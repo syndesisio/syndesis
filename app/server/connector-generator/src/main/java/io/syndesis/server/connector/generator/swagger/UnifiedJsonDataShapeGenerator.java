@@ -17,6 +17,7 @@ package io.syndesis.server.connector.generator.swagger;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -32,12 +33,13 @@ import io.swagger.models.parameters.AbstractSerializableParameter;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.MapProperty;
+import io.swagger.models.properties.ObjectProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.StringProperty;
-import io.syndesis.server.connector.generator.swagger.util.JsonSchemaHelper;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.util.Json;
+import io.syndesis.server.connector.generator.swagger.util.JsonSchemaHelper;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -45,10 +47,10 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static io.syndesis.server.connector.generator.swagger.util.JsonSchemaHelper.determineSchemaReference;
+import static io.syndesis.server.connector.generator.swagger.util.JsonSchemaHelper.resolveSchemaForReference;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -56,44 +58,50 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static final Class<AbstractSerializableParameter<?>> PARAM_CLASS = (Class) AbstractSerializableParameter.class;
+    private static final List<String> PROPERTIES_TO_REMOVE_ON_MERGE = Arrays.asList("$schema", "title");
 
     @Override
-    public DataShape createShapeFromRequest(final String specification, final Swagger swagger, final Operation operation) {
-        final JsonNode bodySchema = createJsonSchemaForBodyOf(specification, operation);
+    public DataShape createShapeFromRequest(final ObjectNode json, final Swagger swagger, final Operation operation) {
+        final ObjectNode bodySchema = createJsonSchemaForBodyOf(json, operation);
 
-        final JsonNode parametersSchema = createJsonSchemaForParametersOf(operation);
+        final ObjectNode parametersSchema = createJsonSchemaForParametersOf(operation);
 
         return unifiedJsonSchema(bodySchema, parametersSchema);
     }
 
     @Override
-    public DataShape createShapeFromResponse(final String specification, final Swagger swagger, final Operation operation) {
+    public DataShape createShapeFromResponse(final ObjectNode json, final Swagger swagger, final Operation operation) {
         final Optional<Response> maybeResponse = findResponse(operation);
 
         if (!maybeResponse.isPresent()) {
             return DATA_SHAPE_NONE;
         }
 
-        final DataShape response = createShapeFromProperty(specification, maybeResponse.get().getSchema());
+        final Response response = maybeResponse.get();
+        final Model responseSchema = response.getResponseSchema();
+        final String description = response.getDescription();
 
-        if (response.getKind() == DataShapeKinds.NONE) {
-            return response;
+        final JsonNode schema = createSchemaFromModel(json, description, responseSchema);
+
+        String schemaString;
+        try {
+            schemaString = Json.writer().writeValueAsString(schema);
+        } catch (final JsonProcessingException e) {
+            throw new IllegalStateException("Unable to serialize given JSON specification in response schema: " + schema, e);
         }
 
-        return new DataShape.Builder().createFrom(response).name("Response").description("API response payload").build();
+        return new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).name("Response").description("API response payload")
+            .specification(schemaString).build();
     }
 
     private static void addEnumsTo(final ObjectNode parameterParameter, final AbstractSerializableParameter<?> serializableParameter) {
         if (serializableParameter.getItems() != null) {
             final Property items = serializableParameter.getItems();
 
-            List<String> enums;
+            List<?> enums;
             try {
                 final Method method = ClassUtils.getPublicMethod(items.getClass(), "getEnum");
-                @SuppressWarnings("unchecked")
-                final List<String> tmp = (List<String>) method.invoke(items);
-
-                enums = tmp;
+                enums = (List<?>) method.invoke(items);
             } catch (@SuppressWarnings("unused") final ReflectiveOperationException ignored) {
                 enums = Collections.emptyList();
             }
@@ -106,7 +114,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
             if (enums != null && !enums.isEmpty()) {
                 final ArrayNode enumArray = itemsNode.putArray("enum");
-                enums.forEach(enumArray::add);
+                enums.forEach(e -> enumArray.add(String.valueOf(e)));
             }
         } else {
             final List<String> enums = serializableParameter.getEnum();
@@ -118,7 +126,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
         }
     }
 
-    private static JsonNode createJsonSchemaForBodyOf(final String specification, final Operation operation) {
+    private static ObjectNode createJsonSchemaForBodyOf(final ObjectNode json, final Operation operation) {
         final Optional<BodyParameter> maybeRequestBody = findBodyParameter(operation);
 
         if (!maybeRequestBody.isPresent()) {
@@ -127,10 +135,13 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
         final BodyParameter requestBody = maybeRequestBody.get();
 
-        return createSchemaFromModel(specification, requestBody.getSchema());
+        final Model requestSchema = requestBody.getSchema();
+        final String name = Optional.ofNullable(requestBody.getName()).orElse(requestBody.getDescription());
+
+        return createSchemaFromModel(json, name, requestSchema);
     }
 
-    private static JsonNode createJsonSchemaForParametersOf(final Operation operation) {
+    private static ObjectNode createJsonSchemaForParametersOf(final Operation operation) {
         final List<Parameter> operationParameters = operation.getParameters();
 
         final List<AbstractSerializableParameter<?>> serializableParameters = operationParameters.stream()//
@@ -142,7 +153,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
             return null;
         }
 
-        final ObjectNode schema = newJsonObjectSchema();
+        final ObjectNode schema = JsonSchemaHelper.newJsonObjectSchema();
         final ObjectNode properties = schema.putObject("properties");
 
         final ObjectNode parameters = properties.putObject("parameters");
@@ -183,32 +194,30 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
         return schema;
     }
 
-    private static JsonNode createSchemaFromModel(final String specification, final Model schema) {
+    private static ObjectNode createSchemaFromModel(final ObjectNode json, final String name, final Model schema) {
         if (schema instanceof ArrayModel) {
             final Property items = ((ArrayModel) schema).getItems();
 
-            return createSchemaFromProperty(specification, items);
+            return createSchemaFromProperty(json, name, items);
         } else if (schema instanceof ModelImpl) {
-            return createSchemaFromModelImpl(schema);
+            return createSchemaFromModelImpl(name, schema);
         }
 
-        final String title = Optional.ofNullable(schema.getTitle()).orElse(schema.getReference().replaceAll("^.*/", ""));
+        final String title = determineTitleOf(name, schema);
 
-        return createSchemaFromReference(specification, title, schema.getReference());
+        return resolveSchemaForReference(json, title, schema.getReference());
     }
 
-    private static JsonNode createSchemaFromModelImpl(final Model schema) {
-        try {
-            final String schemaString = Json.writer().writeValueAsString(schema);
+    private static ObjectNode createSchemaFromModelImpl(final String name, final Model model) {
+        final ObjectNode schema = Json.convertValue(model, ObjectNode.class);
 
-            return parseJsonSchema(schemaString);
-        } catch (final JsonProcessingException e) {
-            throw new IllegalStateException("Unable to serialize given JSON specification in response schema: " + schema, e);
-        }
+        final String title = determineTitleOf(name, model);
+
+        return JsonSchemaHelper.createJsonSchema(title, schema);
     }
 
-    private static JsonNode createSchemaFromProperty(final String specification, final Property schema) {
-        if (schema instanceof MapProperty) {
+    private static ObjectNode createSchemaFromProperty(final ObjectNode json, final String name, final Property schema) {
+        if (schema instanceof MapProperty || schema instanceof ObjectProperty) {
             try {
                 final String schemaString = Json.writer().writeValueAsString(schema);
 
@@ -222,72 +231,72 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
         final String reference = determineSchemaReference(schema);
 
-        final String title = Optional.ofNullable(schema.getTitle()).orElse(reference.replaceAll("^.*/", ""));
+        final String title = determineTitleOf(name, schema);
 
-        return createSchemaFromReference(specification, title, reference);
+        return resolveSchemaForReference(json, title, reference);
     }
 
-    private static JsonNode createSchemaFromReference(final String specification, final String title, final String reference) {
-        final String jsonSchema = JsonSchemaHelper.resolveSchemaForReference(specification, title, reference);
+    private static String determineTitleOf(final String name, final Model schema) {
+        final String title = schema.getTitle();
+        if (title != null) {
+            return title;
+        }
 
-        return parseJsonSchema(jsonSchema);
+        final String description = schema.getDescription();
+        if (description != null) {
+            return description;
+        }
+
+        final String reference = schema.getReference();
+        if (reference != null) {
+            return reference.replaceAll("^.*/", "");
+        }
+
+        return name;
     }
 
-    private static DataShape createShapeFromProperty(final String specification, final Property schema) {
-        if (schema instanceof MapProperty) {
-            try {
-                final String schemaString = Json.writer().writeValueAsString(schema);
+    private static String determineTitleOf(final String name, final Property schema) {
+        final String title = schema.getTitle();
+        if (title != null) {
+            return title;
+        }
 
-                return new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification(schemaString).build();
-            } catch (final JsonProcessingException e) {
-                throw new IllegalStateException("Unable to serialize given JSON specification in response schema: " + schema, e);
-            }
-        } else if (schema instanceof StringProperty) {
-            return DATA_SHAPE_NONE;
+        final String description = schema.getDescription();
+        if (description != null) {
+            return description;
         }
 
         final String reference = determineSchemaReference(schema);
+        if (reference != null) {
+            return reference.replaceAll("^.*/", "");
+        }
 
-        final String title = Optional.ofNullable(schema.getTitle()).orElse(reference.replaceAll("^.*/", ""));
-
-        return createShapeFromReference(specification, title, reference);
+        return name;
     }
 
-    private static DataShape createShapeFromReference(final String specification, final String title, final String reference) {
-        final String jsonSchema = JsonSchemaHelper.resolveSchemaForReference(specification, title, reference);
-
-        return new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification(jsonSchema).build();
-    }
-
-    private static ObjectNode newJsonObjectSchema() {
-        final ObjectNode schema = JsonNodeFactory.instance.objectNode();
-        schema.put("$schema", "http://json-schema.org/draft-04/schema#");
-        schema.put("type", "object");
-
-        return schema;
-    }
-
-    private static JsonNode parseJsonSchema(final String schema) {
+    private static ObjectNode parseJsonSchema(final String schema) {
         try {
-            return Json.reader().readTree(schema);
+            return (ObjectNode) Json.reader().readTree(schema);
         } catch (final IOException e) {
             throw new IllegalStateException("Unable to parse given JSON schema: " + StringUtils.abbreviate(schema, 100), e);
         }
     }
 
-    private static DataShape unifiedJsonSchema(final JsonNode bodySchema, final JsonNode parametersSchema) {
+    private static DataShape unifiedJsonSchema(final ObjectNode bodySchema, final ObjectNode parametersSchema) {
         if (bodySchema == null && parametersSchema == null) {
             return DATA_SHAPE_NONE;
         }
 
-        final ObjectNode unifiedSchema = newJsonObjectSchema();
+        final ObjectNode unifiedSchema = JsonSchemaHelper.newJsonObjectSchema();
         final ObjectNode properties = unifiedSchema.putObject("properties");
 
         if (parametersSchema != null) {
+            properties.remove(PROPERTIES_TO_REMOVE_ON_MERGE);
             properties.set("parameters", parametersSchema.get("properties").get("parameters"));
         }
 
         if (bodySchema != null) {
+            bodySchema.remove(PROPERTIES_TO_REMOVE_ON_MERGE);
             properties.set("body", bodySchema);
         }
 

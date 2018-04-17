@@ -18,6 +18,7 @@ package io.syndesis.server.connector.generator.swagger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -58,6 +59,8 @@ import io.syndesis.server.connector.generator.util.ActionComparator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -128,7 +131,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         }
     }
 
-    abstract ConnectorDescriptor.Builder createDescriptor(String specification, Swagger swagger, Operation operation);
+    abstract ConnectorDescriptor.Builder createDescriptor(ObjectNode json, Swagger swagger, Operation operation);
 
     protected final Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
@@ -180,6 +183,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         final String connectorScheme = connectorTemplate.getCamelConnectorPrefix();
 
         final List<ConnectorAction> actions = new ArrayList<>();
+        final Map<String, Integer> operationIdCounts = new HashMap<>();
         int idx = 0;
         for (final Entry<String, Path> pathEntry : paths.entrySet()) {
             final Path path = pathEntry.getValue();
@@ -188,11 +192,26 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
             for (final Entry<HttpMethod, Operation> entry : operationMap.entrySet()) {
                 final Operation operation = entry.getValue();
-                if (operation.getOperationId() == null) {
+                final String operationId = operation.getOperationId();
+                if (operationId == null) {
                     operation.operationId("operation-" + idx++);
+                } else {
+                    // we tolerate that some operations might have the same
+                    // operationId, if that's the case we generate a unique
+                    // operationId by appending the count of the duplicates,
+                    // e.g. operation ids for non unique operation id "foo" will
+                    // be "foo", "foo1", "foo2", ... this will be reflected in
+                    // the Swagger specification stored in `specification`
+                    // property
+                    final Integer count = operationIdCounts.compute(operationId,
+                        (id, currentCount) -> ofNullable(currentCount).map(c -> ++c).orElse(0));
+
+                    if (count > 0) {
+                        operation.operationId(operationId + count);
+                    }
                 }
 
-                final ConnectorDescriptor descriptor = createDescriptor(info.getResolvedSpecification(), swagger, operation)//
+                final ConnectorDescriptor descriptor = createDescriptor(info.getResolvedJsonGraph(), swagger, operation)//
                     .camelConnectorGAV(connectorGav)//
                     .camelConnectorPrefix(connectorScheme)//
                     .connectorId(connectorId)//

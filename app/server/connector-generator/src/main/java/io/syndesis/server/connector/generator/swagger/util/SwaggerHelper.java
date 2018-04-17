@@ -45,7 +45,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
@@ -55,8 +54,6 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 public final class SwaggerHelper {
-
-    private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
     private static final Logger LOG = LoggerFactory.getLogger(SwaggerHelper.class);
 
@@ -148,9 +145,9 @@ public final class SwaggerHelper {
     static JsonNode convertToJson(final String specification) throws IOException, JsonProcessingException {
         final JsonNode specRoot;
         if (specification.matches("\\s+\\{")) {
-            specRoot = JSON_MAPPER.readTree(specification);
+            specRoot = Json.reader().readTree(specification);
         } else {
-            specRoot = JSON_MAPPER.convertValue(YAML_PARSER.load(specification), JsonNode.class);
+            specRoot = Json.convertValue(YAML_PARSER.load(specification), JsonNode.class);
         }
         return specRoot;
     }

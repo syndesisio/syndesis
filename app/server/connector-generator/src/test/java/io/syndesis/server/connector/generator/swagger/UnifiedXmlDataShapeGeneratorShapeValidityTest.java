@@ -37,6 +37,7 @@ import io.swagger.models.parameters.BodyParameter;
 import io.swagger.parser.SwaggerParser;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.util.Json;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -52,6 +53,8 @@ import org.xmlunit.validation.Languages;
 import org.xmlunit.validation.ValidationProblem;
 import org.xmlunit.validation.ValidationResult;
 import org.xmlunit.validation.Validator;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -72,14 +75,14 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
 
     private static final Validator VALIDATOR = createValidator();
 
+    @Parameter(0)
+    public ObjectNode json;
+
     @Parameter(2)
     public Operation operation;
 
     @Parameter(3)
     public String specification;
-
-    @Parameter(0)
-    public String specificationContent;
 
     @Parameter(1)
     public Swagger swagger;
@@ -131,7 +134,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
 
     @Test
     public void shouldGenerateValidInputSchemasets() {
-        final DataShape input = generator.createShapeFromRequest(specificationContent, swagger, operation);
+        final DataShape input = generator.createShapeFromRequest(json, swagger, operation);
 
         if (input.getKind() != DataShapeKinds.XML_SCHEMA) {
             return;
@@ -149,7 +152,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
 
     @Test
     public void shouldGenerateValidOutputSchemasets() throws IOException {
-        final DataShape output = generator.createShapeFromResponse(specificationContent, swagger, operation);
+        final DataShape output = generator.createShapeFromResponse(json, swagger, operation);
 
         if (output.getKind() != DataShapeKinds.XML_SCHEMA) {
             return;
@@ -192,13 +195,19 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
         final List<Object[]> parameters = new ArrayList<>();
 
         specifications.forEach(specification -> {
-            String specificationContent;
+            final String specificationContent;
             try (InputStream in = UnifiedXmlDataShapeGenerator.class.getResourceAsStream(specification)) {
                 specificationContent = IOUtils.toString(in, StandardCharsets.UTF_8);
             } catch (final IOException e) {
                 throw new AssertionError("Unable to load swagger specification in path: " + specification, e);
             }
 
+            ObjectNode json;
+            try {
+                json = (ObjectNode) Json.reader().readTree(specificationContent);
+            } catch (final IOException e) {
+                throw new AssertionError("Unable to parse swagger specification in path as JSON: " + specification, e);
+            }
             final SwaggerParser parser = new SwaggerParser();
             final Swagger swagger = parser.parse(specificationContent);
 
@@ -212,7 +221,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
                         return;
                     }
 
-                    parameters.add(new Object[] {specificationContent, swagger, operation, specification});
+                    parameters.add(new Object[] {json, swagger, operation, specification});
                 });
             });
         });

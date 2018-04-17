@@ -204,7 +204,7 @@
           "name": "Request",
           "description": "API request payload",
           "kind": "json-schema",
-          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\": {\"$schema\": \"http://json-schema.org/schema#\", \"properties\": {\"category\": {\"properties\": {\"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"name\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Category\"}}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"name\": {\"example\": \"doggie\", \"type\": \"string\"}, \"photoUrls\": {\"items\": {\"type\": \"string\"}, \"type\": \"array\", \"xml\": {\"name\": \"photoUrl\", \"wrapped\": true}}, \"status\": {\"description\": \"pet status in the store\", \"enum\": [ \"available\", \"pending\", \"sold\" ], \"type\": \"string\"}, \"tags\": {\"items\": {\"properties\": {\"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"name\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Tag\"}}, \"type\": \"array\", \"xml\": {\"name\": \"tag\", \"wrapped\": true}}}, \"required\": [ \"name\", \"photoUrls\" ], \"title\": \"Pet\", \"type\": \"object\", \"xml\": {\"name\": \"Pet\"}}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\": {\"properties\": {\"category\": {\"properties\": {\"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"name\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Category\"}}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"name\": {\"example\": \"doggie\", \"type\": \"string\"}, \"photoUrls\": {\"items\": {\"type\": \"string\"}, \"type\": \"array\", \"xml\": {\"name\": \"photoUrl\", \"wrapped\": true}}, \"status\": {\"description\": \"pet status in the store\", \"enum\": [ \"available\", \"pending\", \"sold\" ], \"type\": \"string\"}, \"tags\": {\"items\": {\"properties\": {\"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"name\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Tag\"}}, \"type\": \"array\", \"xml\": {\"name\": \"tag\", \"wrapped\": true}}}, \"required\": [ \"name\", \"photoUrls\" ], \"type\": \"object\", \"xml\": {\"name\": \"Pet\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -230,7 +230,7 @@
           "name": "Request",
           "description": "API request payload",
           "kind": "json-schema",
-          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\" : {\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"], \"type\" : \"string\"}},\"xml\":{\"name\":\"Pet\"},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Pet\"}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\" : {\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"], \"type\" : \"string\"}},\"xml\":{\"name\":\"Pet\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -262,7 +262,7 @@
           "name": "Response",
           "description": "API response payload",
           "kind": "json-schema",
-          "specification": "{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"]}},\"xml\":{\"name\":\"Pet\"},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Pet\"}"
+          "specification": "{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"]}},\"xml\":{\"name\":\"Pet\"},\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"Pet\"}"
         },
         "configuredProperties": {
           "operationId": "findPetsByStatus"
@@ -291,7 +291,7 @@
           "name": "Response",
           "description": "API response payload",
           "kind": "json-schema",
-          "specification": "{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"]}},\"xml\":{\"name\":\"Pet\"},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Pet\"}"
+          "specification": "{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"]}},\"xml\":{\"name\":\"Pet\"},\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"Pet\"}"
         },
         "configuredProperties": {
           "operationId": "findPetsByTags"
@@ -320,7 +320,7 @@
           "name": "Response",
           "description": "API response payload",
           "kind": "json-schema",
-          "specification": "{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"]}},\"xml\":{\"name\":\"Pet\"},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Pet\"}"
+          "specification": "{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"]}},\"xml\":{\"name\":\"Pet\"},\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"Pet\"}"
         },
         "configuredProperties": {
           "operationId": "getPetById"
@@ -401,7 +401,7 @@
           "name": "Response",
           "description": "API response payload",
           "kind": "json-schema",
-          "specification": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\",\"format\":\"int32\"},\"type\":{\"type\":\"string\"},\"message\":{\"type\":\"string\"}},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"ApiResponse\"}"
+          "specification": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\",\"format\":\"int32\"},\"type\":{\"type\":\"string\"},\"message\":{\"type\":\"string\"}},\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"ApiResponse\"}"
         },
         "configuredProperties": {
           "operationId": "uploadFile"
@@ -427,7 +427,7 @@
           "name": "Response",
           "description": "API response payload",
           "kind": "json-schema",
-          "specification": "{\"type\":\"object\",\"additionalProperties\":{\"type\":\"integer\",\"format\":\"int32\"}}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\",\"title\": \"successful operation\",\"type\":\"object\",\"additionalProperties\":{\"type\":\"integer\",\"format\":\"int32\"}}"
         },
         "configuredProperties": {
           "operationId": "getInventory"
@@ -450,13 +450,13 @@
           "name": "Request",
           "description": "API request payload",
           "kind": "json-schema",
-          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\": {\"$schema\": \"http://json-schema.org/schema#\", \"properties\": {\"complete\": {\"default\": false, \"type\": \"boolean\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"petId\": {\"format\": \"int64\", \"type\": \"integer\"}, \"quantity\": {\"format\": \"int32\", \"type\": \"integer\"}, \"shipDate\": {\"format\": \"date-time\", \"type\": \"string\"}, \"status\": {\"description\": \"Order Status\", \"enum\": [ \"placed\", \"approved\", \"delivered\" ], \"type\": \"string\"}}, \"title\": \"Order\", \"type\": \"object\", \"xml\": {\"name\": \"Order\"}}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\": {\"properties\": {\"complete\": {\"default\": false, \"type\": \"boolean\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"petId\": {\"format\": \"int64\", \"type\": \"integer\"}, \"quantity\": {\"format\": \"int32\", \"type\": \"integer\"}, \"shipDate\": {\"format\": \"date-time\", \"type\": \"string\"}, \"status\": {\"description\": \"Order Status\", \"enum\": [ \"placed\", \"approved\", \"delivered\" ], \"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Order\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "name": "Response",
           "description": "API response payload",
           "kind": "json-schema",
-          "specification": "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"petId\":{\"type\":\"integer\",\"format\":\"int64\"},\"quantity\":{\"type\":\"integer\",\"format\":\"int32\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Order\"}"
+          "specification": "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"petId\":{\"type\":\"integer\",\"format\":\"int64\"},\"quantity\":{\"type\":\"integer\",\"format\":\"int32\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"},\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"Order\"}"
         },
         "configuredProperties": {
           "operationId": "placeOrder"
@@ -485,7 +485,7 @@
           "name": "Response",
           "description": "API response payload",
           "kind": "json-schema",
-          "specification": "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"petId\":{\"type\":\"integer\",\"format\":\"int64\"},\"quantity\":{\"type\":\"integer\",\"format\":\"int32\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Order\"}"
+          "specification": "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"petId\":{\"type\":\"integer\",\"format\":\"int64\"},\"quantity\":{\"type\":\"integer\",\"format\":\"int32\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"},\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"Order\"}"
         },
         "configuredProperties": {
           "operationId": "getOrderById"
@@ -534,7 +534,7 @@
           "name": "Request",
           "description": "API request payload",
           "kind": "json-schema",
-          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\": {\"$schema\": \"http://json-schema.org/schema#\", \"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\", \"format\": \"int32\", \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}}, \"title\": \"User\", \"type\": \"object\", \"xml\": {\"name\": \"User\"}}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\": {\"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\", \"format\": \"int32\", \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"User\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -560,7 +560,7 @@
           "name": "Request",
           "description": "API request payload",
           "kind": "json-schema",
-          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\": {\"$schema\": \"http://json-schema.org/schema#\", \"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\", \"format\": \"int32\", \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}}, \"title\": \"User\", \"type\": \"object\", \"xml\": {\"name\": \"User\"}}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\": {\"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\", \"format\": \"int32\", \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}},\"type\": \"object\", \"xml\": {\"name\": \"User\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -586,7 +586,7 @@
           "name": "Request",
           "description": "API request payload",
           "kind": "json-schema",
-          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\": {\"$schema\": \"http://json-schema.org/schema#\", \"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\", \"format\": \"int32\", \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}}, \"title\": \"User\", \"type\": \"object\", \"xml\": {\"name\": \"User\"}}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\": {\"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\", \"format\": \"int32\", \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"User\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -615,7 +615,10 @@
           "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"parameters\": {\"properties\": {\"password\": {\"description\": \"The password for login in clear text\", \"title\": \"password\", \"type\": \"string\"}, \"username\": {\"description\": \"The user name for login\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
-          "kind": "none"
+          "name": "Response",
+          "description": "API response payload",
+          "kind": "json-schema",
+          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\",\"title\":\"successful operation\"}"
         },
         "configuredProperties": {
           "operationId": "loginUser"
@@ -667,7 +670,7 @@
           "name": "Response",
           "description": "API response payload",
           "kind": "json-schema",
-          "specification": "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"username\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"type\":\"integer\",\"format\":\"int32\",\"description\":\"User Status\"}},\"xml\":{\"name\":\"User\"},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"User\"}"
+          "specification": "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"username\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"type\":\"integer\",\"format\":\"int32\",\"description\":\"User Status\"}},\"xml\":{\"name\":\"User\"},\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"User\"}"
         },
         "configuredProperties": {
           "operationId": "getUserByName"
@@ -690,7 +693,7 @@
           "name": "Request",
           "description": "API request payload",
           "kind": "json-schema",
-          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\": {\"$schema\": \"http://json-schema.org/schema#\", \"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\", \"format\": \"int32\", \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}}, \"title\": \"User\", \"type\": \"object\", \"xml\": {\"name\": \"User\"}}, \"parameters\": {\"properties\": {\"username\": {\"description\": \"name that need to be updated\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\", \"properties\": {\"body\": {\"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\", \"format\": \"int32\", \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}},\"type\": \"object\", \"xml\": {\"name\": \"User\"}}, \"parameters\": {\"properties\": {\"username\": {\"description\": \"name that need to be updated\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"

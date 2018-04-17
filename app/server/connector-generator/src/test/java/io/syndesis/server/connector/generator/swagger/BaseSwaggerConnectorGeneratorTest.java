@@ -16,14 +16,17 @@
 package io.syndesis.server.connector.generator.swagger;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import io.swagger.models.Info;
 import io.swagger.models.Operation;
+import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.parser.SwaggerParser;
 import io.syndesis.common.model.action.ActionsSummary;
+import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
@@ -33,6 +36,8 @@ import io.syndesis.server.connector.generator.swagger.util.SwaggerHelper;
 
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import static io.syndesis.server.connector.generator.swagger.TestHelper.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +46,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
 
     private final BaseSwaggerConnectorGenerator generator = new BaseSwaggerConnectorGenerator() {
         @Override
-        ConnectorDescriptor.Builder createDescriptor(final String specification, final Swagger swagger, final Operation operation) {
+        ConnectorDescriptor.Builder createDescriptor(final ObjectNode json, final Swagger swagger, final Operation operation) {
             return new ConnectorDescriptor.Builder();
         }
     };
@@ -152,6 +157,20 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
         final Connector connector = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(connector.getConfiguredProperties()).containsEntry("tokenEndpoint", "http://some.token.url");
+    }
+
+    @Test
+    public void shouldMakeNonUniqueOperationIdsUnique() {
+        final Swagger swagger = new Swagger().path("/path", new Path().get(new Operation().operationId("foo"))
+            .post(new Operation().operationId("foo")).put(new Operation().operationId("bar")));
+
+        final Connector generated = generator.configureConnector(SWAGGER_TEMPLATE, new Connector.Builder().id("connector1").build(),
+            createSettingsFrom(swagger));
+        final List<ConnectorAction> actions = generated.getActions();
+        assertThat(actions).hasSize(3);
+        assertThat(actions.get(0).getId()).hasValueSatisfying(id -> assertThat(id).endsWith("foo"));
+        assertThat(actions.get(1).getId()).hasValueSatisfying(id -> assertThat(id).endsWith("foo1"));
+        assertThat(actions.get(2).getId()).hasValueSatisfying(id -> assertThat(id).endsWith("bar"));
     }
 
     @Test

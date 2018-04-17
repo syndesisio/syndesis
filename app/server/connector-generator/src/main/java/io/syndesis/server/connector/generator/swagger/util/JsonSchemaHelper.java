@@ -17,8 +17,6 @@ package io.syndesis.server.connector.generator.swagger.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import io.swagger.models.parameters.SerializableParameter;
 import io.swagger.models.properties.ArrayProperty;
@@ -28,15 +26,30 @@ import io.syndesis.common.util.Json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import me.andrz.jackson.JsonContext;
 import me.andrz.jackson.JsonReferenceException;
 import me.andrz.jackson.JsonReferenceProcessor;
 
 public final class JsonSchemaHelper {
 
+    private static final String JSON_SCHEMA_URI = "http://json-schema.org/draft-04/schema#";
+
     private JsonSchemaHelper() {
         // utility class
+    }
+
+    public static ObjectNode createJsonSchema(final String title, final ObjectNode schema) {
+        final ObjectNode schemaNode = newJsonObjectSchema();
+        if (title != null) {
+            schemaNode.put("title", title);
+        }
+
+        schemaNode.setAll(schema);
+
+        return schemaNode;
     }
 
     public static String determineSchemaReference(final Property schema) {
@@ -66,23 +79,34 @@ public final class JsonSchemaHelper {
         return javaTypeFor(type, format);
     }
 
-    public static String resolveSchemaForReference(final String specification, final String title, final String reference) {
-        final JsonNode resolved;
-        try {
-            final URL inMemoryUrl = inMemory(specification);
+    public static ObjectNode newJsonObjectSchema() {
+        final ObjectNode schema = JsonNodeFactory.instance.objectNode();
+        schema.put("$schema", JSON_SCHEMA_URI);
+        schema.put("type", "object");
 
-            resolved = new JsonReferenceProcessor().process(inMemoryUrl);
+        return schema;
+    }
+
+    public static ObjectNode resolvableNodeForSpecification(final ObjectNode json) {
+        final ObjectNode resolved;
+        try {
+            final JsonReferenceProcessor referenceProcessor = new JsonReferenceProcessor();
+            resolved = (ObjectNode) referenceProcessor.process(new JsonContext(DummyStreamHandler.DUMMY_URL) {
+                @Override
+                public JsonNode getDocument() throws IOException {
+                    return json;
+                }
+            }, json);
         } catch (JsonReferenceException | IOException e) {
             throw new IllegalStateException("Unable to process JSON references", e);
         }
+        return resolved;
+    }
 
-        final JsonNode node = resolved.at(reference.substring(1));
-        final ObjectNode schemaNode = (ObjectNode) node;
-        schemaNode.put("$schema", "http://json-schema.org/schema#");
-        schemaNode.put("type", "object");
-        schemaNode.put("title", title);
+    public static ObjectNode resolveSchemaForReference(final ObjectNode json, final String title, final String reference) {
+        final ObjectNode dereferenced = (ObjectNode) json.at(reference.substring(1));
 
-        return serializeJson(schemaNode);
+        return createJsonSchema(title, dereferenced);
     }
 
     public static String serializeJson(final JsonNode schemaNode) {
@@ -91,10 +115,6 @@ public final class JsonSchemaHelper {
         } catch (final JsonProcessingException e) {
             throw new IllegalStateException("Unable to serialize JSON schema", e);
         }
-    }
-
-    static URL inMemory(final String specification) throws MalformedURLException {
-        return new URL("mem", null, 0, "specification", new InMemoryUrlStreamHandler(specification));
     }
 
     static String javaTypeFor(final String type, final String format) {
@@ -121,4 +141,5 @@ public final class JsonSchemaHelper {
             throw new IllegalArgumentException("Given parameter is of unknown type/format: " + type + "/" + format);
         }
     }
+
 }

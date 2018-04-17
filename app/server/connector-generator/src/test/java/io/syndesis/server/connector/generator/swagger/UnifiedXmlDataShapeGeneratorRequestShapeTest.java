@@ -26,6 +26,7 @@ import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.util.Json;
 
 import org.apache.commons.io.IOUtils;
 import org.assertj.core.api.SoftAssertions;
@@ -34,6 +35,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -51,24 +54,26 @@ public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
 
     private final UnifiedXmlDataShapeGenerator generator = new UnifiedXmlDataShapeGenerator();
 
+    private final ObjectNode json;
+
     private final Swagger swagger;
 
-    private String swaggerSpecification;
-
     public UnifiedXmlDataShapeGeneratorRequestShapeTest() throws IOException {
+        final String specification;
         try (InputStream in = UnifiedXmlDataShapeGenerator.class.getResourceAsStream("/swagger/petstore.swagger.json")) {
-            swaggerSpecification = IOUtils.toString(in, StandardCharsets.UTF_8);
+            specification = IOUtils.toString(in, StandardCharsets.UTF_8);
         }
 
+        json = (ObjectNode) Json.reader().readTree(specification);
         final SwaggerParser parser = new SwaggerParser();
-        swagger = parser.parse(swaggerSpecification);
+        swagger = parser.parse(specification);
     }
 
     @Test
     public void shouldGenerateAtlasmapSchemaSetForUpdatePetRequest() throws IOException {
         final Operation swaggerOperation = swagger.getPaths().get(path).getOperationMap().get(operation);
 
-        final DataShape shape = generator.createShapeFromRequest(swaggerSpecification, swagger, swaggerOperation);
+        final DataShape shape = generator.createShapeFromRequest(json, swagger, swaggerOperation);
 
         final SoftAssertions softly = new SoftAssertions();
         softly.assertThat(shape.getKind()).isEqualTo(DataShapeKinds.XML_SCHEMA);

@@ -41,14 +41,16 @@ import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
-import io.syndesis.server.connector.generator.swagger.util.XmlSchemaHelper;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.server.connector.generator.swagger.util.XmlSchemaHelper;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static io.syndesis.server.connector.generator.swagger.util.SwaggerHelper.dereference;
 import static io.syndesis.server.connector.generator.swagger.util.XmlSchemaHelper.addElement;
@@ -87,7 +89,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
     }
 
     @Override
-    public DataShape createShapeFromRequest(final String specification, final Swagger swagger, final Operation operation) {
+    public DataShape createShapeFromRequest(final ObjectNode json, final Swagger swagger, final Operation operation) {
         final Document document = DocumentHelper.createDocument();
 
         final Element schemaSet = document.addElement("d:SchemaSet", SCHEMA_SET_NS);
@@ -152,7 +154,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
     }
 
     @Override
-    public DataShape createShapeFromResponse(final String specification, final Swagger swagger, final Operation operation) {
+    public DataShape createShapeFromResponse(final ObjectNode json, final Swagger swagger, final Operation operation) {
         final Optional<Response> maybeResponse = findResponse(operation);
 
         if (!maybeResponse.isPresent()) {

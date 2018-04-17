@@ -15,33 +15,29 @@
  */
 package io.syndesis.server.connector.generator.swagger.util;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import java.nio.charset.StandardCharsets;
 
-final class InMemoryUrlStreamHandler extends URLStreamHandler {
-    private final String specification;
+final class DummyStreamHandler extends URLStreamHandler {
 
-    InMemoryUrlStreamHandler(final String specification) {
-        this.specification = specification;
+    static final URL DUMMY_URL;
+    static {
+        try {
+            DUMMY_URL = new URL("dummy", null, 0, "part", new DummyStreamHandler());
+        } catch (final MalformedURLException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    private DummyStreamHandler() {
+        // only needed for `DUMMY_URL`
     }
 
     @Override
-    protected URLConnection openConnection(final URL u) throws IOException {
-        return new URLConnection(u) {
-            @Override
-            public void connect() throws IOException {
-                // NOP
-            }
-
-            @Override
-            public InputStream getInputStream() throws IOException {
-                return new ByteArrayInputStream(specification.getBytes(StandardCharsets.UTF_8));
-            }
-        };
+    protected URLConnection openConnection(final URL url) throws IOException {
+        return null;
     }
 }

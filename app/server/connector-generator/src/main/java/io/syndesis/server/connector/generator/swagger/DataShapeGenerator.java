@@ -20,12 +20,14 @@ import io.swagger.models.Swagger;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 public interface DataShapeGenerator {
 
     DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
 
-    DataShape createShapeFromRequest(String specification, Swagger swagger, Operation operation);
+    DataShape createShapeFromRequest(ObjectNode json, Swagger swagger, Operation operation);
 
-    DataShape createShapeFromResponse(String specification, Swagger swagger, Operation operation);
+    DataShape createShapeFromResponse(ObjectNode json, Swagger swagger, Operation operation);
 
 }
