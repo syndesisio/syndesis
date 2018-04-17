@@ -15,17 +15,42 @@
  */
 package io.syndesis.server.endpoint;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+
+import com.jcabi.manifests.Manifests;
 
 public final class Version {
 
     private Version() {
     }
 
+    public static Map<String, String> getDetailed() {
+        final Map<String, String> detail = new HashMap<>();
+        detail.put("version", getVersion());
+        putManifestValueTo(detail, "commit-id", "Git-Commit-Id", "X-BasePOM-Git-Commit-Id");
+        putManifestValueTo(detail, "branch", "Git-Branch");
+        putManifestValueTo(detail, "build-time", "Build-Time");
+        putManifestValueTo(detail, "build-id", "X-BasePOM-Build-Id");
+
+        return Collections.unmodifiableMap(detail);
+    }
+
     public static String getVersion() {
         final String packageVersion = Version.class.getPackage().getImplementationVersion();
 
         return Optional.ofNullable(packageVersion).orElse("DEVELOPMENT");
+    }
+
+    static void putManifestValueTo(final Map<String, String> detail, final String key, final String... attributes) {
+        for (final String attribute : attributes) {
+            if (Manifests.exists(attribute)) {
+                detail.put(key, Manifests.read(attribute));
+                break;
+            }
+        }
     }
 
 }
