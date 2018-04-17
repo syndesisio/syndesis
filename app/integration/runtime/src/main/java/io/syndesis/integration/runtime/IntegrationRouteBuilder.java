@@ -172,11 +172,12 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     route.id(step.getId().get() + "-capture");
                 }
 
-                if( startTracker!=null ) {
+                if (startTracker != null) {
                     route = route.process(StepDoneTracker.INSTANCE);
                 }
             }
         }
+
     }
 
     // Visibility changed for test purpose.

@@ -30,7 +30,6 @@ import static io.syndesis.integration.runtime.util.JsonSupport.toJsonObject;
  * Processor used to track the end of a Syndesis step.
  */
 public class StepDoneTracker implements AsyncProcessor {
-
     public static final StepDoneTracker INSTANCE = new StepDoneTracker();
     private static final DefaultExchangeFormatter FORMATTER = new DefaultExchangeFormatter();
 
@@ -50,14 +49,16 @@ public class StepDoneTracker implements AsyncProcessor {
         StepStartTracker startTracker = (StepStartTracker) exchange.removeProperty(IntegrationLoggingConstants.STEP_START_TRACKER);
         if (startTracker != null) {
             final long duration = System.nanoTime() - startTracker.getStartedAt();
-            final String exchangeId = exchange.getProperty(IntegrationLoggingConstants.EXCHANGE_ID, exchange.getExchangeId(), String.class);
+            final String activityId = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
 
-            System.out.println(toJsonObject(
-                "exchange", exchangeId,
-                "step", startTracker.getStep(),
-                "id", startTracker.getId(),
-                "duration", duration,
-                "failure", failure(exchange)));
+            if (activityId != null) {
+                System.out.println(toJsonObject(
+                    "exchange", activityId,
+                    "step", startTracker.getStep(),
+                    "id", startTracker.getId(),
+                    "duration", duration,
+                    "failure", failure(exchange)));
+            }
         }
     }
 
