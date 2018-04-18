@@ -3,6 +3,7 @@
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-oauthproxy
     annotations:
       service.alpha.openshift.io/serving-cert-secret-name: syndesis-oauthproxy-tls
@@ -20,6 +21,7 @@
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
     name: syndesis
   spec:
     host: ${ROUTE_HOSTNAME}
@@ -36,6 +38,7 @@
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-oauthproxy
     name: syndesis-oauthproxy
   spec:
@@ -55,6 +58,7 @@
       metadata:
         labels:
           app: syndesis
+          type: infrastructure
           component: syndesis-oauthproxy
           deploymentconfig: syndesis-oauthproxy
       spec:

@@ -17,6 +17,7 @@ metadata:
 #
   labels:
     app: syndesis
+    type: infrastructure
 parameters:
 # Parameters with no defaults (has to be be provided when template is applied):
 - name: ROUTE_HOSTNAME
@@ -152,6 +153,7 @@ objects:
     name: syndesis-server
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-server
   spec:
     tags:
@@ -167,6 +169,7 @@ objects:
     name: syndesis-ui
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-ui
   spec:
     tags:
@@ -182,6 +185,7 @@ objects:
     name: syndesis-meta
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-meta
   spec:
     tags:
@@ -197,6 +201,7 @@ objects:
     name: oauth-proxy
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-oauthproxy
   spec:
     tags:
@@ -212,6 +217,7 @@ objects:
     name: prometheus
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-prometheus
   spec:
     tags:
@@ -228,6 +234,7 @@ objects:
     name: syndesis-s2i
     labels:
       app: syndesis
+      type: infrastructure
       component: s2i-java
   spec:
     tags:
@@ -244,6 +251,7 @@ objects:
     name: syndesis-oauth-proxy-cookie-secret
     labels:
       app: syndesis
+      type: infrastructure
   stringData:
     oauthCookieSecret: ${OAUTH_COOKIE_SECRET}
 - apiVersion: v1
@@ -252,6 +260,7 @@ objects:
     name: syndesis-server-secret
     labels:
       app: syndesis
+      type: infrastructure
   stringData:
     clientStateAuthenticationKey: ${CLIENT_STATE_AUTHENTICATION_KEY}
     clientStateEncryptionKey: ${CLIENT_STATE_ENCRYPTION_KEY}
@@ -261,6 +270,7 @@ objects:
     name: syndesis-global-config
     labels:
       app: syndesis
+      type: infrastructure
   stringData:
     syndesis: "latest"
     postgresql: "9.5"
@@ -293,6 +303,7 @@ objects:
     name: syndesis-ui
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-ui
   spec:
     ports:
@@ -307,6 +318,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-ui
     name: syndesis-ui
   spec:
@@ -332,6 +344,7 @@ objects:
       metadata:
         labels:
           app: syndesis
+          type: infrastructure
           component: syndesis-ui
           deploymentconfig: syndesis-ui
       spec:
@@ -383,6 +396,7 @@ objects:
     name: syndesis-ui-config
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-ui
   data:
     config.json: |
@@ -419,6 +433,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-db
     name: syndesis-sampledb-config
   data:
@@ -484,6 +499,7 @@ objects:
     name: syndesis-db
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-db
   spec:
     ports:
@@ -518,6 +534,7 @@ objects:
     name: syndesis-db
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-db
   spec:
     replicas: 1
@@ -609,6 +626,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-meta
     name: syndesis-meta
   spec:
@@ -625,6 +643,7 @@ objects:
     name: syndesis-meta
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-meta
   spec:
     accessModes:
@@ -637,6 +656,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-meta
     name: syndesis-meta
   spec:
@@ -656,6 +676,7 @@ objects:
       metadata:
         labels:
           app: syndesis
+          type: infrastructure
           component: syndesis-meta
           deploymentconfig: syndesis-meta
       spec:
@@ -735,6 +756,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-meta
     name: syndesis-meta-config
   data:
@@ -756,6 +778,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-oauthproxy
     annotations:
       service.alpha.openshift.io/serving-cert-secret-name: syndesis-oauthproxy-tls
@@ -773,6 +796,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
     name: syndesis
   spec:
     host: ${ROUTE_HOSTNAME}
@@ -789,6 +813,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-oauthproxy
     name: syndesis-oauthproxy
   spec:
@@ -808,6 +833,7 @@ objects:
       metadata:
         labels:
           app: syndesis
+          type: infrastructure
           component: syndesis-oauthproxy
           deploymentconfig: syndesis-oauthproxy
       spec:
@@ -889,6 +915,7 @@ objects:
     name: syndesis-server
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-server
 - apiVersion: v1
   kind: ServiceAccount
@@ -896,12 +923,14 @@ objects:
     name: syndesis-integration
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-server
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-server
     name: syndesis-server
   spec:
@@ -917,6 +946,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-server
     name: syndesis-server
   spec:
@@ -936,6 +966,7 @@ objects:
       metadata:
         labels:
           app: syndesis
+          type: infrastructure
           component: syndesis-server
           deploymentconfig: syndesis-server
       spec:
@@ -1033,6 +1064,7 @@ objects:
       io.syndesis/upgrade-mode: keep
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-server
     name: syndesis-server-config
   data:
@@ -1233,6 +1265,7 @@ objects:
     name: syndesis:editors
     labels:
       app: syndesis
+      type: infrastructure
   roleRef:
     name: edit
   subjects:
@@ -1244,6 +1277,7 @@ objects:
     name: syndesis:viewers
     labels:
       app: syndesis
+      type: infrastructure
   roleRef:
     name: view
   subjects:
@@ -1255,6 +1289,7 @@ objects:
     name: syndesis-prometheus
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-prometheus
 
 - apiVersion: v1
@@ -1262,6 +1297,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-prometheus
     name: syndesis-prometheus-config
   data:
@@ -1349,6 +1385,7 @@ objects:
     name: syndesis-prometheus
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-prometheus
   spec:
     ports:
@@ -1367,6 +1404,7 @@ objects:
     name: syndesis-prometheus
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-prometheus
   spec:
     accessModes:
@@ -1380,6 +1418,7 @@ objects:
     name: syndesis-prometheus
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-prometheus
   spec:
     replicas: 1
@@ -1397,6 +1436,7 @@ objects:
       metadata:
         labels:
           app: syndesis
+          type: infrastructure
           component: syndesis-prometheus
       spec:
         serviceAccountName: syndesis-prometheus
@@ -1452,6 +1492,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
     name: syndesis-upgrade
     annotations:
       openshift.io/display-name: "Syndesis Upgrade"

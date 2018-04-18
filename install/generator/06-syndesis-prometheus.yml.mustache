@@ -4,6 +4,7 @@
     name: syndesis-prometheus
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-prometheus
 
 - apiVersion: v1
@@ -11,6 +12,7 @@
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-prometheus
     name: syndesis-prometheus-config
   data:
@@ -98,6 +100,7 @@
     name: syndesis-prometheus
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-prometheus
   spec:
     ports:
@@ -116,6 +119,7 @@
     name: syndesis-prometheus
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-prometheus
   spec:
     accessModes:
@@ -129,6 +133,7 @@
     name: syndesis-prometheus
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-prometheus
   spec:
     replicas: 1
@@ -146,6 +151,7 @@
       metadata:
         labels:
           app: syndesis
+          type: infrastructure
           component: syndesis-prometheus
       spec:
         serviceAccountName: syndesis-prometheus

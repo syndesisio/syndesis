@@ -3,6 +3,7 @@
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-db
     name: syndesis-sampledb-config
   data:
@@ -68,6 +69,7 @@
     name: syndesis-db
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-db
   spec:
     ports:
@@ -102,6 +104,7 @@
     name: syndesis-db
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-db
   spec:
     replicas: 1
