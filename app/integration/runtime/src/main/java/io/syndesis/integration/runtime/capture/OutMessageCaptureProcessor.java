@@ -18,7 +18,7 @@ package io.syndesis.integration.runtime.capture;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.syndesis.common.model.integration.Step;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
@@ -28,25 +28,19 @@ import org.apache.camel.Processor;
  * a map stored in the camel exchange property using the processor id as the map key.
  */
 public class OutMessageCaptureProcessor implements Processor {
-
+    public static final Processor INSTANCE = new OutMessageCaptureProcessor();
     public static final String CAPTURED_OUT_MESSAGES_MAP = "Syndesis.CAPTURED_OUT_MESSAGES_MAP";
-
-    private final String id;
-
-    public OutMessageCaptureProcessor(Step step) {
-        this.id = step.getId().orElse(null);
-    }
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        if (this.id != null) {
-            Message message = exchange.hasOut() ? exchange.getOut() : exchange.getIn();
+        final Message message = exchange.hasOut() ? exchange.getOut() : exchange.getIn();
+        final String id = message.getHeader(IntegrationLoggingConstants.STEP_ID, String.class);
 
-            if( message != null ) {
-                Message copy = message.copy();
-                Map<String, Message> outMessagesMap = getCapturedMessageMap(exchange);
-                outMessagesMap.put(this.id, copy);
-            }
+        if (id != null) {
+            Message copy = message.copy();
+            Map<String, Message> outMessagesMap = getCapturedMessageMap(exchange);
+
+            outMessagesMap.put(id, copy);
         }
     }
 

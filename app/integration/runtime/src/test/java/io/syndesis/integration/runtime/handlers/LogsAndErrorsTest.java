@@ -19,15 +19,15 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
-import io.syndesis.extension.api.Step;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.extension.api.Step;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import org.apache.camel.CamelContext;
-import org.apache.camel.CamelExecutionException;
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -43,7 +43,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Handy class to test logging of log messages and errors
@@ -124,14 +124,15 @@ public class LogsAndErrorsTest extends IntegrationTestSupport {
 
             result.expectedBodiesReceived("1","3");
 
-            template.sendBody("direct:expression", "1");
-            try {
-                template.sendBody("direct:expression", "2");
-                fail("Expected exception");
-            } catch (CamelExecutionException e) {
-                // expected.
-            }
-            template.sendBody("direct:expression", "3");
+            Exchange e1 = template.request("direct:expression", e -> e.getIn().setBody("1"));
+            assertThat(e1.isFailed()).isFalse();
+
+            Exchange e2 = template.request("direct:expression", e -> e.getIn().setBody("2"));
+            assertThat(e2.isFailed()).isTrue();
+
+            Exchange e3 = template.request("direct:expression", e -> e.getIn().setBody("3"));
+            assertThat(e3.isFailed()).isFalse();
+
             result.assertIsSatisfied();
 
         } finally {

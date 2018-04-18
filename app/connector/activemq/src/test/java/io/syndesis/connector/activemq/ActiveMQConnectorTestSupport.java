@@ -17,11 +17,11 @@ package io.syndesis.connector.activemq;
 
 import java.util.function.Consumer;
 
-import io.syndesis.connector.support.test.ConnectorTestSupport;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.connector.support.test.ConnectorTestSupport;
 import org.apache.activemq.junit.EmbeddedActiveMQBroker;
 import org.junit.Rule;
 import org.junit.rules.TestName;

@@ -18,11 +18,11 @@ package io.syndesis.integration.runtime.handlers;
 import java.util.Arrays;
 import java.util.List;
 
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;

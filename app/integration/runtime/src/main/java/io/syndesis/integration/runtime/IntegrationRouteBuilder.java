@@ -28,18 +28,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.ModelHelper;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.model.RoutesDefinition;
-import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
-import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.ResourceHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.syndesis.common.model.Split;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -49,6 +37,7 @@ import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import io.syndesis.integration.runtime.handlers.ConnectorStepHandler;
 import io.syndesis.integration.runtime.handlers.DataMapperStepHandler;
@@ -59,25 +48,40 @@ import io.syndesis.integration.runtime.handlers.LogStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.SplitStepHandler;
-import io.syndesis.integration.runtime.logging.StepDoneTracker;
-import io.syndesis.integration.runtime.logging.StepStartTracker;
+import io.syndesis.integration.runtime.logging.ActivityTracker;
+import io.syndesis.integration.runtime.logging.ActivityTrackingPolicy;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
+import org.apache.camel.CamelContext;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.ExpressionNode;
+import org.apache.camel.model.ModelHelper;
+import org.apache.camel.model.PipelineDefinition;
+import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.RoutesDefinition;
+import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
+import org.apache.camel.util.ObjectHelper;
+import org.apache.camel.util.ResourceHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A Camel {@link RouteBuilder} which maps an Integration to Camel routes
  */
+@SuppressWarnings("PMD")
 public class IntegrationRouteBuilder extends RouteBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationRouteBuilder.class);
 
     private final String configurationUri;
     private final List<IntegrationStepHandler> stepHandlerList;
     private final Set<String> resources;
-    private final boolean loggingEnabled;
+    private final ActivityTracker activityTracker;
 
     public IntegrationRouteBuilder(String configurationUri, Collection<IntegrationStepHandler> handlers) {
-        this(configurationUri, handlers, false);
+        this(configurationUri, handlers, null);
     }
 
-    public IntegrationRouteBuilder(String configurationUri, Collection<IntegrationStepHandler> handlers, boolean logging) {
+    public IntegrationRouteBuilder(String configurationUri, Collection<IntegrationStepHandler> handlers, ActivityTracker activityTracker) {
         this.configurationUri = configurationUri;
         this.resources = new HashSet<>();
 
@@ -93,7 +97,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         this.stepHandlerList.add(new LogStepHandler());
         this.stepHandlerList.addAll(handlers);
 
-        this.loggingEnabled = logging;
+        this.activityTracker = activityTracker;
     }
 
     protected Integration loadIntegration() throws IOException {
@@ -111,7 +115,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return integration;
     }
 
-    @SuppressWarnings("PMD")
     @Override
     public void configure() throws Exception {
         final Integration integration = loadIntegration();
@@ -121,77 +124,84 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             return;
         }
 
-        ProcessorDefinition route = configureRouteScheduler(integration);
+        ProcessorDefinition parent = configureRouteScheduler(integration);
 
         for (int i = 0; i < steps.size(); i++) {
             final Step step = steps.get(i);
+            final String stepIndex = Integer.toString(i + 1);
+            final String stepId = step.getId().orElseGet(KeyGenerator::createKey);
             final IntegrationStepHandler handler = findHandler(step);
-
-            if (route == null && !(handler instanceof IntegrationStepHandler.Consumer)) {
-                throw new IllegalStateException("The handler for step kind " + step.getKind() + " is not a consumer");
-            }
 
             // Load route fragments eventually defined by extensions.
             loadFragments(step);
 
-            // If a step id is present, then we need to log the step.
-            StepStartTracker startTracker = null;
-            if (loggingEnabled && route != null && step.getId().isPresent()) {
-                startTracker = new StepStartTracker(step.getId().get());
-                route = route.process(startTracker);
-            }
-
-            final String index = Integer.toString(i + 1);
-            final Optional<ProcessorDefinition> definition = handler.handle(step, route, this, index);
-
-            if (route == null && definition.isPresent()) {
-                definition.filter(RouteDefinition.class::isInstance)
-                    .map(RouteDefinition.class::cast)
-                    .map(rd -> rd.getInputs().get(0))
-                    .ifPresent(rd -> {
-                        step.getId().ifPresent(rd::id);
-                    });
-
-                route = definition.get();
-                integration.getId().ifPresent(route::setId);
-            } else {
-                route = definition.map(rd -> {
-                    step.getId().ifPresent(rd::id);
-                    return rd;
-                }).orElse(route);
-            }
-
-            route = handleConnectorSplit(step, route, index).map(rd -> {
-                step.getId().ifPresent(id -> rd.id(id + "-split"));
-                return rd;
-            }).orElse(route);
-
-            if (route != null) {
-                route = route.process(new OutMessageCaptureProcessor(step));
-                if (step.getId().isPresent()) {
-                    route.id(step.getId().get() + "-capture");
+            if (parent == null) {
+                if (!(handler instanceof IntegrationStepHandler.Consumer)) {
+                    throw new IllegalStateException("The handler for step kind " + step.getKind() + " is not a consumer");
                 }
 
-                if (startTracker != null) {
-                    route = route.process(StepDoneTracker.INSTANCE);
+                Optional<ProcessorDefinition> definition = handler.handle(step, null, this, stepIndex);
+                if (definition.isPresent()) {
+                    parent = definition.get();
+                    parent = configureRouteDefinition(parent, stepId);
+                    parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
+                    parent = configureConnectorSplit(step, parent, stepIndex).orElse(parent);
+                    parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                }
+            } else {
+                parent = configureRouteDefinition(parent, stepId);
+                if (i > 0) {
+                    // If parent is not null and this is the first step, a scheduler
+                    // has been created as route initiator so d'ont include the
+                    // first step in activity logging.
+                    parent = createPipeline(parent, stepId);
+                }
+
+                parent = handler.handle(step, parent, this, stepIndex).orElse(parent);
+
+                Optional<Step> splitStep = getConnectorSplitAsStep(step);
+                if (splitStep.isPresent()) {
+                    if (i > 0) {
+                        if (parent instanceof PipelineDefinition) {
+                            parent = parent.end();
+                        } else if (parent instanceof ExpressionNode) {
+                            parent = parent.endParent();
+                        }
+                    }
+
+                    parent = new SplitStepHandler().handle(splitStep.get(), parent, this, stepIndex).orElse(parent);
+                    parent = parent.process(new OutMessageCaptureProcessor());
+                } else {
+                    if (parent instanceof PipelineDefinition) {
+                        parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                        parent = parent.end();
+                    } else if (parent instanceof ExpressionNode) {
+                        parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                        parent = parent.endParent();
+                    } else {
+                        parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                    }
                 }
             }
         }
-
     }
 
-    // Visibility changed for test purpose.
-    protected IntegrationStepHandler findHandler(Step step) {
-        for (int i = 0; i < stepHandlerList.size(); i++) {
-            IntegrationStepHandler handler = stepHandlerList.get(i);
+    private ProcessorDefinition configureRouteDefinition(ProcessorDefinition definition, String stepId) {
+        if (definition instanceof RouteDefinition) {
+            RouteDefinition rd = (RouteDefinition)definition;
 
-            if (handler.canHandle(step)) {
-                LOGGER.debug("Step kind: {}, handler: {}", step.getStepKind(), handler.getClass().getName());
-                return handler;
-            }
+            rd.id(stepId);
+            rd.routePolicy(new ActivityTrackingPolicy(activityTracker));
+            rd.getInputs().get(0).id(stepId);
         }
 
-        throw new IllegalStateException("Unsupported step kind: " + step.getStepKind());
+        return definition;
+    }
+
+    private ProcessorDefinition<PipelineDefinition> createPipeline(ProcessorDefinition parent, String stepId) {
+        return parent.pipeline()
+            .id(String.format("step:%s", stepId))
+            .setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
     }
 
     /**
@@ -225,7 +235,26 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return null;
     }
 
-    private Optional<ProcessorDefinition> handleConnectorSplit(Step step, ProcessorDefinition route, String index) {
+    private Optional<Step> getConnectorSplitAsStep(Step step) {
+        if (step.getAction().filter(ConnectorAction.class::isInstance).isPresent()) {
+            final ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
+            final ConnectorDescriptor descriptor = action.getDescriptor();
+
+            if (descriptor.getSplit().isPresent()) {
+                final Split split = descriptor.getSplit().get();
+                final Step.Builder splitBuilder = new Step.Builder().stepKind(StepKind.split);
+
+                split.getLanguage().ifPresent(s -> splitBuilder.putConfiguredProperty("language", s));
+                split.getExpression().ifPresent(s -> splitBuilder.putConfiguredProperty("expression", s));
+
+                return Optional.of(splitBuilder.build());
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    private Optional<ProcessorDefinition> configureConnectorSplit(Step step, ProcessorDefinition route, String index) {
         if (step.getAction().filter(ConnectorAction.class::isInstance).isPresent()) {
             final ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
             final ConnectorDescriptor descriptor = action.getDescriptor();
@@ -248,7 +277,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return Optional.empty();
     }
 
-    @SuppressWarnings("PMD")
     private void loadFragments(Step step) {
         if (StepKind.extension != step.getStepKind()) {
             return;
@@ -261,7 +289,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             final String resource = action.getDescriptor().getResource();
 
             if (ObjectHelper.isNotEmpty(resource) && resources.add(resource)) {
-                final Object instance = mandatoryloadResource(context, resource);
+                final Object instance = mandatoryLoadResource(context, resource);
                 final RoutesDefinition definitions = mandatoryConvertToRoutesDefinition(resource, instance);
 
                 LOGGER.debug("Resolved resource: {} as {}", resource, instance.getClass());
@@ -275,8 +303,21 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
     }
 
-    @SuppressWarnings("PMD")
-    private Object mandatoryloadResource(CamelContext context, String resource) {
+    // Visibility changed for test purpose.
+    protected IntegrationStepHandler findHandler(Step step) {
+        for (int i = 0; i < stepHandlerList.size(); i++) {
+            IntegrationStepHandler handler = stepHandlerList.get(i);
+
+            if (handler.canHandle(step)) {
+                LOGGER.debug("Step kind: {}, handler: {}", step.getStepKind(), handler.getClass().getName());
+                return handler;
+            }
+        }
+
+        throw new IllegalStateException("Unsupported step kind: " + step.getStepKind());
+    }
+
+    private Object mandatoryLoadResource(CamelContext context, String resource) {
         Object instance = null;
 
         if (resource.startsWith("classpath:")) {
@@ -299,7 +340,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return instance;
     }
 
-    @SuppressWarnings("PMD")
     private RoutesDefinition mandatoryConvertToRoutesDefinition(String resource, Object instance)  {
         final RoutesDefinition definitions;
 

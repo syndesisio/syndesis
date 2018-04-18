@@ -21,23 +21,30 @@ import org.apache.camel.spi.LogListener;
 import org.apache.camel.util.CamelLogger;
 import org.slf4j.Marker;
 
-import static io.syndesis.integration.runtime.util.JsonSupport.toJsonObject;
-
 public class IntegrationLoggingListener implements LogListener {
-    @SuppressWarnings("PMD.SystemPrintln")
+    private final ActivityTracker tracker;
+
+    public IntegrationLoggingListener(ActivityTracker tracker) {
+        this.tracker = tracker;
+    }
+
     @Override
     public String onLog(Exchange exchange, CamelLogger camelLogger, String message) {
+        if (tracker == null) {
+            return message;
+        }
+
         final String activityId = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
 
         if (activityId != null) {
             final Marker marker = camelLogger.getMarker();
             final String step = marker != null ? marker.getName() : "null";
 
-            System.out.println(toJsonObject(
+            tracker.track(
                 "exchange", activityId,
                 "step", step,
                 "id", KeyGenerator.createKey(),
-                "message", message)
+                "message", message
             );
         }
 
