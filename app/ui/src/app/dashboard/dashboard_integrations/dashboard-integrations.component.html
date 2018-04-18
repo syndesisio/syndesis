@@ -7,8 +7,7 @@
       </div>
       <h1>{{ 'dashboard.integrations.heading' | synI18n }}</h1>
       <p>{{ 'dashboard.integrations.empty-state-txt' | synI18n }}</p>
-      <button class="btn btn-primary"
-              [routerLink]="['/integrations/create']">{{ 'dashboard.integrations.create-btn-txt' | synI18n }}</button>
+      <button class="btn btn-primary" [routerLink]="['/integrations/create']">{{ 'dashboard.integrations.create-btn-txt' | synI18n }}</button>
     </div>
 
     <!-- Integrations Row not empty state -->
@@ -20,20 +19,14 @@
           <div class="card-pf">
             <div class="card-pf-heading">
               <p class="card-pf-heading-details">
-                {{ 'last-n-items' | synI18n: [
-                  ('30' | synI18n),
-                  (('days' | synI18n) | lowercase)
-                ] }}
+                {{ 'last-n-items' | synI18n: [ ('30' | synI18n), (('days' | synI18n) | lowercase) ] }}
               </p>
               <h2 class="card-pf-title">
-                {{ 'top-n-items' | synI18n: [
-                  ('5' | synI18n),
-                  ('integrations.integrations' | synI18n)
-                ] }}
+                {{ 'top-n-items' | synI18n: [ ('5' | synI18n), ('integrations.integrations' | synI18n) ] }}
               </h2>
             </div>
             <div class="card-pf-body">
-              <syndesis-integration-list [integrations]="integrations.slice(0, 5)"></syndesis-integration-list>
+              <syndesis-integration-list [integrations]="integrations.slice(0, 5)" complete="true"></syndesis-integration-list>
             </div>
           </div>
         </div>
@@ -61,20 +54,17 @@
               </h2>
             </div>
             <div class="card-pf-body">
-              <div class="row"
-                   *ngFor="let integration of integrations; let i=index">
-                <div class="update col-xs-12"
-                     *ngIf="i<5"
-                     (click)="goto(integration)">
+              <div class="row" *ngFor="let integration of integrations; let i=index">
+                <div class="update col-xs-12" *ngIf="i<5" (click)="goto(integration)">
                   <div class="col-sm-5">
                     <a [routerLink]=" ['/integrations', integration.id] ">
-                  {{ integration.name }}
-                </a>
+                      {{ integration.name }}
+                    </a>
                   </div>
                   <div class="col-sm-3">
                     <span [ngClass]="'label ' + getLabelClass(integration)">
-                  {{ integration.currentState }}
-                </span>
+                      {{ integration.currentState }}
+                    </span>
                   </div>
                   <div class="col-sm-4">
                     {{ integration.lastUpdated | date:'d MMM HH:MM' }}
@@ -90,7 +80,5 @@
   </div>
 
   <!-- Connections -->
-  <syndesis-dashboard-connections [connections]="connections"
-  [loading]="connectionsLoading"
-  (selectedConnection)="selectedConnection($event)"></syndesis-dashboard-connections>
+  <syndesis-dashboard-connections [connections]="connections" [loading]="connectionsLoading" (selectedConnection)="selectedConnection($event)"></syndesis-dashboard-connections>
 </syndesis-loading>
