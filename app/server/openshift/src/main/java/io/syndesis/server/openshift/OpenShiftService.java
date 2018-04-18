@@ -96,8 +96,9 @@ public interface OpenShiftService {
      * Checks if the deployment (Deployment and Build configurations, Image Streams etc) is scaled.
      * @param name of the deployment to delete
      * @param desiredReplicas how many replicas should be running for this method to return true
+     * @param labels a set of labels that need to be match.
      */
-    boolean isScaled(String name, int desiredReplicas);
+    boolean isScaled(String name, int desiredReplicas, Map<String, String> labels);
 
     /**
      * Check whether a given build is failed
