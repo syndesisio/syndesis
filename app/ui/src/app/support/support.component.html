@@ -13,15 +13,15 @@
       <div *ngIf="version$ | async as versionInfo">
         <dl class="dl-horizontal" *ngIf="versionInfo.version">
           <dt>{{ 'shared.project.name' | synI18n }}:</dt>
-          <dd>{{ versionInfo.version }}</dd>
+          <dd id="productVersion">{{ versionInfo.version }}</dd>
         </dl>
         <dl class="dl-horizontal" *ngIf="versionInfo['build-id']">
           <dt>{{ 'support.buildid' | synI18n }}:</dt>
-          <dd>{{ versionInfo['build-id'] }}</dd>
+          <dd id="buildID">{{ versionInfo['build-id'] }}</dd>
         </dl>
         <dl class="dl-horizontal" *ngIf="versionInfo['commit-id']">
           <dt>{{ 'support.commitid' | synI18n }}:</dt>
-          <dd>{{ versionInfo['commit-id'] }}</dd>
+          <dd id="commitID">{{ versionInfo['commit-id'] }}</dd>
         </dl>
       </div>
     </syndesis-loading>
