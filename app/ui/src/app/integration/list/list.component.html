@@ -36,11 +36,6 @@
         <div class="list-pf-additional-content integration-status">
           <syndesis-integration-status *ngIf="complete"
                                        [integration]="integration"></syndesis-integration-status>
-          <div class="status not-pending" *ngIf="integration.isDraft">
-            <span class="label label-warning">
-              Draft
-            </span>
-          </div>                                       
           <span *ngIf="integration.board?.notices || integration.board?.warnings || integration.board?.errors">
             <span class="pficon pficon-warning-triangle-o"></span>
             Configuration Required
