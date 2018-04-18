@@ -4,6 +4,7 @@
     name: syndesis-server
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-server
 - apiVersion: v1
   kind: ServiceAccount
@@ -11,12 +12,14 @@
     name: syndesis-integration
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-server
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-server
     name: syndesis-server
   spec:
@@ -32,6 +35,7 @@
   metadata:
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-server
     name: syndesis-server
   spec:
@@ -51,6 +55,7 @@
       metadata:
         labels:
           app: syndesis
+          type: infrastructure
           component: syndesis-server
           deploymentconfig: syndesis-server
       spec:
@@ -153,6 +158,7 @@
       io.syndesis/upgrade-mode: keep
     labels:
       app: syndesis
+      type: infrastructure
       component: syndesis-server
     name: syndesis-server-config
   data:

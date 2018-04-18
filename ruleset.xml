@@ -5,9 +5,6 @@
   <rule ref="rulesets/java/sunsecure.xml/ArrayIsStoredDirectly">
     <priority>1</priority>
   </rule>
-  <rule ref="rulesets/java/design.xml/NonStaticInitializer">
-    <priority>3</priority>
-  </rule>
   <rule ref="rulesets/java/controversial.xml/OneDeclarationPerLine">
     <priority>3</priority>
   </rule>

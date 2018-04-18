@@ -17,6 +17,8 @@ package io.syndesis.server.openshift;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +47,12 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenShiftServiceImpl.class);
 
     private static final String OPENSHIFT_PREFIX = "i-";
+
+    // Labels used for generated objects
+    private static final Map<String, String> INTEGRATION_DEFAULT_LABELS = Collections.unmodifiableMap(new HashMap<String, String>() {{
+        put("type", "integration");
+        put("app", "syndesis");
+    }});
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
@@ -174,6 +182,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         openShiftClient.imageStreams().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
                 .withName(name)
+                .addToLabels(INTEGRATION_DEFAULT_LABELS)
             .endMetadata()
             .done();
     }
@@ -190,6 +199,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                 .withName(name)
                 .addToAnnotations(deploymentData.getAnnotations())
                 .addToLabels(deploymentData.getLabels())
+                .addToLabels(INTEGRATION_DEFAULT_LABELS)
             .endMetadata()
             .withNewSpec()
                 .withReplicas(1)
@@ -206,6 +216,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                     .withNewMetadata()
                         .addToLabels("integration", name)
                         .addToLabels(COMPONENT_LABEL, "integration")
+                        .addToLabels(INTEGRATION_DEFAULT_LABELS)
                         .addToLabels(deploymentData.getLabels())
                         .addToAnnotations(deploymentData.getAnnotations())
                         .addToAnnotations("prometheus.io/scrape", "true")
@@ -266,6 +277,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                 .withName(name)
                 .addToAnnotations(deploymentData.getAnnotations())
                 .addToLabels(deploymentData.getLabels())
+                .addToLabels(INTEGRATION_DEFAULT_LABELS)
             .endMetadata()
             .withNewSpec()
                 .withRunPolicy("SerialLatestOnly")
