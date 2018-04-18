@@ -143,7 +143,7 @@ class PodLogMonitor implements Consumer<InputStream> {
             }
 
             // drop really long lines to avoid blowing up our memory.
-            if (line.size() > 1024 * 4) {
+            if (line.size() > 1024 * 10) {
                 line.reset();
             }
         }
