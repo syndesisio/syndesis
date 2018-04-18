@@ -17,6 +17,7 @@ package io.syndesis.server.openshift;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,10 +49,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     private static final String OPENSHIFT_PREFIX = "i-";
 
     // Labels used for generated objects
-    Map<String, String> INTEGRATION_DEFAULT_LABELS = new HashMap<String, String>() {{
+    private static final Map<String, String> INTEGRATION_DEFAULT_LABELS = Collections.unmodifiableMap(new HashMap<String, String>() {{
         put("type", "integration");
         put("app", "syndesis");
-    }};
+    }});
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
