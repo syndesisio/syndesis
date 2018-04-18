@@ -23,6 +23,8 @@ import io.syndesis.server.controller.StateUpdate;
 import io.syndesis.server.openshift.OpenShiftService;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +34,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class UnpublishHandler extends BaseHandler implements StateChangeHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(UnpublishHandler.class);
 
     UnpublishHandler(OpenShiftService openShiftService) {
         super(openShiftService);
@@ -54,9 +58,10 @@ public class UnpublishHandler extends BaseHandler implements StateChangeHandler 
         labels.put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, String.valueOf(integrationDeployment.getVersion()));
 
         List<DeploymentConfig> deployments = openShiftService().getDeploymentsByLabel(labels);
-        List<DeploymentConfig> undeploying = deployments.stream().filter(d -> d.getSpec().getReplicas() == 0).collect(Collectors.toList());
-        if (!undeploying.isEmpty()) {
+        Boolean isDeployed = !deployments.stream().filter(d -> d.getSpec().getReplicas() != 0).collect(Collectors.toList()).isEmpty();
+        if (isDeployed) {
           try {
+              LOG.info("Undeploying integration deployment:{} version:{}", integrationDeployment.getSpec().getName(), integrationDeployment.getVersion());
              openShiftService().scale(integrationDeployment.getSpec().getName(), labels, 0, 1, TimeUnit.MINUTES);
            } catch (InterruptedException e) {
              Thread.currentThread().interrupt();
@@ -64,8 +69,8 @@ public class UnpublishHandler extends BaseHandler implements StateChangeHandler 
            }
          }
 
-        List<DeploymentConfig> deployed = deployments.stream().filter(d -> d.getStatus().getAvailableReplicas() != 0).collect(Collectors.toList());
-        if(deployed.isEmpty()){
+        Boolean isUndeployed = !deployments.stream().filter(d -> d.getStatus().getAvailableReplicas() == 0).collect(Collectors.toList()).isEmpty();
+        if(isUndeployed){
            currentState = IntegrationDeploymentState.Unpublished;
         }
 

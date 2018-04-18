@@ -30,12 +30,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import io.syndesis.server.openshift.OpenShiftService;
+import java.util.HashMap;
+import io.syndesis.common.util.Labels;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -141,9 +144,9 @@ public class IntegrationController {
     }
 
     private void scanIntegrationsForWork() {
+        LOG.info("Checking integrations for their status.");
         executor.execute(() -> {
             dataManager.fetchIds(IntegrationDeployment.class).forEach(id -> {
-                LOG.info("Checking integrations for their status.");
                 checkIntegrationStatusIfNotAlreadyInProgress(id);});
         });
     }
@@ -255,17 +258,18 @@ public class IntegrationController {
         return desiredState.equals(integrationDeployment.getCurrentState());
     }
 
+
     private IntegrationDeploymentState determineState(IntegrationDeployment integrationDeployment) {
-        if (!openShiftService.exists(integrationDeployment.getSpec().getName()) || !openShiftService.isScaled(integrationDeployment.getSpec().getName(), 1)) {
+        Map<String, String> labels = new HashMap<>();
+        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationDeployment.getIntegrationId().get()));
+        labels.put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, String.valueOf(integrationDeployment.getVersion()));
+
+        if (!openShiftService.exists(integrationDeployment.getSpec().getName()) || !openShiftService.isScaled(integrationDeployment.getSpec().getName(), 1, labels)) {
             return IntegrationDeploymentState.Unpublished;
-        } else if (openShiftService.isScaled(integrationDeployment.getSpec().getName(), 1)) {
+        } else {
             return IntegrationDeploymentState.Published;
         }
-        else {
-          return IntegrationDeploymentState.Pending;
-        }
     }
-
 
     /**
      * Re-conciliates the state of the deployment between the database and Openshift.
@@ -273,16 +277,13 @@ public class IntegrationController {
      * For example: Deleted or Scaled down DeploymentConfig.
      */
     private IntegrationDeployment reconcileDeployment(IntegrationDeployment integrationDeployment) {
-        LOG.info("Reconciling integration:{}", integrationDeployment.getSpec().getName());
         IntegrationDeploymentState actualState = determineState(integrationDeployment);
-        if (actualState == integrationDeployment.getCurrentState()) {
-            return integrationDeployment;
-        }
-
-        if (actualState == IntegrationDeploymentState.Unpublished) {
+        LOG.debug("Actual state: {}, Persisted state: {}, Desired state: {}", actualState, integrationDeployment.getCurrentState(), integrationDeployment.getTargetState());
+        //We also need to compare with current state to make sure we only call the unpublished() once. Calling it multiple times, might loose the steps perfromed, causing an infinite loop.
+        if (actualState == IntegrationDeploymentState.Unpublished && actualState != integrationDeployment.getCurrentState()) {
             return integrationDeployment.unpublished();
+        } else {
+          return integrationDeployment.withCurrentState(actualState);
         }
-
-        return integrationDeployment;
     }
 }

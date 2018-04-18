@@ -203,7 +203,10 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
     }
 
     public boolean isRunning(IntegrationDeployment integrationDeployment) {
-        return openShiftService().isScaled(integrationDeployment.getSpec().getName(), 1);
+        Map<String, String> labels = new HashMap<>();
+        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationDeployment.getIntegrationId().get()));
+        labels.put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, String.valueOf(integrationDeployment.getVersion()));
+        return openShiftService().isScaled(integrationDeployment.getSpec().getName(), 1, labels);
     }
 
     private static String propsToString(Properties data) {

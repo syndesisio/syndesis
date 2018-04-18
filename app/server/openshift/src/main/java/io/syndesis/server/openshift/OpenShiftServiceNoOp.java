@@ -61,7 +61,7 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     }
 
     @Override
-    public boolean isScaled(String name, int nrReplicas) {
+    public boolean isScaled(String name, int nrReplicas, Map<String, String> labels) {
         return false;
     }
 

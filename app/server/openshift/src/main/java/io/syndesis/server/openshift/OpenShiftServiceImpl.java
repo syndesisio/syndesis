@@ -126,10 +126,15 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
 
     @Override
-    public boolean isScaled(String name, int desiredReplicas) {
+    public boolean isScaled(String name, int desiredReplicas, Map<String, String> labels) {
         String sName = openshiftName(name);
-        DeploymentConfig dc = openShiftClient.deploymentConfigs().withName(sName).get();
+        List<DeploymentConfig> deploymentConfigs = getDeploymentsByLabel(labels);
+        if (deploymentConfigs.isEmpty()) {
+          return false;
+        }
 
+
+        DeploymentConfig dc = deploymentConfigs.get(0);
         int allReplicas = 0;
         int availableReplicas = 0;
         if (dc != null && dc.getStatus() != null) {
