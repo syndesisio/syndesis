@@ -24,6 +24,7 @@ import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.apache.camel.util.ObjectHelper;
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class MqttVerifierExtension extends DefaultComponentVerifierExtension {
@@ -56,13 +57,24 @@ public class MqttVerifierExtension extends DefaultComponentVerifierExtension {
 
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
         String brokerUrl = (String) parameters.get("brokerUrl");
+        String username = (String) parameters.get("username");
+        String password = (String) parameters.get("password");
 
         if (ObjectHelper.isNotEmpty(brokerUrl)) {
             try {
                 // Create MQTT client
-                MqttClient client = new MqttClient(brokerUrl, MqttClient.generateClientId());
-                client.connect();
-                client.disconnect();
+            	if (ObjectHelper.isEmpty("username") && ObjectHelper.isEmpty("password")) {
+                    MqttClient client = new MqttClient(brokerUrl, MqttClient.generateClientId());
+                    client.connect();
+                    client.disconnect();
+            	} else {
+            		MqttClient client = new MqttClient(brokerUrl, MqttClient.generateClientId());
+            		MqttConnectOptions connOpts = new MqttConnectOptions();
+            		connOpts.setUserName(username);
+            		connOpts.setPassword(password.toCharArray());
+                    client.connect(connOpts);
+                    client.disconnect();
+            	}
             } catch (MqttException e) {
                 builder.error(
                     ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Unable to connect to MQTT broker")

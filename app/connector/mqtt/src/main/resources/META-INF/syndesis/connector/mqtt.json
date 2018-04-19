@@ -27,8 +27,51 @@
             "deprecated": false,
             "secret": false,
             "labelHint": "MQTT broker URL",
-            "placeholder": "eg 'tcp://localhost:1833'"
-        }
+            "placeholder": "eg 'tcp://localhost:1833'",
+            "order": "1"
+        },
+        "username": {
+            "kind": "property",
+            "displayName": "User Name",
+            "group": "security",
+            "label": "common,security",
+            "required": false,
+            "componentProperty": true,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "deprecated": false,
+            "secret": false,
+            "labelHint": "Access the broker with this user’s authorization credentials.",
+            "order": "2"
+        },
+        "password": {
+            "kind": "property",
+            "displayName": "Password",
+            "group": "security",
+            "label": "common,security",
+            "required": false,
+            "componentProperty": true,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "deprecated": false,
+            "secret": true,
+            "labelHint": "Password for the specified user account.",
+            "order": "3"
+        },
+        "clientId": {
+            "kind": "property",
+            "displayName": "Client ID",
+            "group": "security",
+            "label": "common,security",
+            "required": false,
+            "componentProperty": true,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "deprecated": false,
+            "secret": false,
+            "labelHint": "MQTT client Identifier",
+            "order": "4"
+       }
     },
     "actions": [
         {
