@@ -11,6 +11,8 @@ import {
   FileItem,
   ParsedResponseHeaders
 } from 'ng2-file-upload';
+import {environment} from "../../../environments/environment";
+import {HttpXsrfTokenExtractor} from "@angular/common/http";
 
 @Component({
   selector: 'syndesis-integration-list-page',
@@ -44,6 +46,7 @@ export class IntegrationListPage implements OnInit {
     private modalService: ModalService,
     private integrationSupportService: IntegrationSupportService,
     private integrationStore: IntegrationStore,
+    private tokenExtractor: HttpXsrfTokenExtractor,
     public notificationService: NotificationService,
   ) {
     this.integrations$ = integrationStore.list;
@@ -54,6 +57,12 @@ export class IntegrationListPage implements OnInit {
     this.integrationStore.loadAll();
     this.uploader = new FileUploader({
       url: this.integrationSupportService.importIntegrationURL(),
+      headers: [
+        {
+          name: environment.xsrf.headerName,
+          value: this.tokenExtractor.getToken() || environment.xsrf.defaultTokenValue,
+        }
+      ],
       disableMultipart: true,
       autoUpload: true
     });

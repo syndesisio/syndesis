@@ -42,6 +42,15 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private static final String[] COMMON_NON_SECURED_PATHS = {
+        "/api/v1/swagger.*",
+        "/api/v1/index.html",
+        "/api/v1/internal/swagger.*",
+        "/api/v1/internal/index.html",
+        "/api/v1/version",
+        "/health"
+    };
+
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) {
         authenticationManagerBuilder.authenticationProvider(authenticationProvider());
@@ -56,16 +65,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .addFilter(new AnonymousAuthenticationFilter("anonymous"))
             .authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .antMatchers("/api/v1/swagger.*").permitAll()
-            .antMatchers("/api/v1/index.html").permitAll()
-            .antMatchers("/api/v1/internal/swagger.*").permitAll()
-            .antMatchers("/api/v1/internal/index.html").permitAll()
-            .antMatchers("/api/v1/version").permitAll()
+            .antMatchers(COMMON_NON_SECURED_PATHS).permitAll()
             .antMatchers(HttpMethod.GET, "/api/v1/credentials/callback").permitAll()
             .antMatchers("/api/v1/**").hasRole("AUTHENTICATED")
             .anyRequest().permitAll();
 
-        http.csrf().disable();
+        http.csrf()
+            .ignoringAntMatchers(COMMON_NON_SECURED_PATHS)
+            .ignoringAntMatchers("/api/v1/credentials/callback")
+            .ignoringAntMatchers("/api/v1/atlas/**")
+            .csrfTokenRepository(new SyndesisCsrfRepository());
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
