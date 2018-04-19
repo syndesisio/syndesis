@@ -280,6 +280,7 @@ public abstract class BaseITCase {
         }
         headers.set("X-Forwarded-User", "someone_important");
         headers.set("X-Forwarded-Access-Token", token);
+        headers.set("SYNDESIS-XSRF-TOKEN", "awesome");
     }
 
     static final class YamlJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
