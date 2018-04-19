@@ -15,7 +15,7 @@ EOT
 
 stop_all::run() {
     local deployments=$(syndesis_deployments | grep -v syndesis-db)
-    echo "     - Stopping deployments $deployments"
+    echo "      - Stopping deployments $deployments"
     scale_deployments 0 ${deployments}
 }
 

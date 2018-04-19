@@ -1,0 +1,129 @@
+#!/bin/bash
+
+update_resources::label() {
+  echo "Update resources"
+}
+
+update_resources::doc() {
+  cat <<EOT
+This command first will call out to migraton scripts for updating stateful resources (ConfigMap, Secrets, PersistentVolumeClaims).
+
+This part is similar to the DB migration, except that upgrade shell scripts are used for each version:
+
+.Example dynamic upgrade
+
+```
+/migration/resource/
+    1.3/
+      10-update-serverconfig.sh
+      20-update-uiconfig.sh
+    1.4/
+      ...
+```
+
+Again, as for JsonDB upgrades, these scripts are specific for a _target_ version.
+In general, these upgrades scripts are used to add default values for new features (if not present) or change defaults.
+
+Within the scripts you are free to do what you want to do, but typically this will be tweaking of some scripts
+
+NOTE: No resources from generated integration pods are upgraded. This needs to be done as part of the <<upgrade-integration,Integration Upgrade>> process.
+
+After this, the upgrade of the new version with an `oc replace` for all other resource objects extracted <<step-create-upgrade-json, previously>>.
+This command will automatically spin up new versions (or the same if unchanged in this release) for all deployments.
+
+.Rollback
+Restore all the resource objects backuped in a previous step
+EOT
+}
+
+# All resources which should be update by force (delete/create) because
+# an in-place update is not possible
+# * Service and Route can't be replaced because there are immutable datat in the spec (like clusterip)
+# * ServiceAccounts are force replace so that hoopefully the associated secrets are cleaned up, too.
+# * DeploymentConfig are added as it looks like that they leave orphaned replication controllers
+#   when patched in place.
+FORCE_UPGRADE_RESOURCES="Service Route ServiceAccount DeploymentConfig"
+
+# Document which resource shouldn't be updated
+DONT_TOUCH_RESOURCES="ConfigMap Secret PersistentVolumeClaim"
+
+update_resources::run() {
+    local backupdir=$1
+    local workdir=$2
+    local tag=$3
+    local migrationdir=$4
+
+    run_dynamic_update_scripts "$backupdir" "$workdir" "$tag" "$migrationdir"
+    apply_resources "$workdir/resources" "$DONT_TOUCH_RESOURCES"
+}
+
+update_resources::rollback() {
+    local backupdir=${1}
+    local workdir=${2}
+    local cleanup=${3:-}
+
+    restore_resources "$backupdir/resources"
+}
+
+# =========================================================================================
+
+apply_resources() {
+    local resource_dir=${1}
+    local skip_resources=${2:-}
+
+    for kind in $(ls $resource_dir); do
+      echo -n "      - $kind: "
+      if [ -n "${skip_resources}" ] && [ -z "${skip_resources/*${kind}*/}" ]; then
+          echo "skipped"
+      else
+          local extra_opt=""
+          if [ -z "${FORCE_UPGRADE_RESOURCES/*${kind}*/}" ]; then
+            echo "force update (delete/create)"
+            extra_opt="--force"
+          else
+            echo "update (replace)"
+          fi
+          for resource in $(ls $resource_dir/$kind); do
+              echo "        * $(basename $resource .json)"
+              local result
+              local rc
+              set +e
+              result=$(oc replace $extra_opt -f "$resource_dir/$kind/$resource" 2>&1)
+              rc=$?
+              set -e
+              if [ $rc -gt 0 ]; then
+                if [ -z "${result/*not found*/}" ]; then
+                    echo "          not existing --> trying to create"
+                    oc create -f "$resource_dir/$kind/$resource"
+                else
+                    echo "$result"
+                    exit 1
+                fi
+              fi
+          done
+      fi
+    done
+
+}
+
+run_dynamic_update_scripts() {
+    local backupdir=$1
+    local workdir=$2
+    local tag=$3
+    local migrationdir=$4
+
+    if [ -z "${migrationdir}" ]; then
+        return
+    fi
+
+    local resourcedir=${migrationdir}/resource
+    if [ ! -d ${resourcedir}/${tag} ]; then
+        echo "      - No dynamic update scripts found for ${tag} in ${resourcedir}"
+        return
+    fi
+
+    for script in $(ls ${resourcedir}/${tag}/*); do
+      echo "      - Executing $tag/$(basename $script)"
+      source ${script}
+    done
+}
