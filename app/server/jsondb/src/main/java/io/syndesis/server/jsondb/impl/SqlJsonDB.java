@@ -15,6 +15,12 @@
  */
 package io.syndesis.server.jsondb.impl;
 
+import static io.syndesis.server.jsondb.impl.JsonRecordSupport.STRING_VALUE_PREFIX;
+import static io.syndesis.server.jsondb.impl.JsonRecordSupport.validateKey;
+import static io.syndesis.server.jsondb.impl.Strings.prefix;
+import static io.syndesis.server.jsondb.impl.Strings.suffix;
+import static io.syndesis.server.jsondb.impl.Strings.trimSuffix;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -37,16 +43,6 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import io.syndesis.common.util.EventBus;
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.common.util.SyndesisServerException;
-import io.syndesis.common.util.TransactedEventBus;
-import io.syndesis.server.jsondb.WithGlobalTransaction;
-import io.syndesis.server.jsondb.GetOptions;
-import io.syndesis.server.jsondb.JsonDB;
-import io.syndesis.server.jsondb.JsonDBException;
-import io.syndesis.server.jsondb.impl.expr.SqlExpressionBuilder;
-
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.PreparedBatch;
@@ -64,11 +60,15 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-import static io.syndesis.server.jsondb.impl.JsonRecordSupport.STRING_VALUE_PREFIX;
-import static io.syndesis.server.jsondb.impl.JsonRecordSupport.validateKey;
-import static io.syndesis.server.jsondb.impl.Strings.prefix;
-import static io.syndesis.server.jsondb.impl.Strings.suffix;
-import static io.syndesis.server.jsondb.impl.Strings.trimSuffix;
+import io.syndesis.common.util.EventBus;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.common.util.TransactedEventBus;
+import io.syndesis.server.jsondb.GetOptions;
+import io.syndesis.server.jsondb.JsonDB;
+import io.syndesis.server.jsondb.JsonDBException;
+import io.syndesis.server.jsondb.WithGlobalTransaction;
+import io.syndesis.server.jsondb.impl.expr.SqlExpressionBuilder;
 
 /**
  * Implements the JsonDB via DBI/JDBC
@@ -507,21 +507,23 @@ public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
 
     private int deleteJsonRecords(Handle dbi, String baseDBPath, String like) {
 
-        Deque<String> params = getAllParentPaths(baseDBPath);
-
-        StringBuilder sql = new StringBuilder("DELETE from jsondb where path LIKE ?");
-        if( !params.isEmpty() ) {
-            sql.append(" OR path in ( ")
-               .append(String.join(", ", Collections.nCopies(params.size(), "?")))
-               .append(" )");
+        ArrayList<String> expressions = new ArrayList<>();
+        ArrayList<String> queryParams = new ArrayList<>();
+        for (String p : getAllParentPaths(baseDBPath)) {
+            expressions.add("path = ?");
+            queryParams.add(p);
         }
+        expressions.add("path LIKE ?");
+        queryParams.add(like);
 
-        params.addFirst(like);
-        return dbi.update(sql.toString(), params.toArray());
+        StringBuilder sql = new StringBuilder("DELETE FROM jsondb WHERE ");
+        sql.append(String.join(" OR ", expressions));
+
+        return dbi.update(sql.toString(), queryParams.toArray());
     }
 
     private static Deque<String> getAllParentPaths(String baseDBPath) {
-        Deque<String> params = new ArrayDeque<String>();
+        Deque<String> params = new ArrayDeque<>();
         Pattern compile = Pattern.compile("/[^/]*$");
         String current = trimSuffix(baseDBPath, "/");
         while( true ) {
@@ -529,7 +531,7 @@ public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
             if( current.isEmpty() ) {
                 break;
             }
-            params.add(current+"/");
+            params.addFirst(current+"/");
         }
         return  params;
     }

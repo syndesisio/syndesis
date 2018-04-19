@@ -15,25 +15,6 @@
  */
 package io.syndesis.server.logging.jsondb.controller;
 
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.api.model.PodList;
-import io.fabric8.kubernetes.client.KubernetesClient;
-import io.syndesis.common.util.Json;
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.common.util.DurationConverter;
-import io.syndesis.server.jsondb.GetOptions;
-import io.syndesis.server.jsondb.JsonDB;
-import io.syndesis.server.openshift.OpenShiftService;
-import org.skife.jdbi.v2.DBI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +22,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -49,6 +31,27 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+import org.skife.jdbi.v2.DBI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
+
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.PodList;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.syndesis.common.util.DurationConverter;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.server.jsondb.GetOptions;
+import io.syndesis.server.jsondb.JsonDB;
+import io.syndesis.server.openshift.OpenShiftService;
 
 /**
  * This class tracks pod controller and ingests them into our DB.
@@ -262,8 +265,9 @@ public class ActivityTrackingController implements Closeable {
                     continue;
                 }
 
-                // Start a batch..
-                HashMap<String, Object> batch = new HashMap<>();
+                // Start a batch..  We use a tree map so that records are sorted
+                // to help avoid deadlocks.
+                TreeMap<String, Object> batch = new TreeMap<>();
                 long batchStartTime = System.currentTimeMillis();
                 int eventCounter = 0;
 
