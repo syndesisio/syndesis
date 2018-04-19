@@ -19,10 +19,9 @@ RUN yum install -y "$OPENSHIFT_YUM_REPO" "$OPENJDK_RPM" tree\
  && chmod -R g=u /opt
 
 COPY syndesis.yml /opt/template/
-COPY upgrade.sh /opt/
+COPY upgrade.sh common.sh syndesis-cli.jar /opt/
 COPY steps /opt/steps
 COPY migration /opt/migration
-COPY syndesis-cli.jar /opt
 
 
 ENTRYPOINT [ \
