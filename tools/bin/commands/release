@@ -325,7 +325,7 @@ git_commit_files() {
 }
 
 git_tag_release() {
-    local $release_version=${1}
+    local release_version=${1}
 
     echo "==== Tagging version $release_version"
     git tag -f "$release_version"
