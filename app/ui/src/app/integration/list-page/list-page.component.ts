@@ -11,8 +11,8 @@ import {
   FileItem,
   ParsedResponseHeaders
 } from 'ng2-file-upload';
-import {environment} from "../../../environments/environment";
-import {HttpXsrfTokenExtractor} from "@angular/common/http";
+import { environment } from '../../../environments/environment';
+import { HttpXsrfTokenExtractor } from '@angular/common/http';
 
 @Component({
   selector: 'syndesis-integration-list-page',

@@ -15,8 +15,8 @@ import {
   FileUploaderOptions
 } from 'ng2-file-upload';
 import { IntegrationStore } from '@syndesis/ui/store';
-import {environment} from "../../../../environments/environment";
-import {HttpXsrfTokenExtractor} from "@angular/common/http";
+import { environment } from '../../../../environments/environment';
+import { HttpXsrfTokenExtractor } from '@angular/common/http';
 
 @Component({
   selector: 'syndesis-import-integration-component',
