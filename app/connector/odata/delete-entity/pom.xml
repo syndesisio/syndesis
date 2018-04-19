@@ -27,46 +27,20 @@
   <name>Connector :: OData :: Delete</name>
   <packaging>jar</packaging>
 
-  <dependencyManagement>
-    <dependencies>
-      <!-- Camel BOM -->
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-parent</artifactId>
-        <version>${camel.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <dependencies>
 
     <!-- base component to use for this connector -->
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-olingo4</artifactId>
-    </dependency>
-    <!-- add spring-boot support -->
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-olingo4-starter</artifactId>
+      <version>${camel.version}</version>
     </dependency>
 
     <!-- camel-connector -->
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-connector</artifactId>
-    </dependency>
-
-    <!-- camel and spring boot compiler plugins -->
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>apt</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
+      <version>${camel.version}</version>
     </dependency>
 
     <dependency>
@@ -78,93 +52,25 @@
   </dependencies>
 
   <build>
-    <defaultGoal>install</defaultGoal>
 
     <plugins>
 
-      <!-- turn off jar plugin as we use connector plugin to jar instead -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>${maven-jar-plugin.version}</version>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>connector-support-maven-plugin</artifactId>
+        <version>${project.version}</version>
         <executions>
           <execution>
-            <id>default-jar</id>
-            <phase />
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.0</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.0.1</version>
-        <configuration>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-
-      <!-- generate components meta-data and validate component includes documentation etc -->
-      <plugin>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-package-maven-plugin</artifactId>
-        <version>${camel.version}</version>
-        <executions>
-          <execution>
-            <id>prepare</id>
+            <id>inspections</id>
             <goals>
-              <goal>prepare-components</goal>
-            </goals>
-            <phase>generate-resources</phase>
-          </execution>
-          <execution>
-            <id>validate</id>
-            <goals>
-              <goal>validate-components</goal>
-            </goals>
-            <phase>prepare-package</phase>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- generate connector -->
-      <plugin>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-connector-maven-plugin</artifactId>
-        <version>${camel.version}</version>
-        <executions>
-          <execution>
-            <id>boot</id>
-            <goals>
-              <goal>prepare-spring-boot-auto-configuration</goal>
-            </goals>
-            <configuration>
-              <!-- we done want license headers -->
-              <includeLicenseHeader>false</includeLicenseHeader>
-              <!-- we dont camel.connector as prefix -->
-              <configurationPrefix>false</configurationPrefix>
-            </configuration>
-          </execution>
-          <execution>
-            <id>connector</id>
-            <goals>
-              <goal>jar</goal>
+              <goal>generate-connector-inspections</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
 
     </plugins>
+
   </build>
 
 </project>

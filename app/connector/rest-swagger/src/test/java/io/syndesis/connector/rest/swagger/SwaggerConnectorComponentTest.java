@@ -23,25 +23,25 @@ import java.util.Optional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
+import org.apache.camel.component.rest.swagger.RestSwaggerComponent;
 import org.apache.camel.component.rest.swagger.RestSwaggerEndpoint;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.util.IntrospectionSupport;
 import org.apache.commons.io.IOUtils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootApplication
-@SpringBootTest(properties = {"spring.main.banner-mode = off"})
 public class SwaggerConnectorComponentTest {
 
-    @Autowired
-    private CamelContext camelContext;
+    private final CamelContext camelContext = new DefaultCamelContext();
+
+    @Before
+    public void setupCamelContext() {
+        camelContext.addComponent("rest-swagger-swagger-connector-component", new RestSwaggerComponent());
+    }
 
     @Test
     public void shouldDetermineScheme() {
@@ -103,5 +103,10 @@ public class SwaggerConnectorComponentTest {
         component.addAuthenticationHeadersTo(headers);
 
         assertThat(headers).containsEntry("Authorization", "Bearer the-token");
+    }
+
+    @After
+    public void shutdownCamelContext() throws Exception {
+        camelContext.stop();
     }
 }
