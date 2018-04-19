@@ -69,5 +69,8 @@ replace_template::rollback() {
 update_version() {
   local version=${1}
   local version64="$(echo $version | base64)"
-  oc patch secret syndesis-global-config -p "{\"data\": { \"syndesis\": \"$version64\" }}"
+  local old_version64=$(oc get secret syndesis-global-config -o jsonpath={.data.syndesis})
+  if [ "$version64" != "$old_version64" ]; then
+      oc patch secret syndesis-global-config -p "{\"data\": { \"syndesis\": \"$version64\" }}"
+  fi
 }
