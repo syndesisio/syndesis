@@ -13,7 +13,7 @@ export const environment = Object.freeze({
   xsrf: {
     headerName: 'SYNDESIS-XSRF-TOKEN',
     cookieName: 'SYNDESIS-XSRF-COOKIE',
-    defaultTokenValue: 'awesome',
+    defaultTokenValue: 'awesome'
   },
   config: {
     apiEndpoint: 'http://localhost:8080/api/v1',
