@@ -104,7 +104,7 @@ release::run() {
     update_pom_versions "$topdir" "$release_version" "$maven_opts"
 
     # Make a clean install
-    # mvn_clean_install "$topdir" "$maven_opts"
+    mvn_clean_install "$topdir" "$maven_opts"
 
     # Create templates for the full syndesis version
     generate_templates "$topdir" "$release_version"
