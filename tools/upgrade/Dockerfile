@@ -1,19 +1,23 @@
 FROM centos:7
 
-ARG version=latest 
-ARG OPENSHIFT_YUM_REPO=centos-release-openshift-origin37
-ARG OPENJDK_RPM=java-1.8.0-openjdk-headless
+ARG version=latest
+ARG openshift_yum_repo=centos-release-openshift-origin37
+ARG openjdk_rpm=java-1.8.0-openjdk-headless
 
 WORKDIR /opt
 
 LABEL maintainer="dev@syndesis.io"
 
 ENV KUBECONFIG=/opt/kube-config \
-    SYNDESIS_VERSION=${version} 
+    SYNDESIS_VERSION=${version}
 
 # Install jq & oc
-RUN yum install -y "$OPENSHIFT_YUM_REPO" "$OPENJDK_RPM" tree\
- && yum install -y jq origin-clients \
+RUN yum install -y "$openshift_yum_repo" \
+    yum install -y \
+        "$openjdk_rpm" \
+        "tree" \
+        "jq" \
+        "origin-clients" \
  && mkdir /opt/backup \
  && chgrp -R 0 /opt \
  && chmod -R g=u /opt
