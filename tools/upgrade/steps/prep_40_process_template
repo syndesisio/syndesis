@@ -34,23 +34,29 @@ process_template::run() {
     read_global_config params > ${workdir}/template_params.props
     local new_template=$(template_path)
 
-    [ -d ${workdir}/resources ] || mkdir -p ${workdir}/resources
+    [ -d ${workdir}/resources/all ] || mkdir -p ${workdir}/resources/all
 
     # Process template locally and create individual descriptor files
     oc process -f ${new_template}   --param-file=${workdir}/template_params.props | \
        jq -M -c .items[] | \
-       split -l 1 - ${workdir}/resources/res_
+       split -l 1 - ${workdir}/resources/all/res_
 
     # Iterate and remove all files with an annotation "io.syndesis/upgrade-mode: keep"
     # as these should not be updated
-    for res in ${workdir}/resources/res_*; do
+    for res in ${workdir}/resources/all/res_*; do
         local anno=$(cat $res | jq -r '.metadata.annotations|.["io.syndesis/upgrade-mode"]')
+        local kind=$(cat $res | jq -r '.kind')
         local name=$(cat $res | jq -r '.metadata.name')
+        [ -d ${workdir}/resources/${kind} ] || mkdir -p ${workdir}/resources/${kind}
+
         if [ -n "${anno}" ] && [ "${anno}" = "keep" ]; then
             echo "      - Not updating $name"
-            rm $res
+        else
+            mv $res "${workdir}/resources/${kind}/${name}.json"
         fi
     done
+
+    rm -rf ${workdir}/resources/all
 }
 
 process_template::rollback() {
@@ -59,7 +65,6 @@ process_template::rollback() {
     local cleanup=${3:-}
 
     if [ "$cleanup" = "true" ]; then
-
         remove_resource_backup $backupdir "secret"
     fi
 }

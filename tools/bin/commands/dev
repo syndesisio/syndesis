@@ -1,6 +1,5 @@
 #!/bin/bash
 
-COOKIE1="$HOME/.syndesis_api_cookie"
 
 # helper python command to unescape html entities
 dev::xml_unescape() {
@@ -21,8 +20,9 @@ dev::usage() {
     cat <<"EOT"
     --debug <name>            Setup a port forwarding to <name> pod (default: server)
     --cookie                  Loads a local valid cookie to access Syndesis APIs when using Minishift
-    --refresh                 Used in conjuction with --cookie, forces a refresh of the cookie. 
+    --refresh                 Used in conjuction with --cookie, forces a refresh of the cookie.
                               Ex: curl -k --cookie $(syndesis dev --cookie --refresh)  "https://$(oc get route syndesis  --template={{.spec.host}})/api/v1/connections"
+    --version                 Show running version of cluster
 EOT
 }
 
@@ -32,36 +32,46 @@ extract_and_escape() {
     echo "$variable"
 }
 
-dev::create_api_cookie() {
+create_api_cookie() {
+    local cookie_cached=$1
 
-    
     # second cookie needed because curl flushes old values upon redirect. Might be a bug or some obscure flag missing
-    local cookie2="$(mktemp /tmp/syndesis_cookie.XXX.txt)"
+    local cookie_new="$(mktemp /tmp/syndesis_cookie.XXX.txt)"
     # generate a new user so that it will be asked to approve permissions delegation
     local username="dev$RANDOM"
 
     # clean cookie
-    rm -rf "$COOKIE1"
-    touch "$COOKIE1"
+    [ -f $cookie_cached ] && rm -rf "$cookie_cached"
+    touch "$cookie_cached"
 
     local syndesis_url="$(oc get route syndesis  --template={{.spec.host}})"
     local openshift_ip_and_port="$(oc status | grep "In project" | grep  -Po --color=never '(?<=server https://).*' )"
     # first invocation is needed just to get the redierect url and to define a csrf token
-    local redirect_url="$(curl --write-out "%{url_effective}\n" --location --silent --show-error --output /dev/null --insecure --cookie-jar  "$COOKIE1" -v "https://$syndesis_url" 2>/dev/null )"
+    local redirect_url="$(curl --write-out "%{url_effective}\n" --location --silent --show-error --output /dev/null --insecure --cookie-jar  "$cookie_cached" -v "https://$syndesis_url" 2>/dev/null )"
 
     # isolate required params
     # split on question mark, so we are sure the first part is always the correct url
     local login_url="$(echo $redirect_url | sed -e 's/?/\n/g' | head -n1)"
     # split on question marks or ampersend, than filter on the specific param we are interested into
     local then_url="$(echo $redirect_url | sed -e 's/[?&]/\n/g' | grep "then=" | sed -e 's/then=//' )"
-    local csrf=$(cat "$COOKIE1"  | grep -Po '(?<=\scsrf).*' | awk '{$1=$1;print}')
+    local csrf=$(cat "$cookie_cached"  | grep -Po '(?<=\scsrf).*' | awk '{$1=$1;print}')
 
     # login on OpenShift and save output to delegate_permissions_form location
     local delegate_permissions_form="$(mktemp /tmp/syndesis_permissions.XXX.html)"
-    curl --referer "$redirect_url" --insecure --location  -H "Cookie: csrf=$csrf" --data-urlencode username="$username"  --data-urlencode password="developer" --data-ascii then="$then_url" --data-urlencode csrf="$csrf" --cookie-jar "$cookie2" -i -v -o $delegate_permissions_form "$login_url"  2>/dev/null
+    curl --referer "$redirect_url" \
+         --insecure \
+         --location  \
+         -H "Cookie: csrf=$csrf" \
+         --data-urlencode username="$username"  \
+         --data-urlencode password="developer" \
+         --data-ascii then="$then_url" \
+         --data-urlencode csrf="$csrf" \
+         --cookie-jar "$cookie_new" \
+         -i -v -o $delegate_permissions_form \
+         "$login_url"  2>/dev/null
 
     # move the freshly created "ssn" cookie entry back to the main cookie
-    tail -1 "$cookie2" >> "$COOKIE1"
+    tail -1 "$cookie_new" >> "$cookie_cached"
 
     local then_url=$(extract_and_escape "then" $delegate_permissions_form )
     local csrf=$(extract_and_escape "csrf" $delegate_permissions_form )
@@ -71,7 +81,7 @@ dev::create_api_cookie() {
 
     local scopes=$(grep -Po '(?<=name="scope").*' $delegate_permissions_form | grep -Po '(?<=value=")[^"]+')
     local joined_scopes=""
-    
+
     scopes=(${scopes// / })
     for i in "${!scopes[@]}"
     do
@@ -79,8 +89,21 @@ dev::create_api_cookie() {
     done
 
     # approve permission delegation, weaving all the params in the GET parameters
-    
-    curl --insecure --location --cookie-jar "$COOKIE1" --cookie "$COOKIE1" -i -v --data-urlencode "then=$then_url" --data-urlencode "csrf=$csrf" --data-urlencode "client_id=$client_id" --data-urlencode "user_name=$user_name" --data-urlencode "redirect_uri=$redirect_uri" $joined_scopes --data-urlencode "approve=Allow+selected+permissions"  -H 'dnt: 1'  "https://$openshift_ip_and_port/oauth/authorize/approve" -o /dev/null 2>/dev/null
+
+    curl --insecure \
+         --location \
+         -H 'dnt: 1'  \
+         --cookie-jar "$cookie_cached" \
+         --cookie "$cookie_cached" \
+         --data-urlencode "then=$then_url" \
+         --data-urlencode "csrf=$csrf" \
+         --data-urlencode "client_id=$client_id" \
+         --data-urlencode "user_name=$user_name" \
+         --data-urlencode "redirect_uri=$redirect_uri" \
+         --data-urlencode "approve=Allow+selected+permissions"  \
+         $joined_scopes \
+         -i -v -o /dev/null \
+         "https://$openshift_ip_and_port/oauth/authorize/approve" 2>/dev/null
 }
 
 
@@ -97,14 +120,13 @@ dev::run() {
 
         local pod=$(oc get -o name pod -l component=syndesis-${name})
         oc port-forward ${pod//*\//} 5005:5005
-    fi
-
-    if [ -n "$(hasflag --cookie)" ]; then
-        if [ -n "$(hasflag --refresh)" ]; then
-             dev::create_api_cookie
+    elif [ $(hasflag --cookie) ]; then
+        local cookie_cached="$HOME/.syndesis_api_cookie"
+        if [ ! -f $cookie_cached ] || [ -n "$(hasflag --refresh)" ]; then
+             create_api_cookie $cookie_cached
         fi
-        echo $COOKIE1
+        echo $cookie_cached
+    elif [ $(hasflag --version) ]; then
+        oc get secret syndesis-global-config -o jsonpath={.data.syndesis} | base64 --decode
     fi
 }
-
-

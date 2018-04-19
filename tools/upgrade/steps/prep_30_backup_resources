@@ -1,36 +1,44 @@
 #!/bin/bash
 
 backup_resources::label() {
-  echo "Backup ConfigMaps and Secrets"
+  echo "Backup Resource objects"
 }
 
 
 backup_resources::doc() {
   cat <<EOT
-The next step is to backup _stateful resources_, i.e. `ConfigMap` used by the Syndesis infrastructure pods (_not_ the configmap and secrets used by integration runtime pods).
+The next step is to backup all resources:
 
-The `ConfigMaps` to backupe are curently:
+* ConfigMap
+* Secret
+* DeploymentConfig
+* Service
+* Route
+* RoleBinding
+* ServiceAccount
+* Template
+* PersistenceVolumeClaim
+* BuildConfig
 
-*  `syndesis-atlasmap-config`
-*  `syndesis-server-config`
-*  `syndesis-sampledb-config`
-*  `syndesis-ui-config`
-*  `syndesis-meta-config`
-
-At the time being, there are no `Secrets` required to upgrade.
-
-Also, the OpenShift template for creating syndesis should be backed up.
+Only the resources labeled with `app=syndesis` and `type=infrastructure` are considered.
 
 .Rollback
 As for rollback only a cleanup of the configmap backup files is required (or kept for a later manual reversal).
 EOT
 }
 
+# All resources which should be backed up
+BACKUP_RESOURCES="ConfigMap Secret DeploymentConfig Service Route RoleBinding ServiceAccount Template PersistentVolumeClaim BuildConfig"
+
 backup_resources::run() {
     local backupdir=$1
 
-    backup_resource $backupdir "configmap"
-    backup_resource $backupdir "secret"
+    [ -d "$backupdir/resources" ] && mkdir -p "$backupdir/resources"
+
+    for resource in $BACKUP_RESOURCES; do
+        echo "      - $resource"
+        backup_resource "$backupdir/resources" "$resource"
+    done
 }
 
 backup_resources::rollback() {
@@ -39,8 +47,9 @@ backup_resources::rollback() {
     local cleanup=${3:-}
 
     if [ "$cleanup" = "true" ]; then
-        remove_resource_backup $backupdir "configmap"
-        remove_resource_backup $backupdir "secret"
+      for resource in $BACKUP_RESOURCES; do
+          remove_resource_backup $backupdir "$resource"
+        done
     fi
 }
 
