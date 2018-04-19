@@ -104,4 +104,26 @@ public class SwaggerConnectorComponentTest {
 
         assertThat(headers).containsEntry("Authorization", "Bearer the-token");
     }
+
+    @Test
+    public void shouldSetStatusCodesForRefreshTokenRetry() {
+        final SwaggerConnectorComponent component = new SwaggerConnectorComponent();
+
+        assertThat(component.getRefreshTokenRetryStatuses()).isEmpty();
+
+        component.setRefreshTokenRetryStatuses("");
+        assertThat(component.getRefreshTokenRetryStatuses()).isEmpty();
+
+        component.setRefreshTokenRetryStatuses(null);
+        assertThat(component.getRefreshTokenRetryStatuses()).isEmpty();
+
+        component.setRefreshTokenRetryStatuses("1");
+        assertThat(component.getRefreshTokenRetryStatuses()).isEqualTo("1");
+
+        component.setRefreshTokenRetryStatuses("1,2");
+        assertThat(component.getRefreshTokenRetryStatuses()).isEqualTo("1,2");
+
+        component.setRefreshTokenRetryStatuses(" 1 ,2 , 3");
+        assertThat(component.getRefreshTokenRetryStatuses()).isEqualTo("1,2,3");
+    }
 }

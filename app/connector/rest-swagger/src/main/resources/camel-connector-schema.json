@@ -83,6 +83,15 @@
       "deprecated":false,
       "secret":false
     },
+    "refreshToken":{
+      "kind":"property",
+      "displayName":"OAuth refresh token",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false
+    },
     "username":{
       "kind":"property",
       "displayName":"Username",
@@ -95,6 +104,51 @@
     "password":{
       "kind":"property",
       "displayName":"Password",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false
+    },
+    "clientId":{
+      "kind":"property",
+      "displayName":"OAuth client ID",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false
+    },
+    "clientSecret":{
+      "kind":"property",
+      "displayName":"OAuth client secret",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false
+    },
+    "tokenEndpoint":{
+      "kind":"property",
+      "displayName":"OAuth token endpoint",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false
+    },
+    "authorizeUsingParameters":{
+      "kind":"property",
+      "displayName":"If client id and client secret need to be sent in OAuth requests",
+      "required":false,
+      "type":"boolean",
+      "javaType":"java.lang.Boolean",
+      "deprecated":false,
+      "secret":false
+    },
+    "refreshTokenRetryStatuses":{
+      "kind":"property",
+      "displayName":"Comma separated list of HTTP statuses for which refresh of the access token will be attempted",
       "required":false,
       "type":"string",
       "javaType":"java.lang.String",

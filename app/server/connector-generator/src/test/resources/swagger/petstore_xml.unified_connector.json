@@ -791,6 +791,23 @@
       ],
       "order": 4
     },
+    "refreshToken": {
+      "kind": "property",
+      "displayName": "OAuth Refresh token",
+      "group": "producer",
+      "label": "producer",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [
+        "oauth-refresh-token"
+      ],
+      "deprecated": false,
+      "secret": true,
+      "componentProperty": true,
+      "description": "OAuth Refresh token",
+      "order": 5
+    },
     "authorizationEndpoint": {
       "componentProperty": true,
       "defaultValue": "http://petstore.swagger.io/oauth/dialog",
@@ -807,7 +824,7 @@
       "tags": [
         "oauth-authorization-url"
       ],
-      "order": 5
+      "order": 6
     },
     "tokenEndpoint": {
       "componentProperty": true,
@@ -824,7 +841,7 @@
       "tags": [
         "oauth-access-token-url"
       ],
-      "order": 6
+      "order": 7
     },
     "oauthScopes": {
       "componentProperty": true,
@@ -842,7 +859,7 @@
       "tags": [
         "oauth-scope"
       ],
-      "order": 7
+      "order": 8
     },
     "specification": {
       "componentProperty": true,
