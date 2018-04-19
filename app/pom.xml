@@ -670,7 +670,7 @@
         <configuration>
           <rules combine.children="append">
             <evaluateBeanshell>
-              <message>The Java Virtual Machine running this Maven build is enforcing limited cryptography, please either install Unlimited Strength Jurisdiction Policy Files to this JVM or use a JVM that doesn't enforce this limit</message>
+              <message>Your JVM has limited cryptography, please upgrade to 1.8.0_162 or newer or install Unlimited Strength Jurisdiction Policy Files to this JVM.</message>
               <condition>javax.crypto.Cipher.getMaxAllowedKeyLength("AES") > 128</condition>
             </evaluateBeanshell>
           </rules>
