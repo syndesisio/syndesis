@@ -13,7 +13,7 @@ ENV KUBECONFIG=/opt/kube-config \
 
 # Install jq & oc
 RUN yum install -y "$openshift_yum_repo" \
-    yum install -y \
+ && yum install -y \
         "$openjdk_rpm" \
         "tree" \
         "jq" \
