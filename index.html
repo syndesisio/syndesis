@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-6608-g826f2cde5,</span>
+<span id="revnumber">version 1.1.3-6610-gb6500dff3,</span>
 <span id="revdate">2018-04-20</span>
 </div>
 <div id="toc" class="toc2">
@@ -570,8 +570,9 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#dev-release-preparations">2.7.2. Preparations</a></li>
 <li><a href="#dev-release-steps">2.7.3. Release steps</a></li>
 <li><a href="#_minor_version_templates">2.7.4. Minor Version Templates</a></li>
-<li><a href="#_fuse_online_templates">2.7.5. Fuse Online Templates</a></li>
-<li><a href="#dev-release-troubleshooting">2.7.6. Troubleshooting</a></li>
+<li><a href="#_snapshot_release">2.7.5. Snapshot Release</a></li>
+<li><a href="#_fuse_online_templates">2.7.6. Fuse Online Templates</a></li>
+<li><a href="#dev-release-troubleshooting">2.7.7. Troubleshooting</a></li>
 </ul>
 </li>
 <li><a href="#syndesis-install">2.8. syndesis install</a>
@@ -1463,8 +1464,9 @@ Options for release:
 -n  --dry-run                 Dry run, which performs the whole build but does no tagging,
                               artefact upload or pushing Docker images
     --release-version &lt;ver&gt;   Version to release (e.g. "1.2.1"). This is a mandatory argument.
-    --daily-timestamp-version Calculate a daily timestamp version automatically
-
+    --snapshot-release        Snapshot release which can be created on a daily basis.
+                              A timestamped version will be created automatically, and no Maven artefacts
+                              are pushed to maven central. No moving tag will be moved, too.
     --dev-version &lt;version&gt;   Next development version. If not given, set to
                               "&lt;major&gt;.&lt;minor&gt;-SNAPSHOT" as calculated from
                               --release-version (e.g. "1.2-SNAPSHOT")
@@ -1475,13 +1477,14 @@ Options for release:
                               If not given, then a new
                               temporary directory will be used
                               (and removed after the release)
-    --no-maven-release        Don't release the Maven artefacts to Sonatype,
-                              useful for daily snapshots builds to
-                              not trash Maven central
     --docker-user &lt;user&gt;      Docker user for Docker Hub
     --docker-password &lt;pwd&gt;   Docker password for Docker Hub
     --product-templates       Create templates for the productised version only and tag
     --no-git-push             Don't push the release tag (and symbolic major.minor tag)
+    --git-remote              Name of the git remote to push to. If not given, its trying to be pushed
+                              to the git remote to which the currently checked out branch is attached to.
+                              Works only when on a branch, not when checked out directly.
+
     --log &lt;log-file&gt;          Write full log to &lt;log-file&gt;, only print progress to screen
     --man                     Open HTML documentation in the Syndesis Developer Handbook</code></pre>
 </div>
@@ -1751,7 +1754,69 @@ So when we release the next patch level release, moving the minor version tag to
 </div>
 </div>
 <div class="sect3">
-<h4 id="_fuse_online_templates">2.7.5. Fuse Online Templates</h4>
+<h4 id="_snapshot_release">2.7.5. Snapshot Release</h4>
+<div class="paragraph">
+<p>With the option <code>--snapshot-release</code> a lightweight snapshot release for the images and templates can be created.
+The tag/version is calculated automatically by picking up the latest release number (e.g. 1.3.5), increasing the patch-level by
+ one and adding a daily timestamp (e.g. 1.3.6-20180419).
+According to  <a href="https://semver.org/">Semantic Versioning 2.0</a> this is considered to be a version larger than 1.3.5 but <a href="https://semver.org/#spec-item-11">smaller</a> than 1.3.6.</p>
+</div>
+<div class="paragraph">
+<p>This tag can be referenced to in <code>syndesis install</code> and <code>syndesis minishift</code>.</p>
+</div>
+<div class="paragraph">
+<p>In detail, a snapshot release differs from a normal release as it:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#8230;&#8203; doesn&#8217;t release artefacts on Maven central, but pushes Docker images and creates a Git tag for referencing the proper templates.</p>
+</li>
+<li>
+<p>&#8230;&#8203; skips all checks and tests when building to maximise the likelihood that the release succeeds. The rationale here is to better have untested daily snapshot release than no snapshot release because of test failure (which in many cases are not because of errors, but of failure in the infrastructure)</p>
+</li>
+<li>
+<p>&#8230;&#8203; force pushes the snapshot tag on GitHub so that multiple releases per day are allowed</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">syndesis release \
+     --snapshot-release \                   <i class="conum" data-value="1"></i><b>(1)</b>
+     --local-maven-repo /tmp/clean-repo \   <i class="conum" data-value="2"></i><b>(2)</b>
+     --git-remote origin \                  <i class="conum" data-value="3"></i><b>(3)</b>
+     --docker-user &quot;${DOCKER_USER}&quot; \       <i class="conum" data-value="4"></i><b>(4)</b>
+     --docker-password &quot;${DOCKER_PASSWORD}&quot;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Enable snapshot release with a version in the format 1.3.5-20180419</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Point to an empty repository to avoid side effects when building</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Push to the origin repository</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Docker credentials required for pushing to Docker Hub</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A daily Jenkins job with this configuration run on <a href="https://ci.fabric8.io" class="bare">https://ci.fabric8.io</a> for creating a daily snapshots.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fuse_online_templates">2.7.6. Fuse Online Templates</h4>
 <div class="paragraph">
 <p>The templates checked in and tagged with <em>regular</em> tags in pure numeric form (e.g. <code>1.2.8</code>) are always referencing upstream images that are available at Docker Hub.</p>
 </div>
@@ -1784,7 +1849,7 @@ An extra step is required to import productised Syndesis Docker images into the 
 </div>
 </div>
 <div class="sect3">
-<h4 id="dev-release-troubleshooting">2.7.6. Troubleshooting</h4>
+<h4 id="dev-release-troubleshooting">2.7.7. Troubleshooting</h4>
 <div class="paragraph">
 <p>When you run the <code>syndesis release</code> command and when it should not succeed, you might have to perform some cleanup steps yourself
 (there is now automatic rollback).
@@ -3065,8 +3130,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-6608-g826f2cde5<br>
-Last updated 2018-04-20 07:34:41 UTC
+Version 1.1.3-6610-gb6500dff3<br>
+Last updated 2018-04-20 09:14:05 UTC
 </div>
 </div>
 </body>
