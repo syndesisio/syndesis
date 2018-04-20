@@ -15,6 +15,9 @@ import { Extension } from '@syndesis/ui/platform';
 import { NotificationService } from '@syndesis/ui/common';
 import { ExtensionStore } from '@syndesis/ui/store/extension/extension.store';
 
+import { environment } from '../../../../environments/environment';
+import { HttpXsrfTokenExtractor } from '@angular/common/http';
+
 interface FileError {
   level: string;
   message: string;
@@ -46,7 +49,8 @@ export class TechExtensionImportComponent implements OnInit {
   constructor(private extensionStore: ExtensionStore,
               private notificationService: NotificationService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private tokenExtractor: HttpXsrfTokenExtractor) {
     this.extension$ = this.extensionStore.resource;
   }
 
@@ -93,6 +97,12 @@ export class TechExtensionImportComponent implements OnInit {
     const uploadUrl = this.extensionStore.getUploadUrl(this.extensionId);
     this.uploader = new FileUploader({
       url: uploadUrl,
+      headers: [
+        {
+          name: environment.xsrf.headerName,
+          value: this.tokenExtractor.getToken() || environment.xsrf.defaultTokenValue,
+        }
+      ],
       disableMultipart: false,
       autoUpload: true,
       removeAfterUpload: true,

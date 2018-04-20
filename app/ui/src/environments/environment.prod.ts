@@ -7,7 +7,8 @@ export const environment = {
   },
   xsrf: {
     headerName: 'SYNDESIS-XSRF-TOKEN',
-    cookieName: 'SYNDESIS-XSRF-COOKIE'
+    cookieName: 'SYNDESIS-XSRF-COOKIE',
+    defaultTokenValue: 'awesome'
   },
   config: {}
 };

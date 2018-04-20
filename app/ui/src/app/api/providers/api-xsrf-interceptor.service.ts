@@ -15,11 +15,11 @@ export class ApiXsrfInterceptor implements HttpInterceptor {
   constructor(private tokenExtractor: HttpXsrfTokenExtractor) { }
 
   intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (httpRequest.method !== 'HEAD' && httpRequest.method !== 'GET' && httpRequest.url.startsWith('http')) {
-      const token = this.tokenExtractor.getToken();
+    if (httpRequest.url.startsWith('http')) {
+      const token = this.tokenExtractor.getToken() || environment.xsrf.defaultTokenValue;
       const { headerName } = environment.xsrf;
 
-      if (!!token && !httpRequest.headers.has(headerName)) {
+      if (!httpRequest.headers.has(headerName)) {
         httpRequest = httpRequest.clone({ headers: httpRequest.headers.set(headerName, token) });
       }
     }
