@@ -27,11 +27,11 @@ wait_for_deployments() {
   watch_pid=$!
   for dc in $dcs; do
       echo "Waiting for $dc to be scaled to ${replicas_desired}"
-      local replicas=$(get_replicas $dc)
+      local replicas=$(get_replicas $dc $replicas_desired)
       while [ "$replicas" -ne $replicas_desired ]; do
           echo "Sleeping 10s ..."
           sleep 10
-          replicas=$(get_replicas $dc)
+          replicas=$(get_replicas $dc $replicas_desired)
       done
   done
   kill $watch_pid
@@ -90,8 +90,34 @@ pod() {
 
 get_replicas() {
   local dc=${1}
-  oc get dc $dc -o jsonpath="{.status.availableReplicas}"
+  local replicas_desired=${2:-}
+  if [ -n "$replicas_desired" ] && [ $replicas_desired -eq 0 ]; then
+      # For a downscale to zero, we should really wait until all pods are gone
+      echo $(get_running_or_terminating_pods $dc)
+  else
+      # For an upscale, wait until the number of replicas are really available
+      # (i.e. being ready to serve)
+      oc get dc $dc -o jsonpath="{.status.availableReplicas}"
+  fi
 }
+
+get_running_or_terminating_pods() {
+  local dc=${1}
+  local pod_nr=$(
+     oc get pod                                                     \
+        -l deploymentconfig=$dc                                     \
+        -o jsonpath='{range .items[*]}{.status.phase}{"\n"}{end}' | \
+     grep "Running\|Terminating"                                   | \
+     wc -l                                                        | \
+     awk '$1=$1'
+  )
+  if [ -z "$pod_nr" ]; then
+    echo 0
+  else
+    echo $pod_nr
+  fi
+}
+
 # Read from global config
 read_global_config() {
     local key=$1

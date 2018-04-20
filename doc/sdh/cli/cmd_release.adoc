@@ -252,7 +252,7 @@ For a different setup to referencing different images (i.e. the images that are 
 
 For this the option `--product-templates` can be used, which generates templates _without image stream definitions_, but referencing supposedly already existing image streams.
 
-These templates are created with a tag `fuse-ingite-<minor>` (e.g. `fuse-ignite-1.2`) in the Git repository and so directly accessed from GitHub.
+These templates are created with a tag `fuse-ignite-<minor>` (e.g. `fuse-ignite-1.2`) in the Git repository and so directly accessed from GitHub.
 
 The product template support is currently very specific to the Fuse Ignite Cluster, which is used for the Technical Preview phase of Fuse Ignite.
 
