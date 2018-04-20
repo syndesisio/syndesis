@@ -235,7 +235,7 @@ build_and_stage_artefacts() {
 
     if [ $(hasflag --no-maven-release) ]; then
         echo "==== Building locally (--no-maven-release)"
-        ./mvnw ${maven_opts} clean install
+        ./mvnw ${maven_opts} clean install -Pflash
     else
         echo "==== Building and staging Maven artefacts to Sonatype"
         ./mvnw ${maven_opts} -Prelease clean deploy -DstagingDescription="Staging Syndesis for $(readopt --release-version)"

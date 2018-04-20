@@ -322,16 +322,6 @@
             </executions>
           </plugin>
           <plugin>
-            <groupId>pl.project13.maven</groupId>
-            <artifactId>git-commit-id-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>default</id>
-                <phase />
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
             <artifactId>maven-enforcer-plugin</artifactId>
             <executions>
               <execution>
