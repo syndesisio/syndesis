@@ -40,9 +40,7 @@ EOT
 # an in-place update is not possible
 # * Service and Route can't be replaced because there are immutable datat in the spec (like clusterip)
 # * ServiceAccounts are force replace so that hoopefully the associated secrets are cleaned up, too.
-# * DeploymentConfig are added as it looks like that they leave orphaned replication controllers
-#   when patched in place.
-FORCE_UPGRADE_RESOURCES="Service Route ServiceAccount DeploymentConfig"
+FORCE_UPGRADE_RESOURCES="Service Route ServiceAccount"
 
 # Document which resource shouldn't be updated
 DONT_TOUCH_RESOURCES="ConfigMap Secret PersistentVolumeClaim"
