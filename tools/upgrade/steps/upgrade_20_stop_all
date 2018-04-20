@@ -17,7 +17,6 @@ stop_all::run() {
     local deployments=$(syndesis_deployments)
     echo "      - Stopping deployments $deployments"
     scale_deployments 0 ${deployments}
-    echo "Sleeping ..."
 }
 
 stop_all::rollback() {
