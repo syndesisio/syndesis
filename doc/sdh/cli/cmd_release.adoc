@@ -29,8 +29,9 @@ Options for release:
 -n  --dry-run                 Dry run, which performs the whole build but does no tagging,
                               artefact upload or pushing Docker images
     --release-version <ver>   Version to release (e.g. "1.2.1"). This is a mandatory argument.
-    --daily-timestamp-version Calculate a daily timestamp version automatically
-
+    --snapshot-release        Snapshot release which can be created on a daily basis.
+                              A timestamped version will be created automatically, and no Maven artefacts
+                              are pushed to maven central. No moving tag will be moved, too.
     --dev-version <version>   Next development version. If not given, set to
                               "<major>.<minor>-SNAPSHOT" as calculated from
                               --release-version (e.g. "1.2-SNAPSHOT")
@@ -41,13 +42,14 @@ Options for release:
                               If not given, then a new
                               temporary directory will be used
                               (and removed after the release)
-    --no-maven-release        Don't release the Maven artefacts to Sonatype,
-                              useful for daily snapshots builds to
-                              not trash Maven central
     --docker-user <user>      Docker user for Docker Hub
     --docker-password <pwd>   Docker password for Docker Hub
     --product-templates       Create templates for the productised version only and tag
     --no-git-push             Don't push the release tag (and symbolic major.minor tag)
+    --git-remote              Name of the git remote to push to. If not given, its trying to be pushed
+                              to the git remote to which the currently checked out branch is attached to.
+                              Works only when on a branch, not when checked out directly.
+
     --log <log-file>          Write full log to <log-file>, only print progress to screen
     --man                     Open HTML documentation in the Syndesis Developer Handbook
 ----
@@ -209,6 +211,38 @@ The templates contain an image change trigger which will redeploy the applicatio
 So when we release the next patch level release, moving the minor version tag to this patch level release, then the application gets automatically redeployed, and it will pick up the new image.
 
 These two sets of templates can be reached directly from GitHub as the git tags correspond to the Docker tags (i.e. a `1.2.8` tag and a `1.2` tag which will be moved forward).
+
+### Snapshot Release
+
+With the option `--snapshot-release` a lightweight snapshot release for the images and templates can be created.
+The tag/version is calculated automatically by picking up the latest release number (e.g. 1.3.5), increasing the patch-level by
+ one and adding a daily timestamp (e.g. 1.3.6-20180419).
+According to  https://semver.org/[Semantic Versioning 2.0] this is considered to be a version larger than 1.3.5 but https://semver.org/#spec-item-11[smaller] than 1.3.6.
+
+This tag can be referenced to in `syndesis install` and `syndesis minishift`.
+
+In detail, a snapshot release differs from a normal release as it:
+
+* ... doesn't release artefacts on Maven central, but pushes Docker images and creates a Git tag for referencing the proper templates.
+* ... skips all checks and tests when building to maximise the likelihood that the release succeeds. The rationale here is to better have untested daily snapshot release than no snapshot release because of test failure (which in many cases are not because of errors, but of failure in the infrastructure)
+* ... force pushes the snapshot tag on GitHub so that multiple releases per day are allowed
+
+.Example
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+syndesis release \
+     --snapshot-release \                   <1>
+     --local-maven-repo /tmp/clean-repo \   <2>
+     --git-remote origin \                  <3>
+     --docker-user "${DOCKER_USER}" \       <4>
+     --docker-password "${DOCKER_PASSWORD}"
+----
+<1> Enable snapshot release with a version in the format 1.3.5-20180419
+<2> Point to an empty repository to avoid side effects when building
+<3> Push to the origin repository
+<4> Docker credentials required for pushing to Docker Hub
+
+A daily Jenkins job with this configuration run on https://ci.fabric8.io for creating a daily snapshots.
 
 ### Fuse Online Templates
 
