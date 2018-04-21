@@ -42,7 +42,7 @@ backup_resource() {
     local kind=$2
 
     mkdir -p ${backupdir}/${kind}
-    for res in $(oc get ${kind} -l app=syndesis,type=infrastructure -o name | sed -e "s/^[^\/]*\///"); do
+    for res in $(oc get ${kind} -l syndesis.io/app=syndesis,syndesis.io/type=infrastructure -o name | sed -e "s/^[^\/]*\///"); do
         echo "        * $res"
         oc get ${kind} $res -o json > "${backupdir}/${kind}/${res}.json"
     done
@@ -75,7 +75,7 @@ restore_resources() {
 }
 
 syndesis_deployments() {
-  oc get dc -l app=syndesis,type=infrastructure -o name | sed -e "s/^deploymentconfigs\///"
+  oc get dc -l syndesis.io/app=syndesis,syndesis.io/type=infrastructure -o name | sed -e "s/^deploymentconfigs\///"
 }
 
 pod() {

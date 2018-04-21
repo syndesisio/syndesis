@@ -2,9 +2,9 @@
   kind: Service
   metadata:
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-meta
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-meta
     name: syndesis-meta
   spec:
     ports:
@@ -12,16 +12,16 @@
       protocol: TCP
       targetPort: 8080
     selector:
-      app: syndesis
-      component: syndesis-meta
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-meta
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
     name: syndesis-meta
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-meta
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-meta
   spec:
     accessModes:
     - ReadWriteOnce
@@ -32,16 +32,15 @@
   kind: DeploymentConfig
   metadata:
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-meta
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-meta
     name: syndesis-meta
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      component: syndesis-meta
-      deploymentconfig: syndesis-meta
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-meta
     strategy:
       resources:
         limits:
@@ -52,10 +51,9 @@
     template:
       metadata:
         labels:
-          app: syndesis
-          type: infrastructure
-          component: syndesis-meta
-          deploymentconfig: syndesis-meta
+          syndesis.io/app: syndesis
+          syndesis.io/type: infrastructure
+          syndesis.io/component: syndesis-meta
       spec:
         serviceAccountName: syndesis-server
         containers:
@@ -137,9 +135,9 @@
   kind: ConfigMap
   metadata:
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-meta
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-meta
     name: syndesis-meta-config
   data:
     application.yml: |-

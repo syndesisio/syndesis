@@ -2,9 +2,9 @@
   kind: Service
   metadata:
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-oauthproxy
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-oauthproxy
     annotations:
       service.alpha.openshift.io/serving-cert-secret-name: syndesis-oauthproxy-tls
     name: syndesis-oauthproxy
@@ -14,14 +14,14 @@
       protocol: TCP
       targetPort: 8443
     selector:
-      app: syndesis
-      component: syndesis-oauthproxy
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-oauthproxy
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: syndesis
-      type: infrastructure
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
     name: syndesis
   spec:
     host: ${ROUTE_HOSTNAME}
@@ -37,16 +37,15 @@
   kind: DeploymentConfig
   metadata:
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-oauthproxy
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-oauthproxy
     name: syndesis-oauthproxy
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      component: syndesis-oauthproxy
-      deploymentconfig: syndesis-oauthproxy
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-oauthproxy
     strategy:
       resources:
         limits:
@@ -57,10 +56,9 @@
     template:
       metadata:
         labels:
-          app: syndesis
-          type: infrastructure
-          component: syndesis-oauthproxy
-          deploymentconfig: syndesis-oauthproxy
+          syndesis.io/app: syndesis
+          syndesis.io/type: infrastructure
+          syndesis.io/component: syndesis-oauthproxy
       spec:
         containers:
         - name: syndesis-oauthproxy

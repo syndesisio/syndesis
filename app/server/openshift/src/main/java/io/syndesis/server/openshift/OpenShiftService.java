@@ -30,7 +30,8 @@ public interface OpenShiftService {
     String INTEGRATION_ID_LABEL = "syndesis.io/integration-id";
     String DEPLOYMENT_VERSION_LABEL = "syndesis.io/deployment-version";
     String USERNAME_LABEL = "syndesis.io/username";
-    String COMPONENT_LABEL = "component";
+    String COMPONENT_LABEL = "syndesis.io/component";
+    String INTEGRATION_NAME_LABEL = "syndesis.io/integration";
 
     /**
      * Start a previously created build with the data from the given directory
