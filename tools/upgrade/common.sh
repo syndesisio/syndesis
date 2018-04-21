@@ -107,7 +107,7 @@ get_running_or_terminating_pods() {
      oc get pod                                                     \
         -l deploymentconfig=$dc                                     \
         -o jsonpath='{range .items[*]}{.status.phase}{"\n"}{end}' | \
-     grep "Running\|Terminating"                                   | \
+     grep "Running\|Terminating"                                  | \
      wc -l                                                        | \
      awk '$1=$1'
   )
