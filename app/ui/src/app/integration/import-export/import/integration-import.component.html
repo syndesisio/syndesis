@@ -51,8 +51,7 @@
           </div>
         </div>
         <p class="help-block">
-          <em>Note: The imported integration will be in the draft state. If you previously imported and this
-            environment has a draft version of the integration, then that draft is lost.</em>
+          <em>{{ 'integrations.import-export.help-block' | synI18n }}</em>
         </p>
       </div>
       <div class="results">
@@ -65,6 +64,9 @@
               <tbody>
               <ng-container *ngFor="let integration of importedOverviews$ | async">
                 <tr *ngIf="integration.name">
+                  <!--
+                  <th>{{ 'integrations.import-export.item-name' | synI18n: 'Integration' }} Name</th>
+                  -->
                   <th>Integration Name</th>
                   <td>{{ integration.name }}</td>
                 </tr>
