@@ -38,11 +38,11 @@
                   <div *ngIf="item.isUploaded">
                     <div *ngIf="item.isSuccess; else isError">
                       <span class="pficon-ok"></span>
-                      Successfully imported.
+                      {{ 'integrations.import-export.import-success' | synI18n }}
                     </div>
                     <ng-template #isError>
                       <span class="pficon-error-circle-o"></span>
-                      Unable to import this file.
+                      {{ 'integrations.import-export.import-fail' | synI18n }}
                     </ng-template>
                   </div>
                 </div>
