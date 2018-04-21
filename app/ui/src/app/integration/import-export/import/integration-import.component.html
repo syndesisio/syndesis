@@ -15,7 +15,7 @@
            [ngClass]="{'syn-drop-zone--hover': isDragAndDropImport}"
            (fileOver)="onDropOverAndOut($event)"
            (onFileDrop)="onDropFile()">
-        <p>Drag and drop your integration files here or</p>
+        <p>{{ 'integrations.import-export.drag-and-drop' | synI18n }}</p>
         <div class="row syn-drop-zone__file-select">
           <div class="col-md-3">
             <input #fileSelect
