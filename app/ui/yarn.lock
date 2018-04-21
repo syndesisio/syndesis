@@ -159,35 +159,11 @@
   dependencies:
     tslib "^1.7.1"
 
-"@atlasmap/atlasmap.data.mapper@1.34.0-SNAPSHOT.20180405193520":
-  version "1.34.0-SNAPSHOT.20180405193520"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.34.0-SNAPSHOT.20180405193520.tgz#3e252ca06a8af4c99cdfa8272ee61a9b991de698"
+"@atlasmap/atlasmap.data.mapper@1.34.0-SNAPSHOT.20180420225133":
+  version "1.34.0-SNAPSHOT.20180420225133"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.34.0-SNAPSHOT.20180420225133.tgz#b130e1df5db45e8547d23b68b6f28896e530f554"
   dependencies:
-    "@angular/animations" "^5.2.0"
-    "@angular/common" "^5.2.0"
-    "@angular/compiler" "^5.2.0"
-    "@angular/core" "^5.2.0"
-    "@angular/forms" "^5.2.0"
-    "@angular/http" "^5.2.0"
-    "@angular/platform-browser" "^5.2.0"
-    "@angular/platform-browser-dynamic" "^5.2.0"
-    "@angular/router" "^5.2.0"
-    bootstrap "^3.3.7"
-    chart.js "^2.5.0"
-    classlist.js "^1.1.20150312"
-    core-js "^2.5.1"
-    font-awesome "4.7.0"
-    jquery "3.1.1"
-    jquery-match-height "^0.7.2"
-    mkdirp "^0.5.1"
-    moment "^2.20.1"
-    ncp "^2.0.0"
-    ngx-bootstrap "^2.0.2"
-    opn-cli "^3.1.0"
-    patternfly "3.26.1"
-    patternfly-ng "^3.0.0"
-    rxjs "^5.5.2"
-    zone.js "^0.8.14"
+    tslib "^1.7.1"
 
 "@ng-dynamic-forms/core@^5.4.6":
   version "5.4.7"
@@ -938,7 +914,7 @@ bootstrap-touchspin@~3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/bootstrap-touchspin/-/bootstrap-touchspin-3.1.1.tgz#9779deac72aaf577e5e762b8512c747c871d9597"
 
-bootstrap@3.3.7, bootstrap@3.3.x, bootstrap@^3.0, bootstrap@^3.3, bootstrap@^3.3.7, bootstrap@~3.3.7:
+bootstrap@3.3.7, bootstrap@3.3.x, bootstrap@^3.0, bootstrap@^3.3, bootstrap@~3.3.7:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.3.7.tgz#5a389394549f23330875a3b150656574f8a9eb71"
 
@@ -1241,26 +1217,6 @@ chalk@~2.2.0:
     escape-string-regexp "^1.0.5"
     supports-color "^4.0.0"
 
-chart.js@^2.5.0:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.7.2.tgz#3c9fde4dc5b95608211bdefeda7e5d33dffa5714"
-  dependencies:
-    chartjs-color "^2.1.0"
-    moment "^2.10.2"
-
-chartjs-color-string@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/chartjs-color-string/-/chartjs-color-string-0.5.0.tgz#8d3752d8581d86687c35bfe2cb80ac5213ceb8c1"
-  dependencies:
-    color-name "^1.0.0"
-
-chartjs-color@^2.1.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/chartjs-color/-/chartjs-color-2.2.0.tgz#84a2fb755787ed85c39dd6dd8c7b1d88429baeae"
-  dependencies:
-    chartjs-color-string "^0.5.0"
-    color-convert "^0.5.3"
-
 check-error@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/check-error/-/check-error-1.0.2.tgz#574d312edd88bb5dd8912e9286dd6c0aed4aac82"
@@ -1325,10 +1281,6 @@ class-utils@^0.3.5:
     define-property "^0.2.5"
     isobject "^3.0.0"
     static-extend "^0.1.1"
-
-classlist.js@^1.1.20150312:
-  version "1.1.20150312"
-  resolved "https://registry.yarnpkg.com/classlist.js/-/classlist.js-1.1.20150312.tgz#1d70842f7022f08d9ac086ce69e5b250f2c57789"
 
 clean-css@4.1.x, clean-css@^4.1.11:
   version "4.1.11"
@@ -1418,17 +1370,13 @@ collection-visit@^1.0.0:
     map-visit "^1.0.0"
     object-visit "^1.0.0"
 
-color-convert@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-0.5.3.tgz#bdb6c69ce660fadffe0b0007cc447e1b9f7282bd"
-
 color-convert@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.1.tgz#c1261107aeb2f294ebffec9ed9ecad529a6097ed"
   dependencies:
     color-name "^1.1.1"
 
-color-name@^1.0.0, color-name@^1.1.1:
+color-name@^1.1.1:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
 
@@ -2791,10 +2739,6 @@ file-saver@^1.3.3:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/file-saver/-/file-saver-1.3.8.tgz#e68a30c7cb044e2fb362b428469feb291c2e09d8"
 
-file-type@^3.6.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/file-type/-/file-type-3.9.0.tgz#257a078384d1db8087bc449d107d52a52672b9e9"
-
 filename-regex@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/filename-regex/-/filename-regex-2.0.1.tgz#c1c4b9bee3e09725ddb106b75c1e301fe2f18b26"
@@ -2900,7 +2844,7 @@ font-awesome-sass@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/font-awesome-sass/-/font-awesome-sass-4.7.0.tgz#4eda693e915009ce00b228e0964dc5eca9bc34e1"
 
-font-awesome@4.7.0, font-awesome@^4.7.0:
+font-awesome@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
 
@@ -3085,10 +3029,6 @@ get-caller-file@^1.0.1:
 get-stdin@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-4.0.1.tgz#b968c6b0a04384324902e8bf1a5df32579a450fe"
-
-get-stdin@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-5.0.1.tgz#122e161591e21ff4c52530305693f20e6393a398"
 
 get-stream@^3.0.0:
   version "3.0.0"
@@ -4696,7 +4636,7 @@ moment-timezone@^0.4.0, moment-timezone@^0.4.1:
   dependencies:
     moment ">= 2.6.0"
 
-moment@*, "moment@>= 2.6.0", moment@^2.10, moment@^2.10.2, moment@^2.19.1, moment@^2.20.1:
+moment@*, "moment@>= 2.6.0", moment@^2.10, moment@^2.19.1, moment@^2.20.1:
   version "2.22.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.1.tgz#529a2e9bf973f259c9643d237fda84de3a26e8ad"
 
@@ -5062,23 +5002,6 @@ onetime@^1.0.0:
 open@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/open/-/open-0.0.5.tgz#42c3e18ec95466b6bf0dc42f3a2945c3f0cad8fc"
-
-opn-cli@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/opn-cli/-/opn-cli-3.1.0.tgz#f819ae6cae0b411bd0149b8560fe6c88adad20f8"
-  dependencies:
-    file-type "^3.6.0"
-    get-stdin "^5.0.1"
-    meow "^3.7.0"
-    opn "^4.0.0"
-    temp-write "^2.1.0"
-
-opn@^4.0.0:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/opn/-/opn-4.0.2.tgz#7abc22e644dff63b0a96d5ab7f2790c0f01abc95"
-  dependencies:
-    object-assign "^4.0.1"
-    pinkie-promise "^2.0.0"
 
 opn@^5.1.0:
   version "5.3.0"
@@ -5452,7 +5375,7 @@ performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
 
-pify@^2.0.0, pify@^2.2.0, pify@^2.3.0:
+pify@^2.0.0, pify@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
 
@@ -6912,17 +6835,6 @@ tar@^2.0.0, tar@^2.2.1:
     block-stream "*"
     fstream "^1.0.2"
     inherits "2"
-
-temp-write@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/temp-write/-/temp-write-2.1.0.tgz#59890918e0ef09d548aaa342f4bd3409d8404e96"
-  dependencies:
-    graceful-fs "^4.1.2"
-    mkdirp "^0.5.0"
-    os-tmpdir "^1.0.0"
-    pify "^2.2.0"
-    pinkie-promise "^2.0.0"
-    uuid "^2.0.1"
 
 tether@1.4.0:
   version "1.4.0"

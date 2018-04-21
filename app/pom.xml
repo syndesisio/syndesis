@@ -37,7 +37,7 @@
     <syndesis.version>${project.version}</syndesis.version>
 
     <!-- Atlasmap version -->
-    <atlasmap.version>1.34.1</atlasmap.version>
+    <atlasmap.version>1.34.2</atlasmap.version>
     <camel-atlasmap.version>${atlasmap.version}</camel-atlasmap.version>
 
     <!-- Image names -->
