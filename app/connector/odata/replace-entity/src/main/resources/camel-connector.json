@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.odata.ODataReplaceEntityComponent",
   "groupId" : "io.syndesis.connector",
   "artifactId" : "connector-odata-replace-entity",
-  "version" : "1.3-SNAPSHOT",
+  "version" : "1.3.5-20180422",
   "description" : "Replace OData Entity",
   "labels" : [ "odata" ],
   "pattern" : "To",
