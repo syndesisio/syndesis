@@ -72,8 +72,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'",Locale.US);
     static final Map<String,String> LABELS = new HashMap<>();
     static {
-        LABELS.put("app", "syndesis");
-        LABELS.put("component", "syndesis-server");
+        LABELS.put("syndesis.io/app", "syndesis");
+        LABELS.put("syndesis.io/component", "syndesis-server");
     }
     private static final LabelSelector SELECTOR = new LabelSelector(null, LABELS);
 
@@ -157,9 +157,9 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
          try {
              final Optional<Date> startTime = Optional.of(dateFormat.parse(
                      openShiftClient.pods().withLabelSelector(SELECTOR).list().getItems()
-                        .get(0)
-                        .getStatus()
-                        .getStartTime()));
+                                    .get(0)
+                                    .getStatus()
+                                    .getStartTime()));
 
             // compute last processed time
             final Optional<Date> lastCompletedTime = getAggregateMetricValue(METRIC_COMPLETED_TIMESTAMP, Date.class, "max");
