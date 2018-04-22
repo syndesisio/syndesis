@@ -253,5 +253,5 @@ pod() {
 }
 
 syndesis_deployments() {
-  oc get dc -l app=syndesis -o name | sed -e "s/^deploymentconfigs\///"
+  oc get dc -l syndesis.io/app=syndesis -o name | sed -e "s/^deploymentconfigs\///"
 }

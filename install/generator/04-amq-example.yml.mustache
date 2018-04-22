@@ -4,8 +4,8 @@
   metadata:
     name: jboss-amq-63
     labels:
-      app: syndesis
-      component: amq
+      syndesis.io/app: syndesis
+      syndesis.io/component: amq
   spec:
     tags:
     - from:
@@ -31,24 +31,26 @@
       port: 61613
       targetPort: 61613
     selector:
-      deploymentConfig: broker-amq
+      syndesis.io/example: broker-amq
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      application: broker
+      syndesis.io/app: syndesis
+      syndesis.io/example: broker-amq
     name: broker-amq
   spec:
     replicas: 0
     selector:
-      deploymentConfig: broker-amq
+      syndesis.io/app: syndesis
+      syndesis.io/example: broker-amq
     strategy:
       type: Recreate
     template:
       metadata:
         labels:
-          application: broker
-          deploymentConfig: broker-amq
+          syndesis.io/app: syndesis
+          syndesis.io/example: broker-amq
         name: broker-amq
       spec:
         containers:

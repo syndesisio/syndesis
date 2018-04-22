@@ -118,7 +118,7 @@ dev::run() {
 
         setup_oc
 
-        local pod=$(oc get -o name pod -l component=syndesis-${name})
+        local pod=$(oc get -o name pod -l syndesis.io/component=syndesis-${name})
         oc port-forward ${pod//*\//} 5005:5005
     elif [ $(hasflag --cookie) ]; then
         local cookie_cached="$HOME/.syndesis_api_cookie"

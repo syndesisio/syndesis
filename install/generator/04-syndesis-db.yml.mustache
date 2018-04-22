@@ -2,9 +2,9 @@
   kind: ConfigMap
   metadata:
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-db
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-db
     name: syndesis-sampledb-config
   data:
     add-sample-db.sh: |
@@ -68,9 +68,9 @@
   metadata:
     name: syndesis-db
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-db
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-db
   spec:
     ports:
     - name: postgresql
@@ -79,8 +79,8 @@
       protocol: TCP
       targetPort: 5432
     selector:
-      app: syndesis
-      component: syndesis-db
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-db
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -90,8 +90,8 @@
   metadata:
     name: syndesis-db
     labels:
-      app: syndesis
-      component: syndesis-db
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-db
   spec:
     accessModes:
     - ReadWriteOnce
@@ -103,14 +103,14 @@
   metadata:
     name: syndesis-db
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-db
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-db
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      component: syndesis-db
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-db
     strategy:
       type: Recreate
       resources:
@@ -121,8 +121,8 @@
     template:
       metadata:
         labels:
-          app: syndesis
-          component: syndesis-db
+          syndesis.io/app: syndesis
+          syndesis.io/component: syndesis-db
       spec:
         containers:
         - capabilities: {}

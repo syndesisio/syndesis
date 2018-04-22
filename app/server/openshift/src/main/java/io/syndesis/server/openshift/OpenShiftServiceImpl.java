@@ -50,8 +50,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     // Labels used for generated objects
     private static final Map<String, String> INTEGRATION_DEFAULT_LABELS = Collections.unmodifiableMap(new HashMap<String, String>() {{
-        put("type", "integration");
-        put("app", "syndesis");
+        put("syndesis.io/type", "integration");
+        put("syndesis.io/app", "syndesis");
     }});
 
     private final NamespacedOpenShiftClient openShiftClient;
@@ -207,7 +207,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .endMetadata()
             .withNewSpec()
                 .withReplicas(1)
-                .addToSelector("integration", name)
+                .addToSelector(INTEGRATION_NAME_LABEL, name)
                 .withNewStrategy()
                     .withType("Recreate")
                     .withNewResources()
@@ -218,7 +218,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                 .withRevisionHistoryLimit(0)
                 .withNewTemplate()
                     .withNewMetadata()
-                        .addToLabels("integration", name)
+                        .addToLabels(INTEGRATION_NAME_LABEL, name)
                         .addToLabels(COMPONENT_LABEL, "integration")
                         .addToLabels(INTEGRATION_DEFAULT_LABELS)
                         .addToLabels(deploymentData.getLabels())

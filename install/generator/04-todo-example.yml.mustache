@@ -2,8 +2,8 @@
   kind: Service
   metadata:
     labels:
-      app: todo
-      component: todo
+      syndesis.io/app: todo
+      syndesis.io/component: todo
     name: todo
   spec:
     ports:
@@ -11,15 +11,15 @@
       protocol: TCP
       targetPort: 8080
     selector:
-      app: todo
-      component: todo
+      syndesis.io/app: todo
+      syndesis.io/component: todo
 
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: todo
-      component: todo
+      syndesis.io/app: todo
+      syndesis.io/component: todo
     name: todo
   spec:
     host: todo-${ROUTE_HOSTNAME}
@@ -38,7 +38,7 @@
   kind: ImageStream
   metadata:
     labels:
-      app: todo
+      syndesis.io/app: todo
     name: todo
   spec:
     lookupPolicy:
@@ -52,7 +52,7 @@
   kind: BuildConfig
   metadata:
     labels:
-      app: todo
+      syndesis.io/app: todo
     name: todo
   spec:
     postCommit: {}
@@ -82,13 +82,13 @@
   kind: DeploymentConfig
   metadata:
     labels:
-      app: todo
+      syndesis.io/app: todo
     name: todo
   spec:
     replicas: 1
     selector:
-      app: todo
-      deploymentconfig: todo
+      syndesis.io/app: todo
+      syndesis.io/component: todo
     strategy:
       resources:
         limits:
@@ -102,9 +102,8 @@
           openshift.io/container.todo.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
         creationTimestamp: null
         labels:
-          app: todo
-          deploymentconfig: todo
-          component: todo
+          syndesis.io/app: todo
+          syndesis.io/component: todo
       spec:
         containers:
           - env:

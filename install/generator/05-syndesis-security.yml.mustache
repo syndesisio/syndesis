@@ -3,8 +3,8 @@
   metadata:
     name: syndesis:editors
     labels:
-      app: syndesis
-      type: infrastructure
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
   roleRef:
     name: edit
   subjects:
@@ -15,8 +15,8 @@
   metadata:
     name: syndesis:viewers
     labels:
-      app: syndesis
-      type: infrastructure
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
   roleRef:
     name: view
   subjects:

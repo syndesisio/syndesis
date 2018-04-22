@@ -3,31 +3,30 @@
   metadata:
     name: syndesis-ui
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-ui
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-ui
   spec:
     ports:
     - port: 80
       protocol: TCP
       targetPort: 8080
     selector:
-      app: syndesis
-      component: syndesis-ui
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-ui
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-ui
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-ui
     name: syndesis-ui
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      component: syndesis-ui
-      deploymentconfig: syndesis-ui
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-ui
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -44,10 +43,9 @@
     template:
       metadata:
         labels:
-          app: syndesis
-          type: infrastructure
-          component: syndesis-ui
-          deploymentconfig: syndesis-ui
+          syndesis.io/app: syndesis
+          syndesis.io/type: infrastructure
+          syndesis.io/component: syndesis-ui
       spec:
         containers:
         - name: syndesis-ui
@@ -100,9 +98,9 @@
   metadata:
     name: syndesis-ui-config
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-ui
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-ui
   data:
     config.json: |
       {

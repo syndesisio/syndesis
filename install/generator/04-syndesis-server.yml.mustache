@@ -3,24 +3,24 @@
   metadata:
     name: syndesis-server
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-server
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
     name: syndesis-integration
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-server
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-server
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
     name: syndesis-server
   spec:
     ports:
@@ -28,22 +28,21 @@
       protocol: TCP
       targetPort: 8080
     selector:
-      app: syndesis
-      component: syndesis-server
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-server
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-server
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
     name: syndesis-server
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      component: syndesis-server
-      deploymentconfig: syndesis-server
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-server
     strategy:
       resources:
         limits:
@@ -54,10 +53,9 @@
     template:
       metadata:
         labels:
-          app: syndesis
-          type: infrastructure
-          component: syndesis-server
-          deploymentconfig: syndesis-server
+          syndesis.io/app: syndesis
+          syndesis.io/type: infrastructure
+          syndesis.io/component: syndesis-server
       spec:
         serviceAccountName: syndesis-server
         containers:
@@ -157,9 +155,9 @@
     annotations:
       io.syndesis/upgrade-mode: keep
     labels:
-      app: syndesis
-      type: infrastructure
-      component: syndesis-server
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
     name: syndesis-server-config
   data:
     application.yml: |-
