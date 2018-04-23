@@ -167,7 +167,9 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
              if (!serverList.isEmpty()) {
                  startTime = Optional.of(dateFormat.parse(serverList.get(0).getStatus().getStartTime()));
              } else {
-                 LOG.warn("Missing syndesis-server pod in lookup with selector " + LABELS);
+                 if (LOG.isWarnEnabled()) {
+                     LOG.warn("Missing syndesis-server pod in lookup with selector " + LABELS);
+                 }
                  startTime = Optional.empty();
              }
 
