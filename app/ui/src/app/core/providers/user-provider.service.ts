@@ -2,6 +2,15 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { UserService, ApiHttpService, User } from '@syndesis/ui/platform';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpRequest,
+  HttpEventType,
+  HttpProgressEvent,
+  HttpResponse,
+  HttpUrlEncodingCodec
+} from '@angular/common/http';
 
 @Injectable()
 export class UserProviderService extends UserService {
@@ -11,7 +20,7 @@ export class UserProviderService extends UserService {
    * UserService constructor
    * @param {HttpClient} httpClient
    */
-  constructor(private apiHttpService: ApiHttpService) {
+  constructor(private httpClient: HttpClient, private apiHttpService: ApiHttpService) {
     super();
   }
 
@@ -26,6 +35,6 @@ export class UserProviderService extends UserService {
    * Log the user out
    */
   logout(): Observable<any> {
-    return this.apiHttpService.setEndpointUrl('/oauth/sign_out').get();
+    return this.httpClient.get('/oauth/sign_out');
   }
 }
