@@ -29,6 +29,8 @@ public class PrometheusConfigurationProperties {
     private String service = "syndesis-prometheus";
     private String integrationIdLabel = "syndesis_io_integration_id";
     private String deploymentVersionLabel = "syndesis_io_deployment_version";
+    private String componentLabel = "syndesis_io_component";
+    private String typeLabel = "type";
     private String metricsHistoryRange = "1d";
 
     public String getService() {
@@ -53,6 +55,22 @@ public class PrometheusConfigurationProperties {
 
     public void setDeploymentVersionLabel(String deploymentVersionLabel) {
         this.deploymentVersionLabel = deploymentVersionLabel;
+    }
+
+    public String getComponentLabel() {
+        return componentLabel;
+    }
+
+    public void setComponentLabel(String componentLabel) {
+        this.componentLabel = componentLabel;
+    }
+
+    public String getTypeLabel() {
+        return typeLabel;
+    }
+
+    public void setTypeLabel(String typeLabel) {
+        this.typeLabel = typeLabel;
     }
 
     public String getMetricsHistoryRange() {

@@ -29,10 +29,13 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import io.fabric8.kubernetes.api.model.LabelSelector;
+import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.metrics.IntegrationDeploymentMetrics;
 import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
@@ -43,6 +46,8 @@ import io.syndesis.server.endpoint.metrics.MetricsProvider;
 @ConditionalOnProperty(value = "metrics.kind", havingValue = "prometheus")
 public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PrometheusMetricsProviderImpl.class);
+
     private static final String METRIC_TOTAL = "org_apache_camel_ExchangesTotal";
     private static final String METRIC_FAILED = "org_apache_camel_ExchangesFailed";
     private static final String METRIC_START_TIMESTAMP = "io_syndesis_camel_StartTimestamp";
@@ -51,9 +56,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
     private static final String FUNCTION_MAX_OVER_TIME = "max_over_time";
     private static final String VALUE_CONTEXT = "context";
-    private static final String LABEL_TYPE = "type";
     private static final String VALUE_INTEGRATION = "integration";
-    private static final String LABEL_COMPONENT = "component";
 
     private static final BinaryOperator<Long> SUM_LONGS = (aLong, aLong2) -> aLong == null ? aLong2 :
         aLong2 == null ? aLong : aLong + aLong2;
@@ -65,6 +68,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private final String serviceName;
     private final String integrationIdLabel;
     private final String deploymentVersionLabel;
+    private final String componentLabel;
+    private final String typeLabel;
     private final String metricsHistoryRange;
 
     private final NamespacedOpenShiftClient openShiftClient;
@@ -82,6 +87,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         this.serviceName = config.getService();
         this.integrationIdLabel = config.getIntegrationIdLabel();
         this.deploymentVersionLabel = config.getDeploymentVersionLabel();
+        this.componentLabel = config.getComponentLabel();
+        this.typeLabel = config.getTypeLabel();
         this.metricsHistoryRange = config.getMetricsHistoryRange();
         this.openShiftClient = openShiftClient;
     }
@@ -155,11 +162,14 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         final Optional<Long> failedMessages = getSummaryMetricValue(METRIC_FAILED, Long.class, "sum");
 
          try {
-             final Optional<Date> startTime = Optional.of(dateFormat.parse(
-                     openShiftClient.pods().withLabelSelector(SELECTOR).list().getItems()
-                                    .get(0)
-                                    .getStatus()
-                                    .getStartTime()));
+             final List<Pod> serverList = openShiftClient.pods().withLabelSelector(SELECTOR).list().getItems();
+             final Optional<Date> startTime;
+             if (!serverList.isEmpty()) {
+                 startTime = Optional.of(dateFormat.parse(serverList.get(0).getStatus().getStartTime()));
+             } else {
+                 LOG.warn("Missing syndesis-server pod in lookup with selector " + LABELS);
+                 startTime = Optional.empty();
+             }
 
             // compute last processed time
             final Optional<Date> lastCompletedTime = getAggregateMetricValue(METRIC_COMPLETED_TIMESTAMP, Date.class, "max");
@@ -231,8 +241,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
                 .host(serviceName)
                 .metric(metric)
                 .aggregationOperator(Optional.ofNullable(aggregationOperator))
-                .addLabelValues(VALUE_INTEGRATION, LABEL_COMPONENT)
-                .addLabelValues(VALUE_CONTEXT, LABEL_TYPE)
+                .addLabelValues(VALUE_INTEGRATION, this.componentLabel)
+                .addLabelValues(VALUE_CONTEXT, this.typeLabel)
                 .build();
     }
 
