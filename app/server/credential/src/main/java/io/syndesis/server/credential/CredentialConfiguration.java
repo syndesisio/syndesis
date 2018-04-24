@@ -16,6 +16,7 @@
 package io.syndesis.server.credential;
 
 import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.dao.manager.EncryptionComponent;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,8 @@ public class CredentialConfiguration {
     }
 
     @Bean
-    public Credentials credentials(final CredentialProviderLocator connectionProviderLocator) {
-        return new Credentials(connectionProviderLocator);
+    public Credentials credentials(final CredentialProviderLocator connectionProviderLocator, final EncryptionComponent encryptionComponent,
+        final DataManager dataManager) {
+        return new Credentials(connectionProviderLocator, encryptionComponent, dataManager);
     }
 }
