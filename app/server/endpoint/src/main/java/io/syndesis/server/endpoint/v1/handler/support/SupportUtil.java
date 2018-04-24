@@ -69,6 +69,7 @@ public class SupportUtil {
     static final String[] PLATFORM_PODS = {"syndesis-db", "syndesis-oauthproxy", "syndesis-server", "syndesis-ui", "syndesis-meta"};
     protected static final Yaml YAML;
     public static final String MASKING_REGEXP="(?<=password)[:=](\\w+)";
+    public static final String COMPONENT_LABEL = "syndesis.io/component";
 
     private final NamespacedOpenShiftClient client;
     private final IntegrationHandler integrationHandler;
@@ -270,7 +271,7 @@ public class SupportUtil {
     }
 
     public Optional<Reader> getComponentLogs(String componentName){
-        return getLogs("component", componentName);
+        return getLogs(COMPONENT_LABEL, componentName);
     }
 
     public static void dumpAsYaml(HasMetadata obj, OutputStream outputStream) {
