@@ -98,7 +98,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
             deactivatePreviousDeployments(integrationDeployment);
 
             DeploymentData deploymentData = createDeploymentData(integration, integrationDeployment);
-            stepPerformer.perform("build", this::build, deploymentData);
+            stepPerformer.perform("build.v" + deploymentData.getVersion(), this::build, deploymentData);
 
             deploymentData = new DeploymentData.Builder().createFrom(deploymentData).withImage(stepPerformer.stepsPerformed.get("build")).build();
             if (hasPublishedDeployments(integrationDeployment)) {
