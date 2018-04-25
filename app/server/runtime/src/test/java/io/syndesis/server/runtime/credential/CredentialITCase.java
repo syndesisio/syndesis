@@ -111,7 +111,7 @@ public class CredentialITCase extends BaseITCase {
 
         final HttpHeaders cookies = persistAsCookie(flowState);
 
-        final Connection newConnection = new Connection.Builder().name("Test connection").connectorId("http").build();
+        final Connection newConnection = new Connection.Builder().name("Test connection").connectorId("test-provider").build();
         final ResponseEntity<Connection> connectionResponse = http(HttpMethod.POST, "/api/v1/connections",
             newConnection, Connection.class, tokenRule.validToken(), cookies, HttpStatus.OK);
 

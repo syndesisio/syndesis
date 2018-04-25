@@ -17,12 +17,14 @@ package io.syndesis.server.credential;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -44,12 +46,22 @@ import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.util.MultiValueMap;
 
+import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.dao.manager.EncryptionComponent;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CredentialsTest {
 
     private Credentials credentials;
+
+    @Mock
+    private DataManager dataManager;
+
+    @Mock
+    private EncryptionComponent encryptionComponent;
 
     @Mock
     private CredentialProviderLocator locator;
@@ -59,11 +71,14 @@ public class CredentialsTest {
     };
 
     @Before
+    @SuppressWarnings("unchecked")
     public void setupMocks() {
-        credentials = new Credentials(locator);
+        credentials = new Credentials(locator, encryptionComponent, dataManager);
 
         properties.setAppId("appId");
         properties.setAppSecret("appSecret");
+
+        when(encryptionComponent.encryptPropertyValues(anyMap(), anyMap())).then(invocation -> invocation.getArgumentAt(0, Map.class));
     }
 
     @Test
@@ -184,7 +199,9 @@ public class CredentialsTest {
         final CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder().providerId("providerId")
             .returnUrl(URI.create("/ui#state")).code("code").state("state").build();
 
-        final Connection connection = new Connection.Builder().build();
+        final Connection connection = new Connection.Builder()
+            .connector(new Connector.Builder().putProperty("key", new ConfigurationProperty.Builder().build()).build())
+            .build();
         when(credentialProvider.applyTo(new Connection.Builder().createFrom(connection).isDerived(true).build(),
             flowState))
                 .then(a -> new Connection.Builder().createFrom(a.getArgumentAt(0, Connection.class))

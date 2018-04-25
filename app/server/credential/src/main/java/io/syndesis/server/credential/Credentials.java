@@ -15,12 +15,17 @@
  */
 package io.syndesis.server.credential;
 
+import java.net.URI;
+import java.util.Map;
+
+import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.dao.manager.EncryptionComponent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.net.URI;
 
 @Component
 public final class Credentials {
@@ -47,9 +52,16 @@ public final class Credentials {
 
     private final CredentialProviderLocator credentialProviderLocator;
 
+    private final DataManager dataManager;
+
+    private final EncryptionComponent encryptionComponent;
+
     @Autowired
-    public Credentials(final CredentialProviderLocator credentialProviderLocator) {
+    public Credentials(final CredentialProviderLocator credentialProviderLocator, final EncryptionComponent encryptionComponent,
+        final DataManager dataManager) {
         this.credentialProviderLocator = credentialProviderLocator;
+        this.encryptionComponent = encryptionComponent;
+        this.dataManager = dataManager;
     }
 
     public AcquisitionFlow acquire(final String providerId, final URI baseUrl, final URI returnUrl) {
@@ -74,7 +86,15 @@ public final class Credentials {
 
         final Connection withDerivedFlag = new Connection.Builder().createFrom(updatedConnection).isDerived(true).build();
 
-        return credentialProvider.applyTo(withDerivedFlag, flowState);
+        final Connection appliedConnection = credentialProvider.applyTo(withDerivedFlag, flowState);
+
+        final Map<String, String> configuredProperties = appliedConnection.getConfiguredProperties();
+        final Map<String, ConfigurationProperty> properties = updatedConnection.getConnector()
+            .orElseGet(() -> dataManager.fetch(Connector.class, updatedConnection.getConnectorId())).getProperties();
+        final Map<String, String> encryptedConfiguredProperties = encryptionComponent.encryptPropertyValues(configuredProperties,
+            properties);
+
+        return new Connection.Builder().createFrom(appliedConnection).configuredProperties(encryptedConfiguredProperties).build();
     }
 
     public CredentialFlowState finishAcquisition(final CredentialFlowState flowState, final URI baseUrl) {
