@@ -16,12 +16,10 @@
 package io.syndesis.connector.rest.swagger;
 
 import java.io.IOException;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -34,18 +32,30 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 class OAuthRefreshTokenProcessor implements Processor {
 
+    /**
+     * The number of milliseconds we try to refresh the access token before it
+     * expires.
+     */
+    private static final long AHEAD_OF_TIME_REFRESH_MILIS = 60 * 1000;
+
     private static final ObjectMapper JSON = new ObjectMapper();
 
     private static final Logger LOG = LoggerFactory.getLogger(OAuthRefreshTokenProcessor.class);
 
+    final String expiresInOverride = System.getenv().get("AUTHTOKEN_EXPIRES_IN_OVERRIDE");
+
     final AtomicReference<String> lastRefreshTokenTried = new AtomicReference<>(null);
 
-    private final SwaggerConnectorComponent component;
+    //Always refresh on (re)start
+    final AtomicReference<Boolean> isFirstTime = new AtomicReference<>(Boolean.TRUE);
+
+    protected final SwaggerConnectorComponent component;
 
     public OAuthRefreshTokenProcessor(final SwaggerConnectorComponent component) {
         this.component = component;
@@ -53,37 +63,13 @@ class OAuthRefreshTokenProcessor implements Processor {
 
     @Override
     public void process(final Exchange exchange) throws Exception {
-        final HttpOperationFailedException httpFailure = (HttpOperationFailedException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
-        LOG.warn("Failed invoking the remote API, status: {} {}, response body: {}", httpFailure.getStatusCode(),
-            httpFailure.getStatusText(), httpFailure.getResponseBody());
 
-        final int statusCode = httpFailure.getStatusCode();
-        final Set<Integer> statusesToRefreshFor = component.getRefreshTokenRetryStatusesSet();
-        if (!statusesToRefreshFor.contains(statusCode)) {
-            throw httpFailure;
+        if ((isFirstTime.get() || component.getAccessTokenExpiresAt() - AHEAD_OF_TIME_REFRESH_MILIS < now())
+            && component.getRefreshToken() != null) {
+            tryToRefreshAccessToken();
+            isFirstTime.set(Boolean.FALSE);
         }
 
-        final String currentRefreshToken = component.getRefreshToken();
-        lastRefreshTokenTried.getAndUpdate(last -> {
-            if (last != null && last.equals(currentRefreshToken)) {
-                return last;
-            }
-
-            return null;
-        });
-
-        if (!lastRefreshTokenTried.compareAndSet(null, currentRefreshToken)) {
-            throw httpFailure;
-        }
-
-        tryToRefreshAccessToken();
-
-        lastRefreshTokenTried.set(currentRefreshToken);
-
-        // we need to throw the failure so that the exchange fails, otherwise it
-        // might be considered successful and we do not perform any
-        // retry, and that would lead to data inconsistencies
-        throw httpFailure;
     }
 
     CloseableHttpClient createHttpClient() {
@@ -105,7 +91,53 @@ class OAuthRefreshTokenProcessor implements Processor {
         return builder.build();
     }
 
+    long now() {
+        return System.currentTimeMillis();
+    }
+
+    void processRefreshTokenResponse(final HttpEntity entity) throws IOException, JsonProcessingException {
+        final JsonNode body = JSON.readTree(entity.getContent());
+
+        final JsonNode accessToken = body.get("access_token");
+        if (accessToken != null && !accessToken.isNull() && !accessToken.asText().isEmpty()) {
+            component.setAccessToken(accessToken.asText());
+            LOG.info("Successful access token refresh");
+
+            Long expiresInSeconds = null;
+            if (expiresInOverride != null) {
+                expiresInSeconds = Long.valueOf(expiresInOverride);
+            } else {
+                final JsonNode expiresIn = body.get("expires_in");
+                if (expiresIn != null && !expiresIn.isNull() && !expiresIn.asText().isEmpty()) {
+                    expiresInSeconds = expiresIn.asLong();
+                }
+            }
+            if (expiresInSeconds != null) {
+                component.setAccessTokenExpiresAt(now() + expiresInSeconds * 1000);
+            }
+
+            final JsonNode refreshToken = body.get("refresh_token");
+            if (refreshToken != null && !refreshToken.isNull() && !refreshToken.asText().isEmpty()) {
+                component.setRefreshToken(refreshToken.asText());
+            }
+        }
+    }
+
     void tryToRefreshAccessToken() {
+        final String currentRefreshToken = component.getRefreshToken();
+        lastRefreshTokenTried.getAndUpdate(last -> {
+            if (last != null && last.equals(currentRefreshToken)) {
+                return last;
+            }
+
+            return null;
+        });
+
+        if (!lastRefreshTokenTried.compareAndSet(null, currentRefreshToken)) {
+            LOG.info("Already tried to refresh the access token with the current refresh token");
+            return;
+        }
+
         LOG.info("Trying to refresh the OAuth2 access token");
 
         try (final CloseableHttpClient client = createHttpClient()) {
@@ -121,21 +153,10 @@ class OAuthRefreshTokenProcessor implements Processor {
                 }
 
                 final HttpEntity entity = response.getEntity();
-                final JsonNode body = JSON.readTree(entity.getContent());
-
-                final JsonNode accessToken = body.get("access_token");
-                if (accessToken != null && !accessToken.isNull() && !accessToken.asText().isEmpty()) {
-                    component.setAccessToken(accessToken.asText());
-
-                    final JsonNode refreshToken = body.get("refresh_token");
-                    if (refreshToken != null && !refreshToken.isNull() && !refreshToken.asText().isEmpty()) {
-                        component.setRefreshToken(refreshToken.asText());
-                    }
-                }
+                processRefreshTokenResponse(entity);
             }
         } catch (final IOException e) {
             LOG.error("Unable to refresh the access token", e);
         }
     }
-
 }
