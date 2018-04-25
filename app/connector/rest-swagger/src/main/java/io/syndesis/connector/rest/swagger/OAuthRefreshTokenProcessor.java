@@ -67,7 +67,6 @@ class OAuthRefreshTokenProcessor implements Processor {
         if ((isFirstTime.get() || component.getAccessTokenExpiresAt() - AHEAD_OF_TIME_REFRESH_MILIS < now())
             && component.getRefreshToken() != null) {
             tryToRefreshAccessToken();
-            isFirstTime.set(Boolean.FALSE);
         }
 
     }
@@ -101,6 +100,7 @@ class OAuthRefreshTokenProcessor implements Processor {
         final JsonNode accessToken = body.get("access_token");
         if (accessToken != null && !accessToken.isNull() && !accessToken.asText().isEmpty()) {
             component.setAccessToken(accessToken.asText());
+            isFirstTime.set(Boolean.FALSE);
             LOG.info("Successful access token refresh");
 
             Long expiresInSeconds = null;
@@ -126,7 +126,7 @@ class OAuthRefreshTokenProcessor implements Processor {
     void tryToRefreshAccessToken() {
         final String currentRefreshToken = component.getRefreshToken();
         lastRefreshTokenTried.getAndUpdate(last -> {
-            if (last != null && last.equals(currentRefreshToken)) {
+            if (!isFirstTime.get() || last != null && last.equals(currentRefreshToken)) {
                 return last;
             }
 
