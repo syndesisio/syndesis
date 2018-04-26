@@ -1,0 +1,8 @@
+spec:
+  template:
+    spec:
+      containers:
+      - name: broker-amq
+        env:
+        - name: AMQ_TRANSPORTS
+          value: openwire,stomp

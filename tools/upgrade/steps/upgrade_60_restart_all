@@ -15,6 +15,7 @@ EOT
 
 restart_all::run() {
     local deployments=$(syndesis_deployments)
+    scale_deployments 0 ${deployments}
     scale_deployments 1 ${deployments}
 }
 
