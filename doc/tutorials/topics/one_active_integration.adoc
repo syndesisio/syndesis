@@ -7,11 +7,11 @@
 circle. {prodname} is generating the runtime for the integration and
 will start it when the runtime is ready. This takes a few minutes.
 
-In this technology preview, only one integration at a time can be running.
+In this release, one integration at a time can be running (published).
 If you already created one of the other sample integrations and that
 integration is running then this integration is automatically in the
 *Unpublished* state. You must stop the running integration by 
-unpublishing it before {prodname} can start (publish) this integration. 
+unpublishing it. You can then publish this integration.  
 
 To stop an integration:
 
