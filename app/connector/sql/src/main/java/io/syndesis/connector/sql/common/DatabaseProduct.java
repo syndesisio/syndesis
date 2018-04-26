@@ -15,6 +15,8 @@
  */
 package io.syndesis.connector.sql.common;
 
+import java.util.Locale;
+
 /**
  * Enumeration of Database products we have tested, and for which we ship
  * drivers for. One caviat is the Oracle Driver which cannot be shipped due to
@@ -34,5 +36,9 @@ public enum DatabaseProduct {
      */
     public String nameWithSpaces() {
         return name().replaceAll("_", " ");
+    }
+
+    public static DatabaseProduct fromName(String databaseProductName) {
+        return valueOf(databaseProductName.toUpperCase(Locale.US).replaceAll(" ", "_"));
     }
 }
