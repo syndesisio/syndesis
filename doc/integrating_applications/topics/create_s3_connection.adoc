@@ -12,17 +12,22 @@ display any available connections.
 provided by AWS, for the
 AWS account that created the bucket that you want
 this connection to access. If the bucket you want the connection to
-access does not already exist then when the integration starts running,
-it uses the AWS account associated with this access key to create the bucket.
+access does not already exist then when {prodname} tries to start running the 
+integration, it uses the AWS account associated with this access key to 
+create the bucket. However, if the bucket already exists in some other 
+AWS account, then the connection cannot create the bucket and the integration cannot start. 
 . In the *Bucket Name or Amazon Resource Name* field, enter the name of
 the bucket that you want this connection to access or enter the bucket's ARN.
-If the bucket does not already exist then the connection creates it.
+If the bucket does not already exist 
+in either the AWS account being used or in any other AWS account, 
+then the connection creates it. For details about bucket name requirements,
+see <<prerequisites-for-creating-s3-connection>>.
 . In the *Region* field, select the AWS region in which the bucket resides.
-If the bucket does not already exist then the connection creates it in the
+If the connection creates the bucket, then it creates it in the
 selected region.
 . In the *Secret Key* field, enter the Amazon S3 secret access key,
-provided by AWS, for the account that created the bucket that you want this
-connection to access.
+provided by AWS, for the account that created, or will create, 
+the bucket that you want this connection to access.
 . Click *Validate*. {prodname} immediately tries to validate the
 connection and displays a message that indicates whether or not
 validation is successful. If validation fails, revise the configuration

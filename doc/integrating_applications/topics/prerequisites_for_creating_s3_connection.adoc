@@ -6,17 +6,28 @@ following:
 
 * Amazon S3 access key ID that is associated with
 the Amazon Web Services (AWS) account
-that created the bucket that you want the connection to access.
+that created, or will create, the bucket that you want the connection to access.
 +
 You can create a connection that accesses a bucket that does not
 yet exist. In this case, when the integration starts running then
-it use the AWS account associated with this access key ID to create
+it use the AWS account associated with this access key ID to try to create
 the bucket.
 * Amazon S3 secret access key that is associated with the AWS account
-that created or will create (when the integration starts running)
+that created or will try to create (when the integration starts running)
 the bucket that you want the connection to access.
 * Name of the bucket that you want to access or its Amazon Resource Name (ARN).
-The connection creates this bucket if it does not already exist.
++
+If the bucket you specify does not yet exist then the connection
+tries to create a bucket with the name that you specify.  
+Because S3 allows a bucket to be used as a URL that can be accessed publicly, 
+the bucket name that you specify must be globally unique. Also, it must meet
+https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-s3-bucket-naming-requirements.html[S3 bucket naming requirements].
++
+If the bucket you specify does not exist in the AWS account that is
+associated with the Amazon S3 access key ID, but it does exist in another
+AWS account, then the connection does not create the bucket and an
+integration that uses this connection cannot start running. 
+
 * Region in which the bucket is located or the region in which you want
 the connection to create the bucket.
 
