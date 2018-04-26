@@ -16,11 +16,13 @@
 package io.syndesis.connector.rest.swagger;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -115,6 +117,24 @@ public class OAuthRefreshTokenOnFailProcessorTest {
     }
 
     @Test
+    public void shouldRefreshSecondTimeIfWeReceivedTheSameRefreshTokenTheFirstTime() throws Exception {
+        final OAuthRefreshTokenProcessor processor = createProcessor(
+            "{\"access_token\": \"new-access-token\", \"refresh_token\": \"new-refresh-token\"}",
+            "{\"access_token\": \"newer-access-token\", \"refresh_token\": \"new-refresh-token\"}");
+        component.setRefreshTokenRetryStatuses("403");
+
+        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
+
+        assertThat(component.getAccessToken()).isEqualTo("new-access-token");
+        assertThat(component.getRefreshToken()).isEqualTo("new-refresh-token");
+
+        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
+
+        assertThat(component.getAccessToken()).isEqualTo("newer-access-token");
+        assertThat(component.getRefreshToken()).isEqualTo("new-refresh-token");
+    }
+
+    @Test
     public void shouldThrowExceptionIfAlreadyAttemptedWithTheSameRefreshToken() throws Exception {
         component.setRefreshTokenRetryStatuses("403");
         final OAuthRefreshTokenOnFailProcessor processor = new OAuthRefreshTokenOnFailProcessor(component);
@@ -167,11 +187,15 @@ public class OAuthRefreshTokenOnFailProcessorTest {
         assertThat(component.getRefreshToken()).isEqualTo("refresh-token");
     }
 
-    OAuthRefreshTokenOnFailProcessor createProcessor(final String grantJson) throws IOException {
+    OAuthRefreshTokenOnFailProcessor createProcessor(final String... grantJsons) throws IOException {
         final CloseableHttpClient client = mock(CloseableHttpClient.class);
         final CloseableHttpResponse response = mock(CloseableHttpResponse.class);
         when(response.getStatusLine()).thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, 200, "OK"));
-        when(response.getEntity()).thenReturn(new ByteArrayEntity(grantJson.getBytes(), ContentType.APPLICATION_JSON));
+
+        final HttpEntity first = entity(grantJsons[0]);
+        final HttpEntity[] rest = Arrays.stream(grantJsons).skip(1).map(OAuthRefreshTokenOnFailProcessorTest::entity)
+            .toArray(HttpEntity[]::new);
+        when(response.getEntity()).thenReturn(first, rest);
 
         when(client.execute(ArgumentMatchers.any(HttpUriRequest.class))).thenReturn(response);
 
@@ -181,5 +205,9 @@ public class OAuthRefreshTokenOnFailProcessorTest {
                 return client;
             }
         };
+    }
+
+    static HttpEntity entity(final String grantJson) {
+        return new ByteArrayEntity(grantJson.getBytes(), ContentType.APPLICATION_JSON);
     }
 }

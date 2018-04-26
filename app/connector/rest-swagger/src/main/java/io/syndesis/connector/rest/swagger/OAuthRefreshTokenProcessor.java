@@ -16,6 +16,7 @@
 package io.syndesis.connector.rest.swagger;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.camel.Exchange;
@@ -42,18 +43,18 @@ class OAuthRefreshTokenProcessor implements Processor {
      * The number of milliseconds we try to refresh the access token before it
      * expires.
      */
-    private static final long AHEAD_OF_TIME_REFRESH_MILIS = 60 * 1000;
+    static final long AHEAD_OF_TIME_REFRESH_MILIS = 60 * 1000;
 
     private static final ObjectMapper JSON = new ObjectMapper();
 
     private static final Logger LOG = LoggerFactory.getLogger(OAuthRefreshTokenProcessor.class);
 
-    final String expiresInOverride = System.getenv().get("AUTHTOKEN_EXPIRES_IN_OVERRIDE");
+    Optional<Long> expiresInOverride = Optional.ofNullable(System.getenv().get("AUTHTOKEN_EXPIRES_IN_OVERRIDE")).map(Long::valueOf);
+
+    // Always refresh on (re)start
+    final AtomicReference<Boolean> isFirstTime = new AtomicReference<>(Boolean.TRUE);
 
     final AtomicReference<String> lastRefreshTokenTried = new AtomicReference<>(null);
-
-    //Always refresh on (re)start
-    final AtomicReference<Boolean> isFirstTime = new AtomicReference<>(Boolean.TRUE);
 
     protected final SwaggerConnectorComponent component;
 
@@ -64,7 +65,7 @@ class OAuthRefreshTokenProcessor implements Processor {
     @Override
     public void process(final Exchange exchange) throws Exception {
 
-        if ((isFirstTime.get() || component.getAccessTokenExpiresAt() - AHEAD_OF_TIME_REFRESH_MILIS < now())
+        if ((isFirstTime.get() || component.getAccessTokenExpiresAt() - AHEAD_OF_TIME_REFRESH_MILIS <= now())
             && component.getRefreshToken() != null) {
             tryToRefreshAccessToken();
         }
@@ -98,17 +99,17 @@ class OAuthRefreshTokenProcessor implements Processor {
         final JsonNode body = JSON.readTree(entity.getContent());
 
         final JsonNode accessToken = body.get("access_token");
-        if (accessToken != null && !accessToken.isNull() && !accessToken.asText().isEmpty()) {
+        if (isPresentAndHasValue(accessToken)) {
             component.setAccessToken(accessToken.asText());
             isFirstTime.set(Boolean.FALSE);
             LOG.info("Successful access token refresh");
 
             Long expiresInSeconds = null;
-            if (expiresInOverride != null) {
-                expiresInSeconds = Long.valueOf(expiresInOverride);
+            if (expiresInOverride.isPresent()) {
+                expiresInSeconds = expiresInOverride.get();
             } else {
                 final JsonNode expiresIn = body.get("expires_in");
-                if (expiresIn != null && !expiresIn.isNull() && !expiresIn.asText().isEmpty()) {
+                if (isPresentAndHasValue(expiresIn)) {
                     expiresInSeconds = expiresIn.asLong();
                 }
             }
@@ -117,8 +118,11 @@ class OAuthRefreshTokenProcessor implements Processor {
             }
 
             final JsonNode refreshToken = body.get("refresh_token");
-            if (refreshToken != null && !refreshToken.isNull() && !refreshToken.asText().isEmpty()) {
-                component.setRefreshToken(refreshToken.asText());
+            if (isPresentAndHasValue(refreshToken)) {
+                final String givenRefreshToken = refreshToken.asText();
+                component.setRefreshToken(givenRefreshToken);
+
+                lastRefreshTokenTried.compareAndSet(givenRefreshToken, null);
             }
         }
     }
@@ -126,7 +130,11 @@ class OAuthRefreshTokenProcessor implements Processor {
     void tryToRefreshAccessToken() {
         final String currentRefreshToken = component.getRefreshToken();
         lastRefreshTokenTried.getAndUpdate(last -> {
-            if (!isFirstTime.get() || last != null && last.equals(currentRefreshToken)) {
+            if (isFirstTime.get()) {
+                return null;
+            }
+
+            if (last != null && last.equals(currentRefreshToken)) {
                 return last;
             }
 
@@ -158,5 +166,9 @@ class OAuthRefreshTokenProcessor implements Processor {
         } catch (final IOException e) {
             LOG.error("Unable to refresh the access token", e);
         }
+    }
+
+    static boolean isPresentAndHasValue(final JsonNode node) {
+        return node != null && !node.isNull() && !node.asText().isEmpty();
     }
 }
