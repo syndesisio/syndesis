@@ -342,17 +342,26 @@
           "displayName": "Specification",
           "group": "producer",
           "label": "producer",
-          "required": true,
+          "required": false,
           "type": "hidden",
           "javaType": "java.lang.String",
-          "tags": [
-            "upload",
-            "url"
-          ],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description": "Swagger specification of the service"
+          "description": "Comma separated list of HTTP statuses for which to refresh the OAuth access token using the refresh token"
+        },
+        "accessTokenExpiresAt": {
+          "kind": "property",
+          "displayName": "",
+          "group": "producer",
+          "label": "producer",
+          "required": false,
+          "type": "hidden",
+          "javaType": "java.lang.Long",
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "Seconds in UTC when the access token expires"
         },
         "specification": {
           "kind": "property",

@@ -35,6 +35,8 @@ import org.springframework.social.oauth2.AccessGrant;
  */
 public class OAuth2Applicator implements Applicator<AccessGrant> {
 
+    private String accessTokenExpiresAtProperty;
+
     private String accessTokenProperty;
 
     private String clientIdProperty;
@@ -55,17 +57,22 @@ public class OAuth2Applicator implements Applicator<AccessGrant> {
      */
     @Override
     public final Connection applyTo(final Connection connection, final AccessGrant accessGrant) {
-        final Connection.Builder mutableConnection = new Connection.Builder().createFrom(connection)
-            .lastUpdated(new Date());
+        final Connection.Builder mutableConnection = new Connection.Builder().createFrom(connection).lastUpdated(new Date());
 
         Applicator.applyProperty(mutableConnection, clientIdProperty, socialProperties.getAppId());
         Applicator.applyProperty(mutableConnection, clientSecretProperty, socialProperties.getAppSecret());
         Applicator.applyProperty(mutableConnection, accessTokenProperty, accessGrant.getAccessToken());
         Applicator.applyProperty(mutableConnection, refreshTokenProperty, accessGrant.getRefreshToken());
+        final Long expireTime = accessGrant.getExpireTime();
+        Applicator.applyProperty(mutableConnection, accessTokenExpiresAtProperty, expireTime == null ? null : expireTime.toString());
 
         additionalApplication(mutableConnection, accessGrant);
 
         return mutableConnection.build();
+    }
+
+    public void setAccessTokenExpiresAtProperty(final String accessTokenExpiresAtProperty) {
+        this.accessTokenExpiresAtProperty = accessTokenExpiresAtProperty;
     }
 
     public final void setAccessTokenProperty(final String accessTokenProperty) {

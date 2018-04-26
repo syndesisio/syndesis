@@ -19,6 +19,8 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 
+import java.util.Arrays;
+
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
@@ -27,6 +29,7 @@ import org.apache.camel.component.connector.DefaultConnectorEndpoint;
 import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.impl.DefaultEndpoint;
 import org.apache.camel.processor.CatchProcessor;
+import org.apache.camel.processor.Pipeline;
 import org.apache.camel.processor.TryProcessor;
 
 final class OAuthRefreshingEndpoint extends DefaultEndpoint {
@@ -34,7 +37,7 @@ final class OAuthRefreshingEndpoint extends DefaultEndpoint {
 
     private final DefaultConnectorEndpoint endpoint;
 
-    private final Processor tryProcessor;
+    private final Pipeline pipeline;
 
     OAuthRefreshingEndpoint(final DefaultConnectorEndpoint endpoint, final SwaggerConnectorComponent component) {
         super(endpoint.getEndpointUri(), component);
@@ -47,11 +50,15 @@ final class OAuthRefreshingEndpoint extends DefaultEndpoint {
             throw new ExceptionInInitializerError(e);
         }
 
-        final Processor catchBody = new OAuthRefreshTokenProcessor((SwaggerConnectorComponent) getComponent());
+        final OAuthRefreshTokenProcessor refreshProcessor= new OAuthRefreshTokenProcessor((SwaggerConnectorComponent) getComponent());
+
+        final Processor catchBody = new OAuthRefreshTokenOnFailProcessor((SwaggerConnectorComponent) getComponent());
 
         final Processor catchProcessor = new CatchProcessor(EXCEPTIONS_HANDLED, catchBody, null, null);
 
-        tryProcessor = new TryProcessor(producer, singletonList(catchProcessor), null);
+        final Processor tryProcessor = new TryProcessor(producer, singletonList(catchProcessor), null);
+
+        pipeline = new Pipeline(endpoint.getCamelContext(), Arrays.asList(refreshProcessor, tryProcessor));
     }
 
     @Override
@@ -61,7 +68,7 @@ final class OAuthRefreshingEndpoint extends DefaultEndpoint {
 
     @Override
     public Producer createProducer() throws Exception {
-        return new ConnectorProducer(endpoint, tryProcessor);
+        return new ConnectorProducer(endpoint, pipeline);
     }
 
     @Override

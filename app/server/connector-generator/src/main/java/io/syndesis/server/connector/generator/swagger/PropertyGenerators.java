@@ -48,6 +48,12 @@ enum PropertyGenerators {
             return PropertyGenerators::ifHasOAuthSecurityDefinition;
         }
     },
+    accessTokenExpiresAt {
+        @Override
+        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+            return PropertyGenerators::ifHasOAuthSecurityDefinition;
+        }
+    },
     authenticationType {
         @Override
         protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {

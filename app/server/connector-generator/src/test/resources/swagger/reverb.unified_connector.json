@@ -5634,6 +5634,19 @@
       "enum": [],
       "order": 8
     },
+    "accessTokenExpiresAt": {
+      "kind": "property",
+      "displayName": "",
+      "group": "producer",
+      "label": "producer",
+      "required": false,
+      "type": "hidden",
+      "javaType": "java.lang.Long",
+      "deprecated": false,
+      "secret": false,
+      "componentProperty": true,
+      "description": "Seconds in UTC when the access token expires"
+    },
     "specification": {
       "componentProperty": true,
       "deprecated": false,

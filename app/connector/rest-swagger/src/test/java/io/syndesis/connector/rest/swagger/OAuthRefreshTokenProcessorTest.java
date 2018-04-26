@@ -16,6 +16,7 @@
 package io.syndesis.connector.rest.swagger;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.http.common.HttpOperationFailedException;
@@ -32,13 +33,13 @@ import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class OAuthRefreshTokenProcessorTest {
-
     SwaggerConnectorComponent component = new SwaggerConnectorComponent();
+
+    long currentTime = 1000000000;
 
     HttpOperationFailedException exception = new HttpOperationFailedException("uri", 403, "status", "location", null, null);
 
@@ -54,117 +55,79 @@ public class OAuthRefreshTokenProcessorTest {
     }
 
     @Test
-    public void shouldNotThrowExceptionWhenRetryingInitially() throws Exception {
-        final OAuthRefreshTokenProcessor processor = createProcessor("{}");
-        component.setRefreshTokenRetryStatuses("403");
+    public void shouldAllowOverideExpires() throws Exception {
+        component.setAccessTokenExpiresAt(currentTime);
 
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
-    }
-
-    @Test
-    public void shouldNotThrowExceptionWhenRetryingWithDifferentRefreshToken() throws Exception {
-        final OAuthRefreshTokenProcessor processor = createProcessor("{}");
-        component.setRefreshTokenRetryStatuses("403");
-        processor.lastRefreshTokenTried.set("different-refresh-token");
-
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
-    }
-
-    @Test
-    public void shouldNotUpdateComponentAccessAndRefreshTokensWithEmptyValues() throws Exception {
-        final OAuthRefreshTokenProcessor processor = createProcessor("{\"access_token\": \"\", \"refresh_token\": \"\"}");
-        component.setRefreshTokenRetryStatuses("403");
-
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
-
-        assertThat(component.getAccessToken()).isEqualTo("access-token");
-        assertThat(component.getRefreshToken()).isEqualTo("refresh-token");
-    }
-
-    @Test
-    public void shouldNotUpdateComponentAccessAndRefreshTokensWithNullValues() throws Exception {
-        final OAuthRefreshTokenProcessor processor = createProcessor("{\"access_token\": null, \"refresh_token\": null}");
-        component.setRefreshTokenRetryStatuses("403");
-
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
-
-        assertThat(component.getAccessToken()).isEqualTo("access-token");
-        assertThat(component.getRefreshToken()).isEqualTo("refresh-token");
-    }
-
-    @Test
-    public void shouldNotUpdateComponentRefreshTokensWithEmptyValues() throws Exception {
-        final OAuthRefreshTokenProcessor processor = createProcessor("{\"access_token\": \"new-access-token\", \"refresh_token\": \"\"}");
-        component.setRefreshTokenRetryStatuses("403");
-
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
-
-        assertThat(component.getAccessToken()).isEqualTo("new-access-token");
-        assertThat(component.getRefreshToken()).isEqualTo("refresh-token");
-    }
-
-    @Test
-    public void shouldNotUpdateComponentRefreshTokensWithNullValues() throws Exception {
-        final OAuthRefreshTokenProcessor processor = createProcessor("{\"access_token\": \"new-access-token\", \"refresh_token\": null}");
-        component.setRefreshTokenRetryStatuses("403");
-
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
-
-        assertThat(component.getAccessToken()).isEqualTo("new-access-token");
-        assertThat(component.getRefreshToken()).isEqualTo("refresh-token");
-    }
-
-    @Test
-    public void shouldThrowExceptionIfAlreadyAttemptedWithTheSameRefreshToken() throws Exception {
-        component.setRefreshTokenRetryStatuses("403");
-        final OAuthRefreshTokenProcessor processor = new OAuthRefreshTokenProcessor(component);
-        processor.lastRefreshTokenTried.set("refresh-token");
-
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
-    }
-
-    @Test
-    public void shouldThrowExceptionIfStatusIsNonRetriable() {
-        final OAuthRefreshTokenProcessor processor = new OAuthRefreshTokenProcessor(component);
-
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
-
-        component.setRefreshTokenRetryStatuses("400,500");
-
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
-    }
-
-    @Test
-    public void shouldUpdateComponentAccessAndRefreshTokens() throws Exception {
         final OAuthRefreshTokenProcessor processor = createProcessor(
-            "{\"access_token\": \"new-access-token\", \"refresh_token\": \"new-refresh-token\"}");
-        component.setRefreshTokenRetryStatuses("403");
+            "{\"access_token\": \"new-access-token\", \"refresh_token\": \"new-refresh-token\", \"expires_in\": 3600}");
+        processor.isFirstTime.set(Boolean.FALSE);
+        processor.expiresInOverride = Optional.of(1800L);
 
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
+        processor.process(exchange);
 
         assertThat(component.getAccessToken()).isEqualTo("new-access-token");
         assertThat(component.getRefreshToken()).isEqualTo("new-refresh-token");
+        assertThat(component.getAccessTokenExpiresAt()).isEqualTo(currentTime + 1800000L);
     }
 
     @Test
-    public void shouldUpdateComponentAccessToken() throws Exception {
-        final OAuthRefreshTokenProcessor processor = createProcessor("{\"access_token\": \"new-access-token\"}");
-        component.setRefreshTokenRetryStatuses("403");
+    public void shouldNotRefreshAccessTokenIfItHasntExpired() throws Exception {
+        component.setAccessTokenExpiresAt(currentTime + OAuthRefreshTokenProcessor.AHEAD_OF_TIME_REFRESH_MILIS + 1000);
 
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
+        final OAuthRefreshTokenProcessor processor = createProcessor(
+            "{\"access_token\": \"new-access-token\", \"refresh_token\": \"new-refresh-token\", \"expires_in\": 3600}");
+        processor.isFirstTime.set(Boolean.FALSE);
 
-        assertThat(component.getAccessToken()).isEqualTo("new-access-token");
-    }
-
-    @Test
-    public void shouldUpdateComponentRefreshTokenOnlyIfAccessTokenIsGiven() throws Exception {
-        final OAuthRefreshTokenProcessor processor = createProcessor("{\"refresh_token\": \"new-refresh-token\"}");
-        component.setRefreshTokenRetryStatuses("403");
-
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
+        processor.process(exchange);
 
         assertThat(component.getAccessToken()).isEqualTo("access-token");
         assertThat(component.getRefreshToken()).isEqualTo("refresh-token");
+        assertThat(component.getAccessTokenExpiresAt())
+            .isEqualTo(currentTime + OAuthRefreshTokenProcessor.AHEAD_OF_TIME_REFRESH_MILIS + 1000);
+    }
+
+    @Test
+    public void shouldRefreshAccessTokenBeforeItExpiresUsingAheadOfTimeRefresh() throws Exception {
+        component.setAccessTokenExpiresAt(currentTime + OAuthRefreshTokenProcessor.AHEAD_OF_TIME_REFRESH_MILIS);
+
+        final OAuthRefreshTokenProcessor processor = createProcessor(
+            "{\"access_token\": \"new-access-token\", \"refresh_token\": \"new-refresh-token\", \"expires_in\": 3600}");
+        processor.isFirstTime.set(Boolean.FALSE);
+
+        processor.process(exchange);
+
+        assertThat(component.getAccessToken()).isEqualTo("new-access-token");
+        assertThat(component.getRefreshToken()).isEqualTo("new-refresh-token");
+        assertThat(component.getAccessTokenExpiresAt()).isEqualTo(currentTime + 3600000L);
+    }
+
+    @Test
+    public void shouldRefreshAccessTokenIfItHasExpired() throws Exception {
+        component.setAccessTokenExpiresAt(currentTime);
+
+        final OAuthRefreshTokenProcessor processor = createProcessor(
+            "{\"access_token\": \"new-access-token\", \"refresh_token\": \"new-refresh-token\", \"expires_in\": 3600}");
+        processor.isFirstTime.set(Boolean.FALSE);
+
+        processor.process(exchange);
+
+        assertThat(component.getAccessToken()).isEqualTo("new-access-token");
+        assertThat(component.getRefreshToken()).isEqualTo("new-refresh-token");
+        assertThat(component.getAccessTokenExpiresAt()).isEqualTo(currentTime + 3600000L);
+    }
+
+    @Test
+    public void shouldRefreshAccessTokenIfItsTheFirstTimeApiIsInvoked() throws Exception {
+        component.setAccessTokenExpiresAt(currentTime + OAuthRefreshTokenProcessor.AHEAD_OF_TIME_REFRESH_MILIS + 1000);
+
+        final OAuthRefreshTokenProcessor processor = createProcessor(
+            "{\"access_token\": \"new-access-token\", \"refresh_token\": \"new-refresh-token\", \"expires_in\": 3600}");
+
+        processor.process(exchange);
+
+        assertThat(component.getAccessToken()).isEqualTo("new-access-token");
+        assertThat(component.getRefreshToken()).isEqualTo("new-refresh-token");
+        assertThat(component.getAccessTokenExpiresAt()).isEqualTo(currentTime + 3600000L);
     }
 
     OAuthRefreshTokenProcessor createProcessor(final String grantJson) throws IOException {
@@ -179,6 +142,11 @@ public class OAuthRefreshTokenProcessorTest {
             @Override
             CloseableHttpClient createHttpClient() {
                 return client;
+            }
+
+            @Override
+            long now() {
+                return currentTime;
             }
         };
     }

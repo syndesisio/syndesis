@@ -46,7 +46,11 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
 
     private String accessToken;
 
+    private Long accessTokenExpiresAt;
+
     private AuthenticationType authenticationType;
+
+    private boolean authorizeUsingParameters;
 
     private String clientId;
 
@@ -62,8 +66,6 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
 
     private String tokenEndpoint;
 
-    private boolean authorizeUsingParameters;
-
     private String username;
 
     public SwaggerConnectorComponent() {
@@ -76,6 +78,10 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public Long getAccessTokenExpiresAt() {
+        return accessTokenExpiresAt;
     }
 
     public AuthenticationType getAuthenticationType() {
@@ -126,8 +132,16 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
         this.accessToken = accessToken;
     }
 
+    public void setAccessTokenExpiresAt(final Long accessTokenExpiresAt) {
+        this.accessTokenExpiresAt = accessTokenExpiresAt;
+    }
+
     public void setAuthenticationType(final AuthenticationType authenticationType) {
         this.authenticationType = authenticationType;
+    }
+
+    public void setAuthorizeUsingParameters(final boolean useParametersForClientCredentials) {
+        authorizeUsingParameters = useParametersForClientCredentials;
     }
 
     public void setClientId(final String clientId) {
@@ -164,10 +178,6 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
 
     public void setTokenEndpoint(final String tokenEndpoint) {
         this.tokenEndpoint = tokenEndpoint;
-    }
-
-    public void setAuthorizeUsingParameters(final boolean useParametersForClientCredentials) {
-        this.authorizeUsingParameters = useParametersForClientCredentials;
     }
 
     public void setUsername(final String username) {
