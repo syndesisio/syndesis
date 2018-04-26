@@ -20,11 +20,9 @@ to obtain.
 
 * *Poll an Amazon S3 Bucket* to periodically obtain files from the bucket that the
 connection accesses. To configure this action:
-.. In the *Delay* field, accept the default or enter the number of 
-milliseconds that elapse between
-polls. The default is 500 milliseconds.
-Alternatively, you can enter something like `3s`, `5m 30s`, or `2h` to
-indicate 3 seconds, or 5 minutes 30 seconds, or 2 hours, respectively.
+.. In the *Delay* field, accept the default of 500 milliseconds as the time
+that elapses between polls. Or, to specify a different polling interval,
+enter a number and select its time unit. 
 .. In the *Maximum Objects to Retrieve* field, enter the largest number of files
 that one poll operation can obtain. The default is 10.
 +
