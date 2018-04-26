@@ -15,11 +15,14 @@
  */
 package io.syndesis.integration.runtime.logging;
 
-import org.apache.camel.spi.EventNotifier;
+import io.syndesis.common.util.KeyGenerator;
+import org.apache.camel.CamelContext;
+import org.apache.camel.spi.InterceptStrategy;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -32,12 +35,34 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(IntegrationLoggingConfiguration.class)
 public class IntegrationLoggingAutoConfiguration {
     @Bean
-    public CamelContextConfiguration integrationContextLoggingConfiguration() {
-        return new IntegrationLoggingContextConfiguration();
+    @ConditionalOnMissingBean(ActivityTracker.class)
+    public ActivityTracker activityTracker() {
+        return new ActivityTracker.SysOut();
     }
 
     @Bean
-    public EventNotifier integrationActivityEventHandler() {
-        return new IntegrationActivityEventHandler();
+    public CamelContextConfiguration integrationLoggingContextConfiguration(ActivityTracker activityTracker) {
+        return new CamelContextConfiguration() {
+            @Override
+            public void beforeApplicationStart(CamelContext camelContext) {
+                // Lets generates always incrementing lexically sortable unique
+                // uuids. These uuids are also more compact than the camel default
+                // and contain an embedded timestamp.
+                camelContext.setUuidGenerator(KeyGenerator::createKey);
+
+                // Log listener
+                camelContext.addLogListener(new IntegrationLoggingListener(activityTracker));
+            }
+
+            @Override
+            public void afterApplicationStart(CamelContext camelContext) {
+                // no ops
+            }
+        };
+    }
+
+    @Bean
+    public InterceptStrategy integrationLoggingInterceptStrategy(ActivityTracker activityTracker) {
+        return new ActivityTrackingInterceptStrategy(activityTracker);
     }
 }

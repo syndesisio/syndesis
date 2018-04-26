@@ -15,13 +15,20 @@
  */
 package io.syndesis.integration.runtime.logging;
 
-public final class IntegrationLoggingConstants {
-    public static final String ACTIVITY_ID = "Syndesis.ACTIVITY_ID";
-    public static final String STEP_ID = "Syndesis.STEP_ID";
-    public static final String STEP_INDEX = "Syndesis.STEP_INDEX";
-    public static final String STEP_TRACKER_ID = "Syndesis.STEP_TRACKER_ID";
-    public static final String STEP_TRACKER_STARTED_AT = "Syndesis.STEP_TRACKER_STARTED_AT";
+import io.syndesis.integration.runtime.util.JsonSupport;
 
-    private IntegrationLoggingConstants() {
+@FunctionalInterface
+public interface ActivityTracker {
+    void track(Object... items);
+
+    /**
+     * Default implementation that log activity on STOUT.
+     */
+    class SysOut implements ActivityTracker {
+        @SuppressWarnings("PMD.SystemPrintln")
+        @Override
+        public void track(Object... fields) {
+            System.out.println(JsonSupport.toJsonObject(fields));
+        }
     }
 }

@@ -15,10 +15,9 @@
  */
 package io.syndesis.integration.runtime.logging;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Map;
 
+import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultUuidGenerator;
 import org.apache.camel.spi.LogListener;
@@ -33,7 +32,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)

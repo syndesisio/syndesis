@@ -20,13 +20,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
-import io.syndesis.extension.api.Step;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.extension.api.Step;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
@@ -34,11 +34,12 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.properties.DefaultPropertiesParser;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.component.properties.PropertiesParser;
+import org.apache.camel.model.PipelineDefinition;
+import org.apache.camel.model.ProcessDefinition;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.ToDefinition;
-import org.apache.camel.model.language.ConstantExpression;
 import org.apache.camel.spring.SpringCamelContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -87,8 +88,9 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
-            final RouteBuilder routes = newIntegrationRouteBuilder(
+            final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
                 new io.syndesis.common.model.integration.Step.Builder()
+                    .id("step-1")
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -98,6 +100,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new io.syndesis.common.model.integration.Step.Builder()
+                    .id("step-2")
                     .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
@@ -109,6 +112,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
                     .putConfiguredProperty("Property-2", "Val-2")
                     .build(),
                 new io.syndesis.common.model.integration.Step.Builder()
+                    .id("step-3")
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -120,26 +124,39 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
             );
 
             // Set up the camel context
-            context.addRoutes(routes);
+            context.addRoutes(routeBuilder);
             context.setAutoStartup(false);
             context.start();
 
             // Dump routes as XML for troubleshooting
             dumpRoutes(context);
 
-            RouteDefinition routeDefinition = context.getRouteDefinition("test-integration");
+            List<RouteDefinition> routes = context.getRouteDefinitions();
+            assertThat(routes).hasSize(1);
 
-            assertThat(routeDefinition).isNotNull();
-
-            List<ProcessorDefinition<?>> processors = routeDefinition.getOutputs();
-
-            assertThat(processors).hasSize(7);
-            assertThat(processors.get(1)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(SetHeaderDefinition.class.cast(processors.get(1)).getHeaderName()).isEqualTo("Property-1");
-            assertThat(processors.get(2)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(SetHeaderDefinition.class.cast(processors.get(2)).getHeaderName()).isEqualTo("Property-2");
-            assertThat(processors.get(3)).isInstanceOf(ToDefinition.class);
-            assertThat(ToDefinition.class.cast(processors.get(3)).getUri()).isEqualTo("log:myLog");
+            RouteDefinition route = context.getRouteDefinitions().get(0);
+            assertThat(route).isNotNull();
+            assertThat(route.getInputs()).hasSize(1);
+            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getOutputs()).hasSize(4);
+            assertThat(route.getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(1)).isInstanceOf(ProcessDefinition.class);
+            assertThat(route.getOutputs().get(2)).isInstanceOf(PipelineDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs()).hasSize(5);
+            assertThat(route.getOutputs().get(2).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs().get(1)).hasFieldOrPropertyWithValue("headerName", "Property-1");
+            assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(2).getOutputs().get(1)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-1");
+            assertThat(route.getOutputs().get(2).getOutputs().get(2)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs().get(2)).hasFieldOrPropertyWithValue("headerName", "Property-2");
+            assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(2).getOutputs().get(2)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-2");
+            assertThat(route.getOutputs().get(2).getOutputs().get(3)).isInstanceOf(ToDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs().get(3)).hasFieldOrPropertyWithValue(
+                "uri",
+                "log:myLog"
+            );
+            assertThat(route.getOutputs().get(2).getOutputs().get(4)).isInstanceOf(ProcessDefinition.class);
+            assertThat(route.getOutputs().get(3)).isInstanceOf(PipelineDefinition.class);
         } finally {
             context.stop();
         }
@@ -150,8 +167,9 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
-            final RouteBuilder routes = newIntegrationRouteBuilder(
+            final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
                 new io.syndesis.common.model.integration.Step.Builder()
+                    .id("step-1")
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -161,6 +179,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new io.syndesis.common.model.integration.Step.Builder()
+                    .id("step-2")
                     .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
@@ -172,6 +191,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
                     .putConfiguredProperty("param2", "Val-2")
                     .build(),
                 new io.syndesis.common.model.integration.Step.Builder()
+                    .id("step-3")
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -183,25 +203,33 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
             );
 
             // Set up the camel context
-            context.addRoutes(routes);
+            context.addRoutes(routeBuilder);
             context.setAutoStartup(false);
             context.start();
 
             // Dump routes as XML for troubleshooting
             dumpRoutes(context);
 
-            RouteDefinition routeDefinition = context.getRouteDefinition("test-integration");
+            List<RouteDefinition> routes = context.getRouteDefinitions();
+            assertThat(routes).hasSize(1);
 
-            assertThat(routeDefinition).isNotNull();
-
-            List<ProcessorDefinition<?>> processors = routeDefinition.getOutputs();
-
-            assertThat(processors).hasSize(5);
-            assertThat(processors.get(1)).isInstanceOf(ToDefinition.class);
-            assertThat(processors.get(1)).hasFieldOrPropertyWithValue(
+            RouteDefinition route = context.getRouteDefinitions().get(0);
+            assertThat(route).isNotNull();
+            assertThat(route.getInputs()).hasSize(1);
+            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getOutputs()).hasSize(4);
+            assertThat(route.getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(1)).isInstanceOf(ProcessDefinition.class);
+            assertThat(route.getOutputs().get(2)).isInstanceOf(PipelineDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs()).hasSize(3);
+            assertThat(route.getOutputs().get(2).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs().get(1)).isInstanceOf(ToDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs().get(1)).hasFieldOrPropertyWithValue(
                 "uri",
                 "class:io.syndesis.integration.runtime.handlers.ExtensionStepHandlerTest$MyExtension?method=action&bean.param1=Val-1&bean.param2=Val-2"
             );
+            assertThat(route.getOutputs().get(2).getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
+            assertThat(route.getOutputs().get(3)).isInstanceOf(PipelineDefinition.class);
         } finally {
             context.stop();
         }
@@ -212,8 +240,9 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
-            final RouteBuilder routes = newIntegrationRouteBuilder(
+            final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
                 new io.syndesis.common.model.integration.Step.Builder()
+                    .id("step-1")
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -223,6 +252,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new io.syndesis.common.model.integration.Step.Builder()
+                    .id("step-2")
                     .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
@@ -234,6 +264,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
                     .putConfiguredProperty("param2", "Val-2")
                     .build(),
                 new io.syndesis.common.model.integration.Step.Builder()
+                    .id("step-3")
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -245,30 +276,31 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
             );
 
             // Set up the camel context
-            context.addRoutes(routes);
+            context.addRoutes(routeBuilder);
             context.setAutoStartup(false);
             context.start();
 
             // Dump routes as XML for troubleshooting
             dumpRoutes(context);
 
-            RouteDefinition routeDefinition = context.getRouteDefinition("test-integration");
-
-            assertThat(routeDefinition).isNotNull();
-            assertThat(routeDefinition).hasFieldOrPropertyWithValue("id", "test-integration");
-
-            List<ProcessorDefinition<?>> processors = routeDefinition.getOutputs();
-
-            assertThat(processors).hasSize(6);
-            assertThat(processors.get(1)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(SetHeaderDefinition.class.cast(processors.get(1)).getHeaderName()).isEqualTo("param1");
-            assertThat(SetHeaderDefinition.class.cast(processors.get(1)).getExpression()).isInstanceOf(ConstantExpression.class);
-            assertThat(SetHeaderDefinition.class.cast(processors.get(1)).getExpression().getExpression()).isEqualTo("Val-1");
-            assertThat(processors.get(2)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(SetHeaderDefinition.class.cast(processors.get(2)).getHeaderName()).isEqualTo("param2");
-            assertThat(SetHeaderDefinition.class.cast(processors.get(2)).getExpression()).isInstanceOf(ConstantExpression.class);
-            assertThat(SetHeaderDefinition.class.cast(processors.get(2)).getExpression().getExpression()).isEqualTo("Val-2");
-
+            RouteDefinition route = context.getRouteDefinitions().get(0);
+            assertThat(route).isNotNull();
+            assertThat(route.getInputs()).hasSize(1);
+            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getOutputs()).hasSize(4);
+            assertThat(route.getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(1)).isInstanceOf(ProcessDefinition.class);
+            assertThat(route.getOutputs().get(2)).isInstanceOf(PipelineDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs()).hasSize(4);
+            assertThat(route.getOutputs().get(2).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs().get(1)).hasFieldOrPropertyWithValue("headerName", "param1");
+            assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(2).getOutputs().get(1)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-1");
+            assertThat(route.getOutputs().get(2).getOutputs().get(2)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs().get(2)).hasFieldOrPropertyWithValue("headerName", "param2");
+            assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(2).getOutputs().get(2)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-2");
+            assertThat(route.getOutputs().get(2).getOutputs().get(3)).isInstanceOf(ProcessDefinition.class);
+            assertThat(route.getOutputs().get(3)).isInstanceOf(PipelineDefinition.class);
         } finally {
             context.stop();
         }

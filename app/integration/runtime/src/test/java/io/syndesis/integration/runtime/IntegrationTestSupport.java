@@ -18,29 +18,34 @@ package io.syndesis.integration.runtime;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-
 import javax.xml.bind.JAXBException;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.model.ModelHelper;
-import org.apache.camel.model.RouteDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
+import org.apache.camel.CamelContext;
+import org.apache.camel.model.ModelHelper;
+import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.RoutesDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IntegrationTestSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);
 
-    protected void dumpRoutes(CamelContext context) {
-        for (RouteDefinition definition: context.getRouteDefinitions()) {
-            try {
-                LOGGER.info("Route {}: \n{}", definition.getId(), ModelHelper.dumpModelAsXml(context, definition));
-            } catch (JAXBException e) {
-                LOGGER.warn("", e);
-            }
+    protected void dumpRoutes(CamelContext context, RoutesDefinition definition) {
+        try {
+            LOGGER.info("Routes: \n{}",ModelHelper.dumpModelAsXml(context, definition));
+        } catch (JAXBException e) {
+            LOGGER.warn("", e);
         }
+    }
+
+    protected void dumpRoutes(CamelContext context) {
+        RoutesDefinition definition = new RoutesDefinition();
+        definition.setRoutes(context.getRouteDefinitions());
+
+        dumpRoutes(context, definition);
     }
 
     protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Step... steps) {
@@ -63,5 +68,14 @@ public class IntegrationTestSupport {
             .description("This is a test integration!")
             .steps(Arrays.asList(steps))
             .build();
+    }
+
+    protected ProcessorDefinition<?> getOutput(RouteDefinition definition, int... indices) {
+        ProcessorDefinition<?> output = definition;
+        for (int index : indices) {
+            output = output.getOutputs().get(index);
+        }
+
+        return output;
     }
 }

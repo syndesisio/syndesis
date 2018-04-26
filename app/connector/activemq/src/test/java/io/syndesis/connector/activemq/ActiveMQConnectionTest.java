@@ -21,11 +21,11 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import javax.jms.TextMessage;
 
-import io.syndesis.connector.support.test.ConnectorTestSupport;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.connector.support.test.ConnectorTestSupport;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.component.sjms.SjmsComponent;
 import org.assertj.core.api.Assertions;

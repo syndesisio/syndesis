@@ -17,16 +17,18 @@ package io.syndesis.integration.runtime.handlers;
 
 import java.util.List;
 
-import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
+import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.model.PipelineDefinition;
+import org.apache.camel.model.ProcessDefinition;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.spring.SpringCamelContext;
 import org.junit.Test;
@@ -60,6 +62,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         DirtiesContextTestExecutionListener.class
     }
 )
+@SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
 public class DataMapperStepHandlerTest extends IntegrationTestSupport {
     @Autowired
     private ApplicationContext applicationContext;
@@ -69,8 +72,9 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
-            final RouteBuilder routes = newIntegrationRouteBuilder(
+            final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
                 new Step.Builder()
+                    .id("step-1")
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -80,10 +84,12 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
+                    .id("step-2")
                     .stepKind(StepKind.mapper)
                     .putConfiguredProperty("atlasmapping", "{}")
                     .build(),
                 new Step.Builder()
+                    .id("step-3")
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -95,24 +101,35 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
             );
 
             // Set up the camel context
-            context.addRoutes(routes);
+            context.addRoutes(routeBuilder);
             context.start();
 
             // Dump routes as XML for troubleshooting
             dumpRoutes(context);
 
-            RouteDefinition routeDefinition = context.getRouteDefinition("test-integration");
+            List<RouteDefinition> routes = context.getRouteDefinitions();
+            assertThat(routes).hasSize(1);
 
-            assertThat(routeDefinition).isNotNull();
+            RouteDefinition route = context.getRouteDefinitions().get(0);
+            assertThat(route).isNotNull();
+            assertThat(route.getInputs()).hasSize(1);
+            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getOutputs()).hasSize(4);
+            assertThat(route.getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(1)).isInstanceOf(ProcessDefinition.class);
 
-            List<ProcessorDefinition<?>> processors = routeDefinition.getOutputs();
-
-            assertThat(processors).hasSize(5);
-            assertThat(processors.get(1)).isInstanceOf(ToDefinition.class);
-            assertThat(processors.get(1)).hasFieldOrPropertyWithValue(
+            // Atlas
+            assertThat(route.getOutputs().get(2)).isInstanceOf(PipelineDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs()).hasSize(3);
+            assertThat(route.getOutputs().get(2).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs().get(1)).isInstanceOf(ToDefinition.class);
+            assertThat(route.getOutputs().get(2).getOutputs().get(1)).hasFieldOrPropertyWithValue(
                 "uri",
                 "atlas:mapping-step-2.json?sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP
             );
+
+            assertThat(route.getOutputs().get(2).getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
+            assertThat(route.getOutputs().get(3)).isInstanceOf(PipelineDefinition.class);
         } finally {
             context.stop();
         }

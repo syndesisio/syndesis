@@ -21,17 +21,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.filter.FilterPredicate;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spring.SpringCamelContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -135,7 +134,7 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testRuleFilterStepWithJsonSimplePath() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
@@ -195,7 +194,7 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testRuleFilterStepWithJsonComplexPath() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
@@ -255,7 +254,7 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testRuleFilterStepWithPOJO() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(

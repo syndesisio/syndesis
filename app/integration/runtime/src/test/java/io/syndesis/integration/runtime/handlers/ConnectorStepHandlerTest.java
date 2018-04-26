@@ -17,8 +17,6 @@ package io.syndesis.integration.runtime.handlers;
 
 import java.util.Properties;
 
-import io.syndesis.integration.component.proxy.ComponentProxyEndpoint;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -27,6 +25,8 @@ import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.integration.component.proxy.ComponentProxyEndpoint;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.builder.RouteBuilder;

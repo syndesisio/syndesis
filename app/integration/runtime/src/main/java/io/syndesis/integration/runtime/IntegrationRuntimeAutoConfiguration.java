@@ -19,11 +19,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ServiceLoader;
+import javax.xml.bind.JAXBException;
 
+import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConfiguration;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.ModelHelper;
+import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -34,16 +40,25 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(prefix = "syndesis.integration.runtime", name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties({IntegrationRuntimeConfiguration.class, IntegrationLoggingConfiguration.class})
 public class IntegrationRuntimeAutoConfiguration {
+    private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationRuntimeAutoConfiguration.class);
+
     @Autowired
     private IntegrationRuntimeConfiguration configuration;
 
-    @Autowired
-    private IntegrationLoggingConfiguration loggingConfiguration;
+    @Autowired(required = false)
+    private ActivityTracker activityTracker;
 
     @SuppressWarnings("PMD.ImmutableField")
     @Autowired(required = false)
     private List<IntegrationStepHandler> integrationStepHandlers = Collections.emptyList();
 
+    /**
+     * This method is responsible to set up an {@link CamelContextConfiguration}
+     * that crates a route builder from the integration.json and set-up a post
+     * context start task that dumps the generated routes for debugging purpose.
+     *
+     * @return a {@link CamelContextConfiguration}
+     */
     @Bean
     public CamelContextConfiguration integrationContextRuntimeConfiguration() {
         return new CamelContextConfiguration() {
@@ -62,7 +77,7 @@ public class IntegrationRuntimeAutoConfiguration {
 
                 // IntegrationRouteBuilder automatically add known handlers to
                 // the list of provided ones, know handlers have priority
-                final RouteBuilder routeBuilder = new IntegrationRouteBuilder(location, handlers, loggingConfiguration.isEnabled());
+                final RouteBuilder routeBuilder = new IntegrationRouteBuilder(location, handlers, activityTracker);
 
                 try {
                     // Register routes to the camel context
@@ -74,7 +89,16 @@ public class IntegrationRuntimeAutoConfiguration {
 
             @Override
             public void afterApplicationStart(CamelContext camelContext) {
-                // noop
+                RoutesDefinition routes = new RoutesDefinition();
+                routes.setRoutes(camelContext.getRouteDefinitions());
+
+                try {
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("Routes: \n{}", ModelHelper.dumpModelAsXml(camelContext, routes));
+                    }
+                } catch (JAXBException e) {
+                    throw new IllegalArgumentException(e);
+                }
             }
         };
     }
