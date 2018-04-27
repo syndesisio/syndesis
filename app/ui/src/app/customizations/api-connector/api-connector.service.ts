@@ -48,7 +48,13 @@ export class ApiConnectorService {
     const connectorSettings = this.sanitizeCustomConnectorRequest(rawConnectorSettings);
 
     if (specification || icon) {
-      const payload = specification && icon ? { specification, icon } : { specification } || { icon };
+      const payload = {};
+      if (specification) {
+        payload['specification'] = specification;
+      }
+      if (icon) {
+        payload['icon'] = icon;
+      }
       return apiHttpService.upload(payload, { connectorSettings });
     } else {
       return apiHttpService.post(connectorSettings);
