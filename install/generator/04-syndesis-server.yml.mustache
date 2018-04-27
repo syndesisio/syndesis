@@ -104,6 +104,9 @@
             httpGet:
               port: 8080
               path: /api/v1/version
+              httpHeaders:
+              - name: Accept
+                value: 'text/plain'
             initialDelaySeconds: 300
             periodSeconds: 20
             failureThreshold: 5

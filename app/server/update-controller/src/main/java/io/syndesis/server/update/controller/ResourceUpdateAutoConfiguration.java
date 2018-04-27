@@ -52,7 +52,7 @@ public class ResourceUpdateAutoConfiguration {
         return new ResourceUpdateController(
             configuration,
             eventBus,
-            Arrays.asList(
+            Arrays.<ResourceUpdateHandler>asList(
                 new ConnectionUpdateHandler(dataManager, encryptionComponent, validator),
                 new IntegrationUpdateHandler(dataManager, encryptionComponent,validator)
             )
