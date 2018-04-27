@@ -15,7 +15,7 @@
   "properties": {
     "loginUrl": {
       "kind": "property",
-      "displayName": "Login Url",
+      "displayName": "Login URL",
       "group": "security",
       "label": "common,security",
       "required": true,
@@ -26,11 +26,12 @@
       "secret": false,
       "componentProperty": true,
       "defaultValue": "https://login.salesforce.com",
-      "description": "URL of the Salesforce instance used for authentication by default set to https://login.salesforce.com"
+      "description": "URL of the Salesforce instance used for authentication by default set to https://login.salesforce.com",
+      "order": 5
     },
     "clientId": {
       "kind": "property",
-      "displayName": "Client Id",
+      "displayName": "Client ID",
       "group": "security",
       "label": "common,security",
       "required": true,
@@ -42,14 +43,15 @@
       "deprecated": false,
       "secret": false,
       "componentProperty": true,
-      "description": "OAuth Consumer Key of the connected app configured in the Salesforce instance setup. Typically a connected app needs to be configured but one can be provided by installing a package."
+      "description": "OAuth Consumer Key of the connected app configured in the Salesforce instance setup. Typically a connected app needs to be configured but one can be provided by installing a package.",
+      "order": 3
     },
     "clientSecret": {
       "kind": "property",
       "displayName": "Client Secret",
       "group": "security",
       "label": "common,security",
-      "required": false,
+      "required": true,
       "type": "string",
       "javaType": "java.lang.String",
       "tags": [
@@ -58,7 +60,8 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "OAuth Consumer Secret of the connected app configured in the Salesforce instance setup."
+      "description": "OAuth Consumer Secret of the connected app configured in the Salesforce instance setup.",
+      "order": 4
     },
     "refreshToken": {
       "kind": "property",
@@ -66,7 +69,7 @@
       "group": "security",
       "label": "common,security",
       "required": false,
-      "type": "string",
+      "type": "hidden",
       "javaType": "java.lang.String",
       "tags": [],
       "deprecated": false,
@@ -76,31 +79,33 @@
     },
     "userName": {
       "kind": "property",
-      "displayName": "User Name",
+      "displayName": "Username",
       "group": "security",
       "label": "common,security",
-      "required": false,
+      "required": true,
       "type": "string",
       "javaType": "java.lang.String",
       "tags": [],
       "deprecated": false,
       "secret": false,
       "componentProperty": true,
-      "description": "Username used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows."
+      "description": "Username used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows.",
+      "order": 1
     },
     "password": {
       "kind": "property",
       "displayName": "Password",
       "group": "security",
       "label": "common,security",
-      "required": false,
+      "required": true,
       "type": "string",
       "javaType": "java.lang.String",
       "tags": [],
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "Password used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows. Make sure that you append security token to the end of the password if using one."
+      "description": "Password used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows. Make sure that you append security token to the end of the password if using one.",
+      "order": 2
     }
   },
   "actions": [
