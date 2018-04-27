@@ -82,8 +82,7 @@
             "actionType": "connector",
             "descriptor": {
                 "inputDataShape": {
-                    "kind": "java",
-                    "type": "java.lang.String"
+                    "kind": "any"
                 },
                 "outputDataShape": {
                     "kind": "none"
@@ -122,8 +121,7 @@
                     "kind": "none"
                 },
                 "outputDataShape": {
-                    "kind": "java",
-                    "type": "java.lang.String"
+                    "kind": "any"
                 },
                 "configuredProperties": {
                 },
