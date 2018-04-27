@@ -49,10 +49,14 @@ public class IntegrationTestSupport {
     }
 
     protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Step... steps) {
+        return newIntegrationRouteBuilder(newIntegration(steps));
+    }
+
+    protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration) {
         return new IntegrationRouteBuilder("", Collections.emptyList()) {
             @Override
             protected Integration loadIntegration() throws IOException {
-                return newIntegration(steps);
+                return integration;
             }
         };
     }
