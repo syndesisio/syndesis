@@ -218,7 +218,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
 
 
     @Test
-    public void testCaptureWithSplitAndSchedual() throws Exception {
+    public void testCaptureWithSplitAndSchedule() throws Exception {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
