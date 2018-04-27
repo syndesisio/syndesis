@@ -39,7 +39,7 @@ EOT
 # All resources which should be update by force (delete/create) because
 # an in-place update is not possible
 # * Service and Route can't be replaced because there are immutable datat in the spec (like clusterip)
-# * ServiceAccounts are force replace so that hoopefully the associated secrets are cleaned up, too.
+# * ServiceAccounts are force replaced so that hopefully the associated secrets are cleaned up, too.
 FORCE_UPGRADE_RESOURCES="Service Route ServiceAccount"
 
 # Document which resource shouldn't be updated

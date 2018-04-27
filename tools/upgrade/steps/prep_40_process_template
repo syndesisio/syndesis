@@ -19,6 +19,8 @@ Ideally, all such objects are annotated with `io.syndesis/upgrade-mode: keep` an
 
 The files created are stored locally and are applied in a later <<step-apply-upgrade-json, step>>.
 
+All `DeployemntConfig`s replicas are set to 0 so that they do not startup right after the update because a config trigger change.
+
 .Rollback
 Only the locally created object definitions need to be cleaned up (or kept for a later manual rollback).
 EOT
@@ -49,6 +51,12 @@ process_template::run() {
         local name=$(cat $res | jq -r '.metadata.name')
         [ -d ${workdir}/resources/${kind} ] || mkdir -p ${workdir}/resources/${kind}
 
+        if [ "$kind" = "DeploymentConfig" ]; then
+          # Set replica to 0 to avoid redeployment when patching the resource
+          local temp_dc=$(mktemp)
+          cat $res | jq -M '.spec.replicas |= 0' > $temp_dc
+          mv $temp_dc $res
+        fi
         if [ -n "${anno}" ] && [ "${anno}" = "keep" ]; then
             echo "      - Not updating $name"
         else
