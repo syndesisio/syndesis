@@ -89,8 +89,8 @@ public class SqlMetadataAdapterTest {
                 }
             }
             Statement stmt = connection.createStatement();
-            String createTable = "CREATE TABLE NAME (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " +
-                    "lastName VARCHAR(255))";
+            String createTable = "CREATE TABLE NAME (ID INTEGER PRIMARY KEY, FIRSTNAME VARCHAR(255), " +
+                    "LASTNAME VARCHAR(255))";
             stmt.executeUpdate(createTable);
         } catch (SQLException ex) {
             fail("Exception", ex);
@@ -100,6 +100,8 @@ public class SqlMetadataAdapterTest {
     @AfterClass
     public static void afterClass() throws SQLException {
         if (connection!=null && !connection.isClosed()) {
+            Statement stmt = connection.createStatement();
+            stmt.execute("DROP TABLE NAME");
             connection.close();
         }
     }
@@ -157,14 +159,15 @@ public class SqlMetadataAdapterTest {
         SqlMetadataRetrieval adapter = new SqlMetadataRetrieval();
         SyndesisMetadata syndesisMetaData = adapter.adapt(camelContext, "sql", "sql-stored-connector", parameters, metadata.get());
 
-        String expectedListOfProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8).trim();
         ObjectWriter writer = Json.writer();
+
+        String expectedListOfProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8).trim();
         String actualListOfProcedures = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData);
         assertEquals(expectedListOfProcedures, actualListOfProcedures, JSONCompareMode.STRICT);
 
         parameters.put(SqlMetadataRetrieval.PATTERN, SqlMetadataRetrieval.FROM_PATTERN);
         String expectedListOfStartProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8).trim();
-                String actualListOfStartProcedures = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData);
+        String actualListOfStartProcedures = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData);
         assertEquals(expectedListOfStartProcedures, actualListOfStartProcedures, JSONCompareMode.STRICT);
 
         parameters.put("procedureName", "DEMO_ADD");

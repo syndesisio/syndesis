@@ -52,13 +52,25 @@ public final class DatabaseMetaDataHelper {
         return defaultSchema;
     }
 
+    public static String adapt(String databaseProductName, String pattern) {
+        if (pattern == null && databaseProductName.equalsIgnoreCase(DatabaseProduct.MYSQL.name())) {
+            return "%";
+        } else {
+            return pattern;
+        }
+    }
+
     public static ResultSet fetchProcedureColumns(final DatabaseMetaData meta, final String catalog,
         final String schema, final String procedureName) throws SQLException {
         if (meta.getDatabaseProductName().equalsIgnoreCase(DatabaseProduct.POSTGRESQL.name())) {
             return meta.getFunctionColumns(catalog, schema, procedureName, null);
         }
 
-        return meta.getProcedureColumns(catalog, schema, procedureName, null);
+        return meta.getProcedureColumns(
+                catalog, 
+                adapt(meta.getDatabaseProductName(),schema), 
+                adapt(meta.getDatabaseProductName(),procedureName), 
+                adapt(meta.getDatabaseProductName(),null));
     }
 
     public static ResultSet fetchProcedures(final DatabaseMetaData meta, final String catalog,
@@ -67,14 +79,21 @@ public final class DatabaseMetaDataHelper {
             return meta.getFunctions(catalog, schemaPattern, procedurePattern);
         }
 
-        return meta.getProcedures(catalog, schemaPattern, procedurePattern);
+        return meta.getProcedures(
+                catalog, 
+                adapt(meta.getDatabaseProductName(),schemaPattern), 
+                adapt(meta.getDatabaseProductName(),procedurePattern));
     }
 
 
     static Set<String> fetchTables(final DatabaseMetaData meta, final String catalog,
         final String schemaPattern, final String tableNamePattern) throws SQLException {
         Set<String> tablesInSchema = new HashSet<>();
-        try (ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[] { "TABLE" });) {
+        try (ResultSet rs = meta.getTables(
+                catalog, 
+                adapt(meta.getDatabaseProductName(),schemaPattern), 
+                adapt(meta.getDatabaseProductName(), tableNamePattern), 
+                new String[] { "TABLE" });) {
             while (rs.next()) {
                 tablesInSchema.add(rs.getString(3).toUpperCase(Locale.US));
             }
@@ -111,7 +130,11 @@ public final class DatabaseMetaDataHelper {
     @SuppressWarnings("PMD.RemoteInterfaceNamingConvention")
     private static List<ColumnMetaData> getColumnMetaData(final DatabaseMetaData meta, String catalog, //NOPMD
             String schema, String tableName, String columnName, int expectedSize) throws SQLException { //NOPMD
-        try (ResultSet columns = meta.getColumns(catalog, schema, tableName, columnName);) {
+        try (ResultSet columns = meta.getColumns(
+                catalog, 
+                adapt(meta.getDatabaseProductName(),schema), 
+                adapt(meta.getDatabaseProductName(),tableName), 
+                adapt(meta.getDatabaseProductName(),columnName));) {
             List<ColumnMetaData> columnList = convert(columns);
             if (columnList.isEmpty()) {
                 //Postgresql does lowercase instead, so let's try that if we don't have a match
@@ -160,4 +183,5 @@ public final class DatabaseMetaDataHelper {
         }
         return list;
     }
+
 }
