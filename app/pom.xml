@@ -63,7 +63,7 @@
     <spring.version>4.3.12.RELEASE</spring.version>
     <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
 
-    <swagger.version>1.5.19-SNAPSHOT</swagger.version>
+    <swagger.version>1.5.19</swagger.version>
 
     <activemq.version>5.15.2</activemq.version>
 
@@ -1271,24 +1271,6 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
   </distributionManagement>
-
-  <repositories>
-    <repository>
-      <!--
-           we need a SNAPSHOT version of io.swagger:* artefacts, remove
-           this when 1.5.19 is released
-           see https://github.com/swagger-api/swagger-core/issues/2316
-      -->
-      <id>oss-sonatype-snapshots</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-  </repositories>
 
   <issueManagement>
     <system>github</system>
