@@ -1,13 +1,8 @@
 <div class="row">
   <div class="col-md-12">
     <h1>Support</h1>
-    <p>To obtain support, download diagnostic information through this page. If the downloaded zip file is less than 0.5 GB,
-      attach it to an email message that requests help and send the message to
-      <a class="text-nowrap" href="mailto:{{ 'email' | synI18n }}">{{ 'email' | synI18n }}</a>.
-      If the downloaded zip file is larger than 0.5 GB, send an email message that requests
-      help, but do not attach the file, and indicate that the zip file is too large to attach. Technical support will provide
-      instructions for sending the zip file.</p>
-
+      <p>To obtain support, download diagnostic information through this page and open a request on the <a href="https://access.redhat.com/support/cases/#/case/new">Red Hat Customer portal</a>. 
+        If the downloaded zip file is less than 1 GB, attach it to the case. For a larger zip file, tell the support team that the zip file is larger than 1 GB and ask for <a href="https://access.redhat.com/solutions/2112">instructions</a>.</p>
     <h2>Version</h2>
     <syndesis-loading [loading]="!(version$ | async)">
       <div *ngIf="version$ | async as versionInfo">
