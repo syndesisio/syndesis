@@ -170,6 +170,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     }
 
                     parent = new SplitStepHandler().handle(splitStep.get(), parent, this, stepIndex).orElse(parent);
+                    parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                     parent = parent.process(new OutMessageCaptureProcessor());
                 } else {
                     if (parent instanceof PipelineDefinition) {
