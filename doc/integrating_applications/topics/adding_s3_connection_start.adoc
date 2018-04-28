@@ -31,9 +31,8 @@ To have no limit on the number of files that can be obtained, specify
 the poll action obtains all files in the bucket.
 +
 If the bucket contains more than the specified maximum number of files
-then the default
-behavior is that the action obtains the files that were most recently
-modified or created. This behavior can be changed in AWS.
+then the action obtains the files that were most recently
+modified or created. 
 .. In the *Prefix* field, optionally specify a regular expression
 that evaluates to a string. If you specify a
 prefix then this action retrieves a file

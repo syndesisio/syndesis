@@ -8,3 +8,8 @@ To delete an integration:
 you want to delete.
 . On the integration's summary page, click *Delete Integration*.
 . In the popup, click *OK* to confirm that you want to delete the integration.
+
+After you delete an integration, {prodname} still has the history of 
+that integration. If you import a version of the deleted integration, 
+then {prodname} associates the history of the deleted integration with 
+the imported integration.

@@ -25,20 +25,18 @@ field on this page is correct and that only security configuration is required.
 .. If you updated any fields, click *Save*.
 .. In the left panel, click *Settings*.
 +
-If there is an entry for the application that a connection that requires
-configuration is for,
-then this application uses the OAuth protocol. For {prodname} to connect
-to this application, you must register this installation of {prodname}
-as a client of the application.
+The *Settings* page displays entries for applications that use the OAuth
+protocol. 
 
 .. For each connection that requires configuration and that accesses an
 application that uses the OAuth protocol, register this installation of
 {prodname} with the application. The steps vary for each application.
 See the appropriate topic:
 
+* <<register-with-dropbox>>
+* <<register-with-rest-api>>
 * <<register-with-salesforce_{context}>>
 * <<register-with-twitter>>
-* <<register-with-rest-api>>
 
 . In the left panel, click *Connections* and confirm that there are no
 longer any connections that require configuration.
