@@ -22,6 +22,3 @@ API authorization URL. The details for doing this are described in
 
 {prodname} cannot create connectors for APIs that support the HTTP 2.0
 protocol.
-
-See <<creating-api-connectors>> for instructions for
-uploading a Swagger specification.

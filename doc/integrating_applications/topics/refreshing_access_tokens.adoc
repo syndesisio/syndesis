@@ -1,0 +1,45 @@
+[id='refreshing-access-tokens']
+= Automatically refreshing access tokens
+
+If an access token has an expiration date, then {prodname} integrations 
+that use that token to connect to an application stop running successfully 
+when the taken expires. You must re-register {prodname} with the application 
+or service to obtain a new access token.
+
+If you need to, you can change this default behavior so that
+{prodname} automatically requests a new access token when it receives
+certain HTTP response status codes. 
+
+ifeval::["{location}" == "downstream"]
+
+[IMPORTANT]
+====
+This is a
+https://access.redhat.com/support/offerings/techpreview/[Technology Preview feature].
+
+====
+endif::[]
+
+To specify that {prodname} should automatically obtain a new token when
+the one it has expires, 
+in the `securityDefinitions` section of the Swagger specification, 
+add the `x-refresh-token-retry-statuses` vendor extension. The setting 
+of this extension is a comma separated list that
+specifies HTTP response status codes. When {prodname} receives a message
+from an OAuth2 provider and the mesage has one of these response status
+codes, then {prodname} automatically tries to obtain a new access token. 
+In the example
+below, the last line specifies `x-refresh-token-retry-statuses`:
+
+[source]
+----
+securityDefinitions:
+  concur_oauth2:
+    type: 'oauth2'
+    flow: 'accessCode'
+    authorizationUrl: 'https://us-impl.api.concursolutions.com/oauth2/v0/authorize'
+    tokenUrl: 'https://us-impl.api.concursolutions.com/oauth2/v0/token'
+    scopes:
+      LIST: Access List API
+    x-refresh-token-retry-statuses: (401,402,403)
+----

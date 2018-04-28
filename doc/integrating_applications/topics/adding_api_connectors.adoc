@@ -14,7 +14,7 @@ The following topics provide information and instructions for adding
 REST API connectors:
 
 * <<about-api-client-connectors>>
-* <<guidelines-for-swagger-specifications>>
+* <<about-swagger-specifications>>
 * <<creating-api-connectors>>
 * <<updating-api-connectors>>
 * <<deleting-api-connectors>>
@@ -25,7 +25,7 @@ that connector in an integration, see
 
 include::about_api_connectors.adoc[leveloffset=+1]
 
-include::guidelines_for_swagger_specifications.adoc[leveloffset=+1]
+include::about_swagger_content.adoc[leveloffset=+1]
 
 include::creating_api_connectors.adoc[leveloffset=+1]
 
