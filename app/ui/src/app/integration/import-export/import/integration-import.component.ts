@@ -107,7 +107,7 @@ export class IntegrationImportComponent implements OnInit {
         type: NotificationType.DANGER,
         header: 'Import Failed',
         message: 'There was an issue importing your integration.',
-        isPersistent: true,
+        isPersistent: false,
       });
 
       this.error = this.getFileTypeError();
@@ -125,7 +125,7 @@ export class IntegrationImportComponent implements OnInit {
           type: NotificationType.SUCCESS,
           header: 'Successfully Imported',
           message: 'Your integration has been imported',
-          isPersistent: true,
+          isPersistent: false,
         });
       }
     };
