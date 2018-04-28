@@ -1,10 +1,11 @@
 // Reused in
-// "t2sf_intro.adoc", "sf2db_intro.adoc"
+// "t2sf_intro.adoc", "sf2db_intro.adoc", "connectiong_to_sf.adoc"
 [id='create-salesforce-connection_{context}']
 = Create a Salesforce connection
 
 A connection to Salesforce requires registration of
 {prodname} as an application that can access Salesforce.
+
 ifeval::["{context}" == "t2sf"]
 If you did not already register {prodname} see <<register-with-salesforce_{context}>>.
 endif::[]

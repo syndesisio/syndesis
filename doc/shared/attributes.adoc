@@ -4,6 +4,7 @@
 :prodnameinurl: fuse-ignite
 :productpkg: red_hat_fuse
 :version: 7.0
+:location: upstream
 
 :LinkIgniteTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/ignite_sample_integration_tutorials/
 :NameOfIgniteTutorials: Ignite Sample Integration Tutorials
