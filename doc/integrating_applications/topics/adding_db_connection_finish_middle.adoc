@@ -1,0 +1,85 @@
+[id='adding-db-connection-finish-middle']
+= Accessing a database in the middle or to complete an integration
+
+To finish an integration by accessing a database, add a database
+connection as the finish connection. To access 
+a database in the middle of an integration, add a database connection
+between the start and finish connections.
+The instructions below assume that you are
+on the {prodname} *Choose a Finish Connection* page or the
+*Choose a Connection* page.
+
+To add a database connection:
+
+. Click the database connection for the database you want to access.
+. On the *Choose an Action* page, click one of the following:
++
+* *Invoke SQL* operates on data by executing the
+SQL statement you specify.
+* *Invoke Stored Procedure* operates on data by invoking
+the stored procedure you specify or select.
+. If you selected *Invoke SQL*, in the *SQL Statement* field:
+** For a middle connection, enter a SQL `SELECT` statement that obtains
+one record or enter a SQL `INSERT`, `UPDATE`, or
+`DELETE` statement that
+operates on one or more records.
+The database table that contains the data must already exist.
++
+In this release, when a database connection is a middle connection,
+a `SELECT` statement can obtain only one record. You should define
+the `SELECT` statement so that it obtains one record.
+
+** For a finish connection, enter a SQL `INSERT`, `UPDATE` or
+`DELETE` statement to
+operate on one or more records.
+
++
+If you selected *Invoke Stored Procedure*, in the
+*Stored Procedure* field, select or enter the name of the stored procedure to
+invoke to operate on the data of interest. The stored procedure you specify must
+already exist. The database administrator should have created any stored
+procedures you need to use in an integration.
+
+* See the information below about specifying placeholder parameters 
+in queries.  
+
+. Click *Done*.
+
+{prodname} tries to validate the connection, which includes
+checking that a specified SQL query is syntactically correct and
+confirming that the query or stored procedure target data exists. If
+verfication is successful then {prodname} adds the connection to
+the integration. If verification fails then {prodname} displays a message
+about the problem. Update your input as needed and try again.
+
+.Specifying parameters in queries
+
+When you access a database in the middle of an integration or to complete
+an integration, you can specify placeholder parameters in the SQL query 
+or there can be placeholders in the stored procedure. For example: 
+
+[source]
+----
+INSERT INTO TODO(task, completed) VALUES(:#param_1, :#param_2),
+DELETE FROM TODO WHERE task LIKE ':#task'
+----
+In the integration, before the connection that executes one of these
+sample queries, the integration data must include `task` and `completed`
+fields. The connection inserts the values from those fields into the query. 
+There are two ways for the needed fields to be in the integration data:
+
+* A previous connection output data that includes, for example, the
+`task` and `completed` fields. 
+
+* You add a data mapper step before the database connection that executes
+the query. This step maps data fields that were output from a 
+previous connection to the placeholder fields, for example, 
+`task` and `completed`. See <<add-data-mapping-step>>.
+
+The following example is wrong because it uses an invalid syntax to
+specify the placeholder parameter:
+
+[source]
+----
+DELETE FROM TODO WHERE task LIKE '%:#task'
+----
