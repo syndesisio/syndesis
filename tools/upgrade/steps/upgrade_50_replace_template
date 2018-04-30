@@ -29,8 +29,6 @@ replace_template::run() {
 
     echo "      * Updating version to $tag"
     update_version $tag
-
-    exit 1
 }
 
 replace_template::rollback() {
