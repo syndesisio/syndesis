@@ -1,6 +1,6 @@
 <div class="integration-activity__toolbar">
   <p class="integration-activity__toolbar-text" *ngIf='openshiftConsoleURL'>
-    <a href="{{openshiftConsoleURL}}" target="integration-logs">View Log in OpenShift</a> |
+    <a href="{{openshiftConsoleURL}}" target="integration-logs">View Log in OpenShift</a>
   </p>
   <p class="integration-activity__toolbar-text">Last refresh today at {{ lastRefresh | date: 'mediumTime' }}</p>
   <syndesis-button theme="default" (click)="fetchActivities()" type="button" [loading]="onRefresh" class="is-margin-reset">
@@ -18,7 +18,16 @@
       <div class="list-view-pf-expand" [class.active]="activity.id == selectedActivity?.id">
         <span class="fa fa-angle-right" [class.fa-angle-down]="activity.id == selectedActivity?.id"></span>
       </div>
-
+      <div class="list-view-pf-actions">
+        <div *ngIf="activity.failed; else notFailed">
+          <i class="pficon pficon-error-circle-o"></i> Errors found
+        </div>
+        <ng-template #notFailed>
+          <div>
+            <i class="pficon pficon-ok"></i> No errors
+          </div>
+        </ng-template>
+      </div>
       <div class="list-view-pf-main-info">
         <div class="list-view-pf-body">
           <div class="list-view-pf-description">
@@ -33,14 +42,6 @@
             <div class="list-view-pf-additional-info-item">
               Version {{ activity.ver || 'unknown' }}
             </div>
-            <div class="list-view-pf-additional-info-item" *ngIf="activity.failed; else notFailed">
-              <i class="pficon pficon-error-circle-o"></i> Errors found
-            </div>
-            <ng-template #notFailed>
-              <div class="list-view-pf-additional-info-item">
-                <i class="pficon pficon-ok"></i> No errors
-              </div>
-            </ng-template>
           </div>
         </div>
       </div>
