@@ -61,8 +61,8 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
         String webhookUrl = (String) parameters.get("webhookUrl");
-        
-          try {
+
+        try {
             HttpClient client = HttpClientBuilder.create().useSystemProperties().build();
             HttpPost httpPost = new HttpPost(webhookUrl);
 
