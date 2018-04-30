@@ -1,6 +1,6 @@
 {
     "id": "slack",
-    "name": "slack",
+    "name": "Slack",
     "description": "Send messages to Slack",
     "icon": "slack",
     "dependencies": [
@@ -78,7 +78,7 @@
                 ],
                 "inputDataShape": {
                     "kind": "java",
-                    "type": "java.lang.String"
+                    "type": "io.syndesis.connector.slack.SlackPlainMessage"
                 },
                 "outputDataShape": {
                     "kind": "none"
@@ -118,7 +118,7 @@
                 ],
                 "inputDataShape": {
                     "kind": "java",
-                    "type": "java.lang.String"
+                    "type": "io.syndesis.connector.slack.SlackPlainMessage"
                 },
                 "outputDataShape": {
                      "kind": "none"

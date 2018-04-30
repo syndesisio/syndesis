@@ -19,27 +19,45 @@ import java.util.Map;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 
 public class SlackChannelCustomizer implements ComponentProxyCustomizer {
 
 	@Override
 	public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        component.setBeforeProducer(this::beforeProducer);
+        sanitizeUserOrChannel(options);
+	}
+
+    private void sanitizeUserOrChannel(Map<String, Object> options) {
         String username = (String) options.get("username");
         String channel = (String) options.remove("channel");
 
         if (channel != null) {
-            if (channel.charAt(0) == '#') {
-            	options.put("channel", channel);
+            if (channel.trim().charAt(0) == '#') {
+            	options.put("channel", channel.trim());
             } else {
-                options.put("channel", "#" + channel);
+                options.put("channel", "#" + channel.trim());
             }
         } else if (username != null) {
-            if (username.charAt(0) == '@') {
-            	options.put("channel", username);
+            if (username.trim().charAt(0) == '@') {
+            	options.put("channel", username.trim());
             } else {
-                options.put("channel", "@" + username);
+                options.put("channel", "@" + username.trim());
             }
         }
-	}
+    }
+
+    private void beforeProducer(Exchange exchange) {
+
+        final Message in = exchange.getIn();
+        final SlackPlainMessage message = in.getBody(SlackPlainMessage.class);
+
+        if (message != null) {
+            in.setBody(message.getMessage());
+        }
+
+    }
 
 }
