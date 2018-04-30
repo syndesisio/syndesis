@@ -1,16 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { UserService, ApiHttpService, User } from '@syndesis/ui/platform';
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpRequest,
-  HttpEventType,
-  HttpProgressEvent,
-  HttpResponse,
-  HttpUrlEncodingCodec
-} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class UserProviderService extends UserService {
@@ -20,7 +12,7 @@ export class UserProviderService extends UserService {
    * UserService constructor
    * @param {HttpClient} httpClient
    */
-  constructor(private httpClient: HttpClient, private apiHttpService: ApiHttpService) {
+  constructor(private httpClient: HttpClient, private apiHttpService: ApiHttpService, private ngZone: NgZone) {
     super();
   }
 
@@ -32,9 +24,11 @@ export class UserProviderService extends UserService {
   }
 
   /**
-   * Log the user out
+   * Triggers the logout flow and effectively returns the user to the login page
    */
-  logout(): Observable<any> {
-    return this.httpClient.get('/oauth/sign_out');
+  logout(): void {
+    this.ngZone.runOutsideAngular(() => {
+      window.location.href = '/oauth/sign_out';
+    });
   }
 }
