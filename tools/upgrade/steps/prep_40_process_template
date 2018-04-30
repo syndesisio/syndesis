@@ -50,13 +50,6 @@ process_template::run() {
         local kind=$(cat $res | jq -r '.kind')
         local name=$(cat $res | jq -r '.metadata.name')
         [ -d ${workdir}/resources/${kind} ] || mkdir -p ${workdir}/resources/${kind}
-
-        if [ "$kind" = "DeploymentConfig" ]; then
-          # Set replica to 0 to avoid redeployment when patching the resource
-          local temp_dc=$(mktemp)
-          cat $res | jq -M '.spec.replicas |= 0' > $temp_dc
-          mv $temp_dc $res
-        fi
         if [ -n "${anno}" ] && [ "${anno}" = "keep" ]; then
             echo "      - Not updating $name"
         else
