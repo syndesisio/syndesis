@@ -60,7 +60,7 @@ update_resources::rollback() {
     local workdir=${2}
     local cleanup=${3:-}
 
-    apply_resources "$backupdir/resources" "$DONT_TOUCH_RESOURCES Template"
+    apply_resources "$backupdir/resources" "Template"
 }
 
 # =========================================================================================
