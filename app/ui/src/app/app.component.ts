@@ -151,7 +151,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   logout() {
     this.loggedIn = false;
-    return this.userService.logout().toPromise();
+    this.userService.logout();
   }
 
   /**
@@ -195,7 +195,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   handleAction($event: NotificationEvent): void {
     if ($event.action.id === 'reload') {
-      location.reload();
+      window.location.reload();
     }
   }
 

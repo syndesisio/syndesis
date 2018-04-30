@@ -13,5 +13,5 @@ export abstract class UserService {
   /**
    * Log the user out
    */
-  abstract logout(): Observable<any>;
+  abstract logout(): void;
 }
