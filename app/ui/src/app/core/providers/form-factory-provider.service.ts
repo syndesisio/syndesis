@@ -145,7 +145,7 @@ export class FormFactoryProviderService extends FormFactoryService {
                       type: string,
                       validators: {},
                       errorMessages: {}) {
-    if (field.secret) {
+    if (field.secret && field.type !== 'hidden') {
       type = 'password';
     }
     return new DynamicInputModel({
