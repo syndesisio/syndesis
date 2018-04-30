@@ -151,7 +151,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   logout() {
     this.loggedIn = false;
-    return this.userService.logout();
+    return this.userService.logout().toPromise();
   }
 
   /**
