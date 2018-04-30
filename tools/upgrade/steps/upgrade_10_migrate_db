@@ -67,7 +67,7 @@ migrate_db::run() {
 
     echo "    - TODO: Call out to syndesis-server and start the migration CLI"
     echo "      there with local miration scripts"
-    java -jar syndesis-cli.jar migrate
+    #java -jar syndesis-cli.jar migrate
 }
 
 migrate_db::rollback() {
