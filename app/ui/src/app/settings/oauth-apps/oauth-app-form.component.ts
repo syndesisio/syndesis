@@ -35,6 +35,7 @@ const OAUTH_APP_FORM_CONFIG = {
   templateUrl: 'oauth-app-form.component.html'
 })
 export class OAuthAppFormComponent implements OnInit {
+  formConfig: any;
   @Input() item: any = {};
 
   loading = false;
@@ -51,7 +52,7 @@ export class OAuthAppFormComponent implements OnInit {
   ) {}
 
   save() {
-    const app = { ...this.item.client, ...this.formGroup.value };
+    const app = { ...this.item.client, ...this.formFactory.sanitizeValues(this.formGroup.value, this.formConfig) };
     this.formGroup.disable();
     this.loading = true;
     this.error = null;
@@ -85,7 +86,7 @@ export class OAuthAppFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    const formConfig = JSON.parse(JSON.stringify(OAUTH_APP_FORM_CONFIG));
+    const formConfig = this.formConfig = JSON.parse(JSON.stringify(OAUTH_APP_FORM_CONFIG));
     this.formModel = this.formFactory.createFormModel(
       formConfig,
       this.item.client,

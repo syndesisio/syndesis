@@ -148,7 +148,7 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
   continue() {
     const step = this.currentFlowService.getStep(this.position);
     if (this.userDefined) {
-      const value = this.formGroup.value;
+      const value = this.formFactoryService.sanitizeValues(this.formGroup.value, DESCRIBE_DATA_FORM_CONFIG);
       const dataShape = this.getDataShape(this.direction, step);
       // normalize this to 'any'
       dataShape.kind = value.kind;
