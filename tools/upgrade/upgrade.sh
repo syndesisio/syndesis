@@ -99,6 +99,10 @@ run() {
     local migrationdir="$(readopt --migration)"
     echo $time > ${base_backupdir}/LATEST
 
+    # Redirect sript output to top_dir for later reference
+    exec > >(tee -i ${top_dir}/upgrade.log)
+    exec 2>&1
+
     # Preflight check
     source $basedir/migration/preflight.sh
     local current_tag=$(read_global_config syndesis)
