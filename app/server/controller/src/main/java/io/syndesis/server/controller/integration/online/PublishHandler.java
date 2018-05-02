@@ -223,9 +223,8 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         }
     }
 
-
-    private Integration integrationOf(IntegrationDeployment integrationDeployment) {
-        return dataManager.fetch(Integration.class, integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment doesn't have integration id.")));
+    private static Integration integrationOf(IntegrationDeployment integrationDeployment) {
+        return integrationDeployment.getSpec();
     }
 
     /**
