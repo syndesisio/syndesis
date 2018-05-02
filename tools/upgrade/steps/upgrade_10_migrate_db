@@ -65,12 +65,26 @@ migrate_db::run() {
     local workdir=${2}
     local tag=${3}
 
-    # Ensure that DB users are really scaled down
-    scale_deployments 0 "syndesis-server syndesis-meta"
+    local host=${SYNDESIS_DB_SERVICE_HOST:-}
+    local port=${SYNDESIS_DB_SERVICE_PORT:-}
+    if [ -z "$host" ]; then
+        local db_pod=$(pod "syndesis-db")
+        check_error $db_pod
+        oc port-forward $db_pod 5432 &
+        local forward_pid=$!
+        trap "kill $forward_pid" EXIT
+        sleep 5
+        host="localhost"
+        port=5432
+    fi
 
-    echo "    - TODO: Call out to syndesis-server and start the migration CLI"
-    echo "      there with local miration scripts"
-    #java -jar syndesis-cli.jar migrate
+    local user=$(extract_param "POSTGRESQL_USER")
+    local password=$(extract_param "POSTGRESQL_PASSWORD")
+
+    java -jar $workdir/syndesis-cli.jar migrate \
+         --url="jdbc:postgresql://$host:$port/syndesis" \
+         --user="$user" \
+         --password="$password"
 }
 
 migrate_db::rollback() {
