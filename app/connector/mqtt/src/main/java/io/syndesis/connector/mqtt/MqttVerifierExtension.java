@@ -57,7 +57,7 @@ public class MqttVerifierExtension extends DefaultComponentVerifierExtension {
 
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
         String brokerUrl = (String) parameters.get("brokerUrl");
-        String username = (String) parameters.get("username");
+        String username = (String) parameters.get("userName");
         String password = (String) parameters.get("password");
 
         if (ObjectHelper.isNotEmpty(brokerUrl)) {

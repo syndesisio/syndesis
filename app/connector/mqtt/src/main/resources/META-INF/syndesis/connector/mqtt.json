@@ -30,7 +30,7 @@
             "placeholder": "eg 'tcp://localhost:1833'",
             "order": "1"
         },
-        "username": {
+        "userName": {
             "kind": "property",
             "displayName": "User Name",
             "group": "security",
