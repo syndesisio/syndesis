@@ -38,6 +38,7 @@ import io.swagger.annotations.ApiParam;
 import io.syndesis.common.util.SuppressFBWarnings;
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 
 import org.springframework.boot.autoconfigure.social.SocialProperties;
@@ -139,6 +140,16 @@ public class OAuthAppHandler {
             .build();
 
         dataMgr.update(updated);
+
+        final boolean shouldBeDerived = app.clientId != null && app.clientSecret != null;
+
+        dataMgr.fetchAllByPropertyValue(Connection.class, "connectorId", id).forEach(connection -> toggleDerived(connection, shouldBeDerived));
+    }
+
+    private void toggleDerived(final Connection connection, final boolean newDerived) {
+        final Connection underived = new Connection.Builder().createFrom(connection).isDerived(newDerived).build();
+
+        dataMgr.update(underived);
     }
 
     private static boolean isOauthConnector(Connector connector) {
