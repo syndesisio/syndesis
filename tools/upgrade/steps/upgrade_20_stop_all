@@ -21,5 +21,6 @@ stop_all::run() {
 
 stop_all::rollback() {
     local deployments=$(syndesis_deployments)
+    echo "      - Restarting deployments $deployments"
     scale_deployments 1 ${deployments}
 }

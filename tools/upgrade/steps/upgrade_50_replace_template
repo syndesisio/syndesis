@@ -31,17 +31,6 @@ replace_template::run() {
     update_version $tag
 }
 
-extract_template_name() {
-    local file=$1
-
-    local ext="${file##*.}"
-    if [ $ext = "yml" ] || [ $ext = "yaml" ]; then
-        grep 'name:' $file | head -1 | sed -e 's/^[ ]*name:[ ]*//'
-    else
-        cat $file | jq -r .metadata.name
-    fi
-}
-
 replace_template::rollback() {
     local backupdir=${1}
     local workdir=${2}
@@ -56,7 +45,7 @@ replace_template::rollback() {
     if [ -f $orig_template ]; then
         local name=$(extract_template_name $orig_template)
         echo "      * Restoring $name from $orig_template"
-        oc replace --force -f $orig_template
+        cat $orig_template | jq -M '.metadata |= del(.resourceVersion)' | oc replace --force -f -
     else
         echo "      * Original template not found, skipping restore"
     fi
@@ -64,6 +53,17 @@ replace_template::rollback() {
     echo "      * Restoring old version $current_tag"
     update_version $current_tag
 
+}
+
+extract_template_name() {
+    local file=$1
+
+    local ext="${file##*.}"
+    if [ $ext = "yml" ] || [ $ext = "yaml" ]; then
+        grep 'name:' $file | head -1 | sed -e 's/^[ ]*name:[ ]*//'
+    else
+        cat $file | jq -r .metadata.name
+    fi
 }
 
 update_version() {

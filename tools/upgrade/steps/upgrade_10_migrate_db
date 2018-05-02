@@ -65,6 +65,9 @@ migrate_db::run() {
     local workdir=${2}
     local tag=${3}
 
+    # Ensure that DB users are really scaled down
+    scale_deployments 0 "syndesis-server syndesis-meta"
+
     echo "    - TODO: Call out to syndesis-server and start the migration CLI"
     echo "      there with local miration scripts"
     #java -jar syndesis-cli.jar migrate
@@ -75,6 +78,8 @@ migrate_db::rollback() {
     local workdir=${2}
     local cleanup=${3:-}
 
+    # Ensure that DB users are really scaled down
+    scale_deployments 0 "syndesis-server syndesis-meta"
+
     pg_restore "$backupdir/db" "syndesis"
-    pg_restore "$backupdir/db" "sampledb"
 }

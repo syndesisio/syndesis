@@ -48,32 +48,6 @@ backup_resource() {
     done
 }
 
-restore_resources() {
-    local resource_dir=$1
-
-    for kind in $(ls $resource_dir); do
-        echo "      - $kind: "
-        for resource in $(ls $resource_dir/$kind); do
-            echo "        * $(basename $resource .json)"
-            local result
-            local rc
-            set +e
-            result=$(oc replace --force -f "$resource_dir/$kind/$resource" 2>&1)
-            rc=$?
-            set -e
-            if [ $rc -gt 0 ]; then
-                if [ -z "${result/*not found*/}" ]; then
-                    echo "          not existing --> trying to create"
-                    oc create -f "$resource_dir/$kind/$resource"
-                else
-                    echo "$result"
-                    exit 1
-                fi
-            fi
-        done
-    done
-}
-
 syndesis_deployments() {
   oc get dc -l syndesis.io/app=syndesis,syndesis.io/type=infrastructure -o name | sed -e "s/^deploymentconfigs\///"
 }

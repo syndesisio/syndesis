@@ -1528,9 +1528,6 @@ objects:
           - "/opt/backup"
           - "--oc-login"
           - "${OC_LOGIN}"
-          # Temporary for demo:
-          - "--wait"
-          - "3600"
         volumeMounts:
         - mountPath: /opt/backup
           subPath: backup

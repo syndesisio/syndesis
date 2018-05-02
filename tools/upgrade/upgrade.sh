@@ -99,6 +99,10 @@ run() {
     local migrationdir="$(readopt --migration)"
     echo $time > ${base_backupdir}/LATEST
 
+    # Redirect sript output to top_dir for later reference
+    exec > >(tee -i ${top_dir}/upgrade.log)
+    exec 2>&1
+
     # Preflight check
     source $basedir/migration/preflight.sh
     local current_tag=$(read_global_config syndesis)
@@ -156,23 +160,47 @@ perform_actions() {
 rollback() {
     local backupdir=$1
     local current_tag=$2
+    local errors=""
     shift 2
     echo
     echo "----- Rollback"
     local cleanup=$(hasflag --cleanup)
     for step in $@; do
-      local label=$(eval "${step}::label")
-      echo "--- * Rolling back '$label'"
-      set +e
-      (eval "${step}::rollback \"$backupdir\" \"$workdir\" \"$cleanup\" \"$current_tag\"")
-      if [ $? -ne 0 ]; then
+        local label=$(eval "${step}::label")
+        echo "--- * Rolling back '$label'"
+        set +e
+        (eval "${step}::rollback \"$backupdir\" \"$workdir\" \"$cleanup\" \"$current_tag\"")
+        if [ $? -ne 0 ]; then
+            set -e
+            if [ $(hasflag --stop-on-rollback-error) ]; then
+                echo "====> Rollback Error ==> Exit"
+                echo "Backup directory *not* deleted: $backupdir"
+                exit 1
+            else
+                echo "====> Rollback Error !!"
+                echo "====> Continuing with rollback (specify --stop-on-rollback-error to stop here)"
+                errors="${errors:-}  * ${step}\n"
+            fi
+        fi
         set -e
-        echo "====> Rollback Error ==> Exit"
-        echo "Backup directory *not* deleted: $backupdir"
-        exit 1
-      fi
-      set -e
     done
+    if [ -n "${errors}" ]; then
+      cat <<EOT
+==========================================
+!!!!!!!!! Errors during Rollback !!!!!!!!!
+
+The following rollback compensation steps
+caused an error
+
+$error
+
+The setup is very likely broken now and you
+have to manually fix it.
+Please check the log output above for any
+detailed error messages.
+==========================================
+EOT
+    fi
 }
 
 # Dir where this script is located

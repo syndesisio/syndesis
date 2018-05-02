@@ -51,7 +51,7 @@ update_resources::run() {
     local tag=$3
     local migrationdir=$4
 
-    run_dynamic_update_scripts "$backupdir" "$workdir" "$tag" "$migrationdir"
+    run_update_scripts "$backupdir" "$workdir" "$tag" "$migrationdir"
     apply_resources "$workdir/resources" "$DONT_TOUCH_RESOURCES"
 }
 
@@ -60,7 +60,7 @@ update_resources::rollback() {
     local workdir=${2}
     local cleanup=${3:-}
 
-    restore_resources "$backupdir/resources"
+    apply_resources "$backupdir/resources" "Template"
 }
 
 # =========================================================================================
@@ -82,29 +82,51 @@ apply_resources() {
             echo "update (replace)"
           fi
           for resource in $(ls $resource_dir/$kind); do
-              echo "        * $(basename $resource .json)"
+              local name=$(basename $resource .json)
+              echo "        * $name"
               local result
               local rc
               set +e
-              result=$(oc replace $extra_opt -f "$resource_dir/$kind/$resource" 2>&1)
+              local resource_temp=$(mktemp)
+              cat "$resource_dir/$kind/$resource" | \
+                 jq '.metadata |= del(.resourceVersion)' | \
+                 jq '.metadata.annotations |= del(."service.alpha.openshift.io/serving-cert-signed-by")' \
+                 > $resource_temp
+              if [ "$kind" = "DeploymentConfig" ]; then
+                  # Set replicas to 0 for DCs to avoid redeployment when patching the resource
+                  local temp_dc=$(mktemp)
+                  cat $resource_temp | jq -M '.spec.replicas |= 0' > $temp_dc
+                  mv $temp_dc $resource_temp
+              fi
+              result=$(oc replace $extra_opt -f "$resource_temp" 2>&1)
               rc=$?
               set -e
               if [ $rc -gt 0 ]; then
                 if [ -z "${result/*not found*/}" ]; then
                     echo "          not existing --> trying to create"
-                    oc create -f "$resource_dir/$kind/$resource"
+                    oc create -f "$resource_temp"
+                    rm $resource_temp
                 else
                     echo "$result"
+                    rm $resource_temp
                     exit 1
                 fi
               fi
           done
       fi
     done
-
 }
 
-run_dynamic_update_scripts() {
+
+# Just as reference, not currently used
+remove_rcs_for_dc() {
+    local dc=${1}
+    for rc in $(oc get rc -l openshift.io/deployment-config.name=$dc -o name); do
+        oc delete $rc
+    done
+}
+
+run_update_scripts() {
     local backupdir=$1
     local workdir=$2
     local tag=$3
@@ -116,7 +138,7 @@ run_dynamic_update_scripts() {
 
     local resourcedir=${migrationdir}/resource
     if [ ! -d ${resourcedir}/${tag} ]; then
-        echo "      - No dynamic update scripts found for ${tag} in ${resourcedir}"
+        echo "      - No update scripts found for ${tag} in ${resourcedir}"
         return
     fi
 
