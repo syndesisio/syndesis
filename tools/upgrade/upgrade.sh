@@ -161,17 +161,22 @@ rollback() {
     echo "----- Rollback"
     local cleanup=$(hasflag --cleanup)
     for step in $@; do
-      local label=$(eval "${step}::label")
-      echo "--- * Rolling back '$label'"
-      set +e
-      (eval "${step}::rollback \"$backupdir\" \"$workdir\" \"$cleanup\" \"$current_tag\"")
-      if [ $? -ne 0 ]; then
+        local label=$(eval "${step}::label")
+        echo "--- * Rolling back '$label'"
+        set +e
+        (eval "${step}::rollback \"$backupdir\" \"$workdir\" \"$cleanup\" \"$current_tag\"")
+        if [ $? -ne 0 ]; then
+            set -e
+            if [ $(hasflag --stop-on-rollback-error) ]; then
+                echo "====> Rollback Error ==> Exit"
+                echo "Backup directory *not* deleted: $backupdir"
+                exit 1
+            else
+                echo "====> Rollback Error !!"
+                echo "====> Continuing with rollback (specify --stop-on-rollback-error to stop here)"
+            fi
+        fi
         set -e
-        echo "====> Rollback Error ==> Exit"
-        echo "Backup directory *not* deleted: $backupdir"
-        exit 1
-      fi
-      set -e
     done
 }
 
