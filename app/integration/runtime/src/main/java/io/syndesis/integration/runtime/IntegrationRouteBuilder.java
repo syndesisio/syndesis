@@ -60,6 +60,7 @@ import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
+import org.apache.camel.spi.RoutePolicy;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.ResourceHelper;
 import org.slf4j.Logger;
@@ -189,7 +190,13 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     private ProcessorDefinition configureRouteDefinition(ProcessorDefinition definition, String stepId) {
         if (definition instanceof RouteDefinition) {
-            RouteDefinition rd = (RouteDefinition)definition;
+            final RouteDefinition rd = (RouteDefinition)definition;
+            final List<RoutePolicy> rp = rd.getRoutePolicies();
+
+            if (rp != null && rp.stream().anyMatch(ActivityTrackingPolicy.class::isInstance)) {
+                // Route has already been configured so no need to go ahead
+                return definition;
+            }
 
             rd.id(stepId);
             rd.routePolicy(new ActivityTrackingPolicy(activityTracker));
