@@ -156,6 +156,7 @@ perform_actions() {
 rollback() {
     local backupdir=$1
     local current_tag=$2
+    local errors=""
     shift 2
     echo
     echo "----- Rollback"
@@ -174,10 +175,28 @@ rollback() {
             else
                 echo "====> Rollback Error !!"
                 echo "====> Continuing with rollback (specify --stop-on-rollback-error to stop here)"
+                errors="${errors:-}  * ${step}\n"
             fi
         fi
         set -e
     done
+    if [ -n "${errors}" ]; then
+      cat <<EOT
+==========================================
+!!!!!!!!! Errors during Rollback !!!!!!!!!
+
+The following rollback compensation steps
+caused an error
+
+$error
+
+The setup is very likely broken now and you
+have to manually fix it.
+Please check the log output above for any
+detailed error messages.
+==========================================
+EOT
+    fi
 }
 
 # Dir where this script is located
