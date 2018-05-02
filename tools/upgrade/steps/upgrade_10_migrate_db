@@ -82,5 +82,4 @@ migrate_db::rollback() {
     scale_deployments 0 "syndesis-server syndesis-meta"
 
     pg_restore "$backupdir/db" "syndesis"
-    pg_restore "$backupdir/db" "sampledb"
 }

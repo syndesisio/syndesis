@@ -26,7 +26,6 @@ backup_db::run() {
     local backupdir=$1
 
     pg_backup "$backupdir/db" "syndesis"
-    pg_backup "$backupdir/db" "sampledb"
 }
 
 backup_db::rollback() {
@@ -34,9 +33,5 @@ backup_db::rollback() {
     local workdir=${2}
     local cleanup=${3:-}
 
-    if [ "$cleanup" = "true" ]; then
-        for file in "syndesis" "sampledb"; do
-            [ -f "${backupdir}/${file}" ] && rm "${backupdir}/${file}"
-        done
-    fi
+    [ -f "${backupdir}/db/syndesis" ] && rm "${backupdir}/db/syndesis"
 }
