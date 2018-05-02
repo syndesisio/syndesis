@@ -63,7 +63,7 @@ public class MqttVerifierExtension extends DefaultComponentVerifierExtension {
         if (ObjectHelper.isNotEmpty(brokerUrl)) {
             try {
                 // Create MQTT client
-            	if (ObjectHelper.isEmpty("username") && ObjectHelper.isEmpty("password")) {
+            	if (ObjectHelper.isEmpty(username) && ObjectHelper.isEmpty(password)) {
                     MqttClient client = new MqttClient(brokerUrl, MqttClient.generateClientId());
                     client.connect();
                     client.disconnect();
