@@ -10,7 +10,7 @@ metadata:
 #
 # Allow localhost refs: false
 # Use docker images: false
-# Syndesis Tag: latest
+# Syndesis Tag: 1.3.5-20180503
 # Prometheus Tag: v2.1.0
 # Postgresql Tag: 9.5
 # OAuthProxy Tag: v1.1.0
@@ -159,10 +159,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-server:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-server:1.3.5-20180503
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.3.5-20180503"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -175,10 +175,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:1.3.5-20180503
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.3.5-20180503"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -191,10 +191,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-meta:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-meta:1.3.5-20180503
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.3.5-20180503"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -240,10 +240,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:1.3.5-20180503
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.3.5-20180503"
 
 - apiVersion: v1
   kind: Secret
@@ -272,7 +272,7 @@ objects:
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
   stringData:
-    syndesis: "latest"
+    syndesis: "1.3.5-20180503"
     postgresql: "9.5"
     oauthproxy: "v1.1.0"
     prometheus: "v2.1.0"
@@ -383,7 +383,7 @@ objects:
         - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: syndesis-ui:latest
+          name: syndesis-ui:1.3.5-20180503
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -739,7 +739,7 @@ objects:
         - syndesis-meta
         from:
           kind: ImageStreamTag
-          name: syndesis-meta:latest
+          name: syndesis-meta:1.3.5-20180503
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -1043,7 +1043,7 @@ objects:
         - syndesis-server
         from:
           kind: ImageStreamTag
-          name: syndesis-server:latest
+          name: syndesis-server:1.3.5-20180503
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -1097,7 +1097,7 @@ objects:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: syndesis-s2i:latest
+        builderImageStreamTag: syndesis-s2i:1.3.5-20180503
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
