@@ -91,7 +91,9 @@ public class ConnectionUpdateHandler extends AbstractResourceUpdateHandler<Conne
         List<LeveledMessage> messages = new ArrayList<>();
         messages.addAll(computeValidatorMessages(LeveledMessage.Builder::new, connection));
         messages.addAll(computePropertiesDiffMessages(LeveledMessage.Builder::new, oldConnector.getProperties(), newConnector.getProperties()));
-        messages.addAll(computeMissingMandatoryPropertiesMessages(LeveledMessage.Builder::new, newConnector.getProperties(), merge(newConnector.getConfiguredProperties(), connection.getConfiguredProperties())));
+        if (!connection.isDerived()) {
+            messages.addAll(computeMissingMandatoryPropertiesMessages(LeveledMessage.Builder::new, newConnector.getProperties(), merge(newConnector.getConfiguredProperties(), connection.getConfiguredProperties())));
+        }
         messages.addAll(computeSecretsUpdateMessages(LeveledMessage.Builder::new, newConnector.getProperties(), connection.getConfiguredProperties()));
 
         builder.errors(countMessagesWithLevel(LeveledMessage.Level.ERROR, messages));
