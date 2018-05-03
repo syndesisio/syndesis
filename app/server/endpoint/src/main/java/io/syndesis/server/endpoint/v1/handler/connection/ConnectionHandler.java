@@ -160,19 +160,23 @@ public class ConnectionHandler
             .userId(sec.getUserPrincipal().getName())
             .build();
 
+        final Connection connectionToCreate = applyCredentialFlowStateTo(updatedConnection);
+
+        return Creator.super.create(sec, connectionToCreate);
+    }
+
+    Connection applyCredentialFlowStateTo(final Connection connection) {
         final Set<CredentialFlowState> flowStates = CredentialFlowState.Builder.restoreFrom(state::restoreFrom, request);
 
-        final Connection connectionToCreate = flowStates.stream().map(s -> {
+        return flowStates.stream().map(s -> {
             final Cookie removal = new Cookie(s.persistenceKey(), "");
             removal.setPath("/");
             removal.setMaxAge(0);
 
             response.addCookie(removal);
 
-            return credentials.apply(updatedConnection, s);
-        }).findFirst().orElse(updatedConnection);
-
-        return Creator.super.create(sec, connectionToCreate);
+            return credentials.apply(connection, s);
+        }).findFirst().orElse(connection);
     }
 
     private Map<String, ConfigurationProperty> getConnectorProperties(String connectorId) {
@@ -198,7 +202,9 @@ public class ConnectionHandler
             .lastUpdated(new Date())
             .build();
 
-        Updater.super.update(id, updatedConnection);
+        final Connection connectionToUpdate = applyCredentialFlowStateTo(updatedConnection);
+
+        Updater.super.update(id, connectionToUpdate);
     }
 
     @Path("/{id}/actions")
