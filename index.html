@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-6711-gd6c2a5f3a,</span>
+<span id="revnumber">version 1.1.3-6713-gffd6af994,</span>
 <span id="revdate">2018-05-03</span>
 </div>
 <div id="toc" class="toc2">
@@ -571,8 +571,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#dev-release-steps">2.7.3. Release steps</a></li>
 <li><a href="#_minor_version_templates">2.7.4. Minor Version Templates</a></li>
 <li><a href="#_snapshot_release">2.7.5. Snapshot Release</a></li>
-<li><a href="#_fuse_online_templates">2.7.6. Fuse Online Templates</a></li>
-<li><a href="#dev-release-troubleshooting">2.7.7. Troubleshooting</a></li>
+<li><a href="#dev-release-troubleshooting">2.7.6. Troubleshooting</a></li>
 </ul>
 </li>
 <li><a href="#syndesis-install">2.8. syndesis install</a>
@@ -1479,7 +1478,6 @@ Options for release:
                               (and removed after the release)
     --docker-user &lt;user&gt;      Docker user for Docker Hub
     --docker-password &lt;pwd&gt;   Docker password for Docker Hub
-    --product-templates       Create templates for the productised version only and tag
     --no-git-push             Don't push the release tag (and symbolic major.minor tag)
     --git-remote              Name of the git remote to push to. If not given, its trying to be pushed
                               to the git remote to which the currently checked out branch is attached to.
@@ -1816,40 +1814,7 @@ According to  <a href="https://semver.org/">Semantic Versioning 2.0</a> this is 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_fuse_online_templates">2.7.6. Fuse Online Templates</h4>
-<div class="paragraph">
-<p>The templates checked in and tagged with <em>regular</em> tags in pure numeric form (e.g. <code>1.2.8</code>) are always referencing upstream images that are available at Docker Hub.</p>
-</div>
-<div class="paragraph">
-<p>For a different setup to referencing different images (i.e. the images that are produced by the Red Hat productisation process), yet another set of templates can be generated.</p>
-</div>
-<div class="paragraph">
-<p>For this the option <code>--product-templates</code> can be used, which generates templates <em>without image stream definitions</em>, but referencing supposedly already existing image streams.</p>
-</div>
-<div class="paragraph">
-<p>These templates are created with a tag <code>fuse-ignite-&lt;minor&gt;</code> (e.g. <code>fuse-ignite-1.2</code>) in the Git repository and so directly accessed from GitHub.</p>
-</div>
-<div class="paragraph">
-<p>The product template support is currently very specific to the Fuse Ignite Cluster, which is used for the Technical Preview phase of Fuse Ignite.</p>
-</div>
-<div class="paragraph">
-<p>So it is likely that it might change in the future.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-An extra step is required to import productised Syndesis Docker images into the Fuse Ignite cluster. This step should be documented here, and probably added to the release script.
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="dev-release-troubleshooting">2.7.7. Troubleshooting</h4>
+<h4 id="dev-release-troubleshooting">2.7.6. Troubleshooting</h4>
 <div class="paragraph">
 <p>When you run the <code>syndesis release</code> command and when it should not succeed, you might have to perform some cleanup steps yourself
 (there is now automatic rollback).
@@ -3130,8 +3095,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-6711-gd6c2a5f3a<br>
-Last updated 2018-05-03 10:59:02 UTC
+Version 1.1.3-6713-gffd6af994<br>
+Last updated 2018-05-03 11:06:21 UTC
 </div>
 </div>
 </body>
