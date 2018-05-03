@@ -3,15 +3,15 @@
         class="step-block inline-block text-center">
     <ng-container [ngSwitch]="step.stepKind">
       <div *ngSwitchCase="'endpoint'"
-            id="{{ step.connection.name | synSlugify }}"
+            id="{{ step.connection?.name | synSlugify }}"
             class="text-center connection" 
             (click)="onViewDetails(step)" 
-            title="{{ step.connection.name }}&nbsp;{{ step.action.name }}">
+            title="{{ step.connection?.name }}&nbsp;{{ step.action?.name }}">
         <div [class]="'step-line ' + getStepLineClass(index)"></div>
         <div class="icon">
           <img class="syn-icon-small" [src]="step.connection | synIconPath">
         </div>
-        <div class="syn-truncate__ellipsis">{{ step.connection.name | capitalize }}</div>
+        <div class="syn-truncate__ellipsis">{{ step.connection?.name | capitalize }}</div>
       </div>
       <div *ngSwitchDefault
             id="{{ (step.name || step.stepKind) | synSlugify }}"
