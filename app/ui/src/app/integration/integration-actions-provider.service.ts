@@ -222,10 +222,10 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
 
   replaceDraftAction(integration: Integration | IntegrationOverview, deployment: IntegrationDeployment | DeploymentOverview): Promise<any> {
       return this.integrationSupportService.getDeployment(integration.id, deployment.version.toString())
-        .map(_deployment => {
-          this.store.patch(<any>integration, {
+        .switchMap(_deployment => {
+          return this.store.patch(_deployment.integrationId, {
             steps: _deployment.spec.steps,
-            draft: true
+            isDraft: true
           });
         }).toPromise();
   }
