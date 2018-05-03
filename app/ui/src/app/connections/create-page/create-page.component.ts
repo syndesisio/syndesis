@@ -164,8 +164,9 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
         if (
           this.current.oauthStatus &&
           this.current.oauthStatus.status === 'SUCCESS' &&
-          page === 'configure-fields'
+          page === 'review'
         ) {
+          this.currentActiveStep++;
           this.goForward();
           return;
         }
