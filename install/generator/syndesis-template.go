@@ -70,6 +70,8 @@ type Context struct {
 	AllowLocalHost   bool
 	WithDockerImages bool
 	Productized      bool
+	Oso              bool
+	Ocp              bool
 	Tag              string
 	Registry         string
 	Images           images
@@ -138,7 +140,8 @@ func init() {
 	flags.BoolVar(&context.AllowLocalHost, "allow-localhost", false, "Allow localhost")
 	flags.BoolVar(&context.WithDockerImages, "with-docker-images", false, "With docker images")
 	flags.StringVar(&context.Tags.Syndesis, "syndesis-tag", "latest", "Syndesis Image tag to use")
-	flags.BoolVar(&context.Productized, "product", false, "Generate product templates?")
+	flags.BoolVar(&context.Oso, "oso", false, "Generate product templates for SO")
+	flags.BoolVar(&context.Ocp, "ocp", false, "Generate product templates for OCP")
 	flags.StringVar(&context.Registry, "registry", "docker.io", "Registry to use for imagestreams")
 	flags.BoolVar(&context.Debug, "debug", false, "Enable debug support")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
@@ -146,11 +149,14 @@ func init() {
 
 func install(cmd *cobra.Command, args []string) {
 
-	if context.Productized {
+	if context.Oso || context.Ocp {
+		context.Productized = true
 		if err := mergo.MergeWithOverwrite(&context, productContext); err != nil {
 			log.Fatal("Cannot merge in product image names")
 		}
-		context.Name = context.Name + "-fuse-ignite-" + context.Tags.Syndesis
+		if context.Oso {
+			context.Name = context.Name + "-" + context.Tags.Syndesis
+		}
 	}
 
 	files, err := ioutil.ReadDir("./")

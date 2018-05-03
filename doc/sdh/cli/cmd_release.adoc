@@ -44,7 +44,6 @@ Options for release:
                               (and removed after the release)
     --docker-user <user>      Docker user for Docker Hub
     --docker-password <pwd>   Docker password for Docker Hub
-    --product-templates       Create templates for the productised version only and tag
     --no-git-push             Don't push the release tag (and symbolic major.minor tag)
     --git-remote              Name of the git remote to push to. If not given, its trying to be pushed
                               to the git remote to which the currently checked out branch is attached to.
@@ -243,22 +242,6 @@ syndesis release \
 <4> Docker credentials required for pushing to Docker Hub
 
 A daily Jenkins job with this configuration run on https://ci.fabric8.io for creating a daily snapshots.
-
-### Fuse Online Templates
-
-The templates checked in and tagged with _regular_ tags in pure numeric form (e.g. `1.2.8`) are always referencing upstream images that are available at Docker Hub.
-
-For a different setup to referencing different images (i.e. the images that are produced by the Red Hat productisation process), yet another set of templates can be generated.
-
-For this the option `--product-templates` can be used, which generates templates _without image stream definitions_, but referencing supposedly already existing image streams.
-
-These templates are created with a tag `fuse-ignite-<minor>` (e.g. `fuse-ignite-1.2`) in the Git repository and so directly accessed from GitHub.
-
-The product template support is currently very specific to the Fuse Ignite Cluster, which is used for the Technical Preview phase of Fuse Ignite.
-
-So it is likely that it might change in the future.
-
-NOTE: An extra step is required to import productised Syndesis Docker images into the Fuse Ignite cluster. This step should be documented here, and probably added to the release script.
 
 [[dev-release-troubleshooting]]
 ### Troubleshooting

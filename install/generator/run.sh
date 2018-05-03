@@ -18,9 +18,9 @@ go get -u github.com/spf13/cobra github.com/spf13/pflag github.com/hoisie/mustac
 cd $dir
 
 echo "$MESSAGE" > ${targetdir}/syndesis.yml
-go run syndesis-template.go $* --name=syndesis >> ${targetdir}/syndesis.yml
+go run syndesis-template.go --name=syndesis $* >> ${targetdir}/syndesis.yml
 
 echo "$MESSAGE" > ${targetdir}/syndesis-dev.yml
-go run syndesis-template.go $* --name=syndesis-dev --allow-localhost --debug >> ${targetdir}/syndesis-dev.yml
+go run syndesis-template.go --name=syndesis-dev $* --allow-localhost --debug >> ${targetdir}/syndesis-dev.yml
 
 # For re-enabling plain Docker images, use --with-docker-images when generating the template
