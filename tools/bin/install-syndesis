@@ -40,6 +40,8 @@ EOT
 
 recreate_project() {
     local project=$1
+    local dont_ask=${2:-false}
+
     if [ -z "$project" ]; then
         echo "No project given"
         exit 1
@@ -47,6 +49,17 @@ recreate_project() {
 
     # Delete project if existing
     if oc get project "${project}" >/dev/null 2>&1 ; then
+        if [ $dont_ask != "true" ]; then
+            echo =============== WARNING -- Going to delete project ${project}
+            oc get all -n $project
+            echo ============================================================
+            read -p "Do you really want to delete the existing project $project ? yes/[no] : " choice
+            echo
+            if [ "$choice" != "yes" ] && [ "$choice" != "y" ]; then
+                echo "Aborting on user's request"
+                exit 1
+            fi
+        fi
         echo "Deleting project ${project}"
         oc delete project "${project}"
     fi
@@ -72,7 +85,7 @@ create_oauthclient() {
 
 create_and_apply_template() {
     local route=$1
-    local console=$2
+    local console=${2:-}
     local template=${3:-syndesis}
     local tag=${4:-}
 
@@ -99,12 +112,14 @@ get_template_name() {
     local tag=${2:-}
     if [ -n "$tag" ]; then
         local candidate="$template-$tag"
-        local output=$(oc get template $candidate 2>&1)
-        if [[ $output = "*NotFound*" ]]; then
+        $(oc get template $candidate >/dev/null 2>&1)
+        if [ $? -eq 0 ]; then
           echo $candidate
           return
         fi
     fi
+
+
     echo $template
 }
 
@@ -232,10 +247,11 @@ tag=$(readopt --tag -t)
 route=$(readopt --route -r)
 console=$(readopt --console)
 
-# Main code
-if [ -z "$route" ] ||[ $(hasflag --help -h) ]; then
-    display_usage
-    exit 0
+# Get route
+route=$(readopt --route)
+if [ -z "${route}" ]; then
+    route="$(guess_route "$project")"
+    check_error $route
 fi
 
 # If a project is given, create it new or recreate it

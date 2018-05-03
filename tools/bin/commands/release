@@ -30,7 +30,6 @@ release::usage() {
                               temporary directory will be used (and removed after the release)
     --docker-user <user>      Docker user for Docker Hub
     --docker-password <pwd>   Docker password for Docker Hub
-    --product-templates       Create templates for the productised version only and tag
     --no-git-push             Don't push the release tag (and symbolic major.minor tag) at the end
     --git-remote              Name of the git remote to push to. If not given, its trying to be pushed
                               to the git remote to which the currently checked out branch is attached to.
@@ -67,12 +66,6 @@ release::run() {
     # Get the Syndesis minor version (e.g. "1.3")
     local moving_tag=$(extract_minor_version $release_version)
     check_error $moving_tag
-
-    # Generate product templates only if desired
-    if [ $(hasflag --product-templates) ]; then
-        do_product_templates $topdir $moving_tag "fuse-ignite"
-        exit 0
-    fi
 
     # Write to logfile if requested
     if [ $(readopt --log) ]; then
@@ -367,27 +360,6 @@ git_push() {
 
 # =======================================================================
 # Side actions
-
-do_product_templates() {
-  local topdir=$1
-  local moving_tag=$2
-  local tag_prefix=${4:-fuse-ignite}
-
-  cd $topdir/install/generator
-
-  echo "==== Creating product templates for $moving_tag"
-  sh run.sh --product --syndesis-tag="$moving_tag"
-
-  echo "==== Committing"
-  cd $topdir
-  git_commit ^install/ "Update OpenShift templates for Syndesis $moving_tag"
-
-  echo "=== Tagging"
-  git tag -f "${tag_prefix}-${moving_tag}"
-
-  # Push release tag only
-  git_push "$topdir" "$release_version"
-}
 
 drop_staging_repo() {
     local topdir="$1"
