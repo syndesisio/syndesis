@@ -160,8 +160,14 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   preInitialize(position: number, page: number) {
     this.error = undefined;
     const step = this.currentFlowService.getStep(this.position);
-    if (!step) {
+    if (!step || !step.connection) {
       this.router.navigate(['connection-select', this.position], {
+        relativeTo: this.route.parent
+      });
+      return;
+    }
+    if (!step.action) {
+      this.router.navigate(['action-select', this.position], {
         relativeTo: this.route.parent
       });
       return;
@@ -176,7 +182,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
         this.configuredPropertiesForMetadataCall(step.action)
       )
       .toPromise()
-      .then( (descriptor: ActionDescriptor) => {
+      .then((descriptor: ActionDescriptor) => {
         this.currentFlowService.events.emit({
           kind: 'integration-set-descriptor',
           position: this.position,
