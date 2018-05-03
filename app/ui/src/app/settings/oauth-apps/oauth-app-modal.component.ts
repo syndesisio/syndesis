@@ -47,7 +47,7 @@ export class OAuthAppModalComponent {
 
   // Clear the store credentials for the selected oauth app
   removeCredentials() {
-    const app = { ...this.item.client, clientId: '', clientSecret: '' };
+    const app = { ...this.item.client, clientId: null, clientSecret: null };
     return this.store
       .update(app)
       .take(1)
