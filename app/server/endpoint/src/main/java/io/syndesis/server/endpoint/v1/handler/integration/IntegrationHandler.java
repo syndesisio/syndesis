@@ -86,6 +86,7 @@ import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.springframework.stereotype.Component;
 
+@SuppressWarnings("PMD.GodClass")
 @Path("/integrations")
 @Api(value = "integrations")
 @Component
@@ -313,7 +314,7 @@ public class IntegrationHandler extends BaseHandler
         return integration;
     }
 
-    public IntegrationOverview toCurrentIntegrationOverview(Integration integration) {
+    private IntegrationOverview toCurrentIntegrationOverview(Integration integration) {
         final DataManager dataManager = getDataManager();
         final String id = integration.getId().get();
         final IntegrationOverview.Builder builder = new IntegrationOverview.Builder().createFrom(integration);
@@ -327,7 +328,11 @@ public class IntegrationHandler extends BaseHandler
         builder.targetState(IntegrationDeploymentState.Unpublished);
 
         // Get the latest connection.
-        builder.connections(integration.getConnections().stream().map(this::toCurrentConnection).collect(Collectors.toList()));
+        builder.connections(integration.getConnections().stream()
+            .map(this::toCurrentConnection)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(Collectors.toList()));
 
         // Get the latest steps.
         builder.steps(integration.getSteps().stream().map(this::toCurrentSteps).collect(Collectors.toList()));
@@ -346,44 +351,87 @@ public class IntegrationHandler extends BaseHandler
         return builder.build();
     }
 
-    public Connection toCurrentConnection(Connection c) {
+    private Optional<Connection> toCurrentConnection(Connection c) {
         final DataManager dataManager = getDataManager();
-        final Connection connection = dataManager.fetch(Connection.class, c.getId().get());
-        final Connector connector = dataManager.fetch(Connector.class, connection.getConnectorId());
 
-        return new Connection.Builder().createFrom(connection).connector(connector).build();
+        final Connection connection = dataManager.fetch(Connection.class, c.getId().get());
+        if (connection == null) {
+            // this may happen when a connection has been deleted
+            return Optional.empty();
+        }
+
+        final Connector connector = dataManager.fetch(Connector.class, c.getConnectorId());
+        if (connector == null) {
+            // this may happen when the related connector has been deleted
+            return Optional.empty();
+        }
+
+        return Optional.of(
+            new Connection.Builder().createFrom(connection).connector(connector).build()
+        );
     }
 
-    public Extension toCurrentExtension(Extension e) {
-        Set<String> ids = getDataManager().fetchIdsByPropertyValue(Extension.class,
+    private Optional<Extension> toCurrentExtension(Extension e) {
+        final DataManager dataManager = getDataManager();
+
+        // Try to lookup the active extensions
+        Set<String> ids = dataManager.fetchIdsByPropertyValue(Extension.class,
             "extensionId", e.getExtensionId(),
             "status", Extension.Status.Installed.name()
         );
 
-        if (ids.size() != 1) {
-            return e;
+        // This could happen if an extension has been deleted
+        if (ids.isEmpty()) {
+            return Optional.empty();
         }
 
-        return getDataManager().fetch(Extension.class, ids.iterator().next());
+        // This could happen if errors happened while activating an extension
+        // leading more than one extension marked as installed
+        if (ids.size() > 1) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(
+            dataManager.fetch(Extension.class, ids.iterator().next())
+        );
     }
 
     public Step toCurrentSteps(Step step) {
-        Optional<Connection> connection = step.getConnection().map(this::toCurrentConnection);
-        Optional<Extension> extension = step.getExtension().map(this::toCurrentExtension);
+        // actualize the connection
+        final Optional<Connection> connection = step.getConnection().flatMap(this::toCurrentConnection);
+
+        // A connection has been deleted
+        if (step.getConnection().isPresent() && !connection.isPresent()) {
+            // ... so reset the step to its un-configured state
+            return new Step.Builder().stepKind(step.getStepKind()).build();
+        }
+
+        // actualize the extension
+        final Optional<Extension> extension = step.getExtension().flatMap(this::toCurrentExtension);
+
+        // An extension has been deleted
+        if (step.getExtension().isPresent() && !extension.isPresent()) {
+            // ... so reset the step to its un-configured state
+            return new Step.Builder().stepKind(step.getStepKind()).build();
+        }
+
+        // We now need to update the related action
         Optional<? extends Action> action = step.getAction();
 
-        // We also need to update the related action
-        if  (action.isPresent() && action.get().hasId()) {
-            if (connection.isPresent() && connection.get().getConnector().isPresent()) {
-                final Action oldAction = action.get();
+        if (action.isPresent() && action.get().hasId()) {
+            final Action oldAction = action.get();
 
-                action = connection.get().getConnector().get().findActionById(action.get().getId().get()).map(
+            // connector
+            if (connection.isPresent() && connection.get().getConnector().isPresent()) {
+                action = connection.get().getConnector().get().findActionById(oldAction.getId().get()).map(
                     newAction -> merge(oldAction, newAction)
                 );
-            } else if (extension.isPresent()) {
-                final Action oldAction = action.get();
 
-                action = extension.get().findActionById(action.get().getId().get()).map(
+            }
+
+            // extension
+            if (extension.isPresent()) {
+                action = extension.get().findActionById(oldAction.getId().get()).map(
                     newAction -> merge(oldAction, newAction)
                 );
             }

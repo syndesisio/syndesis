@@ -41,6 +41,8 @@ public interface LeveledMessage extends WithMetadata {
         SYNDESIS006, // One or more required properties is not set
         SYNDESIS007, // Secrets update needed
         SYNDESIS008, // Validation Error
+        SYNDESIS009, // Connection has been deleted
+        SYNDESIS010, // Multiple extension installed
     }
 
     enum Level {
