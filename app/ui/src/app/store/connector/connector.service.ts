@@ -53,7 +53,7 @@ export class ConnectorService extends RESTService<Connector, Connectors> {
         });
 
         setTimeout(() => {
-          const returnUrl = `${window.location.pathname}#${id}`;
+          const returnUrl = `${window.location.pathname.replace(/[^/]*$/, 'review')}#${id}`;
           this.apiHttpService
             .setEndpointUrl(`/connectors/${id}/credentials`)
             .post<AcquisitionResponse>({ returnUrl })
