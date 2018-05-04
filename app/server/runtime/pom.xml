@@ -975,14 +975,6 @@
   <profiles>
     <profile>
       <id>fabric8</id>
-      <activation>
-        <property>
-          <name>::image</name>
-        </property>
-      </activation>
-      <properties>
-        <fabric8.generator.name>${image.server}</fabric8.generator.name>
-      </properties>
       <build>
         <plugins>
           <plugin>
@@ -996,49 +988,9 @@
                   <goal>helm</goal>
                   <goal>build</goal>
                 </goals>
-                <phase>package</phase>
-                <configuration>
-                  <generator>
-                  <config>
-                    <spring-boot>
-                      <name>${image.server}</name>
-                      <from>${temporary-docker-image}</from>
-                    </spring-boot>
-                  </config>
-                  </generator>
-                </configuration>
               </execution>
             </executions>
           </plugin>
-          <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>docker-maven-plugin</artifactId>
-            <version>${docker.maven.plugin.version}</version>
-            <configuration>
-              <images>
-                <image>
-                  <name>${temporary-docker-image}</name>
-                  <build>
-                    <from>${from.image}</from>
-                    <assembly>
-                      <basedir>/</basedir>
-                      <descriptor>${project.basedir}/src/main/resources/license-custom-assembly.xml</descriptor>
-                    </assembly>
-                  </build>
-                </image>
-              </images>
-            </configuration>
-            <executions>
-              <execution>
-                <id>docker-image</id>
-                <phase>compile</phase>
-                <goals>
-                  <goal>build</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
         </plugins>
       </build>
     </profile>

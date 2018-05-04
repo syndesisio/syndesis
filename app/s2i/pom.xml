@@ -217,10 +217,10 @@
                   <licensesOutputDirectory>${license.dir}/licenses</licensesOutputDirectory>
                   <licensesOutputFile>${license.dir}/licenses.xml</licensesOutputFile>
                 </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
+	      </execution>
+	    </executions>
+	  </plugin>
+	</plugins>
       </build>
     </profile>
   </profiles>
