@@ -114,7 +114,7 @@ parameters:
 - description: Maximum amount of memory the Prometheus container can use.
   displayName: Memory Limit
   name: PROMETHEUS_MEMORY_LIMIT
-  value: 255Mi
+  value: 512Mi
   required: true
 - description: Volume space available for Meta data, e.g. 512Mi, 2Gi.
   displayName: Meta Volume Capacity
