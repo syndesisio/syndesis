@@ -91,6 +91,8 @@
                 key: clientStateEncryptionKey
           - name: CLIENT_STATE_TID
             value: "1"
+          - name: MAX_INTEGRATIONS_PER_USER
+            value: ${MAX_INTEGRATIONS_PER_USER}
 {{#Debug}}
           - name: JAVA_DEBUG
             value: "true"
@@ -218,3 +220,6 @@
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
       dao:
         kind: jsondb
+      controllers:
+        maxIntegrationsPerUser: ${MAX_INTEGRATIONS_PER_USER}
+        maxDeploymentsPerUser: ${MAX_INTEGRATIONS_PER_USER}
