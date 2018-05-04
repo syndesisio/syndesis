@@ -337,15 +337,20 @@ public class IntegrationHandler extends BaseHandler
         // Get the latest steps.
         builder.steps(integration.getSteps().stream().map(this::toCurrentSteps).collect(Collectors.toList()));
 
+        IntegrationDeployment deployed = null;
         for (IntegrationDeployment deployment: dataManager.fetchAll(IntegrationDeployment.class, new IdPrefixFilter<>(id+":"), ReverseFilter.getInstance())) {
             builder.addDeployment(IntegrationDeploymentOverview.of(deployment));
 
-            if (deployment.getVersion() == integration.getVersion()) {
-                builder.isDraft(deployment.getVersion() != integration.getVersion());
+            if (deployment.getCurrentState() == IntegrationDeploymentState.Published) {
+                deployed = deployment;
                 builder.targetState(deployment.getTargetState());
                 builder.currentState(deployment.getCurrentState());
                 builder.deploymentVersion(deployment.getVersion());
             }
+        }
+
+        if (deployed != null) {
+            builder.isDraft(!integration.equals(deployed.getSpec()));
         }
 
         return builder.build();
