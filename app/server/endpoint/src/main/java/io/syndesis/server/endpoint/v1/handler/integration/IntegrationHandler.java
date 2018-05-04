@@ -337,18 +337,56 @@ public class IntegrationHandler extends BaseHandler
         // Get the latest steps.
         builder.steps(integration.getSteps().stream().map(this::toCurrentSteps).collect(Collectors.toList()));
 
+        IntegrationDeployment deployed = null;
         for (IntegrationDeployment deployment: dataManager.fetchAll(IntegrationDeployment.class, new IdPrefixFilter<>(id+":"), ReverseFilter.getInstance())) {
             builder.addDeployment(IntegrationDeploymentOverview.of(deployment));
 
-            if (deployment.getVersion() == integration.getVersion()) {
-                builder.isDraft(deployment.getVersion() != integration.getVersion());
-                builder.targetState(deployment.getTargetState());
-                builder.currentState(deployment.getCurrentState());
+            final IntegrationDeploymentState currentState = deployment.getCurrentState();
+            if (currentState == IntegrationDeploymentState.Published) {
+                deployed = deployment;
                 builder.deploymentVersion(deployment.getVersion());
+            }
+
+            if (currentState != IntegrationDeploymentState.Unpublished) {
+                // the bet is that any integration that the user wanted to publish
+                // will have it's status != Unpublished, the reason why we can't
+                // look at the last deployment is because users can choose to deploy
+                // previous deployments, so we bet that all the Unpublished
+                // integrations are not the ones that the user don't hold the
+                // current state
+                builder.targetState(deployment.getTargetState());
+                builder.currentState(currentState);
             }
         }
 
+        if (deployed != null) {
+            builder.isDraft(computeDraft(integration, deployed.getSpec()));
+        }
+
         return builder.build();
+    }
+
+    private static boolean computeDraft(final Integration current, final Integration deployed) {
+        final List<Step> currentSteps = current.getSteps();
+        final List<Step> deployedSteps = deployed.getSteps();
+        if (currentSteps.size() != deployedSteps.size()) {
+            return true;
+        }
+
+        for (int i = 0; i < currentSteps.size(); i++) {
+            final Step currentStep = currentSteps.get(i);
+            final Step deployedStep = deployedSteps.get(i);
+
+            if (currentStep.getStepKind() != deployedStep.getStepKind()) {
+                return true;
+            }
+
+            if (!currentStep.getConfiguredProperties().equals(deployedStep.getConfiguredProperties())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private Optional<Connection> toCurrentConnection(Connection c) {
