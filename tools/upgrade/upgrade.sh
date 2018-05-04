@@ -108,6 +108,9 @@ run() {
     local current_tag=$(read_global_config syndesis)
     preflight_version_check "$current_tag" "$tag"
 
+    # Copy the migration jar to the workdir for later reference
+    cp $basedir/syndesis-cli.jar $workdir/
+
     echo "============================================="
     echo "=== STARTING UPGRADE TO SYNDESIS $tag "
     echo "============================================="

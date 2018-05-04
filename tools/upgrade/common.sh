@@ -98,6 +98,12 @@ read_global_config() {
     oc get secret syndesis-global-config -o jsonpath={.data.${key}} | base64 --decode
 }
 
+# Read a single parameter
+extract_param() {
+    local key=${1}
+    read_global_config params | grep "${key}" | sed -e "s/${key}=//"
+}
+
 # ===================================================================================================
 # Postgres funcs
 
