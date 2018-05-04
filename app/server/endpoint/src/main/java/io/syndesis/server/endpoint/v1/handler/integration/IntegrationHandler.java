@@ -347,9 +347,16 @@ public class IntegrationHandler extends BaseHandler
                 builder.deploymentVersion(deployment.getVersion());
             }
 
-            // this will effectively set the the integration target/current state to the target/current state of the last deployment
-            builder.targetState(deployment.getTargetState());
-            builder.currentState(currentState);
+            if (currentState != IntegrationDeploymentState.Unpublished) {
+                // the bet is that any integration that the user wanted to publish
+                // will have it's status != Unpublished, the reason why we can't
+                // look at the last deployment is because users can choose to deploy
+                // previous deployments, so we bet that all the Unpublished
+                // integrations are not the ones that the user don't hold the
+                // current state
+                builder.targetState(deployment.getTargetState());
+                builder.currentState(currentState);
+            }
         }
 
         if (deployed != null) {
