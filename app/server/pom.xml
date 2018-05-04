@@ -57,6 +57,10 @@
     <google-testing-compile-guava.version>21.0</google-testing-compile-guava.version>
     <google-truth.version>0.35</google-truth.version>
 
+    <license.dir>${project.basedir}/src/main/resources/licenses</license.dir>
+    <license.output.dir>${project.build.directory}/licenses</license.output.dir>
+    <temporary-docker-image>meta-temporary</temporary-docker-image>
+
     <!-- maven plugin version -->
     <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
     <maven-archetype-plugin.version>2.2</maven-archetype-plugin.version>
@@ -826,6 +830,30 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>generate-licenses-xml</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>aggregate-download-licenses</goal>
+                </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <licensesOutputDirectory>${license.dir}/licenses</licensesOutputDirectory>
+                  <licensesOutputFile>${license.dir}/licenses.xml</licensesOutputFile>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
 </project>

@@ -27,7 +27,12 @@
   <groupId>io.syndesis.meta</groupId>
   <artifactId>meta</artifactId>
   <name>Meta</name>
-
+  <properties>
+    <license.dir>${project.basedir}/src/main/resources/licenses</license.dir>
+    <license.output.dir>${project.build.directory}/licenses</license.output.dir>
+    <temporary-docker-image>meta-temporary</temporary-docker-image>
+  </properties>
+  
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -436,7 +441,65 @@
                 </goals>
                 <phase>package</phase>
                 <configuration>
-
+                  <generator>
+                  <config>
+                    <spring-boot>
+                      <name>${image.meta}</name>
+                      <from>${temporary-docker-image}</from>
+                    </spring-boot>
+                  </config>
+                  </generator>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>${docker.maven.plugin.version}</version>
+            <configuration>
+              <images>
+                <image>
+                  <name>${temporary-docker-image}</name>
+                  <build>
+                    <from>${from.image}</from>
+                    <assembly>
+                      <basedir>/</basedir>
+                      <descriptor>${project.basedir}/src/main/resources/license-custom-assembly.xml</descriptor>
+                    </assembly>
+                  </build>
+                </image>
+              </images>
+            </configuration>
+            <executions>
+              <execution>
+                <id>docker-image</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>generate-licenses-xml</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>aggregate-download-licenses</goal>
+                </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <licensesOutputDirectory>${license.dir}/licenses</licensesOutputDirectory>
+                  <licensesOutputFile>${license.dir}/licenses.xml</licensesOutputFile>
                 </configuration>
               </execution>
             </executions>
@@ -444,6 +507,7 @@
         </plugins>
       </build>
     </profile>
+
   </profiles>
 
 </project>

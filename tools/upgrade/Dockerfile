@@ -22,11 +22,14 @@ RUN yum install -y "$openshift_yum_repo" \
  && chgrp -R 0 /opt \
  && chmod -R g=u /opt
 
+# Copy licenses
+RUN mkdir -p /opt/ipaas/licenses
+COPY licenses /opt/ipaas/licenses
+
 COPY syndesis.yml /opt/template/
 COPY upgrade.sh common.sh syndesis-cli.jar /opt/
 COPY steps /opt/steps
 COPY migration /opt/migration
-
 
 ENTRYPOINT [ \
   "/bin/bash", \
