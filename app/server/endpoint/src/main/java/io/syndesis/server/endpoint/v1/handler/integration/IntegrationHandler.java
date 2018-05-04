@@ -360,10 +360,33 @@ public class IntegrationHandler extends BaseHandler
         }
 
         if (deployed != null) {
-            builder.isDraft(!integration.equals(deployed.getSpec()));
+            builder.isDraft(computeDraft(integration, deployed.getSpec()));
         }
 
         return builder.build();
+    }
+
+    private static boolean computeDraft(final Integration current, final Integration deployed) {
+        final List<Step> currentSteps = current.getSteps();
+        final List<Step> deployedSteps = deployed.getSteps();
+        if (currentSteps.size() != deployedSteps.size()) {
+            return true;
+        }
+
+        for (int i = 0; i < currentSteps.size(); i++) {
+            final Step currentStep = currentSteps.get(i);
+            final Step deployedStep = deployedSteps.get(i);
+
+            if (currentStep.getStepKind() != deployedStep.getStepKind()) {
+                return true;
+            }
+
+            if (!currentStep.getConfiguredProperties().equals(deployedStep.getConfiguredProperties())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private Optional<Connection> toCurrentConnection(Connection c) {
