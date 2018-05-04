@@ -93,7 +93,18 @@
       "networkonline": "Your internet connection has been restored",
       "networkoffline": "Your internet connection has been interrupted",
       "httperror": "The server returned an error",
-      "httperrordefaultmsg": "Your request could not be completed. Please try again."
+      "httperrordefaultmsg": "Your request could not be completed. Please try again.",
+      "syndesis000": "An unknown error has occurred",
+      "syndesis001": "There are parameter updates. Click <strong>Edit</strong> to update parameter settings.",
+      "syndesis002": "One or more properties have been updated or removed",
+      "syndesis003": "The connector associated with this connection has been deleted",
+      "syndesis004": "The associated extension has been deleted",
+      "syndesis005": "The associated action has been deleted",
+      "syndesis006": "One or more required properties is not set",
+      "syndesis007": "Secrets for this connection need to be updated",
+      "syndesis008": "There has been a validation error",
+      "syndesis009": "A connection has been deleted from this integration",
+      "syndesis010": "Multiple extensions installed"
     },
     "shared": {
       "loading": "loading",

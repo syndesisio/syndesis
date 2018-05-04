@@ -545,10 +545,10 @@ export class CurrentFlowService {
         const integration = this.getIntegrationClone();
         const tags = integration.tags || [];
         const connectorIds = this.getSubsequentConnections(0).map(
-          step => step.connection.connectorId
+          step => step.connection ? step.connection.connectorId : undefined
         );
         connectorIds.forEach(id => {
-          if (tags.indexOf(id) === -1) {
+          if (id && tags.indexOf(id) === -1) {
             tags.push(id);
           }
         });

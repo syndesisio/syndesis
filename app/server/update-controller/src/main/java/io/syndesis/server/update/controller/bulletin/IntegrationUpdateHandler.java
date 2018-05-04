@@ -110,14 +110,15 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                 messages.addAll(computeValidatorMessages(supplier, integration));
 
                 // **********************
-                // Extension
+                // Extension Action
                 // **********************
 
                 step.getAction().filter(StepAction.class::isInstance).map(StepAction.class::cast).ifPresent(action -> {
-                    Extension extension = step.getExtension().orElse(null);
-                    if (extension == null) {
+                    if (!step.getExtension().isPresent()) {
                         return;
                     }
+
+                    final Extension extension = step.getExtension().get();
 
                     // When an extension is updated a new entity is written to the db
                     // so we can't simply lookup by ID but whe need to search for the
@@ -131,7 +132,30 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                         "status", Extension.Status.Installed.name()
                     );
 
-                    if (ids.size() != 1) {
+                    // No installed extension found, this happen if the extension
+                    // has been deleted.
+                    if (ids.size() == 0) {
+                        messages.add(
+                            supplier.get()
+                                .level(LeveledMessage.Level.WARN)
+                                .code(LeveledMessage.Code.SYNDESIS004)
+                                .build()
+                        );
+
+                        return;
+                    }
+
+                    // More than one installed extension found, this should not
+                    // happen unless something wrong happen at extension activation
+                    // phase
+                    if (ids.size() > 1) {
+                        messages.add(
+                            supplier.get()
+                                .level(LeveledMessage.Level.WARN)
+                                .code(LeveledMessage.Code.SYNDESIS010)
+                                .build()
+                        );
+
                         return;
                     }
 
@@ -161,13 +185,30 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                 });
 
                 // **********************
-                // Connector
+                // Connector Action
                 // **********************
 
                 step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).ifPresent(action -> {
-                    Connection connection = step.getConnection().orElse(null);
-                    if (connection == null) {
+                    if (!step.getConnection().isPresent()) {
                         return;
+                    }
+
+                    final Connection connection = step.getConnection().get();
+
+                    if (connection.getId().isPresent()) {
+                        Connection newConnection = dataManager.fetch(Connection.class, connection.getId().get());
+
+                        // There's not connection with the given id so this means
+                        // that the connection has been deleted or is is not present
+                        // in the imported extension
+                        if (newConnection == null) {
+                            messages.add(
+                                supplier.get()
+                                    .level(LeveledMessage.Level.WARN)
+                                    .code(LeveledMessage.Code.SYNDESIS009)
+                                    .build()
+                            );
+                        }
                     }
 
                     Connector newConnector = dataManager.fetch(Connector.class, connection.getConnectorId());
