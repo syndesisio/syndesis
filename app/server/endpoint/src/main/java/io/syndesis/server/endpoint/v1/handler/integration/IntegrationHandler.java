@@ -341,12 +341,15 @@ public class IntegrationHandler extends BaseHandler
         for (IntegrationDeployment deployment: dataManager.fetchAll(IntegrationDeployment.class, new IdPrefixFilter<>(id+":"), ReverseFilter.getInstance())) {
             builder.addDeployment(IntegrationDeploymentOverview.of(deployment));
 
-            if (deployment.getCurrentState() == IntegrationDeploymentState.Published) {
+            final IntegrationDeploymentState currentState = deployment.getCurrentState();
+            if (currentState == IntegrationDeploymentState.Published) {
                 deployed = deployment;
-                builder.targetState(deployment.getTargetState());
-                builder.currentState(deployment.getCurrentState());
                 builder.deploymentVersion(deployment.getVersion());
             }
+
+            // this will effectively set the the integration target/current state to the target/current state of the last deployment
+            builder.targetState(deployment.getTargetState());
+            builder.currentState(currentState);
         }
 
         if (deployed != null) {
