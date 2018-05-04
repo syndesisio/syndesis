@@ -224,8 +224,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
       return this.integrationSupportService.getDeployment(integration.id, deployment.version.toString())
         .switchMap(_deployment => {
           return this.store.patch(_deployment.integrationId, {
-            steps: _deployment.spec.steps,
-            isDraft: true
+            steps: _deployment.spec.steps
           });
         }).toPromise();
   }
