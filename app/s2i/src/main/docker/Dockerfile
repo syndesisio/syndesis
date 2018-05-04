@@ -14,4 +14,8 @@ RUN cd /tmp/artifacts/m2/project \
  && chgrp -R 0 /tmp/artifacts/m2 \
  && chmod -R g=u /tmp/artifacts/m2
 
+# Copy licenses
+RUN mkdir -p /opt/ipaas/
+COPY lic* /opt/ipaas/
+
 USER 1000

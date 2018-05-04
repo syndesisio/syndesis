@@ -35,6 +35,8 @@
     <!-- Must be set empty here so that it can be overridden from the outside-->
     <!-- Don't delete this line -->
     <maven.repo.local></maven.repo.local>
+    <license.dir>${project.basedir}/src/main/resources/licenses</license.dir>
+    <license.output.dir>${project.build.directory}/licenses</license.output.dir>
   </properties>
   <repositories>
     <repository>
@@ -198,6 +200,28 @@
         </plugins>
       </build>
     </profile>
-
+    <profile>
+      <id>generate-licenses-xml</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>aggregate-download-licenses</goal>
+                </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <licensesOutputDirectory>${license.dir}/licenses</licensesOutputDirectory>
+                  <licensesOutputFile>${license.dir}/licenses.xml</licensesOutputFile>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 </project>
