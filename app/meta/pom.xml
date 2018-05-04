@@ -28,8 +28,8 @@
   <artifactId>meta</artifactId>
   <name>Meta</name>
   <properties>
-      <license.dir>${project.basedir}/src/main/resources/licenses</license.dir>
-      <license.output.dir>${project.build.directory}/licenses</license.output.dir>
+    <license.dir>${project.basedir}/src/main/resources/licenses</license.dir>
+    <license.output.dir>${project.build.directory}/licenses</license.output.dir>
   </properties>
 
   <dependencyManagement>
