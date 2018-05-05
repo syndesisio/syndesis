@@ -23,7 +23,7 @@
   <parent>
     <groupId>io.syndesis.integration</groupId>
     <artifactId>integration-parent</artifactId>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.3.6-20180505</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
