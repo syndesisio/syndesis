@@ -199,6 +199,7 @@ update_pom_versions() {
     cd $topdir/app
     echo "==== Updating pom.xml versions to $version"
     ./mvnw ${maven_opts} versions:set -DnewVersion=$version -DprocessAllModules=true -DgenerateBackupPoms=false
+    ./mvnw ${maven_opts} -f "$topdir/doc/pom.xml" versions:set -DnewVersion=$version -DprocessAllModules=true -DgenerateBackupPoms=false
 }
 
 mvn_clean_install() {
@@ -208,6 +209,7 @@ mvn_clean_install() {
     echo "==== Running 'mvn clean install'"
     cd $topdir/app
     ./mvnw ${maven_opts} clean install -Pflash
+    ./mvnw ${maven_opts} -f "$topdir/doc/pom.xml" clean install
 }
 
 generate_templates() {
