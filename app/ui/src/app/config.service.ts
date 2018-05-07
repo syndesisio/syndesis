@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs/Subject';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { log, getCategory } from './logging';
@@ -46,7 +46,16 @@ export class ConfigService {
 
         return this;
       })
-      .catch(() => {
+      .catch(error => {
+        if (error instanceof HttpErrorResponse) {
+          if (error.status === 0 && error.statusText === 'Unknown Error') {
+            // if we get an error here the response could get blocked
+            // by the browser resulting in the above condition.  We'll try
+            // triggering a reload and hope for the best.  The app doesn't
+            // work if this fetch fails anyways.
+            window.location.reload();
+          }
+        }
         log.warnc(() =>
           'Error: Configuration service unreachable! Using defaults: ' +
           JSON.stringify(this.settingsRepository),
