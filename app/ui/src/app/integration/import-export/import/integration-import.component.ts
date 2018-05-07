@@ -17,8 +17,8 @@ import {
 import { IntegrationStore } from '@syndesis/ui/store';
 import { environment } from '../../../../environments/environment';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
-import {NotificationType} from "patternfly-ng";
-import {NotificationService} from "@syndesis/ui/common";
+import { NotificationType } from 'patternfly-ng';
+import { NotificationService } from '@syndesis/ui/common';
 
 @Component({
   selector: 'syndesis-import-integration-component',
