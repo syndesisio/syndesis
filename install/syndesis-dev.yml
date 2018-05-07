@@ -132,6 +132,11 @@ parameters:
   name: SERVER_MEMORY_LIMIT
   value: 800Mi
   required: true
+- description: Maximum number of integrations single user can create
+  displayName: Maximum number of integrations
+  name: MAX_INTEGRATIONS_PER_USER
+  value: "1"
+  required: true
 - description: Key used to perform authentication of client side stored state.
   displayName: Client side state authentication key
   from: '[a-zA-Z0-9]{32}'
@@ -997,6 +1002,8 @@ objects:
                 key: clientStateEncryptionKey
           - name: CLIENT_STATE_TID
             value: "1"
+          - name: MAX_INTEGRATIONS_PER_USER
+            value: ${MAX_INTEGRATIONS_PER_USER}
           - name: JAVA_DEBUG
             value: "true"
           image: ' '
@@ -1107,6 +1114,9 @@ objects:
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
       dao:
         kind: jsondb
+      controllers:
+        maxIntegrationsPerUser: ${MAX_INTEGRATIONS_PER_USER}
+        maxDeploymentsPerUser: ${MAX_INTEGRATIONS_PER_USER}
 - apiVersion: v1
   kind: Service
   metadata:
