@@ -19,7 +19,19 @@ the name of the data field in the search field.
 The data mapper displays a line that connects the two fields you just
 selected.
 
-To confirm that them mapping is defined, in the upper right, click
+To confirm that the mapping is defined, in the upper right, click
 image:shared/images/grid.png[Grid] to display the defined mappings.
 Click image:shared/images/grid.png[Grid] again to display the data field
 panels.
+
+Here is another way to map a single source field to a single target
+field:
+
+. In the *Configure Mapper* page, in the upper right, click the plus sign
+to display the *Mapping Details* panel. 
+. In the *Sources* section, enter
+the name of the source field. 
+. In the *Action* section, accept the
+default *Map* action. 
+. In the *Target* section, enter the name of the
+field that you want to map to and click *Enter*. 

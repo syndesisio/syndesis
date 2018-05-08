@@ -23,14 +23,17 @@ to upload files in the middle of an integration.
 
 . On the *Choose an Action* page, click *Upload*. 
 . In the *File name expression* field, if you want to upload only one
-particular file, then enter a Simple language
+particular file, then enter an 
+http://camel.apache.org/simple.html[Apache Camel Simple language]
 expression that resolves to a file name. This is the name of the
-file that the action uploads to the server. To upload more than one
+file that the action uploads to the server. 
+You cannot specify a regular expression. To upload more than one
 file, leave this field blank. 
-. In the *FTP directory* field, enter the name of a server directory.
-The connection stores the specified file in this directory. If the
-*File name expression* field is blank, then the connection uploads
-all files that were received from the previous integration step. 
+. In the *FTP directory* field, enter the absolute or relative name of a server directory.
+If the *File name expression* field contains an expression, 
+then the connection stores the specified file in this directory. If the
+*File name expression* field is blank, then the connection uploads to
+this directory all files that were received from the previous integration step. 
 . In the *If file exists* field, indicate the behavior when you are 
 uploading a file that has the same path and name as a file that is on
 the server. Accept the default, *Override*, to overwrite

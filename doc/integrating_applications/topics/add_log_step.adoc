@@ -15,7 +15,7 @@ one or more of the following:
 http://camel.apache.org/simple.html[Apache Camel Simple language] expression. 
 
 To add a log step, you must be creating a new integration or
-editing the draft of an integration. The integration must already have
+editing an integration. The integration must already have
 its start and finish connections.
 
 To add a log step:
@@ -34,7 +34,7 @@ enter one of the following:
 +
 If you enter an expression, {prodname} resolves the 
 expression and logs the resulting text. 
-. When log step configuration is complete, in the upper right, click *Next*.
+. When log step configuration is complete, click *Done*.
 . When the integration is complete, publish it to start seeing output
 from the new log step.
 

@@ -7,18 +7,30 @@ This lets you create any number of integrations that connect
 to Twitter. In other words, you need to register a particular
 installation of {prodname} with Twitter only once.
 
+In each {prodname} environment, there can be only one registration
+of {prodname} as a Twitter client. Each Twitter connection uses the
+same Twitter credentials. In other words, you cannot log into one Twitter
+account, register {prodname} as a client that uses those credentials, and then
+log into a second Twitter account to also register {prodname} as a client
+that uses the credentials for the second Twitter account. 
+
 Perform these steps:
 
 . In {prodname}:
 .. In the left panel, click *Settings*.
 .. Near the top of the *OAuth Application Management* page, where you see
-`*During registration, enter this callback URL:*`, copy that URL to the
-clipboard.
+`*During registration, enter this callback URL:*`, copy the URL 
+at the end of the sentence to the clipboard.
 .. To the right of the *Twitter* entry,
 click *Register* to display the *Client ID* and *Client Secret* fields.
-. In another browser tab, go to http://apps.twitter.com and do
-the following:
-.. If you are not already logged in to Twitter, log in.
+. In another browser tab, go to the Twitter *Application Management* web
+site at 
+https://apps.twitter.com 
+and do the following: 
+
+.. Confirm that the URL is `apps.twitter.com` and not just `twitter.com`. 
+.. If you are not already logged in to the Twitter *Application
+Management* site, log in.
 .. Click *Create New App*.
 .. In the *Name* field, enter a name for your new app. This name
 must be unique among all names of apps registered with Twitter.

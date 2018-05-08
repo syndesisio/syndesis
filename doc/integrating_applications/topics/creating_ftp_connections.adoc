@@ -17,7 +17,10 @@ click the *SFTP* connector.
 +
 * For an FTP connection:
 ** *Host* is the only parameter that you must
-specify. Enter the host name of the server you want to connect to.
+specify. Enter the host name of the server that you want to connect to.
+For example, if the name of your FTP host is `FTP.WEST`, then you would 
+enter exactly that, `FTP.WEST`. Do not specify the protocol, for example,
+you should not specify something like this: `ftp://FTP.WEST`.
 ** *Port* is required and has a default value of `21`. This is the
 port that the FTP server is listening on. 
 ** All other parameters are either not required or have default values.
@@ -27,7 +30,10 @@ parameters are after this procedure.
 * For an SFTP connection, there must be values for these parameters:
 +
 ** *Host* is the host name of the SFTP server that you 
-want to connect to.
+want to connect to. For example, if the name of your SFTP host 
+is `SFTP.EAST`, then you would 
+enter exactly that, `SFTP.EAST`. Do not specify the protocol, for example,
+you should not specify something like this: `sftp://SFTP.EAST`.
 ** *Port* has a default of `22`. This is the port that the SFTP server
 is listening on. 
 ** *User name* of the account that you want to 

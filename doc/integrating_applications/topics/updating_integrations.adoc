@@ -10,9 +10,9 @@ you want to update.
 . On the integration's summary page, in the upper right corner, click
 *Edit Integration*.
 
-In the left panel, you can see each step in the integration with a
-visual cue that indicates whether it is a connection or a data operation
-between connections.
+In the left panel, you can see that each step in the integration is 
+represented by an icon that indicates whether it is a connection or a 
+data operation between connections. 
 Update the integration as needed:
 
 * To add a step, in the left panel, hover over the plus

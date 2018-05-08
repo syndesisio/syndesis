@@ -37,7 +37,7 @@ If you are satisfied with the action summary, click *Next*.
 . Indicate the API's security requirements by selecting one of the
 following:
 .. *No Security*
-.. *HTTP Basic Authorization* -- Enter the username and password you
+.. *HTTP Basic Authorization* -- Enter the user name and password you
 want to use to access the API.
 .. *OAuth* -- {prodname} prompts you to enter:
 ... *Authorization URL* is the location for registering {prodname} as

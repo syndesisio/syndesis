@@ -13,7 +13,7 @@ into the target field.
 data mapper displays a line from the first source field to the target field.
 . For each additional source field:
 .. In the *Mapping Details* panel, click *Add Source*.
-.. Start to overtype `*[None]*` with the name of the next source field.
+.. Start to overtype `Search` with the name of the next source field.
 .. When the name of the next source field appears, click it. The data mapper
 displays another line to the target field but this line is from this source
 field.

@@ -28,8 +28,8 @@ securityDefinitions:
   concur_oauth2:
     type: 'oauth2'
     flow: 'accessCode'
-    authorizationUrl: 'https://us-impl.api.concursolutions.com/oauth2/v0/authorize'
-    tokenUrl: 'https://us-impl.api.concursolutions.com/oauth2/v0/token'
+    authorizationUrl: 'https://example.com/oauth/authorize'
+    tokenUrl: 'https://example.com/oauth/token'
     scopes:
       LIST: Access List API
     x-token-strategy: OAUTH_TOKEN_PARAMETER

@@ -10,6 +10,13 @@ to a given application. For example, if you register your {prodname}
 installation with Salesforce, all connections from your {prodname}
 installation to Salesforce use the same client ID and the same client secret.
 
+In each {prodname} environment, for each application that uses OAuth,
+there can be only one registration
+of {prodname} as a client. For example, you cannot log into one Twitter
+account, register {prodname} as a client that uses those credentials, and then
+log into a second Twitter account to also register {prodname} as a client
+that uses the credentials for the second Twitter account.
+
 [NOTE]
 ====
 For information about using custom connectors that let 
@@ -47,3 +54,4 @@ For examples, see
 
 * <<register-with-salesforce_{context}>>
 * <<register-with-twitter>>
+* <<register-with-dropbox>>

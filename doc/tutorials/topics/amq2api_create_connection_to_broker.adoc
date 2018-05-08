@@ -13,7 +13,7 @@ available connections.
 +
 .. In the *Broker URL* field, enter `*tcp://broker-amq-tcp:61616*`
 as the location to obtain data from.
-.. In the *Username* field, enter `*amq*` as the username for
+.. In the *Username* field, enter `*amq*` as the user name for
 the account that accesses this AMQ broker.
 .. In the *Password* field, enter `*topSecret*` as the password for
 the account that accesses this AMQ broker.

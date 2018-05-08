@@ -10,8 +10,16 @@ want to map, you can:
 
 * Search for it. The *Sources* panel and the *Target* panel each have
 a search field at the top. If the search field is not visible, click
-image:shared/images/magnifying-glass.png[Magnifying Glaass] at the top
+image:shared/images/magnifying-glass.png[Magnifying Glass] at the top
 right of the *Sources* or *Target* panel.
+
+* Enter the names of the fields that you want to map. To do this, 
+in the upper right of the *Configure Mapper* page, click the plus sign
+to display the *Mapping Details* panel. In the *Sources* section, enter
+the name of the source field. In the *Action* section, accept the
+default *Map*, which maps one field to one other field. Or, select 
+*Combine* or *Separate*. In the *Target* section, enter the name of the
+field that you want to map to. 
 
 * Expand and collapse folders to limit the visible fields.
 To view the data fields available in a particular step, expand the 

@@ -30,12 +30,15 @@ click *Next*.
 . On the *Review Swagger Actions* page, click *Next*. If you see
 a warning, you can ignore it.
 . Click *Next* again to accept *HTTP Basic Authorization*.
-. On the *Review/Edit Connector Details* page, 
-in the *Host* field, paste the
-URL for your Swagger specification and then delete `/swagger.json` from
-the end. For example:
+. On the *Review/Edit Connector Details* page, {prodname} populates
+the fields with values from the Swagger specification. 
+.. If you want to, you can 
+change the values in the *Connector Name* and *Description* fields. 
+.. Confirm that the value in the *Host* field is correct. For example, 
+it should be something like this:
 `\https://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com`.
-. Accept the default values in the other fields and click *Create Connector*.
+.. Confirm that the value in the *Base URL* field is `/api`. 
+. Click *Create Connector*.
 
 {prodname} displays the *API Client Connectors* tab with an entry for
 the *Todo App API* that you just created.

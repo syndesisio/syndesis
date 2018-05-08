@@ -12,7 +12,8 @@ you want to use to start the integration.
 to obtain one or more files from the Dropbox account that this connection
 accesses. 
 . To configure the action, in the *Folder or file name path to download* field,
-specify the filename path or the folder path for the content that you want
-the integration to obtain. 
+specify the filename path for the content that you want
+the integration to obtain. In this release, you can download only a single
+file. 
 . Click *Next* to specify the action's output type. See 
 <<specifying-connection-input-output-types>>.

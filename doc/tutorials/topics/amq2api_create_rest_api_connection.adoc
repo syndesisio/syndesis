@@ -12,7 +12,7 @@ available connectors.
 *Authentication Type*, *Base Path*, and *Host* fields from the
 connector information.
 . In the *Password* field, enter any value. For this sample integration,
-password and username values are required but they are not used.
+password and user name values are required but they are not used.
 . In the *Username* field, enter any value.
 . Click *Next*.
 . In the *Connection Name* field, enter your choice of a name that

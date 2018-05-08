@@ -17,15 +17,19 @@ instructions.
 +
 Otherwise, select one of the following as the schema type:
 +
-* *JSON schema*
-* *JSON instance* 
-* *XML schema*
-* *XML instance*
+* *JSON schema* is a document that describes the structure of JSON data.
+The document's media type is `application/schema+json`. 
+* *JSON instance* is a document that contains JSON data. The document's 
+media type is `application/json`. 
+* *XML schema* is a document that describes the structure of XML data.
+The document's file extension is `.xsd`.
+* *XML instance* is a document that contains XML data. The
+document's file extension is `.xml`. 
 
 . In the *Definition* input box, paste a definition that conforms to the
 schema type you selected. 
 For example, if you select *JSON schema* then you would paste the content of
-a JSON schema file.
+a JSON schema file, which has a media type of `application/schema+json`.
 
 . In the *Data Type Name* field, enter a name that you choose for the
 data type. For example, suppose you are specifying a JSON schema for

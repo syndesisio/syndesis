@@ -5,18 +5,18 @@ To separate and map the content in one source field to multiple target fields:
 
 . In the *Sources* panel, click the field you want to map.
 . If the *Mapping Details* panel is not already visible to the right of the
-*Target* panel, click (add icon image)
+*Target* panel, in the upper right, click the plust sign
 to display it.
 . In the *Mapping Details* panel, under *Action*, click
 the down caret and select *Separate*.
-. Below that, under *Targets*, click in *`[None]`* and start to type
+. Below that, under *Targets*, click in `Search` and start to type
 the name of the first target data field.
 . When the name of the first target data field appears, click it.
 The data mapper displays a line from the source field to the first
 target field.
 . For each additional target field:
 .. In the lower right, click *Add Target*.
-.. In the new target, click in *`[None]`* and start to type
+.. In the new target, click in `Search` and start to type
 the name of the next target field.
 .. When the name of the next target data field appears, click it.
 The data mapper displays another line from the same source field,
