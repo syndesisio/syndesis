@@ -43,8 +43,9 @@
       "settings": "Settings"
     },
     "links": {
-      "userguide": "//access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/integrating_applications_with_ignite/#obtaining-authorization-to-access-applications",
-      "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/ignite_sample_integration_tutorials/"
+      "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/integrating_applications_with_ignite",
+      "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/ignite_sample_integration_tutorials/",
+      "oauth-access": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/integrating_applications_with_ignite/#obtaining-authorization-to-access-applications"
     },
     "header": {
       "navbartoggle": "Toggle navigation",
@@ -60,7 +61,7 @@
       "oauth-apps": {
         "heading": "OAuth Application Management",
         "description": "To connect to an application that uses the OAuth protocol, obtain a client ID and a client secret from the application. See the {{0}} for help.",
-        "documentation-link": "<a href=\"{{links.userguide}}\" rel=\"nofollow\">documentation</a>",
+        "documentation-link": "<a href=\"{{links.oauth-access}}\" rel=\"nofollow\">documentation</a>",
         "registration-instruction": "During registration, enter this callback URL: {{0}}",
         "list": {
           "item": {
