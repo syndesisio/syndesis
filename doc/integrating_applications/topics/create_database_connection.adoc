@@ -32,7 +32,7 @@ indicates the same schema as the connection URL. For example, enter
 .. In the *Connection URL* field, enter the JDBC URL for the database that you want
 to connect to. For example, enter `*jdbc:postgresql:/ignite-db1234/sampledb*`.
 .. In the *Username* field, enter the name of the account that you want to use
-to access the database. Ensure that the specified password and username
+to access the database. Ensure that the specified password and user name
 are for the same account.
 . Click *Validate*. {prodname} tries to validate the
 connection and displays a message that indicates whether

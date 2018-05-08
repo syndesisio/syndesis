@@ -3,9 +3,11 @@
 
 In an integration, to send a message to a Slack channel or user, first create
 a Slack connection. You can then add that connection to any number
-of integrations as a finish connection or as a middle connection. Since the 
-integration data becomes the message that is sent to Slack, it does not
-make sense to start an integration with a connection to Slack. 
+of integrations as a finish connection or as a middle connection. It 
+does not make sense to add a Slack connection that starts an integration
+because you must map the message content from a previous 
+step to a Slack connection field. In other words, a data mapping
+step must be in the integration just before the Slack connection. 
 
 To add a Slack connection to an integration, you must be creating or
 editing an integration. If you are creating an integration, then
@@ -21,10 +23,16 @@ To add a Slack connection:
 +
 * Click *User name* to send a message to one user. To configure this action,
 in the *User name* field, specify the name of the user to send the message
-to. The integration sends the integration data in a message to that user.
+to. 
 * Click *Channel* to publish a message on a channel. To configure
 this action, in the *Channel* field, specify the channel to publish 
 the message to. The integration sends the integration data in 
 a message to that channel. 
 
 . Click *Next* to add the connection to the integration. 
+. After you add all connections to the integration, add a data mapping step just 
+before the Slack connection. In the mapping step, map a string
+from a previous step to the Slack *message* field. This string 
+should contain the message that you want to send to the Slack
+user or channel. 
+See <<add-data-mapping-step>>. 

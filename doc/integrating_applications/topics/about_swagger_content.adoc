@@ -6,13 +6,13 @@ Swagger specification that {prodname} uses to create a connector
 to a REST API:
 
 * <<guidelines-for-swagger-specifications>>
-* <<access-token-strategy>>
+// * <<access-token-strategy>>
 * <<providing-client-credentials>>
 * <<refreshing-access-tokens>>
 
 include::guidelines_for_swagger_specifications.adoc[leveloffset=+1]
 
-include::access_token_strategy.adoc[leveloffset=+1]
+// include::access_token_strategy.adoc[leveloffset=+1]
 
 include::providing_client_credentials.adoc[leveloffset=+1]
 

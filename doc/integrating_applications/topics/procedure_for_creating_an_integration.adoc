@@ -45,13 +45,13 @@ data between connections. See
 click *Save as Draft* or *Publish* according to whether you want
 to start running the integration.
 
-.. In the *Integration Name* field, enter a name that distinguishes this
+. In the *Integration Name* field, enter a name that distinguishes this
 integration from any other integrations.
 
-.. In the *Description* field, enter a description, for example, you can
+. In the *Description* field, enter a description, for example, you can
 indicate what this integration does.
 
-.. If you are ready to start running the integration, in the upper right,
+. If you are ready to start running the integration, in the upper right,
 click *Publish*. Otherwise, click *Save as Draft*.
 
 In the {prodname} *Integrations* page, you can see your new integration

@@ -27,10 +27,10 @@ version at a time can be in the *Published* state.
 |*Unpublished*
 |An *Unpublished* version is not running. It might have been
 published and then unpublished, but it also might never have been
-published. If no version of this
-integration is in the *Published* state, then you can publish
-an unpublished version to run it. The version number does not
-change when you publish an unpublished version.
+published.  If you publish a previously published version, 
+then the newly published version has the same version number as when the
+integration was previously published. If you publish a previously unpublished 
+version, then the published integration gets the next available version number.
 
 |*Error*
 |An integration version that is in the *Error* state
@@ -38,5 +38,7 @@ encountered an error while being published or while running. The error
 suspended publication or execution.  If this happens, try
 publishing an earlier integration version that ran correctly.
 Alternatively, you  can contact technical support for help.
+To do that, in any {prodname} page, in the upper right, click the 
+image:shared/images/InfoIcon.png[title="Help"] icon and select *Support*. 
 
 |===

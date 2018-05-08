@@ -8,12 +8,20 @@ display any available connections.
 . In the upper right, click *Create Connection* to display
 connectors.  
 . Click the *MQTT* connector.
-. In the *MQTT broker URL* field, enter the location of the MQTT broker
-that you want to send data to or obtain data from. 
+. To configure the connection:
+.. In the *MQTT broker URL* field, enter the location of the MQTT broker
+that you want to send data to or obtain data from. This is the only
+required field. 
+.. In the *User Name* field, optionally enter the user name for the MQTT
+account whose credentials you want to use to access the broker. 
+.. In the *Password* field, if you specified a user name, then specify the
+password associated with that account. 
+.. In the *Client ID* field, optionally specify a string that the MQTT broker uses
+to identify your {prodname} environment as a client. 
 . Click *Validate*. {prodname} immediately tries to validate the 
 connection and displays a message that indicates whether 
-validation is successful. If validation fails, revise the URL
-and try again.
+validation is successful. If validation fails, revise the input 
+parameters and try again.
 . If validation is successful, click *Next*.
 . In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.

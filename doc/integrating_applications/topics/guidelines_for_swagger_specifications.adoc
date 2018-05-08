@@ -19,4 +19,5 @@ If the Swagger specification for the API declares support for
 `application/json` content type and also `application/xml` content type
 then the connector uses the JSON format. If the Swagger specification
 specifies `consumes` or `produces` parameters that define both
-`json` and `xml`, then the connector uses the JSON format.
+`application/json` and `application/xml`, 
+then the connector uses the JSON format.

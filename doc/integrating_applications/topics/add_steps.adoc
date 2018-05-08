@@ -6,10 +6,18 @@ steps between connections. Each step operates on data obtained from the
 previous connection(s) and any other previous steps and makes the data
 available to the next step in the integration.
 
-Add all connections to your integration before you add additional steps.
-
-In an integration, additional steps are optional. Add them if you need to
-operate on data between connections.
+Often, you must map data fields that are received from a 
+connection to data fields that the next connection in the integration 
+can operate on. After you add all connections to your integration, 
+check the integration visualization panel 
+on the left. For each connection that requires data mapping before
+it can operate on the input data, 
+{prodname} displays 
+image:images/DataTypeMismatchWarning.png[title="a warning"]. Click this
+icon to see *Data Type Mismatch: Add a data
+mapping step before this connection to resolve the difference.*
+Click the link in the message to display the *Configure Mapper*
+page in which you specify the data mapping step. 
 
 For details about adding additional steps, see the following topics:
 

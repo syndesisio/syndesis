@@ -9,15 +9,15 @@ To add a basic filter step:
 
 . In the main panel, click *Add a step*.
 . Click *Basic Filter*.
-. In the first field, start to enter `*text*` and when `text`
+
+. In the first field (*The data you want to evaluate*), start to enter 
+`*text*` and when `text`
 appears below the field, click it. This indicates that the content to
 filter for is in the Twitter `text` field, which contains the text of the tweet.
-The initial `text` that appears in the field is a prompt
-and not an entry.
 
 . Accept *contains* as the condition to be met for the integration to
 continue.
 . In the last field, enter `*#RedHatIsGreat*` or some other text you choose.
 A tweet that mentions you must contain the text you enter here for
 the integration to continue operating on this data.
-. Click *Next* to complete the basic filter step.
+. Click *Done* to complete the basic filter step.

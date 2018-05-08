@@ -40,6 +40,6 @@ with the AWS account that created the bucket that
 you want to access or with
 the account that you want the connection to use to create the bucket.
 . In the console, in the upper right, click the down arrow next to
-the username and click *My Security Credentials*.
+the user name and click *My Security Credentials*.
 . Expand *Access Keys* and click *Create New Access Keys*.
 . Follow the prompts to obtain the keys.

@@ -3,12 +3,15 @@
 
 If an access token has an expiration date, then {prodname} integrations 
 that use that token to connect to an application stop running successfully 
-when the taken expires. You must re-register {prodname} with the application 
-or service to obtain a new access token.
+when the taken expires. To obtain a new access token, you must 
+either reconnect to the application or re-register with the application. 
 
 If you need to, you can change this default behavior so that
-{prodname} automatically requests a new access token when it receives
-certain HTTP response status codes. 
+{prodname} automatically requests a new access token in the 
+following situations:
+
+* When the expiration date has been reached.
+* When HTTP response status codes that you specify are received. 
 
 ifeval::["{location}" == "downstream"]
 
@@ -20,13 +23,14 @@ https://access.redhat.com/support/offerings/techpreview/[Technology Preview feat
 ====
 endif::[]
 
-To specify that {prodname} should automatically obtain a new token when
-the one it has expires, 
+To specify that {prodname} should automatically try to obtain a new 
+access token in the situations described, 
 in the `securityDefinitions` section of the Swagger specification, 
 add the `x-refresh-token-retry-statuses` vendor extension. The setting 
 of this extension is a comma separated list that
-specifies HTTP response status codes. When {prodname} receives a message
-from an OAuth2 provider and the mesage has one of these response status
+specifies HTTP response status codes. When an access token's 
+expiration date is reached or when {prodname} receives a message
+from an OAuth2 provider and the message has one of these response status
 codes, then {prodname} automatically tries to obtain a new access token. 
 In the example
 below, the last line specifies `x-refresh-token-retry-statuses`:
@@ -37,9 +41,19 @@ securityDefinitions:
   concur_oauth2:
     type: 'oauth2'
     flow: 'accessCode'
-    authorizationUrl: 'https://us-impl.api.concursolutions.com/oauth2/v0/authorize'
-    tokenUrl: 'https://us-impl.api.concursolutions.com/oauth2/v0/token'
+    authorizationUrl: 'https://example.com/oauth/authorize'
+    tokenUrl: 'https://example.com/oauth/token'
     scopes:
       LIST: Access List API
-    x-refresh-token-retry-statuses: (401,402,403)
+    x-refresh-token-retry-statuses: 401,402,403
 ----
+
+[NOTE]
+====
+Sometimes, an API operation fails and a side effect of that
+failure is that the access token is refreshed. In this situation, 
+even when obtaining a new access token is successful, the
+API operation still fails. In other words, {prodname} does
+not retry the failed API operation after it receives the new
+access token. 
+====

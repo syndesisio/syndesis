@@ -4,7 +4,7 @@
 {prodname} can create connectors for
 Representational State Transfer Application Programming Interfaces
 (REST APIs)
-that support Hypertext Transfer Protocol (HTTP)/1.0 or HTTP/1.1.
+that support Hypertext Transfer Protocol (HTTP).
 To do this, {prodname} requires a valid
 Swagger 2.0 specification that describes a REST API you want to connect to.
 If the API service provider does not make a Swagger specification available

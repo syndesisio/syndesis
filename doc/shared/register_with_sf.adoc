@@ -19,6 +19,12 @@ If you already registered {prodname} as a Salesforce
 client and created a Salesforce connection, skip to  <<create-sf-db-integration>>.
 endif::[]
 
+In each {prodname} environment, there can be only one registration
+of {prodname} as a Salesforce client. Each Salesforce connection uses the
+same Salesforce credentials. In other words, you cannot log into one Salesforce
+account, register {prodname} as a client that uses those credentials, and then
+log into a second Salesforce account to also register {prodname} as a client
+that uses the credentials for the second Salesforce account.
 
 Perform these steps to register {prodname} as a Salesforce client:
 

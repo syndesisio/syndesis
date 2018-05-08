@@ -12,7 +12,7 @@ connectors.
 +
 .. In the *Broker URL* field, enter the location you want to send data
 to or obtain data from. 
-.. In the *User Name* field, enter the username for the account that you want
+.. In the *User Name* field, enter the user name for the account that you want
 to use to access this broker. 
 .. In the *Password* field, enter the password for the account that you want
 to use to access this broker.

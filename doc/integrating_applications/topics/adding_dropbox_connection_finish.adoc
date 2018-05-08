@@ -10,11 +10,9 @@ you want to use to finish the integration.
 . On the *Choose an Action* page, click the *Upload a file to Dropbox* 
 action to add the current integration data to the
 Dropbox account that this connection accesses. 
-. In the *Remote Path* field, to upload multiple files, enter the 
-local path for the folder that you want to upload. Dropbox uses the same 
-path to store the files. To upload one file, specify the local path and 
-file name of the file you want to upload. Dropbox stores the file with the 
-same path and name.
+. In the *Remote Path* field, enter the 
+local filename path for file that you want to upload. Dropbox stores the file with the 
+same path and name. In this release, you can upload only a single file. 
 . For the *Upload mode*, 
 +
 * Select *Add* to upload a file only when a file with the same name is not already

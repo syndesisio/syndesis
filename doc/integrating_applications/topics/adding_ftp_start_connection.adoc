@@ -15,12 +15,15 @@ FTP or SFTP connection that
 you want to use to poll an FTP or SFTP server. 
 . On the *Choose an Action* page, click *Download*.
 . In the *File name expression* field, if you are interested in a single file, 
-then enter a Simple language
-expression that resolves to a file name. The connection
+then enter an 
+http://camel.apache.org/simple.html[Apache Camel Simple language]
+expression that resolves to a file name. You cannot specify a regular
+expression. The connection
 polls (periodically checks) the server for this file and downloads it 
 when it is found. Leave this field blank if you want to download more
 than one file.
-. In the *FTP directory* field, enter the name of the server directory to
+. In the *FTP directory* field, enter the absolute or relative path of 
+the server directory to
 poll. The connection watches this directory for any content and downloads
 all files when it finds any content.
 . In the *Milliseconds before polling starts* field, accept the default 
