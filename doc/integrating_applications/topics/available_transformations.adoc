@@ -86,7 +86,7 @@ subsequent word.
 `toUnit` *
 | Convert a number that represents an area to another unit. The `fromUnit` and
 `toUnit` parameters indicate square feet, square meters, or square miles. 
-For each parameter, specify `feet`, `meters`, or `miles`.
+For each parameter, specify a string whose value is `feet`, `meters`, or `miles`.
 
 |`ConvertDistanceUnit`
 | number
@@ -94,8 +94,8 @@ For each parameter, specify `feet`, `meters`, or `miles`.
 | `fromUnit` *
 
 `toUnit` *
-| Convert a number that represents a distance to another unit. For the
-`fromUnit` and `toUnit` parameters, specify `feet`, `inches`, `meters`, `miles`, 
+| Convert a number that represents a distance to another unit. For each of the
+`fromUnit` and `toUnit` parameters, specify a string whose value is `feet`, `inches`, `meters`, `miles`, 
 or `yards`.
 
 | `ConvertMassUnit`
@@ -104,8 +104,8 @@ or `yards`.
 | `fromUnit` *
 
 `toUnit` *
-| Convert a number that represents mass to another unit. For the
-`fromUnit` and `toUnit` parameters, specify `kilograms` or `pounds`. 
+| Convert a number that represents mass to another unit. For each of the
+`fromUnit` and `toUnit` parameters, specify a string whose value is `kilograms` or `pounds`. 
 
 |`ConvertVolumeUnit`
 | number
@@ -115,7 +115,7 @@ or `yards`.
 `toUnit` *
 | Convert a number that represents volume to another unit. The
 `fromUnit` and `toUnit` parameters indicate cubic feet, cubic meters,
-gallons, or liters. For each parameter, specify 
+gallons, or liters. For each parameter, specify a string whose value is 
 `feet`, `meters`, `gallons`, or `liters`.
 
 |`CurrentDate`
