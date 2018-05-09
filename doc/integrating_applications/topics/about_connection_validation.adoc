@@ -1,26 +1,28 @@
 [id='about-connection-validation']
 = About connection validation
 
-Applications that you connect to might use
-the OAuth protocol to authenticate access requests. For example,
-connections to Salesforce and Twitter use OAuth. To create connections
-to these applications, the first step is to register your {prodname}
-environment as a client of the application that you want to connect to.
-See <<obtaining-authorization-to-access-applications>>.
-
-After obtaining authorization, you can create one or more connections
+After obtaining authorization for {prodname} to access an application
+that uses OAuth, you can create one or more connections
 to that application.
-When you create a connection, {prodname} validates it to confirm that
+When you create a connection to an OAuth application, 
+{prodname} validates it to confirm that
 authorization is in place. At any time, you can validate the connection again to
 ensure that authorization is still in place.
 
-To validate a connection that uses OAuth:
+Some OAuth applications grant access tokens that have an expiration data. 
+If the access token expires, you can reconnect to the application to
+obtain a new acess token.
+
+To validate a connection that uses OAuth or to obtain a new access token
+for an OAuth application:
 
 . In the left panel, click *Connections*.
-. Click the connection you want to validate.
-. In the connection's details page, click *Validate*.
+. Click the connection you want to validate or for which you want to
+obtain a new access token.
+. In the connection's details page, click *Validate* or click
+*Reconnect*. 
 
-If validation fails, then check with the application/service provider to
+If validation or reconnection fails, then check with the application/service provider to
 determine if the application's OAuth keys, IDs, tokens, or secrets are still
 valid. It is possible that an item has expired or been revoked.
 
@@ -33,7 +35,8 @@ validate the updated connection. If validation is successful, and there
 is a running integration that is using this connection, republish
 the integration. To republish an integration, stop it and restart it.
 
-If everything appears to be valid at the service provider, then try reregistering
+If validation fails and reconnection fails but everything appears to 
+be valid at the service provider, then try reregistering
 your {prodname} environment with the application and then recreate the
 connection. {prodname} validates the connection when you recreate it.
 If you recreate the connection, and there is an integration that is

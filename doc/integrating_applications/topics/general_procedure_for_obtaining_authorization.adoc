@@ -1,0 +1,45 @@
+[id='general-procedure-for-obtaining-authorization']
+= General procedure for obtaining authorization
+
+To integrate applications that use OAuth, you must register with that
+application before
+you can create a connection to the application. For example, after you register
+your installation of
+{prodname} as an application that can access Salesforce, then you can
+create a Salesforce connection.
+
+While the specific steps vary for each OAuth application that you want to connect to,
+registration always provides your installation of {prodname} with a client ID and
+a client secret. Some applications use other labels for the client ID
+and client secret. For example, Salesforce generates a consumer key and
+a consumer secret.
+
+For some OAuth applications, {prodname} provides an entry in its *Settings*
+page that makes it easy to register with the application. To see which
+applications this applies to, in the left panel of {prodname}, click
+*Settings*. 
+
+For an application that has an entry in the {prodname} *Settings* page,
+to register {prodname} with that application, the main steps are:
+
+. In the {prodname} *OAuth Application Management* page, in the entry for the
+application with which you want to register {prodname},
+click *Register* to display the *Client ID* and *Client Secret* fields.
+. Near the top of the *OAuth Application Management* page, where you see
+`*During registration, enter this callback URL:*`, copy that URL to the
+clipboard.
+. In another browser tab, go to the web site for the application that you
+want to register with and perform the steps required to obtain
+a client ID and secret. One of these steps requires you to enter
+the callback URL for your installation of {prodname}. Paste the
+URL that you copied to the clipboard in the second step. 
+. On your {prodname} installation *Settings* page, paste the
+client ID and client secret and save the settings.
+
+For examples, see
+
+* <<register-with-salesforce_{context}>>
+* <<register-with-twitter>>
+
+For an example of registering with an application that does not have 
+an entry in the {prodname} *Settings* page, see: <<register-with-dropbox>>.

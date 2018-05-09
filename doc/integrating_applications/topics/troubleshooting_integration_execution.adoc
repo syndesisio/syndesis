@@ -1,0 +1,39 @@
+[id='troubleshooting-integration-execution']
+= Troubleshooting integration execution
+
+If an integration stops working, check its logs and activity details.
+See <<viewing-log-information>> and <<viewing-integration-history>>. 
+
+For a connection to an application that uses OAuth, 
+you might see an error message that indicates
+that the access token for the application has expired. Sometimes,
+you might get a less explicit  `403 - Access denied` message. 
+The information in the message depends on the application that the
+integration is connecting to.
+In this situation, try reconnecting to the application and 
+then republishing the integration:
+
+. In the left panel, click *Integrations*. 
+. In the list of integrations, click the entry for the integration
+that stopped running. 
+. In the integration's summary page, in the visual integration flow, 
+click the icon for the application that you want to reconnect to. 
+. In the connection's details page, click *Reconnect*. 
+. Respond to that application's OAuth workflow prompts. 
++
+{prodname} displays a message to indicate that its access to that
+application has been authorized. 
+For some applications, this takes a few seconds but it can take longer
+for other applications. 
+
+. After reconnecting to the application, republish the integration. 
+
+If reconnection is not successful, try this:
+
+. Re-register {prodname} as a client of the application. See 
+<<obtaining-authorization-to-access-applications>>. 
+. Create a new connection. 
+. Edit each integration that was using the old connection:
+.. Remove the old connection. 
+.. Replace it with the new connection.
+. Publish each updated integration. 

@@ -24,34 +24,11 @@ you access applications that use the
 OAuth protocol, see <<creating-connections-from-custom-connectors>>. 
 ====
 
-Registration needs to happen before
-you can create a connection to the application. For example, after you register
-your installation of
-{prodname} as an application that can access Salesforce, then you can
-create a Salesforce connection.
+For details, see the following topics:
 
-While the specific steps vary for each application you want to connect to,
-registration always provides your installation of {prodname} with a client ID and
-a client secret that you copy into your {prodname} *OAuth Application
-Management* page. Some applications use other labels for the client ID
-and client secret. For example, Salesforce generates a consumer key and
-a consumer secret.
+* <<general-procedure-for-obtaining-authorization>>
+* <<about-connection-validation>>
 
-To register {prodname} with an application, the main steps are:
+include::general_procedure_for_obtaining_authorization.adoc[leveloffset=+1]
 
-. In {prodname}, in the left panel, click *Settings*.
-. In the *OAuth Application Management* page, in the entry for the
-application with which you want to register {prodname},
-click *Register* to display the *Client ID* and *Client Secret* fields.
-. In another browser tab, go to the web site for the application you
-want to register with and perform the steps required to obtain
-a client ID and secret. One of these steps requires you to enter
-the URL for your installation of {prodname}.
-. On your {prodname} installation *Settings* page, paste the
-client ID and client secret and save the settings.
-
-For examples, see
-
-* <<register-with-salesforce_{context}>>
-* <<register-with-twitter>>
-* <<register-with-dropbox>>
+include::about_connection_validation.adoc[leveloffset=+1]
