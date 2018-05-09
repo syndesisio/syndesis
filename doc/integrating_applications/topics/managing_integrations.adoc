@@ -12,6 +12,7 @@ integrations:
 * <<viewing-integration-metrics>>
 * <<viewing-system-metrics>>
 * <<testing-integrations>>
+* <<troubleshooting-integration-execution>>
 * <<updating-integrations>>
 * <<copying-integrations-to-other-environments>>
 * <<deleting-integrations>>
@@ -31,6 +32,8 @@ include::viewing_integration_metrics.adoc[leveloffset=+1]
 include::viewing_system_metrics.adoc[leveloffset=+1]
 
 include::testing_integrations.adoc[leveloffset=+1]
+
+include::troubleshooting_integration_execution.adoc[leveloffset=+1]
 
 include::updating_integrations.adoc[leveloffset=+1]
 
