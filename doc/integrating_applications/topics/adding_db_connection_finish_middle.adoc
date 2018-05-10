@@ -60,8 +60,8 @@ or there can be placeholders in the stored procedure. For example:
 
 [source]
 ----
-INSERT INTO TODO(task, completed) VALUES(:#param_1, :#param_2),
-DELETE FROM TODO WHERE task LIKE ':#task'
+INSERT INTO TODO(task, completed) VALUES(:#param_1, :#param_2)
+
 ----
 In the integration, before the connection that executes one of these
 sample queries, the integration data must include `task` and `completed`
@@ -69,17 +69,24 @@ fields. The connection inserts the values from those fields into the query.
 There are two ways for the needed fields to be in the integration data:
 
 * A previous connection output data that includes, for example, the
-`task` and `completed` fields. 
+`#param_1` and `#param_2` fields. 
 
 * You add a data mapper step before the database connection that executes
 the query. This step maps data fields that were output from a 
 previous connection to the placeholder fields, for example, 
-`task` and `completed`. See <<add-data-mapping-step>>.
+`#param_1` and `#param_2`. See <<add-data-mapping-step>>.
 
-The following example is wrong because it uses an invalid syntax to
-specify the placeholder parameter:
+To include the common, pattern matching symbol, `%`,
+it must be part of specified placeholder name.
+In the code below, the first statement is wrong because it uses an invalid syntax to
+specify the placeholder parameter. 
+
 
 [source]
 ----
-DELETE FROM TODO WHERE task LIKE '%:#task'
+// This is wrong:
+DELETE FROM TODO WHERE task LIKE '%:#param_3'
+
+// This is correct:
+DELETE FROM TODO WHERE task LIKE ':#param_3'
 ----
