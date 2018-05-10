@@ -34,12 +34,7 @@ export class ConnectionsConfigureFieldsComponent
     this.formGroup = this.formService.createFormGroup(this.formModel);
     this.formChangesSubscription = this.formGroup.valueChanges.subscribe(
       data => {
-        Object.keys(data).forEach(key => {
-          if (data[key] === null) {
-            delete data[key];
-          }
-        });
-        this.connection.configuredProperties = data;
+        this.connection.configuredProperties = this.configurationService.sanitize(data);
       }
     );
 

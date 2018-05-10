@@ -3,10 +3,13 @@ import {
   DynamicFormControlModel,
   DynamicInputModel
 } from '@ng-dynamic-forms/core';
-import { Connection, Connector, FormFactoryService } from '@syndesis/ui/platform';
+import { Connection, Connector, FormFactoryService, StringMap, ConfigurationProperty } from '@syndesis/ui/platform';
 
 @Injectable()
 export class ConnectionConfigurationService {
+
+  formConfig: StringMap<ConfigurationProperty>;
+
   constructor(private formFactory: FormFactoryService) {}
 
   shouldValidate(connector: Connector) {
@@ -14,22 +17,15 @@ export class ConnectionConfigurationService {
     return tags.indexOf('verifier') != -1;
   }
 
-  sanitize(data: {}) {
-    const sanitized: any = {};
-    // strip out any null/empty values
-    for (const key of Object.keys(data)) {
-      const trimmed = key.trim();
-      const value = data[key] || '';
-      sanitized[trimmed] = value === '' ? undefined : value;
-    }
-    return sanitized;
+  sanitize(data: {}): any {
+    return this.formFactory.sanitizeValues(data, this.formConfig);
   }
 
   getFormModel(
     connection: Connection,
     readOnly: boolean
   ): DynamicFormControlModel[] {
-    const config = this.getFormConfig(connection);
+    const config = this.formConfig = this.getFormConfig(connection);
     let controls = ['*'];
     // TODO temporary client-side hack to tweak form ordering
     switch (connection.connectorId) {

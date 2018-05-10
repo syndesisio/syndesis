@@ -58,7 +58,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   }
 
   buildData(data: any) {
-    const formValue = this.formFactory.supressNullValues(this.formGroup ? this.formGroup.value : {});
+    const formValue = this.formFactory.sanitizeValues(this.formGroup ? this.formGroup.value : {}, this.formConfig);
     return { ...this.step.configuredProperties, ...formValue, ...data };
   }
 

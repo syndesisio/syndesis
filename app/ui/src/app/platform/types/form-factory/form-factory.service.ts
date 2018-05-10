@@ -21,10 +21,48 @@ export abstract class FormFactoryService {
     controls?: Array<string>
   ): DynamicFormControlModel[];
 
-  supressNullValues(data: object): object {
+  sanitizeValues(
+    data: any,
+    properties:
+      | StringMap<ConfiguredConfigurationProperty>
+      | StringMap<ConfigurationProperty>
+      | StringMap<any>
+      | any): any {
+    data = this.supressNullValues(data);
+    data = this.trimStringValues(data, properties);
+    return data;
+  }
+
+  supressNullValues(data: any): any {
+    if (!data) {
+      return data;
+    }
     Object.keys(data).forEach(key => {
       if (data[key] === null) {
         delete data[key];
+      }
+    });
+    return data;
+  }
+
+  trimStringValues(
+    data: any,
+    properties:
+      | StringMap<ConfiguredConfigurationProperty>
+      | StringMap<ConfigurationProperty>
+      | StringMap<any>
+      | any): any {
+    if (!properties || !data) {
+      return data;
+    }
+    Object.keys(data).forEach(key => {
+      const prop = properties[key];
+      if (prop && prop.trim === false || prop.secret) {
+        return;
+      }
+      const value = data[key];
+      if (typeof value === 'string') {
+        data[key] = value.trim();
       }
     });
     return data;
