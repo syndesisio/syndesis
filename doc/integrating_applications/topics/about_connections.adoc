@@ -3,11 +3,24 @@
 
 Before you can create an integration, you must create a connection
 to each application or service
-that you want to obtain data from or send data to. To create a connection,
-you select a connector and add configuration information. For example,
-to create an AMQ connection, you select the AMQ connector
+that you want to obtain data from or send data to. 
+To create a connection,
+you select a connector and add configuration information. 
+For example, to create an AMQ connection, you select the AMQ connector
 and then follow prompts to identify the broker to connect to and the
 account to use for the connection.
+
+A connection is one specific instance of the connector that
+it is created from. While you can create any number of connections
+from one connector, doing so does not always make sense. For example,
+you can use the AMQ connector to create three AMQ connections where
+each connection accesses a different broker. However any connector
+for an application that uses OAuth 
+requires authorization from that application for access to a 
+particular user account. Consequently, each connection that you
+create from that connector would have the same configuration.
+There is no need for more than one connection to an application
+that uses OAuth. 
 
 To create an integraton, you select a connection to start the integration,
 a connection to end the integration, and optionally one or more
