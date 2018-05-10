@@ -207,25 +207,27 @@ export class StepStore {
   getSteps(extensions: Extensions = []) {
     const allSteps = [];
     for ( const extension of extensions ) {
-      for ( const action of extension.actions) {
-        if (action.actionType == 'step') {
-          let properties;
-          if (Array.isArray(action.descriptor.propertyDefinitionSteps)) {
-            properties = action.descriptor.propertyDefinitionSteps.reduce((acc, current) => {
-            return {...acc, ...current.properties};
-          }, {});
-        } else {
-            properties = {};
-        }
-          allSteps.push({
-            name: action.name,
-            description: action.description,
-            stepKind: 'extension',
-            properties: properties,
-            extension: extension,
-            action: action,
-            configuredProperties: undefined,
-          });
+      if (extension.actions) {
+        for ( const action of extension.actions) {
+          if (action.actionType == 'step') {
+            let properties;
+            if (Array.isArray(action.descriptor.propertyDefinitionSteps)) {
+              properties = action.descriptor.propertyDefinitionSteps.reduce((acc, current) => {
+              return {...acc, ...current.properties};
+            }, {});
+          } else {
+              properties = {};
+          }
+            allSteps.push({
+              name: action.name,
+              description: action.description,
+              stepKind: 'extension',
+              properties: properties,
+              extension: extension,
+              action: action,
+              configuredProperties: undefined,
+            });
+          }
         }
       }
     }
