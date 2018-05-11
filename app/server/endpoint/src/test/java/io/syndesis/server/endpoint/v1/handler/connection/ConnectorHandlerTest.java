@@ -19,6 +19,7 @@ import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.awt.*;
@@ -26,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,6 +49,7 @@ import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
@@ -144,6 +147,17 @@ public class ConnectorHandlerTest {
         final List<Connector> augmented = handler.augmentedWithUsage(Arrays.asList(connector1, connector2, connector3));
 
         assertThat(augmented).contains(usedConnector(connector1, 1), usedConnector(connector2, 2), usedConnector(connector3, 0));
+    }
+
+    @Test
+    public void shouldDeleteConnectionsWhenDeletingConnector() {
+        when(dataManager.fetchIdsByPropertyValue(Connection.class, "connectorId", "connector-id"))
+            .thenReturn(new HashSet<>(Arrays.asList("connection1", "connection2")));
+        handler.delete("connector-id");
+
+        verify(dataManager).delete(Connector.class, "connector-id");
+        verify(dataManager).delete(Connection.class, "connection1");
+        verify(dataManager).delete(Connection.class, "connection2");
     }
 
     private static ConnectorAction newActionBy(final Connector connector) {

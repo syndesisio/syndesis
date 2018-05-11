@@ -17,6 +17,7 @@ package io.syndesis.server.runtime;
 
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.connection.Connection;
 import io.syndesis.server.verifier.AlwaysOkVerifier;
 import io.syndesis.server.verifier.Verifier;
 
@@ -222,6 +223,19 @@ public class ConnectorsITCase extends BaseITCase {
         assertThat(result).isNotNull();
         assertThat(result.getStatus()).isEqualTo(Verifier.Result.Status.OK);
         assertThat(result.getErrors()).isEmpty();
+    }
+
+    @Test
+    public void shouldDeleteConnectors() {
+        dataManager.create(new Connector.Builder().id("test-connector").build());
+        dataManager.create(new Connection.Builder().id("test-connection").connectorId("test-connector").build());
+
+        final ResponseEntity<Void> response = delete("/api/v1/connectors/test-connector");
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        assertThat(dataManager.fetch(Connector.class, "test-connector")).isNull();
+        assertThat(dataManager.fetch(Connection.class, "test-connection")).isNull();
     }
 
     private HttpHeaders multipartHeaders() {
