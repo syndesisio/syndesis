@@ -161,7 +161,6 @@ export class ApiHttpProviderService extends ApiHttpService {
 
   private getHeaders(options: ApiRequestOptions | any) {
     const headers = new HttpHeaders({
-      'Accept': 'application/json',
       ...(options ? options.headers : undefined)
     });
     return headers;
