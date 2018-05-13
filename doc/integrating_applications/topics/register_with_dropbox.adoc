@@ -8,11 +8,9 @@ to Dropbox. In other words, you need to register a particular
 installation of {prodname} with Dropbox only once.
 
 In each {prodname} environment, there can be only one registration
-of {prodname} as a Dropbox client. Each Dropbox connection uses the
-same Dropbox credentials. In other words, you cannot log into one Dropbox
-account, register {prodname} as a client that uses those credentials, and then
-log into a second Dropbox account to also register {prodname} as a client
-that uses the credentials for the second Dropbox account.
+of {prodname} as a Dropbox client. However, while each Dropbox 
+connection uses the same registration, it can use different user
+credentials. 
 
 Perform these steps:
 

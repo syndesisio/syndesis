@@ -40,7 +40,12 @@ See the appropriate topic:
 
 . In the left panel, click *Connections* and confirm that there are no
 longer any connections that require configuration.
-
-You now have a *Draft* version of the imported integration and each
-connection in this integration is configured. You can publish the imported
-integration.
+. In the left panel, click *Integrations*. 
+. In the list of integrations, at the right of the entry for the
+integration that you imported, click 
+image:shared/images/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
+select *Edit*. 
+. In the upper right, click *Save as Draft* or, if you want to start
+running the imported integration, click *Publish*. Regardless of whether
+you save the integration as a draft or you publish the integration, 
+{prodname} updates the integration to use the updated connections. 
