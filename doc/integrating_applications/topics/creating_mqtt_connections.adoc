@@ -16,8 +16,9 @@ required field.
 account whose credentials you want to use to access the broker. 
 .. In the *Password* field, if you specified a user name, then specify the
 password associated with that account. 
-.. In the *Client ID* field, optionally specify a string that the MQTT broker uses
-to identify your {prodname} environment as a client. 
+.. In the *Client ID* field, optionally enter the ID that allows connections 
+to close and reopen without missing messages. The connection must
+subscribe to or publish to a topic.
 . Click *Validate*. {prodname} immediately tries to validate the 
 connection and displays a message that indicates whether 
 validation is successful. If validation fails, revise the input 

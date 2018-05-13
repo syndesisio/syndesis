@@ -4,8 +4,12 @@
 To update an extension:
 
 . Obtain an updated `.jar` file for the extension from the developer.
-. Upload the updated file in the same way that you uploaded the original file.
-See <<making-extensions-available>>. 
+. In {prodname}, in the left panel, click *Customizations*.
+. Click the *Extensions* tab. 
+. At the right of the entry for the extension that you want to update, 
+click *Update*. 
+. Click *Browse*, select the updated `.jar` file, and click *Open*.
+. Confirm that the extension details are correct and click *Update*. 
 . In the details page for the updated extension, determine which integrations
 use the connector or custom step(s) defined in the extension. 
 

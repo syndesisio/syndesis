@@ -44,7 +44,7 @@ information about this extension.
 that Maven repository is in the `pom.xml` file. 
 ... Examine the rest of the content of the `pom.xml` file and change
 any relevant metadata as needed.
-.. In the `syndesis-library-jdbc-driver` folder, execute `mvn clean packate`
+.. In the `syndesis-library-jdbc-driver` folder, execute `mvn clean package`
 to build the extension. 
     
 The generated `.jar` file is in the `syndesis-library-jdbc-driver/target` 
