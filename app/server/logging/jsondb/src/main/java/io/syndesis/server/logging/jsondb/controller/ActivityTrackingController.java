@@ -92,8 +92,8 @@ public class ActivityTrackingController implements Closeable {
         scheduler = Executors.newScheduledThreadPool(1, threadFactory("Logs Controller Scheduler"));
         executor =  Executors.newCachedThreadPool(threadFactory("Logs Controller"));
         executor.execute(this::processEventQueue);
-        scheduler.scheduleWithFixedDelay(()->{ executor.execute(this::pollPods);}, startupDelay.getSeconds(), 5, TimeUnit.SECONDS);
-        scheduler.scheduleWithFixedDelay(()->{ executor.execute(this::cleanupLogs);}, startupDelay.toMillis(), cleanUpInterval.toMillis(), TimeUnit.MILLISECONDS);
+        scheduler.scheduleWithFixedDelay(this::pollPods, startupDelay.getSeconds(), 5, TimeUnit.SECONDS);
+        scheduler.scheduleWithFixedDelay(this::cleanupLogs, startupDelay.toMillis(), cleanUpInterval.toMillis(), TimeUnit.MILLISECONDS);
     }
 
     public void cleanupLogs() {
