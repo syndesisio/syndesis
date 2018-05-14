@@ -28,7 +28,7 @@ field on this page is correct and that only security configuration is required.
 The *Settings* page displays entries for applications that use the OAuth
 protocol. 
 
-.. For each connection that requires configuration and that accesses an
+. For each connection that requires configuration and that accesses an
 application that uses the OAuth protocol, register this installation of
 {prodname} with the application. The steps vary for each application.
 See the appropriate topic:
