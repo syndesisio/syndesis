@@ -67,7 +67,7 @@
                 <a routerLink="/support" role="link">{{ 'support' | synI18n }}</a>
               </li>
               <li>
-                <a href="mailto:{{ 'email' | synI18n }}"
+                <a [attr.href]="'links.contactus' | synI18n"
                 rel="nofollow"
                 role="link"
                 target="_blank">{{ 'contactus' | synI18n }}</a>
