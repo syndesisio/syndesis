@@ -268,6 +268,8 @@ export class SupportComponent implements OnInit {
       this.updateItems();
     });
     this.store.loadAll();
-    this.version$ = this.apiHttpService.get('/version');
+    this.version$ = this.apiHttpService.get('/version', {
+      headers: 'Accept: application/json'
+    });
   }
 }
