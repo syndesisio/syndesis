@@ -34,12 +34,6 @@ The content in this guide is organized as follows:
 To learn how to use {prodname} by creating sample integrations, see:
 {LinkIgniteTutorials}[{NameOfIgniteTutorials}].
 
-In this release, one integration at a time can be running. If you have a 
-running (published) integration and you create a new integration and try to 
-publish it, the new integration is automatically in the *Unpublished* state. 
-You must unpublish the running integration before you can publish 
-(start and run) the new integration. 
-
 include::topics/understanding.adoc[leveloffset=+1]
 
 include::topics/shared/log_in.adoc[leveloffset=+1]

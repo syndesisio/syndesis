@@ -7,13 +7,7 @@ To confirm that the Twitter to Salesforce sample integration is working:
 created is a *Published* integration,
 which means that it is running. If you entered the example name, you
 would see that *Twitter to Salesforce Sample Integration* is running.
-+
-In this release, one integration at a time can be 
-running (published). If you have a published integration and you create 
-and save another integration, then the new integration is automatically 
-in the *Unpublished* state. To stop a published integration so that
-you can publish another integration, see the second half of 
-<<t2sf-name-and-publish>>. 
+
 . Confirm that the integration does not create a contact record when a
 tweet does not contain the text you specified in the basic filter
 step:
