@@ -14,7 +14,7 @@
     "javaType":"io.syndesis.connector.odata.ODataDeleteEntityComponent",
     "groupId":"io.syndesis.connector",
     "artifactId":"connector-odata-delete",
-    "version":"1.3-SNAPSHOT"
+    "version":"1.3.10-20180515"
   },
   "componentProperties":{
     
