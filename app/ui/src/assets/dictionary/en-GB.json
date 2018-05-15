@@ -43,6 +43,7 @@
       "settings": "Settings"
     },
     "links": {
+      "contactus": "//access.redhat.com/support/cases/#/case/new",
       "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/integrating_applications_with_ignite",
       "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/ignite_sample_integration_tutorials/",
       "oauth-access": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/integrating_applications_with_ignite/#obtaining-authorization-to-access-applications"
