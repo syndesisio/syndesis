@@ -80,7 +80,7 @@ public interface PropertyValue {
 
 `enum` property will hold any value suggestions that make sense for the currently selected action properties. The list could hold zero or more suggested value-label pairs depending on the connector. Backend should provide as much property value suggestions as it is feasible, but the frontend should adapt if the number of suggestions changes, e.g. having multiple suggestions reduced to zero or vice versa.
 
-`DataShape` is extended to hold an embeded specification, for instance JSON or XML schema.
+`DataShape` is extended to hold an embedded specification, for instance JSON or XML schema.
 
 ```diff
 public interface DataShape extends Serializable {
@@ -251,7 +251,7 @@ Content-Type: application/json
 }
 ```
 
-The UI has passed the current property value pairs to the backend and the backend has determined that the prerequisite for _sObjectIdName_ has been specifed, so it provides _sObjectIdName_ suggestions and the `inputDataShape` detail.
+The UI has passed the current property value pairs to the backend and the backend has determined that the prerequisite for _sObjectIdName_ has been specified, so it provides _sObjectIdName_ suggestions and the `inputDataShape` detail.
 
 ### SQL invoke stored procedure action example
 

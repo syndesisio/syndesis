@@ -119,7 +119,7 @@ The simple expression language [does not support parentheses](http://camel.apach
 
 For the `path` as well as for the possible `operators` the UI needs a list of values which can be chosen. The list of operators should be fixed, whereas it should be possible to add a freeform path (but with suggestion of a set of given paths).
 
-This background data can be obtained by a dedicated API call to an endpoint `/api/{version}/integrations/filter/options` which takes an existing integration ID (if the intergration has already been created, otherwise the ids of all connections before this filter step need to be send to the API server) as parameter.
+This background data can be obtained by a dedicated API call to an endpoint `/api/{version}/integrations/filter/options` which takes an existing integration ID (if the integration has already been created, otherwise the ids of all connections before this filter step need to be send to the API server) as parameter.
 
 It returns all data required to build the form:
 
@@ -186,7 +186,7 @@ Example for a persistent integration step:
 
 The example is simplified in so far as the value to the "rules" field for step with id "1" must be entered as a single line string with newlines replaced by "\n" since the value of a property is currently only allowed to be a string.
 
-If switching to JPA it is recommended to use a more typed approach which `FilterStep` being a subclass of `Step` and having the relation to "filter rules" in a seperate table, which are linked together.
+If switching to JPA it is recommended to use a more typed approach which `FilterStep` being a subclass of `Step` and having the relation to "filter rules" in a separate table, which are linked together.
 
 ### API
 

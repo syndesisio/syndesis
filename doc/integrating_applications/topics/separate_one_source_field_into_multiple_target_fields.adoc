@@ -5,7 +5,7 @@ To separate and map the content in one source field to multiple target fields:
 
 . In the *Sources* panel, click the field you want to map.
 . If the *Mapping Details* panel is not already visible to the right of the
-*Target* panel, in the upper right, click the plust sign
+*Target* panel, in the upper right, click the plus sign
 to display it.
 . In the *Mapping Details* panel, under *Action*, click
 the down caret and select *Separate*.

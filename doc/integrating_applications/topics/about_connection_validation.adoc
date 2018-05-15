@@ -11,7 +11,7 @@ ensure that authorization is still in place.
 
 Some OAuth applications grant access tokens that have an expiration data. 
 If the access token expires, you can reconnect to the application to
-obtain a new acess token.
+obtain a new access token.
 
 To validate a connection that uses OAuth or to obtain a new access token
 for an OAuth application:

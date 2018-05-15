@@ -31,7 +31,7 @@ docker run -p 5000:5000 -d --restart=always \
 - to enable the local mirror in Minishift pass this flag: `--registry-mirror http://$(ip a s wlp4s0 | grep "inet "  | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | head -1):5000` , where the complex expression is just a way to extract an ip address that the VM is able to reach. I use my Wifi assigned ones, but this depends on the complexity of your network configuration. At the end it's just a matter of providing something like: `--registry-mirror http://192.168.1.2:5000`
 
 ##### Install companion script
-- there is an useful management scripts hiddeen in `syndesis-ui` repo: https://github.com/syndesisio/syndesis-ui/blob/master/scripts/syndesis-install providing a set of options around the usual steps defined in the quickstarts to bring up an env
+- there is an useful management scripts hidden in `syndesis-ui` repo: https://github.com/syndesisio/syndesis-ui/blob/master/scripts/syndesis-install providing a set of options around the usual steps defined in the quickstarts to bring up an env
 - useful options are:
   - `--pull` to download all the images you need
   - `--clean` to delete the `project` at Openshift level (so that you can re-run a `oc new-app`)
@@ -55,7 +55,7 @@ mvn fabric8:build -Dfabric8.mode=kubernetes
 oc rollout latest dc/syndesis-rest
 ```
 
-##### Collection of helper scripts to automaticlaly build locally and deploy to minishift
+##### Collection of helper scripts to automatically build locally and deploy to minishift
 - they build AND deploy
 - in `syndesis-project/tools/minishift-build/`:
 ```bash
@@ -72,7 +72,7 @@ verifier.sh
 
 
 ## Web development
-- based on the idea of modify a service (route) definition in Syndesis Openshift config, so that it will route the invocation to the local dev webeserver running on host
+- based on the idea of modify a service (route) definition in Syndesis Openshift config, so that it will route the invocation to the local dev webserver running on host
 - this happens in this script: `scripts/minishift-setup.sh`
 0. install `yarn`
 ```bash
@@ -119,7 +119,7 @@ git clone https://github.com/atlasmap/atlasmap-runtime.git
 cd atlasmap-runtime
 mvn clean install -DskipTests
 cd runtime/
-# itests profile enables debug mode, listining on port 8000 for a java debugger, and changes the default port so that atlasmap-ui standalone can connect to it
+# itests profile enables debug mode, listening on port 8000 for a java debugger, and changes the default port so that atlasmap-ui standalone can connect to it
 mvn -Pitests spring-boot:run
 
 # leave the runtime running, and in another shell

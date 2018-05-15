@@ -25,11 +25,11 @@ This section of the global configuration will contain the OAuth client parameter
 
 It's possible at some point in the future the settings pages could encompass other settings and are listed here for completeness, but are out of the scope of this proposal.  Some examples:
 
-##### Github
+##### GitHub
 When Syndesis creates an integration for me the project needs to be stored somewhere.  I would expect to be able to configure what Github organization my integrations will be created in at least initially, or at least see where my projects will be created.
 
-##### Openshift
-As a user I know that my integrations are run on the system under some namespace.  I may want to be able to see this information, and if possible I may want to be able to change it or initially set it to suit what I want to do.
+##### OpenShift
+As a user I know that my integrations are run on the system under some namespace. I may want to be able to see this information, and if possible I may want to be able to change it or initially set it to suit what I want to do.
 
 ## User Story
 

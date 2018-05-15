@@ -67,11 +67,11 @@ An _Active_ integration revision is a running integration. This state can be eit
 
 The error state indicates that the integration revision is not running. This state can no be entered via UI but only as a side effect in the backends.
 An integration revision can enter the error state any time.
-The `targetState` stays untouched (as is `== currentState` when being in equillibrium) so that the controlled know which state to reconcile again to get out of the error state (which might not be possible in every case).
+The `targetState` stays untouched (as is `== currentState` when being in equilibrium) so that the controlled know which state to reconcile again to get out of the error state (which might not be possible in every case).
 
 ## Operations
 
-The following operations change the `targetState`. The `targetState` could be updated by simply changing the `IntegrationDeployment`'s field, but it is recommended to use a more semantic rich Rest API call for perfoming this actions (i.e. having specific endpoint which can be used by the UI to trigger the targetState change).
+The following operations change the `targetState`. The `targetState` could be updated by simply changing the `IntegrationDeployment`'s field, but it is recommended to use a more semantic rich Rest API call for performing this actions (i.e. having specific endpoint which can be used by the UI to trigger the targetState change).
 
 * **Publish** sets the target state to _Active_. This operation can be called from the states:
   - _Undeployed_ when the integration revision should be published for the first time
@@ -90,13 +90,13 @@ Creating a new `IntegrationDeployment` will _Undeploy_ all older `IntegrationDep
 
 ## Versioning
 
-When a user creates an integration, an overall `Integration` object is created and starts at version 1.  A change to the integration in this state has no runtime artefact attached and can be freely changed and saved by an user to the database. This is typically done automatically during the UI process of creating an integration.  Every time the integration is updated the version associated with the integraiton is incremented.
+When a user creates an integration, an overall `Integration` object is created and starts at version 1.  A change to the integration in this state has no runtime artefact attached and can be freely changed and saved by an user to the database. This is typically done automatically during the UI process of creating an integration.  Every time the integration is updated the version associated with the integration is incremented.
 
 A "Publish" UI operation will copy the integration into a new `IntegrationDeployment`. The `IntegrationDeployment` integration and configuration is **immutable** and can not be changed.  An integration will have a an associated IntegrationDeployment's for each time the "Publish" UI operation is used.  
 
 An integration is/has a _Draft_ when there are no `IntegrationDeployment` for that integration or when the version of the integration in the latest `IntegrationDeployment` does not match the integration's current version.
 
-A 'Restore' operation on a `IntegrationDeployment` will copy the older version of the integration assoicated with the `IntegrationDeployment` to current `Integration` but still increments the version.  Since this increments the version, this resored integration will be considered to be a _Draft_.
+A 'Restore' operation on a `IntegrationDeployment` will copy the older version of the integration associated with the `IntegrationDeployment` to current `Integration` but still increments the version.  Since this increments the version, this resored integration will be considered to be a _Draft_.
 
 ## State reconciliation
 
@@ -111,7 +111,7 @@ Reconciliation itself can be in one of two states:
 * _Pending_ when `currentState != targetState`
 * _Ok_ when `currentState == targetState`
 
-This state is modelled implicitely by comparing both state variables.
+This state is modelled implicitly by comparing both state variables.
 
 `Error` can never be set to a `targetState` by the user, but could be set by the backend to mark an integration revision as erroneous.
 The error state is typically part of a `currentState`.
@@ -121,7 +121,7 @@ Every state change (current or target) should be tracked as event in an event li
 
 ## Data model
 
-The following data model only highlights the parts which are specific to the lifecycle model. It ommits any other global or revision specific properties.
+The following data model only highlights the parts which are specific to the lifecycle model. It omits any other global or revision specific properties.
 
 The state itself is modelled with a simple enum:
 
@@ -213,7 +213,7 @@ public class IntegrationHistory {
 ### REST API
 
 * You can get an `Integration` by doing an HTTP on `GET /api/v1/integrations/{integration-id}`.
-* You can get the `IntegrationHistory` and it's assoicated `IntegrationDeployment` objects by doing an HTTP on `GET /api/v1/integrations/{integration-id}/history`.
+* You can get the `IntegrationHistory` and it's associated `IntegrationDeployment` objects by doing an HTTP on `GET /api/v1/integrations/{integration-id}/history`.
 
 To keep the `Integration` objects smaller, the actual copy of the integration deployment can be accessed by doing a `GET /api/v1/integrations/{integration-revision-id}/deployments/{version}`.  This returns an `IntegrationDeployment` object.  
 
@@ -237,7 +237,7 @@ Several actions will be performed by the controller who detects this transition:
 
 Within the UI the state of an integration should be visualized.
 
-It is suggested that when the reconciliation state is `Ok` the _currentState_ should be shown and when the reconciliation state is `Pending` then "Pending" should be shown (possibly whith the `targetState` as a tool tip info). Alternatively, when a reconciliation process the label could be more specific about the action just performing ("Deploying", "Suspending", "Resuming", "Undeploying") which can be infered from `currentState` and `targetState`
+It is suggested that when the reconciliation state is `Ok` the _currentState_ should be shown and when the reconciliation state is `Pending` then "Pending" should be shown (possibly with the `targetState` as a tool tip info). Alternatively, when a reconciliation process the label could be more specific about the action just performing ("Deploying", "Suspending", "Resuming", "Undeploying") which can be inferred from `currentState` and `targetState`
 
 | `currentState` | `targetState` | Label |
 | -------------- | ------------- | ----- |

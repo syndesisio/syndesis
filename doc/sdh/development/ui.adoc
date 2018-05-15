@@ -17,7 +17,7 @@ $ yarn install
 $ yarn start:minishift
 ```
 
-The `yarn start:minishift` command works when it can properly detect your local development machine's IP address.  A proxy server inside the minishift deployment will use that IP address to connect back to the development server being run by the yarn command.  If detection of the IP is failing for you, then set the `SYNDESIS_DEV_LOCAL_IP` env variable to your local machine's IP address before running the yarn `yarn start:minishift` command.
+The `yarn start:minishift` command works when it can properly detect your local development machine's IP address. A proxy server inside the minishift deployment will use that IP address to connect back to the development server being run by the yarn command.  If detection of the IP is failing for you, then set the `SYNDESIS_DEV_LOCAL_IP` env variable to your local machine's IP address before running the yarn `yarn start:minishift` command.
 
 ### Open in Your Browser
 Open the Syndesis UI in your browser from the command line by running:
