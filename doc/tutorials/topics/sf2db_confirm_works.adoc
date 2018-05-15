@@ -8,13 +8,7 @@ To confirm that the Salesforce to database integration is working:
 which means that it is running. If you used the example name, you would 
 see that 
 *Salesforce to Database Sample Integration* is *Published*.
-+
-In this release, one integration at a time can be 
-running (published). If you have a published integration and you create 
-and save another integration, then the new integration is automatically 
-in the *Unpublished* state. To stop a published integration so that
-you can publish another integration, see the second half of 
-<<sf2db-name-and-publish>>. 
+
 . In your Salesforce installation, create a new lead. Be
 sure to enter data
 in the fields that you mapped: *Company*, *Email*, *FirstName*,
@@ -24,7 +18,3 @@ for your {prodname} installation. For example:
 `\https://todo-app-proj7614.6a63.fuse-ignite.openshiftapps.com/`.
 . In the *To Do App* display, you should see a notification that a new 
 lead was created in the database. 
-
-In this release, one integration at a time can be 
-running (published). If you create another integration, it is automatically 
-in the *Unpublished* state. 
