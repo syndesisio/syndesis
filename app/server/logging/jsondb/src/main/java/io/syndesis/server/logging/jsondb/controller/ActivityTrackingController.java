@@ -352,4 +352,7 @@ public class ActivityTrackingController implements Closeable {
         this.startupDelay = new DurationConverter().convert(startupDelay);
     }
 
+    public Duration getRetention() {
+        return retention;
+    }
 }

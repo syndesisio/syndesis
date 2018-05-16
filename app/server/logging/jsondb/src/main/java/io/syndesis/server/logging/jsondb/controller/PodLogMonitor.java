@@ -216,6 +216,13 @@ class PodLogMonitor implements Consumer<InputStream> {
             String id = validate((String) json.remove("id"));
             String exchange = validate((String) json.remove("exchange"));
 
+            long keyTimeMillis = KeyGenerator.getKeyTimeMillis(exchange);
+            long until = System.currentTimeMillis() - logsController.getRetention().toMillis();
+            if( keyTimeMillis < until ) {
+                // This log entry is too old.. don't process it..
+                return;
+            }
+
             InflightData inflightData = getInflightData(exchange, time);
             String step = (String) json.remove("step");
             if( step == null ) {
