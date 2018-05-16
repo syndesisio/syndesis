@@ -36,6 +36,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.skife.jdbi.v2.DBI;
+import org.skife.jdbi.v2.PreparedBatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,7 @@ import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.jsondb.GetOptions;
 import io.syndesis.server.jsondb.JsonDB;
+import io.syndesis.server.jsondb.impl.JsonRecordSupport;
 import io.syndesis.server.openshift.OpenShiftService;
 
 /**
@@ -128,6 +130,34 @@ public class ActivityTrackingController implements Closeable {
             return conn.update(sql.toString(), path+"%", path + field);
         });
     }
+
+    private void writeBatch(TreeMap<String, Object> batch) {
+        dbi.inTransaction((conn, status) -> {
+            PreparedBatch insert = conn.prepareBatch("INSERT into jsondb (path, value, ovalue) values (:path, :value, :ovalue)");
+            for (Map.Entry<String, Object> entry : batch.entrySet()) {
+                String key = "/activity" + entry.getKey() + "/";
+                String value = null;
+                String ovalue = null;
+                if( key.startsWith("/activity/exchanges" )) {
+                    value = JsonRecordSupport.STRING_VALUE_PREFIX + (String)entry.getValue();
+                } else if ( key.startsWith("/activity/integrations" )) {
+                    ovalue = "true";
+                    value = String.valueOf(JsonRecordSupport.TRUE_VALUE_PREFIX);
+                } else if ( key.startsWith("/activity/pods" )) {
+                    PodLogState p = (PodLogState) entry.getValue();
+                    key += "time/";
+                    value = JsonRecordSupport.STRING_VALUE_PREFIX+p.time;
+                }
+                insert
+                    .bind("path", key)
+                    .bind("value", value)
+                    .bind("ovalue", ovalue)
+                    .add();
+            }
+            return insert.execute();
+        });
+    }
+
 
     @Override
     @PreDestroy
@@ -288,7 +318,8 @@ public class ActivityTrackingController implements Closeable {
                     }
 
                     // Write the batch..
-                    jsonDB.update("/activity", Json.writer().writeValueAsBytes(batch));
+//                    jsonDB.update("/activity", Json.writer().writeValueAsBytes(batch));
+                    writeBatch(batch);
                     LOG.debug("Batch ingested {} log events", eventCounter);
 
                 } catch (IOException e) {
