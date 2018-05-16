@@ -38,6 +38,7 @@ public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
             .configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
     }
 
+    @Override
     public ObjectMapper getContext(Class<?> objectType) {
         return objectMapper;
     }

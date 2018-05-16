@@ -419,7 +419,9 @@ public class ComponentProxyComponent extends DefaultComponent {
                         // A little nasty hack required as verifier uses Map<String, Object>
                         // to be compatible with all the methods in CamelContext whereas
                         // catalog deals with Map<String, String>
-                        options = Map.class.cast(buildEndpointOptions(null, map));
+                        @SuppressWarnings("unchecked")
+                        Map<String, Object> tmp = Map.class.cast(buildEndpointOptions(null, map));
+                        options = tmp;
                     } catch (Exception e) {
                         // If a failure is detected while reading the catalog, wrap it
                         // and stop the validation step.

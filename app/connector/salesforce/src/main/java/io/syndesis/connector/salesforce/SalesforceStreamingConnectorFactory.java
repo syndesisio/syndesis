@@ -31,11 +31,12 @@ public class SalesforceStreamingConnectorFactory implements ComponentProxyFactor
         return new SalesforceStreamingConnector(componentId, componentScheme);
     }
 
-    private class SalesforceStreamingConnector extends ComponentProxyComponent {
+    private static class SalesforceStreamingConnector extends ComponentProxyComponent {
         public SalesforceStreamingConnector(String componentId, String componentScheme) {
             super(componentId, componentScheme);
         }
 
+        @Override
         @SuppressWarnings("PMD.SignatureDeclareThrowsException")
         protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) throws Exception {
             final String sObjectName = options.get(SalesforceEndpointConfig.SOBJECT_NAME);

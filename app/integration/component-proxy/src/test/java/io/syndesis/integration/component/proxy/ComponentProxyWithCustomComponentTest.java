@@ -83,6 +83,7 @@ public class ComponentProxyWithCustomComponentTest {
                 assertThat(component).isInstanceOf(SqlComponent.class);
                 assertThat(options).containsKey("dataSource");
                 assertThat(options).hasEntrySatisfying("dataSource", new Condition<Object>() {
+                    @Override
                     public boolean matches(Object value) {
                         return value instanceof DataSource;
                     }
@@ -121,6 +122,7 @@ public class ComponentProxyWithCustomComponentTest {
                 assertThat(component).isInstanceOf(SqlComponent.class);
                 assertThat(options).containsKey("dataSource");
                 assertThat(options).hasEntrySatisfying("dataSource", new Condition<Object>() {
+                    @Override
                     public boolean matches(Object value) {
                         return value instanceof DataSource;
                     }

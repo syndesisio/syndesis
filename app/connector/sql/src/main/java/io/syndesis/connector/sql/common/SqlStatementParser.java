@@ -134,7 +134,7 @@ public class SqlStatementParser {
         }
         return null;
     }
-    
+
     private void parseInsert(DatabaseMetaData meta) throws SQLException {
         statementInfo.setStatementType(StatementType.INSERT);
         String tableNameInsert = statementInfo.addTable(sqlArrayUpperCase.get(2));
@@ -205,7 +205,7 @@ public class SqlStatementParser {
 
     List<String> splitSqlStatement(String sql) {
         List<String> sqlArray = new ArrayList<>();
-        String[] segments = sql.split("=|\\,|\\s|\\(|\\)");
+        String[] segments = sql.split("=|\\,|\\s|\\(|\\)", -1);
         for (String segment : segments) {
             if (!"".equals(segment)) {
                 sqlArray.add(segment);

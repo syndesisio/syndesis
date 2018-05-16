@@ -358,7 +358,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
 
     public static class MyStepExtension implements Step {
         @Override
-        public Optional<ProcessorDefinition> configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> map) {
+        public Optional<ProcessorDefinition<?>> configure(CamelContext context, ProcessorDefinition<?> definition, Map<String, Object> map) {
             map.forEach((k, v) -> definition.setHeader(k).constant(v));
 
             return Optional.empty();

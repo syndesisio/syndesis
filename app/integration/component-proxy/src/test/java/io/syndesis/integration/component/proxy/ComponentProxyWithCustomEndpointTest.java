@@ -53,7 +53,7 @@ public class ComponentProxyWithCustomEndpointTest {
                 assertThat(endpoint).isNotNull();
                 assertThat(endpoint).isInstanceOf(FtpEndpoint.class);
 
-                FtpEndpoint ftpEndpoint = FtpEndpoint.class.cast(endpoint);
+                FtpEndpoint<?> ftpEndpoint = FtpEndpoint.class.cast(endpoint);
                 boolean binary = Objects.equals("true", options.get("transfer-mode-binary"));
 
                 ftpEndpoint.getConfiguration().setBinary(binary);
@@ -86,7 +86,7 @@ public class ComponentProxyWithCustomEndpointTest {
             assertThat(names).contains("ftp-my-ftp-proxy");
             assertThat(context.getEndpointMap().keySet()).contains("ftp-my-ftp-proxy://localhost?username=my-user");
 
-            FtpEndpoint ftpEndpoint = context.getEndpoint("ftp-my-ftp-proxy://localhost?username=my-user", FtpEndpoint.class);
+            FtpEndpoint<?> ftpEndpoint = context.getEndpoint("ftp-my-ftp-proxy://localhost?username=my-user", FtpEndpoint.class);
             assertThat(ftpEndpoint).isNotNull();
             assertThat(ftpEndpoint.getConfiguration()).hasFieldOrPropertyWithValue("binary", binary);
             assertThat(ftpEndpoint.getConfiguration()).hasFieldOrPropertyWithValue("username", username);

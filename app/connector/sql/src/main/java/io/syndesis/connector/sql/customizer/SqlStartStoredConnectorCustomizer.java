@@ -29,6 +29,7 @@ public final class SqlStartStoredConnectorCustomizer implements ComponentProxyCu
     }
 
     private void doAfterProducer(Exchange exchange) {
+        @SuppressWarnings("unchecked")
         final Map<String, Object> body = exchange.getIn().getBody(Map.class);
         final String jsonBean = JSONBeanUtil.toJSONBean(body);
 

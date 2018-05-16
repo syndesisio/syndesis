@@ -125,7 +125,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             return;
         }
 
-        ProcessorDefinition parent = configureRouteScheduler(integration);
+        ProcessorDefinition<?> parent = configureRouteScheduler(integration);
 
         for (int i = 0; i < steps.size(); i++) {
             final Step step = steps.get(i);
@@ -141,7 +141,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     throw new IllegalStateException("The handler for step kind " + step.getKind() + " is not a consumer");
                 }
 
-                Optional<ProcessorDefinition> definition = handler.handle(step, null, this, stepIndex);
+                Optional<ProcessorDefinition<?>> definition = handler.handle(step, null, this, stepIndex);
                 if (definition.isPresent()) {
                     parent = definition.get();
                     parent = configureRouteDefinition(parent, stepId);
@@ -188,7 +188,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
     }
 
-    private ProcessorDefinition configureRouteDefinition(ProcessorDefinition definition, String stepId) {
+    private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, String stepId) {
         if (definition instanceof RouteDefinition) {
             final RouteDefinition rd = (RouteDefinition)definition;
             final List<RoutePolicy> rp = rd.getRoutePolicies();
@@ -206,7 +206,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return definition;
     }
 
-    private ProcessorDefinition<PipelineDefinition> createPipeline(ProcessorDefinition parent, String stepId) {
+    private ProcessorDefinition<PipelineDefinition> createPipeline(ProcessorDefinition<?> parent, String stepId) {
         return parent.pipeline()
             .id(String.format("step:%s", stepId))
             .setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
@@ -216,7 +216,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
      * If the integration has a scheduler, start the route with a timer or quartz2
      * endpoint.
      */
-    private ProcessorDefinition configureRouteScheduler(Integration integration) throws URISyntaxException {
+    private ProcessorDefinition<?> configureRouteScheduler(Integration integration) throws URISyntaxException {
         if (integration.getScheduler().isPresent()) {
             Scheduler scheduler = integration.getScheduler().get();
 
@@ -262,7 +262,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return Optional.empty();
     }
 
-    private Optional<ProcessorDefinition> configureConnectorSplit(Step step, ProcessorDefinition route, String index) {
+    private Optional<ProcessorDefinition<?>> configureConnectorSplit(Step step, ProcessorDefinition<?> route, String index) {
         if (step.getAction().filter(ConnectorAction.class::isInstance).isPresent()) {
             final ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
             final ConnectorDescriptor descriptor = action.getDescriptor();

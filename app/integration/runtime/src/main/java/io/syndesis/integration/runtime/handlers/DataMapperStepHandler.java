@@ -32,7 +32,7 @@ public class DataMapperStepHandler implements IntegrationStepHandler{
     }
 
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex) {
+    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String stepIndex) {
         ObjectHelper.notNull(route, "route");
 
         return Optional.of(

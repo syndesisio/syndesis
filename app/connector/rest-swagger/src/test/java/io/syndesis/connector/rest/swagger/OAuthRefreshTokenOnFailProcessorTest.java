@@ -16,6 +16,7 @@
 package io.syndesis.connector.rest.swagger;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import org.apache.camel.Exchange;
@@ -208,6 +209,6 @@ public class OAuthRefreshTokenOnFailProcessorTest {
     }
 
     static HttpEntity entity(final String grantJson) {
-        return new ByteArrayEntity(grantJson.getBytes(), ContentType.APPLICATION_JSON);
+        return new ByteArrayEntity(grantJson.getBytes(StandardCharsets.US_ASCII), ContentType.APPLICATION_JSON);
     }
 }

@@ -45,6 +45,7 @@ public class OutMessageCaptureProcessor implements Processor {
     }
 
     public static Map<String, Message> getCapturedMessageMap(Exchange exchange) {
+        @SuppressWarnings("unchecked")
         Map<String, Message> outMessagesMap = exchange.getProperty(CAPTURED_OUT_MESSAGES_MAP, Map.class);
         if( outMessagesMap == null ) {
             outMessagesMap = new HashMap<>();

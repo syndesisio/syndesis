@@ -73,7 +73,7 @@ public interface HttpQuery {
 
     List<String> getByLabels();
 
-    @SuppressWarnings("PMD.NPathComplexity")
+    @SuppressWarnings({ "PMD.NPathComplexity", "OrphanedFormatString" })
     default UriBuilder getUriBuilder() {
         StringBuilder queryExpression = new StringBuilder();
 

@@ -44,7 +44,7 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
 
     @SuppressWarnings("PMD")
     @Override
-    public Optional<ProcessorDefinition> handle(io.syndesis.common.model.integration.Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex) {
+    public Optional<ProcessorDefinition<?>> handle(io.syndesis.common.model.integration.Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String stepIndex) {
         ObjectHelper.notNull(route, "route");
 
         // Model
@@ -116,7 +116,10 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
                     // the handler method.
                     ObjectHelper.trySetCamelContext(stepExtension, context);
 
-                    return stepExtension.configure(context, route, props);
+                    @SuppressWarnings({"rawtypes", "unchecked"})
+                    final Optional<ProcessorDefinition<?>> configured = (Optional) stepExtension.configure(context, route, props);
+
+                    return configured;
                 } catch (ClassNotFoundException e) {
                     throw new IllegalStateException(e);
                 }

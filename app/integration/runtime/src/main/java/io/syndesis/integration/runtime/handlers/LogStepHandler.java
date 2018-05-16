@@ -33,7 +33,7 @@ public class LogStepHandler implements IntegrationStepHandler {
     }
 
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex) {
+    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String stepIndex) {
         if( step.getId().isPresent() ) {
             String stepId = step.getId().get();
             return Optional.of(route.log(LoggingLevel.INFO, (String) null, stepId, createMessage(step)));

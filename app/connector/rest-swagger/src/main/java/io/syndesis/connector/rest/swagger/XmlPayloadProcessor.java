@@ -73,7 +73,7 @@ final class XmlPayloadProcessor implements StreamFilter {
         default:
         }
 
-        return inRequest && inPayload || !inRequest;
+        return (inRequest && inPayload) || !inRequest;
     }
 
     private void processEndElement(final XMLStreamReader reader) {

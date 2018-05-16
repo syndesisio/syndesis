@@ -55,7 +55,7 @@ public class SimpleEndpointStepHandler implements IntegrationStepHandler, Integr
 
     @SuppressWarnings({"unchecked", "PMD"})
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, final String index) {
+    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, final String index) {
         // Model
         final ConnectorAction action = step.getActionAs(ConnectorAction.class).get();
         final ConnectorDescriptor descriptor = action.getDescriptor();

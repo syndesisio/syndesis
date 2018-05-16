@@ -24,5 +24,5 @@ import org.apache.camel.model.ProcessorDefinition;
 @FunctionalInterface
 public interface Step {
     @SuppressWarnings("rawtypes")
-    Optional<ProcessorDefinition> configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters);
+    Optional<ProcessorDefinition<?>> configure(CamelContext context, ProcessorDefinition<?> definition, Map<String, Object> parameters);
 }

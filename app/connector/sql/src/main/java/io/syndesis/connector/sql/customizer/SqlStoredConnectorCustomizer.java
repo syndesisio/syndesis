@@ -39,6 +39,7 @@ public final class SqlStoredConnectorCustomizer implements ComponentProxyCustomi
     }
 
     private void doAfterProducer(Exchange exchange) {
+        @SuppressWarnings("unchecked")
         final Map<String, Object> map = exchange.getIn().getBody(Map.class);
         final String jsonBean = JSONBeanUtil.toJSONBean(map);
 

@@ -161,10 +161,10 @@ public class GenerateMetadataMojo extends AbstractMojo {
         Path dir = Paths.get(directory, "generated-sources", "annotations");
         if (Files.exists(dir)) {
             getLog().info("Looking in for annotated classes in: " + dir);
-            try {
-                final ObjectMapper mapper = new ObjectMapper();
-                final PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**.json");
-                final List<Path> paths = Files.find(dir, Integer.MAX_VALUE, (path, attr) -> matcher.matches(path)).sorted().collect(Collectors.toList());
+            final ObjectMapper mapper = new ObjectMapper();
+            final PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**.json");
+            try (Stream<Path> matches = Files.find(dir, Integer.MAX_VALUE, (path, attr) -> matcher.matches(path)).sorted()) {
+                final List<Path> paths = matches.collect(Collectors.toList());
 
                 for (Path path: paths) {
                     try {

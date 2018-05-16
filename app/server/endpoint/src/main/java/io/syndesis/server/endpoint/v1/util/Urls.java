@@ -73,7 +73,7 @@ public final class Urls {
     }
 
     static String basePath(final String path) {
-        final String[] parts = path.split("/");
+        final String[] parts = path.split("/", -1);
 
         return "/" + parts[1] + "/" + parts[2] + "/";
     }
