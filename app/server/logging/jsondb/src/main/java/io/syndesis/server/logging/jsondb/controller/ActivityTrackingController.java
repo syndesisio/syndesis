@@ -60,7 +60,7 @@ import io.syndesis.server.openshift.OpenShiftService;
  */
 @Service
 @ConditionalOnProperty(value = "controllers.dblogging.enabled", havingValue = "true", matchIfMissing = true)
-@SuppressWarnings({"PMD.DoNotUseThreads", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.CyclomaticComplexity"})
+@SuppressWarnings({"PMD.DoNotUseThreads", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.CyclomaticComplexity", "PMD.GodClass"})
 public class ActivityTrackingController implements Closeable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivityTrackingController.class);
@@ -145,7 +145,7 @@ public class ActivityTrackingController implements Closeable {
                     value = String.valueOf(JsonRecordSupport.TRUE_VALUE_PREFIX);
                 } else if ( key.startsWith("/activity/pods" )) {
                     PodLogState p = (PodLogState) entry.getValue();
-                    key += "time/";
+                    key += "time/"; //NOPMD
                     value = JsonRecordSupport.STRING_VALUE_PREFIX+p.time;
                 }
                 insert

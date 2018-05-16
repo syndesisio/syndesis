@@ -191,7 +191,7 @@ class PodLogMonitor implements Consumer<InputStream> {
         return data;
     }
 
-    @SuppressWarnings("PMD.CyclomaticComplexity")
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ExcessiveMethodLength", "PMD.NPathComplexity", ""})
     private void processLine(byte[] line) throws IOException {
         // Could it be a data of json structured output?
 
@@ -213,15 +213,15 @@ class PodLogMonitor implements Consumer<InputStream> {
             Map<String, Object> json = Json.reader().forType(HashMap.class).readValue(line, 31, line.length - 31); //NOPMD
 
             // are the required fields set?
-            String id = validate((String) json.remove("id"));
             String exchange = validate((String) json.remove("exchange"));
-
             long keyTimeMillis = KeyGenerator.getKeyTimeMillis(exchange);
             long until = System.currentTimeMillis() - logsController.getRetention().toMillis();
             if( keyTimeMillis < until ) {
                 // This log entry is too old.. don't process it..
                 return;
             }
+
+            String id = validate((String) json.remove("id"));
 
             InflightData inflightData = getInflightData(exchange, time);
             String step = (String) json.remove("step");
