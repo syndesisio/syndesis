@@ -132,7 +132,7 @@ parameters:
 - description: Maximum number of integrations single user can create
   displayName: Maximum number of integrations
   name: MAX_INTEGRATIONS_PER_USER
-  value: "1"
+  value: "{{#Ocp}}0{{/Ocp}}{{^Ocp}}1{{/Ocp}}"
   required: true
 - description: Key used to perform authentication of client side stored state.
   displayName: Client side state authentication key
