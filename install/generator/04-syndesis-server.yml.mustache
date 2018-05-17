@@ -207,7 +207,10 @@
           01_maven_central: https://repo1.maven.org/maven2
           02_redhat_ea_repository: https://maven.repository.redhat.com/earlyaccess/all
           03_jboss_ea: https://repository.jboss.org/nexus/content/groups/ea
-{{/Productized}}      openshift:
+{{/Productized}}{{#Ocp}}      controllers:
+        maxIntegrationsPerUser: 0
+        maxDeploymentsPerUser: 0
+{{/Ocp}}      openshift:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
