@@ -173,9 +173,13 @@ enum PropertyGenerators {
 
     protected abstract BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor();
 
-    static String createHostUri(final String scheme, final String host) {
+    static String createHostUri(final String scheme, final String host, final int port) {
         try {
-            return new URI(scheme, host, null, null).toString();
+            if (port == -1) {
+                return new URI(scheme, host, null, null).toString();
+            }
+
+            return new URI(scheme, null, host, port, null, null, null).toString();
         } catch (final URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
@@ -192,6 +196,37 @@ enum PropertyGenerators {
         final Map<String, Object> vendorExtensions = ofNullable(swagger.getVendorExtensions()).orElse(Collections.emptyMap());
         final URI specificationUrl = (URI) vendorExtensions.get(BaseSwaggerConnectorGenerator.URL_EXTENSION);
 
+        final String schemeToUse = determineSchemeToUse(swagger, specificationUrl);
+        if (schemeToUse == null) {
+            return null;
+        }
+
+        final String specificationHost = swagger.getHost();
+        final boolean specificationWithoutHost = StringUtils.isEmpty(specificationHost);
+        if (specificationWithoutHost && specificationUrl == null) {
+            return null;
+        }
+
+        String hostToUse;
+        if (specificationWithoutHost && specificationUrl != null) {
+            hostToUse = specificationUrl.getHost();
+        } else {
+            hostToUse = swagger.getHost();
+        }
+
+        final int portToUse;
+        final int colonIdx = hostToUse.indexOf(':');
+        if (colonIdx == -1) {
+            portToUse = -1;
+        } else {
+            portToUse = Integer.parseUnsignedInt(hostToUse.substring(colonIdx + 1));
+            hostToUse = hostToUse.substring(0, colonIdx);
+        }
+
+        return createHostUri(schemeToUse, hostToUse, portToUse);
+    }
+
+    private static String determineSchemeToUse(final Swagger swagger, final URI specificationUrl) {
         final List<Scheme> schemes = swagger.getSchemes();
         final boolean noSchemes = schemes == null || schemes.isEmpty();
         if (noSchemes && specificationUrl == null) {
@@ -210,20 +245,7 @@ enum PropertyGenerators {
                 .findFirst()//
                 .orElse(null);
         }
-
-        final String host = swagger.getHost();
-        if (StringUtils.isEmpty(host) && specificationUrl == null) {
-            return null;
-        }
-
-        String hostToUse;
-        if (StringUtils.isEmpty(host) && specificationUrl != null) {
-            hostToUse = specificationUrl.getHost();
-        } else {
-            hostToUse = swagger.getHost();
-        }
-
-        return createHostUri(schemeToUse, hostToUse);
+        return schemeToUse;
     }
 
     private static Optional<ConfigurationProperty> fromTemplate(@SuppressWarnings("unused") final Swagger swagger,
