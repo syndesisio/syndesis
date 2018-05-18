@@ -61,7 +61,7 @@ or there can be placeholders in the stored procedure. For example:
 [source]
 ----
 INSERT INTO TODO(task, completed) VALUES(:#param_1, :#param_2)
-DELETE FROM TODO WHERE task LIKE ':#param_3'
+DELETE FROM TODO WHERE task LIKE :#param_3
 ----
 
 To specify the values of these placeholders, add a data mapping step
