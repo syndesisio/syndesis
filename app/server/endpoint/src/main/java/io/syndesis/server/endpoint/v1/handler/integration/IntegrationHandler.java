@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentOverview;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.model.integration.IntegrationEndpoint;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.validation.AllValidations;
@@ -338,6 +340,7 @@ public class IntegrationHandler extends BaseHandler
         builder.steps(integration.getSteps().stream().map(this::toCurrentSteps).collect(Collectors.toList()));
 
         IntegrationDeployment deployed = null;
+        List<IntegrationDeployment> activeDeployments = new ArrayList<>();
         for (IntegrationDeployment deployment: dataManager.fetchAll(IntegrationDeployment.class, new IdPrefixFilter<>(id+":"), ReverseFilter.getInstance())) {
             builder.addDeployment(IntegrationDeploymentOverview.of(deployment));
 
@@ -356,11 +359,24 @@ public class IntegrationHandler extends BaseHandler
                 // current state
                 builder.targetState(deployment.getTargetState());
                 builder.currentState(currentState);
+                activeDeployments.add(deployment);
             }
         }
 
         if (deployed != null) {
             builder.isDraft(computeDraft(integration, deployed.getSpec()));
+        }
+
+        // Set the URL of the integration deployment if present
+        IntegrationDeployment exposedDeployment = deployed;
+        if (exposedDeployment == null && activeDeployments.size() == 1) {
+            exposedDeployment = activeDeployments.get(0);
+        }
+        if (exposedDeployment != null && exposedDeployment.getId().isPresent()) {
+            IntegrationEndpoint endpoint = dataManager.fetch(IntegrationEndpoint.class, exposedDeployment.getId().get());
+            if (endpoint != null) {
+                builder.url(endpoint.getUrl());
+            }
         }
 
         return builder.build();

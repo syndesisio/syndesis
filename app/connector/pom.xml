@@ -82,6 +82,7 @@
     <module>sql</module>
     <module>twitter</module>
     <module>servicenow</module>
+    <module>webhook</module>
   </modules>
 
   <dependencyManagement>

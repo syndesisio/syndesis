@@ -21,12 +21,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import io.fabric8.kubernetes.client.KubernetesClientException;
-import io.fabric8.openshift.api.model.User;
-import io.fabric8.openshift.api.model.UserBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +36,15 @@ import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
+import io.fabric8.openshift.api.model.Route;
+import io.fabric8.openshift.api.model.RouteSpec;
+import io.fabric8.openshift.api.model.UserBuilder;
+import io.fabric8.openshift.api.model.User;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
 
-@SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention"})
+@SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenShiftServiceImpl.class);
@@ -82,6 +85,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
         ensureDeploymentConfig(sName, deploymentData);
         ensureSecret(sName, deploymentData);
+        ensureExposure(sName, deploymentData);
+
         DeploymentConfig deployment = openShiftClient.deploymentConfigs().withName(sName).deployLatest();
         return String.valueOf(deployment.getStatus().getLatestVersion());
     }
@@ -97,6 +102,9 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         final String sName = openshiftName(name);
 
         LOGGER.debug("Delete {}", sName);
+
+        // May not be exposed (resources not present)
+        removeExposure(sName);
 
         return
             removeImageStreams(sName) &&
@@ -332,6 +340,70 @@ public class OpenShiftServiceImpl implements OpenShiftService {
        return openShiftClient.secrets().withName(projectName).delete();
     }
 
+    private void ensureExposure(String name, DeploymentData deploymentData) {
+        Exposure exposure = deploymentData.getExposure();
+        if (exposure == null || Exposure.NONE.equals(exposure)) {
+            removeRoute(name);
+            removeService(name);
+        } else if (Exposure.DIRECT.equals(exposure)) {
+            ensureService(name, deploymentData);
+            ensureRoute(name, deploymentData);
+        } else {
+            LOGGER.error("Unsupported exposure method {}", exposure);
+        }
+    }
+
+    private boolean removeExposure(String name) {
+        boolean res = removeRoute(name);
+        return removeService(name) && res;
+    }
+
+    private void ensureService(String name, DeploymentData deploymentData) {
+        openShiftClient.services().withName(name).createOrReplaceWithNew()
+            .withNewMetadata()
+                .withName(name)
+                .addToAnnotations(deploymentData.getAnnotations())
+                .addToLabels(deploymentData.getLabels())
+            .endMetadata()
+            .withNewSpec()
+                .addToSelector(INTEGRATION_NAME_LABEL, name)
+                .addNewPort()
+                    .withName("http")
+                    .withProtocol("TCP")
+                    .withPort(INTEGRATION_SERVICE_PORT)
+                    .withNewTargetPort(INTEGRATION_SERVICE_PORT)
+                .endPort()
+            .endSpec()
+            .done();
+    }
+
+    private boolean removeService(String name) {
+        return openShiftClient.services().withName(name).delete();
+    }
+
+    private void ensureRoute(String name, DeploymentData deploymentData) {
+        openShiftClient.routes().withName(name).createOrReplaceWithNew()
+            .withNewMetadata()
+                .withName(name)
+                .addToAnnotations(deploymentData.getAnnotations())
+                .addToLabels(deploymentData.getLabels())
+            .endMetadata()
+            .withNewSpec()
+                .withNewTo()
+                    .withKind("Service")
+                    .withName(name)
+                .endTo()
+                .withNewTls()
+                    .withTermination("edge")
+                .endTls()
+            .endSpec()
+            .done();
+    }
+
+    private boolean removeRoute(String name) {
+        return openShiftClient.routes().withName(name).delete();
+    }
+
     private Build waitForBuild(Build r, long timeout, TimeUnit timeUnit) throws InterruptedException {
         long end = System.currentTimeMillis() + timeUnit.toMillis(timeout);
         Build next = r;
@@ -378,6 +450,14 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         labels.put("syndesis.io/app", "syndesis");
 
         return Collections.unmodifiableMap(labels);
+    }
+
+    @Override
+    public Optional<String> getExposedHost(String name) {
+        Route route = openShiftClient.routes().withName(openshiftName(name)).get();
+        return Optional.ofNullable(route)
+            .flatMap(r -> Optional.ofNullable(r.getSpec()))
+            .map(RouteSpec::getHost);
     }
 
 }
