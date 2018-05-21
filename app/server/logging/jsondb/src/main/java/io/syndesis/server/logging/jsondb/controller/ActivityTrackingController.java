@@ -131,7 +131,7 @@ public class ActivityTrackingController implements Closeable {
         });
     }
 
-    private void writeBatch(TreeMap<String, Object> batch) {
+    private void writeBatch(Map<String, Object> batch) {
         dbi.inTransaction((conn, status) -> {
             PreparedBatch insert = conn.prepareBatch("INSERT into jsondb (path, value, ovalue) values (:path, :value, :ovalue)");
             for (Map.Entry<String, Object> entry : batch.entrySet()) {
