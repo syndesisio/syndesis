@@ -43,53 +43,6 @@
                 "tags": [],
                 "enum": [],
                 "generator": "alphanum:50"
-              },
-              "httpMethodRestrict": {
-                "componentProperty": false,
-                "deprecated": false,
-                "description": "The HTTP method to use for the Webhook",
-                "displayName": "HTTP Method",
-                "javaType": "String",
-                "kind": "parameter",
-                "required": true,
-                "secret": false,
-                "type": "string",
-                "tags": [],
-                "defaultValue": "POST",
-                "enum": [
-                  {
-                    "value": "GET",
-                    "label": "GET"
-                  },
-                  {
-                    "value": "PUT",
-                    "label": "PUT"
-                  },
-                  {
-                    "value": "POST",
-                    "label": "POST"
-                  },
-                  {
-                    "value": "DELETE",
-                    "label": "DELETE"
-                  },
-                  {
-                    "value": "HEAD",
-                    "label": "HEAD"
-                  },
-                  {
-                    "value": "OPTIONS",
-                    "label": "OPTIONS"
-                  },
-                  {
-                    "value": "TRACE",
-                    "label": "TRACE"
-                  },
-                  {
-                    "value": "PATCH",
-                    "label": "PATCH"
-                  }
-                ]
               }
             }
           }
