@@ -16,7 +16,7 @@
       "id": "io.syndesis:webhook-incoming",
       "pattern": "From",
       "actionType": "connector",
-      "tags": ["expose", "dynamic"],
+      "tags": ["expose"],
       "descriptor": {
         "componentScheme": "servlet",
         "inputDataShape": {
