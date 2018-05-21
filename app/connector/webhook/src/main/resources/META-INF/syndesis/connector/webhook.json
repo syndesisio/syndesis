@@ -41,7 +41,8 @@
                 "secret": false,
                 "type": "string",
                 "tags": [],
-                "enum": []
+                "enum": [],
+                "generator": "alphanum:50"
               },
               "httpMethodRestrict": {
                 "componentProperty": false,
