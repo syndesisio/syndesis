@@ -79,6 +79,7 @@
     <module>slack</module>
     <module>sql</module>
     <module>twitter</module>
+    <module>webhook</module>
   </modules>
 
   <dependencyManagement>
