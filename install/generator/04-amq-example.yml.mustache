@@ -5,6 +5,7 @@
     name: jboss-amq-63
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: amq
   spec:
     tags:
@@ -37,12 +38,14 @@
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/example: broker-amq
     name: broker-amq
   spec:
     replicas: 0
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/example: broker-amq
     strategy:
       type: Recreate
@@ -50,6 +53,7 @@
       metadata:
         labels:
           app: syndesis
+          syndesis.io/app: syndesis
           syndesis.io/example: broker-amq
         name: broker-amq
       spec:

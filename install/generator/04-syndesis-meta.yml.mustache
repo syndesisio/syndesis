@@ -3,6 +3,7 @@
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
     name: syndesis-meta
@@ -13,6 +14,7 @@
       targetPort: 8080
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-meta
 - apiVersion: v1
   kind: PersistentVolumeClaim
@@ -20,6 +22,7 @@
     name: syndesis-meta
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
   spec:
@@ -33,6 +36,7 @@
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
     name: syndesis-meta
@@ -40,6 +44,7 @@
     replicas: 1
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-meta
     strategy:
       resources:
@@ -52,6 +57,7 @@
       metadata:
         labels:
           app: syndesis
+          syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-meta
       spec:
@@ -136,6 +142,7 @@
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
     name: syndesis-meta-config

@@ -4,6 +4,7 @@
     name: syndesis-ui
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-ui
   spec:
@@ -13,12 +14,14 @@
       targetPort: 8080
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-ui
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-ui
     name: syndesis-ui
@@ -26,6 +29,7 @@
     replicas: 1
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-ui
     strategy:
       rollingParams:
@@ -44,6 +48,7 @@
       metadata:
         labels:
           app: syndesis
+          syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-ui
       spec:
@@ -99,6 +104,7 @@
     name: syndesis-ui-config
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-ui
   data:
