@@ -17,6 +17,9 @@
       "pattern": "From",
       "actionType": "connector",
       "tags": ["expose"],
+      "metadata": {
+        "serverBasePath": "/webhook"
+      },
       "descriptor": {
         "componentScheme": "servlet",
         "inputDataShape": {
@@ -40,7 +43,7 @@
                 "required": true,
                 "secret": false,
                 "type": "string",
-                "tags": [],
+                "tags": ["context-path"],
                 "enum": [],
                 "generator": "alphanum:50"
               }
