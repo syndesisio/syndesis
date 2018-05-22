@@ -156,8 +156,27 @@
             "outputDataShape": {
               "kind": "none"
             },
+            "connectorCustomizers": [
+               "io.syndesis.connector.aws.s3.AWSS3CopyObjectCustomizer"
+            ],
             "propertyDefinitionSteps": [
               {
+                "name": "Copy an object to an Amazon S3 bucket",
+                "description": "Set the filename to use for the object you're copying",
+                "properties": {
+                   "fileName": {
+                    "kind": "parameter",
+                    "displayName": "File Name",
+                    "group": "producer",
+                    "label": "producer",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "labelHint": "The file name to use for the object to copy to S3"
+                  }
+                }
               }
             ]
           }
