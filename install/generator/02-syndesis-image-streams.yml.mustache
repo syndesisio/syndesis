@@ -5,7 +5,7 @@
   metadata:
     name: {{ Images.Syndesis.Rest }}
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-server
   spec:
@@ -21,7 +21,7 @@
   metadata:
     name: {{ Images.Syndesis.Ui }}
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-ui
   spec:
@@ -37,7 +37,7 @@
   metadata:
     name: {{ Images.Syndesis.Verifier }}
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
   spec:
@@ -53,7 +53,7 @@
   metadata:
     name: {{ Images.Support.OAuthProxy }}
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-oauthproxy
   spec:
@@ -69,7 +69,7 @@
   metadata:
     name: {{ Images.Support.Prometheus }}
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
   spec:
@@ -86,7 +86,7 @@
   metadata:
     name: {{ Images.Syndesis.S2i }}
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: s2i-java
   spec:

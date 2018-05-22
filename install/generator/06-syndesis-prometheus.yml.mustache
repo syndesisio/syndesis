@@ -3,7 +3,7 @@
   metadata:
     name: syndesis-prometheus
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
 
@@ -11,7 +11,7 @@
   kind: ConfigMap
   metadata:
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
     name: syndesis-prometheus-config
@@ -99,7 +99,7 @@
   metadata:
     name: syndesis-prometheus
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
   spec:
@@ -109,7 +109,7 @@
       protocol: TCP
       targetPort: 9090
     selector:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/component: syndesis-prometheus
   status:
     loadBalancer: {}
@@ -118,7 +118,7 @@
   metadata:
     name: syndesis-prometheus
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
   spec:
@@ -132,13 +132,13 @@
   metadata:
     name: syndesis-prometheus
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
   spec:
     replicas: 1
     selector:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/component: syndesis-prometheus
     strategy:
       type: Recreate
@@ -150,7 +150,7 @@
     template:
       metadata:
         labels:
-          syndesis.io/app: syndesis
+          app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-prometheus
       spec:

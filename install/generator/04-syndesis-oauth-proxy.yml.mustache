@@ -2,7 +2,7 @@
   kind: Service
   metadata:
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-oauthproxy
     annotations:
@@ -14,13 +14,13 @@
       protocol: TCP
       targetPort: 8443
     selector:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/component: syndesis-oauthproxy
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
     name: syndesis
   spec:
@@ -37,14 +37,14 @@
   kind: DeploymentConfig
   metadata:
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-oauthproxy
     name: syndesis-oauthproxy
   spec:
     replicas: 1
     selector:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/component: syndesis-oauthproxy
     strategy:
       resources:
@@ -56,7 +56,7 @@
     template:
       metadata:
         labels:
-          syndesis.io/app: syndesis
+          app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-oauthproxy
       spec:

@@ -2,7 +2,7 @@
   kind: ConfigMap
   metadata:
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-db
     name: syndesis-sampledb-config
@@ -68,7 +68,7 @@
   metadata:
     name: syndesis-db
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-db
   spec:
@@ -79,7 +79,7 @@
       protocol: TCP
       targetPort: 5432
     selector:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/component: syndesis-db
     sessionAffinity: None
     type: ClusterIP
@@ -90,7 +90,7 @@
   metadata:
     name: syndesis-db
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/component: syndesis-db
   spec:
     accessModes:
@@ -103,13 +103,13 @@
   metadata:
     name: syndesis-db
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-db
   spec:
     replicas: 1
     selector:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/component: syndesis-db
     strategy:
       type: Recreate
@@ -121,7 +121,7 @@
     template:
       metadata:
         labels:
-          syndesis.io/app: syndesis
+          app: syndesis
           syndesis.io/component: syndesis-db
       spec:
         containers:

@@ -3,7 +3,7 @@
   metadata:
     name: syndesis-server
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-server
 - apiVersion: v1
@@ -11,14 +11,14 @@
   metadata:
     name: syndesis-integration
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-server
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-server
     name: syndesis-server
@@ -28,20 +28,20 @@
       protocol: TCP
       targetPort: 8080
     selector:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/component: syndesis-server
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-server
     name: syndesis-server
   spec:
     replicas: 1
     selector:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/component: syndesis-server
     strategy:
       resources:
@@ -53,7 +53,7 @@
     template:
       metadata:
         labels:
-          syndesis.io/app: syndesis
+          app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-server
       spec:
@@ -160,7 +160,7 @@
     annotations:
       io.syndesis/upgrade-mode: keep
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-server
     name: syndesis-server-config

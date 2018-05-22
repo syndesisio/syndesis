@@ -2,7 +2,7 @@
   kind: Service
   metadata:
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
     name: syndesis-meta
@@ -12,14 +12,14 @@
       protocol: TCP
       targetPort: 8080
     selector:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/component: syndesis-meta
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
     name: syndesis-meta
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
   spec:
@@ -32,14 +32,14 @@
   kind: DeploymentConfig
   metadata:
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
     name: syndesis-meta
   spec:
     replicas: 1
     selector:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/component: syndesis-meta
     strategy:
       resources:
@@ -51,7 +51,7 @@
     template:
       metadata:
         labels:
-          syndesis.io/app: syndesis
+          app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-meta
       spec:
@@ -135,7 +135,7 @@
   kind: ConfigMap
   metadata:
     labels:
-      syndesis.io/app: syndesis
+      app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
     name: syndesis-meta-config
