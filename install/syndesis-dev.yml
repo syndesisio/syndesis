@@ -10,13 +10,14 @@ metadata:
 #
 # Allow localhost refs: true
 # Use docker images: false
-# Syndesis Tag: latest
+# Syndesis Tag: 1.4.1-20180524
 # Prometheus Tag: v2.1.0
 # Postgresql Tag: 9.5
 # OAuthProxy Tag: v1.1.0
 #
   labels:
     app: syndesis
+    syndesis.io/app: syndesis
     syndesis.io/type: infrastructure
 parameters:
 # Parameters with no defaults (has to be be provided when template is applied):
@@ -158,54 +159,58 @@ objects:
     name: syndesis-server
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-server
   spec:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-server:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-server:1.4.1-20180524
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.4.1-20180524"
 - apiVersion: v1
   kind: ImageStream
   metadata:
     name: syndesis-ui
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-ui
   spec:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:1.4.1-20180524
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.4.1-20180524"
 - apiVersion: v1
   kind: ImageStream
   metadata:
     name: syndesis-meta
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
   spec:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-meta:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-meta:1.4.1-20180524
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.4.1-20180524"
 - apiVersion: v1
   kind: ImageStream
   metadata:
     name: oauth-proxy
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-oauthproxy
   spec:
@@ -222,6 +227,7 @@ objects:
     name: prometheus
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
   spec:
@@ -239,16 +245,17 @@ objects:
     name: syndesis-s2i
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: s2i-java
   spec:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:1.4.1-20180524
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.4.1-20180524"
 
 - apiVersion: v1
   kind: Secret
@@ -256,6 +263,7 @@ objects:
     name: syndesis-oauth-proxy-cookie-secret
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
   stringData:
     oauthCookieSecret: ${OAUTH_COOKIE_SECRET}
@@ -265,6 +273,7 @@ objects:
     name: syndesis-server-secret
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
   stringData:
     clientStateAuthenticationKey: ${CLIENT_STATE_AUTHENTICATION_KEY}
@@ -275,9 +284,10 @@ objects:
     name: syndesis-global-config
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
   stringData:
-    syndesis: "latest"
+    syndesis: "1.4.1-20180524"
     postgresql: "9.5"
     oauthproxy: "v1.1.0"
     prometheus: "v2.1.0"
@@ -308,6 +318,7 @@ objects:
     name: syndesis-ui
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-ui
   spec:
@@ -317,12 +328,14 @@ objects:
       targetPort: 8080
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-ui
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-ui
     name: syndesis-ui
@@ -330,6 +343,7 @@ objects:
     replicas: 1
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-ui
     strategy:
       rollingParams:
@@ -348,6 +362,7 @@ objects:
       metadata:
         labels:
           app: syndesis
+          syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-ui
       spec:
@@ -388,7 +403,7 @@ objects:
         - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: syndesis-ui:latest
+          name: syndesis-ui:1.4.1-20180524
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -399,6 +414,7 @@ objects:
     name: syndesis-ui-config
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-ui
   data:
@@ -436,6 +452,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-db
     name: syndesis-sampledb-config
@@ -502,6 +519,7 @@ objects:
     name: syndesis-db
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-db
   spec:
@@ -513,6 +531,7 @@ objects:
       targetPort: 5432
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-db
     sessionAffinity: None
     type: ClusterIP
@@ -524,6 +543,7 @@ objects:
     name: syndesis-db
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-db
   spec:
     accessModes:
@@ -537,12 +557,14 @@ objects:
     name: syndesis-db
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-db
   spec:
     replicas: 1
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-db
     strategy:
       type: Recreate
@@ -555,6 +577,7 @@ objects:
       metadata:
         labels:
           app: syndesis
+          syndesis.io/app: syndesis
           syndesis.io/component: syndesis-db
       spec:
         containers:
@@ -629,6 +652,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
     name: syndesis-meta
@@ -639,6 +663,7 @@ objects:
       targetPort: 8080
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-meta
 - apiVersion: v1
   kind: PersistentVolumeClaim
@@ -646,6 +671,7 @@ objects:
     name: syndesis-meta
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
   spec:
@@ -659,6 +685,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
     name: syndesis-meta
@@ -666,6 +693,7 @@ objects:
     replicas: 1
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-meta
     strategy:
       resources:
@@ -678,6 +706,7 @@ objects:
       metadata:
         labels:
           app: syndesis
+          syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-meta
       spec:
@@ -746,7 +775,7 @@ objects:
         - syndesis-meta
         from:
           kind: ImageStreamTag
-          name: syndesis-meta:latest
+          name: syndesis-meta:1.4.1-20180524
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -757,6 +786,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-meta
     name: syndesis-meta-config
@@ -779,6 +809,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-oauthproxy
     annotations:
@@ -791,12 +822,14 @@ objects:
       targetPort: 8443
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-oauthproxy
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
     name: syndesis
   spec:
@@ -814,6 +847,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-oauthproxy
     name: syndesis-oauthproxy
@@ -821,6 +855,7 @@ objects:
     replicas: 1
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-oauthproxy
     strategy:
       resources:
@@ -833,6 +868,7 @@ objects:
       metadata:
         labels:
           app: syndesis
+          syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-oauthproxy
       spec:
@@ -915,6 +951,7 @@ objects:
     name: syndesis-server
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-server
 - apiVersion: v1
@@ -923,6 +960,7 @@ objects:
     name: syndesis-integration
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-server
 - apiVersion: v1
@@ -930,6 +968,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-server
     name: syndesis-server
@@ -940,12 +979,14 @@ objects:
       targetPort: 8080
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-server
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-server
     name: syndesis-server
@@ -953,6 +994,7 @@ objects:
     replicas: 1
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-server
     strategy:
       resources:
@@ -965,6 +1007,7 @@ objects:
       metadata:
         labels:
           app: syndesis
+          syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-server
       spec:
@@ -1054,7 +1097,7 @@ objects:
         - syndesis-server
         from:
           kind: ImageStreamTag
-          name: syndesis-server:latest
+          name: syndesis-server:1.4.1-20180524
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -1067,6 +1110,7 @@ objects:
       io.syndesis/upgrade-mode: keep
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-server
     name: syndesis-server-config
@@ -1108,7 +1152,7 @@ objects:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: syndesis-s2i:latest
+        builderImageStreamTag: syndesis-s2i:1.4.1-20180524
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
@@ -1121,7 +1165,8 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: todo
+      app: syndesis
+      syndesis.io/app: todo
       syndesis.io/component: todo
     name: todo
   spec:
@@ -1130,14 +1175,16 @@ objects:
       protocol: TCP
       targetPort: 8080
     selector:
-      app: todo
+      app: syndesis
+      syndesis.io/app: todo
       syndesis.io/component: todo
 
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: todo
+      app: syndesis
+      syndesis.io/app: todo
       syndesis.io/component: todo
     name: todo
   spec:
@@ -1157,7 +1204,8 @@ objects:
   kind: ImageStream
   metadata:
     labels:
-      app: todo
+      app: syndesis
+      syndesis.io/app: todo
     name: todo
   spec:
     lookupPolicy:
@@ -1171,7 +1219,8 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      app: todo
+      app: syndesis
+      syndesis.io/app: todo
     name: todo
   spec:
     postCommit: {}
@@ -1201,12 +1250,14 @@ objects:
   kind: DeploymentConfig
   metadata:
     labels:
-      app: todo
+      app: syndesis
+      syndesis.io/app: todo
     name: todo
   spec:
     replicas: 1
     selector:
-      app: todo
+      app: syndesis
+      syndesis.io/app: todo
       syndesis.io/component: todo
     strategy:
       resources:
@@ -1221,7 +1272,8 @@ objects:
           openshift.io/container.todo.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
         creationTimestamp: null
         labels:
-          app: todo
+          app: syndesis
+          syndesis.io/app: todo
           syndesis.io/component: todo
       spec:
         containers:
@@ -1270,6 +1322,7 @@ objects:
     name: syndesis:editors
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
   roleRef:
     name: edit
@@ -1282,6 +1335,7 @@ objects:
     name: syndesis:viewers
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
   roleRef:
     name: view
@@ -1294,6 +1348,7 @@ objects:
     name: syndesis-prometheus
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
 
@@ -1302,6 +1357,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
     name: syndesis-prometheus-config
@@ -1390,6 +1446,7 @@ objects:
     name: syndesis-prometheus
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
   spec:
@@ -1400,6 +1457,7 @@ objects:
       targetPort: 9090
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-prometheus
   status:
     loadBalancer: {}
@@ -1409,6 +1467,7 @@ objects:
     name: syndesis-prometheus
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
   spec:
@@ -1423,12 +1482,14 @@ objects:
     name: syndesis-prometheus
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
   spec:
     replicas: 1
     selector:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/component: syndesis-prometheus
     strategy:
       type: Recreate
@@ -1441,6 +1502,7 @@ objects:
       metadata:
         labels:
           app: syndesis
+          syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-prometheus
       spec:
@@ -1497,6 +1559,7 @@ objects:
   metadata:
     labels:
       app: syndesis
+      syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
     name: syndesis-upgrade
     annotations:
