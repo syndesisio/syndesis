@@ -21,7 +21,7 @@ There must be only at most one label from the "Exclusive" groups.
 | Excl.
 
 | **cat/**
-| Misc categories which are can be added freely
+| Misc categories which can be added freely
 |
 
 | **prio/**
