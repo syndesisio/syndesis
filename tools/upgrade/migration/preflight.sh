@@ -21,7 +21,7 @@ check_upgrade_from_current_version() {
 }
 
 # ======================================================================
-# Entrypoint from upgrade script
+# Being called from upgrade.sh
 preflight_version_check() {
     local current_version="${1}"
     local target_version="${2}"
@@ -34,7 +34,9 @@ preflight_version_check() {
     # the version to update to. This must be the same as the target version
     # provided as argument
     if [ -n "${SYNDESIS_VERSION:-}" ]; then
-        if [ "$SYNDESIS_VERSION" != "${target_version}" ]; then
+        local target_minor_version="$(extract_minor_version $target_version)"
+        local syndesis_minor_version"$(extract_minor_version $SYNDESIS_VERSION)"
+        if [ "${syndesis_minor_version}" != "${target_minor_version}" ]; then
             echo "Internal error: Container template's version is not the same as upgrade container tag"
             echo "- Container version:               $SYNDESIS_VERSION"
             echo "- Version extracted from template: $target_version"
