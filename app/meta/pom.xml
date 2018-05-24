@@ -244,6 +244,12 @@
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-gmail</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-sftp</artifactId>
       <scope>runtime</scope>
     </dependency>
@@ -374,6 +380,8 @@
             <ignore>camel-connector-schema.json</ignore>
             <ignore>camel-connector.json</ignore>
             <ignore>git.properties</ignore>
+            <!--<ignore>javax/servlet/LocalStrings.properties</ignore>
+            <ignore>javax/servlet/http/LocalStrings.properties</ignore>-->
           </ignoredResourcePatterns>
           <ignoredDependencies>
             <ignoredDependency>
@@ -391,6 +399,9 @@
           </ignoredDependencies>
           <ignoredClassPatterns>
             <ignored>org.apache.camel.json.simple.*</ignored>
+            <!--<ignored>javax.servlet.*</ignored>-->
+            <ignored>com.google.common.*</ignored>
+            <ignored>com.google.thirdparty.*</ignored>
           </ignoredClassPatterns>
         </configuration>
       </plugin>
