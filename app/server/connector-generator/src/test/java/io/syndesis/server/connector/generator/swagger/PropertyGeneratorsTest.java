@@ -31,7 +31,13 @@ public class PropertyGeneratorsTest {
 
     @Test
     public void shouldCreateHostUri() {
-        assertThat(createHostUri("scheme", "host")).isEqualTo("scheme://host");
+        assertThat(createHostUri("scheme", "host", -1)).isEqualTo("scheme://host");
+        assertThat(createHostUri("scheme", "host", 8080)).isEqualTo("scheme://host:8080");
+    }
+
+    @Test
+    public void shouldDetermineFromHostsContainingPorts() {
+        assertThat(determineHost(new Swagger().host("54.152.43.92:8080").scheme(Scheme.HTTPS))).isEqualTo("https://54.152.43.92:8080");
     }
 
     @Test
