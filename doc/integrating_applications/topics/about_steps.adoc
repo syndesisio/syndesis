@@ -5,7 +5,7 @@ An integration is a set of ordered steps. Each step operates on data.
 Some steps operate on data while connected to an application or service
 outside {prodname}. These steps are connections. Between connections, there can
 be other steps that operate on data in {prodname}.
-Typically, an integraton includes a step that maps data fields used
+Typically, an integration includes a step that maps data fields used
 in a connection to data fields used in the next connection.
 Except for the start connection, each step operates on data it receives from
 the previous steps.

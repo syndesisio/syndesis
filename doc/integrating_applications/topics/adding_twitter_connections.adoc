@@ -13,7 +13,7 @@ The instructions below
 assume that {prodname} is prompting you to select a start connection, a
 finish connection or a middle connection.
 
-To add a Twitter connection to an integraton:
+To add a Twitter connection to an integration:
 
 . On the page that displays available connections, click the Twitter
 connection that you want to add to the integration. When the integration

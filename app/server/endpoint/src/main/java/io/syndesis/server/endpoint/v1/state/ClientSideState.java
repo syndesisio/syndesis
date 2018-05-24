@@ -22,10 +22,13 @@ import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -43,15 +46,15 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.NewCookie;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
 import io.syndesis.server.credential.CredentialModule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 /**
  * Persists given state on the client with these properties:
@@ -73,7 +76,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class ClientSideState {
     // 15 min
-    public static final long DEFAULT_TIMEOUT = 30 * 60;
+    public static final int DEFAULT_TIMEOUT = 30 * 60;
 
     private static final Decoder DECODER = Base64.getUrlDecoder();
 
@@ -93,7 +96,7 @@ public final class ClientSideState {
 
     private final Function<Object, byte[]> serialization;
 
-    private final long timeout;
+    private final int timeout;
 
     private final LongSupplier timeSource;
 
@@ -152,19 +155,17 @@ public final class ClientSideState {
             ClientSideState::deserialize, DEFAULT_TIMEOUT);
     }
 
-    public ClientSideState(final Edition edition, final long timeout) {
-        this(edition, ClientSideState::currentTimestmpUtc, new RandomIvSource(), ClientSideState::serialize,
-            ClientSideState::deserialize, timeout);
-    }
-
-    ClientSideState(final Edition edition, final LongSupplier timeSource, final long timeout) {
-        this(edition, timeSource, new RandomIvSource(), ClientSideState::serialize, ClientSideState::deserialize,
+    public ClientSideState(final Edition edition, final int timeout) {
+        this(edition, ClientSideState::currentTimestmpUtc, new RandomIvSource(), ClientSideState::serialize, ClientSideState::deserialize,
             timeout);
     }
 
+    ClientSideState(final Edition edition, final LongSupplier timeSource, final int timeout) {
+        this(edition, timeSource, new RandomIvSource(), ClientSideState::serialize, ClientSideState::deserialize, timeout);
+    }
+
     ClientSideState(final Edition edition, final LongSupplier timeSource, final Supplier<byte[]> ivSource,
-        final Function<Object, byte[]> serialization, final BiFunction<Class<?>, byte[], Object> deserialization,
-        final long timeout) {
+        final Function<Object, byte[]> serialization, final BiFunction<Class<?>, byte[], Object> deserialization, final int timeout) {
         this.edition = edition;
         this.timeSource = timeSource;
         this.ivSource = ivSource;
@@ -174,7 +175,8 @@ public final class ClientSideState {
     }
 
     public NewCookie persist(final String key, final String path, final Object value) {
-        return new NewCookie(key, protect(value), path, null, null, NewCookie.DEFAULT_MAX_AGE, true, false);
+        final Date expiry = Date.from(ZonedDateTime.now(ZoneOffset.UTC).plusSeconds(timeout).toInstant());
+        return new NewCookie(key, protect(value), path, null, Cookie.DEFAULT_VERSION, null, timeout, expiry, true, false);
     }
 
     public <T> Set<T> restoreFrom(final Collection<Cookie> cookies, final Class<T> type) {

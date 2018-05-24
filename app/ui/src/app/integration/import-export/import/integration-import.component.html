@@ -2,12 +2,12 @@
   <div class="card-pf">
     <div class="card-pf-heading">
       <div class="card-pf-title">
-        <h1>Import Integration</h1>
+        <h1>{{ 'integrations.import-export.header' | synI18n }}</h1>
       </div>
     </div>
     <div class="card-pf-body">
       <div>
-        <p>Choose one or more zip files that contain exported integrations that you want to import.</p>
+        <p>{{ 'integrations.import-export.choose-files' | synI18n }}</p>
       </div>
       <div class="syn-drop-zone"
            ng2FileDrop
@@ -15,7 +15,7 @@
            [ngClass]="{'syn-drop-zone--hover': isDragAndDropImport}"
            (fileOver)="onDropOverAndOut($event)"
            (onFileDrop)="onDropFile()">
-        <p>Drag and drop your integration files here or</p>
+        <p>{{ 'integrations.import-export.drag-and-drop' | synI18n }}</p>
         <div class="row syn-drop-zone__file-select">
           <div class="col-md-3">
             <input #fileSelect
@@ -33,16 +33,16 @@
                        class="text-muted">
                     <span *ngIf="item.isUploading"
                           class="spinner spinner-sm spinner-inline"></span>
-                    <em>Importing...</em>
+                    <em>{{ 'integrations.import-export.importing' | synI18n }}</em>
                   </div>
                   <div *ngIf="item.isUploaded">
                     <div *ngIf="item.isSuccess; else isError">
                       <span class="pficon-ok"></span>
-                      Successfully imported.
+                      {{ 'integrations.import-export.import-success' | synI18n }}
                     </div>
                     <ng-template #isError>
                       <span class="pficon-error-circle-o"></span>
-                      Unable to import this file.
+                      {{ 'integrations.import-export.import-fail' | synI18n }}
                     </ng-template>
                   </div>
                 </div>
@@ -51,25 +51,24 @@
           </div>
         </div>
         <p class="help-block">
-          <em>Note: The imported integration will be in the draft state. If you previously imported and this
-            environment has a draft version of the integration, then that draft is lost.</em>
+          <em>{{ 'integrations.import-export.help-block' | synI18n }}</em>
         </p>
       </div>
       <div class="results">
         <div *ngIf="showReviewStep">
           <div class="col-xs-2 text">
-            <h3>Import Results:</h3>
+            <h3>{{ 'integrations.import-export.import-results' | synI18n }}</h3>
           </div>
           <div class="col-xs-10">
             <table class="table">
               <tbody>
               <ng-container *ngFor="let integration of importedOverviews$ | async">
-                <tr *ngIf="integration.name">
+                <tr>
                   <th>Integration Name</th>
                   <td>{{ integration.name }}</td>
                 </tr>
                 <tr *ngFor="let step of integration.steps">
-                  <th *ngIf="step.connection">Connection Name</th>
+                  <th>Connection Name</th>
                   <td>{{ step.connection.name }}</td>
                 </tr>
               </ng-container>
@@ -82,12 +81,12 @@
           <button type="button"
                   class="btn btn-primary"
                   (click)="done(importedOverviews$)">
-            Done
+            {{ 'integrations.import-export.btn-done' | synI18n }}
           </button>
           <button type="button"
                   class="btn btn-default"
                   (click)="cancel()">
-            Cancel
+            {{ 'integrations.import-export.btn-cancel' | synI18n }}
           </button>
         </div>
       </div>

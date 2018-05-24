@@ -3,6 +3,7 @@
   metadata:
     name: syndesis-prometheus
     labels:
+      app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
@@ -11,6 +12,7 @@
   kind: ConfigMap
   metadata:
     labels:
+      app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
@@ -99,6 +101,7 @@
   metadata:
     name: syndesis-prometheus
     labels:
+      app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
@@ -109,6 +112,7 @@
       protocol: TCP
       targetPort: 9090
     selector:
+      app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/component: syndesis-prometheus
   status:
@@ -118,6 +122,7 @@
   metadata:
     name: syndesis-prometheus
     labels:
+      app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
@@ -132,12 +137,14 @@
   metadata:
     name: syndesis-prometheus
     labels:
+      app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
   spec:
     replicas: 1
     selector:
+      app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/component: syndesis-prometheus
     strategy:
@@ -150,6 +157,7 @@
     template:
       metadata:
         labels:
+          app: syndesis
           syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-prometheus

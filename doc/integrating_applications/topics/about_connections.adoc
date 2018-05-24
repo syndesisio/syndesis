@@ -22,7 +22,7 @@ create from that connector would have the same configuration.
 There is no need for more than one connection to an application
 that uses OAuth. 
 
-To create an integraton, you select a connection to start the integration,
+To create an integration, you select a connection to start the integration,
 a connection to end the integration, and optionally one or more
 connections for accessing additional applications.
 Any number of integrations can use the same connection.

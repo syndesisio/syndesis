@@ -3,7 +3,20 @@
   "dictionary": {
     "integrations": {
       "integration": "Integration",
-      "integrations": "Integrations"
+      "integrations": "Integrations",
+      "import-export": {
+        "header": "Import Integration",
+        "choose-files": "Choose one or more zip files that contain exported integrations that you want to import.",
+        "drag-and-drop": "Drag and drop your integration files here or",
+        "help-block": "Note: The imported integration will be in the draft state. If you previously imported and this environment has a draft version of the integration, then that draft is lost.",
+        "item-name": "{{0}} Name",
+        "importing": "Importing...",
+        "import-success": "Successfully imported.",
+        "import-fail": "Unable to import this file.",
+        "import-results": "Import Results:",
+        "btn-done": "Done",
+        "btn-cancel": "Cancel"
+      }
     },
     "connections": {
       "connection": "Connection",

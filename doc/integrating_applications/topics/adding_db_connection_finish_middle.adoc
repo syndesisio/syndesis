@@ -48,7 +48,7 @@ in queries.
 {prodname} tries to validate the connection, which includes
 checking that a specified SQL query is syntactically correct and
 confirming that the query or stored procedure target data exists. If
-verfication is successful then {prodname} adds the connection to
+verification is successful then {prodname} adds the connection to
 the integration. If verification fails then {prodname} displays a message
 about the problem. Update your input as needed and try again.
 
@@ -61,7 +61,7 @@ or there can be placeholders in the stored procedure. For example:
 [source]
 ----
 INSERT INTO TODO(task, completed) VALUES(:#param_1, :#param_2)
-DELETE FROM TODO WHERE task LIKE ':#param_3'
+DELETE FROM TODO WHERE task LIKE :#param_3
 ----
 
 To specify the values of these placeholders, add a data mapping step

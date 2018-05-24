@@ -22,7 +22,7 @@ app/test
 The code that actually bootstraps and orchestrates the test can be found
 
 ---
-tools/bin/sysndesis
+tools/bin/syndesis
 tools/bin/commands/system-test
 ---
 
@@ -69,6 +69,6 @@ For the reasons mentioned above two additional scripts have been implemented and
 The purpose of those scripts is to apply the openshift templates and to cleanup after the tests are run.
 
 Since the templates are installed via shell, we need to let arquillian-cube know which are the `services` that indicate that the environment is ready.
-This is why we specify `synesis-server` and `syndesis-ui`.
+This is why we specify `syndesis-server` and `syndesis-ui`.
 
 

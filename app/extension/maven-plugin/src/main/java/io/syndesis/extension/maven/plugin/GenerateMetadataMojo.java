@@ -271,7 +271,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
                 builder.type(type);
             }
         } else {
-            builder.kind(DataShapeKinds.ANY);
+            builder.kind(DataShapeKinds.NONE);
         }
 
         if (StringUtils.isNotEmpty(name)) {

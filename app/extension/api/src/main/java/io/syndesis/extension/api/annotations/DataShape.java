@@ -36,7 +36,7 @@ public @interface DataShape {
     /**
      * The data shape kind.
      */
-    String kind() default "any";
+    String kind() default "none";
 
     /**
      * The data shape type.
