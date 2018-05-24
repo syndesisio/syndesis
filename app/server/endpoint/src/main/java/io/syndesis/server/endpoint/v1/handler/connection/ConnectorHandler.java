@@ -48,6 +48,7 @@ import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSummary;
 import io.syndesis.common.model.filter.FilterOptions;
@@ -101,6 +102,14 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @Path("/custom")
     public CustomConnectorHandler customConnectorHandler() {
         return new CustomConnectorHandler(getDataManager(), applicationContext, iconDao);
+    }
+
+    @Override
+    public void delete(final String id) {
+        Deleter.super.delete(id);
+
+        getDataManager().fetchIdsByPropertyValue(Connection.class, "connectorId", id)
+            .forEach(connectionId -> getDataManager().delete(Connection.class, connectionId));
     }
 
     @Override
