@@ -250,7 +250,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
         }
 
         DataShape.Builder builder = new DataShape.Builder();
-        String kind = Optional.ofNullable(root.get("kind")).map(JsonNode::asText).orElse("");
+        String kind = Optional.ofNullable(root.get("kind")).map(JsonNode::asText).orElse(DataShapeKinds.NONE.toString());
         String type = Optional.ofNullable(root.get("type")).map(JsonNode::asText).orElse("");
         String name = Optional.ofNullable(root.get("name")).map(JsonNode::asText).orElse("");
         String desc = Optional.ofNullable(root.get("description")).map(JsonNode::asText).orElse("");
@@ -263,17 +263,14 @@ public class GenerateMetadataMojo extends AbstractMojo {
                 kind = type.substring(0, separator);
                 type = type.substring(separator + 1);
             }
-
-            if (StringUtils.isNotEmpty(kind)) {
-                builder.kind(DataShapeKinds.fromString(kind));
-            }
-            if (StringUtils.isNotEmpty(type)) {
-                builder.type(type);
-            }
-        } else {
-            builder.kind(DataShapeKinds.NONE);
         }
 
+        if (StringUtils.isNotEmpty(kind)) {
+            builder.kind(DataShapeKinds.fromString(kind));
+        }
+        if (StringUtils.isNotEmpty(type)) {
+            builder.type(type);
+        }
         if (StringUtils.isNotEmpty(name)) {
             builder.name(name);
         }
