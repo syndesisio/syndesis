@@ -58,6 +58,7 @@ public class VerifierResponse {
         return errors;
     }
 
+    @SuppressWarnings("JavaLangClash")
     public static class Error {
         String code;
         String description;

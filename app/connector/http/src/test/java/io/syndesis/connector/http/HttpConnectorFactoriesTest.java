@@ -92,14 +92,14 @@ public class HttpConnectorFactoriesTest {
     // Helpers
     // *************************
 
-    private static <K, V> Map<K, V> mapOf(K key, V value, Object... values) {
-        Map<K, V> map = new LinkedHashMap<>();
+    private static Map<String, Object> mapOf(String key, String value, String... values) {
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put(key, value);
 
         for(int i = 0; i < values.length; i += 2) {
             map.put(
-                (K) values[i],
-                (V) values[i + 1]
+                values[i],
+                values[i + 1]
             );
         }
 

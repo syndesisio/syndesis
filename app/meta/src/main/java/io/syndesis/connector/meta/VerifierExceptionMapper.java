@@ -40,6 +40,7 @@ public class VerifierExceptionMapper implements ExceptionMapper<Throwable> {
 
     private static final Logger LOG = LoggerFactory.getLogger(VerifierExceptionMapper.class);
 
+    @SuppressWarnings("JavaLangClash")
     public static class Error {
         public final String developerMsg;
 

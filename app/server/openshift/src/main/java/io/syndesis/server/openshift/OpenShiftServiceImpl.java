@@ -49,10 +49,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     private static final String OPENSHIFT_PREFIX = "i-";
 
     // Labels used for generated objects
-    private static final Map<String, String> INTEGRATION_DEFAULT_LABELS = Collections.unmodifiableMap(new HashMap<String, String>() {{
-        put("syndesis.io/type", "integration");
-        put("syndesis.io/app", "syndesis");
-    }});
+    private static final Map<String, String> INTEGRATION_DEFAULT_LABELS = defaultLabels();
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
@@ -374,4 +371,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     protected static String openshiftName(String name) {
         return OPENSHIFT_PREFIX + Names.sanitize(name);
     }
+
+    private static Map<String, String> defaultLabels() {
+        final HashMap<String, String> labels = new HashMap<String, String>();
+        labels.put("syndesis.io/type", "integration");
+        labels.put("syndesis.io/app", "syndesis");
+
+        return Collections.unmodifiableMap(labels);
+    }
+
 }

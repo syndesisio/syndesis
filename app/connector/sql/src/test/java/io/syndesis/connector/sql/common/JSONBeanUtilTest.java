@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JSONBeanUtilTest {
 
-    class SimpleInputBean {
+    static class SimpleInputBean {
 
         int a;
         int b;
@@ -49,7 +49,7 @@ public class JSONBeanUtilTest {
         }
     }
 
-    class SimpleOutputBean {
+    static class SimpleOutputBean {
         int c;
 
         public int getC() {

@@ -83,11 +83,8 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>${jdk.version}</source>
-          <target>${jdk.version}</target>
           <!-- Disable annotation processing for ourselves -->
           <proc>none</proc>
-          <verbose>false</verbose>
         </configuration>
       </plugin>
 

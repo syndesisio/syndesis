@@ -32,18 +32,14 @@ public class ExtensionSerializationTest {
         final ObjectWriter writer = Json.writer();
 
         try (InputStream source = getClass().getResourceAsStream("syndesis-extension-definition.json")) {
-            try {
-                reader.forType(Extension.class).readValue(
-                    writer.writeValueAsString(
-                        new Extension.Builder()
-                            .createFrom(reader.forType(Extension.class).readValue(source))
-                            .build()
-                    )
+           reader.forType(Extension.class).readValue(
+               writer.writeValueAsString(
+                   new Extension.Builder()
+                       .createFrom(reader.forType(Extension.class).readValue(source))
+                       .build()
+               )
 
-                );
-            } catch (IOException e) {
-                fail("Should not throw an exception");
-            }
+           );
         }
     }
 }

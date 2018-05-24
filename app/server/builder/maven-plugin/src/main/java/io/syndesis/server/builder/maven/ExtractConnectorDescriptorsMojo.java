@@ -164,7 +164,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
         if (components == null) {
             return null;
         }
-        String[] part = components.split("\\s");
+        String[] part = components.split("\\s", -1);
         ObjectNode componentMeta = new ObjectNode(JsonNodeFactory.instance);
         for (String scheme : part) {
             // find the class name

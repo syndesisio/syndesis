@@ -86,7 +86,7 @@ public class IntegrationSupportHandler {
     private static final Logger LOG = LoggerFactory.getLogger(IntegrationSupportHandler.class);
 
     private final Migrator migrator;
-    private final SqlJsonDB jsonDB;
+    private final SqlJsonDB jsondb;
     private final IntegrationProjectGenerator projectGenerator;
     private final DataManager dataManager;
     private final IntegrationResourceManager resourceManager;
@@ -95,14 +95,14 @@ public class IntegrationSupportHandler {
 
     public IntegrationSupportHandler(
         final Migrator migrator,
-        final SqlJsonDB jsonDB,
+        final SqlJsonDB jsondb,
         final IntegrationProjectGenerator projectGenerator,
         final DataManager dataManager,
         final IntegrationResourceManager resourceManager,
         final IntegrationHandler integrationHandler,
         final FileDataManager extensionDataManager) {
         this.migrator = migrator;
-        this.jsonDB = jsonDB;
+        this.jsondb = jsondb;
 
         this.projectGenerator = projectGenerator;
         this.dataManager = dataManager;
@@ -141,7 +141,7 @@ public class IntegrationSupportHandler {
         }
 
         LinkedHashSet<String> extensions = new LinkedHashSet<>();
-        CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsonDB.getIndexes());
+        CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsondb.getIndexes());
         if( ids.contains("all") ) {
             ids = new ArrayList<>();
             for (Integration integration : dataManager.fetchAll(Integration.class)) {
@@ -223,7 +223,7 @@ public class IntegrationSupportHandler {
                 }
 
                 if (EXPORT_MODEL_FILE_NAME.equals(entry.getName())) {
-                    CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsonDB.getIndexes());
+                    CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsondb.getIndexes());
                     memJsonDB.set("/", nonClosing(zis));
                     changeEvents.addAll(importModels(sec, modelExport, memJsonDB));
                     memJsonDB.close();
@@ -264,7 +264,7 @@ public class IntegrationSupportHandler {
         }
     }
 
-    public List<ChangeEvent> importModels(SecurityContext sec, ModelExport export, JsonDB jsondb) throws IOException {
+    public List<ChangeEvent> importModels(SecurityContext sec, ModelExport export, JsonDB given) throws IOException {
 
         // Apply per version migrations to get the schema upgraded on the import.
         int from = export.schemaVersion();
@@ -276,33 +276,33 @@ public class IntegrationSupportHandler {
 
         for (int i = from; i < to; i++) {
             int version = i + 1;
-            migrator.migrate(jsondb, version);
+            migrator.migrate(given, version);
         }
 
         ArrayList<ChangeEvent> result = new ArrayList<>();
         // Import the extensions..
-        importModels(new JsonDbDao<Extension>(jsondb) {
+        importModels(new JsonDbDao<Extension>(given) {
             @Override
             public Class<Extension> getType() {
                 return Extension.class;
             }
         }, result);
 
-        importModels(new JsonDbDao<Connector>(jsondb) {
+        importModels(new JsonDbDao<Connector>(given) {
             @Override
             public Class<Connector> getType() {
                 return Connector.class;
             }
         }, result);
 
-        importModels(new JsonDbDao<Connection>(jsondb) {
+        importModels(new JsonDbDao<Connection>(given) {
             @Override
             public Class<Connection> getType() {
                 return Connection.class;
             }
         }, result);
 
-        importIntegrations(sec, new JsonDbDao<Integration>(jsondb) {
+        importIntegrations(sec, new JsonDbDao<Integration>(given) {
             @Override
             public Class<Integration> getType() {
                 return Integration.class;

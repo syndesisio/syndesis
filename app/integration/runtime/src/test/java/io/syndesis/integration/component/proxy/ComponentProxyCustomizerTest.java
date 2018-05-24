@@ -15,6 +15,7 @@
  */
 package io.syndesis.integration.component.proxy;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 
@@ -72,7 +73,7 @@ public class ComponentProxyCustomizerTest {
         final ProducerTemplate template = camelContext.createProducerTemplate();
         final String body = "hello";
         final String result = template.requestBody("direct:start", body, String.class);
-        final String expected = Base64.getEncoder().encodeToString("HELLO WORLD!".toUpperCase().getBytes());
+        final String expected = Base64.getEncoder().encodeToString("HELLO WORLD!".toUpperCase().getBytes(StandardCharsets.US_ASCII));
 
         assertThat(result).isEqualTo(expected);
     }
@@ -84,7 +85,7 @@ public class ComponentProxyCustomizerTest {
         final ProducerTemplate template = camelContext.createProducerTemplate();
         final MockEndpoint mock = camelContext.getEndpoint("mock:result", MockEndpoint.class);
         final String body = "hello";
-        final String expected = Base64.getEncoder().encodeToString("HELLO WORLD!".toUpperCase().getBytes());
+        final String expected = Base64.getEncoder().encodeToString("HELLO WORLD!".toUpperCase().getBytes(StandardCharsets.US_ASCII));
 
         mock.expectedMessageCount(1);
         mock.expectedBodiesReceived(expected);

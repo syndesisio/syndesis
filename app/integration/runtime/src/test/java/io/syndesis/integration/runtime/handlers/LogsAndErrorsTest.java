@@ -150,7 +150,7 @@ public class LogsAndErrorsTest extends IntegrationTestSupport {
 
     public static class LogExtension implements Step {
         @Override
-        public Optional<ProcessorDefinition> configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters) {
+        public Optional<ProcessorDefinition<?>> configure(CamelContext context, ProcessorDefinition<?> definition, Map<String, Object> parameters) {
             return Optional.of(definition.log(LoggingLevel.INFO, definition.getId(), definition.getId(), "Got ${body}"));
         }
     }
@@ -159,8 +159,8 @@ public class LogsAndErrorsTest extends IntegrationTestSupport {
         private static int count;
 
         @Override
-        public Optional<ProcessorDefinition> configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters) {
-            ProcessorDefinition processor = definition.process(exchange -> {
+        public Optional<ProcessorDefinition<?>> configure(CamelContext context, ProcessorDefinition<?> definition, Map<String, Object> parameters) {
+            ProcessorDefinition<?> processor = definition.process(exchange -> {
                 count++;
                 if( count == 2 ) {
                     throw new IOException("Bean Error");

@@ -71,7 +71,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
 
     @SuppressWarnings("PMD")
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, final String index) {
+    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, final String index) {
         // Model
         final Connection connection = step.getConnection().get();
         final Connector connector = connection.getConnector().get();

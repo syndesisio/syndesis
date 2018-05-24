@@ -62,6 +62,7 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
         final String jsonBean;
 
         if (exchange.getIn().getBody(List.class) != null) {
+            @SuppressWarnings("unchecked")
             List<Map<String, Object>> maps = exchange.getIn().getBody(List.class);
             if (maps.isEmpty()) {
                 throw new IllegalStateException("Got an empty collection");
@@ -70,7 +71,9 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
             //Only grabbing the first record (map) in the list
             jsonBean = JSONBeanUtil.toJSONBean(maps.get(0));
         } else {
-            jsonBean = JSONBeanUtil.toJSONBean(exchange.getIn().getBody(Map.class));
+            @SuppressWarnings("unchecked")
+            Map<String, Object> body = exchange.getIn().getBody(Map.class);
+            jsonBean = JSONBeanUtil.toJSONBean(body);
         }
 
         exchange.getIn().setBody(jsonBean);

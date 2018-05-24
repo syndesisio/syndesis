@@ -68,7 +68,7 @@ public class ActivityTrackingController implements Closeable {
     private final DBI dbi;
     private final KubernetesClient client;
     private final Map<String, PodLogMonitor> podHandlers = new HashMap<>();
-    private final JsonDB jsonDB;
+    private final JsonDB jsondb;
     private final KubernetesSupport kubernetesSupport;
     private ScheduledExecutorService scheduler;
 
@@ -81,8 +81,8 @@ public class ActivityTrackingController implements Closeable {
     private Duration startupDelay = Duration.ofSeconds(15);
 
     @Autowired
-    public ActivityTrackingController(JsonDB jsonDB, DBI dbi, KubernetesClient client) {
-        this.jsonDB = jsonDB;
+    public ActivityTrackingController(JsonDB jsondb, DBI dbi, KubernetesClient client) {
+        this.jsondb = jsondb;
         this.dbi = dbi;
         this.client = client;
         this.kubernetesSupport = new KubernetesSupport(client);
@@ -233,7 +233,7 @@ public class ActivityTrackingController implements Closeable {
             if (pods != null) {
                 pods.keySet().removeAll(podHandlers.keySet());
                 for (String o : pods.keySet()) {
-                    jsonDB.delete("/activity/pods/" + o);
+                    jsondb.delete("/activity/pods/" + o);
                     LOG.info("Pod state removed from db: {}", o);
                 }
             }
@@ -260,11 +260,11 @@ public class ActivityTrackingController implements Closeable {
     }
 
     public void deletePodLogState(String podName) throws IOException {
-        jsonDB.delete("/activity/pods/" + podName);
+        jsondb.delete("/activity/pods/" + podName);
     }
 
     public void setPodLogState(String podName, PodLogState state) throws IOException {
-        jsonDB.set("/activity/pods/" + podName, Json.writer().writeValueAsBytes(state));
+        jsondb.set("/activity/pods/" + podName, Json.writer().writeValueAsBytes(state));
     }
 
     public PodLogState getPodLogState(String podName) throws IOException {
@@ -276,7 +276,7 @@ public class ActivityTrackingController implements Closeable {
     }
 
     private <T> T dbGet(Class<T> type, String path, GetOptions options) throws IOException {
-        byte[] data = jsonDB.getAsByteArray(path, options);
+        byte[] data = jsondb.getAsByteArray(path, options);
         if (data == null) {
             return null;
         }
@@ -318,8 +318,8 @@ public class ActivityTrackingController implements Closeable {
                     }
 
                     // Write the batch..
-//                    jsonDB.update("/activity", Json.writer().writeValueAsBytes(batch));
                     writeBatch(batch);
+
                     LOG.debug("Batch ingested {} log events", eventCounter);
 
                 } catch (IOException e) {

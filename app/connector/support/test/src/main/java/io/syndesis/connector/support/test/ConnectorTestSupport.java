@@ -134,7 +134,7 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
     //
     // ******************************
 
-    protected class ResourceManager implements IntegrationResourceManager {
+    protected static class ResourceManager implements IntegrationResourceManager {
         @Override
         public Optional<Connector> loadConnector(String id) {
             Connector connector = null;

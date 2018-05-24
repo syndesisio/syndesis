@@ -302,6 +302,13 @@
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <!-- Needed by Guava at compile time -->
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>

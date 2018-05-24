@@ -16,6 +16,7 @@
 package io.syndesis.connector.rest.swagger;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import org.apache.camel.Exchange;
@@ -134,7 +135,7 @@ public class OAuthRefreshTokenProcessorTest {
         final CloseableHttpClient client = mock(CloseableHttpClient.class);
         final CloseableHttpResponse response = mock(CloseableHttpResponse.class);
         when(response.getStatusLine()).thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, 200, "OK"));
-        when(response.getEntity()).thenReturn(new ByteArrayEntity(grantJson.getBytes(), ContentType.APPLICATION_JSON));
+        when(response.getEntity()).thenReturn(new ByteArrayEntity(grantJson.getBytes(StandardCharsets.US_ASCII), ContentType.APPLICATION_JSON));
 
         when(client.execute(ArgumentMatchers.any(HttpUriRequest.class))).thenReturn(response);
 

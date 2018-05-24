@@ -35,6 +35,7 @@ public class FtpVerifierExtension extends DefaultComponentVerifierExtension {
     // *********************************
     // Parameters validation
     //
+    @Override
     protected Result verifyParameters(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
                 .error(ResultErrorHelper.requiresOption("host", parameters))

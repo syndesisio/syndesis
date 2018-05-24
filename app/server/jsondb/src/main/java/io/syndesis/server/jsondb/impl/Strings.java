@@ -56,7 +56,7 @@ public final class Strings {
 
     public static String splitPart(String delimiter, String value, int idx) {
         int i = idx-1;
-        String[] split = value.split(Pattern.quote(delimiter));
+        String[] split = value.split(Pattern.quote(delimiter), -1);
         if( i < split.length ) {
             return split[i];
         } else {

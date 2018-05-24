@@ -173,7 +173,7 @@ public class RepackageExtensionMojo extends SupportMojo {
     }
 
     protected void addCustomBoms(Collection<MavenDependency> dependencies) {
-        String[] boms = blackListedBoms.split(",");
+        String[] boms = blackListedBoms.split(",", -1);
         try {
             for (String bom : boms) {
                 String trimmed = bom.trim();
@@ -197,7 +197,7 @@ public class RepackageExtensionMojo extends SupportMojo {
     }
 
     private String getVersionFromDependencyManagement(String artifact) {
-        String[] parts = artifact.split(":");
+        String[] parts = artifact.split(":", -1);
         String groupId = parts.length > 0 ? parts[0] : "";
         String artifactId = parts.length > 1 ? parts[1] : "";
         for (Dependency dep : project.getDependencyManagement().getDependencies()) {
@@ -224,7 +224,7 @@ public class RepackageExtensionMojo extends SupportMojo {
     }
 
     protected void addCustomGAVs(Collection<MavenDependency> dependencies) {
-        String[] gavs = blackListedGAVs.split(",");
+        String[] gavs = blackListedGAVs.split(",", -1);
 
         for (String gav : gavs) {
             dependencies.add(newMavenDependency(gav));

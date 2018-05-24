@@ -53,7 +53,7 @@ public class SqlParam {
 
 
     @Data
-    public class TypeValue<T> {
+    public static class TypeValue<T> {
 
         private Class<T> clazz;
         private T sampleValue;
@@ -84,19 +84,18 @@ public class SqlParam {
     @SuppressWarnings({"rawtypes", "PMD.CyclomaticComplexity"})
     static TypeValue<?> javaType(final JDBCType jdbcType) {
 
-        SqlParam sqlParam = new SqlParam();
         switch (jdbcType) {
         case ARRAY:
         case BINARY:
         case BLOB:
         case LONGVARBINARY:
         case VARBINARY:
-            return sqlParam.new TypeValue<>(List.class, SqlSampleValue.ARRAY_VALUE);
+            return new TypeValue<>(List.class, SqlSampleValue.ARRAY_VALUE);
         case BIT:
         case BOOLEAN:
-            return sqlParam.new TypeValue<>(Boolean.class, SqlSampleValue.BOOLEAN_VALUE);
+            return new TypeValue<>(Boolean.class, SqlSampleValue.BOOLEAN_VALUE);
         case CHAR:
-            return sqlParam.new TypeValue<>(Character.class, SqlSampleValue.CHAR_VALUE);
+            return new TypeValue<>(Character.class, SqlSampleValue.CHAR_VALUE);
         case CLOB:
         case DATALINK:
         case LONGNVARCHAR:
@@ -107,29 +106,29 @@ public class SqlParam {
         case ROWID:
         case SQLXML:
         case VARCHAR:
-            return sqlParam.new TypeValue<>(String.class, SqlSampleValue.STRING_VALUE);
+            return new TypeValue<>(String.class, SqlSampleValue.STRING_VALUE);
         case DATE:
-            return sqlParam.new TypeValue<>(Date.class, SqlSampleValue.DATE_VALUE);
+            return new TypeValue<>(Date.class, SqlSampleValue.DATE_VALUE);
         case TIME:
-            return sqlParam.new TypeValue<>(Time.class, SqlSampleValue.TIME_VALUE);
+            return new TypeValue<>(Time.class, SqlSampleValue.TIME_VALUE);
         case TIMESTAMP:
         case TIMESTAMP_WITH_TIMEZONE:
         case TIME_WITH_TIMEZONE:
-            return sqlParam.new TypeValue<>(Timestamp.class, SqlSampleValue.TIMESTAMP_VALUE);
+            return new TypeValue<>(Timestamp.class, SqlSampleValue.TIMESTAMP_VALUE);
         case DECIMAL:
         case NUMERIC:
-            return sqlParam.new TypeValue<>(BigDecimal.class, SqlSampleValue.DECIMAL_VALUE);
+            return new TypeValue<>(BigDecimal.class, SqlSampleValue.DECIMAL_VALUE);
         case FLOAT:
         case DOUBLE:
-            return sqlParam.new TypeValue<>(Double.class, SqlSampleValue.DOUBLE_VALUE);
+            return new TypeValue<>(Double.class, SqlSampleValue.DOUBLE_VALUE);
         case REAL:
-            return sqlParam.new TypeValue<>(Float.class, SqlSampleValue.FLOAT_VALUE);
+            return new TypeValue<>(Float.class, SqlSampleValue.FLOAT_VALUE);
         case BIGINT:
-            return sqlParam.new TypeValue<>(Long.class, SqlSampleValue.LONG_VALUE);
+            return new TypeValue<>(Long.class, SqlSampleValue.LONG_VALUE);
         case SMALLINT:
         case INTEGER:
         case TINYINT:
-            return sqlParam.new TypeValue<>(Integer.class, SqlSampleValue.INTEGER_VALUE);
+            return new TypeValue<>(Integer.class, SqlSampleValue.INTEGER_VALUE);
         case NULL:
             return null;
         case DISTINCT:
@@ -139,7 +138,7 @@ public class SqlParam {
         case REF_CURSOR:
         case STRUCT:
         default:
-            return sqlParam.new TypeValue<>(String.class, SqlSampleValue.STRING_VALUE);
+            return new TypeValue<>(String.class, SqlSampleValue.STRING_VALUE);
         }
     }
 

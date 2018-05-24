@@ -52,6 +52,11 @@ public class SqlConnectorVerifierExtension extends DefaultComponentVerifierExten
         if (builder.build().getErrors().isEmpty()) {
             try (Connection connection = SqlSupport.createConnection(parameters)) {
                 // just try to get the connection
+                if (!connection.isValid(0)) {
+                    builder.error(ResultErrorBuilder.withCodeAndDescription(
+                        VerificationError.StandardCode.GENERIC, "Unable to connect to database")
+                        .build());
+                }
             } catch (SQLException e) {
                 final Map<String, Object> redacted = new HashMap<>(parameters);
                 redacted.replace("password", "********");
@@ -90,7 +95,7 @@ public class SqlConnectorVerifierExtension extends DefaultComponentVerifierExten
     }
 
     private static void unsupportedDatabase(ResultBuilder builder) {
-        String supportedDatabases = Arrays.stream(DatabaseProduct.values()).map(Enum::name).collect(Collectors.joining(","));
+        String supportedDatabases = Arrays.stream(DatabaseProduct.values()).map(DatabaseProduct::name).collect(Collectors.joining(","));
         String msg = "Supported Databases are [" + supportedDatabases + "]";
 
         builder.error(
