@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.odata.ODataCreateEntityComponent",
   "groupId" : "io.syndesis.connector",
   "artifactId" : "connector-odata-create-entity",
-  "version" : "1.4-SNAPSHOT",
+  "version" : "1.4.1-20180524",
   "description" : "Create OData Entity",
   "labels" : [ "odata" ],
   "pattern" : "To",
