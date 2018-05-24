@@ -19,7 +19,7 @@ The following sections explain the structure of these templates, which is only n
 
 There exist different flavours of OpenShift templates, with the following characteristics:
 
-| Template | Descripton |
+| Template | Description |
 | -------- | ---------- |
 | [syndesis.yml](https://raw.githubusercontent.com/syndesisio/syndesis/master/install/syndesis.yml) | Standard Syndesis template |
 | [syndesis-dev.yml](https://raw.githubusercontent.com/syndesisio/syndesis/master/install/syndesis-dev.yml) | Same as above, but with debug enabled and allowing access from localhost (for local UI development) |
@@ -37,7 +37,7 @@ All of these templates are generated from a single source [syndesis.yml.mustache
 All template parameters are required. Most of them have sane defaults, but some of them have not. These must be provided during instantiation with `oc new-app`
 
 
-### Required input parametes
+### Required input parameters
 
 | Parameter | Description |
 | --------- | ----------- |

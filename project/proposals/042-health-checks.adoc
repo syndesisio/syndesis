@@ -22,7 +22,7 @@ There is two kind of health checks required for Syndesis:
 
 These are native OpenShift readiness and liveness probes.
 
-It is important that the readiness and liveness probes are only being used casually to ensure the integration can startup and become ready, and that the JVM stays alive. We can leverage the existing Camel health check from camel-spring-boot (`/health` HTTP REST endpoint), that ties into OpenShift readiness/liveness probes and ensures the JVM, Spring-Boot, and Apache Camel can startup and be ready. The livensss probe then calls the same `/health` HTTP REST endpoint which just checks that Spring Boot, and Camel is running.
+It is important that the readiness and liveness probes are only being used casually to ensure the integration can startup and become ready, and that the JVM stays alive. We can leverage the existing Camel health check from camel-spring-boot (`/health` HTTP REST endpoint), that ties into OpenShift readiness/liveness probes and ensures the JVM, Spring-Boot, and Apache Camel can startup and be ready. The liveness probe then calls the same `/health` HTTP REST endpoint which just checks that Spring Boot, and Camel is running.
 
 We do not want the OpenShift liveness probe to react on errors from the integration because when an integration is in an error state because of one of its connectors fails, this should be reported by other means than Kubernetes status changes. It should be visible on the Syndesis UI instead (i.e. integration health checks).
 
@@ -34,7 +34,7 @@ These are Syndesis specific and requires new functionality developed into Apache
 
 The existing Camel health check from camel-spring-boot (`/health` HTTP REST endpoint) can be used as-is, however as we want Syndesis to be more in control of errors, we would need to ensure that the readiness/liveness probes reports OK even if an integration startup and cannot connect to a remote system, and would be in error.
 
-When Apache Camel startup then Camel routes will startup by default, and as part of their startup then the (route consumers) will often connect to remote systems, and in case of connection errors those will be thrown as exception and Camel will fail to startup. Only a handful of Camel components has built-in failover/retry in those situatations.
+When Apache Camel startup then Camel routes will startup by default, and as part of their startup then the (route consumers) will often connect to remote systems, and in case of connection errors those will be thrown as exception and Camel will fail to startup. Only a handful of Camel components has built-in failover/retry in those situations.
 
 For Syndesis we would need to be in full control, and therefore we will need to ensure Apache Camel can startup even if there is a connection problem with a remote system. This requires to configure Apache Camel to not auto start the routes, which can be done in Spring Boot by configuring `application.properties` with the following:
 
@@ -47,10 +47,10 @@ When using spring,the camel context can be configured using beans from the regis
 [NOTE]
 ====
 - as the idea of a route controller has been brought up for Camel 3.0, the  RouteController will be an early preview SPI.
-- as refactoring the route mamagement requires to change camel-core, the first implementation leverages `RoutePolicy`/`RoutePolicyFactory`
+- as refactoring the route management requires to change camel-core, the first implementation leverages `RoutePolicy`/`RoutePolicyFactory`
 ====
 
-The `RouteController` implementation will sets `autoStartup = false` and will install its own `RoutePolicyFactory` which then creates a `RoutePolicy`  for each route an where we in the `onInit` callback can register the routes to the `RouteController` which then runs as a background thread and orchestrates starting the routes. The `RouteController` will then be responsbible for starting up all these routes, and have support for periodically retry in case a route fails to startup. And only when all routes has been started the `RouteController` has completed starting up all the routes.
+The `RouteController` implementation will sets `autoStartup = false` and will install its own `RoutePolicyFactory` which then creates a `RoutePolicy`  for each route an where we in the `onInit` callback can register the routes to the `RouteController` which then runs as a background thread and orchestrates starting the routes. The `RouteController` will then be responsible for starting up all these routes, and have support for periodically retry in case a route fails to startup. And only when all routes has been started the `RouteController` has completed starting up all the routes.
 
 In Camel with Spring Boot we can setup this in the `Main` class via something along the following code lines:
 
@@ -207,7 +207,7 @@ NOTE: the path could be changed like endpoints.camelroutes.path = /camel/routes
 }
 ----
 
-NOTE: the ``hasRouteController`` property can be used to check if a route is managed by the route controller or it is up to the user to restart it (i.e. after the nunmber of configured attempts has exhausted)
+NOTE: the ``hasRouteController`` property can be used to check if a route is managed by the route controller or it is up to the user to restart it (i.e. after the number of configured attempts has exhausted)
 
 === User interaction
 

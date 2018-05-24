@@ -392,7 +392,7 @@ HTTP/1.1 200 OK
       "componentProperty": true,
       "defaultValue": "http://petstore.swagger.io",
       "deprecated": false,
-      "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration.",
+      "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the corresponding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overridden in endpoint configuration.",
       "displayName": "Host",
       "group": "producer",
       "javaType": "java.lang.String",

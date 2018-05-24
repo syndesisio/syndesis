@@ -32,6 +32,6 @@ five minutes.
 {prodname} tries to validate the connection, which includes
 checking that a specified SQL query is syntactically correct and
 confirming that the query or stored procedure target data exists. If
-verfication is successful then {prodname} adds the start connection to
+verification is successful then {prodname} adds the start connection to
 the integration. If verification fails then {prodname} displays a message
 about the problem. Update your input as needed and try again.

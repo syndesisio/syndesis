@@ -263,7 +263,7 @@ We need to use a dedicated beta API version, like v1beta (not yet defined as it 
 
 |GET
 |/api/{version}/extensions/{extensionId}/actions/{actionId}
-|To get a speicific action of a tech extension
+|To get a specific action of a tech extension
 
 |POST
 |/api/{version}/extensions/{extensionId}/validation
