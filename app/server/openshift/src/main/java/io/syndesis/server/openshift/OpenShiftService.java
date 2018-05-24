@@ -33,6 +33,8 @@ public interface OpenShiftService {
     String COMPONENT_LABEL = "syndesis.io/component";
     String INTEGRATION_NAME_LABEL = "syndesis.io/integration";
 
+    int INTEGRATION_SERVICE_PORT = 8080;
+
     /**
      * Start a previously created build with the data from the given directory
      *

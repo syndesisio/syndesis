@@ -82,6 +82,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
         ensureDeploymentConfig(sName, deploymentData);
         ensureSecret(sName, deploymentData);
+        ensureExposure(sName, deploymentData);
+
         DeploymentConfig deployment = openShiftClient.deploymentConfigs().withName(sName).deployLatest();
         return String.valueOf(deployment.getStatus().getLatestVersion());
     }
@@ -97,6 +99,9 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         final String sName = openshiftName(name);
 
         LOGGER.debug("Delete {}", sName);
+
+        // May not be exposed (resources not present)
+        removeExposure(sName);
 
         return
             removeImageStreams(sName) &&
@@ -330,6 +335,67 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     private boolean removeSecret(String projectName) {
        return openShiftClient.secrets().withName(projectName).delete();
+    }
+
+    private void ensureExposure(String name, DeploymentData deploymentData) {
+        Exposure exposure = deploymentData.getExposure();
+        if (exposure == null || Exposure.NONE.equals(exposure)) {
+            removeRoute(name);
+            removeService(name);
+        } else if (Exposure.DIRECT.equals(exposure)) {
+            ensureService(name, deploymentData);
+            ensureRoute(name, deploymentData);
+        } else {
+            LOGGER.error("Unsupported exposure method {}", exposure);
+        }
+    }
+
+    private boolean removeExposure(String name) {
+        boolean res = removeRoute(name);
+        return removeService(name) && res;
+    }
+
+    private void ensureService(String name, DeploymentData deploymentData) {
+        openShiftClient.services().withName(name).createOrReplaceWithNew()
+            .withNewMetadata()
+                .withName(name)
+                .addToAnnotations(deploymentData.getAnnotations())
+                .addToLabels(deploymentData.getLabels())
+            .endMetadata()
+            .withNewSpec()
+                .addToSelector(INTEGRATION_NAME_LABEL, name)
+                .addNewPort()
+                    .withName("http")
+                    .withProtocol("TCP")
+                    .withPort(INTEGRATION_SERVICE_PORT)
+                    .withNewTargetPort(INTEGRATION_SERVICE_PORT)
+                .endPort()
+            .endSpec()
+            .done();
+    }
+
+    private boolean removeService(String name) {
+        return openShiftClient.services().withName(name).delete();
+    }
+
+    private void ensureRoute(String name, DeploymentData deploymentData) {
+        openShiftClient.routes().withName(name).createOrReplaceWithNew()
+            .withNewMetadata()
+                .withName(name)
+                .addToAnnotations(deploymentData.getAnnotations())
+                .addToLabels(deploymentData.getLabels())
+            .endMetadata()
+            .withNewSpec()
+                .withNewTo()
+                    .withKind("Service")
+                    .withName(name)
+                .endTo()
+            .endSpec()
+            .done();
+    }
+
+    private boolean removeRoute(String name) {
+        return openShiftClient.routes().withName(name).delete();
     }
 
     private Build waitForBuild(Build r, long timeout, TimeUnit timeUnit) throws InterruptedException {

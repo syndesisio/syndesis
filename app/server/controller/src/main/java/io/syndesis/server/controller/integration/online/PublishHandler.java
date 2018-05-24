@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import io.syndesis.common.util.Optionals;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateUpdate;
@@ -35,6 +36,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.server.openshift.DeploymentData;
+import io.syndesis.server.openshift.Exposure;
 import io.syndesis.server.openshift.OpenShiftService;
 
 public class PublishHandler extends BaseHandler implements StateChangeHandler {
@@ -135,6 +137,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         String integrationId = integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId"));
         String version = Integer.toString(integrationDeployment.getVersion());
         return DeploymentData.builder()
+            .withExposure(getExposure(integrationDeployment))
             .withVersion(integrationDeployment.getVersion())
             .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationId))
             .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
@@ -293,6 +296,23 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         } catch (IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
+    }
+
+    private Exposure getExposure(IntegrationDeployment integrationDeployment) {
+        Exposure exposure = Exposure.NONE;
+
+        boolean needsDirectExposure = integrationOf(integrationDeployment)
+            .getSteps()
+            .stream()
+            .flatMap(step -> Optionals.asStream(step.getAction()))
+            .flatMap(action -> action.getTags().stream())
+            .anyMatch("expose"::equals);
+
+        if (needsDirectExposure) {
+            exposure = Exposure.DIRECT;
+        }
+
+        return exposure;
     }
 
     // ===============================================================================

@@ -15,7 +15,9 @@
  */
 package io.syndesis.common.util;
 
+import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public final class Optionals {
     private Optionals() {
@@ -45,5 +47,12 @@ public final class Optionals {
             }
         }
         return true;
+    }
+
+    /**
+     * Converts a Optional into a Stream in order to use it in a Stream#flatMap.
+     */
+    public static <T> Stream<T> asStream(Optional<T> optional) {
+        return optional.map(Collections::singleton).orElse(Collections.emptySet()).stream();
     }
 }
