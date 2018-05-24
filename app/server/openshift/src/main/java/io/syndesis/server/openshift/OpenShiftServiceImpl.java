@@ -390,6 +390,9 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                     .withKind("Service")
                     .withName(name)
                 .endTo()
+                .withNewTls()
+                    .withTermination("edge")
+                .endTls()
             .endSpec()
             .done();
     }
