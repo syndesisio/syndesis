@@ -20,6 +20,7 @@ dev::usage() {
     cat <<"EOT"
     --debug <name>            Setup a port forwarding to <name> pod (default: server)
     --cookie                  Loads a local valid cookie to access Syndesis APIs when using Minishift
+    --cleanup                 Removes 'Completed' pods
     --refresh                 Used in conjuction with --cookie, forces a refresh of the cookie.
                               Ex: curl -k --cookie $(syndesis dev --cookie --refresh)  "https://$(oc get route syndesis  --template={{.spec.host}})/api/v1/connections"
     --version                 Show running version of cluster
@@ -128,5 +129,7 @@ dev::run() {
         echo $cookie_cached
     elif [ $(hasflag --version) ]; then
         oc get secret syndesis-global-config -o jsonpath={.data.syndesis} | base64 --decode
+    elif [ $(hasflag --cleanup ) ]; then
+        oc delete pods $(oc get pods --field-selector=status.phase=Succeeded -o=jsonpath='{range .items[*]}{.metadata.name} ')
     fi
 }
