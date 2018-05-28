@@ -18,25 +18,20 @@ package io.syndesis.server.controller.integration.online;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
-import io.syndesis.common.util.Optionals;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateUpdate;
 import io.syndesis.common.util.Labels;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.server.controller.integration.online.customizer.DeploymentDataCustomizer;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.server.openshift.DeploymentData;
-import io.syndesis.server.openshift.Exposure;
 import io.syndesis.server.openshift.OpenShiftService;
 
 public class PublishHandler extends BaseHandler implements StateChangeHandler {
@@ -44,19 +39,22 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
     private final DataManager dataManager;
     private final IntegrationProjectGenerator projectGenerator;
     private final ControllersConfigurationProperties properties;
+    private final List<DeploymentDataCustomizer> customizers;
 
     @SuppressWarnings("PMD.DefaultPackage")
     PublishHandler(
         DataManager dataManager,
         OpenShiftService openShiftService,
         IntegrationProjectGenerator projectGenerator,
-        ControllersConfigurationProperties properties) {
+        ControllersConfigurationProperties properties,
+        List<DeploymentDataCustomizer> customizers) {
 
         super(openShiftService);
 
         this.dataManager = dataManager;
         this.projectGenerator = projectGenerator;
         this.properties = properties;
+        this.customizers = customizers;
     }
 
     @Override
@@ -136,8 +134,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
 
         String integrationId = integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId"));
         String version = Integer.toString(integrationDeployment.getVersion());
-        return DeploymentData.builder()
-            .withExposure(getExposure(integrationDeployment))
+        DeploymentData data = DeploymentData.builder()
             .withVersion(integrationDeployment.getVersion())
             .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationId))
             .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
@@ -147,6 +144,14 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
             .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
             .addSecretEntry("application.properties", propsToString(applicationProperties))
             .build();
+
+        if (this.customizers != null && !this.customizers.isEmpty()) {
+            for (DeploymentDataCustomizer customizer : customizers) {
+                data = customizer.customize(data, integrationDeployment);
+            }
+        }
+
+        return data;
     }
 
 
@@ -296,23 +301,6 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         } catch (IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
-    }
-
-    private Exposure getExposure(IntegrationDeployment integrationDeployment) {
-        Exposure exposure = Exposure.NONE;
-
-        boolean needsDirectExposure = integrationOf(integrationDeployment)
-            .getSteps()
-            .stream()
-            .flatMap(step -> Optionals.asStream(step.getAction()))
-            .flatMap(action -> action.getTags().stream())
-            .anyMatch("expose"::equals);
-
-        if (needsDirectExposure) {
-            exposure = Exposure.DIRECT;
-        }
-
-        return exposure;
     }
 
     // ===============================================================================
