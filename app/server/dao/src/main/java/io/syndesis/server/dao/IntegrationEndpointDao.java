@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.controller.integration.online.customizer;
+package io.syndesis.server.dao;
 
-import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.server.openshift.DeploymentData;
+import io.syndesis.common.model.integration.IntegrationEndpoint;
+import io.syndesis.server.dao.manager.DataAccessObject;
 
-/**
- * Used to customize the deployment data generated for a integration deployment.
- */
-@FunctionalInterface
-public interface DeploymentDataCustomizer {
-
-    DeploymentData customize(DeploymentData data, IntegrationDeployment integrationDeployment);
-
+public interface IntegrationEndpointDao extends DataAccessObject<IntegrationEndpoint> {
+    @Override
+    default Class<IntegrationEndpoint> getType() {
+        return IntegrationEndpoint.class;
+    }
 }

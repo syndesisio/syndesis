@@ -4,8 +4,8 @@
     <ng-container [ngSwitch]="step.stepKind">
       <div *ngSwitchCase="'endpoint'"
             id="{{ step.connection?.name | synSlugify }}"
-            class="text-center connection" 
-            (click)="onViewDetails(step)" 
+            class="text-center connection"
+            (click)="onViewDetails(step)"
             title="{{ step.connection?.name }}&nbsp;{{ step.action?.name }}">
         <div [class]="'step-line ' + getStepLineClass(index)"></div>
         <div class="icon">
@@ -25,6 +25,9 @@
     </ng-container>
     <span *ngIf="!last" class="step-sep fa fa-angle-right"></span>
   </div>
+  <p *ngIf="integration.url">
+    External URL: <strong>{{integration.url}}</strong>
+  </p>
   <p>
     <syndesis-editable-textarea [value]="integration.description"
                                 placeholder="No description set..."

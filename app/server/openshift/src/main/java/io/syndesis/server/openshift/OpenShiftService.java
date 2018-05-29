@@ -18,6 +18,7 @@ package io.syndesis.server.openshift;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import io.fabric8.openshift.api.model.DeploymentConfig;
@@ -122,5 +123,13 @@ public interface OpenShiftService {
      * @return The currently logged in user.
      */
     User whoAmI(String username);
+
+    /**
+     * Returns the hostname exposed by Openshift for the integration, if any.
+     *
+     * @param name the name of the route to check
+     * @return a Optional containing the URL
+     */
+    Optional<String> getExposedHost(String name);
 
 }

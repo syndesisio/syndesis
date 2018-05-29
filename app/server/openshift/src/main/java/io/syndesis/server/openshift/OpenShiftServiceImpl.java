@@ -21,12 +21,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import io.fabric8.kubernetes.client.KubernetesClientException;
-import io.fabric8.openshift.api.model.User;
-import io.fabric8.openshift.api.model.UserBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +36,8 @@ import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
+import io.fabric8.openshift.api.model.Route;
+import io.fabric8.openshift.api.model.RouteSpec;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
@@ -447,6 +448,14 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         labels.put("syndesis.io/app", "syndesis");
 
         return Collections.unmodifiableMap(labels);
+    }
+
+    @Override
+    public Optional<String> getExposedHost(String name) {
+        Route route = openShiftClient.routes().withName(openshiftName(name)).get();
+        return Optional.ofNullable(route)
+            .flatMap(r -> Optional.ofNullable(r.getSpec()))
+            .map(RouteSpec::getHost);
     }
 
 }

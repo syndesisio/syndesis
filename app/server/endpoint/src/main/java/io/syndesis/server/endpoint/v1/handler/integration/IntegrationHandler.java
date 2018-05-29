@@ -62,6 +62,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentOverview;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.model.integration.IntegrationEndpoint;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.validation.AllValidations;
@@ -361,6 +362,13 @@ public class IntegrationHandler extends BaseHandler
 
         if (deployed != null) {
             builder.isDraft(computeDraft(integration, deployed.getSpec()));
+
+            if (deployed.getId().isPresent()) {
+                IntegrationEndpoint endpoint = dataManager.fetch(IntegrationEndpoint.class, deployed.getId().get());
+                if (endpoint != null) {
+                    builder.url(endpoint.getUrl());
+                }
+            }
         }
 
         return builder.build();
