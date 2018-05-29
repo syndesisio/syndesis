@@ -74,9 +74,9 @@ public class DataManagerTest {
     @Test
     public void getConnections() {
         ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
-        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsOnly("5");
-        Assert.assertEquals(1, connections.getTotalCount());
-        Assert.assertEquals(1, connections.getItems().size());
+        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsOnly("5", "webhook");
+        Assert.assertEquals(2, connections.getTotalCount());
+        Assert.assertEquals(2, connections.getItems().size());
         Assert.assertEquals(connections.getTotalCount(), connections.getItems().size());
     }
 
@@ -94,7 +94,7 @@ public class DataManagerTest {
         );
 
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactlyInAnyOrder("twitter", "activemq");
-        Assert.assertEquals(13, connectors.getTotalCount());
+        Assert.assertEquals(14, connectors.getTotalCount());
         Assert.assertEquals(2, connectors.getItems().size());
     }
 
