@@ -186,7 +186,7 @@ public class EndpointController {
                 while (part.endsWith("/")) {
                     part = part.substring(part.length() - 1);
                 }
-                res.append("/").append(part);
+                res.append('/').append(part);
             }
         }
         return res.toString();

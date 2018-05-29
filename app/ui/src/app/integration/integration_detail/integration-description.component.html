@@ -26,7 +26,7 @@
     <span *ngIf="!last" class="step-sep fa fa-angle-right"></span>
   </div>
   <p *ngIf="integration.url">
-    External URL: <strong>{{integration.url}}</strong>
+    External URL: <strong>{{ integration.url }}</strong>
   </p>
   <p>
     <syndesis-editable-textarea [value]="integration.description"

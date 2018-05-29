@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.syndesis.common.util;
 
 import java.util.Random;
@@ -7,7 +22,7 @@ import java.util.Random;
  *
  * Examples of generator string: "alphanum", "alphanum:50".
  */
-public class RandomValueGenerator {
+public final class RandomValueGenerator {
 
     private static final String ALPHANUM_SCHEME = "alphanum";
     private static final String ALPHANUM_DOMAIN = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -23,7 +38,7 @@ public class RandomValueGenerator {
             throw new IllegalArgumentException("Generator cannot be null");
         }
 
-        int split = generator.indexOf(":");
+        int split = generator.indexOf(':');
         if (split < 0) {
             return generate(generator, null);
         } else {
@@ -45,7 +60,7 @@ public class RandomValueGenerator {
             try {
                 length = Integer.parseInt(remaining.trim());
             } catch (NumberFormatException ex) {
-                throw new IllegalArgumentException("Unexpected string after the " + ALPHANUM_SCHEME + " scheme: expected length");
+                throw new IllegalArgumentException("Unexpected string after the " + ALPHANUM_SCHEME + " scheme: expected length", ex);
             }
         }
 
