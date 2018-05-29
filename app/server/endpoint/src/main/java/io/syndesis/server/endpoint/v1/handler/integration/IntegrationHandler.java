@@ -369,10 +369,8 @@ public class IntegrationHandler extends BaseHandler
 
         // Set the URL of the integration deployment if present
         IntegrationDeployment exposedDeployment = deployed;
-        if (exposedDeployment == null) {
-            if (activeDeployments.size() == 1) {
-                exposedDeployment = activeDeployments.get(0);
-            }
+        if (exposedDeployment == null && activeDeployments.size() == 1) {
+            exposedDeployment = activeDeployments.get(0);
         }
         if (exposedDeployment != null && exposedDeployment.getId().isPresent()) {
             IntegrationEndpoint endpoint = dataManager.fetch(IntegrationEndpoint.class, exposedDeployment.getId().get());
