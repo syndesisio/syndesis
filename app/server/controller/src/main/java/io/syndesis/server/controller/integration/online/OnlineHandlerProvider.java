@@ -16,11 +16,13 @@
 package io.syndesis.server.controller.integration.online;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateChangeHandlerProvider;
+import io.syndesis.server.controller.integration.online.customizer.ExposureDeploymentDataCustomizer;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.server.openshift.OpenShiftService;
@@ -55,7 +57,8 @@ public class OnlineHandlerProvider extends BaseHandler implements StateChangeHan
                 dataManager,
                 openShiftService(),
                 projectGenerator,
-                properties
+                properties,
+                Collections.singletonList(new ExposureDeploymentDataCustomizer())
             ),
             new UnpublishHandler(openShiftService()));
     }

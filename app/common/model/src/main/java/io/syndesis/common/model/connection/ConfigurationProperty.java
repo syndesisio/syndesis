@@ -94,6 +94,8 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
     List<PropertyRelation> getRelation();
 
+    String getGenerator();
+
     @JsonIgnore
     default boolean isComponentProperty() {
         Boolean value = getComponentProperty();

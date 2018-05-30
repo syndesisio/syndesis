@@ -45,6 +45,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConnectionBase;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
+import io.syndesis.common.util.RandomValueGenerator;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
@@ -98,16 +99,24 @@ public class ConnectionActionHandler {
             .findAny()//
             .orElseThrow(() -> new EntityNotFoundException("Action with id: " + id));
 
-        final ConnectorDescriptor defaultDescriptor = action.getDescriptor();
+        final ConnectorDescriptor originalDescriptor = action.getDescriptor();
+
+        ConnectorDescriptor.Builder generatedDescriptorBuilder = new ConnectorDescriptor.Builder().createFrom(originalDescriptor);
+        action.getProperties().forEach((k, v) -> {
+            if (v.getGenerator() != null && v.getDefaultValue() == null) {
+                generatedDescriptorBuilder.replaceConfigurationProperty(k, c -> c.defaultValue(RandomValueGenerator.generate(v.getGenerator())));
+            }
+        });
+        ConnectorDescriptor generatedDescriptor = generatedDescriptorBuilder.build();
 
         if (!action.getTags().contains("dynamic")) {
-            return Response.ok().entity(Meta.verbatim(defaultDescriptor)).build();
+            return Response.ok().entity(Meta.verbatim(generatedDescriptor)).build();
         }
 
         final Map<String, String> parameters = encryptionComponent
             .decrypt(new HashMap<>(Optional.ofNullable(properties).orElseGet(HashMap::new)));
         // put all action parameters with `null` values
-        defaultDescriptor.getPropertyDefinitionSteps()
+        generatedDescriptor.getPropertyDefinitionSteps()
             .forEach(step -> step.getProperties().forEach((k, v) -> parameters.putIfAbsent(k, null)));
 
         // add the pattern as a property
@@ -120,7 +129,7 @@ public class ConnectionActionHandler {
         final HystrixExecutable<DynamicActionMetadata> meta = createMetadataCommand(action, parameters);
         final DynamicActionMetadata dynamicActionMetadata = meta.execute();
 
-        final ConnectorDescriptor enrichedDescriptor = applyMetadataTo(defaultDescriptor, dynamicActionMetadata);
+        final ConnectorDescriptor enrichedDescriptor = applyMetadataTo(generatedDescriptor, dynamicActionMetadata);
 
         @SuppressWarnings("unchecked")
         final HystrixInvokableInfo<ConnectorDescriptor> metaInfo = (HystrixInvokableInfo<ConnectorDescriptor>) meta;
