@@ -27,10 +27,7 @@ export class ConnectionsConfigureFieldsComponent
   ) {}
 
   ngOnInit() {
-    this.formModel = this.configurationService.getFormModel(
-      this.connection,
-      false
-    );
+    this.formModel = this.configurationService.getFormModel(this.connection);
     this.formGroup = this.formService.createFormGroup(this.formModel);
     this.formChangesSubscription = this.formGroup.valueChanges.subscribe(
       data => {
