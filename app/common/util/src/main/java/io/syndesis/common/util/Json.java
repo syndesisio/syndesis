@@ -72,7 +72,7 @@ public final class Json {
      * The name of this method is super awkward to remind you that there aren't many cases for you to use it.
      * It's main usage is in tests, where you might have reason to configure differently advanced parameters.
      *
-     * Thise method creates a copy of an ObjectMapper.
+     * This method creates a copy of an ObjectMapper.
      * @return
      */
     public static ObjectMapper copyObjectMapperConfiguration() {
