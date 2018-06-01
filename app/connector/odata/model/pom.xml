@@ -21,7 +21,7 @@
   <parent>
     <groupId>io.syndesis.connector</groupId>
     <artifactId>connector-odata-parent</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4.1-20180601</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
