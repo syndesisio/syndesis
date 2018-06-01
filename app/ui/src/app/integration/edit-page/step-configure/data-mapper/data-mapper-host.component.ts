@@ -15,7 +15,7 @@ import {
   MappingManagementService,
   MappingSerializer,
   DataMapperAppComponent
-} from '@atlasmap/atlasmap.data.mapper';
+} from '@atlasmap/atlasmap-data-mapper';
 
 import { ConfigService } from '@syndesis/ui/config.service';
 import { log, getCategory } from '@syndesis/ui/logging';

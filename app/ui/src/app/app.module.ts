@@ -5,7 +5,7 @@ import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { VendorModule } from '@syndesis/ui/vendor';
 import { TagInputModule } from 'ngx-chips';
 import { NotificationModule } from 'patternfly-ng';
-import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
+import { DataMapperModule } from '@atlasmap/atlasmap-data-mapper';
 
 import { ApiModule } from './api';
 import { CoreModule } from './core';
