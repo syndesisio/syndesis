@@ -16,24 +16,17 @@
 package io.syndesis.connector.gmail;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.Address;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -55,11 +48,11 @@ public class GmailSendEmailCustomizer implements ComponentProxyCustomizer {
 	private String userId;
 	private String bcc;
 	private String cc;
-	
+
 	@Override
 	public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        setApiMethod(options);
-        component.setBeforeProducer(this::beforeProducer);
+		setApiMethod(options);
+		component.setBeforeProducer(this::beforeProducer);
 	}
 
 	private void setApiMethod(Map<String, Object> options) {
@@ -77,20 +70,32 @@ public class GmailSendEmailCustomizer implements ComponentProxyCustomizer {
 	private void beforeProducer(Exchange exchange) throws MessagingException, IOException {
 
 		final Message in = exchange.getIn();
-		final Object body = exchange.getIn().getBody();
-		com.google.api.services.gmail.model.Message message = null;
-		if (body instanceof File) {
-			message = createMessageWithAttachments(to, userId, subject, text, cc, bcc, (File) body);
+		final GmailMessageModel mail = exchange.getIn().getBody(GmailMessageModel.class);
+		if (mail != null) {
+			if (ObjectHelper.isNotEmpty(mail.getText())) {
+				text = mail.getText();
+			}
+			if (ObjectHelper.isNotEmpty(mail.getSubject())) {
+				subject = mail.getSubject();
+			}
+			if (ObjectHelper.isNotEmpty(mail.getTo())) {
+				to = mail.getTo();
+			}
+			if (ObjectHelper.isNotEmpty(mail.getCc())) {
+				cc = mail.getCc();
+			}
+			if (ObjectHelper.isNotEmpty(mail.getBcc())) {
+				bcc = mail.getCc();
+			}
 		}
-		else {
-			message = createMessage(to, userId, subject, text, cc, bcc);
-		}
+		com.google.api.services.gmail.model.Message message = createMessage(to, userId, subject, text, cc, bcc);
 
 		in.setHeader("CamelGoogleMail.content", message);
 		in.setHeader("CamelGoogleMail.userId", userId);
 	}
 
-	private com.google.api.services.gmail.model.Message createMessage(String to, String from, String subject, String bodyText, String cc, String bcc) throws MessagingException, IOException {
+	private com.google.api.services.gmail.model.Message createMessage(String to, String from, String subject,
+			String bodyText, String cc, String bcc) throws MessagingException, IOException {
 		Properties props = new Properties();
 		Session session = Session.getDefaultInstance(props, null);
 
@@ -100,70 +105,29 @@ public class GmailSendEmailCustomizer implements ComponentProxyCustomizer {
 		email.addRecipients(javax.mail.Message.RecipientType.TO, getAddressesList(to));
 		email.setSubject(subject);
 		email.setText(bodyText);
-        if (ObjectHelper.isNotEmpty(cc)) {
-        	email.addRecipients(javax.mail.Message.RecipientType.CC, getAddressesList(cc));
-        }
-        if (ObjectHelper.isNotEmpty(bcc)) {
-        	email.addRecipients(javax.mail.Message.RecipientType.BCC, getAddressesList(bcc));
-        }
-		
+		if (ObjectHelper.isNotEmpty(cc)) {
+			email.addRecipients(javax.mail.Message.RecipientType.CC, getAddressesList(cc));
+		}
+		if (ObjectHelper.isNotEmpty(bcc)) {
+			email.addRecipients(javax.mail.Message.RecipientType.BCC, getAddressesList(bcc));
+		}
+
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		email.writeTo(buffer);
-        byte[] bytes = buffer.toByteArray();
-        String encodedEmail = Base64.encodeBase64URLSafeString(bytes);
-        com.google.api.services.gmail.model.Message message = new com.google.api.services.gmail.model.Message();
-        message.setRaw(encodedEmail);
-        return message;
+		byte[] bytes = buffer.toByteArray();
+		String encodedEmail = Base64.encodeBase64URLSafeString(bytes);
+		com.google.api.services.gmail.model.Message message = new com.google.api.services.gmail.model.Message();
+		message.setRaw(encodedEmail);
+		return message;
 	}
-	
-	private com.google.api.services.gmail.model.Message createMessageWithAttachments(String to, String from, String subject, String bodyText, String cc, String bcc, File file) throws MessagingException, IOException {
-		Properties props = new Properties();
-		Session session = Session.getDefaultInstance(props, null);
 
-		MimeMessage email = new MimeMessage(session);
-
-		email.setFrom(new InternetAddress(from));
-		email.addRecipients(javax.mail.Message.RecipientType.TO, getAddressesList(to));
-		email.setSubject(subject);
-		email.setText(bodyText);
-        if (ObjectHelper.isNotEmpty(cc)) {
-        	email.addRecipients(javax.mail.Message.RecipientType.CC, getAddressesList(cc));
-        }
-        if (ObjectHelper.isNotEmpty(bcc)) {
-        	email.addRecipients(javax.mail.Message.RecipientType.BCC, getAddressesList(bcc));
-        }
-        
-        MimeBodyPart mimeBodyPart = new MimeBodyPart();
-        mimeBodyPart.setContent(bodyText, "text/plain");
-
-        Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(mimeBodyPart);
-
-        mimeBodyPart = new MimeBodyPart();
-        DataSource source = new FileDataSource(file);
-
-        mimeBodyPart.setDataHandler(new DataHandler(source));
-        mimeBodyPart.setFileName(file.getName());
-        
-        multipart.addBodyPart(mimeBodyPart);
-        email.setContent(multipart);
-		
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		email.writeTo(buffer);
-        byte[] bytes = buffer.toByteArray();
-        String encodedEmail = Base64.encodeBase64URLSafeString(bytes);
-        com.google.api.services.gmail.model.Message message = new com.google.api.services.gmail.model.Message();
-        message.setRaw(encodedEmail);
-        return message;
-	}
-	
 	private Address[] getAddressesList(String addressString) throws AddressException {
 		List<String> recipientList = Splitter.on(',').splitToList(addressString);
 		Address[] recipientAddress = new InternetAddress[recipientList.size()];
 		int counter = 0;
 		for (String recipient : recipientList) {
-		    recipientAddress[counter] = new InternetAddress(recipient.trim());
-		    counter++;
+			recipientAddress[counter] = new InternetAddress(recipient.trim());
+			counter++;
 		}
 		return recipientAddress;
 	}
