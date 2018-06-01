@@ -70,6 +70,7 @@
     <module>aws-s3</module>
     <module>dropbox</module>
     <module>ftp</module>
+    <module>gmail</module>
     <module>http</module>
     <module>mqtt</module>
     <module>odata</module>

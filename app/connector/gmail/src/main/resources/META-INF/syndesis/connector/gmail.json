@@ -1,0 +1,184 @@
+{
+      "id": "Gmail",
+      "name": "Google Mail",
+      "description": "Send and receive mail through gmail",
+      "icon": "fa-puzzle-piece",
+      "dependencies": [
+          {
+              "type": "MAVEN",
+              "id": "@project.groupId@:@project.artifactId@:@project.version@"
+          }
+      ],
+      "tags": [
+        "verifier"
+      ],
+      "properties": {
+        "clientId": {
+          "kind": "parameter",
+          "displayName": "Client Id",
+          "group": "common",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "raw": true,
+          "labelHint": "Client Id",
+          "order": "1"
+        },
+        "clientSecret": {
+          "kind": "parameter",
+          "displayName": "Client Secret",
+          "group": "common",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "raw": true,
+          "labelHint": "Client Secret",
+          "order": "2"
+        },
+        "applicationName": {
+          "kind": "parameter",
+          "displayName": "Application Name",
+          "group": "common",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "raw": true,
+          "labelHint": "Application Name",
+          "order": "3"
+        },
+        "accessToken": {
+          "kind": "path",
+          "displayName": "Access Token",
+          "group": "common",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "raw": true,
+          "labelHint": "Access Token",
+          "order": "4"
+        },
+        "refreshToken": {
+          "kind": "path",
+          "displayName": "Refresh Token",
+          "group": "common",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "raw": true,
+          "deprecated": false,
+          "secret": true,
+          "labelHint": "Refresh Token",
+          "order": "5"
+        },
+        "userId": {
+          "kind": "parameter",
+          "displayName": "user Id",
+          "group": "common",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "raw": true,
+          "labelHint": "UserId",
+          "order": "6"
+        }
+      },
+      "actions": [
+        {
+          "name": "Send Email",
+          "description": "Copy one or more objects into a bucket.",
+          "id": "io.syndesis:gmail-send-email-connector",
+          "pattern": "To",
+          "actionType": "connector",
+          "descriptor": {
+            "componentScheme": "google-mail",
+            "inputDataShape": {
+              "kind": "any"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
+            "connectorCustomizers": [
+               "io.syndesis.connector.gmail.GmailSendEmailCustomizer"
+            ],
+            "propertyDefinitionSteps": [
+              {
+                "name": "Send Email through GMail",
+                "description": "Set the Email",
+                "properties": {
+                   "text": {
+                    "kind": "parameter",
+                    "displayName": "Email Text",
+                    "group": "producer",
+                    "label": "producer",
+                    "required": true,
+                    "type": "textarea",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "labelHint": "The text to use"
+                  },
+                  "to": {
+                    "kind": "parameter",
+                    "displayName": "Email to",
+                    "group": "producer",
+                    "label": "producer",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "labelHint": "The to to use"
+                  },
+                  "cc": {
+                    "kind": "parameter",
+                    "displayName": "Email cc",
+                    "group": "producer",
+                    "label": "producer",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "labelHint": "The cc to use"
+                  },
+                  "bcc": {
+                    "kind": "parameter",
+                    "displayName": "Email bcc",
+                    "group": "producer",
+                    "label": "producer",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "labelHint": "The bcc to use"
+                  },
+                  "subject": {
+                    "kind": "parameter",
+                    "displayName": "Email subject",
+                    "group": "producer",
+                    "label": "producer",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "labelHint": "The subject to use"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+}
