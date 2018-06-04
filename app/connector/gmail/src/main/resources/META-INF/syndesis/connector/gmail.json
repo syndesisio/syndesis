@@ -102,7 +102,8 @@
           "descriptor": {
             "componentScheme": "google-mail",
             "inputDataShape": {
-              "kind": "any"
+              "kind": "java",
+              "type": "io.syndesis.connector.gmail.GmailMessageModel"
             },
             "outputDataShape": {
               "kind": "none"
@@ -120,7 +121,7 @@
                     "displayName": "Email Text",
                     "group": "producer",
                     "label": "producer",
-                    "required": true,
+                    "required": false,
                     "type": "textarea",
                     "javaType": "java.lang.String",
                     "deprecated": false,
@@ -132,7 +133,7 @@
                     "displayName": "Email to",
                     "group": "producer",
                     "label": "producer",
-                    "required": true,
+                    "required": false,
                     "type": "string",
                     "javaType": "java.lang.String",
                     "deprecated": false,
@@ -168,7 +169,7 @@
                     "displayName": "Email subject",
                     "group": "producer",
                     "label": "producer",
-                    "required": true,
+                    "required": false,
                     "type": "string",
                     "javaType": "java.lang.String",
                     "deprecated": false,
