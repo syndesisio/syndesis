@@ -1,5 +1,5 @@
 [id='adding-dropbox-connection-finish']
-= Finishing an integration by adding files to Dropbox
+= Finish an integration by adding files to Dropbox
 
 To finish an integration by uploading files to Dropbox,
 add a Dropbox connection as the finish connection:

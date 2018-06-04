@@ -1,5 +1,5 @@
 [id='adding-slack-connections']
-= Adding a Slack connection to an integration
+= Add a Slack connection to an integration
 
 In an integration, to send a message to a Slack channel or user, first create
 a Slack connection. You can then add that connection to any number

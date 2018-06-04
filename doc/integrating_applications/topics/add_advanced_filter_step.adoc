@@ -28,4 +28,4 @@ http://camel.apache.org/simple.html[Camel Simple Expression] language
 to specify a filter
 expression.
 
-. Click *Done*.
+. Click *Done* to add the advanced filter step to the integration. 

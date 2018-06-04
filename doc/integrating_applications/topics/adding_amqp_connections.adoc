@@ -1,5 +1,5 @@
 [id='adding-amqp-connections']
-= Adding an AMQP connection to an integration
+= Add an AMQP connection to an integration
 
 You must create an AMQP connection before you can add an
 AMQP connection to an

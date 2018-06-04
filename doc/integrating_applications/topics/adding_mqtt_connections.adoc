@@ -1,5 +1,5 @@
 [id='adding-mqtt-connections']
-= Adding an MQTT connection to an integration
+= Add an MQTT connection to an integration
 
 You must create an MQTT connection before you can add it to an
 integration. If you did not already create an MQTT connection, 

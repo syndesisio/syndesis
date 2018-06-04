@@ -42,4 +42,5 @@ enter `*Sample AMQP connection*`
 . In the upper right, click *Create* to see that the connection you 
 created is now available. If you
 entered the example name, you would 
-see that *AMQP 1* is now available. 
+see that *AMQP 1* appears as a connection that you can 
+choose to add to an integration. 

@@ -42,4 +42,5 @@ enter `*Sample S3 connection
 that obtains data from the northeast bucket.*`
 . In the upper right, click *Create* to see that the connection you
 created is now available. If you entered the example name, you would
-see that *Obtain S3 Data* is now available.
+see that *Obtain S3 Data* appears as a connection that you can 
+choose to add to an integration.

@@ -1,5 +1,5 @@
 [id='adding-amq-connection-start']
-= Starting an integration based on receiving AMQ messages
+= Start an integration based on receiving AMQ messages
 
 :context: start
 To trigger execution of an integration based on receiving a message

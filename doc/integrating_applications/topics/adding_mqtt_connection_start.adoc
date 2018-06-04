@@ -18,4 +18,5 @@ you want to use to start the integration.
 to receive messages from the queue or topic you specify. 
 . In the *MQTT queue/topic name* field, enter the name of the queue or topic 
 to subscribe to in order to receive data. 
-. Click *Done* to add the start connection. 
+. Click *Done* to add the start connection. The connection appears as the
+first step in the integration flow. 

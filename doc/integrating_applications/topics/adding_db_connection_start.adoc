@@ -1,5 +1,5 @@
 [id='adding-db-connection-start']
-= Starting an integration by accessing a database
+= Start an integration by accessing a database
 
 To start an integration by accessing a database:
 

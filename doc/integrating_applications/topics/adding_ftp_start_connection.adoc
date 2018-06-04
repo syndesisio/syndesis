@@ -1,5 +1,5 @@
 [id='adding-ftp-start-connection']
-= Obtaining files from an FTP or SFTP server
+= Obtain files from an FTP or SFTP server
 
 To trigger integration execution when
 an FTP or SFTP connection finds the file(s) you are interested in,

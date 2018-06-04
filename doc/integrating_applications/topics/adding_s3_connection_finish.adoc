@@ -1,5 +1,5 @@
 [id='adding-s3-connection-finish']
-= Finishing an integration by adding data to Amazon S3
+= Finish an integration by adding data to Amazon S3
 
 :context: finish
 To finish an integration by copying data to Amazon S3, 

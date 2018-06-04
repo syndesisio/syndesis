@@ -32,4 +32,5 @@ is helpful to know about this connection.
 . In the upper right, click *Create* to see that the connection you 
 created is now available. If you
 entered the example name, you would 
-see that *MQTT West* now available. 
+see that *MQTT West* appears as a connection that you can 
+choose to add to an integration. 

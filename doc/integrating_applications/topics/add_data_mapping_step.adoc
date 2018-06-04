@@ -15,6 +15,7 @@ To add a data mapper step:
 . In the left panel, where you want to add a data mapper step,
 hover over the image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 . In the popup that appears, click *Add a Step*.
-. On the *Choose a Step* page, click *Data Mapper*.
+. On the *Choose a Step* page, click *Data Mapper* to display source
+and target fields. 
 
-For details, see  <<mapping-data>>.
+For details about configuring the data mapping step, see  <<mapping-data>>.

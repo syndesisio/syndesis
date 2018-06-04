@@ -1,5 +1,5 @@
 [id='adding-dropbox-connections']
-= Adding a Dropbox connection to an integration
+= Add a Dropbox connection to an integration
 
 You must create a Dropbox connection before you can add a Dropbox
 connection to an integration. If you did not already create a Dropbox connection,

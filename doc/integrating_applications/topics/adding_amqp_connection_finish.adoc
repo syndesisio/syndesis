@@ -1,5 +1,5 @@
 [id='adding-amqp-connection-finish']
-= Finishing an integration by publishing AMQP messages
+= Finish an integration by publishing AMQP messages
 
 :context: finish
 To finish an integration by publishing messages to an AMQP broker,

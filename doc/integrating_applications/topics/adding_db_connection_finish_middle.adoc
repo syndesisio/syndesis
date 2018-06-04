@@ -1,5 +1,5 @@
 [id='adding-db-connection-finish-middle']
-= Accessing a database in the middle or to complete an integration
+= Access a database in the middle or to complete an integration
 
 To finish an integration by accessing a database, add a database
 connection as the finish connection. To access 

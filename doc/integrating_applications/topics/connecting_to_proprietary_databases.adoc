@@ -1,6 +1,5 @@
 [id='connecting-to-proprietary-databases']
-= Connecting to proprietary databases
-
+= Connect to proprietary databases
 
 To connect to a proprietary SQL database, the main tasks that must be
 accomplished are as follows:

@@ -1,5 +1,5 @@
 [id='adding-amqp-connection-middle']
-= Publishing messages to AMQP in the middle of an integration
+= Publish messages to AMQP in the middle of an integration
 
 :context: middle
 In the middle of an integration, to publish messages to an AMQP broker,

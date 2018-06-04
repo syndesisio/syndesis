@@ -1,5 +1,5 @@
 [id='adding-sf-connections']
-= Adding a Salesforce connection to an integration
+= Add a Salesforce connection to an integration
 
 You must create a Salesforce connection before you can add a Salesforce
 connection to an integration. If you did not already create a Salesforce
@@ -29,3 +29,6 @@ might be a contact, lead or price book entry. Click in the *Object* field
 to select from a list of Salesforce objects or enter the name of the object.
 
 . Click *Done* to add the connection to the integration.
+
+The connection appears in the integration flow 
+in the location where you added it. 

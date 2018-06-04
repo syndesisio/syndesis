@@ -1,5 +1,5 @@
 [id='adding-mqtt-connection-finish-middle']
-= Publishing a message to an MQTT broker
+= Publish a message to an MQTT broker
 
 In an integration, you can publish a message to an MQTT broker to finish
 an integration. To do this, add an MQTT connection as the integration's 
@@ -26,3 +26,6 @@ to publish a message in the middle of an integration.
 . In the *MQTT queue/topic name* field, specify the name of he queue or
 topic to publish the message to. 
 . Click *Done* to add the connection to the integration. 
+
+The connection appears in the integration flow 
+in the location where you added it. 
