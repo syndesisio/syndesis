@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
   DynamicFormControlModel,
-  DynamicInputModel
+  DynamicInputModel,
+  DynamicSelectModel
 } from '@ng-dynamic-forms/core';
 import { Connection, Connector, FormFactoryService, StringMap, ConfigurationProperty } from '@syndesis/ui/platform';
 
@@ -21,11 +22,10 @@ export class ConnectionConfigurationService {
     return this.formFactory.sanitizeValues(data, this.formConfig);
   }
 
-  getFormModel(
-    connection: Connection,
-    readOnly: boolean
-  ): DynamicFormControlModel[] {
-    const config = this.formConfig = this.getFormConfig(connection);
+  getFormModel(connection: Connection): DynamicFormControlModel[] {
+    const configAndValues = this.getFormConfig(connection);
+    const config = this.formConfig = configAndValues.config;
+    const values = configAndValues.values;
     let controls = ['*'];
     // TODO temporary client-side hack to tweak form ordering
     switch (connection.connectorId) {
@@ -34,11 +34,8 @@ export class ConnectionConfigurationService {
         break;
       default:
     }
-    const formModel = this.formFactory.createFormModel(config, undefined, controls);
-    formModel
-      .filter(model => model instanceof DynamicInputModel)
-      .forEach(model => ((<DynamicInputModel>model).readOnly = readOnly));
-    return formModel;
+    const formModel = this.formFactory.createFormModel(config, values, controls);
+    return this.formFactory.createFormModel(config, values, controls);
   }
 
   cloneObject(obj: any) {
@@ -46,26 +43,12 @@ export class ConnectionConfigurationService {
   }
 
   private getFormConfig(connection: Connection) {
-    let props = {};
+    let config = <StringMap<ConfigurationProperty>>{};
+    let values = {};
     if (connection.connector) {
-      if (connection.connector.properties) {
-        props = this.cloneObject(connection.connector.properties);
-      }
-      if (connection.connector.configuredProperties) {
-        Object.keys(connection.connector.configuredProperties).forEach(key => {
-          if (props[key]) {
-            props[key].value = connection.connector.configuredProperties[key];
-          }
-        });
-      }
-      if (connection.configuredProperties) {
-        Object.keys(connection.configuredProperties).forEach(key => {
-          if (props[key]) {
-            props[key].value = connection.configuredProperties[key];
-          }
-        });
-      }
+      config = { ...connection.connector.properties };
+      values = { ...connection.connector.configuredProperties, ...connection.configuredProperties };
     }
-    return props;
+    return { config, values };
   }
 }

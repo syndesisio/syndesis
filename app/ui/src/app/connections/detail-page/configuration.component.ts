@@ -93,11 +93,13 @@ export class ConnectionDetailConfigurationComponent implements OnInit, OnChanges
   }
 
   resetView(readOnly: boolean) {
-    this.formModel = this.configurationService.getFormModel(
-      this.connection,
-      readOnly
-    );
+    this.formModel = this.configurationService.getFormModel(this.connection);
     this.formGroup = this.formService.createFormGroup(this.formModel);
+    if (readOnly) {
+      this.formGroup.disable();
+    } else {
+      this.formGroup.enable();
+    }
   }
 
   reconnect() {
