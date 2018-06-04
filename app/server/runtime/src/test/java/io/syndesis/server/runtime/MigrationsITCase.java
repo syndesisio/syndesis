@@ -15,13 +15,14 @@
  */
 package io.syndesis.server.runtime;
 
-import io.syndesis.common.util.Json;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.jsondb.impl.SqlJsonDB;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import static io.syndesis.common.util.Json.map;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ResourceLoader;
@@ -32,9 +33,9 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import static io.syndesis.common.util.Json.map;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import io.syndesis.common.util.Json;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.jsondb.impl.SqlJsonDB;
 
 @SpringBootTest()
 @ActiveProfiles("test")
@@ -62,12 +63,12 @@ public class MigrationsITCase {
     @Test
     public void shouldPerformMigrations() throws JsonProcessingException {
         resetDB();
-        Migrations migrations = createMigrations("classpath:test-migrations/up-", 0);
+        Migrations migrations = createMigrations("classpath:test-migrations", 0);
         migrations.run();
 
         jsondb.set("/test", json(map("u10001", map("name", "Hiram Chirino"))));
 
-        migrations = createMigrations("classpath:test-migrations/up-", 3);
+        migrations = createMigrations("classpath:test-migrations", 3);
         migrations.run();
 
         final String json = jsondb.getAsString("/test");
@@ -78,7 +79,7 @@ public class MigrationsITCase {
     private Migrations createMigrations(final String prefix, final int target) {
         final DefaultMigrator migrator = new DefaultMigrator(resourceLoader) {
             @Override
-            protected String migrationsScriptPrefix() {
+            protected String defaultMigrationScriptsPath() {
                 return prefix;
             }
         };

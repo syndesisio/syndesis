@@ -21,5 +21,5 @@ import io.syndesis.server.jsondb.JsonDB;
  * Handles migrating the schema of a JsonDB store to a given schema of the model
  */
 public interface Migrator {
-    void migrate(JsonDB jsondb, int schema);
+    void migrate(JsonDB jsondb, int schema, String... resources);
 }
