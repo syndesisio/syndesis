@@ -182,6 +182,45 @@
           }
         },
         {
+          "name": "Delete Object",
+          "description": "Delete one object in a bucket.",
+          "id": "io.syndesis:aws-s3-delete-object-connector",
+          "pattern": "To",
+          "actionType": "connector",
+          "descriptor": {
+            "componentScheme": "aws-s3",
+            "inputDataShape": {
+              "kind": "any"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
+            "connectorCustomizers": [
+               "io.syndesis.connector.aws.s3.AWSS3DeleteObjectCustomizer"
+            ],
+            "propertyDefinitionSteps": [
+              {
+                "name": "Delete an object in an Amazon S3 bucket",
+                "description": "Set the filename to use for the object you're deleting",
+                "properties": {
+                   "fileName": {
+                    "kind": "parameter",
+                    "displayName": "File Name",
+                    "group": "producer",
+                    "label": "producer",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "labelHint": "The file name to use for the object to delete in S3"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
           "name": "Get Object",
           "description": "Retrieve one object from a bucket.",
           "id": "io.syndesis:aws-s3-get-object-connector",
