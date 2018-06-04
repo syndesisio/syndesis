@@ -64,6 +64,7 @@ After {prodname} creates a connector,
 you cannot change it. To effect a change, you need to upload an updated
 Swagger file so that {prodname} can create a new connector.
 . When you are satisfied with the connector details, click *Create API Connector*.
+{prodname} displays the new connector with the other connectors. 
 
 For details about using your new API connector, see
 <<connecting-to-rest-apis>>.

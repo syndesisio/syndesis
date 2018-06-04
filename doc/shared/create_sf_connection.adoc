@@ -50,4 +50,5 @@ enter `*Sample Salesforce connection
 that uses my Salesforce login credentials.*`
 . In the upper right, click *Create* to see that the connection you
 created is now available. If you entered the example name, you would
-see that *SF Connect 1* is now available.
+see that *SF Connect 1* appears as a connection that you can 
+choose to add to an integration.

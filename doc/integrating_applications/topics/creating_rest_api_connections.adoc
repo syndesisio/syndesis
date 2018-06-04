@@ -19,5 +19,6 @@ can verify its registration credentials for connecting to the API.
 helps you distinguish this connection from any other connections.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection.
-. In the upper right, click *Create* to see that the connection you
-created is now available.
+. In the upper right, click *Create* to see that you can now
+choose the connection you
+created and add to an integration.

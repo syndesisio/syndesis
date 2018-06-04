@@ -21,3 +21,7 @@ describes the API you are connecting to.
 . Depending on the action you select, enter any parameters that
 {prodname} prompts for.
 . Click *Done*.
+
+The connection appears in the integration flow 
+in the location where you added it. 
+ 

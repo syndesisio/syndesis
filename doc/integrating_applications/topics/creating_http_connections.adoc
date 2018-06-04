@@ -25,4 +25,5 @@ For example, enter `*HTTPS My Company Sales*`.
 is helpful to know about this connection.
 . In the upper right, click *Create* to see that the connection you
 created is now available. If you entered the example name, you would
-see that *HTTPS My Company Sales* is now available.
+see that *HTTPS My Company Sales* appears as a connection that you can 
+choose to add to an integration.

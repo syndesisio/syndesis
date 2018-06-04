@@ -1,5 +1,5 @@
 [id='creating-ftp-connections']
-= Creating an FTP or SFTP connection
+= Create an FTP or SFTP connection
 
 To create a connection to an FTP server or an SFTP server:
 
@@ -55,7 +55,8 @@ For example, enter `*XLight FTP Server*`.
 is helpful to know about this connection.
 . In the upper right, click *Create* to see that the connection you
 created is now available. If you entered the example name, you would
-see that *XLight FTP Server* is now available.
+see that *XLight FTP Server* appears as a connection that you can 
+choose to add to an integration.
 
 .Descriptions of other parameters
 

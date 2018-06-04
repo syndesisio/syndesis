@@ -1,5 +1,5 @@
 [id='adding-dropbox-connection-middle']
-= Accessing Dropbox in the middle of an integration
+= Access Dropbox in the middle of an integration
 
 To download or upload Dropbox files in the middle of an integration,
 add a Dropbox connection between the start and 

@@ -1,5 +1,5 @@
 [id='adding-ftp-connections']
-= Adding an FTP or SFTP connection to an integration
+= Add an FTP or SFTP connection to an integration
 
 After you create an FTP connection or an SFTP connection, you can add 
 it to any number of integrations. See the following topics:

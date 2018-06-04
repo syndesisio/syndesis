@@ -1,5 +1,5 @@
 [id='adding-ftp-finish-middle-connection']
-= Uploading files to an FTP or SFTP server
+= Upload files to an FTP or SFTP server
 
 To finish an integration by uploading files to an FTP or SFTP server, you 
 add an FTP or SFTP connection as the finish connection. You can also

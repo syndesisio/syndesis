@@ -1,5 +1,5 @@
 [id='adding-s3-connections']
-= Adding an Amazon S3 connection to an integration
+= Add an Amazon S3 connection to an integration
 
 You must create an Amazon S3 connection before you can add an
 Amazon S3 connection to an

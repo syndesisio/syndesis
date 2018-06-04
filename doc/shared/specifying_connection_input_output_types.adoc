@@ -7,7 +7,8 @@ a connection's action. Type specifications let {prodname} alert you when a
 data mapping step is required. A data mapping step ensures that the next
 integration step can process the data it receives.
 
-After you configure an Amazon S3, AMQ, AMQP, Dropbox, or FTP/SFTP connection, 
+After you configure an Amazon S3, AMQ, AMQP, Dropbox, FTP/SFTP, or 
+HTTP/HTTPS connection, 
 {prodname} prompts you to specify input and/or output data types as follows:
 
 . In the *Select Type* field, if the data type does not need to be known, 
@@ -44,3 +45,6 @@ in the integration visualization panel and in the data mapper.
 distinguish this type. This description appears in the data mapper when 
 you hover over the step that processes this type. 
 . Click *Done*. 
+
+The connection appears in the integration flow 
+in the location where you added it. 

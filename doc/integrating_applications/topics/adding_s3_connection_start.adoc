@@ -1,5 +1,5 @@
 [id='adding-s3-connection-start']
-= Starting an integration by obtaining data from Amazon S3
+= Start an integration by obtaining data from Amazon S3
 
 :context: start
 To start an integration by obtaining data from an Amazon S3 bucket, 

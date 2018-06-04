@@ -48,4 +48,5 @@ enter `*Sample PostgreSQL connection
 that uses my login credentials.*`
 . In the upper right, click *Create* to see that the connection you
 created is now available. If you entered the example name, you would
-see that *PostgreSQL DB 1* is available.
+see that *PostgreSQL DB 1* appears as a connection that you can 
+choose to add to an integration.

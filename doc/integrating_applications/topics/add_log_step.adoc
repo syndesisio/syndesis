@@ -34,7 +34,8 @@ enter one of the following:
 +
 If you enter an expression, {prodname} resolves the 
 expression and logs the resulting text. 
-. When log step configuration is complete, click *Done*.
+. When log step configuration is complete, click *Done* to add the step
+to the integration. 
 . When the integration is complete, publish it to start seeing output
 from the new log step.
 
