@@ -23,8 +23,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import io.syndesis.common.util.Json;
 import org.junit.Test;
 
-import static junit.framework.TestCase.fail;
-
 public class ExtensionSerializationTest {
     @Test
     public void testSerializeDeserialize() throws IOException {
