@@ -43,6 +43,7 @@ export class TechExtensionImportComponent implements OnInit {
   extensionUpdate = false;
   hasBaseDropZoneOver: boolean;
   item = { } as FileItem;
+  uploadValid = false;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
@@ -136,6 +137,7 @@ export class TechExtensionImportComponent implements OnInit {
       }
       if (status === 200) {
         this.response = <Extension> resp;
+        this.uploadValid = true;
         return;
       }
       this.error = {
