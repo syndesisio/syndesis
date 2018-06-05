@@ -15,16 +15,15 @@
  */
 package io.syndesis.server.cli.command.migrate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import io.syndesis.common.model.Schema;
 import io.syndesis.server.cli.command.SyndesisCommand;
 import io.syndesis.server.jsondb.JsonDB;
 import io.syndesis.server.jsondb.dao.Migrator;
 import io.syndesis.server.runtime.StoredSettings;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -61,6 +60,9 @@ public class MigrateCommand extends SyndesisCommand {
     @Option(names = {"-u", "--user"}, description = "Username to authenticate against the database", required = false)
     private String username;
 
+    @Option(names = {"-f", "--dir"}, description = "Path to the migrations scripts directory (Spring resource syntax)", required = false)
+    private String migrationDir;
+
     void setEncryptionPassword(final String encryptionPassword) {
         this.encryptionPassword = encryptionPassword;
     }
@@ -81,6 +83,10 @@ public class MigrateCommand extends SyndesisCommand {
         this.username = username;
     }
 
+    void setMigrationDir(final String migrationDir) {
+        this.migrationDir = migrationDir;
+    }
+
     @Override
     protected void perform() {
         final String storedVersion = storedSettings.get(SCHEMA_VERSION_KEY);
@@ -92,7 +98,11 @@ public class MigrateCommand extends SyndesisCommand {
         }
 
         for (int i = version; i <= targetVersion; i++) {
-            migrator.migrate(jsondb, i);
+            if (migrationDir != null) {
+                migrator.migrate(jsondb, i, migrationDir);
+            } else {
+                migrator.migrate(jsondb, i);
+            }
         }
 
         storedSettings.set(SCHEMA_VERSION_KEY, Integer.toString(targetVersion));
