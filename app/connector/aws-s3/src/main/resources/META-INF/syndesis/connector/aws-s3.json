@@ -242,20 +242,6 @@
                 "name": "Retrieve an object from an Amazon S3 bucket",
                 "description": "Set the filename and if you have to delete the file once it has been downloaded from S3",
                 "properties": {
-                  "deleteAfterRead": {
-                    "kind": "parameter",
-                    "displayName": "Delete After Read",
-                    "group": "consumer",
-                    "label": "consumer",
-                    "required": false,
-                    "type": "boolean",
-                    "javaType": "boolean",
-                    "deprecated": false,
-                    "secret": false,
-                    "defaultValue": false,
-                    "labelHint": "Delete objects from S3 after they have been retrieved. The delete is only performed if the Exchange is committed. If a rollback occurs the object is not deleted. If this option is false then the same objects will be retrieve over and over again on the polls. Therefore you need to use the Idempotent Consumer EIP in the route to filter out duplicates. You can filter using the link S3ConstantsBUCKET_NAME and link S3ConstantsKEY headers or only the link S3ConstantsKEY header.",
-                    "order": "2"
-                  },
                   "fileName": {
                     "kind": "parameter",
                     "displayName": "File Name",
@@ -266,8 +252,7 @@
                     "javaType": "java.lang.String",
                     "deprecated": false,
                     "secret": false,
-                    "labelHint": "To get the object from the bucket with the given file name",
-                    "order": "1"
+                    "labelHint": "To get the object from the bucket with the given file name"
                   }
                 }
               }
