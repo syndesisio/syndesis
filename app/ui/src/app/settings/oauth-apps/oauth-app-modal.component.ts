@@ -1,3 +1,4 @@
+import { take } from 'rxjs/operators';
 import { Component } from '@angular/core';
 import { NotificationType } from 'patternfly-ng';
 
@@ -57,7 +58,7 @@ export class OAuthAppModalComponent {
     };
     return this.store
       .delete(app)
-      .take(1)
+      .pipe(take(1))
       .toPromise();
   }
 }

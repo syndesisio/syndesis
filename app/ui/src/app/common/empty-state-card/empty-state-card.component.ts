@@ -18,5 +18,4 @@ import { Component } from '@angular/core';
   `,
   styleUrls: ['empty-state-card.component.scss']
 })
-
 export class EmptyStateCardComponent {}

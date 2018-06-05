@@ -1,13 +1,15 @@
-import { PatternflyUIModule } from '@syndesis/ui/common';
+import { map, first } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 
 import { log, getCategory } from '@syndesis/ui/logging';
 import { Connections, Connection, UserService } from '@syndesis/ui/platform';
-import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
+import {
+  CurrentFlowService,
+  FlowEvent,
+  FlowPageService
+} from '@syndesis/ui/integration/edit-page';
 import { ConnectionStore } from '@syndesis/ui/store';
 
 const category = getCategory('Integrations');
@@ -43,9 +45,14 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
       }
     );
     this.loading$ = store.loading;
-    this.connections$ = store.list.map((connections: Connections) => {
-      return this.currentFlowService.filterConnectionsByPosition(connections, this.position);
-    });
+    this.connections$ = store.list.pipe(
+      map((connections: Connections) => {
+        return this.currentFlowService.filterConnectionsByPosition(
+          connections,
+          this.position
+        );
+      })
+    );
   }
 
   gotoCreateConnection() {
@@ -114,7 +121,7 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.routeSubscription = this.route.paramMap
-      .first(params => params.has('position'))
+      .pipe(first(params => params.has('position')))
       .subscribe(params => {
         const position = params.get('position');
         this.position = +position;
@@ -139,5 +146,4 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
     }
     return '';
   }
-
 }

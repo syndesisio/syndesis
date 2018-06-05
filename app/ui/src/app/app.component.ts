@@ -1,17 +1,16 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  Inject
-} from '@angular/core';
+import { AfterViewInit, Component, OnInit, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
 import { Notification, NotificationEvent } from 'patternfly-ng';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { UserService, User, PlatformActions, PlatformState } from '@syndesis/ui/platform';
+import {
+  UserService,
+  User,
+  PlatformActions,
+  PlatformState
+} from '@syndesis/ui/platform';
 import { ModalService } from './common/modal/modal.service';
 import { NavigationService } from './common/navigation.service';
 import { ConfigService } from './config.service';
@@ -22,7 +21,7 @@ import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notificat
 @Component({
   selector: 'syndesis-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewInit {
   // TODO icon?
@@ -158,7 +157,9 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Function that resets the database.
    */
   resetDB() {
-    this.testSupport.resetDB().subscribe(() => log.debugc(() => 'DB has been reset'));
+    this.testSupport
+      .resetDB()
+      .subscribe(() => log.debugc(() => 'DB has been reset'));
   }
 
   /**

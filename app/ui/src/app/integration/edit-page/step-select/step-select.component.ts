@@ -1,37 +1,26 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import {
-  ActionConfig,
-  FilterConfig,
-  FilterEvent,
-  FilterField,
-  SortConfig,
-  SortField,
-  SortEvent,
-  ToolbarConfig
-} from 'patternfly-ng';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
+import { FilterConfig, SortConfig, ToolbarConfig } from 'patternfly-ng';
 import {
   ExtensionStore,
   EXTENSION,
   StepStore,
-  StepKind,
-  StepKinds
+  StepKind
 } from '@syndesis/ui/store';
-import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
-import { TypeFactory } from '@syndesis/ui/model';
-import { Extension, Extensions, Step, Steps } from '@syndesis/ui/platform';
+import {
+  CurrentFlowService,
+  FlowEvent,
+  FlowPageService
+} from '@syndesis/ui/integration/edit-page';
+import { Extensions, Step, Steps } from '@syndesis/ui/platform';
 import { ObjectPropertyFilterPipe } from '@syndesis/ui/common';
-import { log, getCategory } from '@syndesis/ui/logging';
 
 @Component({
   selector: 'syndesis-integration-step-select',
   templateUrl: './step-select.component.html',
-  styleUrls: [
-    '../../integration-common.scss',
-    './step-select.component.scss'
-  ]
+  styleUrls: ['../../integration-common.scss', './step-select.component.scss']
 })
 export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
   flowSubscription: Subscription;
@@ -52,7 +41,6 @@ export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
     private stepStore: StepStore,
     private extensionStore: ExtensionStore
   ) {
-
     this.flowSubscription = this.currentFlowService.events.subscribe(
       (event: FlowEvent) => {
         this.handleFlowEvent(event);
@@ -196,7 +184,7 @@ export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
       } as SortConfig
     } as ToolbarConfig;
     this.route.paramMap
-      .first(params => params.has('position'))
+      .pipe(first(params => params.has('position')))
       .subscribe(params => {
         this.position = +params.get('position');
         this.extensions$.subscribe(extensions => {

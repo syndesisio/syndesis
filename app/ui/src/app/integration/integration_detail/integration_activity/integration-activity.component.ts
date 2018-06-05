@@ -1,10 +1,16 @@
+import { map } from 'rxjs/operators';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ConfigService } from '@syndesis/ui/config.service';
 import { log } from '@syndesis/ui/logging';
-import { Activity, Integration, IntegrationDeployment, IntegrationSupportService, Step } from '@syndesis/ui/platform';
+import {
+  Activity,
+  Integration,
+  IntegrationDeployment,
+  IntegrationSupportService,
+  Step
+} from '@syndesis/ui/platform';
 import { PaginationConfig } from 'patternfly-ng';
-import { Subscription } from 'rxjs/Subscription';
-import { forkJoin } from 'rxjs/observable/forkJoin';
+import { Subscription, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'syndesis-integration-activity',
@@ -30,7 +36,10 @@ export class IntegrationActivityComponent implements OnInit, OnDestroy {
 
   private allActivities: Activity[] = [];
 
-  constructor(private integrationSupportService: IntegrationSupportService, private configService: ConfigService) { }
+  constructor(
+    private integrationSupportService: IntegrationSupportService,
+    private configService: ConfigService
+  ) {}
 
   ngOnInit() {
     this.fetchActivities();
@@ -47,7 +56,7 @@ export class IntegrationActivityComponent implements OnInit, OnDestroy {
 
     if (step) {
       const { name, action } = step;
-      stepName = name || ( action && action.name ? action.name : stepName );
+      stepName = name || (action && action.name ? action.name : stepName);
     }
 
     return stepName;
@@ -63,47 +72,70 @@ export class IntegrationActivityComponent implements OnInit, OnDestroy {
     this.onRefresh = true;
     this.onError = false;
 
-    const activities$ = this.integrationSupportService.requestIntegrationActivity(this.integration.id);
-    const integrationDeployments$ = this.integrationSupportService.getDeployments(this.integration.id);
-
-    this.subscription = forkJoin<[Activity[], IntegrationDeployment[]]>([activities$, integrationDeployments$]).map(results => {
-      const activitities = results[0];
-      const integrationDeployments = results[1];
-
-      activitities.forEach(activity => {
-        if (activity.steps && Array.isArray(activity.steps)) {
-          activity.steps.forEach(step => {
-            const deployedIntegrationStep = integrationDeployments
-              .find(deployment => deployment.version === +activity.ver)
-              .spec
-              .steps.find(integrationStep => integrationStep.id == step.id);
-
-            step.name = this.fetchStepName(deployedIntegrationStep);
-            step.isFailed = step.failure && step.failure.length > 0;
-
-            const errorMessages = [null, ...step.messages, step.failure].filter(messages => !!messages);
-            step.output = errorMessages.length > 0 ? errorMessages.join('\n') : null;
-          });
-        }
-      });
-
-      return activitities;
-    })
-    .subscribe(
-      activities => this.updateActivities(activities),
-      error => this.handleError(error)
+    const activities$ = this.integrationSupportService.requestIntegrationActivity(
+      this.integration.id
     );
+    const integrationDeployments$ = this.integrationSupportService.getDeployments(
+      this.integration.id
+    );
+
+    this.subscription = forkJoin<[Activity[], IntegrationDeployment[]]>([
+      activities$,
+      integrationDeployments$
+    ])
+      .pipe(
+        map(results => {
+          const activitities: any[] = results[0];
+          const integrationDeployments: any[] = results[1];
+
+          activitities.forEach(activity => {
+            if (activity.steps && Array.isArray(activity.steps)) {
+              activity.steps.forEach(step => {
+                const deployedIntegrationStep = integrationDeployments
+                  .find(deployment => deployment.version === +activity.ver)
+                  .spec.steps.find(
+                    integrationStep => integrationStep.id == step.id
+                  );
+
+                step.name = this.fetchStepName(deployedIntegrationStep);
+                step.isFailed = step.failure && step.failure.length > 0;
+
+                const errorMessages = [
+                  null,
+                  ...step.messages,
+                  step.failure
+                ].filter(messages => !!messages);
+                step.output =
+                  errorMessages.length > 0 ? errorMessages.join('\n') : null;
+              });
+            }
+          });
+
+          return activitities;
+        })
+      )
+      .subscribe(
+        activities => this.updateActivities(activities),
+        error => this.handleError(error)
+      );
   }
 
   renderActivitiesByPage(): void {
-    const pageItemIndex = (this.paginationConfig.pageNumber - 1) * this.paginationConfig.pageSize;
-    this.activities = this.allActivities.slice(pageItemIndex, pageItemIndex + this.paginationConfig.pageSize);
+    const pageItemIndex =
+      (this.paginationConfig.pageNumber - 1) * this.paginationConfig.pageSize;
+    this.activities = this.allActivities.slice(
+      pageItemIndex,
+      pageItemIndex + this.paginationConfig.pageSize
+    );
   }
 
   onSelectActivity(event: Event, activity: Activity): void {
     event.preventDefault();
     event.stopPropagation();
-    this.selectedActivity = this.selectedActivity && this.selectedActivity.id === activity.id ? null : activity;
+    this.selectedActivity =
+      this.selectedActivity && this.selectedActivity.id === activity.id
+        ? null
+        : activity;
   }
 
   private updateActivities(activities: Activity[]): void {
@@ -111,11 +143,14 @@ export class IntegrationActivityComponent implements OnInit, OnDestroy {
     this.lastRefresh = new Date();
 
     const aggregatedActivities = [...activities, ...this.allActivities];
-    this.allActivities = Array.from(new Set(aggregatedActivities.map(activity => activity.id)))
+    this.allActivities = Array.from(
+      new Set(aggregatedActivities.map(activity => activity.id))
+    )
       .map(id => aggregatedActivities.find(activity => activity.id === id))
       .sort((activity1, activity2) => activity2.at - activity1.at);
 
-    this.showPagination = (this.allActivities.length > this.paginationConfig.pageSize);
+    this.showPagination =
+      this.allActivities.length > this.paginationConfig.pageSize;
     this.paginationConfig.totalItems = this.allActivities.length;
     this.paginationConfig.pageNumber = 1;
 
@@ -135,6 +170,11 @@ export class IntegrationActivityComponent implements OnInit, OnDestroy {
   private handleError(error: Error): void {
     this.onRefresh = false;
     this.onError = true;
-    log.error(`Error fetching activity records for integration ID ${this.integration.id}`, error);
+    log.error(
+      `Error fetching activity records for integration ID ${
+        this.integration.id
+      }`,
+      error
+    );
   }
 }

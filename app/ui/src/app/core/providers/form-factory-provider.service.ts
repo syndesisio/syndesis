@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { FormFactoryService, ConfigurationProperty, ConfiguredConfigurationProperty, StringMap, I18NService } from '@syndesis/ui/platform';
+import {
+  FormFactoryService,
+  ConfigurationProperty,
+  ConfiguredConfigurationProperty,
+  StringMap,
+  I18NService
+} from '@syndesis/ui/platform';
 import { DurationInputModel } from '@syndesis/ui/common/ui-patternfly/duration-form-control.model';
 import {
   DynamicFormControlModel,
@@ -13,7 +19,6 @@ import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class FormFactoryProviderService extends FormFactoryService {
-
   constructor(private i18NService: I18NService) {
     super();
   }
@@ -74,13 +79,32 @@ export class FormFactoryProviderService extends FormFactoryService {
           formField = this.createCheckbox(key, field, value);
           break;
         case 'textarea':
-          formField = this.createTextArea(key, field, value, validators, errorMessages);
+          formField = this.createTextArea(
+            key,
+            field,
+            value,
+            validators,
+            errorMessages
+          );
           break;
         case 'select':
-          formField = this.createSelect(key, field, value, validators, errorMessages);
+          formField = this.createSelect(
+            key,
+            field,
+            value,
+            validators,
+            errorMessages
+          );
           break;
         default:
-          formField = this.createInput(key, field, value, type,  validators, errorMessages);
+          formField = this.createInput(
+            key,
+            field,
+            value,
+            type,
+            validators,
+            errorMessages
+          );
       }
 
       if (formField) {
@@ -128,20 +152,24 @@ export class FormFactoryProviderService extends FormFactoryService {
     return answer;
   }
 
-  private createDuration(key: string,
-                         field: ConfiguredConfigurationProperty,
-                         value: any): any {
-    return new DurationInputModel({
-      id: key,
-      label: field.displayName || key,
-      labelTooltip: this.getLocalizedString(field, 'labelHint'),
-      controlTooltip: this.getLocalizedString(field, 'controlHint'),
-      inputType: 'duration',
-      value: value || field.value || field.defaultValue,
-      hint: field.description,
-      required: field.required,
-      relation: field.relation
-    }, {
+  private createDuration(
+    key: string,
+    field: ConfiguredConfigurationProperty,
+    value: any
+  ): any {
+    return new DurationInputModel(
+      {
+        id: key,
+        label: field.displayName || key,
+        labelTooltip: this.getLocalizedString(field, 'labelHint'),
+        controlTooltip: this.getLocalizedString(field, 'controlHint'),
+        inputType: 'duration',
+        value: value || field.value || field.defaultValue,
+        hint: field.description,
+        required: field.required,
+        relation: field.relation
+      },
+      {
         element: {
           label: 'control-label'
         },
@@ -149,42 +177,46 @@ export class FormFactoryProviderService extends FormFactoryService {
           control: 'col-sm-9',
           label: 'col-sm-3'
         }
-      });
+      }
+    );
   }
 
   private createInput(
-                      key: string,
-                      field: ConfiguredConfigurationProperty,
-                      value: any,
-                      type: string,
-                      validators: {},
-                      errorMessages: {}) {
+    key: string,
+    field: ConfiguredConfigurationProperty,
+    value: any,
+    type: string,
+    validators: {},
+    errorMessages: {}
+  ) {
     if (field.secret && field.type !== 'hidden') {
       type = 'password';
     }
-    return new DynamicInputModel({
-      id: key,
-      label: type === 'hidden' ? null : field.displayName || key,
-      inputType: type,
-      value: value || field.value || field.defaultValue,
-      labelTooltip: this.getLocalizedString(field, 'labelHint'),
-      controlTooltip: this.getLocalizedString(field, 'controlHint'),
-      placeholder: this.getLocalizedString(field, 'placeholder'),
-      hint: this.getLocalizedString(field, 'description'),
-      list: field.enum
-        ? (<Array<any>>field.enum).map(val => {
-          if (typeof val === 'string') {
-            return val;
-          }
-          return val['value'];
-        })
-        : undefined,
-      required: type === 'hidden' ? undefined : field.required,
-      autoComplete: field.secret ? 'off' : undefined,
-      relation: field.relation,
-      validators: type === 'hidden' ? undefined : validators,
-      errorMessages: errorMessages
-    }, {
+    return new DynamicInputModel(
+      {
+        id: key,
+        label: type === 'hidden' ? null : field.displayName || key,
+        inputType: type,
+        value: value || field.value || field.defaultValue,
+        labelTooltip: this.getLocalizedString(field, 'labelHint'),
+        controlTooltip: this.getLocalizedString(field, 'controlHint'),
+        placeholder: this.getLocalizedString(field, 'placeholder'),
+        hint: this.getLocalizedString(field, 'description'),
+        list: field.enum
+          ? (<Array<any>>field.enum).map(val => {
+              if (typeof val === 'string') {
+                return val;
+              }
+              return val['value'];
+            })
+          : undefined,
+        required: type === 'hidden' ? undefined : field.required,
+        autoComplete: field.secret ? 'off' : undefined,
+        relation: field.relation,
+        validators: type === 'hidden' ? undefined : validators,
+        errorMessages: errorMessages
+      },
+      {
         element: {
           label: 'control-label'
         },
@@ -192,28 +224,33 @@ export class FormFactoryProviderService extends FormFactoryService {
           control: 'col-sm-9',
           label: 'col-sm-3'
         }
-      });
+      }
+    );
   }
 
-  private createSelect(key: string,
-                       field: ConfiguredConfigurationProperty,
-                       value: any,
-                       validators: {},
-                       errorMessages: {}) {
-    return new DynamicSelectModel({
-      id: key,
-      multiple: false,
-      label: field.displayName || key,
-      labelTooltip: this.getLocalizedString(field, 'labelHint'),
-      controlTooltip: this.getLocalizedString(field, 'controlHint'),
-      value: value || field.defaultValue || field.enum[0].value,
-      hint: this.getLocalizedString(field, 'description'),
-      required: field.required,
-      relation: field.relation,
-      validators: validators,
-      errorMessages: errorMessages,
-      options: field.enum
-    }, {
+  private createSelect(
+    key: string,
+    field: ConfiguredConfigurationProperty,
+    value: any,
+    validators: {},
+    errorMessages: {}
+  ) {
+    return new DynamicSelectModel(
+      {
+        id: key,
+        multiple: false,
+        label: field.displayName || key,
+        labelTooltip: this.getLocalizedString(field, 'labelHint'),
+        controlTooltip: this.getLocalizedString(field, 'controlHint'),
+        value: value || field.defaultValue || field.enum[0].value,
+        hint: this.getLocalizedString(field, 'description'),
+        required: field.required,
+        relation: field.relation,
+        validators: validators,
+        errorMessages: errorMessages,
+        options: field.enum
+      },
+      {
         element: {
           label: 'control-label'
         },
@@ -221,29 +258,34 @@ export class FormFactoryProviderService extends FormFactoryService {
           control: 'col-sm-9',
           label: 'col-sm-3'
         }
-      });
+      }
+    );
   }
 
-  private createTextArea(key: string,
-                         field: ConfiguredConfigurationProperty,
-                         value: any,
-                         validators: {},
-                         errorMessages: {}) {
-    return new DynamicTextAreaModel({
-      id: key,
-      label: field.displayName || key,
-      labelTooltip: this.getLocalizedString(field, 'labelHint'),
-      controlTooltip: this.getLocalizedString(field, 'controlHint'),
-      value: value || field.value || field.defaultValue,
-      hint: this.getLocalizedString(field, 'description'),
-      required: field.required,
-      relation: field.relation,
-      placeholder: this.getLocalizedString(field, 'placeholder'),
-      rows: field.rows,
-      cols: field.cols,
-      validators: validators,
-      errorMessages: errorMessages
-    }, {
+  private createTextArea(
+    key: string,
+    field: ConfiguredConfigurationProperty,
+    value: any,
+    validators: {},
+    errorMessages: {}
+  ) {
+    return new DynamicTextAreaModel(
+      {
+        id: key,
+        label: field.displayName || key,
+        labelTooltip: this.getLocalizedString(field, 'labelHint'),
+        controlTooltip: this.getLocalizedString(field, 'controlHint'),
+        value: value || field.value || field.defaultValue,
+        hint: this.getLocalizedString(field, 'description'),
+        required: field.required,
+        relation: field.relation,
+        placeholder: this.getLocalizedString(field, 'placeholder'),
+        rows: field.rows,
+        cols: field.cols,
+        validators: validators,
+        errorMessages: errorMessages
+      },
+      {
         element: {
           label: 'control-label'
         },
@@ -251,24 +293,28 @@ export class FormFactoryProviderService extends FormFactoryService {
           control: 'col-sm-9',
           label: 'col-sm-3'
         }
-      });
+      }
+    );
   }
 
-  private createCheckbox(key: string,
-                         field: ConfiguredConfigurationProperty,
-                         value: any
+  private createCheckbox(
+    key: string,
+    field: ConfiguredConfigurationProperty,
+    value: any
   ) {
     let initialValue = value || field.value || field.defaultValue;
-    initialValue = (initialValue === 'false') ? false : initialValue;
-    return new DynamicCheckboxModel({
-      id: key,
-      label: field.displayName || key,
-      labelTooltip: this.getLocalizedString(field, 'labelHint'),
-      controlTooltip: this.getLocalizedString(field, 'controlHint'),
-      hint: this.getLocalizedString(field, 'description'),
-      relation: field.relation,
-      value: (!!initialValue)
-    }, {
+    initialValue = initialValue === 'false' ? false : initialValue;
+    return new DynamicCheckboxModel(
+      {
+        id: key,
+        label: field.displayName || key,
+        labelTooltip: this.getLocalizedString(field, 'labelHint'),
+        controlTooltip: this.getLocalizedString(field, 'controlHint'),
+        hint: this.getLocalizedString(field, 'description'),
+        relation: field.relation,
+        value: !!initialValue
+      },
+      {
         element: {
           control: 'element-control checkbox'
         },
@@ -276,6 +322,7 @@ export class FormFactoryProviderService extends FormFactoryService {
           control: 'col-sm-offset-3 col-sm-9',
           label: ''
         }
-      });
+      }
+    );
   }
 }

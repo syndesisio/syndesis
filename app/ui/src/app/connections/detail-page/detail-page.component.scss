@@ -3,7 +3,7 @@
 :host {
   @include syn-scrollable-parent;
 
-  syndesis-loading {    
+  syndesis-loading {
     padding-left: $gutter;
     padding-right: $gutter;
     margin-right: -$gutter;

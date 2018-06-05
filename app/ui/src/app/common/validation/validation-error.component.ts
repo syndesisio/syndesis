@@ -12,4 +12,4 @@ import { Component, OnInit } from '@angular/core';
     </p>
   `
 })
-export class ValidationErrorComponent { }
+export class ValidationErrorComponent {}

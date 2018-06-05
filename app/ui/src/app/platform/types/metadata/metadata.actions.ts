@@ -7,8 +7,8 @@ import { MetadataState } from './metadata.models';
  * type tokens and helper methods to return and dispatch statically typed actions.
  * See: './metadata.reducer.ts'
  */
-export const UPDATE    = '[Metadata] General state update';
-export const RESET     = '[Metadata] State reset to initial values';
+export const UPDATE = '[Metadata] General state update';
+export const RESET = '[Metadata] State reset to initial values';
 
 /**
  * Statically typed action classes, with constructors
@@ -17,7 +17,7 @@ export const RESET     = '[Metadata] State reset to initial values';
 export class MetadataUpdate implements Action {
   readonly type = UPDATE;
 
-  constructor(public payload: MetadataState) { }
+  constructor(public payload: MetadataState) {}
 }
 
 export class MetadataReset implements Action {

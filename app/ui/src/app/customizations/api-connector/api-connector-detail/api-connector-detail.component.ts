@@ -1,12 +1,16 @@
+import { map, first, combineLatest, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import {
   ApiConnectorActions,
-  ApiConnectorData, ApiConnectors, ApiConnectorState,
-  ApiConnectorStore, getApiConnectorState,
+  ApiConnectorData,
+  ApiConnectors,
+  ApiConnectorState,
+  ApiConnectorStore,
+  getApiConnectorState,
   CustomConnectorRequest
 } from '@syndesis/ui/customizations/api-connector';
 import { ConfigService } from '@syndesis/ui/config.service';
@@ -30,19 +34,29 @@ export class ApiConnectorDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.apiConnectorState$ = this.apiConnectorStore.select<ApiConnectorState>(getApiConnectorState);
+    this.apiConnectorState$ = this.apiConnectorStore.select<ApiConnectorState>(
+      getApiConnectorState
+    );
 
     this.apiConnectorData$ = this.route.paramMap
-      .first(params => params.has('id'))
-      .map(params => params.get('id'))
-      .combineLatest(this.apiConnectorState$.map(apiConnectorState => apiConnectorState.list))
-      .switchMap(([id, apiConnectors]: [string, ApiConnectors]) =>
-        apiConnectors.filter(apiConnector => apiConnector.id == id)
+      .pipe(
+        first(params => params.has('id')),
+        map(params => params.get('id')),
+        // tslint:disable-next-line:deprecation
+        combineLatest(
+          this.apiConnectorState$.pipe(
+            map(apiConnectorState => apiConnectorState.list)
+          )
+        ),
+        switchMap(([id, apiConnectors]: [string, ApiConnectors]) =>
+          apiConnectors.filter(apiConnector => apiConnector.id == id)
+        )
       );
   }
 
   onUpdate(customConnectorRequest: CustomConnectorRequest): void {
-    this.apiConnectorStore.dispatch(ApiConnectorActions.update(customConnectorRequest));
+    this.apiConnectorStore.dispatch(
+      ApiConnectorActions.update(customConnectorRequest)
+    );
   }
-
 }

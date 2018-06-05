@@ -12,7 +12,10 @@ import { ApiModule } from '@syndesis/ui/api';
 import { apiConnectorEndpoints } from './api-connector.api';
 import { ApiConnectorRoutingModule } from './api-connector.routing';
 
-import { ApiConnectorAuthComponent, ApiConnectorSwaggerUploadComponent } from './api-connector-create';
+import {
+  ApiConnectorAuthComponent,
+  ApiConnectorSwaggerUploadComponent
+} from './api-connector-create';
 import { ApiConnectorInfoComponent } from './api-connector-info';
 import { ApiConnectorReviewComponent } from './api-connector-review';
 import { ApiConnectorListComponent } from './api-connector-list';
@@ -32,7 +35,7 @@ import { ApiConnectorService } from './api-connector.service';
     ApiConnectorRoutingModule,
     ApiModule.forChild(apiConnectorEndpoints),
     StoreModule.forFeature('apiConnectorState', apiConnectorReducer),
-    EffectsModule.forFeature([ApiConnectorEffects]),
+    EffectsModule.forFeature([ApiConnectorEffects])
   ],
   exports: [RouterModule],
   declarations: [
@@ -41,8 +44,8 @@ import { ApiConnectorService } from './api-connector.service';
     ApiConnectorAuthComponent,
     ApiConnectorSwaggerUploadComponent,
     ApiConnectorInfoComponent,
-    ApiConnectorReviewComponent,
+    ApiConnectorReviewComponent
   ],
   providers: [ApiConnectorService]
 })
-export class ApiConnectorModule { }
+export class ApiConnectorModule {}

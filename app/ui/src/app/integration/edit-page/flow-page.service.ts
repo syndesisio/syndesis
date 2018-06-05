@@ -1,9 +1,14 @@
 import { Injectable, Inject } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CurrentFlowService } from './current-flow.service';
 import { FlowEvent } from '@syndesis/ui/integration/edit-page';
-import { Integration, Step, IntegrationState, PUBLISHED } from '@syndesis/ui/platform';
+import {
+  Integration,
+  Step,
+  IntegrationState,
+  PUBLISHED
+} from '@syndesis/ui/platform';
 
 @Injectable()
 export class FlowPageService {
@@ -15,9 +20,7 @@ export class FlowPageService {
   constructor(
     public currentFlowService: CurrentFlowService,
     public router: Router
-  ) {
-
-  }
+  ) {}
 
   initialize() {
     this.errorMessage = undefined;
@@ -38,7 +41,10 @@ export class FlowPageService {
   cancel() {
     this.initialize();
     if (this.currentFlowService.integration.id) {
-      this.router.navigate(['/integrations', this.currentFlowService.integration.id]);
+      this.router.navigate([
+        '/integrations',
+        this.currentFlowService.integration.id
+      ]);
     } else {
       this.router.navigate(['/integrations']);
     }
@@ -137,5 +143,4 @@ export class FlowPageService {
   getCurrentStepKind(route: ActivatedRoute) {
     return (this.getCurrentStep(route) || {})['stepKind'];
   }
-
 }

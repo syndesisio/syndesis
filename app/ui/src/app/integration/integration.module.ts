@@ -14,7 +14,10 @@ import { IntegrationImportExportModule } from './import-export/integration-impor
 import { IntegrationSupportModule } from './integration-support.module';
 import { IntegrationListModule } from './list';
 import { IntegrationListPage } from './list-page';
-import { IntegrationDetailComponent, INTEGRATION_DETAIL_DIRECTIVES } from './integration_detail';
+import {
+  IntegrationDetailComponent,
+  INTEGRATION_DETAIL_DIRECTIVES
+} from './integration_detail';
 import { IntegrationLogsComponent } from './integration_logs';
 
 import {
@@ -35,7 +38,7 @@ import {
   FlowViewComponent,
   FlowViewStepComponent,
   CurrentFlowService,
-  FlowPageService,
+  FlowPageService
 } from './edit-page';
 
 const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
@@ -119,7 +122,7 @@ const routes: Routes = [
     FileUploadModule,
     integrationSupportModuleFwd,
     integrationListModuleFwd,
-    IntegrationImportExportModule,
+    IntegrationImportExportModule
   ],
   declarations: [
     ...INTEGRATION_DETAIL_DIRECTIVES,
@@ -145,9 +148,6 @@ const routes: Routes = [
     StepVisiblePipe,
     CancelAddStepComponent
   ],
-  providers: [
-    CurrentFlowService,
-    FlowPageService,
-  ]
+  providers: [CurrentFlowService, FlowPageService]
 })
 export class IntegrationModule {}

@@ -5,7 +5,10 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 
-import { ApiConnectorListComponent, ApiConnectorLazyLoaderGuard } from './api-connector';
+import {
+  ApiConnectorListComponent,
+  ApiConnectorLazyLoaderGuard
+} from './api-connector';
 import { ApiConnectorModule } from './api-connector/api-connector.module';
 import { CustomizationsComponent } from './customizations.component';
 
@@ -35,14 +38,17 @@ const routes: Routes = [
         redirectTo: 'api-connector'
       }
     ]
-  // TODO: Move to its own NgRoutingModule
-  }, {
+    // TODO: Move to its own NgRoutingModule
+  },
+  {
     path: 'extensions/import/:id',
     component: TechExtensionImportComponent
-  }, {
+  },
+  {
     path: 'extensions/import',
     component: TechExtensionImportComponent
-  }, {
+  },
+  {
     path: 'extensions/:id',
     component: TechExtensionDetailComponent
   }
@@ -56,7 +62,7 @@ const routes: Routes = [
     PatternflyUIModule,
     FileUploadModule,
     ApiConnectorModule,
-    RouterModule.forChild(routes),
+    RouterModule.forChild(routes)
   ],
   exports: [RouterModule],
   declarations: [
@@ -68,4 +74,4 @@ const routes: Routes = [
     TechExtensionDetailComponent
   ]
 })
-export class CustomizationsModule { }
+export class CustomizationsModule {}

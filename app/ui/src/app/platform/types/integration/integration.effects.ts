@@ -1,7 +1,9 @@
+import { of as observableOf, Observable } from 'rxjs';
+
+import { map, mergeMap, catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
 
 import { IntegrationSupportService } from './integration-support.service';
 import { IntegrationService } from './integration.service';
@@ -9,18 +11,24 @@ import * as IntegrationActions from './integration.actions';
 
 @Injectable()
 export class IntegrationEffects {
-
   @Effect()
   fetchIntegrations$: Observable<Action> = this.actions$
     .ofType(IntegrationActions.FETCH_INTEGRATIONS)
-    .mergeMap(() =>
-      this.integrationService
-        .fetch()
-        .map(response => ({ type: IntegrationActions.FETCH_INTEGRATIONS_COMPLETE, payload: response }))
-        .catch(error => Observable.of({
-          type: IntegrationActions.FETCH_INTEGRATIONS_FAIL,
-          payload: error
-        }))
+    .pipe(
+      mergeMap(() =>
+        this.integrationService.fetch().pipe(
+          map(response => ({
+            type: IntegrationActions.FETCH_INTEGRATIONS_COMPLETE,
+            payload: response
+          })),
+          catchError(error =>
+            observableOf({
+              type: IntegrationActions.FETCH_INTEGRATIONS_FAIL,
+              payload: error
+            })
+          )
+        )
+      )
     );
 
   @Effect()
@@ -29,14 +37,21 @@ export class IntegrationEffects {
       IntegrationActions.FETCH_METRICS,
       IntegrationActions.FETCH_INTEGRATIONS
     )
-    .mergeMap(action =>
-      this.integrationService
-        .fetchMetrics(action.id)
-        .map(response => ({ type: IntegrationActions.FETCH_METRICS_COMPLETE, payload: { id: action.id, ...response } }))
-        .catch(error => Observable.of({
-          type: IntegrationActions.FETCH_METRICS_FAIL,
-          payload: error
-        }))
+    .pipe(
+      mergeMap(action =>
+        this.integrationService.fetchMetrics(action.id).pipe(
+          map(response => ({
+            type: IntegrationActions.FETCH_METRICS_COMPLETE,
+            payload: { id: action.id, ...response }
+          })),
+          catchError(error =>
+            observableOf({
+              type: IntegrationActions.FETCH_METRICS_FAIL,
+              payload: error
+            })
+          )
+        )
+      )
     );
 
   constructor(

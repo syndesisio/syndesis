@@ -1,0 +1,167 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "syndesis-ui": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "tsConfig": "src/tsconfig.json",
+            "showCircularDependencies": false,
+            "polyfills": "src/polyfills.ts",
+            "preserveSymlinks": true,
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/scss/base",
+                "node_modules"
+              ]
+            },
+            "assets": [
+              "src/assets",
+              "src/favicon.ico",
+              "src/favicon-16x16.png",
+              "src/favicon-32x32.png",
+              "src/android-chrome-192x192.png",
+              "src/android-chrome-512x512.png",
+              "src/apple-touch-icon.png",
+              "src/mstile-150x150.png",
+              "src/safari-pinned-tab.svg",
+              "src/manifest.webapp",
+              "src/browserconfig.xml",
+              "src/config.json"
+            ],
+            "styles": [
+              "node_modules/patternfly/dist/css/patternfly.css",
+              "node_modules/patternfly/dist/css/patternfly-additions.css",
+              "node_modules/patternfly-ng/dist/css/patternfly-ng.min.css",
+              "src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/jquery/dist/jquery.js",
+              "node_modules/jquery-match-height/dist/jquery.matchHeight.js",
+              "node_modules/tether/dist/js/tether.js",
+              "node_modules/bootstrap/dist/js/bootstrap.js",
+              "node_modules/patternfly/dist/js/patternfly.js",
+              "node_modules/patternfly/dist/js/patternfly-settings.js",
+              "node_modules/patternfly-bootstrap-combobox/js/bootstrap-combobox.js",
+              "node_modules/moment/min/moment.min.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "syndesis-ui:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "syndesis-ui:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "syndesis-ui:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "karmaConfig": "./karma.conf.js",
+            "tsConfig": "src/tsconfig.json",
+            "polyfills": "src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/scss/base",
+                "node_modules"
+              ]
+            },
+            "scripts": [
+              "node_modules/jquery/dist/jquery.js",
+              "node_modules/jquery-match-height/dist/jquery.matchHeight.js",
+              "node_modules/tether/dist/js/tether.js",
+              "node_modules/bootstrap/dist/js/bootstrap.js",
+              "node_modules/patternfly/dist/js/patternfly.js",
+              "node_modules/patternfly/dist/js/patternfly-settings.js",
+              "node_modules/patternfly-bootstrap-combobox/js/bootstrap-combobox.js",
+              "node_modules/moment/min/moment.min.js"
+            ],
+            "styles": [
+              "node_modules/patternfly/dist/css/patternfly.css",
+              "node_modules/patternfly/dist/css/patternfly-additions.css",
+              "node_modules/patternfly-ng/dist/css/patternfly-ng.min.css",
+              "src/styles.scss"
+            ],
+            "assets": [
+              "src/assets",
+              "src/favicon.ico",
+              "src/favicon-16x16.png",
+              "src/favicon-32x32.png",
+              "src/android-chrome-192x192.png",
+              "src/android-chrome-512x512.png",
+              "src/apple-touch-icon.png",
+              "src/mstile-150x150.png",
+              "src/safari-pinned-tab.svg",
+              "src/manifest.webapp",
+              "src/browserconfig.xml",
+              "src/config.json"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.json"
+            ],
+            "exclude": []
+          }
+        }
+      }
+    },
+    "syndesis-ui-e2e": {
+      "root": "",
+      "sourceRoot": "",
+      "projectType": "application"
+    }
+  },
+  "defaultProject": "syndesis-ui",
+  "schematics": {
+    "@schematics/angular:component": {
+      "prefix": "syndesis",
+      "styleext": "scss"
+    },
+    "@schematics/angular:directive": {
+      "prefix": "syndesis"
+    }
+  }
+}

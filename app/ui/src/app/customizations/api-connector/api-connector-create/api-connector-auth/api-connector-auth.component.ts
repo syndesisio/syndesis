@@ -1,6 +1,13 @@
-import { Component, Input, Output, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  OnInit,
+  OnDestroy,
+  EventEmitter
+} from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { CustomValidators } from '@syndesis/ui/platform';
 import { CustomConnectorRequest } from '@syndesis/ui/customizations/api-connector';
@@ -15,22 +22,31 @@ export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
   @Input() customConnectorRequest: CustomConnectorRequest;
   @Output() authSetup = new EventEmitter();
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit() {
-    const { authenticationType, authorizationEndpoint, tokenEndpoint } = this.customConnectorRequest.properties;
+    const {
+      authenticationType,
+      authorizationEndpoint,
+      tokenEndpoint
+    } = this.customConnectorRequest.properties;
     this.authSetupForm = this.formBuilder.group({
-      authenticationType: [authenticationType ? authenticationType.defaultValue : ''],
-      authorizationEndpoint: [authorizationEndpoint ? authorizationEndpoint.defaultValue : ''],
+      authenticationType: [
+        authenticationType ? authenticationType.defaultValue : ''
+      ],
+      authorizationEndpoint: [
+        authorizationEndpoint ? authorizationEndpoint.defaultValue : ''
+      ],
       tokenEndpoint: [tokenEndpoint ? tokenEndpoint.defaultValue : '']
     });
 
     this.authSetupFormValueSubscription = this.authSetupForm
       .get('authenticationType')
-      .valueChanges
-      .subscribe(value => this.setOAuthFormValidation(value));
+      .valueChanges.subscribe(value => this.setOAuthFormValidation(value));
 
-    this.setOAuthFormValidation(authenticationType ? authenticationType.defaultValue : '');
+    this.setOAuthFormValidation(
+      authenticationType ? authenticationType.defaultValue : ''
+    );
   }
 
   onSubmit({ value, valid }): void {
@@ -44,8 +60,14 @@ export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
   }
 
   private setOAuthFormValidation(authenticationType: string) {
-    const validatorFn = authenticationType == 'oauth2' ? [Validators.required, CustomValidators.validUrl] : [];
-    const { authorizationEndpoint, tokenEndpoint } = this.authSetupForm.controls;
+    const validatorFn =
+      authenticationType == 'oauth2'
+        ? [Validators.required, CustomValidators.validUrl]
+        : [];
+    const {
+      authorizationEndpoint,
+      tokenEndpoint
+    } = this.authSetupForm.controls;
 
     authorizationEndpoint.setValidators(validatorFn);
     authorizationEndpoint.updateValueAndValidity();

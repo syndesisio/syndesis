@@ -17,23 +17,21 @@ describe('ConnectionsListComponent', () => {
   let component: ConnectionsListComponent;
   let fixture: ComponentFixture<ConnectionsListComponent>;
 
-  beforeEach(
-    async(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          TestApiModule,
-          CommonModule,
-          SyndesisCommonModule.forRoot(),
-          RouterTestingModule.withRoutes([]),
-          ModalModule.forRoot(),
-          BsDropdownModule.forRoot(),
-          SyndesisStoreModule,
-          NotificationModule
-        ],
-        declarations: [ConnectionsListComponent]
-      }).compileComponents();
-    })
-  );
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        TestApiModule,
+        CommonModule,
+        SyndesisCommonModule.forRoot(),
+        RouterTestingModule.withRoutes([]),
+        ModalModule.forRoot(),
+        BsDropdownModule.forRoot(),
+        SyndesisStoreModule,
+        NotificationModule
+      ],
+      declarations: [ConnectionsListComponent]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConnectionsListComponent);

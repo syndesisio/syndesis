@@ -6,7 +6,7 @@ const initialState: IntegrationImportState = {
   file: null,
   importResults: {
     integrations: [],
-    connections: [],
+    connections: []
   },
   list: [],
   loading: true,
@@ -15,13 +15,16 @@ const initialState: IntegrationImportState = {
   errors: []
 };
 
-export function integrationImportReducer(state = initialState, action: any): IntegrationImportState {
+export function integrationImportReducer(
+  state = initialState,
+  action: any
+): IntegrationImportState {
   switch (action.type) {
-
     case IntegrationImportActions.UPLOAD_INTEGRATION: {
       return {
         ...state,
-        file: (action as IntegrationImportActions.IntegrationImportUpload).entity.file,
+        file: (action as IntegrationImportActions.IntegrationImportUpload)
+          .entity.file,
         loading: true,
         loaded: false,
         hasErrors: false,

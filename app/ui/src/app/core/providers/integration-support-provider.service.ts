@@ -1,6 +1,9 @@
+import { merge as observableMerge, Observable } from 'rxjs';
+
+import { mergeMap, map, filter } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Action,
+import {
+  Action,
   Connection,
   Activity,
   Integration,
@@ -19,13 +22,18 @@ import { EventsService } from '@syndesis/ui/store';
 
 @Injectable()
 export class IntegrationSupportProviderService extends IntegrationSupportService {
-
-  constructor(private apiHttpService: ApiHttpService, private eventsService: EventsService) {
+  constructor(
+    private apiHttpService: ApiHttpService,
+    private eventsService: EventsService
+  ) {
     super();
   }
 
   getFilterOptions(dataShape: any): Observable<any> {
-    return this.apiHttpService.post(integrationEndpoints.filterOptions, dataShape);
+    return this.apiHttpService.post(
+      integrationEndpoints.filterOptions,
+      dataShape
+    );
   }
 
   deploy(integration: Integration | IntegrationDeployment): Observable<any> {
@@ -38,45 +46,64 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     } else {
       // it's an Integration
       url = integrationEndpoints.publish;
-      state = { };
+      state = {};
       method = 'put';
     }
-    return this.apiHttpService.setEndpointUrl(url, { id: integration.id, version: integration.version })[method](state);
+    return this.apiHttpService
+      .setEndpointUrl(url, { id: integration.id, version: integration.version })
+      [method](state);
   }
 
   undeploy(integration: Integration): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.updateState, {
-      id: integration.id,
-      version: integration.deploymentVersion,
-    }).post({
-      targetState: UNPUBLISHED
-    });
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.updateState, {
+        id: integration.id,
+        version: integration.deploymentVersion
+      })
+      .post({
+        targetState: UNPUBLISHED
+      });
   }
 
-  updateState(id: string, version: string | number, status: IntegrationStatus): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.updateState, { id, version }).post({
-      targetState: status
-    });
+  updateState(
+    id: string,
+    version: string | number,
+    status: IntegrationStatus
+  ): Observable<any> {
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.updateState, { id, version })
+      .post({
+        targetState: status
+      });
   }
 
-  getDeployment(id: string, version: string): Observable<IntegrationDeployment> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.deployment, { id, version }).get();
+  getDeployment(
+    id: string,
+    version: string
+  ): Observable<IntegrationDeployment> {
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.deployment, { id, version })
+      .get();
   }
 
   getDeployments(id: string): Observable<IntegrationDeployments> {
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.deployments, { id })
       .get()
-      .map(response => (response['items'] as IntegrationDeployments) || []);
+      .pipe(
+        map(response => (response['items'] as IntegrationDeployments) || [])
+      );
   }
 
   watchDeployments(id: string): Observable<any> {
-    return Observable.merge(
+    return observableMerge(
       this.getDeployments(id),
-      this.eventsService.changeEvents
-        .filter(event => event.kind === 'integration-deployment')
+      this.eventsService.changeEvents.pipe(
+        filter(event => event.kind === 'integration-deployment'),
         // TODO it would obviously be better to just fetch one, not all of 'em
-        .flatMap(event => this.getDeployments(id)));
+        mergeMap(event => this.getDeployments(id))
+      )
+    );
   }
 
   requestPom(integration: Integration): Observable<any> {
@@ -88,23 +115,30 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     action: Action,
     configuredProperties: any
   ): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.metadata, {
-      connectionId: connection.id,
-      actionId: action.id
-    }).post(configuredProperties);
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.metadata, {
+        connectionId: connection.id,
+        actionId: action.id
+      })
+      .post(configuredProperties);
   }
 
   requestJavaInspection(
     connectorId: String,
     type: String
   ): Observable<Response> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.javaInspection, { connectorId, type }).get();
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.javaInspection, {
+        connectorId,
+        type
+      })
+      .get();
   }
 
   exportIntegration(...ids: string[]): Observable<Blob> {
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.export, { id: ids })
-      .get( { responseType: 'blob' });
+      .get({ responseType: 'blob' });
   }
 
   importIntegrationURL(): string {
@@ -113,8 +147,9 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
 
   requestIntegrationActivityFeatureEnabled(): Observable<boolean> {
     return this.apiHttpService
-      .setEndpointUrl(integrationEndpoints.activityFeature).get<{ enabled?: string }>()
-      .map(response => !!response.enabled);
+      .setEndpointUrl(integrationEndpoints.activityFeature)
+      .get<{ enabled?: string }>()
+      .pipe(map(response => !!response.enabled));
   }
 
   requestIntegrationActivity(integrationId: string): Observable<Activity[]> {
@@ -124,19 +159,22 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   }
 
   downloadSupportData(data: any[]): Observable<Blob> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.supportData)
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.supportData)
       .post<Blob>(data, { responseType: 'blob' });
   }
 
   private getOverview(id: string): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.overview, { id }).get();
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.overview, { id })
+      .get();
   }
 
   private watchOverview(id: string): Observable<IntegrationOverview> {
-    return Observable.merge(
+    return observableMerge(
       this.getOverview(id),
-      this.eventsService.changeEvents
-        .filter(event => {
+      this.eventsService.changeEvents.pipe(
+        filter(event => {
           switch (event.kind) {
             case 'integration':
               return event.id === id;
@@ -145,22 +183,30 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
             default:
               return false;
           }
-        })
-        .flatMap(event => this.getOverview(id))
+        }),
+        mergeMap(event => this.getOverview(id))
+      )
     );
   }
 
   private getOverviews(): Observable<IntegrationOverviews> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.overviews).get().map((value: any) => value.items || []);
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.overviews)
+      .get()
+      .pipe(map((value: any) => value.items || []));
   }
 
   private watchOverviews(): Observable<IntegrationOverviews> {
-    return Observable.merge(
+    return observableMerge(
       this.getOverviews(),
-      this.eventsService.changeEvents
-        .filter(event => event.kind === 'integration' || event.kind === 'integration-deployment')
-        .flatMap(event => this.getOverviews())
+      this.eventsService.changeEvents.pipe(
+        filter(
+          event =>
+            event.kind === 'integration' ||
+            event.kind === 'integration-deployment'
+        ),
+        mergeMap(event => this.getOverviews())
+      )
     );
   }
-
 }

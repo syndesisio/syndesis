@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { Extension, Extensions, Integrations } from '@syndesis/ui/platform';
 import { AbstractStore, EventsService } from '../entity';
 import { ExtensionService } from './extension.service';
 
 @Injectable()
-export class ExtensionStore extends AbstractStore<Extension, Extensions, ExtensionService> {
+export class ExtensionStore extends AbstractStore<
+  Extension,
+  Extensions,
+  ExtensionService
+> {
   constructor(extensionService: ExtensionService, eventService: EventsService) {
     super(extensionService, eventService, [], {} as Extension);
   }

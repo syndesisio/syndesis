@@ -1,23 +1,24 @@
 import { ApplicationRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { map, switchMap, combineLatest } from 'rxjs/operators';
-import { Action as PFAction, ActionConfig, ListConfig, NotificationType } from 'patternfly-ng';
+import { Observable, of, Subscription } from 'rxjs';
+import { map, switchMap, combineLatest, first } from 'rxjs/operators';
+import {
+  Action as PFAction,
+  ActionConfig,
+  NotificationType
+} from 'patternfly-ng';
 
 import { IntegrationStore, StepStore, EventsService } from '@syndesis/ui/store';
 import {
   Integration,
   Step,
   PUBLISHED,
-  UNPUBLISHED,
   IntegrationOverview,
   IntegrationActionsService,
   IntegrationSupportService,
   IntegrationDeployment,
   IntegrationMetrics,
-  IntegrationState,
   IntegrationActions,
   PlatformState
 } from '@syndesis/ui/platform';
@@ -55,10 +56,7 @@ const DEFAULT_POLLING_INTERVAL = 5000;
 @Component({
   selector: 'syndesis-integration-detail-page',
   templateUrl: 'integration-detail.component.html',
-  styleUrls: [
-    '../integration-common.scss',
-    'integration-detail.component.scss'
-  ]
+  styleUrls: ['../integration-common.scss', 'integration-detail.component.scss']
 })
 export class IntegrationDetailComponent implements OnInit, OnDestroy {
   integrationMetrics$: Observable<IntegrationMetrics>;
@@ -88,7 +86,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     private eventsService: EventsService,
     private platformStore: Store<PlatformState>,
     private configService: ConfigService
-  ) { }
+  ) {}
 
   get modalTitle() {
     return this.integrationActionsService.getModalTitle();
@@ -109,7 +107,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   }
 
   nameUpdated(id: string, $event) {
-    this.attributeUpdated(id, { 'name': $event });
+    this.attributeUpdated(id, { name: $event });
   }
 
   attributeUpdated(id: string, updatedAttribute: { [key: string]: string }) {
@@ -131,10 +129,12 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   draftAction(eventId: string) {
     switch (eventId) {
       case 'publish':
-        this.integrationActionsService.requestAction('publish', <any>this.integration);
+        this.integrationActionsService.requestAction('publish', <any>this
+          .integration);
         break;
       case 'edit':
-        this.integrationActionsService.requestAction('edit', <any>this.integration);
+        this.integrationActionsService.requestAction('edit', <any>this
+          .integration);
         break;
       default:
         break;
@@ -144,10 +144,15 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   deploymentAction(event: { id: string; deployment: IntegrationDeployment }) {
     switch (event.id) {
       case REPLACE_DRAFT:
-        this.integrationActionsService.requestAction('replaceDraft', this.integration, event.deployment);
+        this.integrationActionsService.requestAction(
+          'replaceDraft',
+          this.integration,
+          event.deployment
+        );
         break;
       case STOP_INTEGRATION:
-        this.integrationActionsService.requestAction('unpublish', <any>this.integration);
+        this.integrationActionsService.requestAction('unpublish', <any>this
+          .integration);
         break;
       case PUBLISH:
         {
@@ -157,7 +162,10 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
             name: this.integration.name,
             version: event.deployment.version
           };
-          this.integrationActionsService.requestAction('publish', <any>integration);
+          this.integrationActionsService.requestAction(
+            'publish',
+            <any>integration
+          );
         }
         break;
       case CREATE_DRAFT:
@@ -171,13 +179,28 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.integrationMetrics$ = this.platformStore.select('integrationState').pipe(
-      map(integrationState => integrationState.metrics.list),
-      combineLatest(this.route.paramMap.first(params => params.has('integrationId')).map(paramMap => paramMap.get('integrationId'))),
-      switchMap(([integrationMetrics, integrationId]) => Observable.of(integrationMetrics.find(metrics => metrics.id === integrationId)))
-    );
+    this.integrationMetrics$ = this.platformStore
+      .select('integrationState')
+      .pipe(
+        map(integrationState => integrationState.metrics.list),
+        // tslint:disable-next-line:deprecation
+        combineLatest(
+          this.route.paramMap
+            .pipe(
+              first(params => params.has('integrationId')),
+              map(paramMap => paramMap.get('integrationId'))
+            )
+        ),
+        switchMap(([integrationMetrics, integrationId]) =>
+          of(
+            integrationMetrics.find(metrics => metrics.id === integrationId)
+          )
+        )
+      );
 
-    this.selectedTabbedView$ = this.route.queryParams.map(params => params['view'] || 'description');
+    this.selectedTabbedView$ = this.route.queryParams.pipe(
+      map(params => params['view'] || 'description')
+    );
 
     this.draftConfig = {
       primaryActions: [
@@ -187,13 +210,13 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
           title: 'Edit',
           styleClass: 'btn btn-default primary-action',
           tooltip: 'Edit this draft'
-        } as PFAction,
+        } as PFAction
       ]
     } as ActionConfig;
 
     this.loggingEnabled = this.config.getSettings('features', 'logging', false);
     this.routeSubscription = this.route.paramMap
-      .first(params => params.has('integrationId'))
+      .pipe(first(params => params.has('integrationId')))
       .subscribe(paramMap => {
         if (this.integrationSubscription) {
           this.integrationSubscription.unsubscribe();
@@ -202,33 +225,35 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
 
         this.onRefreshMetrics(integrationId);
 
-        this.integrationSubscription = this.integrationStore.resource.subscribe((integration: IntegrationOverview) => {
-          this.loading = false;
-          this.integration = integration;
-          this.deploymentActionConfigs = {};
-          if (!this.integration.deployments) {
-            return;
-          }
-          for (const deployment of this.integration.deployments) {
-            const actionConfig = {
-              primaryActions: [],
-              moreActions: [],
-              moreActionsVisible: true,
-              moreActionsDisabled: false
-            } as ActionConfig;
-            actionConfig.moreActions.push(replaceDraft);
-            if (deployment.version === integration.deploymentVersion) {
-              if (integration.currentState === PUBLISHED) {
-                actionConfig.moreActions.push(stopIntegration);
+        this.integrationSubscription = this.integrationStore.resource.subscribe(
+          (integration: IntegrationOverview) => {
+            this.loading = false;
+            this.integration = integration;
+            this.deploymentActionConfigs = {};
+            if (!this.integration.deployments) {
+              return;
+            }
+            for (const deployment of this.integration.deployments) {
+              const actionConfig = {
+                primaryActions: [],
+                moreActions: [],
+                moreActionsVisible: true,
+                moreActionsDisabled: false
+              } as ActionConfig;
+              actionConfig.moreActions.push(replaceDraft);
+              if (deployment.version === integration.deploymentVersion) {
+                if (integration.currentState === PUBLISHED) {
+                  actionConfig.moreActions.push(stopIntegration);
+                } else {
+                  actionConfig.moreActions.push(publish);
+                }
               } else {
                 actionConfig.moreActions.push(publish);
               }
-            } else {
-              actionConfig.moreActions.push(publish);
+              this.deploymentActionConfigs[deployment.id] = actionConfig;
             }
-            this.deploymentActionConfigs[deployment.id] = actionConfig;
           }
-        });
+        );
         this.loading = true;
         this.integrationStore.load(integrationId);
       });
@@ -243,8 +268,11 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
 
   onRefreshMetrics(integrationId: string): void {
     if (integrationId || this.integration.id) {
-      this.platformStore.dispatch(new IntegrationActions.FetchMetrics(integrationId || this.integration.id));
+      this.platformStore.dispatch(
+        new IntegrationActions.FetchMetrics(
+          integrationId || this.integration.id
+        )
+      );
     }
   }
-
 }

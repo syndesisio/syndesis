@@ -1,11 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription, BehaviorSubject, Observable } from 'rxjs';
 import { CurrentFlowService, FlowPageService, FlowEvent } from '../index';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
-import { Step, FormFactoryService, StringMap, DataShapeKinds } from '@syndesis/ui/platform';
-import { Observable } from 'rxjs/Observable';
-import { DynamicFormService, DynamicFormControlModel } from '@ng-dynamic-forms/core';
+import {
+  Step,
+  FormFactoryService,
+  StringMap,
+  DataShapeKinds
+} from '@syndesis/ui/platform';
+import {
+  DynamicFormService,
+  DynamicFormControlModel
+} from '@ng-dynamic-forms/core';
 import { FormGroup } from '@angular/forms';
 
 enum DataShapeDirection {
@@ -13,14 +19,16 @@ enum DataShapeDirection {
   OUTPUT = 'output'
 }
 
-const PROPERTY_RELATION = [{
-  action: 'DISABLE',
-  connective: 'OR',
-  when: [
-    { id: 'kind', value: DataShapeKinds.ANY },
-    { id: 'kind', value: DataShapeKinds.NONE }
-  ]
-}];
+const PROPERTY_RELATION = [
+  {
+    action: 'DISABLE',
+    connective: 'OR',
+    when: [
+      { id: 'kind', value: DataShapeKinds.ANY },
+      { id: 'kind', value: DataShapeKinds.NONE }
+    ]
+  }
+];
 
 const DESCRIBE_DATA_FORM_CONFIG = {
   kind: {
@@ -78,7 +86,6 @@ const DESCRIBE_DATA_FORM_CONFIG = {
   styleUrls: ['../../integration-common.scss']
 })
 export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
-
   buttonText = 'Next';
   actionName: string;
   connectionName: string;
@@ -144,28 +151,39 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
       return;
     }
     // if we're in the middle, we need to check both
-    const nextDirection = this.direction === DataShapeDirection.INPUT ? DataShapeDirection.OUTPUT : DataShapeDirection.INPUT;
-    this.router.navigate(['describe-data', this.position, nextDirection], { relativeTo: this.route.parent });
-
+    const nextDirection =
+      this.direction === DataShapeDirection.INPUT
+        ? DataShapeDirection.OUTPUT
+        : DataShapeDirection.INPUT;
+    this.router.navigate(['describe-data', this.position, nextDirection], {
+      relativeTo: this.route.parent
+    });
   }
 
   continue() {
     const step = this.currentFlowService.getStep(this.position);
     if (this.userDefined) {
-      const value = this.formFactoryService.sanitizeValues(this.formGroup.value, DESCRIBE_DATA_FORM_CONFIG);
+      const value = this.formFactoryService.sanitizeValues(
+        this.formGroup.value,
+        DESCRIBE_DATA_FORM_CONFIG
+      );
       const dataShape = this.getDataShape(this.direction, step);
       // normalize this to 'any'
       dataShape.kind = value.kind;
       if (dataShape.kind !== DataShapeKinds.ANY) {
         dataShape.specification = value.specification || '';
         dataShape.name = value.name || 'Custom';
-        dataShape.description = value.description || 'A user specified data type';
+        dataShape.description =
+          value.description || 'A user specified data type';
       } else {
         delete dataShape.specification;
         delete dataShape.name;
         delete dataShape.description;
       }
-      dataShape.metadata = { ...dataShape.metadata, ...{ userDefined: 'true' } };
+      dataShape.metadata = {
+        ...dataShape.metadata,
+        ...{ userDefined: 'true' }
+      };
       this.currentFlowService.events.emit({
         kind: 'integration-set-datashape',
         isInput: this.direction === DataShapeDirection.INPUT,
@@ -199,7 +217,10 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
       this.buttonText = 'Done';
     }
     const dataShape = this.getDataShape(this.direction, step);
-    if (dataShape.kind === DataShapeKinds.ANY || (dataShape.metadata && dataShape.metadata.userDefined === 'true')) {
+    if (
+      dataShape.kind === DataShapeKinds.ANY ||
+      (dataShape.metadata && dataShape.metadata.userDefined === 'true')
+    ) {
       this.formValues = {
         kind: dataShape.kind,
         name: dataShape.name,
@@ -207,7 +228,10 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
         specification: dataShape.specification
       } as StringMap<string>;
       this.userDefined = true;
-      this.formModel = this.formFactoryService.createFormModel(DESCRIBE_DATA_FORM_CONFIG, this.formValues);
+      this.formModel = this.formFactoryService.createFormModel(
+        DESCRIBE_DATA_FORM_CONFIG,
+        this.formValues
+      );
       this.formGroup = this.dynamicFormService.createFormGroup(this.formModel);
     } else {
       // no need to prompt...
@@ -217,16 +241,20 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.routeSubscription = this.route.paramMap.subscribe((params: ParamMap) => {
-      this.direction = params.get('direction') as DataShapeDirection;
-      this.position = +params.get('position');
-      this.initialize();
-    });
-    this.flowSubscription = this.currentFlowService.events.subscribe((flowEvent: FlowEvent) => {
-      if (flowEvent.kind === 'integration-updated') {
+    this.routeSubscription = this.route.paramMap.subscribe(
+      (params: ParamMap) => {
+        this.direction = params.get('direction') as DataShapeDirection;
+        this.position = +params.get('position');
         this.initialize();
       }
-    });
+    );
+    this.flowSubscription = this.currentFlowService.events.subscribe(
+      (flowEvent: FlowEvent) => {
+        if (flowEvent.kind === 'integration-updated') {
+          this.initialize();
+        }
+      }
+    );
   }
 
   ngOnDestroy() {
@@ -240,5 +268,4 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
     }
     return step.action.descriptor.outputDataShape;
   }
-
 }

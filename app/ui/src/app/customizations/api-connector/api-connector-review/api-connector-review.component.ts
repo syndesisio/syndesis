@@ -9,18 +9,18 @@ import { ApiConnectorData } from '@syndesis/ui/customizations/api-connector';
 })
 export class ApiConnectorReviewComponent {
   validation: ApiConnectorData;
-  importedActions: Array<{ tag: string; count: number; }>;
+  importedActions: Array<{ tag: string; count: number }>;
 
   @Input() apiConnectorTemplateName: string;
   @Input() showNextButton: boolean;
-  @Input() set apiConnectorData(value: ApiConnectorData) {
+  @Input()
+  set apiConnectorData(value: ApiConnectorData) {
     this.validation = value;
     const actionCountByTags = value.actionsSummary.actionCountByTags || {};
     this.importedActions = Object.keys(actionCountByTags).map(key => ({
       tag: key,
       count: +actionCountByTags[key]
     }));
-
   }
 
   @Output() reviewComplete = new EventEmitter();

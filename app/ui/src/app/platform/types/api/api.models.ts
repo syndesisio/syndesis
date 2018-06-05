@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { StringMap, FileMap } from '@syndesis/ui/platform';
 
@@ -46,7 +46,11 @@ export interface ApiEndpoint {
   put<T>(body: any, options?: ApiRequestOptions): Observable<T>;
   patch<T>(body: any, options?: ApiRequestOptions): Observable<T>;
   delete<T>(body?: any, options?: ApiRequestOptions): Observable<T>;
-  upload<T>(fileMap?: FileMap, body?: StringMap<any>, options?: ApiUploadOptions): Observable<T>;
+  upload<T>(
+    fileMap?: FileMap,
+    body?: StringMap<any>,
+    options?: ApiUploadOptions
+  ): Observable<T>;
 }
 
 export interface ApiRequestProgress {

@@ -14,12 +14,14 @@ import { Component, Input } from '@angular/core';
       </span>
     </button>
   `,
-  styles: [`
+  styles: [
+    `
     :host-context(.is-margin-reset) .submit { margin: 0; }
     .syndesis-button { display: flex; justify-content: center; }
     .syndesis-button__spinner { display: block; margin: 0; }
     .syndesis-button__spinner + .syndesis-button__label { padding-left: 1em; }
-  `]
+  `
+  ]
 })
 export class ButtonComponent {
   @Input() type: 'button' | 'submit' = 'button';

@@ -14,42 +14,43 @@ import { EventsService, IntegrationStore, StepStore } from '@syndesis/ui/store';
 import { IntegrationService } from '../../../store/integration/integration.service';
 import { SyndesisCommonModule } from '../../../common/common.module';
 import { ConnectionsModule } from '../../../connections/connections.module';
-import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
+import {
+  CurrentFlowService,
+  FlowPageService
+} from '@syndesis/ui/integration/edit-page';
 
 describe('FlowViewComponent', () => {
   let component: FlowViewComponent;
   let fixture: ComponentFixture<FlowViewComponent>;
 
-  beforeEach(
-    async(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          CoreModule.forRoot(),
-          ApiModule.forRoot(),
-          CommonModule,
-          FormsModule,
-          RouterTestingModule.withRoutes([]),
-          ConnectionsModule,
-          ModalModule.forRoot(),
-          TabsModule.forRoot(),
-          PopoverModule.forRoot(),
-          CollapseModule.forRoot(),
-          SyndesisCommonModule.forRoot(),
-          IntegrationSupportModule,
-          CollapseModule
-        ],
-        declarations: [FlowViewComponent, FlowViewStepComponent],
-        providers: [
-          CurrentFlowService,
-          FlowPageService,
-          IntegrationStore,
-          IntegrationService,
-          EventsService,
-          StepStore
-        ]
-      }).compileComponents();
-    })
-  );
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        CoreModule.forRoot(),
+        ApiModule.forRoot(),
+        CommonModule,
+        FormsModule,
+        RouterTestingModule.withRoutes([]),
+        ConnectionsModule,
+        ModalModule.forRoot(),
+        TabsModule.forRoot(),
+        PopoverModule.forRoot(),
+        CollapseModule.forRoot(),
+        SyndesisCommonModule.forRoot(),
+        IntegrationSupportModule,
+        CollapseModule
+      ],
+      declarations: [FlowViewComponent, FlowViewStepComponent],
+      providers: [
+        CurrentFlowService,
+        FlowPageService,
+        IntegrationStore,
+        IntegrationService,
+        EventsService,
+        StepStore
+      ]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FlowViewComponent);

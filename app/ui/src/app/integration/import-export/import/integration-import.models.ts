@@ -1,7 +1,4 @@
-import {
-  BaseReducerModel,
-  BaseRequestModel
-} from '@syndesis/ui/platform';
+import { BaseReducerModel, BaseRequestModel } from '@syndesis/ui/platform';
 
 export interface IntegrationImportValidationError {
   error?: string;
@@ -10,7 +7,9 @@ export interface IntegrationImportValidationError {
 }
 export type IntegrationImports = Array<IntegrationImportState>;
 
-export interface IntegrationImportRequest extends BaseRequestModel, IntegrationImportState {
+export interface IntegrationImportRequest
+  extends BaseRequestModel,
+    IntegrationImportState {
   integrationImportTemplateId: string;
 }
 
@@ -25,7 +24,7 @@ export interface IntegrationImportState extends BaseReducerModel {
     id?: string;
   };
   list?: IntegrationImports;
-  warnings?: Array<{ key: string; longdesc: string; }>;
+  warnings?: Array<{ key: string; longdesc: string }>;
 }
 
 export interface FileError {

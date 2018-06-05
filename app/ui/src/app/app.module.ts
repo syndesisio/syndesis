@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule, InjectionToken } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
@@ -33,7 +33,7 @@ import { ERROR_HANDLER_PROVIDERS } from './error-handler';
     AppRoutingModule,
     SyndesisStoreModule,
     DataMapperModule,
-    NotificationModule,
+    NotificationModule
   ],
   providers: [
     ERROR_HANDLER_PROVIDERS,
@@ -43,7 +43,7 @@ import { ERROR_HANDLER_PROVIDERS } from './error-handler';
       useFactory: appConfigInitializer,
       deps: [ConfigService],
       multi: true
-    },
+    }
   ],
   bootstrap: [AppComponent]
 })

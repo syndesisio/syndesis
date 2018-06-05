@@ -1,4 +1,11 @@
-import { BaseEntity, User, Action, StringMap, ConfigurationProperty, BulletinBoard } from '@syndesis/ui/platform';
+import {
+  BaseEntity,
+  User,
+  Action,
+  StringMap,
+  ConfigurationProperty,
+  BulletinBoard
+} from '@syndesis/ui/platform';
 
 // these are related to oauth enabled connections
 export interface AcquisitionMethod extends BaseEntity {

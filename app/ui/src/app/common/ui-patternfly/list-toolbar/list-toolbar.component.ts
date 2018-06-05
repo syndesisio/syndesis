@@ -1,24 +1,24 @@
 import {
+  EMPTY,
+  Subject,
+  Observable,
+  Subscription
+} from 'rxjs';
+
+import { tap } from 'rxjs/operators';
+import {
   Component,
-  EventEmitter,
   Input,
-  Output,
   OnDestroy,
   OnInit,
   TemplateRef
 } from '@angular/core';
 
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-
 import {
-  ActionConfig,
   FilterConfig,
   FilterEvent,
   FilterField,
   SortConfig,
-  SortField,
   SortEvent,
   ToolbarConfig
 } from 'patternfly-ng';
@@ -32,7 +32,7 @@ import { ObjectPropertySortPipe } from '../../object-property-sort.pipe';
   styleUrls: ['./list-toolbar.component.scss']
 })
 export class ListToolbarComponent<T> implements OnInit, OnDestroy {
-  @Input() items: Observable<Array<T>> = Observable.empty();
+  @Input() items: Observable<Array<T>> = EMPTY;
   @Input() filteredItems: Subject<Array<T>>;
   @Input() actionTemplate: TemplateRef<any>;
   @Input() viewTemplate: TemplateRef<any>;
@@ -79,30 +79,32 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
     } as ToolbarConfig;
 
     this.subscription = this.items
-      .do(items => (this.allItems = items))
-      .do(items => {
-        if (!this.filterTags) {
-          return;
-        }
-        if (items.find(item => item['tags'])) {
-          if (!filterConfig.fields.find(field => field.id === 'tag')) {
-            filterConfig.fields.push({
-              id: 'tag',
-              title: 'Tag',
-              placeholder: 'Filter by tag...',
-              type: 'typeahead'
-            });
+      .pipe(
+        tap(items => (this.allItems = items)),
+        tap(items => {
+          if (!this.filterTags) {
+            return;
           }
-        } else {
-          const index = filterConfig.fields.findIndex(
-            field => field.id === 'tag'
-          );
-          if (index >= 0) {
-            filterConfig.fields.splice(index, 1);
+          if (items.find(item => item['tags'])) {
+            if (!filterConfig.fields.find(field => field.id === 'tag')) {
+              filterConfig.fields.push({
+                id: 'tag',
+                title: 'Tag',
+                placeholder: 'Filter by tag...',
+                type: 'typeahead'
+              });
+            }
+          } else {
+            const index = filterConfig.fields.findIndex(
+              field => field.id === 'tag'
+            );
+            if (index >= 0) {
+              filterConfig.fields.splice(index, 1);
+            }
           }
-        }
-      })
-      .do(_ => this.filter())
+        }),
+        tap(_ => this.filter())
+      )
       .subscribe();
   }
 
@@ -111,22 +113,23 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
   }
 
   filter(): void {
-    const result = this.toolbarConfig.filterConfig.appliedFilters.reduce(
-      (items, filter) =>
-        filter.field.id === 'tag'
-          ? items.filter(
-              item =>
-                Array.isArray(item['tags'])
-                  ? item['tags'].some(tag => tag === filter.query.value)
-                  : false
-            )
-          : this.propertyFilter.transform(items, {
-              filter: filter.value,
-              propertyName: filter.field.id,
-              exact: filter.field.type !== 'text'
-            }),
-      this.allItems
-    ) || [];
+    const result =
+      this.toolbarConfig.filterConfig.appliedFilters.reduce(
+        (items, filter) =>
+          filter.field.id === 'tag'
+            ? items.filter(
+                item =>
+                  Array.isArray(item['tags'])
+                    ? item['tags'].some(tag => tag === filter.query.value)
+                    : false
+              )
+            : this.propertyFilter.transform(items, {
+                filter: filter.value,
+                propertyName: filter.field.id,
+                exact: filter.field.type !== 'text'
+              }),
+        this.allItems
+      ) || [];
     this.toolbarConfig.filterConfig.resultsCount = result.length;
     this.itemsFiltered = result;
     this.sort();

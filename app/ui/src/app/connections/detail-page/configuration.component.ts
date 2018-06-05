@@ -8,12 +8,15 @@ import {
   OnInit
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
+import {
+  DynamicFormControlModel,
+  DynamicFormService
+} from '@ng-dynamic-forms/core';
 
 import { Connection, ApiHttpService } from '@syndesis/ui/platform';
 import { ConnectionConfigurationService } from '../common/configuration/configuration.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 interface AcquisitionResponseState {
   persist: string;
@@ -30,7 +33,8 @@ interface AcquisitionResponse {
   selector: 'syndesis-connection-detail-configuration',
   templateUrl: './configuration.component.html'
 })
-export class ConnectionDetailConfigurationComponent implements OnInit, OnChanges {
+export class ConnectionDetailConfigurationComponent
+  implements OnInit, OnChanges {
   @Input() connection: Connection;
   @Output() updated = new EventEmitter<Connection>();
   mode: 'view' | 'edit' = 'view';
@@ -47,7 +51,7 @@ export class ConnectionDetailConfigurationComponent implements OnInit, OnChanges
     private apiHttpService: ApiHttpService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.fragment.subscribe(fragment => {

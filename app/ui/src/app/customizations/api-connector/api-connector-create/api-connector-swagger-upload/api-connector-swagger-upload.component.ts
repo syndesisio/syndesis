@@ -3,7 +3,7 @@ import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core';
 import {
   ApiConnectorState,
   CustomConnectorRequest,
-  ApiConnectorValidationError,
+  ApiConnectorValidationError
 } from '@syndesis/ui/customizations/api-connector';
 
 @Component({
@@ -18,18 +18,22 @@ export class ApiConnectorSwaggerUploadComponent {
   swaggerFileList: FileList;
 
   get validationError(): ApiConnectorValidationError {
-    if (this.apiConnectorState &&
+    if (
+      this.apiConnectorState &&
       this.apiConnectorState.createRequest &&
       this.apiConnectorState.createRequest.errors &&
-      this.apiConnectorState.createRequest.errors.length > 0) {
+      this.apiConnectorState.createRequest.errors.length > 0
+    ) {
       return this.apiConnectorState.createRequest.errors[0];
     }
   }
 
   get processingError(): string {
-    if (this.apiConnectorState &&
+    if (
+      this.apiConnectorState &&
       this.apiConnectorState.hasErrors &&
-      this.apiConnectorState.errors.length > 0) {
+      this.apiConnectorState.errors.length > 0
+    ) {
       return this.apiConnectorState.errors[0].message;
     }
   }
@@ -49,7 +53,8 @@ export class ApiConnectorSwaggerUploadComponent {
         configuredProperties: {
           specification: this.swaggerFileUrl
         },
-        specificationFile: attachFile && this.swaggerFileList && this.swaggerFileList[0]
+        specificationFile:
+          attachFile && this.swaggerFileList && this.swaggerFileList[0]
       };
 
       this.request.next(validateSwaggerRequest);

@@ -1,14 +1,33 @@
-import { Component, Input, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  ChangeDetectorRef
+} from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
+import {
+  DynamicFormControlModel,
+  DynamicFormService
+} from '@ng-dynamic-forms/core';
 
-import { Action, DataShape, FormFactoryService, IntegrationSupportService, Step } from '@syndesis/ui/platform';
+import {
+  Action,
+  DataShape,
+  FormFactoryService,
+  IntegrationSupportService,
+  Step
+} from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { StepStore, DATA_MAPPER, BASIC_FILTER } from '@syndesis/ui/store';
-import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
+import {
+  CurrentFlowService,
+  FlowEvent,
+  FlowPageService
+} from '@syndesis/ui/integration/edit-page';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -20,7 +39,8 @@ const category = getCategory('IntegrationsCreatePage');
     './step-configure.component.scss'
   ]
 })
-export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, AfterViewInit {
+export class IntegrationStepConfigureComponent
+  implements OnInit, OnDestroy, AfterViewInit {
   flowSubscription: Subscription;
   position: number;
   step: Step;
@@ -44,7 +64,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
     public router: Router,
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
-    public stepStore: StepStore,
+    public stepStore: StepStore
   ) {
     this.flowSubscription = this.currentFlowService.events.subscribe(
       (event: FlowEvent) => {
@@ -124,7 +144,9 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
       return;
     }
     this.loading = true;
-    const step = (this.step = <Step>this.currentFlowService.getStep(this.position));
+    const step = (this.step = <Step>this.currentFlowService.getStep(
+      this.position
+    ));
     // If no Step exists or it's not actually a step, redirect to the Select Step view
     if (!step || step.stepKind === 'endpoint') {
       this.router.navigate(['step-select', this.position], {
@@ -133,7 +155,9 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
       return;
     }
 
-    const prevStep = this.currentFlowService.getPreviousStepWithDataShape(this.position);
+    const prevStep = this.currentFlowService.getPreviousStepWithDataShape(
+      this.position
+    );
     this.dataShape = prevStep.action.descriptor.outputDataShape;
     this.loadFormSetup(this.step);
   }
@@ -171,21 +195,20 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
   }
 
   ngOnInit() {
-    this.routeSubscription = this.route.paramMap
-      .subscribe(params => {
-        /* totally reset our state just to be safe*/
-        this.loading = false;
-        this.step = undefined;
-        this.formModel = undefined;
-        this.formGroup = undefined;
-        this.formConfig = undefined;
-        this.cfg = undefined;
-        this.customProperties = undefined;
-        this.dataShape = undefined;
-        this.error = undefined;
-        this.position = +params.get('position');
-        this.loadForm();
-      });
+    this.routeSubscription = this.route.paramMap.subscribe(params => {
+      /* totally reset our state just to be safe*/
+      this.loading = false;
+      this.step = undefined;
+      this.formModel = undefined;
+      this.formGroup = undefined;
+      this.formConfig = undefined;
+      this.cfg = undefined;
+      this.customProperties = undefined;
+      this.dataShape = undefined;
+      this.error = undefined;
+      this.position = +params.get('position');
+      this.loadForm();
+    });
   }
 
   ngAfterViewInit() {

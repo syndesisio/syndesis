@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import { Subscription, Observable } from 'rxjs';
 
 import { ApiHttpService, Connector, Connectors } from '@syndesis/ui/platform';
 import { RESTService } from '../entity';
@@ -53,7 +52,10 @@ export class ConnectorService extends RESTService<Connector, Connectors> {
         });
 
         setTimeout(() => {
-          const returnUrl = `${window.location.pathname.replace(/[^/]*$/, 'review')}#${id}`;
+          const returnUrl = `${window.location.pathname.replace(
+            /[^/]*$/,
+            'review'
+          )}#${id}`;
           this.apiHttpService
             .setEndpointUrl(`/connectors/${id}/credentials`)
             .post<AcquisitionResponse>({ returnUrl })

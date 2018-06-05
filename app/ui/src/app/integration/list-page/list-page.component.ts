@@ -1,16 +1,14 @@
 import { Component, OnInit, ApplicationRef } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { FilterField, NotificationType } from 'patternfly-ng';
 import { IntegrationStore, ChangeEvent } from '@syndesis/ui/store';
-import { IntegrationOverviews, IntegrationSupportService, Integration } from '@syndesis/ui/platform';
-import { ModalService, NotificationService } from '@syndesis/ui/common';
 import {
-  FileUploader,
-  FileItem,
-  ParsedResponseHeaders
-} from 'ng2-file-upload';
+  IntegrationOverviews,
+  IntegrationSupportService,
+  Integration
+} from '@syndesis/ui/platform';
+import { ModalService, NotificationService } from '@syndesis/ui/common';
+import { FileUploader, FileItem, ParsedResponseHeaders } from 'ng2-file-upload';
 import { environment } from '../../../environments/environment';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
 
@@ -23,9 +21,9 @@ export class IntegrationListPage implements OnInit {
   loading$: Observable<boolean>;
   public uploader: FileUploader;
   integrations$: Observable<Integration[]>;
-  filteredIntegrations$: Subject<
-    Integration[]
-  > = new BehaviorSubject(<Integration[]>{});
+  filteredIntegrations$: Subject<Integration[]> = new BehaviorSubject(
+    <Integration[]>{}
+  );
   filterFields: Array<FilterField> = [
     /*
     {
@@ -47,7 +45,7 @@ export class IntegrationListPage implements OnInit {
     private integrationSupportService: IntegrationSupportService,
     private integrationStore: IntegrationStore,
     private tokenExtractor: HttpXsrfTokenExtractor,
-    public notificationService: NotificationService,
+    public notificationService: NotificationService
   ) {
     this.integrations$ = integrationStore.list;
     this.loading$ = integrationStore.loading;
@@ -60,7 +58,8 @@ export class IntegrationListPage implements OnInit {
       headers: [
         {
           name: environment.xsrf.headerName,
-          value: this.tokenExtractor.getToken() || environment.xsrf.defaultTokenValue,
+          value:
+            this.tokenExtractor.getToken() || environment.xsrf.defaultTokenValue
         }
       ],
       disableMultipart: true,
@@ -74,12 +73,12 @@ export class IntegrationListPage implements OnInit {
     ) => {
       if (status === 200) {
         const changeEvents = JSON.parse(response) as ChangeEvent[];
-        for ( const x of changeEvents ) {
+        for (const x of changeEvents) {
           this.notificationService.popNotification({
             type: NotificationType.SUCCESS,
             header: 'Imported ' + x.kind,
             message: 'Your ' + x.kind + ' ' + x.id + ' has been imported',
-            isPersistent: true,
+            isPersistent: true
           });
         }
       } else if (status === 400) {
@@ -87,7 +86,7 @@ export class IntegrationListPage implements OnInit {
           type: NotificationType.DANGER,
           header: 'Import Failed!',
           message: JSON.parse(response).userMsg,
-          isPersistent: true,
+          isPersistent: true
         });
       } else {
         this.notificationService.popNotification({

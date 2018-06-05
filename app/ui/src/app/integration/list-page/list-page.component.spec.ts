@@ -17,24 +17,22 @@ xdescribe('IntegrationsListPage', () => {
   let component: IntegrationListPage;
   let fixture: ComponentFixture<IntegrationListPage>;
 
-  beforeEach(
-    async(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          SyndesisCommonModule.forRoot(),
-          SyndesisStoreModule,
-          RouterTestingModule.withRoutes([]),
-          ModalModule.forRoot(),
-          TooltipModule.forRoot(),
-          TabsModule.forRoot(),
-          NotificationModule,
-          PatternflyUIModule,
-          IntegrationListModule
-        ],
-        declarations: [IntegrationListPage]
-      }).compileComponents();
-    })
-  );
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        SyndesisCommonModule.forRoot(),
+        SyndesisStoreModule,
+        RouterTestingModule.withRoutes([]),
+        ModalModule.forRoot(),
+        TooltipModule.forRoot(),
+        TabsModule.forRoot(),
+        NotificationModule,
+        PatternflyUIModule,
+        IntegrationListModule
+      ],
+      declarations: [IntegrationListPage]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(IntegrationListPage);

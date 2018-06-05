@@ -26,5 +26,5 @@ export const integrationEndpoints: Endpoints = {
   activity: '/activity/integrations/{integrationId}',
   supportData: '/support/downloadSupportZip',
   // TODO this path should be driven by config.json also does this belong here
-  javaInspection: '/../../mapper/v1/java-inspections/{connectorId}/{type}.json',
+  javaInspection: '/../../mapper/v1/java-inspections/{connectorId}/{type}.json'
 };

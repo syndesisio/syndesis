@@ -9,14 +9,12 @@ describe('ListToolbarComponent', () => {
   let component: ListToolbarComponent<any>;
   let fixture: ComponentFixture<ListToolbarComponent<any>>;
 
-  beforeEach(
-    async(() => {
-      TestBed.configureTestingModule({
-        imports: [RouterTestingModule.withRoutes([]), ToolbarModule],
-        declarations: [ListToolbarComponent]
-      }).compileComponents();
-    })
-  );
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([]), ToolbarModule],
+      declarations: [ListToolbarComponent]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ListToolbarComponent);

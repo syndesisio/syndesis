@@ -3,7 +3,7 @@ import { ValidatorFn, AbstractControl } from '@angular/forms';
 export class CustomValidators {
   static requiredIfValidator(isRequired: boolean): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
-      return isRequired && !control.value ? { 'requiredIfChecked': true } : null;
+      return isRequired && !control.value ? { requiredIfChecked: true } : null;
     };
   }
 
@@ -13,7 +13,7 @@ export class CustomValidators {
     /* tslint:enable:max-line-length*/
 
     if (!regex.test(control.value)) {
-      return { 'validUrl': true };
+      return { validUrl: true };
     }
     return null;
   }

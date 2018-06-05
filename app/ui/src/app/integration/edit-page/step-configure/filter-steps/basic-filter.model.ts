@@ -5,11 +5,10 @@ import {
   DynamicFormArrayGroupModel,
   DynamicFormGroupModel
 } from '@ng-dynamic-forms/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 
 import {
   BasicFilter,
-  Rule,
   Op,
   getDefaultOps,
   convertOps
@@ -83,7 +82,7 @@ export function createBasicFilterModel(
           id: 'op',
           hint: 'Must meet this condition',
           value: rule ? rule.op : 'contains',
-          options: Observable.of(<any>ops)
+          options: of(<any>ops)
         },
         {
           element: {
@@ -132,7 +131,7 @@ export function createBasicFilterModel(
           {
             id: 'predicate',
             label: 'Continue only if incoming data match ',
-            options: Observable.of([
+            options: of([
               {
                 label: 'ALL of the following',
                 value: 'AND'

@@ -17,7 +17,15 @@ const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
     syndesisCommonModuleFwd,
     integrationSupportModuleFwd
   ],
-  declarations: [IntegrationActionMenuComponent, IntegrationStatusComponent, IntegrationListComponent],
-  exports: [IntegrationActionMenuComponent, IntegrationListComponent, IntegrationStatusComponent]
+  declarations: [
+    IntegrationActionMenuComponent,
+    IntegrationStatusComponent,
+    IntegrationListComponent
+  ],
+  exports: [
+    IntegrationActionMenuComponent,
+    IntegrationListComponent,
+    IntegrationStatusComponent
+  ]
 })
 export class IntegrationListModule {}

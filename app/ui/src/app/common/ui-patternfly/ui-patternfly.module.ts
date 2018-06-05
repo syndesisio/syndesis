@@ -28,7 +28,7 @@ import { VendorModule } from '@syndesis/ui/vendor';
     DurationFormControlComponent,
     DynamicFormsCoreModule,
     SyndesisFormComponent,
-    ListToolbarComponent,
+    ListToolbarComponent
   ]
 })
 export class PatternflyUIModule {}

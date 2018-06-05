@@ -1,19 +1,29 @@
 import { TestBed, async, inject } from '@angular/core/testing';
 
-import { Connection,
+import {
+  Connection,
   Action,
   createIntegration,
   createStep,
   Integration,
   Step,
-  Steps } from '@syndesis/ui/platform';
+  Steps
+} from '@syndesis/ui/platform';
 import { CoreModule } from '@syndesis/ui/core';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { ApiModule } from '@syndesis/ui/api';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { TypeFactory } from '@syndesis/ui/model';
-import { EventsService, IntegrationStore, IntegrationService, StepStore } from '@syndesis/ui/store';
-import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration/edit-page';
+import {
+  EventsService,
+  IntegrationStore,
+  IntegrationService,
+  StepStore
+} from '@syndesis/ui/store';
+import {
+  CurrentFlowService,
+  FlowEvent
+} from '@syndesis/ui/integration/edit-page';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 describe('CurrentFlow', () => {
@@ -22,7 +32,7 @@ describe('CurrentFlow', () => {
       imports: [
         ApiModule.forRoot(),
         CoreModule.forRoot(),
-        IntegrationSupportModule,
+        IntegrationSupportModule
       ],
       providers: [
         CurrentFlowService,

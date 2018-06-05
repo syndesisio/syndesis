@@ -24,11 +24,8 @@ describe('DashboardMetricsComponent', () => {
         SyndesisStoreModule
       ],
       providers: [ConfigService],
-      declarations: [
-        DashboardMetricsComponent
-      ]
-    })
-    .compileComponents();
+      declarations: [DashboardMetricsComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,14 +1,19 @@
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { ApiHttpService } from '@syndesis/ui/platform';
-import { ApiConnectors, ApiConnectorData, CustomConnectorRequest } from './api-connector.models';
+import {
+  ApiConnectors,
+  ApiConnectorData,
+  CustomConnectorRequest
+} from './api-connector.models';
 
 import { apiConnectorEndpoints } from './api-connector.api';
 
 @Injectable()
 export class ApiConnectorService {
-  constructor(private apiHttpService: ApiHttpService) { }
+  constructor(private apiHttpService: ApiHttpService) {}
 
   getCustomConnector(id: string): Observable<ApiConnectorData> {
     return this.apiHttpService
@@ -18,34 +23,52 @@ export class ApiConnectorService {
 
   getCustomConnectorList(): Observable<ApiConnectors> {
     return this.apiHttpService
-      .setEndpointUrl(apiConnectorEndpoints.getApiConnectorList, { template: 'swagger-connector-template' })
-      .get<{ items: ApiConnectors }>() // TODO: Provide a better <T> typing here
-      .map(response => response.items);
+      .setEndpointUrl(apiConnectorEndpoints.getApiConnectorList, {
+        template: 'swagger-connector-template'
+      })
+      .get<{ items: ApiConnectors }>()
+      .pipe(
+        // TODO: Provide a better <T> typing here
+        map(response => response.items)
+      );
   }
 
-  validateCustomConnectorInfo(customConnectorRequest: CustomConnectorRequest): Observable<ApiConnectorData> {
-    const apiHttpService = this.apiHttpService.setEndpointUrl(apiConnectorEndpoints.validateCustomConnectorInfo);
+  validateCustomConnectorInfo(
+    customConnectorRequest: CustomConnectorRequest
+  ): Observable<ApiConnectorData> {
+    const apiHttpService = this.apiHttpService.setEndpointUrl(
+      apiConnectorEndpoints.validateCustomConnectorInfo
+    );
     const { specificationFile, connectorTemplateId } = customConnectorRequest;
     if (specificationFile) {
-      return apiHttpService.upload<ApiConnectorData>({
-        specification: specificationFile
-      }, {
-        connectorSettings: { connectorTemplateId }
-      });
+      return apiHttpService.upload<ApiConnectorData>(
+        {
+          specification: specificationFile
+        },
+        {
+          connectorSettings: { connectorTemplateId }
+        }
+      );
     } else {
       return apiHttpService.post<ApiConnectorData>(customConnectorRequest);
     }
   }
 
-  createCustomConnector(customConnectorRequest: CustomConnectorRequest): Observable<any> {
-    const apiHttpService = this.apiHttpService.setEndpointUrl(apiConnectorEndpoints.submitCustomConnector);
+  createCustomConnector(
+    customConnectorRequest: CustomConnectorRequest
+  ): Observable<any> {
+    const apiHttpService = this.apiHttpService.setEndpointUrl(
+      apiConnectorEndpoints.submitCustomConnector
+    );
     const [rawConnectorSettings, icon, specification] = [
       customConnectorRequest,
       customConnectorRequest.iconFile,
       customConnectorRequest.specificationFile
     ];
 
-    const connectorSettings = this.sanitizeCustomConnectorRequest(rawConnectorSettings);
+    const connectorSettings = this.sanitizeCustomConnectorRequest(
+      rawConnectorSettings
+    );
 
     if (specification || icon) {
       const payload = {};
@@ -61,8 +84,13 @@ export class ApiConnectorService {
     }
   }
 
-  updateCustomConnector(customConnectorRequest: CustomConnectorRequest): Observable<any> {
-    const apiHttpService = this.apiHttpService.setEndpointUrl(apiConnectorEndpoints.selectApiConnector, { id: customConnectorRequest.id });
+  updateCustomConnector(
+    customConnectorRequest: CustomConnectorRequest
+  ): Observable<any> {
+    const apiHttpService = this.apiHttpService.setEndpointUrl(
+      apiConnectorEndpoints.selectApiConnector,
+      { id: customConnectorRequest.id }
+    );
     const [rawConnector, icon] = [
       customConnectorRequest,
       customConnectorRequest.iconFile
@@ -85,14 +113,18 @@ export class ApiConnectorService {
 
   // Custom connector requests need to be sanitized prior to be submitted to the API
   // Please read: https://github.com/syndesisio/syndesis/issues/980
-  private sanitizeCustomConnectorRequest(customConnector: CustomConnectorRequest): CustomConnectorRequest {
+  private sanitizeCustomConnectorRequest(
+    customConnector: CustomConnectorRequest
+  ): CustomConnectorRequest {
     const configuredProperties = { ...customConnector.configuredProperties };
 
     for (const key in configuredProperties) {
       if (configuredProperties.hasOwnProperty(key)) {
-        if (configuredProperties[key] == null
-          || configuredProperties[key] == undefined
-          || configuredProperties[key] === '') {
+        if (
+          configuredProperties[key] == null ||
+          configuredProperties[key] == undefined ||
+          configuredProperties[key] === ''
+        ) {
           delete configuredProperties[key];
         }
       }

@@ -1,7 +1,7 @@
+import { map } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable, Subscription } from 'rxjs';
 
 import { NavigationService } from '@syndesis/ui/common';
 import { IntegrationStore } from '@syndesis/ui/store';
@@ -116,8 +116,10 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
     );
 
     this.routeSubscription = this.route.paramMap
-      .map(params => params.get('integrationId'))
-      .subscribe(integrationId => this.integrationStore.loadOrCreate(integrationId));
+      .pipe(map(params => params.get('integrationId')))
+      .subscribe(integrationId =>
+        this.integrationStore.loadOrCreate(integrationId)
+      );
 
     this.navigationService.hide();
   }

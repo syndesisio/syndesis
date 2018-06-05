@@ -22,9 +22,7 @@ import { IntegrationImportService } from './integration-import.service';
     FileUploadModule
   ],
   exports: [RouterModule],
-  declarations: [
-    IntegrationImportComponent,
-  ],
+  declarations: [IntegrationImportComponent],
   providers: [IntegrationImportService]
 })
-export class IntegrationImportModule { }
+export class IntegrationImportModule {}

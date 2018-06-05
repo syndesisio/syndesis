@@ -1,12 +1,19 @@
-import { Component, Input, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
+import {
+  Component,
+  Input,
+  OnInit,
+  EventEmitter,
+  Output,
+  OnDestroy
+} from '@angular/core';
 
 import { ConfigService } from '@syndesis/ui/config.service';
 import { moment } from '@syndesis/ui/vendor';
 import {
   Connections,
-  IntegrationState, Integrations, IntegrationMetrics
+  IntegrationState,
+  Integrations,
+  IntegrationMetrics
 } from '@syndesis/ui/platform';
 
 const DEFAULT_POLLING_INTERVAL = 5000;
@@ -14,8 +21,10 @@ const DEFAULT_POLLING_INTERVAL = 5000;
 @Component({
   selector: 'syndesis-dashboard-metrics',
   templateUrl: './dashboard-metrics.component.html',
-  styleUrls: ['../dashboard.component.scss',
-    './dashboard-metrics.component.scss']
+  styleUrls: [
+    '../dashboard.component.scss',
+    './dashboard-metrics.component.scss'
+  ]
 })
 export class DashboardMetricsComponent implements OnInit, OnDestroy {
   @Input() connections: Connections; // TODO: Replace by connectionState once the ngrx store supports it
@@ -30,9 +39,9 @@ export class DashboardMetricsComponent implements OnInit, OnDestroy {
   constructor(private configService: ConfigService) {}
 
   get errorIntegrations(): number {
-    return this.integrations
-      .filter(integration => integration.currentState === 'Error')
-      .length;
+    return this.integrations.filter(
+      integration => integration.currentState === 'Error'
+    ).length;
   }
 
   get integrationMetrics(): IntegrationMetrics {
@@ -40,18 +49,25 @@ export class DashboardMetricsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.uptimeStart = moment(this.integrationMetrics.start).format('MMM Do HH:mm A'); // eg January 12nd 8:53 pm
+    this.uptimeStart = moment(this.integrationMetrics.start).format(
+      'MMM Do HH:mm A'
+    ); // eg January 12nd 8:53 pm
 
     let pollingInterval: number;
 
     try {
-      pollingInterval = this.configService.getSettings('metricsPollingInterval');
+      pollingInterval = this.configService.getSettings(
+        'metricsPollingInterval'
+      );
     } catch (error) {
       pollingInterval = DEFAULT_POLLING_INTERVAL;
     }
 
     if (pollingInterval > 0) {
-      this.metricsRefreshInterval = setInterval(() => this.refresh.emit(), pollingInterval);
+      this.metricsRefreshInterval = setInterval(
+        () => this.refresh.emit(),
+        pollingInterval
+      );
     }
   }
 

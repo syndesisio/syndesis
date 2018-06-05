@@ -5,14 +5,14 @@
 }
 
 .connector-actions {
-  padding-bottom: .5em;
+  padding-bottom: 0.5em;
 
   &__header {
     display: flex;
     background-color: $color-pf-black-200;
     text-transform: uppercase;
     font-weight: bold;
-    padding: .4em .6em;
+    padding: 0.4em 0.6em;
   }
 
   &__operations {
@@ -23,7 +23,7 @@
   &__operations &__operations li:before {
     display: inline;
     content: '-';
-    margin: 0 .3em;
+    margin: 0 0.3em;
   }
 
   &__label {
@@ -31,13 +31,13 @@
     color: white;
     font-size: 11px;
     margin: 0 1em;
-    padding: .2em .6em;
+    padding: 0.2em 0.6em;
 
-    &--error{
+    &--error {
       background: $color-pf-red-100;
     }
 
-    &--warning{
+    &--warning {
       background: $color-pf-orange-300;
     }
   }

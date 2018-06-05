@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { ConfigService } from '@syndesis/ui/config.service';
 import {
   PlatformState,
-  IntegrationState, selectIntegrationState, Integrations, IntegrationActions,
+  IntegrationState,
+  selectIntegrationState,
+  Integrations,
+  IntegrationActions,
   Connections,
   UserService
 } from '@syndesis/ui/platform';
@@ -40,7 +43,6 @@ export class DashboardComponent implements OnInit {
 
     this.connectionStore.loadAll();
     this.integrationStore.loadAll();
-
   }
 
   onRefreshDashboard(): void {

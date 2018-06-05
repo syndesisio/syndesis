@@ -1,3 +1,4 @@
+import { map } from 'rxjs/operators';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -6,7 +7,7 @@ import {
   IntegrationSupportService
 } from '@syndesis/ui/platform';
 import { FileError, IntegrationImportsData } from './integration-import.models';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import {
   FileItem,
@@ -40,11 +41,13 @@ export class IntegrationImportComponent implements OnInit {
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
-  constructor(private integrationSupportService: IntegrationSupportService,
-              private integrationStore: IntegrationStore,
-              private router: Router,
-              public notificationService: NotificationService,
-              private tokenExtractor: HttpXsrfTokenExtractor) {
+  constructor(
+    private integrationSupportService: IntegrationSupportService,
+    private integrationStore: IntegrationStore,
+    private router: Router,
+    public notificationService: NotificationService,
+    private tokenExtractor: HttpXsrfTokenExtractor
+  ) {
     // Do stuff here!
   }
 
@@ -53,7 +56,11 @@ export class IntegrationImportComponent implements OnInit {
   }
 
   done(importedOverviews) {
-    if (importedOverviews.length === 1 && importedOverviews[0].id && !this.isMultipleImport) {
+    if (
+      importedOverviews.length === 1 &&
+      importedOverviews[0].id &&
+      !this.isMultipleImport
+    ) {
       this.router.navigate(['/integrations', importedOverviews[0].id]);
     } else {
       this.redirectBack();
@@ -63,7 +70,8 @@ export class IntegrationImportComponent implements OnInit {
   getFileTypeError() {
     return {
       level: 'alert alert-danger',
-      message: '<strong>This is not a valid file type.</strong> Try again and specify a .zip file.'
+      message:
+        '<strong>This is not a valid file type.</strong> Try again and specify a .zip file.'
     };
   }
 
@@ -85,7 +93,8 @@ export class IntegrationImportComponent implements OnInit {
       headers: [
         {
           name: environment.xsrf.headerName,
-          value: this.tokenExtractor.getToken() || environment.xsrf.defaultTokenValue,
+          value:
+            this.tokenExtractor.getToken() || environment.xsrf.defaultTokenValue
         }
       ],
       disableMultipart: true,
@@ -100,12 +109,16 @@ export class IntegrationImportComponent implements OnInit {
       ]
     });
 
-    this.uploader.onWhenAddingFileFailed = (item: FileLikeObject, filter: any, options: any): any => {
+    this.uploader.onWhenAddingFileFailed = (
+      item: FileLikeObject,
+      filter: any,
+      options: any
+    ): any => {
       this.notificationService.popNotification({
         type: NotificationType.DANGER,
         header: 'Import Failed',
         message: 'There was an issue importing your integration.',
-        isPersistent: false,
+        isPersistent: false
       });
 
       this.error = this.getFileTypeError();
@@ -113,9 +126,11 @@ export class IntegrationImportComponent implements OnInit {
       this.uploader.clearQueue();
     };
 
-    this.uploader.onCompleteItem = (item: FileItem,
-                                    response: string,
-                                    status: number) => {
+    this.uploader.onCompleteItem = (
+      item: FileItem,
+      response: string,
+      status: number
+    ) => {
       if (status === 200) {
         this.fetchImportedIntegrations(JSON.parse(response));
 
@@ -123,7 +138,7 @@ export class IntegrationImportComponent implements OnInit {
           type: NotificationType.SUCCESS,
           header: 'Successfully Imported',
           message: 'Your integration has been imported',
-          isPersistent: false,
+          isPersistent: false
         });
       }
     };
@@ -134,11 +149,13 @@ export class IntegrationImportComponent implements OnInit {
   }
 
   private fetchImportedIntegrations(results) {
-    this.importedOverviews$ = this.integrationStore.list.map(integrations => {
-      return integrations.filter(integration => {
-        return results.find(result => result.id === integration.id) !== -1;
-      });
-    });
+    this.importedOverviews$ = this.integrationStore.list.pipe(
+      map(integrations => {
+        return integrations.filter(integration => {
+          return results.find(result => result.id === integration.id) !== -1;
+        });
+      })
+    );
 
     this.showButtons = true;
     this.showReviewStep = true;

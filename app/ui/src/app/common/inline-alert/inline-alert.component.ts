@@ -1,10 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { LeveledMessage, MessageLevel, StatusCodeDecoderService } from '@syndesis/ui/platform';
+import {
+  LeveledMessage,
+  MessageLevel,
+  StatusCodeDecoderService
+} from '@syndesis/ui/platform';
 
 @Component({
-    selector: 'syndesis-inline-alert',
-    templateUrl: './inline-alert.component.html',
-    styleUrls: []
+  selector: 'syndesis-inline-alert',
+  templateUrl: './inline-alert.component.html',
+  styleUrls: []
 })
 export class InlineAlertComponent implements OnInit {
   icon: string[];
@@ -12,13 +16,15 @@ export class InlineAlertComponent implements OnInit {
   alertLevel: string;
   @Input() message: LeveledMessage;
 
-  constructor(private statusCodeDecoderService: StatusCodeDecoderService) { }
+  constructor(private statusCodeDecoderService: StatusCodeDecoderService) {}
 
   ngOnInit() {
     if (!this.message) {
       return;
     }
-    this.messageString = this.statusCodeDecoderService.getMessageString(this.message);
+    this.messageString = this.statusCodeDecoderService.getMessageString(
+      this.message
+    );
     switch (this.message.level) {
       case MessageLevel.WARN:
         this.alertLevel = 'alert-warning';
@@ -32,6 +38,5 @@ export class InlineAlertComponent implements OnInit {
         this.alertLevel = 'alert-info';
         this.icon = ['pficon', 'pficon-info'];
     }
-
   }
 }

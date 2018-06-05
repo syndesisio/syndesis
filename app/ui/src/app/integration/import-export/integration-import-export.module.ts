@@ -29,8 +29,6 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   exports: [RouterModule],
-  declarations: [
-    IntegrationImportExportComponent
-  ]
+  declarations: [IntegrationImportExportComponent]
 })
-export class IntegrationImportExportModule { }
+export class IntegrationImportExportModule {}

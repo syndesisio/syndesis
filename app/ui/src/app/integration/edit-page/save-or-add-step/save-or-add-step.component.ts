@@ -1,7 +1,12 @@
+import { map } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { FlowEvent, CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
+import {
+  FlowEvent,
+  CurrentFlowService,
+  FlowPageService
+} from '@syndesis/ui/integration/edit-page';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { Integration } from '@syndesis/ui/platform';
@@ -24,9 +29,7 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router
-  ) {
-
-  }
+  ) {}
 
   get errorMessage() {
     return this.flowPageService.errorMessage;
@@ -150,8 +153,8 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
 
   ngOnInit() {
     this.flowPageService.initialize();
-    const validate = this.route.queryParams.map(
-      params => params['validate'] || false
+    const validate = this.route.queryParams.pipe(
+      map(params => params['validate'] || false)
     );
     if (validate) {
       this.validateFlow();
