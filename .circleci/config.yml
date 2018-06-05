@@ -376,7 +376,7 @@ workflows:
       - system-test:
           filters:
             branches:
-              only: master
+              only: system-test
       - doc:
           filters:
             branches:
