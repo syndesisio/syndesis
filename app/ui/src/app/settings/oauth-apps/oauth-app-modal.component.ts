@@ -49,7 +49,7 @@ export class OAuthAppModalComponent {
   removeCredentials() {
     const app = { ...this.item.client, clientId: null, clientSecret: null };
     return this.store
-      .update(app)
+      .delete(app)
       .take(1)
       .toPromise();
   }
