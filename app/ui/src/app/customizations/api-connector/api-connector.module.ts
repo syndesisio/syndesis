@@ -37,9 +37,13 @@ import { ApicurioEditorModule, ApicurioCommonComponentsModule } from 'apicurio-d
     ApiConnectorRoutingModule,
     ApiModule.forChild(apiConnectorEndpoints),
     StoreModule.forFeature('apiConnectorState', apiConnectorReducer),
+<<<<<<< HEAD
     EffectsModule.forFeature([ApiConnectorEffects]),
     ApicurioEditorModule,
     ApicurioCommonComponentsModule
+=======
+    EffectsModule.forFeature([ApiConnectorEffects])
+>>>>>>> chore(deps): upgrade angular core and rxjs
   ],
   exports: [RouterModule],
   declarations: [

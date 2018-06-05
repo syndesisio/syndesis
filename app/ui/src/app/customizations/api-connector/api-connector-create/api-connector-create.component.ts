@@ -53,6 +53,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     private nav: NavigationService,
     private router: Router
   ) {}
+<<<<<<< HEAD
 
 
   public apiDefinition(spec): ApiDefinition {
@@ -83,6 +84,8 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   public onUserChange(command: OtCommand): void {
     console.log('Something happened! ' + JSON.stringify(command));
   }
+=======
+>>>>>>> chore(deps): upgrade angular core and rxjs
 
   ngOnInit() {
     this.modalService.registerModal(
@@ -94,6 +97,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     );
 
     // Once the request validation results are yielded for the 1st time, we move user to step 2
+<<<<<<< HEAD
     this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
       .first(request => !!request && !!request.actionsSummary)
       .subscribe( apiConnectorState => {
@@ -111,6 +115,14 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
         };
         reader.readAsText(apiConnectorState.specificationFile);
       });
+=======
+    this.apiConnectorState$
+      .pipe(map(apiConnectorState => apiConnectorState.createRequest))
+      .pipe(first(request => !!request && !!request.actionsSummary))
+      .subscribe(
+        () => (this.currentActiveStep = WizardSteps.ReviewApiConnector)
+      );
+>>>>>>> chore(deps): upgrade angular core and rxjs
 
     // Once the request object is flagged as 'isComplete', we redirect the user to the main listing
     this.apiConnectorState$
