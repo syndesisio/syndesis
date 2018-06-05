@@ -75,35 +75,39 @@
           <div class="syn-drop-zone extension__group"
             ng2FileDrop
             [uploader]="uploader"
-            [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
+            [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver || uploadValid}"
             (fileOver)="onFileOver($event)">
             <p>Drag and drop your extension file here or</p>
             <div class="row syn-drop-zone__file-select">
-              <div class="col-xs-4">
-                <input #fileSelect
-                  type="file"
-                  ng2FileSelect
-                  [uploader]="uploader"
-                  (onFileSelected)="fileSelect.value=''">
+              <div class="col-md-4">
+                <p>
+                  <input #fileSelect
+                    type="file"
+                    ng2FileSelect
+                    [uploader]="uploader"
+                    (onFileSelected)="fileSelect.value=''">
+                </p>
               </div>
-              <div class="col-xs-4">
-                {{ item?.file?.name }}
+              <div class="col-md-4">
+                <p>
+                  {{ item?.file?.name }}
+                </p>
               </div>
-              <div class="col-xs-4">
-                <div *ngIf="item.isUploading" class="text-muted">
+              <div class="col-md-4">
+                <p *ngIf="item.isUploading" class="text-muted">
                   <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
                   <em>Importing...</em>
-                </div>
-                <div *ngIf="item.isUploaded">
-                  <div *ngIf="item.isSuccess; else isError">
+                </p>
+                <p *ngIf="item.isUploaded">
+                  <span *ngIf="item.isSuccess; else isError">
                     <span class="pficon-ok"></span>
                     Successfully imported.
-                  </div>
+                  </span>
                   <ng-template #isError>
                     <span class="pficon-error-circle-o"></span>
                     Unable to import this file.
                   </ng-template>
-                </div>
+                </p>
               </div>
             </div>
             <p class="help-block"><em>Accepted file type: .jar</em></p>

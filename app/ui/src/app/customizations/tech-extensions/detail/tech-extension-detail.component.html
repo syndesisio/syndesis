@@ -34,11 +34,11 @@
         <div class="card-pf-heading">
           <div class="card-pf-title">
             <div class="row">
-              <h1 class="col-xs-8 extension__title">
+              <h1 class="col-sm-8 extension__title">
                 {{ extension.name }}
                 <span class="extension__title__id">(ID: {{ extension.extensionId }})</span>
               </h1>
-              <div class="col-xs-4 text-right">
+              <div class="col-sm-4 text-right">
                 <button type="button"
                         class="btn btn-primary"
                         [routerLink]="['..', 'import', extension.id, { 'name': extension.name }]">Update</button>
