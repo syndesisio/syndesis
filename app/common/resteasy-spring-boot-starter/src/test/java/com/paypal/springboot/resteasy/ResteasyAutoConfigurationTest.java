@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
  * Created by facarvalho on 11/24/15.
  * @author Fabio Carvalho (facarvalho@paypal.com or fabiocarvalho777@gmail.com)
  */
+@SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class ResteasyAutoConfigurationTest {
 
     @Test

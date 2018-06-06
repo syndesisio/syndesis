@@ -18,9 +18,11 @@ import org.springframework.util.ClassUtils;
  *
  * @author Fabio Carvalho (facarvalho@paypal.com or fabiocarvalho777@gmail.com)
  */
-public class JaxrsApplicationScanner {
-
+public final class JaxrsApplicationScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(JaxrsApplicationScanner.class);
+
+    private JaxrsApplicationScanner() {
+    }
 
     public static Set<Class<? extends Application>> getApplications(List<String> packagesToBeScanned) {
         return findJaxrsApplicationClasses(packagesToBeScanned);

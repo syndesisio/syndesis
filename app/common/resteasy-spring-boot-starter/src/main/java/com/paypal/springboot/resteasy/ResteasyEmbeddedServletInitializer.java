@@ -45,9 +45,9 @@ public class ResteasyEmbeddedServletInitializer implements BeanFactoryPostProces
     // available only for .properties files, but not for YAML files. It should be finally removed in a future major release.
     private static final String JAXRS_APP_CLASSES_PROPERTY_LEGACY = "resteasy.jaxrs.app";
 
-    private Set<Class<? extends Application>> applications = new HashSet<>();
-    private Set<Class<?>> allResources = new HashSet<>();
-    private Set<Class<?>> providers = new HashSet<>();
+    private final Set<Class<? extends Application>> applications = new HashSet<>();
+    private final Set<Class<?>> allResources = new HashSet<>();
+    private final Set<Class<?>> providers = new HashSet<>();
 
     private enum JaxrsAppClassesRegistration {
         BEANS, PROPERTY, SCANNING, AUTO
@@ -280,7 +280,7 @@ public class ResteasyEmbeddedServletInitializer implements BeanFactoryPostProces
                 continue;
             }
 
-            LOGGER.debug("registering JAX-RS application class " + applicationClass.getName());
+            LOGGER.debug("registering JAX-RS application class {}", applicationClass.getName());
 
             GenericBeanDefinition applicationServletBean = createApplicationServlet(applicationClass, path.value());
             registry.registerBeanDefinition(applicationClass.getName(), applicationServletBean);

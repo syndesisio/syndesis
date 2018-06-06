@@ -39,7 +39,7 @@ public class ResteasyApplicationBuilder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ResteasyApplicationBuilder.class);
 
-    @SuppressWarnings({"PMD.NPathComplexity", "PMD.UseStringBufferForStringAppends"})
+    @SuppressWarnings({"PMD.NPathComplexity", "PMD.UseStringBufferForStringAppends", "PMD.SimplifyStartsWith"})
     public ServletRegistrationBean build(String applicationClassName, String path, Set<Class<?>> resources, Set<Class<?>> providers) {
         Servlet servlet = new HttpServlet30Dispatcher();
 

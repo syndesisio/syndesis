@@ -57,16 +57,16 @@ public class JaxrsAppRegistrationTest extends PowerMockTestCase {
     private static Set<Class<?>> allPossibleAppClasses;
 
     static {
-        Set<Class<?>> _allPossibleAppClasses = new HashSet<>();
+        Set<Class<?>> tmpAllPossibleAppClasses = new HashSet<>();
 
-        _allPossibleAppClasses.add(TestApplication1.class);
-        _allPossibleAppClasses.add(TestApplication2.class);
-        _allPossibleAppClasses.add(TestApplication3.class);
-        _allPossibleAppClasses.add(TestApplication4.class);
-        _allPossibleAppClasses.add(TestApplication5.class);
-        _allPossibleAppClasses.add(Application.class);
+        tmpAllPossibleAppClasses.add(TestApplication1.class);
+        tmpAllPossibleAppClasses.add(TestApplication2.class);
+        tmpAllPossibleAppClasses.add(TestApplication3.class);
+        tmpAllPossibleAppClasses.add(TestApplication4.class);
+        tmpAllPossibleAppClasses.add(TestApplication5.class);
+        tmpAllPossibleAppClasses.add(Application.class);
 
-        allPossibleAppClasses = Collections.unmodifiableSet(_allPossibleAppClasses);
+        allPossibleAppClasses = Collections.unmodifiableSet(tmpAllPossibleAppClasses);
     }
 
     @BeforeMethod
