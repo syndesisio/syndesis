@@ -1,0 +1,17 @@
+[id='supported-connectors']
+= Connectors that are supported by {prodname}
+
+{prodname} provides the following connectors. Each connector is based on
+the similarly named Apache Camel component. 
+
+Amazon S3
+AMQ
+AMQP
+Dropbox
+FTP/SFTP
+HTTP/HTTPS
+MQTT
+Salesforce
+Slack
+SQL databases
+Twitter

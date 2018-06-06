@@ -1,49 +1,34 @@
 [id='connecting-to-applications']
 = Connecting to applications that you want to integrate
 
-When you create an integration you add a connection to each application
-that you want to integrate. The following topics provide details for
-creating connections and adding them to integrations:
+To integrate applications: 
+. Create a connection to each application or service that you want to integrate.
+. Create an integration. 
+. Add connections to the integration. 
 
-* <<overview-of-creating-connections>>
+The procedure for
+creating a connection varies for each application or service. The details
+for creating each kind of connection are in 
+{LinkIgniteConnectorGuide}[{NameOfIgniteConnectorGuide}].
+
+The following topics
+provide an overview of the workflow:
+
+* <<about-creating-connections>>
+* <<obtaining-authorization-to-access-applications>>
+* <<about-adding-connections-to-integrations>>
+* <<viewing-and-editing-connection-information>>
+* <<creating-connections-from-custom-connectors>>
 * <<specifying-connection-input-output-types>>
-* <<connecting-to-s3>>
-* <<connecting-to-amq>>
-* <<connecting-to-amqp>>
-* <<connecting-to-dropbox>>
-* <<connecting-to-ftp>>
-* <<connecting-to-http>>
-* <<connecting-to-mqtt>>
-* <<connecting-to-rest-apis>>
-* <<connecting-to-sf>>
-* <<connecting-to-slack>>
-* <<connecting-to-databases>>
-* <<connecting-to-twitter>>
 
-include::overview_of_creating_connections.adoc[leveloffset=+1]
+include::about_creating_connections.adoc[leveloffset=+1]
+
+include::obtaining_authorization_to_access_applications.adoc[leveloffset=+1]
+
+include::about_adding_connections_to_integrations.adoc[leveloffset=+1]
+
+include::viewing_and_editing_connection_information.adoc[leveloffset=+1]
+
+include::creating_connections_from_custom_connectors.adoc[leveloffset=+1]
 
 include::shared/specifying_connection_input_output_types.adoc[leveloffset=+1]
-
-include::connecting_to_amazon_s3.adoc[leveloffset=+1]
-
-include::connecting_to_amq.adoc[leveloffset=+1]
-
-include::connecting_to_amqp.adoc[leveloffset=+1]
-
-include::connecting_to_dropbox.adoc[leveloffset=+1]
-
-include::connecting_to_ftp.adoc[leveloffset=+1]
-
-include::connecting_to_http.adoc[leveloffset=+1]
-
-include::connecting_to_mqtt.adoc[leveloffset=+1]
-
-include::connecting_to_rest_apis.adoc[leveloffset=+1]
-
-include::connecting_to_sf.adoc[leveloffset=+1]
-
-include::connecting_to_slack.adoc[leveloffset=+1]
-
-include::connecting_to_databases.adoc[leveloffset=+1]
-
-include::connecting_to_twitter.adoc[leveloffset=+1]
