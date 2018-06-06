@@ -173,6 +173,7 @@
             <!-- if declared complains about being unused -->
             <ignoredUsedUndeclaredDependency>org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.0_spec</ignoredUsedUndeclaredDependency>
             <ignoredUsedUndeclaredDependency>com.google.code.findbugs:findbugs-annotations</ignoredUsedUndeclaredDependency>
+            <ignoredUsedUndeclaredDependency>org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec</ignoredUsedUndeclaredDependency>
           </ignoredUsedUndeclaredDependencies>
           <ignoredUnusedDeclaredDependencies>
             <ignoredUnusedDeclaredDependency>commons-logging:commons-logging</ignoredUnusedDeclaredDependency>

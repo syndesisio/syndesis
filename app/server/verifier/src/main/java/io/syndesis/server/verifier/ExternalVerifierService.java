@@ -55,13 +55,17 @@ public class ExternalVerifierService implements Verifier {
         final ResteasyJackson2Provider resteasyJacksonProvider = new ResteasyJackson2Provider();
         resteasyJacksonProvider.setMapper(MAPPER);
 
-        final ResteasyProviderFactory providerFactory = ResteasyProviderFactory.newInstance();
+        final ResteasyProviderFactory providerFactory = new ResteasyProviderFactory();
         providerFactory.register(resteasyJacksonProvider);
+
         final Configuration configuration = new LocalResteasyProviderFactory(providerFactory);
 
         Client client = ClientBuilder.newClient(configuration);
         WebTarget target = client.target(String.format("http://%s/api/v1/verifier/%s", config.getService(), connectorId));
-        return target.request(MediaType.APPLICATION_JSON).post(Entity.entity(options, MediaType.APPLICATION_JSON),
-                                                               new GenericType<List<Result>>(){});
+
+        return target.request(MediaType.APPLICATION_JSON).post(
+            Entity.entity(options, MediaType.APPLICATION_JSON),
+            new GenericType<List<Result>>(){}
+         );
     }
 }
