@@ -221,6 +221,27 @@ If you need to force `syndesis-db` to delete it's content and having it recreate
 oc exec -it  $(oc get pods --selector=deploymentconfig=syndesis-db  -o jsonpath="{..metadata.name}") -- bash -c 'psql -d syndesis -c "DELETE FROM jsondb;"'
 ```
 
+## Inspect `syndesis-db` sampledb
+```bash
+oc exec -it  $(oc get pods --selector=deploymentconfig=syndesis-db  -o jsonpath="{..metadata.name}") -- bash -c 'psql -d sampledb -c "\dt public.*"'
+          List of relations
+ Schema |  Name   | Type  |  Owner   
+--------+---------+-------+----------
+ public | contact | table | sampledb
+ public | todo    | table | sampledb
+(2 rows)
+
+oc exec -it  $(oc get pods --selector=deploymentconfig=syndesis-db  -o jsonpath="{..metadata.name}") -- bash -c 'psql -d sampledb -c "\d todo"'
+                                Table "public.todo"
+  Column   |       Type        |                     Modifiers                     
+-----------+-------------------+---------------------------------------------------
+ id        | integer           | not null default nextval('todo_id_seq'::regclass)
+ task      | character varying | 
+ completed | integer           | 
+Indexes:
+    "todo_pkey" PRIMARY KEY, btree (id)
+```
+
 ## Remove health and readiness probes
 During development, readiness and health probes might get into your way, if you are using a debugger. For example, if you block the execution of a jvm process with a break point, the process might fail to respond to health check pings; if this happens, OpenShift will consider the pod as being unhealthy and it will kill it and deploy a new one.  
 You can patch the `DeploymentConfig` definitions to disable these checks.
