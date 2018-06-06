@@ -3,9 +3,11 @@
     <div class="row row-cards-pf connections-view">
       <div class="col-md-8 col-md-offset-2">
         <div class="card-pf">
-          <h2 class="card-pf-title">
-            {{ connection?.connector?.name }} Configuration
-          </h2>
+          <div class="card-pf-heading">
+            <h2 class="card-pf-title">
+              {{ connection?.connector?.name }} Configuration
+            </h2>
+          </div>
           <div class="card-pf-body">
             <ng-container *ngIf='!hasCredentials'>
               <div *ngIf="formModel && formGroup">
