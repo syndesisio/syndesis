@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.endpoint;
+package io.syndesis.server.endpoint.v1;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,26 +22,30 @@ import java.util.Optional;
 
 import com.jcabi.manifests.Manifests;
 
-public final class Version {
+import org.springframework.stereotype.Service;
 
-    private Version() {
-    }
+@Service
+public final class VersionService {
 
-    public static Map<String, String> getDetailed() {
+    private final Map<String, String> detail;
+
+    public VersionService() {
         final Map<String, String> detail = new HashMap<>();
-        detail.put("version", getVersion());
+        putManifestValueTo(detail, "version", "Implementation-Version", "Project-Version");
         putManifestValueTo(detail, "commit-id", "Git-Commit-Id", "X-BasePOM-Git-Commit-Id");
         putManifestValueTo(detail, "branch", "Git-Branch");
         putManifestValueTo(detail, "build-time", "Build-Time");
         putManifestValueTo(detail, "build-id", "X-BasePOM-Build-Id");
 
-        return Collections.unmodifiableMap(detail);
+        this.detail = Collections.unmodifiableMap(detail);
     }
 
-    public static String getVersion() {
-        final String packageVersion = Version.class.getPackage().getImplementationVersion();
+    public Map<String, String> getDetailed() {
+        return detail;
+    }
 
-        return Optional.ofNullable(packageVersion).orElse("DEVELOPMENT");
+    public String getVersion() {
+        return Optional.ofNullable(detail.get("version")).orElse("DEVELOPMENT");
     }
 
     static void putManifestValueTo(final Map<String, String> detail, final String key, final String... attributes) {

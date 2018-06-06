@@ -50,6 +50,6 @@ public class VersionITCase extends BaseITCase {
         final ResponseEntity<String> plainVersion = http(HttpMethod.GET, "/api/v1/version", null, String.class, tokenRule.validToken(),
             headers, HttpStatus.OK);
 
-        assertThat(plainVersion.getBody()).isNotBlank();
+        assertThat(plainVersion.getBody()).isNotEmpty();
     }
 }
