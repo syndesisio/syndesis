@@ -29,7 +29,6 @@ export class IntegrationImportComponent implements OnInit {
   error: FileError;
   importedOverviews$: Observable<IntegrationOverviews>;
   importing = false;
-  isDragAndDropImport: boolean;
   isMultipleImport: boolean;
   item = {} as FileItem;
   loading = true;
@@ -37,6 +36,7 @@ export class IntegrationImportComponent implements OnInit {
   showButtons = false;
   showReviewStep = false;
   uploader: FileUploader;
+  hasBaseDropZoneOver: boolean;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
@@ -68,17 +68,15 @@ export class IntegrationImportComponent implements OnInit {
   }
 
   onDropFile(): void {
-    this.isDragAndDropImport = true;
     this.isMultipleImport = this.checkIfMultiple();
-  }
-
-  onDropOverAndOut(event: Event): void {
-    this.checkIfDragAndDrop(event);
   }
 
   onFileSelected(): void {
-    this.isDragAndDropImport = false;
     this.isMultipleImport = this.checkIfMultiple();
+  }
+
+  onFileOver(e) {
+    this.hasBaseDropZoneOver = e;
   }
 
   ngOnInit() {
@@ -129,10 +127,6 @@ export class IntegrationImportComponent implements OnInit {
         });
       }
     };
-  }
-
-  private checkIfDragAndDrop(isDragAndDropImport): void {
-    this.isDragAndDropImport = !!isDragAndDropImport;
   }
 
   private checkIfMultiple(): boolean {
