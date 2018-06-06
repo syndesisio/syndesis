@@ -9,16 +9,15 @@ add an Amazon S3 connection as the start connection:
 . Click *Create Integration*.
 . On the *Choose a Start Connection* page, click the Amazon S3 connection that
 you want to use to start the integration.
-. On the *Choose an Action* page, click one of these actions:
-* *Get Object* to obtain a file from the bucket that the connection
-accesses. To configure this action:
-
-.. In the *File Name* field, enter the name of the file that you want
+. On the *Choose an Action* page, click the action that you
+want the connection to perform:
+* *Get Object* obtains a file from the bucket that the connection
+accesses.
++
+In the *File Name* field, enter the name of the file that you want
 to obtain. 
-.. To obtain a file and then delete it from the bucket, select
-*Delete After Read*. 
 
-* *Poll an Amazon S3 Bucket* to periodically obtain files from the bucket that the
+* *Poll an Amazon S3 Bucket* periodically obtains files from the bucket that the
 connection accesses. To configure this action:
 .. In the *Delay* field, accept the default of 500 milliseconds as the time
 that elapses between polls. Or, to specify a different polling interval,
@@ -41,5 +40,5 @@ only when its name starts with that string.
 .. Indicate whether you want to  
 *Obtain files and then delete them from the bucket*.
 
-. Click *Done* to specify the action's output type. See 
+. After you configure the action, click *Done* to specify the action's output type. See 
 <<specifying-connection-input-output-types>>. 
