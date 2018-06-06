@@ -51,11 +51,9 @@ class MetadataCommand extends HystrixCommand<DynamicActionMetadata> {
                 .withCoreSize(configuration.getThreads()))//
             .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()//
                 .withExecutionTimeoutInMilliseconds(configuration.getTimeout())));
+
         this.parameters = parameters;
-
-        final String actionId = action.getId().get();
-
-        metadataUrl = String.format("http://%s/api/v1/connectors/%s/actions/%s", configuration.getService(), connectorId, actionId);
+        this.metadataUrl = String.format("http://%s/api/v1/connectors/%s/actions/%s", configuration.getService(), connectorId, action.getId().get());
     }
 
     @Override
@@ -65,22 +63,35 @@ class MetadataCommand extends HystrixCommand<DynamicActionMetadata> {
 
     @Override
     protected DynamicActionMetadata run() {
-        final Client client = createClient();
-        final WebTarget target = client.target(metadataUrl);
+        Client client = null;
 
-        return target.request(MediaType.APPLICATION_JSON).post(Entity.entity(parameters, MediaType.APPLICATION_JSON),
-            DynamicActionMetadata.class);
+        try {
+            client = createClient();
 
+            final WebTarget target = client.target(metadataUrl);
+            final Entity<?> entity = Entity.entity(parameters, MediaType.APPLICATION_JSON);
+
+            return target.request(MediaType.APPLICATION_JSON).post(entity, DynamicActionMetadata.class);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
+        }
     }
 
     private static Client createClient() {
+
         return ClientBuilder.newClient().register((ClientResponseFilter) (requestContext, responseContext) -> {
             if (responseContext.getStatusInfo().getFamily() == Family.SERVER_ERROR
-                && "application/json".equals(responseContext.getHeaderString(HttpHeaders.CONTENT_TYPE))) {
+                && MediaType.APPLICATION_JSON.equals(responseContext.getHeaderString(HttpHeaders.CONTENT_TYPE))) {
                 final RestError error = Json.reader().forType(RestError.class).readValue(responseContext.getEntityStream());
 
-                throw new SyndesisRestException(error.getDeveloperMsg(), error.getUserMsg(), error.getUserMsgDetail(),
-                    error.getErrorCode());
+                throw new SyndesisRestException(
+                    error.getDeveloperMsg(),
+                    error.getUserMsg(),
+                    error.getUserMsgDetail(),
+                    error.getErrorCode()
+                );
             }
         });
     }

@@ -17,7 +17,8 @@ package io.syndesis.server.verifier;
 
 import java.util.List;
 import java.util.Map;
-
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -28,7 +29,6 @@ import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-
 import org.jboss.resteasy.client.jaxrs.internal.LocalResteasyProviderFactory;
 import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
@@ -41,9 +41,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty(value = "meta.kind", havingValue = "service", matchIfMissing = true)
 public class ExternalVerifierService implements Verifier {
-
-    private static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module());
-
+    private volatile Client client;
     private final MetadataConfigurationProperties config;
 
     public ExternalVerifierService(MetadataConfigurationProperties config) {
@@ -52,20 +50,38 @@ public class ExternalVerifierService implements Verifier {
 
     @Override
     public List<Result> verify(String connectorId, Map<String, String> options) {
-        final ResteasyJackson2Provider resteasyJacksonProvider = new ResteasyJackson2Provider();
-        resteasyJacksonProvider.setMapper(MAPPER);
-
-        final ResteasyProviderFactory providerFactory = new ResteasyProviderFactory();
-        providerFactory.register(resteasyJacksonProvider);
-
-        final Configuration configuration = new LocalResteasyProviderFactory(providerFactory);
-
-        Client client = ClientBuilder.newClient(configuration);
-        WebTarget target = client.target(String.format("http://%s/api/v1/verifier/%s", config.getService(), connectorId));
+        final String url = String.format("http://%s/api/v1/verifier/%s", config.getService(), connectorId);
+        final WebTarget target = client.target(url);
 
         return target.request(MediaType.APPLICATION_JSON).post(
             Entity.entity(options, MediaType.APPLICATION_JSON),
             new GenericType<List<Result>>(){}
          );
+    }
+
+    @PostConstruct
+    public void init() {
+        if (this.client == null) {
+            final ObjectMapper mapper = new ObjectMapper().registerModules(new Jdk8Module());
+            final ResteasyJackson2Provider resteasyJacksonProvider = new ResteasyJackson2Provider();
+
+            resteasyJacksonProvider.setMapper(mapper);
+
+            final ResteasyProviderFactory providerFactory = new ResteasyProviderFactory();
+            providerFactory.register(resteasyJacksonProvider);
+
+            final Configuration configuration = new LocalResteasyProviderFactory(providerFactory);
+
+            this.client = ClientBuilder.newClient(configuration);
+        }
+
+    }
+
+    @PreDestroy
+    public void destroy() {
+        if (this.client != null) {
+            this.client.close();
+            this.client = null;
+        }
     }
 }
