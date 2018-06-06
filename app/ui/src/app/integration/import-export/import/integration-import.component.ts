@@ -71,10 +71,6 @@ export class IntegrationImportComponent implements OnInit {
     this.isMultipleImport = this.checkIfMultiple();
   }
 
-  onDropOverAndOut(event: Event): void {
-    this.checkIfDragAndDrop(event);
-  }
-
   onFileSelected(): void {
     this.isMultipleImport = this.checkIfMultiple();
   }
