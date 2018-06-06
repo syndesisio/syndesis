@@ -88,6 +88,17 @@
       <artifactId>resteasy-jackson2-provider</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_annotations</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
   </dependencies>
 
 </project>

@@ -44,8 +44,9 @@ public class HttpClient {
         final ResteasyJackson2Provider resteasyJacksonProvider = new ResteasyJackson2Provider();
         resteasyJacksonProvider.setMapper(MAPPER);
 
-        final ResteasyProviderFactory providerFactory = ResteasyProviderFactory.newInstance();
+        final ResteasyProviderFactory providerFactory = new ResteasyProviderFactory();
         providerFactory.register(resteasyJacksonProvider);
+
         final Configuration configuration = new LocalResteasyProviderFactory(providerFactory);
 
         return ClientBuilder.newClient(configuration);
