@@ -84,8 +84,9 @@ subsequent word.
 | `fromUnit`*
 
 `toUnit` *
-| Convert a number that represents an area to another unit. For each of the `fromUnit` and
-`toUnit` parameters, specify a string whose value is 
+| Convert a number that represents an area to another unit. For 
+the `fromUnit` and `toUnit` parameters, select the appropriate unit
+from the *From Unit* and *To Unit* menus. The choices are:
 `Square Foot`, `Square Meter`, or `Square Mile`.
 
 |`ConvertDistanceUnit`
@@ -94,8 +95,9 @@ subsequent word.
 | `fromUnit` *
 
 `toUnit` *
-| Convert a number that represents a distance to another unit. For each of the
-`fromUnit` and `toUnit` parameters, specify a string whose value is 
+| Convert a number that represents a distance to another unit. For the
+`fromUnit` and `toUnit` parameters, select the appropriate unit
+from the *From Unit* and *To Unit* menus. The choices are: 
 `Foot`, `Inch`, `Meter`, `Mile`, or `Yard`.
 
 | `ConvertMassUnit`
@@ -104,8 +106,10 @@ subsequent word.
 | `fromUnit` *
 
 `toUnit` *
-| Convert a number that represents mass to another unit. For each of the
-`fromUnit` and `toUnit` parameters, specify a string whose value is `Kilo Gram` or `Pound`. 
+| Convert a number that represents mass to another unit. For the
+`fromUnit` and `toUnit` parameters, select the appropriate unit
+from the *From Unit* and *To Unit* menus. The choices are: 
+`Kilogram` or `Pound`. 
 
 |`ConvertVolumeUnit`
 | number
@@ -113,8 +117,9 @@ subsequent word.
 | `fromUnit` *
 
 `toUnit` *
-| Convert a number that represents volume to another unit. For each of the 
-`fromUnit` and `toUnit` parameters, specify a string whose value is 
+| Convert a number that represents volume to another unit. For the 
+`fromUnit` and `toUnit` parameters, select the appropriate unit
+from the *From Unit* and *To Unit* menus. The choices are:
 `Cubic Foot`, `Cubic Meter`, `Gallon US Fluid`, or `Liter`.
 
 |`CurrentDate`
