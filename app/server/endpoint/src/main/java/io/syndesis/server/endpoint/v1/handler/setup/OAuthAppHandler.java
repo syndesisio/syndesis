@@ -124,7 +124,11 @@ public class OAuthAppHandler {
 
         final Connector updated = new Connector.Builder().createFrom(connector)
             .putOrRemoveConfiguredPropertyTaggedWith(Credentials.CLIENT_ID_TAG, app.getClientId())
-            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.CLIENT_SECRET_TAG, app.getClientSecret()).build();
+            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.CLIENT_SECRET_TAG, app.getClientSecret())
+            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.AUTHORIZATION_URL_TAG, app.getAuthorizationUrl())
+            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.ACCESS_TOKEN_URL_TAG, app.getTokenUrl())
+            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.SCOPE_TAG, app.getScopes())//
+            .build();
 
         dataMgr.update(updated);
 
