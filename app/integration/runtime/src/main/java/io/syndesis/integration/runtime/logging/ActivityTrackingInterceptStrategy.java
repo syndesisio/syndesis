@@ -73,10 +73,11 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
         public boolean process(final Exchange exchange, final AsyncCallback callback) {
             final String trackerId = KeyGenerator.createKey();
             final long createdAt = System.nanoTime();
+            final Message in = exchange.getIn();
+            in.setHeader(IntegrationLoggingConstants.STEP_TRACKER_ID, trackerId);
 
             return super.process(exchange, doneSync -> {
                 final String activityId =  exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
-                final Message in = exchange.getIn();
                 final String stepId = in.getHeader(IntegrationLoggingConstants.STEP_ID, String.class);
 
                 if (activityId != null) {

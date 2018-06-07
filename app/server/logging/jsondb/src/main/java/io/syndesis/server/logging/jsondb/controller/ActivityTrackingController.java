@@ -53,6 +53,7 @@ import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.jsondb.GetOptions;
 import io.syndesis.server.jsondb.JsonDB;
 import io.syndesis.server.jsondb.impl.JsonRecordSupport;
+import io.syndesis.server.jsondb.impl.SqlJsonDB;
 import io.syndesis.server.openshift.OpenShiftService;
 
 /**
@@ -79,6 +80,7 @@ public class ActivityTrackingController implements Closeable {
     private Duration retention = Duration.ofDays(1);
     private Duration cleanUpInterval = Duration.ofMinutes(15);
     private Duration startupDelay = Duration.ofSeconds(15);
+    private SqlJsonDB.DatabaseKind databaseKind;
 
     @Autowired
     public ActivityTrackingController(JsonDB jsondb, DBI dbi, KubernetesClient client) {
@@ -96,6 +98,25 @@ public class ActivityTrackingController implements Closeable {
         executor.execute(this::processEventQueue);
         scheduler.scheduleWithFixedDelay(this::pollPods, startupDelay.getSeconds(), 5, TimeUnit.SECONDS);
         scheduler.scheduleWithFixedDelay(this::cleanupLogs, startupDelay.toMillis(), cleanUpInterval.toMillis(), TimeUnit.MILLISECONDS);
+
+        // Lets find out the type of DB we are working with.
+        dbi.inTransaction((x, status) -> {
+            try {
+                String dbName = x.getConnection().getMetaData().getDatabaseProductName();
+                databaseKind = SqlJsonDB.DatabaseKind.valueOf(dbName);
+
+                // CockroachDB uses the PostgreSQL driver.. so need to look a little closer.
+                if( databaseKind == SqlJsonDB.DatabaseKind.PostgreSQL ) {
+                    String version = x.createQuery("SELECT VERSION()").mapTo(String.class).first();
+                    if( version.startsWith("CockroachDB") ) {
+                        databaseKind = SqlJsonDB.DatabaseKind.CockroachDB;
+                    }
+                }
+                return null;
+            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+                throw new IllegalStateException("Could not determine the database type", e);
+            }
+        });
     }
 
     public void cleanupLogs() {
@@ -133,7 +154,13 @@ public class ActivityTrackingController implements Closeable {
 
     private void writeBatch(Map<String, Object> batch) {
         dbi.inTransaction((conn, status) -> {
-            PreparedBatch insert = conn.prepareBatch("INSERT into jsondb (path, value, ovalue) values (:path, :value, :ovalue)");
+            String sql = "INSERT into jsondb (path, value, ovalue) values (:path, :value, :ovalue)";
+            if( databaseKind == SqlJsonDB.DatabaseKind.PostgreSQL ) {
+                // Lets update if the record exists.
+                sql += " ON CONFLICT (path) DO UPDATE SET value = :value, ovalue = :ovalue"; // NOPMD
+            }
+
+            PreparedBatch insert = conn.prepareBatch(sql);
             for (Map.Entry<String, Object> entry : batch.entrySet()) {
                 String key = "/activity" + entry.getKey() + "/";
                 String value = null;
