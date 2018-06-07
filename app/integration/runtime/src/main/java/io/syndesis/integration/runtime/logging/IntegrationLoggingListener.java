@@ -17,6 +17,7 @@ package io.syndesis.integration.runtime.logging;
 
 import io.syndesis.common.util.KeyGenerator;
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.apache.camel.spi.LogListener;
 import org.apache.camel.util.CamelLogger;
 import org.slf4j.Marker;
@@ -35,15 +36,20 @@ public class IntegrationLoggingListener implements LogListener {
         }
 
         final String activityId = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
-
         if (activityId != null) {
             final Marker marker = camelLogger.getMarker();
             final String step = marker != null ? marker.getName() : "null";
 
+            final Message in = exchange.getIn();
+            String stepTrackerId = in.getHeader(IntegrationLoggingConstants.STEP_TRACKER_ID, String.class);
+            if( stepTrackerId == null ) {
+                stepTrackerId = KeyGenerator.createKey();
+            }
+
             tracker.track(
                 "exchange", activityId,
                 "step", step,
-                "id", KeyGenerator.createKey(),
+                "id", stepTrackerId,
                 "message", message
             );
         }

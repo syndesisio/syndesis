@@ -167,16 +167,17 @@ class PodLogMonitor implements Consumer<InputStream> {
 
     private static class InflightData {
         Activity activity = new Activity();
-        Map<String, ActivityStep> steps = new LinkedHashMap<>();
+        ArrayList<ActivityStep> doneSteps = new ArrayList<>();
+        Map<String, ActivityStep> activeSteps = new LinkedHashMap<>();
         Map<String, Object> metadata = new HashMap<>();
 
         public ActivityStep getStep(String step, String id) throws IOException {
-            ActivityStep rc = steps.get(step);
+            ActivityStep rc = activeSteps.get(step);
             if( rc == null ) {
                 rc = new ActivityStep();
                 rc.setId(step);
                 rc.setAt(KeyGenerator.getKeyTimeMillis(id));
-                steps.put(step, rc);
+                activeSteps.put(step, rc);
             }
             return rc;
         }
@@ -243,7 +244,7 @@ class PodLogMonitor implements Consumer<InputStream> {
                     inflightData.activity.setStatus(status);
 
                     if( "done".equals(status) ) {
-                        inflightData.activity.setSteps(new ArrayList<>(inflightData.steps.values()));
+                        inflightData.activity.setSteps(inflightData.doneSteps);
                         if( !inflightData.metadata.isEmpty() ) {
                             inflightData.activity.setMetadata(toJsonNode(inflightData.metadata));
                         }
@@ -289,6 +290,19 @@ class PodLogMonitor implements Consumer<InputStream> {
                     }
                     as.getEvents().add(toJsonNode(json));
                 }
+
+                if( duration!=null ) {
+                    inflightData.activeSteps.remove(step);
+                    if( inflightData.doneSteps.size() == 50 ) {
+                        ActivityStep truncated = new ActivityStep();
+                        truncated.addMessage("Max activity tracking steps reached.  No further steps will be recorded.");
+                        inflightData.doneSteps.add(truncated);
+                    }
+                    if( inflightData.doneSteps.size() < 50 ) {
+                        inflightData.doneSteps.add(as);
+                    }
+                }
+
             }
 
         } catch (JsonDBException | ClassCastException | IOException ignored) {
