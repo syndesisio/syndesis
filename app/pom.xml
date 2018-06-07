@@ -123,6 +123,7 @@
     <module>s2i</module>
     <module>meta</module>
     <module>ui</module>
+    <module>../doc/tools</module>
   </modules>
 
   <profiles>
