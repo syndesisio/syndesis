@@ -96,6 +96,11 @@
       <artifactId>connector-gmail</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connector-servicenow</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>

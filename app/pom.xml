@@ -589,6 +589,8 @@
               <exclude>meta/**/run-env.sh</exclude>
               <exclude>server/syndesis-builder-image-generator/image/**</exclude><!-- auto generated without headers -->
               <exclude>**/src/main/resources/banner.txt</exclude>
+              <!-- excludes as it is copied from upstream camel component and nneds to be moved back to caml -->
+              <exclude>connector/servicenow/src/main/java/io/syndesis/connector/servicenow/ServiceNowMetaDataExtension.java</exclude>
             </excludes>
           </configuration>
           <dependencies>
@@ -645,6 +647,7 @@
           <configuration>
             <ignoredResourcePatterns combine.children="append">
               <ignoredResourcePattern>resources/catalog.cat</ignoredResourcePattern>
+              <ignoredResourcePattern>mozilla/public-suffix-list.txt</ignoredResourcePattern>
             </ignoredResourcePatterns>
           </configuration>
         </plugin>
@@ -1007,6 +1010,12 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-servicenow</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <!-- ============================================== -->
 
       <!-- TODO: Maybe import BOM ? -->
@@ -1152,6 +1161,7 @@
         <groupId>org.jboss.spec.javax.ws.rs</groupId>
         <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
         <version>1.0.0.Final</version>
+        <scope>provided</scope>
       </dependency>
 
       <dependency>
