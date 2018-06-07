@@ -163,7 +163,6 @@
 
   </dependencies>
 
-
   <build>
     <plugins>
       <plugin>
@@ -174,6 +173,7 @@
             <ignoredUsedUndeclaredDependency>org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.0_spec</ignoredUsedUndeclaredDependency>
             <ignoredUsedUndeclaredDependency>com.google.code.findbugs:findbugs-annotations</ignoredUsedUndeclaredDependency>
             <ignoredUsedUndeclaredDependency>org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec</ignoredUsedUndeclaredDependency>
+            <ignoredUsedUndeclaredDependency>org.jboss.spec.javax.annotation:jboss-annotations-api_1.2_spec</ignoredUsedUndeclaredDependency>
           </ignoredUsedUndeclaredDependencies>
           <ignoredUnusedDeclaredDependencies>
             <ignoredUnusedDeclaredDependency>commons-logging:commons-logging</ignoredUnusedDeclaredDependency>
@@ -183,4 +183,5 @@
       </plugin>
     </plugins>
   </build>
+
 </project>

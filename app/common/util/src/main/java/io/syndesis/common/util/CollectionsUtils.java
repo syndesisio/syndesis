@@ -16,6 +16,7 @@
 package io.syndesis.common.util;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -65,5 +66,40 @@ public final class CollectionsUtils {
         return map.entrySet().stream()
             .filter(entry -> entry.getValue() != null)
             .filter(predicate);
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> mapOf(Supplier<Map<K, V>> creator, K key, V value, Object... keyVals) {
+        Map<K, V> map = creator.get();
+        map.put(key, value);
+
+        for (int i = 0; i < keyVals.length; i += 2) {
+            map.put(
+                (K) keyVals[i],
+                (V) keyVals[i + 1]
+            );
+        }
+
+        return map;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> immutableMapOf(Supplier<Map<K, V>> creator, K key, V value, Object... keyVals) {
+        return Collections.unmodifiableMap(
+            mapOf(creator, key, value, keyVals)
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> mapOf(K key, V value, Object... keyVals) {
+        return mapOf(HashMap::new, key, value, keyVals);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> immutableMapOf(K key, V value, Object... keyVals) {
+        return Collections.unmodifiableMap(
+            mapOf(HashMap::new, key, value, keyVals)
+        );
     }
 }

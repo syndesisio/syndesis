@@ -20,7 +20,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -28,24 +27,25 @@ import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.metrics.IntegrationDeploymentMetrics;
 import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
+import io.syndesis.common.util.CollectionsUtils;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.endpoint.metrics.MetricsProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(value = "metrics.kind", havingValue = "prometheus")
 public class PrometheusMetricsProviderImpl implements MetricsProvider {
-
     private static final Logger LOG = LoggerFactory.getLogger(PrometheusMetricsProviderImpl.class);
 
     private static final String METRIC_TOTAL = "org_apache_camel_ExchangesTotal";
@@ -58,12 +58,12 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private static final String VALUE_CONTEXT = "context";
     private static final String VALUE_INTEGRATION = "integration";
 
-    private static final BinaryOperator<Long> SUM_LONGS = (aLong, aLong2) -> aLong == null ? aLong2 :
-        aLong2 == null ? aLong : aLong + aLong2;
-    private static final BinaryOperator<Date> MAX_DATE = (date1, date2) -> date1 == null ? date2 :
-        date2 == null ? date1 : date1.after(date2) ? date1 : date2;
-
-    private final HttpClient httpClient = new HttpClient();
+    private static final BinaryOperator<Long> SUM_LONGS = (aLong, aLong2) -> aLong == null
+        ? aLong2
+        : aLong2 == null ? aLong : aLong + aLong2;
+    private static final BinaryOperator<Date> MAX_DATE = (date1, date2) -> date1 == null
+        ? date2
+        : date2 == null ? date1 : date1.after(date2) ? date1 : date2;
 
     private final String serviceName;
     private final String integrationIdLabel;
@@ -74,16 +74,18 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final DateFormat dateFormat = //2018-03-14T23:34:09Z
-            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'",Locale.US);
-    static final Map<String,String> LABELS = new HashMap<>();
-    static {
-        LABELS.put("syndesis.io/app", "syndesis");
-        LABELS.put("syndesis.io/component", "syndesis-server");
-    }
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+
+    static final Map<String,String> LABELS = CollectionsUtils.immutableMapOf(
+        "syndesis.io/app", "syndesis",
+        "syndesis.io/component", "syndesis-server"
+    );
+
     private static final LabelSelector SELECTOR = new LabelSelector(null, LABELS);
 
-    protected PrometheusMetricsProviderImpl(PrometheusConfigurationProperties config,
-            NamespacedOpenShiftClient openShiftClient) {
+    private volatile HttpClient httpClient;
+
+    protected PrometheusMetricsProviderImpl(PrometheusConfigurationProperties config, NamespacedOpenShiftClient openShiftClient) {
         this.serviceName = config.getService();
         this.integrationIdLabel = config.getIntegrationIdLabel();
         this.deploymentVersionLabel = config.getDeploymentVersionLabel();
@@ -91,6 +93,22 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         this.typeLabel = config.getTypeLabel();
         this.metricsHistoryRange = config.getMetricsHistoryRange();
         this.openShiftClient = openShiftClient;
+    }
+
+    @PostConstruct
+    public void init() {
+        if (this.httpClient == null) {
+            this.httpClient = new HttpClient();
+        }
+
+    }
+
+    @PreDestroy
+    public void destroy() {
+        if (this.httpClient != null) {
+            this.httpClient.close();
+            this.httpClient = null;
+        }
     }
 
     @Override
@@ -254,5 +272,4 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
                 String.format("Error Type: %s, Error: %s", response.getErrorType(), response.getError()));
         }
     }
-
 }
