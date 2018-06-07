@@ -21,11 +21,20 @@ import java.util.List;
 import java.util.Map;
 
 import io.syndesis.common.model.DataShape;
+import org.apache.camel.util.ObjectHelper;
 
 public final class SyndesisMetadata {
+    // The empty metadata instance
+    public static final SyndesisMetadata EMPTY = new SyndesisMetadata(Collections.emptyMap(), null, null);
 
+    /**
+     * The compute inbound data shape.
+     */
     public final DataShape inputShape;
 
+    /**
+     * The computed outbound data shape.
+     */
     public final DataShape outputShape;
 
     /**
@@ -44,5 +53,43 @@ public final class SyndesisMetadata {
                 Collections.sort(propertyPairs, Comparator.comparing(PropertyPair::getDisplayValue));
             }
         }
+    }
+
+    // *********************
+    // Helpers
+    // *********************
+
+    public static SyndesisMetadata of(Map<String, List<PropertyPair>> properties) {
+        ObjectHelper.notNull(properties, "Properties");
+
+        return new SyndesisMetadata(properties, null, null);
+    }
+
+    public static SyndesisMetadata inOnly(DataShape dataShape) {
+        ObjectHelper.notNull(dataShape, "DataShape");
+
+        return new SyndesisMetadata(Collections.emptyMap(), dataShape, null);
+    }
+
+    public static SyndesisMetadata outOnly(DataShape dataShape) {
+        ObjectHelper.notNull(dataShape, "DataShape");
+
+        return new SyndesisMetadata(Collections.emptyMap(), null, dataShape);
+    }
+
+    public static SyndesisMetadata of(DataShape dataShape) {
+        ObjectHelper.notNull(dataShape, "DataShape");
+        
+        return of(
+            new DataShape.Builder().createFrom(dataShape).build(),
+            new DataShape.Builder().createFrom(dataShape).build()
+        );
+    }
+
+    public static SyndesisMetadata of(DataShape inputShape, DataShape outputShape) {
+        ObjectHelper.notNull(inputShape, "Input DataShape");
+        ObjectHelper.notNull(outputShape, "Output DataShape");
+
+        return new SyndesisMetadata(Collections.emptyMap(), inputShape, outputShape);
     }
 }
