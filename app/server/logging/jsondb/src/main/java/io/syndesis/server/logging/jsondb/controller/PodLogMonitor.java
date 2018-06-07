@@ -17,12 +17,12 @@ package io.syndesis.server.logging.jsondb.controller;
 
 import static io.syndesis.server.jsondb.impl.JsonRecordSupport.validateKey;
 import static java.lang.String.format;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +52,9 @@ import io.syndesis.server.openshift.OpenShiftService;
 class PodLogMonitor implements Consumer<InputStream> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivityTrackingController.class);
+
+    // matches log lines like: 2018-06-06T21:54:36.30603486Z {"exchange":"i-LEM51uGKc6IuIjvR95Vz","status":"begin"}
+    private static final Pattern LOG_LINE_REGEX = Pattern.compile("^(\\d\\d\\d\\d\\-\\d\\d\\-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d+Z) (\\{.*\\})\\s*");
 
     private final ActivityTrackingController logsController;
     protected final AtomicBoolean markInOpenshift = new AtomicBoolean(true);
@@ -138,7 +143,7 @@ class PodLogMonitor implements Consumer<InputStream> {
 
             line.write(c);
             if (c == '\n') {
-                processLine(line.toByteArray());
+                processLine(new String(line.toByteArray(), UTF_8));
                 line.reset();
             }
 
@@ -192,25 +197,21 @@ class PodLogMonitor implements Consumer<InputStream> {
     }
 
     @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ExcessiveMethodLength", "PMD.NPathComplexity", ""})
-    private void processLine(byte[] line) throws IOException {
-        // Could it be a data of json structured output?
+    private void processLine(String line) throws IOException {
 
-        // Log lines look like:
-        // 2018-01-12T21:22:02.068338027Z { ..... }
-        if (
-            line.length < 32 // not long enough
-                || line[30] != ' ' // expecting space
-                || line[31] != '{' // expecting the json data starting here.
-            ) {
+        // Does it look like a data of json structured output?
+        Matcher matcher = LOG_LINE_REGEX.matcher(line);
+        if ( !matcher.matches() ) {
             return;
         }
 
-        String time = new String(line, 0, 30, StandardCharsets.US_ASCII);
+        String time = matcher.group(1);
+        String data = matcher.group(2);
         try {
 
 
             @SuppressWarnings("unchecked")
-            Map<String, Object> json = Json.reader().forType(HashMap.class).readValue(line, 31, line.length - 31); //NOPMD
+            Map<String, Object> json = Json.reader().forType(HashMap.class).readValue(data); //NOPMD
 
             // are the required fields set?
             String exchange = validate((String) json.remove("exchange"));
