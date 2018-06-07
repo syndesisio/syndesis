@@ -244,6 +244,9 @@ export abstract class AbstractStore<
     const deleted = new Subject<T>();
     this.service.delete(entity).subscribe(
       e => {
+        if (e === null) {
+          e = entity;
+        }
         deleted.next(this.plain(e));
       },
       error => {

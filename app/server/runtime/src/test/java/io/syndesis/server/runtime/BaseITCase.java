@@ -176,6 +176,10 @@ public abstract class BaseITCase {
         return http(HttpMethod.GET, url, null, responseClass, token, expectedStatus);
     }
 
+    protected <T> ResponseEntity<T> get(String url, ParameterizedTypeReference<T> responseClass) {
+        return http(HttpMethod.GET, url, null, responseClass, tokenRule.validToken(), new HttpHeaders(), HttpStatus.OK);
+    }
+
     protected <T> ResponseEntity<T> get(String url, ParameterizedTypeReference<T> responseClass, String token, HttpStatus expectedStatus) {
         return http(HttpMethod.GET, url, null, responseClass, token, new HttpHeaders(), expectedStatus);
     }
@@ -202,6 +206,10 @@ public abstract class BaseITCase {
 
     protected <T> ResponseEntity<T> post(String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus, HttpHeaders headers) {
         return http(HttpMethod.POST, url, body, responseClass, token, headers, expectedStatus);
+    }
+
+    protected <T> ResponseEntity<T> put(String url, Object body) {
+        return put(url, body, null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
     }
 
     protected <T> ResponseEntity<T> put(String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus) {

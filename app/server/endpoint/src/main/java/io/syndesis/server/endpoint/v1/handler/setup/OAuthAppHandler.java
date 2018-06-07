@@ -15,33 +15,41 @@
  */
 package io.syndesis.server.endpoint.v1.handler.setup;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.ws.rs.core.UriInfo;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiParam;
-import io.syndesis.common.util.SuppressFBWarnings;
-import io.syndesis.server.credential.Credentials;
-import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.server.credential.Credentials;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.endpoint.util.PaginationFilter;
+import io.syndesis.server.endpoint.util.ReflectiveFilterer;
+import io.syndesis.server.endpoint.util.ReflectiveSorter;
+import io.syndesis.server.endpoint.v1.operations.FilterOptionsFromQueryParams;
+import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
+import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
 
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -54,96 +62,80 @@ public class OAuthAppHandler {
 
     private final DataManager dataMgr;
 
-    public OAuthAppHandler(DataManager dataMgr) {
+    public OAuthAppHandler(final DataManager dataMgr) {
         this.dataMgr = dataMgr;
     }
 
-    // Since this a a view model DTO, and not a domain model lets define it here instead
-    // of placing it into the model module.
-    @SuppressFBWarnings(
-        value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD",
-        justification = "All fields are encode by jackson and sent to the UI")
-    public static final class OAuthApp extends SocialProperties {
-        public String id;
-        public String name;
-        public String icon;
-        public String clientId;
-        public String clientSecret;
-
-        @Override
-        @JsonIgnore
-        public String getAppId() {
-            return clientId;
-        }
-
-        @Override
-        @JsonIgnore
-        public String getAppSecret() {
-            return clientSecret;
-        }
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "")
-    public List<OAuthApp> get() {
-        ArrayList<OAuthApp> apps = new ArrayList<>();
-
-        List<Connector> items = dataMgr.fetchAll(Connector.class).getItems();
-        items.forEach(connector -> {
-            if (isOauthConnector(connector)) {
-                apps.add(createOAuthApp(connector));
-            }
-        });
-
-        return apps;
+    @DELETE
+    @Consumes("application/json")
+    @Path(value = "/{id}")
+    public void delete(@NotNull @PathParam("id") @ApiParam(required = true) final String id) {
+        // delete is to remove OAuth properties from the connector
+        update(id, new OAuthApp());
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
-    public OAuthApp get(@PathParam("id") @ApiParam(required = true) String id) {
+    public OAuthApp get(@NotNull @PathParam("id") @ApiParam(required = true) final String id) {
 
-        Connector connector = dataMgr.fetch(Connector.class, id);
-        if( connector == null ) {
+        final Connector connector = dataMgr.fetch(Connector.class, id);
+        if (connector == null || !isOauthConnector(connector)) {
             throw new EntityNotFoundException();
         }
-        if (isOauthConnector(connector)) {
-            return createOAuthApp(connector);
-        }
 
-        throw new EntityNotFoundException();
+        return createOAuthApp(connector);
     }
 
-    private static OAuthApp createOAuthApp(Connector connector) {
-        OAuthApp app = new OAuthApp();
-        app.id = connector.getId().get();
-        app.name = connector.getName();
-        app.icon = connector.getIcon();
-        app.clientId = connector.propertyTaggedWith(Credentials.CLIENT_ID_TAG).orElse(null);
-        app.clientSecret = connector.propertyTaggedWith(Credentials.CLIENT_SECRET_TAG).orElse(null);
-        return app;
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "sort", value = "Sort the result list according to the given field value", paramType = "query",
+            dataType = "string"),
+        @ApiImplicitParam(name = "direction",
+            value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " + "(ascending) or 'desc' (descending)",
+            paramType = "query", dataType = "string"),
+        @ApiImplicitParam(name = "page", value = "Page number to return", paramType = "query", dataType = "integer", defaultValue = "1"),
+        @ApiImplicitParam(name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer",
+            defaultValue = "20"),
+        @ApiImplicitParam(name = "query", value = "The search query to filter results on", paramType = "query", dataType = "string"),
+
+    })
+    public ListResult<OAuthApp> list(@Context final UriInfo uriInfo) {
+        final List<Connector> oauthConnectors = dataMgr.fetchAll(Connector.class, //
+            OAuthConnectorFilter.INSTANCE,
+            new ReflectiveFilterer<>(Connector.class, new FilterOptionsFromQueryParams(uriInfo).getFilters()),
+            new ReflectiveSorter<>(Connector.class, new SortOptionsFromQueryParams(uriInfo)),
+            new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))).getItems();
+
+        final List<OAuthApp> apps = oauthConnectors.stream().map(OAuthAppHandler::createOAuthApp).collect(Collectors.toList());
+
+        return ListResult.of(apps);
     }
 
     @PUT
     @Path(value = "/{id}")
-    @Consumes("application/json")
-    public void update(@NotNull @PathParam("id") String id, @NotNull @Valid OAuthApp app) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void update(@NotNull @PathParam("id") final String id, @NotNull @Valid final OAuthApp app) {
         final Connector connector = dataMgr.fetch(Connector.class, id);
         if (connector == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
         final Connector updated = new Connector.Builder().createFrom(connector)
-            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.CLIENT_ID_TAG, app.clientId)
-            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.CLIENT_SECRET_TAG, app.clientSecret)
+            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.CLIENT_ID_TAG, app.getClientId())
+            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.CLIENT_SECRET_TAG, app.getClientSecret())
+            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.AUTHORIZATION_URL_TAG, app.getAuthorizationUrl())
+            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.ACCESS_TOKEN_URL_TAG, app.getTokenUrl())
+            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.SCOPE_TAG, app.getScopes())//
             .build();
 
         dataMgr.update(updated);
 
-        final boolean shouldBeDerived = app.clientId != null && app.clientSecret != null;
+        final boolean shouldBeDerived = app.getClientId() != null && app.getClientSecret() != null;
 
-        dataMgr.fetchAllByPropertyValue(Connection.class, "connectorId", id).forEach(connection -> toggleDerived(connection, shouldBeDerived));
+        dataMgr.fetchAllByPropertyValue(Connection.class, "connectorId", id)
+            .forEach(connection -> toggleDerived(connection, shouldBeDerived));
     }
 
     private void toggleDerived(final Connection connection, final boolean newDerived) {
@@ -152,11 +144,14 @@ public class OAuthAppHandler {
         dataMgr.update(underived);
     }
 
-    private static boolean isOauthConnector(Connector connector) {
+    private static OAuthApp createOAuthApp(final Connector connector) {
+        return new OAuthApp(connector);
+    }
+
+    private static boolean isOauthConnector(final Connector connector) {
         return connector.getProperties().values().stream().anyMatch(x -> {
-                return x.getTags().contains(Credentials.CLIENT_ID_TAG);
-            }
-        );
+            return x.getTags().contains(Credentials.CLIENT_ID_TAG);
+        });
     }
 
 }
