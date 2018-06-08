@@ -15,3 +15,7 @@
     entry: node_modules/.bin/commitlint --edit
     language: node
     stages: [commit-msg]
+  - id: format-license
+    name: Format license
+    entry: tools/misc/format-license.sh
+    language: script
