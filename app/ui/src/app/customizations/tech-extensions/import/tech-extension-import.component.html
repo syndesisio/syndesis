@@ -96,16 +96,16 @@
               <div class="col-md-4">
                 <p *ngIf="item.isUploading" class="text-muted">
                   <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
-                  <em>Importing...</em>
+                  <em>Uploading...</em>
                 </p>
                 <p *ngIf="item.isUploaded">
                   <span *ngIf="item.isSuccess; else isError">
                     <span class="pficon-ok"></span>
-                    Successfully imported.
+                    Successfully uploaded.
                   </span>
                   <ng-template #isError>
                     <span class="pficon-error-circle-o"></span>
-                    Unable to import this file.
+                    Unable to upload this file.
                   </ng-template>
                 </p>
               </div>
@@ -186,7 +186,7 @@
                 <button *ngIf="!importing"
                         type="button"
                         class="btn btn-default"
-                        [routerLink]="['..']">
+                        [routerLink]="['/customizations/extensions']">
                   Cancel
                 </button>
               </dd>
