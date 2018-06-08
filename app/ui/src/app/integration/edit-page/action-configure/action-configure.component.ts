@@ -101,6 +101,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   }
 
   continue() {
+    this.loading = true;
     this.error = undefined;
     const data = this.buildData({});
     this.currentFlowService.events.emit({
