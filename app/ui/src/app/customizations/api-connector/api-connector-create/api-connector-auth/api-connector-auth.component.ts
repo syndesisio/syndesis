@@ -7,8 +7,7 @@ import { CustomConnectorRequest } from '@syndesis/ui/customizations/api-connecto
 
 @Component({
   selector: 'syndesis-api-connector-auth',
-  templateUrl: './api-connector-auth.component.html',
-  styleUrls: ['./api-connector-auth.component.scss']
+  templateUrl: './api-connector-auth.component.html'
 })
 export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
   authSetupForm: FormGroup;

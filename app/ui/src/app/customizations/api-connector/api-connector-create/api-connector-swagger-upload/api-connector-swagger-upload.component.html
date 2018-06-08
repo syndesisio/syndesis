@@ -16,40 +16,49 @@
     {{ processingError }}
   </syndesis-validation-error>
 
-  <p>Upload the swagger file for your Custom API Client Connector. Custom API's are RESTful APIs and can be hosted anywhere,
-    as long as a well-documented swagger is available and conforms to OpenAPI standard.</p>
+  <p>
+    Upload the swagger file for your Custom API Client Connector. Custom API's are RESTful APIs and can be hosted anywhere,
+    as long as a well-documented swagger is available and conforms to OpenAPI standard.
+  </p>
   <p>
     <strong>Choose how you want to create your connector:</strong>
   </p>
-  <form class="syn-form syn-form--swagger-upload" (ngSubmit)="onSubmit(swaggerForm, uploadFileOption.checked)" #swaggerForm="ngForm" novalidate>
-    <fieldset class="syn-form__body">
-      <div class="syn-form-input-list syn-form-input-list--horizontal">
-        <label class="syn-form-input-list__option">
-          <input type="radio" checked="checked" name="connectorSource" #uploadFileOption> Upload a Swagger file
-        </label>
-        <label class="syn-form-input-list__option">
-          <input type="radio" name="connectorSource" #fetchUrlOption> Use a URL
-        </label>
+  <form class="syn-form--swagger-upload form-horizontal" (ngSubmit)="onSubmit(swaggerForm, uploadFileOption.checked)" #swaggerForm="ngForm" novalidate>
+    <fieldset>
+      <div class="form-group form-group--inline">
+        <div class="col-xs-12">
+          <label>
+            <input type="radio" checked="checked" name="connectorSource" #uploadFileOption> Upload a Swagger file
+          </label>
+          <label>
+            <input type="radio" name="connectorSource" #fetchUrlOption> Use a URL
+          </label>
+        </div>
       </div>
 
-      <div class="syn-form-row syn-form-row--upload-file" [class.syn-visuallyhidden]="!uploadFileOption.checked">
-        <input type="file" (change)="onFile($event)">
+      <div class="form-group" [class.syn-visuallyhidden]="!uploadFileOption.checked">
+        <div class="col-xs-12">
+          <input type="file" (change)="onFile($event)">
+        </div>
       </div>
 
-      <div class="syn-form-row syn-form-row--fetch-file" [class.syn-visuallyhidden]="!fetchUrlOption.checked">
-        <input class="syn-form-row__input" type="text"
-          [class.syn-invalid]="validationError"
-          name="swaggerFileUrl"
-          [(ngModel)]="swaggerFileUrl"
-          [requiredIf]="fetchUrlOption.checked"
-          #swaggerFileUrlInput="ngModel">
-        <em>
-          * Please note, we will download this for you but any updates to the online version will not be updated in our app
-        </em>
+      <div class="form-group" [class.syn-visuallyhidden]="!fetchUrlOption.checked">
+        <div class="col-xs-12">
+          <input type="text"
+            class="form-control"
+            [class.syn-invalid]="validationError"
+            name="swaggerFileUrl"
+            [(ngModel)]="swaggerFileUrl"
+            [requiredIf]="fetchUrlOption.checked"
+            #swaggerFileUrlInput="ngModel">
+          <em class="text-muted">
+            * Please note, we will download this for you but any updates to the online version will not be updated in our app.
+          </em>
+        </div>
       </div>
     </fieldset>
 
-    <fieldset class="syn-form__buttons">
+    <fieldset>
       <syndesis-button type="submit"
         [loading]="apiConnectorState.loading"
         [disabled]="(!uploadFileOption.checked && !swaggerFileUrlInput.value) || (uploadFileOption.checked && !swaggerFileList)">
