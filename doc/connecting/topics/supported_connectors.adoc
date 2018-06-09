@@ -1,17 +1,53 @@
 [id='supported-connectors']
-= Connectors that are supported by {prodname}
+= Connectors that are provided by {prodname}
 
-{prodname} provides the following connectors. Each connector is based on
-the similarly named Apache Camel component. 
+{prodname} provides the following connectors. 
 
-Amazon S3
-AMQ
-AMQP
-Dropbox
-FTP/SFTP
-HTTP/HTTPS
-MQTT
-Salesforce
-Slack
-SQL databases
-Twitter
+[options="header"]
+[cols="1,3"]
+|===
+|Name 
+|Description
+
+|<<connecting-to-s3,Amazon S3>>
+|Retrieve data from an Amazon S3 bucket or copy data into a bucket. 
+
+|<<connecting-to-amq,AMQ>>
+|Obtain messages from an ApacheMQ broker or publish messages to an ApacheMQ
+broker. 
+
+|<<connecting-to-amqp,AMQP>>
+|Obtain messages from an Advanced Message Queue Protocol broker or
+publish messages to an AMQP broker. 
+
+|<<connecting-to-dropbox,Dropbox>>
+|Download files from Dropbox or upload files to Dropbox. 
+
+|<<connecting-to-ftp,FTP/SFTP>>
+|Download files from an FTP or SFTP server or upload files to an
+FTP or SFTP server. 
+
+|<<connecting-to-http,HTTP/HTTPS>>
+|Connect to an HTTP or HTTPS endpoint and execute the
+`GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, OR `PATCH` method.
+
+|<<connecting-to-mqtt,MQTT>>
+|Obtain messages from an MQ Telemetry Transport broker or publish messages
+to an MQTT broker. 
+
+|<<connecting-to-sf,Salesforce>>
+|Create, update, fetch, or delete a Salesforce record. 
+
+|<<connecting-to-slack,Slack>>
+|Send a message to a Slack user or channel. 
+
+|<<connecting-to-databases, SQL databases>>
+|Invoke a SQL statement or a SQL stored procedure on an Apache Derby, 
+MySQL, or PostgreSQL database. To connect to other types of SQL databases,
+you upload a JDBC driver for that database. 
+
+|<<connecting-to-twitter,Twitter>>
+|Trigger execution of an integration upon tweets that mention you or that 
+contain data you specify. 
+
+|===
