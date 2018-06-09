@@ -13,7 +13,7 @@ you want to use to start the integration.
 want the connection to perform:
 * *Get Object* obtains a file from the bucket that the connection
 accesses. In the *File Name* field, enter the name of the file that you want
-to obtain. 
+to obtain. If the specified file is not in the bucket, it is a runtime error.
 
 * *Poll an Amazon S3 Bucket* periodically obtains files from the bucket that the
 connection accesses. To configure this action:
