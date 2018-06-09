@@ -1,5 +1,5 @@
 [id='add-data-mapping-step']
-= Add a data mapping step
+= Adding a data mapping step
 
 You can add a step to an integration to map data from the previous
 connection(s) and any other steps to the next connection. For example,

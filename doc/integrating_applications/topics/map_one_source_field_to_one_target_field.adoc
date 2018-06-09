@@ -16,7 +16,7 @@ image:shared/images/magnifying-glass.png[Magnifying Glass] and entering
 the name of the data field in the search field.
 . In the *Target* panel, click the data field you want to map to.
 
-The data mapper displays a line that connects the two fields you just
+The data mapper displays a line that connects the two fields that you just
 selected.
 
 To confirm that the mapping is defined, in the upper right, click

@@ -15,7 +15,8 @@ To create a database connection:
 . Ensure that the JDBC driver for the database that you want to connect to
 is on your classpath. If you uploaded a JDBC driver library extension to 
 connect to a proprietary database, then the upload process puts the driver
-on your classpath. See <<creating-jdbc-driver-library-extensions>>. 
+on your classpath. See 
+{LinkFuseOnlineIntegrationGuide}#creating-jdbc-driver-library-extensions[Creating JDBC driver library extensions]. 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
 . In the upper right, click *Create Connection* to display

@@ -39,4 +39,4 @@ only when its name starts with that string.
 *Obtain files and then delete them from the bucket*.
 
 . After you configure the action, click *Done* to specify the action's output type. See 
-<<specifying-connection-input-output-types>>. 
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

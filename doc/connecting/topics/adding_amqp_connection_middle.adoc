@@ -46,4 +46,4 @@ response message before throwing a runtime exception.
 The default is 5000 milliseconds (5 seconds).
 
 . Click *Next* to specify the action's input and output type. See 
-<<specifying-connection-input-output-types>>.
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

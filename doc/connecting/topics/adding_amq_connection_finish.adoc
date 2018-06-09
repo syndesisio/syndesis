@@ -17,4 +17,4 @@ topic to send messages to.
 a connection fails. 
 
 . Click *Next* to specify the action's input/output type. See 
-<<specifying-connection-input-output-types>>.
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

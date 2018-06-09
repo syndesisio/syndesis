@@ -1,17 +1,16 @@
 :prodname: Syndesis
-:prodversion: 1.0
+:prodversion: 1.1
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
 
-:LinkIgniteTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/ignite_sample_integration_tutorials/
-:NameOfIgniteTutorials: Ignite Sample Integration Tutorials
+:LinkFuseOnlineTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_online_sample_integration_tutorials/
+:NameOfFuseOnlineTutorials: Fuse Online Sample Integration Tutorials
 
-:LinkIgniteIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_ignite/
-:NameOfIgniteIntegrationGuide: Integrating Applications with Ignite
+:LinkFuseOnlineIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_fuse_online/
+:NameOfFuseOnlineIntegrationGuide: Integrating Applications with Fuse Online
 
-:LinkToolingUserGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/single/tooling_user_guide/index
-:NameOfToolingUserGuide: Tooling User Guide
-
+:LinkFuseOnlineConnectorGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/connecting_fuse_online_to_applications_and_services/
+:NameOfFuseOnlineConnectorGuide: Connecting Fuse Online to Applications and Services
 
 
 [id='developing-customizations']

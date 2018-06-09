@@ -28,4 +28,4 @@ action adds only the last file that was received from the poll action.
 
 . After you configure the chosen action, click *Next* to specify 
 the action's input type. See 
-<<specifying-connection-input-output-types>>.
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

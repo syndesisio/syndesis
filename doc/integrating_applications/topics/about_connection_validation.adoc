@@ -28,8 +28,9 @@ valid. It is possible that an item has expired or been revoked.
 
 If you find that an OAuth item is invalid, has expired, or been
 revoked, obtain new values and paste them into the {prodname} settings
-for the application. See the instructions in this guide for
-registering the application whose connection did not validate. With the
+for the application. See the instructions in 
+{LinkFuseOnlineConnectorGuide}[{NameOfFuseOnlineConnectorGuide}] 
+for registering the application whose connection did not validate. With the
 updated settings in place, follow the instructions above to try to
 validate the updated connection. If validation is successful, and there
 is a running integration that is using this connection, republish

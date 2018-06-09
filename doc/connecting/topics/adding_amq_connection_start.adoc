@@ -22,4 +22,4 @@ subscription ID. The destination type must be a topic.
 data that satisfies a particular condition, enter a filter expression.
 
 .  Click *Next* to specify the action's output type. See 
-<<specifying-connection-input-output-types>>.
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

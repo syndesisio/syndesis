@@ -1,5 +1,5 @@
 [id='add-custom-step']
-= Add a custom step
+= Adding a custom step
 
 If {prodname} does not provide a step that you need in an integration,
 a developer can define one or more custom steps in an extension. A custom

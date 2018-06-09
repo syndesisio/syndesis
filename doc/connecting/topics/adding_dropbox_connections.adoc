@@ -6,8 +6,10 @@ connection to an integration. If you did not already create a Dropbox connection
 see <<create-dropbox-connection>>.
 
 You must be creating an integration or updating an integration to
-add a connection to that integration. If you need to, see
-<<procedure-for-creating-an-integration>> or <<updating-integrations>>.
+add a connection to that integration. If you need to, see the 
+{LinkFuseOnlineIntegrationGuide}#procedure-for-creating-an-integration[general procedure
+for creating an integration]. 
+or see {LinkFuseOnlineIntegrationGuide}#updating-integrations[updating integrations].
 
 The procedure for adding a Dropbox connection to an integration varies
 according to whether you want to use the connection to start an

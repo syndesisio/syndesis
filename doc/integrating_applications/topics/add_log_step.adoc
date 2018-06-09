@@ -1,5 +1,5 @@
 [id='add-log-step']
-= Add a log step
+= Adding a log step
 
 {prodname} provides log information for each integration version that
 it executes. To learn what information is automatically logged,

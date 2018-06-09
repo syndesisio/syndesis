@@ -5,14 +5,14 @@
 :productpkg: red_hat_fuse
 :version: 7.1
 
-:LinkIgniteTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/ignite_sample_integration_tutorials/
-:NameOfIgniteTutorials: Ignite Sample Integration Tutorials
+:LinkFuseOnlineTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_online_sample_integration_tutorials/
+:NameOfFuseOnlineTutorials: Fuse Online Sample Integration Tutorials
 
-:LinkIgniteIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_ignite/
-:NameOfIgniteIntegrationGuide: Integrating Applications with Ignite
+:LinkFuseOnlineIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_fuse_online/
+:NameOfFuseOnlineIntegrationGuide: Integrating Applications with Fuse Online
 
-:LinkIgniteConnectorGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/connecting_ignite_to_applications_and_services/
-:NameOfIgniteConnectorGuide: Connecting Ignite to Applications and Services
+:LinkFuseOnlineConnectorGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/connecting_fuse_online_to_applications_and_services/
+:NameOfFuseOnlineConnectorGuide: Connecting Fuse Online to Applications and Services
 
 :LinkToolingUserGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/single/tooling_user_guide/index
 :NameOfToolingUserGuide: Tooling User Guide
@@ -33,7 +33,7 @@ sample integrations:
 * <<salesforce-to-db>>
 * <<amq-to-rest-api>>
 
-See also: {LinkIgniteIntegrationGuide}[{NameOfIgniteIntegrationGuide}]
+See also: {LinkFuseOnlineIntegrationGuide}[{NameOfFuseOnlineIntegrationGuide}]
 
 include::topics/comparison_of_sample_integrations.adoc[leveloffset=+1]
 

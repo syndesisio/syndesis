@@ -6,8 +6,10 @@ connection to an integration. If you did not already create a Salesforce
 connection, see <<create-salesforce-connection_{context}>>.
 
 You must be creating an integration or updating an integration to
-add a connection to that integration. If you need to, see
-<<procedure-for-creating-an-integration>> or <<updating-integrations>>.
+add a connection to that integration. If you need to, see the 
+{LinkFuseOnlineIntegrationGuide}#procedure-for-creating-an-integration[general procedure
+for creating an integration]. 
+or see {LinkFuseOnlineIntegrationGuide}#updating-integrations[updating integrations].
 
 The instructions below
 assume that {prodname} is prompting you to select a start connection, a

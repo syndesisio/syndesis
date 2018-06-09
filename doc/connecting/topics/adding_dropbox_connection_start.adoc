@@ -16,4 +16,4 @@ specify the filename path for the content that you want
 the integration to obtain. In this release, you can download only a single
 file. 
 . Click *Next* to specify the action's output type. See 
-<<specifying-connection-input-output-types>>.
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

@@ -5,17 +5,19 @@ To connect to a proprietary SQL database, the main tasks that must be
 accomplished are as follows:
 
 . A developer creates a library extension that contains the JDBC driver 
-for the database that you want to access in an integration. 
-See <<creating-jdbc-driver-library-extensions>>. 
+for the database that you want to access in an integration. See 
+{LinkFuseOnlineIntegrationGuide}#creating-jdbc-driverlibrary-extensions[Creating JDBC driver library extensions].
 
 . The developer provides a `.jar` file that contains the library extension.
 
 . You upload that `.jar` file to {prodname}. See 
-<<making-extensions-available>>.
+{LinkFuseOnlineIntegrationGuide}#making-extensions-available[Making extensions available].
 
 . You create a connection to your database by selecting the 
 {prodname} *Database* connector and specifying the connection URL
-for your database. See <<create-database-connection>>. 
+for your database. See 
+{LinkFuseOnlineIntegrationGuide}#create-database-connection[Creating database connections].
 
 . In an integration, you add the connection to your database. 
-See <<add-database-connection>>. 
+See 
+{LinkFuseOnlineIntegrationGuide}#add-database-connection[Adding database connections]. 

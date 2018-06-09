@@ -68,5 +68,5 @@ To specify the values of these placeholders, add a data mapping step
 to your integration before the database connection. In the data mapping
 step, map the appropriate source data fields to the target data
 fields, for example, map source data to the `:#param_1`, `:#param_2`, and
-`:#param_3` target fields.
-See <<add-data-mapping-step>>.
+`:#param_3` target fields. See
+{LinkFuseOnlineIntegrationGuide}#add-data-mapping-step[Add a data mapping step].

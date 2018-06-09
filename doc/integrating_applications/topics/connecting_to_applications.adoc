@@ -2,6 +2,7 @@
 = Connecting to applications that you want to integrate
 
 To integrate applications: 
+
 . Create a connection to each application or service that you want to integrate.
 . Create an integration. 
 . Add connections to the integration. 
@@ -9,7 +10,7 @@ To integrate applications:
 The procedure for
 creating a connection varies for each application or service. The details
 for creating each kind of connection are in 
-{LinkIgniteConnectorGuide}[{NameOfIgniteConnectorGuide}].
+{LinkFuseOnlineConnectorGuide}[{NameOfFuseOnlineConnectorGuide}].
 
 The following topics
 provide an overview of the workflow:

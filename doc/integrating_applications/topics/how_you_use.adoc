@@ -3,8 +3,8 @@
 
 The best way to learn about how to use {prodname} is to create the sample
 integrations by following the instructions in the
-{LinkIgniteTutorials}[sample integration tutorials].
-Following is an abbreviated description of one of the samples to provide
+{LinkFuseOnlineTutorials}[sample integration tutorials].
+The following abbreviated description of one of the samples provides
 an overview of how you use {prodname}. These steps omit details so
 you should not try to follow them.
 
@@ -24,7 +24,8 @@ integration.
 
 . Choose the action that you want the Salesforce connection to perform. In
 the sample integration, you choose the *On create* action for the
-*Lead* object. After connecting to Salesforce, the integration watches for
+*Lead* object. This means that after connecting to Salesforce, 
+the integration watches for
 notifications that a Salesforce lead was created. When the integration
 finds such a notification, it passes the new lead's data to the next
 step in the integration. However, before you can add the next step, you

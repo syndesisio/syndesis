@@ -5,7 +5,7 @@ In an integration that has a few steps or that operates on a small set
 of data, it is probably easy to find
 the data field you want to map. But in an integration that has many steps,
 or that has a step that accesses a large set of data, the list of data fields
-might be very long. To quickly find the data field you
+might be very long. To quickly find the data field that you
 want to map, you can:
 
 * Search for it. The *Sources* panel and the *Target* panel each have
