@@ -24,4 +24,4 @@ upload has been updated.
 same name is present in the same Dropbox folder. Dropbox overwrites the file
 that it already has with the file that you are uploading. 
 . Click *Next* to specify the action's input type. See 
-<<specifying-connection-input-output-types>>.
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

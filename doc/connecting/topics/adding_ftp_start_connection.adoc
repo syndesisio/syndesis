@@ -34,4 +34,4 @@ interval between polls.
 . In the *Delete after download* field, accept the default of *No*
 or select *Yes* to download the file(s) and then delete it(them) from the server.
 . Click *Next* to specify the action's output type. See 
-<<specifying-connection-input-output-types>>.
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

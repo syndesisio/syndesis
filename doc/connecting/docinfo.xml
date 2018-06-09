@@ -1,6 +1,6 @@
 <productname>Syndesis</productname>
 <productnumber>1.1</productnumber>
-<subtitle>User's guide to integrating applications with Syndesis</subtitle>
+<subtitle>Guide for using provided connectors</subtitle>
 <abstract>
  <para>Syndesis provides integration as a service.</para>
 </abstract>

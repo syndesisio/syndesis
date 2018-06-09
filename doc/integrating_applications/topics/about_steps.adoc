@@ -21,7 +21,7 @@ criteria that you define.
 * Logging information in addition to the default logging that {prodname}
 automatically provides.
 
-See also <<add-steps>> and <<workflow-overview>>. 
+See also <<workflow-overview>> and <<add-steps>>. 
 
 To operate on data between connections in a way that is not built into
 {prodname}, you can upload an extension that provides a custom step.

@@ -38,8 +38,9 @@ client ID and client secret and save the settings.
 
 For examples, see
 
-* <<register-with-salesforce_{context}>>
-* <<register-with-twitter>>
+* {LinkFuseOnlineConnectorGuide}#register-with-salesforce_{context}[Registering Fuse Online as a Salesforce client]
+* {LinkFuseOnlineConnectorGuide}#register-with-twitter[Registering Fuse Online as a Twitter client]
 
 For an example of registering with an application that does not have 
-an entry in the {prodname} *Settings* page, see: <<register-with-dropbox>>.
+an entry in the {prodname} *Settings* page, see: 
+{LinkFuseOnlineConnectorGuide}#register-with-dropbox[Registering Fuse Online as a Dropbox client].

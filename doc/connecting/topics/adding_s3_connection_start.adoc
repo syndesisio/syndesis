@@ -12,9 +12,7 @@ you want to use to start the integration.
 . On the *Choose an Action* page, click the action that you
 want the connection to perform:
 * *Get Object* obtains a file from the bucket that the connection
-accesses.
-+
-In the *File Name* field, enter the name of the file that you want
+accesses. In the *File Name* field, enter the name of the file that you want
 to obtain. 
 
 * *Poll an Amazon S3 Bucket* periodically obtains files from the bucket that the
@@ -41,4 +39,4 @@ only when its name starts with that string.
 *Obtain files and then delete them from the bucket*.
 
 . After you configure the action, click *Done* to specify the action's output type. See 
-<<specifying-connection-input-output-types>>. 
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

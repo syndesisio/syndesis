@@ -54,4 +54,4 @@ See also:
 
 * <<creating-connections-from-custom-connectors>>
 * <<add-custom-step>>
-* <<connecting-to-proprietary-databases>>
+* {LinkFuseOnlineConnectorGuide}#connecting-to-proprietary-databases[Connecting to proprietary databases]

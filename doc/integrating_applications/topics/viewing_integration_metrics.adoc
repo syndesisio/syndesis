@@ -1,5 +1,5 @@
 [id='viewing-integration-metrics']
-= Viewing integration metrics
+= Viewing metrics for a particular integration
 
 To view integration metrics:
 

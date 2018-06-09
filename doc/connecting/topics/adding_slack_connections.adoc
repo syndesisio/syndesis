@@ -34,5 +34,5 @@ a message to that channel.
 before the Slack connection. In the mapping step, map a string
 from a previous step to the Slack *message* field. This string 
 should contain the message that you want to send to the Slack
-user or channel. 
-See <<add-data-mapping-step>>. 
+user or channel. See
+{LinkFuseOnlineIntegrationGuide}#add-data-mapping-step[Add data mapping step].

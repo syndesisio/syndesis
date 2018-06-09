@@ -33,10 +33,10 @@ application that uses the OAuth protocol, register this installation of
 {prodname} with the application. The steps vary for each application.
 See the appropriate topic:
 
-* <<register-with-dropbox>>
-* <<register-with-rest-api>>
-* <<register-with-salesforce_{context}>>
-* <<register-with-twitter>>
+* {LinkFuseOnlineConnectorGuide}#register-with-dropbox[Register with Dropbox]
+* <<register-with-rest-api,Register with a REST API>>
+* {LinkFuseOnlineConnectorGuide}#register-with-salesforce_{context}[Register with Salesforce]
+* {LinkFuseOnlineConnectorGuide}#register-with-twitter[Register with Twitter]
 
 . In the left panel, click *Connections* and confirm that there are no
 longer any connections that require configuration.

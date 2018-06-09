@@ -64,4 +64,4 @@ server and then rename that temporary file to have the correct name.
 This is useful for reducing locks when uploading very large files.
 
 . Click *Next* to specify the action's input type. See 
-<<specifying-connection-input-output-types>>.
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

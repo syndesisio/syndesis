@@ -1,26 +1,24 @@
-[id='adding-amq-connection-middle']
-= Publish AMQ messages in the middle of an integration
+[id='adding-amqp-connection-middle']
+= Publish messages to AMQP in the middle of an integration
 
 :context: middle
-In the middle of an integration, to publish messages to an AMQ broker, 
-add an AMQ connection between the start and
-finish connections. You must be creating or editing an integration.
-The integratation's start and finish connections must have already been
-added. 
+In the middle of an integration, to publish messages to an AMQP broker,
+add an AMQP connection between the start and 
+finish connections. You must be creating or editing an integration. 
+You must have already added the start and finish connections to the
+integration. Follow these instructions:
 
-To add an AMQ connection as a middle connection:
-
-. In the integration visualization panel on the left, click the plus sign
-that is in the location where you want to add the connection.
+. In the integration visualization panel on the left, click the plus
+sign in the location where you want to add the connection. 
 . Click *Add a connection*. 
 
-. On the *Choose a Connection* page, click the AMQ connection that you
-want the integration to use after the start connection and before
-the finish connection.
+. On the *Choose a Connection* page, click the AMQP connection that you 
+want the integration to use after the start connection and before 
+the finish connection. 
 
 . On the *Choose an Action* page, select one of the following actions:
 +
-* *Publish messages* action to
+* *Publish messages* to
 publish messages to the queue or topic you specify. To configure this
 action:
 .. In the *Destination Name* field, enter the name of the queue or 
@@ -35,8 +33,8 @@ you specify and receive a response. To configure this action:
 .. In the *Destination Name* field, enter the name of the queue or topic 
 to send messages to. 
 .. For the *Destination Type*, accept *Queue* or select *Topic*.
-.. In the *Message Selector* field, if you want to receive only responses
-that satisfy a particular condition, enter a filter expression.
+.. In the *Message Selector* field, if you want to receive only responses 
+that satisfy a particular condition, enter a filter expression. 
 .. In the *Named Reply To* field, enter the name of
 a queue or topic. The destination sends its response
 to this queue or topic. 
@@ -47,6 +45,5 @@ connection waits for a
 response message before throwing a runtime exception. 
 The default is 5000 milliseconds (5 seconds).
 
-. Click *Next* to specify the action's input type and then the action's
-output type. See 
-<<specifying-connection-input-output-types>>.
+. Click *Next* to specify the action's input and output type. See 
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

@@ -18,6 +18,9 @@ the integration to operate on.
 to perform. The available actions vary for each connection.
 
 .. On the page for configuring the action, enter values in the fields.
+.. Optionally, if the connection requires data type specification, 
+{prodname} prompts you to click
+*Next* to specify the input and/or output type of the action. 
 .. Click *Done* to add the start connection.
 
 . Choose and configure the finish connection:
@@ -31,6 +34,9 @@ has been operating on.
 to perform. The available actions vary for each connection.
 
 .. On the page for configuring the action, enter values in the fields.
+.. Optionally, if the connection requires data type specification, 
+{prodname} prompts you to click
+*Next* to specify the input and/or output type of the action. 
 .. Click *Done* to add the finish connection.
 
 . Optionally, add one or more connections between the start connection and

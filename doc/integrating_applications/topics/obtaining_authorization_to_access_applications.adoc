@@ -15,17 +15,14 @@ only one registration of {prodname} as a client is required. This
 registration lets you create multiple connections and each connection can
 use different user credentials. 
 
-[NOTE]
-====
-For information about using custom connectors that let 
-you access applications that use the
-OAuth protocol, see <<creating-connections-from-custom-connectors>>. 
-====
-
 For details, see the following topics:
 
 * <<general-procedure-for-obtaining-authorization>>
 * <<about-connection-validation>>
+
+For information about using custom connectors that let 
+you access applications that use the
+OAuth protocol, see <<creating-connections-from-custom-connectors>>. 
 
 include::general_procedure_for_obtaining_authorization.adoc[leveloffset=+1]
 

@@ -5,13 +5,14 @@ You must create a Twitter connection before you can add a Twitter
 connection to an integration. If you did not already create a Twitter connection,
 see <<create-twitter-connection>>.
 
-You must be creating an integration or updating an integration to
-add a connection to that integration. If you need to, see
-<<procedure-for-creating-an-integration>> or <<updating-integrations>>.
-
-The instructions below
-assume that {prodname} is prompting you to select a start connection, a
-finish connection or a middle connection.
+A connection to Twitter must be the start connection in an integration. 
+You must be creating an integration and being prompted to choose
+its start connection or you can be updating an integration to
+change its start connection. 
+If you need to, see the 
+{LinkFuseOnlineIntegrationGuide}#procedure-for-creating-an-integration[general procedure
+for creating an integration]. 
+or see {LinkFuseOnlineIntegrationGuide}#updating-integrations[updating integrations].
 
 To add a Twitter connection to an integration:
 
@@ -21,8 +22,13 @@ uses the selected connection to connect to Twitter, {prodname} uses the
 credentials defined in that connection.
 
 . Click the action that you want the selected connection to perform.
-Each Twitter connection that you add to an integration performs only
+A Twitter connection that you add to an integration performs only
 the action you choose.
+
+*  *Mention* triggers execution of the integration when a tweet contains
+your handle.
+* *Search* triggers execution of the integration when a tweet contains
+text that you specify. 
 
 . Optionally, enter the configuration information that {prodname}
 prompts for. For example, the *Search* action prompts you to specify
@@ -31,4 +37,4 @@ how often to search and keywords to search for.
 . Click *Done* to add the connection to the integration.
 
 The connection appears in the integration flow 
-in the location where you added it. 
+as the start connection. 

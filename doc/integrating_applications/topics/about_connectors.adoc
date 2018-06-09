@@ -8,5 +8,12 @@ for creating a connection to that specific application. For example, you use the
 Salesforce connector to create a connection to
 Salesforce.
 
+An application that you want to connect to might use the OAuth protocol
+to authenticate users. In this case, you register {prodname} as a client
+that can access that application. The registration is associated with the
+connector. You need to register {prodname} only once with each 
+application that uses OAuth. The registration extends to each 
+connection that you create from that connector. 
+
 If {prodname} does not provide a connector you need, a developer
 can create the needed connector.

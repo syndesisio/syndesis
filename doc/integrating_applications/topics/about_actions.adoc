@@ -1,5 +1,5 @@
 [id='about-actions']
-= About actions
+= About actions performed by connections
 
 In an integration, each connection performs one action. As you create an
 integration, you choose a connection to add to the integration and then you

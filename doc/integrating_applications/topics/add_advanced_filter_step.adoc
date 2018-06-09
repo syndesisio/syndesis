@@ -1,5 +1,5 @@
 [id='add-advanced-filter-step']
-= Add an advanced filter step
+= Adding an advanced filter step
 
 In a filter step, {prodname} inspects the
 data and continues the integration only if the content meets
@@ -26,6 +26,18 @@ and in the popup that appears, click *Add a Step*.
 . In the edit box, use the
 http://camel.apache.org/simple.html[Camel Simple Expression] language
 to specify a filter
-expression.
+expression. For example, the following expression evaluates to true
+when the message header's `type` field is set to `widget`:
++
+----
+${in.header.type} == 'widget' 
+----
++
+In the following example, the expression evaluates to true when the
+body of the message contains a `title` field:
++
+----
+${in.body.title} 
+----
 
 . Click *Done* to add the advanced filter step to the integration. 

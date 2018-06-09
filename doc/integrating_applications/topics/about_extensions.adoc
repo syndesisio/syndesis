@@ -23,7 +23,7 @@ exactly one extension.
 
 For an example of uploading and using an extension that provides a step
 that operates on data between connections, see the 
-{LinkIgniteTutorials}#amq-to-rest-api[AMQ to REST API sample integration tutorial].
+{LinkFuseOnlineTutorials}#amq-to-rest-api[AMQ to REST API sample integration tutorial].
 
 For custom connectors and custom steps, information about coding the 
 extension and creating the `.jar` file is in the

@@ -1,13 +1,13 @@
-[id='adding-amqp-connection-start']
-= Start an integration based on receiving AMQP messages
+[id='adding-amq-connection-start']
+= Start an integration based on receiving AMQ messages
 
 :context: start
-To trigger execution of an integration based on receiving messages from
-an AMQP broker, add an AMQP connection as the start connection: 
+To trigger execution of an integration based on receiving a message
+from an AMQ broker, add an AMQ connection as the start connection:
 
-. In the {prodname} panel on the left, click *Integrations*. 
-. Click *Create Integration*. 
-. On the *Choose a Start Connection* page, click the AMQP connection that
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a Start Connection* page, click the AMQ connection that
 you want to use to start the integration. 
 . On the *Choose an Action* page, click the *Subscribe for messages* action
 to receive messages from the queue or topic you specify. 
@@ -22,4 +22,4 @@ subscription ID. The destination type must be a topic.
 data that satisfies a particular condition, enter a filter expression.
 
 .  Click *Next* to specify the action's output type. See 
-<<specifying-connection-input-output-types>>.
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

@@ -1,5 +1,5 @@
 [id='specifying-connection-input-output-types']
-= Specifying connection input or output types
+= Specifying connection action input or output types
 
 To process data from the start connection through the finish connection,
 sometimes you need to specify input/output types when you configure

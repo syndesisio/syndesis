@@ -58,4 +58,4 @@ or specify a number and its unit (milliseconds, seconds, minutes, or hours)
 to indicate how long to wait between invocations. 
 
 . Click *Done* to specify the action's input or output type. See 
-<<specifying-connection-input-output-types>>. 
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

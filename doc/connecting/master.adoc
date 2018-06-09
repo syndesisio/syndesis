@@ -1,0 +1,66 @@
+:prodname: Syndesis
+:prodversion: 7.1
+:imagesdir: topics
+:prodnameinurl: fuse-ignite
+:productpkg: red_hat_fuse
+:version: 7.1
+
+:LinkFuseOnlineTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_online_sample_integration_tutorials/
+:NameOfFuseOnlineTutorials: Fuse Online Sample Integration Tutorials
+
+:LinkFuseOnlineIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_fuse_online/
+:NameOfFuseOnlineIntegrationGuide: Integrating Applications with Fuse Online
+
+:LinkFuseOnlineConnectorGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/connecting_fuse_online_to_applications_and_services/
+:NameOfFuseOnlineConnectorGuide: Connecting Fuse Online to Applications and Services
+
+:LinkToolingUserGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/single/tooling_user_guide/index
+:NameOfToolingUserGuide: Tooling User Guide
+
+[id='connecting-to-applications-and-services']
+= Connecting {prodname} to Applications and Services
+
+This guide provides information and instructions for creating
+connections between {prodname} and the applications and services 
+that you want to integrate. {prodname} 
+<<supported-connectors,provides numerous connectors>>
+for creating the connections that you need. 
+When you create an integration you add a connection to each application
+that you want to integrate. The following topics provide details for
+creating connections and adding them to integrations:
+
+* <<connecting-to-s3>>
+* <<connecting-to-amq>>
+* <<connecting-to-amqp>>
+* <<connecting-to-dropbox>>
+* <<connecting-to-ftp>>
+* <<connecting-to-http>>
+* <<connecting-to-mqtt>>
+* <<connecting-to-sf>>
+* <<connecting-to-slack>>
+* <<connecting-to-databases>>
+* <<connecting-to-twitter>>
+
+include::topics/supported_connectors.adoc[leveloffset=+1]
+
+include::topics/connecting_to_amazon_s3.adoc[leveloffset=+1]
+
+include::topics/connecting_to_amq.adoc[leveloffset=+1]
+
+include::topics/connecting_to_amqp.adoc[leveloffset=+1]
+
+include::topics/connecting_to_dropbox.adoc[leveloffset=+1]
+
+include::topics/connecting_to_ftp.adoc[leveloffset=+1]
+
+include::topics/connecting_to_http.adoc[leveloffset=+1]
+
+include::topics/connecting_to_mqtt.adoc[leveloffset=+1]
+
+include::topics/connecting_to_sf.adoc[leveloffset=+1]
+
+include::topics/connecting_to_slack.adoc[leveloffset=+1]
+
+include::topics/connecting_to_databases.adoc[leveloffset=+1]
+
+include::topics/connecting_to_twitter.adoc[leveloffset=+1]

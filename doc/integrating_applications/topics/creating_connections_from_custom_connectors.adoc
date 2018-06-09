@@ -38,4 +38,4 @@ secret. If these parameters are not available, you need to talk with
 the extension developer and ask for an updated extension that lets
 you specify the client ID and client secret. 
 
-For more information, see <<overview-of-creating-connections>>.
+For more information, see <<connecting-to-applications>>.

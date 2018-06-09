@@ -1,7 +1,8 @@
 [id='viewing-system-metrics']
-= Viewing system metrics
+= Viewing metrics for a {prodname} environment
 
-System metrics appear on the {prodname} home page. To see them, click
+Metrics for your {prodname} environment 
+appear on the {prodname} home page. To see them, click
 *Home* in the left panel. {prodname} updates the following metrics
 every 5 seconds:
 
