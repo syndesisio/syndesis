@@ -70,6 +70,12 @@ export class StepStore {
         filter: {
           type: 'textarea',
           displayName: 'Only continue if',
+          placeholder:
+`Examples of Simple Language filter expressions:
+
+$\{in.header.type\} == 'widget' // Evaluates true when type = widget
+$\{in.body.title\} // Evaluates true when body contains title.
+`,
           required: true,
           rows: 10
         }

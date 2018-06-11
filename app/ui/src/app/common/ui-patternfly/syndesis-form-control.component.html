@@ -9,8 +9,9 @@
          [class.required-pf]="model.required"
          [ngClass]="[elementLabelClass, gridLabelClass]">
     {{ model.label }}
+    <ng-template #labelTooltipTemplate><div [innerHtml]="model.labelTooltip"></div></ng-template>
     <div *ngIf="model.labelTooltip"
-         [tooltip]="model.labelTooltip"
+         [tooltip]="labelTooltipTemplate"
          placement="right"
          class="hint-icon">
       <span class="glyphicon glyphicon-info-sign"></span>
@@ -44,8 +45,9 @@
         <span [innerHTML]="model.label"
               [ngClass]="[elementLabelClass, gridLabelClass]">
         </span>
+        <ng-template #checkboxLabelTooltipTemplate><div [innerHtml]="model.labelTooltip"></div></ng-template>
         <div *ngIf="model.labelTooltip"
-             [tooltip]="model.labelTooltip"
+             [tooltip]="checkboxLabelTooltipTemplate"
              placement="right"
              class="inline-block hint-icon">
           &nbsp;
