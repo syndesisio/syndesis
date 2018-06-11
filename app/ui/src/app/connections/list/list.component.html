@@ -20,7 +20,7 @@
           <ng-container *ngIf="isConnectors">
             <h1>Register Applications</h1>
             <p>There are currently no applications registered.</p>
-            <p>Before you can create a connection, you must register your applications to allow Syndesis to access information
+            <p>Before you can create a connection, you must register your applications to allow {{ 'shared.project.name' | synI18n }} to access information
               and act on your behalf</p>
             <button class="btn btn-primary"
                     [routerLink]="['/settings/oauth-clients']">Register Applications</button>

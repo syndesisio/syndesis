@@ -11,6 +11,7 @@ import {
   I18NService,
 } from '../../platform';
 import { environment } from '../../../environments/environment';
+import { ConfigService } from '@syndesis/ui/config.service';
 
 const { fallbackValue, localStorageKey, dictionaryFolderPath } = environment.i18n;
 
@@ -21,6 +22,7 @@ export class I18NProviderService extends I18NService {
   constructor(
     private httpClient: HttpClient,
     private platformStore: Store<PlatformState>,
+    private configService: ConfigService,
     @Inject(PLATFORM_ID) private platformId: any,
     @Inject('LOCALSTORAGE') private localStorage: Storage
   ) {
@@ -43,19 +45,21 @@ export class I18NProviderService extends I18NService {
     if (!this.dictionary) {
       return fallbackValue;
     }
-
+    // config.json overrides
+    switch (dictionaryKey) {
+      case 'shared.project.name':
+        return this.configService.getSettings('branding', 'appName');
+      default:
+    }
     let translateKeys = (dictionaryKey || '').toLowerCase().split(/[\.:]/);
-
     if (translateKeys.length === 1) {
       translateKeys = ['shared', ...translateKeys];
     }
-
     let translation = this.getTranslatedTerm(this.dictionary, ...translateKeys);
     if (translation !== fallbackValue) {
       translation = this.replaceLabelPlaceholders(translation, args);
       translation = this.replaceIndexPlaceholders(translation, args);
     }
-
     return translation;
   }
 

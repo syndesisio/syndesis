@@ -1,11 +1,22 @@
 {
   "locale": "en-GB",
   "dictionary": {
+    "customizations": {
+      "extensions": {
+        "heading": "{{extensions}}",
+        "description": "An extension defines one or more custom steps for use in integrations.  Find out more at <a href=\"{{links.userguide}}#adding-extensions\" target=\"_blank\">{{shared.project.name}} Help</a>",
+        "import-extension": "Import {{extension}}",
+        "step-extension": "{{step}} {{extension}}",
+        "connector-extension": "{{connector}} {{extension}}",
+        "library-extension": "Library {{extension}}",
+        "unknown-extension": "Unknown {{extension}}"
+      }
+    },
     "integrations": {
-      "integration": "Integration",
-      "integrations": "Integrations",
+      "integration": "{{integration}}",
+      "integrations": "{{integrations}}",
       "import-export": {
-        "header": "Import Integration",
+        "header": "Import {{integration}}",
         "choose-files": "Choose one or more zip files that contain exported integrations that you want to import.",
         "drag-and-drop": "Drag and drop your integration files here or",
         "help-block": "Note: The imported integration will be in the draft state. If you previously imported and this environment has a draft version of the integration, then that draft is lost.",
@@ -14,13 +25,13 @@
         "import-success": "Successfully imported.",
         "import-fail": "Unable to import this file.",
         "import-results": "Import Results:",
-        "btn-done": "Done",
-        "btn-cancel": "Cancel"
+        "btn-done": "{{done}}",
+        "btn-cancel": "{{cancel}}"
       }
     },
     "connections": {
-      "connection": "Connection",
-      "connections": "Connections"
+      "connection": "{{connection}}",
+      "connections": "{{connections}}"
     },
     "dashboard": {
       "heading": "Dashboard",
@@ -50,8 +61,8 @@
     },
     "menu": {
       "home": "Home",
-      "integrations": "Integrations",
-      "connections": "Connections",
+      "integrations": "{{integrations}}",
+      "connections": "{{connections}}",
       "customizations": "Customizations",
       "settings": "Settings"
     },
@@ -125,11 +136,12 @@
       "loading": "loading",
       "email": "fuse-online-tech-preview@redhat.com",
       "project": {
-        "name": "Syndesis"
+        "name": "Syndesis (tokenized)"
       },
       "ok": "Ok",
       "save": "Save",
       "cancel": "Cancel",
+      "done": "Done",
       "register": "Register",
       "edit": "Edit",
       "remove": "Remove",
@@ -143,7 +155,22 @@
       "5": "5",
       "30": "30",
       "days": "Days",
-      "user": "User"
+      "user": "User",
+      "used-by": "Used by",
+      "update": "Update",
+      "delete": "Delete",
+      "extension": "Extension",
+      "extensions": "{{extension}}s",
+      "integration": "Integration",
+      "integrations": "{{integration}}s",
+      "connection": "Connection",
+      "connections": "{{connection}}s",
+      "step": "Step",
+      "steps": "{{step}}s",
+      "connector": "Connector",
+      "connectors": "{{connector}}s",
+      "action": "Action",
+      "actions": "{{action}}s"
     }
   }
 }
