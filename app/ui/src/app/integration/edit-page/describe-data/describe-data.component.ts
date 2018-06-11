@@ -48,23 +48,27 @@ const DESCRIBE_DATA_FORM_CONFIG = {
         label: 'XML Instance',
         value: DataShapeKinds.XML_INSTANCE
       }
-    ]
+    ],
+    controlHint: 'integrations.edit.describe-data.select-type'
   },
   specification: {
     type: 'textarea',
     displayName: 'Definition',
     rows: 10,
-    relation: PROPERTY_RELATION
+    relation: PROPERTY_RELATION,
+    labelHint: 'integrations.edit.describe-data.definition'
   },
   name: {
     type: 'string',
     displayName: 'Data Type Name',
-    relation: PROPERTY_RELATION
+    relation: PROPERTY_RELATION,
+    controlHint: 'integrations.edit.describe-data.name'
   },
   description: {
     type: 'string',
     displayName: 'Data Type Description',
-    relation: PROPERTY_RELATION
+    relation: PROPERTY_RELATION,
+    controlHint: 'integrations.edit.describe-data.description'
   }
 };
 

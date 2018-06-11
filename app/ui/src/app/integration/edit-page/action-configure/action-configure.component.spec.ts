@@ -6,7 +6,8 @@ import { ReactiveFormsModule, FormGroup, FormControl, FormsModule } from '@angul
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 
 import { CoreModule } from '@syndesis/ui/core';
-import { ActionDescriptor, ActionDescriptorStep } from '@syndesis/ui/platform';
+
+import { PlatformModule, ActionDescriptor, ActionDescriptorStep } from '@syndesis/ui/platform';
 
 import { ApiModule } from '@syndesis/ui/api';
 import { ConfigService } from '@syndesis/ui/config.service';
@@ -30,7 +31,8 @@ describe('IntegrationConfigureActionComponent', () => {
                     ReactiveFormsModule,
                     DynamicFormsCoreModule.forRoot(),
                     CoreModule.forRoot(),
-                    ApiModule.forRoot()
+                    ApiModule.forRoot(),
+                    PlatformModule.forRoot()
                 ],
                 declarations: [IntegrationConfigureActionComponent],
                 providers: [
