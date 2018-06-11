@@ -240,7 +240,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Retrieve an object from an Amazon S3 bucket",
-                "description": "Set the filename and if you have to delete the file once it has been downloaded from S3",
+                "description": "Set the filename of the object to retrieve",
                 "properties": {
                   "fileName": {
                     "kind": "parameter",
