@@ -224,6 +224,7 @@ export class FormFactoryProviderService extends FormFactoryService {
       hint: field.description,
       required: field.required,
       relation: field.relation,
+      placeholder: field.placeholder,
       rows: field.rows,
       cols: field.cols,
       validators: validators,
