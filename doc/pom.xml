@@ -23,11 +23,22 @@
 
     <name>Syndesis :: Docs</name>
 
+    <parent>
+      <groupId>io.syndesis</groupId>
+      <artifactId>syndesis-parent</artifactId>
+      <version>1.4-SNAPSHOT</version>
+      <relativePath>../app/pom.xml</relativePath>
+    </parent>
+
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-docs</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.4-SNAPSHOT</version>
 
     <packaging>pom</packaging>
+
+    <modules>
+	<module>tools</module>
+    </modules>
 
     <build>
         <plugins>
@@ -58,7 +69,7 @@
             <plugin>
                 <groupId>io.syndesis</groupId>
                 <artifactId>syndesis-documentation-maven-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+		<version>${project.version}</version>
                 <executions>
                     <execution>
                         <phase>generate-resources</phase>
