@@ -29,7 +29,7 @@
 
     <properties>
         <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
-        <camel.version>2.21.0</camel.version>
+        <camel.version>2.21.0.fuse-000094</camel.version>
     </properties>
 
     <!-- Metadata need to publish to central -->
@@ -77,6 +77,32 @@
         <system>github</system>
         <url>https://github.com/syndesisio/syndesis.io/issues</url>
     </issueManagement>
+
+  <repositories>
+    <repository>
+       <id>jboss-fuse</id>
+       <url>https://origin-repository.jboss.org/nexus/content/groups/ea</url>
+    </repository>
+    <repository>
+       <id>mrrc-redhat</id>
+       <url>https://maven.repository.redhat.com/ga</url>
+    </repository>
+  </repositories>
+
+      <pluginRepositories>
+        <pluginRepository>
+          <releases />
+          <snapshots />
+          <id>jboss_origin</id>
+          <name>jboss_origin</name>
+          <url>https://origin-repository.jboss.org/nexus/content/groups/ea</url>
+        </pluginRepository>
+        <pluginRepository>
+          <id>redhat.ga</id>
+          <name>Red Hat General Availability Repository</name>
+          <url>https://maven.repository.redhat.com/ga</url>
+        </pluginRepository>
+      </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
