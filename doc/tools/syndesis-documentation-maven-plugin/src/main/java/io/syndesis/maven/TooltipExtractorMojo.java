@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.maven.plugin.AbstractMojo;
@@ -55,10 +57,12 @@ public class TooltipExtractorMojo extends AbstractMojo {
             final TooltipExtractor consumer = new TooltipExtractor();
 
             for (File path: sources) {
-                Files.lines(path.toPath()).forEach(consumer);
+                try (Stream<String> lines = Files.lines(path.toPath())) {
+                    lines.forEach(consumer);
+                }
             }
 
-            consumer.write(new FileWriter(output));
+            consumer.write(Files.newBufferedWriter(output.toPath(), StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new MojoFailureException(e.getMessage(), e);
         }
@@ -78,12 +82,14 @@ public class TooltipExtractorMojo extends AbstractMojo {
             if (matcher.matches()) {
                 final String entry = matcher.group(1); // i.e. address.queue.label
                 final String value = matcher.group(2);  // the text after the first :
-                final String[] keys = entry.split("\\.");
+                final String[] keys = entry.split("\\.", -1);
 
                 Map<String, Object> node = root;
                 for (int i = 0; i < keys.length; i++) {
                     if (i < keys.length - 1) {
-                        node = (Map)node.computeIfAbsent(keys[i], k -> new HashMap<>());
+                        @SuppressWarnings("unchecked")
+                        Map<String, Object> tmpNode = (Map)node.computeIfAbsent(keys[i], k -> new HashMap<>());
+                        node = tmpNode;
                     } else {
                         if (tooltipBeginTag.equals(value)) {
                             isTooltip = true;
