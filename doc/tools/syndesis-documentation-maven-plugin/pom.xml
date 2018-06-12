@@ -85,15 +85,17 @@
     <dependency>
       <groupId>org.apache.maven.resolver</groupId>
       <artifactId>maven-resolver-api</artifactId>
-      <version>${maven-resolver-api.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -103,13 +105,11 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.8.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -124,19 +124,16 @@
       <version>1.25.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>net.javacrumbs.json-unit</groupId>
+      <artifactId>json-unit-core</artifactId>
+      <version>1.25.0</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin.version}</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>

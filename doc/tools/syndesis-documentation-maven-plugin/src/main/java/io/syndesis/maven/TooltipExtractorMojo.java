@@ -16,7 +16,6 @@
 package io.syndesis.server.builder.maven;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -73,6 +72,7 @@ public class TooltipExtractorMojo extends AbstractMojo {
         private final ObjectMapper mapper = new ObjectMapper();
 
         private boolean isTooltip;
+	@SuppressWarnings("PMD.AvoidStringBufferField")
         private StringBuilder tooltip = new StringBuilder();
         private Map<String, Object> root = new HashMap<>();
 
@@ -106,7 +106,7 @@ public class TooltipExtractorMojo extends AbstractMojo {
                 }
             } else if (isTooltip) {
                 if (tooltip.length() > 0) {
-                    tooltip.append(" ");
+                    tooltip.append(' ');
                 }
 
                 tooltip.append(line.trim());
