@@ -61,7 +61,7 @@
     <kubernetes.client.version>2.4.1</kubernetes.client.version>
 
     <spring.version>4.3.12.RELEASE</spring.version>
-    <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
+    <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
 
     <swagger.version>1.5.19</swagger.version>
 
