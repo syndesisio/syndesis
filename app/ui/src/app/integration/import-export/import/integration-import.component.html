@@ -56,39 +56,49 @@
           <em>{{ 'integrations.import-export.help-block' | synI18n }}</em>
         </p>
       </div>
-      <div class="results">
-        <div *ngIf="showReviewStep">
-          <div class="col-sm-2 text">
-            <h3>{{ 'integrations.import-export.import-results' | synI18n }}</h3>
-          </div>
-          <div class="col-sm-10">
-            <table class="table">
-              <tbody>
-              <ng-container *ngFor="let integration of importedOverviews$ | async">
-                <tr>
-                  <th>Integration Name</th>
-                  <td>{{ integration.name }}</td>
-                </tr>
-                <tr *ngFor="let step of integration.steps">
-                  <th>Connection Name</th>
-                  <td>{{ step.connection.name }}</td>
-                </tr>
-              </ng-container>
-              </tbody>
-            </table>
+      <div class="integration-import-results row" *ngIf="showReviewStep">
+        <div class="col-sm-2 text">
+          <h3>{{ 'integrations.import-export.import-results' | synI18n }}</h3>
+        </div>
+        <div class="col-sm-10">
+          <div class="list-group">
+            <ng-container *ngFor="let integration of importedOverviews$ | async">
+              <div class="list-group-item">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <strong>Integration Name</strong>
+                  </div>
+                  <div class="col-sm-9">
+                    {{ integration.name }}
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item" *ngFor="let step of integration.steps">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <strong>Connection Name</strong>
+                  </div>
+                  <div class="col-sm-9">
+                    {{ step.connection.name }}
+                  </div>
+                </div>
+              </div>
+            </ng-container>
           </div>
         </div>
-        <div class="buttons col-xs-12"
-             *ngIf="showButtons || showReviewStep">
+      </div>
+      <div class="row">
+        <div class="col-xs-12"
+          *ngIf="showButtons || showReviewStep">
           <button type="button"
-                  class="btn btn-primary"
-                  (click)="done(importedOverviews$)">
-            {{ 'integrations.import-export.btn-done' | synI18n }}
+            class="btn btn-primary"
+            (click)="done(importedOverviews$)">
+              {{ 'integrations.import-export.btn-done' | synI18n }}
           </button>
           <button type="button"
-                  class="btn btn-default"
-                  (click)="cancel()">
-            {{ 'integrations.import-export.btn-cancel' | synI18n }}
+            class="btn btn-default"
+            (click)="cancel()">
+              {{ 'integrations.import-export.btn-cancel' | synI18n }}
           </button>
         </div>
       </div>
