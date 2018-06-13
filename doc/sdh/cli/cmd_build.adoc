@@ -33,6 +33,7 @@ Options for build:
 -k  --kill-pods               Kill pods after the image has been created.
                               Useful when building with image-mode docker
 -c  --clean                   Run clean builds (mvn clean)
+    --camel-snapshot          Run a build with a specific Camel snapshot. You'll need to set an environment variable CAMEL_SNAPSHOT_VERSION with the SNAPSHOT version you want to use.
     --batch-mode              Run mvn in batch mode
 ----
 
@@ -166,4 +167,14 @@ syndesis -i docker -k
 
 # Or:
 # syndesis --docker
+----
+
+[[syndesis-build-camel-snapshot]]
+### Building with a Camel snapshot
+
+Suppose you've to build Syndesis with a local Camel snapshot, you can do that with the following commands
+
+----
+export CAMEL_SNAPSHOT_VERSION=2.21.0-SNAPSHOT
+syndesis build --openshift --clean --camel-snapshot
 ----
