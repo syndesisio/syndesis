@@ -514,6 +514,8 @@
 	            <arg>-XepDisableWarningsInGeneratedCode</arg>
 	            <arg>-XepExcludedPaths:.*/generated-sources/.*</arg>
 	            <arg>-implicit:none</arg>
+	            <!-- temporary disable until https://github.com/google/error-prone/issues/780 is resolved -->
+	            <arg>-Xep:ParameterName:OFF</arg>
 	          </compilerArgs>
 	        </configuration>
 	        <dependencies>
