@@ -28,6 +28,7 @@ build::usage() {
                               Useful when building with image-mode docker
 -c  --clean                   Run clean builds (mvn clean)
     --batch-mode              Run mvn in batch mode
+    --camel-snapshot          Run a build with a specific Camel snapshot. You'll need to set an environment variable CAMEL_SNAPSHOT_VERSION with the SNAPSHOT version you want to use.
 EOT
 
 }
@@ -85,6 +86,17 @@ maven_args() {
             fi
         fi
     fi
+
+    set +o nounset
+    if [ -n "$(hasflag --camel-snapshot)" ]; then
+       if [ -n "$CAMEL_SNAPSHOT_VERSION" ]; then
+           args="$args -Dcamel.version=$CAMEL_SNAPSHOT_VERSION"
+       else
+           echo "ERROR: you need to set the environment variable CAMEL_SNAPSHOT_VERSION to use --camel-snapshot option".
+           exit 1
+       fi
+    fi
+    set -o nounset
 
     if [ -z "$project" ]; then
         project="$(readopt --project -p)"
