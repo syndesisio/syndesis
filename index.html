@@ -521,8 +521,8 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-6945-g8bbd645c3,</span>
-<span id="revdate">2018-06-13</span>
+<span id="revnumber">version 1.1.3-6947-g1afbf56f9,</span>
+<span id="revdate">2018-06-14</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Syndesis Developer Handbook</div>
@@ -536,6 +536,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#syndesis-build-modules">2.1.2. Modules</a></li>
 <li><a href="#syndesis-build-tuning">2.1.3. Tuning</a></li>
 <li><a href="#syndesis-build-image">2.1.4. Images</a></li>
+<li><a href="#syndesis-build-camel-snapshot">2.1.5. Building with a Camel snapshot</a></li>
 </ul>
 </li>
 <li><a href="#syndesis-ui">2.2. syndesis ui</a></li>
@@ -905,6 +906,7 @@ Options for build:
 -k  --kill-pods               Kill pods after the image has been created.
                               Useful when building with image-mode docker
 -c  --clean                   Run clean builds (mvn clean)
+    --camel-snapshot          Run a build with a specific Camel snapshot. You'll need to set an environment variable CAMEL_SNAPSHOT_VERSION with the SNAPSHOT version you want to use.
     --batch-mode              Run mvn in batch mode</code></pre>
 </div>
 </div>
@@ -1098,6 +1100,18 @@ syndesis -i docker -k
 
 # Or:
 # syndesis --docker</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="syndesis-build-camel-snapshot">2.1.5. Building with a Camel snapshot</h4>
+<div class="paragraph">
+<p>Suppose you&#8217;ve to build Syndesis with a local Camel snapshot, you can do that with the following commands</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>export CAMEL_SNAPSHOT_VERSION=2.21.0-SNAPSHOT
+syndesis build --openshift --clean --camel-snapshot</pre>
 </div>
 </div>
 </div>
@@ -3095,8 +3109,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-6945-g8bbd645c3<br>
-Last updated 2018-06-13 18:24:44 UTC
+Version 1.1.3-6947-g1afbf56f9<br>
+Last updated 2018-06-14 07:35:35 UTC
 </div>
 </div>
 </body>
