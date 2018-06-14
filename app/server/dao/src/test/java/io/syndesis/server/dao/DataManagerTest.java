@@ -94,7 +94,7 @@ public class DataManagerTest {
         );
 
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactlyInAnyOrder("twitter", "activemq");
-        Assert.assertEquals(14, connectors.getTotalCount());
+        Assert.assertEquals(15, connectors.getTotalCount());
         Assert.assertEquals(2, connectors.getItems().size());
     }
 

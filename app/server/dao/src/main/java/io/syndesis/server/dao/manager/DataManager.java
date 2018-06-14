@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,7 @@ import io.syndesis.common.model.ModelData;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,7 +130,10 @@ public class DataManager implements DataAccessObjectRegistry {
     private void loadData() {
         try {
             final ResourcePatternResolver resolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
-            final Resource[] resources = resolver.getResources("classpath:/META-INF/syndesis/connector/*.json");
+            Stream<Resource> resources1 = Arrays.stream(resolver.getResources("classpath:/META-INF/syndesis/connector/*.json"));
+            Stream<Resource> resources2 = Arrays.stream(resolver.getResources("classpath:/META-INF/syndesis/api-connectors/*.json"));
+            final Resource[] resources = Stream.concat(resources1, resources2).toArray(
+                    size -> new Resource[size]);
 
             if (resources != null) {
                 ReadApiClientData reader = new ReadApiClientData(encryptionComponent);
