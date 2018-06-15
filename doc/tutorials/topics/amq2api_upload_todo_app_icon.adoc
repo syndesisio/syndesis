@@ -3,8 +3,7 @@
 
 To show the flow of an integration, {prodname} displays icons that identify
 the applications that the integration is connecting to. Your {prodname}
-installation provides an icon for the REST API connector that you just
-created for the To Do app.
+installation provides an icon for the To Do app.
 
 To upload the To Do app icon:
 

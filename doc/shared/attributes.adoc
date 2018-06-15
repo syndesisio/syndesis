@@ -1,16 +1,94 @@
-:prodname: Syndesis
-:prodversion: 7.1
-:imagesdir: topics
-:prodnameinurl: fuse-ignite
+// Standard document attributes to be used in the documentation
+//
+// The following are shared by all documents
+:toc:
+:toclevels: 4
+:numbered:
+
+// Attributes for Fuse on OpenShift
+:cdk-version: 3.4
+:maven-version: 3.3.x
+:archetype-version: 2.2.0.fuse-000092-redhat-2
+:archetype-catalog: https://maven.repository.redhat.com/earlyaccess/all/io/fabric8/archetypes/archetypes-catalog/{archetype-version}/archetypes-catalog-{archetype-version}-archetype-catalog.xml
+:templates-base-url: https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000081-redhat-4
+
+
+// Attributes converted from DocBook
+:amq: Apache ActiveMQ
+
+:bomversion: 7.0.0.fuse-000027-redhat-1
+
+:broker: Red Hat AMQ
+
+:camel: Apache Camel
+
+:camelFullVersion: 2.21.0.fuse-000077-redhat-1
+
+:copy: ©
+
+:cxf: Apache CXF
+
+:cxfFullVersion: 3.1.11.fuse-000243-redhat-1
+
+:eapfull: Red Hat JBoss Enterprise Application Platform
+
+:eapname: JBoss EAP
+
+:fabric8Version: 3.0.11.fuse-000039-redhat-1
+
+:fabric8MavenPluginVersion: 3.5.33.fuse-000067-redhat-1
+
+:fabric8CamelMavenPluginVersion: 2.3.80
+
+:felix: Apache Felix
+
+:fmc: Fuse Console
+
+:framework: Apache CXF
+
+:fullversion: 7.0.0.fuse-000191-redhat-1
+
+:fuseeapversion: 7.0.0.fuse-000085-redhat-1
+
+:hq: JBoss Operations Network
+
+:ide: Fuse Tooling
+
+:ideTools: Fuse Tooling
+
+:infin: ∞
+
+:karaf: Apache Karaf
+
+:mdash: —
+
+:nbsp:  
+
+:ndash: –
+
+:prodbuildversion: 000191
+
+:prodname: Fuse
+
+:prodnamefull: Red Hat Fuse
+
 :productpkg: red_hat_fuse
+
+:productdocsemail: fuinclude::topics/shared/attributes.adoc[]se-docs-support@redhat.com
+
+:reg: ®
+
+:reldate: August 2018
+
+:router: Apache Camel
+
+:servicemix: Apache ServiceMix
+
+:springBootFullVersion: 1.5.12.RELEASE
+
+:trade: ™
+
 :version: 7.1
-:location: upstream
 
-:LinkFuseOnlineTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_online_sample_integration_tutorials/
-:NameOfFuseOnlineTutorials: Fuse Online Sample Integration Tutorials
-
-:LinkFuseOnlineIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_fuse_online/
-:NameOfFuseOnlineIntegrationGuide: Integrating Applications with Fuse Online
-
-:LinkFuseOnlineConnectorGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/connecting_fuse_online_to_applications_and_services/
-:NameOfFuseOnlineConnectorGuide: Connecting Fuse Online to Applications and Services
+// Include attributes for deep linking
+include::attributes-links.adoc[]

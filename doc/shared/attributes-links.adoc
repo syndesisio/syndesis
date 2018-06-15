@@ -1,0 +1,91 @@
+// JBoss Fuse titles
+:LinkCXFDevGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/apache_cxf_development_guide/index
+:NameOfCXFDevGuide: Apache CXF Development Guide
+
+:LinkCXFSecurityGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/apache_cxf_security_guide/index
+:NameOfCXFSecurityGuide: Apache CXF Security Guide
+
+:LinkKarafConsoleRef: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/apache_karaf_console_reference/index
+:NameOfKarafConsoleRef: Apache Karaf Console Reference
+
+:LinkDeployKaraf: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/deploying_into_apache_karaf/index
+:NameOfDeployKaraf: Deploying into Apache Karaf
+
+:LinkDeployEAP: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/deploying_into_jboss_eap/index
+:NameOfDeployEAP: Deploying into JBoss EAP
+
+:LinkDeploySpringBoot: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/deploying_into_spring_boot/index
+:NameOfDeploySpringBoot: Deploying into Spring Boot
+
+:LinkKarafInstallGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/installing_on_apache_karaf/index
+:NameOfKarafInstallGuide: Installing on Apache Karaf
+
+:LinkEAPInstallGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/installing_on_jboss_eap/index
+:NameOfEAPInstallGuide: Installing on JBoss EAP
+
+:LinkMigrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/migration_guide/index
+:NameOfMigrationGuide: Migration Guide
+
+:LinkManagingFuse: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/managing_fuse/index
+:NameOfManagingFuse: Managing Fuse
+
+:LinkReleaseNotes: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/release_notes/index
+:NameOfReleaseNotes: Release Notes
+
+:LinkSecurityGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/security_guide/index
+:NameOfSecurityGuide: Security Guide
+
+:LinkTransactionsGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/transaction_guide/index
+:NameOfTransactionsGuide: Transaction Guide
+
+:LinkToolingTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/tooling_tutorials/index
+:NameOfToolingTutorials: Tooling Tutorials
+
+:LinkToolingUserGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/tooling_user_guide/index
+:NameOfToolingUserGuide: Tooling User Guide
+
+:LinkCamelCompRef: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/apache_camel_component_reference/index
+:NameOfCamelCompRef: Apache Camel Component Reference
+
+:LinkCamelDevGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/apache_camel_development_guide/index
+:NameOfCamelDevGuide: Apache Camel Development Guide
+
+:LinkFISGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_on_openshift_guide/
+:NameOfFISGuide: Fuse on OpenShift Guide
+
+// Fuse Online titles
+
+:LinkFuseOnlineTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_online_sample_integration_tutorials/
+:NameOfFuseOnlineTutorials: Fuse Online Sample Integration Tutorials
+
+:LinkFuseOnlineIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_fuse_online/
+:NameOfFuseOnlineIntegrationGuide: Integrating Applications with Fuse Online
+
+:LinkFuseOnlineConnectorGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/connecting_fuse_online_to_applications_and_services/
+:NameOfFuseOnlineConnectorGuide: Connecting Fuse Online to Applications and Services
+
+//REVISIT Don't forget to add the guides from the tooling repo, FIS guide!
+
+// Developer Studio titles
+:DevStudioProdName: Red Hat JBoss Developer Studio
+:DevStudioProdNameShort: Developer Studio
+:DevStudioVersion: 11.1
+
+:LinkDevStudioInstallGuide: https://access.redhat.com/documentation/en-us/red_hat_jboss_developer_studio/{DevStudioVersion}/html-single/installation_guide/
+:NameOfDevStudioInstallGuide: Installation Guide
+
+:LinkDevStudioRelNotes: https://access.redhat.com/documentation/en-us/red_hat_jboss_developer_studio/11.1/html-single/release_notes_and_known_issues/
+:NameOfDevStudioRelNotes: Release Notes and Known Issues
+
+
+// Container Development Kit (CDK) titles
+:CDKProdName: Red Hat Container Development Kit
+:CDKProdNameShort: Container Development Kit
+:CDKVersion: 3.2
+
+:LinkCDKGettingStarted: https://access.redhat.com/documentation/en-us/red_hat_container_development_kit/{CDKVersion}/html-single/getting_started_guide/
+:NameOfCDKGettingStarted: Getting Started Guide
+
+// Red Hat Single Sign-On titles
+:RHSSOProdName: Red Hat Single Sign-On
+:RHSSOProdNameShort: Single Sign-On
