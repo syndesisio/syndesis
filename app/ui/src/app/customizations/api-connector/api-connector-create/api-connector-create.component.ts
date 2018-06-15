@@ -38,16 +38,33 @@ enum WizardSteps {
 export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   currentActiveStep = 1;
   apiConnectorState$: Observable<ApiConnectorState>;
+
+  @ViewChild('_apiEditor') _apiEditor: ApiEditorComponent;
+  apiDef: ApiDefinition;
+
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
 
   private cancelModalId = 'create-cancellation-modal';
 
   constructor(
-    private router: Router,
-    private modalService: ModalService,
     private apiConnectorStore: Store<ApiConnectorStore>,
-    private nav: NavigationService
+    private modalService: ModalService,
+    private nav: NavigationService,
+    private router: Router
   ) {}
+
+
+  public apiDefinition(): ApiDefinition {
+    return this.apiDef;
+  }
+
+  public onUserSelection(selection: string): void {
+    console.log('User selection changed: ', selection);
+  }
+
+  public onUserChange(command: OtCommand): void {
+    console.log('Something happened! ' + JSON.stringify(command));
+  }
 
   ngOnInit() {
     this.modalService.registerModal(
