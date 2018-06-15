@@ -24,7 +24,7 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-parent</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4.1-20180615</version>
     <relativePath>../../app/pom.xml</relativePath>
   </parent>
 
