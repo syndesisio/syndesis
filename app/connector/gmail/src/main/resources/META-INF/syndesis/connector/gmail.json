@@ -13,7 +13,8 @@
     "tokenUrl": "https://accounts.google.com/o/oauth2/token",
     "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
     "authenticationType": "oauth2",
-    "googleScopes": "https://mail.google.com/"
+    "googleScopes": "https://mail.google.com/",
+    "applicationName": "gmail-syndesis"
   },
   "tags": [
     "verifier"
