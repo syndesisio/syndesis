@@ -9,16 +9,16 @@ include::topics/shared/attributes.adoc[]
 :version: 7.1
 
 [id='connecting-to-applications-and-services']
-= Connecting {prodname} to Applications and Services
+= Connecting {prodname} to Applications and Services 
 
-This guide provides information and instructions for creating
-connections between {prodname} and the applications and services 
-that you want to integrate. {prodname} 
-<<supported-connectors,provides numerous connectors>>
-for creating the connections that you need. 
-When you create an integration you add a connection to each application
-that you want to integrate. The following topics provide details for
-creating connections and adding them to integrations:
+To integrate applications, you create a connection to each application
+or service that you want to integrate. You then create an integration and
+add a connection to it for each integration or service that you want
+to integrate.
+
+{prodname} <<supported-connectors,supports numerous connectors>> that serve
+as templates for creating connections. The following topics provide 
+details for creating connections and adding them to integrations:
 
 * <<connecting-to-s3>>
 * <<connecting-to-amq>>
