@@ -20,6 +20,9 @@ import {
   CustomApiConnectorAuthSettings
 } from '@syndesis/ui/customizations/api-connector';
 
+import { ApiEditorComponent, ApiDefinition } from 'apicurio-design-studio';
+import { OtCommand } from 'oai-ts-commands';
+
 enum WizardSteps {
   UploadSwagger = 1,
   ReviewApiConnector = 2,
