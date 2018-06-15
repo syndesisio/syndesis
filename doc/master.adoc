@@ -1,7 +1,12 @@
+:experimental:
+include::shared/attributes.adoc[]
+
 :prodname: Syndesis
-:prodversion: 7.0
+:prodversion: 7.1
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
+:productpkg: red_hat_fuse
+:version: 7.1
 
 // This is a convenience document for generating all doc.
 // Images will not appear because each "book" has its own
@@ -9,13 +14,13 @@
 
 = Skeleton for {prodname} User Documentation
 
-This document contains the very preliminary state of
-planned topics. Some topics contain draft documentation and/or
-notes. Other topics are empty.
+This document pulls in all {prodname} user documentation. 
 
 include::tutorials/master.adoc[offsetlevel=+1]
 
 include::integrating_applications/master.adoc[offsetlevel=+1]
+
+include::connecting/master.adoc[offsetlevel=+1]
 
 include::developing_customizations/master.adoc[offsetlevel=+1]
 

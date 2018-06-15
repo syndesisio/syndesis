@@ -16,5 +16,11 @@ in the fields that you mapped: *Company*, *Email*, *FirstName*,
 . In a new browser window, insert `*todo-*` in front of the URL
 for your {prodname} installation. For example: 
 `\https://todo-app-proj7614.6a63.fuse-ignite.openshiftapps.com/`.
++
+Your {prodname} installation provides the To Do app, which has a 
+REST API for accessing a database that contains tasks. In the AMQ to REST 
+API sample integration tutorial, there are instructions for uploading a 
+Swagger file for the To Do app to create an API client connector. 
+
 . In the *To Do App* display, you should see a notification that a new 
 lead was created in the database. 

@@ -1,17 +1,12 @@
+:experimental:
+include::topics/shared/attributes.adoc[]
+
 :prodname: Syndesis
-:prodversion: 1.0
+:prodversion: 7.1
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
-
-:LinkIgniteTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/ignite_sample_integration_tutorials/
-:NameOfIgniteTutorials: Ignite Sample Integration Tutorials
-
-:LinkIgniteIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_ignite/
-:NameOfIgniteIntegrationGuide: Integrating Applications with Ignite
-
-:LinkToolingUserGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/single/tooling_user_guide/index
-:NameOfToolingUserGuide: Tooling User Guide
-
+:productpkg: red_hat_fuse
+:version: 7.1
 
 
 [id='managing_environments']

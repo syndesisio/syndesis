@@ -6,8 +6,9 @@ that support Hypertext Transfer Protocol (HTTP)/1.0 or HTTP/1.1.
 To do this, {prodname} requires a valid
 Swagger 2.0 specification that describes a REST API you want to connect to.
 
-Your {prodname} installation provides the To Do app, which has a REST API for
-which a Swagger specification is available.
+Your {prodname} installation provides the To Do app, which has a REST API
+for accessing a database that contains tasks. Your installation also provides
+a Swagger specification for this API.
 
 To create a REST API connector for the To Do app:
 

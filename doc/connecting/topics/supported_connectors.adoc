@@ -44,10 +44,19 @@ to an MQTT broker.
 |<<connecting-to-databases, SQL databases>>
 |Invoke a SQL statement or a SQL stored procedure on an Apache Derby, 
 MySQL, or PostgreSQL database. To connect to other types of SQL databases,
-you upload a JDBC driver for that database. 
+you upload a {prodname} library extension that contains a 
+JDBC driver for that database. 
 
 |<<connecting-to-twitter,Twitter>>
 |Trigger execution of an integration upon tweets that mention you or that 
 contain data you specify. 
 
 |===
+
+If {prodname} does not provide a connector that you need, an 
+experienced developer can create an extension that defines a custom
+connector. For information about coding the 
+extension and creating its `.jar` file, which is uploaded to 
+{prodname}, see 
+{LinkToolingUserGuide}#IgniteExtension[Developing extensions for
+{prodname} integrations].
