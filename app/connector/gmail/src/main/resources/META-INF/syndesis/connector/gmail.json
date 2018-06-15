@@ -9,6 +9,13 @@
       "id": "@project.groupId@:@project.artifactId@:@project.version@"
     }
   ],
+  "configuredProperties": {
+    "tokenUrl": "https://accounts.google.com/o/oauth2/token",
+    "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+    "authenticationType": "oauth2",
+    "googleScopes": "https://mail.google.com/",
+    "applicationName": "gmail-syndesis"
+  },
   "tags": [
     "verifier"
   ],
@@ -21,6 +28,9 @@
       "type": "string",
       "javaType": "java.lang.String",
       "deprecated": false,
+      "tags": [
+        "oauth-client-id"
+      ],
       "secret": false,
       "raw": true,
       "labelHint": "Client Id",
@@ -36,6 +46,9 @@
       "deprecated": false,
       "secret": true,
       "raw": true,
+      "tags": [
+        "oauth-client-secret"
+      ],
       "labelHint": "Client Secret",
       "order": "2"
     },
@@ -60,6 +73,9 @@
       "type": "string",
       "javaType": "java.lang.String",
       "deprecated": false,
+      "tags": [
+        "oauth-access-token"
+      ],
       "secret": true,
       "raw": true,
       "labelHint": "Access Token",
@@ -90,6 +106,69 @@
       "raw": true,
       "labelHint": "UserId",
       "order": "6"
+    },
+    "googleScopes": {
+      "kind": "parameter",
+      "displayName": "Scopes",
+      "group": "common",
+      "required": true,
+      "type": "hidden",
+      "javaType": "java.lang.String",
+      "deprecated": false,
+      "secret": false,
+      "raw": true,
+      "labelHint": "UserId",
+      "tags": [
+        "oauth-scope"
+      ]
+    },
+    "tokenUrl": {
+      "kind": "property",
+      "displayName": "Token URL",
+      "group": "security",
+      "label": "security",
+      "required": false,
+      "type": "hidden",
+      "javaType": "java.lang.String",
+      "tags": [
+        "oauth-access-token-url"
+      ],
+      "deprecated": false,
+      "secret": true,
+      "componentProperty": true,
+      "description": "The access token"
+    },
+    "authorizationUrl": {
+      "kind": "property",
+      "displayName": "Authorization URL",
+      "group": "security",
+      "label": "security",
+      "required": false,
+      "type": "hidden",
+      "javaType": "java.lang.String",
+      "tags": [
+        "oauth-authorization-url"
+      ],
+      "deprecated": false,
+      "secret": true,
+      "componentProperty": true,
+      "description": "The access token"
+    },
+    "authenticationType": {
+      "kind": "property",
+      "displayName": "Authorization URL",
+      "group": "security",
+      "label": "security",
+      "required": false,
+      "type": "hidden",
+      "javaType": "java.lang.String",
+      "tags": [
+        "authentication-type"
+      ],
+      "deprecated": false,
+      "secret": true,
+      "componentProperty": true,
+      "description": "The access token"
     }
   },
   "actions": [

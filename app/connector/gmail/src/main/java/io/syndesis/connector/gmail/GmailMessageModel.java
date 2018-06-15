@@ -63,4 +63,10 @@ public class GmailMessageModel {
 		this.bcc = bcc;
 	}
 
+	@Override
+	public String toString() {
+		return "GmailMessageModel [text=" + text + ", subject=" + subject + ", to=" + to + ", cc=" + cc + ", bcc=" + bcc
+				+ "]";
+	}
+
 }

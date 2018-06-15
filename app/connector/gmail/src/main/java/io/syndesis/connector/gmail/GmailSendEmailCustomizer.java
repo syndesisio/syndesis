@@ -85,7 +85,7 @@ public class GmailSendEmailCustomizer implements ComponentProxyCustomizer {
 				cc = mail.getCc();
 			}
 			if (ObjectHelper.isNotEmpty(mail.getBcc())) {
-				bcc = mail.getCc();
+				bcc = mail.getBcc();
 			}
 		}
 		com.google.api.services.gmail.model.Message message = createMessage(to, userId, subject, text, cc, bcc);
