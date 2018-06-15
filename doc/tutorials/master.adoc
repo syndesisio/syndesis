@@ -1,22 +1,12 @@
+:experimental:
+include::topics/shared/attributes.adoc[]
+
 :prodname: Syndesis
 :prodversion: 7.1
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
 :productpkg: red_hat_fuse
 :version: 7.1
-
-:LinkFuseOnlineTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_online_sample_integration_tutorials/
-:NameOfFuseOnlineTutorials: Fuse Online Sample Integration Tutorials
-
-:LinkFuseOnlineIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_fuse_online/
-:NameOfFuseOnlineIntegrationGuide: Integrating Applications with Fuse Online
-
-:LinkFuseOnlineConnectorGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/connecting_fuse_online_to_applications_and_services/
-:NameOfFuseOnlineConnectorGuide: Connecting Fuse Online to Applications and Services
-
-:LinkToolingUserGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/single/tooling_user_guide/index
-:NameOfToolingUserGuide: Tooling User Guide
-
 
 [id='tutorials']
 = {prodname} Sample Integration Tutorials
