@@ -19,6 +19,4 @@ Add an intro paragraph here.
 
 include::topics/developing_api_client_connectors.adoc[leveloffset=+1]
 
-include::topics/developing_custom_steps.adoc[leveloffset=+1]
-
-include::topics/developing_other_connectors.adoc[leveloffset=+1]
+include::topics/developing_extensions.adoc[leveloffset=+1]
