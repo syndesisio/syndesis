@@ -56,7 +56,7 @@
 
     <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
 
-    <jackson.version>2.8.10</jackson.version>
+    <jackson.version>2.9.0</jackson.version>
     <json-patch.version>1.9</json-patch.version>
     <kubernetes.client.version>2.4.1</kubernetes.client.version>
 
@@ -299,7 +299,7 @@
             <executions>
               <execution>
                 <id>default-testResources</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -308,7 +308,7 @@
             <executions>
               <execution>
                 <id>default-testCompile</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -318,7 +318,7 @@
             <executions>
               <execution>
                 <id>get-build-id</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -327,7 +327,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -337,11 +337,11 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
+                <phase/>
               </execution>
               <execution>
                 <id>default-it</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -350,7 +350,7 @@
             <executions>
               <execution>
                 <id>attach-tests</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -359,7 +359,7 @@
             <executions>
               <execution>
                 <id>attach-javadocs</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -368,7 +368,7 @@
             <executions>
               <execution>
                 <id>attach-sources</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -377,7 +377,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -387,7 +387,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -397,7 +397,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -407,7 +407,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -417,7 +417,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -426,7 +426,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -435,7 +435,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -445,7 +445,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -454,7 +454,7 @@
             <executions>
               <execution>
                 <id>default-test</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -464,7 +464,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -474,7 +474,7 @@
             <version>${exec-maven-plugin.version}</version>
             <executions>
               <execution>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -483,7 +483,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
+                <phase/>
               </execution>
             </executions>
           </plugin>
@@ -1386,8 +1386,8 @@
 
       <pluginRepositories>
         <pluginRepository>
-          <releases />
-          <snapshots />
+          <releases/>
+          <snapshots/>
           <id>jboss_origin</id>
           <name>jboss_origin</name>
           <url>https://origin-repository.jboss.org/nexus/content/groups/ea</url>
