@@ -15,22 +15,11 @@
  */
 package io.syndesis.server.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.ResourceLoader;
 
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -42,6 +31,16 @@ import io.syndesis.common.util.cache.LRUCacheManager;
 import io.syndesis.server.dao.manager.DataAccessObject;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DataManagerTest {
     private CacheManager cacheManager;
@@ -94,8 +93,8 @@ public class DataManagerTest {
         );
 
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactlyInAnyOrder("twitter", "activemq");
-        Assert.assertEquals(15, connectors.getTotalCount());
-        Assert.assertEquals(2, connectors.getItems().size());
+        assertThat(connectors.getTotalCount()).isGreaterThanOrEqualTo(connectors.getItems().size());
+        assertThat(connectors.getItems()).hasSize(2);
     }
 
     @Test

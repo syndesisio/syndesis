@@ -1,0 +1,226 @@
+{
+    "id": "servicenow",
+    "name": "ServiceNow",
+    "description": "ServiceNow",
+    "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMzAwIDMwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzAwIDMwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+LnN0MHtmaWxsOiM4MzJFQUI7fS5zdDF7ZmlsbDojQkFCQUJBO30uc3Qye2ZpbGw6bm9uZTt9LnN0M3tmaWxsOiM4REM2M0Y7fS5zdDR7ZmlsbDojMEY5QkQ3O30uc3Q1e2ZpbGw6I0ZGRkZGRjt9LnN0NntmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiNGRkZGRkY7fS5zdDd7ZmlsbDojMURBMUYyO30uc3Q4e2ZpbGw6IzNENUE5ODt9LnN0OXtmaWxsOiMyMzFGMjA7fS5zdDEwe2ZpbGw6IzAwN0JCNTt9LnN0MTF7ZmlsbDojREM0RTQxO30uc3QxMntmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiMxODE2MTY7fS5zdDEze2ZpbGw6IzE4MTYxNjt9LnN0MTR7ZmlsbDojRjJGMkYyO30uc3QxNXtmaWxsOiNFM0UzRTM7fS5zdDE2e2ZpbGw6I0Q1NEIzRDt9LnN0MTd7ZmlsbDojRDcyQjI3O30uc3QxOHtvcGFjaXR5OjAuNTY7ZmlsbDp1cmwoI1NWR0lEXzFfKTt9LnN0MTl7ZmlsbDojOTJENDAwO30uc3QyMHtmaWxsOiMwMEI5RTQ7fS5zdDIxe2ZpbGw6IzJCMzk5MDt9LnN0MjJ7ZmlsbDojM0Y5QzM1O30uc3QyM3tmaWxsOiM4RkNFRDg7fS5zdDI0e2ZpbGw6I0QyMUYyMTt9LnN0MjV7ZmlsbDojRDZENkQ2O30uc3QyNntmaWxsOiNGMUYxRjE7fS5zdDI3e2ZpbGw6I0MzMjI2NTt9LnN0Mjh7ZmlsbDojOEMzMTIzO30uc3QyOXtmaWxsOiNFMDUyNDM7fS5zdDMwe2ZpbGw6IzVFMUYxODt9LnN0MzF7ZmlsbDojRjJCMEE5O30uc3QzMntmaWxsOiNDQUNDQ0U7fS5zdDMze2ZpbGw6I0ExQUZEQjt9LnN0MzR7ZmlsbDojMDAyMDg3O308L3N0eWxlPjxwYXRoIGQ9Ik0xOTMuNiwxNjEuMmMtMC40LDAtMC44LDAuMS0xLjEsMC4xYy0wLjUtMS45LTEtMy44LTEuNC01LjZjLTIuMi05LjMtNC4zLTE4LjYtNi43LTI3LjhjLTEuMi00LjktNC41LTYuNS05LjQtNS4xYy01LjEsMS40LTQuNiw1LTMuNiw4LjljMy45LDE0LjEsNy45LDI4LjEsMTEuNiw0Mi4zYzEuMiw0LjUsMy41LDcsOC41LDcuMWM1LjIsMC4xLDcuNy0yLjMsOS4xLTcuMWMyLjQtOCw1LjMtMTUuOCw4LTIzLjdjNC4xLDguNCw3LDE2LjYsOS42LDI0LjljMS40LDQuNSw0LjQsNS45LDguOSw1LjhjNC40LDAsNy0xLjksOC4xLTYuMWM0LTE0LjgsOC4xLTI5LjcsMTIuMi00NC41YzEtMy41LDAuNS02LjEtMy4zLTcuNWMtMy44LTEuNC03LjEtMC44LTguOSwzYy0xLjEsMi4yLTEuNyw0LjgtMi4yLDcuMmMtMi4xLDkuMi00LjEsMTguMy02LjIsMjcuNWMtMy41LTcuMS01LjgtMTQuMy03LjktMjEuNWMtMS40LTQuNi0zLjMtOC41LTguOS04LjZjLTUuOC0wLjEtOC4xLDMuNi05LjYsOC41QzE5OC4zLDE0Ni40LDE5NS45LDE1My44LDE5My42LDE2MS4yeiBNNjcuOSwxMjcuN2MtMS45LTEuMS0zLjktMi43LTYuMS0zLjRjLTUuNC0xLjctNy40LTAuMy03LjUsNS4yYy0wLjIsMTQuNi0wLjEsMjkuMi0wLjEsNDMuOWMwLDQuOCwxLjgsNy43LDcuMyw3LjVjNS41LTAuMiw2LjMtMy43LDYuMy03LjljMC4xLTguOC0wLjMtMTcuNiwwLjQtMjYuM2MwLjMtMy40LDIuNC03LjcsNS05LjhjOC4zLTYuNiwxOC42LTIsMTkuNSw4LjZjMC44LDkuMywwLjUsMTguNywwLjUsMjhjMCw0LjYsMS41LDcuNCw2LjcsNy4zYzUuMywwLDYuNy0zLjEsNi42LTcuNmMtMC4yLTEwLjUtMC4yLTIxLjEtMC44LTMxLjZjLTAuOC0xNC4yLTEyLjYtMjIuNy0yNi41LTE5LjFDNzUuNSwxMjMuNyw3MS45LDEyNS45LDY3LjksMTI3Ljd6IE0xNDEuOSwxODAuOWMwLjMsMCwxLjMsMCwyLjMtMC4xYzExLjMtMS4xLDE5LjQtNi44LDIzLjktMTcuMmM0LjYtMTAuOCwyLjktMjEtMy45LTMwLjRjLTIuNC0zLjMtNS41LTMuMy04LjgtMS4zYy0zLjUsMi4xLTMuMSw0LjctMS4zLDhjMS42LDIuOCwyLjksNiwzLjQsOS4yYzEuNywxMC43LTUuNSwxOS44LTE1LjksMjAuNWMtOS41LDAuNy0xNy45LTgtMTcuMi0xOC43YzAuMy0zLjksMi41LTcuNywzLjMtMTEuNmMwLjQtMi4xLDAuNC02LjEtMC41LTYuNWMtMi41LTEtNi0xLjUtOC40LTAuNWMtMi4xLDAuOS0zLjksMy45LTQuOCw2LjNDMTA1LjYsMTYxLDExOC45LDE4MS4xLDE0MS45LDE4MC45eiBNMTQ2LjcsMTM5LjhjMC00LjMsMC41LTguNy0wLjItMTIuOGMtMC40LTItMy4xLTUuMS00LjctNWMtMi4yLDAtNiwyLjUtNi4xLDQuMWMtMC42LDkuMS0wLjcsMTguMi0wLjEsMjcuM2MwLjEsMS44LDMuOSw0LjYsNS45LDQuNWMxLjgtMC4xLDQuNy0zLjIsNS4xLTUuNEMxNDcuMiwxNDguNSwxNDYuNywxNDQuMSwxNDYuNywxMzkuOHoiLz48cGF0aCBjbGFzcz0ic3Q1IiBkPSJNNzMuOCwxLjJjLTcuMiwxLjEtMTQuNiwxLjktMjEuNywzLjVDMjYuMywxMC4yLDcuNiwzMC40LDMuNiw1Ni42QzIuOCw2Mi4zLDIsNjguMSwxLjIsNzMuOGMwLTI0LjIsMC00OC40LDAtNzIuN0MyNS40LDEuMiw0OS42LDEuMiw3My44LDEuMnoiLz48cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMTkzLjYsMTYxLjJjMi4zLTcuNCw0LjctMTQuOCw2LjktMjIuMmMxLjUtNC45LDMuOC04LjYsOS42LTguNWM1LjYsMC4xLDcuNSw0LDguOSw4LjZjMi4xLDcuMiw0LjQsMTQuNCw3LjksMjEuNWMyLjEtOS4yLDQuMS0xOC40LDYuMi0yNy41YzAuNi0yLjUsMS4xLTUsMi4yLTcuMmMxLjktMy44LDUuMS00LjQsOC45LTNjMy44LDEuNCw0LjMsMy45LDMuMyw3LjVjLTQuMSwxNC44LTguMSwyOS43LTEyLjIsNDQuNWMtMS4xLDQuMi0zLjcsNi04LjEsNi4xYy00LjUsMC03LjQtMS40LTguOS01LjhjLTIuNy04LjMtNS42LTE2LjYtOS42LTI0LjljLTIuNyw3LjktNS42LDE1LjctOCwyMy43Yy0xLjQsNC44LTMuOSw3LjItOS4xLDcuMWMtNS4xLTAuMS03LjMtMi42LTguNS03LjFjLTMuOC0xNC4xLTcuOC0yOC4yLTExLjYtNDIuM2MtMS4xLTMuOS0xLjUtNy40LDMuNi04LjljNC45LTEuNCw4LjEsMC4zLDkuNCw1LjFjMi4zLDkuMyw0LjQsMTguNiw2LjcsMjcuOGMwLjQsMS45LDAuOSwzLjgsMS40LDUuNkMxOTIuOSwxNjEuMywxOTMuMiwxNjEuMiwxOTMuNiwxNjEuMnoiLz48cGF0aCBjbGFzcz0ic3Q1IiBkPSJNNjcuOSwxMjcuN2M0LTEuOCw3LjYtNCwxMS40LTVjMTMuOS0zLjYsMjUuNyw0LjksMjYuNSwxOS4xYzAuNiwxMC41LDAuNiwyMSwwLjgsMzEuNmMwLjEsNC40LTEuMyw3LjUtNi42LDcuNmMtNS4zLDAtNi43LTIuNy02LjctNy4zYzAtOS40LDAuMy0xOC43LTAuNS0yOGMtMC45LTEwLjYtMTEuMi0xNS4yLTE5LjUtOC42Yy0yLjcsMi4xLTQuNyw2LjMtNSw5LjhjLTAuOCw4LjctMC4zLDE3LjUtMC40LDI2LjNjLTAuMSw0LjItMC44LDcuNy02LjMsNy45Yy01LjUsMC4yLTcuMy0yLjgtNy4zLTcuNWMwLTE0LjYtMC4xLTI5LjIsMC4xLTQzLjljMC4xLTUuNSwyLjEtNi45LDcuNS01LjJDNjQsMTI0LjksNjYsMTI2LjUsNjcuOSwxMjcuN3oiLz48cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMTQxLjksMTgwLjljLTIzLDAuMy0zNi4zLTE5LjktMjcuOS00Mi4zYzAuOS0yLjQsMi43LTUuNCw0LjgtNi4zYzIuNC0xLDUuOS0wLjYsOC40LDAuNWMwLjksMC40LDAuOSw0LjMsMC41LDYuNWMtMC44LDMuOS0zLjEsNy43LTMuMywxMS42Yy0wLjcsMTAuNyw3LjYsMTkuNCwxNy4yLDE4LjdjMTAuNC0wLjcsMTcuNi05LjgsMTUuOS0yMC41Yy0wLjUtMy4yLTEuOC02LjQtMy40LTkuMmMtMS44LTMuMy0yLjItNS44LDEuMy04YzMuMy0yLDYuNC0yLDguOCwxLjNjNi43LDkuNCw4LjUsMTkuNiwzLjksMzAuNGMtNC40LDEwLjQtMTIuNiwxNi4xLTIzLjksMTcuMkMxNDMuMiwxODAuOCwxNDIuMiwxODAuOCwxNDEuOSwxODAuOXoiLz48cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMTQ2LjcsMTM5LjhjMCw0LjMsMC42LDguNy0wLjIsMTIuOGMtMC40LDIuMi0zLjIsNS4zLTUuMSw1LjRjLTIsMC4xLTUuOC0yLjgtNS45LTQuNWMtMC42LTkuMS0wLjUtMTguMiwwLjEtMjcuM2MwLjEtMS42LDQtNC4xLDYuMS00LjFjMS42LDAsNC40LDMsNC43LDVDMTQ3LjIsMTMxLjIsMTQ2LjcsMTM1LjYsMTQ2LjcsMTM5Ljh6Ii8+PHBhdGggY2xhc3M9InN0MjQiIGQ9Ik0wLDIyNy40YzAtNTEuNiwwLTEwMy4xLDAtMTU0LjdDMC45LDY3LDEuNyw2MS4yLDIuNSw1NS41QzYuNSwyOS4zLDI1LjEsOS4xLDUxLDMuNkM1OC4xLDIsNjUuNSwxLjIsNzIuNywwLjFjNTEuNiwwLDEwMy4xLDAsMTU0LjcsMGM1LjYsMC44LDExLjEsMS42LDE2LjcsMi40YzI2LjgsNCw0Ny4yLDIyLjMsNTIuNCw0OC45YzIuNCwxMi41LDMuMSwyNS42LDMuMiwzOC40YzAuNCw0MC4yLDAuMyw4MC40LDAsMTIwLjZjLTAuMSwxMS4zLTAuNywyMi42LTIuMiwzMy44Yy0zLjYsMjYuOS0yMi4zLDQ3LjEtNDguOCw1Mi40Yy0xMC44LDIuMi0yMiwzLTMzLjEsMy4xYy00MS44LDAuNC04My41LDAuMy0xMjUuMywwLjFjLTExLjctMC4xLTIzLjQtMC43LTM1LTIuM2MtMjYuMS0zLjYtNDYuMi0yMi42LTUxLjgtNDguMkMyLDI0MiwxLjIsMjM0LjcsMCwyMjcuNHoiLz48Zz48cGF0aCBjbGFzcz0ic3Q2IiBkPSJNODMuMiwxMjFjLTYuOSwwLTEzLDIuNy0xNy4yLDcuOGMtMS4xLTUuNy00LjctNy03LjctN2MtMS43LDAtNS4xLDAuNy01LjEsMi4zdjQ5LjRjMCw0LjIsMi4xLDYuMyw2LDYuM2gxLjJjMy45LDAsNi0yLjIsNi02LjNsMC0zMS45YzIuNy01LjUsNy44LTguNiwxNC4xLTguNmM3LjEsMCwxMS40LDUuMSwxMS40LDEzLjZ2MjYuOWMwLDQuMiwyLjEsNi4zLDYsNi4zbDEuMiwwYzMuOSwwLDYtMi4yLDYtNi4zdi0yOC4zQzEwNS4xLDEzMCw5Ni45LDEyMSw4My4yLDEyMXoiLz48cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMjQ2LjQsMTI0LjNjLTAuOS0xLjEtMy45LTMuMi03LTMuMmMtMS4zLDAtNS43LDAuNS02LjgsNi44bC03LjgsMzVsLTguOC0yOC41Yy0wLjktMy4yLTMuMy00LjctNy44LTQuN2MtNC41LDAtNi45LDEuNC03LjksNC43bC05LjEsMjguOGwtNy45LTM1LjJjLTEuMi02LjItNS4yLTYuOC02LjktNi44Yy0zLDAtNi40LDEuOS03LjMsMy4zYy0wLjQsMC42LTAuNCwxLjEtMC4zLDEuM2wxMy44LDQ5LjdjMS4xLDMuOCw0LjQsNC40LDcuOSw0LjRjNC42LDAsNi41LTEuMSw3LjgtNC43bDkuNy0yOS41bDkuNCwyOS41YzEuMiwzLjYsMyw0LjcsNy45LDQuN2MzLjUsMCw2LjgtMC41LDcuOC00LjRsMTMuNy00OS44QzI0Ni45LDEyNSwyNDYuNSwxMjQuNCwyNDYuNCwxMjQuM3oiLz48cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMTY2LDEzNi45Yy0wLjUtMS4yLTIuNy01LjItNS4yLTYuNWMtNC0yLjQtOC4yLDAuOS05LjYsMy4yYy0wLjUsMC45LTAuNiwxLjYtMC4xLDIuM2MxLjIsMS42LDIuOCw0LjMsMy4zLDUuM2MxLjIsMi43LDIuMSw1LjgsMi4xLDkuMmMwLDEwLjUtNy4xLDE4LjEtMTYuOSwxOC4xYy05LjcsMC0xNy03LjktMTctMTguM2MwLTMuMywwLjctNi40LDItOWMwLjgtMS42LDEuOC0zLjIsMy40LTUuMmMwLjQtMC43LDAuNC0xLjQtMC4xLTIuM2MtMS40LTIuMy01LjUtNS42LTkuNi0zLjJjLTIuNCwxLjQtNC40LDQuNS01LjMsNi40Yy0xLjgsMy45LTIuOCw4LjQtMi44LDEzLjNjMCwxNy40LDEyLjEsMjkuNiwyOS40LDI5LjZjMTcsMCwyOS40LTEyLjMsMjkuNC0yOS40QzE2OC45LDE0NS40LDE2Ny45LDE0MC45LDE2NiwxMzYuOXoiLz48cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMTQwLDEyMC41aC0wLjljLTMuNSwwLTUuNSwyLjUtNS41LDYuOXYyMy4xYzAsNC4zLDIsNi44LDUuNSw2LjhsMC45LDBjMy41LDAsNS40LTIuNCw1LjQtNi44di0yMy4xQzE0NS40LDEyMi45LDE0My41LDEyMC41LDE0MCwxMjAuNXoiLz48L2c+PC9zdmc+",
+    "dependencies": [
+        {
+            "type": "MAVEN",
+            "id": "@project.groupId@:@project.artifactId@:@project.version@"
+        }
+    ],
+    "componentScheme": "servicenow",
+    "tags": [
+        "verifier"
+    ],
+    "properties": {
+        "instanceName": {
+            "kind": "property",
+            "displayName": "Instance Name",
+            "group": "security",
+            "label": "security",
+            "required": true,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "tags": [],
+            "deprecated": false,
+            "secret": false,
+            "componentProperty": true,
+            "labelHint": "Instance Name",
+            "order": 1
+        },
+        "userName": {
+            "kind": "property",
+            "displayName": "User Name",
+            "group": "security",
+            "label": "security",
+            "required": true,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "tags": [],
+            "deprecated": false,
+            "secret": false,
+            "componentProperty": true,
+            "labelHint": "The User Name",
+            "order": 3
+        },
+        "password": {
+            "kind": "property",
+            "displayName": "User Password",
+            "group": "security",
+            "label": "security",
+            "required": true,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "tags": [],
+            "deprecated": false,
+            "secret": true,
+            "componentProperty": true,
+            "labelHint": "The User Password",
+            "order": 4
+        },
+        "oauthClientId": {
+            "kind": "property",
+            "displayName": "Client ID",
+            "group": "security",
+            "label": "security",
+            "required": false,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "deprecated": false,
+            "secret": true,
+            "componentProperty": true,
+            "labelHint": "OAuth Client ID",
+            "order": 5
+        },
+        "oauthClientSecret": {
+            "kind": "property",
+            "displayName": "Client Secret",
+            "group": "security",
+            "label": "security",
+            "required": false,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "deprecated": false,
+            "secret": true,
+            "componentProperty": true,
+            "labelHint": "OAuth Client Secret",
+            "order": 6
+        }
+    },
+    "actions": [
+        {
+            "name": "Retrieve Record",
+            "description": "Retrieves multiple records for the specified table.",
+            "id": "io.syndesis:servicenow-action-retrieve-record",
+            "pattern": "From",
+            "actionType": "connector",
+            "tags": [
+                "dynamic"
+            ],
+            "descriptor": {
+                "inputDataShape": {
+                    "kind": "none"
+                },
+                "outputDataShape": {
+                    "kind": "json-schema"
+                },
+                "split": {
+                },
+                "connectorCustomizers": [
+                    "io.syndesis.connector.servicenow.customizers.ServiceNowTableGetCustomizer"
+                ],
+                "propertyDefinitionSteps": [
+                    {
+                        "name": "properties",
+                        "description": "",
+                        "properties": {
+                            "table": {
+                                "kind": "parameter",
+                                "displayName": "The table name",
+                                "group": "common",
+                                "label": "",
+                                "required": true,
+                                "type": "string",
+                                "javaType": "java.lang.String",
+                                "tags": [],
+                                "deprecated": false,
+                                "secret": false,
+                                "componentProperty": false,
+                                "labelHint": "The Table name",
+                                "order": 1
+                            },
+                            "query": {
+                                "kind": "parameter",
+                                "displayName": "The query used to filter the result set",
+                                "group": "common",
+                                "label": "",
+                                "required": false,
+                                "type": "string",
+                                "javaType": "java.lang.String",
+                                "tags": [],
+                                "deprecated": false,
+                                "secret": false,
+                                "componentProperty": false,
+                                "labelHint": "The query used to filter the result set",
+                                "order": 2
+                            },
+                            "limit": {
+                                "kind": "parameter",
+                                "displayName": "Limit of elements per page",
+                                "group": "common",
+                                "label": "",
+                                "required": false,
+                                "type": "integer",
+                                "javaType": "java.lang.Integer",
+                                "tags": [],
+                                "deprecated": false,
+                                "secret": false,
+                                "componentProperty": false,
+                                "labelHint": "Limit of elements per page",
+                                "order": 3
+                            },
+                            "schedulerExpression": {
+                              "kind": "parameter",
+                              "displayName": "Period",
+                              "group": "consumer",
+                              "required": false,
+                              "type": "duration",
+                              "javaType": "long",
+                              "deprecated": false,
+                              "secret": false,
+                              "defaultValue": 60000,
+                              "labelHint": "Delay between scheduling (executing).",
+                              "order": 4
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Create Record",
+            "description": "Create a record into a specified staging table and triggers transformation based on predefined transform maps in the import set table.",
+            "id": "io.syndesis:servicenow-action-create-record",
+            "pattern": "To",
+            "actionType": "connector",
+            "tags": [
+                "dynamic"
+            ],
+            "descriptor": {
+                "inputDataShape": {
+                    "kind": "any"
+                },
+                "outputDataShape": {
+                    "kind": "java",
+                    "type": "org.apache.camel.component.servicenow.model.ImportSetResult"
+                },
+                "connectorCustomizers": [
+                    "io.syndesis.connector.servicenow.customizers.ServiceNowImportSetCustomizer"
+                ],
+                "propertyDefinitionSteps": [
+                    {
+                        "name": "properties",
+                        "description": "",
+                        "properties": {
+                            "table": {
+                                "kind": "parameter",
+                                "displayName": "The Import Set name",
+                                "group": "common",
+                                "label": "",
+                                "required": true,
+                                "type": "string",
+                                "javaType": "java.lang.String",
+                                "tags": [],
+                                "deprecated": false,
+                                "secret": false,
+                                "componentProperty": false,
+                                "labelHint": "The Import Set name"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

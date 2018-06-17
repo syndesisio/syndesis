@@ -80,6 +80,7 @@
     <module>slack</module>
     <module>sql</module>
     <module>twitter</module>
+    <module>servicenow</module>
   </modules>
 
   <dependencyManagement>
