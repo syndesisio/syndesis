@@ -16,101 +16,150 @@
 package io.syndesis.integration.runtime.util;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.MapLikeType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.apache.camel.Predicate;
 import org.apache.camel.spi.Language;
 import org.apache.camel.spi.Registry;
 import org.apache.camel.util.ExchangeHelper;
 import org.apache.camel.util.ObjectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Predicate which tries to convert a JSON message to a map first before
  * applying
  */
-public class JsonSimplePredicate implements Predicate {
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+public final class JsonSimplePredicate implements Predicate {
+    private static final Pattern SIMPLE_EXPRESSION = Pattern.compile("\\$\\{([^}]+)\\}");
 
-    private final Predicate predicate;
+    private static final MapLikeType GENERIC_TYPE = TypeFactory.defaultInstance().constructMapLikeType(HashMap.class, String.class,
+        Object.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(JsonSimplePredicate.class);
+
+    private static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module());
+
+    private final ObjectMapper mapper;
+
     private final Predicate ognlPredicate;
 
-    public JsonSimplePredicate(String expression, CamelContext context) {
-        Language language = ObjectHelper.notNull(context.resolveLanguage("simple"), "simple language");
-        String ognlExpression = convertSimpleToOGNLForMaps(expression);
+    private final Predicate predicate;
 
-        this.predicate = language.createPredicate(expression);
-        this.ognlPredicate = language.createPredicate(ognlExpression);
+    public JsonSimplePredicate(final String expression, final CamelContext context) {
+        final Language language = ObjectHelper.notNull(context.resolveLanguage("simple"), "simple language");
+        final String ognlExpression = convertSimpleToOGNLForMaps(expression);
+
+        predicate = language.createPredicate(expression);
+        ognlPredicate = language.createPredicate(ognlExpression);
+
+        final Registry registry = context.getRegistry();
+        final Set<ObjectMapper> mappers = registry.findByType(ObjectMapper.class);
+
+        if (mappers.size() != 1) {
+            mapper = MAPPER;
+        } else {
+            mapper = mappers.iterator().next();
+        }
     }
 
-    @SuppressWarnings("PMD.AvoidReassigningParameters")
     @Override
-    public boolean matches(Exchange exchange) {
-        Object msgBody = exchange.getIn().getBody();
-        Predicate predicate = this.predicate;
+    public boolean matches(final Exchange exchange) {
+        final Message payload = exchange.getIn();
 
-        // TODO: Maybe check for content-type, too ?
-        // String contentType = exchange.getIn().getHeader(Exchange.CONTENT_TYPE, String.class);
-        // if ("application/json".equals(contentType)) { ... }
-        // ???
-        if (msgBody instanceof String) {
-            // If it is a json document , suppose that this is a document which needs to be parsed as JSON
-            // Therefor we set a map instead of the string
-            Map<String, Object> jsonDocument = jsonStringAsMap((String) msgBody, exchange);
-            if (jsonDocument != null) {
-                // Clone the exchange and set the JSON message converted to a Map / List as in message.
-                // The intention is that only this predicate acts on the converted value,
-                // but the original in-message still continues to carry the same format
-                // The predicated is supposed to be read only with respect to the incoming messaeg.
-                exchange = ExchangeHelper.createCopy(exchange, true);
-                exchange.getIn().setBody(jsonDocument);
-
-                predicate = this.ognlPredicate;
+        try (InputStream stream = streamFrom(payload)) {
+            if (stream == null) {
+                return predicate.matches(exchange);
             }
+
+            // If it is a JSON document, suppose that this is a document which
+            // needs to be parsed as JSON, therefore we set a map instead of the
+            // string
+            final Map<String, Object> json = mapper.readValue(stream, GENERIC_TYPE);
+            if (json == null) {
+                return predicate.matches(exchange);
+            }
+            // Clone the exchange and set the JSON message converted to a Map /
+            // List as in message.
+            // The intention is that only this predicate acts on the converted
+            // value, but the original in-message still continues to carry the
+            // same format.
+            // The predicated is supposed to be read only with respect to the
+            // incoming message.
+            final Exchange exchangeForProcessing = ExchangeHelper.createCopy(exchange, true);
+            exchangeForProcessing.getIn().setBody(json);
+
+            return ognlPredicate.matches(exchangeForProcessing);
+        } catch (final IOException e) {
+            LOG.warn("Unable to apply simple filter to the given payload");
+            LOG.debug("Unable to parse incoming message body as JSON needed for simple filtering", e);
         }
 
+        // if above fails
         return predicate.matches(exchange);
     }
 
-    @SuppressWarnings("PMD.AvoidReassigningParameters")
-    public static String convertSimpleToOGNLForMaps(String input) {
-        final String regexp = "(?<=\\$\\{body).*?(\\.[\\w]+)\\.?([^\\}]*?)";
-        final Pattern pattern = Pattern.compile(regexp);
+    static String convertSimpleToOGNLForMaps(final String simple) {
+        final Matcher matcher = SIMPLE_EXPRESSION.matcher(simple);
 
-        Matcher m = pattern.matcher(input);
-        while (m.find()) {
-            input = input.substring(0, m.start(1)) + '[' + input.substring(m.start(1)+1, m.end(1)) + ']' + input.substring(m.end(1));
-            m = pattern.matcher(input);
+        final StringBuffer ognl = new StringBuffer(simple.length() + 5);
+        while (matcher.find()) {
+            final String expression = toOgnl(matcher);
+
+            matcher.appendReplacement(ognl, "\\$\\{" + expression + "\\}");
         }
 
-        return input;
+        matcher.appendTail(ognl);
+
+        return ognl.toString();
     }
 
-    @SuppressWarnings("PMD.EmptyCatchBlock")
-    private static Map<String, Object> jsonStringAsMap(String body, Exchange exchange) {
-        ObjectMapper mapper = resolveObjectMapper(exchange.getContext().getRegistry());
-
-        // convert JSON string to Map
-        try {
-            return mapper.readValue(body, new TypeReference<Map<String, Object>>(){});
-        } catch (IOException e) {
-            // ignore because we are attempting to convert, but its not a JSON document
-        }
-        return null;
+    static InputStream streamFrom(final Message payload) {
+        return payload.getBody(InputStream.class);
     }
 
-    private static ObjectMapper resolveObjectMapper(Registry registry) {
-        Set<ObjectMapper> mappers = registry.findByType(ObjectMapper.class);
-        if (mappers.size() == 1) {
-            return mappers.iterator().next();
+    static String toOgnl(final Matcher matcher) {
+        final String expression = matcher.group(1);
+        if (!(expression.startsWith("body.") || expression.startsWith("body["))) {
+            return expression;
         }
 
-        return MAPPER;
+        final StringBuilder ognl = new StringBuilder(expression.length() + 5);
+        final char[] chars = expression.toCharArray();
+        boolean start = true;
+        for (final char ch : chars) {
+            if (ch == '.' || ch == '[') {
+                if (!start) {
+                    ognl.append(']');
+                }
+                start = false;
+
+                ognl.append('[');
+            } else if (ch == '$') {
+                ognl.append("\\$");
+            } else if (ch != ']') {
+                ognl.append(ch);
+            }
+        }
+
+        if (!start) {
+            ognl.append(']');
+        }
+
+        return ognl.toString();
     }
+
 }
