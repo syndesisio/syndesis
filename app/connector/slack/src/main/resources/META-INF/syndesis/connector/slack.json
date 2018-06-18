@@ -1,7 +1,7 @@
 {
     "id": "slack",
     "name": "Slack",
-    "description": "Send messages to Slack",
+    "description": "Send messages to users and channels.",
     "icon": "slack",
     "dependencies": [
         {

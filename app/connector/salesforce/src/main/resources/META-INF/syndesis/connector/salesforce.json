@@ -1,7 +1,7 @@
 {
   "id": "salesforce",
   "name": "Salesforce",
-  "description": "Cloud-based Customer Relationship Management",
+  "description": "Manage customer relations in the cloud.",
   "dependencies": [
     {
       "type": "MAVEN",

@@ -1,7 +1,7 @@
 {
     "id": "mqtt",
-    "name": "MQTT",
-    "description": "Publish and Subscribe Messages to a MQTT broker.",
+    "name": "MQTT Message Broker",
+    "description": "Subscribe for and publish messages.",
     "icon": "paho",
     "dependencies": [
         {
