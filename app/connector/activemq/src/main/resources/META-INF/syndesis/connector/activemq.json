@@ -1,7 +1,7 @@
 {
   "id": "activemq",
-  "name": "AMQ",
-  "description": "AMQ message broker",
+  "name": "AMQ Message Broker",
+  "description": "Subscribe for and publish messages.",
   "icon": "fa-puzzle-piece",
   "dependencies": [
     {

@@ -1,7 +1,7 @@
 {
   "id": "amqp",
-  "name": "AMQP",
-  "description": "AMQP Message Broker",
+  "name": "AMQP Message Broker",
+  "description": "Subscribe for and publish messages.",
   "icon": "fa-amqp",
   "dependencies": [
     {

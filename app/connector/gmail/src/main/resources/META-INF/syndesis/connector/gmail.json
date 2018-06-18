@@ -1,7 +1,7 @@
 {
   "id": "gmail",
-  "name": "Google Mail",
-  "description": "Send and receive mail through gmail",
+  "name": "Gmail",
+  "description": "Receive and send messages.",
   "icon": "fa-puzzle-piece",
   "dependencies": [
     {

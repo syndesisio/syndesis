@@ -1,7 +1,7 @@
 {
   "id": "sql",
   "name": "Database",
-  "description": "Invoke SQL or a stored procedure",
+  "description": "Subscribe for and publish messages.",
   "icon": "fa-database",
   "dependencies": [
     {
