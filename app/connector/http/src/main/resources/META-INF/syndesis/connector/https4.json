@@ -2,7 +2,7 @@
   "id": "https4",
   "name": "HTTPS",
   "icon": "http",
-  "description": "Https Connector",
+  "description": "Invoke various HTTPS methods.",
   "dependencies": [
     {
       "type": "MAVEN",

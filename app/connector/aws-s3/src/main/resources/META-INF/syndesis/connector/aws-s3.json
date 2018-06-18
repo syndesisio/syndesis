@@ -1,7 +1,7 @@
 {
       "id": "aws-s3",
       "name": "Amazon S3",
-      "description": "Direct object storage and retrieval",
+      "description": "Retrieve and store objects.",
       "icon": "fa-puzzle-piece",
       "dependencies": [
           {

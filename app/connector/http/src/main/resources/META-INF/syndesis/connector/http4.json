@@ -2,7 +2,7 @@
   "id": "http4",
   "name": "HTTP",
   "icon": "http",
-  "description": "Http Connector",
+  "description": "Invoke various HTTP methods.",
   "dependencies": [
     {
       "type": "MAVEN",

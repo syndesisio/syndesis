@@ -1,7 +1,7 @@
 {
     "id": "dropbox",
     "name": "Dropbox",
-    "description": "File upload and download from Dropbox",
+    "description": "Download and upload files.",
     "icon": "fa-dropbox",
     "dependencies": [
         {
