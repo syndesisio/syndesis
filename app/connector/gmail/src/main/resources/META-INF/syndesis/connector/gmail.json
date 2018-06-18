@@ -1,7 +1,7 @@
 {
   "id": "gmail",
   "name": "Google Mail",
-  "description": "Send and receive mail through gmail",
+  "description": "Receive and send messages.",
   "icon": "fa-puzzle-piece",
   "dependencies": [
     {
@@ -174,7 +174,7 @@
   "actions": [
     {
       "name": "Send Email",
-      "description": "Copy one or more objects into a bucket.",
+      "description": "Send a message.",
       "id": "io.syndesis:gmail-send-email-connector",
       "pattern": "To",
       "actionType": "connector",
@@ -262,7 +262,7 @@
     },
     {
       "name": "Receive Email",
-      "description": "Receive email",
+      "description": "Receive messages.",
       "id": "io.syndesis:gmail-receive-email-connector",
       "pattern": "From",
       "actionType": "connector",
