@@ -10,7 +10,7 @@
   <form [formGroup]="authSetupForm" #form="ngForm" (ngSubmit)="onSubmit(form)" class="form-horizontal" novalidate>
     <fieldset class="container-fluid">
       <div class="row">
-        <div *ngFor="let authType of customConnectorRequest.properties.authenticationType.enum" class="col-xs-12">
+        <div *ngFor="let authType of customConnectorRequest.properties.authenticationType.enum; let i = index" class="col-xs-12">
           <div class="form-group">
             <div class="col-xs-12">
               <div class="radio">
@@ -18,13 +18,15 @@
                   <input type="radio"
                     name="authenticationType"
                     formControlName="authenticationType"
-                    [value]="authType.value"> {{ authType.label }}
+                    [value]="authType.value"
+                    [checked]="i == 0"
+                    #authenticationType> {{ authType.label }}
                 </label>
               </div>
             </div>
           </div>
           <ng-container *ngIf="authType.value == 'oauth2'">
-            <div *ngIf="authSetupForm.value.authenticationType == 'oauth2'">
+            <div *ngIf="authenticationType.checked">
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="authorizationEndpoint">Authorization URL</label>
                 <div class="col-sm-9">
