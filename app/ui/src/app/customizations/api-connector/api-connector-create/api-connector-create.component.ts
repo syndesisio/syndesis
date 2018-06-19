@@ -66,6 +66,10 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     console.log('Something happened! ' + JSON.stringify(command));
   }
 
+  public showDefinitionEditor(): boolean {
+    return true;
+  }
+
   ngOnInit() {
     this.modalService.registerModal(
       this.cancelModalId,
