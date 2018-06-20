@@ -46,7 +46,7 @@ describe('WizardProgressBarComponent', () => {
     component.steps = ['Step 1', 'Step 2', 'Step 3'];
     component.selectedStep = 2;
     fixture.detectChanges();
-    const stepNodes = fixture.debugElement.queryAll(By.css('.active'));
+    const stepNodes = fixture.debugElement.queryAll(By.css('.wizard-pf-step.active'));
     expect(stepNodes.length).toEqual(1);
   });
 });
