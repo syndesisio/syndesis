@@ -19,7 +19,7 @@
   <parent>
     <groupId>io.syndesis.connector</groupId>
     <artifactId>connector-parent</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4.1-20180620</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
     <modelVersion>4.0.0</modelVersion>
