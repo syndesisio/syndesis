@@ -61,8 +61,15 @@
 
     <div class="row row-cards-pf" *ngIf="currentActiveStep == 2 && displayDefinitionEditor === true">
       <div class="card-pf">
+        <!--
         <api-editor #apiEditor
                     [api]="apiDefinition()"
+                    [embedded]="true"
+                    (onCommandExecuted)="onUserChange($event)"
+                    (onSelectionChanged)="onUserSelection($event)"></api-editor>
+                    -->
+        <api-editor #apiEditor
+                    [api]="(apiConnectorState$ | async)?.createRequest.specificationFile"
                     [embedded]="true"
                     (onCommandExecuted)="onUserChange($event)"
                     (onSelectionChanged)="onUserSelection($event)"></api-editor>
