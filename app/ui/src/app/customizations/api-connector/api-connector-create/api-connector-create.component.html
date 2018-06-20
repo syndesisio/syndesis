@@ -42,7 +42,7 @@
           *ngIf="currentActiveStep == 1"
           (request)="onValidationRequest($event)">
         </syndesis-api-connector-swagger-upload>
-        <syndesis-api-connector-review *ngIf="currentActiveStep == 2"
+        <syndesis-api-connector-review *ngIf="currentActiveStep == 2 && displayDefinitionEditor === false"
           [apiConnectorTemplateName]="'OpenAPI'"
           [apiConnectorData]="(apiConnectorState$ | async)?.createRequest"
           [showNextButton]="true"
