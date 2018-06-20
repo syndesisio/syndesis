@@ -17,6 +17,9 @@ export class ApiConnectorInfoComponent implements OnInit {
   apiConnectorDataForm: FormGroup;
   editControlKey: string;
   iconFile: File;
+  originalValue: string;
+  enableSave: boolean;
+  valueSaved = false;
   private isDirty: boolean;
 
   constructor(
@@ -56,7 +59,7 @@ export class ApiConnectorInfoComponent implements OnInit {
     }
   }
 
-  onChange(event): void {
+  saveValue(event): void {
     if (event.target && event.target.files) {
       const fileList = event.target.files as FileList;
       if (fileList.length > 0) {
@@ -67,6 +70,7 @@ export class ApiConnectorInfoComponent implements OnInit {
     // If component is not in "Create" mode (eg. detail page), updating
     // any input field will automatically fire up the submit handler
     if (!this.createMode) {
+      this.valueSaved = true;
       this.onSubmit();
     }
   }
@@ -91,16 +95,36 @@ export class ApiConnectorInfoComponent implements OnInit {
     this.editControlKey = null;
   }
 
-  onEditEnable(event: Event, key: string): void {
+  onBlur(el) {
+    el.value = this.originalValue;
+  }
+
+  onEditEnable(event: Event, key: string, el): void {
     event.preventDefault();
     event.stopPropagation();
+    this.originalValue = el.value;
     this.editControlKey = key;
     this.isDirty = false;
+    this.valueSaved = false;
+    this.enableSave = false;
     setTimeout(() => this.renderer.selectRootElement(`#${key}`).focus(), 0);
   }
 
-  onEditChange(): void {
-    this.isDirty = true;
+  onKeyup(event) {
+    if (event.srcElement.value == this.originalValue || (event.srcElement.required && event.srcElement.value == '')) {
+      this.enableSave = false;
+    } else {
+      this.enableSave = true;
+    }
+  }
+
+  clearValue(event, el) {
+    event.stopPropagation();
+    el.value = '';
+    el.focus();
+    if (el.required) {
+      this.enableSave = false;
+    }
   }
 
   @HostListener('document:click', ['$event'])
