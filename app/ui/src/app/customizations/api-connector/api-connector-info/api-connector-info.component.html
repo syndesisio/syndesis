@@ -23,72 +23,168 @@
               class="syn-form-filebrowser__preview"
               [src]="{ icon: iconFile } | synIconPath">
           </span>
-          <input class="syn-form-filebrowser__input" type="file" name="connectorIcon" (change)="onChange($event)">
+          <input class="syn-form-filebrowser__input" type="file" name="connectorIcon" (change)="saveValue($event)">
         </div>
       </div>
 
       <div class="form-group">
         <label class="required-pf col-sm-3 control-label" for="name">Connector Name</label>
-        <div class="col-sm-9">
-          <input class="form-control" type="text" id="name"
-            formControlName="name"
-            (keyup.enter)="onChange($event)"
-            (change)="onEditChange()"
-            #nameInput
-            [ngClass]="{'hidden': !createMode && editControlKey !== 'name'}">
-          <span class="syn-form-row__input--editor" *ngIf="!createMode && editControlKey !== 'name'" (click)="onEditEnable($event, 'name')">
+        <div class="col-sm-9"
+          [ngClass]="{'form-control-pf-editable': !createMode, 'form-control-pf-edit': editControlKey == 'name'}">
+          <button class="form-control-pf-value"
+            (click)="onEditEnable($event, 'name', nameInput)"
+            *ngIf="!createMode">
             {{ nameInput.value }}
-            <i class="fa fa-pencil"></i>
-          </span>
+            <i class="glyphicon glyphicon-pencil"></i>
+          </button>
+          <div class="form-control-pf-textbox">
+            <input class="form-control form-control-pf-editor" type="text" id="name"
+              formControlName="name"
+              #nameInput
+              required
+              (blur)="!createMode && !valueSaved && onBlur(nameInput)"
+              (keyup)="!createMode && onKeyup($event)"
+              [ngClass]="{'hidden': !createMode && editControlKey !== 'name'}">
+            <button type="button"
+              class="form-control-pf-empty"
+              aria-label="Clear Value"
+              (click)="clearValue($event,nameInput)"
+              *ngIf="!createMode">
+              <span class="fa fa-times-circle fa-lg"></span>
+            </button>
+          </div>
+          <button type="button"
+            class="btn btn-primary form-control-pf-save"
+            [disabled]="!enableSave"
+            aria-label="Save"
+            (mousedown)="saveValue($event)"
+            *ngIf="!createMode">
+              <i class="glyphicon glyphicon-ok"></i>
+          </button>
+          <button type="button"
+            class="btn btn-default form-control-pf-cancel"
+            aria-label="Cancel"
+            *ngIf="!createMode">
+              <i class="glyphicon glyphicon-remove"></i>
+          </button>
         </div>
       </div>
 
       <div class="form-group">
         <label class="col-sm-3 control-label" for="description">Description</label>
-        <div class="col-sm-9">
-          <textarea class="form-control" type="text" id="description" rows="4"
+        <div class="col-sm-9"
+          [ngClass]="{'form-control-pf-editable': !createMode, 'form-control-pf-edit form-control-pf-full-width': editControlKey == 'description'}">
+          <button class="form-control-pf-value"
+            (click)="onEditEnable($event, 'description', descriptionInput)"
+            *ngIf="!createMode">
+            <span [innerHTML]="descriptionInput.value | synParseMarkdownLinks"></span>
+            <i class="glyphicon glyphicon-pencil"></i>
+          </button>
+          <textarea class="form-control form-control-pf-editor" type="text" id="description" rows="4"
             formControlName="description"
-            (keyup.enter)="onChange($event)"
-            (change)="onEditChange()"
             #descriptionInput
+            (blur)="!createMode && !valueSaved && onBlur(descriptionInput)"
+            (keyup)="!createMode && onKeyup($event)"
             [ngClass]="{'hidden': !createMode && editControlKey !== 'description'}">
           </textarea>
-          <span class="syn-form-row__input--editor" *ngIf="!createMode && editControlKey !== 'description'" (click)="onEditEnable($event, 'description')">
-            <span [innerHtml]="descriptionInput.value | synParseMarkdownLinks"></span>
-            <i class="fa fa-pencil"></i>
-          </span>
+          <div class="action-buttons" *ngIf="!createMode">
+            <button type="button"
+              class="btn btn-primary form-control-pf-save"
+              [disabled]="!enableSave"
+              aria-label="Save"
+              (mousedown)="saveValue($event)">
+              <i class="glyphicon glyphicon-ok"></i>
+            </button>
+            <button type="button"
+              class="btn btn-default form-control-pf-cancel"
+              aria-label="Cancel">
+                <i class="glyphicon glyphicon-remove"></i>
+            </button>
+          </div>
         </div>
       </div>
 
       <div class="form-group">
         <label class="col-sm-3 control-label" for="host">Host</label>
-        <div class="col-sm-9">
-          <input class="form-control" type="text" id="host"
-            formControlName="host"
-            (keyup.enter)="onChange($event)"
-            (change)="onEditChange()"
-            #hostInput
-            [ngClass]="{'hidden': !createMode && editControlKey !== 'host'}">
-          <span class="syn-form-row__input--editor" *ngIf="!createMode && editControlKey !== 'host'" (click)="onEditEnable($event, 'host')">
+        <div class="col-sm-9"
+        [ngClass]="{'form-control-pf-editable': !createMode, 'form-control-pf-edit': editControlKey == 'host'}">
+          <button class="form-control-pf-value"
+            (click)="onEditEnable($event, 'host', hostInput)"
+            *ngIf="!createMode">
             {{ hostInput.value }}
-            <i class="fa fa-pencil"></i>
-          </span>
+            <i class="glyphicon glyphicon-pencil"></i>
+          </button>
+          <div class="form-control-pf-textbox">
+            <input class="form-control form-control-pf-editor" type="text" id="host"
+              formControlName="host"
+              #hostInput
+              (blur)="!createMode && !valueSaved && onBlur(hostInput)"
+              (keyup)="!createMode && onKeyup($event)"
+              [ngClass]="{'hidden': !createMode && editControlKey !== 'host'}">
+            <button type="button"
+              class="form-control-pf-empty"
+              aria-label="Clear Value"
+              (click)="clearValue($event,hostInput)"
+              *ngIf="!createMode">
+              <span class="fa fa-times-circle fa-lg"></span>
+            </button>
+          </div>
+          <button type="button"
+            class="btn btn-primary form-control-pf-save"
+            [disabled]="!enableSave"
+            aria-label="Save"
+            (mousedown)="saveValue($event)"
+            *ngIf="!createMode">
+              <i class="glyphicon glyphicon-ok"></i>
+          </button>
+          <button type="button"
+            class="btn btn-default form-control-pf-cancel"
+            aria-label="Cancel"
+            *ngIf="!createMode">
+              <i class="glyphicon glyphicon-remove"></i>
+          </button>
         </div>
       </div>
 
       <div class="form-group">
-        <label class="col-sm-3 control-label" for="basePath">Base URL</label>
-        <div class="col-sm-9">
-          <input class="form-control" type="text" id="basePath"
-            formControlName="basePath"
-            (keyup.enter)="onChange($event)"
-            (change)="onEditChange()"
-            #basePathInput
-            [ngClass]="{'hidden': !createMode && editControlKey !== 'basePath'}">
-          <span class="syn-form-row__input--editor" *ngIf="!createMode && editControlKey !== 'basePath'" (click)="onEditEnable($event, 'basePath')">
+        <label class="col-sm-3 control-label" for="host">Base URL</label>
+        <div class="col-sm-9"
+        [ngClass]="{'form-control-pf-editable': !createMode, 'form-control-pf-edit': editControlKey == 'basePath'}">
+          <button class="form-control-pf-value"
+            (click)="onEditEnable($event, 'basePath', basePathInput)"
+            *ngIf="!createMode">
             {{ basePathInput.value }}
-            <i class="fa fa-pencil"></i>
-          </span>
+            <i class="glyphicon glyphicon-pencil"></i>
+          </button>
+          <div class="form-control-pf-textbox">
+            <input class="form-control form-control-pf-editor" type="text" id="basePath"
+              formControlName="basePath"
+              #basePathInput
+              (blur)="!createMode && !valueSaved && onBlur(basePathInput)"
+              (keyup)="!createMode && onKeyup($event)"
+              [ngClass]="{'hidden': !createMode && editControlKey !== 'basePath'}">
+            <button type="button"
+              class="form-control-pf-empty"
+              aria-label="Clear Value"
+              (click)="clearValue($event,basePathInput)"
+              *ngIf="!createMode">
+              <span class="fa fa-times-circle fa-lg"></span>
+            </button>
+          </div>
+          <button type="button"
+            class="btn btn-primary form-control-pf-save"
+            [disabled]="!enableSave"
+            aria-label="Save"
+            (mousedown)="saveValue($event)"
+            *ngIf="!createMode">
+              <i class="glyphicon glyphicon-ok"></i>
+          </button>
+          <button type="button"
+            class="btn btn-default form-control-pf-cancel"
+            aria-label="Cancel"
+            *ngIf="!createMode">
+              <i class="glyphicon glyphicon-remove"></i>
+          </button>
         </div>
       </div>
     </fieldset>
