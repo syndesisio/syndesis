@@ -55,7 +55,21 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   ) {}
 
 
-  public apiDefinition(): ApiDefinition {
+  public apiDefinition(spec): ApiDefinition {
+    // Check to see if it's a URL or a file first..
+    console.log('spec: ' + JSON.stringify(spec));
+    if(spec && spec.configuredProperties && spec.configuredProperties.specification) {
+      // File URL
+      console.log('User has specified a file URL.');
+    } else if(spec && spec.configuredProperties && spec.configuredProperties.specificationFile) {
+      // Entire file uploaded
+      console.log('User has uploaded a file.');
+      this.apiDef.spec = spec;
+      console.log('this.apiDef: ' + JSON.stringify(this.apiDef));
+      return this.apiDef;
+    }
+    //this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest);
+
     return this.apiDef;
   }
 
@@ -111,24 +125,14 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   }
 
   onReviewComplete({event: event, displayEditor: displayEditor}): void {
-    console.log('displayEditor: ' + JSON.stringify(displayEditor));
-
     // Check if request is to show editor or not
     if(displayEditor === true) {
       this.displayDefinitionEditor = true;
-      console.log('User wants to display editor...');
-      console.log('this.displayDefinitionEditor: ' + JSON.stringify(this.displayDefinitionEditor));
 
     } else {
       this.displayDefinitionEditor = false;
-
       this.currentActiveStep = WizardSteps.UpdateAuthSettings;
-
-      console.log('User does not want to display editor...');
-      console.log('this.displayDefinitionEditor: ' + JSON.stringify(this.displayDefinitionEditor));
     }
-
-    console.log('this.displayDefinitionEditor: ' + JSON.stringify(this.displayDefinitionEditor));
   }
 
   onAuthSetup(authSettings: CustomApiConnectorAuthSettings): void {
