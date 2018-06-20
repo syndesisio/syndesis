@@ -38,6 +38,7 @@ enum WizardSteps {
 export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   currentActiveStep = 1;
   apiConnectorState$: Observable<ApiConnectorState>;
+  displayDefinitionEditor = false;
 
   @ViewChild('_apiEditor') _apiEditor: ApiEditorComponent;
   apiDef: ApiDefinition;
@@ -66,8 +67,8 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     console.log('Something happened! ' + JSON.stringify(command));
   }
 
-  public showDefinitionEditor(): boolean {
-    return true;
+  public showDefinitionEditor(value: boolean): boolean {
+    return this.displayDefinitionEditor === value;
   }
 
   ngOnInit() {
