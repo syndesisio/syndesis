@@ -67,10 +67,6 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     console.log('Something happened! ' + JSON.stringify(command));
   }
 
-  public showDefinitionEditor(value: boolean): boolean {
-    return this.displayDefinitionEditor === value;
-  }
-
   ngOnInit() {
     this.modalService.registerModal(
       this.cancelModalId,
@@ -114,8 +110,22 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     );
   }
 
-  onReviewComplete(): void {
-    this.currentActiveStep = WizardSteps.UpdateAuthSettings;
+  onReviewComplete({event: event, displayEditor: displayEditor}): void {
+    console.log('displayEditor: ' + JSON.stringify(displayEditor));
+
+    // Check if request is to show editor or not
+    if(displayEditor === true) {
+      this.displayDefinitionEditor = true;
+      console.log('User wants to display editor...');
+      console.log('this.displayDefinitionEditor: ' + JSON.stringify(this.displayDefinitionEditor));
+    } else {
+      this.displayDefinitionEditor = false;
+      this.currentActiveStep = WizardSteps.UpdateAuthSettings;
+      console.log('User does not want to display editor...');
+      console.log('this.displayDefinitionEditor: ' + JSON.stringify(this.displayDefinitionEditor));
+    }
+
+    console.log('this.displayDefinitionEditor: ' + JSON.stringify(this.displayDefinitionEditor));
   }
 
   onAuthSetup(authSettings: CustomApiConnectorAuthSettings): void {

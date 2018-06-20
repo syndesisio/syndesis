@@ -42,8 +42,18 @@
     </ol>
   </div>
 
-  <button *ngIf="showNextButton" (click)="reviewComplete.emit()" type="button" class="connector-form__submit btn btn-primary">
+  <button *ngIf="showNextButton"
+          (click)="reviewComplete.emit({event: event, displayEditor: false})"
+          type="button"
+          class="connector-form__submit btn btn-primary">
     Next
+  </button>
+
+  <button *ngIf="showNextButton"
+          (click)="reviewComplete.emit({event: event, displayEditor: true})"
+          type="button"
+          class="connector-form__submit btn btn-default">
+    Review/Edit
   </button>
 
 </div>
