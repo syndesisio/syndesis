@@ -23,37 +23,45 @@
   <p>
     <strong>Choose how you want to create your connector:</strong>
   </p>
-  <form class="syn-form--swagger-upload form-horizontal" (ngSubmit)="onSubmit(swaggerForm, uploadFileOption.checked)" #swaggerForm="ngForm" novalidate>
-    <fieldset>
-      <div class="form-group form-group--inline">
-        <div class="col-xs-12">
+  <form class="form-horizontal syn-form--swagger-upload" (ngSubmit)="onSubmit(swaggerForm, uploadFileOption.checked)" #swaggerForm="ngForm" novalidate>
+    <fieldset class="container-fluid">
+      <div class="form-group row">
+        <div class="col-xs-12 radio">
           <label>
             <input type="radio" checked="checked" name="connectorSource" #uploadFileOption> Upload a Swagger file
           </label>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="form-group row"
+          [class.syn-visuallyhidden]="!uploadFileOption.checked">
+          <div class="col-xs-12">
+            <input type="file" (change)="onFile($event)">
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-xs-12 radio">
           <label>
             <input type="radio" name="connectorSource" #fetchUrlOption> Use a URL
           </label>
         </div>
       </div>
-
-      <div class="form-group" [class.syn-visuallyhidden]="!uploadFileOption.checked">
-        <div class="col-xs-12">
-          <input type="file" (change)="onFile($event)">
-        </div>
-      </div>
-
-      <div class="form-group" [class.syn-visuallyhidden]="!fetchUrlOption.checked">
-        <div class="col-xs-12">
-          <input type="text"
-            class="form-control"
-            [class.syn-invalid]="validationError"
-            name="swaggerFileUrl"
-            [(ngModel)]="swaggerFileUrl"
-            [requiredIf]="fetchUrlOption.checked"
-            #swaggerFileUrlInput="ngModel">
-          <em class="text-muted">
-            * Please note, we will download this for you but any updates to the online version will not be updated in our app.
-          </em>
+      <div class="container-fluid">
+        <div class="form-group row"
+          [class.syn-visuallyhidden]="!fetchUrlOption.checked">
+          <div class="col-xs-12">
+            <input type="text"
+              class="form-control"
+              [class.syn-invalid]="validationError"
+              name="swaggerFileUrl"
+              [(ngModel)]="swaggerFileUrl"
+              [requiredIf]="fetchUrlOption.checked"
+              #swaggerFileUrlInput="ngModel">
+            <em class="text-muted">
+              * Please note, we will download this for you but any updates to the online version will not be updated in our app.
+            </em>
+          </div>
         </div>
       </div>
     </fieldset>
