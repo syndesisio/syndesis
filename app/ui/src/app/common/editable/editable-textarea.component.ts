@@ -24,8 +24,8 @@ import { EditableComponent } from './editable.component';
         autocomplete="off"
         aria-label="description"
         (keyup)="valueChanged($event)"></textarea>
+      <span class="help-block pull-left" *ngIf="errorMessage">{{ errorMessage }}</span>
       <div class="action-buttons">
-        <span class="help-block pull-left" *ngIf="errorMessage">{{ errorMessage }}</span>
         <button
           type="button"
           class="btn btn-primary form-control-pf-save"
