@@ -112,17 +112,3 @@ input[type="text"] {
     border: 1px solid $color-pf-red-100;
   }
 }
-
-// Legacy styles. To be reviewed at some point and
-// replaced by the above styling whereas possible
-.control-label {
-  display: flex;
-  flex-flow: row;
-  justify-content: flex-end;
-}
-
-.control-label .hint-icon {
-  flex: 0;
-  margin-left: 5px;
-  cursor: pointer;
-}
