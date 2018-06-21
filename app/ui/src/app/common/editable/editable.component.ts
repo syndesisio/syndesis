@@ -7,6 +7,8 @@ export abstract class EditableComponent {
   @Output() onSave = new EventEmitter<any>();
   editing: boolean;
   errorMessage: string;
+  originalValue: string;
+  enableSave: boolean;
 
   async submit(value) {
     this.errorMessage = await this.validate(value);
@@ -29,5 +31,19 @@ export abstract class EditableComponent {
   cancel() {
     this.errorMessage = null;
     this.editing = false;
+  }
+
+  startEditing(el) {
+    this.enableSave = false;
+    this.editing = true;
+    this.originalValue = el.value;
+  }
+
+  valueChanged(e) {
+    if (this.originalValue == e.srcElement.value) {
+      this.enableSave = false;
+    } else {
+      this.enableSave = true;
+    }
   }
 }
