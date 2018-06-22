@@ -28,7 +28,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
+        <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
         <camel.version>2.21.0.fuse-000094</camel.version>
     </properties>
 

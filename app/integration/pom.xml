@@ -114,6 +114,7 @@
     <module>api</module>
     <module>component-proxy</module>
     <module>runtime</module>
+    <module>bom</module>
     <module>project-generator</module>
   </modules>
 

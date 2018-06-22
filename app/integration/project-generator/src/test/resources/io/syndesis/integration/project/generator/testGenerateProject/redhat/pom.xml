@@ -26,7 +26,6 @@
     <fabric8.maven.plugin.version>@fabric8.maven.plugin.version@</fabric8.maven.plugin.version>
     <maven-surefire-plugin.version>@maven-surefire-plugin.version@</maven-surefire-plugin.version>
     <syndesis.version>@syndesis.version@</syndesis.version>
-    <camel-atlasmap.version>@camel-atlasmap.version@</camel-atlasmap.version>
   </properties>
 
   <dependencyManagement>
@@ -38,6 +37,13 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-bom</artifactId>
+        <version>\${syndesis.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -46,29 +52,24 @@
     <dependency>
       <groupId>io.atlasmap</groupId>
       <artifactId>camel-atlasmap</artifactId>
-      <version>\${camel-atlasmap.version}</version>
     </dependency>
 
     <!-- dependencies used in this integration -->
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-http-get</artifactId>
-      <version>@syndesis.version@</version>
     </dependency>
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-timer</artifactId>
-      <version>@syndesis.version@</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.11</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>1.7.11</version>
     </dependency>
 
     <!-- spring-boot as runtime -->
@@ -99,7 +100,6 @@
     <dependency>
       <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-runtime</artifactId>
-      <version>\${syndesis.version}</version>
     </dependency>
 
   </dependencies>

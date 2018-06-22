@@ -26,7 +26,6 @@
     <fabric8.maven.plugin.version>@fabric8.maven.plugin.version@</fabric8.maven.plugin.version>
     <maven-surefire-plugin.version>@maven-surefire-plugin.version@</maven-surefire-plugin.version>
     <syndesis.version>@syndesis.version@</syndesis.version>
-    <camel-atlasmap.version>@camel-atlasmap.version@</camel-atlasmap.version>
   </properties>
 
   <dependencyManagement>
@@ -38,6 +37,13 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-bom</artifactId>
+        <version>\${syndesis.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -46,7 +52,6 @@
     <dependency>
       <groupId>io.atlasmap</groupId>
       <artifactId>camel-atlasmap</artifactId>
-      <version>\${camel-atlasmap.version}</version>
     </dependency>
 
     <!-- dependencies used in this integration -->
@@ -54,7 +59,6 @@
     <dependency>
       <groupId>{{groupId}}</groupId>
       <artifactId>{{artifactId}}</artifactId>
-      <version>{{version}}</version>
     </dependency>
   {{/dependencies}}
 
@@ -86,7 +90,6 @@
     <dependency>
       <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-runtime</artifactId>
-      <version>\${syndesis.version}</version>
     </dependency>
 
   </dependencies>
