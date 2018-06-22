@@ -14,7 +14,7 @@
     "javaType":"io.syndesis.connector.odata.ODataReplaceEntityComponent",
     "groupId":"io.syndesis.connector",
     "artifactId":"connector-odata-replace",
-    "version":"1.4-SNAPSHOT"
+    "version":"1.4.1-20180622"
   },
   "componentProperties":{
     
