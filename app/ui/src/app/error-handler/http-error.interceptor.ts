@@ -28,15 +28,9 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).do((event: HttpEvent<any>) => event, (error: any) => {
       if (error instanceof HttpErrorResponse) {
-        this.notificationService.popNotification({
-          type: NotificationType.DANGER,
-          header: this.errorMessages.httpError,
-          message: error && error.message ? error.message : this.errorMessages.httpErrorMessage
-        });
-
         /* tslint:disable no-console */
         if (console && console.error) {
-          console.error(error || GENERIC_HTTP_ERROR_MSG);
+          console.error('Error performing ' + request.method + ' request to ' + request.url + ' : ', error || GENERIC_HTTP_ERROR_MSG);
         }
       }
     });
