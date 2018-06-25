@@ -57,15 +57,18 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
 
   public apiDefinition(spec): ApiDefinition {
     // Check to see if it's a URL or a file first..
-    console.log('spec: ' + JSON.stringify(spec));
+    //console.log('spec: ' + JSON.stringify(spec));
     if(spec && spec.configuredProperties && spec.configuredProperties.specification) {
       // File URL
-      console.log('User has specified a file URL.');
+      //console.log('User has specified a file URL.');
+      //this.apiDef.spec = spec;
+      //console.log('this.apiDef: ' + JSON.stringify(this.apiDef));
+      return this.apiDef;
     } else if(spec && spec.configuredProperties && spec.configuredProperties.specificationFile) {
       // Entire file uploaded
-      console.log('User has uploaded a file.');
+      //console.log('User has uploaded a file.');
       this.apiDef.spec = spec;
-      console.log('this.apiDef: ' + JSON.stringify(this.apiDef));
+      //console.log('this.apiDef: ' + JSON.stringify(this.apiDef));
       return this.apiDef;
     }
     //this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest);
