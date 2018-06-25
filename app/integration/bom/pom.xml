@@ -20,7 +20,7 @@
 
     <groupId>io.syndesis.integration</groupId>
     <artifactId>integration-bom</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4.1-20180625</version>
     <name>Integration :: Bill of Materials (BOM)</name>
     <description>Syndesis :: Integration :: ${project.name}</description>
 
