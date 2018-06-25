@@ -1,0 +1,119 @@
+{
+  "id": "kafka",
+  "name": "Kafka",
+  "description": "Kafka Message Broker",
+  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIiB4bWxuczpjYz0iaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbnMjIiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6c29kaXBvZGk9Imh0dHA6Ly9zb2RpcG9kaS5zb3VyY2Vmb3JnZS5uZXQvRFREL3NvZGlwb2RpLTAuZHRkIiB4bWxuczppbmtzY2FwZT0iaHR0cDovL3d3dy5pbmtzY2FwZS5vcmcvbmFtZXNwYWNlcy9pbmtzY2FwZSIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgMzIgMzIiIHZlcnNpb249IjEuMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiIGlkPSJzdmcyIiBpbmtzY2FwZTp2ZXJzaW9uPSIwLjQ4LjQgcjk5MzkiIHNvZGlwb2RpOmRvY25hbWU9ImthZmthLWljb24uc3ZnIj4KICA8bWV0YWRhdGEgaWQ9Im1ldGFkYXRhMTIiPgogICAgPHJkZjpSREY+CiAgICAgIDxjYzpXb3JrIHJkZjphYm91dD0iIj4KICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3N2Zyt4bWw8L2RjOmZvcm1hdD4KICAgICAgICA8ZGM6dHlwZSByZGY6cmVzb3VyY2U9Imh0dHA6Ly9wdXJsLm9yZy9kYy9kY21pdHlwZS9TdGlsbEltYWdlIi8+CiAgICAgIDwvY2M6V29yaz4KICAgIDwvcmRmOlJERj4KICA8L21ldGFkYXRhPgogIDxkZWZzIGlkPSJkZWZzMTAiLz4KICA8c29kaXBvZGk6bmFtZWR2aWV3IHBhZ2Vjb2xvcj0iI2ZmZmZmZiIgYm9yZGVyY29sb3I9IiM2NjY2NjYiIGJvcmRlcm9wYWNpdHk9IjEiIG9iamVjdHRvbGVyYW5jZT0iMTAiIGdyaWR0b2xlcmFuY2U9IjEwIiBndWlkZXRvbGVyYW5jZT0iMTAiIGlua3NjYXBlOnBhZ2VvcGFjaXR5PSIwIiBpbmtzY2FwZTpwYWdlc2hhZG93PSIyIiBpbmtzY2FwZTp3aW5kb3ctd2lkdGg9IjEzOTYiIGlua3NjYXBlOndpbmRvdy1oZWlnaHQ9IjEwMTgiIGlkPSJuYW1lZHZpZXc4IiBzaG93Z3JpZD0iZmFsc2UiIGlua3NjYXBlOnpvb209IjI1LjYyNSIgaW5rc2NhcGU6Y3g9IjE2IiBpbmtzY2FwZTpjeT0iMTYiIGlua3NjYXBlOndpbmRvdy14PSI2NSIgaW5rc2NhcGU6d2luZG93LXk9IjI0IiBpbmtzY2FwZTp3aW5kb3ctbWF4aW1pemVkPSIwIiBpbmtzY2FwZTpjdXJyZW50LWxheWVyPSJzdmcyIi8+CiAgPGcgaWQ9Imc0IiB0cmFuc2Zvcm09Im1hdHJpeCgwLjA2NzAzMTc4LDAsMCwwLjA2NzAzMjA0LDUuNjA5NTg2NiwxLjAxNTA4MSkiPgogICAgPHBhdGggZD0ibSAyMzcuNjE2ODYsMjQ5LjI2Nzc0IGMgLTE4LjU5MDE3LDAgLTM1LjI1NjU1LDguMjM2MTQgLTQ2LjY2OTUzLDIxLjIwMzA5IEwgMTYxLjcwMjIsMjQ5Ljc2NzM2IGMgMy4xMDQ0OSwtOC41NDczOSA0Ljg4NzAyLC0xNy43MjUzMyA0Ljg4NzAyLC0yNy4zMzE2NyAwLC05LjQzOTggLTEuNzIwNTEsLTE4LjQ2MzgzIC00LjcyMjc4LC0yNi44ODQ4OSBsIDI5LjE3OTY2LC0yMC40ODQxIGMgMTEuNDExODQsMTIuOTAxNDggMjguMDM0NTcsMjEuMDkyODMgNDYuNTcwNzYsMjEuMDkyODMgMzQuMzEyNDYsMCA2Mi4yMzIxOCwtMjcuOTE1MTMgNjIuMjMyMTgsLTYyLjIzMjE4IDAsLTM0LjMxNzA0OSAtMjcuOTE5NzIsLTYyLjIzMjE3MSAtNjIuMjMyMTgsLTYyLjIzMjE3MSAtMzQuMzEyNDUsMCAtNjIuMjMyMTcsMjcuOTE1MTIyIC02Mi4yMzIxNyw2Mi4yMzIxNzEgMCw2LjE0MjM2IDAuOTI4MDIsMTIuMDY1MzUgMi41OTMzOSwxNy42NzQ3OSBMIDE0OC43Nzg5LDE3Mi4wOTY1OSBDIDEzNi41ODE0NywxNTYuOTY0NjUgMTE5LjAxOTIzLDE0Ni4zOTkyOCA5OS4wMDk0NzMsMTQzLjE3NDIgbCAwLC0zNS4xOTEwOCBjIDI4LjE4OTYxNywtNS45MjA3IDQ5LjQyOTQ1NywtMzAuOTY2NzgyIDQ5LjQyOTQ1NywtNjAuODk0MTM2IDAsLTM0LjMxNzA1MiAtMjcuOTE5NzEsLTYyLjIzMjE3NCAtNjIuMjMyMTY3LC02Mi4yMzIxNzQgLTM0LjMxMjQ1OCwwIC02Mi4yMzIxNzQsMjcuOTE1MTIyIC02Mi4yMzIxNzQsNjIuMjMyMTc0IDAsMjkuNTI2NTE1IDIwLjY4OTY5NCw1NC4yNjM2NDYgNDguMzE1Mzg2LDYwLjYwNjk5NiBsIDAsMzUuNjQ4MiBjIC0zNy43MDE3ODIsNi42MTc4NiAtNjYuNDY1NjcxMiwzOS41MjEwNiAtNjYuNDY1NjcxMiw3OS4wOTE1MSAwLDM5Ljc2MzQgMjkuMDQ4NzI1Miw3Mi43ODcyIDY3LjAyMjcxMDIsNzkuMTc5OTQgbCAwLDM3LjY0MjA2IGMgLTI3LjkwODIzMSw2LjEzNDMyIC00OC44NzI0MjUsMzEuMDIzMDYgLTQ4Ljg3MjQyNSw2MC43NTA1NyAwLDM0LjMxNzA1IDI3LjkxOTcxNiw2Mi4yMzIxNyA2Mi4yMzIxNzQsNjIuMjMyMTcgMzQuMzEyNDU3LDAgNjIuMjMyMTY3LC0yNy45MTUxMiA2Mi4yMzIxNjcsLTYyLjIzMjE3IDAsLTI5LjcyNzUxIC0yMC45NjQxOSwtNTQuNjE2MjUgLTQ4Ljg3MjQxOCwtNjAuNzUwNTcgbCAwLC0zNy42NDMyIEMgMTE5LjE4MjMyLDI5OC4zMTEzIDEzNi40MjE4MiwyODcuOTU0OTcgMTQ4LjQ5NDA2LDI3My4xNTg0IGwgMjkuNDQwMzgsMjAuODM3ODYgYyAtMS42MzQzNyw1LjU1ODkgLTIuNTQ5NzUsMTEuNDIzMzIgLTIuNTQ5NzUsMTcuNTAzNjYgMCwzNC4zMTcwNSAyNy45MTk3Miw2Mi4yMzIxNyA2Mi4yMzIxNyw2Mi4yMzIxNyAzNC4zMTI0NiwwIDYyLjIzMjE4LC0yNy45MTUxMiA2Mi4yMzIxOCwtNjIuMjMyMTcgMCwtMzQuMzE3MDUgLTI3LjkxOTcyLC02Mi4yMzIxOCAtNjIuMjMyMTgsLTYyLjIzMjE4IGwgMCwwIHogbSAwLC0xNDUuNTEzNTMgYyAxNi42Mzg4MiwwIDMwLjE3MiwxMy41Mzg5MiAzMC4xNzIsMzAuMTczMTQgMCwxNi42MzQyMiAtMTMuNTMzMTgsMzAuMTcxOTkgLTMwLjE3MiwzMC4xNzE5OSAtMTYuNjM4ODEsMCAtMzAuMTcxOTksLTEzLjUzNzc3IC0zMC4xNzE5OSwtMzAuMTcxOTkgMCwtMTYuNjM0MjIgMTMuNTMzMTgsLTMwLjE3MzE0IDMwLjE3MTk5LC0zMC4xNzMxNCBsIDAsMCB6IE0gNTYuMDMzNjIyLDQ3LjA4ODk4NCBjIDAsLTE2LjYzNDIyIDEzLjUzNDMyNywtMzAuMTcxOTkyIDMwLjE3MzE0MSwtMzAuMTcxOTkyIDE2LjYzODgxNywwIDMwLjE3MTk4NywxMy41Mzc3NzIgMzAuMTcxOTg3LDMwLjE3MTk5MiAwLDE2LjYzNDIyIC0xMy41MzMxNywzMC4xNzE5OTEgLTMwLjE3MTk4NywzMC4xNzE5OTEgLTE2LjYzODgxNCwwIC0zMC4xNzMxNDEsLTEzLjUzNzc3MSAtMzAuMTczMTQxLC0zMC4xNzE5OTEgbCAwLDAgeiBNIDExNi4zNzg3NSw0MDAuMDA4MjYgYyAwLDE2LjYzNDIyIC0xMy41MzMxNywzMC4xNzE5OSAtMzAuMTcxOTg3LDMwLjE3MTk5IC0xNi42Mzg4MTQsMCAtMzAuMTczMTQxLC0xMy41Mzc3NyAtMzAuMTczMTQxLC0zMC4xNzE5OSAwLC0xNi42MzQyMiAxMy41MzQzMjcsLTMwLjE3MiAzMC4xNzMxNDEsLTMwLjE3MiAxNi42Mzg4MTcsMCAzMC4xNzE5ODcsMTMuNTM3NzggMzAuMTcxOTg3LDMwLjE3MiBsIDAsMCB6IE0gODYuMjA0NDY2LDI2NC41MTU2OCBjIC0yMy4yMDYxMzMsMCAtNDIuMDg0NTg4LC0xOC44NzUwMSAtNDIuMDg0NTg4LC00Mi4wNzk5OSAwLC0yMy4yMDYxMyAxOC44Nzg0NTUsLTQyLjA4NDU5IDQyLjA4NDU4OCwtNDIuMDg0NTkgMjMuMjA0OTg0LDAgNDIuMDgzNDM0LDE4Ljg3ODQ2IDQyLjA4MzQzNCw0Mi4wODQ1OSAwLDIzLjIwNDk4IC0xOC44Nzg0NSw0Mi4wNzk5OSAtNDIuMDgzNDM0LDQyLjA3OTk5IGwgMCwwIHogbSAxNTEuNDEyMzk0LDc3LjE1NzM4IGMgLTE2LjYzODgxLDAgLTMwLjE3MTk5LC0xMy41Mzg5MiAtMzAuMTcxOTksLTMwLjE3MzE0IDAsLTE2LjYzNDIyIDEzLjUzMzE4LC0zMC4xNzE5OSAzMC4xNzE5OSwtMzAuMTcxOTkgMTYuNjM4ODIsMCAzMC4xNzIsMTMuNTM3NzcgMzAuMTcyLDMwLjE3MTk5IDAsMTYuNjM0MjIgLTEzLjUzMzE4LDMwLjE3MzE0IC0zMC4xNzIsMzAuMTczMTQgbCAwLDAgeiIgaWQ9InBhdGg2IiBpbmtzY2FwZTpjb25uZWN0b3ItY3VydmF0dXJlPSIwIiBzdHlsZT0iZmlsbDojMDAwMDAwIi8+CiAgPC9nPgo8L3N2Zz4K",
+  "dependencies": [
+    {
+      "type": "MAVEN",
+      "id": "@project.groupId@:@project.artifactId@:@project.version@"
+    }
+  ],
+  "componentScheme": "kafka",
+  "configuredProperties": {
+
+  },
+  "tags": [
+    "verifier"
+  ],
+  "properties": {
+    "brokers": {
+      "kind": "property",
+      "displayName": "Kafka bootstraps URI",
+      "group": "common",
+      "label": "common",
+      "required": true,
+      "componentProperty": true,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "deprecated": false,
+      "secret": false,
+      "labelHint": "Comma separated list of Kafka brokers URI i the form of host:port",
+      "order": "1"
+    }
+  },
+  "actions": [
+    {
+      "name": "Publish",
+      "description": "Publish data to the Kafka topic you specify.",
+      "id": "io.syndesis:kafka-publish-action",
+      "pattern": "To",
+      "actionType": "connector",
+      "tags": [
+        "dynamic"
+      ],
+      "descriptor": {
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "configuredProperties": {},
+        "propertyDefinitionSteps": [
+          {
+            "name": "Select the Kafka topic",
+            "description": "Specify Kafka topic name",
+            "properties": {
+              "topic": {
+                "kind": "path",
+                "displayName": "Topic Name",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "labelHint": "Name of the Kafka topic to send data to.",
+                "order": "1"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Subscribe",
+      "description": "Receive data from the Kafka topic you specify.",
+      "id": "io.syndesis:kafka-subscribe-action",
+      "pattern": "From",
+      "actionType": "connector",
+      "tags": [
+        "dynamic"
+      ],
+      "descriptor": {
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "configuredProperties": {},
+        "propertyDefinitionSteps": [
+          {
+            "name": "Select the Kafka topic",
+            "description": "Specify Kafka topic Name",
+            "properties": {
+              "topic": {
+                "kind": "path",
+                "displayName": "Topic Name",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "labelHint": "Name of the Kafka topic to receive data from.",
+                "order": "1"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

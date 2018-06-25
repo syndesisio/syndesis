@@ -249,6 +249,12 @@
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-kafka</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-sftp</artifactId>
       <scope>runtime</scope>
     </dependency>
