@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Info;
 import io.swagger.models.Operation;
@@ -59,8 +61,6 @@ import io.syndesis.server.connector.generator.util.ActionComparator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -234,7 +234,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         actions.sort(ActionComparator.INSTANCE);
         builder.addAllActions(actions);
 
-        builder.putConfiguredProperty("specification", SwaggerHelper.serialize(swagger));
+        builder.putConfiguredProperty("specification", SwaggerHelper.minimalSwaggerUsedByComponent(swagger));
 
         return builder.build();
     }
