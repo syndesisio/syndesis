@@ -18,11 +18,12 @@ import { EditableComponent } from './editable.component';
         </ng-container>
         <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
       </button>
-      <textarea #textareaInput
+      <textarea #textareaInput="ngModel"
         [ngModel]="value"
         class="form-control form-control-pf-editor"
         autocomplete="off"
         aria-label="description"
+        (blur)="cancel(textareaInput)"
         (keyup)="valueChanged($event)"></textarea>
       <span class="help-block pull-left" *ngIf="errorMessage">{{ errorMessage }}</span>
       <div class="action-buttons">
@@ -38,7 +39,7 @@ import { EditableComponent } from './editable.component';
           type="button"
           class="btn btn-default form-control-pf-cancel"
           aria-label="Cancel"
-          (click)="cancel()">
+          (click)="cancel(textareaInput)">
           <i class="glyphicon glyphicon-remove"></i>
         </button>
       </div>
