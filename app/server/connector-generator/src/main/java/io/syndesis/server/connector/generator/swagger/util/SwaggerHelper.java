@@ -17,12 +17,26 @@ package io.syndesis.server.connector.generator.swagger.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static java.util.Optional.ofNullable;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.ProcessingMessage;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
 
 import io.swagger.models.HttpMethod;
 import io.swagger.models.ModelImpl;
@@ -42,14 +56,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.report.ProcessingMessage;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
-import com.github.fge.jsonschema.main.JsonSchema;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -81,6 +87,59 @@ public final class SwaggerHelper {
 
     public static ModelImpl dereference(final RefProperty property, final Swagger swagger) {
         return (ModelImpl) swagger.getDefinitions().get(property.getSimpleRef());
+    }
+
+    /**
+     * Removes all properties from the given Swagger specification that are not
+     * used by the REST Swagger Camel component in order to minimize the amount
+     * of data stored in the configured properties.
+     */
+    public static String minimalSwaggerUsedByComponent(final Swagger swagger) {
+        final ObjectNode json = Json.convertValue(swagger, ObjectNode.class);
+        json.remove(Arrays.asList("info", "tags", "definitions", "externalDocs"));
+
+        json.remove("securityDefinitions");
+
+        json.get("paths").forEach(path -> {
+            path.forEach(operation -> {
+                final ObjectNode operationNode = (ObjectNode) operation;
+                operationNode.remove(Arrays.asList("tags", "summary", "description", "security"));
+                final ArrayNode parameters = (ArrayNode) operation.get("parameters");
+
+                if (parameters != null) {
+                    final List<JsonNode> parametersList = new ArrayList<>(
+                        StreamSupport.stream(parameters.spliterator(), false).collect(Collectors.toList()));
+
+                    for (final ListIterator<JsonNode> i = parametersList.listIterator(); i.hasNext();) {
+                        final ObjectNode param = (ObjectNode) i.next();
+                        param.remove(Arrays.asList("description", "type", "required", "format"));
+
+                        if (!"path".equals(param.get("in").textValue())) {
+                            i.remove();
+                        }
+                    }
+
+                    if (parameters.size() == 0) {
+                        operationNode.remove("parameters");
+                    }
+
+                    if (parametersList.isEmpty()) {
+                        operationNode.remove("parameters");
+                    } else {
+                        parameters.removeAll();
+                        parameters.addAll(parametersList);
+                    }
+                }
+
+                operationNode.remove("responses");
+            });
+        });
+
+        try {
+            return Json.writer().writeValueAsString(json);
+        } catch (final JsonProcessingException e) {
+            throw new IllegalStateException("Unable to serialize minified Swagger specification", e);
+        }
     }
 
     public static OperationDescription operationDescriptionOf(final Swagger swagger, final Operation operation) {

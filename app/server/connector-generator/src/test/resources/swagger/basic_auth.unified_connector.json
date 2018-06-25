@@ -6,7 +6,7 @@
   },
   "connectorGroupId": "swagger-connector-template",
   "configuredProperties": {
-    "specification": "{\"basePath\" : \"/api\", \"host\" : \"sample.io\", \"info\" : {\"description\" : \"Sample Swagger file with HTTP Basic Authentication\", \"license\" : {\"name\" : \"Apache 2.0\", \"url\" : \"http://www.apache.org/licenses/LICENSE-2.0.html\"}, \"title\" : \"HTTP Basic Authentication Sample\", \"version\" : \"1.0.0\"}, \"paths\" : {\"/operation\" : {\"get\" : {\"operationId\" : \"operation-0\", \"produces\" : [ \"application/json\" ], \"responses\" : {\"200\" : {\"description\" : \"All OK\"}}}}}, \"schemes\" : [ \"http\" ], \"securityDefinitions\" : {\"username_password\" : {\"type\" : \"basic\"}}, \"swagger\" : \"2.0\"}",
+    "specification": "{\"swagger\":\"2.0\",\"host\":\"sample.io\",\"basePath\":\"/api\",\"schemes\":[\"http\"],\"paths\":{\"/operation\":{\"get\":{\"operationId\":\"operation-0\",\"produces\":[\"application/json\"]}}}}",
     "authenticationType": "basic",
     "basePath": "/api",
     "host": "http://sample.io"
