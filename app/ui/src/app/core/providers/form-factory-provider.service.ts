@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormFactoryService, ConfigurationProperty, ConfiguredConfigurationProperty, StringMap } from '@syndesis/ui/platform';
+import { FormFactoryService, ConfigurationProperty, ConfiguredConfigurationProperty, StringMap, I18NService } from '@syndesis/ui/platform';
 import { DurationInputModel } from '@syndesis/ui/common/ui-patternfly/duration-form-control.model';
 import {
   DynamicFormControlModel,
@@ -9,10 +9,12 @@ import {
   DynamicSelectModel
 } from '@ng-dynamic-forms/core';
 
+import { environment } from '../../../environments/environment';
+
 @Injectable()
 export class FormFactoryProviderService extends FormFactoryService {
 
-  constructor() {
+  constructor(private i18NService: I18NService) {
     super();
   }
 
@@ -114,14 +116,26 @@ export class FormFactoryProviderService extends FormFactoryService {
     return answer;
   }
 
+  private getLocalizedString(field, key): string {
+    const value = field[key];
+    if (value === undefined || value === null) {
+      return undefined;
+    }
+    const answer = this.i18NService.localize(value);
+    if (answer === environment.i18n.fallbackValue) {
+      return value;
+    }
+    return answer;
+  }
+
   private createDuration(key: string,
                          field: ConfiguredConfigurationProperty,
                          value: any): any {
     return new DurationInputModel({
       id: key,
       label: field.displayName || key,
-      labelTooltip: field.labelHint,
-      controlTooltip: field.controlHint,
+      labelTooltip: this.getLocalizedString(field, 'labelHint'),
+      controlTooltip: this.getLocalizedString(field, 'controlHint'),
       inputType: 'duration',
       value: value || field.value || field.defaultValue,
       hint: field.description,
@@ -151,12 +165,12 @@ export class FormFactoryProviderService extends FormFactoryService {
     return new DynamicInputModel({
       id: key,
       label: type === 'hidden' ? null : field.displayName || key,
-      labelTooltip: field.labelHint,
-      controlTooltip: field.controlHint,
       inputType: type,
       value: value || field.value || field.defaultValue,
-      placeholder: field.placeholder,
-      hint: field.description,
+      labelTooltip: this.getLocalizedString(field, 'labelHint'),
+      controlTooltip: this.getLocalizedString(field, 'controlHint'),
+      placeholder: this.getLocalizedString(field, 'placeholder'),
+      hint: this.getLocalizedString(field, 'description'),
       list: field.enum
         ? (<Array<any>>field.enum).map(val => {
           if (typeof val === 'string') {
@@ -190,10 +204,10 @@ export class FormFactoryProviderService extends FormFactoryService {
       id: key,
       multiple: false,
       label: field.displayName || key,
-      labelTooltip: field.labelHint,
-      controlTooltip: field.controlHint,
+      labelTooltip: this.getLocalizedString(field, 'labelHint'),
+      controlTooltip: this.getLocalizedString(field, 'controlHint'),
       value: value || field.defaultValue || field.enum[0].value,
-      hint: field.description,
+      hint: this.getLocalizedString(field, 'description'),
       required: field.required,
       relation: field.relation,
       validators: validators,
@@ -218,13 +232,13 @@ export class FormFactoryProviderService extends FormFactoryService {
     return new DynamicTextAreaModel({
       id: key,
       label: field.displayName || key,
-      labelTooltip: field.labelHint,
-      controlTooltip: field.controlHint,
+      labelTooltip: this.getLocalizedString(field, 'labelHint'),
+      controlTooltip: this.getLocalizedString(field, 'controlHint'),
       value: value || field.value || field.defaultValue,
-      hint: field.description,
+      hint: this.getLocalizedString(field, 'description'),
       required: field.required,
       relation: field.relation,
-      placeholder: field.placeholder,
+      placeholder: this.getLocalizedString(field, 'placeholder'),
       rows: field.rows,
       cols: field.cols,
       validators: validators,
@@ -249,9 +263,9 @@ export class FormFactoryProviderService extends FormFactoryService {
     return new DynamicCheckboxModel({
       id: key,
       label: field.displayName || key,
-      labelTooltip: field.labelHint,
-      controlTooltip: field.controlHint,
-      hint: field.description,
+      labelTooltip: this.getLocalizedString(field, 'labelHint'),
+      controlTooltip: this.getLocalizedString(field, 'controlHint'),
+      hint: this.getLocalizedString(field, 'description'),
       relation: field.relation,
       value: (!!initialValue)
     }, {

@@ -27,6 +27,14 @@
         "import-results": "Import Results:",
         "btn-done": "{{done}}",
         "btn-cancel": "{{cancel}}"
+      },
+      "edit": {
+        "describe-data": {
+          "select-type": "Indicate how you are specifying the data type.",
+          "definition": "Paste or write content for the type you selected, for example, for JSON Schema, paste the content of a document whose media type is application/schema+json.",
+          "name": "Enter a name that you choose. This name will appear in the data mapper.",
+          "description": "Enter any information about this data type that might be helpful to you."
+        }
       }
     },
     "connections": {
