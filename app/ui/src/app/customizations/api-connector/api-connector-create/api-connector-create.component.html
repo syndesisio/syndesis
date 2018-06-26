@@ -68,19 +68,11 @@
         </div>
         <div class="card-pf-body">
           <api-editor #apiEditor
-                      [api]="apiDefinition((apiConnectorState$ | async)?.createRequest)"
+                      [api]="apiDef"
                       [embedded]="true"
                       (onCommandExecuted)="onUserChange($event)"
                       (onSelectionChanged)="onUserSelection($event)"></api-editor>
         </div>
-
-        <!--
-        <api-editor #apiEditor
-                    [api]="(apiConnectorState$ | async)?.createRequest.specificationFile"
-                    [embedded]="true"
-                    (onCommandExecuted)="onUserChange($event)"
-                    (onSelectionChanged)="onUserSelection($event)"></api-editor>
-                    -->
       </div>
     </div>
 

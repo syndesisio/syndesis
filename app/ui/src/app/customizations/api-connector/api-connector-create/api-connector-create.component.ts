@@ -94,12 +94,23 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     );
 
     // Once the request validation results are yielded for the 1st time, we move user to step 2
-    this.apiConnectorState$
-      .pipe(map(apiConnectorState => apiConnectorState.createRequest))
-      .pipe(first(request => !!request && !!request.actionsSummary))
-      .subscribe(
-        () => (this.currentActiveStep = WizardSteps.ReviewApiConnector)
-      );
+    this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
+      .first(request => !!request && !!request.actionsSummary)
+      .subscribe( apiConnectorState => {
+        // TODO error handling!
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.apiDef = new ApiDefinition();
+          this.apiDef.createdBy = 'user1';
+          this.apiDef.createdOn = new Date();
+          this.apiDef.tags = [];
+          this.apiDef.description = '';
+          this.apiDef.id = 'api-1';
+          this.apiDef.spec = reader.result;
+          this.currentActiveStep = WizardSteps.ReviewApiConnector;
+        };
+        reader.readAsText(apiConnectorState.specificationFile);
+      });
 
     // Once the request object is flagged as 'isComplete', we redirect the user to the main listing
     this.apiConnectorState$
@@ -129,7 +140,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
 
   onReviewComplete({event: event, displayEditor: displayEditor}): void {
     // Check if request is to show editor or not
-    if(displayEditor === true) {
+    if (displayEditor === true) {
       this.displayDefinitionEditor = true;
 
     } else {
