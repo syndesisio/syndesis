@@ -4,26 +4,46 @@ import { EditableComponent } from './editable.component';
 @Component({
   selector: 'syndesis-editable-textarea',
   template: `
-    <ng-template [ngIf]="!editing">
-      <em class="text-muted" *ngIf="!value">
-        {{ placeholder }}
-      </em>
-      <ng-container *ngIf="value">
-        {{ value }}
-      </ng-container>
-      <button type="button" class="btn btn-link" (click)="editing = true">
-        <i class="fa fa-pencil" aria-hidden="true" title="Click to edit"></i>
+    <div class="form-control-pf-editable form-control-pf-full-width"
+      [ngClass]="{'form-control-pf-edit': editing, 'has-error': errorMessage}">
+      <button
+        (click)="startEditing(textareaInput)"
+        type="button"
+        class="form-control-pf-value">
+        <em class="text-muted" *ngIf="!value">
+          {{ placeholder }}
+        </em>
+        <ng-container *ngIf="value">
+          {{ value }}
+        </ng-container>
+        <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
       </button>
-    </ng-template>
-
-    <ng-template [ngIf]="editing">
-      <div class="form-group" [ngClass]="{'has-error': errorMessage}">
-        <textarea #textareaInput class="form-control" [ngModel]="value"></textarea>
-        <span class="help-block" *ngIf="errorMessage">{{ errorMessage }}</span>
+      <textarea #textareaInput="ngModel"
+        [ngModel]="value"
+        class="form-control form-control-pf-editor"
+        autocomplete="off"
+        aria-label="description"
+        (blur)="cancel(textareaInput)"
+        (keyup)="valueChanged($event)"></textarea>
+      <span class="help-block pull-left" *ngIf="errorMessage">{{ errorMessage }}</span>
+      <div class="action-buttons">
+        <button
+          type="button"
+          class="btn btn-primary form-control-pf-save"
+          aria-label="Save"
+          [disabled]="!enableSave"
+          (mousedown)="submit(textareaInput.value.trim())">
+          <i class="glyphicon glyphicon-ok"></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn-default form-control-pf-cancel"
+          aria-label="Cancel"
+          (click)="cancel(textareaInput)">
+          <i class="glyphicon glyphicon-remove"></i>
+        </button>
       </div>
-      <button type="button" class="btn btn-primary" (click)="submit(textareaInput.value.trim())">Save</button>
-      <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
-    </ng-template>
+    </div>
   `
 })
 export class EditableTextareaComponent extends EditableComponent {}
