@@ -25,7 +25,9 @@
     "test:cc": "yarn ng test --watch=false --code-coverage",
     "test:ci": "yarn ng test --watch=false --progress=false",
     "sw": "sw-precache --root=dist --config=sw-precache-config.js",
-    "docker:build": "yarn ng build --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest . && docker tag syndesis/syndesis-ui:latest docker.io/syndesis/syndesis-ui:latest"
+    "docker:build": "yarn ng build --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest . && docker tag syndesis/syndesis-ui:latest docker.io/syndesis/syndesis-ui:latest",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "private": true,
   "dependencies": {
@@ -65,7 +67,8 @@
     "ts-helpers": "1.1.2",
     "typescript-logging": "0.4.0",
     "url": "^0.11.0",
-    "zone.js": "^0.8.26"
+    "zone.js": "^0.8.26",
+    "snyk": "^1.85.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.6.6",
@@ -115,5 +118,6 @@
     "tslint": "~5.7.0",
     "typescript": "2.7.2",
     "webdriver-manager": "12.0.2"
-  }
+  },
+  "snyk": true
 }
