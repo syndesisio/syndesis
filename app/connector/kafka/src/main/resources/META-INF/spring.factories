@@ -1,0 +1,4 @@
+
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    io.syndesis.connector.kafka.KafkaVerifierAutoConfiguration,\
+    io.syndesis.connector.kafka.KafkaMetaDataAutoConfiguration

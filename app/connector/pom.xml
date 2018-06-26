@@ -72,6 +72,7 @@
     <module>ftp</module>
     <module>gmail</module>
     <module>http</module>
+    <module>kafka</module>
     <module>mqtt</module>
     <module>odata</module>
     <module>rest-swagger</module>
