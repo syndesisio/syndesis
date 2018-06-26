@@ -791,6 +791,12 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
+apicurio-design-studio@^0.2.11-3:
+  version "0.2.11-3"
+  resolved "https://registry.yarnpkg.com/apicurio-design-studio/-/apicurio-design-studio-0.2.11-3.tgz#20f49848d8f4cab04f896f6b54facbc2ec5b8e30"
+  dependencies:
+    tslib "^1.7.1"
+
 app-root-path@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/app-root-path/-/app-root-path-2.0.1.tgz#cd62dcf8e4fd5a417efc664d2e5b10653c651b46"
@@ -1275,6 +1281,10 @@ brace-expansion@^1.1.7:
   dependencies:
     balanced-match "^1.0.0"
     concat-map "0.0.1"
+
+brace@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/brace/-/brace-0.11.1.tgz#4896fcc9d544eef45f4bb7660db320d3b379fe58"
 
 braces@^0.1.2:
   version "0.1.5"
@@ -1942,6 +1952,10 @@ copy-webpack-plugin@^4.5.1:
     minimatch "^3.0.4"
     p-limit "^1.0.0"
     serialize-javascript "^1.4.0"
+
+core-js@2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.4.1.tgz#4de911e667b0eae9124e34254b53aea6fc618d3e"
 
 core-js@^1.0.0, core-js@^1.0.1:
   version "1.2.7"
@@ -5487,6 +5501,19 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
 
+oai-ts-commands@^0.2.28:
+  version "0.2.28"
+  resolved "https://registry.yarnpkg.com/oai-ts-commands/-/oai-ts-commands-0.2.28.tgz#ad6b981c58a8b0e02cc0d7874ac05be2c7c9ee66"
+  dependencies:
+    core-js "2.4.1"
+    oai-ts-core "0.2.15"
+
+oai-ts-core@0.2.15, oai-ts-core@^0.2.15:
+  version "0.2.15"
+  resolved "https://registry.yarnpkg.com/oai-ts-core/-/oai-ts-core-0.2.15.tgz#2a889e2d813c5fe5eb8430fd6333b92487743fd8"
+  dependencies:
+    core-js "2.4.1"
+
 oauth-sign@~0.8.1, oauth-sign@~0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.8.2.tgz#46a6ab7f0aead8deae9ec0565780b7d4efeb9d43"
@@ -8415,9 +8442,22 @@ yallist@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-2.1.2.tgz#1c11f9218f076089a47dd512f93c6699a6a81d52"
 
+<<<<<<< HEAD
 yargs-parser@^10.0.0:
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-10.0.0.tgz#c737c93de2567657750cb1f2c00be639fd19c994"
+=======
+yamljs@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/yamljs/-/yamljs-0.3.0.tgz#dc060bf267447b39f7304e9b2bfbe8b5a7ddb03b"
+  dependencies:
+    argparse "^1.0.7"
+    glob "^7.0.5"
+
+yargs-parser@^4.2.0:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-4.2.1.tgz#29cceac0dc4f03c6c87b4a9f217dd18c9f74871c"
+>>>>>>> Res merge conflicts in package.json
   dependencies:
     camelcase "^4.1.0"
 

@@ -54,34 +54,16 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-
-  public apiDefinition(spec): ApiDefinition {
-    // Check to see if it's a URL or a file first..
-    //console.log('spec: ' + JSON.stringify(spec));
-    if(spec && spec.configuredProperties && spec.configuredProperties.specification) {
-      // File URL
-      //console.log('User has specified a file URL.');
-      //this.apiDef.spec = spec;
-      //console.log('this.apiDef: ' + JSON.stringify(this.apiDef));
-      return this.apiDef;
-    } else if(spec && spec.configuredProperties && spec.configuredProperties.specificationFile) {
-      // Entire file uploaded
-      //console.log('User has uploaded a file.');
-      this.apiDef.spec = spec;
-      //console.log('this.apiDef: ' + JSON.stringify(this.apiDef));
-      return this.apiDef;
-    }
-    //this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest);
-
-    return this.apiDef;
-  }
-
   public onUserSelection(selection: string): void {
     console.log('User selection changed: ', selection);
   }
 
   public onUserChange(command: OtCommand): void {
     console.log('Something happened! ' + JSON.stringify(command));
+  }
+
+  public showDefinitionEditor(): boolean {
+    return true;
   }
 
   ngOnInit() {
@@ -107,8 +89,10 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
           this.apiDef.description = '';
           this.apiDef.id = 'api-1';
           this.apiDef.spec = reader.result;
+          console.log('this.apiDef: ' + this.apiDef);
           this.currentActiveStep = WizardSteps.ReviewApiConnector;
         };
+        //console.log('reader.readAsText(apiConnectorState.specificationFile): ' + JSON.stringify(reader.readAsText(apiConnectorState.specificationFile)));
         reader.readAsText(apiConnectorState.specificationFile);
       });
 
