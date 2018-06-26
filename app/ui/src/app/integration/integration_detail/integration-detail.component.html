@@ -9,13 +9,13 @@
             <div class="inline-block">
               <ol class="breadcrumb">
                 <li>
-                  <a [routerLink]="['/']">Home</a>
+                  <a [routerLink]="['/']">{{ 'home' | synI18n }}</a>
                 </li>
                 <li>
-                  <a [routerLink]="['/integrations']">Integrations</a>
+                  <a [routerLink]="['/integrations']">{{ 'integrations.integrations' | synI18n }}</a>
                 </li>
                 <li class="active">
-                  <strong>Integration Summary</strong>
+                  <strong>{{ 'integrations.integration-summary' | synI18n }}</strong>
                 </li>
               </ol>
             </div>
@@ -34,16 +34,16 @@
         </h1>
         <ng-container [ngSwitch]="integration.currentState">	 
           <ng-container *ngSwitchCase="'Pending'">	  
-            <div class="spinner spinner-sm spinner-inline"></div> {{ integration.targetState == 'Published' ? 'Publishing...' : 'Unpublishing...' }}
+            <div class="spinner spinner-sm spinner-inline"></div> {{ (integration.targetState == 'Published' ? 'integrations.publishing' : 'integrations.unpublishing') | synI18n }}
           </ng-container>
           <ng-container *ngSwitchCase="'Published'">
-            <span class="pficon pficon-ok"></span> Published version {{ integration.deploymentVersion }}
+            <span class="pficon pficon-ok"></span> {{ 'published-integration' | synI18n }} version {{ integration.deploymentVersion }}
           </ng-container>
           <ng-container *ngSwitchCase="'Unpublished'">
-            Not Published
+            {{ 'integrations.unpublished' | synI18n }}
           </ng-container>
           <ng-container *ngSwitchCase="'Error'">
-            <span class="pficon pficon-error"></span> Published version {{ integration.deploymentVersion }}
+            <span class="pficon pficon-error"></span> {{ 'integrations.' + integration.currentState | synI18n }}<span *ngIf="integration.deploymentVersion"> version {{ integration.deploymentVersion }}</span>
           </ng-container>
         </ng-container>
       </div>
@@ -56,19 +56,19 @@
 
       <ul class="syn-tabs row nav nav-tabs nav-tabs-pf toolbar-pf integration-detail__tabs">
         <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'description'">
-          <a [routerLink]="['/integrations', integration.id]">Details</a>
+          <a [routerLink]="['/integrations', integration.id]">{{ 'details' | synI18n }}</a>
         </li>
         <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'activity'">
           <a [routerLink]="['/integrations', integration.id]"
             [queryParams]="{ view: 'activity' }">
-            Activity
+            {{ 'activity' | synI18n }}
           </a>
         </li>
         <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'logs'" *ngIf="loggingEnabled">
-          <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'logs' }">Logs</a>
+          <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'logs' }">{{ 'logs' | synI18n }}</a>
         </li>
         <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'metrics'">
-          <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'metrics' }">Metrics</a>
+          <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'metrics' }">{{ 'metrics' | synI18n }}</a>
         </li>
       </ul>
 

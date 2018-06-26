@@ -63,7 +63,7 @@
                   </div>
                   <div class="col-sm-3">
                     <span [ngClass]="'label ' + getLabelClass(integration)">
-                      {{ integration.currentState }}
+                      {{ 'integrations.' + integration.currentState | synI18n }}
                     </span>
                   </div>
                   <div class="col-sm-4">

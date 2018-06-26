@@ -12,7 +12,8 @@ import {
   IntegrationOverview,
   IntegrationOverviews,
   IntegrationSupportService,
-  Integration
+  Integration,
+  I18NService
 } from '@syndesis/ui/platform';
 import { IntegrationStore } from '@syndesis/ui/store';
 
@@ -23,6 +24,9 @@ import { IntegrationStore } from '@syndesis/ui/store';
 })
 export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
 
+  PENDING: string;
+  UNPUBLISHED: string;
+  PUBLISHED: string;
   integrationOverviews$: Observable<Integration[]>;
   integrations: Array<IntegrationOverview>;
   loading = true;
@@ -30,21 +34,13 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
   @Input() connections: Connections;
   @Input() connectionsLoading: boolean;
 
-  integrationChartData: any[] = [
-    ['Published', 0],
-    ['Unpublished', 0]
-  ];
+  integrationChartData: any[];
 
   integrationsChartConfig: DonutConfig = {
     chartHeight: 120,
     chartId: 'integrationsCounter',
-    colors: {
-      Published: '#0088CE',   // PatternFly Blue 400, Published
-      Unpublished: '#D1D1D1'  // PatternFly Black 300, Unpublished
-    },
-    donut: {
-      title: 'Integrations'
-    },
+    colors: {}, // initialized in constructor
+    donut: {}, // initialized in constructor
     legend: {
       show: true,
       position: 'right'
@@ -56,8 +52,22 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
   constructor(
     public route: ActivatedRoute,
     private router: Router,
-    private integrationStore: IntegrationStore
+    private integrationStore: IntegrationStore,
+    private i18NService: I18NService
   ) {
+    this.PUBLISHED = i18NService.localize('integrations.published');
+    this.UNPUBLISHED = i18NService.localize('integrations.unpublished');
+    this.PENDING = i18NService.localize('integrations.pending');
+    this.integrationChartData = [
+      [this.PUBLISHED, 0],
+      [this.UNPUBLISHED, 0],
+      [this.PENDING, 0]
+    ];
+    this.integrationsChartConfig.colors[this.PUBLISHED] = '#0088CE'; // PatternFly Blue 400
+    this.integrationsChartConfig.colors[this.UNPUBLISHED] = '#D1D1D1'; // PatternFly Black 300
+    this.integrationsChartConfig.colors[this.PENDING] = '#EDEDED'; // PatternFly Black 200
+    this.integrationsChartConfig.donut.title = i18NService.localize('integrations.integrations');
+
   }
 
   ngOnInit() {
@@ -66,8 +76,9 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
       this.integrations = integrations;
       this.loading = false;
       this.integrationChartData = [
-        [`Published`, this.countActiveIntegrations()],
-        [`Unpublished`, this.countInactiveIntegrations()]
+        [this.PUBLISHED, this.countActiveIntegrations()],
+        [this.UNPUBLISHED, this.countInactiveIntegrations()],
+        [this.PENDING, this.countPendingIntegrations()]
       ];
     });
     this.integrationStore.loadAll();
@@ -84,6 +95,7 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
   filterIntegrations() {
     const active = [];
     const inactive = [];
+    const pending = [];
     let total = 0;
     (this.integrations || []).forEach(integration => {
       switch (integration.currentState) {
@@ -95,6 +107,10 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
           total = total + 1;
           inactive.push(integration);
           break;
+        case 'Pending':
+          total = total + 1;
+          pending.push(integration);
+          break;
         default:
           break;
       }
@@ -102,6 +118,7 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
     return {
       active: active,
       inactive: inactive,
+      pending: pending,
       total: total
     };
   }
@@ -114,6 +131,10 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
     return this.filterIntegrations().inactive.length;
   }
 
+  countPendingIntegrations() {
+    return this.filterIntegrations().pending.length;
+  }
+
   //-----  Recent Updates Section ------------------->>
 
   getLabelClass(integration): string {
@@ -123,8 +144,6 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
         return 'label-primary';
       case 'Unpublished':
         return 'label-default';
-      case 'Draft':
-        return 'label-warning';
     }
   }
 

@@ -1,6 +1,6 @@
 <syndesis-loading [loading]="!integration">
   <dl class="dl-horizontal" *ngIf="integration?.isDraft">
-    <dt>Draft:</dt>
+    <dt>{{ 'draft' | synI18n }}:</dt>
     <dd>
       <div class="list-pf">
         <div class="list-pf-item">
@@ -8,15 +8,15 @@
             <div class="list-pf-content list-pf-content-flex">
               <div class="pfng-list-content">
                 <div class="list-pf-left">
-                  <em>Draft</em>
+                  <em>{{ 'draft' | synI18n }}</em>
                 </div>
               </div>
               <div class="list-pf-actions">
                 <syndesis-button theme="default" (click)="onDraftAction('publish')" type="button">
-                  Publish
+                  {{ 'publish-draft' | synI18n }}
                 </syndesis-button>
                 <syndesis-button theme="default" (click)="onDraftAction('edit')" type="button">
-                  Edit
+                  {{ 'edit' | synI18n }}
                 </syndesis-button>
               </div>
             </div>
@@ -26,7 +26,7 @@
     </dd>
   </dl>
   <dl class="dl-horizontal" *ngIf="integration?.deployments && integration?.deployments.length">
-    <dt>History:</dt>
+    <dt>{{ 'history' | synI18n }}:</dt>
     <dd>
       <pfng-list
         [items]="integration?.deployments | objectPropertySort:{ sortField: 'version', descending: true }"
@@ -55,12 +55,12 @@
           <div class="list-pf-content-wrapper">
             <div class="list-pf-main-content">
               <div class="list-pf-title">
-                Version: {{ deployment.version }}
+                {{ 'version' | synI18n }}: {{ deployment.version }}
               </div>
             </div>
           </div>
           <div class="list-pf-additional-content">
-            <span *ngIf="deployment.updatedAt">Last published on {{ deployment.updatedAt | date:'medium' }}</span>
+            <span *ngIf="deployment.updatedAt">{{ 'last-published-on' | synI18n }} {{ deployment.updatedAt | date:'medium' }}</span>
             <span>{{ deployment.timesUsed | i18nPlural:usesMapping }} </span>
           </div>
         </ng-template>
@@ -68,7 +68,7 @@
           <div class="row">
             <div class="col-md-6">
               <dl class="dl-horizontal" *ngIf="deployment.createdAt">
-                <dt>Created at:</dt>
+                <dt>{{ 'created-at' | synI18n }}:</dt>
                 <dd>{{ deployment.createdAt | date:'medium' }}</dd>
               </dl>
             </div>
