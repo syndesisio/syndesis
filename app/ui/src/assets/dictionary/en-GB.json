@@ -128,6 +128,8 @@
       "networkoffline": "Your internet connection has been interrupted",
       "httperror": "The server returned an error",
       "httperrordefaultmsg": "Your request could not be completed. Please try again.",
+      "httpconnectfailurehdr": "An error occurred connecting to the server.",
+      "httpconnectfailuremsg": "Failed to communicate with the server, try refreshing the page, or check the javascript console for more information.",
       "syndesis000": "An unknown error has occurred",
       "syndesis001": "There are parameter updates. Click <strong>Edit</strong> to update parameter settings.",
       "syndesis002": "One or more properties have been updated or removed",

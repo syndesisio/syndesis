@@ -276,7 +276,7 @@ export abstract class AbstractStore<
     let errorMessage: any;
     switch (typeof error) {
       case 'object':
-        if (error['data']) {
+        if (error['data'] && error['data'] instanceof Array) {
           errorMessage = error['data'].map(e => e.message).join(' ');
         } else {
           errorMessage = error;
