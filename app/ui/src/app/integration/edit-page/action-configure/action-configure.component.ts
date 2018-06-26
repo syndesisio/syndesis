@@ -142,6 +142,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
                     error.userMsg ||
                     error.developerMsg
                 };
+                this.loading = false;
               });
           } else {
             /* All done... */
