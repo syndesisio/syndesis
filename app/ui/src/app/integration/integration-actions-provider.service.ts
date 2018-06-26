@@ -9,7 +9,8 @@ import { Integration,
   Step,
   PENDING,
   PUBLISHED,
-  UNPUBLISHED } from '@syndesis/ui/platform';
+  UNPUBLISHED,
+  I18NService } from '@syndesis/ui/platform';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { log } from '@syndesis/ui/logging';
@@ -32,6 +33,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     public modalService: ModalService,
     public application: ApplicationRef,
     public integrationSupportService: IntegrationSupportService,
+    private i18NService: I18NService,
   ) {
     super();
   }
@@ -64,33 +66,31 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
             saveAs(value, integration.name + '-export.zip');
           });
       case 'replaceDraft':
-        header = 'Updating draft.';
-        message = 'Replacing the current draft of the integration';
-        danger = 'Failed to update integration draft';
-        reason = 'Error updating integration';
+        header = this.i18NService.localize('updating-draft-header');
+        message = this.i18NService.localize('updating-draft-message');
+        danger = this.i18NService.localize('updating-draft-danger');
+        reason = this.i18NService.localize('updating-draft-reason');
         request = this.requestReplaceDraft(integration, deployment);
         break;
       case 'publish':
-        header = 'Publishing integration.';
-        message =
-          'Your integration will start running in a few moments.';
-        danger = 'Failed to publish integration';
-        reason = 'Error publishing integration';
+        header = this.i18NService.localize('publishing-integration-header');
+        message = this.i18NService.localize('publishing-integration-message');
+        danger = this.i18NService.localize('publishing-integration-danger');
+        reason = this.i18NService.localize('publishing-integration-reason');
         request = this.requestPublish(integration);
         break;
       case 'unpublish':
-        header = 'Unpublishing integration.';
-        message =
-          'It takes a few moments to unpublish the integration.';
-        danger = 'Failed to unpublish integration';
-        reason = 'Error unpublishing integration';
+        header = this.i18NService.localize('unpublishing-integration-header');
+        message = this.i18NService.localize('unpublishing-integration-message');
+        danger = this.i18NService.localize('unpublishing-integration-danger');
+        reason = this.i18NService.localize('unpublishing-integration-reason');
         request = this.requestDeactivate(integration);
         break;
       case 'delete':
-        header = 'Delete Successful.';
-        message = 'Integration successfully deleted.';
-        danger = 'Failed to delete integration';
-        reason = 'Error deleting integration';
+        header = this.i18NService.localize('delete-integration-header');
+        message = this.i18NService.localize('delete-integration-message');
+        danger = this.i18NService.localize('delete-integration-danger');
+        reason = this.i18NService.localize('delete-integration-reason');
         request = this.requestDelete(integration);
         break;
       default:
@@ -251,17 +251,16 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     this.modalTitle =  'Confirm';
     switch (action) {
       case 'replaceDraft':
-        this.modalMessage = 'Are you sure you would like to replace the current draft for the \
-        \'' + this.selectedIntegration.name + '\' integration?';
+        this.modalMessage = this.i18NService.localize('update-draft-modal', [this.selectedIntegration.name]);
         break;
       case 'publish':
-        this.modalMessage = 'Are you sure you would like to publish the \'' + this.selectedIntegration.name + '\' integration?';
+        this.modalMessage = this.i18NService.localize('publish-integration-modal', [this.selectedIntegration.name]);
         break;
       case 'unpublish':
-        this.modalMessage = 'Are you sure you would like to unpublish the \'' + this.selectedIntegration.name + '\' integration?';
+        this.modalMessage = this.i18NService.localize('unpublish-integration-modal', [this.selectedIntegration.name]);
         break;
       default:
-        this.modalMessage = 'Are you sure you would like to delete the \'' + this.selectedIntegration.name + '\' integration?';
+        this.modalMessage = this.i18NService.localize('delete-integration-modal', [this.selectedIntegration.name]);
     }
   }
 }

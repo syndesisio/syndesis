@@ -11,13 +11,13 @@ import { IntegrationOverview } from '@syndesis/ui/platform';
         <div class="spinner spinner-sm spinner-inline"></div>
         <ng-container [ngSwitch]="integration.targetState">
           <ng-container *ngSwitchCase="'Published'">
-            Publishing
+            {{ 'integrations.publishing' | synI18n }}
           </ng-container>
           <ng-container *ngSwitchCase="'Unpublished'">
-            Unpublishing
+            {{ 'integrations.unpublishing' | synI18n }}
           </ng-container>
           <ng-container *ngSwitchDefault>
-            Pending
+            {{ 'integrations.pending' | synI18n }}
           </ng-container>
         </ng-container>
       </div>
@@ -25,7 +25,7 @@ import { IntegrationOverview } from '@syndesis/ui/platform';
       <div *ngIf="integration.currentState !== 'Pending'"
             class="status not-pending">
         <span class="label label-{{ getLabelClass(integration.currentState) }}">
-          {{ getStatusText(integration.currentState) }}
+          {{ 'integrations.' + integration.currentState | synI18n }}
         </span>
       </div>
     </div>
@@ -42,17 +42,6 @@ export class IntegrationStatusComponent {
         return 'primary';
       case 'Unpublished':
         return 'inactive';
-      default:
-        return currentState;
-    }
-  }
-
-  getStatusText(currentState): string | any {
-    switch (currentState) {
-      case 'Published':
-        return 'Published';
-      case 'Unpublished':
-        return 'Unpublished';
       default:
         return currentState;
     }

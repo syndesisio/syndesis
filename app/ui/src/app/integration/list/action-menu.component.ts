@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Integration, IntegrationActionsService } from '@syndesis/ui/platform';
+import { Integration, IntegrationActionsService, I18NService } from '@syndesis/ui/platform';
 import {
   Action, ActionConfig
 } from 'patternfly-ng';
@@ -21,7 +21,8 @@ export class IntegrationActionMenuComponent implements OnInit {
   @Input() integration: Integration;
   actionConfig: ActionConfig;
 
-  constructor(public integrationActionsService: IntegrationActionsService) { }
+  constructor(public integrationActionsService: IntegrationActionsService,
+              private i18NService: I18NService) { }
 
   ngOnInit() {
     this.actionConfig = {
@@ -33,54 +34,54 @@ export class IntegrationActionMenuComponent implements OnInit {
     if (this.showViewAction) {
       this.actionConfig.moreActions.push({
         id: 'view',
-        title: 'View',
-        tooltip: `View ${this.integration.name}`,
+        title: this.i18NService.localize('view'),
+        tooltip: this.i18NService.localize('view-thing', [this.integration.name]),
       });
     }
     if (!this.showPrimaryActions) {
       this.actionConfig.moreActions.push({
         id: 'edit',
-        title: 'Edit',
-        tooltip: `Edit ${this.integration.name}`
+        title: this.i18NService.localize('edit'),
+        tooltip: this.i18NService.localize('edit-thing', [this.integration.name]),
       });
     }
     this.actionConfig.moreActions.push({
       id: 'publish',
-      title: 'Publish',
-      tooltip: `Publish ${this.integration.name}`,
+      title: this.i18NService.localize('integrations.publish'),
+      tooltip: this.i18NService.localize('integrations.publish-thing', [this.integration.name]),
       visible: this.integrationActionsService.canActivate(this.integration)
 
     });
     this.actionConfig.moreActions.push({
       id: 'unpublish',
-      title: 'Unpublish',
-      tooltip: `Unpublish ${this.integration.name}`,
+      title: this.i18NService.localize('integrations.unpublish'),
+      tooltip: this.i18NService.localize('integrations.unpublish-thing', [this.integration.name]),
       visible: this.integrationActionsService.canDeactivate(this.integration)
     });
     this.actionConfig.moreActions.push({
       id: 'delete',
-      title: 'Delete',
-      tooltip: `Delete ${this.integration.name}`
+      title: this.i18NService.localize('delete'),
+      tooltip: this.i18NService.localize('delete-thing', [this.integration.name]),
     });
     if (!this.showPrimaryActions) {
       this.actionConfig.moreActions.push({
         id: 'export',
-        title: 'Export',
-        tooltip: `Export ${this.integration.name}`,
+        title: this.i18NService.localize('export'),
+        tooltip: this.i18NService.localize('export-thing', [this.integration.name]),
       });
     }
     if (this.showPrimaryActions) {
       this.actionConfig.primaryActions.push({
         id: 'export',
         styleClass: 'btn btn-default',
-        title: 'Export',
-        tooltip: `Export ${this.integration.name}`
+        title: this.i18NService.localize('export'),
+        tooltip: this.i18NService.localize('export-thing', [this.integration.name]),
       });
       this.actionConfig.primaryActions.push({
         id: 'edit',
         styleClass: 'btn btn-primary',
-        title: 'Edit Integration',
-        tooltip: `Edit ${this.integration.name}`
+        title: this.i18NService.localize('integrations.edit-integration'),
+        tooltip: this.i18NService.localize('edit-thing', [this.integration.name]),
       });
     }
   }
