@@ -9,10 +9,14 @@
     <h4 class="modal-title">{{ title }}</h4>
   </div>
   <div class="modal-body">
-    <p>{{ message }}</p>
-    <ng-template *ngIf="body"
-                 [ngTemplateOutlet]="body"
-                 [ngTemplateOutletContext]="{ modal: this }"></ng-template>
+    <span *ngIf="type == 'delete'" aria-hidden="true" class="pficon pficon-error-circle-o"></span>
+    <div>
+      <p *ngIf="lead" class="lead">{{ lead }}</p>
+      <p>{{ message }}</p>
+      <ng-template *ngIf="body"
+                   [ngTemplateOutlet]="body"
+                   [ngTemplateOutletContext]="{ modal: this }"></ng-template>
+    </div>
   </div>
   <div class="modal-footer">
     <button type="button"
@@ -20,7 +24,15 @@
             (click)="cancel()">
       Cancel
     </button>
-    <button type="button"
+
+    <button *ngIf="type == 'delete'"
+            type="button"
+            class="btn btn-danger"
+            (click)="ok()">
+        Delete
+    </button>
+    <button *ngIf="!type"
+            type="button"
             class="btn btn-primary"
             (click)="ok()">
       OK
