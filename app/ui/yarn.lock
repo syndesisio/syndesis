@@ -5584,9 +5584,9 @@ patternfly-sass@3.23.2:
     patternfly-bootstrap-combobox "~1.1.7"
     patternfly-bootstrap-treeview "~2.1.0"
 
-patternfly@3.49.0:
-  version "3.49.0"
-  resolved "https://registry.yarnpkg.com/patternfly/-/patternfly-3.49.0.tgz#1c019601cfe11d02ec4d38fe23a465d51b97cd95"
+patternfly@3.51.2:
+  version "3.51.2"
+  resolved "https://registry.yarnpkg.com/patternfly/-/patternfly-3.51.2.tgz#6a2cf76377495ebea8f1f17329bcf87e07f2f61a"
   dependencies:
     bootstrap "~3.3.7"
     font-awesome "^4.7.0"
