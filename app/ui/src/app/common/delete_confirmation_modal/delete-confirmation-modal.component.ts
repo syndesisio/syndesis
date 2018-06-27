@@ -13,10 +13,9 @@ import { Component, Output, EventEmitter, Input } from '@angular/core';
     <h4 class="modal-title">{{ title }}</h4>
   </div>
   <div class="modal-body">
-    <div class="row">
-      <div class="col-xs-12">
-        <ng-content></ng-content>
-      </div>
+    <span aria-hidden="true" class="pficon pficon-error-circle-o"></span>
+    <div>
+      <ng-content></ng-content>
     </div>
   </div>
   <div class="modal-footer">
