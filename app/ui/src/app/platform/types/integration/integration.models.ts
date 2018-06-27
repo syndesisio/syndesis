@@ -58,6 +58,7 @@ export interface Integration extends IntegrationOverview {
   deploymentId?: number;
   updatedAt: number;
   createdAt: number;
+  url: string;
 }
 
 export type Integrations = Array<Integration>;

@@ -1,0 +1,62 @@
+{
+  "id": "webhook",
+  "name": "Webhook",
+  "description": "Create direct connections with external systems through Webhooks",
+  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ijk0NCAtNzcxIDI1MDAgMjMzNCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyA5NDQgLTc3MSAyNTAwIDIzMzQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNDNzNBNjM7fQ0KCS5zdDF7ZmlsbDojNEI0QjRCO30NCgkuc3Qye2ZpbGw6IzRBNEE0QTt9DQo8L3N0eWxlPg0KPGc+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTIxMTEuNCwyMTAuNWMtMTAzLjYsMTc0LjItMjAyLjksMzQyLjktMzA0LjIsNTEwLjNjLTI2LDQzLTM4LjksNzgtMTguMSwxMzIuNg0KCQljNTcuNCwxNTAuOS0yMy42LDI5Ny44LTE3NS44LDMzNy42Yy0xNDMuNSwzNy42LTI4My40LTU2LjctMzExLjgtMjEwLjRjLTI1LjItMTM2LDgwLjMtMjY5LjMsMjMwLjMtMjkwLjYNCgkJYzEyLjYtMS44LDI1LjQtMiw0Ni41LTMuNmwyMjguMS0zODIuNWMtMTQzLjUtMTQyLjctMjI4LjktMzA5LjQtMjEwLTUxNmMxMy40LTE0Ni4xLDcwLjgtMjcyLjMsMTc1LjgtMzc1LjgNCgkJQzE5NzMuMi03ODYsMjI4MC04MTguMSwyNTE2LjctNjY2YzIyNy40LDE0Ni4xLDMzMS41LDQzMC42LDI0Mi44LDY3NC4xYy02Ni45LTE4LjEtMTM0LjMtMzYuNC0yMDguNC01Ni41DQoJCWMyNy45LTEzNS40LDcuMy0yNTctODQuMS0zNjEuMWMtNjAuMy02OC44LTEzNy44LTEwNC44LTIyNS44LTExOC4xYy0xNzYuNS0yNi43LTM0OS44LDg2LjctNDAxLjIsMjU5LjkNCgkJQzE3ODEuNy03MS4xLDE4NzAsODkuNSwyMTExLjQsMjEwLjVMMjExMS40LDIxMC41eiIvPg0KCTxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0yNDA3LjMsNC41YzczLDEyOC44LDE0Ny4xLDI1OS41LDIyMC42LDM4OWMzNzEuMy0xMTQuOSw2NTEuMiw5MC43LDc1MS43LDMxMC43DQoJCWMxMjEuMywyNjUuOCwzOC40LDU4MC42LTE5OS45LDc0NC42Yy0yNDQuNSwxNjguMy01NTMuOCwxMzkuNi03NzAuNC03Ni43YzU1LjItNDYuMiwxMTAuNy05Mi42LDE3MC0xNDIuMg0KCQljMjE0LDEzOC42LDQwMS4xLDEzMi4xLDU0MC4xLTMyLjFjMTE4LjUtMTQwLDExNS45LTM0OC44LTYtNDg1LjhjLTE0MC43LTE1OC4yLTMyOS4yLTE2My01NTctMTEuMg0KCQljLTk0LjUtMTY3LjctMTkwLjYtMzM0LTI4Mi4yLTUwMi44Yy0zMC45LTU2LjktNjQuOS04OS45LTEzNC41LTEwMmMtMTE2LjEtMjAuMS0xOTEuMS0xMTkuOS0xOTUuNi0yMzEuNg0KCQljLTQuNC0xMTAuNSw2MC43LTIxMC40LDE2Mi40LTI0OS4zYzEwMC44LTM4LjYsMjE5LjEtNy40LDI4Ni45LDc4LjNjNTUuNCw3MCw3MywxNDguOCw0My45LDIzNS4yDQoJCUMyNDI5LjItNDcuMywyNDE4LjctMjQsMjQwNy4zLDQuNUwyNDA3LjMsNC41eiIvPg0KCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0yNTgxLjgsMTA1Ny4yaC00NDdjLTQyLjgsMTc2LjItMTM1LjQsMzE4LjUtMjk0LjgsNDA4LjljLTEyNCw3MC4zLTI1Ny41LDk0LjItMzk5LjcsNzEuMg0KCQljLTI2MS44LTQyLjItNDc1LjktMjc3LjktNDk0LjctNTQzLjNjLTIxLjMtMzAwLjYsMTg1LjMtNTY3LjgsNDYwLjctNjI3LjljMTksNjkuMSwzOC4yLDEzOC44LDU3LjIsMjA3LjcNCgkJYy0yNTIuNywxMjguOS0zNDAuMiwyOTEuNC0yNjkuNCw0OTQuNWM2Mi4zLDE3OC44LDIzOS4xLDI3Ni43LDQzMS4xLDIzOC44YzE5Ni4xLTM4LjcsMjk1LTIwMS43LDI4Mi45LTQ2My4yDQoJCWMxODUuOSwwLDM3Mi0xLjksNTU3LjksMC45YzcyLjYsMS4xLDEyOC42LTYuNCwxODMuMy03MC40YzkwLTEwNS4zLDI1NS44LTk1LjgsMzUyLjcsMy43Yzk5LjEsMTAxLjcsOTQuNCwyNjUuMi0xMC41LDM2Mi42DQoJCWMtMTAxLjIsOTMuOS0yNjEsODguOS0zNTUuNy0xMi4zQzI2MTYuMywxMTA3LjYsMjYwMSwxMDgyLjksMjU4MS44LDEwNTcuMkwyNTgxLjgsMTA1Ny4yeiIvPg0KPC9nPg0KPC9zdmc+DQo=",
+  "dependencies": [
+    {
+      "type": "MAVEN",
+      "id": "@project.groupId@:@project.artifactId@:@project.version@"
+    }
+  ],
+  "actions": [
+    {
+      "name": "Incoming Webhook",
+      "description": "Start a Syndesis integration from a Webhook",
+      "id": "io.syndesis:webhook-incoming",
+      "pattern": "From",
+      "actionType": "connector",
+      "tags": ["expose"],
+      "metadata": {
+        "serverBasePath": "/webhook"
+      },
+      "descriptor": {
+        "componentScheme": "servlet",
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+        ],
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "configuredProperties": {
+          "httpMethodRestrict": "GET,POST"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Webhook Configuration",
+            "name": "configuration",
+            "properties": {
+              "contextPath": {
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "The Webhook token that will be set as final part of the URL",
+                "displayName": "Webhook Token",
+                "javaType": "String",
+                "kind": "parameter",
+                "required": true,
+                "secret": false,
+                "type": "string",
+                "tags": ["context-path"],
+                "enum": [],
+                "generator": "alphanum:50"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

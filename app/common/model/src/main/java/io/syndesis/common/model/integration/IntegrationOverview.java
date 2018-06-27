@@ -58,6 +58,8 @@ public interface IntegrationOverview extends WithId<IntegrationOverview>, Integr
         return IntegrationBulletinBoard.emptyBoard();
     }
 
+    Optional<String> getUrl();
+
     // ******************
     // Builder
     // ******************

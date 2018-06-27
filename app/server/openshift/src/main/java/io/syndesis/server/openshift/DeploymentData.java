@@ -28,6 +28,8 @@ public class DeploymentData {
     private String image;
     private int version;
 
+    private Exposure exposure = Exposure.NONE;
+
     public Map<String, String> getAnnotations() {
         return annotations;
     }
@@ -46,6 +48,10 @@ public class DeploymentData {
 
     public String getImage() {
         return image;
+    }
+
+    public Exposure getExposure() {
+        return exposure;
     }
 
     public static Builder builder() {
@@ -94,6 +100,11 @@ public class DeploymentData {
 
         public DeploymentData.Builder withVersion(int version) {
             that.version = version;
+            return this;
+        }
+
+        public DeploymentData.Builder withExposure(Exposure exposure) {
+            that.exposure = exposure;
             return this;
         }
     }

@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import io.fabric8.openshift.api.model.DeploymentConfig;
@@ -83,5 +84,10 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     @Override
     public boolean isBuildStarted(String name) {
         return false;
+    }
+
+    @Override
+    public Optional<String> getExposedHost(String name) {
+        return Optional.empty();
     }
 }

@@ -64,7 +64,7 @@ public class DataManagerTest {
         @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
-            .contains("activemq", "amqp", "ftp","sftp", "sql", "salesforce", "twitter", "aws-s3", "mqtt", "http4", "https4", "dropbox", "slack", "gmail");
+            .contains("activemq", "amqp", "ftp","sftp", "sql", "salesforce", "twitter", "aws-s3", "mqtt", "http4", "https4", "dropbox", "slack", "gmail", "webhook");
         Assert.assertTrue(connectors.getTotalCount() > 1);
         Assert.assertTrue(connectors.getItems().size() > 1);
         Assert.assertTrue(connectors.getTotalCount() >= connectors.getItems().size());
@@ -73,9 +73,9 @@ public class DataManagerTest {
     @Test
     public void getConnections() {
         ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
-        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsOnly("5");
-        Assert.assertEquals(1, connections.getTotalCount());
-        Assert.assertEquals(1, connections.getItems().size());
+        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsOnly("5", "webhook");
+        Assert.assertEquals(2, connections.getTotalCount());
+        Assert.assertEquals(2, connections.getItems().size());
         Assert.assertEquals(connections.getTotalCount(), connections.getItems().size());
     }
 
