@@ -412,16 +412,6 @@
             </executions>
           </plugin>
           <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>findbugs-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>default</id>
-                <phase />
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
             <artifactId>maven-pmd-plugin</artifactId>
             <executions>
               <execution>
@@ -642,6 +632,12 @@
         </plugin>
 
         <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>3.1.5</version>
+        </plugin>
+
+        <plugin>
           <groupId>org.basepom.maven</groupId>
           <artifactId>duplicate-finder-maven-plugin</artifactId>
           <configuration>
@@ -716,6 +712,22 @@
             </evaluateBeanshell>
           </rules>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
       </plugin>
 
     </plugins>
