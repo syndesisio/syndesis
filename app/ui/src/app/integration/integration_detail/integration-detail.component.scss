@@ -8,6 +8,13 @@
 
   &__info {
     margin-bottom: 10px;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+
+  &__name {
+    margin-right: $gutter;
   }
 
   &__row {

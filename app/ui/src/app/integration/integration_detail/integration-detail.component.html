@@ -29,23 +29,25 @@
     </div>
     <div class="integration-detail__body row syn-scrollable--body">
       <div class="integration-detail__info integration-detail__row">
-        <h1 class="inline-block">
+        <h1 class="integration-detail__name">
           <syndesis-editable-text [value]="integration.name" [validationFn]="validateName" (onSave)="nameUpdated(integration.id, $event)"></syndesis-editable-text>
         </h1>
-        <ng-container [ngSwitch]="integration.currentState">	 
-          <ng-container *ngSwitchCase="'Pending'">	  
-            <div class="spinner spinner-sm spinner-inline"></div> {{ (integration.targetState == 'Published' ? 'integrations.publishing' : 'integrations.unpublishing') | synI18n }}
+        <div>
+          <ng-container [ngSwitch]="integration.currentState">	 
+            <ng-container *ngSwitchCase="'Pending'">	  
+              <div class="spinner spinner-sm spinner-inline"></div> {{ (integration.targetState == 'Published' ? 'integrations.publishing' : 'integrations.unpublishing') | synI18n }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'Published'">
+              <span class="pficon pficon-ok"></span> {{ 'published-integration' | synI18n }} version {{ integration.deploymentVersion }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'Unpublished'">
+              {{ 'integrations.unpublished' | synI18n }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'Error'">
+              <span class="pficon pficon-error"></span> {{ 'integrations.' + integration.currentState | synI18n }}<span *ngIf="integration.deploymentVersion"> version {{ integration.deploymentVersion }}</span>
+            </ng-container>
           </ng-container>
-          <ng-container *ngSwitchCase="'Published'">
-            <span class="pficon pficon-ok"></span> {{ 'published-integration' | synI18n }} version {{ integration.deploymentVersion }}
-          </ng-container>
-          <ng-container *ngSwitchCase="'Unpublished'">
-            {{ 'integrations.unpublished' | synI18n }}
-          </ng-container>
-          <ng-container *ngSwitchCase="'Error'">
-            <span class="pficon pficon-error"></span> {{ 'integrations.' + integration.currentState | synI18n }}<span *ngIf="integration.deploymentVersion"> version {{ integration.deploymentVersion }}</span>
-          </ng-container>
-        </ng-container>
+        </div>
       </div>
 
       <div *ngIf="integration.board?.messages && integration.board?.messages.length" class="integration-detail__row">        
