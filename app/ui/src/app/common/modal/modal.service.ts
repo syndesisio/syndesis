@@ -18,7 +18,7 @@ export class ModalService {
 
   show(id = 'modal'): Promise<Modal> {
     const modal = this.registeredModals.get(id);
-    modal.bsModalRef = this.bsModalService.show(modal.template, { ignoreBackdropClick: true });
+    modal.bsModalRef = this.bsModalService.show(modal.template, { ignoreBackdropClick: true, class: 'message-dialog-pf' });
     return this.bsModalService.onHide
       .take(1)
       .toPromise()

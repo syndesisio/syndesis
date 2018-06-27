@@ -13,4 +13,5 @@ export abstract class IntegrationActionsService {
   abstract getFinish(integration: Integration): Step;
   abstract getModalTitle(): string;
   abstract getModalMessage(): string;
+  abstract getModalType(): string;
 }

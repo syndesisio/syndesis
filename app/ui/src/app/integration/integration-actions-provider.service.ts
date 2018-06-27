@@ -24,6 +24,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   selectedIntegration: Integration | IntegrationOverview ;
   modalTitle: string;
   modalMessage: string;
+  modalType: string;
 
   constructor(
     public store: IntegrationStore,
@@ -125,6 +126,10 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
 
   getModalMessage() {
     return this.modalMessage || '';
+  }
+
+  getModalType() {
+    return this.modalType || '';
   }
 
   doAction(action: string, integration: Integration | IntegrationOverview, deployment?: IntegrationDeployment | DeploymentOverview) {
@@ -252,15 +257,19 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     switch (action) {
       case 'replaceDraft':
         this.modalMessage = this.i18NService.localize('update-draft-modal', [this.selectedIntegration.name]);
+        this.modalType = '';
         break;
       case 'publish':
         this.modalMessage = this.i18NService.localize('publish-integration-modal', [this.selectedIntegration.name]);
+        this.modalType = '';
         break;
       case 'unpublish':
         this.modalMessage = this.i18NService.localize('unpublish-integration-modal', [this.selectedIntegration.name]);
+        this.modalType = '';
         break;
       default:
         this.modalMessage = this.i18NService.localize('delete-integration-modal', [this.selectedIntegration.name]);
+        this.modalType = 'delete';
     }
   }
 }
