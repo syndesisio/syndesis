@@ -95,8 +95,15 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     if (this.position > 0) {
       direction = 'input';
     }
-    this.router.navigate(['describe-data', this.position, direction], {
-      relativeTo: this.route.parent
+    this.currentFlowService.events.emit({
+      kind: 'integration-set-metadata',
+      position: this.position,
+      metadata: { configured: true },
+      onSave: () => {
+        this.router.navigate(['describe-data', this.position, direction], {
+          relativeTo: this.route.parent
+        });
+      }
     });
   }
 
@@ -209,7 +216,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       return;
     }
     this.isShapeless = this.currentFlowService.isActionShapeless(descriptor);
-    if (this.hasActionPropertiesToDisplay(descriptor)) {
+    if (this.hasNoActionPropertiesToDisplay(descriptor)) {
       this.loading = false;
       // TODO figure out how to get a link in here that works
       this.error = {
@@ -217,6 +224,10 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
         icon: 'pficon pficon-info',
         message: 'There are no properties to configure for this action.'
       };
+      const metadata = this.step.metadata || {};
+      if (!metadata.configured) {
+        this.finishUp();
+      }
       return;
     }
     const lastPage = (this.lastPage =
@@ -247,7 +258,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     }, 30);
   }
 
-  hasActionPropertiesToDisplay(descriptor: ActionDescriptor) {
+  hasNoActionPropertiesToDisplay(descriptor: ActionDescriptor) {
     return !descriptor || descriptor === undefined ||
       descriptor.propertyDefinitionSteps === undefined ||
       Object.keys(descriptor.propertyDefinitionSteps[0]).length === 0;

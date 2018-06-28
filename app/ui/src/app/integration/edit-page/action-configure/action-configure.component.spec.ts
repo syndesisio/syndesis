@@ -64,7 +64,7 @@ describe('IntegrationConfigureActionComponent', () => {
         const step: ActionDescriptorStep = { configuredProperties: {} } as ActionDescriptorStep;
         const propertyDefinitionSteps: Array<ActionDescriptorStep> = [step];
         const descriptor: ActionDescriptor = { propertyDefinitionSteps } as ActionDescriptor;
-        expect(component.hasActionPropertiesToDisplay(descriptor)).toBeFalsy();
+        expect(component.hasNoActionPropertiesToDisplay(descriptor)).toBeFalsy();
     });
 
 });
