@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.handler.atlas;
 
+import io.atlasmap.api.AtlasException;
 import io.atlasmap.service.AtlasService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -25,4 +26,9 @@ import javax.ws.rs.Path;
 @ConditionalOnProperty(name="atlas.enabled", havingValue = "true", matchIfMissing = true)
 @Path("/atlas")
 public class SyndesisAtlasService extends AtlasService {
+
+    public SyndesisAtlasService() throws AtlasException {
+        super();
+    }
+
 }
