@@ -14,6 +14,7 @@
         <include>ruleset.xml</include>
         <include>checkstyle.xml</include>
         <include>checkstyle-suppressions.xml</include>
+        <include>checkstyle-suppressions-xpath.xml</include>
       </includes>
     </fileSet>
     <fileSet>

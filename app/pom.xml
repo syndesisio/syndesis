@@ -14,7 +14,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -46,7 +47,6 @@
     <image.meta>syndesis/syndesis-meta:%l</image.meta>
     <image.ui>syndesis/syndesis-ui:%l</image.ui>
 
-
     <fabric8.maven.plugin.version>3.5.38</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
     <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
@@ -58,14 +58,21 @@
 
     <jackson.version>2.8.10</jackson.version>
     <json-patch.version>1.9</json-patch.version>
-    <kubernetes.client.version>2.4.1</kubernetes.client.version>
+    <kubernetes.client.version>3.1.4</kubernetes.client.version>
 
     <spring.version>4.3.12.RELEASE</spring.version>
     <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
+    <spring-cloud.version>Dalston.SR5</spring-cloud.version>
 
-    <swagger.version>1.5.19</swagger.version>
+    <swagger.version>1.5.20</swagger.version>
 
-    <activemq.version>5.15.2</activemq.version>
+    <activemq.version>5.15.4</activemq.version>
+
+    <arquillian.version>1.4.0.Final</arquillian.version>
+
+    <maven.version>3.5.4</maven.version>
+
+    <errorprone.version>2.3.1</errorprone.version>
 
     <!-- Global camel version used everywhere -->
     <camel.version>2.21.0.fuse-000094</camel.version>
@@ -75,6 +82,7 @@
     <dep.pmd.version>5.8.1</dep.pmd.version>
     <dep.plugin.surefire.version>2.21.0</dep.plugin.surefire.version> <!-- SUREFIRE-1422 -->
     <dep.plugin.failsafe.version>2.21.0</dep.plugin.failsafe.version> <!-- SUREFIRE-1422 -->
+    <dep.checkstyle.version>8.10.1</dep.checkstyle.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
     <basepom.test.fork-count>1</basepom.test.fork-count>
@@ -481,51 +489,51 @@
       </build>
     </profile>
 
-	<profile>
-	  <id>non-m2e</id>
-	  <activation>
-	    <property>
-	      <name>!m2e.version</name>
-	    </property>
-	  </activation>
-	  <build>
-	    <plugins>
-	      <plugin>
-	        <artifactId>maven-compiler-plugin</artifactId>
-	        <configuration>
-	          <compilerId>javac-with-errorprone</compilerId>
-	          <forceJavacCompilerUse>true</forceJavacCompilerUse>
-	          <compilerArgs>
-	            <arg>-Xlint:all</arg>
-	            <arg>-Xlint:-deprecation</arg>
-	            <arg>-Xlint:-processing</arg>
-	            <arg>-Xlint:-serial</arg>
-	            <arg>-Werror</arg>
-	            <arg>-XepDisableWarningsInGeneratedCode</arg>
-	            <arg>-XepExcludedPaths:.*/generated-sources/.*</arg>
-	            <arg>-implicit:none</arg>
+    <profile>
+      <id>non-m2e</id>
+      <activation>
+        <property>
+          <name>!m2e.version</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerId>javac-with-errorprone</compilerId>
+              <forceJavacCompilerUse>true</forceJavacCompilerUse>
+              <compilerArgs>
+                <arg>-Xlint:all</arg>
+                <arg>-Xlint:-deprecation</arg>
+                <arg>-Xlint:-processing</arg>
+                <arg>-Xlint:-serial</arg>
+                <arg>-Werror</arg>
+                <arg>-XepDisableWarningsInGeneratedCode</arg>
+                <arg>-XepExcludedPaths:.*/generated-sources/.*</arg>
+                <arg>-implicit:none</arg>
 	            <!-- temporary disable until https://github.com/google/error-prone/issues/780 is resolved -->
-	            <arg>-Xep:ParameterName:OFF</arg>
-	          </compilerArgs>
-	        </configuration>
-	        <dependencies>
-	          <dependency>
-	            <groupId>org.codehaus.plexus</groupId>
-	            <artifactId>plexus-compiler-javac-errorprone</artifactId>
-	            <version>2.8.4</version>
-	          </dependency>
+                <arg>-Xep:ParameterName:OFF</arg>
+              </compilerArgs>
+            </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-compiler-javac-errorprone</artifactId>
+                <version>2.8.4</version>
+              </dependency>
 	          <!-- override plexus-compiler-javac-errorprone's dependency on
 	           Error Prone with the latest version -->
-	          <dependency>
-	            <groupId>com.google.errorprone</groupId>
-	            <artifactId>error_prone_core</artifactId>
-	            <version>2.3.1</version>
-	          </dependency>
-	        </dependencies>
-	      </plugin>
-	    </plugins>
-	  </build>
-	</profile>
+              <dependency>
+                <groupId>com.google.errorprone</groupId>
+                <artifactId>error_prone_core</artifactId>
+	            <version>${errorprone.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
   </profiles>
 
@@ -641,10 +649,73 @@
           <groupId>org.basepom.maven</groupId>
           <artifactId>duplicate-finder-maven-plugin</artifactId>
           <configuration>
-            <ignoredResourcePatterns combine.children="append">
+            <ignoredResourcePatterns
+              combine.children="append">
               <ignoredResourcePattern>resources/catalog.cat</ignoredResourcePattern>
               <ignoredResourcePattern>mozilla/public-suffix-list.txt</ignoredResourcePattern>
             </ignoredResourcePatterns>
+            <exceptions>
+              <exception>
+                <conflictingDependencies>
+                  <dependency>
+                    <groupId>org.apache.camel</groupId>
+                    <artifactId>camel-core</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>org.apache.camel</groupId>
+                    <artifactId>camel-catalog</artifactId>
+                  </dependency>
+                </conflictingDependencies>
+                <packages>
+                  <package>org.apache.camel.json.simple</package>
+                </packages>
+              </exception>
+              <exception>
+                <conflictingDependencies>
+                  <dependency>
+                    <groupId>org.apache.camel</groupId>
+                    <artifactId>camel-core</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>org.apache.camel</groupId>
+                    <artifactId>spi-annotations</artifactId>
+                  </dependency>
+                </conflictingDependencies>
+                <packages>
+                  <package>org.apache.camel.spi</package>
+                </packages>
+              </exception>
+              <exception>
+                <conflictingDependencies>
+                  <dependency>
+                    <groupId>xmlpull</groupId>
+                    <artifactId>xmlpull</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>xpp3</groupId>
+                    <artifactId>xpp3_min</artifactId>
+                  </dependency>
+                </conflictingDependencies>
+                <packages>
+                  <package>org.xmlpull</package>
+                </packages>
+              </exception>
+              <exception>
+                <conflictingDependencies>
+                  <dependency>
+                    <groupId>net.minidev</groupId>
+                    <artifactId>accessors-smart</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>org.ow2.asm</groupId>
+                    <artifactId>asm</artifactId>
+                  </dependency>
+                </conflictingDependencies>
+                <packages>
+                  <package>org.objectweb.asm</package>
+                </packages>
+              </exception>
+            </exceptions>
           </configuration>
         </plugin>
 
@@ -679,6 +750,78 @@
             <forkedProcessTimeoutInSeconds>120</forkedProcessTimeoutInSeconds>
           </configuration>
         </plugin>
+
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>3.5</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>templating-maven-plugin</artifactId>
+          <version>1.0.0</version>
+        </plugin>
+
+        <plugin>
+          <groupId>io.syndesis.connector</groupId>
+          <artifactId>connector-support-maven-plugin</artifactId>
+          <version>${project.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-connector-maven-plugin</artifactId>
+          <version>${camel.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-package-maven-plugin</artifactId>
+          <version>${camel.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>io.github.swagger2markup</groupId>
+          <artifactId>swagger2markup-maven-plugin</artifactId>
+          <version>1.1.0</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.github.kongchen</groupId>
+          <artifactId>swagger-maven-plugin</artifactId>
+          <version>3.1.6</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.asciidoctor</groupId>
+          <artifactId>asciidoctor-maven-plugin</artifactId>
+          <version>1.5.3</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>truezip-maven-plugin</artifactId>
+          <version>1.2</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.5.0</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.github.eirslett</groupId>
+          <artifactId>frontend-maven-plugin</artifactId>
+          <version>1.6</version>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -707,8 +850,11 @@
         <configuration>
           <rules combine.children="append">
             <evaluateBeanshell>
-              <message>Your JVM has limited cryptography, please upgrade to 1.8.0_162 or newer or install Unlimited Strength Jurisdiction Policy Files to this JVM.</message>
-              <condition>javax.crypto.Cipher.getMaxAllowedKeyLength("AES") > 128</condition>
+              <message>Your JVM has limited cryptography, please upgrade
+                to 1.8.0_162 or newer or install Unlimited Strength
+                Jurisdiction Policy Files to this JVM.</message>
+              <condition>javax.crypto.Cipher.getMaxAllowedKeyLength("AES")
+                > 128</condition>
             </evaluateBeanshell>
           </rules>
         </configuration>
@@ -741,11 +887,72 @@
     <dependencies>
 
       <!-- BOMs -->
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-spring-boot-dependencies</artifactId>
+        <version>${camel.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-bom</artifactId>
+        <version>${resteasy.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>kubernetes-client-bom-with-deps</artifactId>
+        <version>${kubernetes.client.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>kubernetes-model</artifactId>
+        <version>2.0.4</version>
+      </dependency>
 
       <dependency>
         <groupId>org.jboss.shrinkwrap.resolver</groupId>
         <artifactId>shrinkwrap-resolver-bom</artifactId>
         <version>${shrinkwrap.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.arquillian</groupId>
+        <artifactId>arquillian-bom</artifactId>
+        <version>${arquillian.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -1042,6 +1249,18 @@
 
       <!-- ============================================== -->
 
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-spring</artifactId>
+	<version>${resteasy.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jettison-provider</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
       <!-- TODO: Maybe import BOM ? -->
       <dependency>
         <groupId>org.apache.camel</groupId>
@@ -1075,6 +1294,12 @@
       </dependency>
 
       <dependency>
+        <groupId>com.github.mikegirard</groupId>
+        <artifactId>spring-social-salesforce</artifactId>
+        <version>1.3.0</version>
+      </dependency>
+
+      <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
         <version>${jackson.version}</version>
@@ -1096,6 +1321,24 @@
         <groupId>com.fasterxml.jackson.module</groupId>
         <artifactId>jackson-module-jsonSchema</artifactId>
         <version>${jackson.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>me.andrz.jackson</groupId>
+        <artifactId>jackson-json-reference-core</artifactId>
+        <version>0.2.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jdbi</groupId>
+        <artifactId>jdbi</artifactId>
+        <version>${jdbi.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.errorprone</groupId>
+        <artifactId>error_prone_annotations</artifactId>
+        <version>${errorprone.version}</version>
       </dependency>
 
       <!-- ActiveMQ deps to override Spring Boot imported pom -->
@@ -1130,7 +1373,71 @@
         <version>${maven-resolver-api.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-model</artifactId>
+        <version>${maven.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-model-builder</artifactId>
+        <version>${maven.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-core</artifactId>
+        <version>${maven.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-plugin-api</artifactId>
+        <version>${maven.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-artifact</artifactId>
+        <version>${maven.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven.plugin-tools</groupId>
+        <artifactId>maven-plugin-annotations</artifactId>
+        <version>3.5.2</version>
+      </dependency>
+
       <!-- Misc -->
+
+      <dependency>
+        <groupId>com.github.spullara.mustache.java</groupId>
+        <artifactId>compiler</artifactId>
+        <version>0.9.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>net.iharder</groupId>
+        <artifactId>base64</artifactId>
+        <version>2.3.8</version>
+      </dependency>
 
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
@@ -1152,6 +1459,42 @@
           <exclusion>
             <groupId>javax.mail</groupId>
             <artifactId>mailapi</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-core</artifactId>
+        <version>${swagger.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-parser</artifactId>
+        <version>1.0.36</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-models</artifactId>
+        <version>${swagger.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-annotations</artifactId>
+        <version>${swagger.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-jaxrs</artifactId>
+        <version>${swagger.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -1189,9 +1532,21 @@
       </dependency>
 
       <dependency>
+        <groupId>org.jboss.spec.javax.annotation</groupId>
+        <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+        <version>1.0.2.Final</version>
+      </dependency>
+
+      <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
         <version>2.5</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.2.1</version>
       </dependency>
 
       <dependency>
@@ -1230,6 +1585,12 @@
         <artifactId>assertj-core</artifactId>
         <version>${assertj-core.version}</version>
         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>2.19.0</version>
       </dependency>
 
       <!-- ========================================== -->
@@ -1358,9 +1719,29 @@
       </dependency>
 
       <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlasmap-maven-plugin</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>com.vaadin.external.google</groupId>
         <artifactId>android-json</artifactId>
         <version>0.0.20131108.vaadin1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>mockwebserver</artifactId>
+        <version>0.0.15</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.xmlunit</groupId>
+        <artifactId>xmlunit-core</artifactId>
+        <version>2.5.1</version>
+        <scope>test</scope>
       </dependency>
 
     </dependencies>
@@ -1415,28 +1796,28 @@
 
   <repositories>
     <repository>
-       <id>jboss-fuse</id>
-       <url>https://origin-repository.jboss.org/nexus/content/groups/ea</url>
+      <id>jboss-fuse</id>
+      <url>https://origin-repository.jboss.org/nexus/content/groups/ea</url>
     </repository>
     <repository>
-       <id>mrrc-redhat</id>
-       <url>https://maven.repository.redhat.com/ga</url>
+      <id>mrrc-redhat</id>
+      <url>https://maven.repository.redhat.com/ga</url>
     </repository>
   </repositories>
 
-      <pluginRepositories>
-        <pluginRepository>
-          <releases />
-          <snapshots />
-          <id>jboss_origin</id>
-          <name>jboss_origin</name>
-          <url>https://origin-repository.jboss.org/nexus/content/groups/ea</url>
-        </pluginRepository>
-        <pluginRepository>
-          <id>redhat.ga</id>
-          <name>Red Hat General Availability Repository</name>
-          <url>https://maven.repository.redhat.com/ga</url>
-        </pluginRepository>
-      </pluginRepositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <releases />
+      <snapshots />
+      <id>jboss_origin</id>
+      <name>jboss_origin</name>
+      <url>https://origin-repository.jboss.org/nexus/content/groups/ea</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>redhat.ga</id>
+      <name>Red Hat General Availability Repository</name>
+      <url>https://maven.repository.redhat.com/ga</url>
+    </pluginRepository>
+  </pluginRepositories>
 
 </project>
