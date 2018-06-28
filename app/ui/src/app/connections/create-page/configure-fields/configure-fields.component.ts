@@ -18,6 +18,7 @@ export class ConnectionsConfigureFieldsComponent
   formModel: DynamicFormControlModel[];
   formGroup: FormGroup;
   formChangesSubscription: Subscription;
+  acquiringCredentials = false;
 
   constructor(
     public current: CurrentConnectionService,
@@ -51,7 +52,10 @@ export class ConnectionsConfigureFieldsComponent
   }
 
   acquireCredentials() {
-    this.current.acquireCredentials();
+    this.acquiringCredentials = true;
+    const callback = () => this.acquiringCredentials = false;
+    // error info is directly exposed from the current connection service, just toggle the spinner from here
+    this.current.acquireCredentials().subscribe(callback, callback);
   }
 
   canDeactivate(nextState: RouterStateSnapshot) {

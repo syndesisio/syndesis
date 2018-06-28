@@ -37,7 +37,7 @@ export class ConnectorService extends RESTService<Connector, Connectors> {
   acquireCredentials(id: string) {
     // need to save the state of the app a bit since this
     // will navigate to a new page and then come back
-    return Observable.create(observer => {
+    return Observable.create( observer => {
       // TODO we probably don't need all these nested setTimeouts, but...
       setTimeout(() => {
         // Try and clear any stale cookies, though we can't touch HttpOnly ones
@@ -64,6 +64,9 @@ export class ConnectorService extends RESTService<Connector, Connectors> {
                 observer.next(response);
                 observer.complete();
               }, 30);
+            }, error => {
+              observer.error(error);
+              observer.complete();
             });
         }, 30);
       }, 30);
