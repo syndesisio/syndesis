@@ -34,20 +34,24 @@
               </div>
             </ng-container>
             <ng-container *ngIf='hasCredentials'>
+              <p>
+                Log into your {{ connection?.connector?.name }} account to grant authorization for {{ 'shared.project.name' | synI18n }} to act on your behalf.
+              </p>
               <div class="alert alert-warning alert-dismissable"
                    *ngIf="current.oauthError">
                 <button type="button"
                         class="close"
                         (click)="current.clearOAuthError()"></button>
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <p>{{ current.oauthStatus.message }}</p>
+                <p [innerHTML]='current.oauthStatus.message'></p>
               </div>
-              <p>
-                Log into your {{ connection?.connector?.name }} account to grant authorization for {{ 'shared.project.name' | synI18n }} to act on your behalf.
-              </p>
               <p class="text-center">
                 <button class="btn btn-primary"
-                        (click)="acquireCredentials()">Connect {{ connection?.connector?.name }}</button>
+                        [disabled]="acquiringCredentials"
+                        (click)="acquireCredentials()">
+                        <span *ngIf="acquiringCredentials" class="spinner spinner-sm spinner-inline"></span>
+                        Connect {{ connection?.connector?.name }}
+                      </button>
               </p>
             </ng-container>
           </div>

@@ -50,7 +50,9 @@
     },
     "connections": {
       "connection": "{{connection}}",
-      "connections": "{{connections}}"
+      "connections": "{{connections}}",
+      "unknown-oauth-error": "An unknown error has occurred initiating the OAuth page flow.",
+      "external-oauth-error": "The target OAuth application has responded with the following error: <br/><pre>{{0}}</pre>"
     },
     "dashboard": {
       "heading": "Dashboard",

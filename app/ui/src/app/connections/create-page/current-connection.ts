@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { getCategory, log } from '@syndesis/ui/logging';
-import { ConfiguredConfigurationProperty, Connection } from '@syndesis/ui/platform';
+import { ConfiguredConfigurationProperty, Connection, I18NService } from '@syndesis/ui/platform';
 import { ConnectionStore, ConnectorStore } from '@syndesis/ui/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -27,7 +27,8 @@ export class CurrentConnectionService {
 
   constructor(
     private store: ConnectionStore,
-    private connectorStore: ConnectorStore
+    private connectorStore: ConnectorStore,
+    private i18NService: I18NService
   ) {}
 
   init() {
@@ -100,10 +101,17 @@ export class CurrentConnectionService {
       return Observable.empty();
     }
     const connectorId = this._connection.connectorId;
-    this.connectorStore
-      .acquireCredentials(connectorId)
-      .subscribe((resp: any) => {
+    return this.connectorStore.acquireCredentials(connectorId).flatMap((resp: any) => {
         log.infoc(() => 'Got response: ' + JSON.stringify(resp));
+      }).catch( (error: any) => {
+        const data = error.data;
+        const message = data && data.userMsgDetail ?
+          this.i18NService.localize('connections.external-oauth-error', data.userMsgDetail) :
+          this.i18NService.localize('connetions.unknown-oauth-error');
+        this._oauthStatus = {
+          message: message
+        };
+        log.infoc(() => 'Error response initiating oauth flow:' + JSON.stringify(error));
       });
   }
 
