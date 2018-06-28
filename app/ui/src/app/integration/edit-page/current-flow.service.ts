@@ -423,6 +423,14 @@ export class CurrentFlowService {
         log.debugc(() => 'Set step at position: ' + position, category);
         break;
       }
+      case 'integration-set-metadata': {
+        const position = +event['position'];
+        const metadata = event['metadata'];
+        const step = <any>(this.steps[position] || createStep());
+        step.metadata = { ...step.metadata, ...metadata };
+        this.maybeDoAction(event['onSave']);
+        break;
+      }
       case 'integration-set-properties': {
         const position = +event['position'];
         const action = event['action'];

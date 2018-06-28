@@ -7,7 +7,8 @@ import {
   MessageLevel,
   LeveledMessage,
   key,
-  WithLeveledMessages } from '@syndesis/ui/platform';
+  WithLeveledMessages,
+  StringMap } from '@syndesis/ui/platform';
 
 export class Step implements BaseEntity {
   id?: string;
@@ -17,6 +18,7 @@ export class Step implements BaseEntity {
   connection: Connection;
   configuredProperties: {};
   stepKind?: string;
+  metadata?: StringMap<any>;
 
   constructor() {
     this.id = key();
