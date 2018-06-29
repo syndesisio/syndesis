@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.odata.ODataUpdateEntityComponent",
   "groupId" : "io.syndesis.connector",
   "artifactId" : "connector-odata-update-entity",
-  "version" : "1.4-SNAPSHOT",
+  "version" : "1.4.1-20180629",
   "description" : "Update OData Entity",
   "labels" : [ "odata" ],
   "pattern" : "To",
