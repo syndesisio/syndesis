@@ -385,6 +385,13 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
       baseUrl,
       this.configService
     );
+
+    try {
+      this.cfg.initCfg.disableMappingPreviewMode =
+        this.configService.getSettings('datamapper', 'disableMappingPreviewMode');
+    } catch (err) {
+      this.cfg.initCfg.disableMappingPreviewMode = true;
+    }
   }
 
   private fetchServiceUrl(

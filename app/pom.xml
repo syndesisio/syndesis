@@ -37,7 +37,7 @@
     <syndesis.version>${project.version}</syndesis.version>
 
     <!-- Atlasmap version -->
-    <atlasmap.version>1.35.0</atlasmap.version>
+    <atlasmap.version>1.35.4</atlasmap.version>
     <camel-atlasmap.version>${atlasmap.version}</camel-atlasmap.version>
 
     <!-- Image names -->
@@ -1235,6 +1235,12 @@
         <groupId>io.syndesis</groupId>
         <artifactId>project-generator</artifactId>
         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-api</artifactId>
+        <version>${atlasmap.version}</version>
       </dependency>
 
       <dependency>
