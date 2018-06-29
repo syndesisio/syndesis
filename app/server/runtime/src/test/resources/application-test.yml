@@ -29,7 +29,7 @@ controllers:
 
 spring:
   datasource:
-    url: 'jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL'
+    url: 'jdbc:h2:mem:test;DB_CLOSE_DELAY=-1'
     driver-class-name: org.h2.Driver
   main:
     banner-mode: log
