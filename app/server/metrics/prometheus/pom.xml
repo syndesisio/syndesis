@@ -14,7 +14,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>io.syndesis.server</groupId>
     <artifactId>server-parent</artifactId>
@@ -61,11 +62,6 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-client</artifactId>
     </dependency>
@@ -104,10 +100,6 @@
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
-    </dependency>
 
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -117,10 +109,6 @@
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jaxrs</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
     </dependency>
 
     <dependency>
@@ -143,6 +131,22 @@
       <artifactId>kubernetes-model</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.jboss.spec.javax.annotation</groupId>
+      <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.spec.javax.ws.rs</groupId>
+      <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+    </dependency>
+
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>
@@ -162,26 +166,5 @@
     </dependency>
 
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <ignoredUsedUndeclaredDependencies>
-            <!-- if declared complains about being unused -->
-            <ignoredUsedUndeclaredDependency>org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.0_spec</ignoredUsedUndeclaredDependency>
-            <ignoredUsedUndeclaredDependency>com.google.code.findbugs:findbugs-annotations</ignoredUsedUndeclaredDependency>
-            <ignoredUsedUndeclaredDependency>org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec</ignoredUsedUndeclaredDependency>
-            <ignoredUsedUndeclaredDependency>org.jboss.spec.javax.annotation:jboss-annotations-api_1.2_spec</ignoredUsedUndeclaredDependency>
-          </ignoredUsedUndeclaredDependencies>
-          <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>commons-logging:commons-logging</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.glassfish:javax.el</ignoredUnusedDeclaredDependency>
-          </ignoredUnusedDeclaredDependencies>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

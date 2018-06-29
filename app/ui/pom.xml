@@ -14,7 +14,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.syndesis</groupId>
@@ -31,31 +32,10 @@
   <name>UI</name>
 
   <build>
-    <pluginManagement>
-      <plugins>
-         <!--Disable some of these checks until we get the code base in basepom shape-->
-        <plugin>
-          <groupId>com.mycila</groupId>
-          <artifactId>license-maven-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>com.hubspot.maven.plugins</groupId>
-          <artifactId>dependency-management-maven-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-
     <plugins>
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
-        <version>${frontend-maven-plugin-version}</version>
         <executions>
           <execution>
             <id>install node and npm</id>
@@ -146,7 +126,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-clean-plugin</artifactId>
-        <version>${clean-maven-plugin-version}</version>
         <configuration>
           <followSymLinks>false</followSymLinks>
           <filesets>
@@ -176,7 +155,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-clean-plugin</artifactId>
-            <version>${clean-maven-plugin-version}</version>
             <configuration combine.self="override">
               <followSymLinks>false</followSymLinks>
               <filesets>
@@ -192,11 +170,10 @@
           <plugin>
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
-            <version>${frontend-maven-plugin-version}</version>
             <executions>
               <execution>
                 <id>yarn ng lint</id>
-                <phase/>
+                <phase />
               </execution>
               <execution>
                 <id>yarn ng test</id>
@@ -220,7 +197,9 @@
     <profile>
       <id>image</id>
       <activation>
-        <property><name>::image</name></property>
+        <property>
+          <name>::image</name>
+        </property>
       </activation>
       <build>
         <plugins>
@@ -248,7 +227,7 @@
                   <build>
                     <assembly>
                       <inline>
-												<fileSet>
+                        <fileSet>
                           <directory>dist</directory>
                         </fileSet>
                       </inline>

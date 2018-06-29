@@ -15,7 +15,7 @@
    limitations under the License.
 -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.syndesis.server</groupId>
@@ -28,9 +28,234 @@
   <name>Server :: Builder :: Maven Plugin</name>
   <packaging>maven-plugin</packaging>
 
-  <properties>
-    <maven.version>3.5.0</maven.version>
-  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>common-model</artifactId>
+        <version>${project.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-dao</artifactId>
+        <version>${project.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-commons</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-endpoint</artifactId>
+        <version>${project.version}</version>
+        <scope>runtime</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.annotation</groupId>
+            <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-twitter</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-config</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.github.mikegirard</groupId>
+            <artifactId>spring-social-salesforce</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-client</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-model</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jaxrs</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlasmap-maven-plugin</artifactId>
+        <version>${atlasmap.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.glassfish.hk2.external</groupId>
+            <artifactId>javax.inject</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.glassfish.hk2.external</groupId>
+            <artifactId>aopalliance-repackaged</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-core</artifactId>
+        <version>${maven.version}</version>
+        <scope>provided</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>*</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shared</groupId>
+        <artifactId>maven-artifact-transfer</artifactId>
+        <version>0.9.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>*</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-plugin-api</artifactId>
+        <version>${maven.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.interceptor</groupId>
+            <artifactId>javax.interceptor-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
 
@@ -39,60 +264,11 @@
     <dependency>
       <groupId>io.syndesis.common</groupId>
       <artifactId>common-model</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-context</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-web</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework.security</groupId>
-          <artifactId>spring-security-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.ws.rs</groupId>
-          <artifactId>javax.ws.rs-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis.server</groupId>
       <artifactId>server-dao</artifactId>
-
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-context</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-beans</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.infinispan</groupId>
-          <artifactId>infinispan-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.infinispan</groupId>
-          <artifactId>infinispan-commons</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.hibernate.javax.persistence</groupId>
-          <artifactId>hibernate-jpa-2.1-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <!-- Runtime Dependencies -->
@@ -100,88 +276,6 @@
       <groupId>io.syndesis.server</groupId>
       <artifactId>server-endpoint</artifactId>
       <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-context</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-web</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework.security</groupId>
-          <artifactId>spring-security-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-beans</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.jboss.spec.javax.annotation</groupId>
-          <artifactId>jboss-annotations-api_1.2_spec</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-autoconfigure</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-test</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework.social</groupId>
-          <artifactId>spring-social-twitter</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework.social</groupId>
-          <artifactId>spring-social-config</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework.social</groupId>
-          <artifactId>spring-social-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-test</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework.security</groupId>
-          <artifactId>spring-security-crypto</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.github.mikegirard</groupId>
-          <artifactId>spring-social-salesforce</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.infinispan</groupId>
-          <artifactId>infinispan-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.hibernate.javax.persistence</groupId>
-          <artifactId>hibernate-jpa-2.1-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>io.fabric8</groupId>
-          <artifactId>kubernetes-client</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>io.fabric8</groupId>
-          <artifactId>kubernetes-model</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>io.swagger</groupId>
-          <artifactId>swagger-jaxrs</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <!-- ===================================================================================== -->
@@ -189,70 +283,28 @@
     <dependency>
       <groupId>io.atlasmap</groupId>
       <artifactId>atlasmap-maven-plugin</artifactId>
-      <version>${atlasmap.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.glassfish.jersey.core</groupId>
-          <artifactId>jersey-server</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.glassfish.jersey.core</groupId>
-          <artifactId>jersey-common</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.glassfish.jersey.containers</groupId>
-          <artifactId>jersey-container-servlet</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.glassfish.hk2.external</groupId>
-          <artifactId>javax.inject</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.glassfish.hk2.external</groupId>
-          <artifactId>aopalliance-repackaged</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.glassfish.jersey.core</groupId>
-          <artifactId>jersey-client</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.glassfish.jersey.media</groupId>
-          <artifactId>jersey-media-json-jackson</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
-      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
-      <version>${maven.version}</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>aopalliance</groupId>
-          <artifactId>aopalliance</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
-      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -269,19 +321,11 @@
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>maven-artifact-transfer</artifactId>
-      <version>0.9.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
-      <version>3.5</version>
       <scope>provided</scope>
     </dependency>
 
@@ -290,6 +334,10 @@
       <artifactId>maven-resolver-api</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.hibernate</groupId>
@@ -317,13 +365,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.5</version>
         <executions>
           <execution>
             <id>default-descriptor</id>
             <phase>default-descriptor</phase>
             <goals>
-            	<goal>descriptor</goal>
+              <goal>descriptor</goal>
             </goals>
           </execution>
           <execution>
@@ -333,78 +380,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.basepom.maven</groupId>
-        <artifactId>duplicate-finder-maven-plugin</artifactId>
-        <configuration>
-          <ignoredClassPatterns>
-            <ignoredClassPattern>org.eclipse.aether.util.artifact.*</ignoredClassPattern>
-            <ignoredClassPattern>org.eclipse.aether.util.filter.*</ignoredClassPattern>
-            <ignoredClassPattern>javax.ws.rs.*</ignoredClassPattern>
-            <ignoredClassPattern>org.objectweb.asm.*</ignoredClassPattern>
-            <ignoredClassPattern>org.apache.camel.json.simple.*</ignoredClassPattern>
-          </ignoredClassPatterns>
-          <ignoredDependencies>
-            <!-- Ignore the dup resources/catalog.cat -->
-            <dependency>
-              <groupId>io.atlasmap</groupId>
-              <artifactId>atlas-java-model</artifactId>
-            </dependency>
-            <dependency>
-              <groupId>io.atlasmap</groupId>
-              <artifactId>atlas-json-model</artifactId>
-            </dependency>
-            <dependency>
-              <groupId>io.atlasmap</groupId>
-              <artifactId>atlas-xml-model</artifactId>
-            </dependency>
-          </ignoredDependencies>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.ning.maven.plugins</groupId>
-        <artifactId>maven-dependency-versions-check-plugin</artifactId>
-        <configuration>
-          <exceptions>
-            <exception>
-              <groupId>com.google.guava</groupId>
-              <artifactId>guava</artifactId>
-              <resolvedVersion>18.0</resolvedVersion>
-              <expectedVersion>20.0</expectedVersion>
-            </exception>
-            <exception>
-              <groupId>org.apache.commons</groupId>
-              <artifactId>commons-lang3</artifactId>
-              <resolvedVersion>3.2.1</resolvedVersion>
-              <expectedVersion>3.5</expectedVersion>
-            </exception>
-            <exception>
-              <groupId>org.apache.maven</groupId>
-              <artifactId>maven-settings-builder</artifactId>
-              <resolvedVersion>3.2.1</resolvedVersion>
-              <expectedVersion>3.5.0</expectedVersion>
-            </exception>
-            <exception>
-              <groupId>org.apache.maven.shared</groupId>
-              <artifactId>maven-common-artifact-filters</artifactId>
-              <resolvedVersion>1.4.0</resolvedVersion>
-              <expectedVersion>3.0.1</expectedVersion>
-            </exception>
-          </exceptions>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.hubspot.maven.plugins</groupId>
-        <artifactId>dependency-management-maven-plugin</artifactId>
-        <configuration>
-          <requireManagement>
-            <allowExclusions>true</allowExclusions>
-          </requireManagement>
-        </configuration>
       </plugin>
 
     </plugins>
