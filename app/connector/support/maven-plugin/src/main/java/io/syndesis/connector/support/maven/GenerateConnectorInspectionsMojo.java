@@ -85,7 +85,9 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     @SuppressWarnings("PMD.CyclomaticComplexity")
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
-            inspectionsOutputDir.mkdirs();
+            if (!inspectionsOutputDir.exists() && !inspectionsOutputDir.mkdirs()) {
+		throw new MojoFailureException("Unable to create output directory at: " + inspectionsOutputDir);
+	    }
 
             File root = new File(output, CONNECTORS_META_PATH);
             if (root.exists()) {
@@ -133,8 +135,8 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                 }
             }
 
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-            throw new MojoExecutionException("", e);
+        } catch (ClassNotFoundException | DependencyResolutionRequiredException | IOException e) {
+            throw new MojoExecutionException("Unable to generate inspections", e);
         }
     }
 
@@ -163,7 +165,7 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
             getLog().info("Generating for connector: " + connector.getId().get() + ", and type: " + type);
 
             final ClassLoader tccl = Thread.currentThread().getContextClassLoader();
-            final List<String> elements = project.getCompileClasspathElements();
+            final List<String> elements = project.getRuntimeClasspathElements();
             final URL[] classpath = new URL[elements.size()];
 
             for (int i = 0; i < elements.size(); i++) {

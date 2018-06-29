@@ -32,7 +32,7 @@ public class SalesforceStreamingConnectorFactory implements ComponentProxyFactor
     }
 
     private static class SalesforceStreamingConnector extends ComponentProxyComponent {
-        public SalesforceStreamingConnector(String componentId, String componentScheme) {
+        SalesforceStreamingConnector(String componentId, String componentScheme) {
             super(componentId, componentScheme);
         }
 

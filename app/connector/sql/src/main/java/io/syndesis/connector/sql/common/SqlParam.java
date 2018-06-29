@@ -77,7 +77,7 @@ public class SqlParam {
         public static final Boolean BOOLEAN_VALUE = Boolean.TRUE;
         public static final Double DOUBLE_VALUE = Double.valueOf(0);
         public static final Integer INTEGER_VALUE = 0;
-        public static final Long LONG_VALUE = 0l;
+        public static final Long LONG_VALUE = 0L;
         public static final Float FLOAT_VALUE = 0f;
     }
 

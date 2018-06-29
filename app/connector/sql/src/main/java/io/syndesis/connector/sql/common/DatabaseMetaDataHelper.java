@@ -67,9 +67,9 @@ public final class DatabaseMetaDataHelper {
         }
 
         return meta.getProcedureColumns(
-                catalog, 
-                adapt(meta.getDatabaseProductName(),schema), 
-                adapt(meta.getDatabaseProductName(),procedureName), 
+                catalog,
+                adapt(meta.getDatabaseProductName(),schema),
+                adapt(meta.getDatabaseProductName(),procedureName),
                 adapt(meta.getDatabaseProductName(),null));
     }
 
@@ -80,8 +80,8 @@ public final class DatabaseMetaDataHelper {
         }
 
         return meta.getProcedures(
-                catalog, 
-                adapt(meta.getDatabaseProductName(),schemaPattern), 
+                catalog,
+                adapt(meta.getDatabaseProductName(),schemaPattern),
                 adapt(meta.getDatabaseProductName(),procedurePattern));
     }
 
@@ -90,9 +90,9 @@ public final class DatabaseMetaDataHelper {
         final String schemaPattern, final String tableNamePattern) throws SQLException {
         Set<String> tablesInSchema = new HashSet<>();
         try (ResultSet rs = meta.getTables(
-                catalog, 
-                adapt(meta.getDatabaseProductName(),schemaPattern), 
-                adapt(meta.getDatabaseProductName(), tableNamePattern), 
+                catalog,
+                adapt(meta.getDatabaseProductName(),schemaPattern),
+                adapt(meta.getDatabaseProductName(), tableNamePattern),
                 new String[] { "TABLE" });) {
             while (rs.next()) {
                 tablesInSchema.add(rs.getString(3).toUpperCase(Locale.US));
@@ -131,9 +131,9 @@ public final class DatabaseMetaDataHelper {
     private static List<ColumnMetaData> getColumnMetaData(final DatabaseMetaData meta, String catalog, //NOPMD
             String schema, String tableName, String columnName, int expectedSize) throws SQLException { //NOPMD
         try (ResultSet columns = meta.getColumns(
-                catalog, 
-                adapt(meta.getDatabaseProductName(),schema), 
-                adapt(meta.getDatabaseProductName(),tableName), 
+                catalog,
+                adapt(meta.getDatabaseProductName(),schema),
+                adapt(meta.getDatabaseProductName(),tableName),
                 adapt(meta.getDatabaseProductName(),columnName));) {
             List<ColumnMetaData> columnList = convert(columns);
             if (columnList.isEmpty()) {
@@ -154,6 +154,7 @@ public final class DatabaseMetaDataHelper {
 
     }
 
+    @SuppressWarnings("OBL_UNSATISFIED_OBLIGATION")
     /* default */ static List<SqlParam> getOutputColumnInfo(final Connection connection,
             final String sqlSelectStatement) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();

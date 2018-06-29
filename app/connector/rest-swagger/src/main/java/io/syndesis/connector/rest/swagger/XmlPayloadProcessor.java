@@ -51,7 +51,7 @@ final class XmlPayloadProcessor implements StreamFilter {
     @SuppressWarnings("PMD.AvoidStringBufferField")
     private StringBuilder parameterValue;
 
-    public XmlPayloadProcessor(final Map<String, Object> headers) {
+    XmlPayloadProcessor(final Map<String, Object> headers) {
         this.headers = headers;
     }
 

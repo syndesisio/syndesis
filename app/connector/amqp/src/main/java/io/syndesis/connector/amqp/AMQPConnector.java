@@ -46,7 +46,7 @@ class AMQPConnector extends ComponentProxyComponent {
     private String clientCertificate;
     private boolean skipCertificateCheck;
 
-    public AMQPConnector(String componentId, String componentScheme) {
+    AMQPConnector(String componentId, String componentScheme) {
         super(componentId, componentScheme);
         // support connection verification
         registerExtension(this::getComponentVerifier);

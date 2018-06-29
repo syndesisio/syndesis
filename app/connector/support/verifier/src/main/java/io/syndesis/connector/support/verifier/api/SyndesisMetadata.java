@@ -79,7 +79,7 @@ public final class SyndesisMetadata {
 
     public static SyndesisMetadata of(DataShape dataShape) {
         ObjectHelper.notNull(dataShape, "DataShape");
-        
+
         return of(
             new DataShape.Builder().createFrom(dataShape).build(),
             new DataShape.Builder().createFrom(dataShape).build()

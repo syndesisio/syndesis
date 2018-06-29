@@ -38,7 +38,7 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
 
     Map<String, Object> options;
     Map<String, Integer> jdbcTypeMap;
-    private final static Logger LOGGER = LoggerFactory.getLogger(SqlConnectorCustomizer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SqlConnectorCustomizer.class);
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {

@@ -30,7 +30,7 @@ import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.DefaultMetaData;
 
 public class SqlConnectorMetaDataExtension extends AbstractMetaDataExtension {
-    private final static MetaData EMPTY_METADATA = new DefaultMetaData(null, null, null);
+    private static final MetaData EMPTY_METADATA = new DefaultMetaData(null, null, null);
 
     public SqlConnectorMetaDataExtension(CamelContext camelContext) {
         super(camelContext);

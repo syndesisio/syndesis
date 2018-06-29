@@ -27,23 +27,22 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public class AWSS3DeleteObjectCustomizer implements ComponentProxyCustomizer {
-	
-	private String filenameKey;
 
-	@Override
-	public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-		filenameKey = (String) options.get("fileName");
-		
-		component.setBeforeProducer(this::beforeProducer);
-	}
+    private String filenameKey;
 
-	public void beforeProducer(final Exchange exchange) throws IOException {
-		final Message in = exchange.getIn();
-		in.setHeader(S3Constants.S3_OPERATION, S3Operations.deleteObject);
-		
-		if (filenameKey != null) {
-			in.setHeader(S3Constants.KEY, filenameKey);
-		}
-		
-	}
+    @Override
+    public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        filenameKey = (String) options.get("fileName");
+
+        component.setBeforeProducer(this::beforeProducer);
+    }
+
+    public void beforeProducer(final Exchange exchange) throws IOException {
+        final Message in = exchange.getIn();
+        in.setHeader(S3Constants.S3_OPERATION, S3Operations.deleteObject);
+
+        if (filenameKey != null) {
+            in.setHeader(S3Constants.KEY, filenameKey);
+        }
+    }
 }

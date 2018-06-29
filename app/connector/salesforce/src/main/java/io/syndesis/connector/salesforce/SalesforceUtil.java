@@ -20,8 +20,8 @@ import java.util.Map;
 import org.apache.camel.component.salesforce.SalesforceEndpointConfig;
 
 public final class SalesforceUtil {
-    private final static String TOPIC_PREFIX = "syndesis_";
-    private final static int TOPIC_NAME_MAX_LENGTH = 25;
+    private static final String TOPIC_PREFIX = "syndesis_";
+    private static final int TOPIC_NAME_MAX_LENGTH = 25;
 
     private SalesforceUtil() {
     }
