@@ -119,6 +119,7 @@ public class CredentialITCase extends BaseITCase {
 
         final ResponseEntity<Void> connectionResponse = http(HttpMethod.PUT, "/api/v1/connections/test-connection",
             newConnection, Void.class, tokenRule.validToken(), cookies, HttpStatus.NO_CONTENT);
+        assertThat(connectionResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
         final Connection updatedConnection = dataManager.fetch(Connection.class, "test-connection");
         assertThat(updatedConnection.isDerived()).isTrue();

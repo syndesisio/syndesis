@@ -20,7 +20,7 @@ import io.syndesis.server.credential.CredentialProviderFactory;
 import io.syndesis.server.credential.OAuth2Applicator;
 import io.syndesis.server.credential.OAuth2CredentialProvider;
 
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
@@ -57,8 +57,8 @@ public class TestCredentialProviderFactory implements CredentialProviderFactory 
         final Class<MultiValueMap<String, String>> additionalParametersType = (Class) MultiValueMap.class;
         final OAuth2Operations operations = spy(new OAuth2Template("testClientId", "testClientSecret",
             "https://test/oauth2/authorize", "https://test/oauth2/token"));
-        doReturn(new AccessGrant("token")).when(operations).exchangeForAccess(Matchers.anyString(),
-            Matchers.anyString(), Matchers.any(additionalParametersType));
+        doReturn(new AccessGrant("token")).when(operations).exchangeForAccess(ArgumentMatchers.anyString(),
+            ArgumentMatchers.anyString(), ArgumentMatchers.isNull());
 
         when(connectionFactory.getOAuthOperations()).thenReturn(operations);
 

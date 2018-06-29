@@ -17,9 +17,9 @@ package io.syndesis.server.credential;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
-import static org.mockito.Matchers.anyMap;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.social.connect.support.OAuth1ConnectionFactory;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
@@ -78,7 +78,7 @@ public class CredentialsTest {
         properties.setAppId("appId");
         properties.setAppSecret("appSecret");
 
-        when(encryptionComponent.encryptPropertyValues(anyMap(), anyMap())).then(invocation -> invocation.getArgumentAt(0, Map.class));
+        when(encryptionComponent.encryptPropertyValues(anyMap(), anyMap())).then(invocation -> invocation.getArgument(0));
     }
 
     @Test
@@ -204,7 +204,7 @@ public class CredentialsTest {
             .build();
         when(credentialProvider.applyTo(new Connection.Builder().createFrom(connection).isDerived(true).build(),
             flowState))
-                .then(a -> new Connection.Builder().createFrom(a.getArgumentAt(0, Connection.class))
+                .then(a -> new Connection.Builder().createFrom(a.getArgument(0))
                     .putConfiguredProperty("key", "value").build());
 
         final Connection finishedConnection = credentials.apply(connection, flowState);
