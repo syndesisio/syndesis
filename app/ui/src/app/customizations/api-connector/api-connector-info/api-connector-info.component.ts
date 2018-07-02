@@ -19,15 +19,12 @@ export class ApiConnectorInfoComponent implements OnInit {
 
   @ViewChild('connectorIconImg') connectorIconImg: ElementRef;
   @ViewChild('connectorIconInput') connectorIconInput: ElementRef;
-  //@ViewChild('hostInput') hostInput: ElementRef;
 
   createMode: boolean;
   editMode: boolean;
   apiConnectorDataForm: FormGroup;
-  editControlKey: string;
   iconFile: File;
-
-  private isDirty: boolean;
+  originalValue = {};
 
   constructor(private formBuilder: FormBuilder, private renderer: Renderer2) {}
 
@@ -50,7 +47,6 @@ export class ApiConnectorInfoComponent implements OnInit {
     // request in progress, we set the component in CREATE mode (inputs visible by default).
     if (!this.apiConnectorData && this.apiConnectorState.createRequest.name) {
       this.createMode = true;
-      this.isDirty = true;
       this.apiConnectorData = this.apiConnectorState.createRequest;
     } else if (!this.apiConnectorData) {
       throw new Error(
@@ -69,6 +65,7 @@ export class ApiConnectorInfoComponent implements OnInit {
       this.apiConnectorDataForm.get('description').setValue(description);
       this.apiConnectorDataForm.get('host').setValue(configuredProperties.host || properties.host.defaultValue);
       this.apiConnectorDataForm.get('basePath').setValue(configuredProperties.basePath || properties.basePath.defaultValue);
+      this.originalValue = this.apiConnectorDataForm.value;
     }
 
     if (!this.createMode) {
@@ -88,21 +85,17 @@ export class ApiConnectorInfoComponent implements OnInit {
   disableEdit() {
     this.editMode = false;
     this.apiConnectorDataForm.disable();
-    this.isDirty = false;
   }
 
   cancelEdit() {
     this.disableEdit();
     this.clearValue(this.connectorIconInput);
     this.iconFile = undefined;
+    this.apiConnectorDataForm.setValue(this.originalValue);
   }
 
   clearValue(el) {
     el.nativeElement.value = '';
-  }
-
-  isDisabled() {
-    return !this.editMode;
   }
 
   onChange() {
@@ -111,17 +104,12 @@ export class ApiConnectorInfoComponent implements OnInit {
       if (fileList.length > 0) {
         this.iconFile = fileList[0];
       }
-      this.isDirty = true;
     }
-  }
-
-  onEditChange() {
-    this.isDirty = true;
   }
 
   onSubmit(): void {
     if (this.apiConnectorDataForm.valid) {
-      if (this.isDirty) {
+      if (this.apiConnectorDataForm.dirty) {
         const { name, description, host, basePath } = this.apiConnectorDataForm.value;
         const apiConnectorData = {
           ...this.apiConnectorData,
@@ -137,7 +125,6 @@ export class ApiConnectorInfoComponent implements OnInit {
 
         this.update.emit(apiConnectorData);
         this.clearValue(this.connectorIconInput);
-        this.isDirty = false;
       }
       this.disableEdit();
     }
