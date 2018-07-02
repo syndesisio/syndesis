@@ -14,6 +14,6 @@ import { TestApiHttpService } from './test-api-http.service';
       provide: ApiHttpService,
       useClass: TestApiHttpService
     }
-  ],
+  ]
 })
-export class TestApiModule { }
+export class TestApiModule {}

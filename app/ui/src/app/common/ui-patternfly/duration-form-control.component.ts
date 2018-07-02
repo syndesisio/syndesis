@@ -1,13 +1,11 @@
-import { Component,
-  Input,
-  Output,
-  OnInit,
-  EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormLayoutService,
+import {
+  DynamicFormLayoutService,
   DynamicFormControlLayout,
   DynamicFormControlModel,
-  DynamicFormControlEvent } from '@ng-dynamic-forms/core';
+  DynamicFormControlEvent
+} from '@ng-dynamic-forms/core';
 
 @Component({
   selector: 'syndesis-duration-control',
@@ -24,7 +22,7 @@ export class DurationFormControlComponent implements OnInit {
   @Output() focus = new EventEmitter<any>();
 
   baseValue: number;
-  duration: { value: number, label: string };
+  duration: { value: number; label: string };
   modelId: string;
 
   durations = [
@@ -114,7 +112,7 @@ export class DurationFormControlComponent implements OnInit {
     }
     let duration;
     for (const _duration of this.durations) {
-      if ( value / _duration.value >= 1 ) {
+      if (value / _duration.value >= 1) {
         duration = _duration;
       } else {
         break;
@@ -122,12 +120,18 @@ export class DurationFormControlComponent implements OnInit {
     }
     this.baseValue = value / duration.value;
     this.duration = duration;
-
   }
 
-  private getClass(context: string, place: string, model: DynamicFormControlModel = this.model) {
+  private getClass(
+    context: string,
+    place: string,
+    model: DynamicFormControlModel = this.model
+  ) {
     const controlLayout = model.layout as DynamicFormControlLayout;
-    return this.dynamicFormLayoutService.getClass(controlLayout, context, place);
+    return this.dynamicFormLayoutService.getClass(
+      controlLayout,
+      context,
+      place
+    );
   }
-
 }

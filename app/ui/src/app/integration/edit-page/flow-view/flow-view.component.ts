@@ -6,10 +6,14 @@ import {
   ViewChildren
 } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
 import { log, getCategory } from '@syndesis/ui/logging';
-import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
+import {
+  CurrentFlowService,
+  FlowEvent,
+  FlowPageService
+} from '@syndesis/ui/integration/edit-page';
 import { ModalService } from '@syndesis/ui/common';
 import { Integration, UserService } from '@syndesis/ui/platform';
 
@@ -150,32 +154,30 @@ export class FlowViewComponent implements OnDestroy {
   }
 
   deletePrompt(position) {
-    this.modalService
-      .show('delete-step')
-      .then(modal => {
-        if (modal.result) {
-          const isFirst = position === this.currentFlowService.getFirstPosition();
-          const isLast = position === this.currentFlowService.getLastPosition();
+    this.modalService.show('delete-step').then(modal => {
+      if (modal.result) {
+        const isFirst = position === this.currentFlowService.getFirstPosition();
+        const isLast = position === this.currentFlowService.getLastPosition();
 
-          this.currentFlowService.events.emit({
-            kind: 'integration-remove-step',
-            position: position,
-            onSave: () => {
-              setTimeout(() => {
-                if (isFirst || isLast) {
-                  this.router.navigate(['connection-select', position], {
-                    relativeTo: this.route
-                  });
-                } else {
-                  this.router.navigate(['save-or-add-step'], {
-                    relativeTo: this.route
-                  });
-                }
-              }, 10);
-            }
-          });
-        }
-      });
+        this.currentFlowService.events.emit({
+          kind: 'integration-remove-step',
+          position: position,
+          onSave: () => {
+            setTimeout(() => {
+              if (isFirst || isLast) {
+                this.router.navigate(['connection-select', position], {
+                  relativeTo: this.route
+                });
+              } else {
+                this.router.navigate(['save-or-add-step'], {
+                  relativeTo: this.route
+                });
+              }
+            }, 10);
+          }
+        });
+      }
+    });
   }
 
   set integrationName(name: string) {

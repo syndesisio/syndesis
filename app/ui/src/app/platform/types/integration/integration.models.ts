@@ -3,12 +3,10 @@ import {
   Action,
   BaseEntity,
   Connection,
-  User,
-  MessageLevel,
-  LeveledMessage,
   key,
   WithLeveledMessages,
-  StringMap } from '@syndesis/ui/platform';
+  StringMap
+} from '@syndesis/ui/platform';
 
 export class Step implements BaseEntity {
   id?: string;
@@ -32,7 +30,11 @@ export const PUBLISHED = 'Published';
 export const UNPUBLISHED = 'Unpublished';
 export const ERROR = 'Error';
 
-export type IntegrationStatus = 'Pending' | 'Published' | 'Unpublished' | 'Error';
+export type IntegrationStatus =
+  | 'Pending'
+  | 'Published'
+  | 'Unpublished'
+  | 'Error';
 
 export interface IntegrationOverview extends BaseEntity, WithLeveledMessages {
   version?: number;
@@ -158,7 +160,8 @@ export interface IntegrationMetrics {
   lastProcessed: number;
 }
 
-export interface IntegrationState extends BaseReducerCollectionModel<Integration> {
+export interface IntegrationState
+  extends BaseReducerCollectionModel<Integration> {
   metrics: {
     summary: IntegrationMetrics;
     list: Array<IntegrationMetrics>;

@@ -1,4 +1,9 @@
-import { StringMap, BaseReducerModel, BaseRequestModel, BaseEntity } from '@syndesis/ui/platform';
+import {
+  StringMap,
+  BaseReducerModel,
+  BaseRequestModel,
+  BaseEntity
+} from '@syndesis/ui/platform';
 
 export interface ApiConnectorValidationError {
   error?: string;
@@ -20,7 +25,7 @@ export interface ApiConnectorData {
   };
   name?: string;
   description?: string;
-  warnings?: Array<{ key: string; longdesc: string; }>;
+  warnings?: Array<{ key: string; longdesc: string }>;
   errors?: Array<ApiConnectorValidationError>;
   icon?: string;
   configuredProperties?: RequestProperties;
@@ -33,7 +38,7 @@ export interface ApiConnectorData {
     };
     authenticationType?: {
       defaultValue: string;
-      enum: Array<{ label: string; value: string; }>;
+      enum: Array<{ label: string; value: string }>;
     };
     authorizationEndpoint?: {
       defaultValue: string;
@@ -56,7 +61,9 @@ export interface CustomApiConnectorAuthSettings {
   tokenEndpoint?: string;
 }
 
-export interface CustomConnectorRequest extends CustomApiConnectorRequest, ApiConnectorData {
+export interface CustomConnectorRequest
+  extends CustomApiConnectorRequest,
+    ApiConnectorData {
   specificationFile?: File;
   iconFile?: File;
 }

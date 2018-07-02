@@ -36,7 +36,8 @@ import { EmptyStateCardComponent } from './empty-state-card/empty-state-card.com
 @NgModule({
   imports: [
     CommonModule,
-    ReactiveFormsModule, FormsModule,
+    ReactiveFormsModule,
+    FormsModule,
     TagInputModule,
     RouterModule
   ],

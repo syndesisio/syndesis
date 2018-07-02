@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Connection, Action, Extension, Extensions, Step, Steps, DataShapeKinds } from '@syndesis/ui/platform';
+import {
+  Connection,
+  Action,
+  Extension,
+  Extensions,
+  Step,
+  Steps,
+  DataShapeKinds
+} from '@syndesis/ui/platform';
 
 export interface StepKind extends Step {
   name: string;
@@ -70,8 +78,7 @@ export class StepStore {
         filter: {
           type: 'textarea',
           displayName: 'Only continue if',
-          placeholder:
-`Examples of Simple Language filter expressions:
+          placeholder: `Examples of Simple Language filter expressions:
 
 $\{in.header.type\} == 'widget' // Evaluates true when type = widget
 $\{in.body.title\} // Evaluates true when body contains title.
@@ -94,18 +101,18 @@ $\{in.body.title\} // Evaluates true when body contains title.
         contextLoggingEnabled: {
           type: 'boolean',
           displayName: 'Message Context',
-          required: false,
+          required: false
         },
         bodyLoggingEnabled: {
           type: 'boolean',
           displayName: 'Message Body',
-          required: false,
+          required: false
         },
         customText: {
           type: 'string',
           displayName: 'Custom Text',
-          required: false,
-        },
+          required: false
+        }
         /*
         loggingLevel: {
           type: 'select',
@@ -120,8 +127,8 @@ $\{in.body.title\} // Evaluates true when body contains title.
             {value: 'TRACE', label: 'TRACE'}],
         },
         */
-      },
-    },
+      }
+    }
     /*
     {
       id: undefined,
@@ -202,9 +209,12 @@ $\{in.body.title\} // Evaluates true when body contains title.
     }
     // flatten arrays of properties into one object until step configuration supports pages
     if (Array.isArray(action.descriptor.propertyDefinitionSteps)) {
-      return action.descriptor.propertyDefinitionSteps.reduce( (acc, current) => {
-        return { ...acc, ...current.properties };
-      }, {});
+      return action.descriptor.propertyDefinitionSteps.reduce(
+        (acc, current) => {
+          return { ...acc, ...current.properties };
+        },
+        {}
+      );
     } else {
       return {};
     }
@@ -212,18 +222,21 @@ $\{in.body.title\} // Evaluates true when body contains title.
 
   getSteps(extensions: Extensions = []) {
     const allSteps = [];
-    for ( const extension of extensions ) {
+    for (const extension of extensions) {
       if (extension.actions) {
-        for ( const action of extension.actions) {
+        for (const action of extension.actions) {
           if (action.actionType == 'step') {
             let properties;
             if (Array.isArray(action.descriptor.propertyDefinitionSteps)) {
-              properties = action.descriptor.propertyDefinitionSteps.reduce((acc, current) => {
-              return {...acc, ...current.properties};
-            }, {});
-          } else {
+              properties = action.descriptor.propertyDefinitionSteps.reduce(
+                (acc, current) => {
+                  return { ...acc, ...current.properties };
+                },
+                {}
+              );
+            } else {
               properties = {};
-          }
+            }
             allSteps.push({
               name: action.name,
               description: action.description,
@@ -231,13 +244,15 @@ $\{in.body.title\} // Evaluates true when body contains title.
               properties: properties,
               extension: extension,
               action: action,
-              configuredProperties: undefined,
+              configuredProperties: undefined
             });
           }
         }
       }
     }
-    return this.steps.concat(allSteps).sort((a, b) => a.name.localeCompare(b.name));
+    return this.steps
+      .concat(allSteps)
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
   // Check if we need a custom form handling which stores the parsed

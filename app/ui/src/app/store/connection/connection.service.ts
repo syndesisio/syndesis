@@ -15,7 +15,8 @@ export class ConnectionService extends RESTService<Connection, Connections> {
     const connection = TypeFactory.create<Connection>();
     connection.name = name;
 
-    return this.apiHttpService.setEndpointUrl('/connections/validation')
+    return this.apiHttpService
+      .setEndpointUrl('/connections/validation')
       .post(connection)
       .toPromise()
       .then(response => null)

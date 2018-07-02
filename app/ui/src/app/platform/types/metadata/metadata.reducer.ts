@@ -11,15 +11,18 @@ import { MetadataState } from './metadata.models';
 import * as MetadataActions from './metadata.actions';
 
 const initialState: MetadataState = {
-  appName          : 'Syndesis',
-  locale           : 'en-us',
-  loading          : false,
-  loaded           : true,
-  hasErrors        : false,
-  errors           : []
+  appName: 'Syndesis',
+  locale: 'en-us',
+  loading: false,
+  loaded: true,
+  hasErrors: false,
+  errors: []
 };
 
-export function metadataReducer(state = initialState, action: any): MetadataState {
+export function metadataReducer(
+  state = initialState,
+  action: any
+): MetadataState {
   switch (action.type) {
     case MetadataActions.UPDATE: {
       return {
@@ -38,4 +41,6 @@ export function metadataReducer(state = initialState, action: any): MetadataStat
   }
 }
 
-export const selectMetadataState = createFeatureSelector<MetadataState>('metadataState');
+export const selectMetadataState = createFeatureSelector<MetadataState>(
+  'metadataState'
+);

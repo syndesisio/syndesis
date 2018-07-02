@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
   FileUploader,
   FileItem,
@@ -32,7 +32,6 @@ interface FileError {
   ]
 })
 export class TechExtensionImportComponent implements OnInit {
-
   uploader: FileUploader;
   response: Extension;
   error: FileError;
@@ -42,23 +41,26 @@ export class TechExtensionImportComponent implements OnInit {
   extension$: Observable<Extension>;
   extensionUpdate = false;
   hasBaseDropZoneOver: boolean;
-  item = { } as FileItem;
+  item = {} as FileItem;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
-  constructor(private extensionStore: ExtensionStore,
-              private notificationService: NotificationService,
-              private router: Router,
-              private route: ActivatedRoute,
-              private tokenExtractor: HttpXsrfTokenExtractor) {
+  constructor(
+    private extensionStore: ExtensionStore,
+    private notificationService: NotificationService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private tokenExtractor: HttpXsrfTokenExtractor
+  ) {
     this.extension$ = this.extensionStore.resource;
   }
 
   getGenericError() {
     return {
-        level: 'alert alert-danger',
-        message: '<strong>This is not a valid file type.</strong> Try again and specify a .jar file.'
-      };
+      level: 'alert alert-danger',
+      message:
+        '<strong>This is not a valid file type.</strong> Try again and specify a .jar file.'
+    };
   }
 
   onFileOver(e) {
@@ -72,19 +74,25 @@ export class TechExtensionImportComponent implements OnInit {
       this.response = undefined;
       return;
     }
-    this.extensionStore.importExtension(this.response.id).toPromise().then( value => {
-      this.notificationService.popNotification({
-        type: NotificationType.SUCCESS,
-        header: 'Imported!',
-        message: 'Your extension has been imported.'
+    this.extensionStore
+      .importExtension(this.response.id)
+      .toPromise()
+      .then(value => {
+        this.notificationService.popNotification({
+          type: NotificationType.SUCCESS,
+          header: 'Imported!',
+          message: 'Your extension has been imported.'
+        });
+        this.router.navigate(['/customizations/extensions'], {
+          relativeTo: this.route
+        });
+      })
+      .catch((reason: any) => {
+        this.error = {
+          level: 'alert alert-danger',
+          message: reason.userMsg || 'An unknown error has occurred.'
+        };
       });
-      this.router.navigate(['/customizations/extensions'], { relativeTo: this.route });
-    }).catch((reason: any) => {
-      this.error = {
-        level: 'alert alert-danger',
-        message: reason.userMsg || 'An unknown error has occurred.'
-      };
-    });
   }
 
   ngOnInit() {
@@ -99,7 +107,8 @@ export class TechExtensionImportComponent implements OnInit {
       headers: [
         {
           name: environment.xsrf.headerName,
-          value: this.tokenExtractor.getToken() || environment.xsrf.defaultTokenValue,
+          value:
+            this.tokenExtractor.getToken() || environment.xsrf.defaultTokenValue
         }
       ],
       disableMultipart: false,
@@ -117,12 +126,21 @@ export class TechExtensionImportComponent implements OnInit {
         }
       ]
     });
-    this.uploader.onWhenAddingFileFailed = (item: FileLikeObject, filter: any, options: any): any => {
+    this.uploader.onWhenAddingFileFailed = (
+      item: FileLikeObject,
+      filter: any,
+      options: any
+    ): any => {
       this.error = this.getGenericError();
       this.fileSelect.nativeElement['value'] = '';
       this.uploader.clearQueue();
     };
-    this.uploader.onCompleteItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
+    this.uploader.onCompleteItem = (
+      item: FileItem,
+      response: string,
+      status: number,
+      headers: ParsedResponseHeaders
+    ) => {
       this.item = item;
       this.error = undefined;
       this.response = undefined;
@@ -134,7 +152,7 @@ export class TechExtensionImportComponent implements OnInit {
         return;
       }
       if (status === 200) {
-        this.response = <Extension> resp;
+        this.response = <Extension>resp;
         return;
       }
       this.error = {

@@ -35,19 +35,27 @@ export class ApiConnectorActions {
     return new ApiConnectorFetchComplete(payload);
   }
 
-  static validateSwagger(payload: CustomConnectorRequest): ApiConnectorValidateSwagger {
+  static validateSwagger(
+    payload: CustomConnectorRequest
+  ): ApiConnectorValidateSwagger {
     return new ApiConnectorValidateSwagger(payload);
   }
 
-  static validateSwaggerComplete(payload: ApiConnectorData): ApiConnectorValidateSwaggerComplete {
+  static validateSwaggerComplete(
+    payload: ApiConnectorData
+  ): ApiConnectorValidateSwaggerComplete {
     return new ApiConnectorValidateSwaggerComplete(payload);
   }
 
-  static validateSwaggerFail(payload: ActionReducerError): ApiConnectorValidateSwaggerFail {
+  static validateSwaggerFail(
+    payload: ActionReducerError
+  ): ApiConnectorValidateSwaggerFail {
     return new ApiConnectorValidateSwaggerFail(payload);
   }
 
-  static updateAuthSettings(payload: CustomApiConnectorAuthSettings): ApiConnectorUpdateAuthSettings {
+  static updateAuthSettings(
+    payload: CustomApiConnectorAuthSettings
+  ): ApiConnectorUpdateAuthSettings {
     return new ApiConnectorUpdateAuthSettings(payload);
   }
 
@@ -99,61 +107,61 @@ export class ApiConnectorFetch implements Action {
 export class ApiConnectorFetchComplete implements Action {
   readonly type = ApiConnectorActions.FETCH_COMPLETE;
 
-  constructor(public payload: ApiConnectors) { }
+  constructor(public payload: ApiConnectors) {}
 }
 
 export class ApiConnectorFetchFail implements Action {
   readonly type = ApiConnectorActions.FETCH_FAIL;
 
-  constructor(public payload: ActionReducerError) { }
+  constructor(public payload: ActionReducerError) {}
 }
 
 export class ApiConnectorValidateSwagger implements Action {
   readonly type = ApiConnectorActions.VALIDATE_SWAGGER;
 
-  constructor(public payload: CustomConnectorRequest) { }
+  constructor(public payload: CustomConnectorRequest) {}
 }
 
 export class ApiConnectorValidateSwaggerComplete implements Action {
   readonly type = ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE;
 
-  constructor(public payload: ApiConnectorData) { }
+  constructor(public payload: ApiConnectorData) {}
 }
 
 export class ApiConnectorValidateSwaggerFail implements Action {
   readonly type = ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE;
 
-  constructor(public payload: ActionReducerError) { }
+  constructor(public payload: ActionReducerError) {}
 }
 
 export class ApiConnectorUpdateAuthSettings implements Action {
   readonly type = ApiConnectorActions.UPDATE_AUTH_SETTINGS;
 
-  constructor(public payload: CustomApiConnectorAuthSettings) { }
+  constructor(public payload: CustomApiConnectorAuthSettings) {}
 }
 
 export class ApiConnectorCreate implements Action {
   readonly type = ApiConnectorActions.CREATE;
 
-  constructor(public payload: CustomConnectorRequest) { }
+  constructor(public payload: CustomConnectorRequest) {}
 }
 
 export class ApiConnectorCreateComplete implements Action {
   readonly type = ApiConnectorActions.CREATE_COMPLETE;
 
-  constructor(public payload: CustomConnectorRequest) { }
+  constructor(public payload: CustomConnectorRequest) {}
 }
 
 export class ApiConnectorCreateFail implements Action {
   readonly type = ApiConnectorActions.CREATE_FAIL;
 
-  constructor(public payload: ActionReducerError) { }
+  constructor(public payload: ActionReducerError) {}
 }
 
 export class ApiConnectorUpdate implements Action {
   readonly type = ApiConnectorActions.UPDATE;
 
-  constructor(public payload: CustomConnectorRequest) { }
+  constructor(public payload: CustomConnectorRequest) {}
 }
 
 export class ApiConnectorUpdateComplete implements Action {
@@ -163,13 +171,13 @@ export class ApiConnectorUpdateComplete implements Action {
 export class ApiConnectorUpdateFail implements Action {
   readonly type = ApiConnectorActions.UPDATE_FAIL;
 
-  constructor(public payload: ActionReducerError) { }
+  constructor(public payload: ActionReducerError) {}
 }
 
 export class ApiConnectorDelete implements Action {
   readonly type = ApiConnectorActions.DELETE;
 
-  constructor(public payload: string) { }
+  constructor(public payload: string) {}
 }
 
 export class ApiConnectorDeleteComplete implements Action {
@@ -179,7 +187,7 @@ export class ApiConnectorDeleteComplete implements Action {
 export class ApiConnectorDeleteFail implements Action {
   readonly type = ApiConnectorActions.DELETE_FAIL;
 
-  constructor(public payload: ActionReducerError) { }
+  constructor(public payload: ActionReducerError) {}
 }
 
 export class ApiConnectorCreateCancel implements Action {

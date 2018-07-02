@@ -1,11 +1,26 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation, OnChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation,
+  OnChanges
+} from '@angular/core';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
-import { DynamicFormService, DynamicFormControlModel, DynamicFormArrayModel, DynamicInputModel } from '@ng-dynamic-forms/core';
+import {
+  DynamicFormService,
+  DynamicFormControlModel,
+  DynamicFormArrayModel,
+  DynamicInputModel
+} from '@ng-dynamic-forms/core';
 
 import { DataShape, IntegrationSupportService } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { DATA_MAPPER } from '@syndesis/ui/store';
-import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration/edit-page';
+import {
+  CurrentFlowService,
+  FlowEvent
+} from '@syndesis/ui/integration/edit-page';
 import { createBasicFilterModel, findById } from './basic-filter.model';
 import { BasicFilter } from './filter.interface';
 
@@ -52,7 +67,7 @@ export class BasicFilterComponent implements OnChanges {
     public currentFlowService: CurrentFlowService,
     public integrationSupportService: IntegrationSupportService,
     private dynamicFormService: DynamicFormService
-  ) { }
+  ) {}
 
   ngOnChanges(changes: any) {
     if (!('position' in changes)) {
@@ -68,7 +83,9 @@ export class BasicFilterComponent implements OnChanges {
         ops,
         paths
       );
-      self.formGroup = self.dynamicFormService.createFormGroup(self.basicFilterModel);
+      self.formGroup = self.dynamicFormService.createFormGroup(
+        self.basicFilterModel
+      );
       self.predicateControl = self.formGroup
         .get('filterSettingsGroup')
         .get('predicate') as FormControl;

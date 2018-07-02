@@ -1,14 +1,23 @@
 import { Component, Input, ViewChild, OnChanges } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable, Subscription } from 'rxjs';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
 
-import { Action, Integration, Step, DataShape, DataShapeKinds } from '@syndesis/ui/platform';
+import {
+  Action,
+  Integration,
+  Step,
+  DataShape,
+  DataShapeKinds
+} from '@syndesis/ui/platform';
 import { ModalService } from '@syndesis/ui/common';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { StepStore, DATA_MAPPER, ENDPOINT } from '@syndesis/ui/store';
-import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
+import {
+  CurrentFlowService,
+  FlowEvent,
+  FlowPageService
+} from '@syndesis/ui/integration/edit-page';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -47,9 +56,7 @@ export class FlowViewStepComponent implements OnChanges {
     public route: ActivatedRoute,
     public router: Router,
     private stepStore: StepStore
-  ) {
-
-  }
+  ) {}
 
   get currentStepKind() {
     return this.flowPageService.getCurrentStepKind(this.route);
@@ -309,7 +316,9 @@ export class FlowViewStepComponent implements OnChanges {
 
   visitPreviousStepDescribeData() {
     this.datamapperInfoPop.hide();
-    const index = this.currentFlowService.getPreviousStepIndexWithDataShape(this.position);
+    const index = this.currentFlowService.getPreviousStepIndexWithDataShape(
+      this.position
+    );
     this.router.navigate(['describe-data', index, 'output'], {
       relativeTo: this.route
     });
@@ -340,12 +349,19 @@ export class FlowViewStepComponent implements OnChanges {
       return;
     }
 
-    if (this.step !== this.currentFlowService.getStartStep()
-      && this.step.action.descriptor.inputDataShape) {
+    if (
+      this.step !== this.currentFlowService.getStartStep() &&
+      this.step.action.descriptor.inputDataShape
+    ) {
       const inDataShape = this.step.action.descriptor.inputDataShape;
       this.inputDataShapeText = this.getDataShapeText(inDataShape);
-      if ([DataShapeKinds.ANY, DataShapeKinds.NONE].indexOf(inDataShape.kind) === -1) {
-        const prev = this.currentFlowService.getPreviousStepWithDataShape(this.position);
+      if (
+        [DataShapeKinds.ANY, DataShapeKinds.NONE].indexOf(inDataShape.kind) ===
+        -1
+      ) {
+        const prev = this.currentFlowService.getPreviousStepWithDataShape(
+          this.position
+        );
         const prevOutDataShape = prev.action.descriptor.outputDataShape;
         if (DataShapeKinds.ANY === prevOutDataShape.kind) {
           this.previousStepShouldDefineDataShape = true;
@@ -355,9 +371,13 @@ export class FlowViewStepComponent implements OnChanges {
       }
     }
 
-    if (this.step !== this.currentFlowService.getEndStep()
-      && this.step.action.descriptor.outputDataShape) {
-      this.outputDataShapeText = this.getDataShapeText(this.step.action.descriptor.outputDataShape);
+    if (
+      this.step !== this.currentFlowService.getEndStep() &&
+      this.step.action.descriptor.outputDataShape
+    ) {
+      this.outputDataShapeText = this.getDataShapeText(
+        this.step.action.descriptor.outputDataShape
+      );
     }
   }
 
@@ -412,8 +432,11 @@ export class FlowViewStepComponent implements OnChanges {
     if (!one || !other) {
       return false;
     }
-    return one.kind === other.kind && one.type === other.type
-      && one.specification === other.specification;
+    return (
+      one.kind === other.kind &&
+      one.type === other.type &&
+      one.specification === other.specification
+    );
   }
 
   private thingIsEnabled(step: Step) {

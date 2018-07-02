@@ -6,7 +6,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class TitleizePipe implements PipeTransform {
   transform(value: string, config: any) {
     const separator = config
-      ? config.separator ? config.separator : ' '
+      ? config.separator
+        ? config.separator
+        : ' '
       : ' ';
     if (typeof value === 'string' && value && value.length > 0) {
       const parts = value.split(separator);

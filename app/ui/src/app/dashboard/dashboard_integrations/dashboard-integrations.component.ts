@@ -1,7 +1,6 @@
 import { Component, Input, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable, Subscription } from 'rxjs';
 
 import { DonutComponent, DonutConfig } from 'patternfly-ng';
 
@@ -23,7 +22,6 @@ import { IntegrationStore } from '@syndesis/ui/store';
   styleUrls: ['./dashboard-integrations.component.scss']
 })
 export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
-
   PENDING: string;
   UNPUBLISHED: string;
   PUBLISHED: string;
@@ -66,21 +64,24 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
     this.integrationsChartConfig.colors[this.PUBLISHED] = '#0088CE'; // PatternFly Blue 400
     this.integrationsChartConfig.colors[this.UNPUBLISHED] = '#D1D1D1'; // PatternFly Black 300
     this.integrationsChartConfig.colors[this.PENDING] = '#EDEDED'; // PatternFly Black 200
-    this.integrationsChartConfig.donut.title = i18NService.localize('integrations.integrations');
-
+    this.integrationsChartConfig.donut.title = i18NService.localize(
+      'integrations.integrations'
+    );
   }
 
   ngOnInit() {
     this.integrationOverviews$ = this.integrationStore.list;
-    this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
-      this.integrations = integrations;
-      this.loading = false;
-      this.integrationChartData = [
-        [this.PUBLISHED, this.countActiveIntegrations()],
-        [this.UNPUBLISHED, this.countInactiveIntegrations()],
-        [this.PENDING, this.countPendingIntegrations()]
-      ];
-    });
+    this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(
+      integrations => {
+        this.integrations = integrations;
+        this.loading = false;
+        this.integrationChartData = [
+          [this.PUBLISHED, this.countActiveIntegrations()],
+          [this.UNPUBLISHED, this.countInactiveIntegrations()],
+          [this.PENDING, this.countPendingIntegrations()]
+        ];
+      }
+    );
     this.integrationStore.loadAll();
   }
 

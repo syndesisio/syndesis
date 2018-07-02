@@ -1,11 +1,9 @@
-import { Subject } from 'rxjs/Subject';
+import { Subject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
 
 import { log, getCategory } from './logging';
 import { environment } from '../environments/environment';
-import { StringMap } from '@syndesis/ui/platform';
 
 const category = getCategory('ConfigService');
 
@@ -26,30 +24,37 @@ export class ConfigService {
     this.settingsSubject.next(this.settingsRepository);
   }
 
-  initialize(configJson = defaultConfigJson): Promise<any|ConfigService> {
-    return this.httpClient.get(configJson)
+  initialize(configJson = defaultConfigJson): Promise<any | ConfigService> {
+    return this.httpClient
+      .get(configJson)
       .toPromise()
       .then(config => {
-        log.debugc(() => 'Received config: ' + JSON.stringify(config, undefined, 2), category);
+        log.debugc(
+          () => 'Received config: ' + JSON.stringify(config, undefined, 2),
+          category
+        );
 
         this.settingsRepository = Object.freeze({
           ...this.settingsRepository,
-          ...config,
+          ...config
         });
 
         this.settingsSubject.next(this.settingsRepository);
 
-        log.debugc(() =>
-          'Using merged config: ' + JSON.stringify(this.settingsRepository, undefined, 2),
+        log.debugc(
+          () =>
+            'Using merged config: ' +
+            JSON.stringify(this.settingsRepository, undefined, 2),
           category
         );
 
         return this;
       })
       .catch(() => {
-        log.warnc(() =>
-          'Error: Configuration service unreachable! Using defaults: ' +
-          JSON.stringify(this.settingsRepository),
+        log.warnc(
+          () =>
+            'Error: Configuration service unreachable! Using defaults: ' +
+            JSON.stringify(this.settingsRepository),
           category
         );
 
@@ -88,6 +93,8 @@ export class ConfigService {
   }
 }
 
-export function appConfigInitializer(configService: ConfigService): () => Promise<ConfigService> {
+export function appConfigInitializer(
+  configService: ConfigService
+): () => Promise<ConfigService> {
   return () => configService.initialize();
 }

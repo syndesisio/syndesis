@@ -25,12 +25,14 @@ import { EditableComponent } from './editable.component';
       <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
     </ng-template>
   `,
-  styles: [`
+  styles: [
+    `
     .form-control {
       font-size: inherit;
       height: inherit;
       line-height: inherit;
     }
-  `]
+  `
+  ]
 })
-export class EditableTextComponent extends EditableComponent { }
+export class EditableTextComponent extends EditableComponent {}

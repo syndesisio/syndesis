@@ -1,6 +1,12 @@
-import { ApplicationRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  ApplicationRef,
+  Component,
+  Input,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import {
   Action,
@@ -14,7 +20,11 @@ import {
 
 import { log, getCategory } from '@syndesis/ui/logging';
 import { IntegrationStore } from '@syndesis/ui/store';
-import { Integrations, Integration, IntegrationActionsService } from '@syndesis/ui/platform';
+import {
+  Integrations,
+  Integration,
+  IntegrationActionsService
+} from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-list',
@@ -30,9 +40,7 @@ export class IntegrationListComponent implements OnInit {
     public route: ActivatedRoute,
     public router: Router,
     public integrationActionsService: IntegrationActionsService
-  ) {
-
-  }
+  ) {}
 
   get modalTitle() {
     return this.integrationActionsService.getModalTitle();
@@ -70,5 +78,4 @@ export class IntegrationListComponent implements OnInit {
       } as EmptyStateConfig
     };
   }
-
 }

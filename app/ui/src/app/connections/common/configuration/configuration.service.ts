@@ -4,11 +4,16 @@ import {
   DynamicInputModel,
   DynamicSelectModel
 } from '@ng-dynamic-forms/core';
-import { Connection, Connector, FormFactoryService, StringMap, ConfigurationProperty } from '@syndesis/ui/platform';
+import {
+  Connection,
+  Connector,
+  FormFactoryService,
+  StringMap,
+  ConfigurationProperty
+} from '@syndesis/ui/platform';
 
 @Injectable()
 export class ConnectionConfigurationService {
-
   formConfig: StringMap<ConfigurationProperty>;
 
   constructor(private formFactory: FormFactoryService) {}
@@ -24,17 +29,29 @@ export class ConnectionConfigurationService {
 
   getFormModel(connection: Connection): DynamicFormControlModel[] {
     const configAndValues = this.getFormConfig(connection);
-    const config = this.formConfig = configAndValues.config;
+    const config = (this.formConfig = configAndValues.config);
     const values = configAndValues.values;
     let controls = ['*'];
     // TODO temporary client-side hack to tweak form ordering
     switch (connection.connectorId) {
       case 'activemq':
-        controls = ['brokerUrl', 'username', 'password', 'clientId', 'skipCertificateCheck', 'brokerCertificate', 'clientCertificate'];
+        controls = [
+          'brokerUrl',
+          'username',
+          'password',
+          'clientId',
+          'skipCertificateCheck',
+          'brokerCertificate',
+          'clientCertificate'
+        ];
         break;
       default:
     }
-    const formModel = this.formFactory.createFormModel(config, values, controls);
+    const formModel = this.formFactory.createFormModel(
+      config,
+      values,
+      controls
+    );
     return this.formFactory.createFormModel(config, values, controls);
   }
 
@@ -47,7 +64,10 @@ export class ConnectionConfigurationService {
     let values = {};
     if (connection.connector) {
       config = { ...connection.connector.properties };
-      values = { ...connection.connector.configuredProperties, ...connection.configuredProperties };
+      values = {
+        ...connection.connector.configuredProperties,
+        ...connection.configuredProperties
+      };
     }
     return { config, values };
   }

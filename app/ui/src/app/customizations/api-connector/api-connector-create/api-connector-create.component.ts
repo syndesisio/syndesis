@@ -1,6 +1,13 @@
-import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
+import { map, first } from 'rxjs/operators';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  OnDestroy
+} from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { ModalService } from '@syndesis/ui/common';
@@ -14,10 +21,10 @@ import {
 } from '@syndesis/ui/customizations/api-connector';
 
 enum WizardSteps {
-  UploadSwagger       = 1,
-  ReviewApiConnector  = 2,
-  UpdateAuthSettings  = 3,
-  SubmitRequest       = 4,
+  UploadSwagger = 1,
+  ReviewApiConnector = 2,
+  UpdateAuthSettings = 3,
+  SubmitRequest = 4
 }
 
 @Component({
@@ -36,20 +43,29 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     private router: Router,
     private modalService: ModalService,
     private apiConnectorStore: Store<ApiConnectorStore>
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.modalService.registerModal(this.cancelModalId, this.cancelModalTemplate);
-    this.apiConnectorState$ = this.apiConnectorStore.select(getApiConnectorState);
+    this.modalService.registerModal(
+      this.cancelModalId,
+      this.cancelModalTemplate
+    );
+    this.apiConnectorState$ = this.apiConnectorStore.select(
+      getApiConnectorState
+    );
 
     // Once the request validation results are yielded for the 1st time, we move user to step 2
-    this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
-      .first(request => !!request && !!request.actionsSummary)
-      .subscribe(() => this.currentActiveStep = WizardSteps.ReviewApiConnector);
+    this.apiConnectorState$
+      .pipe(map(apiConnectorState => apiConnectorState.createRequest))
+      .pipe(first(request => !!request && !!request.actionsSummary))
+      .subscribe(
+        () => (this.currentActiveStep = WizardSteps.ReviewApiConnector)
+      );
 
     // Once the request object is flagged as 'isComplete', we redirect the user to the main listing
-    this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
-      .first(request => !!request && request.isComplete)
+    this.apiConnectorState$
+      .pipe(map(apiConnectorState => apiConnectorState.createRequest))
+      .pipe(first(request => !!request && request.isComplete))
       .subscribe(() => this.redirectBack());
   }
 
@@ -66,7 +82,9 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   }
 
   onValidationRequest(request: CustomConnectorRequest) {
-    this.apiConnectorStore.dispatch(ApiConnectorActions.validateSwagger(request));
+    this.apiConnectorStore.dispatch(
+      ApiConnectorActions.validateSwagger(request)
+    );
   }
 
   onReviewComplete(): void {
@@ -74,12 +92,16 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   }
 
   onAuthSetup(authSettings: CustomApiConnectorAuthSettings): void {
-    this.apiConnectorStore.dispatch(ApiConnectorActions.updateAuthSettings(authSettings));
+    this.apiConnectorStore.dispatch(
+      ApiConnectorActions.updateAuthSettings(authSettings)
+    );
     this.currentActiveStep = WizardSteps.SubmitRequest;
   }
 
   onCreateComplete(customConnectorRequest: CustomConnectorRequest): void {
-    this.apiConnectorStore.dispatch(ApiConnectorActions.create(customConnectorRequest));
+    this.apiConnectorStore.dispatch(
+      ApiConnectorActions.create(customConnectorRequest)
+    );
   }
 
   ngOnDestroy() {

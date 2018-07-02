@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 
 import { Connections, Connection } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
@@ -18,9 +16,9 @@ const category = getCategory('Connections');
 export class ConnectionsListPage implements OnInit {
   loading: Observable<boolean>;
   connections: Observable<Connections>;
-  filteredConnections: Subject<
-    Connections
-  > = new BehaviorSubject(<Connections>{});
+  filteredConnections: Subject<Connections> = new BehaviorSubject(
+    <Connections>{}
+  );
 
   constructor(private store: ConnectionStore, private router: Router) {
     this.loading = store.loading;

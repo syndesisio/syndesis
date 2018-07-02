@@ -24,13 +24,13 @@ const routes: Routes = [
     SyndesisCommonModule,
     VendorModule,
     ChartModule,
-    IntegrationListModule,
+    IntegrationListModule
   ],
   declarations: [
     DashboardMetricsComponent,
     DashboardConnectionsComponent,
     DashboardIntegrationsComponent,
-    DashboardComponent,
+    DashboardComponent
   ]
 })
 export class DashboardModule {}

@@ -1,7 +1,11 @@
 import { ActionReducerMap, createFeatureSelector } from '@ngrx/store';
 
 import { BaseReducerModel, PlatformState } from '@syndesis/ui/platform';
-import { ApiConnectorState, CustomApiConnectorRequest, CustomConnectorRequest } from './api-connector.models';
+import {
+  ApiConnectorState,
+  CustomApiConnectorRequest,
+  CustomConnectorRequest
+} from './api-connector.models';
 import {
   ApiConnectorActions,
   ApiConnectorFetchComplete,
@@ -12,7 +16,7 @@ import {
   ApiConnectorUpdate,
   ApiConnectorUpdateComplete,
   ApiConnectorUpdateFail,
-  ApiConnectorDelete,
+  ApiConnectorDelete
 } from './api-connector.actions';
 
 const initialCreateRequest: CustomApiConnectorRequest = {
@@ -32,7 +36,10 @@ const initialState: ApiConnectorState = {
   errors: []
 };
 
-export function apiConnectorReducer(state = initialState, action: any): ApiConnectorState {
+export function apiConnectorReducer(
+  state = initialState,
+  action: any
+): ApiConnectorState {
   switch (action.type) {
     case ApiConnectorActions.VALIDATE_SWAGGER: {
       return {
@@ -72,7 +79,11 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
       const createRequest = (action as ApiConnectorCreate).payload;
       return {
         ...state,
-        createRequest: { ...createRequest, isComplete: false, isRequested: true },
+        createRequest: {
+          ...createRequest,
+          isComplete: false,
+          isRequested: true
+        },
         loading: true,
         hasErrors: false,
         errors: []
@@ -92,8 +103,12 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
 
     case ApiConnectorActions.UPDATE: {
       const updatedCustomConnection = (action as ApiConnectorUpdate).payload;
-      const deleted = [...state.list].filter(customConnector => customConnector.id === updatedCustomConnection.id)[0];
-      const list = [...state.list].filter(customConnector => customConnector.id !== updatedCustomConnection.id);
+      const deleted = [...state.list].filter(
+        customConnector => customConnector.id === updatedCustomConnection.id
+      )[0];
+      const list = [...state.list].filter(
+        customConnector => customConnector.id !== updatedCustomConnection.id
+      );
       list.unshift(updatedCustomConnection);
 
       return {
@@ -118,8 +133,12 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
 
     case ApiConnectorActions.DELETE: {
       const deletedConnectorId = (action as ApiConnectorDelete).payload;
-      const deleted = [...state.list].filter(customConnector => customConnector.id === deletedConnectorId)[0];
-      const list = [...state.list].filter(customConnector => customConnector.id !== deletedConnectorId);
+      const deleted = [...state.list].filter(
+        customConnector => customConnector.id === deletedConnectorId
+      )[0];
+      const list = [...state.list].filter(
+        customConnector => customConnector.id !== deletedConnectorId
+      );
 
       return {
         ...state,
@@ -161,7 +180,7 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
         ...state,
         createRequest: {
           ...state.createRequest,
-          configuredProperties,
+          configuredProperties
         },
         loading: false,
         hasErrors: false,
@@ -210,4 +229,6 @@ export interface ApiConnectorStore extends PlatformState {
   apiConnectorState: ApiConnectorState;
 }
 
-export const getApiConnectorState = createFeatureSelector<ApiConnectorState>('apiConnectorState');
+export const getApiConnectorState = createFeatureSelector<ApiConnectorState>(
+  'apiConnectorState'
+);

@@ -1,27 +1,44 @@
-import { Component,  Input,  ViewChild, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
+import { Component, Input, ViewChild, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as fileSaver from 'file-saver';
 
 import { ObjectPropertyFilterConfig } from '../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../common/object-property-sort.pipe';
 
-import { Integrations, Integration, IntegrationSupportService, ApiHttpService } from '@syndesis/ui/platform';
+import {
+  Integrations,
+  Integration,
+  IntegrationSupportService,
+  ApiHttpService
+} from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { IntegrationStore } from '@syndesis/ui/store';
 
-import { PaginationConfig, PaginationEvent, ToolbarConfig, FilterConfig, SortConfig, SortField, SortEvent,
-  ListConfig, Filter, FilterEvent, FilterType, FilterField, NotificationType } from 'patternfly-ng';
+import {
+  PaginationConfig,
+  PaginationEvent,
+  ToolbarConfig,
+  FilterConfig,
+  SortConfig,
+  SortField,
+  SortEvent,
+  ListConfig,
+  Filter,
+  FilterEvent,
+  FilterType,
+  FilterField,
+  NotificationType
+} from 'patternfly-ng';
 
 const ARCHIVE_FILE_NAME = 'syndesis.zip';
 
 @Component({
-selector: 'syndesis-support',
-templateUrl: './support.component.html',
-styleUrls: ['./support.component.scss']
+  selector: 'syndesis-support',
+  templateUrl: './support.component.html',
+  styleUrls: ['./support.component.scss']
 })
 export class SupportComponent implements OnInit {
-
   allLogsSelected = true;
   loading = true;
   saving = false;
@@ -57,9 +74,7 @@ export class SupportComponent implements OnInit {
 
   buildData(data: any = {}): void {
     this.saving = true;
-    this.integrationSupportService
-    .downloadSupportData(data)
-    .subscribe(
+    this.integrationSupportService.downloadSupportData(data).subscribe(
       response => {
         fileSaver.saveAs(response, ARCHIVE_FILE_NAME);
         this.saving = false;
@@ -132,7 +147,9 @@ export class SupportComponent implements OnInit {
     this.currentSortField = $event.field;
     this.isAscendingSort = $event.isAscending;
     this.itemsInPage.sort((item1: any, item2: any) => {
-      let compValue =  item1[this.currentSortField.id].localeCompare(item2[this.currentSortField.id]);
+      let compValue = item1[this.currentSortField.id].localeCompare(
+        item2[this.currentSortField.id]
+      );
       if (!this.isAscendingSort) {
         compValue = compValue * -1;
       }
@@ -149,12 +166,12 @@ export class SupportComponent implements OnInit {
     }
 
     const input = {};
-    chosen.forEach(el => input[el.name] = true);
+    chosen.forEach(el => (input[el.name] = true));
     this.buildData(input);
   }
 
   deselectAll(): void {
-    this.items.forEach(item => item.selected = false);
+    this.items.forEach(item => (item.selected = false));
   }
 
   handleSelectionChange(event): void {
@@ -170,7 +187,9 @@ export class SupportComponent implements OnInit {
   }
 
   selectAllMatchingFiler(pfnglist): void {
-    this.items.filter(x => pfnglist.items.includes(x)).forEach(item => item.selected = true);
+    this.items
+      .filter(x => pfnglist.items.includes(x))
+      .forEach(item => (item.selected = true));
   }
 
   handlePageSize($event: PaginationEvent) {
@@ -184,11 +203,13 @@ export class SupportComponent implements OnInit {
   }
 
   updateItems() {
-    this.itemsInPage = this.items.slice(
-      ( this.paginationConfig.pageNumber - 1 ) * this.paginationConfig.pageSize,
-      this.paginationConfig.totalItems )
+    this.itemsInPage = this.items
+      .slice(
+        (this.paginationConfig.pageNumber - 1) * this.paginationConfig.pageSize,
+        this.paginationConfig.totalItems
+      )
       .slice(0, this.paginationConfig.pageSize);
-    }
+  }
 
   obtainToolbarConfig(): ToolbarConfig {
     return {
@@ -219,7 +240,7 @@ export class SupportComponent implements OnInit {
             id: 'description',
             title: 'Description',
             sortType: 'alpha'
-          },
+          }
         ],
         isAscending: true
       } as SortConfig
@@ -236,17 +257,20 @@ export class SupportComponent implements OnInit {
 
   obtainFilterConfig(): FilterConfig {
     return {
-      fields: [{
-        id: 'name',
-        title: 'Name',
-        placeholder: 'Filter by Name...',
-        type: FilterType.TEXT
-      }, {
-        id: 'description',
-        title: 'Description',
-        placeholder: 'Filter by Description...',
-        type: FilterType.TEXT
-      }] as FilterField[],
+      fields: [
+        {
+          id: 'name',
+          title: 'Name',
+          placeholder: 'Filter by Name...',
+          type: FilterType.TEXT
+        },
+        {
+          id: 'description',
+          title: 'Description',
+          placeholder: 'Filter by Description...',
+          type: FilterType.TEXT
+        }
+      ] as FilterField[],
       resultsCount: this.items.length,
       appliedFilters: []
     } as FilterConfig;

@@ -1,15 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExtensionStore } from '../../store/extension/extension.store';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import {
   Action,
   ActionConfig,
   ListConfig,
   ListEvent,
-  EmptyStateConfig,
+  EmptyStateConfig
 } from 'patternfly-ng';
 import { ConfigService } from '../../config.service';
 import { TechExtensionDeleteModalComponent } from './tech-extension-delete-modal.component';
@@ -22,20 +20,24 @@ import { Extensions, Extension } from '@syndesis/ui/platform';
 })
 export class TechExtensionsListComponent implements OnInit {
   extensions$: Observable<Extensions>;
-  filteredExtensions$: Subject<Extensions> = new BehaviorSubject(<Extensions>{});
+  filteredExtensions$: Subject<Extensions> = new BehaviorSubject(
+    <Extensions>{}
+  );
   loading$: Observable<boolean>;
   listConfig: ListConfig;
   @ViewChild(TechExtensionDeleteModalComponent)
   deleteModal: TechExtensionDeleteModalComponent;
   itemUseMapping: { [valueComparator: string]: string } = {
     '=1': '<strong>1</strong> integration',
-    'other': '<strong>#</strong> integrations'
+    other: '<strong>#</strong> integrations'
   };
 
-  constructor(private store: ExtensionStore,
-              public config: ConfigService,
-              private router: Router,
-              private route: ActivatedRoute) {
+  constructor(
+    private store: ExtensionStore,
+    public config: ConfigService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.extensions$ = this.store.list;
     this.loading$ = this.store.loading;
     this.listConfig = {
@@ -46,8 +48,7 @@ export class TechExtensionsListComponent implements OnInit {
       emptyStateConfig: {
         iconStyleClass: 'pficon pficon-add-circle-o',
         title: 'Import Extension',
-        info:
-          'There are no extensions available.',
+        info: 'There are no extensions available.',
         actions: {
           primaryActions: [
             {
@@ -78,5 +79,4 @@ export class TechExtensionsListComponent implements OnInit {
   ngOnInit() {
     this.store.loadAll();
   }
-
 }

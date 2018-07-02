@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterStateSnapshot } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
-import { Subscription } from 'rxjs/Subscription';
+import {
+  DynamicFormControlModel,
+  DynamicFormService
+} from '@ng-dynamic-forms/core';
+import { Subscription } from 'rxjs';
 
 import { Connection, CanComponentDeactivate } from '@syndesis/ui/platform';
 import { CurrentConnectionService } from '../current-connection';
@@ -32,11 +35,13 @@ export class ConnectionsConfigureFieldsComponent
     this.formGroup = this.formService.createFormGroup(this.formModel);
     this.formChangesSubscription = this.formGroup.valueChanges.subscribe(
       data => {
-        this.connection.configuredProperties = this.configurationService.sanitize(data);
+        this.connection.configuredProperties = this.configurationService.sanitize(
+          data
+        );
       }
     );
 
-    this.current.formGroup = (this.hasCredentials) ? null : this.formGroup;
+    this.current.formGroup = this.hasCredentials ? null : this.formGroup;
   }
 
   ngOnDestroy() {

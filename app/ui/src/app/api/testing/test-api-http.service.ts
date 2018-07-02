@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable, of, Subject } from 'rxjs';
 
 import {
   ApiHttpService,
-  ApiEndpoint, ApiRequestProgress,
-  ApiRequestOptions, ApiUploadOptions,
-  StringMap, FileMap
+  ApiEndpoint,
+  ApiRequestProgress,
+  ApiRequestOptions,
+  ApiUploadOptions,
+  StringMap,
+  FileMap
 } from '../../platform';
 
 @Injectable()
@@ -33,44 +35,80 @@ export class TestApiHttpService extends ApiHttpService {
     return {
       url,
       get: <T>(options?: ApiRequestOptions | any) => this.get<T>(url, options),
-      post: <T>(body: any, options?: ApiRequestOptions | any) => this.post<T>([endpointKey, ...endpointParams], body, options),
-      put: <T>(body: any, options?: ApiRequestOptions | any) => this.put<T>([endpointKey, ...endpointParams], body, options),
-      patch: <T>(body: any, options?: ApiRequestOptions | any) => this.put<T>([endpointKey, ...endpointParams], body, options),
-      delete: <T>(options?: ApiRequestOptions | any) => this.delete<T>(url, options),
-      upload: <T>(fileMap?: FileMap, body?: StringMap<any>, options?: ApiUploadOptions) => {
-        return this.upload<T>([endpointKey, ...endpointParams], fileMap, body, options);
+      post: <T>(body: any, options?: ApiRequestOptions | any) =>
+        this.post<T>([endpointKey, ...endpointParams], body, options),
+      put: <T>(body: any, options?: ApiRequestOptions | any) =>
+        this.put<T>([endpointKey, ...endpointParams], body, options),
+      patch: <T>(body: any, options?: ApiRequestOptions | any) =>
+        this.put<T>([endpointKey, ...endpointParams], body, options),
+      delete: <T>(options?: ApiRequestOptions | any) =>
+        this.delete<T>(url, options),
+      upload: <T>(
+        fileMap?: FileMap,
+        body?: StringMap<any>,
+        options?: ApiUploadOptions
+      ) => {
+        return this.upload<T>(
+          [endpointKey, ...endpointParams],
+          fileMap,
+          body,
+          options
+        );
       }
     };
   }
 
-  get<T>(endpoint: string | any[], options?: ApiRequestOptions | any): Observable<T> {
-    return Observable.of(null as T);
+  get<T>(
+    endpoint: string | any[],
+    options?: ApiRequestOptions | any
+  ): Observable<T> {
+    return of(null as T);
   }
 
-  post<T>(endpoint: string | any[], body?: any, options?: ApiRequestOptions | any): Observable<T> {
-    return Observable.of(null as T);
+  post<T>(
+    endpoint: string | any[],
+    body?: any,
+    options?: ApiRequestOptions | any
+  ): Observable<T> {
+    return of(null as T);
   }
 
-  put<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions | any): Observable<T> {
-    return Observable.of(null as T);
+  put<T>(
+    endpoint: string | any[],
+    body: any,
+    options?: ApiRequestOptions | any
+  ): Observable<T> {
+    return of(null as T);
   }
 
-  patch<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions | any): Observable<T> {
-    return Observable.of(null as T);
+  patch<T>(
+    endpoint: string | any[],
+    body: any,
+    options?: ApiRequestOptions | any
+  ): Observable<T> {
+    return of(null as T);
   }
 
-  delete<T>(endpoint: string | any[], options?: ApiRequestOptions | any): Observable<T> {
-    return Observable.of(null as T);
+  delete<T>(
+    endpoint: string | any[],
+    options?: ApiRequestOptions | any
+  ): Observable<T> {
+    return of(null as T);
   }
 
   get uploadProgressEvent$(): Observable<ApiRequestProgress> {
     return this.uploadProgressSubject.asObservable();
   }
 
-  upload<T>(endpoint: string | any[], fileMap: FileMap, body?: StringMap<any>, options?: ApiUploadOptions): Observable<T> {
+  upload<T>(
+    endpoint: string | any[],
+    fileMap: FileMap,
+    body?: StringMap<any>,
+    options?: ApiUploadOptions
+  ): Observable<T> {
     this.emitProgressEvent();
 
-    return Observable.of(null as T);
+    return of(null as T);
   }
 
   private emitProgressEvent(): void {

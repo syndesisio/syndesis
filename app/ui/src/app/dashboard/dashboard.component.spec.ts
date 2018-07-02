@@ -4,7 +4,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { ActionModule, ListModule, NotificationModule, ChartModule } from 'patternfly-ng';
+import {
+  ActionModule,
+  ListModule,
+  NotificationModule,
+  ChartModule
+} from 'patternfly-ng';
 
 import { PlatformModule } from '@syndesis/ui/platform';
 import { ApiModule } from '@syndesis/ui/api';
@@ -24,39 +29,34 @@ xdescribe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
 
-  beforeEach(
-    async(() => {
-      const moduleConfig = {
-        imports: [
-          ApiModule.forRoot(),
-          PlatformModule.forRoot(),
-          CoreModule.forRoot(),
-          SyndesisCommonModule.forRoot(),
-          ActionModule,
-          ListModule,
-          ChartModule,
-          ModalModule.forRoot(),
-          TooltipModule.forRoot(),
-          BsDropdownModule.forRoot(),
-          RouterTestingModule.withRoutes([]),
-          NotificationModule,
-          IntegrationListModule,
-          SyndesisStoreModule
-        ],
-        declarations: [
-          DashboardMetricsComponent,
-          DashboardComponent,
-          DashboardConnectionsComponent,
-          DashboardIntegrationsComponent
-        ],
-        providers: [
-          ConfigService,
-          ModalService,
-        ]
-      };
-      TestBed.configureTestingModule(moduleConfig).compileComponents();
-    })
-  );
+  beforeEach(async(() => {
+    const moduleConfig = {
+      imports: [
+        ApiModule.forRoot(),
+        PlatformModule.forRoot(),
+        CoreModule.forRoot(),
+        SyndesisCommonModule.forRoot(),
+        ActionModule,
+        ListModule,
+        ChartModule,
+        ModalModule.forRoot(),
+        TooltipModule.forRoot(),
+        BsDropdownModule.forRoot(),
+        RouterTestingModule.withRoutes([]),
+        NotificationModule,
+        IntegrationListModule,
+        SyndesisStoreModule
+      ],
+      declarations: [
+        DashboardMetricsComponent,
+        DashboardComponent,
+        DashboardConnectionsComponent,
+        DashboardIntegrationsComponent
+      ],
+      providers: [ConfigService, ModalService]
+    };
+    TestBed.configureTestingModule(moduleConfig).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DashboardComponent);

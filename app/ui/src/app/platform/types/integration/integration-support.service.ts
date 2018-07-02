@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import {
   Action,
@@ -11,33 +11,41 @@ import {
   IntegrationOverview,
   IntegrationOverviews,
   IntegrationStatus,
-  ApiHttpService,
+  ApiHttpService
 } from '@syndesis/ui/platform';
 
 @Injectable()
 export abstract class IntegrationSupportService {
-
   /**
    * Fetch the options object for the rule filter
    * @param dataShape
    */
   abstract getFilterOptions(dataShape: any): Observable<any>;
 
-  abstract deploy(integration: Integration | IntegrationDeployment): Observable<any>;
+  abstract deploy(
+    integration: Integration | IntegrationDeployment
+  ): Observable<any>;
 
   abstract undeploy(integration: Integration): Observable<any>;
 
   /**
    * Change the state of a running integration
    */
-  abstract updateState(id: string, version: string | number, status: IntegrationStatus): Observable<any>;
+  abstract updateState(
+    id: string,
+    version: string | number,
+    status: IntegrationStatus
+  ): Observable<any>;
 
   /**
    * Fetch a single deployment version for an integration
    * @param id
    * @param version
    */
-  abstract getDeployment(id: String, version: string): Observable<IntegrationDeployment>;
+  abstract getDeployment(
+    id: String,
+    version: string
+  ): Observable<IntegrationDeployment>;
 
   /**
    * Fetch all the deployments for an integration
@@ -63,7 +71,11 @@ export abstract class IntegrationSupportService {
    * @param action
    * @param configuredProperties
    */
-  abstract fetchMetadata(connection: Connection, action: Action, configuredProperties: any): Observable<any>;
+  abstract fetchMetadata(
+    connection: Connection,
+    action: Action,
+    configuredProperties: any
+  ): Observable<any>;
 
   /**
    * Create a java inspection for the given data type
@@ -83,7 +95,9 @@ export abstract class IntegrationSupportService {
    */
   abstract importIntegrationURL(): string;
   abstract requestIntegrationActivityFeatureEnabled(): Observable<boolean>;
-  abstract requestIntegrationActivity(integrationId: string): Observable<Activity[]>;
+  abstract requestIntegrationActivity(
+    integrationId: string
+  ): Observable<Activity[]>;
 
   abstract downloadSupportData(data: any[]): Observable<Blob>;
 }

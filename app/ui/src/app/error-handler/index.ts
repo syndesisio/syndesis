@@ -5,7 +5,9 @@ import { ExceptionHandlerService } from './exception-handler.service';
 import { HttpErrorInterceptor } from './http-error.interceptor';
 import { OfflineHandlerService } from './offline-handler.service';
 
-export function offlineHandlerInitializer(offlineHandlerService: OfflineHandlerService): () => Promise<OfflineHandlerService> {
+export function offlineHandlerInitializer(
+  offlineHandlerService: OfflineHandlerService
+): () => Promise<OfflineHandlerService> {
   return () => offlineHandlerService.initialize(true);
 }
 

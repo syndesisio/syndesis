@@ -91,7 +91,7 @@ export enum MessageCode {
   SYNDESIS005 = 'SYNDESIS005', // Action has been deleted
   SYNDESIS006 = 'SYNDESIS006', // One or more required properties is not set
   SYNDESIS007 = 'SYNDESIS007', // Secrets update needed
-  SYNDESIS008 = 'SYNDESIS008', // Validation Error
+  SYNDESIS008 = 'SYNDESIS008' // Validation Error
 }
 
 export interface LeveledMessage {
@@ -143,9 +143,11 @@ export interface ConfiguredConfigurationProperty extends ConfigurationProperty {
   cols?: number;
 }
 
-export interface BulletinBoard extends WithId, WithMetadata, WithLeveledMessages, WithModificationTimestamps {
-
-}
+export interface BulletinBoard
+  extends WithId,
+    WithMetadata,
+    WithLeveledMessages,
+    WithModificationTimestamps {}
 
 export enum DataShapeKinds {
   ANY = 'any',

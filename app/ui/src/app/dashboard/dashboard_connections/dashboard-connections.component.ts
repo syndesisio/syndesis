@@ -2,15 +2,16 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { Connection, Connections } from '@syndesis/ui/platform';
-import { ConnectionStore } from '@syndesis/ui/store';
 
 const category = getCategory('Dashboard');
 
 @Component({
   selector: 'syndesis-dashboard-connections',
   templateUrl: './dashboard-connections.component.html',
-  styleUrls: ['../dashboard.component.scss',
-    './dashboard-connections.component.scss']
+  styleUrls: [
+    '../dashboard.component.scss',
+    './dashboard-connections.component.scss'
+  ]
 })
 export class DashboardConnectionsComponent implements OnInit {
   @Input() connections: Connections;

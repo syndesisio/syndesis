@@ -1,8 +1,14 @@
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { RESTService } from '../entity';
-import { ApiHttpService, Extension, Extensions, Integrations } from '@syndesis/ui/platform';
+import {
+  ApiHttpService,
+  Extension,
+  Extensions,
+  Integrations
+} from '@syndesis/ui/platform';
 
 @Injectable()
 export class ExtensionService extends RESTService<Extension, Extensions> {
@@ -28,8 +34,10 @@ export class ExtensionService extends RESTService<Extension, Extensions> {
   }
 
   public list(): Observable<Extensions> {
-    return super.list().map(extensions => {
-      return extensions.filter(extension => extension.status !== 'Deleted');
-    });
+    return super.list().pipe(
+      map(extensions => {
+        return extensions.filter(extension => extension.status !== 'Deleted');
+      })
+    );
   }
 }

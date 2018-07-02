@@ -1,19 +1,25 @@
+import { map, catchError } from 'rxjs/operators';
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable, throwError } from 'rxjs';
 
 import {
   PlatformState,
-  I18NState, selectI18NState,
+  I18NState,
+  selectI18NState,
   DictionaryEntry,
-  I18NService,
+  I18NService
 } from '../../platform';
 import { environment } from '../../../environments/environment';
 import { ConfigService } from '@syndesis/ui/config.service';
 
-const { fallbackValue, localStorageKey, dictionaryFolderPath } = environment.i18n;
+const {
+  fallbackValue,
+  localStorageKey,
+  dictionaryFolderPath
+} = environment.i18n;
 
 @Injectable()
 export class I18NProviderService extends I18NService {
@@ -30,15 +36,15 @@ export class I18NProviderService extends I18NService {
 
     this.platformStore
       .select(selectI18NState)
-      .map(state => state.dictionary)
-      .subscribe(dictionary => this.dictionary = dictionary);
+      .pipe(map(state => state.dictionary))
+      .subscribe(dictionary => (this.dictionary = dictionary));
   }
 
   setLocale(locale: string): Observable<I18NState> {
     const dictionaryUrl = `${dictionaryFolderPath}/${locale}.json`;
     return this.httpClient
-      .get(dictionaryUrl)
-      .catch(error => Observable.throw(error));
+      .get<I18NState>(dictionaryUrl)
+      .pipe(catchError(error => throwError(error)));
   }
 
   localize(dictionaryKey: string, args?: any[]): string {
@@ -71,7 +77,8 @@ export class I18NProviderService extends I18NService {
 
   getLocale(defaultLocale: string): string {
     if (isPlatformBrowser(this.platformId)) {
-      defaultLocale = this.localStorage.getItem(localStorageKey) || defaultLocale;
+      defaultLocale =
+        this.localStorage.getItem(localStorageKey) || defaultLocale;
     }
 
     return defaultLocale;
@@ -80,10 +87,13 @@ export class I18NProviderService extends I18NService {
   getValue(dictionaryKey: string, args?: any[]): Observable<string> {
     return this.platformStore
       .select(selectI18NState)
-      .map(() => this.localize(dictionaryKey, args));
+      .pipe(map(() => this.localize(dictionaryKey, args)));
   }
 
-  private getTranslatedTerm(dictionary: DictionaryEntry, ...keys: string[]): string {
+  private getTranslatedTerm(
+    dictionary: DictionaryEntry,
+    ...keys: string[]
+  ): string {
     let translationMatch: DictionaryEntry | string = dictionary;
     let lastValidKey = keys[0];
     for (let index = 0; index < keys.length; index++) {

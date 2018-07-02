@@ -8,9 +8,11 @@ import { ConnectorStore } from '../../../store/connector/connector.store';
 @Component({
   selector: 'syndesis-connection-configuration-validation',
   templateUrl: './validation.component.html',
-  styles: [`
+  styles: [
+    `
     .alert { margin-top: 15px; margin-bottom: 0; }
-  `]
+  `
+  ]
 })
 export class ConnectionConfigurationValidationComponent {
   @Input() connection: Connection;

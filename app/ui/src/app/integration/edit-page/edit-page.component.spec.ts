@@ -5,10 +5,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ToolbarModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule, NavigationService } from '@syndesis/ui/common';
-import { CurrentFlowService,
+import {
+  CurrentFlowService,
   FlowViewComponent,
   FlowViewStepComponent,
-  IntegrationEditPage } from '@syndesis/ui/integration/edit-page';
+  IntegrationEditPage
+} from '@syndesis/ui/integration/edit-page';
 import { ConnectionsListComponent } from '../../connections/list/list.component';
 import { SyndesisStoreModule } from '@syndesis/ui/store';
 
@@ -19,34 +21,29 @@ describe('IntegrationsEditComponent', () => {
   let component: IntegrationEditPage;
   let fixture: ComponentFixture<IntegrationEditPage>;
 
-  beforeEach(
-    async(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          CollapseModule,
-          CommonModule,
-          FormsModule,
-          SyndesisCommonModule,
-          ModalModule,
-          RouterTestingModule.withRoutes([]),
-          PopoverModule.forRoot(),
-          CollapseModule.forRoot(),
-          SyndesisStoreModule,
-          ToolbarModule
-        ],
-        declarations: [
-          IntegrationEditPage,
-          ConnectionsListComponent,
-          FlowViewComponent,
-          FlowViewStepComponent
-        ],
-        providers: [
-          CurrentFlowService,
-          NavigationService,
-        ]
-      }).compileComponents();
-    })
-  );
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        CollapseModule,
+        CommonModule,
+        FormsModule,
+        SyndesisCommonModule,
+        ModalModule,
+        RouterTestingModule.withRoutes([]),
+        PopoverModule.forRoot(),
+        CollapseModule.forRoot(),
+        SyndesisStoreModule,
+        ToolbarModule
+      ],
+      declarations: [
+        IntegrationEditPage,
+        ConnectionsListComponent,
+        FlowViewComponent,
+        FlowViewStepComponent
+      ],
+      providers: [CurrentFlowService, NavigationService]
+    }).compileComponents();
+  }));
 
   // TODO: Add separate test for editing
   beforeEach(() => {

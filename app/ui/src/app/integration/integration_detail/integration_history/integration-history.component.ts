@@ -11,7 +11,11 @@ import { Integration, IntegrationDeployment } from '@syndesis/ui/platform';
 export class IntegrationHistoryComponent {
   @Input() integration: Integration;
   @Input() deploymentActionConfigs = {};
-  @Output() deploymentAction = new EventEmitter<{ id: string; deployment: IntegrationDeployment }>();
+  @Output()
+  deploymentAction = new EventEmitter<{
+    id: string;
+    deployment: IntegrationDeployment;
+  }>();
   @Output() draftAction = new EventEmitter<string>();
 
   deploymentListConfig: ListConfig = {
@@ -23,10 +27,13 @@ export class IntegrationHistoryComponent {
   usesMapping: { [valueComparator: string]: string } = {
     '=0': '0 Uses',
     '=1': '1 Use',
-    'other': '# Uses'
+    other: '# Uses'
   };
 
-  onDeploymentAction(event: { id: string }, deployment: IntegrationDeployment): void {
+  onDeploymentAction(
+    event: { id: string },
+    deployment: IntegrationDeployment
+  ): void {
     this.deploymentAction.emit({ id: event.id, deployment });
   }
 

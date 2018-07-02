@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { Actions, Action } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
@@ -27,5 +27,4 @@ export class ListActionsComponent {
   isSelected(action: Action) {
     return action.id === this.selectedId;
   }
-
 }

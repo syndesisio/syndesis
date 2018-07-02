@@ -13,7 +13,7 @@ import { ApiModule } from '@syndesis/ui/api';
     {
       provide: SYNDESIS_ABSTRACT_PROVIDERS.IntegrationActionsService,
       useClass: IntegrationActionsProviderService
-    },
+    }
   ]
 })
 export class IntegrationSupportModule {}

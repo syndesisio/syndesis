@@ -1,9 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
-import { Connection, UserService, CanComponentDeactivate } from '@syndesis/ui/platform';
+import {
+  Connection,
+  UserService,
+  CanComponentDeactivate
+} from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { ModalService } from '@syndesis/ui/common';
 import { CurrentConnectionService } from '../current-connection';
@@ -16,7 +20,8 @@ const category = getCategory('Connections');
   templateUrl: 'review.component.html',
   styleUrls: ['review.component.scss']
 })
-export class ConnectionsReviewComponent implements CanComponentDeactivate, OnInit, OnDestroy {
+export class ConnectionsReviewComponent
+  implements CanComponentDeactivate, OnInit, OnDestroy {
   saved = false;
   reviewForm: FormGroup;
   sub: Subscription = undefined;
@@ -27,9 +32,7 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
     private connectionService: ConnectionService,
     private router: Router,
     private userService: UserService
-  ) {
-
-  }
+  ) {}
 
   createReviewForm(): FormGroup {
     return new FormGroup({

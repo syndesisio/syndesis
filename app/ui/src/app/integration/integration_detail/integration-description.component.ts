@@ -24,6 +24,10 @@ export class IntegrationDescriptionComponent {
   }
 
   getStepLineClass(index: number): string {
-    return index === (this.integration.steps.length - 1) ? 'finish' : index === 0 ? 'start' : '';
+    return index === this.integration.steps.length - 1
+      ? 'finish'
+      : index === 0
+        ? 'start'
+        : '';
   }
 }

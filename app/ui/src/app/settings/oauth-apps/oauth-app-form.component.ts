@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
 import { FormFactoryService } from '@syndesis/ui/platform';
@@ -41,7 +35,8 @@ const OAUTH_APP_FORM_CONFIG = {
   scopes: {
     displayName: 'OAuth scopes',
     type: 'string',
-    labelHint: 'Comma separated list of OAuth scopes used when requesting authorization from the target application'
+    labelHint:
+      'Comma separated list of OAuth scopes used when requesting authorization from the target application'
   }
 };
 
@@ -67,7 +62,10 @@ export class OAuthAppFormComponent implements OnInit {
   ) {}
 
   save() {
-    const app = { ...this.item.client, ...this.formFactory.sanitizeValues(this.formGroup.value, this.formConfig) };
+    const app = {
+      ...this.item.client,
+      ...this.formFactory.sanitizeValues(this.formGroup.value, this.formConfig)
+    };
     this.formGroup.disable();
     this.loading = true;
     this.error = null;
@@ -93,15 +91,19 @@ export class OAuthAppFormComponent implements OnInit {
     event.stopPropagation();
     event.preventDefault();
 
-    if (event.target &&
-        event.target.tagName &&
-        event.target.tagName.toLowerCase() === 'a') {
+    if (
+      event.target &&
+      event.target.tagName &&
+      event.target.tagName.toLowerCase() === 'a'
+    ) {
       this.router.navigateByUrl(event.target.getAttribute('href'));
     }
   }
 
   ngOnInit() {
-    const formConfig = this.formConfig = JSON.parse(JSON.stringify(OAUTH_APP_FORM_CONFIG));
+    const formConfig = (this.formConfig = JSON.parse(
+      JSON.stringify(OAUTH_APP_FORM_CONFIG)
+    ));
     this.formModel = this.formFactory.createFormModel(
       formConfig,
       this.item.client,

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { moment } from '@syndesis/ui/vendor';
@@ -8,7 +8,7 @@ import { moment } from '@syndesis/ui/vendor';
   name: 'synDuration'
 })
 export class DurationPipe implements PipeTransform {
-  transform(timeDuration: number, unit: 'ms'|'ns'): string {
+  transform(timeDuration: number, unit: 'ms' | 'ns'): string {
     if (!timeDuration) {
       return 'NaN';
     }

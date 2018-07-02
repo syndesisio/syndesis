@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationType } from 'patternfly-ng';
 import { Extension, Integrations } from '@syndesis/ui/platform';
@@ -21,38 +27,48 @@ export class TechExtensionDeleteModalComponent implements OnInit, OnDestroy {
   loading = true;
   @ViewChild('template') public template: TemplateRef<any>;
 
-  constructor(private extensionStore: ExtensionStore,
-              private modalService: ModalService,
-              private notificationService: NotificationService,
-              private router: Router,
-              private route: ActivatedRoute) { }
+  constructor(
+    private extensionStore: ExtensionStore,
+    private modalService: ModalService,
+    private notificationService: NotificationService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   public prompt(item: Extension) {
     this.extension = item;
-    this.extensionStore.loadIntegrations(this.extension.id).subscribe( integrations => {
-      this.loading = false;
-      this.integrations = integrations;
-    }, err => {
-      this.loading = false;
-    });
-    this.modalService.show(this.id).then( modal => {
+    this.extensionStore.loadIntegrations(this.extension.id).subscribe(
+      integrations => {
+        this.loading = false;
+        this.integrations = integrations;
+      },
+      err => {
+        this.loading = false;
+      }
+    );
+    this.modalService.show(this.id).then(modal => {
       if (modal.result) {
-        this.extensionStore.delete(this.extension).subscribe(ext => {
-          this.notificationService.popNotification({
-            type: NotificationType.SUCCESS,
-            header: 'Deleted!',
-            message: `The extension "${this.extension.name}" has been deleted`
-          });
-          if ('id' in this.route.snapshot.params) {
-            this.router.navigate(['..'], { relativeTo: this.route });
+        this.extensionStore.delete(this.extension).subscribe(
+          ext => {
+            this.notificationService.popNotification({
+              type: NotificationType.SUCCESS,
+              header: 'Deleted!',
+              message: `The extension "${this.extension.name}" has been deleted`
+            });
+            if ('id' in this.route.snapshot.params) {
+              this.router.navigate(['..'], { relativeTo: this.route });
+            }
+          },
+          err => {
+            this.notificationService.popNotification({
+              type: NotificationType.WARNING,
+              header: 'Deleted!',
+              message: `The extension "${
+                this.extension.name
+              }" could not be deleted due to: ${err.userMsg || 'Unknown error'}`
+            });
           }
-        }, err => {
-          this.notificationService.popNotification({
-            type: NotificationType.WARNING,
-            header: 'Deleted!',
-            message: `The extension "${this.extension.name}" could not be deleted due to: ${err.userMsg || 'Unknown error'}`
-          });
-        });
+        );
       } else {
         this.extension = undefined;
       }
@@ -74,5 +90,4 @@ export class TechExtensionDeleteModalComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.modalService.unregisterModal(this.id);
   }
-
 }

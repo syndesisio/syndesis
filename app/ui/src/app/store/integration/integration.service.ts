@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { ApiHttpService, Integration, Integrations, IntegrationState } from '@syndesis/ui/platform';
+import {
+  ApiHttpService,
+  Integration,
+  Integrations,
+  IntegrationState
+} from '@syndesis/ui/platform';
 import { RESTService } from '../entity';
 
 @Injectable()

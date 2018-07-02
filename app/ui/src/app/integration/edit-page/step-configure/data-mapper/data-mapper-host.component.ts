@@ -1,6 +1,14 @@
-import { Component, ViewChild, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import {
+  Component,
+  ViewChild,
+  OnInit,
+  OnDestroy,
+  Input,
+  Output,
+  EventEmitter
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import {
   DocumentInitializationModel,
@@ -8,7 +16,6 @@ import {
   InspectionType,
   MappingDefinition,
   ConfigModel,
-  MappingModel,
   InitializationService,
   ErrorHandlerService,
   DocumentManagementService,
@@ -18,11 +25,18 @@ import {
 } from '@atlasmap/atlasmap-data-mapper';
 
 import { ConfigService } from '@syndesis/ui/config.service';
-import { log, getCategory } from '@syndesis/ui/logging';
-import { TypeFactory } from '@syndesis/ui/model';
-import { DataShapeKinds, DataShape, IntegrationSupportService, Step, ActionDescriptor, Action } from '@syndesis/ui/platform';
-import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration/edit-page';
-import { DATA_MAPPER } from '@syndesis/ui/store';
+import { getCategory } from '@syndesis/ui/logging';
+import {
+  DataShapeKinds,
+  DataShape,
+  IntegrationSupportService,
+  Step,
+  ActionDescriptor,
+  Action
+} from '@syndesis/ui/platform';
+import {
+  CurrentFlowService
+} from '@syndesis/ui/integration/edit-page';
 /*
  * Example host component:
  *
@@ -66,8 +80,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   @Input() position: number;
   @Output() mappings = new EventEmitter<string>();
 
-  @ViewChild('dataMapperComponent')
-  dataMapperComponent: DataMapperAppComponent;
+  @ViewChild('dataMapperComponent') dataMapperComponent: DataMapperAppComponent;
 
   cfg: ConfigModel = new ConfigModel();
 
@@ -79,7 +92,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     public router: Router,
     public configService: ConfigService,
     public initializationService: InitializationService,
-    public support: IntegrationSupportService,
+    public support: IntegrationSupportService
   ) {
     this.resetConfig();
   }
@@ -100,7 +113,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
       this.setupDebugKeys();
       this.saveMappingHandlerSubscription = this.registerSaveMappingHandler();
       onSave = () => {
-          this.initializeMapper();
+        this.initializeMapper();
       };
     } else {
       this.cfg.sourceDocs = [];
@@ -114,7 +127,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   }
 
   initializeMapper() {
-    if (this.outstandingTasks == 0 ) {
+    if (this.outstandingTasks == 0) {
       this.initializationService.initialize();
     }
   }
@@ -178,26 +191,40 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   }
 
   private populateSourceDocuments(): boolean {
-    const previousSteps = this.currentFlowService.getPreviousStepsWithDataShape(this.position);
+    const previousSteps = this.currentFlowService.getPreviousStepsWithDataShape(
+      this.position
+    );
     if (!previousSteps || previousSteps.length === 0) {
       this.cfg.errorService.error(
-        'No source data type was found. Data Mapper requires at least one data type aware step prior to itself.', '');
+        'No source data type was found. Data Mapper requires at least one data type aware step prior to itself.',
+        ''
+      );
       return false;
     }
 
     // Populate all supported DataShape from previous DataShape aware steps as source documents
     let hasSource = false;
     const dataShapeAwareSteps = previousSteps.filter(pair =>
-      this.isSupportedDataShape(pair.step.action.descriptor.outputDataShape));
+      this.isSupportedDataShape(pair.step.action.descriptor.outputDataShape)
+    );
     for (const pair of dataShapeAwareSteps) {
       const outputDataShape = pair.step.action.descriptor.outputDataShape;
-      if (this.addSourceDocument(pair.step.id, pair.index, outputDataShape, dataShapeAwareSteps.length === 1)) {
+      if (
+        this.addSourceDocument(
+          pair.step.id,
+          pair.index,
+          outputDataShape,
+          dataShapeAwareSteps.length === 1
+        )
+      ) {
         hasSource = true;
       }
     }
     if (!hasSource) {
       this.cfg.errorService.error(
-        'No supported source data type was found. Data type needs to be configured before Data Mapper step is added.', '');
+        'No supported source data type was found. Data type needs to be configured before Data Mapper step is added.',
+        ''
+      );
       return false;
     }
     return true;
@@ -205,22 +232,40 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
 
   private populateTargetDocument(step: Step): boolean {
     // Next DataShape aware step must have a supported input DataShape, which describes a target document
-    const subsequents = this.currentFlowService.getSubsequentStepsWithDataShape(this.position);
+    const subsequents = this.currentFlowService.getSubsequentStepsWithDataShape(
+      this.position
+    );
     // The first step could be this datamapper step itself if it's not the first visit,
     // as DataShape is added by the following event
-    const targetPair = step.id === subsequents[0].step.id ? subsequents[1] : subsequents[0];
+    const targetPair =
+      step.id === subsequents[0].step.id ? subsequents[1] : subsequents[0];
     if (!targetPair) {
       this.cfg.errorService.error(
-        'No target data type was found. Data Mapper step can only be added before data type aware step.', '');
+        'No target data type was found. Data Mapper step can only be added before data type aware step.',
+        ''
+      );
       return false;
     }
     const inputDataShape = targetPair.step.action.descriptor.inputDataShape;
     if (!inputDataShape.kind || !inputDataShape.specification) {
-      this.cfg.errorService.error('No data type specification was found for subsequent step', '');
+      this.cfg.errorService.error(
+        'No data type specification was found for subsequent step',
+        ''
+      );
       return false;
     }
-    if (!this.addTargetDocument(targetPair.step.id, targetPair.index, inputDataShape, true)) {
-      this.cfg.errorService.error('Unsupported data type was found for subsequent step', '');
+    if (
+      !this.addTargetDocument(
+        targetPair.step.id,
+        targetPair.index,
+        inputDataShape,
+        true
+      )
+    ) {
+      this.cfg.errorService.error(
+        'Unsupported data type was found for subsequent step',
+        ''
+      );
       return false;
     }
     this.addInitializationTask();
@@ -269,7 +314,10 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
         );
       } catch (err) {
         // TODO popup or error alert?  At least catch this so we initialize
-        this.cfg.errorService.error('Failed to deserialize mappings: ' + err, '');
+        this.cfg.errorService.error(
+          'Failed to deserialize mappings: ' + err,
+          ''
+        );
       }
       this.cfg.mappings = mappingDefinition;
     }
@@ -291,16 +339,32 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     if (!dataShape || !dataShape.kind) {
       return false;
     }
-    return [DataShapeKinds.JAVA, DataShapeKinds.JSON_INSTANCE, DataShapeKinds.JSON_SCHEMA,
-      DataShapeKinds.XML_INSTANCE, DataShapeKinds.XML_SCHEMA]
-            .indexOf(dataShape.kind) > -1;
+    return (
+      [
+        DataShapeKinds.JAVA,
+        DataShapeKinds.JSON_INSTANCE,
+        DataShapeKinds.JSON_SCHEMA,
+        DataShapeKinds.XML_INSTANCE,
+        DataShapeKinds.XML_SCHEMA
+      ].indexOf(dataShape.kind) > -1
+    );
   }
 
-  private addSourceDocument(documentId: string, index: number, dataShape: DataShape, showFields: boolean): boolean {
+  private addSourceDocument(
+    documentId: string,
+    index: number,
+    dataShape: DataShape,
+    showFields: boolean
+  ): boolean {
     return this.addDocument(documentId, index, dataShape, true, showFields);
   }
 
-  private addTargetDocument(documentId: string, index: number, dataShape: DataShape, showFields: boolean): boolean {
+  private addTargetDocument(
+    documentId: string,
+    index: number,
+    dataShape: DataShape,
+    showFields: boolean
+  ): boolean {
     return this.addDocument(documentId, index, dataShape, false, showFields);
   }
 
@@ -349,8 +413,8 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     }
 
     initModel.id = documentId;
-    initModel.name = (index + 1) + ' - '
-        + (dataShape.name ? dataShape.name : dataShape.type);
+    initModel.name =
+      index + 1 + ' - ' + (dataShape.name ? dataShape.name : dataShape.type);
     initModel.description = dataShape.description;
     initModel.isSource = isSource;
     initModel.showFields = showFields;

@@ -1,16 +1,16 @@
+import { switchMap, take } from 'rxjs/operators';
 import { ApplicationRef, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Integration,
+import {
+  Integration,
   IntegrationDeployment,
   IntegrationOverview,
   DeploymentOverview,
   IntegrationActionsService,
   IntegrationSupportService,
   Step,
-  PENDING,
-  PUBLISHED,
-  UNPUBLISHED,
-  I18NService } from '@syndesis/ui/platform';
+  I18NService
+} from '@syndesis/ui/platform';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { log } from '@syndesis/ui/logging';
@@ -21,7 +21,7 @@ import { saveAs } from 'file-saver';
 @Injectable()
 export class IntegrationActionsProviderService extends IntegrationActionsService {
   currentAction: string;
-  selectedIntegration: Integration | IntegrationOverview ;
+  selectedIntegration: Integration | IntegrationOverview;
   modalTitle: string;
   modalMessage: string;
   modalType: string;
@@ -34,7 +34,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     public modalService: ModalService,
     public application: ApplicationRef,
     public integrationSupportService: IntegrationSupportService,
-    private i18NService: I18NService,
+    private i18NService: I18NService
   ) {
     super();
   }
@@ -51,7 +51,11 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
 
   //----- Actions ------------------->>
 
-  requestAction(action: string, integration: Integration | IntegrationOverview, deployment?: IntegrationDeployment | DeploymentOverview) {
+  requestAction(
+    action: string,
+    integration: Integration | IntegrationOverview,
+    deployment?: IntegrationDeployment | DeploymentOverview
+  ) {
     let request, header, message, danger, reason;
     switch (action) {
       case 'createIntegration':
@@ -62,7 +66,8 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         return this.router.navigate(['/integrations', integration.id, 'edit']);
       case 'export':
         return this.integrationSupportService
-          .exportIntegration(integration.id).toPromise()
+          .exportIntegration(integration.id)
+          .toPromise()
           .then(value => {
             saveAs(value, integration.name + '-export.zip');
           });
@@ -132,7 +137,11 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     return this.modalType || '';
   }
 
-  doAction(action: string, integration: Integration | IntegrationOverview, deployment?: IntegrationDeployment | DeploymentOverview) {
+  doAction(
+    action: string,
+    integration: Integration | IntegrationOverview,
+    deployment?: IntegrationDeployment | DeploymentOverview
+  ) {
     switch (action) {
       case 'replaceDraft':
         return this.replaceDraftAction(integration, deployment);
@@ -149,7 +158,10 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   }
 
   //-----  Activate/Deactivate ------------------->>
-  requestReplaceDraft(integration: Integration | IntegrationOverview, deployment: IntegrationDeployment | DeploymentOverview) {
+  requestReplaceDraft(
+    integration: Integration | IntegrationOverview,
+    deployment: IntegrationDeployment | DeploymentOverview
+  ) {
     this.selectedIntegration = integration;
     return this.showModal('replaceDraft');
   }
@@ -200,17 +212,21 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         'Selected integration for activation: ' +
         JSON.stringify(integration['id'])
     );
-    return this.integrationSupportService.deploy(<any> integration).toPromise();
+    return this.integrationSupportService.deploy(<any>integration).toPromise();
   }
 
   // Actual activate/deactivate action once the user confirms
-  deactivateAction(integration: Integration | IntegrationOverview): Promise<any> {
+  deactivateAction(
+    integration: Integration | IntegrationOverview
+  ): Promise<any> {
     log.debugc(
       () =>
         'Selected integration for deactivation: ' +
         JSON.stringify(integration['id'])
     );
-    return this.integrationSupportService.undeploy(<any> integration).toPromise();
+    return this.integrationSupportService
+      .undeploy(<any>integration)
+      .toPromise();
   }
 
   // Actual delete action once the user confirms
@@ -220,28 +236,35 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         'Selected integration for delete: ' + JSON.stringify(integration['id'])
     );
     return this.store
-      .delete(<any> integration)
-      .take(1)
+      .delete(<any>integration)
+      .pipe(take(1))
       .toPromise();
   }
 
-  replaceDraftAction(integration: Integration | IntegrationOverview, deployment: IntegrationDeployment | DeploymentOverview): Promise<any> {
-      return this.integrationSupportService.getDeployment(integration.id, deployment.version.toString())
-        .switchMap(_deployment => {
+  replaceDraftAction(
+    integration: Integration | IntegrationOverview,
+    deployment: IntegrationDeployment | DeploymentOverview
+  ): Promise<any> {
+    return this.integrationSupportService
+      .getDeployment(integration.id, deployment.version.toString())
+      .pipe(
+        switchMap(_deployment => {
           return this.store.patch(_deployment.integrationId, {
             steps: _deployment.spec.steps
           });
-        }).toPromise();
+        })
+      )
+      .toPromise();
   }
 
   //-----  Icons ------------------->>
 
   getStart(integration: Integration) {
-    return integration.steps ? integration.steps[0] : {} as Step;
+    return integration.steps ? integration.steps[0] : ({} as Step);
   }
 
   getFinish(integration: Integration) {
-    return integration.steps ? integration.steps.slice(-1)[0] : {} as Step;
+    return integration.steps ? integration.steps.slice(-1)[0] : ({} as Step);
   }
 
   //-----  Modal ------------------->>
@@ -253,22 +276,33 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   }
 
   setModalProperties(action) {
-    this.modalTitle =  'Confirm';
+    this.modalTitle = 'Confirm';
     switch (action) {
       case 'replaceDraft':
-        this.modalMessage = this.i18NService.localize('update-draft-modal', [this.selectedIntegration.name]);
+        this.modalMessage = this.i18NService.localize('update-draft-modal', [
+          this.selectedIntegration.name
+        ]);
         this.modalType = '';
         break;
       case 'publish':
-        this.modalMessage = this.i18NService.localize('publish-integration-modal', [this.selectedIntegration.name]);
+        this.modalMessage = this.i18NService.localize(
+          'publish-integration-modal',
+          [this.selectedIntegration.name]
+        );
         this.modalType = '';
         break;
       case 'unpublish':
-        this.modalMessage = this.i18NService.localize('unpublish-integration-modal', [this.selectedIntegration.name]);
+        this.modalMessage = this.i18NService.localize(
+          'unpublish-integration-modal',
+          [this.selectedIntegration.name]
+        );
         this.modalType = '';
         break;
       default:
-        this.modalMessage = this.i18NService.localize('delete-integration-modal', [this.selectedIntegration.name]);
+        this.modalMessage = this.i18NService.localize(
+          'delete-integration-modal',
+          [this.selectedIntegration.name]
+        );
         this.modalType = 'delete';
     }
   }

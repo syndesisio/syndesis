@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@syndesis/ui/common';
 
@@ -11,12 +17,17 @@ export class IntegrationImportExportComponent implements OnInit, OnDestroy {
 
   private cancelModalId = 'create-cancellation-modal';
 
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              private modalService: ModalService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private modalService: ModalService
+  ) {}
 
   ngOnInit() {
-    this.modalService.registerModal(this.cancelModalId, this.cancelModalTemplate);
+    this.modalService.registerModal(
+      this.cancelModalId,
+      this.cancelModalTemplate
+    );
   }
 
   onCancel(doCancel: boolean): void {

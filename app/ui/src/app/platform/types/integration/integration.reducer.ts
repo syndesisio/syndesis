@@ -22,9 +22,11 @@ const initialState: IntegrationState = {
   errors: []
 };
 
-export function integrationReducer(state = initialState, action: any): IntegrationState {
+export function integrationReducer(
+  state = initialState,
+  action: any
+): IntegrationState {
   switch (action.type) {
-
     case IntegrationActions.FETCH_INTEGRATIONS: {
       return {
         ...state,
@@ -36,7 +38,8 @@ export function integrationReducer(state = initialState, action: any): Integrati
     }
 
     case IntegrationActions.FETCH_INTEGRATIONS_COMPLETE: {
-      const collection = (action as IntegrationActions.IntegrationsFetchComplete).payload || [];
+      const collection =
+        (action as IntegrationActions.IntegrationsFetchComplete).payload || [];
       return {
         ...state,
         ...{ collection },
@@ -46,10 +49,14 @@ export function integrationReducer(state = initialState, action: any): Integrati
     }
 
     case IntegrationActions.REFRESH_OVERVIEWS: {
-      const overviews = (action as IntegrationActions.IntegrationsRefreshOverviews).payload || [];
+      const overviews =
+        (action as IntegrationActions.IntegrationsRefreshOverviews).payload ||
+        [];
       const collection = [...state.collection].map(integration => {
-        const integrationOverview = overviews.find(overview => overview.id === integration.id);
-        return {...integration, ...integrationOverview };
+        const integrationOverview = overviews.find(
+          overview => overview.id === integration.id
+        );
+        return { ...integration, ...integrationOverview };
       });
 
       return {
@@ -63,7 +70,8 @@ export function integrationReducer(state = initialState, action: any): Integrati
     case IntegrationActions.REFRESH_OVERVIEWS_FAIL:
     case IntegrationActions.FETCH_METRICS_FAIL:
     case IntegrationActions.FETCH_INTEGRATIONS_FAIL: {
-      const error = (action as IntegrationActions.IntegrationsFetchFail).payload;
+      const error = (action as IntegrationActions.IntegrationsFetchFail)
+        .payload;
       return {
         ...state,
         loading: false,
@@ -74,14 +82,22 @@ export function integrationReducer(state = initialState, action: any): Integrati
     }
 
     case IntegrationActions.UPDATE_INTEGRATION: {
-      const { entity, changes, loading } = action as IntegrationActions.IntegrationUpdate;
-      const existingIntegration = state.collection.find(item => item.id === entity.id);
+      const {
+        entity,
+        changes,
+        loading
+      } = action as IntegrationActions.IntegrationUpdate;
+      const existingIntegration = state.collection.find(
+        item => item.id === entity.id
+      );
       const updatedIntegration = {
         ...existingIntegration,
         ...entity,
         ...changes
       };
-      const restCollection = state.collection.filter(item => item.id !== entity.id);
+      const restCollection = state.collection.filter(
+        item => item.id !== entity.id
+      );
 
       return {
         ...state,
@@ -104,9 +120,12 @@ export function integrationReducer(state = initialState, action: any): Integrati
     }
 
     case IntegrationActions.UPDATE_INTEGRATION_FAIL: {
-      const error = (action as IntegrationActions.IntegrationUpdateFail).payload;
+      const error = (action as IntegrationActions.IntegrationUpdateFail)
+        .payload;
       const deletedIntegration = state.deleted;
-      const restCollection = state.collection.filter(item => item.id !== state.inserted.id);
+      const restCollection = state.collection.filter(
+        item => item.id !== state.inserted.id
+      );
 
       return {
         ...state,
@@ -118,7 +137,10 @@ export function integrationReducer(state = initialState, action: any): Integrati
     }
 
     case IntegrationActions.CREATE_INTEGRATION: {
-      const { entity, loading } = action as IntegrationActions.IntegrationCreate;
+      const {
+        entity,
+        loading
+      } = action as IntegrationActions.IntegrationCreate;
 
       return {
         ...state,
@@ -140,8 +162,11 @@ export function integrationReducer(state = initialState, action: any): Integrati
     }
 
     case IntegrationActions.CREATE_INTEGRATION_FAIL: {
-      const error = (action as IntegrationActions.IntegrationUpdateFail).payload;
-      const restCollection = state.collection.filter(item => item.id !== state.inserted.id);
+      const error = (action as IntegrationActions.IntegrationUpdateFail)
+        .payload;
+      const restCollection = state.collection.filter(
+        item => item.id !== state.inserted.id
+      );
 
       return {
         ...state,
@@ -153,9 +178,16 @@ export function integrationReducer(state = initialState, action: any): Integrati
     }
 
     case IntegrationActions.DELETE_INTEGRATION: {
-      const { entity, loading } = action as IntegrationActions.IntegrationDelete;
-      const restCollection = state.collection.filter(item => item.id !== entity.id);
-      const deletedIntegration = state.collection.find(item => item.id === entity.id);
+      const {
+        entity,
+        loading
+      } = action as IntegrationActions.IntegrationDelete;
+      const restCollection = state.collection.filter(
+        item => item.id !== entity.id
+      );
+      const deletedIntegration = state.collection.find(
+        item => item.id === entity.id
+      );
 
       return {
         ...state,
@@ -176,8 +208,11 @@ export function integrationReducer(state = initialState, action: any): Integrati
     }
 
     case IntegrationActions.DELETE_INTEGRATION_FAIL: {
-      const error = (action as IntegrationActions.IntegrationDeleteFail).payload;
-      const restCollection = state.collection.filter(item => item.id !== state.inserted.id);
+      const error = (action as IntegrationActions.IntegrationDeleteFail)
+        .payload;
+      const restCollection = state.collection.filter(
+        item => item.id !== state.inserted.id
+      );
 
       return {
         ...state,
@@ -208,11 +243,16 @@ export function integrationReducer(state = initialState, action: any): Integrati
     }
 
     case IntegrationActions.FETCH_METRICS_COMPLETE: {
-      const payload = (action as IntegrationActions.FetchMetricsComplete).payload;
+      const payload = (action as IntegrationActions.FetchMetricsComplete)
+        .payload;
       let { list, summary } = state.metrics;
       if (payload.id) {
-        if (list.some(integrationMetrics => integrationMetrics.id === payload.id)) {
-          list = list.filter(integrationMetrics => integrationMetrics.id !== payload.id);
+        if (
+          list.some(integrationMetrics => integrationMetrics.id === payload.id)
+        ) {
+          list = list.filter(
+            integrationMetrics => integrationMetrics.id !== payload.id
+          );
         }
 
         list.push(payload);
@@ -236,4 +276,6 @@ export function integrationReducer(state = initialState, action: any): Integrati
   }
 }
 
-export const selectIntegrationState = createFeatureSelector<IntegrationState>('integrationState');
+export const selectIntegrationState = createFeatureSelector<IntegrationState>(
+  'integrationState'
+);

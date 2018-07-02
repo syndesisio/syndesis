@@ -1,3 +1,4 @@
+import { take } from 'rxjs/operators';
 import { Injectable, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Modal } from './modal.models';
@@ -18,9 +19,12 @@ export class ModalService {
 
   show(id = 'modal'): Promise<Modal> {
     const modal = this.registeredModals.get(id);
-    modal.bsModalRef = this.bsModalService.show(modal.template, { ignoreBackdropClick: true, class: 'message-dialog-pf' });
+    modal.bsModalRef = this.bsModalService.show(modal.template, {
+      ignoreBackdropClick: true,
+      class: 'message-dialog-pf'
+    });
     return this.bsModalService.onHide
-      .take(1)
+      .pipe(take(1))
       .toPromise()
       .then(_ => modal);
   }

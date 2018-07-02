@@ -18,26 +18,24 @@ xdescribe('IntegrationsListComponent', () => {
   let component: IntegrationListComponent;
   let fixture: ComponentFixture<IntegrationListComponent>;
 
-  beforeEach(
-    async(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          CommonModule,
-          SyndesisCommonModule.forRoot(),
-          RouterTestingModule.withRoutes([]),
-          ModalModule.forRoot(),
-          TooltipModule.forRoot(),
-          BsDropdownModule.forRoot(),
-          TabsModule.forRoot(),
-          SyndesisStoreModule,
-          ActionModule,
-          ListModule,
-          NotificationModule
-        ],
-        declarations: [IntegrationStatusComponent, IntegrationListComponent]
-      }).compileComponents();
-    })
-  );
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        CommonModule,
+        SyndesisCommonModule.forRoot(),
+        RouterTestingModule.withRoutes([]),
+        ModalModule.forRoot(),
+        TooltipModule.forRoot(),
+        BsDropdownModule.forRoot(),
+        TabsModule.forRoot(),
+        SyndesisStoreModule,
+        ActionModule,
+        ListModule,
+        NotificationModule
+      ],
+      declarations: [IntegrationStatusComponent, IntegrationListComponent]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(IntegrationListComponent);

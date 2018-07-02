@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
-import { Subscription } from 'rxjs/Subscription';
+import {
+  DynamicFormControlModel,
+  DynamicFormService
+} from '@ng-dynamic-forms/core';
+import { Subscription } from 'rxjs';
 
 import {
   ActionDescriptor,
@@ -10,9 +13,12 @@ import {
   UserService,
   Action,
   Step,
-  IntegrationSupportService } from '@syndesis/ui/platform';
-import { log } from '@syndesis/ui/logging';
-import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
+  IntegrationSupportService
+} from '@syndesis/ui/platform';
+import {
+  CurrentFlowService,
+  FlowPageService
+} from '@syndesis/ui/integration/edit-page';
 
 @Component({
   selector: 'syndesis-integration-action-configure',
@@ -54,11 +60,14 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   goBack() {
     const step = this.currentFlowService.getStep(this.position);
     step.action = undefined;
-    this.flowPageService.goBack([ 'action-select', this.position ], this.route);
+    this.flowPageService.goBack(['action-select', this.position], this.route);
   }
 
   buildData(data: any) {
-    const formValue = this.formFactory.sanitizeValues(this.formGroup ? this.formGroup.value : {}, this.formConfig);
+    const formValue = this.formFactory.sanitizeValues(
+      this.formGroup ? this.formGroup.value : {},
+      this.formConfig
+    );
     return { ...this.step.configuredProperties, ...formValue, ...data };
   }
 
@@ -71,7 +80,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       onSave: () => {
         if (this.page === 0) {
           /* All done configuring this action... */
-          this.router.navigate([ 'save-or-add-step' ], {
+          this.router.navigate(['save-or-add-step'], {
             queryParams: { validate: true },
             relativeTo: this.route.parent
           });
@@ -139,7 +148,9 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
               })
               .catch(error => {
                 // the message is in the _meta attribute in the response
-                const message = error.data._meta ? error.data._meta.message : null;
+                const message = error.data._meta
+                  ? error.data._meta.message
+                  : null;
                 this.error = {
                   class: 'alert alert-warning',
                   icon: 'pficon pficon-warning-triangle-o',
@@ -206,7 +217,12 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       });
   }
 
-  initialize(position: number, page: number, descriptor: ActionDescriptor, error?: any) {
+  initialize(
+    position: number,
+    page: number,
+    descriptor: ActionDescriptor,
+    error?: any
+  ) {
     if (error) {
       this.error = error;
       this.error.class = 'alert alert-warning';

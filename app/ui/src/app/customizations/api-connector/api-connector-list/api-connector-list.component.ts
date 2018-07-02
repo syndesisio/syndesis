@@ -1,17 +1,25 @@
-import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
+import { filter, map } from 'rxjs/operators';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  OnDestroy
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ActionConfig, ListConfig, EmptyStateConfig } from 'patternfly-ng';
 
 import { ModalService } from '@syndesis/ui/common';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { ConfigService } from '@syndesis/ui/config.service';
 import {
-  ApiConnectorData, ApiConnectors, ApiConnectorState,
-  ApiConnectorStore, getApiConnectorState,
+  ApiConnectorData,
+  ApiConnectors,
+  ApiConnectorState,
+  ApiConnectorStore,
+  getApiConnectorState,
   ApiConnectorActions
 } from '@syndesis/ui/customizations/api-connector';
 
@@ -21,27 +29,31 @@ import {
   styleUrls: ['./api-connector-list.component.scss']
 })
 export class ApiConnectorListComponent implements OnInit, OnDestroy {
-  @ViewChild('confirmDeleteModalTemplate') confirmDeleteModalTemplate: TemplateRef<any>;
+  @ViewChild('confirmDeleteModalTemplate')
+  confirmDeleteModalTemplate: TemplateRef<any>;
   apiConnectorState$: Observable<ApiConnectorState>;
   filteredApiConnectors$ = new BehaviorSubject(<ApiConnectors>{});
   listConfig: ListConfig;
   appName: string;
   itemUseMapping: { [valueComparator: string]: string } = {
     '=1': '<strong>1</strong> time',
-    'other': '<strong>#</strong> times'
+    other: '<strong>#</strong> times'
   };
   deletableApiConnectorName: string;
 
   private confirmDeleteModalId = 'confirm-delete-modal';
 
   get apiConnectors$(): Observable<ApiConnectors> {
-    return this.apiConnectorState$.map(apiConnectorState => apiConnectorState.list);
+    return this.apiConnectorState$.pipe(
+      map(apiConnectorState => apiConnectorState.list)
+    );
   }
 
   get stateError(): Observable<string> {
-    return this.apiConnectorState$
-      .filter(apiConnectorState => apiConnectorState.hasErrors)
-      .map(apiConnectorState => apiConnectorState.errors[0].message);
+    return this.apiConnectorState$.pipe(
+      filter(apiConnectorState => apiConnectorState.hasErrors),
+      map(apiConnectorState => apiConnectorState.errors[0].message)
+    );
   }
 
   constructor(
@@ -49,7 +61,7 @@ export class ApiConnectorListComponent implements OnInit, OnDestroy {
     private config: ConfigService,
     private router: Router,
     private route: ActivatedRoute,
-    private modalService: ModalService,
+    private modalService: ModalService
   ) {
     this.listConfig = {
       dblClick: false,
@@ -77,13 +89,20 @@ export class ApiConnectorListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
-    this.apiConnectorState$ = this.apiConnectorStore.select<ApiConnectorState>(getApiConnectorState);
-    this.modalService.registerModal(this.confirmDeleteModalId, this.confirmDeleteModalTemplate);
+    this.apiConnectorState$ = this.apiConnectorStore.select<ApiConnectorState>(
+      getApiConnectorState
+    );
+    this.modalService.registerModal(
+      this.confirmDeleteModalId,
+      this.confirmDeleteModalTemplate
+    );
   }
 
   handleAction(event: any): void {
     if (event.id === 'createApiConnector') {
-      this.router.navigate(['create', 'swagger-connector'], { relativeTo: this.route });
+      this.router.navigate(['create', 'swagger-connector'], {
+        relativeTo: this.route
+      });
     }
   }
 

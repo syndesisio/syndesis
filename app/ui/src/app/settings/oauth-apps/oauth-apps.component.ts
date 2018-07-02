@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ConfigService } from '../../config.service';
 import { UserService } from '@syndesis/ui/platform';
 
@@ -110,9 +110,11 @@ export class OAuthAppsComponent implements OnInit {
     event.stopPropagation();
     event.preventDefault();
 
-    if (event.target &&
-        event.target.tagName &&
-        event.target.tagName.toLowerCase() === 'a') {
+    if (
+      event.target &&
+      event.target.tagName &&
+      event.target.tagName.toLowerCase() === 'a'
+    ) {
       window.open(event.target.getAttribute('href'), '_blank');
     }
   }
@@ -133,6 +135,10 @@ export class OAuthAppsComponent implements OnInit {
       }
     });
     this.store.loadAll();
-    this.callbackURL = window.location.protocol + '//' + window.location.hostname + '/api/v1/credentials/callback';
+    this.callbackURL =
+      window.location.protocol +
+      '//' +
+      window.location.hostname +
+      '/api/v1/credentials/callback';
   }
 }

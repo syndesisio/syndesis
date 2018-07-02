@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
+import {
+  CurrentFlowService,
+  FlowPageService
+} from '@syndesis/ui/integration/edit-page';
 
 @Component({
   selector: 'syndesis-integration-integration-basics',
@@ -16,9 +19,7 @@ export class IntegrationBasicsComponent implements OnInit {
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router
-  ) {
-
-  }
+  ) {}
 
   get errorMessage() {
     return this.flowPageService.errorMessage;

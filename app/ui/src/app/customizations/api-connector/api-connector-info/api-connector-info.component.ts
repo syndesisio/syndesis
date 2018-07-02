@@ -1,7 +1,19 @@
-import { Component, OnInit, Input, Output, EventEmitter, Renderer2, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  Renderer2,
+  HostListener
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { CustomConnectorRequest, ApiConnectorData, ApiConnectorState } from '@syndesis/ui/customizations/api-connector';
+import {
+  CustomConnectorRequest,
+  ApiConnectorData,
+  ApiConnectorState
+} from '@syndesis/ui/customizations/api-connector';
 
 @Component({
   selector: 'syndesis-api-connector-info',
@@ -19,14 +31,12 @@ export class ApiConnectorInfoComponent implements OnInit {
   iconFile: File;
   private isDirty: boolean;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private renderer: Renderer2
-  ) { }
+  constructor(private formBuilder: FormBuilder, private renderer: Renderer2) {}
 
   get processingError(): string {
-    return this.apiConnectorState.hasErrors ?
-      this.apiConnectorState.errors[0].message : null;
+    return this.apiConnectorState.hasErrors
+      ? this.apiConnectorState.errors[0].message
+      : null;
   }
 
   ngOnInit() {
@@ -34,7 +44,7 @@ export class ApiConnectorInfoComponent implements OnInit {
       name: ['', Validators.required],
       description: [''],
       host: [''],
-      basePath: [''],
+      basePath: ['']
     });
 
     // If no particular connector is injected but there's a custom connector create
@@ -43,15 +53,28 @@ export class ApiConnectorInfoComponent implements OnInit {
       this.createMode = true;
       this.apiConnectorData = this.apiConnectorState.createRequest;
     } else if (!this.apiConnectorData) {
-      throw new Error(`ApiConnectorInfoComponent requires either an ApiConnectorData object or an active custom connector create request`);
+      throw new Error(
+        `ApiConnectorInfoComponent requires either an ApiConnectorData object or an active custom connector create request`
+      );
     }
 
     if (this.apiConnectorData) {
-      const { name, description, configuredProperties, properties } = this.apiConnectorData;
+      const {
+        name,
+        description,
+        configuredProperties,
+        properties
+      } = this.apiConnectorData;
       this.apiConnectorDataForm.get('name').setValue(name);
       this.apiConnectorDataForm.get('description').setValue(description);
-      this.apiConnectorDataForm.get('host').setValue(configuredProperties.host || properties.host.defaultValue);
-      this.apiConnectorDataForm.get('basePath').setValue(configuredProperties.basePath || properties.basePath.defaultValue);
+      this.apiConnectorDataForm
+        .get('host')
+        .setValue(configuredProperties.host || properties.host.defaultValue);
+      this.apiConnectorDataForm
+        .get('basePath')
+        .setValue(
+          configuredProperties.basePath || properties.basePath.defaultValue
+        );
       this.isDirty = true;
     }
   }
@@ -73,13 +96,18 @@ export class ApiConnectorInfoComponent implements OnInit {
 
   onSubmit(): void {
     if (this.apiConnectorDataForm.valid && this.isDirty) {
-      const { name, description, host, basePath } = this.apiConnectorDataForm.value;
+      const {
+        name,
+        description,
+        host,
+        basePath
+      } = this.apiConnectorDataForm.value;
       const apiConnectorData = {
         ...this.apiConnectorData,
         configuredProperties: {
           ...this.apiConnectorData.configuredProperties,
           host,
-          basePath,
+          basePath
         },
         name,
         description,
@@ -107,7 +135,11 @@ export class ApiConnectorInfoComponent implements OnInit {
   private onDocumentClick(event: Event): void {
     const element: any = event.target;
     const elementTag = element.tagName.toLowerCase();
-    if (elementTag !== 'input' && elementTag !== 'textarea' && this.editControlKey) {
+    if (
+      elementTag !== 'input' &&
+      elementTag !== 'textarea' &&
+      this.editControlKey
+    ) {
       setTimeout(() => this.onSubmit(), 0);
     }
   }

@@ -1,12 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { Connection } from '@syndesis/ui/platform';
 import { TypeFactory } from '@syndesis/ui/model';
 import { NavigationService } from '@syndesis/ui/common';
 import { log, getCategory } from '@syndesis/ui/logging';
-import { CurrentConnectionService, ConnectionEvent } from './current-connection';
+import {
+  CurrentConnectionService,
+  ConnectionEvent
+} from './current-connection';
 
 const category = getCategory('Connections');
 

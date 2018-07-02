@@ -8,7 +8,8 @@ describe('SlugifyPipe', () => {
 
   it('should return a slugified lowercased string', () => {
     const pipe = new SlugifyPipe();
-    expect(pipe.transform(`I'm a non-Slugified String`))
-      .toEqual('i-m-a-non-slugified-string');
+    expect(pipe.transform(`I'm a non-Slugified String`)).toEqual(
+      'i-m-a-non-slugified-string'
+    );
   });
 });

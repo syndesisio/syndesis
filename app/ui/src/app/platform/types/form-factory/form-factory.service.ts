@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { DynamicFormControlModel } from '@ng-dynamic-forms/core';
 
-import { ConfigurationProperty, ConfiguredConfigurationProperty, StringMap } from '@syndesis/ui/platform';
+import {
+  ConfigurationProperty,
+  ConfiguredConfigurationProperty,
+  StringMap
+} from '@syndesis/ui/platform';
 
 @Injectable()
 export abstract class FormFactoryService {
@@ -27,7 +31,8 @@ export abstract class FormFactoryService {
       | StringMap<ConfiguredConfigurationProperty>
       | StringMap<ConfigurationProperty>
       | StringMap<any>
-      | any): any {
+      | any
+  ): any {
     data = this.supressNullValues(data);
     data = this.trimStringValues(data, properties);
     return data;
@@ -51,13 +56,14 @@ export abstract class FormFactoryService {
       | StringMap<ConfiguredConfigurationProperty>
       | StringMap<ConfigurationProperty>
       | StringMap<any>
-      | any): any {
+      | any
+  ): any {
     if (!properties || !data) {
       return data;
     }
     Object.keys(data).forEach(key => {
       const prop = properties[key];
-      if (prop && prop.trim === false || prop.secret) {
+      if ((prop && prop.trim === false) || prop.secret) {
         return;
       }
       const value = data[key];

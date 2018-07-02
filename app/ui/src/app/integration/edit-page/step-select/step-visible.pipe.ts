@@ -19,7 +19,9 @@ export class StepVisiblePipe implements PipeTransform {
     }
     const position = config.position;
     const previous = this.currentFlowService.getPreviousSteps(config.position);
-    const subsequent = this.currentFlowService.getSubsequentSteps(config.position);
+    const subsequent = this.currentFlowService.getSubsequentSteps(
+      config.position
+    );
     return objects.filter((s: StepKind) => {
       if (s.visible && typeof s.visible === 'function') {
         return s.visible(position, previous, subsequent);

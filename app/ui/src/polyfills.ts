@@ -18,6 +18,8 @@
  * BROWSER POLYFILLS
  */
 
+import './global-shims';
+
 /** IE9, IE10 and IE11 requires all of the following polyfills. **/
 // import 'core-js/es6/symbol';
 // import 'core-js/es6/object';
@@ -53,27 +55,28 @@ import 'core-js/es7/reflect';
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
-import 'zone.js/dist/zone';  // Included with Angular CLI.
+import 'zone.js/dist/zone'; // Included with Angular CLI.
 
 /***************************************************************************************************
  * RxJS IMPORTS
  */
-import 'rxjs/add/observable/empty';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/observable/fromEvent';
 
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/combineLatest';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/share';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/take';
+// import 'rxjs/add/observable/empty';
+// import 'rxjs/add/observable/merge';
+// import 'rxjs/add/observable/of';
+// import 'rxjs/add/observable/throw';
+// import 'rxjs/add/observable/fromEvent';
+
+// import 'rxjs/add/operator/catch';
+// import 'rxjs/add/operator/combineLatest';
+// import 'rxjs/add/operator/do';
+// import 'rxjs/add/operator/filter';
+// import 'rxjs/add/operator/first';
+// import 'rxjs/add/operator/map';
+// import 'rxjs/add/operator/mergeMap';
+// import 'rxjs/add/operator/share';
+// import 'rxjs/add/operator/switchMap';
+// import 'rxjs/add/operator/take';
 
 /***************************************************************************************************
  * APPLICATION IMPORTS

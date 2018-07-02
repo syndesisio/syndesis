@@ -1,6 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable, Subscription } from 'rxjs';
 
 import {
   Action,
@@ -18,12 +17,14 @@ import {
   ActionDescriptor
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
-import { IntegrationStore,
+import {
+  IntegrationStore,
   ENDPOINT,
   DATA_MAPPER,
   EXTENSION,
   BASIC_FILTER,
-  StepStore } from '@syndesis/ui/store';
+  StepStore
+} from '@syndesis/ui/store';
 import { FlowEvent } from '@syndesis/ui/integration/edit-page';
 
 const category = getCategory('CurrentFlow');
@@ -62,22 +63,22 @@ export class CurrentFlowService {
       return connections;
     }
     if (position === 0) {
-      return connections.filter( connection => {
+      return connections.filter(connection => {
         if (!connection.connector) {
           // safety net
           return true;
         }
-        return connection.connector.actions.some( action => {
+        return connection.connector.actions.some(action => {
           return action.pattern === 'From';
         });
       });
     }
-    return connections.filter( connection => {
+    return connections.filter(connection => {
       if (!connection.connector) {
         // safety net
         return true;
       }
-      return connection.connector.actions.some( action => {
+      return connection.connector.actions.some(action => {
         return action.pattern === 'To';
       });
     });
@@ -182,13 +183,15 @@ export class CurrentFlowService {
    * @param {number} position
    * @returns {Array<{step: Step, index: number}>}
    */
-  getSubsequentStepsWithDataShape(position): Array<{step: Step, index: number}> {
-    const answer: {step: Step, index: number}[] = [];
+  getSubsequentStepsWithDataShape(
+    position
+  ): Array<{ step: Step; index: number }> {
+    const answer: { step: Step; index: number }[] = [];
     const steps = this.getSubsequentSteps(position);
     if (steps) {
       steps.forEach((step, index) => {
         if (this.hasDataShape(step, true)) {
-          answer.push({'step': step, 'index': position + index});
+          answer.push({ step: step, index: position + index });
         }
       });
     }
@@ -218,11 +221,13 @@ export class CurrentFlowService {
    * @param {number} position
    * @returns {Array<{step: Step, index: number}>}
    */
-  getPreviousStepsWithDataShape(position): Array<{step: Step, index: number}> {
-    const answer: {step: Step, index: number}[] = [];
+  getPreviousStepsWithDataShape(
+    position
+  ): Array<{ step: Step; index: number }> {
+    const answer: { step: Step; index: number }[] = [];
     this.getPreviousSteps(position).forEach((step, index) => {
       if (this.hasDataShape(step, false)) {
-        answer.push({step, index});
+        answer.push({ step, index });
       }
     });
     return answer;
@@ -353,7 +358,7 @@ export class CurrentFlowService {
       return true;
     }
     // position is assumed to be 0 indexed
-    return (position + 1) >= this.steps.length;
+    return position + 1 >= this.steps.length;
   }
 
   isActionShapeless(descriptor: ActionDescriptor) {
@@ -362,7 +367,10 @@ export class CurrentFlowService {
     }
     const inputDataShape = descriptor.inputDataShape;
     const outputDataShape = descriptor.outputDataShape;
-    return inputDataShape.kind === DataShapeKinds.ANY || outputDataShape.kind === DataShapeKinds.ANY;
+    return (
+      inputDataShape.kind === DataShapeKinds.ANY ||
+      outputDataShape.kind === DataShapeKinds.ANY
+    );
   }
 
   handleEvent(event: FlowEvent): void {
@@ -483,24 +491,28 @@ export class CurrentFlowService {
           if (!data[actionProperty]) {
             step.configuredProperties[
               actionProperty
-            ] = descriptor.propertyDefinitionSteps.map(
-              actionDefinitionStep => {
-                return actionDefinitionStep.properties[actionProperty]
-                  .defaultValue;
-              }
-            )[0];
+            ] = descriptor.propertyDefinitionSteps.map(actionDefinitionStep => {
+              return actionDefinitionStep.properties[actionProperty]
+                .defaultValue;
+            })[0];
           }
         }
         // set the descriptor but avoid overwriting data shapes if they're user set, or if the incoming datashapes don't have the spec set
         const inputDataShape = step.action.descriptor.inputDataShape;
         const outputDataShape = step.action.descriptor.outputDataShape;
         step.action.descriptor = descriptor;
-        if (this.isUserDefined(inputDataShape) ||
-           (descriptor.inputDataShape.kind !== DataShapeKinds.NONE && !descriptor.inputDataShape.specification)) {
+        if (
+          this.isUserDefined(inputDataShape) ||
+          (descriptor.inputDataShape.kind !== DataShapeKinds.NONE &&
+            !descriptor.inputDataShape.specification)
+        ) {
           step.action.descriptor.inputDataShape = inputDataShape;
         }
-        if (this.isUserDefined(outputDataShape) ||
-           (descriptor.outputDataShape.kind !== DataShapeKinds.NONE && !descriptor.outputDataShape.specification)) {
+        if (
+          this.isUserDefined(outputDataShape) ||
+          (descriptor.outputDataShape.kind !== DataShapeKinds.NONE &&
+            !descriptor.outputDataShape.specification)
+        ) {
           step.action.descriptor.outputDataShape = outputDataShape;
         }
         this.maybeDoAction(event['onSave']);
@@ -512,8 +524,8 @@ export class CurrentFlowService {
         const isInput = event['isInput'] || false;
         const step = this.steps[position] || createStep();
         if (!step.action) {
-          step.action = { } as Action;
-          step.action.descriptor = { } as ActionDescriptor;
+          step.action = {} as Action;
+          step.action.descriptor = {} as ActionDescriptor;
         }
         if (isInput) {
           step.action.descriptor.inputDataShape = dataShape;
@@ -553,7 +565,7 @@ export class CurrentFlowService {
         const integration = this.getIntegrationClone();
         const tags = integration.tags || [];
         const connectorIds = this.getSubsequentConnections(0).map(
-          step => step.connection ? step.connection.connectorId : undefined
+          step => (step.connection ? step.connection.connectorId : undefined)
         );
         connectorIds.forEach(id => {
           if (id && tags.indexOf(id) === -1) {
@@ -578,9 +590,12 @@ export class CurrentFlowService {
               this._integration.id = i.id;
             }
             if (event.publish) {
-              this.integrationSupportService.deploy(i).toPromise().then(() => {
-                finishUp(i, sub);
-              });
+              this.integrationSupportService
+                .deploy(i)
+                .toPromise()
+                .then(() => {
+                  finishUp(i, sub);
+                });
             } else {
               finishUp(i, sub);
             }
@@ -648,7 +663,11 @@ export class CurrentFlowService {
   }
 
   private isUserDefined(dataShape: DataShape) {
-    return dataShape && dataShape.metadata && dataShape.metadata.userDefined === 'true';
+    return (
+      dataShape &&
+      dataShape.metadata &&
+      dataShape.metadata.userDefined === 'true'
+    );
   }
 
   private hasDataShape(step: Step, isInput = false): boolean {
@@ -656,7 +675,9 @@ export class CurrentFlowService {
       return false;
     }
     const descriptor = step.action.descriptor;
-    const dataShape = isInput ? descriptor.inputDataShape : descriptor.outputDataShape;
+    const dataShape = isInput
+      ? descriptor.inputDataShape
+      : descriptor.outputDataShape;
     return dataShape && dataShape.kind !== DataShapeKinds.NONE;
   }
 

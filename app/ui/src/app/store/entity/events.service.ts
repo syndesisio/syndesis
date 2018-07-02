@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
+import { Subject, Subscription } from 'rxjs';
 import { resolve } from 'url';
 
 import { ConfigService } from '@syndesis/ui/config.service';
@@ -32,7 +31,10 @@ export class EventsService {
   private retries = 0;
   private preferredProtocol = null;
 
-  constructor(private configService: ConfigService, private apiHttpService: ApiHttpService) {
+  constructor(
+    private configService: ConfigService,
+    private apiHttpService: ApiHttpService
+  ) {
     this.configService.asyncSettings$.subscribe(() => this.start());
   }
 
@@ -90,31 +92,32 @@ export class EventsService {
       this.apiHttpService
         .setEndpointUrl('/event/reservations')
         .post<{ data: any }>({})
-        .subscribe(response => {
-          const apiEndpoint = this.configService.getSettings().apiEndpoint;
-          const reservation = response.data;
+        .subscribe(
+          response => {
+            const apiEndpoint = this.configService.getSettings().apiEndpoint;
+            const reservation = response.data;
 
-          try {
-            if (connectUsingWebSockets) {
-              let wsApiEndpoint = resolve(window.location.href, apiEndpoint);
-              wsApiEndpoint = wsApiEndpoint.replace(/^http/, 'ws');
-              (wsApiEndpoint += '/event/streams.ws/' + reservation),
-                this.connectWebSocket(wsApiEndpoint);
-              log.info('Connecting using web socket');
-              this.starting = false;
-              this.started = true;
-            } else {
-              this.connectEventSource(
-                apiEndpoint + '/event/streams/' + reservation
-              );
-              this.starting = false;
-              this.started = true;
-              log.info('Connecting using server side events');
+            try {
+              if (connectUsingWebSockets) {
+                let wsApiEndpoint = resolve(window.location.href, apiEndpoint);
+                wsApiEndpoint = wsApiEndpoint.replace(/^http/, 'ws');
+                (wsApiEndpoint += '/event/streams.ws/' + reservation),
+                  this.connectWebSocket(wsApiEndpoint);
+                log.info('Connecting using web socket');
+                this.starting = false;
+                this.started = true;
+              } else {
+                this.connectEventSource(
+                  apiEndpoint + '/event/streams/' + reservation
+                );
+                this.starting = false;
+                this.started = true;
+                log.info('Connecting using server side events');
+              }
+            } catch (error) {
+              this.onFailure(error);
             }
-          } catch (error) {
-            this.onFailure(error);
-          }
-        },
+          },
           error => this.onFailure(error)
         );
     } catch (error) {

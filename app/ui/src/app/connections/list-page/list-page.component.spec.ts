@@ -17,26 +17,21 @@ describe('ConnectionListPage', () => {
   let component: ConnectionsListPage;
   let fixture: ComponentFixture<ConnectionsListPage>;
 
-  beforeEach(
-    async(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          TestApiModule,
-          SyndesisCommonModule.forRoot(),
-          SyndesisStoreModule,
-          RouterTestingModule.withRoutes([]),
-          ModalModule.forRoot(),
-          BsDropdownModule.forRoot(),
-          NotificationModule,
-          PatternflyUIModule,
-        ],
-        declarations: [
-          ConnectionsListPage,
-          ConnectionsListComponent,
-        ]
-      }).compileComponents();
-    }),
-  );
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        TestApiModule,
+        SyndesisCommonModule.forRoot(),
+        SyndesisStoreModule,
+        RouterTestingModule.withRoutes([]),
+        ModalModule.forRoot(),
+        BsDropdownModule.forRoot(),
+        NotificationModule,
+        PatternflyUIModule
+      ],
+      declarations: [ConnectionsListPage, ConnectionsListComponent]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConnectionsListPage);

@@ -1,6 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Activity, Integration, IntegrationSupportService } from '@syndesis/ui/platform';
+import { Observable } from 'rxjs';
+import {
+  Activity,
+  Integration,
+  IntegrationSupportService
+} from '@syndesis/ui/platform';
 import { tap, map } from 'rxjs/operators';
 
 @Component({
@@ -25,7 +29,9 @@ export class IntegrationLogsComponent implements OnInit {
       .pipe(
         tap(isEnabled => {
           if (isEnabled) {
-            this.exchanges$ = this.integrationSupportService.requestIntegrationActivity(this.integration.id);
+            this.exchanges$ = this.integrationSupportService.requestIntegrationActivity(
+              this.integration.id
+            );
           }
           return isEnabled;
         })

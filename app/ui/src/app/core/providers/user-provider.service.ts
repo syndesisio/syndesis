@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { UserService, ApiHttpService, User } from '@syndesis/ui/platform';
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +12,11 @@ export class UserProviderService extends UserService {
    * UserService constructor
    * @param {HttpClient} httpClient
    */
-  constructor(private httpClient: HttpClient, private apiHttpService: ApiHttpService, private ngZone: NgZone) {
+  constructor(
+    private httpClient: HttpClient,
+    private apiHttpService: ApiHttpService,
+    private ngZone: NgZone
+  ) {
     super();
   }
 

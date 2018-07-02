@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 
 import { Connectors, Connector, Connection } from '@syndesis/ui/platform';
 import { TypeFactory } from '@syndesis/ui/model';

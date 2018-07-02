@@ -1,9 +1,14 @@
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
+import {
+  of as observableOf,
+  merge as observableMerge,
+  Observable,
+  Observer,
+  BehaviorSubject,
+  Subscription,
+  Subject
+} from 'rxjs';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
+import { share, mergeMap, filter } from 'rxjs/operators';
 import { plural } from 'pluralize';
 
 import { BaseEntity } from '@syndesis/ui/platform';
@@ -56,7 +61,7 @@ export abstract class AbstractStore<
   }
 
   setChangeEventsFilter(changeEvents: Subject<ChangeEvent>) {
-    return changeEvents.filter(event => event.kind === this.service.kind);
+    return changeEvents.pipe(filter(event => event.kind === this.service.kind));
   }
 
   protected abstract get kind(): string;
@@ -64,28 +69,31 @@ export abstract class AbstractStore<
   get list() {
     // Give back the _list,
     // but also update it if we get notified the a change occurred.
-    return Observable.merge(
+    return observableMerge(
       this._list,
-      this.changeEvents.flatMap(event => {
+      this.changeEvents.pipe(mergeMap(event => {
         // We could probably get fancy one day an only fetch the entry that matches event.id
         // simulate no data
         if (EMPTY_STATE) {
-          return Observable.of([] as L) as Observable<L>;
+          return observableOf([] as L) as Observable<L>;
         } else {
           return this.service.list();
         }
-      }),
-    ).share();
+      })),
+    ).pipe(share());
   }
 
   get resource() {
-    return Observable.merge(
+    return observableMerge(
       this._current,
-      this.changeEvents.filter(event => {
-        return event.id.startsWith(this.currentId);
-      }).flatMap(event => {
-        return this.service.get(this.currentId);
-      }),
+      this.changeEvents.pipe(
+        filter(event => {
+          return event.id.startsWith(this.currentId);
+        }),
+        mergeMap(event => {
+          return this.service.get(this.currentId);
+        })
+      )
     );
   }
 
@@ -195,7 +203,7 @@ export abstract class AbstractStore<
         created.error(error);
       },
     );
-    return created.share();
+    return created.pipe(share());
   }
 
   update(entity: T, reload = false): Observable<T> {
@@ -229,7 +237,7 @@ export abstract class AbstractStore<
         this._loading.next(false);
       },
     );
-    return updated.share();
+    return updated.pipe(share());
   }
 
   updateOrCreate(entity: T): Observable<T> {
@@ -265,7 +273,7 @@ export abstract class AbstractStore<
         deleted.error(error);
       },
     );
-    return deleted.share();
+    return deleted.pipe(share());
   }
 
   patch(id: string, attributes: any): Observable<any> {

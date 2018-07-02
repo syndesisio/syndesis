@@ -1,5 +1,5 @@
-
-const ALPHABET = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+const ALPHABET =
+  '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
 const RANDOMNESS: number[] = [];
 let lastTimestamp = 0;
 
@@ -13,7 +13,6 @@ let lastTimestamp = 0;
  * (2) loosely increment based on relative machine time when viewed across nodes.
  */
 export function key() {
-
   // first time setup.. initialize the randomness...
   if (RANDOMNESS.length == 0) {
     for (let i = 0; i < 12; i++) {

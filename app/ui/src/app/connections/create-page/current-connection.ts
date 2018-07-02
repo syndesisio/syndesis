@@ -1,10 +1,14 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { getCategory, log } from '@syndesis/ui/logging';
-import { ConfiguredConfigurationProperty, Connection, I18NService } from '@syndesis/ui/platform';
+
+import {
+  ConfiguredConfigurationProperty,
+  Connection,
+  I18NService
+} from '@syndesis/ui/platform';
 import { ConnectionStore, ConnectorStore } from '@syndesis/ui/store';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable, EMPTY, Subscription } from 'rxjs';
 
 const category = getCategory('CurrentConnectionService');
 
@@ -98,7 +102,7 @@ export class CurrentConnectionService {
   acquireCredentials() {
     if (!this._connection || !this._connection.connectorId) {
       this._credentials = undefined;
-      return Observable.empty();
+      return EMPTY;
     }
     const connectorId = this._connection.connectorId;
     return this.connectorStore.acquireCredentials(connectorId).flatMap((resp: any) => {
@@ -239,7 +243,7 @@ export class CurrentConnectionService {
   private fetchCredentials() {
     if (!this._connection || !this._connection.connectorId) {
       this._credentials = undefined;
-      return Observable.empty();
+      return EMPTY;
     }
     const connectorId = this._connection.connectorId;
     return Observable.create(observer => {
@@ -259,7 +263,10 @@ export class CurrentConnectionService {
     const properties = { ...connection.connector.properties };
     // strip out any values that happen to have been set in the `properties` object
     for (const key of Object.keys(properties)) {
-      const { value, ...property } = <ConfiguredConfigurationProperty> properties[key];
+      const {
+        value,
+        ...property
+      } = <ConfiguredConfigurationProperty>properties[key];
       properties[key] = property;
     }
     connection.connectorId = connection.connector.id;

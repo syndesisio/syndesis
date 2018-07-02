@@ -1,4 +1,5 @@
-import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { BaseEntity, ApiHttpService } from '@syndesis/ui/platform';
 
@@ -7,7 +8,7 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
     public apiHttpService: ApiHttpService,
     public endpoint: string,
     public kind: string
-  ) { }
+  ) {}
 
   get(id: string): Observable<T> {
     return this.apiHttpService
@@ -19,7 +20,12 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
     return this.apiHttpService
       .setEndpointUrl(this.getEndpointSegment())
       .get()
-      .map((response: any) => Array.isArray(response) ? response : response.items || [] as L);
+      .pipe(
+        map(
+          (response: any) =>
+            Array.isArray(response) ? response : response.items || ([] as L)
+        )
+      );
   }
 
   create(obj: T): Observable<T> {
@@ -32,7 +38,7 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
     return this.apiHttpService
       .setEndpointUrl(this.getEndpointSegment(obj.id))
       .put(obj)
-      .map((response: any) => response !== null ? response : []);
+      .pipe(map((response: any) => (response !== null ? response : [])));
   }
 
   delete(obj: T): Observable<any> {

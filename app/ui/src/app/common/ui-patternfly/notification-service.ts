@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
-import {
-  NotificationService as NS,
-  Notification,
-  Action
-} from 'patternfly-ng';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { NotificationService as NS, Notification, Action } from 'patternfly-ng';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
 export class NotificationService extends NS {
@@ -43,7 +38,7 @@ export class NotificationService extends NS {
 
   // Toast notification wrapper, used for notifications
   // that are not persistent and do not have actions associated
-  popNotification({type, header, message, isPersistent = false}): void {
+  popNotification({ type, header, message, isPersistent = false }): void {
     this.message(type, header, message, isPersistent);
   }
 }
