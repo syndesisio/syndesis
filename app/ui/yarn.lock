@@ -246,9 +246,9 @@
     semver "^5.3.0"
     semver-intersect "^1.1.2"
 
-"@swimlane/ngx-datatable@^11.1.7":
-  version "11.3.2"
-  resolved "https://registry.yarnpkg.com/@swimlane/ngx-datatable/-/ngx-datatable-11.3.2.tgz#cefeda7f75a6f69394e4f8e05b197942584f054d"
+"@swimlane/ngx-datatable@^13.0.0":
+  version "13.0.1"
+  resolved "https://registry.yarnpkg.com/@swimlane/ngx-datatable/-/ngx-datatable-13.0.1.tgz#6e949e19130b2054e2715d30d158751c4fbaa502"
 
 "@types/bootstrap@^3.3.37":
   version "3.3.39"
@@ -738,14 +738,6 @@ align-text@^0.1.1, align-text@^0.1.3:
 amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
-
-"angular-tree-component@^6.0.0 || ^7.0.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/angular-tree-component/-/angular-tree-component-7.1.0.tgz#53674ea944f7147647c7e48931f5fad66237a632"
-  dependencies:
-    lodash "^4.17.5"
-    mobx "^3.6.2"
-    mobx-angular "2.1.1"
 
 angular2-text-mask@^9.0.0:
   version "9.0.0"
@@ -1241,12 +1233,6 @@ bootstrap-select@1.12.2:
   dependencies:
     jquery ">=1.8"
 
-bootstrap-select@^1.12.2:
-  version "1.12.4"
-  resolved "https://registry.yarnpkg.com/bootstrap-select/-/bootstrap-select-1.12.4.tgz#7f15d3c0ce978868d9c09c70f96624f55fa02ee1"
-  dependencies:
-    jquery ">=1.8"
-
 bootstrap-select@~1.10.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/bootstrap-select/-/bootstrap-select-1.10.0.tgz#9499679e70004dbc00872522322d3b93a0f132e4"
@@ -1419,8 +1405,8 @@ bytes@3.0.0:
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.0.0.tgz#d32815404d689699f85a4ea4fa8755dd13a96048"
 
 c3@^0.4.15, c3@~0.4.11:
-  version "0.4.22"
-  resolved "https://registry.yarnpkg.com/c3/-/c3-0.4.22.tgz#88b895f06fb6b44314e94b2d7331c3dc98b64d2d"
+  version "0.4.23"
+  resolved "https://registry.yarnpkg.com/c3/-/c3-0.4.23.tgz#32ece135d0ac6d124187be5c6935903699643002"
   dependencies:
     d3 "~3.5.0"
 
@@ -2185,10 +2171,10 @@ dashdash@^1.12.0:
     assert-plus "^1.0.0"
 
 datatables.net-bs@>=1.10.9:
-  version "1.10.16"
-  resolved "https://registry.yarnpkg.com/datatables.net-bs/-/datatables.net-bs-1.10.16.tgz#b0854f5b374f713ae3db4156c7cea8a760c3de76"
+  version "1.10.19"
+  resolved "https://registry.yarnpkg.com/datatables.net-bs/-/datatables.net-bs-1.10.19.tgz#08763b4e4d0cef1a427d019dc15e717c7ed67a4d"
   dependencies:
-    datatables.net "1.10.16"
+    datatables.net "1.10.19"
     jquery ">=1.7"
 
 datatables.net-colreorder-bs@~1.3.2:
@@ -2200,8 +2186,8 @@ datatables.net-colreorder-bs@~1.3.2:
     jquery ">=1.7"
 
 datatables.net-colreorder@>=1.2.0, datatables.net-colreorder@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/datatables.net-colreorder/-/datatables.net-colreorder-1.4.1.tgz#389e4b1a274e203979a3718d86c5884d0a0166b6"
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/datatables.net-colreorder/-/datatables.net-colreorder-1.5.1.tgz#ee5eacd7178b5fd9396aab44d4907aae35086f8c"
   dependencies:
     datatables.net "^1.10.15"
     jquery ">=1.7"
@@ -2214,13 +2200,19 @@ datatables.net-colreorder@~1.3.2:
     jquery ">=1.7"
 
 datatables.net-select@~1.2.0:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/datatables.net-select/-/datatables.net-select-1.2.5.tgz#4f764669b464d5576a59c576c1250a5d069aa2e9"
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/datatables.net-select/-/datatables.net-select-1.2.7.tgz#7d5badfca49c438f8b51df04483d8d77857e917c"
   dependencies:
     datatables.net "^1.10.15"
     jquery ">=1.7"
 
-datatables.net@1.10.16, datatables.net@>=1.10.9, datatables.net@^1.10.15:
+datatables.net@1.10.19, datatables.net@^1.10.15:
+  version "1.10.19"
+  resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.10.19.tgz#97a1ed41c85e62d61040603481b59790a172dd1f"
+  dependencies:
+    jquery ">=1.7"
+
+datatables.net@>=1.10.9:
   version "1.10.16"
   resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.10.16.tgz#4b052d1082824261b68eed9d22741b711d3d2469"
   dependencies:
@@ -4856,11 +4848,11 @@ lodash@^3.8.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.5.0, lodash@~4.17.4:
+lodash@^4.0.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.2, lodash@^4.3.0, lodash@^4.5.0, lodash@~4.17.4:
   version "4.17.5"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
-lodash@^4.17.3:
+lodash@^4.17.10, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
@@ -5163,23 +5155,19 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0:
   dependencies:
     minimist "0.0.8"
 
-mobx-angular@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/mobx-angular/-/mobx-angular-2.1.1.tgz#d5e36539acb200186dd5a1170806b4776b9a8b88"
-
-mobx@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.6.2.tgz#fb9f5ff5090539a1ad54e75dc4c098b602693320"
-
 moment-timezone@^0.4.0, moment-timezone@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.4.1.tgz#81f598c3ad5e22cdad796b67ecd8d88d0f5baa06"
   dependencies:
     moment ">= 2.6.0"
 
-moment@*, "moment@>= 2.6.0", moment@^2.10, moment@^2.19.1, moment@^2.20.1:
+moment@*, moment@^2.20.1:
   version "2.22.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.1.tgz#529a2e9bf973f259c9643d237fda84de3a26e8ad"
+
+"moment@>= 2.6.0", moment@^2.10, moment@^2.19.1:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
 moment@~2.14.1:
   version "2.14.1"
@@ -5287,10 +5275,6 @@ ng2-material-dropdown@0.10.0:
   resolved "https://registry.yarnpkg.com/ng2-material-dropdown/-/ng2-material-dropdown-0.10.0.tgz#c524937ac0e9ad833f5dcecd9c98f64aca0519cc"
   dependencies:
     tslib "^1.9.0"
-
-"ngx-bootstrap@^1.8.0 || ^2.0.0":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.3.tgz#b8ca4be305be4e2e99f60d941cc8a3e906f198d7"
 
 ngx-bootstrap@^3.0.0:
   version "3.0.1"
@@ -5846,18 +5830,17 @@ patternfly-bootstrap-treeview@~2.1.0:
     bootstrap "3.3.x"
     jquery ">= 2.1.x"
 
-patternfly-ng@^3.0.0:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-3.1.3.tgz#30811bac41d6e82ee40f626e03e3f3a1c2861821"
+patternfly-ng@^4.0.0:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-4.0.1.tgz#9f960d21e2723430a952eccbabb29e3a31137a86"
   dependencies:
-    lodash "^4.17.4"
+    lodash "^4.17.10"
     patternfly "^3.28.0"
   optionalDependencies:
-    "@swimlane/ngx-datatable" "^11.1.7"
-    angular-tree-component "^6.0.0 || ^7.0.0"
+    "@swimlane/ngx-datatable" "^13.0.0"
     c3 "^0.4.15"
     ng2-dragula "^1.5.0"
-    ngx-bootstrap "^1.8.0 || ^2.0.0"
+    ngx-bootstrap "^3.0.0"
 
 patternfly-sass@3.23.2:
   version "3.23.2"
@@ -5917,16 +5900,17 @@ patternfly@3.51.2:
     patternfly-bootstrap-treeview "~2.1.0"
 
 patternfly@^3.28.0:
-  version "3.45.0"
-  resolved "https://registry.yarnpkg.com/patternfly/-/patternfly-3.45.0.tgz#5b27bde3e3ef68a1542906b96016654aa089a7f3"
+  version "3.52.0"
+  resolved "https://registry.yarnpkg.com/patternfly/-/patternfly-3.52.0.tgz#31012b4e1da97ef92cf05032e03f45763c718938"
   dependencies:
     bootstrap "~3.3.7"
     font-awesome "^4.7.0"
     jquery "~3.2.1"
   optionalDependencies:
+    "@types/c3" "^0.6.0"
     bootstrap-datepicker "^1.7.1"
     bootstrap-sass "^3.3.7"
-    bootstrap-select "^1.12.2"
+    bootstrap-select "1.12.2"
     bootstrap-slider "^9.9.0"
     bootstrap-switch "~3.3.4"
     bootstrap-touchspin "~3.1.1"

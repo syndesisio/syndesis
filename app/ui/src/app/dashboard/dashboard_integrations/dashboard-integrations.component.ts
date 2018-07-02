@@ -2,7 +2,7 @@ import { Component, Input, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 
-import { DonutComponent, DonutConfig } from 'patternfly-ng';
+import { DonutChartConfig as DonutConfig } from 'patternfly-ng';
 
 import { log } from '@syndesis/ui/logging';
 import {

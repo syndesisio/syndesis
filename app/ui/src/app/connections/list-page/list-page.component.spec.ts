@@ -3,7 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { NotificationModule } from 'patternfly-ng';
+import { ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
 
 import { TestApiModule } from '@syndesis/ui/api/testing';
 

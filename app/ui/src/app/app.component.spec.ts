@@ -3,7 +3,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CollapseModule, ModalModule } from 'ngx-bootstrap';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { NotificationModule } from 'patternfly-ng';
+import { ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
 import { StoreModule as NgRxStoreModule } from '@ngrx/store';
 
 import { AppComponent } from './app.component';

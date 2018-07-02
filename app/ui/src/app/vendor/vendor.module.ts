@@ -14,7 +14,9 @@ import {
 
 import {
   ActionModule,
-  NotificationModule,
+  ToastNotificationModule,
+  ToastNotificationListModule,
+  InlineNotificationModule,
   CardModule,
   ListModule,
   ToolbarModule,
@@ -31,7 +33,9 @@ const imports = [
   TypeaheadModule.forRoot(),
   BsDropdownModule.forRoot(),
   ActionModule,
-  NotificationModule,
+  ToastNotificationModule,
+  ToastNotificationListModule,
+  InlineNotificationModule,
   CardModule,
   ListModule,
   ToolbarModule
@@ -47,7 +51,9 @@ const _exports = [
   TypeaheadModule,
   BsDropdownModule,
   ActionModule,
-  NotificationModule,
+  ToastNotificationModule,
+  ToastNotificationListModule,
+  InlineNotificationModule,
   CardModule,
   ListModule,
   ToolbarModule,
