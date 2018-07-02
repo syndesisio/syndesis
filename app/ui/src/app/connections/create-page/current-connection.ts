@@ -9,6 +9,7 @@ import {
 } from '@syndesis/ui/platform';
 import { ConnectionStore, ConnectorStore } from '@syndesis/ui/store';
 import { Observable, EMPTY, Subscription } from 'rxjs';
+import { catchError, mergeMap } from 'rxjs/operators';
 
 const category = getCategory('CurrentConnectionService');
 
@@ -105,18 +106,24 @@ export class CurrentConnectionService {
       return EMPTY;
     }
     const connectorId = this._connection.connectorId;
-    return this.connectorStore.acquireCredentials(connectorId).flatMap((resp: any) => {
-        log.infoc(() => 'Got response: ' + JSON.stringify(resp));
-      }).catch( (error: any) => {
-        const data = error.data;
-        const message = data && data.userMsgDetail ?
-          this.i18NService.localize('connections.external-oauth-error', data.userMsgDetail) :
-          this.i18NService.localize('connetions.unknown-oauth-error');
-        this._oauthStatus = {
-          message: message
-        };
-        log.infoc(() => 'Error response initiating oauth flow:' + JSON.stringify(error));
-      });
+    return this.connectorStore.acquireCredentials(connectorId)
+      .pipe(
+        mergeMap((resp: any) => {
+          log.infoc(() => 'Got response: ' + JSON.stringify(resp));
+          return resp;
+        }),
+        catchError((error: any) => {
+          const data = error.data;
+          const message = data && data.userMsgDetail ?
+            this.i18NService.localize('connections.external-oauth-error', data.userMsgDetail) :
+            this.i18NService.localize('connetions.unknown-oauth-error');
+          this._oauthStatus = {
+            message: message
+          };
+          log.infoc(() => 'Error response initiating oauth flow:' + JSON.stringify(error));
+          return error;
+        })
+      );
   }
 
   clearOAuthError() {
