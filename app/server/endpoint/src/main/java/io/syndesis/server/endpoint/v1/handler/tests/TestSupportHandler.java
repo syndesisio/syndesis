@@ -15,9 +15,9 @@
  */
 package io.syndesis.server.endpoint.v1.handler.tests;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -28,16 +28,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import io.syndesis.common.model.ModelData;
-import io.syndesis.server.dao.manager.DataAccessObject;
-import io.syndesis.server.dao.manager.DataManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.ModelData;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.server.dao.manager.DataAccessObject;
+import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Path("/test-support")
 @org.springframework.stereotype.Component
@@ -64,8 +65,9 @@ public class TestSupportHandler {
     public void resetDBToDefault() {
         LOG.warn("user {} is resetting DB", context.getRemoteUser());
         // Deployments must be also deleted because we it is not possible to reach them after deleting DB.
-        deleteDeployments();
+        List<Integration> integrations = getIntegrations();
         deleteAllDBEntities();
+        deleteDeployments(integrations);
         dataMgr.resetDeploymentData();
     }
 
@@ -80,12 +82,27 @@ public class TestSupportHandler {
         }
     }
 
+    /**
+     * Gets all integrations.
+     * @return list of integrations
+     */
+    private List<Integration> getIntegrations() {
+        return dataMgr.fetchAll(Integration.class).getItems();
+    }
+
     @GET
     @Path("/delete-deployments")
     public void deleteDeployments() {
         LOG.warn("user {} is deleting all integration deploymets", context.getRemoteUser());
-        List<Integration> integrations = dataMgr.fetchAll(Integration.class).getItems();
-        for (Integration i : integrations) {
+        deleteDeployments(dataMgr.fetchAll(Integration.class).getItems());
+    }
+
+    /**
+     * Delete selected deployments.
+     * @param deployments list of integration to delete
+     */
+    private void deleteDeployments(List<Integration> deployments) {
+        for (Integration i : deployments) {
             if (openShiftService.exists(i.getName())) {
                 openShiftService.delete(i.getName());
                 LOG.debug("Deleting integration \"{}\"", i.getName());
