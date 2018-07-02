@@ -2,10 +2,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { TabsModule } from 'ngx-bootstrap/tabs';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
+import { VendorModule } from '@syndesis/ui/vendor';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
@@ -23,10 +20,7 @@ xdescribe('IntegrationsListPage', () => {
         SyndesisCommonModule.forRoot(),
         SyndesisStoreModule,
         RouterTestingModule.withRoutes([]),
-        ModalModule.forRoot(),
-        TooltipModule.forRoot(),
-        TabsModule.forRoot(),
-        NotificationModule,
+        VendorModule,
         PatternflyUIModule,
         IntegrationListModule
       ],
