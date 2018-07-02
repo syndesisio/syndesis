@@ -25,6 +25,11 @@
               ]
             },
             "assets": [
+              {
+                "glob": "config.json",
+                "input": "src",
+                "output": "/"
+              },
               "src/assets",
               "src/favicon.ico",
               "src/favicon-16x16.png",
