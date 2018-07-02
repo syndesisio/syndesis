@@ -7,8 +7,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import {
   ActionModule,
   ListModule,
-  NotificationModule,
-  ChartModule
+  ToastNotificationListModule as NotificationModule,
+  DonutChartModule as ChartModule
 } from 'patternfly-ng';
 
 import { PlatformModule } from '@syndesis/ui/platform';

@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { NotificationModule } from 'patternfly-ng';
+import { ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';

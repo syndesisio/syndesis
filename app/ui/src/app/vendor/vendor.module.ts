@@ -14,7 +14,7 @@ import {
 
 import {
   ActionModule,
-  NotificationModule,
+  ToastNotificationListModule as NotificationModule,
   CardModule,
   ListModule,
   ToolbarModule,

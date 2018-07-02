@@ -7,7 +7,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { ActionModule, ListModule, NotificationModule } from 'patternfly-ng';
+import { ActionModule, ListModule, ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { IntegrationListComponent } from './list.component';

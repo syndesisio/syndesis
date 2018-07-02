@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-import { ChartModule } from 'patternfly-ng';
+import { DonutChartModule as ChartModule } from 'patternfly-ng';
 
 import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
