@@ -35,8 +35,7 @@
               "src/mstile-150x150.png",
               "src/safari-pinned-tab.svg",
               "src/manifest.webapp",
-              "src/browserconfig.xml",
-              "src/config.json"
+              "src/browserconfig.xml"
             ],
             "styles": [
               "node_modules/patternfly/dist/css/patternfly.css",
@@ -132,8 +131,7 @@
               "src/mstile-150x150.png",
               "src/safari-pinned-tab.svg",
               "src/manifest.webapp",
-              "src/browserconfig.xml",
-              "src/config.json"
+              "src/browserconfig.xml"
             ]
           }
         },
