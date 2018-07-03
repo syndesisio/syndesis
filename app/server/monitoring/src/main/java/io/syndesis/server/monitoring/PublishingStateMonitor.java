@@ -74,6 +74,7 @@ public class PublishingStateMonitor implements StateHandler {
 
         final String integrationId = integrationDeployment.getIntegrationId().get();
         final String version = String.valueOf(integrationDeployment.getVersion());
+        final String compositeId = IntegrationDeployment.compositeId(integrationId, integrationDeployment.getVersion());
         final IntegrationDeploymentState targetState = integrationDeployment.getTargetState();
 
         // is it being published?
@@ -97,7 +98,7 @@ public class PublishingStateMonitor implements StateHandler {
                     // no details needed once deployed successfully!!!
                     // NOTE that this won't happen always, the state polling window may miss this
                     // TODO need a cleanup handler to remove successfully published state details??
-                    deleteStateDetails(integrationId);
+                    deleteStateDetails(compositeId);
                 } else {
                     podUrls = getPodUrls(pod);
                     // pending deployment pod
@@ -120,19 +121,19 @@ public class PublishingStateMonitor implements StateHandler {
 
                     }
                 } else {
-                    // 3. default state, with no event or log urls!!!
+                    // 3. default initial state, with no event or log urls!!!
                     detailedState = IntegrationDeploymentDetailedState.ASSEMBLING;
                 }
             }
 
             if (detailedState != null) {
                 IntegrationDeploymentStateDetails stateDetails = new IntegrationDeploymentStateDetails.Builder()
-                    .id(integrationId)
+                    .id(compositeId)
                     .detailedState(detailedState)
                     .eventsUrl(Optional.ofNullable(podUrls[0]))
                     .logsUrl(Optional.ofNullable(podUrls[1]))
                     .build();
-                if (dataManager.fetch(IntegrationDeploymentStateDetails.class, integrationId) != null) {
+                if (dataManager.fetch(IntegrationDeploymentStateDetails.class, compositeId) != null) {
                     dataManager.update(stateDetails);
                 } else {
                     dataManager.create(stateDetails);

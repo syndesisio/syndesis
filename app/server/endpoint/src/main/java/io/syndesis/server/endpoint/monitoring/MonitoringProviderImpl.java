@@ -20,6 +20,8 @@ import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.monitoring.IntegrationDeploymentStateDetails;
 import io.syndesis.server.dao.manager.DataManager;
 
@@ -35,8 +37,12 @@ public class MonitoringProviderImpl implements MonitoringProvider {
 
     @Override
     public IntegrationDeploymentStateDetails getIntegrationStateDetails(String integrationId) {
-        // TODO: do we need to check if the integration is still pending??
-        return dataManager.fetch(IntegrationDeploymentStateDetails.class, integrationId);
+        // get current integration version for IntegrationDeployment id
+        final Integration integration = dataManager.fetch(Integration.class, integrationId);
+        final int version = integration.getVersion();
+
+        final String compositeId = IntegrationDeployment.compositeId(integrationId, version);
+        return dataManager.fetch(IntegrationDeploymentStateDetails.class, compositeId);
     }
 
     @Override
