@@ -49,3 +49,4 @@ src/config.json.bak
 users.json
 scripts/swagger.json
 src/app/_model.ts
+package-lock.json
