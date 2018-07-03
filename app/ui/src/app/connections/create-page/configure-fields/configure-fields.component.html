@@ -5,7 +5,7 @@
         <div class="card-pf">
           <div class="card-pf-heading">
             <h2 class="card-pf-title">
-              {{ connection?.connector?.name }} Configuration
+              {{ 'thing-configuration' | synI18n: connection?.connector?.name }}
             </h2>
           </div>
           <div class="card-pf-body">
@@ -21,20 +21,18 @@
                                                                     primaryAction></syndesis-connection-configuration-validation>
                     </div>
                   </div>
-                  <p class="fields-status-pf">The fields marked with <span class="required-pf">*</span> are required.</p>
+                  <p class="fields-status-pf" [innerHTML]="'required-fields' | synI18n"></p>
                   <syndesis-form-control *ngFor="let controlModel of formModel"
                                          [group]="formGroup"
                                          [model]="controlModel"></syndesis-form-control>
                 </form>
                 <form *ngIf="!formModel.length">
-                  <p class="alert alert-info">There are no properties to configure</p>
+                  <p class="alert alert-info">{{ 'no-properties' | synI18n }}</p>
                 </form>
               </div>
             </ng-container>
             <ng-container *ngIf='hasCredentials'>
-              <p>
-                Log into your {{ connection?.connector?.name }} account to grant authorization for {{ 'shared.project.name' | synI18n }} to act on your behalf.
-              </p>
+              <p>{{ 'connections.oauth-prompt' | synI18n: connection?.connector?.name }}</p>
               <div class="alert alert-warning alert-dismissable"
                    *ngIf="current.oauthError">
                 <button type="button"
@@ -48,7 +46,7 @@
                         [disabled]="acquiringCredentials"
                         (click)="acquireCredentials()">
                         <span *ngIf="acquiringCredentials" class="spinner spinner-sm spinner-inline"></span>
-                        Connect {{ connection?.connector?.name }}
+                        {{ 'connections.oauth-button' | synI18n: connection?.connector?.name }}
                       </button>
               </p>
             </ng-container>
@@ -58,6 +56,6 @@
     </div>
   </div>
 </syndesis-loading>
-<syndesis-modal title="Leave page"
-                message="Are you sure you want to leave this page and lose any unsaved work?">
+<syndesis-modal title="{{ 'connections.leave-page-title' | synI18n }}"
+                message="{{ 'connections.leave-page-message' | synI18n }}">
 </syndesis-modal>

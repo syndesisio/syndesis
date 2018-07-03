@@ -5,33 +5,33 @@
       <div class="inline-block">
         <ol class="breadcrumb">
           <li>
-            <a [routerLink]=" ['/'] ">Home</a>
+            <a [routerLink]=" ['/'] ">{{ 'home' | synI18n }}</a>
           </li>
           <li>
-            <a [routerLink]=" ['..'] ">Connections</a>
+            <a [routerLink]=" ['..'] ">{{ 'connections' | synI18n }}</a>
           </li>
-          <li class="active"><strong>Create Connection</strong></li>
+          <li class="active"><strong>{{ 'connections.create-connection' | synI18n }}</strong></li>
         </ol>
       </div>
       <div *ngIf="current.loaded" class="toolbar-pf-action-right">
         <button class="btn btn-default"
-                (click)="cancel()">Cancel
+                (click)="cancel()"> {{ 'cancel' | synI18n }}
         </button> &nbsp;
         <button class="btn btn-default"
                 *ngIf="showBack()"
                 (click)="goBack()">
-          <i class="fa fa-chevron-left"></i> Back
+          <i class="fa fa-chevron-left"></i> {{ 'back' | synI18n }}
         </button>
         <button class="btn btn-primary"
                 *ngIf="showNextButton()"
                 (click)="goForward()"
                 [disabled]="!canContinue()">
-          Next <i class="fa fa-chevron-right"></i>
+          {{ 'next' | synI18n }} <i class="fa fa-chevron-right"></i>
         </button>
         <button class="btn btn-primary"
                 *ngIf="getCurrentPage() === 'review'"
                 (click)="doCreate()"
-                [disabled]="current.saving || !canContinue()">Create
+                [disabled]="current.saving || !canContinue()"> {{ 'create' | synI18n }}
         </button>
       </div>
     </div>
@@ -40,7 +40,7 @@
 
 <!-- Wizard Progress Bar-->
 <syndesis-wizard-progress-bar
-  [steps]="['Select Connector', 'Configure Connection', 'Name Connection']"
+  [steps]="[ 'connections.select-connector' | synI18n, 'connections.configure-connection' | synI18n, 'connections.name-connection' | synI18n]"
   stepUrlPrefix="connections/create/"
   [stepUrls]="['connection-basics', 'configure-fields', 'review']"
   [selectedStep]="currentActiveStep">
