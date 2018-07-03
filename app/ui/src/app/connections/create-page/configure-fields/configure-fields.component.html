@@ -12,8 +12,7 @@
             <ng-container *ngIf='!hasCredentials'>
               <div *ngIf="formModel && formGroup">
                 <form class="form-horizontal"
-                      [formGroup]="formGroup"
-                      *ngIf="formModel.length">
+                      [formGroup]="formGroup">
                   <div class="form-group">
                     <div class="col-sm-12">
                       <syndesis-connection-configuration-validation [connection]="connection"
@@ -25,8 +24,7 @@
                   <p class="fields-status-pf">The fields marked with <span class="required-pf">*</span> are required.</p>
                   <syndesis-form-control *ngFor="let controlModel of formModel"
                                          [group]="formGroup"
-                                         [model]="controlModel"
-                                         [hasErrorMessaging]="controlModel.hasErrorMessages"></syndesis-form-control>
+                                         [model]="controlModel"></syndesis-form-control>
                 </form>
                 <form *ngIf="!formModel.length">
                   <p class="alert alert-info">There are no properties to configure</p>

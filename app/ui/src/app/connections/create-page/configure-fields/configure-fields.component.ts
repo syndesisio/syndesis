@@ -58,9 +58,15 @@ export class ConnectionsConfigureFieldsComponent
 
   acquireCredentials() {
     this.acquiringCredentials = true;
-    const callback = () => this.acquiringCredentials = false;
+    let sub: Subscription;
+    const callback = () => {
+      this.acquiringCredentials = false;
+      if (sub) {
+        sub.unsubscribe();
+      }
+    };
     // error info is directly exposed from the current connection service, just toggle the spinner from here
-    this.current.acquireCredentials().subscribe(callback, callback);
+    sub = this.current.acquireCredentials().subscribe(callback, callback);
   }
 
   canDeactivate(nextState: RouterStateSnapshot) {
