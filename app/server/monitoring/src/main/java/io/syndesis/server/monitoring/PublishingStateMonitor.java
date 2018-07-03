@@ -82,16 +82,17 @@ public class PublishingStateMonitor implements StateHandler {
             IntegrationDeploymentDetailedState detailedState = null;
             String[] podUrls = new String[] { null, null };
 
-            // work backwards, in order: deployed pod, build pod, default to assembling
+            // work backwards, in reverse order: deployed pod, build pod, default to assembling
             // 1. look for deployed pod
             final PodList podList = client.pods()
                     .withLabel(OpenShiftService.COMPONENT_LABEL, "integration")
                     .withLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
                     .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId).list();
             if (!podList.getItems().isEmpty()) {
+
+                final Pod pod = podList.getItems().get(0);
                 // check if deployment is ready
                 // TODO: handle pod scaling in the future
-                final Pod pod = podList.getItems().get(0);
                 if (Readiness.isPodReady(pod)) {
                     // no details needed once deployed successfully!!!
                     // NOTE that this won't happen always, the state polling window may miss this
@@ -100,8 +101,7 @@ public class PublishingStateMonitor implements StateHandler {
                 } else {
                     podUrls = getPodUrls(pod);
                     // pending deployment pod
-                    detailedState = null != podUrls[0] ? IntegrationDeploymentDetailedState.DEPLOYING :
-                            IntegrationDeploymentDetailedState.STARTING;
+                    detailedState = null != podUrls[0] ? IntegrationDeploymentDetailedState.DEPLOYING : IntegrationDeploymentDetailedState.STARTING;
                 }
 
             } else {
@@ -130,7 +130,7 @@ public class PublishingStateMonitor implements StateHandler {
                     .id(integrationId)
                     .detailedState(detailedState)
                     .eventsUrl(Optional.ofNullable(podUrls[0]))
-                    .podLogUrl(Optional.ofNullable(podUrls[1]))
+                    .logsUrl(Optional.ofNullable(podUrls[1]))
                     .build();
                 if (dataManager.fetch(IntegrationDeploymentStateDetails.class, integrationId) != null) {
                     dataManager.update(stateDetails);
@@ -143,24 +143,22 @@ public class PublishingStateMonitor implements StateHandler {
     }
 
     private String[] getPodUrls(Pod pod) {
-        String eventUrl = null;
-        String logUrl = null;
-        if (!Readiness.isPodReady(pod)) {
-            final PodStatus status = pod.getStatus();
-            switch (status.getPhase()) {
-            case "Pending":
-                // get pod event url
-                eventUrl = String.format(POD_EVENT_URL, client.getMasterUrl(), client.getNamespace(), pod.getMetadata().getName());
-                break;
-            case "Running":
-                // get pod log url
-                logUrl = String.format(POD_LOG_URL, client.getMasterUrl(), client.getNamespace(), pod.getMetadata().getName());
-                break;
-            default:
-                // ignore
-            }
+        String eventsUrl = null;
+        String logsUrl = null;
+        final PodStatus status = pod.getStatus();
+        switch (status.getPhase()) {
+        case "Pending":
+            // get pod events url
+            eventsUrl = String.format(POD_EVENT_URL, client.getMasterUrl(), client.getNamespace(), pod.getMetadata().getName());
+            break;
+        case "Running":
+            // get pod logs url
+            logsUrl = String.format(POD_LOG_URL, client.getMasterUrl(), client.getNamespace(), pod.getMetadata().getName());
+            break;
+        default:
+            // ignore
         }
-        return new String[]{ eventUrl, logUrl };
+        return new String[]{ eventsUrl, logsUrl };
     }
 
     private void deleteStateDetails(String id) {

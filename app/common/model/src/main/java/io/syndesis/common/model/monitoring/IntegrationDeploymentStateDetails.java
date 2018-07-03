@@ -38,9 +38,23 @@ public interface IntegrationDeploymentStateDetails extends WithId<IntegrationDep
         return Kind.IntegrationDeploymentStateDetails;
     }
 
+    /**
+     * Integration state detailed status, including step count and total steps.
+     * @return detailed state.
+     */
     IntegrationDeploymentDetailedState getDetailedState();
+
+    /**
+     * POD events URL for either the build pod or deployment pod, depending on current detailed state.
+     * @return pod events url.
+     */
     Optional<String> getEventsUrl();
-    Optional<String> getPodLogUrl();
+
+    /**
+     * POD logs URL for either the build or deployment pod, depending on detailed state.
+     * @return pod logs url.
+     */
+    Optional<String> getLogsUrl();
 
     class Builder extends ImmutableIntegrationDeploymentStateDetails.Builder {
         // allow access to IntegrationDeploymentStateDetails.Builder
