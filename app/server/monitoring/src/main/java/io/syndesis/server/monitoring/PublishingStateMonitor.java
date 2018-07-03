@@ -27,6 +27,7 @@ import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.api.model.PodStatus;
 import io.fabric8.kubernetes.client.internal.readiness.Readiness;
+import io.fabric8.openshift.api.model.BuildList;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
@@ -50,6 +51,7 @@ public class PublishingStateMonitor implements StateHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(PublishingStateMonitor.class);
     private static final String POD_LOG_URL = "%sapi/v1/namespaces/%s/pods/%s/logs";
     private static final String POD_EVENT_URL = "%sapi/v1/namespaces/%s/pods/%s/events";
+    public static final String BUILD_POD_NAME_LABEL = "openshift.io/build.pod-name";
 
     private final NamespacedOpenShiftClient client;
     private final DataManager dataManager;
@@ -71,6 +73,7 @@ public class PublishingStateMonitor implements StateHandler {
     public void accept(IntegrationDeployment integrationDeployment) {
 
         final String integrationId = integrationDeployment.getIntegrationId().get();
+        final String version = String.valueOf(integrationDeployment.getVersion());
         final IntegrationDeploymentState targetState = integrationDeployment.getTargetState();
 
         // is it being published?
@@ -81,7 +84,9 @@ public class PublishingStateMonitor implements StateHandler {
 
             // work backwards, in order: deployed pod, build pod, default to assembling
             // 1. look for deployed pod
-            final PodList podList = client.pods().withLabel(OpenShiftService.COMPONENT_LABEL, "integration")
+            final PodList podList = client.pods()
+                    .withLabel(OpenShiftService.COMPONENT_LABEL, "integration")
+                    .withLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
                     .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId).list();
             if (!podList.getItems().isEmpty()) {
                 // check if deployment is ready
@@ -101,15 +106,19 @@ public class PublishingStateMonitor implements StateHandler {
 
             } else {
                 // 2. look for build pod
-                // TODO: fix build pod labels once UI is working again!!!
-                final PodList buildPodList = client.pods().withLabel(OpenShiftService.COMPONENT_LABEL, "integration")
-                        .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId).list();
-                if (!buildPodList.getItems().isEmpty()) {
-                    final Pod pod = buildPodList.getItems().get(0);
-                    podUrls = getPodUrls(pod);
-                    // pending deployment pod
-                    detailedState = (null != podUrls[0]) ? IntegrationDeploymentDetailedState.ASSEMBLING :
-                            IntegrationDeploymentDetailedState.BUILDING;
+                final BuildList buildList = client.builds()
+                        .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId)
+                        .withLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
+                        .list();
+                if (!buildList.getItems().isEmpty()) {
+                    final String podName = buildList.getItems().get(0).getMetadata().getLabels().get(BUILD_POD_NAME_LABEL);
+                    final Pod pod = client.pods().withName(podName).get();
+                    if (pod != null) {
+                        podUrls = getPodUrls(pod);
+                        // pending deployment pod
+                        detailedState = (null != podUrls[0]) ? IntegrationDeploymentDetailedState.ASSEMBLING : IntegrationDeploymentDetailedState.BUILDING;
+
+                    }
                 } else {
                     // 3. default state, with no event or log urls!!!
                     detailedState = IntegrationDeploymentDetailedState.ASSEMBLING;
