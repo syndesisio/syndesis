@@ -53,9 +53,8 @@
 </div>
 
 <ng-template #confirmDeleteModalTemplate>
-  <delete-confirmation-modal (delete)="onDeleteConfirm($event)">
-    <p class="lead">Removing a connector removes all of it's connections</p>
-    <p>This will remove all connections for this connector. Deleting this connector does not affect running integrations.</p>
-    <p>Are you sure you want to delete the "{{ deletableApiConnectorName }}" connector?</p>
+  <delete-confirmation-modal (delete)="onDeleteConfirm($event)" title="Confirm Delete?">
+    <p class="lead">Are you sure you want to delete the "{{ deletableApiConnectorName }}" connector?</p>
+    <p>Deleting a connector deletes all connections that were created from that connector but does not affect a running integration that uses one of those connections.</p>
   </delete-confirmation-modal>
 </ng-template>

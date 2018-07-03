@@ -54,6 +54,10 @@ export class IntegrationListComponent implements OnInit {
     return this.integrationActionsService.getModalType();
   }
 
+  get modalPrimaryText() {
+    return this.integrationActionsService.getModalPrimaryText();
+  }
+
   ngOnInit() {
     this.listConfig = {
       dblClick: false,

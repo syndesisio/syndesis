@@ -25,6 +25,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   modalTitle: string;
   modalMessage: string;
   modalType: string;
+  modalPrimaryText: string;
 
   constructor(
     public store: IntegrationStore,
@@ -135,6 +136,10 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
 
   getModalType() {
     return this.modalType || '';
+  }
+
+  getModalPrimaryText() {
+    return this.modalPrimaryText || '';
   }
 
   doAction(
@@ -290,6 +295,8 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
           [this.selectedIntegration.name]
         );
         this.modalType = '';
+        this.modalTitle = 'Confirm Start?';
+        this.modalPrimaryText = 'Start';
         break;
       case 'unpublish':
         this.modalMessage = this.i18NService.localize(
@@ -297,6 +304,8 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
           [this.selectedIntegration.name]
         );
         this.modalType = '';
+        this.modalTitle = 'Confirm Stop?';
+        this.modalPrimaryText = 'Stop';
         break;
       default:
         this.modalMessage = this.i18NService.localize(
@@ -304,6 +313,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
           [this.selectedIntegration.name]
         );
         this.modalType = 'delete';
+        this.modalTitle = 'Confirm Delete?';
     }
   }
 }

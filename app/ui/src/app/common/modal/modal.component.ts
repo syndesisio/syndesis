@@ -20,6 +20,7 @@ export class ModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() lead: string;
   @Input() message: string;
   @Input() type: string;
+  @Input() primaryText: string;
   @Input() body: TemplateRef<any>;
   @ViewChild('template') public template: TemplateRef<any>;
 
