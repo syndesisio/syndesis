@@ -1,12 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  Renderer2,
-  HostListener
-} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, Renderer2, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import {
@@ -25,11 +17,14 @@ export class ApiConnectorInfoComponent implements OnInit {
   @Input() apiConnectorData: ApiConnectorData;
   @Output() update = new EventEmitter<CustomConnectorRequest>();
 
+  @ViewChild('connectorIconImg') connectorIconImg: ElementRef;
+  @ViewChild('connectorIconInput') connectorIconInput: ElementRef;
+
   createMode: boolean;
+  editMode: boolean;
   apiConnectorDataForm: FormGroup;
-  editControlKey: string;
   iconFile: File;
-  private isDirty: boolean;
+  originalValue = {};
 
   constructor(private formBuilder: FormBuilder, private renderer: Renderer2) {}
 
@@ -44,7 +39,8 @@ export class ApiConnectorInfoComponent implements OnInit {
       name: ['', Validators.required],
       description: [''],
       host: [''],
-      basePath: ['']
+      basePath: [''],
+      icon: ['']
     });
 
     // If no particular connector is injected but there's a custom connector create
@@ -67,80 +63,70 @@ export class ApiConnectorInfoComponent implements OnInit {
       } = this.apiConnectorData;
       this.apiConnectorDataForm.get('name').setValue(name);
       this.apiConnectorDataForm.get('description').setValue(description);
-      this.apiConnectorDataForm
-        .get('host')
-        .setValue(configuredProperties.host || properties.host.defaultValue);
-      this.apiConnectorDataForm
-        .get('basePath')
-        .setValue(
-          configuredProperties.basePath || properties.basePath.defaultValue
-        );
-      this.isDirty = true;
+      this.apiConnectorDataForm.get('host').setValue(configuredProperties.host || properties.host.defaultValue);
+      this.apiConnectorDataForm.get('basePath').setValue(configuredProperties.basePath || properties.basePath.defaultValue);
+      this.originalValue = this.apiConnectorDataForm.value;
+    }
+
+    if (!this.createMode) {
+      this.apiConnectorDataForm.disable();
     }
   }
 
-  onChange(event): void {
-    if (event.target && event.target.files) {
-      const fileList = event.target.files as FileList;
+  editForm() {
+    this.enableEdit();
+  }
+
+  enableEdit() {
+    this.editMode = true;
+    this.apiConnectorDataForm.enable();
+  }
+
+  disableEdit() {
+    this.editMode = false;
+    this.apiConnectorDataForm.disable();
+  }
+
+  cancelEdit() {
+    this.disableEdit();
+    this.clearValue(this.connectorIconInput);
+    this.iconFile = undefined;
+    this.apiConnectorDataForm.setValue(this.originalValue);
+  }
+
+  clearValue(el) {
+    el.nativeElement.value = '';
+  }
+
+  onChange() {
+    if (this.connectorIconInput.nativeElement.files) {
+      const fileList = this.connectorIconInput.nativeElement.files as FileList;
       if (fileList.length > 0) {
         this.iconFile = fileList[0];
       }
     }
-    this.isDirty = true;
-    // If component is not in "Create" mode (eg. detail page), updating
-    // any input field will automatically fire up the submit handler
-    if (!this.createMode) {
-      this.onSubmit();
-    }
   }
 
   onSubmit(): void {
-    if (this.apiConnectorDataForm.valid && this.isDirty) {
-      const {
-        name,
-        description,
-        host,
-        basePath
-      } = this.apiConnectorDataForm.value;
-      const apiConnectorData = {
-        ...this.apiConnectorData,
-        configuredProperties: {
-          ...this.apiConnectorData.configuredProperties,
-          host,
-          basePath
-        },
-        name,
-        description,
-        iconFile: this.iconFile
-      } as CustomConnectorRequest;
+    if (this.apiConnectorDataForm.valid) {
+      if (this.apiConnectorDataForm.dirty) {
+        const { name, description, host, basePath } = this.apiConnectorDataForm.value;
+        const apiConnectorData = {
+          ...this.apiConnectorData,
+          configuredProperties: {
+            ...this.apiConnectorData.configuredProperties,
+            host,
+            basePath,
+          },
+          name,
+          description,
+          iconFile: this.iconFile
+        } as CustomConnectorRequest;
 
-      this.update.emit(apiConnectorData);
-    }
-    this.editControlKey = null;
-  }
-
-  onEditEnable(event: Event, key: string): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.editControlKey = key;
-    this.isDirty = false;
-    setTimeout(() => this.renderer.selectRootElement(`#${key}`).focus(), 0);
-  }
-
-  onEditChange(): void {
-    this.isDirty = true;
-  }
-
-  @HostListener('document:click', ['$event'])
-  private onDocumentClick(event: Event): void {
-    const element: any = event.target;
-    const elementTag = element.tagName.toLowerCase();
-    if (
-      elementTag !== 'input' &&
-      elementTag !== 'textarea' &&
-      this.editControlKey
-    ) {
-      setTimeout(() => this.onSubmit(), 0);
+        this.update.emit(apiConnectorData);
+        this.clearValue(this.connectorIconInput);
+      }
+      this.disableEdit();
     }
   }
 }

@@ -15,15 +15,22 @@
     (submit)="onSubmit()">
     <fieldset>
       <div class="form-group icon-row syn-form-filebrowser">
-        <label class="col-sm-3 control-label syn-form-filebrowser__label" for="connectorName">Connector Icon</label>
-        <div class="col-sm-9 syn-form-column">
+        <label class="col-sm-3 control-label syn-form-filebrowser__label" for="connectorIcon">Connector Icon</label>
+        <div class="col-sm-9 syn-form-column" id="connectorIcon">
           <span class="syn-form-filebrowser__default-file">
-            <i class="fa fa-upload" *ngIf="(createMode && !iconFile) || !createMode"></i>
-            <img *ngIf="createMode && iconFile"
+            <i class="fa fa-upload" *ngIf="createMode && !iconFile"></i>
+            <img *ngIf="(createMode && iconFile) || !createMode"
               class="syn-form-filebrowser__preview"
-              [src]="{ icon: iconFile } | synIconPath">
+              [src]="iconFile ? ({ icon: iconFile } | synIconPath) : (apiConnectorData | synIconPath)"
+              id="connectorIconImg"
+              #connectorIconImg>
           </span>
-          <input class="syn-form-filebrowser__input" type="file" name="connectorIcon" (change)="onChange($event)">
+          <input class="syn-form-filebrowser__input"
+            type="file"
+            id="connectorIconInput"
+            (change)="onChange()"
+            #connectorIconInput
+            formControlName="icon">
         </div>
       </div>
 
@@ -32,14 +39,7 @@
         <div class="col-sm-9">
           <input class="form-control" type="text" id="name"
             formControlName="name"
-            (keyup.enter)="onChange($event)"
-            (change)="onEditChange()"
-            #nameInput
-            [ngClass]="{'hidden': !createMode && editControlKey !== 'name'}">
-          <span class="syn-form-row__input--editor" *ngIf="!createMode && editControlKey !== 'name'" (click)="onEditEnable($event, 'name')">
-            {{ nameInput.value }}
-            <i class="fa fa-pencil"></i>
-          </span>
+            #nameInput>
         </div>
       </div>
 
@@ -48,15 +48,8 @@
         <div class="col-sm-9">
           <textarea class="form-control" type="text" id="description" rows="4"
             formControlName="description"
-            (keyup.enter)="onChange($event)"
-            (change)="onEditChange()"
-            #descriptionInput
-            [ngClass]="{'hidden': !createMode && editControlKey !== 'description'}">
+            #descriptionInput>
           </textarea>
-          <span class="syn-form-row__input--editor" *ngIf="!createMode && editControlKey !== 'description'" (click)="onEditEnable($event, 'description')">
-            <span [innerHtml]="descriptionInput.value | synParseMarkdownLinks"></span>
-            <i class="fa fa-pencil"></i>
-          </span>
         </div>
       </div>
 
@@ -65,14 +58,7 @@
         <div class="col-sm-9">
           <input class="form-control" type="text" id="host"
             formControlName="host"
-            (keyup.enter)="onChange($event)"
-            (change)="onEditChange()"
-            #hostInput
-            [ngClass]="{'hidden': !createMode && editControlKey !== 'host'}">
-          <span class="syn-form-row__input--editor" *ngIf="!createMode && editControlKey !== 'host'" (click)="onEditEnable($event, 'host')">
-            {{ hostInput.value }}
-            <i class="fa fa-pencil"></i>
-          </span>
+            #hostInput>
         </div>
       </div>
 
@@ -81,23 +67,26 @@
         <div class="col-sm-9">
           <input class="form-control" type="text" id="basePath"
             formControlName="basePath"
-            (keyup.enter)="onChange($event)"
-            (change)="onEditChange()"
-            #basePathInput
-            [ngClass]="{'hidden': !createMode && editControlKey !== 'basePath'}">
-          <span class="syn-form-row__input--editor" *ngIf="!createMode && editControlKey !== 'basePath'" (click)="onEditEnable($event, 'basePath')">
-            {{ basePathInput.value }}
-            <i class="fa fa-pencil"></i>
-          </span>
+            #basePathInput>
         </div>
       </div>
     </fieldset>
 
     <div class="form-group">
-      <fieldset class="col-sm-9 col-sm-offset-3" *ngIf="createMode">
-        <syndesis-button type="submit" [loading]="apiConnectorState.loading" [disabled]="apiConnectorDataForm.invalid">
+      <fieldset class="col-sm-9 col-sm-offset-3">
+        <syndesis-button *ngIf="createMode"
+                          type="submit"
+                          [loading]="apiConnectorState.loading"
+                          [disabled]="apiConnectorDataForm.invalid">
           Create API Connector
         </syndesis-button>
+        <ng-container *ngIf="!createMode">
+            <button *ngIf="!editMode" class="btn btn-primary" (click)="editForm()">Edit</button>
+            <ng-container *ngIf="editMode">
+                <button class="btn btn-default" (click)="cancelEdit()">Cancel</button>
+                <button class="btn btn-primary" (click)="onSubmit()">Save</button>
+            </ng-container>
+        </ng-container>
       </fieldset>
     </div>
   </form>
