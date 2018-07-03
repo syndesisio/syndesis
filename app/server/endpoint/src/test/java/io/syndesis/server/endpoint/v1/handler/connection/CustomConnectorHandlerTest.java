@@ -70,7 +70,7 @@ public class CustomConnectorHandlerTest {
         final ConnectorAction action = new ConnectorAction.Builder().name("action").build();
 
         when(dataManager.fetch(ConnectorTemplate.class, "connector-template-id")).thenReturn(connectorTemplate);
-        when(dataManager.create(any(Connector.class))).thenAnswer(invocation -> invocation.getArgumentAt(0, Connector.class));
+        when(dataManager.create(any(Connector.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         when(applicationContext.getBean("connector-template-id", ConnectorGenerator.class)).thenReturn(new ConnectorGenerator() {
             @Override

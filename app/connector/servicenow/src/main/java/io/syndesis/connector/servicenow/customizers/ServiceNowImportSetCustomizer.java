@@ -30,9 +30,9 @@ public class ServiceNowImportSetCustomizer implements ComponentProxyCustomizer {
     }
 
     //
-    // we need to set heades with the support of a customizer as there's 
+    // we need to set heades with the support of a customizer as there's
     // no yet a way to mark a property as header value.
-    // 
+    //
     // https://github.com/syndesisio/syndesis/issues/2819
     //
     private void beforeProducer(final Exchange exchange) {

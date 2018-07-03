@@ -15,10 +15,9 @@
    limitations under the License.
 -->
 <!DOCTYPE suppressions PUBLIC
-    "-//Puppy Crawl//DTD Suppressions 1.1//EN"
-    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+    "-//Puppy Crawl//DTD Suppressions Xpath Experimental 1.2//EN"
+    "http://checkstyle.sourceforge.net/dtds/suppressions_1_2_xpath_experimental.dtd">
 
 <suppressions>
-  <suppress files="[\\/]generated-sources[\\/]" checks=".*"/>
-  <suppress files="/springboot/[^/]+(AutoConfiguration|ConfigurationCommon|Configuration).java" checks="(NewlineAtEndOfFile|RegexpSingleline)"/>
+  <suppress-xpath files=".*" checks=".*" query="//ANNOTATION[@text='Generated']" />
 </suppressions>

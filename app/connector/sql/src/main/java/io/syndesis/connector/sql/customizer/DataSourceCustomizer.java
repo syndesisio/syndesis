@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DataSourceCustomizer implements ComponentProxyCustomizer, CamelContextAware {
-    private final static Logger LOGGER = LoggerFactory.getLogger(DataSourceCustomizer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceCustomizer.class);
 
     private CamelContext camelContext;
 

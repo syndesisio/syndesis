@@ -78,5 +78,9 @@
 
     <!-- http://checkstyle.sourceforge.net/config_misc.html -->
     <module name="UpperEll"/>
+
+    <module name="SuppressionXpathFilter">
+      <property name="file" value="/syndesis/checkstyle-suppressions-xpath.xml"/>
+    </module>
   </module>
 </module>

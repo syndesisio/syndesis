@@ -60,9 +60,9 @@ public class GmailVerifierExtension extends DefaultComponentVerifierExtension {
         try {
             GoogleMailConfiguration configuration = setProperties(new GoogleMailConfiguration(), parameters);
             GoogleMailClientFactory clientFactory = new BatchGoogleMailClientFactory();
-            Gmail client = clientFactory.makeClient(configuration.getClientId(), configuration.getClientSecret(), 
-            		configuration.getScopes(), configuration.getApplicationName(),
-            		configuration.getRefreshToken(), configuration.getAccessToken());
+            Gmail client = clientFactory.makeClient(configuration.getClientId(), configuration.getClientSecret(),
+                    configuration.getScopes(), configuration.getApplicationName(),
+                    configuration.getRefreshToken(), configuration.getAccessToken());
             client.users().getProfile((String) parameters.get("userId")).execute();
         } catch (Exception e) {
             ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, e.getMessage())
@@ -70,8 +70,8 @@ public class GmailVerifierExtension extends DefaultComponentVerifierExtension {
                 .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e);
 
             builder.error(errorBuilder.build());
-        } 
-        
+        }
+
         return builder.build();
     }
 }

@@ -14,9 +14,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.syndesis.connector</groupId>
@@ -41,6 +40,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
       <scope>provided</scope>
@@ -48,7 +52,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
-      <optional>true</optional>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -63,13 +67,13 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>io.syndesis.integration</groupId>
-      <artifactId>integration-component-proxy</artifactId>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-paho</artifactId>
-      <version>${camel.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.paho</groupId>
@@ -97,7 +101,7 @@
       </plugin>
 
       <plugin>
-        <groupId>${project.groupId}</groupId>
+        <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-support-maven-plugin</artifactId>
         <version>${project.version}</version>
         <executions>
@@ -108,14 +112,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>pl.project13.maven</groupId>
-        <artifactId>git-commit-id-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
       </plugin>
     </plugins>
   </build>

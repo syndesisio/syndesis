@@ -14,140 +14,104 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <groupId>io.syndesis.extension</groupId>
-        <artifactId>extension-parent</artifactId>
-        <version>1.4-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>io.syndesis.extension</groupId>
+    <artifactId>extension-parent</artifactId>
+    <version>1.4-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>extension-converter</artifactId>
-    <name>Extension :: Converter</name>
+  <artifactId>extension-converter</artifactId>
+  <name>Extension :: Converter</name>
 
-    <dependencies>
+  <dependencies>
 
-        <dependency>
-            <groupId>io.syndesis.common</groupId>
-            <artifactId>common-model</artifactId>
-        </dependency>
+    <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-model</artifactId>
+    </dependency>
 
-        <dependency>
-            <groupId>io.syndesis.common</groupId>
-            <artifactId>common-util</artifactId>
-        </dependency>
+    <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-util</artifactId>
+    </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
 
-        <!-- Test -->
+    <dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+    </dependency>
 
-        <!-- The extension-api module is needed only for tests -->
-        <!-- Transitive dependency on camel-core must be removed if moving this in compile scope -->
-        <dependency>
-            <groupId>io.syndesis.extension</groupId>
-            <artifactId>extension-api</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <!-- Test -->
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <!-- The extension-api module is needed only for tests -->
+    <!-- Transitive dependency on camel-core must be removed if moving this in compile scope -->
+    <dependency>
+      <groupId>io.syndesis.extension</groupId>
+      <artifactId>extension-api</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-jsonSchema</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>com.github.java-json-tools</groupId>
-            <artifactId>json-schema-validator</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-jsonSchema</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mailapi</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-schema-validator</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>com.github.java-json-tools</groupId>
-            <artifactId>json-schema-core</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mailapi</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-schema-core</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.el</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <configuration>
-                    <ignoredUnusedDeclaredDependencies>
-                        <ignoredUnusedDeclaredDependency>io.syndesis:extension-api</ignoredUnusedDeclaredDependency>
-                    </ignoredUnusedDeclaredDependencies>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.basepom.maven</groupId>
-                <artifactId>duplicate-finder-maven-plugin</artifactId>
-                <configuration>
-                    <ignoredClassPatterns>
-                        <ignoredClassPattern>com.google.common.*</ignoredClassPattern>
-                        <ignoredClassPattern>org.aopalliance.*</ignoredClassPattern>
-                        <ignoredClassPattern>org.apache.maven.*</ignoredClassPattern>
-                        <ignoredClassPattern>org.codehaus.plexus.*</ignoredClassPattern>
-                        <ignoredClassPattern>org.eclipse.aether.*</ignoredClassPattern>
-                        <ignoredClassPattern>org.apache.log4j.*</ignoredClassPattern>
-                        <ignoredClassPattern>org.objectweb.asm.*</ignoredClassPattern>
-                        <ignoredClassPattern>org.apache.camel.json.simple.*</ignoredClassPattern>
-                        <ignoredClassPattern>javax.ws.rs.*</ignoredClassPattern>
-                    </ignoredClassPatterns>
-                    <ignoredResourcePatterns>
-                        <ignoredResourcePattern>features.xml</ignoredResourcePattern>
-                        <ignoredResourcePattern>org/infinispan/.*</ignoredResourcePattern>
-                        <ignoredResourcePattern>ValidationMessages.properties</ignoredResourcePattern>
-                        <ignoredResourcePattern>about.html</ignoredResourcePattern>
-                        <ignoredResourcePattern>draftv3/schema</ignoredResourcePattern>
-                        <ignoredResourcePattern>draftv4/schema</ignoredResourcePattern>
-                    </ignoredResourcePatterns>
-
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
 </project>

@@ -14,7 +14,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.syndesis.extension</groupId>
@@ -27,12 +28,104 @@
   <name>Extension :: Maven Plugin</name>
   <packaging>maven-plugin</packaging>
 
-  <properties>
-    <maven.version>3.5.0</maven.version>
-  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>common-model</artifactId>
+        <version>${project.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>*</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>common-util</artifactId>
+        <version>${project.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>*</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-core</artifactId>
+        <version>${maven.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>*</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.plugin-tools</groupId>
+        <artifactId>maven-plugin-annotations</artifactId>
+        <version>3.5.2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring-boot.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.shrinkwrap.resolver</groupId>
+        <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+        <version>3.1.3</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shared</groupId>
+        <artifactId>maven-common-artifact-filters</artifactId>
+        <version>3.0.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-repository-metadata</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-plugin-api</artifactId>
+        <version>${maven.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>*</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
-
 
     <dependency>
       <groupId>io.syndesis.common</groupId>
@@ -42,28 +135,6 @@
     <dependency>
       <groupId>io.syndesis.common</groupId>
       <artifactId>common-model</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-context</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-web</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework.security</groupId>
-          <artifactId>spring-security-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.ws.rs</groupId>
-          <artifactId>javax.ws.rs-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -91,12 +162,6 @@
       <artifactId>atlas-java-core</artifactId>
     </dependency>
 
-    <!-- needed by atlasmap/jackson -->
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>org.jboss.spec.javax.ws.rs</groupId>
       <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
@@ -106,46 +171,41 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
-      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model-builder</artifactId>
-      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
-      <version>${maven.version}</version>
       <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>aopalliance</groupId>
-          <artifactId>aopalliance</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>${maven.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
-      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
@@ -157,14 +217,6 @@
     <dependency>
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
-      <version>3.5</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-utils</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -185,52 +237,18 @@
     </dependency>
 
     <dependency>
-      <!-- Needed by Guava at compile time -->
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
-      <scope>provided</scope>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
     </dependency>
 
     <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-utils</artifactId>
-        </exclusion>
-      </exclusions>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-maven-plugin</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.shrinkwrap.resolver</groupId>
       <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.sonatype.plexus</groupId>
-          <artifactId>plexus-sec-dispatcher</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-interpolation</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.maven</groupId>
-          <artifactId>maven-repository-metadata</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.maven</groupId>
-          <artifactId>maven-aether-provider</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.maven</groupId>
-          <artifactId>maven-settings-builder</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-utils</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -256,16 +274,17 @@
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>maven-common-artifact-filters</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.maven</groupId>
-          <artifactId>maven-repository-metadata</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-utils</artifactId>
-        </exclusion>
-      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
     </dependency>
 
     <dependency>
@@ -273,11 +292,13 @@
       <artifactId>junit</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
@@ -292,16 +313,15 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.5</version>
         <configuration>
-          <mojoDependencies/>
+          <mojoDependencies />
         </configuration>
         <executions>
           <execution>
             <id>default-descriptor</id>
             <phase>process-classes</phase>
             <goals>
-            	<goal>descriptor</goal>
+              <goal>descriptor</goal>
             </goals>
           </execution>
           <execution>
@@ -311,85 +331,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.basepom.maven</groupId>
-        <artifactId>duplicate-finder-maven-plugin</artifactId>
-        <configuration>
-          <ignoredClassPatterns>
-            <ignoredClassPattern>com.google.common.*</ignoredClassPattern>
-            <ignoredClassPattern>org.aopalliance.*</ignoredClassPattern>
-            <ignoredClassPattern>org.apache.maven.*</ignoredClassPattern>
-            <ignoredClassPattern>org.codehaus.plexus.*</ignoredClassPattern>
-            <ignoredClassPattern>org.eclipse.aether.*</ignoredClassPattern>
-            <ignoredClassPattern>org.apache.log4j.*</ignoredClassPattern>
-            <ignoredClassPattern>org.objectweb.asm.*</ignoredClassPattern>
-            <ignoredClassPattern>org.apache.camel.json.simple.*</ignoredClassPattern>
-            <ignoredClassPattern>javax.ws.rs.*</ignoredClassPattern>
-          </ignoredClassPatterns>
-          <ignoredResourcePatterns>
-            <ignoredResourcePattern>features.xml</ignoredResourcePattern>
-            <ignoredResourcePattern>org/infinispan/.*</ignoredResourcePattern>
-            <ignoredResourcePattern>ValidationMessages.properties</ignoredResourcePattern>
-            <ignoredResourcePattern>about.html</ignoredResourcePattern>
-            <ignoredResourcePattern>draftv3/schema</ignoredResourcePattern>
-            <ignoredResourcePattern>draftv4/schema</ignoredResourcePattern>
-          </ignoredResourcePatterns>
-          <ignoredDependencies>
-            <dependency>
-              <groupId>commons-logging</groupId>
-              <artifactId>commons-logging</artifactId>
-            </dependency>
-          </ignoredDependencies>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.ning.maven.plugins</groupId>
-        <artifactId>maven-dependency-versions-check-plugin</artifactId>
-        <configuration>
-          <exceptions>
-            <exception>
-              <groupId>com.google.guava</groupId>
-              <artifactId>guava</artifactId>
-              <resolvedVersion>18.0</resolvedVersion>
-              <expectedVersion>20.0</expectedVersion>
-            </exception>
-            <exception>
-              <groupId>org.apache.commons</groupId>
-              <artifactId>commons-lang3</artifactId>
-              <resolvedVersion>3.2.1</resolvedVersion>
-              <expectedVersion>3.5</expectedVersion>
-            </exception>
-            <exception>
-              <groupId>org.apache.maven</groupId>
-              <artifactId>maven-settings-builder</artifactId>
-              <resolvedVersion>3.2.1</resolvedVersion>
-              <expectedVersion>3.5.0</expectedVersion>
-            </exception>
-          </exceptions>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.hubspot.maven.plugins</groupId>
-        <artifactId>dependency-management-maven-plugin</artifactId>
-        <configuration>
-          <requireManagement>
-            <allowExclusions>true</allowExclusions>
-          </requireManagement>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.0_spec</ignoredUnusedDeclaredDependency>
-          </ignoredUnusedDeclaredDependencies>
-        </configuration>
       </plugin>
 
     </plugins>

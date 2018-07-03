@@ -26,7 +26,7 @@ class OAuthRefreshTokenOnFailProcessor extends OAuthRefreshTokenProcessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(OAuthRefreshTokenOnFailProcessor.class);
 
-    public OAuthRefreshTokenOnFailProcessor(final SwaggerConnectorComponent component) {
+    OAuthRefreshTokenOnFailProcessor(final SwaggerConnectorComponent component) {
         super(component);
     }
 

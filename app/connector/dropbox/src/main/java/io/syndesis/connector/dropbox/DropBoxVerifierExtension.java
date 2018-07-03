@@ -24,6 +24,7 @@ import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 
+import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.v2.DbxClientV2;
 
@@ -54,7 +55,6 @@ public class DropBoxVerifierExtension extends DefaultComponentVerifierExtension 
                 .error(parameters, this::verifyCredentials).build();
     }
 
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
         String token = (String) parameters.get("accessToken");
@@ -65,8 +65,7 @@ public class DropBoxVerifierExtension extends DefaultComponentVerifierExtension 
             DbxRequestConfig config = new DbxRequestConfig(clientId, Locale.getDefault().toString());
             DbxClientV2 client = new DbxClientV2(config, token);
             client.users().getCurrentAccount();
-            client = null;
-        } catch (Exception e) {
+        } catch (DbxException e) {
             builder.error(ResultErrorBuilder
                     .withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION,
                             "Invalid client identifier and/or access token")

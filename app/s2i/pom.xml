@@ -89,7 +89,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.0.2</version>
         <executions>
           <execution>
             <id>copy-resources</id>
@@ -112,7 +111,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>${maven.exec.plugin.version}</version>
         <executions>
           <execution>
             <id>copy-local-repo</id>
@@ -147,14 +145,6 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.mycila</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <configuration>
-          <!-- TODO: re-enable -->
-          <skip>true</skip>
-        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -217,10 +207,10 @@
                   <licensesOutputDirectory>${license.dir}/licenses</licensesOutputDirectory>
                   <licensesOutputFile>${license.dir}/licenses.xml</licensesOutputFile>
                 </configuration>
-	      </execution>
-	    </executions>
-	  </plugin>
-	</plugins>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
       </build>
     </profile>
   </profiles>

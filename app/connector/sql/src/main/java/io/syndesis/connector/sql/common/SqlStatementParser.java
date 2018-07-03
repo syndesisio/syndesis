@@ -46,7 +46,7 @@ public class SqlStatementParser {
     private final SqlStatementMetaData statementInfo;
     private List<String> sqlArray = new ArrayList<>();
     private List<String> sqlArrayUpperCase = new ArrayList<>();
-    private final static Logger LOGGER = LoggerFactory.getLogger(SqlStatementParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SqlStatementParser.class);
 
     public SqlStatementParser(Connection connection, String sql) {
         super();

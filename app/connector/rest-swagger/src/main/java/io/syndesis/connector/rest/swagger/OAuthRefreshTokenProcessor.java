@@ -58,7 +58,7 @@ class OAuthRefreshTokenProcessor implements Processor {
 
     protected final SwaggerConnectorComponent component;
 
-    public OAuthRefreshTokenProcessor(final SwaggerConnectorComponent component) {
+    OAuthRefreshTokenProcessor(final SwaggerConnectorComponent component) {
         this.component = component;
     }
 
@@ -148,10 +148,10 @@ class OAuthRefreshTokenProcessor implements Processor {
 
         LOG.info("Trying to refresh the OAuth2 access token");
 
-        try (final CloseableHttpClient client = createHttpClient()) {
+        try (CloseableHttpClient client = createHttpClient()) {
             final HttpUriRequest request = createHttpRequest();
 
-            try (final CloseableHttpResponse response = client.execute(request)) {
+            try (CloseableHttpResponse response = client.execute(request)) {
                 final StatusLine statusLine = response.getStatusLine();
                 if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
                     final HttpEntity entity = response.getEntity();

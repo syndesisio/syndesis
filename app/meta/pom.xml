@@ -14,7 +14,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -34,12 +35,18 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- Redefine Activemq deps to override ones from spring-boot pom import -->
       <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-client</artifactId>
+        <version>${activemq.version}</version>
+        <exclusions>
+          <!-- avoid conflict with AMQP connector's JMS 2.0 dependency -->
+          <exclusion>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -146,19 +153,11 @@
     <dependency>
       <groupId>io.swagger</groupId>
       <artifactId>swagger-jaxrs</artifactId>
-      <version>${swagger.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.ws.rs</groupId>
-          <artifactId>jsr311-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.spec.javax.annotation</groupId>
       <artifactId>jboss-annotations-api_1.2_spec</artifactId>
-      <version>1.0.0.Final</version>
       <scope>provided</scope>
     </dependency>
 
@@ -171,29 +170,16 @@
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jaxrs</artifactId>
-      <version>${resteasy.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-multipart-provider</artifactId>
-      <version>${resteasy.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.spec.javax.ws.rs</groupId>
       <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
     </dependency>
 
     <!-- === Connectors ================================================================== -->
@@ -207,13 +193,6 @@
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-client</artifactId>
-      <exclusions>
-        <!-- avoid conflict with AMQP connector's JMS 2.0 dependency -->
-        <exclusion>
-          <groupId>org.apache.geronimo.specs</groupId>
-          <artifactId>geronimo-jms_1.1_spec</artifactId>
-        </exclusion>
-      </exclusions>
       <scope>runtime</scope>
     </dependency>
 
@@ -269,12 +248,6 @@
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-aws-s3</artifactId>
       <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -317,18 +290,6 @@
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-servicenow</artifactId>
       <scope>runtime</scope>
-      <exclusions>
-        <!-- provided by jboss-jaxrs-api_2.1_spec -->
-        <exclusion>
-          <groupId>javax.ws.rs</groupId>
-          <artifactId>javax.ws.rs-api</artifactId>
-        </exclusion>
-        <!-- provided by jboss-annotations-api_1.2_spec -->
-        <exclusion>
-          <groupId>javax.annotation</groupId>
-          <artifactId>javax.annotation-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -343,19 +304,16 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -378,7 +336,6 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring-boot.version}</version>
         <configuration>
           <jvmArguments>-server -Xms256m -Xmx512m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000</jvmArguments>
           <layout>ZIP</layout>
@@ -391,67 +348,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.basepom.maven</groupId>
-        <artifactId>duplicate-finder-maven-plugin</artifactId>
-        <configuration>
-          <printEqualFiles>false</printEqualFiles>
-          <ignoredResourcePatterns>
-            <ignore>camel-component-schema.json</ignore>
-            <ignore>camel-connector-schema.json</ignore>
-            <ignore>camel-connector.json</ignore>
-            <ignore>git.properties</ignore>
-            <!--<ignore>javax/servlet/LocalStrings.properties</ignore>
-            <ignore>javax/servlet/http/LocalStrings.properties</ignore>-->
-          </ignoredResourcePatterns>
-          <ignoredDependencies>
-            <ignoredDependency>
-              <groupId>org.apache.camel</groupId>
-              <artifactId>spi-annotations</artifactId>
-            </ignoredDependency>
-            <ignoredDependency>
-              <groupId>com.vaadin.external.google</groupId>
-              <artifactId>android-json</artifactId>
-            </ignoredDependency>
-            <ignoredDependency>
-              <groupId>xpp3</groupId>
-              <artifactId>xpp3_min</artifactId>
-            </ignoredDependency>
-          </ignoredDependencies>
-          <ignoredClassPatterns>
-            <ignored>org.apache.camel.json.simple.*</ignored>
-            <!--<ignored>javax.servlet.*</ignored>-->
-            <ignored>com.google.common.*</ignored>
-            <ignored>com.google.thirdparty.*</ignored>
-          </ignoredClassPatterns>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <ignoredUnusedDeclaredDependencies>
-            <!--
-                This is shipped alongside spring-boot-starter-undertow but such artifact has
-                scope 'runtime' so javax.el is not used for testing purpose, setting javax.el
-                to have scope 'test' would make the javax.el not available at runtime.
-            -->
-            <ignoredUnusedDeclaredDependency>org.glassfish:javax.el</ignoredUnusedDeclaredDependency>
-          </ignoredUnusedDeclaredDependencies>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.hubspot.maven.plugins</groupId>
-        <artifactId>dependency-management-maven-plugin</artifactId>
-        <configuration>
-          <requireManagement>
-            <allowExclusions>true</allowExclusions>
-          </requireManagement>
-        </configuration>
       </plugin>
 
     </plugins>
@@ -489,28 +385,28 @@
         </plugins>
       </build>
     </profile>
-	<profile>
+    <profile>
       <id>generate-licenses-xml</id>
-	  <build>
-	  <plugins>
-	    <plugin>
-	      <groupId>org.codehaus.mojo</groupId>
-	      <artifactId>license-maven-plugin</artifactId>
-	      <executions>
-	        <execution>
-	          <goals>
-	            <goal>aggregate-download-licenses</goal>
-	          </goals>
-	          <phase>generate-resources</phase>
-	          <configuration>
-	            <licensesOutputDirectory>${license.dir}/licenses</licensesOutputDirectory>
-	            <licensesOutputFile>${license.dir}/licenses.xml</licensesOutputFile>
-	          </configuration>
-	        </execution>
-	      </executions>
-	    </plugin>
-	  </plugins>
-	  </build>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>aggregate-download-licenses</goal>
+                </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <licensesOutputDirectory>${license.dir}/licenses</licensesOutputDirectory>
+                  <licensesOutputFile>${license.dir}/licenses.xml</licensesOutputFile>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 
