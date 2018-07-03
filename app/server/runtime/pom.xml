@@ -524,6 +524,13 @@
       <scope>runtime</scope>
     </dependency>
 
+    <!-- DeploymentStateMonitor implementation -->
+    <dependency>
+      <groupId>io.syndesis.server</groupId>
+      <artifactId>server-monitoring</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- Prometheus implementation -->
     <dependency>
       <groupId>io.syndesis.server</groupId>

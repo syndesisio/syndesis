@@ -20,6 +20,8 @@ features:
       enabled: true
   dblogging:
     enabled: true
+  monitoring:
+    enabled: false
 
 server:
   useForwardHeaders: true
@@ -128,3 +130,6 @@ prometheus:
 
 metrics:
   kind: prometheus
+
+monitoring:
+  kind: noop
