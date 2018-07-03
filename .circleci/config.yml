@@ -84,7 +84,7 @@ jobs:
           name: Build UI
           command: |
             apt-get update
-            apt-get install libxss1
+            apt-get install libxss1 patch
             ./tools/bin/syndesis build --batch-mode --module ui --image-mode=docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
