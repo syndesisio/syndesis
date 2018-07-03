@@ -64,7 +64,9 @@
       "create-connection": "Create {{connection}}",
       "select-connector": "Select Connector",
       "configure-connection": "Configure {{connection}}",
-      "name-connection": "Name {{connection}}"
+      "name-connection": "Name {{connection}}",
+      "delete-connection-modal": "Are you sure you want to delete the \"{{0}}\" connection?",
+      "delete-connection-modal-title": "Confirm Delete?"
     },
     "dashboard": {
       "heading": "Dashboard",

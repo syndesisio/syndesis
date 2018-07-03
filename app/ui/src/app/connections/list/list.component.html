@@ -2,9 +2,9 @@
   <div class="container-cards-pf connections-list container-fluid">
     <div class="row row-cards-pf cards">
 
-      <syndesis-modal title="Confirm Delete?"
+      <syndesis-modal title="{{ 'connections.delete-connection-modal-title' | synI18n }}"
                       type="delete"
-                      [message]="'Are you sure you want to delete the \'' + selectedForDelete?.name + '\' connection?'">
+                      message="{{ 'connections.delete-connection-modal' | synI18n: selectedForDelete?.name }}">
       </syndesis-modal>
 
       <ng-container *ngIf="connections && connections.length === 0">
