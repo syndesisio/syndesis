@@ -1,13 +1,13 @@
 <div [ngClass]="{'text-right': placement === 'right'}">
   <!-- validate button -->
-  <button *ngIf="showValidateButton(connection?.connector)"
+  <button *ngIf="showValidateButton(connection?.connector) && !validating"
           [disabled]="!formGroup.valid || validating"
           (click)="doValidate(connection.connector, formGroup)"
           class="btn"
-          [ngClass]="[primaryAction === null ? 'btn-default' : 'btn-primary']">Validate
+          [ngClass]="[primaryAction === null ? 'btn-default' : 'btn-primary']">{{ 'validate' | synI18n }}
   </button>
   <!-- validate progress -->
-  <span *ngIf="validating">Validating, please wait...
+  <span *ngIf="validating">{{ 'validating' | synI18n }}
     <span class="spinner spinner-xs spinner-inline"></span>
   </span>
 </div>
@@ -19,7 +19,7 @@
             <span class="pficon pficon-close"></span>
           </button>
     <span class="pficon pficon-warning-triangle-o"></span>
-    <p>Validation error:</p>
+    <p>{{ 'validation-error' | synI18n }}</p>
     <pre>{{ validateError }}</pre>
   </div>
 </div>
@@ -32,6 +32,6 @@
             <span class="pficon pficon-close"></span>
           </button>
     <span class="pficon pficon-ok"></span>
-    <strong>{{ connection.connector.name }}</strong> has been successfully validated
+    <span [innerHTML]="'validation-success' | synI18n: connection.connector.name"></span>
   </div>
 </div>

@@ -19,7 +19,7 @@ export class ConnectionConfigurationService {
   constructor(private formFactory: FormFactoryService) {}
 
   shouldValidate(connector: Connector) {
-    const tags = connector.tags || [];
+    const tags = connector ? connector.tags || [] : [];
     return tags.indexOf('verifier') != -1;
   }
 
