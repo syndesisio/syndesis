@@ -36,9 +36,6 @@
       "actionType": "connector",
       "descriptor": {
         "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
-        "connectorCustomizers": [
-          "io.syndesis.connector.http.HttpMethodCustomizer"
-        ],
         "inputDataShape": {
           "kind": "any"
         },
@@ -120,9 +117,6 @@
       "actionType": "connector",
       "descriptor": {
         "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
-        "connectorCustomizers": [
-          "io.syndesis.connector.http.HttpMethodCustomizer"
-        ],
         "inputDataShape": {
           "kind": "none"
         },
