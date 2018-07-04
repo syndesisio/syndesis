@@ -34,7 +34,9 @@ endpoints:
 # Disable ActiveMQ auto-configuration of an embedded Broker
 spring:
   autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration
+    exclude:
+      - org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
 io:
   syndesis:
