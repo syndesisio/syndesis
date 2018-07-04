@@ -20,3 +20,6 @@ endpoints.camelroutes.enabled = false
 
 camel.health.enabled=false
 camel.health.indicator.enabled=true
+
+# disable spring boot auto configurations
+spring.autoconfigure.exclude[0] = org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
