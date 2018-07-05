@@ -1,10 +1,10 @@
-<div class="oauth-apps" (click)="handleLinks($event)">
+<div class="oauth-apps">
   <h1>{{ 'settings.oauth-apps.heading' | synI18n }}</h1>
   <p [innerHtml]="
     'settings.oauth-apps.description' | synI18n: (
       'settings.oauth-apps.documentation-link' | synI18n
     )
-  "></p>
+  " (click)="handleLinks($event)"></p>
   <p>{{ 'settings.oauth-apps.registration-instruction' | synI18n: callbackURL }}</p>
 
   <!-- Modal -->
