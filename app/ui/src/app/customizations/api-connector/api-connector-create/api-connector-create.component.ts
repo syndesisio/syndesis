@@ -10,6 +10,9 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
+import { WindowRef } from '../../window-ref';
+import * as YAML from 'yamljs';
+
 import { ModalService, NavigationService } from '@syndesis/ui/common';
 import {
   ApiConnectorState,
@@ -51,8 +54,11 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     private apiConnectorStore: Store<ApiConnectorStore>,
     private modalService: ModalService,
     private nav: NavigationService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private winRef: WindowRef
+  ) {
+    this.winRef.nativeWindow.dump = YAML.dump;
+  }
 
   public onUserSelection(selection: string): void {
     console.log('User selection changed: ', selection);
