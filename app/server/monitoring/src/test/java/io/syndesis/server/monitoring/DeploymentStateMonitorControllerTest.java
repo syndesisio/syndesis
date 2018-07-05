@@ -169,6 +169,9 @@ public class DeploymentStateMonitorControllerTest {
                 // no deployment or build pod yet
                 new Object[]{null, null, null,
                         getDetails(ASSEMBLING, null, null)},
+                // build without build pod
+                new Object[] {null, build, null,
+                        getDetails(ASSEMBLING, null, null)},
                 // build pod with Pending status
                 new Object[] {null, build, pod = getPod(PENDING_STATUS, BUILD_POD_NAME),
                         getDetails(ASSEMBLING, getEventsUrl(pod), null)},
