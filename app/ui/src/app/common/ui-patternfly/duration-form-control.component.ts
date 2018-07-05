@@ -106,7 +106,7 @@ export class DurationFormControlComponent implements OnInit {
   ngOnInit() {
     this.elementControlClass = this.getClass('element', 'control');
     this.modelId = this.model.id;
-    const value = +this.model.value || 0;
+    const value = +this.group.value[this.modelId] || 0;
     if (!value) {
       return;
     }
