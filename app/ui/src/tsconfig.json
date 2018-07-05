@@ -38,7 +38,8 @@
       ],
       "@syndesis/ui/*": [
         "app/*"
-      ]
+      ],
+      "fs": [ "./global-shims" ]
     }
   }
 }
