@@ -10,6 +10,11 @@
         "connector-extension": "{{connector}} {{extension}}",
         "library-extension": "Library {{extension}}",
         "unknown-extension": "Unknown {{extension}}"
+      },
+      "api-client-connectors": {
+        "delete-connector-modal": "Deleting a connector deletes all connections that were created from that connector but does not affect a running integration that uses one of those connections.",
+        "delete-connector-modal-title": "Confirm Delete?",
+        "delete-connector-modal-lead": "Are you sure you want to delete the \"{{0}}\" connector?"
       }
     },
     "integrations": {
