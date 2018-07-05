@@ -32,9 +32,9 @@
 
   <!-- Delete Modal Container -->
   <syndesis-modal id="delete-step"
-                  title="Confirm Delete?"
+                  title="{{ 'integrations.edit.delete-step-modal-title' | synI18n }}"
                   type="delete"
-                  message="Are you sure you want to delete this step from the integration?">
+                  message="{{ 'integrations.edit.delete-step-modal' | synI18n }}">
   </syndesis-modal>
 
   <syndesis-loading [loading]="!loaded()">
