@@ -16,6 +16,7 @@
 package io.syndesis.server.monitoring;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,11 +26,12 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan
+@ConfigurationProperties("monitoring")
 @ConditionalOnProperty(value = "features.monitoring.enabled", havingValue = "true")
 public class MonitoringConfiguration {
 
-    private long initialDelay = 10;
-    private long period = 10;
+    private long initialDelay = 5;
+    private long period = 5;
 
     public long getInitialDelay() {
         return initialDelay;
