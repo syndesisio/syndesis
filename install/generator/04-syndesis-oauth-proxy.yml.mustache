@@ -83,6 +83,8 @@
             - --cookie-secret=$(OAUTH_COOKIE_SECRET)
             - --pass-access-token
             - --skip-provider-button
+            - --skip-auth-regex=/logout
+            - --skip-auth-regex=/[^/]+\.(png|jpg|eot|svg|ttf|woff|woff2)
             - --skip-auth-regex=/api/v1/swagger.*
             - --skip-auth-regex=/api/v1/index.html
             - --skip-auth-regex=/api/v1/credentials/callback
