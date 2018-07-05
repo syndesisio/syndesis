@@ -181,6 +181,8 @@
       "description": "Description",
       "draft": "Draft",
       "done": "Done",
+      "next": "Next",
+      "back": "Back",
       "register": "Register",
       "edit": "Edit",
       "edit-thing": "Edit {{0}}",
