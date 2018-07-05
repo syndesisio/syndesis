@@ -87,7 +87,7 @@ public class DeploymentStateMonitorController implements Runnable, Closeable, De
             final ListResult<IntegrationDeployment> deployments = dataManager.fetchAll(IntegrationDeployment.class);
             for (IntegrationDeployment deployment : deployments) {
                 final IntegrationDeploymentState currentState = deployment.getCurrentState();
-                final List<StateHandler> handlers = this.stateHandlers.get(currentState);
+                final List<StateHandler> handlers = this.stateHandlers.getOrDefault(currentState, Collections.emptyList());
                 if (!handlers.isEmpty()) {
                     for (StateHandler handler : handlers) {
                         try {
@@ -122,8 +122,8 @@ public class DeploymentStateMonitorController implements Runnable, Closeable, De
 
     @Override
     public void register(IntegrationDeploymentState state, StateHandler stateHandler) {
-        final List<StateHandler> handlers = this.stateHandlers.getOrDefault(state,
-                Collections.synchronizedList(new ArrayList<>()));
+        final List<StateHandler> handlers = this.stateHandlers.computeIfAbsent(state,
+                k -> Collections.synchronizedList(new ArrayList<>()));
         handlers.add(stateHandler);
     }
 }

@@ -48,10 +48,11 @@ import static io.syndesis.common.model.integration.IntegrationDeploymentState.Pu
 @ConditionalOnProperty(value = "features.monitoring.enabled", havingValue = "true")
 public class PublishingStateMonitor implements StateHandler {
 
+    static final String BUILD_POD_NAME_LABEL = "openshift.io/build.pod-name";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(PublishingStateMonitor.class);
-    private static final String POD_LOG_URL = "%sapi/v1/namespaces/%s/pods/%s/logs";
-    private static final String POD_EVENT_URL = "%sapi/v1/namespaces/%s/pods/%s/events";
-    public static final String BUILD_POD_NAME_LABEL = "openshift.io/build.pod-name";
+    private static final String POD_LOGS_URL = "%sapi/v1/namespaces/%s/pods/%s/logs";
+    private static final String POD_EVENTS_URL = "%sapi/v1/namespaces/%s/pods/%s/events";
 
     private final NamespacedOpenShiftClient client;
     private final DataManager dataManager;
@@ -85,10 +86,7 @@ public class PublishingStateMonitor implements StateHandler {
 
             // work backwards, in reverse order: deployed pod, build pod, default to assembling
             // 1. look for deployed pod
-            final PodList podList = client.pods()
-                    .withLabel(OpenShiftService.COMPONENT_LABEL, "integration")
-                    .withLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
-                    .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId).list();
+            final PodList podList = getDeploymentPodList(integrationId, version);
             if (!podList.getItems().isEmpty()) {
 
                 final Pod pod = podList.getItems().get(0);
@@ -107,18 +105,15 @@ public class PublishingStateMonitor implements StateHandler {
 
             } else {
                 // 2. look for build pod
-                final BuildList buildList = client.builds()
-                        .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId)
-                        .withLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
-                        .list();
+                final BuildList buildList = getBuildList(integrationId, version);
                 if (!buildList.getItems().isEmpty()) {
+
                     final String podName = buildList.getItems().get(0).getMetadata().getLabels().get(BUILD_POD_NAME_LABEL);
-                    final Pod pod = client.pods().withName(podName).get();
+                    final Pod pod = getBuildPod(podName);
                     if (pod != null) {
                         podUrls = getPodUrls(pod);
                         // pending deployment pod
                         detailedState = (null != podUrls[0]) ? IntegrationDeploymentDetailedState.ASSEMBLING : IntegrationDeploymentDetailedState.BUILDING;
-
                     }
                 } else {
                     // 3. default initial state, with no event or log urls!!!
@@ -143,6 +138,24 @@ public class PublishingStateMonitor implements StateHandler {
 
     }
 
+    protected Pod getBuildPod(String podName) {
+        return client.pods().withName(podName).get();
+    }
+
+    protected BuildList getBuildList(String integrationId, String version) {
+        return client.builds()
+                            .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId)
+                            .withLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
+                            .list();
+    }
+
+    protected PodList getDeploymentPodList(String integrationId, String version) {
+        return client.pods()
+                        .withLabel(OpenShiftService.COMPONENT_LABEL, "integration")
+                        .withLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
+                        .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId).list();
+    }
+
     private String[] getPodUrls(Pod pod) {
         String eventsUrl = null;
         String logsUrl = null;
@@ -150,16 +163,24 @@ public class PublishingStateMonitor implements StateHandler {
         switch (status.getPhase()) {
         case "Pending":
             // get pod events url
-            eventsUrl = String.format(POD_EVENT_URL, client.getMasterUrl(), client.getNamespace(), pod.getMetadata().getName());
+            eventsUrl = getEventsUrl(client, pod);
             break;
         case "Running":
             // get pod logs url
-            logsUrl = String.format(POD_LOG_URL, client.getMasterUrl(), client.getNamespace(), pod.getMetadata().getName());
+            logsUrl = getLogsUrl(client, pod);
             break;
         default:
             // ignore
         }
         return new String[]{ eventsUrl, logsUrl };
+    }
+
+    static String getEventsUrl(NamespacedOpenShiftClient client, Pod pod) {
+        return String.format(POD_EVENTS_URL, client.getMasterUrl(), client.getNamespace(), pod.getMetadata().getName());
+    }
+
+    static String getLogsUrl(NamespacedOpenShiftClient client, Pod pod) {
+        return String.format(POD_LOGS_URL, client.getMasterUrl(), client.getNamespace(), pod.getMetadata().getName());
     }
 
     private void deleteStateDetails(String id) {
