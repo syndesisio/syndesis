@@ -48,7 +48,7 @@ import static io.syndesis.common.model.integration.IntegrationDeploymentState.Pu
 @ConditionalOnProperty(value = "features.monitoring.enabled", havingValue = "true")
 public class PublishingStateMonitor implements StateHandler {
 
-    static final String BUILD_POD_NAME_LABEL = "openshift.io/build.pod-name";
+    static final String BUILD_POD_NAME_ANNOTATION = "openshift.io/build.pod-name";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PublishingStateMonitor.class);
     private static final String POD_LOGS_URL = "%sapi/v1/namespaces/%s/pods/%s/logs";
@@ -67,7 +67,7 @@ public class PublishingStateMonitor implements StateHandler {
 
     @Override
     public String getDescription() {
-        return "Publishing state details handler";
+        return "Publishing state details";
     }
 
     @Override
@@ -108,12 +108,14 @@ public class PublishingStateMonitor implements StateHandler {
                 final BuildList buildList = getBuildList(integrationId, version);
                 if (!buildList.getItems().isEmpty()) {
 
-                    final String podName = buildList.getItems().get(0).getMetadata().getLabels().get(BUILD_POD_NAME_LABEL);
-                    final Pod pod = getBuildPod(podName);
-                    if (pod != null) {
-                        podUrls = getPodUrls(pod);
-                        // pending deployment pod
-                        detailedState = (null != podUrls[0]) ? IntegrationDeploymentDetailedState.ASSEMBLING : IntegrationDeploymentDetailedState.BUILDING;
+                    final String podName = buildList.getItems().get(0).getMetadata().getAnnotations().get(BUILD_POD_NAME_ANNOTATION);
+                    if (podName != null) {
+                        final Pod pod = getBuildPod(podName);
+                        if (pod != null) {
+                            podUrls = getPodUrls(pod);
+                            // pending deployment pod
+                            detailedState = (null != podUrls[0]) ? IntegrationDeploymentDetailedState.ASSEMBLING : IntegrationDeploymentDetailedState.BUILDING;
+                        }
                     }
                 }
                 if (detailedState == null) {
@@ -163,15 +165,15 @@ public class PublishingStateMonitor implements StateHandler {
         final PodStatus status = pod.getStatus();
         switch (status.getPhase()) {
         case "Pending":
+        case "Unknown":
             // get pod events url
             eventsUrl = getEventsUrl(client, pod);
             break;
-        case "Running":
+        default:
+            // Running, Succeeded or Failed
             // get pod logs url
             logsUrl = getLogsUrl(client, pod);
             break;
-        default:
-            // ignore
         }
         return new String[]{ eventsUrl, logsUrl };
     }

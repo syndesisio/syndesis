@@ -159,7 +159,7 @@ public class DeploymentStateMonitorControllerTest {
 
         final Build build = new BuildBuilder()
                 .withNewMetadata()
-                .addToLabels(PublishingStateMonitor.BUILD_POD_NAME_LABEL, BUILD_POD_NAME)
+                .addToAnnotations(PublishingStateMonitor.BUILD_POD_NAME_ANNOTATION, BUILD_POD_NAME)
                 .endMetadata()
                 .build();
 
