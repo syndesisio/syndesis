@@ -115,7 +115,8 @@ public class PublishingStateMonitor implements StateHandler {
                         // pending deployment pod
                         detailedState = (null != podUrls[0]) ? IntegrationDeploymentDetailedState.ASSEMBLING : IntegrationDeploymentDetailedState.BUILDING;
                     }
-                } else {
+                }
+                if (detailedState == null) {
                     // 3. default initial state, with no event or log urls!!!
                     detailedState = IntegrationDeploymentDetailedState.ASSEMBLING;
                 }
