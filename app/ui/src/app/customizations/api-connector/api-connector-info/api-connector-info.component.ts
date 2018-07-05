@@ -109,7 +109,7 @@ export class ApiConnectorInfoComponent implements OnInit {
 
   onSubmit(): void {
     if (this.apiConnectorDataForm.valid) {
-      if (this.apiConnectorDataForm.dirty) {
+      if ((!this.createMode && this.apiConnectorDataForm.dirty) || this.createMode) {
         const { name, description, host, basePath } = this.apiConnectorDataForm.value;
         const apiConnectorData = {
           ...this.apiConnectorData,
