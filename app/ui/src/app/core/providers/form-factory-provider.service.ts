@@ -302,8 +302,14 @@ export class FormFactoryProviderService extends FormFactoryService {
     field: ConfiguredConfigurationProperty,
     value: any
   ) {
-    let initialValue = value || field.value || field.defaultValue;
-    initialValue = initialValue === 'false' ? false : initialValue;
+    let initialValue = false;
+    if (value !== undefined && value !== null) {
+      initialValue = !!value;
+    } else if (field.value !== undefined || field.value !== null) {
+      initialValue = !!field.value;
+    } else {
+      initialValue = !!field.defaultValue;
+    }
     return new DynamicCheckboxModel(
       {
         id: key,
@@ -312,7 +318,7 @@ export class FormFactoryProviderService extends FormFactoryService {
         controlTooltip: this.getLocalizedString(field, 'controlHint'),
         hint: this.getLocalizedString(field, 'description'),
         relation: field.relation,
-        value: !!initialValue
+        value: initialValue
       },
       {
         element: {
