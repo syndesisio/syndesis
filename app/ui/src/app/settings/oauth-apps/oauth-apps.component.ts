@@ -8,6 +8,7 @@ import { UserService } from '@syndesis/ui/platform';
 
 import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
+import { FilterConfig, SortConfig, ToolbarConfig } from 'patternfly-ng';
 
 export interface OAuthAppListItem {
   expanded: boolean;
@@ -48,7 +49,7 @@ export class OAuthAppsComponent implements OnInit {
           type: 'text'
         }
       ]
-    },
+    } as FilterConfig,
     sortConfig: {
       fields: [
         {
@@ -58,8 +59,8 @@ export class OAuthAppsComponent implements OnInit {
         }
       ],
       isAscending: true
-    }
-  };
+    } as SortConfig
+  } as ToolbarConfig;
   // Data
   list: Observable<OAuthApps>;
   loading: Observable<boolean>;
