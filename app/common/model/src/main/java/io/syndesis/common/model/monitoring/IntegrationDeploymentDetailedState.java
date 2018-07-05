@@ -36,12 +36,10 @@ public enum IntegrationDeploymentDetailedState {
     private final int currentStep;
     private final int totalSteps;
 
-    @JsonValue
     public int getCurrentStep() {
         return currentStep;
     }
 
-    @JsonValue
     public int getTotalSteps() {
         return totalSteps;
     }
