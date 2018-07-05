@@ -295,8 +295,8 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
           [this.selectedIntegration.name]
         );
         this.modalType = '';
-        this.modalTitle = 'Confirm Start?';
-        this.modalPrimaryText = 'Start';
+        this.modalTitle = this.i18NService.localize('publish-integration-modal-title');
+        this.modalPrimaryText = this.i18NService.localize('publish-integration-modal-primary-text');
         break;
       case 'unpublish':
         this.modalMessage = this.i18NService.localize(
@@ -304,8 +304,8 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
           [this.selectedIntegration.name]
         );
         this.modalType = '';
-        this.modalTitle = 'Confirm Stop?';
-        this.modalPrimaryText = 'Stop';
+        this.modalTitle = this.i18NService.localize('unpublish-integration-modal-title');
+        this.modalPrimaryText = this.i18NService.localize('unpublish-integration-modal-primary-text');
         break;
       default:
         this.modalMessage = this.i18NService.localize(
@@ -313,7 +313,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
           [this.selectedIntegration.name]
         );
         this.modalType = 'delete';
-        this.modalTitle = 'Confirm Delete?';
+        this.modalTitle = this.i18NService.localize('delete-integration-modal-title');
     }
   }
 }
