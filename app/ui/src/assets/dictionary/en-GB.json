@@ -64,7 +64,9 @@
       "create-connection": "Create {{connection}}",
       "select-connector": "Select Connector",
       "configure-connection": "Configure {{connection}}",
-      "name-connection": "Name {{connection}}"
+      "name-connection": "Name {{connection}}",
+      "delete-connection-modal": "Are you sure you want to delete the \"{{0}}\" connection?",
+      "delete-connection-modal-title": "Confirm Delete?"
     },
     "dashboard": {
       "heading": "Dashboard",
@@ -124,7 +126,7 @@
         "list": {
           "item": {
             "description": "Client ID and client secret not configured.",
-            "remove-btn-modal": "Are you sure you want to clear the credentials for '{{0}}'?"
+            "remove-btn-modal": "Are you sure you want to delete the OAuth credentials for '{{0}}'?"
           }
         },
         "form": {
@@ -250,10 +252,10 @@
       "delete-integration-message": "Integration successfully deleted.",
       "delete-integration-danger": "Failed to delete integration",
       "delete-integration-reason": "Error deleting integration",
-      "update-draft-modal": "Are you sure you would like to replace the current draft for the \"{{0}}\" integration?",
-      "publish-integration-modal": "Are you sure you would like start the \"{{0}}\" integration?",
-      "unpublish-integration-modal": "Are you sure you would like to stop the \"{{0}}\" integration?",
-      "delete-integration-modal": "Are you sure you would like delete the \"{{0}}\" integration?"
+      "update-draft-modal": "Are you sure you want to to replace the current draft for the \"{{0}}\" integration?",
+      "publish-integration-modal": "Are you sure you want to start the \"{{0}}\" integration?",
+      "unpublish-integration-modal": "Are you sure you want to stop the \"{{0}}\" integration?",
+      "delete-integration-modal": "Are you sure you want to delete the \"{{0}}\" integration?"
     }
   }
 }

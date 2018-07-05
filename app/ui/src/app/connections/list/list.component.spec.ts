@@ -4,14 +4,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
+import { CoreModule } from '@syndesis/ui/core';
+import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisStoreModule } from '../../store/store.module';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { ConnectionsListComponent } from './list.component';
 import { TestApiModule } from '@syndesis/ui/api/testing';
+import { PlatformModule } from '@syndesis/ui/platform';
 
 describe('ConnectionsListComponent', () => {
   let component: ConnectionsListComponent;
@@ -24,10 +24,10 @@ describe('ConnectionsListComponent', () => {
         CommonModule,
         SyndesisCommonModule.forRoot(),
         RouterTestingModule.withRoutes([]),
-        ModalModule.forRoot(),
-        BsDropdownModule.forRoot(),
         SyndesisStoreModule,
-        NotificationModule
+        PlatformModule.forRoot(),
+        CoreModule.forRoot(),
+        VendorModule
       ],
       declarations: [ConnectionsListComponent]
     }).compileComponents();

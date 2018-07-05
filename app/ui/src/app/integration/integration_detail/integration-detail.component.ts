@@ -100,6 +100,10 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     return this.integrationActionsService.getModalType();
   }
 
+  get modalPrimaryText() {
+    return this.integrationActionsService.getModalPrimaryText();
+  }
+
   viewDetails(step: Step) {
     if (step && step.connection) {
       this.router.navigate(['/connections/', step.connection.id]);

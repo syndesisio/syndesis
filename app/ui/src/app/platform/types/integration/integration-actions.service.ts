@@ -22,4 +22,5 @@ export abstract class IntegrationActionsService {
   abstract getModalTitle(): string;
   abstract getModalMessage(): string;
   abstract getModalType(): string;
+  abstract getModalPrimaryText(): string;
 }
