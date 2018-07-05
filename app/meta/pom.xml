@@ -293,6 +293,12 @@
     </dependency>
 
     <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-timer</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
       <!-- Needed by Guava at compile time -->
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>

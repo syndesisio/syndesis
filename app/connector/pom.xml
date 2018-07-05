@@ -52,6 +52,7 @@
     <module>sftp</module>
     <module>slack</module>
     <module>sql</module>
+    <module>timer</module>
     <module>twitter</module>
     <module>servicenow</module>
     <module>webhook</module>

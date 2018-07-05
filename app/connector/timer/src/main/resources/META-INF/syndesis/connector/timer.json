@@ -1,0 +1,95 @@
+{
+      "id": "timer",
+      "name": "Timer",
+      "description": "Trigger events based on an interval or a quartz expression",
+      "icon": "fa-puzzle-piece",
+      "dependencies": [
+          {
+              "type": "MAVEN",
+              "id": "@project.groupId@:@project.artifactId@:@project.version@"
+          }
+      ],
+      "configuredProperties": {},
+      "actions": [
+        {
+            "name": "Simple Timer",
+            "description": "Simple Timer",
+            "id": "io.syndesis:timer-action",
+            "pattern": "From",
+            "actionType": "connector",
+            "descriptor": {
+                "componentScheme": "timer",
+                "inputDataShape": {
+                    "kind": "none"
+                },
+                "outputDataShape": {
+                    "kind": "any"
+                },
+                "configuredProperties": {
+                    "timerName": "syndesis-timer"
+                },
+                "propertyDefinitionSteps": [
+                    {
+                        "description": "Period",
+                        "name": "period",
+                        "properties": {
+                            "period": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "Period",
+                                "displayName": "period",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "required": false,
+                                "secret": false,
+                                "type": "duration",
+                                "tags": [],
+                                "enum": []
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Cron Timer",
+            "description": "Cron Timer",
+            "id": "io.syndesis:timer-chron",
+            "pattern": "From",
+            "actionType": "connector",
+            "descriptor": {
+                "componentScheme": "quartz2",
+                "inputDataShape": {
+                    "kind": "none"
+                },
+                "outputDataShape": {
+                    "kind": "none"
+                },
+                "configuredProperties": {
+                    "triggerName": "syndesis-quartz"
+                },
+                "propertyDefinitionSteps": [
+                    {
+                        "description": "Cron",
+                        "name": "cron",
+                        "properties": {
+                            "cron": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "Cron Expression",
+                                "displayName": "Cron Expression",
+                                "javaType": "string",
+                                "kind": "parameter",
+                                "required": false,
+                                "secret": false,
+                                "type": "string",
+                                "tags": [],
+                                "enum": []
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
