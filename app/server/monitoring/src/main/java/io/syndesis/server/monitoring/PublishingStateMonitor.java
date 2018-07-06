@@ -89,9 +89,9 @@ public class PublishingStateMonitor implements StateHandler {
             final PodList podList = getDeploymentPodList(integrationId, version);
             if (!podList.getItems().isEmpty()) {
 
+                // TODO: handle pod scaling in the future
                 final Pod pod = podList.getItems().get(0);
                 // check if deployment is ready
-                // TODO: handle pod scaling in the future
                 if (Readiness.isPodReady(pod)) {
                     // no details needed once deployed successfully!!!
                     // NOTE that this won't happen always, the state polling window may miss this
@@ -127,6 +127,8 @@ public class PublishingStateMonitor implements StateHandler {
             if (detailedState != null) {
                 IntegrationDeploymentStateDetails stateDetails = new IntegrationDeploymentStateDetails.Builder()
                     .id(compositeId)
+                    .integrationId(integrationId)
+                    .deploymentVersion(Integer.valueOf(version))
                     .detailedState(detailedState)
                     .eventsUrl(Optional.ofNullable(podUrls[0]))
                     .logsUrl(Optional.ofNullable(podUrls[1]))

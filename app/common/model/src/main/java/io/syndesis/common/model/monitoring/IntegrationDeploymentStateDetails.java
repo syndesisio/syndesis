@@ -39,6 +39,18 @@ public interface IntegrationDeploymentStateDetails extends WithId<IntegrationDep
     }
 
     /**
+     * Integration Id of the related {@link io.syndesis.common.model.integration.IntegrationDeployment}.
+     * @return integration id.
+     */
+    String getIntegrationId();
+
+    /**
+     * Deployment version of the related {@link io.syndesis.common.model.integration.IntegrationDeployment}.
+     * @return integration deployment version.
+     */
+    int getDeploymentVersion();
+
+    /**
      * Integration state detailed status, including step count and total steps.
      * @return detailed state.
      */
