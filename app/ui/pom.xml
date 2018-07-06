@@ -62,7 +62,7 @@
               <goal>yarn</goal>
             </goals>
             <configuration>
-              <arguments>install --no-progress</arguments>
+              <arguments>install --no-progress --force</arguments>
             </configuration>
           </execution>
           <execution>
