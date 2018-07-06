@@ -33,4 +33,4 @@ oc cp ${pod}:/tmp/src $dest
 
 secret=$(oc get pod $pod -o json | jq -r ".spec.volumes[]|select(.name==\"secret-volume\")|.secret.secretName")
 mkdir $dest/config || true
-oc get secret $secret -o jsonpath="{.data.application\.properties}" | base64 -D > $dest/config/application.properties
+oc get secret $secret -o jsonpath="{.data.application\.properties}" | base64 --decode > $dest/config/application.properties
