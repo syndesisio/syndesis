@@ -55,6 +55,7 @@
     <module>builder/maven-plugin</module>
     <module>builder/image-generator</module>
     <module>verifier</module>
+    <module>monitoring</module>
     <module>metrics/jsondb</module>
     <module>metrics/prometheus</module>
   </modules>

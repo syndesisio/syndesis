@@ -1093,6 +1093,12 @@
 
       <dependency>
         <groupId>io.syndesis.server</groupId>
+        <artifactId>server-monitoring</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.server</groupId>
         <artifactId>server-metrics-prometheus</artifactId>
         <version>${project.version}</version>
       </dependency>
