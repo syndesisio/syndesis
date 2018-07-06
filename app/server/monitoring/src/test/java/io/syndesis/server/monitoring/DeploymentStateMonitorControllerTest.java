@@ -190,6 +190,8 @@ public class DeploymentStateMonitorControllerTest {
     private static IntegrationDeploymentStateDetails getDetails(IntegrationDeploymentDetailedState state, String eventsUrl, String logsUrl) {
         return new IntegrationDeploymentStateDetails.Builder()
                 .id(DEPLOYMENT_ID)
+                .integrationId(INTEGRATION_ID)
+                .deploymentVersion(INTEGRATION_VERSION)
                 .detailedState(state)
                 .eventsUrl(Optional.ofNullable(eventsUrl))
                 .logsUrl(Optional.ofNullable(logsUrl))
