@@ -11,7 +11,7 @@ authorize {prodname} to access the API.
 If the API you want to connect to does not use OAuth, skip this
 section and see <<create-rest-api-connection>>.
 
-To register {prodname} as an authorized API client:
+To register {prodname} as an authorized API client application:
 
 . In {prodname}:
 .. In the left panel, click *Settings*.

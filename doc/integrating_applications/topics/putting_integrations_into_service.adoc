@@ -1,0 +1,36 @@
+[id='putting-integrations-into-service']
+= Putting integrations into and out of service
+
+After you create an integration, you can save it as a draft or 
+start running it. The first time that you 
+run an integration, {prodname} assembles the needed resources, 
+builds the integration runtime, deploys the OpenShift pod that will
+run the integration, and then starts executing the integration. 
+
+At any time, you can click a button to stop running the integration. 
+When you want to start the integration again, {prodname} already
+has what it needs so starting it takes less time
+than when you ran it for the first time. 
+
+The process of starting an integration for the first time is 
+referred to as publishing the integration. The following topics 
+provide details:
+
+* <<publishing-integrations>>
+* <<stopping-integrations>>
+* <<starting-integrations>>
+* <<restarting-older-integration-versions>>
+* <<troubleshooting-integration-execution>>
+* <<copying-integrations-to-other-environments>>
+
+include::publishing_integrations.adoc[leveloffset=+1]
+
+include::stopping_integrations.adoc[leveloffset=+1]
+
+include::starting_integrations.adoc[leveloffset=+1]
+
+include::restarting_older_integration_versions.adoc[leveloffset=+1]
+
+include::troubleshooting_integration_execution.adoc[leveloffset=+1]
+
+include::copying_integrations_to_other_environments.adoc[leveloffset=+1]

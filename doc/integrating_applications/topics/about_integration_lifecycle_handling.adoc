@@ -3,17 +3,15 @@
 
 After you create and publish an integration, you  might want to update
 what the integration does. You can edit a draft of the published integration
-and then replace the initial running version with the updated version.
+and then replace the running version with the updated version.
 To facilitate this, for each integration, {prodname} maintains multiple
 versions as well as each version's state. The following topics provide
 an understanding of the behavior to help you manage your integrations.
 
-* <<understanding-integration-versions>>
-* <<understanding-integration-states>>
-* <<viewing-integration-history>>
+* <<description-of-integration-versions>>
+* <<description-of-integration-states>>
 
-include::understanding_integration_versions.adoc[leveloffset=+1]
 
-include::understanding_integration_states.adoc[leveloffset=+1]
+include::description_of_integration_versions.adoc[leveloffset=+1]
 
-include::viewing_integration_history.adoc[leveloffset=+1]
+include::description_of_integration_states.adoc[leveloffset=+1]

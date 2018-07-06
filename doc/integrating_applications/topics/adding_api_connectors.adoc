@@ -6,15 +6,15 @@ Representational State Transfer Application Programming Interfaces
 (REST APIs)
 that support Hypertext Transfer Protocol (HTTP).
 To do this, {prodname} requires a valid
-Swagger 2.0 specification that describes a REST API that you want to connect to.
-If the API service provider does not make a Swagger specification available
-then you must create the Swagger specification.
+OpenAPI 2.0 specification that describes a REST API that you want to connect to.
+If the API service provider does not make an OpenAPI specification available
+then you must create the OpenAPI specification.
 
 The following topics provide information and instructions for adding
 REST API connectors:
 
 * <<about-api-client-connectors>>
-* <<about-swagger-specifications>>
+* <<about-openapi-specifications>>
 * <<creating-api-connectors>>
 * <<updating-api-connectors>>
 * <<deleting-api-connectors>>
@@ -26,7 +26,7 @@ that connector in an integration, see
 
 include::about_api_connectors.adoc[leveloffset=+1]
 
-include::about_swagger_content.adoc[leveloffset=+1]
+include::about_openapi_content.adoc[leveloffset=+1]
 
 include::creating_api_connectors.adoc[leveloffset=+1]
 

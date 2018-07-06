@@ -1,6 +1,12 @@
 [id='importing-integrations']
 = Importing integrations
 
+In a {prodname} environment, to import an integration from another 
+{prodname} environment, you must have used that other {prodname} 
+environment to <<exporting-integrations,export the integraion>>. 
+Exporting an integration downloads the zip file that you upload
+to import the integration.
+
 To import an integration:
 
 :context: ug
@@ -40,7 +46,9 @@ See the appropriate topic:
 
 . In the left panel, click *Connections* and confirm that there are no
 longer any connections that require configuration.
-. In the left panel, click *Integrations*. 
+. In the left panel, click *Integrations*. In the list of integrations, 
+imported integrations have a 
+green triangle in the upper left corner of their entries. 
 . In the list of integrations, at the right of the entry for the
 integration that you imported, click 
 image:shared/images/ThreeVerticalDotsKebab.png[Three Vertical Dots] and

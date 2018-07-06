@@ -1,16 +1,16 @@
-[id='about-swagger-specifications']
-= About Swagger specification content
+[id='about-openapi-specifications']
+= About OpenAPI specification content
 
 The following topics provide information about the content of the
-Swagger specification that {prodname} uses to create a connector
+OpenAPI specification that {prodname} uses to create a connector
 to a REST API:
 
-* <<guidelines-for-swagger-specifications>>
+* <<guidelines-for-openapi-specifications>>
 // * <<access-token-strategy>>
 * <<providing-client-credentials>>
 * <<refreshing-access-tokens>>
 
-include::guidelines_for_swagger_specifications.adoc[leveloffset=+1]
+include::guidelines_for_openapi_specifications.adoc[leveloffset=+1]
 
 // include::access_token_strategy.adoc[leveloffset=+1]
 

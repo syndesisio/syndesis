@@ -44,7 +44,7 @@ Ensure that your classpath has only one version of this driver and that the
 reference is to the newer driver you are uploading. Integrations that are running
 and that use connections based on the older driver are not affected. 
 New connections that you create will use the new driver.
-If you publish an integration that has a connection that was created with the
+If you start an integration that has a connection that was created with the
 older driver, {prodname} automatically uses the new driver instead. 
 
 . Click *Import Extension*. {prodname} makes the custom connector or 

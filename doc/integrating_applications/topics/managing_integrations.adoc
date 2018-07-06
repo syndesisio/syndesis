@@ -4,39 +4,24 @@
 The following topics provide information to help you manage your
 integrations:
 
+* <<overview-of-managing-integrations>>
 * <<about-integration-lifecycle-handling>>
-* <<publishing-integrations>>
-* <<unpublishing-integrations>>
-* <<republishing-older-integration-versions>>
-* <<viewing-log-information>>
-* <<viewing-integration-metrics>>
-* <<viewing-system-metrics>>
+* <<putting-integrations-into-service>>
+* <<monitoring-integrations>>
 * <<testing-integrations>>
-* <<troubleshooting-integration-execution>>
 * <<updating-integrations>>
-* <<copying-integrations-to-other-environments>>
 * <<deleting-integrations>>
 
-include::about_integration_versions.adoc[leveloffset=+1]
+include::overview_of_managing_integrations.adoc[leveloffset=+1]
 
-include::publishing_integrations.adoc[leveloffset=+1]
+include::about_integration_lifecycle_handling.adoc[leveloffset=+1]
 
-include::unpublishing_integrations.adoc[leveloffset=+1]
+include::putting_integrations_into_service.adoc[leveloffset=+1]
 
-include::republishing_older_integration_versions.adoc[leveloffset=+1]
-
-include::viewing_log_information.adoc[leveloffset=+1]
-
-include::viewing_integration_metrics.adoc[leveloffset=+1]
-
-include::viewing_system_metrics.adoc[leveloffset=+1]
+include::monitoring_integrations.adoc[leveloffset=+1]
 
 include::testing_integrations.adoc[leveloffset=+1]
 
-include::troubleshooting_integration_execution.adoc[leveloffset=+1]
-
 include::updating_integrations.adoc[leveloffset=+1]
-
-include::copying_integrations_to_other_environments.adoc[leveloffset=+1]
 
 include::deleting_integrations.adoc[leveloffset=+1]
