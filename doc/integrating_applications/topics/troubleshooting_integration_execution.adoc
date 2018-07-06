@@ -26,7 +26,7 @@ application has been authorized.
 For some applications, this takes a few seconds but it can take longer
 for other applications. 
 
-. After reconnecting to the application, republish the integration. 
+. After reconnecting to the application, start the integration. 
 
 If reconnection is not successful, try this:
 

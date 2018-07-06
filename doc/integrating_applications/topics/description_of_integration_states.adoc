@@ -1,0 +1,53 @@
+[id='description-of-integration-states']
+= Description of integration states
+
+{prodname} can maintain multiple versions of the same integration. 
+The benefit of this is that you can edit an integration to change its
+behavior. You do not need to create a new integration when something
+changes. 
+
+There can be exactly one draft version of an integration. 
+{prodname} has a definition for the draft version of an integration but it 
+has never run this version of the integration. When you edit an integration,
+you are updating the draft version of the integration. 
+
+In {prodname}, you can see a list of the versions of an integration in the 
+integration's summary page. To view this page, in the left navigation
+panel, click *Integrations* and then click the entry for the integration
+whose versions you want to see. In the list of versions, each entry 
+indicates the state of that version, which is one of the following:
+
+[cols="2*"]
+|===
+|*State*
+|*Description*
+
+|*Running*
+|A *Running* version is executing; it is in service. Only one version
+of an integration can be running. That is, only one
+version at a time can be in the *Running* state.
+
+|*Stopped*
+|A *Stopped* version is not running. The draft version of an integration
+is in the *Stopped* state. Each integration that was running at one time
+and then stopped is in the *Stopped* state. 
+
+If no version of this integration is in the *Running* state, 
+then you can start a version that is stopped. 
+
+|*Pending*
+|A *pending* version is in transition. {prodname} is in the process
+of either starting this version of the integration or stopping  
+this version of the integration, but
+the integration is not yet running or stopped. 
+
+|*Error*
+|An integration version that is in the *Error* state
+encountered an OpenShift error while being started or while running. 
+The error suspended start-up or execution.  If this happens, try
+starting an earlier integration version that ran correctly.
+Alternatively, contact technical support for help.
+To do that, in any {prodname} page, in the upper right, click the 
+image:shared/images/InfoIcon.png[title="Help"] icon and select *Support*. 
+
+|===

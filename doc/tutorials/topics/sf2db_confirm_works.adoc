@@ -4,10 +4,9 @@
 To confirm that the Salesforce to database integration is working:
 
 . In the left panel, click *Integrations*.
-. If necessary, wait until your sample integration is a *Published* integration,
-which means that it is running. If you used the example name, you would 
-see that 
-*Salesforce to Database Sample Integration* is *Published*.
+. If necessary, wait until your sample integration is a *Running* integration.
+ If you used the example name, you would see that 
+*Salesforce to Database Sample Integration* is *Running*.
 
 . In your Salesforce installation, create a new lead. Be
 sure to enter data
@@ -19,8 +18,8 @@ for your {prodname} installation. For example:
 +
 Your {prodname} installation provides the To Do app, which has a 
 REST API for accessing a database that contains tasks. In the AMQ to REST 
-API sample integration tutorial, there are instructions for uploading a 
-Swagger file for the To Do app to create an API client connector. 
+API sample integration tutorial, there are instructions for uploading an
+OpenAPI (Swagger) file for the To Do app to create an API client connector. 
 
 . In the *To Do App* display, you should see a notification that a new 
 lead was created in the database. 

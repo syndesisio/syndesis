@@ -9,21 +9,21 @@ already available are listed here.
 . Click *Create API Connector*.
 . On the *Create API Client Connector* page, do one of the following:
 +
-* Click *Browse* and select the Swagger file that you want to upload.
-* Select *Use a URL* and paste the URL for your Swagger specification
+* Click *Browse* and select the OpenAPI file that you want to upload.
+* Select *Use a URL* and paste the URL for your OpenAPI specification
 in the input field. 
 
 . Click *Next*. If there is invalid or missing content, {prodname}
 displays information about what needs to be corrected. Select a different
-Swagger file to upload or click *Cancel*,
-revise the Swagger file, and upload the updated file.
+OpenAPI file to upload or click *Cancel*,
+revise the OpenAPI file, and upload the updated file.
 +
 If the specification is valid and complete, {prodname} displays a summary of
 the actions that the connector will provide. This might include errors and
 warnings about the action specifications.
 
-. To revise the Swagger file,
-click *Cancel*, revise the Swagger file, and upload the updated file.
+. To revise the OpenAPI file,
+click *Cancel*, revise the OpenAPI file, and upload the updated file.
 +
 If you are satisfied with the action summary, click *Next*.
 . Indicate the API's security requirements by selecting one of the
@@ -34,14 +34,14 @@ want to use to access the API.
 .. *OAuth* -- {prodname} prompts you to enter:
 ... *Authorization URL* is the location for registering {prodname} as
 a client of the API. Registration authorizes {prodname} to access the API.
-See <<register-with-rest-api>>. The Swagger specification or other
+See <<register-with-rest-api>>. The OpenAPI specification or other
 documentation for the API should specify this URL. If it does not then
 you must contact the service provider to obtain this URL.
 ... *Access Token URL* is required for OAuth authorization. Again, the
-Swagger specification or other documentation for the API should provide
+OpenAPI specification or other documentation for the API should provide
 this URL. If it does not then you must contact the service provider.
 . Click *Next*. {prodname} displays the connector's name,
-description, host, and base URL as indicated by the Swagger file.
+description, host, and base URL as indicated by the OpenAPI file.
 For connections that you create from this connector,
 +
 ** {prodname}
@@ -49,8 +49,8 @@ concatenates the host and base URL values to define the endpoint for
 the connection. For example, if the host is `https://example.com` and
 the base URL is `/api/v1` then the connection endpoint is
 `https://example.com/api/v1`.
-** {prodname} applies  the schema specified in the Swagger file to data
-mapping steps. If the Swagger file supports more than one schema then {prodname}
+** {prodname} applies the schema specified in the OpenAPI file to data
+mapping steps. If the OpenAPI file supports more than one schema then {prodname}
 uses the TLS (HTTPS) schema.
 . Review the connector details and optionally upload an icon for the connector.
 If you do not upload an icon, {prodname} generates one.
@@ -59,10 +59,10 @@ the flow of an integration, it displays a connector's icon
 to represent connections that are created from that connector.
 +
 To override a value obtained from
-the Swagger file, edit the field value that you want to change.
+the OpenAPI file, edit the field value that you want to change.
 After {prodname} creates a connector,
 you cannot change it. To effect a change, you need to upload an updated
-Swagger file so that {prodname} can create a new connector.
+OpenAPI file so that {prodname} can create a new connector.
 . When you are satisfied with the connector details, click *Create API Connector*.
 {prodname} displays the new connector with the other connectors. 
 

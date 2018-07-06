@@ -1,18 +1,17 @@
-[id='unpublishing-integrations']
-= Unpublishing integrations
+[id='stopping-integrations']
+= Stopping integrations
 
 Each integration can have exactly one version that is running. A running
-version is in the *Published* state. To stop
-running an integration, you unpublish it.
-
-To unpublish an integration:
+version is in the *Running* state. To stop
+running an integration:
 
 . In the left {prodname} panel, click *Integrations*.
 . In the list of integrations, identify the entry for the integration that you
-want to stop running. The entry shows that this integration *Published*.
+want to stop running. The entry shows that this integration is *Running*.
 . At the far right of this integration's entry, click
 image:shared/images/ThreeVerticalDotsKebab.png[Kebab]
-and select *Unpublish*.
+and select *Stop*.
 
-{prodname} stops running the integration. *Unpublished* appears in the
+{prodname} stops running the integration. *Stopping* and then
+*Stopped* appears in the
 integration's entry in the list of integrations.

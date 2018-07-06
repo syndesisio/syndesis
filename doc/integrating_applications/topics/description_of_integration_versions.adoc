@@ -1,0 +1,30 @@
+[id='description-of-integration-versions']
+= Description of integration versions
+
+In each {prodname} environment, each integration can have multiple
+versions. Support for multiple integration versions has several benefits:
+
+* If you publish a version that does not work correctly, then you
+can return to running a correct version of the integration. To do that, you
+stop the incorrect version and start a version
+that runs the way you want it to. 
+
+* As requirements or tools change, you can incrementally update an
+integration. You do not need to create a new integration. 
+
+{prodname} assigns a new version number each time it starts running
+a new version of an integration. For example, suppose you publish the
+Twitter to Salesforce sample integration. After it has been
+running, you update the integration to use a different
+account to connect to Twitter. You then publish the updated integration.
+{prodname} stops the running version of integration, and 
+publishes the updated version of the integration with an incremented version number.
+
+The initial integration that was running
+is version 1. The updated integration that is now running is
+version 2. If you edit version 2, for example to
+use a different account to connect to Salesforce, and you publish that
+version then it becomes version 3 of the integration.
+
+See also: <<publishing-integrations>> and
+<<restarting-older-integration-versions>>.

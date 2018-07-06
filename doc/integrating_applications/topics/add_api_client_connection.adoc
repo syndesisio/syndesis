@@ -16,7 +16,7 @@ To add an API connection to an integration:
 connection that you want to add to the integration.
 . Click the action that you want the connection to perform.
 The actions that are available are based on the resource operations
-specified in the Swagger file that was uploaded to {prodname} and that
+specified in the OpenAPI file that was uploaded to {prodname} and that
 describes the API you are connecting to.
 . Depending on the action you select, enter any parameters that
 {prodname} prompts for.

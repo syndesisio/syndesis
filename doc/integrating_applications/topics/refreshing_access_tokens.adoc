@@ -25,7 +25,7 @@ endif::[]
 
 To specify that {prodname} should automatically try to obtain a new 
 access token in the situations described, 
-in the `securityDefinitions` section of the Swagger specification, 
+in the `securityDefinitions` section of the OpenAPI specification, 
 add the `x-refresh-token-retry-statuses` vendor extension. The setting 
 of this extension is a comma separated list that
 specifies HTTP response status codes. When an access token's 

@@ -3,18 +3,18 @@
 [id='cleanup_{context}']
 = Clean up your integration
 
-When you are done working with a sample integration, unpublish it and
+When you are done working with a sample integration, stop it and
 delete it:
 
 . In the left panel, click *Integrations*.
 . In the main panel, identify the entry for the sample integration that 
-you want to unpublish.
+you want to stop.
 . In that entry, to the right, click
 image:shared/images/ThreeVerticalDotsKebab.png[Kebab Menu] and then 
-click *Unpublish*. 
-. Click *OK* to confirm that you want to stop running the integration.
+click *Stop*. 
+. Click *Stop* to confirm that you want to stop running the integration.
 
-. In the entry for the integration that you just unpublished, to the right, click
+. In the entry for the integration that you just stopped, to the right, click
 image:shared/images/ThreeVerticalDotsKebab.png[Kebab Menu] and then 
 click *Delete*. 
-. Click *OK* to confirm that you want to delete the integration.
+. Click *Delete* to confirm that you want to delete the integration.

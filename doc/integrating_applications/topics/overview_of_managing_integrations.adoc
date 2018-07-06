@@ -1,0 +1,14 @@
+[id='overview-of-managing-integrations']
+= Overview of managing integrations
+
+Each {prodname} environment is hosted on OpenShift Online or
+OpenShift Container Platform (OCP). A common set up is to have
+a {prodname}development environment, a {prodname} test environment, 
+and a {prodname} deployment environment. 
+
+To facilitate this, {prodname} provides the ability to export an 
+integration from one {prodname} environment and then import that integration
+into another {prodname} environment. 
+
+The information and procedures for managing integrations are the same
+in each kind of {prodname} environment, unless specifically noted. 

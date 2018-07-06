@@ -1,13 +1,13 @@
 [id='about-api-client-connectors']
 = Requirements for API client connectors
 
-After you upload a Swagger specification to {prodname}, a connector to the API
+After you upload an OpenAPI specification to {prodname}, a connector to the API
 becomes available. An integrator can select the connector, create
 an API client connection, and then add that connection to an integration.
 
 When {prodname} creates an API client connector, it maps each resource
-operation in the Swagger specification to an action. The action name
-and action description comes from documentation in the Swagger specification.
+operation in the OpenAPI specification to an action. The action name
+and action description comes from documentation in the OpenAPI specification.
 
 {prodname} connectors support OAuth 2.0 and HTTP Basic
 Authorization. If access to the API requires Transport Layer Security (TLS)

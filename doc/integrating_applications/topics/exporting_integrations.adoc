@@ -1,6 +1,11 @@
 [id="exporting-integrations"]
 = Exporting integrations
 
+When {prodname} exports an integration it downloads a zip file
+to your local `Downloads` folder. This zip file
+contains the information needed to recreate the integration in a
+different {prodname} environment. 
+
 To export an integration:
 
 . In the left panel of {prodname}, click *Integrations*. 
@@ -10,9 +15,9 @@ that you want to export.
 image:shared/images/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
 select *Export*. 
 
-{prodname} downloads a zip file to your local `Downloads` folder. To import
+To import
 the integration into another {prodname} environment, open that environment
-and import this zip file. 
+and import the exported zip file. 
 
 Exporting an integration is also a way to have a backup of the integration. 
 However, {prodname} maintains the versions of an integration so exporting
