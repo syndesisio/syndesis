@@ -15,16 +15,17 @@
  */
 package io.syndesis.common.model.monitoring;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Enum to describe current Integration Deployment sub state
  * while transitioning (publishing/un-publishing) an integration's state.
  */
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum IntegrationDeploymentDetailedState {
 
     ASSEMBLING(1, Constants.TOTAL_PUBLISHING_STEPS),
@@ -32,16 +33,22 @@ public enum IntegrationDeploymentDetailedState {
     DEPLOYING(3, Constants.TOTAL_PUBLISHING_STEPS),
     STARTING(4, Constants.TOTAL_PUBLISHING_STEPS);
 
-    private static final Pattern VALUE_PATTERN = Pattern.compile("(\\w+)\\(\\d+/\\d+\\)");
     private final int currentStep;
     private final int totalSteps;
 
+    @JsonProperty
     public int getCurrentStep() {
         return currentStep;
     }
 
+    @JsonProperty
     public int getTotalSteps() {
         return totalSteps;
+    }
+
+    @JsonProperty
+    public String getValue() {
+        return this.name();
     }
 
     IntegrationDeploymentDetailedState(int currentStep, int totalSteps) {
@@ -49,27 +56,19 @@ public enum IntegrationDeploymentDetailedState {
         this.totalSteps = totalSteps;
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return String.format("%s(%d/%d)", super.name(), currentStep, totalSteps);
-    }
-
     @JsonCreator
-    public static IntegrationDeploymentDetailedState fromString(String value) {
-        final Matcher matcher = VALUE_PATTERN.matcher(value);
-        if (matcher.matches()) {
-            final String name = matcher.group(1);
-            for (IntegrationDeploymentDetailedState state : values()) {
-                if (state.name().equals(name)) {
-                    return state; // ignore current step and totalsteps from value!
-                }
-            }
-        }
-        throw new IllegalArgumentException("Illegal value " + value);
+    static IntegrationDeploymentDetailedState fromValue(@JsonProperty("value") String value,
+                                                        @JsonProperty("currentStep") int currentStep,
+                                                        @JsonProperty("totalSteps") int totalSteps) {
+        return Arrays.stream(values())
+                .filter(v -> v.getValue().equals(value)
+                        && v.getCurrentStep() == currentStep
+                        && v.getTotalSteps() == totalSteps)
+                .findFirst()
+                .get();
     }
 
     private static class Constants {
-        public static final int TOTAL_PUBLISHING_STEPS = 4;
+        static final int TOTAL_PUBLISHING_STEPS = 4;
     }
 }
