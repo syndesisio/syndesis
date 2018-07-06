@@ -71,6 +71,7 @@ public class DeploymentStateMonitorControllerTest {
 
     private static final PodStatus PENDING_STATUS = new PodStatusBuilder().withPhase("Pending").build();
     private static final PodStatus RUNNING_STATUS = new PodStatusBuilder().withPhase("Running").build();
+    private static final PodStatus SUCCEEDED_STATUS = new PodStatusBuilder().withPhase("Succeeded").build();
 
     @Parameterized.Parameter(value = 0)
     public Pod deploymentPod;
@@ -177,6 +178,9 @@ public class DeploymentStateMonitorControllerTest {
                         getDetails(ASSEMBLING, getEventsUrl(pod), null)},
                 // build pod with Running status
                 new Object[] {null, build, pod = getPod(RUNNING_STATUS, BUILD_POD_NAME),
+                        getDetails(BUILDING, null, getLogsUrl(pod))},
+                // build pod with Succeeded status, no deployment pod yet
+                new Object[] {null, build, pod = getPod(SUCCEEDED_STATUS, BUILD_POD_NAME),
                         getDetails(BUILDING, null, getLogsUrl(pod))},
                 // deployment pod with Pending status
                 new Object[] { pod = getPod(PENDING_STATUS, DEPLOYMENT_POD_NAME), null, null,
