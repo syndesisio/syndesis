@@ -29,7 +29,7 @@
             type="button"
             class="btn btn-danger"
             (click)="ok()">
-        Delete
+        {{ 'delete-modal-primary-text' | synI18n }}
     </button>
     <button *ngIf="!type"
             type="button"

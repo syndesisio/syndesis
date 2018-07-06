@@ -6,16 +6,16 @@
             (click)="cancel()">
       <span class="pficon pficon-close"></span>
     </button>
-    <h4 class="modal-title">Confirm Delete?</h4>
+    <h4 class="modal-title">{{ 'customizations.extensions.delete-extension-modal-title' | synI18n }}</h4>
   </div>
   <div class="modal-body">
     <span aria-hidden="true" class="pficon pficon-error-circle-o"></span>
     <syndesis-loading [loading]="loading">
       <p [ngClass]="{'lead': integrations && integrations.length > 0 }">
-        Are you sure you want to delete the "{{ extension?.name }}" extension?
+        {{ 'customizations.extensions.delete-extension-modal-lead' | synI18n: extension?.name }}
       </p>
       <ng-container *ngIf="integrations && integrations.length > 0">
-        <p>Each integration that is listed below uses at least one step that is defined in this extension. If you delete this extension, the consequences are unpredictable.</p>
+        <p>{{ 'customizations.extensions.delete-extension-modal' | synI18n }}</p>
         <ul class="delete-extension-list">
           <li *ngFor="let integration of integrations">
             <strong>{{ integration.name }}</strong>
@@ -36,7 +36,7 @@
     <button type="button"
             class="btn btn-danger"
             (click)="delete()">
-      Delete
+      {{ 'delete-modal-primary-text' | synI18n }}
     </button>
   </div>
 </ng-template>

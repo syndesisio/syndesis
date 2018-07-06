@@ -9,7 +9,15 @@
         "step-extension": "{{step}} {{extension}}",
         "connector-extension": "{{connector}} {{extension}}",
         "library-extension": "Library {{extension}}",
-        "unknown-extension": "Unknown {{extension}}"
+        "unknown-extension": "Unknown {{extension}}",
+        "delete-extension-modal": "Each integration that is listed below uses at least one step that is defined in this extension. If you delete this extension, the consequences are unpredictable.",
+        "delete-extension-modal-title": "Confirm Delete?",
+        "delete-extension-modal-lead": "Are you sure you want to delete the \"{{0}}\" extension?"
+      },
+      "api-client-connectors": {
+        "delete-connector-modal": "Deleting a connector deletes all connections that were created from that connector but does not affect a running integration that uses one of those connections.",
+        "delete-connector-modal-title": "Confirm Delete?",
+        "delete-connector-modal-lead": "Are you sure you want to delete the \"{{0}}\" connector?"
       }
     },
     "integrations": {
@@ -45,7 +53,9 @@
           "definition": "Paste or write content for the type you selected, for example, for JSON Schema, paste the content of a document whose media type is application/schema+json.",
           "name": "Enter a name that you choose. This name will appear in the data mapper.",
           "description": "Enter any information about this data type that might be helpful to you."
-        }
+        },
+        "delete-step-modal": "Are you sure you want to delete this step from the integration?",
+        "delete-step-modal-title": "Confirm Delete?"
       }
     },
     "connections": {
@@ -126,7 +136,8 @@
         "list": {
           "item": {
             "description": "Client ID and client secret not configured.",
-            "remove-btn-modal": "Are you sure you want to delete the OAuth credentials for '{{0}}'?"
+            "remove-btn-modal": "Are you sure you want to delete the OAuth credentials for '{{0}}'?",
+            "remove-btn-modal-title": "Confirm Delete?"
           }
         },
         "form": {
@@ -254,8 +265,14 @@
       "delete-integration-reason": "Error deleting integration",
       "update-draft-modal": "Are you sure you want to to replace the current draft for the \"{{0}}\" integration?",
       "publish-integration-modal": "Are you sure you want to start the \"{{0}}\" integration?",
+      "publish-integration-modal-title": "Confirm Start?",
+      "publish-integration-modal-primary-text": "Start",
       "unpublish-integration-modal": "Are you sure you want to stop the \"{{0}}\" integration?",
-      "delete-integration-modal": "Are you sure you want to delete the \"{{0}}\" integration?"
+      "unpublish-integration-modal-title": "Confirm Stop?",
+      "unpublish-integration-modal-primary-text": "Stop",
+      "delete-integration-modal": "Are you sure you want to delete the \"{{0}}\" integration?",
+      "delete-integration-modal-title": "Confirm Delete?",
+      "delete-modal-primary-text": "Delete"
     }
   }
 }
