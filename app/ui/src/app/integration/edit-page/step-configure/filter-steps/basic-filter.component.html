@@ -1,25 +1,89 @@
-<div *ngIf="formGroup">
+<div *ngIf="form">
   <syndesis-loading [loading]="loading">
-    <form [formGroup]="formGroup" class="basic-filter-form">
-      <syndesis-form-control *ngFor="let controlModel of basicFilterModel"
-        [group]="formGroup"
-        [model]="controlModel"
-        (change)="onChange($event)"
-        [formArrayRowClass]="'clearfix'">
-        <ng-template modelId="rulesFormArray" let-context="context" let-index="index">
-          <div class="pull-right rule-buttons">
-            <a class="fa fa-trash-o"
-              *ngIf="rulesArrayControl?.controls.length > 1"
-              (click)="remove(context, index)">
-            </a>
+    <form (change)="onChange($event)" [formGroup]="form" class="basic-filter-form">
+
+      <div class="form-group">
+
+        <fieldset formGroupName="filterSettingsGroup" class="filterSettingsGroupContainer">
+          <label for="basicFilterPredicateSelect">
+            {{ form.controls.filterSettingsGroup.controls.predicate.value.label }}
+          </label>
+          <select
+            id="basicFilterPredicateSelect"
+            formControlName="predicate"
+            class="form-control predicate-select">
+            <option
+              [attr.selected]="first ? 'selected' : null"
+              [ngValue]="option.value"
+              *ngFor="let option of predicateOpsModel$ | async; let first = first;">
+              {{ option.label }}
+            </option>
+          </select>
+        </fieldset>
+      </div>
+
+      <div class="form-group">
+        <fieldset
+          formArrayName="rulesArray"
+          *ngFor="let ruleSet of form.get('rulesArray').controls; let i = index;"
+          class="rulesArrayContainer">
+          <div [formGroupName]="i">
+            <div class="col-md-3 rule-col">
+              <!-- <label>Property Name label: {{ form.controls.rulesArray.controls[i].controls.path.value }}</label> -->
+              <input
+                class="form-control"
+                formControlName="path"
+                type="text"
+                placeholder="Property name">
+              <span class="help-block">The data you want to evaluate</span>
+            </div>
+            <div class="col-md-3 rule-col">
+              <!-- Select Value: {{ form.value.rulesArray[i].op }} -->
+              <select formControlName="op" class="form-control">
+                <option
+                  [ngValue]="option.value"
+                  *ngFor="let option of ruleOpsModel$ | async">
+                  {{ option.label }}
+                </option>
+              </select>
+              <span class="help-block">Must meet this condition</span>
+            </div>
+            <div class="col-md-3 rule-col">
+              <!-- <label>Keywords: {{ form.controls.rulesArray.controls[i].controls.value.value }}</label> -->
+              <input
+                class="form-control"
+                formControlName="value"
+                type="text"
+                placeholder="Keywords">
+              <span class="help-block">For this value</span>
+            </div>
+            <div class="col-sm-12 col-md-3">
+              <div class="pull-right rule-buttons">
+                <a
+                  tabindex="0"
+                  [attr.aria-label]="'Remove rule set ' + (i + 1)"
+                  class="fa fa-trash-o"
+                  tooltip="Remove this rule set group"
+                  placement="left"
+                  container="body"
+                  (keydown.enter)="removeRuleSet(i)"
+                  (click)="removeRuleSet(i)"
+                  >
+                </a>
+              </div>
+            </div>
           </div>
-        </ng-template>
-      </syndesis-form-control>
+        </fieldset>
+      </div>
+
     </form>
   </syndesis-loading>
+
   <div class="form-group">
-    <a (click)="add()" class="add-rule">
-      + Add another rule
-    </a>
+    <button
+      (keydown.enter)="addRuleSet()"
+      (click)="addRuleSet()"
+      class="add-rule">+ Add another rule
+    </button>
   </div>
 </div>

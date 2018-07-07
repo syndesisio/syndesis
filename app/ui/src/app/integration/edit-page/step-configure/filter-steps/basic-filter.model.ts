@@ -5,7 +5,7 @@ import {
   DynamicFormArrayGroupModel,
   DynamicFormGroupModel
 } from '@ng-dynamic-forms/core';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 
 import {
   BasicFilter,
@@ -13,31 +13,6 @@ import {
   getDefaultOps,
   convertOps
 } from './filter.interface';
-
-export function findById(id: string, model: any): any {
-  switch (typeof model) {
-    case 'object':
-      if (Array.isArray(model)) {
-        const answer = (<Array<any>>model).find(i => findById(id, i));
-        if (!answer) {
-          return false;
-        }
-        return answer['group'] ? findById(id, answer['group']) : answer;
-      } else {
-        if (model['id'] && model['id'] === id) {
-          return model;
-        }
-        if (model['group']) {
-          const answer = findById(id, model['group']);
-          return answer;
-        }
-      }
-      break;
-    default:
-      break;
-  }
-  return false;
-}
 
 export function createBasicFilterModel(
   configuredProperties: BasicFilter,
