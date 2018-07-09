@@ -1,9 +1,9 @@
 [id='connecting-to-s3']
 = Connecting to Amazon S3
 
-In an integration, to retrieve data from an Amazon S3 bucket or copy data into
-an Amazon S3 bucket, you create an Amazon S3
-connection. You then add that Amazon S3 connection to an integration.
+An integration can retrieve data from an Amazon S3 bucket or copy data into
+an Amazon S3 bucket. To do this, you create an Amazon S3
+connection and then add that Amazon S3 connection to an integration.
 For details, see:
 
 * <<prerequisites-for-creating-s3-connection>>

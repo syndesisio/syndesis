@@ -1,0 +1,27 @@
+[id='add-gmail-connection']
+= Add a Gmail connection to an integration
+
+You must create a Gmail connection before you can add it to an
+integration. If you did not already create a Gmail  connection, 
+see <<create-gmail-connection>>. 
+
+The procedure for adding a Gmail connection to an integration varies
+according to whether you want to use the Gmail connection to:
+
+* Trigger an integration when a message is received by the account 
+that the connection has authorization to access. Each time this account
+receives a message, the connection obtains the message and sends it
+to the next step in the integration. 
+
+* Send a message from the account that the connection is authorized to
+access. To do this, add a Gmail connection in the middle of an integration
+or as the integration's finish connection. 
+
+See the following topics:
+
+* <<add-gmail-connection-start>>
+* <<add-gmail-connection-finish-middle>>
+
+include::add_gmail_connection_start.adoc[leveloffset=+1]
+
+include::add_gmail_connection_finish_middle.adoc[leveloffset=+1]

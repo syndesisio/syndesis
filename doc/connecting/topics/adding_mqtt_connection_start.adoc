@@ -3,7 +3,7 @@
 
 To trigger execution of an integration based on receiving a message
 from an MQTT broker, add an MQTT connection as the start connection. When 
-you publish the integration, the MQTT connection continuously watches for messages
+the integration is running, the MQTT connection continuously watches for messages
 on the MQTT queue or topic that you specify. When the connection finds a 
 message, it passes it to the next step in the integration. An MQTT 
 connection handles one message at a time. 

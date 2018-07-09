@@ -1,5 +1,5 @@
 [id='register-with-twitter']
-= Register {prodname} as a Twitter client
+= Register {prodname} as a Twitter client application
 
 You must register your installation of {prodname} as a client application
 that can access Twitter.

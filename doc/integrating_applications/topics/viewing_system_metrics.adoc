@@ -6,8 +6,11 @@ appear on the {prodname} home page. To see them, click
 *Home* in the left panel. {prodname} updates the following metrics
 every 5 seconds:
 
-* The number of integrations that are defined in this environment regardless of 
-the integration state. A red cross indicates any integrations that
+* The number of integrations that are defined in this environment as
+well as the number of integrations that are running, the number 
+of integrations that are stopped, and the number of integrations that
+are pending. {prodname} is either stopping or starting pending integrations.
+A red cross indicates any integrations that
 were running but that encountered an error that suspended execution. 
 
 * The number of connections that are defined in this environment. 

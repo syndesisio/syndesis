@@ -1,7 +1,7 @@
 // Reused in
 //"t2sf_intro.adoc", "sf2db_intro.adoc"
 [id='register-with-salesforce_{context}']
-= Register {prodname} as a Salesforce client
+= Register {prodname} as a Salesforce client application
 
 You must register your installation of {prodname} as a client application
 that can access Salesforce.

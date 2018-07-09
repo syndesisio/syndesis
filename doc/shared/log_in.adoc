@@ -1,5 +1,5 @@
 [id='logging-in-and-out']
-= Logging in to {prodname}
+= What to expect when using {prodname} for the first time
 
 To use {prodname} on OpenShift Online, Red Hat provides a link.
 Clicking this link displays the
@@ -14,7 +14,7 @@ next time you click the {prodname} access link, {prodname} immediately appears.
 
 To use {prodname} on OpenShift Container Platform, follow the installation
 instructions, which are at the end of 
-{LinkFuseOnlineIntegrationGuide}[{NameOfFuseOnlineIntegrationGuide}]
+{LinkFuseOnlineIntegrationGuide}[{NameOfFuseOnlineIntegrationGuide}].
 
 Red Hat supports using {prodname} in the following browsers:
 
