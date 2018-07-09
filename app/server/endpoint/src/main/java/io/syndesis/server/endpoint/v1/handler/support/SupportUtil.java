@@ -50,6 +50,8 @@ import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
+import io.syndesis.server.openshift.OpenShiftService;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -235,39 +237,20 @@ public class SupportUtil {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Reader> getLogs(String label, String integrationName) {
+    public Optional<Reader> getLogs(String label, String component) {
         return client.pods().list().getItems().stream()
-            .filter(pod -> integrationName.equals(pod.getMetadata().getLabels().get(label)))
+            .filter(pod -> component.equals(pod.getMetadata().getLabels().get(label)))
             .findAny()
             .map(pod -> pod.getMetadata().getName())
-            .flatMap(podName -> {
-                PodOperationsImpl pod = (PodOperationsImpl) client.pods().withName(podName);
-                try {
-                    Request request = new Request.Builder()
-                        .url(pod.getResourceUrl().toString() + "/log?pretty=false&timestamps=true")
-                        .build();
-                    Response response = null;
-                    try {
-                        response = okHttpClient.newCall(request).execute();
-                        if (!response.isSuccessful()) {
-                            throw new IOException("Unexpected response from /log endpoint: " + response);
-                        }
-                        return Optional.of(new RegexBasedMasqueradeReader(new BufferedReader(response.body().charStream()), MASKING_REGEXP));
-                    } catch (IOException e) { // NOPMD
-                        LOG.error("Error downloading log file for integration {}" , integrationName, e );
-                        if (response != null){
-                           response.close();
-                        }
-                    }
-                } catch (MalformedURLException e) {
-                    LOG.error("Error downloading log file for integration {}" , integrationName, e );
-                }
-                return Optional.empty();
-            });
+            .flatMap(podName -> fetchLogsFor(podName, component));
     }
 
     public Optional<Reader> getIntegrationLogs(String integrationName){
-        return getLogs("integration", integrationName);
+        return client.pods().list().getItems().stream()
+            .filter(pod -> integrationName.equals(pod.getMetadata().getAnnotations().get(OpenShiftService.INTEGRATION_NAME_ANNOTATION)))
+            .findAny()
+            .map(pod -> pod.getMetadata().getName())
+            .flatMap(podName -> fetchLogsFor(podName, integrationName));
     }
 
     public Optional<Reader> getComponentLogs(String componentName){
@@ -277,4 +260,30 @@ public class SupportUtil {
     public static void dumpAsYaml(HasMetadata obj, OutputStream outputStream) {
         YAML.dump(obj, new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
     }
+
+    private Optional<Reader> fetchLogsFor(String podName, String component) {
+        PodOperationsImpl pod = (PodOperationsImpl) client.pods().withName(podName);
+        try {
+            Request request = new Request.Builder()
+                .url(pod.getResourceUrl().toString() + "/log?pretty=false&timestamps=true")
+                .build();
+            Response response = null;
+            try {
+                response = okHttpClient.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected response from /log endpoint: " + response);
+                }
+                return Optional.of(new RegexBasedMasqueradeReader(new BufferedReader(response.body().charStream()), MASKING_REGEXP));
+            } catch (IOException e) { // NOPMD
+                LOG.error("Error downloading log file for integration {}" , component, e );
+                if (response != null){
+                   response.close();
+                }
+            }
+        } catch (MalformedURLException e) {
+            LOG.error("Error downloading log file for integration {}" , component, e );
+        }
+        return Optional.empty();
+    }
+
 }
