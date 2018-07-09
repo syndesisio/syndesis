@@ -2,7 +2,7 @@
       (click)="handleLinks($event)"
       *ngIf="message">
   <span class="pficon pficon-ok"></span>
-  <strong>{{ 'settings.oauth-apps.form.success.msg' | synI18n }}</strong>
+  <strong>{{ 'settings.oauth-apps.form.success.msg' | synI18n }}</strong>&nbsp;
   <span [innerHtml]="
     'settings.oauth-apps.form.success.action.msg' | synI18n: [
       ('settings.oauth-apps.form.success.action.link' | synI18n: '/connections/create'),
