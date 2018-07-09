@@ -16,12 +16,15 @@
 package io.syndesis.server.endpoint.monitoring;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.monitoring.IntegrationDeploymentStateDetails;
 import io.syndesis.server.dao.manager.DataManager;
 
@@ -47,7 +50,15 @@ public class MonitoringProviderImpl implements MonitoringProvider {
 
     @Override
     public List<IntegrationDeploymentStateDetails> getAllIntegrationStateDetails() {
-        // TODO: filter out deployed deployments, maybe cleanup db at the same time??
-        return dataManager.fetchAll(IntegrationDeploymentStateDetails.class).getItems();
+        // TODO remove published integration deployment details???
+        // get all pending publish deployments
+        final Set<String> pendingIds = dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class,
+                "currentState", IntegrationDeploymentState.Pending.toString(),
+                "targetState", IntegrationDeploymentState.Published.toString());
+        return dataManager.fetchAll(IntegrationDeploymentStateDetails.class)
+                .getItems()
+                .stream()
+                .filter(d -> pendingIds.contains(d.getIntegrationId()))
+                .collect(Collectors.toList());
     }
 }
