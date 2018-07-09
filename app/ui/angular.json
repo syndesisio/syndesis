@@ -40,7 +40,8 @@
               "src/mstile-150x150.png",
               "src/safari-pinned-tab.svg",
               "src/manifest.webapp",
-              "src/browserconfig.xml"
+              "src/browserconfig.xml",
+              "src/logout.html"
             ],
             "styles": [
               "node_modules/patternfly/dist/css/patternfly.css",
