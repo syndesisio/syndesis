@@ -18,46 +18,8 @@
     </div>
   </ng-template>
 
-  <ng-template #tooltipPopover>
-    <div class="info-popover container-fluid">
-      <dl class="row">
-        <dt class="col-xs-6 text-right">
-          Name
-        </dt>
-        <dd class="col-xs-6">
-          {{ step.connection?.name }}
-        </dd>
-      </dl>
-      <dl class="row">
-        <dt class="col-xs-6 text-right">
-          Action
-        </dt>
-        <dd class="col-xs-6">
-          {{ step.action?.name }}
-        </dd>
-      </dl>
-      <dl class="row" *ngIf="inputDataShapeText">
-        <dt class="col-xs-6 text-right">
-          Input Data Type
-        </dt>
-        <dd class="col-xs-6">
-          {{ inputDataShapeText }}
-        </dd>
-      </dl>
-      <dl class="row" *ngIf="outputDataShapeText">
-        <dt class="col-xs-6 text-right">
-          Output Data Type
-        </dt>
-        <dd class="col-xs-6">
-          {{ outputDataShapeText }}
-        </dd>
-      </dl>
-    </div>
-  </ng-template>
-
   <!-- Icon Progress Line -->
-  <div class="col-md-3 progress-line">
-    <span class="step-index">{{ stepIndex }}</span>
+  <div class="progress-line">
     <div [ngClass]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
       [popover]="tooltipPopover"
       #connectionImgPop="bs-popover"
@@ -74,49 +36,40 @@
       <img class="syn-icon-small"
            *ngIf="step.stepKind === 'endpoint' && step.connection"
            [src]="step.connection | synIconPath">
+      <span class="pficon pficon-warning-triangle-o data-mismatch"
+        *ngIf="shouldAddDatamapper || previousStepShouldDefineDataShape"
+        [popover]="addDatamapper"
+        #datamapperInfoPop="bs-popover"
+        triggers=""
+        containerClass="flow-view-popover"
+        placement="right"
+        outsideClick="true"
+        (click)="toggleAddDatamapperInfo(); $event.stopPropagation();"
+        container="body"></span>
     </div>
   </div>
 
   <!-- Step Item Wrapper -->
-  <div class="col-md-9 menu"
+  <div class="menu"
        *ngIf="currentStepKind !== 'mapper'"
        [ngSwitch]="step.stepKind">
 
     <!-- Connection Steps -->
     <div *ngSwitchCase="'endpoint'"
-         [ngClass]="getParentActiveClass() + ' step-container'">
+         [ngClass]="getParentActiveClass()"
+         class="step-container clearfix"> 
 
       <!-- Connection Title -->
       <div [ngClass]="getParentClass()"
-            (click)="goto('action-configure')">
-        <span class="pficon pficon-warning-triangle-o data-mismatch"
-          *ngIf="shouldAddDatamapper || previousStepShouldDefineDataShape"
-          [popover]="addDatamapper"
-          #datamapperInfoPop="bs-popover"
-          triggers=""
-          containerClass="flow-view-popover"
-          placement="right"
-          outsideClick="true"
-          (click)="toggleAddDatamapperInfo(); $event.stopPropagation();"
-          container="body"></span>
+            (click)="goto('action-configure')"
+            class="col-xs-12">
 
         <div class="step-content">
           <div class="step-name" title="{{ stepName }}">
-            {{ stepName }}
+              {{ stepIndex + '. ' + stepName }}
           </div>
 
           <div class="step-icons">
-            <!-- Info icon -->
-            <i class="fa fa-lg fa-info-circle"
-              [popover]="tooltipPopover"
-              #connectionInfoPop="bs-popover"
-              placement="right"
-              (click)="toggleInfoPopover(); $event.stopPropagation();"
-              triggers=""
-              containerClass="flow-view-popover"
-              popoverTitle="Connection Properties"
-              outsideClick="true"
-              container="body"></i>
             <!-- Delete Icon -->
             <i *ngIf="showDelete()"
               class="fa fa-lg fa-trash"
@@ -161,13 +114,14 @@
 
     <!-- Default Steps -->
     <div *ngSwitchDefault
-         [ngClass]="getParentActiveClass() + ' step-container'">
+         [ngClass]="getParentActiveClass()"
+         class="clearfix step-container">
       <!-- Step Heading -->
-      <div [ngClass]="getParentClass()"
+      <div class="col-xs-12" [ngClass]="getParentClass()"
         (click)="goto('step-configure')">
         <div class="step-content">
           <div class="step-name" title="{{ stepName }}">
-            {{ stepName }}
+            {{ stepIndex + '. ' + stepName }}
           </div>
           <div class="step-icons">
             <!-- Delete Icon -->
@@ -199,6 +153,39 @@
           <span [ngClass]="getTextClass('step-configure')">Configuration</span>
         </li>
       </ul>
+    </div>
+
+    <div class="container-fluid step-details">
+      <dl class="row">
+        <dt class="col-xs-4">
+          Name:
+        </dt>
+        <dd class="col-xs-8">
+          {{ step.connection?.name }}
+        </dd>
+        <dt class="col-xs-4">
+          Action:
+        </dt>
+        <dd class="col-xs-8">
+          {{ step.action?.name }}
+        </dd>
+        <ng-container *ngIf="inputDataShapeText">
+          <dt class="col-xs-4">
+            Input Type:
+          </dt>
+          <dd class="col-xs-8">
+            {{ inputDataShapeText }}
+          </dd>
+        </ng-container>
+        <ng-container *ngIf="outputDataShapeText">
+          <dt class="col-xs-4">
+            Output Type:
+          </dt>
+          <dd class="col-xs-8">
+            {{ outputDataShapeText }}
+          </dd>
+        </ng-container>
+      </dl>
     </div>
   </div>
 </div>
