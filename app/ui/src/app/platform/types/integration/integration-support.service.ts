@@ -11,7 +11,8 @@ import {
   IntegrationOverview,
   IntegrationOverviews,
   IntegrationStatus,
-  ApiHttpService
+  ApiHttpService,
+  IntegrationStatusDetail
 } from '@syndesis/ui/platform';
 
 @Injectable()
@@ -100,4 +101,8 @@ export abstract class IntegrationSupportService {
   ): Observable<Activity[]>;
 
   abstract downloadSupportData(data: any[]): Observable<Blob>;
+
+  abstract fetchDetailedStatus(id: string): Observable<IntegrationStatusDetail>;
+
+  abstract fetchDetailedStatuses(): Observable<IntegrationStatusDetail[]>;
 }

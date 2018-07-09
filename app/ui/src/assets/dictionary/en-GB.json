@@ -272,7 +272,14 @@
       "unpublish-integration-modal-primary-text": "Stop",
       "delete-integration-modal": "Are you sure you want to delete the \"{{0}}\" integration?",
       "delete-integration-modal-title": "Confirm Delete?",
-      "delete-modal-primary-text": "Delete"
+      "delete-modal-primary-text": "Delete",
+      "assembling": "Assembling",
+      "building": "Building",
+      "deploying": "Deploying",
+      "starting": "Starting",
+      "integration-detail-state": "{{0}} ( {{1}} / {{2}} )",
+      "log-link": "<a href=\"{{0}}\" target=\"_blank\">View Logs <i class=\"fa fa-external-link\"></i></a>",
+      "bar-width": "{{0}} Complete"
     }
   }
 }

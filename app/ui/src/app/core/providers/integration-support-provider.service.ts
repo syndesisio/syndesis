@@ -16,7 +16,8 @@ import {
   ApiHttpService,
   integrationEndpoints,
   UNPUBLISHED,
-  PUBLISHED
+  PUBLISHED,
+  IntegrationStatusDetail
 } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
 
@@ -162,6 +163,18 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.supportData)
       .post<Blob>(data, { responseType: 'blob' });
+  }
+
+  fetchDetailedStatus(id: string): Observable<IntegrationStatusDetail> {
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.integrationStatusDetail, { id })
+      .get<IntegrationStatusDetail>();
+  }
+
+  fetchDetailedStatuses(): Observable<IntegrationStatusDetail[]> {
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.integrationStatusDetails)
+      .get<IntegrationStatusDetail[]>();
   }
 
   private getOverview(id: string): Observable<any> {

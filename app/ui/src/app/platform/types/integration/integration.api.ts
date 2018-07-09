@@ -3,6 +3,8 @@ import { Endpoints } from '@syndesis/ui/platform';
 export const integrationEndpoints: Endpoints = {
   integrations: '/integrations',
   integration: '/integrations/{id}',
+  integrationStatusDetail: '/monitoring/integrations/{id}',
+  integrationStatusDetails: '/monitoring/integrations',
   integrationMetrics: '/metrics/integrations',
   integrationMetricsById: '/metrics/integrations/{id}',
   // TODO does this belong here really
