@@ -58,7 +58,7 @@ public class MonitoringProviderImpl implements MonitoringProvider {
         return dataManager.fetchAll(IntegrationDeploymentStateDetails.class)
                 .getItems()
                 .stream()
-                .filter(d -> pendingIds.contains(d.getIntegrationId()))
+                .filter(d -> pendingIds.contains(d.getId().orElse("")))
                 .collect(Collectors.toList());
     }
 }
