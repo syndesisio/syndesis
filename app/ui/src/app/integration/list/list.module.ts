@@ -4,6 +4,7 @@ import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { IntegrationSupportModule } from '../integration-support.module';
 import { IntegrationStatusComponent } from './status.component';
+import { IntegrationStatusDetailComponent } from './status-detail.component';
 import { IntegrationActionMenuComponent } from './action-menu.component';
 import { IntegrationListComponent } from './list.component';
 
@@ -20,12 +21,14 @@ const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
   declarations: [
     IntegrationActionMenuComponent,
     IntegrationStatusComponent,
+    IntegrationStatusDetailComponent,
     IntegrationListComponent
   ],
   exports: [
     IntegrationActionMenuComponent,
     IntegrationListComponent,
-    IntegrationStatusComponent
+    IntegrationStatusComponent,
+    IntegrationStatusDetailComponent
   ]
 })
 export class IntegrationListModule {}

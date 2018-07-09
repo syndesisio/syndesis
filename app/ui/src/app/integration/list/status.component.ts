@@ -8,18 +8,7 @@ import { IntegrationOverview } from '@syndesis/ui/platform';
     <div class="syndesis-integration-status">
       <!-- In Progress -->
       <div class="status pending" *ngIf="integration.currentState === 'Pending'">
-        <div class="spinner spinner-sm spinner-inline"></div>
-        <ng-container [ngSwitch]="integration.targetState">
-          <ng-container *ngSwitchCase="'Published'">
-            {{ 'integrations.publishing' | synI18n }}
-          </ng-container>
-          <ng-container *ngSwitchCase="'Unpublished'">
-            {{ 'integrations.unpublishing' | synI18n }}
-          </ng-container>
-          <ng-container *ngSwitchDefault>
-            {{ 'integrations.pending' | synI18n }}
-          </ng-container>
-        </ng-container>
+        <syndesis-integration-status-detail [integration]="integration"></syndesis-integration-status-detail>
       </div>
       <!-- Status -->
       <div *ngIf="integration.currentState !== 'Pending'"

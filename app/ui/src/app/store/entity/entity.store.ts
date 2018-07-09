@@ -8,7 +8,7 @@ import {
   Subject
 } from 'rxjs';
 
-import { share, mergeMap, filter } from 'rxjs/operators';
+import { share, mergeMap, filter, debounceTime } from 'rxjs/operators';
 import { plural } from 'pluralize';
 
 import { BaseEntity } from '@syndesis/ui/platform';
@@ -71,7 +71,9 @@ export abstract class AbstractStore<
     // but also update it if we get notified the a change occurred.
     return observableMerge(
       this._list,
-      this.changeEvents.pipe(mergeMap(event => {
+      this.changeEvents.pipe(
+      debounceTime(500),
+        mergeMap(event => {
         // We could probably get fancy one day an only fetch the entry that matches event.id
         // simulate no data
         if (EMPTY_STATE) {

@@ -63,6 +63,7 @@ export interface Integration extends IntegrationOverview {
   updatedAt: number;
   createdAt: number;
   url: string;
+  statusDetail?: IntegrationStatusDetail;
 }
 
 export type Integrations = Array<Integration>;
@@ -98,6 +99,22 @@ export interface DeploymentOverview extends BaseEntity {
   targetState: IntegrationStatus;
   createdAt: number;
   integrationVersion: number;
+}
+
+export type DetailedStatus = 'ASSEMBLING' | 'BUILDING' | 'DEPLOYING' | 'STARTING';
+
+export interface DetailedState {
+  value: DetailedStatus;
+  currentStep: number;
+  totalSteps: number;
+}
+
+export interface IntegrationStatusDetail {
+  detailedState: DetailedState;
+  logsUrl: string;
+  id: string;
+  integrationId: string;
+  deploymentVersion: number;
 }
 
 // this is for the basic filter operation
