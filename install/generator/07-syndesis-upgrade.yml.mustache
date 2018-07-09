@@ -37,7 +37,7 @@
     spec:
       containers:
       - name: upgrade
-        image: syndesis/syndesis-upgrade:${SYNDESIS_VERSION}
+        image: {{ Images.SyndesisImage}}/{{ Images.Syndesis.Upgrade }}:${SYNDESIS_VERSION}
         env:
           - name: SYNDESIS_UPGRADE_PROJECT
             valueFrom:

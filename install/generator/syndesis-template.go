@@ -47,6 +47,7 @@ type syndesisImages struct {
 	Ui       string
 	Verifier string
 	S2i      string
+	Upgrade  string
 }
 
 type images struct {
@@ -70,6 +71,7 @@ type Context struct {
 	AllowLocalHost   bool
 	WithDockerImages bool
 	Productized      bool
+	EarlyAccess      bool
 	Oso              bool
 	Ocp              bool
 	Tag              string
@@ -95,6 +97,7 @@ var syndesisContext = Context{
 			Ui:       "syndesis-ui",
 			Verifier: "syndesis-meta",
 			S2i:      "syndesis-s2i",
+			Upgrade:  "syndesis-upgrade",
 		},
 	},
 	Tags: tags{
@@ -108,7 +111,7 @@ var syndesisContext = Context{
 var productContext = Context{
 	Images: images{
 		ImageStreamNamespace:  "fuse-ignite",
-		SyndesisImagesPrefix:  "syndesis",
+		SyndesisImagesPrefix:  "fuse7",
 		OAuthProxyImagePrefix: "openshift",
 		PrometheusImagePrefix: "prom",
 		Support: supportImages{
@@ -121,6 +124,7 @@ var productContext = Context{
 			Ui:       "fuse-ignite-ui",
 			Verifier: "fuse-ignite-meta",
 			S2i:      "fuse-ignite-s2i",
+			Upgrade:  "fuse-ignite-upgrade",
 		},
 	},
 	Tags: tags{
@@ -142,6 +146,7 @@ func init() {
 	flags.StringVar(&context.Tags.Syndesis, "syndesis-tag", "latest", "Syndesis Image tag to use")
 	flags.BoolVar(&context.Oso, "oso", false, "Generate product templates for SO")
 	flags.BoolVar(&context.Ocp, "ocp", false, "Generate product templates for OCP")
+	flags.BoolVar(&context.EarlyAccess, "early-access", false, "Point repositories to early-access repos")
 	flags.StringVar(&context.Registry, "registry", "docker.io", "Registry to use for imagestreams")
 	flags.BoolVar(&context.Debug, "debug", false, "Enable debug support")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
