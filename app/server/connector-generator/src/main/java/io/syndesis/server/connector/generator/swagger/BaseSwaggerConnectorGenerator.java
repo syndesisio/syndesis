@@ -123,11 +123,11 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception ex) {
             if (!swaggerInfo.getErrors().isEmpty()) {
                 // Just log and return the validation errors if any
-                LOG.error("An error occurred while trying to create a swagger connector", ex);
+                LOG.error("An error occurred while trying to create a OpenAPI connector", ex);
                 return new ConnectorSummary.Builder().errors(swaggerInfo.getErrors()).warnings(swaggerInfo.getWarnings()).build();
             }
 
-            throw SyndesisServerException.launderThrowable("An error occurred while trying to create a swagger connector", ex);
+            throw SyndesisServerException.launderThrowable("An error occurred while trying to create a OpenAPI connector", ex);
         }
     }
 
@@ -261,7 +261,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
     protected final String determineConnectorName(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final SwaggerModelInfo modelInfo = parseSpecification(connectorSettings, false);
         if (!modelInfo.getErrors().isEmpty()) {
-            throw new IllegalArgumentException("Given Swagger specification contains errors: " + modelInfo);
+            throw new IllegalArgumentException("Given OpenAPI specification contains errors: " + modelInfo);
         }
 
         final Swagger swagger = modelInfo.getModel();

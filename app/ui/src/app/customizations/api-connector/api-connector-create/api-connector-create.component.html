@@ -27,7 +27,7 @@
   </section>
   <section class="wizard__ui wizard__progress">
     <syndesis-wizard-progress-bar [steps]="[
-      'Upload Swagger Specification',
+      'Upload OpenAPI Specification',
       'Review Actions',
       'Specify Security',
       'Review/Edit Connector Details']" [selectedStep]="currentActiveStep">
@@ -43,7 +43,7 @@
           (request)="onValidationRequest($event)">
         </syndesis-api-connector-swagger-upload>
         <syndesis-api-connector-review *ngIf="currentActiveStep == 2"
-          [apiConnectorTemplateName]="'Swagger'"
+          [apiConnectorTemplateName]="'OpenAPI'"
           [apiConnectorData]="(apiConnectorState$ | async)?.createRequest"
           [showNextButton]="true"
           (reviewComplete)="onReviewComplete($event)">
