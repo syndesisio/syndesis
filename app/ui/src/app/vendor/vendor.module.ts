@@ -14,6 +14,8 @@ import {
 
 import {
   ActionModule,
+  BlockCopyModule,
+  InlineCopyModule,
   ToastNotificationModule,
   ToastNotificationListModule,
   InlineNotificationModule,
@@ -33,6 +35,8 @@ const imports = [
   TypeaheadModule.forRoot(),
   BsDropdownModule.forRoot(),
   ActionModule,
+  BlockCopyModule,
+  InlineCopyModule,
   ToastNotificationModule,
   ToastNotificationListModule,
   InlineNotificationModule,
@@ -51,6 +55,8 @@ const _exports = [
   TypeaheadModule,
   BsDropdownModule,
   ActionModule,
+  BlockCopyModule,
+  InlineCopyModule,
   ToastNotificationModule,
   ToastNotificationListModule,
   InlineNotificationModule,

@@ -1,14 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
 import { Observable } from 'rxjs';
 import { ConfigService } from '../../config.service';
-import { UserService } from '@syndesis/ui/platform';
 
 import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
-import { FilterConfig, SortConfig, ToolbarConfig } from 'patternfly-ng';
+import {
+  FilterConfig,
+  SortConfig,
+  ToolbarConfig,
+  CopyEvent,
+  NotificationType
+} from 'patternfly-ng';
+
+import { NotificationService } from '@syndesis/ui/common';
 
 export interface OAuthAppListItem {
   expanded: boolean;
@@ -73,7 +79,7 @@ export class OAuthAppsComponent implements OnInit {
   constructor(
     public store: OAuthAppStore,
     public config: ConfigService,
-    private router: Router
+    private notificationService: NotificationService
   ) {
     this.loading = store.loading;
     this.list = store.list;
@@ -141,5 +147,19 @@ export class OAuthAppsComponent implements OnInit {
       '//' +
       window.location.hostname +
       '/api/v1/credentials/callback';
+  }
+
+  handleCopy($event: CopyEvent, result: any): void {
+    this.notify(result);
+  }
+
+  notify(result: any): void {
+    this.notificationService.message(
+      NotificationType.SUCCESS,
+      null,
+      result.msg,
+      false,
+      null,
+      null);
   }
 }
