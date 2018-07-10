@@ -55,11 +55,9 @@
                   (click)="!editingName && startEditingName()"
                   (keyup)="$event.keyCode == 13 && stopEditingName()">
           </div>
-          <div class="integration-name-edit">
-            <button class="btn btn-link  integration-name-edit-btn" type="button">
-              <span class="fa fa-pencil"
-                    *ngIf="!editingName"
-                    (click)="startEditingName()"></span>
+          <div class="integration-name-edit" *ngIf="!editingName">
+            <button class="btn btn-link  integration-name-edit-btn" type="button" (click)="startEditingName()">
+              <span class="fa fa-pencil"></span>
             </button>
           </div>
         </div>
