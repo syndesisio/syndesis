@@ -15,26 +15,31 @@ const OAUTH_APP_FORM_CONFIG = {
   clientId: {
     displayName: 'Client ID',
     type: 'string',
+    required: true,
     labelHint: 'The OAuth client ID setting for the target application'
   },
   clientSecret: {
     displayName: 'Client Secret',
     type: 'password',
+    required: true,
     labelHint: 'The OAuth client secret value for the target application'
   },
   authorizationUrl: {
     displayName: 'Authorization URL',
     type: 'string',
+    required: true,
     labelHint: 'URL to the authorization endpoint of the target application'
   },
   tokenUrl: {
     displayName: 'Access Token URL',
     type: 'string',
+    required: true,
     labelHint: 'URL to the access token endpoint of the target application'
   },
   scopes: {
-    displayName: 'OAuth scopes',
+    displayName: 'OAuth Scopes',
     type: 'string',
+    required: true,
     labelHint:
       'Comma separated list of OAuth scopes used when requesting authorization from the target application'
   }
