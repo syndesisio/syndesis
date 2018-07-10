@@ -23,11 +23,13 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.credential.CredentialFlowState;
 import io.syndesis.server.credential.CredentialProvider;
 import io.syndesis.server.credential.CredentialProviderLocator;
+import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.credential.OAuth1CredentialFlowState;
 import io.syndesis.server.credential.OAuth1CredentialProvider;
 import io.syndesis.server.endpoint.v1.handler.setup.OAuthApp;
@@ -47,6 +49,10 @@ import static org.awaitility.Awaitility.given;
  * /setup/* related endpoint tests.
  */
 public class SetupITCase extends BaseITCase {
+
+    static final ConfigurationProperty CLIENT_ID_PROPERTY = new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_ID_TAG).build();
+
+    static final ConfigurationProperty CLIENT_SECRET_PROPERTY = new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_SECRET_TAG).build();
 
     @JsonDeserialize
     public static class OAuthResult implements ListResult<OAuthApp> {
@@ -72,25 +78,28 @@ public class SetupITCase extends BaseITCase {
     protected CredentialProviderLocator locator;
 
     @Test
-    public void getOauthApps() {
+    public void getOAuthApps() {
         final ResponseEntity<OAuthResult> result = get("/api/v1/setup/oauth-apps", OAuthResult.class);
         final List<OAuthApp> apps = result.getBody().getItems();
         assertThat(apps.size()).isEqualTo(4);
 
-        final OAuthApp twitter = apps.stream().filter(x -> "twitter".equals(x.getId())).findFirst().get();
-        assertThat(twitter.getId()).isEqualTo("twitter");
+        final OAuthApp twitter = apps.stream().filter(x -> x.idEquals("twitter")).findFirst().get();
+        assertThat(twitter.getId()).hasValue("twitter");
         assertThat(twitter.getName()).isEqualTo("Twitter");
         assertThat(twitter.getIcon()).startsWith("data:image/svg+xml;base64");
-        assertThat(twitter.getClientId()).isNull();
-        assertThat(twitter.getClientSecret()).isNull();
+        assertThat(twitter.propertyTaggedWith(Credentials.CLIENT_ID_TAG)).isNotPresent();
+        assertThat(twitter.propertyTaggedWith(Credentials.CLIENT_SECRET_TAG)).isNotPresent();
 
     }
 
     @Test
     public void shouldDeleteOAuthSettings() {
-        final OAuthApp twitter = new OAuthApp();
-        twitter.setClientId("test-id");
-        twitter.setClientSecret("test-secret");
+        final OAuthApp twitter = new OAuthApp.Builder()//
+            .putProperty("consumerKey", CLIENT_ID_PROPERTY)//
+            .putProperty("consumerSecret", CLIENT_SECRET_PROPERTY)//
+            .putConfiguredProperty("consumerKey", "test-id")//
+            .putConfiguredProperty("consumerSecret", "test-secret")//
+            .build();
 
         put("/api/v1/setup/oauth-apps/twitter", twitter);
 
@@ -114,10 +123,13 @@ public class SetupITCase extends BaseITCase {
     }
 
     @Test
-    public void updateOauthApp() {
-        OAuthApp twitter = new OAuthApp();
-        twitter.setClientId("test-id");
-        twitter.setClientSecret("test-secret");
+    public void updateOAuthApp() {
+        final OAuthApp twitter = new OAuthApp.Builder()//
+            .putProperty("consumerKey", CLIENT_ID_PROPERTY)//
+            .putProperty("consumerSecret", CLIENT_SECRET_PROPERTY)//
+            .putConfiguredProperty("consumerKey", "test-id")//
+            .putConfiguredProperty("consumerSecret", "test-secret")//
+            .build();
 
         http(HttpMethod.PUT, "/api/v1/setup/oauth-apps/twitter", twitter, null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
@@ -125,12 +137,12 @@ public class SetupITCase extends BaseITCase {
         final List<OAuthApp> apps = result.getBody().getItems();
         assertThat(apps.size()).isEqualTo(4);
 
-        twitter = apps.stream().filter(x -> "twitter".equals(x.getId())).findFirst().get();
-        assertThat(twitter.getId()).isEqualTo("twitter");
-        assertThat(twitter.getName()).isEqualTo("Twitter");
-        assertThat(twitter.getIcon()).startsWith("data:image/svg+xml;base64");
-        assertThat(twitter.getClientId()).isEqualTo("test-id");
-        assertThat(twitter.getClientSecret()).isEqualTo("test-secret");
+        final OAuthApp updated = apps.stream().filter(x -> x.idEquals("twitter")).findFirst().get();
+        assertThat(updated.getId()).hasValue("twitter");
+        assertThat(updated.getName()).isEqualTo("Twitter");
+        assertThat(updated.getIcon()).startsWith("data:image/svg+xml;base64");
+        assertThat(updated.propertyTaggedWith(Credentials.CLIENT_ID_TAG)).hasValue("test-id");
+        assertThat(updated.propertyTaggedWith(Credentials.CLIENT_SECRET_TAG)).hasValue("test-secret");
 
         // Now that we have configured the app, we should be able to create the
         // connection factory.
