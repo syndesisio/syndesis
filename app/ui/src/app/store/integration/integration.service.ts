@@ -18,8 +18,22 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
   }
 
   get(id: string): Observable<Integration> {
-    return super.get(id).pipe(
-      switchMap(integration => this.checkIfPending(integration))
+    return forkJoin<Integration, IntegrationStatusDetail>([
+      super.get(id),
+      this.integrationSupportService.fetchDetailedStatus(id).pipe(
+        catchError( err => {
+          // Fall back to showing the coarse status
+          log.warn('error fetching detailed status: ', err);
+          return undefined;
+        })
+      )
+    ]).pipe(
+      map(results => {
+        const integration = results[0];
+        const detailedStatus = results[1];
+        integration.statusDetail = detailedStatus;
+        return integration;
+      })
     );
   }
 
@@ -27,9 +41,9 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
     return forkJoin<Integrations, IntegrationStatusDetail[]>([
       super.list(),
       this.integrationSupportService.fetchDetailedStatuses().pipe(
-        catchError( error => {
-          // can always fall back to showing the coarse status
-          log.warn('error fetching detailed status: ', error);
+        catchError( err => {
+          // Fall back to showing the coarse status
+          log.warn('error fetching detailed statuses: ', err);
           return [];
         })
       )
@@ -44,23 +58,6 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
           }
         });
         return integrations;
-      })
-    );
-  }
-
-  private checkIfPending(integration): Observable<Integration> {
-    if (integration.currentState === PENDING) {
-      return this.fetchDetailedStatus(integration);
-    } else {
-      return of(integration);
-    }
-  }
-
-  private fetchDetailedStatus(integration): Observable<Integration> {
-    return this.integrationSupportService.fetchDetailedStatus(integration.id).pipe(
-      map(detailedStatus => {
-        integration.statusDetail = detailedStatus;
-        return integration;
       })
     );
   }

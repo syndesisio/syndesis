@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 
 import { Integration, IntegrationStatusDetail, I18NService, StringMap } from '@syndesis/ui/platform';
 import { ConfigService } from '@syndesis/ui/config.service';
@@ -43,7 +43,7 @@ import { ConfigService } from '@syndesis/ui/config.service';
     `
   ]
 })
-export class IntegrationStatusDetailComponent implements OnInit {
+export class IntegrationStatusDetailComponent implements OnChanges {
   @Input() integration: Integration;
   statusDetail: IntegrationStatusDetail;
   statusDetailText: string;
@@ -55,7 +55,7 @@ export class IntegrationStatusDetailComponent implements OnInit {
   constructor(private i18NService: I18NService,
               private configService: ConfigService) {}
 
-  ngOnInit() {
+  initialize() {
     if (this.integration && this.integration.statusDetail) {
       const statusDetail = this.statusDetail = this.integration.statusDetail;
       const total = statusDetail.detailedState.totalSteps;
@@ -78,4 +78,9 @@ export class IntegrationStatusDetailComponent implements OnInit {
       }
     }
   }
+
+  ngOnChanges() {
+    this.initialize();
+  }
+
 }
