@@ -10,7 +10,7 @@ finish connection, or as a middle connection.
 The steps for connecting to Gmail in an integration are:
 
 . Authorize {prodname} to access the Gmail API.
-. Create a Gmail connection and grant authorization for access to particular
+. Create a Gmail connection and grant authorization for access to a particular
 Gmail account. 
 . Add a Gmail connection to an integration.
 

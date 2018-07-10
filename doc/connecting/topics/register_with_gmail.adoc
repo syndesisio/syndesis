@@ -17,9 +17,9 @@ copy the callback URL for your installation of {prodname} to the clipboard.
 You will need this URL toward the end of this procedure. 
 . In another browser tab, go to `https://console.developers.google.com` 
 and do the following:
-.. Confirm that you are signed in to a Gmail account for which you want
-to authorize access from {prodname}. Or, choose a Gmail account for
-which to grant authorization and sign in to that account. 
+.. Confirm that you are signed in to the Gmail account that you want to
+use to register {prodname} as a Gmail client application. 
+Or, choose a different Gmail account and sign in to that account. 
 .. Ensure that you want to use the current Google project to grant
 authorization to {prodname}. Or, choose or create another project. 
 If this Google account does not already
@@ -32,8 +32,29 @@ image:images/Hamburger.png[Navigation menu icon] and select
 *APIs and Services* > *Dashboard*. 
 .. Click the *Gmail API* card.
 .. In the *Gmail API* page, click *Enable*. 
-.. In the page that appears, click *Create credentials*. 
-.. On the *Add credentials to your project page*, do the following:
+.. In the page that appears, in the left navigation panel, click 
+*Credentials* and then click the *OAuth consent screen* tab. 
+In this tab, do the following: 
+... In the *Product name shown to users* field, enter a name for the 
+client application. For example, enter `{prodname} client application`. 
+... Skip the other fields. 
+... Click *Save*. 
+.. To the right of *Create Credentials*, click the down arrow to 
+display a menu and select *OAuth client ID*. 
+.. Select *Web application* and in the page that appears, do the following:
+... In the *Name* field, enter a name for the OAuth client ID for 
+your installation of {prodname}. This is different from the name you 
+entered for client application itself. For example, enter 
+`OAuth client ID for {prodname}`. 
+... Skip *Authorized JavaScript origins*. 
+... In the *Authorized redirect URIs* field, paste the callback URL 
+that you copied from your {prodname} installation at the beginning of 
+this procedure. 
+... Click *Create* to display the client ID and client secret for your 
+{prodname} installation. 
+.. To the right of the client ID field, click
+image:images/copy_icon.png[the Copy icon] to copy the client ID
+to your clipboard.
 
 . Return to the {prodname} *Settings* page and in the Gmail *Client ID* 
 field, paste the Gmail client ID that you just copied. 
@@ -46,4 +67,6 @@ your clipboard.
 . Return to the {prodname} *Settings* page and in the 
 Gmail *Client Secret* field, paste the Gmail client secret that you 
 just copied. 
-. Click *Save*. You should get a *Registration Successful!* notification. 							
+. Click *Save*. You should get a *Registration Successful!* notification. 	
+. Click *Ok* to collapse the fields. With registration in place, you can
+create a Gmail connection. 
