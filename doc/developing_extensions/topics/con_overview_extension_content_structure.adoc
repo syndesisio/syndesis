@@ -1,0 +1,39 @@
+[id='overview-extension-content-structure']
+= Overview of extension content and structure
+
+An extension is a collection of classes, dependencies and resources 
+that are packaged as a JAR file, which is structured as follows:
+
+[source]
+----
+extension.jar
+|
++- META-INF
+|  |
+|  +- syndesis
+|     |
+|     +- syndesis-extension-definition.json <1>
+|
++- mycompany
+|  |
+|  +-project
+|    |
+|    +-YourClasses.class <2>
+|
++- lib <3>
+  |
+  +-dependency1.jar
+  |
+  +-dependency2.jar
+----
+<1> Extension definition
+<2> Extension classes
+<3> Additional dependencies
+
+[WARNING]
+====
+{prodname} uses Spring Boot to load an extension. Consequently, you must
+package an extension according to Spring Boot's executable JAR format. 
+For example, ensure that you use the `ZipEntry.STORED()` method to save
+a nested JAR file.
+====

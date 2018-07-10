@@ -1,0 +1,2 @@
+[id='using-maven-to-generate-extension-definitions']
+= Using Maven to generate extension definitions

@@ -1,0 +1,2 @@
+[id='description-kinds-extensions']
+= Description of the kinds of extensions

@@ -1,0 +1,91 @@
+[id='about-extension-definitions']
+= About extension definitions
+
+The _syndesis-extension-definition.json_ file contains the definition of 
+the extension like name, description well as a list of actions it supports and the dependencies it needs.
+
+A definition file has the following general layout:
+
+[source,json]
+----
+{
+  "schemaVersion": "v1",
+  "name": "",
+  "description": "",
+  "version": "",
+  "extensionId": "",
+  "extensionType": "",
+  "properties": {
+  },
+  "actions": [
+  ],
+  "dependencies": [
+  ],
+}
+----
+
+- **schemaVersion** defines the version of the extension definition scheme, this is used by Syndesis back-end to determine how to map the definition to the internal model and allows extensions developed against an old version of Syndesis to be deployed on newer versions.
+- **extensionId** defines an unique id for the extension, this should be unique at least across a Syndesis instance
+- **extensionType** defines what Syndesis should expect the extension to provide, as of version 1.3 the following types are supported:
+* Steps
+* Connectors
+* Libraries
+- **properties** defines the global configuration options supported by the extension
++
+[source,json]
+----
+"propertyName": {
+  "deprecated": true|false,
+  "description": "",
+  "displayName": "",
+  "group": "",
+  "kind": "",
+  "label": "",
+  "required": true|false,
+  "secret": true|false,
+  "javaType": "",
+  "type": "",
+  "defaultValue": "",
+  "enum": {
+  }
+}
+----
++
+IMPORTANT: properties are taken into account only for extensions with type _Connectors_
+- **actions** defines the steps the extension contributes to Syndesis
++
+[source,json]
+----
+{
+    "id": "", <1>
+    "name": "", <2>
+    "description": "", <3>
+    "actionType": "step|connector", <4>
+    "descriptor": { <5>
+    }
+}
+----
+<1> An unique id for the action.
+<2> The action name shown on syndesis.
+<3> The action descriptor shown on syndesis
+<4> The action type (step,connector)
+<5> The action descriptor
++
+[IMPORTANT]
+====
+Actions are taken into account only for extension with type _Connectors_ and _Steps_.
+====
+
+- **dependencies** defines the dependencies this extension requires Syndesis to provide.
++
+A dependency is defined as follow:
++
+[source,json]
+----
+{
+  "type": "MAVEN", <1>
+  "id"   : "org.apache.camel:camel-telegram:jar:2.21.0" <2>
+}
+----
+<1> the type of dependency (MAVEN,EXTENSION,EXTENSION_TAG)
+<2> the dependency id, for maven dependencies it is a maven gav
