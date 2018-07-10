@@ -12,6 +12,28 @@
 
 .flow-view {
   height: 100%;
+  position: relative;
+  padding-right: 30px;
+
+  .toggle-collapsed { 
+    position: absolute;
+    top: -$gutter;
+    right: -$gutter;
+    bottom: 0;
+    width: 30px;
+    border: solid #d1d1d1;
+    border-width: 0 0 0 1px;
+    font-size: 1.5em;
+    font-weight: 200;
+
+    &:before {
+      content: '\00ab';
+    }
+
+    &.collapsed:before {
+      content: '\00bb';
+    }
+  }
 
   syndesis-loading {
     display: flex;
@@ -24,13 +46,19 @@
     flex: 1 1 auto;
     padding-top: 15px;
     padding-bottom: 20px;
+    padding-left: 30px;
     margin-right: -20px;
     display: flex;
     flex-direction: column;
+    width: 400px;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     &.collapsed {
-      width: 130px;
+      width: auto;
       margin-right: 0;
+      padding-right: $gutter;
     }
 
     .start,
@@ -89,6 +117,7 @@
         font-style: normal;
 
         &[readonly] {
+          @include truncate(ellipsis);
           background: none;
           border-color: transparent;
           box-shadow: none;
@@ -110,7 +139,7 @@
     flex: 0 0 auto;
 
     &:not(:last-child) {
-      padding-bottom: 24px;
+      padding-bottom: 50px;
     }
 
     .step-line {
@@ -132,7 +161,7 @@
 
       ::ng-deep .popover {
         margin-top: -2px;
-        margin-left: 28px !important;
+        //margin-left: 28px !important;
         border-color: $color-pf-black-500;
 
         &.right > .arrow {

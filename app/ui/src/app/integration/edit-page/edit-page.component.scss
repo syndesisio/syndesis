@@ -30,13 +30,11 @@
     position: relative;
     background: #fafafa;
     border-right: 1px solid #d1d1d1;
-    overflow-x: hidden;
-    overflow-y: auto;
+    height: 100%;
     padding: 0 $gutter;
   }
 
   .wizard-sidebar {
-    width: 450px;
     padding-top: $gutter;
   }
 

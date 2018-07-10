@@ -24,8 +24,6 @@
       [popover]="tooltipPopover"
       #connectionImgPop="bs-popover"
       placement="right"
-      (mouseover)="showInfoPopoverCollapsed()"
-      (mouseout)="hideInfoPopoverCollapsed()"
       triggers=""
       containerClass="flow-view-popover"
       popoverTitle="Connection Properties"
@@ -160,31 +158,21 @@
         <dt class="col-xs-4">
           Name:
         </dt>
-        <dd class="col-xs-8">
-          {{ step.connection?.name }}
+        <dd class="col-xs-8 syn-truncate__ellipsis" title="{{ step.connection?.name }}">
+          {{ step.connection?.name || 'n/a' }}
         </dd>
         <dt class="col-xs-4">
           Action:
         </dt>
-        <dd class="col-xs-8">
-          {{ step.action?.name }}
+        <dd class="col-xs-8 syn-truncate__ellipsis" title="{{ step.action?.name }}">
+          {{ step.action?.name || 'n/a' }}
         </dd>
-        <ng-container *ngIf="inputDataShapeText">
-          <dt class="col-xs-4">
-            Input Type:
-          </dt>
-          <dd class="col-xs-8">
-            {{ inputDataShapeText }}
-          </dd>
-        </ng-container>
-        <ng-container *ngIf="outputDataShapeText">
-          <dt class="col-xs-4">
-            Output Type:
-          </dt>
-          <dd class="col-xs-8">
-            {{ outputDataShapeText }}
-          </dd>
-        </ng-container>
+        <dt class="col-xs-4">
+          Data Type:
+        </dt>
+        <dd class="col-xs-8 syn-truncate__ellipsis" title="{{ inputDataShapeText || outputDataShapeText }}">
+          {{ inputDataShapeText || outputDataShapeText || 'n/a' }}
+        </dd>
       </dl>
     </div>
   </div>

@@ -18,7 +18,7 @@
   // SIDEBAR: COMMON, REGARDLESS OF STATE
   ////////////////////////////////////////////////////////////////////////////////
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
   ul {
     list-style-type: none;
@@ -131,7 +131,12 @@
   .menu {
     position: relative;
     flex: 1 0 auto;
-    padding-left: $gutter;
+    padding-left: 15px;
+    padding-top: 15px;
+
+    ::ng-deep .collapsed & {
+      display: none;
+    }
 
     //----- Sidebar: Menu & Parent Step Container ----------------->>
     .step-container {
@@ -146,6 +151,10 @@
       &.active {
         .fa.fa-trash {
           color: #ffffff;
+        }
+
+        + .step-details {
+          display: none;
         }
       }
 
@@ -205,10 +214,6 @@
         margin-top: 5px;
         min-width: 160px;
         padding: 5px 0;
-        -webkit-margin-before: 0;
-        -webkit-margin-after: 1em;
-        -webkit-margin-start: 0;
-        -webkit-margin-end: 0;
 
         // Each Step
         li {
@@ -244,8 +249,8 @@
 
   .step-details {
     position: absolute;
-    top: 100%;
-    width: 100%;    
+    top: calc(100% + 10px);
+    width: 100%;
   }
 }
 
@@ -255,6 +260,7 @@
 
 .info-popover {
   min-width: 350px;
+
   dl {
     dt,
     dd {

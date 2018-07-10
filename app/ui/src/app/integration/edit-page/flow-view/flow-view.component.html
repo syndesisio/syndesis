@@ -49,11 +49,13 @@
                   #nameInput
                   class="form-control integration-name-field"
                   placeholder="Enter integration name..."
+                  [title]="integrationName"
                   [(ngModel)]="integrationName"
                   [readonly]="!editingName"
                   (blur)="stopEditingName()"
                   (click)="!editingName && startEditingName()"
-                  (keyup)="$event.keyCode == 13 && stopEditingName()">
+                  (keyup)="$event.keyCode == 13 && stopEditingName()"
+                  size="1">
           </div>
           <div class="integration-name-edit">
             <button class="btn btn-link  integration-name-edit-btn" type="button">
@@ -66,7 +68,8 @@
       </div>
     </div>
 
-    <div [class]="containerClass"
+    <div class="flow-view-container"
+         [ngClass]="{ 'collapsed': isCollapsed || containerClass }"
          *ngIf="i && i.steps">
 
       <!-- First Step -->
@@ -105,8 +108,9 @@
                                               [currentPosition]="currentPosition"
                                               [currentState]="currentState"></syndesis-integration-flow-view-step>
       </div>
-
     </div>
   </syndesis-loading>
-
+  <button class="btn btn-default toggle-collapsed"
+    (click)="toggleCollapsed()"
+    [class.collapsed]="isCollapsed"></button>
 </div>

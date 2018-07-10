@@ -30,6 +30,7 @@ export class FlowViewComponent implements OnDestroy {
   urls: UrlSegment[];
   selectedKind: string | boolean = false;
   editingName = false;
+  isCollapsed: boolean;
 
   @ViewChildren(PopoverDirective) popovers: PopoverDirective[];
   @ViewChild('nameInput') nameInput: ElementRef;
@@ -64,10 +65,14 @@ export class FlowViewComponent implements OnDestroy {
   get containerClass() {
     switch (this.flowPageService.getCurrentStepKind(this.route)) {
       case 'mapper':
-        return 'flow-view-container collapsed';
+        return true;
       default:
-        return 'flow-view-container';
+        return false;
     }
+  }
+
+  toggleCollapsed() {
+    this.isCollapsed = !this.isCollapsed;
   }
 
   showAddStep() {
