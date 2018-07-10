@@ -123,11 +123,11 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception ex) {
             if (!swaggerInfo.getErrors().isEmpty()) {
                 // Just log and return the validation errors if any
-                LOG.error("An error occurred while trying to create a OpenAPI connector", ex);
+                LOG.error("An error occurred while trying to create an OpenAPI connector", ex);
                 return new ConnectorSummary.Builder().errors(swaggerInfo.getErrors()).warnings(swaggerInfo.getWarnings()).build();
             }
 
-            throw SyndesisServerException.launderThrowable("An error occurred while trying to create a OpenAPI connector", ex);
+            throw SyndesisServerException.launderThrowable("An error occurred while trying to create an OpenAPI connector", ex);
         }
     }
 
@@ -358,7 +358,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
         if (specification == null) {
             throw new IllegalArgumentException(
-                "Configured properties of the given Connector template does not include `specification` property");
+                "Configured properties of the given connector template does not include `specification` property");
         }
         return specification;
     }

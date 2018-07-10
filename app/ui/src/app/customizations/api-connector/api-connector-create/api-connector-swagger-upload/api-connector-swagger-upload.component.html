@@ -17,8 +17,8 @@
   </syndesis-validation-error>
 
   <p>
-    Upload the OpenAPI 2.0 file for your Custom API Client Connector. Custom API's are RESTful APIs and can be hosted anywhere,
-    as long as a well-documented API specification is available and conforms to OpenAPI standard.
+    Upload the OpenAPI 2.0 file for your custom API client ocnnector. Custom APIs are RESTful APIs and can be hosted anywhere,
+    as long as a well-documented API specification is available and conforms to the OpenAPI standard.
   </p>
   <p>
     <strong>Choose how you want to create your connector:</strong>
@@ -28,7 +28,7 @@
       <div class="form-group row">
         <div class="col-xs-12 radio">
           <label>
-            <input type="radio" checked="checked" name="connectorSource" #uploadFileOption> Upload a OpenAPI file
+            <input type="radio" checked="checked" name="connectorSource" #uploadFileOption> Upload an OpenAPI file
           </label>
         </div>
       </div>
@@ -59,7 +59,7 @@
               [requiredIf]="fetchUrlOption.checked"
               #swaggerFileUrlInput="ngModel">
             <em class="text-muted">
-              * Please note, we will download this for you but any updates to the online version will not be updated in our app.
+              * Note: we will download this for you but any updates to the online version will not be updated in our app.
             </em>
           </div>
         </div>
