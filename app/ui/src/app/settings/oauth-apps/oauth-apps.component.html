@@ -5,7 +5,15 @@
       'settings.oauth-apps.documentation-link' | synI18n
     )
   " (click)="handleLinks($event)"></p>
-  <p>{{ 'settings.oauth-apps.registration-instruction' | synI18n: callbackURL }}</p>
+  <p>{{ 'settings.oauth-apps.registration-instruction' | synI18n }}
+    <pfng-inline-copy
+      [buttonAriaLabel]="'Copy Callback URL'"
+      [value]="callbackURL"
+      (onCopy)="handleCopy($event, {
+        name: 'Callback URL',
+        msg: 'Callback URL Copied'
+      })"></pfng-inline-copy>
+  </p>
 
   <!-- Modal -->
   <syndesis-oauth-app-modal #modal></syndesis-oauth-app-modal>

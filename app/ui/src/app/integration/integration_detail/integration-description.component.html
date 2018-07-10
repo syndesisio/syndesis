@@ -25,9 +25,23 @@
     </ng-container>
     <span *ngIf="!last" class="step-sep fa fa-angle-right"></span>
   </div>
-  <p *ngIf="integration.url">
-    External URL: <strong>{{ integration.url }}</strong>
-  </p>
+  <div *ngIf="integration.url" class="block-copy-container container-fluid">
+    <div class="col-sm-8">
+      <p>
+        <pfng-block-copy
+          [buttonAriaLabel]="'Copy External URL'"
+          [expandToggleAriaLabel]="'Expand External URL'"
+          [buttonLabel]="'Copy'"
+          [label]="'External URL'"
+          [value]="integration.url"
+          (onCopy)="handleCopy($event, {
+            name: 'External URL',
+            msg: 'External URL Copied'
+          })">
+        </pfng-block-copy>
+      </p>
+    </div>
+  </div>
   <p>
     <syndesis-editable-textarea [value]="integration.description"
                                 placeholder="No description set..."
