@@ -1,31 +1,32 @@
-<div class="flow-view">
-  <!-- Insert step popover -->
-  <ng-template #popTemplate let-position='position'>
-    <div class="popover-body">
-      <div *ngIf="showAddStep();">
-        <a (click)="insertStepAfter(position)">Add a step</a>
-      </div>
-      <div *ngIf="showAddConnection();">
-        <a (click)="insertConnectionAfter(position)">Add a connection</a>
-      </div>
+<!-- Insert step popover -->
+<ng-template #popTemplate let-position='position' class="asdfasdf">
+  <div class="popover-body">
+    <div *ngIf="showAddStep();" class="syn-nowrap">
+      <a (click)="insertStepAfter(position)">Add a step</a>
     </div>
-  </ng-template>
+    <div *ngIf="showAddConnection();" class="syn-nowrap">
+      <a (click)="insertConnectionAfter(position)">Add a connection</a>
+    </div>
+  </div>
+</ng-template>
+
+<div class="flow-view">
   <!-- Insert step line -->
   <ng-template #insertStepTemplate let-position='position'>
     <div *ngIf="currentState === 'save-or-add-step'"
          class="step step-insert"
-         (click)="pop.toggle()"
-         (mouseover)="pop.show()"
-         (mouseleave)="pop.hide()">
-      <div class="step-line"></div>
-      <div class="col-md-2 square-icon"
-           [popover]="popTemplate"
-           [popoverContext]="{ position: position }"
-           placement="right"
-           #pop="bs-popover">
-        <i class="fa fa-plus-square"></i>
-      </div>
-      <div class="col-md-10">
+         (click)="pop.toggle()">
+      <div class="icon-container">
+        <div class="square-icon"
+            [popover]="popTemplate"
+            [popoverContext]="{ position: position }"
+            placement="{{ isCollapsed ? 'bottom' : 'right' }}"
+            container="body"
+            #pop="bs-popover"
+            containerClass="flow-view-add-popover"
+            (click)="pop.toggle()">
+          <i class="fa fa-plus-square"></i>
+        </div>
       </div>
     </div>
   </ng-template>
@@ -37,11 +38,10 @@
                   message="{{ 'integrations.edit.delete-step-modal' | synI18n }}">
   </syndesis-modal>
 
-  <syndesis-loading [loading]="!loaded()">
+  <syndesis-loading [loading]="!loaded()" class="syn-scrollable">
 
     <!-- Header -->
-    <div class="row name"
-         *ngIf="currentStepKind !== 'mapper'">
+    <div class="row name">
       <div class="col-md-12">
         <div class="vertical-align">
           <div class="integration-name">
@@ -68,13 +68,12 @@
       </div>
     </div>
 
-    <div class="flow-view-container"
-         [ngClass]="{ 'collapsed': isCollapsed || containerClass }"
+    <div class="flow-view-container syn-scrollable--body"
+         [ngClass]="{ 'collapsed': isCollapsed }"
          *ngIf="i && i.steps">
 
       <!-- First Step -->
       <div class="step start">
-        <div class="step-line"></div>
         <syndesis-integration-flow-view-step [step]="startConnection()"
                                               [position]="firstPosition()"
                                               [currentPosition]="currentPosition"
@@ -90,7 +89,6 @@
                    [ngForOf]="getMiddleSteps()"
                    let-position="index">
         <div class="step">
-          <div class="step-line"></div>
           <syndesis-integration-flow-view-step [step]="step"
                                                 [position]="position + 1"
                                                 [currentPosition]="currentPosition"
@@ -112,5 +110,6 @@
   </syndesis-loading>
   <button class="btn btn-default toggle-collapsed"
     (click)="toggleCollapsed()"
-    [class.collapsed]="isCollapsed"></button>
+    [class.collapsed]="isCollapsed"
+    title="Expand info"></button>
 </div>

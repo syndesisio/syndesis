@@ -18,8 +18,8 @@
     </div>
   </ng-template>
 
-  <!-- Icon Progress Line -->
-  <div class="progress-line">
+  <!-- Icon -->
+  <div class="icon-container">
     <div [ngClass]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
       [popover]="tooltipPopover"
       #connectionImgPop="bs-popover"
@@ -28,12 +28,13 @@
       containerClass="flow-view-popover"
       popoverTitle="Connection Properties"
       outsideClick="true"
-      container="body">
+      container="body"
+      title="{{ stepName }}">
       <i [ngClass]="getIconClass()"
-         *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
+          *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
       <img class="syn-icon-small"
-           *ngIf="step.stepKind === 'endpoint' && step.connection"
-           [src]="step.connection | synIconPath">
+            *ngIf="step.stepKind === 'endpoint' && step.connection"
+            [src]="step.connection | synIconPath">
       <span class="pficon pficon-warning-triangle-o data-mismatch"
         *ngIf="shouldAddDatamapper || previousStepShouldDefineDataShape"
         [popover]="addDatamapper"
@@ -49,7 +50,6 @@
 
   <!-- Step Item Wrapper -->
   <div class="menu"
-       *ngIf="currentStepKind !== 'mapper'"
        [ngSwitch]="step.stepKind">
 
     <!-- Connection Steps -->
@@ -153,24 +153,28 @@
       </ul>
     </div>
 
-    <div class="container-fluid step-details">
-      <dl class="row">
-        <dt class="col-xs-4">
+    <div class="step-details">
+      <dl>
+        <dt>
           Name:
         </dt>
-        <dd class="col-xs-8 syn-truncate__ellipsis" title="{{ step.connection?.name }}">
+        <dd class="syn-truncate__ellipsis" title="{{ step.connection?.name }}">
           {{ step.connection?.name || 'n/a' }}
         </dd>
-        <dt class="col-xs-4">
+      </dl>
+      <dl>
+        <dt>
           Action:
         </dt>
-        <dd class="col-xs-8 syn-truncate__ellipsis" title="{{ step.action?.name }}">
+        <dd class="syn-truncate__ellipsis" title="{{ step.action?.name }}">
           {{ step.action?.name || 'n/a' }}
         </dd>
-        <dt class="col-xs-4">
+      </dl>
+      <dl>
+        <dt>
           Data Type:
         </dt>
-        <dd class="col-xs-8 syn-truncate__ellipsis" title="{{ inputDataShapeText || outputDataShapeText }}">
+        <dd class="syn-truncate__ellipsis" title="{{ inputDataShapeText || outputDataShapeText }}">
           {{ inputDataShapeText || outputDataShapeText || 'n/a' }}
         </dd>
       </dl>

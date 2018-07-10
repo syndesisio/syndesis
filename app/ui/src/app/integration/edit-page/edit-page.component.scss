@@ -24,18 +24,11 @@
     margin-right: 0;
   }
 
-  .wizard-sidebar,
-  .mapper-sidebar {
+  .wizard-sidebar {
     flex: 0 0 auto;
-    position: relative;
     background: #fafafa;
     border-right: 1px solid #d1d1d1;
     height: 100%;
-    padding: 0 $gutter;
-  }
-
-  .wizard-sidebar {
-    padding-top: $gutter;
   }
 
   .main-panel {

@@ -57,15 +57,6 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
     }
   }
 
-  getSidebarClass() {
-    switch (this.flowPageService.getCurrentStepKind(this.route)) {
-      case 'mapper':
-        return 'mapper-sidebar';
-      default:
-        return 'wizard-sidebar';
-    }
-  }
-
   getPageContainer() {
     switch (this.flowPageService.getCurrentStepKind(this.route)) {
       case 'mapper':
