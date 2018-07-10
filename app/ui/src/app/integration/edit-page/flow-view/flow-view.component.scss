@@ -109,7 +109,8 @@
   .name {
     flex: 0 0 auto;
     border-bottom: 1px #d9d9d9 solid;
-    padding-bottom: 20px;
+    padding-right: $gutter;
+    padding-bottom: $gutter;
 
     .integration-name {
       flex: 1 0 0;

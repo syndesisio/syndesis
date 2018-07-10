@@ -41,7 +41,6 @@ export class FlowViewStepComponent implements OnChanges {
   // the current state/page of the current step
   @Input() currentState: string;
 
-  @ViewChild('connectionImgPop') connectionImgPop: PopoverDirective;
   @ViewChild('datamapperInfoPop') datamapperInfoPop: PopoverDirective;
 
   inputDataShapeText: string;

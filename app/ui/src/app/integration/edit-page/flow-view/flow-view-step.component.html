@@ -21,15 +21,9 @@
   <!-- Icon -->
   <div class="icon-container">
     <div [ngClass]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
-      [popover]="tooltipPopover"
-      #connectionImgPop="bs-popover"
       placement="right"
-      triggers=""
-      containerClass="flow-view-popover"
-      popoverTitle="Connection Properties"
-      outsideClick="true"
-      container="body"
-      title="{{ stepName }}">
+      [tooltip]="stepNameTooltip"
+      container="body">
       <i [ngClass]="getIconClass()"
           *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
       <img class="syn-icon-small"
@@ -45,6 +39,7 @@
         outsideClick="true"
         (click)="toggleAddDatamapperInfo(); $event.stopPropagation();"
         container="body"></span>
+        <ng-template #stepNameTooltip><div class="syn-nowrap">{{ stepName }}</div></ng-template>
     </div>
   </div>
 

@@ -111,5 +111,7 @@
   <button class="btn btn-default toggle-collapsed"
     (click)="toggleCollapsed()"
     [class.collapsed]="isCollapsed"
-    title="Expand info"></button>
+    [tooltip]="toggleButtonTooltip"
+    placement="right"></button>
+  <ng-template #toggleButtonTooltip><div class="syn-nowrap">Expand info</div></ng-template>
 </div>
