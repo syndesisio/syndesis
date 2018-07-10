@@ -25,7 +25,11 @@ publish messages to an AMQP broker.
 
 |<<connecting-to-ftp,FTP/SFTP>>
 |Download files from an FTP or SFTP server or upload files to an
-FTP or SFTP server. 
+FTP or SFTP server.
+
+|<<connecting-to-gmail,Gmail>>
+|Obtain messages sent to a particular Gmail account and send messages
+from a particular Gmail account. 
 
 |<<connecting-to-http,HTTP/HTTPS>>
 |Connect to an HTTP or HTTPS endpoint and execute the
