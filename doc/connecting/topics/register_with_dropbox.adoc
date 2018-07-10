@@ -16,12 +16,9 @@ Perform these steps:
 
 . In {prodname}:
 .. In the left panel, click *Settings*.
-.. Near the top of the page, in the sentence that starts with
-`*During registration, enter this callback URL:*`,
-copy the URL at the end of that sentence to the clipboard. 
-For example, the URL is something like this:
-`\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
-
+.. On the *Settings* page, near the top, click *Copy Callback URL* to
+copy the callback URL for your installation of {prodname} to the clipboard. 
+You will need this URL later in this procedure. 
 . In another browser tab, go  to `https://www.dropbox.com` 
 and do the following:
 .. Sign in to the Dropbox account that has the data that you want to
@@ -29,7 +26,12 @@ access in an integration.
 .. After signing in, go to https://www.dropbox.com/developers/apps.
 .. Click *Create App*.
 .. Select *Dropbox API*. 
-.. Choose whether {prodname} can access a single folder or all of the 
+.. Ch.. Near the top of the page, in the sentence that starts with
+`*During registration, enter this callback URL:*`,
+copy the URL at the end of that sentence to the clipboard. 
+For example, the URL is something like this:
+`\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
+oose whether {prodname} can access a single folder or all of the 
 folders and files. 
 .. Specify a name for your Dropbox app. For example, you might
 specify `*Fuse Online Access From Aslan LLC*`. The name you specify must be

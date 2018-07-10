@@ -12,16 +12,15 @@ Gmail account.
 To authorize your {prodname} installation to access Gmail:
 
 . In {prodname}, in the left navigation panel, click *Settings*. 
-In the *Settings* page, near the top, you can see the {prodname}
-callback URL. 
-. Copy the callback URL to your clipboard. You will need it toward the 
-end of this procedure. 
+. On the *Settings* page, near the top, click *Copy Callback URL* to
+copy the callback URL for your installation of {prodname} to the clipboard. 
+You will need this URL toward the end of this procedure. 
 . In another browser tab, go to `https://console.developers.google.com` 
 and do the following:
 .. Confirm that you are signed in to a Gmail account for which you want
 to authorize access from {prodname}. Or, choose a Gmail account for
 which to grant authorization and sign in to that account. 
-.. Ensure that you want to use the currect Google project to grant
+.. Ensure that you want to use the current Google project to grant
 authorization to {prodname}. Or, choose or create another project. 
 If this Google account does not already
 have a project, you must create one. For information about Google projects
@@ -35,39 +34,16 @@ image:images/Hamburger.png[Navigation menu icon] and select
 .. In the *Gmail API* page, click *Enable*. 
 .. In the page that appears, click *Create credentials*. 
 .. On the *Add credentials to your project page*, do the following:
-... Under *Which API are you using?* ensure that *Gmail API* is selected.
-... Under *Where will you be calling the API from?*, 
-select *Web browser (Javascript)*. 
-... Under *What data will you be using?*, select *User data*. 
-... Click *What credentials do I need?*
-.. On the *Add credentials to your project* page, under 
-*Create an OAuth 2.0 client ID*, do the following:
-... In the *Name* field enter a name for your {prodname} client application, 
-for example, `{prodname} client`.
-... In the *Authorized JavaScript origins* field, paste the URL that is
-in your clipboard and delete the last four segments. This is the base
-URL for your {prodname} installation. For example, it 
-should look something like this: 
-`https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com`.
-... In the *Authorized redirect URI* field, paste the URL that is in 
-your clipboard. It should look something like this: 
-`https://app-proj9128.7b63.fuse-ignite.openshiftapps.com/api/v1/credentials/callback`.
-... Click *Create OAuth client ID*. 
-.. Under *Set up the OAuth 2.0 consent screen*: 
-... Ensure that the *Email address* field shows the Gmail account that you 
-want to access from {prodname}.
-... In the *Product name shown to users* field, enter `{prodname}`. 
-... Click *Continue*. 
-.. Under *Download credentials*, copy the client ID. 
-. Go to your {prodname} installation *Settings* page and do the following:
-.. To the right of the Gmail entry, click *Register*. 
-.. In the *Client ID* field, paste the Gmail client ID. 
-. Return to the Google APIs *Credentials* page and do the following:
-.. To the right of the entry for your {prodname} client, click 
-image:images/BlackPencilEdit.png[Edit OAuth client].
-.. At the top of the *Client ID for Web application* page, copy the
-client secret value. 
-. Return to the {prodname} *Settings* page and do the following: 
-.. In the *Client Secret* field, paste the Gmail client secret. 
-.. Click *Save*. You should get a *Registration successful!* notification. 
-.. Click *Ok* to collapse the Gmail settings. 
+
+. Return to the {prodname} *Settings* page and in the Gmail *Client ID* 
+field, paste the Gmail client ID that you just copied. 
+
+. Return to the Google developers site and to the right of the 
+client secret field, click 
+image:images/copy_icon.png[the Copy icon] to copy the client secret to
+your clipboard.
+
+. Return to the {prodname} *Settings* page and in the 
+Gmail *Client Secret* field, paste the Gmail client secret that you 
+just copied. 
+. Click *Save*. You should get a *Registration Successful!* notification. 							

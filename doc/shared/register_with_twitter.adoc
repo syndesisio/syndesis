@@ -16,9 +16,9 @@ Perform these steps:
 
 . In {prodname}:
 .. In the left panel, click *Settings*.
-.. Near the top of the *OAuth Application Management* page, where you see
-`*During registration, enter this callback URL:*`, copy the URL 
-at the end of the sentence to the clipboard.
+.. On the *Settings* page, near the top, click *Copy Callback URL* to
+copy the callback URL for your installation of {prodname} to the clipboard. 
+You will need this URL later in this procedure. 
 .. To the right of the *Twitter* entry,
 click *Register* to display the *Client ID* and *Client Secret* fields.
 . In another browser tab, go to the Twitter *Application Management* web
