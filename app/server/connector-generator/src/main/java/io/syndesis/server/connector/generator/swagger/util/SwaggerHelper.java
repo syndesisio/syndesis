@@ -138,7 +138,7 @@ public final class SwaggerHelper {
         try {
             return Json.writer().writeValueAsString(json);
         } catch (final JsonProcessingException e) {
-            throw new IllegalStateException("Unable to serialize minified Swagger specification", e);
+            throw new IllegalStateException("Unable to serialize minified OpenAPI specification", e);
         }
     }
 
@@ -169,9 +169,9 @@ public final class SwaggerHelper {
             resolvedSpecification = resolve(specification);
             resultBuilder.resolvedSpecification(resolvedSpecification);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception e) {
-            LOG.debug("Unable to resolve Swagger specification\n{}\n", specification, e);
+            LOG.debug("Unable to resolve OpenAPI specification\n{}\n", specification, e);
             return resultBuilder
-                .addError(new Violation.Builder().error("error").property("").message("Unable to resolve Swagger specification from: "
+                .addError(new Violation.Builder().error("error").property("").message("Unable to resolve OpenAPI specification from: "
                     + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse("")).build())
                 .build();
         }
@@ -179,9 +179,9 @@ public final class SwaggerHelper {
         final SwaggerParser parser = new SwaggerParser();
         final Swagger swagger = parser.parse(resolvedSpecification);
         if (swagger == null) {
-            LOG.debug("Unable to read Swagger specification\n{}\n", specification);
+            LOG.debug("Unable to read OpenAPI specification\n{}\n", specification);
             return resultBuilder
-                .addError(new Violation.Builder().error("error").property("").message("Unable to read Swagger specification from: "
+                .addError(new Violation.Builder().error("error").property("").message("Unable to read OpenAPI specification from: "
                     + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse("")).build())
                 .build();
         }
@@ -197,7 +197,7 @@ public final class SwaggerHelper {
         try {
             return Json.writer().writeValueAsString(swagger);
         } catch (final JsonProcessingException e) {
-            throw new IllegalStateException("Unable to serialize Swagger specification", e);
+            throw new IllegalStateException("Unable to serialize OpenAPI specification", e);
         }
     }
 
@@ -279,7 +279,7 @@ public final class SwaggerHelper {
         } catch (IOException | ProcessingException ex) {
             LOG.error("Unable to load the schema file embedded in the artifact", ex);
             return new SwaggerModelInfo.Builder().addError(new Violation.Builder().error("error").property("")
-                .message("Unable to load the swagger schema file embedded in the artifact").build()).build();
+                .message("Unable to load the OpenAPI schema file embedded in the artifact").build()).build();
         }
     }
 

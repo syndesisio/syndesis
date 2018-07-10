@@ -33,8 +33,8 @@
     "kind": "connector-template",
     "data": {
       "id": "swagger-connector-template",
-      "name": "Swagger API Connector",
-      "description": "Swagger API Connector",
+      "name": "OpenAPI Connector",
+      "description": "OpenAPI Connector",
       "icon": "fa-link",
       "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis.version@",
       "camelConnectorPrefix": "swagger-operation",
@@ -56,7 +56,7 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description": "Provide a Swagger specification that describes a REST API. The API can be hosted anywhere. The Swagger specification must conform to the OpenAPI (the new name for Swagger) specification."
+          "description": "Upload the OpenAPI 2.0 file for your Custom API Client Connector. Custom API's are RESTful APIs and can be hosted anywhere, as long as a well-documented API specification is available and conforms to OpenAPI standard."
         },
         "host": {
           "kind": "property",
@@ -70,7 +70,7 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration."
+          "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port."
         },
         "basePath": {
           "kind": "property",
@@ -84,7 +84,7 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description": "API basePath for example /v2. Default is unset if set overrides the value present in Swagger specification."
+          "description": "API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI specification."
         },
         "authenticationType": {
           "kind": "property",
@@ -164,7 +164,7 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration.",
+          "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port.",
           "order": 10
         },
         "basePath": {
@@ -179,7 +179,7 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description": "API basePath for example /v2. Default is unset if set overrides the value present in Swagger specification.",
+          "description": "API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI specification.",
           "order": 11
         },
         "authenticationType": {
@@ -389,7 +389,7 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description": "Swagger specification of the service"
+          "description": "OpenAPI specification of the service"
         },
         "username": {
           "kind": "property",

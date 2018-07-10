@@ -171,8 +171,8 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
                 withWarnings.addWarning(new Violation.Builder()//
                     .property("/schemes")//
                     .error("missing-schemes")
-                    .message("Unable to determine the scheme to use: Swagger specification does not provide a `schemes` definition "
-                        + "and the Swagger specification was uploaded so the originating URL is lost.")
+                    .message("Unable to determine the scheme to use: OpenAPI specification does not provide a `schemes` definition "
+                        + "and the specification was uploaded so the originating URL is lost.")
                     .build());
             }
         } else {
@@ -183,8 +183,8 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
                 withWarnings.addWarning(new Violation.Builder()//
                     .property("/schemes")//
                     .error("missing-schemes")
-                    .message("Unable to determine the scheme to use: no supported scheme found within the Swagger specification. "
-                        + "Schemes given in the Swagger specification: "
+                    .message("Unable to determine the scheme to use: no supported scheme found within the OpenAPI specification. "
+                        + "Schemes given in the specification: "
                         + schemes.stream().map(s -> s.toValue()).collect(Collectors.joining(", ")))
                     .build());
             }
