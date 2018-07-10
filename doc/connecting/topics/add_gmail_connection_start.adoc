@@ -1,0 +1,25 @@
+[id='add-gmail-connection-start']
+= Obtain a message that was received by a Gmail account
+
+To trigger execution of an integration when a particular Gmail account
+receives a message, add a Gmail connection as the start connection of
+an integration. When you created the Gmail connection you authorized it
+to access the particular Gmail account that you want to obtain messages
+from. 
+
+When the integration is running, the Gmail connection continuously watches 
+this account for messages. When the connection finds an unread
+message, it passes the message to the next step in the integration and
+marks the message as *read*. A Gmail 
+connection handles one message at a time. 
+
+To trigger an integration when a particular Gmail account receives a 
+message:
+
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a Start Connection* page, click the Gmail connection that
+you want to use to start the integration. 
+. On the *Choose an Action* page, click the *Receive Messages* action. 
+. Click *Done* to add the start connection. The connection appears as the
+first step in the integration flow. 

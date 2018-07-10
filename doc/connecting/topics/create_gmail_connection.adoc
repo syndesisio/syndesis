@@ -1,0 +1,38 @@
+[id='create-gmail-connection']
+= Create a connection that accesses a particular Gmail account
+
+A connection to Gmail requires registration of
+{prodname} as an application that can access Gmail.
+If you did not already register {prodname}, see <<register-with-gmail>>.
+
+When you create a Gmail connection, you authorize the connection to access one
+particular Gmail account. After you create a Gmail connection, you can 
+add it in multiple integrations.
+
+To create a Gmail connection:
+
+. In {prodname}, in the left panel, click *Connections* to
+display any available connections.
+. In the upper right, click *Create Connection* to display
+the available connectors. A connector is a template that
+you use to create one or more connections.
+. Click the *Gmail* connector.
+. Click *Connect Gmail*, which takes you to a *Sign in with Gmail* page.
+If *Connect Gmail* does not appear, then your {prodname} installation
+is not correctly registered as a Gmail client application. See
+<<register-with-gmail>>. 
+. Enter the email address of the Google account that you want this connection to
+access from {prodname} and click *Next*. 
+. In response to *openshiftapps.com wants to access your Google Account*,
+click *Allow* to return to {prodname}.
+. In the *Connection Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connections.
+For example, enter `*Gmail Connect 1*`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection. For example,
+enter `*Sample Gmail connection
+that uses my Gmail account credentials.*`
+. In the upper right, click *Create* to see that the connection you
+created is now available. If you entered the example name, you would
+see that *Gmail Connect 1* appears as a connection that you can 
+choose to add to an integration.

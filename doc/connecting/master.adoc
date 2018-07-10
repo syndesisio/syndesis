@@ -25,6 +25,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-amqp>>
 * <<connecting-to-dropbox>>
 * <<connecting-to-ftp>>
+* <<connecting-to-gmail>>
 * <<connecting-to-http>>
 * <<connecting-to-mqtt>>
 * <<connecting-to-sf>>
@@ -43,6 +44,8 @@ include::topics/connecting_to_amqp.adoc[leveloffset=+1]
 include::topics/connecting_to_dropbox.adoc[leveloffset=+1]
 
 include::topics/connecting_to_ftp.adoc[leveloffset=+1]
+
+include::topics/connecting_to_gmail.adoc[leveloffset=+1]
 
 include::topics/connecting_to_http.adoc[leveloffset=+1]
 

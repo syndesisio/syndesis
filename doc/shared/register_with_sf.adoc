@@ -1,7 +1,7 @@
 // Reused in
 //"t2sf_intro.adoc", "sf2db_intro.adoc"
 [id='register-with-salesforce_{context}']
-= Register {prodname} as a Salesforce client
+= Register {prodname} as a Salesforce client application
 
 You must register your installation of {prodname} as a client application
 that can access Salesforce.
@@ -28,9 +28,9 @@ Perform these steps to register {prodname} as a Salesforce client application:
 
 . In {prodname}:
 .. In the left panel, click *Settings*.
-.. Near the top of the *OAuth Application Management* page, where you see
-`*During registration, enter this callback URL:*`, copy that URL to the
-clipboard.
+.. On the *Settings* page, near the top, click *Copy Callback URL* to
+copy the callback URL for your installation of {prodname} to the clipboard. 
+You will need this URL later in this procedure. 
 .. To the right of the *Salesforce* entry,
 click *Register* to display the *Client ID* and *Client Secret* fields.
 . In another browser tab, log in to your Salesforce account and
