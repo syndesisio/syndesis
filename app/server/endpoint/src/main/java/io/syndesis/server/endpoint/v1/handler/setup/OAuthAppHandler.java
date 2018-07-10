@@ -70,8 +70,9 @@ public class OAuthAppHandler {
     @Consumes("application/json")
     @Path(value = "/{id}")
     public void delete(@NotNull @PathParam("id") @ApiParam(required = true) final String id) {
-        // delete is to remove OAuth properties from the connector
-        update(id, new OAuthApp());
+        final Connector connector = dataMgr.fetch(Connector.class, id);
+
+        update(id, OAuthApp.fromConnector(connector).clearValues());
     }
 
     @GET
@@ -84,7 +85,7 @@ public class OAuthAppHandler {
             throw new EntityNotFoundException();
         }
 
-        return createOAuthApp(connector);
+        return OAuthApp.fromConnector(connector);
     }
 
     @GET
@@ -108,7 +109,7 @@ public class OAuthAppHandler {
             new ReflectiveSorter<>(Connector.class, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))).getItems();
 
-        final List<OAuthApp> apps = oauthConnectors.stream().map(OAuthAppHandler::createOAuthApp).collect(Collectors.toList());
+        final List<OAuthApp> apps = oauthConnectors.stream().map(OAuthApp::fromConnector).collect(Collectors.toList());
 
         return ListResult.of(apps);
     }
@@ -122,30 +123,18 @@ public class OAuthAppHandler {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        final Connector updated = new Connector.Builder().createFrom(connector)
-            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.CLIENT_ID_TAG, app.getClientId())
-            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.CLIENT_SECRET_TAG, app.getClientSecret())
-            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.AUTHORIZATION_URL_TAG, app.getAuthorizationUrl())
-            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.ACCESS_TOKEN_URL_TAG, app.getTokenUrl())
-            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.SCOPE_TAG, app.getScopes())//
-            .build();
+        final Connector updated = app.update(connector);
 
         dataMgr.update(updated);
 
-        final boolean shouldBeDerived = app.getClientId() != null && app.getClientSecret() != null;
-
         dataMgr.fetchAllByPropertyValue(Connection.class, "connectorId", id)
-            .forEach(connection -> toggleDerived(connection, shouldBeDerived));
+            .forEach(connection -> toggleDerived(connection, app.isDerived()));
     }
 
     private void toggleDerived(final Connection connection, final boolean newDerived) {
         final Connection underived = new Connection.Builder().createFrom(connection).isDerived(newDerived).build();
 
         dataMgr.update(underived);
-    }
-
-    private static OAuthApp createOAuthApp(final Connector connector) {
-        return new OAuthApp(connector);
     }
 
     private static boolean isOauthConnector(final Connector connector) {

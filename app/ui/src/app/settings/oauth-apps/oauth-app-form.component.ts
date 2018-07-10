@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
 import { FormFactoryService } from '@syndesis/ui/platform';
@@ -9,47 +9,13 @@ import {
   DynamicFormService,
   DynamicInputModel
 } from '@ng-dynamic-forms/core';
-
-// Default form config object for OAuth client settings
-const OAUTH_APP_FORM_CONFIG = {
-  clientId: {
-    displayName: 'Client ID',
-    type: 'string',
-    required: true,
-    labelHint: 'The OAuth client ID setting for the target application'
-  },
-  clientSecret: {
-    displayName: 'Client Secret',
-    type: 'password',
-    required: true,
-    labelHint: 'The OAuth client secret value for the target application'
-  },
-  authorizationUrl: {
-    displayName: 'Authorization URL',
-    type: 'string',
-    required: true,
-    labelHint: 'URL to the authorization endpoint of the target application'
-  },
-  tokenUrl: {
-    displayName: 'Access Token URL',
-    type: 'string',
-    required: true,
-    labelHint: 'URL to the access token endpoint of the target application'
-  },
-  scopes: {
-    displayName: 'OAuth Scopes',
-    type: 'string',
-    required: true,
-    labelHint:
-      'Comma separated list of OAuth scopes used when requesting authorization from the target application'
-  }
-};
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'syndesis-oauth-app-form',
   templateUrl: 'oauth-app-form.component.html'
 })
-export class OAuthAppFormComponent implements OnInit {
+export class OAuthAppFormComponent implements OnInit, OnDestroy {
   formConfig: any;
   @Input() item: any = {};
 
@@ -58,6 +24,7 @@ export class OAuthAppFormComponent implements OnInit {
   message: any = null;
   formGroup: FormGroup;
   formModel: DynamicFormControlModel[];
+  appsSubscription: Subscription;
 
   constructor(
     private formFactory: FormFactoryService,
@@ -69,8 +36,9 @@ export class OAuthAppFormComponent implements OnInit {
   save() {
     const app = {
       ...this.item.client,
-      ...this.formFactory.sanitizeValues(this.formGroup.value, this.formConfig)
+      configuredProperties: this.formFactory.sanitizeValues(this.formGroup.value, this.formConfig)
     };
+
     this.formGroup.disable();
     this.loading = true;
     this.error = null;
@@ -106,14 +74,17 @@ export class OAuthAppFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    const formConfig = (this.formConfig = JSON.parse(
-      JSON.stringify(OAUTH_APP_FORM_CONFIG)
-    ));
-    this.formModel = this.formFactory.createFormModel(
-      formConfig,
-      this.item.client,
-      ['*']
-    );
+    this.appsSubscription = this.store.list.subscribe(oauthApps => {
+      const oauthApp = oauthApps.find(it => it.id == this.item.client.id);
+      this.formModel = this.formFactory.createFormModel(
+        oauthApp.properties,
+        oauthApp.configuredProperties,
+        ['*']);
+      });
     this.formGroup = this.formService.createFormGroup(this.formModel);
+  }
+
+  ngOnDestroy() {
+    this.appsSubscription.unsubscribe();
   }
 }

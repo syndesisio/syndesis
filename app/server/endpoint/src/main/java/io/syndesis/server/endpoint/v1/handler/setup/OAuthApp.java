@@ -15,103 +15,130 @@
  */
 package io.syndesis.server.endpoint.v1.handler.setup;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.SortedSet;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.WithName;
+import io.syndesis.common.model.WithProperties;
+import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.credential.Credentials;
 
-public final class OAuthApp {
+import org.immutables.value.Value;
 
-    private String authorizationUrl;
+@Value.Immutable
+@JsonDeserialize(builder = OAuthApp.Builder.class)
+@SuppressWarnings("immutables")
+public interface OAuthApp extends WithId<OAuthApp>, WithName, WithProperties {
 
-    private String clientId;
+    Set<String> OAUTH_TAGS = Collections.unmodifiableSet(new HashSet<>(
+        Arrays.asList(Credentials.CLIENT_ID_TAG, Credentials.CLIENT_SECRET_TAG, Credentials.AUTHORIZATION_URL_TAG, Credentials.ACCESS_TOKEN_URL_TAG, Credentials.SCOPE_TAG)));
 
-    private String clientSecret;
+    class Builder extends ImmutableOAuthApp.Builder {
 
-    private String icon;
+        Builder withTaggedPropertyFrom(final Connector connector, final String tag) {
+            final Optional<Entry<String, ConfigurationProperty>> maybeProperty = connector.propertyEntryTaggedWith(tag);
 
-    private String id;
+            if (maybeProperty.isPresent()) {
+                final Entry<String, ConfigurationProperty> property = maybeProperty.get();
+                final String propertyName = property.getKey();
 
-    private String name;
+                final ConfigurationProperty configuration = property.getValue();
+                putProperty(propertyName, configuration);
 
-    private String scopes;
+                final Optional<String> maybeValue = connector.propertyTaggedWith(tag);
+                if (maybeValue.isPresent()) {
+                    putConfiguredProperty(propertyName, maybeValue.get());
+                }
+            }
 
-    private String tokenUrl;
+            return this;
+        }
 
-    public OAuthApp() {
     }
 
-    OAuthApp(final Connector connector) {
-        id = connector.getId().get();
-        name = connector.getName();
-        icon = connector.getIcon();
-        clientId = connector.propertyTaggedWith(Credentials.CLIENT_ID_TAG).orElse(null);
-        clientSecret = connector.propertyTaggedWith(Credentials.CLIENT_SECRET_TAG).orElse(null);
-        authorizationUrl = connector.propertyTaggedWith(Credentials.AUTHORIZATION_URL_TAG).orElse(null);
-        tokenUrl = connector.propertyTaggedWith(Credentials.ACCESS_TOKEN_URL_TAG).orElse(null);
-        scopes = connector.propertyTaggedWith(Credentials.SCOPE_TAG).orElse(null);
+    default OAuthApp clearValues() {
+        final Map<String, String> current = getConfiguredProperties();
+        final Map<String, String> replacement = new HashMap<>();
+
+        for (final Entry<String, ConfigurationProperty> property : getProperties().entrySet()) {
+            final ConfigurationProperty configurationProperty = property.getValue();
+            final SortedSet<String> tags = configurationProperty.getTags();
+
+            if (Collections.disjoint(tags, OAUTH_TAGS)) {
+                final String propertyName = property.getKey();
+                final String value = current.get(propertyName);
+                if (value != null) {
+                    replacement.put(propertyName, value);
+                }
+            }
+        }
+
+        return new Builder().createFrom(this).configuredProperties(replacement).build();
     }
 
-    public String getAuthorizationUrl() {
-        return authorizationUrl;
+    String getIcon();
+
+    @Value.Derived
+    default boolean isDerived() {
+        getConfiguredProperties();
+        final Optional<String> maybeClientId = propertyTaggedWith(Credentials.CLIENT_ID_TAG);
+        final Optional<String> maybeClientSecret = propertyTaggedWith(Credentials.CLIENT_SECRET_TAG);
+
+        return maybeClientId.isPresent() && maybeClientSecret.isPresent();
     }
 
-    public String getClientId() {
-        return clientId;
+    default Optional<String> propertyTaggedWith(final String tag) {
+        return propertyTaggedWith(getConfiguredProperties(), tag);
     }
 
-    public String getClientSecret() {
-        return clientSecret;
+    default Connector update(final Connector connector) {
+        final Connector.Builder updating = new Connector.Builder().createFrom(connector);
+
+        final Map<String, String> configuredProperties = getConfiguredProperties();
+
+        final Map<String, String> current = connector.getConfiguredProperties();
+        final Map<String, String> updated = new HashMap<>(current);
+
+        for (final String tag : OAUTH_TAGS) {
+            final Optional<Entry<String, ConfigurationProperty>> maybeProperty = connector.propertyEntryTaggedWith(tag);
+
+            if (maybeProperty.isPresent()) {
+                final Entry<String, ConfigurationProperty> property = maybeProperty.get();
+                final String propertyName = property.getKey();
+
+                final String updatedValue = configuredProperties.get(propertyName);
+                if (updatedValue == null) {
+                    updated.remove(propertyName);
+                } else {
+                    updated.put(propertyName, updatedValue);
+                }
+            }
+        }
+
+        return updating.configuredProperties(updated).build();
     }
 
-    public String getIcon() {
-        return icon;
+    static OAuthApp fromConnector(final Connector connector) {
+        return new Builder()//
+            .id(connector.getId())//
+            .name(connector.getName())//
+            .icon(connector.getIcon())//
+            .withTaggedPropertyFrom(connector, Credentials.CLIENT_ID_TAG)//
+            .withTaggedPropertyFrom(connector, Credentials.CLIENT_SECRET_TAG)//
+            .withTaggedPropertyFrom(connector, Credentials.AUTHORIZATION_URL_TAG)//
+            .withTaggedPropertyFrom(connector, Credentials.ACCESS_TOKEN_URL_TAG)//
+            .withTaggedPropertyFrom(connector, Credentials.SCOPE_TAG)//
+            .build();
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getScopes() {
-        return scopes;
-    }
-
-    public String getTokenUrl() {
-        return tokenUrl;
-    }
-
-    public void setAuthorizationUrl(final String authorizationUrl) {
-        this.authorizationUrl = authorizationUrl;
-    }
-
-    public void setClientId(final String clientId) {
-        this.clientId = clientId;
-    }
-
-    public void setClientSecret(final String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    public void setIcon(final String icon) {
-        this.icon = icon;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public void setScopes(final String scopes) {
-        this.scopes = scopes;
-    }
-
-    public void setTokenUrl(final String tokenUrl) {
-        this.tokenUrl = tokenUrl;
-    }
-
 }
