@@ -5,13 +5,11 @@ import { Subscription } from 'rxjs';
 import { Connection } from '@syndesis/ui/platform';
 import { TypeFactory } from '@syndesis/ui/model';
 import { NavigationService } from '@syndesis/ui/common';
-import { log, getCategory } from '@syndesis/ui/logging';
+import { log } from '@syndesis/ui/logging';
 import {
   CurrentConnectionService,
   ConnectionEvent
 } from './current-connection';
-
-const category = getCategory('Connections');
 
 const CONNECTION_BASICS = 'connection-basics';
 const CONFIGURE_FIELDS = 'configure-fields';
@@ -28,6 +26,8 @@ const REVIEW_INDEX = 3;
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
   currentActiveStep = CONNECTION_BASICS_INDEX;
+  currentSubscription: Subscription;
+  fragmentSubscription: Subscription;
 
   constructor(
     public current: CurrentConnectionService,
@@ -193,10 +193,10 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.current.init();
-    this.current.events.subscribe(event => {
+    this.currentSubscription = this.current.events.subscribe(event => {
       this.handleEvent(event);
     });
-    this.route.fragment.subscribe(fragment => {
+    this.fragmentSubscription = this.route.fragment.subscribe(fragment => {
       /**
        * Detect if there's a selected connection ID already or not
        */
@@ -215,6 +215,8 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.currentSubscription.unsubscribe();
+    this.fragmentSubscription.unsubscribe();
     this.current.dispose();
     this.nav.show();
   }
