@@ -75,7 +75,7 @@ export class OAuthAppFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.appsSubscription = this.store.list.subscribe(oauthApps => {
-      const oauthApp = oauthApps.find(it => it.id == this.item.client.id);
+      const oauthApp = <OAuthApp> oauthApps.find(it => it.id == this.item.client.id);
       this.formModel = this.formFactory.createFormModel(
         oauthApp.properties,
         oauthApp.configuredProperties,

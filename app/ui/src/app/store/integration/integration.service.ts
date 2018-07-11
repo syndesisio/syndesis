@@ -4,7 +4,8 @@ import { ApiHttpService,
   Integrations,
   IntegrationSupportService,
   PENDING,
-  IntegrationStatusDetail } from '@syndesis/ui/platform';
+  IntegrationStatusDetail,
+  DetailedState } from '@syndesis/ui/platform';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, catchError } from 'rxjs/operators';
 import { RESTService } from '../entity';
@@ -32,6 +33,9 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
         const integration = results[0];
         const detailedStatus = results[1];
         integration.statusDetail = detailedStatus;
+        // for styling
+        //return this.forceDetailedState(integration);
+        // for reals
         return integration;
       })
     );
@@ -57,9 +61,34 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
             integration.statusDetail = status;
           }
         });
+        // force some state for styling
+        /*
+        return integrations.map((i, index) => {
+          if (index === 0) {
+            return this.forceDetailedState(i);
+          }
+          return i;
+        });
+        */
+
+        // the real code
         return integrations;
       })
     );
+  }
+
+  // design time function
+  private forceDetailedState(integration: Integration) {
+    integration.currentState = 'Pending';
+    integration.statusDetail = {
+      detailedState: {
+        value: 'ASSEMBLING',
+        currentStep: 2,
+        totalSteps: 4
+      } as DetailedState,
+      logsUrl: 'https://www.google.com',
+    } as IntegrationStatusDetail;
+    return integration;
   }
 
 }
