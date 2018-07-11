@@ -24,20 +24,11 @@
     margin-right: 0;
   }
 
-  .wizard-sidebar,
-  .mapper-sidebar {
+  .wizard-sidebar {
     flex: 0 0 auto;
-    position: relative;
     background: #fafafa;
     border-right: 1px solid #d1d1d1;
-    overflow-x: hidden;
-    overflow-y: auto;
-    padding: 0 $gutter;
-  }
-
-  .wizard-sidebar {
-    min-width: 300px;
-    padding-top: $gutter;
+    height: 100%;
   }
 
   .main-panel {

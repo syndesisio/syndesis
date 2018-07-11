@@ -1,37 +1,68 @@
 @import 'syndesis-sass';
 
-.collapsed {
-  .step-insert {
-    display: none;
-  }
-}
-
-.popover-body > div {
-  padding: 5px;
-}
-
 .flow-view {
   height: 100%;
+  position: relative;
+  padding: $gutter 30px 0 $gutter;
 
-  syndesis-loading {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: visible;
+  .toggle-collapsed { 
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 30px;
+    border: solid #d1d1d1;
+    border-width: 0 0 0 1px;
+    font-size: 1.5em;
+    font-weight: 200;
+    outline: 0;
+
+    &:before {
+      content: '\00ab';
+    }
+
+    &.collapsed:before {
+      content: '\00bb';
+    }
   }
 
   .flow-view-container {
     flex: 1 1 auto;
     padding-top: 15px;
     padding-bottom: 20px;
-    margin-right: -20px;
-    width: 320px;
+    padding-left: 30px;
     display: flex;
     flex-direction: column;
+    width: 400px;
 
     &.collapsed {
-      width: 130px;
-      margin-right: 0;
+      width: auto;
+      padding-right: 50px;
+    }
+
+    ::ng-deep {
+      .icon-container {
+        padding-bottom: 50px;
+        width: 55px;
+        height: 105px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      .step:not(:last-child) .icon-container {
+        &::before {
+          content: '';
+          position: absolute;
+          width: 2px;
+          background-color: #d4d4d4;
+          top: 0;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+      }
     }
 
     .start,
@@ -78,7 +109,8 @@
   .name {
     flex: 0 0 auto;
     border-bottom: 1px #d9d9d9 solid;
-    padding-bottom: 20px;
+    padding-right: $gutter;
+    padding-bottom: $gutter;
 
     .integration-name {
       flex: 1 0 0;
@@ -90,6 +122,7 @@
         font-style: normal;
 
         &[readonly] {
+          @include truncate(ellipsis);
           background: none;
           border-color: transparent;
           box-shadow: none;
@@ -106,22 +139,7 @@
   // LEFT-HAND NAV BAR W/ STEPS
   ////////////////////////////////////////////////////////////////////////////////
   .step {
-    position: relative;
-    flex-wrap: nowrap;
     flex: 0 0 auto;
-
-    &:not(:last-child) {
-      padding-bottom: 24px;
-    }
-
-    .step-line {
-      position: absolute;
-      height: 100%;
-      top: 0;
-      left: 26px;
-      width: 2px;
-      background-color: #d4d4d4;
-    }
 
     &.finish {
       flex: 0 0 auto;
@@ -131,37 +149,46 @@
     &.step-insert {
       flex: 0 0 auto;
 
-      ::ng-deep .popover {
-        margin-top: -2px;
-        margin-left: 28px !important;
-        border-color: $color-pf-black-500;
-
-        &.right > .arrow {
-          border-right-color: $color-pf-black-500;
-        }
-      }
-
       a {
         text-decoration: none;
       }
 
-      .popover-body {
-        a {
-          cursor: pointer;
-          padding: 10px;
-        }
-      }
-
       .square-icon {
-        padding-left: 0;
+        position: relative;
+        cursor: pointer;
 
         .fa.fa-plus-square {
           color: #158acc;
           background-color: white;
           font-size: x-large;
-          margin-left: 17px;
         }
       }
     }
+  }
+}
+
+::ng-deep .flow-view-add-popover {
+  border-color: $color-pf-black-500;
+  transform: translateX(10px);
+
+  .popover-body {
+    a {
+      cursor: pointer;
+      display: inline-block;
+
+      &:not(:last-child) {
+        margin-bottom: 5px;
+      }
+    }
+
+    > div {
+      padding: 5px;
+    }
+  }
+
+  &.right > .arrow {
+    border-right-color: $color-pf-black-500;
+    margin: 0 !important;
+    transform: translateY(-50%);
   }
 }

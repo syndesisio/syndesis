@@ -41,8 +41,6 @@ export class FlowViewStepComponent implements OnChanges {
   // the current state/page of the current step
   @Input() currentState: string;
 
-  @ViewChild('connectionInfoPop') connectionInfoPop: PopoverDirective;
-  @ViewChild('connectionImgPop') connectionImgPop: PopoverDirective;
   @ViewChild('datamapperInfoPop') datamapperInfoPop: PopoverDirective;
 
   inputDataShapeText: string;
@@ -60,32 +58,6 @@ export class FlowViewStepComponent implements OnChanges {
 
   get currentStepKind() {
     return this.flowPageService.getCurrentStepKind(this.route);
-  }
-
-  showInfoPopover() {
-    this.connectionInfoPop.show();
-  }
-
-  showInfoPopoverCollapsed() {
-    if (!this.step || this.step.stepKind !== ENDPOINT) {
-      return;
-    }
-    const currentStep = this.currentFlowService.getStep(this.currentPosition);
-    if (currentStep && currentStep.kind === DATA_MAPPER) {
-      this.connectionImgPop.show();
-    }
-  }
-
-  hideInfoPopoverCollapsed() {
-    this.connectionImgPop.hide();
-  }
-
-  hideInfoPopover() {
-    this.connectionInfoPop.hide();
-  }
-
-  toggleInfoPopover() {
-    this.connectionInfoPop.toggle();
   }
 
   toggleAddDatamapperInfo() {
