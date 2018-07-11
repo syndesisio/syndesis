@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, HostBinding } from '@angular/core';
 
 import { Integration, IntegrationStatusDetail, I18NService, StringMap } from '@syndesis/ui/platform';
 import { ConfigService } from '@syndesis/ui/config.service';
@@ -6,41 +6,47 @@ import { ConfigService } from '@syndesis/ui/config.service';
 @Component({
   selector: 'syndesis-integration-status-detail',
   template: `
-    <ng-container *ngIf="statusDetail">
-      <div>
-        <i [innerHtml]="statusDetailText"></i>&nbsp;
-        <span *ngIf="logUrl" [innerHtml]="'log-link' | synI18n: logUrl"></span>
-      </div>
-      <div class="progress progress-xs">
-        <div class="progress-bar"
-              role="progressbar"
-              [ngStyle]="barWidth">
-              <span class="sr-only">{{ 'bar-width' | synI18n: barWidth.width }}</span>
-              </div>
-      </div>
-    </ng-container>
-    <!-- this is a fallback -->
-    <ng-container *ngIf="!statusDetail">
-      <div class="spinner spinner-sm spinner-inline"></div>
-      <ng-container [ngSwitch]="integration.targetState">
-        <ng-container *ngSwitchCase="'Published'">
-          {{ 'integrations.publishing' | synI18n }}
-        </ng-container>
-        <ng-container *ngSwitchCase="'Unpublished'">
-          {{ 'integrations.unpublishing' | synI18n }}
-        </ng-container>
-        <ng-container *ngSwitchDefault>
-          {{ 'integrations.pending' | synI18n }}
+    <div class="integration-status-detail">
+      <ng-container *ngIf="statusDetail">
+        <div>
+          <i [innerHtml]="statusDetailText"></i>&nbsp;
+          <span class="pull-right" *ngIf="logUrl" [innerHtml]="'log-link' | synI18n: logUrl"></span>
+        </div>
+        <div class="progress progress-xs">
+          <div class="progress-bar"
+                role="progressbar"
+                [ngStyle]="barWidth">
+                <span class="sr-only">{{ 'bar-width' | synI18n: barWidth.width }}</span>
+                </div>
+        </div>
+      </ng-container>
+      <!-- this is a fallback -->
+      <ng-container *ngIf="!statusDetail">
+        <div class="spinner spinner-sm spinner-inline"></div>
+        <ng-container [ngSwitch]="integration.targetState">
+          <ng-container *ngSwitchCase="'Published'">
+            {{ 'integrations.publishing' | synI18n }}
+          </ng-container>
+          <ng-container *ngSwitchCase="'Unpublished'">
+            {{ 'integrations.unpublishing' | synI18n }}
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            {{ 'integrations.pending' | synI18n }}
+          </ng-container>
         </ng-container>
       </ng-container>
-    </ng-container>
+    </div>
   `,
   styles: [
-    `
-      progress: {
-        padding: 0;
-      }
-    `
+  `
+    .integration-status-detail {
+      width: 180px;
+    }
+    .integration-status-detail .progress.progress-xs: {
+      padding: 0;
+      margin-bottom: 0;
+    }
+  `
   ]
 })
 export class IntegrationStatusDetailComponent implements OnChanges {
