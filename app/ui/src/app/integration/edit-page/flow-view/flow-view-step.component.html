@@ -50,7 +50,7 @@
     <!-- Connection Steps -->
     <div *ngSwitchCase="'endpoint'"
          [ngClass]="getParentActiveClass()"
-         class="step-container clearfix"> 
+         class="step-container clearfix">
 
       <!-- Connection Title -->
       <div [ngClass]="getParentClass()"
@@ -153,15 +153,15 @@
         <dt>
           Name:
         </dt>
-        <dd class="syn-truncate__ellipsis" title="{{ step.connection?.name }}">
-          {{ step.connection?.name || 'n/a' }}
+        <dd class="syn-truncate__ellipsis" title="{{ step.connection?.name || step.name || 'Value not specified' }}">
+          {{ step.connection?.name || step.name || 'n/a' }}
         </dd>
       </dl>
       <dl>
         <dt>
           Action:
         </dt>
-        <dd class="syn-truncate__ellipsis" title="{{ step.action?.name }}">
+        <dd class="syn-truncate__ellipsis" title="{{ step.action?.name || 'Value not specified' }}">
           {{ step.action?.name || 'n/a' }}
         </dd>
       </dl>
@@ -169,7 +169,7 @@
         <dt>
           Data Type:
         </dt>
-        <dd class="syn-truncate__ellipsis" title="{{ inputDataShapeText || outputDataShapeText }}">
+        <dd class="syn-truncate__ellipsis" title="{{ inputDataShapeText || outputDataShapeText || 'Value not specified' }}">
           {{ inputDataShapeText || outputDataShapeText || 'n/a' }}
         </dd>
       </dl>
