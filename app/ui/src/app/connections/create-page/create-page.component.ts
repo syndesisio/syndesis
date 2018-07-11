@@ -13,13 +13,21 @@ import {
 
 const category = getCategory('Connections');
 
+const CONNECTION_BASICS = 'connection-basics';
+const CONFIGURE_FIELDS = 'configure-fields';
+const REVIEW = 'review';
+
+const CONNECTION_BASICS_INDEX = 1;
+const CONFIGURE_FIELDS_INDEX = 2;
+const REVIEW_INDEX = 3;
+
 @Component({
   selector: 'syndesis-connection-create-page',
   templateUrl: 'create-page.component.html',
   styleUrls: ['./create-page.component.scss']
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
-  currentActiveStep = 1;
+  currentActiveStep = CONNECTION_BASICS_INDEX;
 
   constructor(
     public current: CurrentConnectionService,
@@ -46,11 +54,11 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     const page = this.getCurrentPage();
     const connection = this.current.connection;
     switch (page) {
-      case 'connection-basics':
+      case CONNECTION_BASICS:
         return this.connection.name && this.connection.connector;
-      case 'configure-fields':
+      case CONFIGURE_FIELDS:
         return this.current.formGroup && this.current.formGroup.valid;
-      case 'review':
+      case REVIEW:
         return this.current.formGroup && this.current.formGroup.valid;
       default:
         return true;
@@ -60,7 +68,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
   showBack() {
     const page = this.getCurrentPage();
     switch (page) {
-      case 'connection-basics':
+      case CONNECTION_BASICS:
         return false;
       default:
         return true;
@@ -70,11 +78,11 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
   showNextButton() {
     const page = this.getCurrentPage();
     switch (page) {
-      case 'connection-basics':
+      case CONNECTION_BASICS:
         return false;
-      case 'configure-fields':
+      case CONFIGURE_FIELDS:
         return !this.current.hasCredentials();
-      case 'review':
+      case REVIEW:
         return false;
       default:
         return true;
@@ -86,21 +94,23 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.currentActiveStep--;
     const page = this.getCurrentPage();
     const target = [];
     switch (page) {
-      case 'connection-basics':
+      case CONNECTION_BASICS:
         target.push('..');
         break;
-      case 'configure-fields':
-        target.push('connection-basics');
+      case CONFIGURE_FIELDS:
+        this.currentActiveStep = CONNECTION_BASICS_INDEX;
+        target.push(CONNECTION_BASICS);
         break;
-      case 'review':
+      case REVIEW:
         if (!this.current.connection.connector.properties) {
-          target.push('connection-basics');
+          this.currentActiveStep = CONNECTION_BASICS_INDEX;
+          target.push(CONNECTION_BASICS);
         } else {
-          target.push('configure-fields');
+          this.currentActiveStep = CONFIGURE_FIELDS_INDEX;
+          target.push(CONFIGURE_FIELDS);
         }
         break;
       default:
@@ -115,19 +125,21 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
    *  TODO this is terrible, the page flow should be handled in the individual steps
    */
   goForward() {
-    this.currentActiveStep++;
     const page = this.getCurrentPage();
     const target = [];
     switch (page) {
-      case 'connection-basics':
+      case CONNECTION_BASICS:
         if (!this.current.connection.connector.properties) {
-          target.push('review');
+          this.currentActiveStep = REVIEW_INDEX;
+          target.push(REVIEW);
         } else {
-          target.push('configure-fields');
+          this.currentActiveStep = CONFIGURE_FIELDS_INDEX;
+          target.push(CONFIGURE_FIELDS);
         }
         break;
-      case 'configure-fields':
-        target.push('review');
+      case CONFIGURE_FIELDS:
+        this.currentActiveStep = REVIEW_INDEX;
+        target.push(REVIEW);
         break;
       default:
         break;
@@ -151,23 +163,23 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
           () => 'Credentials: ' + JSON.stringify(this.current.credentials)
         );
         log.infoc(() => 'hasCredentials: ' + this.current.hasCredentials());
-        if (!this.current.hasConnector() && page !== 'connection-basics') {
+        if (!this.current.hasConnector() && page !== CONNECTION_BASICS) {
           setTimeout(() => {
-            this.router.navigate(['connection-basics'], {
+            this.router.navigate([CONNECTION_BASICS], {
               relativeTo: this.route
             });
           }, 10);
           return;
         } else if (
           this.current.hasConnector() &&
-          page === 'connection-basics'
+          page === CONNECTION_BASICS
         ) {
           this.goForward();
         }
         if (
           this.current.oauthStatus &&
           this.current.oauthStatus.status === 'SUCCESS' &&
-          page === 'review'
+          page === REVIEW
         ) {
           this.currentActiveStep++;
           this.goForward();
