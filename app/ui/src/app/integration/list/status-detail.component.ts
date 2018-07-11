@@ -8,32 +8,36 @@ import { ConfigService } from '@syndesis/ui/config.service';
   template: `
     <div class="integration-status-detail">
       <ng-container *ngIf="statusDetail">
-        <div>
-          <i [innerHtml]="statusDetailText"></i>&nbsp;
-          <span class="pull-right" *ngIf="logUrl" [innerHtml]="'log-link' | synI18n: logUrl"></span>
-        </div>
-        <div class="progress progress-xs">
-          <div class="progress-bar"
-                role="progressbar"
-                [ngStyle]="barWidth">
-                <span class="sr-only">{{ 'bar-width' | synI18n: barWidth.width }}</span>
-                </div>
+        <div class="statusDetail">
+          <div>
+            <i [innerHtml]="statusDetailText"></i>&nbsp;
+            <span class="pull-right" *ngIf="logUrl" [innerHtml]="'log-link' | synI18n: logUrl"></span>
+          </div>
+          <div class="progress progress-xs">
+            <div class="progress-bar"
+                  role="progressbar"
+                  [ngStyle]="barWidth">
+                  <span class="sr-only">{{ 'bar-width' | synI18n: barWidth.width }}</span>
+                  </div>
+          </div>
         </div>
       </ng-container>
       <!-- this is a fallback -->
       <ng-container *ngIf="!statusDetail">
-        <div class="spinner spinner-sm spinner-inline"></div>
-        <ng-container [ngSwitch]="integration.targetState">
-          <ng-container *ngSwitchCase="'Published'">
-            {{ 'integrations.publishing' | synI18n }}
+        <div class="statusState">
+          <div class="spinner spinner-sm spinner-inline"></div>
+          <ng-container [ngSwitch]="integration.targetState">
+            <ng-container *ngSwitchCase="'Published'">
+              {{ 'integrations.publishing' | synI18n }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'Unpublished'">
+              {{ 'integrations.unpublishing' | synI18n }}
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              {{ 'integrations.pending' | synI18n }}
+            </ng-container>
           </ng-container>
-          <ng-container *ngSwitchCase="'Unpublished'">
-            {{ 'integrations.unpublishing' | synI18n }}
-          </ng-container>
-          <ng-container *ngSwitchDefault>
-            {{ 'integrations.pending' | synI18n }}
-          </ng-container>
-        </ng-container>
+        </div>
       </ng-container>
     </div>
   `,
@@ -42,9 +46,18 @@ import { ConfigService } from '@syndesis/ui/config.service';
     .integration-status-detail {
       width: 180px;
     }
-    .integration-status-detail .progress.progress-xs: {
-      padding: 0;
-      margin-bottom: 0;
+    .integration-status-detail .statusDetail {
+      position: relative;
+      transform: translateY(-4px);
+    }
+    .integration-status-detail .progress.progress-xs {
+      position: absolute;
+      top: 100%;
+      width: 100%;
+    }
+    .integration-status-detail .statusState {
+      display: inline-flex;
+      align-items: center;
     }
   `
   ]
