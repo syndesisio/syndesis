@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
-import { ModalService } from '@syndesis/ui/common';
+import { ModalService, NavigationService } from '@syndesis/ui/common';
 import {
   ApiConnectorState,
   ApiConnectorStore,
@@ -42,7 +42,8 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private modalService: ModalService,
-    private apiConnectorStore: Store<ApiConnectorStore>
+    private apiConnectorStore: Store<ApiConnectorStore>,
+    private nav: NavigationService
   ) {}
 
   ngOnInit() {
@@ -67,6 +68,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
       .pipe(map(apiConnectorState => apiConnectorState.createRequest))
       .pipe(first(request => !!request && request.isComplete))
       .subscribe(() => this.redirectBack());
+    this.nav.hide();
   }
 
   showCancelModal(): void {
@@ -107,6 +109,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.modalService.unregisterModal(this.cancelModalId);
     this.apiConnectorStore.dispatch(ApiConnectorActions.createCancel());
+    this.nav.show();
   }
 
   private redirectBack(): void {
