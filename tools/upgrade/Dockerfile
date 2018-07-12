@@ -1,7 +1,7 @@
 FROM centos:7
 
 ARG version=latest
-ARG openshift_yum_repo=centos-release-openshift-origin37
+ARG openshift_yum_repo=centos-release-openshift-origin39
 ARG openjdk_rpm=java-1.8.0-openjdk-headless
 
 WORKDIR /opt
@@ -12,7 +12,9 @@ ENV KUBECONFIG=/opt/kube-config \
     SYNDESIS_VERSION=${version}
 
 # Install jq & oc
-RUN yum install -y "$openshift_yum_repo" \
+# Enable EPEL for "uniguruma" package (required by jq)
+RUN yum install -y "epel-release" \
+ && yum install -y "$openshift_yum_repo" \
  && yum install -y \
         "$openjdk_rpm" \
         "tree" \
