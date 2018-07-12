@@ -46,6 +46,7 @@
     <module>gmail</module>
     <module>http</module>
     <module>kafka</module>
+    <module>log</module>
     <module>mqtt</module>
     <module>rest-swagger</module>
     <module>salesforce</module>

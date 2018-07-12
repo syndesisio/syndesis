@@ -1,0 +1,137 @@
+{
+      "id": "log",
+      "name": "Log",
+      "description": "Log the exchange with different options",
+      "icon": "fa-puzzle-piece",
+      "dependencies": [
+          {
+              "type": "MAVEN",
+              "id": "@project.groupId@:@project.artifactId@:@project.version@"
+          }
+      ],
+      "configuredProperties": {},
+      "actions": [
+        {
+            "name": "Simple Logger",
+            "description": "Simple Logger",
+            "id": "io.syndesis:log-action",
+            "pattern": "To",
+            "actionType": "connector",
+            "descriptor": {
+                "componentScheme": "log",
+                "inputDataShape": {
+                    "kind": "none"
+                },
+                "outputDataShape": {
+                    "kind": "none"
+                },
+                "configuredProperties": {
+                    "loggerName": "syndesis-log"
+                },
+                "propertyDefinitionSteps": [
+                    {
+                        "description": "Log Level",
+                        "name": "level",
+                        "properties": {
+                            "level": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "Log Level.",
+                                "displayName": "log level",
+                                "javaType": "java.lang.String",
+                                "enum":[
+                                    {
+                                        "value":"ERROR",
+                                        "label":"ERROR"
+                                    },
+                                    {
+                                        "value":"WARN",
+                                        "label":"WARN"
+                                    },
+                                    {
+                                        "value":"INFO",
+                                        "label":"INFO"
+                                    },
+                                    {
+                                        "value":"DEBUG",
+                                        "label":"DEBUG"
+                                    },
+                                    {
+                                        "value":"TRACE",
+                                        "label":"TRACE"
+                                    },
+                                    {
+                                        "value":"OFF",
+                                        "label":"OFF"
+                                    }
+                                ],
+                                "kind": "parameter",
+                                "required": true,
+                                "secret": false,
+                                "type": "string",
+                                "tags": [],
+                                "defaultValue" : "INFO"
+                            },
+                            "showExchangeId": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "whether or not to show Exchange Id in the Log.",
+                                "displayName": "Log message Id",
+                                "javaType": "boolean",
+                                "kind": "parameter",
+                                "required": true,
+                                "secret": false,
+                                "type": "boolean",
+                                "tags": [],
+                                "enum": [],
+                                "defaultValue" : true
+                            },
+                            "showBody": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "whether or not to show Body content in the Log.",
+                                "displayName": "Log Body",
+                                "javaType": "boolean",
+                                "kind": "parameter",
+                                "required": true,
+                                "secret": false,
+                                "type": "boolean",
+                                "tags": [],
+                                "enum": [],
+                                "defaultValue" : true
+                            },
+                            "showHeaders": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "whether or not to show Headers in the Log.",
+                                "displayName": "Log Headers",
+                                "javaType": "boolean",
+                                "kind": "parameter",
+                                "required": true,
+                                "secret": false,
+                                "type": "boolean",
+                                "tags": [],
+                                "enum": [],
+                                "defaultValue" : false
+                            },
+                            "showAll": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "whether or not to log everything (very verbose).",
+                                "displayName": "Log everything",
+                                "javaType": "boolean",
+                                "kind": "parameter",
+                                "required": true,
+                                "secret": false,
+                                "type": "boolean",
+                                "tags": [],
+                                "enum": [],
+                                "defaultValue" : false
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

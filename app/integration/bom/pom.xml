@@ -260,6 +260,11 @@
         <artifactId>connector-timer</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-log</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
