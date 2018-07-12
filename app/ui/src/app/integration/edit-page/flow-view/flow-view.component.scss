@@ -49,6 +49,7 @@
         align-items: center;
         justify-content: center;
         position: relative;
+        flex-shrink: 0;
       }
 
       .step:not(:last-child) .icon-container {
