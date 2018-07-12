@@ -1,0 +1,112 @@
+{
+  "id": "telegram",
+  "name": "Telegram",
+  "description": "Send and receive messages to/from a Telegram chat",
+  "icon": "fa-puzzle-piece",
+  "dependencies": [
+      {
+           "type": "MAVEN",
+           "id": "@project.groupId@:@project.artifactId@:@project.version@"
+      }
+  ],
+  "properties": {
+    "authorizationToken": {
+      "kind": "property",
+      "displayName": "Authorization Token",
+      "group": "security",
+      "label": "security",
+      "required": true,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [],
+      "deprecated": false,
+      "secret": true,
+      "componentProperty": false,
+      "description": "Telegram Bot Authorization Token that can be obtained from the Telegram BotFather"
+    }
+  },
+  "actions": [
+    {
+      "name": "Receive Messages",
+      "description": "Receive all messages sent to the chat bot",
+      "id": "io.syndesis:telegram-chat-from-action",
+      "pattern": "From",
+      "actionType": "connector",
+      "descriptor": {
+        "componentScheme": "telegram",
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "type": "org.apache.camel.component.telegram.model.IncomingMessage"
+        },
+        "configuredProperties": {
+          "type": "bots"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Chat id",
+            "name": "chatId",
+            "properties": {
+              "chatId": {
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "The telegram's Chat Id.",
+                "displayName": "Chat Id",
+                "javaType": "String",
+                "kind": "parameter",
+                "required": false,
+                "secret": false,
+                "type": "string",
+                "tags": [],
+                "enum": []
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Send a Text Message",
+      "description": "Send a messages to the chat (through the bot).",
+      "id": "io.syndesis:telegram-chat-to-action",
+      "pattern": "To",
+      "actionType": "connector",
+      "descriptor": {
+        "componentScheme": "telegram",
+        "inputDataShape": {
+          "kind": "java",
+          "type": "org.apache.camel.component.telegram.model.OutgoingTextMessage"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "configuredProperties": {
+          "type": "bots"
+        },
+        "propertyDefinitionSteps": [
+            {
+                "description": "Chat id",
+                "name": "chatId",
+                "properties": {
+                    "chatId": {
+                        "componentProperty": false,
+                        "deprecated": false,
+                        "description": "The telegram's Chat Id, if not set will use CamelTelegramChatId from the incoming exchange.",
+                        "displayName": "Chat Id",
+                        "javaType": "String",
+                        "kind": "parameter",
+                        "required": false,
+                        "secret": false,
+                        "type": "string",
+                        "tags": [],
+                        "enum": []
+                    }
+                }
+            }
+        ]
+      }
+    }
+  ]
+}
