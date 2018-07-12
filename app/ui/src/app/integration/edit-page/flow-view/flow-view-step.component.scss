@@ -118,7 +118,8 @@
   ////////////////////////////////////////////////////////////////////////////////
   .menu {
     position: relative;
-    flex: 1 0 auto;
+    flex: 1 1 100%;
+    min-width: 0;
     padding-left: 15px;
     padding-top: 15px;
 
@@ -160,10 +161,8 @@
           align-items: center;
 
           .step-name {
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow-x: hidden;
             text-transform: uppercase;
+            padding-right: 1em;
           }
 
           .step-icons {
