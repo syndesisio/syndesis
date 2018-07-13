@@ -290,7 +290,7 @@
             "properties": {
               "labels": {
                 "kind": "parameter",
-                "displayName": "labels",
+                "displayName": "Labels",
                 "group": "producer",
                 "label": "producer",
                 "required": false,
@@ -298,7 +298,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The labels to use",
+                "labelHint": "Comma separated list of labels",
                 "order": "2"
               },
               "maxResults": {
