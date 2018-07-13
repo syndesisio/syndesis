@@ -1,0 +1,102 @@
+{
+  "id": "irc",
+  "name": "IRC",
+  "description": "Send and receive messages to/from an IRC chat",
+  "icon": "fa-puzzle-piece",
+  "dependencies": [
+      {
+           "type": "MAVEN",
+           "id": "@project.groupId@:@project.artifactId@:@project.version@"
+      }
+  ],
+    "actions": [
+        {
+            "name": "IRC PRIVMSG",
+            "description": "React to privmsg",
+            "id": "io.syndesis:irc-privmsg",
+            "pattern": "From",
+            "actionType": "connector",
+            "descriptor": {
+                "componentScheme": "irc",
+                "inputDataShape": {
+                    "kind": "any"
+                },
+                "outputDataShape": {
+                    "kind": "any"
+                },
+                "configuredProperties": {
+                    "autoRejoin": true,
+                    "onNick": false,
+                    "onQuit": false,
+                    "onJoin": false,
+                    "onKick": false,
+                    "onMode": false,
+                    "onPart": false,
+                    "onTopic": false,
+                    "onPrivmsg": true
+
+                },
+                "propertyDefinitionSteps": [
+                    {
+                        "name": "properties",
+                        "description": "Properties",
+                        "properties": {
+                            "nickname": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "Nickname",
+                                "displayName": "nickname",
+                                "javaType": "string",
+                                "kind": "parameter",
+                                "required": true,
+                                "secret": false,
+                                "type": "string",
+                                "tags": [],
+                                "enum": []
+                            },
+                            "hostname": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "hostname",
+                                "displayName": "hostname",
+                                "javaType": "string",
+                                "kind": "parameter",
+                                "required": true,
+                                "secret": false,
+                                "type": "string",
+                                "tags": [],
+                                "enum": []
+                            },
+                            "port": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "port",
+                                "displayName": "port_",
+                                "javaType": "int",
+                                "kind": "parameter",
+                                "required": true,
+                                "secret": false,
+                                "type": "int",
+                                "tags": [],
+                                "enum": []
+                            },
+                            "channels": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "channels",
+                                "displayName": "channels",
+                                "javaType": "string",
+                                "kind": "parameter",
+                                "required": true,
+                                "secret": false,
+                                "type": "string",
+                                "tags": [],
+                                "enum": []
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

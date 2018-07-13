@@ -125,6 +125,11 @@
       <artifactId>connector-telegram</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connector-irc</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
