@@ -45,6 +45,7 @@
     <module>ftp</module>
     <module>gmail</module>
     <module>http</module>
+    <module>irc</module>
     <module>kafka</module>
     <module>log</module>
     <module>mqtt</module>
