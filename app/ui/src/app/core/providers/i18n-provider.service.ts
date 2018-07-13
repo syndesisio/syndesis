@@ -54,6 +54,7 @@ export class I18NProviderService extends I18NService {
     // config.json overrides
     switch (dictionaryKey) {
       case 'shared.project.name':
+      case 'project.name':
         return this.configService.getSettings('branding', 'appName');
       default:
     }
