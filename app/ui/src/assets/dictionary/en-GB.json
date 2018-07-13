@@ -184,6 +184,9 @@
       "home": "Home",
       "loading": "loading",
       "email": "fuse-online-tech-preview@redhat.com",
+      "consoleurl": "(tokenized)",
+      "pod-logs-url": "{{consoleurl}}/project/{{0}}/browse/pods/{{1}}?tab=logs",
+      "pod-events-url": "{{consoleurl}}/project/{{0}}/browse/pods/{{1}}?tab=events",
       "project": {
         "name": "Syndesis (tokenized)"
       },

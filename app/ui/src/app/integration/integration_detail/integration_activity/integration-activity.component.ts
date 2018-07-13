@@ -7,7 +7,8 @@ import {
   Integration,
   IntegrationDeployment,
   IntegrationSupportService,
-  Step
+  Step,
+  I18NService
 } from '@syndesis/ui/platform';
 import { PaginationConfig } from 'patternfly-ng';
 import { Subscription, forkJoin } from 'rxjs';
@@ -38,7 +39,9 @@ export class IntegrationActivityComponent implements OnInit, OnDestroy {
 
   constructor(
     private integrationSupportService: IntegrationSupportService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private i18NService: I18NService
+
   ) {}
 
   ngOnInit() {
@@ -156,11 +159,10 @@ export class IntegrationActivityComponent implements OnInit, OnDestroy {
 
     this.openshiftConsoleURL = null;
     if (this.allActivities.length > 0) {
-      const base = this.configService.getSettings('consoleUrl');
       const pod = this.allActivities[0].pod;
       const project = this.configService.getSettings('project');
-      if (base && pod && project) {
-        this.openshiftConsoleURL = `${base}/project/${project}/browse/pods/${pod}?tab=logs`;
+      if (pod && project) {
+        this.openshiftConsoleURL = this.i18NService.localize('pod-logs-url', [project, pod]);
       }
     }
 

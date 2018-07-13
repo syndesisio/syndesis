@@ -33,11 +33,14 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.monitoring.IntegrationDeploymentDetailedState;
 import io.syndesis.common.model.monitoring.IntegrationDeploymentStateDetails;
+import io.syndesis.common.model.monitoring.LinkType;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
 
 import static io.syndesis.common.model.integration.IntegrationDeploymentState.Pending;
 import static io.syndesis.common.model.integration.IntegrationDeploymentState.Published;
+import static io.syndesis.common.model.monitoring.LinkType.EVENTS;
+import static io.syndesis.common.model.monitoring.LinkType.LOGS;
 
 /**
  * Monitor Integrations based on their deployment state.
@@ -51,8 +54,6 @@ public class PublishingStateMonitor implements StateHandler {
     static final String BUILD_POD_NAME_ANNOTATION = "openshift.io/build.pod-name";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PublishingStateMonitor.class);
-    private static final String POD_LOGS_URL = "%sapi/v1/namespaces/%s/pods/%s/logs";
-    private static final String POD_EVENTS_URL = "%sapi/v1/namespaces/%s/pods/%s/events";
 
     private final NamespacedOpenShiftClient client;
     private final DataManager dataManager;
@@ -82,7 +83,8 @@ public class PublishingStateMonitor implements StateHandler {
         if (targetState.equals(Published)) {
 
             IntegrationDeploymentDetailedState detailedState = null;
-            String[] podUrls = new String[] { null, null };
+            String podName = null;
+            LinkType linkType = null;
 
             // work backwards, in reverse order: deployed pod, build pod, default to assembling
             // 1. look for deployed pod
@@ -91,6 +93,7 @@ public class PublishingStateMonitor implements StateHandler {
 
                 // TODO: handle pod scaling in the future
                 final Pod pod = podList.getItems().get(0);
+                podName = pod.getMetadata().getName();
                 // check if deployment is ready
                 if (Readiness.isPodReady(pod)) {
                     // no details needed once deployed successfully!!!
@@ -98,9 +101,9 @@ public class PublishingStateMonitor implements StateHandler {
                     // TODO need a cleanup handler to remove successfully published state details??
                     deleteStateDetails(compositeId);
                 } else {
-                    podUrls = getPodUrls(pod);
+                    linkType = getPodUrls(pod);
                     // pending deployment pod
-                    detailedState = null != podUrls[0] ? IntegrationDeploymentDetailedState.DEPLOYING : IntegrationDeploymentDetailedState.STARTING;
+                    detailedState = EVENTS == linkType ? IntegrationDeploymentDetailedState.DEPLOYING : IntegrationDeploymentDetailedState.STARTING;
                 }
 
             } else {
@@ -108,13 +111,16 @@ public class PublishingStateMonitor implements StateHandler {
                 final BuildList buildList = getBuildList(integrationId, version);
                 if (!buildList.getItems().isEmpty()) {
 
-                    final String podName = buildList.getItems().get(0).getMetadata().getAnnotations().get(BUILD_POD_NAME_ANNOTATION);
+                    podName = buildList.getItems().get(0).getMetadata().getAnnotations().get(BUILD_POD_NAME_ANNOTATION);
                     if (podName != null) {
                         final Pod pod = getBuildPod(podName);
                         if (pod != null) {
-                            podUrls = getPodUrls(pod);
+                            linkType = getPodUrls(pod);
                             // pending deployment pod
-                            detailedState = (null != podUrls[0]) ? IntegrationDeploymentDetailedState.ASSEMBLING : IntegrationDeploymentDetailedState.BUILDING;
+                            detailedState = EVENTS == linkType ? IntegrationDeploymentDetailedState.ASSEMBLING : IntegrationDeploymentDetailedState.BUILDING;
+                        } else {
+                            // clear podName, since it doesn't exist yet
+                            podName = null;
                         }
                     }
                 }
@@ -125,14 +131,8 @@ public class PublishingStateMonitor implements StateHandler {
             }
 
             if (detailedState != null) {
-                IntegrationDeploymentStateDetails stateDetails = new IntegrationDeploymentStateDetails.Builder()
-                    .id(compositeId)
-                    .integrationId(integrationId)
-                    .deploymentVersion(Integer.valueOf(version))
-                    .detailedState(detailedState)
-                    .eventsUrl(Optional.ofNullable(podUrls[0]))
-                    .logsUrl(Optional.ofNullable(podUrls[1]))
-                    .build();
+                IntegrationDeploymentStateDetails stateDetails = getStateDetails(integrationId, version, compositeId,
+                        detailedState, podName, linkType);
                 if (dataManager.fetch(IntegrationDeploymentStateDetails.class, compositeId) != null) {
                     dataManager.update(stateDetails);
                 } else {
@@ -141,6 +141,19 @@ public class PublishingStateMonitor implements StateHandler {
             }
         }
 
+    }
+
+    private IntegrationDeploymentStateDetails getStateDetails(String integrationId, String version, String
+            compositeId, IntegrationDeploymentDetailedState detailedState, String podName, LinkType linkType) {
+        return new IntegrationDeploymentStateDetails.Builder()
+            .id(compositeId)
+            .integrationId(integrationId)
+            .deploymentVersion(Integer.valueOf(version))
+            .detailedState(detailedState)
+            .namespace(client.getNamespace())
+            .podName(Optional.ofNullable(podName))
+            .linkType(Optional.ofNullable(linkType))
+            .build();
     }
 
     protected Pod getBuildPod(String podName) {
@@ -161,31 +174,23 @@ public class PublishingStateMonitor implements StateHandler {
                         .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId).list();
     }
 
-    private String[] getPodUrls(Pod pod) {
-        String eventsUrl = null;
-        String logsUrl = null;
+    protected LinkType getPodUrls(Pod pod) {
+        LinkType linkType;
+
         final PodStatus status = pod.getStatus();
         switch (status.getPhase()) {
         case "Pending":
         case "Unknown":
             // get pod events url
-            eventsUrl = getEventsUrl(client, pod);
+            linkType = EVENTS;
             break;
         default:
             // Running, Succeeded or Failed
             // get pod logs url
-            logsUrl = getLogsUrl(client, pod);
+            linkType = LOGS;
             break;
         }
-        return new String[]{ eventsUrl, logsUrl };
-    }
-
-    static String getEventsUrl(NamespacedOpenShiftClient client, Pod pod) {
-        return String.format(POD_EVENTS_URL, client.getMasterUrl(), client.getNamespace(), pod.getMetadata().getName());
-    }
-
-    static String getLogsUrl(NamespacedOpenShiftClient client, Pod pod) {
-        return String.format(POD_LOGS_URL, client.getMasterUrl(), client.getNamespace(), pod.getMetadata().getName());
+        return linkType;
     }
 
     private void deleteStateDetails(String id) {

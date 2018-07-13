@@ -57,16 +57,22 @@ public interface IntegrationDeploymentStateDetails extends WithId<IntegrationDep
     IntegrationDeploymentDetailedState getDetailedState();
 
     /**
-     * POD events URL for either the build pod or deployment pod, depending on current detailed state.
-     * @return pod events url.
+     * OpenShift namespace for (build/deployment) pod being monitored.
+     * @return OpenShift namespace.
      */
-    Optional<String> getEventsUrl();
+    Optional<String> getNamespace();
 
     /**
-     * POD logs URL for either the build or deployment pod, depending on detailed state.
-     * @return pod logs url.
+     * POD name of pod (build/deployment) being monitored.
+     * @return currently monitored pod name.
      */
-    Optional<String> getLogsUrl();
+    Optional<String> getPodName();
+
+    /**
+     * Type of log link being returned, i.e. whether events url or logs url should be displayed.
+     * @return
+     */
+    Optional<LinkType> getLinkType();
 
     class Builder extends ImmutableIntegrationDeploymentStateDetails.Builder {
         // allow access to IntegrationDeploymentStateDetails.Builder
