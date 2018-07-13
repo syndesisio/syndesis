@@ -69,22 +69,10 @@ public interface IntegrationDeploymentStateDetails extends WithId<IntegrationDep
     Optional<String> getPodName();
 
     /**
-     * Type of log link being returned, i.e. whether eventsUrl or logsUrl is valid.
+     * Type of log link being returned, i.e. whether events url or logs url should be displayed.
      * @return
      */
     Optional<LinkType> getLinkType();
-
-    /**
-     * POD events URL for either the build pod or deployment pod, depending on current detailed state.
-     * @return pod events url.
-     */
-    Optional<String> getEventsUrl();
-
-    /**
-     * POD logs URL for either the build or deployment pod, depending on detailed state.
-     * @return pod logs url.
-     */
-    Optional<String> getLogsUrl();
 
     class Builder extends ImmutableIntegrationDeploymentStateDetails.Builder {
         // allow access to IntegrationDeploymentStateDetails.Builder

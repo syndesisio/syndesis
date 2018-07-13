@@ -172,29 +172,29 @@ public class DeploymentStateMonitorControllerTest {
         return Arrays.asList(
                 // no deployment or build pod yet
                 new Object[]{null, null, null,
-                        getDetails(ASSEMBLING, TEST_NAMESPACE, null, null, null, null)},
+                        getDetails(ASSEMBLING, TEST_NAMESPACE, null, null)},
                 // build without build pod
                 new Object[] {null, build, null,
-                        getDetails(ASSEMBLING, TEST_NAMESPACE, null, null, null, null)},
+                        getDetails(ASSEMBLING, TEST_NAMESPACE, null, null)},
                 // build pod with Pending status
                 new Object[] {null, build, pod = getPod(PENDING_STATUS, BUILD_POD_NAME),
-                        getDetails(ASSEMBLING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.EVENTS, getEventsUrl(pod), null)},
+                        getDetails(ASSEMBLING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.EVENTS)},
                 // build pod with Running status
                 new Object[] {null, build, pod = getPod(RUNNING_STATUS, BUILD_POD_NAME),
-                        getDetails(BUILDING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.LOGS, null, getLogsUrl(pod))},
+                        getDetails(BUILDING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.LOGS)},
                 // build pod with Succeeded status, no deployment pod yet
                 new Object[] {null, build, pod = getPod(SUCCEEDED_STATUS, BUILD_POD_NAME),
-                        getDetails(BUILDING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.LOGS, null, getLogsUrl(pod))},
+                        getDetails(BUILDING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.LOGS)},
                 // deployment pod with Pending status
                 new Object[] { pod = getPod(PENDING_STATUS, DEPLOYMENT_POD_NAME), null, null,
-                        getDetails(DEPLOYING, TEST_NAMESPACE, DEPLOYMENT_POD_NAME, LinkType.EVENTS, getEventsUrl(pod), null)},
+                        getDetails(DEPLOYING, TEST_NAMESPACE, DEPLOYMENT_POD_NAME, LinkType.EVENTS)},
                 // deployment pod with Running status
                 new Object[] { pod = getPod(RUNNING_STATUS, DEPLOYMENT_POD_NAME), null, null,
-                        getDetails(STARTING, TEST_NAMESPACE, DEPLOYMENT_POD_NAME, LinkType.LOGS, null, getLogsUrl(pod))}
+                        getDetails(STARTING, TEST_NAMESPACE, DEPLOYMENT_POD_NAME, LinkType.LOGS)}
                 );
     }
 
-    private static IntegrationDeploymentStateDetails getDetails(IntegrationDeploymentDetailedState state, String namespace, String podName, LinkType linkType, String eventsUrl, String logsUrl) {
+    private static IntegrationDeploymentStateDetails getDetails(IntegrationDeploymentDetailedState state, String namespace, String podName, LinkType linkType) {
         return new IntegrationDeploymentStateDetails.Builder()
                 .id(DEPLOYMENT_ID)
                 .integrationId(INTEGRATION_ID)
@@ -203,17 +203,7 @@ public class DeploymentStateMonitorControllerTest {
                 .namespace(Optional.ofNullable(namespace))
                 .podName(Optional.ofNullable(podName))
                 .linkType(Optional.ofNullable(linkType))
-                .eventsUrl(Optional.ofNullable(eventsUrl))
-                .logsUrl(Optional.ofNullable(logsUrl))
                 .build();
-    }
-
-    private static String getEventsUrl(Pod pod) {
-        return PublishingStateMonitor.getEventsUrl(client, pod);
-    }
-
-    private static String getLogsUrl(Pod pod) {
-        return PublishingStateMonitor.getLogsUrl(client, pod);
     }
 
     private static Pod getPod(PodStatus status, String name) {
