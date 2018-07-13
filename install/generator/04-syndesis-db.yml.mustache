@@ -65,6 +65,71 @@
       /var/lib/pgsql/sampledb/add-sample-db.sh &>  /proc/1/fd/1
 
 - apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-db
+    name: syndesis-db-maintenance-script
+  data:
+    maintenance.sh: |
+      #!/bin/bash
+      cat << EOF| psql -h syndesis-db -U $POSTGRESQL_USER -d $POSTGRESQL_DATABASE
+      VACUUM FULL ANALYSE jsondb;
+      REINDEX TABLE jsondb;
+      SELECT COUNT(*) FROM jsondb;
+      EOF
+
+- apiVersion: batch/v1beta1
+  kind: CronJob
+  metadata:
+    name: syndesis-db-maintenance
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-db-maintenance
+  spec:
+    schedule: "15 4 * * *"
+    jobTemplate:
+      spec:
+        template:
+          metadata:
+            labels:
+              syndesis.io/app: syndesis
+              syndesis.io/type: infrastructure
+              syndesis.io/component: syndesis-db-maintenance
+          spec:
+            containers:
+            - name: syndesis-db-maintenance
+              env:
+              - name: POSTGRESQL_USER
+                value: ${POSTGRESQL_USER}
+              - name: PGPASSWORD
+                value: ${POSTGRESQL_PASSWORD}
+              - name: POSTGRESQL_DATABASE
+                value: ${POSTGRESQL_DATABASE}
+              image: centos/postgresql-95-centos7
+              command:
+                - /bin/sh
+                - -c
+                - /data/maintenance.sh
+              volumeMounts:
+              - mountPath: /data
+                name: syndesis-db-maintenance-script
+            restartPolicy: Never
+            volumes:
+            - name: syndesis-db-data
+              persistentVolumeClaim:
+                claimName: syndesis-db
+            - configMap:
+                defaultMode: 511
+                name: syndesis-db-maintenance-script
+              name: syndesis-db-maintenance-script
+
+- apiVersion: v1
   kind: Service
   metadata:
     name: syndesis-db
