@@ -57,6 +57,24 @@ public interface IntegrationDeploymentStateDetails extends WithId<IntegrationDep
     IntegrationDeploymentDetailedState getDetailedState();
 
     /**
+     * OpenShift namespace for (build/deployment) pod being monitored.
+     * @return OpenShift namespace.
+     */
+    Optional<String> getNamespace();
+
+    /**
+     * POD name of pod (build/deployment) being monitored.
+     * @return currently monitored pod name.
+     */
+    Optional<String> getPodName();
+
+    /**
+     * Type of log link being returned, i.e. whether eventsUrl or logsUrl is valid.
+     * @return
+     */
+    Optional<LinkType> getLinkType();
+
+    /**
      * POD events URL for either the build pod or deployment pod, depending on current detailed state.
      * @return pod events url.
      */

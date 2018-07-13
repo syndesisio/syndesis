@@ -45,6 +45,7 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.monitoring.IntegrationDeploymentDetailedState;
 import io.syndesis.common.model.monitoring.IntegrationDeploymentStateDetails;
+import io.syndesis.common.model.monitoring.LinkType;
 import io.syndesis.common.util.cache.CacheManager;
 import io.syndesis.common.util.cache.LRUCacheManager;
 import io.syndesis.server.dao.manager.DataManager;
@@ -88,14 +89,16 @@ public class DeploymentStateMonitorControllerTest {
     private DataManager dataManager;
     private static NamespacedOpenShiftClient client;
 
+    public static final String TEST_NAMESPACE = "test-namespace";
+
     static {
         client = Mockito.mock(NamespacedOpenShiftClient.class);
         try {
-            Mockito.when(client.getMasterUrl()).thenReturn(new URL("https://test-cluster"));
+            Mockito.when(client.getOpenshiftUrl()).thenReturn(new URL("https://test-cluster"));
         } catch (MalformedURLException e) {
             fail(e.getMessage());
         }
-        Mockito.when(client.getNamespace()).thenReturn("test-namespace");
+        Mockito.when(client.getNamespace()).thenReturn(TEST_NAMESPACE);
     }
 
     @Before
@@ -169,34 +172,37 @@ public class DeploymentStateMonitorControllerTest {
         return Arrays.asList(
                 // no deployment or build pod yet
                 new Object[]{null, null, null,
-                        getDetails(ASSEMBLING, null, null)},
+                        getDetails(ASSEMBLING, TEST_NAMESPACE, null, null, null, null)},
                 // build without build pod
                 new Object[] {null, build, null,
-                        getDetails(ASSEMBLING, null, null)},
+                        getDetails(ASSEMBLING, TEST_NAMESPACE, null, null, null, null)},
                 // build pod with Pending status
                 new Object[] {null, build, pod = getPod(PENDING_STATUS, BUILD_POD_NAME),
-                        getDetails(ASSEMBLING, getEventsUrl(pod), null)},
+                        getDetails(ASSEMBLING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.EVENTS, getEventsUrl(pod), null)},
                 // build pod with Running status
                 new Object[] {null, build, pod = getPod(RUNNING_STATUS, BUILD_POD_NAME),
-                        getDetails(BUILDING, null, getLogsUrl(pod))},
+                        getDetails(BUILDING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.LOGS, null, getLogsUrl(pod))},
                 // build pod with Succeeded status, no deployment pod yet
                 new Object[] {null, build, pod = getPod(SUCCEEDED_STATUS, BUILD_POD_NAME),
-                        getDetails(BUILDING, null, getLogsUrl(pod))},
+                        getDetails(BUILDING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.LOGS, null, getLogsUrl(pod))},
                 // deployment pod with Pending status
                 new Object[] { pod = getPod(PENDING_STATUS, DEPLOYMENT_POD_NAME), null, null,
-                        getDetails(DEPLOYING, getEventsUrl(pod), null)},
+                        getDetails(DEPLOYING, TEST_NAMESPACE, DEPLOYMENT_POD_NAME, LinkType.EVENTS, getEventsUrl(pod), null)},
                 // deployment pod with Running status
                 new Object[] { pod = getPod(RUNNING_STATUS, DEPLOYMENT_POD_NAME), null, null,
-                        getDetails(STARTING, null, getLogsUrl(pod))}
+                        getDetails(STARTING, TEST_NAMESPACE, DEPLOYMENT_POD_NAME, LinkType.LOGS, null, getLogsUrl(pod))}
                 );
     }
 
-    private static IntegrationDeploymentStateDetails getDetails(IntegrationDeploymentDetailedState state, String eventsUrl, String logsUrl) {
+    private static IntegrationDeploymentStateDetails getDetails(IntegrationDeploymentDetailedState state, String namespace, String podName, LinkType linkType, String eventsUrl, String logsUrl) {
         return new IntegrationDeploymentStateDetails.Builder()
                 .id(DEPLOYMENT_ID)
                 .integrationId(INTEGRATION_ID)
                 .deploymentVersion(INTEGRATION_VERSION)
                 .detailedState(state)
+                .namespace(Optional.ofNullable(namespace))
+                .podName(Optional.ofNullable(podName))
+                .linkType(Optional.ofNullable(linkType))
                 .eventsUrl(Optional.ofNullable(eventsUrl))
                 .logsUrl(Optional.ofNullable(logsUrl))
                 .build();
