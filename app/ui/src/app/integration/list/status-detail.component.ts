@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, HostBinding } from '@angular/core';
 
-import { Integration, IntegrationStatusDetail, I18NService, StringMap } from '@syndesis/ui/platform';
+import { Integration, IntegrationStatusDetail, I18NService, StringMap, ConsoleLinkType } from '@syndesis/ui/platform';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 @Component({
@@ -85,14 +85,16 @@ export class IntegrationStatusDetailComponent implements OnChanges {
                                   current,
                                   total]);
       this.barWidth.width = ((current / total) * 100) + '%';
-      if (statusDetail.logsUrl) {
-        const base = this.configService.getSettings('consoleUrl');
-        if (base) {
-          const logUrl = statusDetail.logsUrl
-            .replace('https://openshift.default.svc/api/v1/namespaces', `${base}/project`)
-            .replace('/pods/', '/browse/pods/')
-            .replace('/logs', '?tab=logs');
-          this.logUrl = logUrl;
+      this.logUrl = undefined;
+      if (statusDetail.linkType && statusDetail.namespace && statusDetail.podName) {
+        switch (statusDetail.linkType) {
+          case ConsoleLinkType.Events:
+            this.logUrl = this.i18NService.localize('pod-events-url', [statusDetail.namespace, statusDetail.podName]);
+            break;
+          case ConsoleLinkType.Logs:
+            this.logUrl = this.i18NService.localize('pod-logs-url', [statusDetail.namespace, statusDetail.podName]);
+            break;
+          default:
         }
       }
     }

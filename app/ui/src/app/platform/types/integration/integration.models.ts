@@ -101,7 +101,17 @@ export interface DeploymentOverview extends BaseEntity {
   integrationVersion: number;
 }
 
-export type DetailedStatus = 'ASSEMBLING' | 'BUILDING' | 'DEPLOYING' | 'STARTING';
+export enum ConsoleLinkType {
+  Events = 'EVENTS',
+  Logs = 'LOGS'
+}
+
+export enum DetailedStatus {
+  Assembling = 'ASSEMBLING',
+  Building = 'BUILDING',
+  Deploying = 'DEPLOYNG',
+  Starting = 'STARTING'
+}
 
 export interface DetailedState {
   value: DetailedStatus;
@@ -111,10 +121,14 @@ export interface DetailedState {
 
 export interface IntegrationStatusDetail {
   detailedState: DetailedState;
-  logsUrl: string;
+  linkType?: ConsoleLinkType;
+  logsUrl?: string;
+  eventsUrl?: string;
   id: string;
   integrationId: string;
   deploymentVersion: number;
+  namespace: string;
+  podName: string;
 }
 
 // this is for the basic filter operation

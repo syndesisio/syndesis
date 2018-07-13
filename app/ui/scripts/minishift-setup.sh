@@ -17,6 +17,7 @@ cp src/config.json.minishift src/config.json
 
 
 sed -i.bu "s#syndesis.192.168.64.2.nip.io#$(oc get route syndesis  --template={{.spec.host}})#" src/config.json
+sed -i.bu "s#https://192.168.64.2:8443#$(minishift console --url)#" src/config.json
 sed -i.bu "s/Syndesis/Syndesis - DEVELOPMENT/" src/config.json
 rm src/config.json.bu
 
