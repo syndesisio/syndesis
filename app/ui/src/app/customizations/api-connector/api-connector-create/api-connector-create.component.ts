@@ -61,11 +61,11 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   }
 
   public onUserSelection(selection: string): void {
-    console.log('User selection changed: ', selection);
+    //console.log('User selection changed: ', selection);
   }
 
   public onUserChange(command: OtCommand): void {
-    console.log('Something happened! ' + JSON.stringify(command));
+    //console.log('Something happened! ' + JSON.stringify(command));
   }
 
   public showDefinitionEditor(): boolean {
@@ -95,10 +95,8 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
           this.apiDef.description = '';
           this.apiDef.id = 'api-1';
           this.apiDef.spec = reader.result;
-          console.log('this.apiDef: ' + this.apiDef);
           this.currentActiveStep = WizardSteps.ReviewApiConnector;
         };
-        //console.log('reader.readAsText(apiConnectorState.specificationFile): ' + JSON.stringify(reader.readAsText(apiConnectorState.specificationFile)));
         reader.readAsText(apiConnectorState.specificationFile);
       });
 

@@ -73,7 +73,6 @@
     "ts-helpers": "1.1.2",
     "typescript-logging": "0.4.0",
     "url": "^0.11.0",
-    "snyk": "^1.85.0",
     "yamljs": "^0.3.0",
     "zone.js": "^0.8.26"
   },
