@@ -4,25 +4,27 @@ import {
   Input,
   Output,
   ViewEncapsulation,
-  OnChanges
+  OnChanges,
+  OnDestroy
 } from '@angular/core';
-import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import {
-  DynamicFormService,
-  DynamicFormControlModel,
-  DynamicFormArrayModel,
-  DynamicInputModel
-} from '@ng-dynamic-forms/core';
+  FormGroup,
+  FormArray,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
 
+import { of, Observable, Subscription } from 'rxjs';
 import { DataShape, IntegrationSupportService } from '@syndesis/ui/platform';
-import { log, getCategory } from '@syndesis/ui/logging';
-import { DATA_MAPPER } from '@syndesis/ui/store';
+import { log } from '@syndesis/ui/logging';
+import { CurrentFlowService } from '@syndesis/ui/integration/edit-page';
 import {
-  CurrentFlowService,
-  FlowEvent
-} from '@syndesis/ui/integration/edit-page';
-import { createBasicFilterModel, findById } from './basic-filter.model';
-import { BasicFilter } from './filter.interface';
+  BasicFilter,
+  getDefaultOps,
+  convertOps,
+  Op,
+  Rule
+} from './filter.interface';
 
 @Component({
   selector: 'syndesis-basic-filter',
@@ -30,14 +32,15 @@ import { BasicFilter } from './filter.interface';
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./basic-filter.component.scss']
 })
-export class BasicFilterComponent implements OnChanges {
-  basicFilterModel: DynamicFormControlModel[];
-  formGroup: FormGroup;
-  predicateControl: FormControl;
-  predicateModel: DynamicInputModel;
-  rulesArrayControl: FormArray;
-  rulesArrayModel: DynamicFormArrayModel;
+export class BasicFilterComponent implements OnChanges, OnDestroy {
+  form: FormGroup; // our model driven form
+  rulesArray: any = [];
+  ruleOpsModel$: Observable<any>;
+  predicateOpsModel$: Observable<any>;
+  filterSettingsGroupObj;
+  paths: Array<string>;
   loading = true;
+  formValueChangeSubscription: Subscription;
 
   @Input() dataShape: DataShape;
   @Input() position;
@@ -66,45 +69,97 @@ export class BasicFilterComponent implements OnChanges {
   constructor(
     public currentFlowService: CurrentFlowService,
     public integrationSupportService: IntegrationSupportService,
-    private dynamicFormService: DynamicFormService
-  ) {}
+    private fb: FormBuilder
+  ) {
+    this.predicateOpsModel$ = of([
+      {
+        label: 'ALL of the following',
+        value: 'AND'
+      },
+      {
+        label: 'ANY of the following',
+        value: 'OR'
+      }
+    ]);
+  }
+
+  // this can be valid even if we can't fetch the form data
+  initForm(
+    configuredProperties?: BasicFilter,
+    ops: Array<Op> = [],
+    paths: Array<string> = []
+  ): void {
+
+    if (!ops || !ops.length) {
+      ops = getDefaultOps();
+    } else {
+      ops = convertOps(ops);
+    }
+
+    let rules: Rule[] = undefined;
+    const incomingGroups = [];
+    const self = this;
+    // build up the form array from the incoming values (if any)
+    if (configuredProperties && configuredProperties.rules) {
+      // TODO hackity hack
+      if (typeof configuredProperties.rules === 'string') {
+        rules = JSON.parse(<any>configuredProperties.rules);
+      } else {
+        rules = configuredProperties.rules;
+      }
+
+      for (const incomingRule of rules) {
+        incomingGroups.push(this.fb.group(incomingRule));
+      }
+    }
+
+    this.ruleOpsModel$ = of(ops);
+    this.paths = paths;
+
+    this.filterSettingsGroupObj = {
+      predicate: {
+        label: 'Continue only if incoming data match',
+        options: this.predicateOpsModel$,
+        value: (configuredProperties && configuredProperties.predicate) ? configuredProperties.predicate : 'AND'
+      }
+    };
+
+    const preloadedPredicate = this.fb.group(this.filterSettingsGroupObj);
+    let preloadedRulesArray;
+
+    if (incomingGroups.length > 0) {
+      preloadedRulesArray = this.fb.array(incomingGroups);
+    } else {
+      preloadedRulesArray = this.fb.array([this.createNewRuleGroup()]);
+    }
+
+    this.rulesArray = preloadedRulesArray;
+
+    const formGroupObj = {
+      filterSettingsGroup: preloadedPredicate,
+      rulesArray: preloadedRulesArray
+    };
+
+    this.form = this.fb.group(formGroupObj);
+
+    this.formValueChangeSubscription = this.form.valueChanges.subscribe(_ => {
+      this.valid = this.form.valid;
+      this.validChange.emit(this.valid);
+    });
+
+    this.loading = false;
+  }
+
+  ngOnDestroy() {
+    this.formValueChangeSubscription.unsubscribe();
+  }
 
   ngOnChanges(changes: any) {
     if (!('position' in changes)) {
       return;
     }
+
     this.loading = true;
-    const self = this;
-
-    // this can be valid even if we can't fetch the form data
-    function initializeForm(ops?, paths?) {
-      self.basicFilterModel = createBasicFilterModel(
-        self.configuredProperties || <any>{},
-        ops,
-        paths
-      );
-      self.formGroup = self.dynamicFormService.createFormGroup(
-        self.basicFilterModel
-      );
-      self.predicateControl = self.formGroup
-        .get('filterSettingsGroup')
-        .get('predicate') as FormControl;
-      self.predicateModel = findById(
-        'predicate',
-        self.basicFilterModel
-      ) as DynamicInputModel;
-      self.rulesArrayControl = self.formGroup
-        .get('rulesGroup')
-        .get('rulesFormArray') as FormArray;
-      self.rulesArrayModel = findById(
-        'rulesFormArray',
-        self.basicFilterModel
-      ) as DynamicFormArrayModel;
-      self.loading = false;
-      self.valid = self.formGroup.valid;
-      self.validChange.emit(self.formGroup.valid);
-    }
-
     // Fetch our form data
     this.integrationSupportService
       .getFilterOptions(this.dataShape)
@@ -112,7 +167,9 @@ export class BasicFilterComponent implements OnChanges {
       .then((body: any) => {
         const ops = body.ops;
         const paths = body.paths;
-        initializeForm(ops, paths);
+        this.ruleOpsModel$ = of(ops);
+        this.paths = paths;
+        this.initForm(this.configuredProperties || <any>{}, ops, paths);
       })
       .catch(error => {
         try {
@@ -123,42 +180,51 @@ export class BasicFilterComponent implements OnChanges {
           log.infoc(() => 'Failed to fetch filter form data: ' + error);
         }
         // we can handle this for now using default values
-        initializeForm();
+        this.initForm();
       });
   }
 
-  // Manage Individual Fields
-  add() {
-    this.dynamicFormService.addFormArrayGroup(
-      this.rulesArrayControl,
-      this.rulesArrayModel
-    );
-    this.valid = this.formGroup.valid;
-    this.validChange.emit(this.valid);
+  addRuleSet(): void {
+    const newGroup = <FormGroup>this.createNewRuleGroup();
+    this.rulesArray = this.form.get('rulesArray') as FormArray;
+    this.rulesArray.push(newGroup);
   }
 
-  remove(context: DynamicFormArrayModel, index: number) {
-    this.dynamicFormService.removeFormArrayGroup(
-      index,
-      this.rulesArrayControl,
-      context
-    );
-    this.valid = this.formGroup.valid;
-    this.validChange.emit(this.valid);
+  get myRules(): FormArray {
+    return <FormArray>this.rulesArray;
   }
 
-  onChange($event) {
-    this.valid = this.formGroup.valid;
+  removeRuleSet(index: number): void {
+    this.myRules.removeAt(index);
+    this.onChange();
+  }
+
+  createNewRuleGroup(ops?, paths?, value?): FormGroup {
+    const group = {
+      path: ['', Validators.compose([
+          Validators.required,
+          Validators.maxLength(51)
+        ])
+      ],
+      op: ['contains', Validators.required],
+      value: ['', Validators.required]
+    };
+    return this.fb.group(group);
+  }
+
+  onChange() {
+    this.valid = this.form.valid;
     this.validChange.emit(this.valid);
     if (!this.valid) {
       return;
     }
-    const formGroupObj = this.formGroup.value;
+
+    const formGroupObj = this.form.value;
 
     const formattedProperties: BasicFilter = {
       type: 'rule',
-      predicate: formGroupObj.filterSettingsGroup.predicate,
-      rules: formGroupObj.rulesGroup.rulesFormArray
+      predicate: this.form.controls.filterSettingsGroup.get('predicate').value,
+      rules: formGroupObj.rulesArray
     };
 
     this.configuredPropertiesChange.emit(formattedProperties);
