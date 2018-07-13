@@ -7,16 +7,24 @@ import {
   OnChanges,
   OnDestroy
 } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormArray,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
 
+import { of, Observable, Subscription } from 'rxjs';
 import { DataShape, IntegrationSupportService } from '@syndesis/ui/platform';
 import { log } from '@syndesis/ui/logging';
+import { CurrentFlowService } from '@syndesis/ui/integration/edit-page';
 import {
-  CurrentFlowService
-} from '@syndesis/ui/integration/edit-page';
-
-import { BasicFilter, getDefaultOps, convertOps, Op, Rule } from './filter.interface';
-import { of, Observable, Subscription } from 'rxjs';
+  BasicFilter,
+  getDefaultOps,
+  convertOps,
+  Op,
+  Rule
+} from './filter.interface';
 
 @Component({
   selector: 'syndesis-basic-filter',
@@ -26,13 +34,13 @@ import { of, Observable, Subscription } from 'rxjs';
 })
 export class BasicFilterComponent implements OnChanges, OnDestroy {
   form: FormGroup; // our model driven form
-  rulesArray: any = []; // what's a valid type to use here?
+  rulesArray: any = [];
   ruleOpsModel$: Observable<any>;
   predicateOpsModel$: Observable<any>;
   filterSettingsGroupObj;
-  pathsModel;
+  paths: Array<string>;
   loading = true;
-  formValudChangeSubscription: Subscription;
+  formValueChangeSubscription: Subscription;
 
   @Input() dataShape: DataShape;
   @Input() position;
@@ -106,7 +114,7 @@ export class BasicFilterComponent implements OnChanges, OnDestroy {
     }
 
     this.ruleOpsModel$ = of(ops);
-    this.pathsModel = paths;
+    this.paths = paths;
 
     this.filterSettingsGroupObj = {
       predicate: {
@@ -116,6 +124,7 @@ export class BasicFilterComponent implements OnChanges, OnDestroy {
       }
     };
 
+    const preloadedPredicate = this.fb.group(this.filterSettingsGroupObj);
     let preloadedRulesArray;
 
     if (incomingGroups.length > 0) {
@@ -127,13 +136,13 @@ export class BasicFilterComponent implements OnChanges, OnDestroy {
     this.rulesArray = preloadedRulesArray;
 
     const formGroupObj = {
-      filterSettingsGroup: this.fb.group(this.filterSettingsGroupObj),
+      filterSettingsGroup: preloadedPredicate,
       rulesArray: preloadedRulesArray
     };
 
     this.form = this.fb.group(formGroupObj);
 
-    this.formValudChangeSubscription = this.form.valueChanges.subscribe(_ => {
+    this.formValueChangeSubscription = this.form.valueChanges.subscribe(_ => {
       this.valid = this.form.valid;
       this.validChange.emit(this.valid);
     });
@@ -142,7 +151,7 @@ export class BasicFilterComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.formValudChangeSubscription.unsubscribe();
+    this.formValueChangeSubscription.unsubscribe();
   }
 
   ngOnChanges(changes: any) {
@@ -158,8 +167,8 @@ export class BasicFilterComponent implements OnChanges, OnDestroy {
       .then((body: any) => {
         const ops = body.ops;
         const paths = body.paths;
-        this.ruleOpsModel$ = of(body.ops);
-        this.pathsModel = body.ops;
+        this.ruleOpsModel$ = of(ops);
+        this.paths = paths;
         this.initForm(this.configuredProperties || <any>{}, ops, paths);
       })
       .catch(error => {
@@ -192,7 +201,11 @@ export class BasicFilterComponent implements OnChanges, OnDestroy {
 
   createNewRuleGroup(ops?, paths?, value?): FormGroup {
     const group = {
-      path: ['', Validators.required],
+      path: ['', Validators.compose([
+          Validators.required,
+          Validators.maxLength(51)
+        ])
+      ],
       op: ['contains', Validators.required],
       value: ['', Validators.required]
     };

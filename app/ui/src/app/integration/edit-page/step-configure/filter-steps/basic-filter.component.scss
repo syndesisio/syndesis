@@ -1,3 +1,4 @@
+@import 'syndesis-sass';
 .basic-filter {
   .basic-filter-form {
     .rule-buttons {
@@ -49,6 +50,10 @@
       .rule-col {
         padding-bottom: 12px;
       }
+    }
+
+    .error.help-block {
+      color: $color-pf-red-200;
     }
   }
 }
