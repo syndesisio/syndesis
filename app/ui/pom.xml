@@ -94,6 +94,15 @@
             </configuration>
           </execution>
           <execution>
+            <id>yarn cleanup</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>cleanup</arguments>
+            </configuration>
+          </execution>
+          <execution>
             <id>yarn ng build</id>
             <goals>
               <goal>yarn</goal>
@@ -129,6 +138,13 @@
         <configuration>
           <followSymLinks>false</followSymLinks>
           <filesets>
+            <fileset>
+              <directory>src</directory>
+              <includes>
+                <include>config.json</include>
+                <include>config.json.bak</include>
+              </includes>
+            </fileset>
             <fileset>
               <directory>node_modules</directory>
               <includes>
