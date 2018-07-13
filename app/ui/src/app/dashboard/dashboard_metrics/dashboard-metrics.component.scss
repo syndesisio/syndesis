@@ -28,10 +28,19 @@
 
         .metrics__uptime-header {
           margin-top: 0;
+          font-size: 16px;
         }
 
         .metrics__uptime-kickoff {
           font-size: 11px;
+        }
+
+        .card-pf-body {
+          .metrics__uptime-legend {
+            font-size: 15px;
+            margin-bottom: 0;
+            line-height: 1.2;
+          }
         }
       }
     }

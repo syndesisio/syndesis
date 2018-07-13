@@ -58,7 +58,11 @@
                   size="1">
           </div>
           <div class="integration-name-edit" *ngIf="!editingName">
-            <button class="btn btn-link  integration-name-edit-btn" type="button" (click)="startEditingName()">
+            <button
+              aria-label="Edit Integration Name"
+              class="btn btn-link integration-name-edit-btn"
+              type="button"
+              (click)="startEditingName()">
               <span class="fa fa-pencil"></span>
             </button>
           </div>
@@ -106,10 +110,12 @@
       </div>
     </div>
   </syndesis-loading>
-  <button class="btn btn-default toggle-collapsed"
+  <button
+    class="btn btn-default toggle-collapsed"
     (click)="toggleCollapsed()"
     [class.collapsed]="isCollapsed"
     [tooltip]="toggleButtonTooltip"
+    aria-label="Integration Visualization Pane Details Toggle"
     placement="right"></button>
   <ng-template #toggleButtonTooltip><div class="syn-nowrap">Expand info</div></ng-template>
 </div>

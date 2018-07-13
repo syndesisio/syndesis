@@ -71,17 +71,19 @@
       <div class="col-sm-6 col-md-3 metrics__cards-item metrics__cards-item--uptime">
         <div class="card-pf card-pf-accented card-pf-aggregate-status">
           <div class="card-pf-title">
-            <h3 class="metrics__uptime-header metrics__uptime-label">
+            <h2 class="metrics__uptime-header metrics__uptime-label">
               {{ 'dashboard.metrics.uptime.uptime' | synI18n }}
-            </h3>
-            <h3 class="metrics__uptime-header metrics__uptime-kickoff">
+            </h2>
+            <time
+              [attr.datetime]="dateTime"
+              class="metrics__uptime-header metrics__uptime-kickoff">
               {{ 'dashboard.metrics.uptime.since' | synI18n: uptimeStart }}
-            </h3>
+            </time>
           </div>
           <div class="card-pf-body">
-            <h4 class="metrics__uptime-legend">
+            <span class="metrics__uptime-legend">
               {{ integrationMetrics.start | synDurationDiff$ | async }}
-            </h4>
+            </span>
           </div>
         </div>
       </div>
