@@ -205,7 +205,8 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The text to use"
+                "labelHint": "The text to use",
+                "order": "3"
               },
               "to": {
                 "kind": "parameter",
@@ -217,7 +218,8 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The to to use"
+                "labelHint": "The to to use",
+                "order": "1"
               },
               "cc": {
                 "kind": "parameter",
@@ -229,7 +231,8 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The cc to use"
+                "labelHint": "The cc to use",
+                "order": "4"
               },
               "bcc": {
                 "kind": "parameter",
@@ -241,7 +244,8 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The bcc to use"
+                "labelHint": "The bcc to use",
+                "order": "5"
               },
               "subject": {
                 "kind": "parameter",
@@ -253,7 +257,8 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The subject to use"
+                "labelHint": "The subject to use",
+                "order": "2"
               }
             }
           }
