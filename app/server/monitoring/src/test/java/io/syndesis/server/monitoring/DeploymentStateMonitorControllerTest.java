@@ -36,10 +36,10 @@ import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.api.model.PodListBuilder;
 import io.fabric8.kubernetes.api.model.PodStatus;
 import io.fabric8.kubernetes.api.model.PodStatusBuilder;
+import io.fabric8.kubernetes.api.model.ReplicationController;
+import io.fabric8.kubernetes.api.model.ReplicationControllerBuilder;
 import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.BuildBuilder;
-import io.fabric8.openshift.api.model.BuildList;
-import io.fabric8.openshift.api.model.BuildListBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
@@ -51,7 +51,10 @@ import io.syndesis.common.util.cache.LRUCacheManager;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 
-import static io.syndesis.common.model.monitoring.IntegrationDeploymentDetailedState.*;
+import static io.syndesis.common.model.monitoring.IntegrationDeploymentDetailedState.ASSEMBLING;
+import static io.syndesis.common.model.monitoring.IntegrationDeploymentDetailedState.BUILDING;
+import static io.syndesis.common.model.monitoring.IntegrationDeploymentDetailedState.DEPLOYING;
+import static io.syndesis.common.model.monitoring.IntegrationDeploymentDetailedState.STARTING;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.given;
 import static org.junit.Assert.assertEquals;
@@ -68,6 +71,7 @@ public class DeploymentStateMonitorControllerTest {
     private static final String DEPLOYMENT_ID = IntegrationDeployment.compositeId(INTEGRATION_ID, INTEGRATION_VERSION);
 
     private static final String BUILD_POD_NAME = "build-pod";
+    private static final String DEPLOYER_POD_NAME = "test-integration-1-deploy";
     private static final String DEPLOYMENT_POD_NAME = "deployment-pod";
 
     private static final PodStatus PENDING_STATUS = new PodStatusBuilder().withPhase("Pending").build();
@@ -78,18 +82,24 @@ public class DeploymentStateMonitorControllerTest {
     public Pod deploymentPod;
 
     @Parameterized.Parameter(value = 1)
-    public Build build;
+    public ReplicationController replicationController;
 
     @Parameterized.Parameter(value = 2)
-    public Pod buildPod;
+    public Pod deployerPod;
 
     @Parameterized.Parameter(value = 3)
+    public Build build;
+
+    @Parameterized.Parameter(value = 4)
+    public Pod buildPod;
+
+    @Parameterized.Parameter(value = 5)
     public IntegrationDeploymentStateDetails expectedDetails;
 
     private DataManager dataManager;
     private static NamespacedOpenShiftClient client;
 
-    public static final String TEST_NAMESPACE = "test-namespace";
+    private static final String TEST_NAMESPACE = "test-namespace";
 
     static {
         client = Mockito.mock(NamespacedOpenShiftClient.class);
@@ -130,14 +140,29 @@ public class DeploymentStateMonitorControllerTest {
 
             new PublishingStateMonitor(controller, client, dataManager) {
                 @Override
-                protected Pod getBuildPod(String podName) {
-                    return buildPod;
+                protected Pod getPod(String podName) {
+                    final Pod pod;
+                    switch (podName) {
+                    case BUILD_POD_NAME:
+                        pod = buildPod;
+                        break;
+                    case DEPLOYER_POD_NAME:
+                        pod = deployerPod;
+                        break;
+                    default:
+                        pod = null;
+                    }
+                    return pod;
                 }
 
                 @Override
-                protected BuildList getBuildList(String integrationId, String version) {
-                    final BuildListBuilder builder = new BuildListBuilder();
-                    return (build == null) ? builder.build() : builder.addToItems(build).build();
+                protected Optional<Build> getBuild(String integrationId, String version) {
+                    return Optional.ofNullable(build);
+                }
+
+                @Override
+                protected Optional<ReplicationController> getReplicationController(String integrationId, String version) {
+                    return Optional.ofNullable(replicationController);
                 }
 
                 @Override
@@ -161,35 +186,52 @@ public class DeploymentStateMonitorControllerTest {
     @Parameterized.Parameters
     public static Iterable<Object[]> data() {
 
+        final ReplicationController replicationController = new ReplicationControllerBuilder()
+                .withNewMetadata()
+                .addToAnnotations(PublishingStateMonitor.DEPLOYER_POD_NAME_ANNOTATION, DEPLOYER_POD_NAME)
+                .endMetadata()
+                .build();
         final Build build = new BuildBuilder()
                 .withNewMetadata()
                 .addToAnnotations(PublishingStateMonitor.BUILD_POD_NAME_ANNOTATION, BUILD_POD_NAME)
                 .endMetadata()
                 .build();
 
-        // deploymentPod, build, buildPod, and expectedDetails
-        Pod pod;
+        // successful build and deployer pod
+        final Pod buildPod = getPod(SUCCEEDED_STATUS, BUILD_POD_NAME);
+        final Pod deployerPod = getPod(SUCCEEDED_STATUS, DEPLOYER_POD_NAME);
+
+        // deploymentPod, rc, deployerPod, build, buildPod, and expectedDetails
         return Arrays.asList(
-                // no deployment or build pod yet
-                new Object[]{null, null, null,
-                        getDetails(ASSEMBLING, TEST_NAMESPACE, null, null)},
-                // build without build pod
-                new Object[] {null, build, null,
+                // no deployment, rc, deployer, or build pod yet
+                new Object[]{null, null, null, null, null,
                         getDetails(ASSEMBLING, TEST_NAMESPACE, null, null)},
                 // build pod with Pending status
-                new Object[] {null, build, pod = getPod(PENDING_STATUS, BUILD_POD_NAME),
+                new Object[] {null, null, null, build, getPod(PENDING_STATUS, BUILD_POD_NAME),
                         getDetails(ASSEMBLING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.EVENTS)},
                 // build pod with Running status
-                new Object[] {null, build, pod = getPod(RUNNING_STATUS, BUILD_POD_NAME),
+                new Object[] {null, null, null, build, getPod(RUNNING_STATUS, BUILD_POD_NAME),
                         getDetails(BUILDING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.LOGS)},
                 // build pod with Succeeded status, no deployment pod yet
-                new Object[] {null, build, pod = getPod(SUCCEEDED_STATUS, BUILD_POD_NAME),
+                new Object[] {null, null, null, build, buildPod,
                         getDetails(BUILDING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.LOGS)},
+                // rc without deployer pod
+                new Object[] {null, replicationController, null, build, buildPod,
+                        getDetails(BUILDING, TEST_NAMESPACE, BUILD_POD_NAME, LinkType.LOGS)},
+                // rc with pending deployer pod
+                new Object[] {null, replicationController, getPod(PENDING_STATUS, DEPLOYER_POD_NAME), build, buildPod,
+                        getDetails(DEPLOYING, TEST_NAMESPACE, DEPLOYER_POD_NAME, LinkType.EVENTS)},
+                // rc with running deployer pod
+                new Object[] {null, replicationController, getPod(RUNNING_STATUS, DEPLOYER_POD_NAME), build, buildPod,
+                        getDetails(DEPLOYING, TEST_NAMESPACE, DEPLOYER_POD_NAME, LinkType.LOGS)},
+                // rc with succeeded deployer pod
+                new Object[] {null, replicationController, deployerPod, build, buildPod,
+                        getDetails(DEPLOYING, TEST_NAMESPACE, DEPLOYER_POD_NAME, LinkType.LOGS)},
                 // deployment pod with Pending status
-                new Object[] { pod = getPod(PENDING_STATUS, DEPLOYMENT_POD_NAME), null, null,
+                new Object[] {getPod(PENDING_STATUS, DEPLOYMENT_POD_NAME), replicationController, deployerPod, build, buildPod,
                         getDetails(DEPLOYING, TEST_NAMESPACE, DEPLOYMENT_POD_NAME, LinkType.EVENTS)},
                 // deployment pod with Running status
-                new Object[] { pod = getPod(RUNNING_STATUS, DEPLOYMENT_POD_NAME), null, null,
+                new Object[] {getPod(RUNNING_STATUS,DEPLOYMENT_POD_NAME), replicationController, deployerPod, build, buildPod,
                         getDetails(STARTING, TEST_NAMESPACE, DEPLOYMENT_POD_NAME, LinkType.LOGS)}
                 );
     }

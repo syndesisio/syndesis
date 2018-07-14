@@ -26,8 +26,9 @@ import org.springframework.stereotype.Service;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.api.model.PodStatus;
+import io.fabric8.kubernetes.api.model.ReplicationController;
 import io.fabric8.kubernetes.client.internal.readiness.Readiness;
-import io.fabric8.openshift.api.model.BuildList;
+import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
@@ -51,6 +52,7 @@ import static io.syndesis.common.model.monitoring.LinkType.LOGS;
 @ConditionalOnProperty(value = "features.monitoring.enabled", havingValue = "true")
 public class PublishingStateMonitor implements StateHandler {
 
+    static final String DEPLOYER_POD_NAME_ANNOTATION = "openshift.io/deployer-pod.name";
     static final String BUILD_POD_NAME_ANNOTATION = "openshift.io/build.pod-name";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PublishingStateMonitor.class);
@@ -72,6 +74,7 @@ public class PublishingStateMonitor implements StateHandler {
     }
 
     @Override
+    @SuppressWarnings("PMD.NPathComplexity")
     public void accept(IntegrationDeployment integrationDeployment) {
 
         final String integrationId = integrationDeployment.getIntegrationId().get();
@@ -86,7 +89,7 @@ public class PublishingStateMonitor implements StateHandler {
             String podName = null;
             LinkType linkType = null;
 
-            // work backwards, in reverse order: deployed pod, build pod, default to assembling
+            // work backwards, in reverse order: deployed pod, deployer pod, build pod, default to assembling
             // 1. look for deployed pod
             final PodList podList = getDeploymentPodList(integrationId, version);
             if (!podList.getItems().isEmpty()) {
@@ -107,25 +110,46 @@ public class PublishingStateMonitor implements StateHandler {
                 }
 
             } else {
-                // 2. look for build pod
-                final BuildList buildList = getBuildList(integrationId, version);
-                if (!buildList.getItems().isEmpty()) {
-
-                    podName = buildList.getItems().get(0).getMetadata().getAnnotations().get(BUILD_POD_NAME_ANNOTATION);
+                // 2. look for deployer pod
+                final Optional<ReplicationController> replicationController = getReplicationController(integrationId,
+                        version);
+                if (replicationController.isPresent()) {
+                    podName = replicationController.get().getMetadata().getAnnotations().get(DEPLOYER_POD_NAME_ANNOTATION);
                     if (podName != null) {
-                        final Pod pod = getBuildPod(podName);
-                        if (pod != null) {
-                            linkType = getPodUrls(pod);
-                            // pending deployment pod
-                            detailedState = EVENTS == linkType ? IntegrationDeploymentDetailedState.ASSEMBLING : IntegrationDeploymentDetailedState.BUILDING;
+                        final Pod deployerPod = getPod(podName);
+                        if (deployerPod != null) {
+                            // with a deployer pod, detailed state is always deploying
+                            linkType = getPodUrls(deployerPod);
+                            detailedState = IntegrationDeploymentDetailedState.DEPLOYING;
                         } else {
                             // clear podName, since it doesn't exist yet
                             podName = null;
                         }
                     }
                 }
+
+                // 3. look for build pod, if deployer pod not found
+                if (podName == null) {
+                    final Optional<Build> build = getBuild(integrationId, version);
+                    if (build.isPresent()) {
+
+                        podName = build.get().getMetadata().getAnnotations().get(BUILD_POD_NAME_ANNOTATION);
+                        if (podName != null) {
+                            final Pod pod = getPod(podName);
+                            if (pod != null) {
+                                linkType = getPodUrls(pod);
+                                // pending deployment pod
+                                detailedState = EVENTS == linkType ? IntegrationDeploymentDetailedState.ASSEMBLING : IntegrationDeploymentDetailedState.BUILDING;
+                            } else {
+                                // clear podName, since it doesn't exist yet
+                                podName = null;
+                            }
+                        }
+                    }
+                }
+
                 if (detailedState == null) {
-                    // 3. default initial state, with no event or log urls!!!
+                    // 4. default initial state, with no event or log urls!!!
                     detailedState = IntegrationDeploymentDetailedState.ASSEMBLING;
                 }
             }
@@ -156,15 +180,23 @@ public class PublishingStateMonitor implements StateHandler {
             .build();
     }
 
-    protected Pod getBuildPod(String podName) {
+    protected Optional<ReplicationController> getReplicationController(String integrationId, String version) {
+        return client.replicationControllers()
+                .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId)
+                .withLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
+                .list().getItems().stream().findFirst();
+    }
+
+    protected Pod getPod(String podName) {
         return client.pods().withName(podName).get();
     }
 
-    protected BuildList getBuildList(String integrationId, String version) {
+    protected Optional<Build> getBuild(String integrationId, String version) {
         return client.builds()
                             .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId)
                             .withLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
-                            .list();
+                            .list()
+                .getItems().stream().findFirst();
     }
 
     protected PodList getDeploymentPodList(String integrationId, String version) {
