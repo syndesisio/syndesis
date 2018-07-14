@@ -74,6 +74,7 @@ public class PublishingStateMonitor implements StateHandler {
     }
 
     @Override
+    @SuppressWarnings("PMD.NPathComplexity")
     public void accept(IntegrationDeployment integrationDeployment) {
 
         final String integrationId = integrationDeployment.getIntegrationId().get();
