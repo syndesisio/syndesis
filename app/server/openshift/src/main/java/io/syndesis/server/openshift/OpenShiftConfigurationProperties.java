@@ -15,10 +15,13 @@
  */
 package io.syndesis.server.openshift;
 
-import io.fabric8.openshift.client.OpenShiftConfig;
-import io.fabric8.openshift.client.OpenShiftConfigBuilder;
+import java.util.Map;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
+
+import io.fabric8.openshift.client.OpenShiftConfig;
+import io.fabric8.openshift.client.OpenShiftConfigBuilder;
 
 @ConfigurationProperties("openshift")
 @Validated
@@ -49,6 +52,8 @@ public class OpenShiftConfigurationProperties {
 
     private int maximumRetries = 3;
     private long pollingInterval = 5000;
+
+    private Map<String, String> buildNodeSelector;
 
     public void setDebug(final boolean debug) {
         this.debug = debug;
@@ -156,5 +161,13 @@ public class OpenShiftConfigurationProperties {
 
     public void setPollingInterval(long pollingInterval) {
         this.pollingInterval = pollingInterval;
+    }
+
+    public Map<String, String> getBuildNodeSelector() {
+        return buildNodeSelector;
+    }
+
+    public void setBuildNodeSelector(Map<String, String> buildNodeSelector) {
+        this.buildNodeSelector = buildNodeSelector;
     }
 }

@@ -25,21 +25,20 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import io.fabric8.kubernetes.client.KubernetesClientException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.Quantity;
+import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteSpec;
-import io.fabric8.openshift.api.model.UserBuilder;
 import io.fabric8.openshift.api.model.User;
+import io.fabric8.openshift.api.model.UserBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
@@ -66,7 +65,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     public String build(String name, DeploymentData deploymentData, InputStream tarInputStream) throws InterruptedException {
         final String sName = openshiftName(name);
         ensureImageStreams(sName);
-        ensureBuildConfig(sName, deploymentData, this.config.getBuilderImageStreamTag(), this.config.getImageStreamNamespace());
+        ensureBuildConfig(sName, deploymentData, this.config.getBuilderImageStreamTag(), this.config.getImageStreamNamespace(), this.config.getBuildNodeSelector());
         Build build = openShiftClient.buildConfigs().withName(sName)
                        .instantiateBinary()
                        .fromInputStream(tarInputStream);
@@ -280,7 +279,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return openShiftClient.deploymentConfigs().withName(projectName).delete();
     }
 
-    private void ensureBuildConfig(String name, DeploymentData deploymentData, String builderStreamTag, String imageStreamNamespace) {
+    private void ensureBuildConfig(String name, DeploymentData deploymentData, String builderStreamTag, String imageStreamNamespace, Map<String, String> buildNodeSelector) {
         openShiftClient.buildConfigs().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
                 .withName(name)
@@ -316,6 +315,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                     .withName(name + ":" + deploymentData.getVersion())
                     .endTo()
                 .endOutput()
+                .withNodeSelector(buildNodeSelector)
             .endSpec()
          .done();
     }
