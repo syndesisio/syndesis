@@ -43,7 +43,7 @@ EOT
 FORCE_UPGRADE_RESOURCES="Service Route ServiceAccount"
 
 # Document which resource shouldn't be updated
-DONT_TOUCH_RESOURCES="ConfigMap Secret PersistentVolumeClaim"
+DONT_TOUCH_RESOURCES="ConfigMap Secret PersistentVolumeClaim RoleBinding"
 
 update_resources::run() {
     local backupdir=$1
