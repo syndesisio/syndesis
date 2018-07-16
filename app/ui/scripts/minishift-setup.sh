@@ -15,9 +15,10 @@ echo "Local IP is: ${LOCAL_IP}"
 mv -f src/config.json src/config.json.bak || true
 cp src/config.json.minishift src/config.json
 
+OS_HOST=$(oc status | head -n 1 | sed s/.*https/https/)
 
 sed -i.bu "s#syndesis.192.168.64.2.nip.io#$(oc get route syndesis  --template={{.spec.host}})#" src/config.json
-sed -i.bu "s#https://192.168.64.2:8443#$(minishift console --url)#" src/config.json
+sed -i.bu "s#https://192\.168\.64\.2:8443#${OS_HOST}#" src/config.json
 sed -i.bu "s/Syndesis/Syndesis - DEVELOPMENT/" src/config.json
 rm src/config.json.bu
 
