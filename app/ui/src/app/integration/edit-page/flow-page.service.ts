@@ -81,6 +81,13 @@ export class FlowPageService {
       error: reason => {
         this.errorMessage = reason;
         this.saveInProgress = false;
+        //
+        // Error occurred while publishing
+        // so reset publish progress flag
+        //
+        if (this.publishInProgress) {
+          this.publishInProgress = false;
+        }
       }
     });
   }
