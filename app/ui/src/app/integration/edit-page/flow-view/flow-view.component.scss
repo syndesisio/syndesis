@@ -29,7 +29,7 @@
   .flow-view-container {
     flex: 1 1 auto;
     padding-top: 15px;
-    padding-bottom: 20px;
+    padding-bottom: 80px;
     padding-left: 30px;
     display: flex;
     flex-direction: column;
@@ -38,30 +38,35 @@
     &.collapsed {
       width: auto;
       padding-right: 50px;
+      padding-bottom: 20px;
     }
 
     ::ng-deep {
-      .icon-container {
-        padding-bottom: 50px;
-        width: 55px;
-        height: 105px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        flex-shrink: 0;
-      }
+      .step {
+        .icon-container {
+          width: 55px;
+          height: 55px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          flex-shrink: 0;
+        }
 
-      .step:not(:last-child) .icon-container {
-        &::before {
-          content: '';
-          position: absolute;
-          width: 2px;
-          background-color: #d4d4d4;
-          top: 0;
-          bottom: 0;
-          left: 50%;
-          transform: translateX(-50%);
+        &:not(:last-child) .icon-container {
+          padding-bottom: 50px;
+          height: 105px;
+
+          &::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background-color: #d4d4d4;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+          }
         }
       }
     }
