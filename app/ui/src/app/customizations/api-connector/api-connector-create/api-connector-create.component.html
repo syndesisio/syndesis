@@ -42,7 +42,7 @@
           *ngIf="currentActiveStep == 1"
           (request)="onValidationRequest($event)">
         </syndesis-api-connector-swagger-upload>
-        <syndesis-api-connector-review *ngIf="currentActiveStep == 2"
+        <syndesis-api-connector-review *ngIf="currentActiveStep == 2 && displayDefinitionEditor === false"
           [apiConnectorTemplateName]="'OpenAPI'"
           [apiConnectorData]="(apiConnectorState$ | async)?.createRequest"
           [showNextButton]="true"
@@ -58,6 +58,24 @@
         </syndesis-api-connector-info>
       </div>
     </div>
+
+    <div class="row row-cards-pf apicurio" *ngIf="currentActiveStep == 2 && displayDefinitionEditor === true">
+      <div class="card-pf">
+        <div class="card-pf-heading">
+          <h2 class="card-pf-title">
+            Edit Definition
+          </h2>
+        </div>
+        <div class="card-pf-body">
+          <api-editor #apiEditor
+                      [api]="apiDef"
+                      [embedded]="true"
+                      (onCommandExecuted)="onUserChange($event)"
+                      (onSelectionChanged)="onUserSelection($event)"></api-editor>
+        </div>
+      </div>
+    </div>
+
   </section>
 </article>
 

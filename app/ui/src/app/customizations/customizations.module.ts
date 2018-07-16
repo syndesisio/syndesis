@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FileUploadModule } from 'ng2-file-upload';
 import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
+import { WindowRef } from './window-ref';
 
 import {
   ApiConnectorListComponent,
@@ -72,6 +73,7 @@ const routes: Routes = [
     TechExtensionImportComponent,
     TechExtensionDeleteModalComponent,
     TechExtensionDetailComponent
-  ]
+  ],
+  providers: [WindowRef]
 })
 export class CustomizationsModule {}

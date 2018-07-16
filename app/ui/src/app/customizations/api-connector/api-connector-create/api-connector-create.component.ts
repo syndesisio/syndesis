@@ -10,6 +10,9 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
+import { WindowRef } from '../../window-ref';
+import * as YAML from 'yamljs';
+
 import { ModalService, NavigationService } from '@syndesis/ui/common';
 import {
   ApiConnectorState,
@@ -19,6 +22,9 @@ import {
   CustomConnectorRequest,
   CustomApiConnectorAuthSettings
 } from '@syndesis/ui/customizations/api-connector';
+
+import { ApiEditorComponent, ApiDefinition } from 'apicurio-design-studio';
+import { OtCommand } from 'oai-ts-commands';
 
 enum WizardSteps {
   UploadSwagger = 1,
@@ -35,16 +41,36 @@ enum WizardSteps {
 export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   currentActiveStep = 1;
   apiConnectorState$: Observable<ApiConnectorState>;
+  displayDefinitionEditor = false;
+
+  @ViewChild('_apiEditor') _apiEditor: ApiEditorComponent;
+  apiDef: ApiDefinition;
+
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
 
   private cancelModalId = 'create-cancellation-modal';
 
   constructor(
-    private router: Router,
-    private modalService: ModalService,
     private apiConnectorStore: Store<ApiConnectorStore>,
-    private nav: NavigationService
-  ) {}
+    private modalService: ModalService,
+    private nav: NavigationService,
+    private router: Router,
+    private winRef: WindowRef
+  ) {
+    this.winRef.nativeWindow.dump = YAML.dump;
+  }
+
+  public onUserSelection(selection: string): void {
+    //console.log('User selection changed: ', selection);
+  }
+
+  public onUserChange(command: OtCommand): void {
+    //console.log('Something happened! ' + JSON.stringify(command));
+  }
+
+  public showDefinitionEditor(): boolean {
+    return true;
+  }
 
   ngOnInit() {
     this.modalService.registerModal(
@@ -56,12 +82,23 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     );
 
     // Once the request validation results are yielded for the 1st time, we move user to step 2
-    this.apiConnectorState$
-      .pipe(map(apiConnectorState => apiConnectorState.createRequest))
-      .pipe(first(request => !!request && !!request.actionsSummary))
-      .subscribe(
-        () => (this.currentActiveStep = WizardSteps.ReviewApiConnector)
-      );
+    this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
+      .first(request => !!request && !!request.actionsSummary)
+      .subscribe( apiConnectorState => {
+        // TODO error handling!
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.apiDef = new ApiDefinition();
+          this.apiDef.createdBy = 'user1';
+          this.apiDef.createdOn = new Date();
+          this.apiDef.tags = [];
+          this.apiDef.description = '';
+          this.apiDef.id = 'api-1';
+          this.apiDef.spec = reader.result;
+          this.currentActiveStep = WizardSteps.ReviewApiConnector;
+        };
+        reader.readAsText(apiConnectorState.specificationFile);
+      });
 
     // Once the request object is flagged as 'isComplete', we redirect the user to the main listing
     this.apiConnectorState$
@@ -89,8 +126,15 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     );
   }
 
-  onReviewComplete(): void {
-    this.currentActiveStep = WizardSteps.UpdateAuthSettings;
+  onReviewComplete({event: event, displayEditor: displayEditor}): void {
+    // Check if request is to show editor or not
+    if (displayEditor === true) {
+      this.displayDefinitionEditor = true;
+
+    } else {
+      this.displayDefinitionEditor = false;
+      this.currentActiveStep = WizardSteps.UpdateAuthSettings;
+    }
   }
 
   onAuthSetup(authSettings: CustomApiConnectorAuthSettings): void {
