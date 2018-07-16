@@ -570,9 +570,6 @@ objects:
                 name: syndesis-db-maintenance-script
             restartPolicy: Never
             volumes:
-            - name: syndesis-db-data
-              persistentVolumeClaim:
-                claimName: syndesis-db
             - configMap:
                 defaultMode: 511
                 name: syndesis-db-maintenance-script
@@ -1215,6 +1212,11 @@ objects:
         health:
           sensitive: false
         jsondb:
+          enabled: true
+      monitoring:
+        kind: default
+      features:
+        monitoring:
           enabled: true
       openshift:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
