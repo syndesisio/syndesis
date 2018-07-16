@@ -121,9 +121,6 @@
                 name: syndesis-db-maintenance-script
             restartPolicy: Never
             volumes:
-            - name: syndesis-db-data
-              persistentVolumeClaim:
-                claimName: syndesis-db
             - configMap:
                 defaultMode: 511
                 name: syndesis-db-maintenance-script
