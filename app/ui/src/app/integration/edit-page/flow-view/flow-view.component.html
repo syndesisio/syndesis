@@ -15,16 +15,15 @@
   <ng-template #insertStepTemplate let-position='position'>
     <div *ngIf="currentState === 'save-or-add-step'"
          class="step step-insert"
-         (click)="pop.toggle()">
+         (mouseover)="pop.show()"
+         (mouseleave)="pop.hide()">
       <div class="icon-container">
         <div class="square-icon"
             [popover]="popTemplate"
             [popoverContext]="{ position: position }"
-            placement="right"
-            container="body"
+            placement="bottom"
             #pop="bs-popover"
-            containerClass="flow-view-add-popover"
-            (click)="pop.toggle()">
+            containerClass="flow-view-add-popover">
           <i class="fa fa-plus-square"></i>
         </div>
       </div>
