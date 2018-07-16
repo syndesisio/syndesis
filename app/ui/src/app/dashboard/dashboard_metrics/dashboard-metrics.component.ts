@@ -33,6 +33,7 @@ export class DashboardMetricsComponent implements OnInit, OnDestroy {
   @Output() refresh = new EventEmitter();
 
   uptimeStart: string;
+  dateTime: string;
 
   private metricsRefreshInterval: any;
 
@@ -52,6 +53,10 @@ export class DashboardMetricsComponent implements OnInit, OnDestroy {
     this.uptimeStart = moment(this.integrationMetrics.start).format(
       'MMM Do HH:mm A'
     ); // eg January 12nd 8:53 pm
+
+    this.dateTime = moment(this.integrationMetrics.start).format(
+      'YYYY-MM-DD HH:mm'
+    ); // eg 2018-07-13 09:05
 
     let pollingInterval: number;
 

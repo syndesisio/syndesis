@@ -70,6 +70,7 @@
                 let-item="item">
     <div class="list-pf-actions">
       <button *ngIf="!item.expanded"
+              [attr.aria-label]="('register' | synI18n) + ' ' + item.client.name"
               class="btn btn-default"
               (click)="item.expanded = !item.expanded">
               <ng-container *ngIf="!isConfigured(item)">{{ 'register' | synI18n }}</ng-container>
