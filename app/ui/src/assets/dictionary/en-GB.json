@@ -40,9 +40,9 @@
         "drag-and-drop": "Drag and drop your integration files here or",
         "help-block": "Note: The imported integration will be in the draft state. If you previously imported and this environment has a draft version of the integration, then that draft is lost.",
         "item-name": "{{0}} Name",
-        "importing": "Importing...",
-        "import-success": "Successfully imported.",
-        "import-fail": "Unable to import this file.",
+        "importing": "Importing '{{0}}'...",
+        "import-success": "Successfully imported '{{0}}'.",
+        "import-fail": "Unable to import '{{0}}'.",
         "import-results": "Import Results:",
         "btn-done": "{{done}}",
         "btn-cancel": "{{cancel}}"
