@@ -1,16 +1,22 @@
 @import 'syndesis-sass';
 
-.wizard-nav {
-  &__button {
-    margin-left: 1.6em;
-  }
-}
+:host {
+  .wizard {
+    &__main {
+      margin-left: -$gutter;
+      margin-right: -$gutter;
+      position: relative;
+    }
 
-.wizard__body {
-  max-width: 700px;
-  margin: auto;
+    &-nav {
+      &__button {
+        margin-left: 1.6em;
+      }
+    }
 
-  .apicurio {
-    //z-index: auto;
+    &__body {
+      max-width: 700px;
+      margin: auto;
+    }
   }
 }

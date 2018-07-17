@@ -1,4 +1,4 @@
-<article class="wizard">
+<article class="wizard syn-scrollable">
   <section class="wizard__ui wizard__nav">
     <nav class="wizard-nav row toolbar-pf">
       <div class="col-sm-12">
@@ -25,58 +25,60 @@
       </div>
     </nav>
   </section>
-  <section class="wizard__ui wizard__progress">
-    <syndesis-wizard-progress-bar [steps]="[
-      'Upload OpenAPI Specification',
-      'Review Actions',
-      'Specify Security',
-      'Review/Edit Connector Details']" [selectedStep]="currentActiveStep">
-    </syndesis-wizard-progress-bar>
-  </section>
+  <div class="wizard__main syn-scrollable--body container-fluid">
+    <section class="wizard__ui wizard__progress">
+      <syndesis-wizard-progress-bar [steps]="[
+        'Upload OpenAPI Specification',
+        'Review Actions',
+        'Specify Security',
+        'Review/Edit Connector Details']" [selectedStep]="currentActiveStep">
+      </syndesis-wizard-progress-bar>
+    </section>
 
-  <section class="wizard__ui wizard__body wizard__body--step1">
-    <div class="row row-cards-pf">
-      <div class="card-pf">
-        <syndesis-api-connector-swagger-upload
-          [apiConnectorState]="apiConnectorState$ | async"
-          *ngIf="currentActiveStep == 1"
-          (request)="onValidationRequest($event)">
-        </syndesis-api-connector-swagger-upload>
-        <syndesis-api-connector-review *ngIf="currentActiveStep == 2 && displayDefinitionEditor === false"
-          [apiConnectorTemplateName]="'OpenAPI'"
-          [apiConnectorData]="(apiConnectorState$ | async)?.createRequest"
-          [showNextButton]="true"
-          (reviewComplete)="onReviewComplete($event)">
-        </syndesis-api-connector-review>
-        <syndesis-api-connector-auth *ngIf="currentActiveStep == 3"
-          [customConnectorRequest]="(apiConnectorState$ | async)?.createRequest"
-          (authSetup)="onAuthSetup($event)">
-        </syndesis-api-connector-auth>
-        <syndesis-api-connector-info *ngIf="currentActiveStep == 4"
-          [apiConnectorState]="apiConnectorState$ | async"
-          (update)="onCreateComplete($event)">
-        </syndesis-api-connector-info>
-      </div>
-    </div>
-
-    <div class="row row-cards-pf apicurio" *ngIf="currentActiveStep == 2 && displayDefinitionEditor === true">
-      <div class="card-pf">
-        <div class="card-pf-heading">
-          <h2 class="card-pf-title">
-            Edit Definition
-          </h2>
-        </div>
-        <div class="card-pf-body">
-          <api-editor #apiEditor
-                      [api]="apiDef"
-                      [embedded]="true"
-                      (onCommandExecuted)="onUserChange($event)"
-                      (onSelectionChanged)="onUserSelection($event)"></api-editor>
+    <section class="wizard__ui wizard__body wizard__body--step1">
+      <div class="row row-cards-pf">
+        <div class="card-pf">
+          <syndesis-api-connector-swagger-upload
+            [apiConnectorState]="apiConnectorState$ | async"
+            *ngIf="currentActiveStep == 1"
+            (request)="onValidationRequest($event)">
+          </syndesis-api-connector-swagger-upload>
+          <syndesis-api-connector-review *ngIf="currentActiveStep == 2 && displayDefinitionEditor === false"
+            [apiConnectorTemplateName]="'OpenAPI'"
+            [apiConnectorData]="(apiConnectorState$ | async)?.createRequest"
+            [showNextButton]="true"
+            (reviewComplete)="onReviewComplete($event)">
+          </syndesis-api-connector-review>
+          <syndesis-api-connector-auth *ngIf="currentActiveStep == 3"
+            [customConnectorRequest]="(apiConnectorState$ | async)?.createRequest"
+            (authSetup)="onAuthSetup($event)">
+          </syndesis-api-connector-auth>
+          <syndesis-api-connector-info *ngIf="currentActiveStep == 4"
+            [apiConnectorState]="apiConnectorState$ | async"
+            (update)="onCreateComplete($event)">
+          </syndesis-api-connector-info>
         </div>
       </div>
-    </div>
 
-  </section>
+      <div class="row row-cards-pf apicurio" *ngIf="currentActiveStep == 2 && displayDefinitionEditor === true">
+        <div class="card-pf">
+          <div class="card-pf-heading">
+            <h2 class="card-pf-title">
+              Edit Definition
+            </h2>
+          </div>
+          <div class="card-pf-body">
+            <api-editor #apiEditor
+                        [api]="apiDef"
+                        [embedded]="true"
+                        (onCommandExecuted)="onUserChange($event)"
+                        (onSelectionChanged)="onUserSelection($event)"></api-editor>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div>
 </article>
 
 <ng-template #cancelModalTemplate>
