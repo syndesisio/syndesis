@@ -19,7 +19,7 @@
   </ng-template>
 
   <!-- Icon -->
-  <div class="icon-container">
+  <div class="icon-container" (click)="gotoPageFor(step)">
     <div [ngClass]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
       placement="right"
       [tooltip]="stepNameTooltip"
