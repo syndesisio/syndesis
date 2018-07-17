@@ -18,6 +18,7 @@ package io.syndesis.server.endpoint.v1.handler.support;
 import io.swagger.annotations.Api;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -27,11 +28,15 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 
@@ -58,10 +63,22 @@ public class SupportHandler extends BaseHandler {
     public Response downloadSupportZip(Map<String, Boolean> configurationMap, @Context UriInfo uriInfo) {
         LOG.info("Received Support file request: {}", configurationMap);
         File zipFile = util.createSupportZipFile(configurationMap, uriInfo);
-        return Response.ok(zipFile)
-                .header("Content-Disposition",
-                        "attachment; filename=\"syndesis.zip\"").build();
 
+        return Response.ok()
+            .header("Content-Disposition",
+                        "attachment; filename=\"syndesis.zip\"")
+            .entity(new StreamingOutput() {
+            @Override
+            public void write(final OutputStream output) throws IOException, WebApplicationException {
+                try {
+                    FileUtils.copyFile(zipFile, output);
+                } finally {
+                    if(zipFile!=null) {
+                        zipFile.delete();
+                    }
+                }
+            }
+        }).build();
     }
 
 }

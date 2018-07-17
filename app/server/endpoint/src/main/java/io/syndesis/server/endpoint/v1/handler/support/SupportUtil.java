@@ -15,29 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.support;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
-
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl;
@@ -51,7 +28,6 @@ import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
 import io.syndesis.server.openshift.OpenShiftService;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -63,6 +39,28 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 @ConditionalOnProperty(value = "openshift.enabled", matchIfMissing = true, havingValue = "true")
@@ -93,12 +91,13 @@ public class SupportUtil {
     }
 
     public Optional<Reader> streamLogs(String label, String integrationName) {
-        return client.pods().list().getItems().stream()
-            .filter(p -> integrationName.equals(p.getMetadata().getLabels().get(label))).findAny().
-                flatMap(p ->
-                    //Optional.of(client.pods().inNamespace(config.getNamespace()).withName(p.getMetadata().getName()).getLogReader())
-                    Optional.of(new StringReader("REQUIRES_LIBRARY_UPDATE!!!!"))
-                );
+        throw new UnsupportedOperationException("K8s/Ocp Client upgrade needed to support this operation!");
+        //TODO: K8s/Ocp Client upgrade needed to support this operation:
+//        return client.pods().list().getItems().stream()
+//            .filter(p -> integrationName.equals(p.getMetadata().getLabels().get(label))).findAny().
+//                flatMap(p ->
+//                    Optional.of(client.pods().inNamespace(config.getNamespace()).withName(p.getMetadata().getName()).getLogReader())
+//                );
     }
 
     public File createSupportZipFile(Map<String, Boolean> configurationMap, UriInfo uriInfo) {
@@ -107,15 +106,22 @@ public class SupportUtil {
             zipFile = File.createTempFile("syndesis.", ".zip");
         } catch (IOException e) {
             LOG.error("Error creating Support zip file", e);
+            if(zipFile!=null) {
+                zipFile.delete();
+            }
             throw new WebApplicationException(e, 500);
         }
 
-        try ( ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile));) {
+        try ( ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile))) {
             addPlatformPodsLogs(os);
+            addResourceDescriptors(os);
             addIntegrationsFiles(configurationMap, uriInfo, os);
             LOG.info("Created Support file: {}", zipFile);
         } catch (IOException e) {
             LOG.error("Error producing Support zip file", e);
+            if(zipFile!=null) {
+                zipFile.delete();
+            }
             throw new WebApplicationException(e, 500);
         }
 
@@ -125,7 +131,6 @@ public class SupportUtil {
     protected void addIntegrationsFiles(Map<String, Boolean> configurationMap, UriInfo uriInfo, ZipOutputStream os) {
         configurationMap.keySet().stream().forEach(integrationName -> {
             addIntegrationLogs(os, integrationName);
-            addResourceDescriptors(os);
             addSourceFiles(uriInfo, os, integrationName);
         });
     }
@@ -142,7 +147,7 @@ public class SupportUtil {
                         try {
                             addSource(integrationName, id, os);
                         } catch (Exception e) {
-                            LOG.error("Error preparing logs for integration: {}", integrationName, e);
+                            LOG.error("Error adding source files for integration: {}", integrationName, e);
                         }
                     });
                 });
@@ -200,20 +205,18 @@ public class SupportUtil {
         StreamingOutput export = integrationSupportHandler.export(Arrays.asList(integrationId));
         ZipEntry ze = new ZipEntry(integrationName + ".src.zip");
         os.putNextEntry(ze);
+        File file = null;
+        try {
+            file = File.createTempFile(integrationName, ".src.zip");
+            export.write(FileUtils.openOutputStream(file));
+            FileUtils.copyFile(file, os);
+            os.closeEntry();
+        } finally {
+            if(file!=null) {
+                file.delete();
+            }
+        }
 
-        File file = File.createTempFile(integrationName, ".src.zip");
-        export.write(FileUtils.openOutputStream(file));
-        FileUtils.copyFile(file, os);
-        os.closeEntry();
-    }
-
-    protected void addEntryToZip(String integrationName, String fileContent, ZipOutputStream os) throws IOException {
-        ZipEntry ze = new ZipEntry(integrationName + ".log");
-        os.putNextEntry(ze);
-        File file = File.createTempFile(integrationName, ".log");
-        FileUtils.writeStringToFile( file, fileContent, StandardCharsets.UTF_8 );
-        FileUtils.copyFile(file, os);
-        os.closeEntry();
     }
 
     protected void addEntryToZip(String integrationName, Reader fileContent, ZipOutputStream os) throws IOException {
