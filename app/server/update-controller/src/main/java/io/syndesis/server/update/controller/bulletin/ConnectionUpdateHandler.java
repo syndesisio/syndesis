@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.validation.Validator;
 
@@ -64,6 +65,7 @@ public class ConnectionUpdateHandler extends AbstractResourceUpdateHandler<Conne
             dataManager.fetchAllByPropertyValue(Connection.class, "connectorId", id)
                 .filter(connection -> connection.getConnector().isPresent())
                 .map(connection -> computeBoard(connection, connection.getConnector().get(), connector))
+                .filter(Objects::nonNull)
                 .forEach(boards::add);
         }
 
@@ -78,8 +80,7 @@ public class ConnectionUpdateHandler extends AbstractResourceUpdateHandler<Conne
 
         if (board != null) {
             builder = new ConnectionBulletinBoard.Builder()
-                .createFrom(board)
-                .updatedAt(System.currentTimeMillis());
+                .createFrom(board);
         } else {
             builder = new ConnectionBulletinBoard.Builder()
                 .id(KeyGenerator.createKey())
@@ -104,7 +105,13 @@ public class ConnectionUpdateHandler extends AbstractResourceUpdateHandler<Conne
         builder.putMetadata("connector-version-connection", Integer.toString(oldConnector.getVersion()));
         builder.messages(messages);
 
-        return builder.build();
+        ConnectionBulletinBoard updated = builder.build();
+
+        if (!updated.equals(board)) {
+            return builder.updatedAt(System.currentTimeMillis()).build();
+        }
+
+        return null;
     }
 
     private static Map<String, String> merge(final Map<String, String> one, final Map<String, String> two) {
