@@ -135,7 +135,7 @@
         "registration-instruction": "During registration, enter this callback URL:",
         "list": {
           "item": {
-            "description": "Client ID and client secret not configured.",
+            "description": "Access to this application is not configured.",
             "remove-btn-modal": "Are you sure you want to delete the OAuth credentials for '{{0}}'?",
             "remove-btn-modal-title": "Confirm Delete?"
           }
