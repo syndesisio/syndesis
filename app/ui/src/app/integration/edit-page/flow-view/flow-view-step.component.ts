@@ -251,6 +251,28 @@ export class FlowViewStepComponent implements OnChanges {
     return true;
   }
 
+  gotoPageFor(step) {
+    switch (step.stepKind) {
+      case 'endpoint':
+        if (!step.connection) {
+          this.goto('connection-select');
+          return;
+        }
+        if (!step.action) {
+          this.goto('action-select');
+          return;
+        }
+        this.goto('action-configure', 0);
+        return;
+      default:
+        if (!step.stepKind) {
+          this.goto('step-select');
+          return;
+        }
+        this.goto('step-configure');
+    }
+  }
+
   goto(page: string, index?: number) {
     if (!page) {
       if (!this.isCollapsed()) {
