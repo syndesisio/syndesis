@@ -1,13 +1,16 @@
 import { map } from 'rxjs/operators';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
   IntegrationOverviews,
-  IntegrationSupportService
+  IntegrationSupportService,
+  Integrations,
+  Connections,
+  StringMap
 } from '@syndesis/ui/platform';
 import { FileError, IntegrationImportsData } from './integration-import.models';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import {
   FileItem,
@@ -20,24 +23,23 @@ import { environment } from '../../../../environments/environment';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { NotificationType } from 'patternfly-ng';
 import { NotificationService } from '@syndesis/ui/common';
+import { filter } from '../../../../../node_modules/rxjs-compat/operator/filter';
 
 @Component({
   selector: 'syndesis-import-integration-component',
   templateUrl: './integration-import.component.html',
   styleUrls: ['./integration-import.component.scss']
 })
-export class IntegrationImportComponent implements OnInit {
+export class IntegrationImportComponent implements OnInit, OnDestroy {
   error: FileError;
-  importedOverviews$: Observable<IntegrationOverviews>;
-  importing = false;
-  isMultipleImport: boolean;
-  item = {} as FileItem;
-  loading = true;
-  response: IntegrationImportsData;
   showButtons = false;
   showReviewStep = false;
   uploader: FileUploader;
   hasBaseDropZoneOver: boolean;
+  responses: StringMap<any>;
+  subscription: Subscription;
+  imported: Integrations;
+  connections: Connections;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
@@ -47,21 +49,19 @@ export class IntegrationImportComponent implements OnInit {
     private router: Router,
     public notificationService: NotificationService,
     private tokenExtractor: HttpXsrfTokenExtractor
-  ) {
-    // Do stuff here!
-  }
+  ) { }
 
   cancel() {
     this.redirectBack();
   }
 
-  done(importedOverviews) {
+  done() {
     if (
-      importedOverviews.length === 1 &&
-      importedOverviews[0].id &&
-      !this.isMultipleImport
+      this.imported &&
+      this.imported.length === 1 &&
+      this.imported[0].id
     ) {
-      this.router.navigate(['/integrations', importedOverviews[0].id]);
+      this.router.navigate(['/integrations', this.imported[0].id]);
     } else {
       this.redirectBack();
     }
@@ -75,19 +75,18 @@ export class IntegrationImportComponent implements OnInit {
     };
   }
 
-  onDropFile(): void {
-    this.isMultipleImport = this.checkIfMultiple();
-  }
-
-  onFileSelected(): void {
-    this.isMultipleImport = this.checkIfMultiple();
-  }
-
   onFileOver(e) {
     this.hasBaseDropZoneOver = e;
   }
 
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
   ngOnInit() {
+    this.responses = {};
     this.uploader = new FileUploader({
       url: this.integrationSupportService.importIntegrationURL(),
       headers: [
@@ -110,9 +109,9 @@ export class IntegrationImportComponent implements OnInit {
     });
 
     this.uploader.onWhenAddingFileFailed = (
-      item: FileLikeObject,
-      filter: any,
-      options: any
+      _item: FileLikeObject,
+      _filter: any,
+      _options: any
     ): any => {
       this.notificationService.popNotification({
         type: NotificationType.DANGER,
@@ -126,42 +125,60 @@ export class IntegrationImportComponent implements OnInit {
       this.uploader.clearQueue();
     };
 
+    // Collect the results of each individual upload
     this.uploader.onCompleteItem = (
       item: FileItem,
       response: string,
       status: number
     ) => {
-      if (status === 200) {
-        this.fetchImportedIntegrations(JSON.parse(response));
+        this.responses[item.file.name] = { item, status, response };
+    };
 
-        this.notificationService.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Successfully Imported',
-          message: 'Your integration has been imported',
-          isPersistent: false
-        });
+    // this fires when all uploads are complete, regardless if it's successful or not
+    this.uploader.onCompleteAll = () => {
+      if (this.subscription) {
+        this.subscription.unsubscribe();
       }
+      // fetch and filter the integrations to the newly imported ones
+      this.subscription = this.integrationStore.list.pipe(
+        map(integrations => {
+          const answer: Integrations = [];
+          Object.keys(this.responses).forEach(fileName => {
+            const response = this.responses[fileName];
+            if (response.status === 200) {
+              const apiResponse = JSON.parse(response.response)[0];
+              const integration = integrations.find(i => i.id === apiResponse.id);
+              if (integration) {
+                answer.push(integration);
+              }
+            }
+          });
+          return answer;
+        }),
+      ).subscribe(imported => {
+        this.imported = imported;
+        // build an of unique connections for each integration
+        const connections = [];
+        imported.forEach(i => {
+          i.steps.filter(s => s.stepKind === 'endpoint').forEach(step => {
+            if (!step.connection) {
+              return;
+            }
+            if (!connections.find(c => c.id === step.connection.id)) {
+              connections.push(step.connection);
+            }
+          });
+        });
+        this.connections = connections;
+        this.showButtons = true;
+        this.showReviewStep = true;
+      });
+      // make the call
+      this.integrationStore.loadAll();
     };
   }
 
-  private checkIfMultiple(): boolean {
-    return this.uploader.queue.length > 1;
-  }
-
-  private fetchImportedIntegrations(results) {
-    this.importedOverviews$ = this.integrationStore.list.pipe(
-      map(integrations => {
-        return integrations.filter(integration => {
-          return results.find(result => result.id === integration.id) !== -1;
-        });
-      })
-    );
-
-    this.showButtons = true;
-    this.showReviewStep = true;
-  }
-
-  private redirectBack(): void {
+  redirectBack(): void {
     this.router.navigate(['/integrations']);
   }
 }
