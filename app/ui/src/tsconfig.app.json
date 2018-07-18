@@ -41,5 +41,8 @@
       ],
       "fs": [ "./global-shims" ]
     }
+  },
+  "angularCompilerOptions": {
+    "preserveWhitespaces": true
   }
 }
