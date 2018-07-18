@@ -32,8 +32,7 @@ import { filter } from '../../../../../node_modules/rxjs-compat/operator/filter'
 })
 export class IntegrationImportComponent implements OnInit, OnDestroy {
   error: FileError;
-  showButtons = false;
-  showReviewStep = false;
+  _showReviewStep = false;
   uploader: FileUploader;
   hasBaseDropZoneOver: boolean;
   responses: StringMap<any>;
@@ -67,6 +66,20 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     }
   }
 
+  get showReviewStep() {
+    return this._showReviewStep && this.imported.length;
+  }
+
+  initialize(): any {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    this._showReviewStep = false;
+    this.connections = undefined;
+    this.imported = undefined;
+    this.responses = {};
+  }
+
   getFileTypeError() {
     return {
       level: 'alert alert-danger',
@@ -77,6 +90,10 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
 
   onFileOver(e) {
     this.hasBaseDropZoneOver = e;
+  }
+
+  onDropFile(): void {
+    this.initialize();
   }
 
   ngOnDestroy() {
@@ -170,8 +187,7 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
           });
         });
         this.connections = connections;
-        this.showButtons = true;
-        this.showReviewStep = true;
+        this._showReviewStep = true;
       });
       // make the call
       this.integrationStore.loadAll();

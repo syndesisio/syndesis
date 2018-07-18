@@ -13,6 +13,7 @@
            ng2FileDrop
            [uploader]="uploader"
            [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
+           (onFileDrop)="onDropFile()"
            (fileOver)="onFileOver($event)">
         <p>{{ 'integrations.import-export.drag-and-drop' | synI18n }}</p>
         <div class="row syn-drop-zone__file-select">
@@ -64,7 +65,7 @@
               <div class="list-group-item">
                 <div class="row">
                   <div class="col-sm-2">
-                    <strong>Integration Name</strong>
+                    <strong>{{ 'integration-name' | synI18n }}</strong>
                   </div>
                   <div class="col-sm-9">
                     {{ integration.name }}
@@ -76,7 +77,7 @@
               <div class="list-group-item">
                 <div class="row">
                   <div class="col-sm-2">
-                    <strong>Connection Name</strong>
+                    <strong>{{ 'connection-name' | synI18n }}</strong>
                   </div>
                   <div class="col-sm-3">
                     {{ connection.name }}
@@ -85,7 +86,7 @@
                     class="col-sm-5">
                     <div class="alert alert-warning">
                       <span class="pficon pficon-warning-triangle-o"></span>
-                      Configuration Required
+                      {{ 'configuration-required' | synI18n }}
                     </div>
                   </div>
                 </div>

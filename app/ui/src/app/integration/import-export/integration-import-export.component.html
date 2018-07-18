@@ -7,21 +7,23 @@
       <div class="inline-block">
         <ol class="breadcrumb no-bottom-margin">
           <li>
-            <a routerLink="/">Home</a>
+            <a routerLink="/">{{ 'home' | synI18n }}</a>
           </li>
           <li>
-            <a routerLink="/integrations">Integrations</a>
+            <a routerLink="/integrations">{{ 'integrations' | synI18n }}</a>
           </li>
           <li class="active">
-            <strong>Import Integration</strong>
+            <strong>{{ 'integrations.import-export.header' | synI18n }}</strong>
           </li>
         </ol>
       </div>
       <div class="toolbar-pf-action-right">
-        <button class="btn btn-primary"
-                (click)="redirectBack()">
-          Done
-        </button>
+        <div class="toolbar-pf-action-right-alignment">
+          <button class="btn btn-primary"
+                  (click)="redirectBack()">
+            {{ 'integrations.import-export.btn-done' | synI18n }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
