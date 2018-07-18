@@ -76,8 +76,7 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
 
             if (board != null) {
                 builder = new IntegrationBulletinBoard.Builder()
-                    .createFrom(board)
-                    .updatedAt(System.currentTimeMillis());
+                    .createFrom(board);
             } else {
                 builder = new IntegrationBulletinBoard.Builder()
                     .id(KeyGenerator.createKey())
@@ -248,7 +247,10 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
             builder.putMetadata("integration-version", Integer.toString(integration.getVersion()));
             builder.messages(messages);
 
-            boards.add(builder.build());
+            final IntegrationBulletinBoard updated = builder.build();
+            if (!updated.equals(board)) {
+                boards.add(builder.updatedAt(System.currentTimeMillis()).build());
+            }
         }
 
         return boards;

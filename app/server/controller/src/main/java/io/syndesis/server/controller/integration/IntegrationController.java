@@ -204,12 +204,14 @@ public class IntegrationController {
                     // handler.execute might block for while so refresh our copy of the integration
                     // data before we update the current status
                     IntegrationDeployment current = dataManager.fetch(IntegrationDeployment.class, integrationDeploymentId);
-                    dataManager.update(current.builder()
+                    final IntegrationDeployment updated = current.builder()
                         .statusMessage(Optional.ofNullable(update.getStatusMessage()))
                         .currentState(update.getState())
                         .stepsDone(update.getStepsPerformed())
-                        .updatedAt(System.currentTimeMillis())
-                        .build());
+                        .build();
+                    if (!(updated.equals(current))) {
+                        dataManager.update(updated.builder().updatedAt(System.currentTimeMillis()).build());
+                    }
                 });
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
                 LOG.error("Error while processing integration status for integration {}", integrationDeploymentId, e);
