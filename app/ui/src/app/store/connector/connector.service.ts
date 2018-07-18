@@ -3,6 +3,7 @@ import { Subscription, Observable } from 'rxjs';
 
 import { ApiHttpService, Connector, Connectors } from '@syndesis/ui/platform';
 import { RESTService } from '../entity';
+import { ConfigService } from '@syndesis/ui/config.service';
 
 interface AcquisitionResponseState {
   persist: string;
@@ -17,8 +18,8 @@ interface AcquisitionResponse {
 
 @Injectable()
 export class ConnectorService extends RESTService<Connector, Connectors> {
-  constructor(apiHttpService: ApiHttpService) {
-    super(apiHttpService, 'connectors', 'connector');
+  constructor(apiHttpService: ApiHttpService, configService: ConfigService) {
+    super(apiHttpService, 'connectors', 'connector', configService);
   }
 
   validate(id: string, data: Map<string, string>) {

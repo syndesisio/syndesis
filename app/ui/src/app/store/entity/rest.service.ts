@@ -2,13 +2,18 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import { BaseEntity, ApiHttpService } from '@syndesis/ui/platform';
+import { ConfigService } from '@syndesis/ui/config.service';
 
 export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
+  perPage: number;
   protected constructor(
     public apiHttpService: ApiHttpService,
     public endpoint: string,
-    public kind: string
-  ) {}
+    public kind: string,
+    configService: ConfigService
+  ) {
+    this.perPage = configService.getSettings().perPage || 50;
+  }
 
   get(id: string): Observable<T> {
     return this.apiHttpService
@@ -18,13 +23,12 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
 
   list(): Observable<L> {
     return this.apiHttpService
-      .setEndpointUrl(this.getEndpointSegment())
+      .setEndpointUrl(this.getEndpointSegment() + '?per_page=' + this.perPage)
       .get()
       .pipe(
-        map(
-          (response: any) =>
-            Array.isArray(response) ? response : response.items || ([] as L)
-        )
+        map((response: any) => {
+            return Array.isArray(response) ? response : response.items || ([] as L);
+        })
       );
   }
 
