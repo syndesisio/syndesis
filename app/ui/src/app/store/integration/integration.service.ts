@@ -10,12 +10,14 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, catchError } from 'rxjs/operators';
 import { RESTService } from '../entity';
 import { log, getCategory } from '../../logging';
+import { ConfigService } from '@syndesis/ui/config.service';
 
 @Injectable()
 export class IntegrationService extends RESTService<Integration, Integrations> {
   constructor(apiHttpService: ApiHttpService,
+              configService: ConfigService,
               protected integrationSupportService: IntegrationSupportService) {
-    super(apiHttpService, 'integrations', 'integration');
+    super(apiHttpService, 'integrations', 'integration', configService);
   }
 
   get(id: string): Observable<Integration> {

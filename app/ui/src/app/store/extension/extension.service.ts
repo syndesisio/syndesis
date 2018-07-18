@@ -9,11 +9,12 @@ import {
   Extensions,
   Integrations
 } from '@syndesis/ui/platform';
+import { ConfigService } from '@syndesis/ui/config.service';
 
 @Injectable()
 export class ExtensionService extends RESTService<Extension, Extensions> {
-  constructor(public apiHttpService: ApiHttpService) {
-    super(apiHttpService, 'extensions', 'extension');
+  constructor(apiHttpService: ApiHttpService, configService: ConfigService) {
+    super(apiHttpService, 'extensions', 'extension', configService);
   }
 
   public getUploadUrl(id?: string) {

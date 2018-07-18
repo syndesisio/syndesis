@@ -4,11 +4,12 @@ import { ValidationErrors } from '@angular/forms';
 import { ApiHttpService, Connection, Connections } from '@syndesis/ui/platform';
 import { TypeFactory } from '@syndesis/ui/model';
 import { RESTService } from '../entity';
+import { ConfigService } from '@syndesis/ui/config.service';
 
 @Injectable()
 export class ConnectionService extends RESTService<Connection, Connections> {
-  constructor(apiHttpService: ApiHttpService) {
-    super(apiHttpService, 'connections', 'connection');
+  constructor(apiHttpService: ApiHttpService, configService: ConfigService) {
+    super(apiHttpService, 'connections', 'connection', configService);
   }
 
   validateName(name: string): Promise<ValidationErrors | null> {
