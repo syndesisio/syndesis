@@ -655,6 +655,7 @@
               <ignoredResourcePattern>mozilla/public-suffix-list.txt</ignoredResourcePattern>
               <ignoredResourcePattern>draftv3/schema</ignoredResourcePattern>
               <ignoredResourcePattern>draftv4/schema</ignoredResourcePattern>
+              <ignoredResourcePattern>git.properties</ignoredResourcePattern>
             </ignoredResourcePatterns>
             <exceptions>
               <exception>
