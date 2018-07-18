@@ -8,5 +8,7 @@ if (environment.production) {
 }
 
 /* tslint:disable:no-console */
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.log(err));
+platformBrowserDynamic().bootstrapModule(AppModule, {
+  preserveWhitespaces: true
+})
+.catch(err => console.log(err));
