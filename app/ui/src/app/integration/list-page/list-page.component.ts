@@ -1,15 +1,14 @@
-import { Component, OnInit, ApplicationRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { FilterField, NotificationType } from 'patternfly-ng';
 import { IntegrationStore, ChangeEvent } from '@syndesis/ui/store';
 import {
-  IntegrationOverviews,
   IntegrationSupportService,
   Integration
 } from '@syndesis/ui/platform';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
-import { FileUploader, FileItem, ParsedResponseHeaders } from 'ng2-file-upload';
-import { environment } from '../../../environments/environment';
+import { FileUploader, FileItem, ParsedResponseHeaders } from '@syndesis/ui/vendor';
+import { environment } from 'environments/environment';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
 
 @Component({

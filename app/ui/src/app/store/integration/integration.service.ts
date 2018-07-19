@@ -8,8 +8,8 @@ import { ApiHttpService,
   DetailedState } from '@syndesis/ui/platform';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, catchError } from 'rxjs/operators';
-import { RESTService } from '../entity';
-import { log, getCategory } from '../../logging';
+import { RESTService } from '@syndesis/ui/store/entity';
+import { log, getCategory } from '@syndesis/ui/logging';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 @Injectable()

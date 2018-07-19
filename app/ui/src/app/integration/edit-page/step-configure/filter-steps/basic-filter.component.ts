@@ -24,7 +24,7 @@ import {
   convertOps,
   Op,
   Rule
-} from './filter.interface';
+} from '@syndesis/ui/integration/edit-page/step-configure/filter-steps/filter.interface';
 
 @Component({
   selector: 'syndesis-basic-filter',

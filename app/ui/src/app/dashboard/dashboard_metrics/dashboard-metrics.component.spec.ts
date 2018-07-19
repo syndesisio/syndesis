@@ -7,7 +7,7 @@ import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { PlatformModule, IntegrationState } from '@syndesis/ui/platform';
 import { SyndesisStoreModule } from '@syndesis/ui/store';
 
-import { DashboardMetricsComponent } from './dashboard-metrics.component';
+import { DashboardMetricsComponent } from '@syndesis/ui/dashboard/dashboard_metrics/dashboard-metrics.component';
 import { ApiModule } from '@syndesis/ui/api';
 
 describe('DashboardMetricsComponent', () => {

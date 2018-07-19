@@ -6,12 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { ApiModule } from '@syndesis/ui/api';
 import { CoreModule } from '@syndesis/ui/core';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
-import { FlowViewComponent } from './flow-view.component';
-import { FlowViewStepComponent } from './flow-view-step.component';
+import { FlowViewComponent } from '@syndesis/ui/integration/edit-page/flow-view/flow-view.component';
+import { FlowViewStepComponent } from '@syndesis/ui/integration/edit-page/flow-view/flow-view-step.component';
 import { SyndesisStoreModule } from '@syndesis/ui/store';
-import { IntegrationService } from '../../../store/integration/integration.service';
-import { SyndesisCommonModule } from '../../../common/common.module';
-import { ConnectionsModule } from '../../../connections/connections.module';
+import { IntegrationService } from '@syndesis/ui/store/integration/integration.service';
+import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';
+import { ConnectionsModule } from '@syndesis/ui/connections/connections.module';
 import { VendorModule } from '@syndesis/ui/vendor';
 import {
   CurrentFlowService,

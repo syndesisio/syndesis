@@ -1,1 +1,1 @@
-export * from './integration-logs.component';
+export * from '@syndesis/ui/integration/integration_logs/integration-logs.component';

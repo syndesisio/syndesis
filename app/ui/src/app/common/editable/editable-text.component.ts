@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EditableComponent } from './editable.component';
+import { EditableComponent } from '@syndesis/ui/common/editable/editable.component';
 
 @Component({
   selector: 'syndesis-editable-text',

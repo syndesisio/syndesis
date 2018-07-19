@@ -5,11 +5,11 @@ import { CoreModule } from '@syndesis/ui/core';
 import { VendorModule } from '@syndesis/ui/vendor';
 import { TestApiModule } from '@syndesis/ui/api/testing';
 
-import { SyndesisStoreModule } from '../../store/store.module';
-import { SyndesisCommonModule } from '../../common/common.module';
-import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
-import { ConnectionsListPage } from './list-page.component';
-import { ConnectionsListComponent } from '../list/list.component';
+import { SyndesisStoreModule } from '@syndesis/ui/store/store.module';
+import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';
+import { PatternflyUIModule } from '@syndesis/ui/common/ui-patternfly/ui-patternfly.module';
+import { ConnectionsListPage } from '@syndesis/ui/connections/list-page/list-page.component';
+import { ConnectionsListComponent } from '@syndesis/ui/connections/list/list.component';
 import { PlatformModule } from '@syndesis/ui/platform';
 
 describe('ConnectionListPage', () => {

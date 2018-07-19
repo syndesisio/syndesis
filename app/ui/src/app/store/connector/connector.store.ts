@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Connectors, Connector } from '@syndesis/ui/platform';
 
-import { AbstractStore } from '../entity/entity.store';
-import { EventsService } from '../entity/events.service';
-import { ConnectorService } from './connector.service';
+import { AbstractStore } from '@syndesis/ui/store/entity/entity.store';
+import { EventsService } from '@syndesis/ui/store/entity/events.service';
+import { ConnectorService } from '@syndesis/ui/store/connector/connector.service';
 
 @Injectable()
 export class ConnectorStore extends AbstractStore<

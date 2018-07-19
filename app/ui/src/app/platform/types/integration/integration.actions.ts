@@ -6,7 +6,7 @@ import {
   Integrations,
   IntegrationMetrics,
   IntegrationOverviews
-} from './integration.models';
+} from '@syndesis/ui/platform/types/integration/integration.models';
 
 export const FETCH_INTEGRATIONS = '[Integrations] Fetch integrations request';
 export const FETCH_INTEGRATIONS_COMPLETE =

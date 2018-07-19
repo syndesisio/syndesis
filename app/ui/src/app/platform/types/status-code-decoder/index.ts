@@ -1,1 +1,1 @@
-export * from './status-code-decoder.service';
+export * from '@syndesis/ui/platform/types/status-code-decoder/status-code-decoder.service';

@@ -11,9 +11,9 @@
  */
 import { ActionReducerMap } from '@ngrx/store';
 
-import { MetadataState, metadataReducer } from './metadata';
-import { IntegrationState, integrationReducer } from './integration';
-import { I18NState, i18nReducer } from './i18n';
+import { MetadataState, metadataReducer } from '@syndesis/ui/platform/types/metadata';
+import { IntegrationState, integrationReducer } from '@syndesis/ui/platform/types/integration';
+import { I18NState, i18nReducer } from '@syndesis/ui/platform/types/i18n';
 
 export interface PlatformState {
   metadataState: MetadataState;

@@ -9,9 +9,9 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
-import { environment } from '../../environments/environment';
-import { platformReducer, PlatformEffects } from './types';
-import { SYNDESIS_GUARDS } from './guards';
+import { environment } from 'environments/environment';
+import { platformReducer, PlatformEffects } from '@syndesis/ui/platform/types';
+import { SYNDESIS_GUARDS } from '@syndesis/ui/platform/guards';
 
 @NgModule({
   imports: [

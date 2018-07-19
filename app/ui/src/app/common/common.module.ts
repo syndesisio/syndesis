@@ -4,35 +4,35 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TagInputModule } from 'ngx-chips';
 
-import { CancelConfirmationModalComponent } from './cancel_confirmation_modal';
-import { DeleteConfirmationModalComponent } from './delete_confirmation_modal';
-import { SYNDESYS_EDITABLE_DIRECTIVES } from './editable';
-import { LoadingComponent } from './loading/loading.component';
-import { SYNDESYS_VALIDATION_DIRECTIVES } from './validation';
-import { WizardProgressBarComponent } from './wizard_progress_bar';
+import { CancelConfirmationModalComponent } from '@syndesis/ui/common/cancel_confirmation_modal';
+import { DeleteConfirmationModalComponent } from '@syndesis/ui/common/delete_confirmation_modal';
+import { SYNDESYS_EDITABLE_DIRECTIVES } from '@syndesis/ui/common/editable';
+import { LoadingComponent } from '@syndesis/ui/common/loading/loading.component';
+import { SYNDESYS_VALIDATION_DIRECTIVES } from '@syndesis/ui/common/validation';
+import { WizardProgressBarComponent } from '@syndesis/ui/common/wizard_progress_bar';
 
-import { I18NPipe } from './i18n.pipe';
-import { DerpPipe } from './derp.pipe';
-import { ObjectPropertyFilterPipe } from './object-property-filter.pipe';
-import { ObjectPropertySortPipe } from './object-property-sort.pipe';
-import { TruncateCharactersPipe } from './truncate-characters.pipe';
-import { TruncateWordsPipe } from './truncate-words.pipe';
-import { CapitalizePipe } from './capitalize.pipe';
-import { TitleizePipe } from './titleize.pipe';
-import { SlugifyPipe } from './slugify.pipe';
-import { DurationPipe } from './duration.pipe';
-import { DurationDiffPipe } from './duration-diff.pipe';
-import { IconPathPipe } from './icon-path.pipe';
-import { ParseMarkdownLinksPipe } from './parse-markdown-links.pipe';
-import { ButtonComponent } from './button.component';
-import { InlineAlertComponent } from './inline-alert';
+import { I18NPipe } from '@syndesis/ui/common/i18n.pipe';
+import { DerpPipe } from '@syndesis/ui/common/derp.pipe';
+import { ObjectPropertyFilterPipe } from '@syndesis/ui/common/object-property-filter.pipe';
+import { ObjectPropertySortPipe } from '@syndesis/ui/common/object-property-sort.pipe';
+import { TruncateCharactersPipe } from '@syndesis/ui/common/truncate-characters.pipe';
+import { TruncateWordsPipe } from '@syndesis/ui/common/truncate-words.pipe';
+import { CapitalizePipe } from '@syndesis/ui/common/capitalize.pipe';
+import { TitleizePipe } from '@syndesis/ui/common/titleize.pipe';
+import { SlugifyPipe } from '@syndesis/ui/common/slugify.pipe';
+import { DurationPipe } from '@syndesis/ui/common/duration.pipe';
+import { DurationDiffPipe } from '@syndesis/ui/common/duration-diff.pipe';
+import { IconPathPipe } from '@syndesis/ui/common/icon-path.pipe';
+import { ParseMarkdownLinksPipe } from '@syndesis/ui/common/parse-markdown-links.pipe';
+import { ButtonComponent } from '@syndesis/ui/common/button.component';
+import { InlineAlertComponent } from '@syndesis/ui/common/inline-alert';
 
 // TODO: Move these services out to a CoreModule
-import { NotificationService } from './ui-patternfly';
-import { ModalComponent, ModalService } from './modal';
-import { ConfigService } from '../config.service';
-import { NavigationService } from './navigation.service';
-import { EmptyStateCardComponent } from './empty-state-card/empty-state-card.component';
+import { NotificationService } from '@syndesis/ui/common/ui-patternfly';
+import { ModalComponent, ModalService } from '@syndesis/ui/common/modal';
+import { ConfigService } from '@syndesis/ui/config.service';
+import { NavigationService } from '@syndesis/ui/common/navigation.service';
+import { EmptyStateCardComponent } from '@syndesis/ui/common/empty-state-card/empty-state-card.component';
 @NgModule({
   imports: [
     CommonModule,

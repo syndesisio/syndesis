@@ -1,1 +1,1 @@
-export * from './connection.models';
+export * from '@syndesis/ui/platform/types/connection/connection.models';

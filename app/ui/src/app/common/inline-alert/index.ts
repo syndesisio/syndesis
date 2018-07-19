@@ -1,1 +1,1 @@
-export * from './inline-alert.component';
+export * from '@syndesis/ui/common/inline-alert/inline-alert.component';

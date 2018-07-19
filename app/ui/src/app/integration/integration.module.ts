@@ -4,21 +4,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { DataMapperModule } from '@atlasmap/atlasmap-data-mapper';
-import { FileUploadModule } from 'ng2-file-upload';
 
 import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 import { ConnectionsModule } from '@syndesis/ui/connections';
 
-import { IntegrationImportExportModule } from './import-export/integration-import-export.module';
-import { IntegrationSupportModule } from './integration-support.module';
-import { IntegrationListModule } from './list';
-import { IntegrationListPage } from './list-page';
+import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
+import { IntegrationListModule } from '@syndesis/ui/integration/list';
+import { IntegrationListPage } from '@syndesis/ui/integration/list-page';
+import { IntegrationImportPageComponent } from '@syndesis/ui/integration/import-page';
 import {
   IntegrationDetailComponent,
   INTEGRATION_DETAIL_DIRECTIVES
-} from './integration_detail';
-import { IntegrationLogsComponent } from './integration_logs';
+} from '@syndesis/ui/integration/integration_detail';
+import { IntegrationLogsComponent } from '@syndesis/ui/integration/integration_logs';
 
 import {
   IntegrationEditPage,
@@ -39,7 +38,7 @@ import {
   FlowViewStepComponent,
   CurrentFlowService,
   FlowPageService
-} from './edit-page';
+} from '@syndesis/ui/integration/edit-page';
 
 const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
 const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
@@ -92,6 +91,10 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'import',
+    component: IntegrationImportPageComponent,
+  },
+  {
     path: 'create',
     component: IntegrationEditPage,
     children: editIntegrationChildRoutes
@@ -119,10 +122,8 @@ const routes: Routes = [
     VendorModule,
     syndesisCommonModuleFwd,
     DataMapperModule,
-    FileUploadModule,
     integrationSupportModuleFwd,
     integrationListModuleFwd,
-    IntegrationImportExportModule
   ],
   declarations: [
     ...INTEGRATION_DETAIL_DIRECTIVES,
@@ -138,6 +139,7 @@ const routes: Routes = [
     IntegrationStepSelectComponent,
     IntegrationStepConfigureComponent,
     IntegrationListPage,
+    IntegrationImportPageComponent,
     IntegrationLogsComponent,
     IntegrationSaveOrAddStepComponent,
     IntegrationSelectActionComponent,

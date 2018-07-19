@@ -1,7 +1,7 @@
 import { createFeatureSelector } from '@ngrx/store';
 
-import { IntegrationState, IntegrationMetrics } from './integration.models';
-import * as IntegrationActions from './integration.actions';
+import { IntegrationState, IntegrationMetrics } from '@syndesis/ui/platform/types/integration/integration.models';
+import * as IntegrationActions from '@syndesis/ui/platform/types/integration/integration.actions';
 
 const initialIntegrationMetrics: IntegrationMetrics = {
   messages: 0,

@@ -4,21 +4,21 @@ import { RouterModule, Routes } from '@angular/router';
 import { FileUploadModule } from 'ng2-file-upload';
 import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
-import { WindowRef } from './window-ref';
+import { WindowRef } from '@syndesis/ui/customizations/window-ref';
 
 import {
   ApiConnectorListComponent,
   ApiConnectorLazyLoaderGuard
-} from './api-connector';
-import { ApiConnectorModule } from './api-connector/api-connector.module';
-import { CustomizationsComponent } from './customizations.component';
+} from '@syndesis/ui/customizations/api-connector';
+import { ApiConnectorModule } from '@syndesis/ui/customizations/api-connector/api-connector.module';
+import { CustomizationsComponent } from '@syndesis/ui/customizations/customizations.component';
 
 import {
   TechExtensionsListComponent,
   TechExtensionImportComponent,
   TechExtensionDetailComponent,
   TechExtensionDeleteModalComponent
-} from './tech-extensions';
+} from '@syndesis/ui/customizations/tech-extensions';
 
 const routes: Routes = [
   {

@@ -5,14 +5,14 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 
 import { EventsService } from '@syndesis/ui/store';
-import { ApiConnectorService } from './api-connector.service';
+import { ApiConnectorService } from '@syndesis/ui/customizations/api-connector/api-connector.service';
 import {
   ApiConnectorActions,
   ApiConnectorValidateSwagger,
   ApiConnectorCreate,
   ApiConnectorUpdate,
   ApiConnectorDelete
-} from './api-connector.actions';
+} from '@syndesis/ui/customizations/api-connector/api-connector.actions';
 
 @Injectable()
 export class ApiConnectorEffects {

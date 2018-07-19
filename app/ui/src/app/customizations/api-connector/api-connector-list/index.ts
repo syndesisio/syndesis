@@ -1,1 +1,1 @@
-export * from './api-connector-list.component';
+export * from '@syndesis/ui/customizations/api-connector/api-connector-list/api-connector-list.component';

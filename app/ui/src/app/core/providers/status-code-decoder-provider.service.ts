@@ -6,7 +6,7 @@ import {
   StringMap,
   I18NService
 } from '@syndesis/ui/platform';
-import { environment } from '../../../environments/environment';
+import { environment } from 'environments/environment';
 const { fallbackValue } = environment.i18n;
 
 @Injectable()

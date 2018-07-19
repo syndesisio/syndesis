@@ -2,9 +2,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { SyndesisCommonModule } from '../../../common/common.module';
-import { ListActionsComponent } from './list-actions.component';
-import { SyndesisStoreModule } from '../../../store/store.module';
+import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';
+import { ListActionsComponent } from '@syndesis/ui/integration/edit-page/list-actions/list-actions.component';
+import { SyndesisStoreModule } from '@syndesis/ui/store/store.module';
 
 describe('ListActionsComponent', () => {
   let component: ListActionsComponent;

@@ -7,8 +7,8 @@
  */
 import { createFeatureSelector } from '@ngrx/store';
 
-import { MetadataState } from './metadata.models';
-import * as MetadataActions from './metadata.actions';
+import { MetadataState } from '@syndesis/ui/platform/types/metadata/metadata.models';
+import * as MetadataActions from '@syndesis/ui/platform/types/metadata/metadata.actions';
 
 const initialState: MetadataState = {
   appName: 'Syndesis',

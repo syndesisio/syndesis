@@ -9,20 +9,20 @@ import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 import { ApiModule } from '@syndesis/ui/api';
 
-import { apiConnectorEndpoints } from './api-connector.api';
-import { ApiConnectorRoutingModule } from './api-connector.routing';
+import { apiConnectorEndpoints } from '@syndesis/ui/customizations/api-connector/api-connector.api';
+import { ApiConnectorRoutingModule } from '@syndesis/ui/customizations/api-connector/api-connector.routing';
 
 import {
   ApiConnectorAuthComponent,
   ApiConnectorSwaggerUploadComponent
-} from './api-connector-create';
-import { ApiConnectorInfoComponent } from './api-connector-info';
-import { ApiConnectorReviewComponent } from './api-connector-review';
-import { ApiConnectorListComponent } from './api-connector-list';
+} from '@syndesis/ui/customizations/api-connector/api-connector-create';
+import { ApiConnectorInfoComponent } from '@syndesis/ui/customizations/api-connector/api-connector-info';
+import { ApiConnectorReviewComponent } from '@syndesis/ui/customizations/api-connector/api-connector-review';
+import { ApiConnectorListComponent } from '@syndesis/ui/customizations/api-connector/api-connector-list';
 
-import { apiConnectorReducer } from './api-connector.reducer';
-import { ApiConnectorEffects } from './api-connector.effects';
-import { ApiConnectorService } from './api-connector.service';
+import { apiConnectorReducer } from '@syndesis/ui/customizations/api-connector/api-connector.reducer';
+import { ApiConnectorEffects } from '@syndesis/ui/customizations/api-connector/api-connector.effects';
+import { ApiConnectorService } from '@syndesis/ui/customizations/api-connector/api-connector.service';
 
 import { ApicurioEditorModule, ApicurioCommonComponentsModule } from 'apicurio-design-studio';
 

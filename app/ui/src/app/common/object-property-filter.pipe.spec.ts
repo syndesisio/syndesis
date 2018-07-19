@@ -1,4 +1,4 @@
-import { ObjectPropertyFilterPipe } from './object-property-filter.pipe';
+import { ObjectPropertyFilterPipe } from '@syndesis/ui/common/object-property-filter.pipe';
 
 describe('ObjectPropertyFilterPipe', () => {
   let pipe: ObjectPropertyFilterPipe;

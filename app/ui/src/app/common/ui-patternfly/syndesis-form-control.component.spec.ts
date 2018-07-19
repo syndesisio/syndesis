@@ -33,11 +33,11 @@ import {
   DynamicTimePickerModel
 } from '@ng-dynamic-forms/core';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { DurationFormControlComponent } from './duration-form-control.component';
+import { DurationFormControlComponent } from '@syndesis/ui/common/ui-patternfly/duration-form-control.component';
 import {
   SyndesisFormControlType,
   SyndesisFormComponent
-} from './syndesis-form-control.component';
+} from '@syndesis/ui/common/ui-patternfly/syndesis-form-control.component';
 
 describe('SyndesisFormComponent test suite', () => {
   const formModel = [

@@ -1,4 +1,4 @@
-import { EditableComponent } from './editable.component';
+import { EditableComponent } from '@syndesis/ui/common/editable/editable.component';
 
 describe('EditableComponent', () => {
   class MyEditableComponent extends EditableComponent {}

@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { I18NState, DictionaryEntry, I18N_DEFAULT_LOCALE } from './i18n.models';
+import { I18NState, DictionaryEntry, I18N_DEFAULT_LOCALE } from '@syndesis/ui/platform/types/i18n/i18n.models';
 
 export const FETCH = '[i18n] Fetch generic dictionary request';
 export const FETCH_COMPLETE = '[i18n] Fetch generic dictionary complete';

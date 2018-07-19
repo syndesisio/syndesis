@@ -3,14 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { CanDeactivateGuard } from '@syndesis/ui/platform';
 
-import { ConnectionsModule } from './connections.module';
-import { ConnectionsListPage } from './list-page/list-page.component';
-import { ConnectionsCreatePage } from './create-page/create-page.component';
-import { ConnectionsConnectionBasicsComponent } from './create-page/connection-basics/connection-basics.component';
-import { ConnectionsConfigureFieldsComponent } from './create-page/configure-fields/configure-fields.component';
-import { ConnectionsReviewComponent } from './create-page/review/review.component';
-import { ConnectionsCancelComponent } from './create-page/cancel.component';
-import { ConnectionDetailPageComponent } from './detail-page/detail-page.component';
+import { ConnectionsModule } from '@syndesis/ui/connections/connections.module';
+import { ConnectionsListPage } from '@syndesis/ui/connections/list-page/list-page.component';
+import { ConnectionsCreatePage } from '@syndesis/ui/connections/create-page/create-page.component';
+import { ConnectionsConnectionBasicsComponent } from '@syndesis/ui/connections/create-page/connection-basics/connection-basics.component';
+import { ConnectionsConfigureFieldsComponent } from '@syndesis/ui/connections/create-page/configure-fields/configure-fields.component';
+import { ConnectionsReviewComponent } from '@syndesis/ui/connections/create-page/review/review.component';
+import { ConnectionsCancelComponent } from '@syndesis/ui/connections/create-page/cancel.component';
+import { ConnectionDetailPageComponent } from '@syndesis/ui/connections/detail-page/detail-page.component';
 
 const routes: Routes = [
   { path: '', component: ConnectionsListPage, pathMatch: 'full' },

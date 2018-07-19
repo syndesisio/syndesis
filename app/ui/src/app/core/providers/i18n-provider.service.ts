@@ -11,8 +11,8 @@ import {
   selectI18NState,
   DictionaryEntry,
   I18NService
-} from '../../platform';
-import { environment } from '../../../environments/environment';
+} from '@syndesis/ui/platform';
+import { environment } from 'environments/environment';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 const {

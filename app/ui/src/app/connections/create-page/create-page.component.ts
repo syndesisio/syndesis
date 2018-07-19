@@ -9,7 +9,7 @@ import { log } from '@syndesis/ui/logging';
 import {
   CurrentConnectionService,
   ConnectionEvent
-} from './current-connection';
+} from '@syndesis/ui/connections/create-page/current-connection';
 
 const CONNECTION_BASICS = 'connection-basics';
 const CONFIGURE_FIELDS = 'configure-fields';

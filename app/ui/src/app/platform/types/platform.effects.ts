@@ -4,9 +4,9 @@ import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 
-import * as PlatformActions from './platform.actions';
-import { IntegrationEffects, IntegrationActions } from './integration';
-import { I18NEffects } from './i18n';
+import * as PlatformActions from '@syndesis/ui/platform/types/platform.actions';
+import { IntegrationEffects, IntegrationActions } from '@syndesis/ui/platform/types/integration';
+import { I18NEffects } from '@syndesis/ui/platform/types/i18n';
 
 @Injectable()
 export class PlatformEffects {

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { getPropertyValue } from './object-property-filter.pipe';
+import { getPropertyValue } from '@syndesis/ui/common/object-property-filter.pipe';
 
 export class ObjectPropertySortConfig {
   sortField: string;

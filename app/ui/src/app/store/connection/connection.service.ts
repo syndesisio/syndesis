@@ -3,7 +3,7 @@ import { ValidationErrors } from '@angular/forms';
 
 import { ApiHttpService, Connection, Connections } from '@syndesis/ui/platform';
 import { TypeFactory } from '@syndesis/ui/model';
-import { RESTService } from '../entity';
+import { RESTService } from '@syndesis/ui/store/entity';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 @Injectable()

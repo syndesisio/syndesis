@@ -43,6 +43,7 @@
         "importing": "Importing '{{0}}'...",
         "import-success": "Successfully imported '{{0}}'.",
         "import-fail": "Unable to import '{{0}}'.",
+        "upload-error": "<strong>Unable to import '{{0}}':</strong> {{1}}",
         "import-results": "Import Results:",
         "btn-done": "{{done}}",
         "btn-cancel": "{{cancel}}"

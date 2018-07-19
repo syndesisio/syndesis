@@ -1,2 +1,2 @@
-export * from './settings.module';
-export * from './oauth-apps';
+export * from '@syndesis/ui/settings/settings.module';
+export * from '@syndesis/ui/settings/oauth-apps';

@@ -7,9 +7,9 @@ import {
   ApiConnectors,
   ApiConnectorData,
   CustomConnectorRequest
-} from './api-connector.models';
+} from '@syndesis/ui/customizations/api-connector/api-connector.models';
 
-import { apiConnectorEndpoints } from './api-connector.api';
+import { apiConnectorEndpoints } from '@syndesis/ui/customizations/api-connector/api-connector.api';
 
 @Injectable()
 export class ApiConnectorService {

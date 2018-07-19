@@ -1,2 +1,2 @@
-export * from './connector.service';
-export * from './connector.store';
+export * from '@syndesis/ui/store/connector/connector.service';
+export * from '@syndesis/ui/store/connector/connector.store';

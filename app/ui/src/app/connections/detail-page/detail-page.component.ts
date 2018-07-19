@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 
 import { Connection, MessageCode, MessageLevel } from '@syndesis/ui/platform';
-import { ConnectionStore } from '../../store/connection/connection.store';
+import { ConnectionStore } from '@syndesis/ui/store/connection/connection.store';
 
 @Component({
   selector: 'syndesis-connection-detail-page',

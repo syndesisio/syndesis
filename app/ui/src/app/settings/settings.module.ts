@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
-import { SyndesisCommonModule } from '../common/common.module';
-import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
+import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';
+import { PatternflyUIModule } from '@syndesis/ui/common/ui-patternfly/ui-patternfly.module';
 import { VendorModule } from '@syndesis/ui/vendor';
 
-import { SettingsRootComponent } from './settings-root.component';
-import { OAuthAppsComponent } from './oauth-apps/oauth-apps.component';
-import { OAuthAppFormComponent } from './oauth-apps/oauth-app-form.component';
-import { OAuthAppModalComponent } from './oauth-apps/oauth-app-modal.component';
+import { SettingsRootComponent } from '@syndesis/ui/settings/settings-root.component';
+import { OAuthAppsComponent } from '@syndesis/ui/settings/oauth-apps/oauth-apps.component';
+import { OAuthAppFormComponent } from '@syndesis/ui/settings/oauth-apps/oauth-app-form.component';
+import { OAuthAppModalComponent } from '@syndesis/ui/settings/oauth-apps/oauth-app-modal.component';
 
 const routes: Routes = [
   {

@@ -1,9 +1,9 @@
 import { APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { ExceptionHandlerService } from './exception-handler.service';
-import { HttpErrorInterceptor } from './http-error.interceptor';
-import { OfflineHandlerService } from './offline-handler.service';
+import { ExceptionHandlerService } from '@syndesis/ui/error-handler/exception-handler.service';
+import { HttpErrorInterceptor } from '@syndesis/ui/error-handler/http-error.interceptor';
+import { OfflineHandlerService } from '@syndesis/ui/error-handler/offline-handler.service';
 
 export function offlineHandlerInitializer(
   offlineHandlerService: OfflineHandlerService

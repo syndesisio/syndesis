@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
-import { WizardProgressBarComponent } from './wizard-progress-bar.component';
+import { WizardProgressBarComponent } from '@syndesis/ui/common/wizard_progress_bar/wizard-progress-bar.component';
 
 describe('WizardProgressBarComponent', () => {
   let component: WizardProgressBarComponent;

@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { I18NState, I18N_DEFAULT_LOCALE, DictionaryEntry } from './i18n.models';
-import * as I18NActions from './i18n.actions';
+import { I18NState, I18N_DEFAULT_LOCALE, DictionaryEntry } from '@syndesis/ui/platform/types/i18n/i18n.models';
+import * as I18NActions from '@syndesis/ui/platform/types/i18n/i18n.actions';
 
 const initialState: I18NState = {
   dictionary: null,

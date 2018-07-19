@@ -1,1 +1,1 @@
-export * from './configuration';
+export * from '@syndesis/ui/connections/common/configuration';

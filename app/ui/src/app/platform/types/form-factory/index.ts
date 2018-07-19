@@ -1,1 +1,1 @@
-export * from './form-factory.service';
+export * from '@syndesis/ui/platform/types/form-factory/form-factory.service';

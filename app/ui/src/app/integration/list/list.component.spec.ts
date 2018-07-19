@@ -9,10 +9,10 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ActionModule, ListModule, ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
 
-import { SyndesisCommonModule } from '../../common/common.module';
-import { IntegrationListComponent } from './list.component';
-import { IntegrationStatusComponent } from './status.component';
-import { SyndesisStoreModule } from '../../store/store.module';
+import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';
+import { IntegrationListComponent } from '@syndesis/ui/integration/list/list.component';
+import { IntegrationStatusComponent } from '@syndesis/ui/integration/list/status.component';
+import { SyndesisStoreModule } from '@syndesis/ui/store/store.module';
 
 xdescribe('IntegrationsListComponent', () => {
   let component: IntegrationListComponent;

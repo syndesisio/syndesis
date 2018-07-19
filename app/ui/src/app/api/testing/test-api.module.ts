@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
 import { ApiHttpService } from '@syndesis/ui/platform';
-import { TestApiHttpService } from './test-api-http.service';
+import { TestApiHttpService } from '@syndesis/ui/api/testing/test-api-http.service';
 
 @NgModule({
   imports: [CommonModule, HttpClientModule],

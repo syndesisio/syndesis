@@ -2,4 +2,15 @@
 import * as moment from 'moment';
 
 export { moment };
-export * from './vendor.module';
+
+import {
+  FileItem,
+  FileLikeObject,
+  FileUploader,
+  FileUploaderOptions,
+  ParsedResponseHeaders
+} from 'ng2-file-upload';
+
+export { FileItem, FileLikeObject, FileUploader, FileUploaderOptions, ParsedResponseHeaders };
+
+export * from '@syndesis/ui/vendor/vendor.module';

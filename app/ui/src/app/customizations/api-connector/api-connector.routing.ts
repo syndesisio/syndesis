@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ApiConnectorCreateComponent } from './api-connector-create';
-import { ApiConnectorDetailComponent } from './api-connector-detail';
-import { ApiConnectorLazyLoaderGuard } from './api-connector-lazy-loader.guard';
+import { ApiConnectorCreateComponent } from '@syndesis/ui/customizations/api-connector/api-connector-create';
+import { ApiConnectorDetailComponent } from '@syndesis/ui/customizations/api-connector/api-connector-detail';
+import { ApiConnectorLazyLoaderGuard } from '@syndesis/ui/customizations/api-connector/api-connector-lazy-loader.guard';
 
 const routes: Routes = [
   {

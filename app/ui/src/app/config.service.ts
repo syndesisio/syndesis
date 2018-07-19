@@ -2,8 +2,8 @@ import { Subject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { log, getCategory } from './logging';
-import { environment } from '../environments/environment';
+import { log, getCategory } from '@syndesis/ui/logging';
+import { environment } from 'environments/environment';
 
 const category = getCategory('ConfigService');
 

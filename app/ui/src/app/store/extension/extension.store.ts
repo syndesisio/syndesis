@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Extension, Extensions, Integrations } from '@syndesis/ui/platform';
-import { AbstractStore, EventsService } from '../entity';
-import { ExtensionService } from './extension.service';
+import { AbstractStore, EventsService } from '@syndesis/ui/store/entity';
+import { ExtensionService } from '@syndesis/ui/store/extension/extension.service';
 
 @Injectable()
 export class ExtensionStore extends AbstractStore<

@@ -1,1 +1,1 @@
-export * from './step.store';
+export * from '@syndesis/ui/store/step/step.store';

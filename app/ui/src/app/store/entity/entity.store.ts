@@ -12,10 +12,10 @@ import { share, mergeMap, filter, debounceTime } from 'rxjs/operators';
 import { plural } from 'pluralize';
 
 import { BaseEntity } from '@syndesis/ui/platform';
-import { RESTService } from './rest.service';
+import { RESTService } from '@syndesis/ui/store/entity/rest.service';
 
-import { log, getCategory } from '../../logging';
-import { EventsService, ChangeEvent } from './events.service';
+import { log, getCategory } from '@syndesis/ui/logging';
+import { EventsService, ChangeEvent } from '@syndesis/ui/store/entity/events.service';
 
 const category = getCategory('AbstractStore');
 

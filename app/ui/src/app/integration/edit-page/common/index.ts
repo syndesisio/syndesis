@@ -1,1 +1,1 @@
-export * from './cancel-add-step.component';
+export * from '@syndesis/ui/integration/edit-page/common/cancel-add-step.component';

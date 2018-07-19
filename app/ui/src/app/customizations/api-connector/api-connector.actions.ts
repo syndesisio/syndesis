@@ -6,7 +6,7 @@ import {
   CustomConnectorRequest,
   ApiConnectorData,
   CustomApiConnectorAuthSettings
-} from './api-connector.models';
+} from '@syndesis/ui/customizations/api-connector/api-connector.models';
 
 export class ApiConnectorActions {
   static FETCH = '[API Connectors] Fetch connectors request';

@@ -2,10 +2,10 @@ import { take } from 'rxjs/operators';
 import { Component } from '@angular/core';
 import { NotificationType } from 'patternfly-ng';
 
-import { OAuthAppListItem } from './oauth-apps.component';
-import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
+import { OAuthAppListItem } from '@syndesis/ui/settings/oauth-apps/oauth-apps.component';
+import { OAuthAppStore } from '@syndesis/ui/store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
-import { ModalService } from '../../common/modal/modal.service';
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notification-service';
 
 @Component({

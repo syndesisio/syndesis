@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Endpoints } from './api.models';
+import { Endpoints } from '@syndesis/ui/platform/types/api/api.models';
 
 @Injectable()
 export abstract class ApiConfigService {

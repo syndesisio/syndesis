@@ -2,7 +2,7 @@ import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { RESTService } from '../entity';
+import { RESTService } from '@syndesis/ui/store/entity';
 import {
   ApiHttpService,
   Extension,

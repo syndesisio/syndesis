@@ -1,4 +1,4 @@
-import { SlugifyPipe } from './slugify.pipe';
+import { SlugifyPipe } from '@syndesis/ui/common/slugify.pipe';
 
 describe('SlugifyPipe', () => {
   it('create an instance', () => {

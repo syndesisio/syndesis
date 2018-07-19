@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { Connection, Connector } from '@syndesis/ui/platform';
-import { ConnectionConfigurationService } from './configuration.service';
-import { ConnectorStore } from '../../../store/connector/connector.store';
+import { ConnectionConfigurationService } from '@syndesis/ui/connections/common/configuration/configuration.service';
+import { ConnectorStore } from '@syndesis/ui/store/connector/connector.store';
 
 @Component({
   selector: 'syndesis-connection-configuration-validation',

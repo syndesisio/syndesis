@@ -5,7 +5,7 @@ import {
   ApiConnectorState,
   CustomApiConnectorRequest,
   CustomConnectorRequest
-} from './api-connector.models';
+} from '@syndesis/ui/customizations/api-connector/api-connector.models';
 import {
   ApiConnectorActions,
   ApiConnectorFetchComplete,
@@ -17,7 +17,7 @@ import {
   ApiConnectorUpdateComplete,
   ApiConnectorUpdateFail,
   ApiConnectorDelete
-} from './api-connector.actions';
+} from '@syndesis/ui/customizations/api-connector/api-connector.actions';
 
 const initialCreateRequest: CustomApiConnectorRequest = {
   connectorTemplateId: null,

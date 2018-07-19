@@ -1,2 +1,2 @@
-export * from './basic-filter.component';
-export * from './filter.interface';
+export * from '@syndesis/ui/integration/edit-page/step-configure/filter-steps/basic-filter.component';
+export * from '@syndesis/ui/integration/edit-page/step-configure/filter-steps/filter.interface';

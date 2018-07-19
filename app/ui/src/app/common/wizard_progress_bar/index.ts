@@ -1,1 +1,1 @@
-export * from './wizard-progress-bar.component';
+export * from '@syndesis/ui/common/wizard_progress_bar/wizard-progress-bar.component';

@@ -1,1 +1,1 @@
-export * from './dashboard-connections.component';
+export * from '@syndesis/ui/dashboard/dashboard_connections/dashboard-connections.component';

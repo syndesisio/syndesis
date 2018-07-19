@@ -1,4 +1,4 @@
-import { ObjectPropertySortPipe } from './object-property-sort.pipe';
+import { ObjectPropertySortPipe } from '@syndesis/ui/common/object-property-sort.pipe';
 
 describe('ObjectPropertySortPipe', () => {
   let pipe: ObjectPropertySortPipe;
