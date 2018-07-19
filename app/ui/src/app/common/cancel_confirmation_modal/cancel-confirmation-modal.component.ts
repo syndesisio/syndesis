@@ -10,13 +10,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
             (click)="onModalClick(false)">
       <span class="pficon pficon-close"></span>
     </button>
-    <h4 class="modal-title">Warning!</h4>
+    <h4 class="modal-title">{{ title }}</h4>
   </div>
   <div class="modal-body">
-    <div class="row">
-      <div class="col-xs-12">
-        <ng-content></ng-content>
-      </div>
+    <span aria-hidden="true" class="pficon pficon-warning-triangle-o"></span>
+    <div>
+      <ng-content></ng-content>
     </div>
   </div>
   <div class="modal-footer">
@@ -26,7 +25,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
       {{ secondaryLabel }}
     </button>
     <button type="button"
-            class="btn btn-danger"
+            class="btn btn-primary"
             (click)="onModalClick(true)">
       {{ primaryLabel }}
     </button>
@@ -36,6 +35,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class CancelConfirmationModalComponent {
   @Input() primaryLabel = 'Cancel';
   @Input() secondaryLabel = 'Continue';
+  @Input() title = 'Warning!';
   @Output() cancel = new EventEmitter<boolean>();
 
   onModalClick(doCancel: boolean): void {
