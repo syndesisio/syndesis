@@ -206,6 +206,7 @@
       "export": "Export",
       "export-thing": "{{export}} {{0}}",
       "remove": "Remove",
+      "close": "Close",
       "create": "Create",
       "help": "Help",
       "support": "Support",
