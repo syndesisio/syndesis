@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter, Input, Output, OnDestroy } from '@angu
 import { Router } from '@angular/router';
 import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
 import { FormFactoryService } from '@syndesis/ui/platform';
-import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
+import { OAuthAppStore } from '@syndesis/ui/store/oauthApp/oauth-app.store';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,

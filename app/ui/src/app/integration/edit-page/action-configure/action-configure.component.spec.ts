@@ -26,7 +26,7 @@ import {
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
-import { IntegrationConfigureActionComponent } from './action-configure.component';
+import { IntegrationConfigureActionComponent } from '@syndesis/ui/integration/edit-page/action-configure/action-configure.component';
 
 describe('IntegrationConfigureActionComponent', () => {
   let component: IntegrationConfigureActionComponent;

@@ -1,7 +1,7 @@
 import { RouterStateSnapshot } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { ConnectionsReviewComponent } from './review.component';
-import { CurrentConnectionService } from '../current-connection';
+import { ConnectionsReviewComponent } from '@syndesis/ui/connections/create-page/review/review.component';
+import { CurrentConnectionService } from '@syndesis/ui/connections/create-page/current-connection';
 
 describe('ConnectionsReviewComponent', () => {
   let current;

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, BehaviorSubject, Observable } from 'rxjs';
-import { CurrentFlowService, FlowPageService, FlowEvent } from '../index';
+import { CurrentFlowService, FlowPageService, FlowEvent } from '@syndesis/ui/integration/edit-page';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import {
   Step,

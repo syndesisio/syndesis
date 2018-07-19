@@ -6,7 +6,7 @@ import {
   Integration,
   Integrations,
   IntegrationMetrics
-} from './integration.models';
+} from '@syndesis/ui/platform/types/integration/integration.models';
 
 @Injectable()
 export abstract class IntegrationService {

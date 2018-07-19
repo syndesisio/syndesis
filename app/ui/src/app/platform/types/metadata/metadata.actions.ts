@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { MetadataState } from './metadata.models';
+import { MetadataState } from '@syndesis/ui/platform/types/metadata/metadata.models';
 
 /**
  * POC: The MetadataActions class provides convenient static methods to access action

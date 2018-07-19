@@ -1,4 +1,4 @@
-import { TruncateWordsPipe } from './truncate-words.pipe';
+import { TruncateWordsPipe } from '@syndesis/ui/common/truncate-words.pipe';
 
 describe('TruncateWordsPipe', () => {
   let pipe: TruncateWordsPipe;

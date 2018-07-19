@@ -1,1 +1,1 @@
-export * from './app.module';
+export * from '@syndesis/ui/app.module';

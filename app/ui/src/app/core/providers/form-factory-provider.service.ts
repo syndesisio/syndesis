@@ -15,7 +15,7 @@ import {
   DynamicSelectModel
 } from '@ng-dynamic-forms/core';
 
-import { environment } from '../../../environments/environment';
+import { environment } from 'environments/environment';
 
 @Injectable()
 export class FormFactoryProviderService extends FormFactoryService {

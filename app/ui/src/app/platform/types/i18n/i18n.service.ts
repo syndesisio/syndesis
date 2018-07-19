@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { I18NState } from './i18n.models';
+import { I18NState } from '@syndesis/ui/platform/types/i18n/i18n.models';
 
 @Injectable()
 export abstract class I18NService {

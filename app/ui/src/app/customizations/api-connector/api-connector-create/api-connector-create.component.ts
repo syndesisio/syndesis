@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
-import { WindowRef } from '../../window-ref';
+import { WindowRef } from '@syndesis/ui/customizations/window-ref';
 import * as YAML from 'yamljs';
 
 import { ModalService, NavigationService } from '@syndesis/ui/common';

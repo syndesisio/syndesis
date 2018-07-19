@@ -1,0 +1,143 @@
+<!-- Toolbar & Breadcrumbs -->
+<nav class="row toolbar-pf toolbar">
+  <div class="col-sm-12">
+    <div class="toolbar-pf-actions">
+      <div class="inline-block">
+        <ol class="breadcrumb no-bottom-margin">
+          <li>
+            <a routerLink="/">{{ 'home' | synI18n }}</a>
+          </li>
+          <li>
+            <a routerLink="/integrations">{{ 'integrations' | synI18n }}</a>
+          </li>
+          <li class="active">
+            <strong>{{ 'integrations.import-export.header' | synI18n }}</strong>
+          </li>
+        </ol>
+      </div>
+      <div class="toolbar-pf-action-right">
+        <div class="toolbar-pf-action-right-alignment">
+          <button class="btn btn-default"
+                  (click)="redirectBack()">
+            {{ 'close' | synI18n }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div>
+  <div class="row row-cards-pf second-row">
+    <div class="card-pf">
+      <div class="card-pf-heading">
+        <div class="card-pf-title">
+          <h1>{{ 'integrations.import-export.header' | synI18n }}</h1>
+        </div>
+      </div>
+      <div class="card-pf-body">
+        <div *ngIf="(errors$ | async).length">
+          <div *ngFor="let error of errors$ | async">
+            <syndesis-inline-alert [message]="getErrorMessage(error)"></syndesis-inline-alert>
+          </div>
+        </div>
+        <div>
+          <p>{{ 'integrations.import-export.choose-files' | synI18n }}</p>
+        </div>
+        <div class="syn-drop-zone"
+            ng2FileDrop
+            [uploader]="uploader"
+            [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
+            (fileOver)="onFileOver($event)">
+          <p>{{ 'integrations.import-export.drag-and-drop' | synI18n }}</p>
+          <div class="row syn-drop-zone__file-select">
+            <div class="col-md-3">
+              <p>
+                <input #fileSelect
+                      type="file"
+                      ng2FileSelect
+                      multiple
+                      [uploader]="uploader">
+              </p>
+            </div>
+            <div class="col-md-9">
+              <div *ngFor="let item of uploader.queue">
+                <div class="row">
+                  <div class="col-xs-10">
+                    <p *ngIf="item.isUploading"
+                        class="text-muted">
+                      <span *ngIf="item.isUploading"
+                            class="spinner spinner-sm spinner-inline"></span>
+                      <em>{{ 'integrations.import-export.importing' | synI18n: item.file.name }}</em>
+                  </p>
+                    <p *ngIf="item.isUploaded">
+                      <span *ngIf="item.isSuccess; else isError">
+                        <span class="pficon-ok"></span>
+                        {{ 'integrations.import-export.import-success' | synI18n: item.file.name }}
+                      </span>
+                      <ng-template #isError>
+                        <span class="pficon-error-circle-o"></span>
+                        {{ 'integrations.import-export.import-fail' | synI18n: item.file.name }}
+                      </ng-template>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="help-block">
+            <em>{{ 'integrations.import-export.help-block' | synI18n }}</em>
+          </p>
+        </div>
+        <div class="integration-import-results row" *ngIf="showReviewStep">
+          <div class="col-sm-2 text">
+            <h3>{{ 'integrations.import-export.import-results' | synI18n }}</h3>
+          </div>
+          <div class="col-sm-10">
+            <div class="list-group">
+              <ng-container *ngFor="let integration of importedIntegrations$ | async">
+                <div class="list-group-item">
+                  <div class="row">
+                    <div class="col-sm-2">
+                      {{ 'integration-name' | synI18n }}
+                    </div>
+                    <div class="col-sm-10">
+                      <strong>{{ integration.name }}</strong>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngFor="let connection of importedConnections$ |async">
+                <div class="list-group-item">
+                  <div class="row">
+                    <div class="col-sm-2">
+                      {{ 'connection-name' | synI18n }}
+                    </div>
+                  <div class="col-sm-5">
+                      <strong>{{ connection.name }}</strong>
+                    </div>
+                    <div *ngIf="connection.board?.notices || connection.board?.warnings || connection.board?.errors"
+                      class="col-sm-5">
+                      <span class="pficon pficon-warning-triangle-o"></span>
+                      {{ 'configuration-required' | synI18n }}
+                    </div>
+                  </div>
+                </div>
+                </ng-container>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12"
+            *ngIf="showReviewStep">
+            <button type="button"
+              class="btn btn-primary"
+              (click)="done()">
+                {{ 'integrations.import-export.btn-done' | synI18n }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,3 +1,3 @@
-export * from './step-configure.component';
-export * from './data-mapper';
-export * from './filter-steps';
+export * from '@syndesis/ui/integration/edit-page/step-configure/step-configure.component';
+export * from '@syndesis/ui/integration/edit-page/step-configure/data-mapper';
+export * from '@syndesis/ui/integration/edit-page/step-configure/filter-steps';

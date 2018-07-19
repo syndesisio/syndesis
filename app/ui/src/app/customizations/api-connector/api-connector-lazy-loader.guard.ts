@@ -4,12 +4,12 @@ import { Observable, of } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
-import { ApiConnectorState } from './api-connector.models';
-import { ApiConnectorActions } from './api-connector.actions';
+import { ApiConnectorState } from '@syndesis/ui/customizations/api-connector/api-connector.models';
+import { ApiConnectorActions } from '@syndesis/ui/customizations/api-connector/api-connector.actions';
 import {
   ApiConnectorStore,
   getApiConnectorState
-} from './api-connector.reducer';
+} from '@syndesis/ui/customizations/api-connector/api-connector.reducer';
 
 @Injectable()
 export class ApiConnectorLazyLoaderGuard implements CanActivate {

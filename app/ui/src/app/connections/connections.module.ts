@@ -6,22 +6,22 @@ import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { TagInputModule } from 'ngx-chips';
 
 import { VendorModule } from '@syndesis/ui/vendor';
-import { SyndesisCommonModule } from '../common/common.module';
-import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
-import { ConnectionsCreatePage } from './create-page/create-page.component';
-import { ConnectionsConnectionBasicsComponent } from './create-page/connection-basics/connection-basics.component';
-import { ConnectionsConfigureFieldsComponent } from './create-page/configure-fields/configure-fields.component';
-import { ConnectionsReviewComponent } from './create-page/review/review.component';
-import { ConnectionsCancelComponent } from './create-page/cancel.component';
-import { ConnectionsListPage } from './list-page/list-page.component';
-import { ConnectionsListComponent } from './list/list.component';
-import { CurrentConnectionService } from './create-page/current-connection';
-import { ConnectionDetailPageComponent } from './detail-page/detail-page.component';
-import { ConnectionDetailBreadcrumbComponent } from './detail-page/breadcrumb.component';
-import { ConnectionDetailInfoComponent } from './detail-page/info.component';
-import { ConnectionDetailConfigurationComponent } from './detail-page/configuration.component';
-import { ConnectionConfigurationService } from './common/configuration/configuration.service';
-import { ConnectionConfigurationValidationComponent } from './common/configuration/validation.component';
+import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';
+import { PatternflyUIModule } from '@syndesis/ui/common/ui-patternfly/ui-patternfly.module';
+import { ConnectionsCreatePage } from '@syndesis/ui/connections/create-page/create-page.component';
+import { ConnectionsConnectionBasicsComponent } from '@syndesis/ui/connections/create-page/connection-basics/connection-basics.component';
+import { ConnectionsConfigureFieldsComponent } from '@syndesis/ui/connections/create-page/configure-fields/configure-fields.component';
+import { ConnectionsReviewComponent } from '@syndesis/ui/connections/create-page/review/review.component';
+import { ConnectionsCancelComponent } from '@syndesis/ui/connections/create-page/cancel.component';
+import { ConnectionsListPage } from '@syndesis/ui/connections/list-page/list-page.component';
+import { ConnectionsListComponent } from '@syndesis/ui/connections/list/list.component';
+import { CurrentConnectionService } from '@syndesis/ui/connections/create-page/current-connection';
+import { ConnectionDetailPageComponent } from '@syndesis/ui/connections/detail-page/detail-page.component';
+import { ConnectionDetailBreadcrumbComponent } from '@syndesis/ui/connections/detail-page/breadcrumb.component';
+import { ConnectionDetailInfoComponent } from '@syndesis/ui/connections/detail-page/info.component';
+import { ConnectionDetailConfigurationComponent } from '@syndesis/ui/connections/detail-page/configuration.component';
+import { ConnectionConfigurationService } from '@syndesis/ui/connections/common/configuration/configuration.service';
+import { ConnectionConfigurationValidationComponent } from '@syndesis/ui/connections/common/configuration/validation.component';
 
 @NgModule({
   imports: [

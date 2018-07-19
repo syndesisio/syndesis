@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { User } from './user.models';
+import { User } from '@syndesis/ui/platform/types/user/user.models';
 
 @Injectable()
 export abstract class UserService {

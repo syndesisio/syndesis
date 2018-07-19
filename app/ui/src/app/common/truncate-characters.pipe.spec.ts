@@ -1,4 +1,4 @@
-import { TruncateCharactersPipe } from './truncate-characters.pipe';
+import { TruncateCharactersPipe } from '@syndesis/ui/common/truncate-characters.pipe';
 
 describe('TruncateCharactersPipe', () => {
   let pipe: TruncateCharactersPipe;

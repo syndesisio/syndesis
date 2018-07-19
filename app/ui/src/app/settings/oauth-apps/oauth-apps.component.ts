@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
+import { OAuthAppStore } from '@syndesis/ui/store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
 import { Observable } from 'rxjs';
-import { ConfigService } from '../../config.service';
+import { ConfigService } from '@syndesis/ui/config.service';
 
-import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
-import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
+import { ObjectPropertyFilterConfig } from '@syndesis/ui/common/object-property-filter.pipe';
+import { ObjectPropertySortConfig } from '@syndesis/ui/common/object-property-sort.pipe';
 import {
   FilterConfig,
   SortConfig,

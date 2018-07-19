@@ -1,1 +1,1 @@
-export * from './list-page.component';
+export * from '@syndesis/ui/integration/list-page/list-page.component';

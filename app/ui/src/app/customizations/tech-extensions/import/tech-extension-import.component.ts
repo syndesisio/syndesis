@@ -15,7 +15,7 @@ import { Extension } from '@syndesis/ui/platform';
 import { NotificationService } from '@syndesis/ui/common';
 import { ExtensionStore } from '@syndesis/ui/store/extension/extension.store';
 
-import { environment } from '../../../../environments/environment';
+import { environment } from 'environments/environment';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
 
 interface FileError {

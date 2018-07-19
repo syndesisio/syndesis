@@ -23,8 +23,8 @@ import {
   ToolbarConfig
 } from 'patternfly-ng';
 
-import { ObjectPropertyFilterPipe } from '../../object-property-filter.pipe';
-import { ObjectPropertySortPipe } from '../../object-property-sort.pipe';
+import { ObjectPropertyFilterPipe } from '@syndesis/ui/common/object-property-filter.pipe';
+import { ObjectPropertySortPipe } from '@syndesis/ui/common/object-property-sort.pipe';
 
 @Component({
   selector: 'syndesis-list-toolbar',

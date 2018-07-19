@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { ApiHttpService } from '@syndesis/ui/platform';
 import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
-import { RESTService } from '../entity';
+import { RESTService } from '@syndesis/ui/store/entity';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 @Injectable()

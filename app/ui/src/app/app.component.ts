@@ -11,11 +11,11 @@ import {
   PlatformActions,
   PlatformState
 } from '@syndesis/ui/platform';
-import { ModalService } from './common/modal/modal.service';
-import { NavigationService } from './common/navigation.service';
-import { ConfigService } from './config.service';
-import { log } from './logging';
-import { TestSupportService } from './store/test-support.service';
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
+import { NavigationService } from '@syndesis/ui/common/navigation.service';
+import { ConfigService } from '@syndesis/ui/config.service';
+import { log } from '@syndesis/ui/logging';
+import { TestSupportService } from '@syndesis/ui/store/test-support.service';
 import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notification-service';
 
 @Component({

@@ -7,9 +7,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
-import { localStorageFactory } from './factories';
+import { localStorageFactory } from '@syndesis/ui/core/factories';
 import * as SYNDESIS_ABSTRACT_PROVIDERS from '@syndesis/ui/platform';
-import * as SYNDESIS_PROVIDERS from './providers';
+import * as SYNDESIS_PROVIDERS from '@syndesis/ui/core/providers';
 
 @NgModule({
   imports: [CommonModule, HttpClientModule]

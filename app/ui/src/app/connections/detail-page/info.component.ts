@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 
 import { Connection } from '@syndesis/ui/platform';
-import { ConnectionService } from '../../store/connection/connection.service';
-import { ConnectionConfigurationService } from '../common/configuration/configuration.service';
+import { ConnectionService } from '@syndesis/ui/store/connection/connection.service';
+import { ConnectionConfigurationService } from '@syndesis/ui/connections/common/configuration/configuration.service';
 
 @Component({
   selector: 'syndesis-connection-detail-info',

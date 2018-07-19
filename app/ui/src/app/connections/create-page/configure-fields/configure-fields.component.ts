@@ -8,9 +8,9 @@ import {
 import { Subscription } from 'rxjs';
 
 import { Connection, CanComponentDeactivate } from '@syndesis/ui/platform';
-import { CurrentConnectionService } from '../current-connection';
-import { ModalService } from '../../../common/modal/modal.service';
-import { ConnectionConfigurationService } from '../../common/configuration/configuration.service';
+import { CurrentConnectionService } from '@syndesis/ui/connections/create-page/current-connection';
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
+import { ConnectionConfigurationService } from '@syndesis/ui/connections/common/configuration/configuration.service';
 
 @Component({
   selector: 'syndesis-connections-configure-fields',

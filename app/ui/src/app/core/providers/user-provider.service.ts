@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { UserService, ApiHttpService, User } from '@syndesis/ui/platform';
 import { HttpClient, HttpXsrfTokenExtractor } from '@angular/common/http';
 
-import { environment } from '../../../environments/environment';
+import { environment } from 'environments/environment';
 
 @Injectable()
 export class UserProviderService extends UserService {

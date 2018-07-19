@@ -14,7 +14,7 @@ import {
 } from '@ng-dynamic-forms/core';
 
 import { Connection, ApiHttpService } from '@syndesis/ui/platform';
-import { ConnectionConfigurationService } from '../common/configuration/configuration.service';
+import { ConnectionConfigurationService } from '@syndesis/ui/connections/common/configuration/configuration.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 

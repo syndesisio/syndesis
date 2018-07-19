@@ -9,7 +9,7 @@ import {
   ApiUploadOptions,
   StringMap,
   FileMap
-} from '../../platform';
+} from '@syndesis/ui/platform';
 
 @Injectable()
 export class TestApiHttpService extends ApiHttpService {

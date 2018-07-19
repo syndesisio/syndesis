@@ -7,15 +7,15 @@ import { TagInputModule } from 'ngx-chips';
 import { ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap-data-mapper';
 
-import { ApiModule } from './api';
-import { CoreModule } from './core';
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app.routing';
-import { SyndesisCommonModule } from './common';
-import { appConfigInitializer, ConfigService } from './config.service';
-import { SyndesisStoreModule } from './store/store.module';
-import { platformEndpoints, PlatformModule } from './platform';
-import { ERROR_HANDLER_PROVIDERS } from './error-handler';
+import { ApiModule } from '@syndesis/ui/api';
+import { CoreModule } from '@syndesis/ui/core';
+import { AppComponent } from '@syndesis/ui/app.component';
+import { AppRoutingModule } from '@syndesis/ui/app.routing';
+import { SyndesisCommonModule } from '@syndesis/ui/common';
+import { appConfigInitializer, ConfigService } from '@syndesis/ui/config.service';
+import { SyndesisStoreModule } from '@syndesis/ui/store/store.module';
+import { platformEndpoints, PlatformModule } from '@syndesis/ui/platform';
+import { ERROR_HANDLER_PROVIDERS } from '@syndesis/ui/error-handler';
 
 @NgModule({
   declarations: [AppComponent],

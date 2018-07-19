@@ -1,1 +1,1 @@
-export * from './oauth-apps.models';
+export * from '@syndesis/ui/settings/oauth-apps/oauth-apps.models';

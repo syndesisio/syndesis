@@ -10,8 +10,8 @@ import {
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { ModalService } from '@syndesis/ui/common';
-import { CurrentConnectionService } from '../current-connection';
-import { ConnectionService } from '../../../store/connection/connection.service';
+import { CurrentConnectionService } from '@syndesis/ui/connections/create-page/current-connection';
+import { ConnectionService } from '@syndesis/ui/store/connection/connection.service';
 
 const category = getCategory('Connections');
 

@@ -9,9 +9,9 @@ import {
 
 import { NotificationType } from 'patternfly-ng';
 import { Connections, Connection } from '@syndesis/ui/platform';
-import { ModalService } from '../../common/modal/modal.service';
-import { ConnectionStore } from '../../store/connection/connection.store';
-import { log, getCategory } from '../../logging';
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
+import { ConnectionStore } from '@syndesis/ui/store/connection/connection.store';
+import { log, getCategory } from '@syndesis/ui/logging';
 import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notification-service';
 
 const category = getCategory('Connections');

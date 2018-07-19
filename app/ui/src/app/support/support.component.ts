@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as fileSaver from 'file-saver';
 
-import { ObjectPropertyFilterConfig } from '../common/object-property-filter.pipe';
-import { ObjectPropertySortConfig } from '../common/object-property-sort.pipe';
+import { ObjectPropertyFilterConfig } from '@syndesis/ui/common/object-property-filter.pipe';
+import { ObjectPropertySortConfig } from '@syndesis/ui/common/object-property-sort.pipe';
 
 import {
   Integrations,

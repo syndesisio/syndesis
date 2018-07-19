@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 import { TypeFactory } from '@syndesis/ui/model';
-import { IntegrationService } from './integration.service';
+import { IntegrationService } from '@syndesis/ui/store/integration/integration.service';
 
 import {
   createIntegration,
@@ -12,7 +12,7 @@ import {
   Integrations
 } from '@syndesis/ui/platform';
 
-import { AbstractStore, EventsService, ChangeEvent } from '../entity';
+import { AbstractStore, EventsService, ChangeEvent } from '@syndesis/ui/store/entity';
 
 @Injectable()
 export class IntegrationStore extends AbstractStore<

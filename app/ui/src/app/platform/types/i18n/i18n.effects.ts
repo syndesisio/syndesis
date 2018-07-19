@@ -8,9 +8,9 @@ import { Actions, Effect } from '@ngrx/effects';
 
 import { moment } from '@syndesis/ui/vendor';
 
-import * as I18NActions from './i18n.actions';
-import { I18NService } from './i18n.service';
-import { I18NState, I18N_DEFAULT_LOCALE } from './i18n.models';
+import * as I18NActions from '@syndesis/ui/platform/types/i18n/i18n.actions';
+import { I18NService } from '@syndesis/ui/platform/types/i18n/i18n.service';
+import { I18NState, I18N_DEFAULT_LOCALE } from '@syndesis/ui/platform/types/i18n/i18n.models';
 
 // TODO: is this ok? https://github.com/ngrx/platform/issues/31
 interface PayloadAction extends Action {

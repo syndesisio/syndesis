@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ExtensionStore } from '../../store/extension/extension.store';
+import { ExtensionStore } from '@syndesis/ui/store/extension/extension.store';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import {
   Action,
@@ -9,8 +9,8 @@ import {
   ListEvent,
   EmptyStateConfig
 } from 'patternfly-ng';
-import { ConfigService } from '../../config.service';
-import { TechExtensionDeleteModalComponent } from './tech-extension-delete-modal.component';
+import { ConfigService } from '@syndesis/ui/config.service';
+import { TechExtensionDeleteModalComponent } from '@syndesis/ui/customizations/tech-extensions/tech-extension-delete-modal.component';
 import { Extensions, Extension } from '@syndesis/ui/platform';
 
 @Component({

@@ -1,1 +1,1 @@
-export * from './localstorage';
+export * from '@syndesis/ui/core/factories/localstorage';

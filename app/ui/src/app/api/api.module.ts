@@ -2,9 +2,9 @@ import { ModuleWithProviders, NgModule, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClientXsrfModule } from '@angular/common/http';
 
-import { environment } from '../../environments/environment';
+import { environment } from 'environments/environment';
 import { ApiHttpService, ApiConfigService, Endpoints, API_ENDPOINTS } from '@syndesis/ui/platform';
-import * as SYNDESIS_API_PROVIDERS from './providers';
+import * as SYNDESIS_API_PROVIDERS from '@syndesis/ui/api/providers';
 
 export function endpointsLazyLoaderFactory(apiEndpoints: Endpoints, apiConfigService: ApiConfigService) {
   return new SYNDESIS_API_PROVIDERS.ApiEndpointsLazyLoaderService(apiEndpoints, apiConfigService);

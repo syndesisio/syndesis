@@ -5,9 +5,9 @@ import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 
-import { IntegrationSupportService } from './integration-support.service';
-import { IntegrationService } from './integration.service';
-import * as IntegrationActions from './integration.actions';
+import { IntegrationSupportService } from '@syndesis/ui/platform/types/integration/integration-support.service';
+import { IntegrationService } from '@syndesis/ui/platform/types/integration/integration.service';
+import * as IntegrationActions from '@syndesis/ui/platform/types/integration/integration.actions';
 
 @Injectable()
 export class IntegrationEffects {

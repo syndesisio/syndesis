@@ -8,7 +8,7 @@ import {
   ViewChild,
   TemplateRef
 } from '@angular/core';
-import { ModalService } from './modal.service';
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 
 @Component({
   selector: 'syndesis-modal',

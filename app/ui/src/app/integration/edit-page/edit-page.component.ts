@@ -7,8 +7,8 @@ import { NavigationService } from '@syndesis/ui/common';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { Integration } from '@syndesis/ui/platform';
 import { FlowEvent } from '@syndesis/ui/integration/edit-page';
-import { CurrentFlowService } from './current-flow.service';
-import { FlowPageService } from './flow-page.service';
+import { CurrentFlowService } from '@syndesis/ui/integration/edit-page/current-flow.service';
+import { FlowPageService } from '@syndesis/ui/integration/edit-page/flow-page.service';
 import { log, getCategory } from '@syndesis/ui/logging';
 
 const category = getCategory('IntegrationsEditPage');

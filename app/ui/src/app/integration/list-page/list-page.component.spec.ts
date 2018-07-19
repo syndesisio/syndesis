@@ -4,11 +4,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { VendorModule } from '@syndesis/ui/vendor';
 
-import { SyndesisCommonModule } from '../../common/common.module';
-import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
-import { IntegrationListModule } from '../list/list.module';
-import { IntegrationListPage } from './list-page.component';
-import { SyndesisStoreModule } from '../../store/store.module';
+import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';
+import { PatternflyUIModule } from '@syndesis/ui/common/ui-patternfly/ui-patternfly.module';
+import { IntegrationListModule } from '@syndesis/ui/integration/list/list.module';
+import { IntegrationListPage } from '@syndesis/ui/integration/list-page/list-page.component';
+import { SyndesisStoreModule } from '@syndesis/ui/store/store.module';
 
 xdescribe('IntegrationsListPage', () => {
   let component: IntegrationListPage;

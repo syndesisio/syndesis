@@ -1,2 +1,2 @@
-export * from './user.models';
-export * from './user.service';
+export * from '@syndesis/ui/platform/types/user/user.models';
+export * from '@syndesis/ui/platform/types/user/user.service';

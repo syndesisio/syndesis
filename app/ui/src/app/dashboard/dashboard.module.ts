@@ -8,10 +8,10 @@ import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { IntegrationListModule } from '@syndesis/ui/integration';
 
-import { DashboardComponent } from './dashboard.component';
-import { DashboardConnectionsComponent } from './dashboard_connections';
-import { DashboardIntegrationsComponent } from './dashboard_integrations';
-import { DashboardMetricsComponent } from './dashboard_metrics';
+import { DashboardComponent } from '@syndesis/ui/dashboard/dashboard.component';
+import { DashboardConnectionsComponent } from '@syndesis/ui/dashboard/dashboard_connections';
+import { DashboardIntegrationsComponent } from '@syndesis/ui/dashboard/dashboard_integrations';
+import { DashboardMetricsComponent } from '@syndesis/ui/dashboard/dashboard_metrics';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent, pathMatch: 'full' }

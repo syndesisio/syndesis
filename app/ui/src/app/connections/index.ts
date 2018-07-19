@@ -1,1 +1,1 @@
-export * from './connections.module';
+export * from '@syndesis/ui/connections/connections.module';

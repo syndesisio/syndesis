@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { LoadingComponent } from './loading.component';
+import { LoadingComponent } from '@syndesis/ui/common/loading/loading.component';
 
 describe('LoadingComponent', () => {
   let component: LoadingComponent;

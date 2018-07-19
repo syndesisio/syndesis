@@ -11,7 +11,7 @@ import {
   FlowViewStepComponent,
   IntegrationEditPage
 } from '@syndesis/ui/integration/edit-page';
-import { ConnectionsListComponent } from '../../connections/list/list.component';
+import { ConnectionsListComponent } from '@syndesis/ui/connections/list/list.component';
 import { SyndesisStoreModule } from '@syndesis/ui/store';
 
 import { ModalModule } from 'ngx-bootstrap/modal';

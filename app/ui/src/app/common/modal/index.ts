@@ -1,2 +1,2 @@
-export * from './modal.component';
-export * from './modal.service';
+export * from '@syndesis/ui/common/modal/modal.component';
+export * from '@syndesis/ui/common/modal/modal.service';

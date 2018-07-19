@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ActionService } from './action.service';
+import { ActionService } from '@syndesis/ui/store/action/action.service';
 import { Actions, Action } from '@syndesis/ui/platform';
 
-import { AbstractStore } from '../entity/entity.store';
-import { EventsService } from '../entity/events.service';
+import { AbstractStore } from '@syndesis/ui/store/entity/entity.store';
+import { EventsService } from '@syndesis/ui/store/entity/events.service';
 
 @Injectable()
 export class ActionStore extends AbstractStore<Action, Actions, ActionService> {

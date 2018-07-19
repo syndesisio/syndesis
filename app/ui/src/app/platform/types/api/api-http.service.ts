@@ -8,7 +8,7 @@ import {
   ApiRequestProgress,
   ApiRequestOptions,
   ApiUploadOptions
-} from './api.models';
+} from '@syndesis/ui/platform/types/api/api.models';
 
 @Injectable()
 export abstract class ApiHttpService {

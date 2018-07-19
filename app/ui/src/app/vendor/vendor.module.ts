@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 
+import { FileUploadModule } from 'ng2-file-upload';
+
 import {
   AlertModule,
   CollapseModule,
@@ -42,7 +44,8 @@ const imports = [
   InlineNotificationModule,
   CardModule,
   ListModule,
-  ToolbarModule
+  ToolbarModule,
+  FileUploadModule
 ];
 
 const _exports = [
@@ -63,7 +66,8 @@ const _exports = [
   CardModule,
   ListModule,
   ToolbarModule,
-  PaginationModule
+  PaginationModule,
+  FileUploadModule
 ];
 
 @NgModule({
