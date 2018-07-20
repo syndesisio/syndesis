@@ -147,19 +147,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
                 });
               })
               .catch(error => {
-                // the message is in the _meta attribute in the response
-                const message = error.data._meta
-                  ? error.data._meta.message
-                  : null;
-                this.error = {
-                  class: 'alert alert-warning',
-                  icon: 'pficon pficon-warning-triangle-o',
-                  message:
-                    message ||
-                    error.message ||
-                    error.userMsg ||
-                    error.developerMsg
-                };
+                this.setError(error);
                 this.loading = false;
               });
           } else {
@@ -175,6 +163,22 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  setError(error) {
+    // the message is in the _meta attribute in the response
+    const message = error.data._meta
+      ? error.data._meta.message
+      : null;
+    this.error = {
+      class: 'alert alert-warning',
+      icon: 'pficon pficon-warning-triangle-o',
+      message:
+        message ||
+        error.message ||
+        error.userMsg ||
+        error.developerMsg
+    };
   }
 
   preInitialize(position: number, page: number) {
@@ -224,10 +228,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     error?: any
   ) {
     if (error) {
-      this.error = error;
-      this.error.class = 'alert alert-warning';
-      this.error.icon = 'pficon pficon-warning-triangle-o';
-      this.error.message = error.message || error.userMsg || error.developerMsg;
+      this.setError(error);
       this.loading = false;
       return;
     }
