@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { ConfigService } from '@syndesis/ui/config.service';
 import {
   PlatformState,
   IntegrationState,
@@ -10,7 +10,7 @@ import {
   Integrations,
   IntegrationActions,
   Connections,
-  UserService
+  Connection
 } from '@syndesis/ui/platform';
 import { ConnectionStore, IntegrationStore } from '@syndesis/ui/store';
 
@@ -27,10 +27,9 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private store: Store<PlatformState>,
-    private userService: UserService,
     private connectionStore: ConnectionStore,
     private integrationStore: IntegrationStore,
-    private configService: ConfigService
+    private router: Router
   ) {
     this.connections$ = this.connectionStore.list;
     this.integrations$ = this.integrationStore.list;
@@ -47,5 +46,10 @@ export class DashboardComponent implements OnInit {
 
   onRefreshDashboard(): void {
     this.store.dispatch(new IntegrationActions.FetchMetrics());
+  }
+
+  //-----  Selecting a Connection or Integration ------------------->>
+  selectedConnection(connection: Connection) {
+    this.router.navigate(['/connections', connection.id]);
   }
 }

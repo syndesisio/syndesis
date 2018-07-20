@@ -29,9 +29,6 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
   integrations: Array<IntegrationOverview>;
   loading = true;
 
-  @Input() connections: Connections;
-  @Input() connectionsLoading: boolean;
-
   integrationChartData: any[];
 
   integrationsChartConfig: DonutConfig = {
@@ -146,11 +143,6 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
       case 'Unpublished':
         return 'label-default';
     }
-  }
-
-  //-----  Selecting a Connection or Integration ------------------->>
-  selectedConnection(connection: Connection) {
-    this.router.navigate(['/connections', connection.id]);
   }
 
   goto(integration: IntegrationOverview) {
