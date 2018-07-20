@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,
+          OnInit,
+          OnDestroy,
+          ViewChild,
+          TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  CurrentFlowService,
-  FlowPageService
-} from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
+import { ModalService } from '@syndesis/ui/common';
 
 @Component({
   selector: 'syndesis-integration-integration-basics',
@@ -13,8 +15,15 @@ import {
     './integration-basics.component.scss'
   ]
 })
-export class IntegrationBasicsComponent implements OnInit {
+
+export class IntegrationBasicsComponent implements OnInit, OnDestroy {
+
+  @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
+
+  private cancelModalId = 'create-cancellation-modal';
+
   constructor(
+    private modalService: ModalService,
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
@@ -31,6 +40,18 @@ export class IntegrationBasicsComponent implements OnInit {
 
   get publishInProgress() {
     return this.flowPageService.publishInProgress;
+  }
+
+  showCancelModal() {
+    this.modalService.show(this.cancelModalId).then(modal => {
+      if (modal.result) {
+        this.cancel();
+      }
+    });
+  }
+
+  onCancel(doCancel: boolean): void {
+    this.modalService.hide(this.cancelModalId, doCancel);
   }
 
   cancel() {
@@ -100,5 +121,13 @@ export class IntegrationBasicsComponent implements OnInit {
 
   ngOnInit() {
     this.flowPageService.initialize();
+    this.modalService.registerModal(
+      this.cancelModalId,
+      this.cancelModalTemplate
+    );
+  }
+
+  ngOnDestroy() {
+    this.modalService.unregisterModal(this.cancelModalId);
   }
 }
