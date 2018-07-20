@@ -16,6 +16,7 @@ import { RESTService } from '@syndesis/ui/store/entity/rest.service';
 
 import { log, getCategory } from '@syndesis/ui/logging';
 import { EventsService, ChangeEvent } from '@syndesis/ui/store/entity/events.service';
+import { combineLatest } from '../../../../node_modules/rxjs-compat/operator/combineLatest';
 
 const category = getCategory('AbstractStore');
 
@@ -39,6 +40,8 @@ export abstract class AbstractStore<
   private _loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   private changeEvents: Observable<ChangeEvent>;
+  private listSubscription: Subscription;
+  private currentSubscription: Subscription;
 
   constructor(
     public service: R,
@@ -69,20 +72,7 @@ export abstract class AbstractStore<
   get list() {
     // Give back the _list,
     // but also update it if we get notified the a change occurred.
-    return observableMerge(
-      this._list,
-      this.changeEvents.pipe(
-      debounceTime(500),
-        mergeMap(event => {
-        // We could probably get fancy one day an only fetch the entry that matches event.id
-        // simulate no data
-        if (EMPTY_STATE) {
-          return observableOf([] as L) as Observable<L>;
-        } else {
-          return this.service.list();
-        }
-      })),
-    ).pipe(share());
+    return this._list.pipe(share());
   }
 
   get resource() {
@@ -96,16 +86,31 @@ export abstract class AbstractStore<
           return this.service.get(this.currentId);
         })
       )
-    );
+    ).pipe(share());
   }
 
   get loading() {
-    return this._loading.asObservable();
+    return this._loading.pipe(share());
   }
 
   loadAll(retries = 0) {
+    if (!retries && this.listSubscription) {
+      return;
+    }
     this._loading.next(true);
-    this.service.list().subscribe(
+    this.listSubscription = observableMerge(
+      this.service.list(),
+      this.changeEvents.pipe(
+        debounceTime(500),
+        mergeMap(event => {
+        // We could probably get fancy one day an only fetch the entry that matches event.id
+        // simulate no data
+        if (EMPTY_STATE) {
+          return observableOf([] as L) as Observable<L>;
+        } else {
+          return this.service.list();
+        }
+      }))).subscribe(
       list => {
         setTimeout(() => {
           // simulate no elements
@@ -130,8 +135,7 @@ export abstract class AbstractStore<
         } else {
           this._loading.next(false);
         }
-      },
-    );
+      });
   }
 
   newInstance(): T {
@@ -158,7 +162,10 @@ export abstract class AbstractStore<
 
   load(id: string, retries = 0): Observable<T> {
     this._loading.next(true);
-    this.service.get(id).subscribe(
+    if (this.currentSubscription) {
+      this.currentSubscription.unsubscribe();
+    }
+    this.currentSubscription = this.service.get(id).subscribe(
       entity => {
         setTimeout(() => {
           this._current.next(this.plain(entity));
@@ -180,7 +187,7 @@ export abstract class AbstractStore<
         }
       },
     );
-    return this._current.asObservable();
+    return this._current.pipe(share());
   }
 
   create(entity: T): Observable<T> {

@@ -1,11 +1,30 @@
-<div class="syndesis-dashboard">
-  <syndesis-dashboard-metrics
-    [integrationState]="integrationState$ | async"
-    [integrations]="integrations$ | async"
-    [connections]="connections$ | async"
-    (refresh)="onRefreshDashboard()">
-  </syndesis-dashboard-metrics>
-  <syndesis-dashboard-integrations [connections]="connections$ | async"
-                                   [connectionsLoading]="connectionsLoading$ | async">
-  </syndesis-dashboard-integrations>
-</div>
+<ng-template
+  let-integrationState="integrationState"
+  let-integrations="integrations"
+  let-integrationsLoading="integrationsLoading"
+  let-connections="connections"
+  let-connectionsLoading="connectionsLoading"
+  [ngTemplateOutletContext]="{
+    integrationState: (integrationState$ | async),
+    integrations: (integrations$ | async),
+    integrationsLoading: (integrationsLoading$ | async),
+    connections: (connections$ | async),
+    connectionsLoading: (connectionsLoading$ | async)
+  }"
+  [ngTemplateOutlet]="me" #me>
+  <div class="syndesis-dashboard">
+
+      <!-- integrations -->
+      <syndesis-dashboard-metrics
+        [integrationState]="integrationState"
+        [integrations]="integrations"
+        [connections]="connections"
+        (refresh)="onRefreshDashboard()">
+      </syndesis-dashboard-metrics>
+      <syndesis-dashboard-integrations></syndesis-dashboard-integrations>
+
+      <!-- connections -->
+      <syndesis-dashboard-connections [connections]="connections" [loading]="connectionsLoading" (selectedConnection)="selectedConnection($event)"></syndesis-dashboard-connections>
+
+  </div>
+</ng-template>
