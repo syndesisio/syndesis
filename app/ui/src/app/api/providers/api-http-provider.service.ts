@@ -363,7 +363,7 @@ export class ApiHttpProviderService extends ApiHttpService {
     return {
       message: message || DEFAULT_ERROR_MSG,
       debugMessage: debugMessage || DEFAULT_ERROR_MSG,
-      status: response.errorCode,
+      status: response.errorCode || response.status,
       data: response.error ? response.error : response
     };
   }
