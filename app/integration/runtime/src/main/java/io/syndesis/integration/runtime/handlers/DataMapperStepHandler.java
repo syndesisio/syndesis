@@ -36,7 +36,7 @@ public class DataMapperStepHandler implements IntegrationStepHandler{
         ObjectHelper.notNull(route, "route");
 
         return Optional.of(
-            route.toF("atlas:mapping-step-%s.json?sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP, stepIndex)
+            route.toF("atlas:mapping-step-%s.json?encoding=UTF-8&sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP, stepIndex)
         );
     }
 }
