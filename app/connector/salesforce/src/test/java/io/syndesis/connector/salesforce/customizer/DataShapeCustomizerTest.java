@@ -146,7 +146,7 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
     public void shouldUnmarshallToSpecifiedOutputType() throws Exception {
         final ComponentProxyComponent component = setUpComponent("salesforce-create-sobject");
         final Exchange exchange = new DefaultExchange(context);
-        final Message out = exchange.getOut();
+        final Message out = exchange.getIn();
         out.setBody("{}");
 
         component.getAfterProducer().process(exchange);
