@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -73,10 +74,10 @@ public class DataManagerTest {
     @Test
     public void getConnections() {
         ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
-        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsOnly("5", "webhook");
-        Assert.assertEquals(2, connections.getTotalCount());
-        Assert.assertEquals(2, connections.getItems().size());
-        Assert.assertEquals(connections.getTotalCount(), connections.getItems().size());
+        Stream<String> connectionIds = connections.getItems().stream().map(Connection::getId).map(Optional::get);
+        assertThat(connectionIds).contains("5", "webhook", "timer", "log");
+        assertThat(connections.getTotalCount()).isGreaterThanOrEqualTo(4);
+        assertThat(connections.getItems().size()).isGreaterThanOrEqualTo(4);
     }
 
     @Test
