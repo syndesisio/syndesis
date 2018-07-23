@@ -2,17 +2,20 @@
 = Register {prodname} as a Gmail client application
 
 To be able to connect to Gmail in an integration, 
-you must register your installation of {prodname} as a client application
-that can access Gmail. Registration authorizes {prodname} to access Gmail
-and lets you create any number of integrations that connect
-to Gmail. While each Gmail connection uses the same registration, 
-each connection can use different user credentials to access a different
-Gmail account. 
+you register your installation of {prodname} as a client application
+that can access Gmail. Registration authorizes {prodname} to access Gmail.
+With registration in place, you can create any number of Gmail 
+connections and any number of 
+integrations that connect to Gmail. While each Gmail connection uses the 
+same registration, each connection can use different user credentials to 
+access a different Gmail account. 
 
 To authorize your {prodname} installation to access Gmail:
 
 . In {prodname}, in the left navigation panel, click *Settings*. 
-. On the *Settings* page, near the top, click *Copy Callback URL* to
+. On the *Settings* page, near the top, to the right of the callback URL, 
+click
+image:images/CopyCallbackURL.png[Copy Callback URL] to 
 copy the callback URL for your installation of {prodname} to the clipboard. 
 You will need this URL toward the end of this procedure. 
 . In another browser tab, go to `https://console.developers.google.com` 
@@ -56,8 +59,8 @@ this procedure.
 image:images/copy_icon.png[the Copy icon] to copy the client ID
 to your clipboard.
 
-. Return to the {prodname} *Settings* page and in the Gmail *Client ID* 
-field, paste the Gmail client ID that you just copied. 
+. Return to the {prodname} *Settings* page and in the Gmail *Client ID* field, 
+paste the Gmail client ID that you just copied. 
 
 . Return to the Google developers site and to the right of the 
 client secret field, click 
