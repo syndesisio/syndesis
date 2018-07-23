@@ -30,7 +30,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.processor.Pipeline;
-import org.springframework.cglib.core.internal.Function;
 
 public class DataShapeCustomizer implements ComponentProxyCustomizer, CamelContextAware, DataShapeAware {
     private CamelContext camelContext;
@@ -70,13 +69,13 @@ public class DataShapeCustomizer implements ComponentProxyCustomizer, CamelConte
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         if (inputDataShape != null) {
-            Processor processor = new UnmarshallProcessor(inputDataShape, Exchange::getIn);
+            Processor processor = new UnmarshallProcessor(inputDataShape);
             Processor pipeline = Pipeline.newInstance(this.camelContext, processor, component.getBeforeProducer());
 
             component.setBeforeProducer(pipeline);
         }
         if (outputDataShape != null) {
-            Processor processor = new UnmarshallProcessor(outputDataShape, Exchange::getOut);
+            Processor processor = new UnmarshallProcessor(outputDataShape);
             Processor pipeline = Pipeline.newInstance(this.camelContext, processor, component.getAfterProducer());
 
             component.setAfterProducer(pipeline);
@@ -85,11 +84,8 @@ public class DataShapeCustomizer implements ComponentProxyCustomizer, CamelConte
 
     public final class UnmarshallProcessor implements Processor {
         private final Class<?> type;
-        private final Function<Exchange, Message> messageFunction;
 
-        public UnmarshallProcessor(final DataShape dataShape, Function<Exchange, Message> messageFunction) {
-            this.messageFunction = messageFunction;
-
+        public UnmarshallProcessor(final DataShape dataShape) {
             if (dataShape.getKind() == DataShapeKinds.JAVA) {
                 type = camelContext.getClassResolver().resolveClass(dataShape.getType());
                 if (type == null) {
@@ -110,7 +106,7 @@ public class DataShapeCustomizer implements ComponentProxyCustomizer, CamelConte
                 return;
             }
 
-            final Message message = messageFunction.apply(exchange);
+            final Message message = exchange.getIn();
             final String bodyAsString = message.getBody(String.class);
 
             if (bodyAsString == null) {
