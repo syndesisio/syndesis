@@ -23,7 +23,7 @@
                     "kind": "none"
                 },
                 "outputDataShape": {
-                    "kind": "any"
+                    "kind": "none"
                 },
                 "configuredProperties": {
                     "timerName": "syndesis-timer"
