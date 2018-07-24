@@ -42,11 +42,11 @@ this version of the integration, but
 the integration is not yet running or stopped. 
 
 |*Error*
-|An integration version that is in the *Error* state
+|An integration version that is in the *Error* state 
 encountered an OpenShift error while being started or while running. 
-The error suspended start-up or execution.  If this happens, try
-starting an earlier integration version that ran correctly.
-Alternatively, contact technical support for help.
+The error suspended start-up or execution.  If this happens, try 
+starting an earlier integration version that ran correctly. 
+Alternatively, contact technical support for help. 
 To do that, in any {prodname} page, in the upper right, click the 
 image:shared/images/InfoIcon.png[title="Help"] icon and select *Support*. 
 
