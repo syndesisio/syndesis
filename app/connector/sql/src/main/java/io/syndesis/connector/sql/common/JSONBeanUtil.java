@@ -17,6 +17,7 @@ package io.syndesis.connector.sql.common;
 
 import java.io.IOException;
 import java.sql.Types;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,16 +74,30 @@ public final class JSONBeanUtil {
     }
 
     public static Map<String,SqlParameterValue> parseSqlParametersFromJSONBean(final String json, final Map<String, Integer> jdbcTypeMap) {
+        if (json == null || json.isEmpty()) {
+            return Collections.emptyMap(); // json is empty so no need to parse
+        }
+
         final Map<String, String> parsed;
         try {
             parsed = MAPPER.readerFor(STRING_STRING_MAP).readValue(json);
         } catch (final IOException e) {
             throw new IllegalArgumentException("Unable to parse given JSON", e);
         }
+
         final Map<String,SqlParameterValue> ret = new HashMap<>();
         for (String key : parsed.keySet()) {
             Object value = parsed.get(key);
-            Integer jdbcType = (jdbcType = jdbcTypeMap.get(key)) != null ? jdbcType : Types.VARCHAR;
+
+            Integer jdbcType = null;
+            if (jdbcTypeMap != null) {
+                jdbcType = jdbcTypeMap.get(key);
+            }
+
+            if (jdbcType == null) {
+                jdbcType = Types.VARCHAR;
+            }
+
             SqlParameterValue sqlParam = new SqlParameterValue(jdbcType, value);
             ret.put(key,sqlParam);
         }

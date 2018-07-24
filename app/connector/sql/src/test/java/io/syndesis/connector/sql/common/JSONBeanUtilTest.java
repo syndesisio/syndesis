@@ -15,13 +15,15 @@
  */
 package io.syndesis.connector.sql.common;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import org.junit.Assert;
 import org.junit.Test;
-
+import org.springframework.jdbc.core.SqlParameterValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -90,4 +92,34 @@ public class JSONBeanUtilTest {
         Assert.assertEquals("30", properties.get("b"));
     }
 
+    /**
+     * Address issue when sql is parsed but contains no sql parameters
+     * @see https://github.com/syndesisio/syndesis/issues/2706
+     *
+     * @throws JsonProcessingException
+     */
+    @Test
+    public void parseSqlParametersFromJSONBeanWhenNoParameters() throws JsonProcessingException {
+        try {
+            String[] jsonParamValues = { null, "" };
+            for (int i = 0; i < jsonParamValues.length; ++i) {
+                JSONBeanUtil.parseSqlParametersFromJSONBean(jsonParamValues[i], new HashMap<>());
+            }
+        } catch (Exception ex) {
+            throw new AssertionError("Should not throw exception when json parameter is empty", ex);
+        }
+
+        //
+        // Test type map
+        //
+        try {
+            String jsonParamValue = "{ \"arg1\": \"blah\" }";
+            Map<String, SqlParameterValue> retMap = JSONBeanUtil.parseSqlParametersFromJSONBean(jsonParamValue, null);
+            SqlParameterValue paramValue = retMap.get("arg1");
+            assertNotNull(paramValue);
+            assertEquals(Types.VARCHAR, paramValue.getSqlType());
+        }  catch (Exception ex) {
+            throw new AssertionError("Should not throw exception when json parameter is empty", ex);
+        }
+    }
 }
