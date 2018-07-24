@@ -1,10 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component,
+        OnInit,
+        OnDestroy,
+        ViewChild,
+        TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { Connection } from '@syndesis/ui/platform';
 import { TypeFactory } from '@syndesis/ui/model';
-import { NavigationService } from '@syndesis/ui/common';
+import { NavigationService, ModalService } from '@syndesis/ui/common';
 import { log } from '@syndesis/ui/logging';
 import {
   CurrentConnectionService,
@@ -29,11 +33,16 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
   currentSubscription: Subscription;
   fragmentSubscription: Subscription;
 
+  @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
+
+  private cancelModalId = 'create-cancellation-modal';
+
   constructor(
     public current: CurrentConnectionService,
     private route: ActivatedRoute,
     private router: Router,
-    private nav: NavigationService
+    private nav: NavigationService,
+    private modalService: ModalService,
   ) {}
 
   get connection(): Connection {
@@ -87,6 +96,18 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
       default:
         return true;
     }
+  }
+
+  showCancelModal() {
+    this.modalService.show(this.cancelModalId).then(modal => {
+      if (modal.result) {
+        this.cancel();
+      }
+    });
+  }
+
+  onCancel(doCancel: boolean): void {
+    this.modalService.hide(this.cancelModalId, doCancel);
   }
 
   cancel() {
@@ -212,6 +233,10 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
       this.current.connection = connection;
     });
     this.nav.hide();
+    this.modalService.registerModal(
+      this.cancelModalId,
+      this.cancelModalTemplate
+    );
   }
 
   ngOnDestroy() {
@@ -219,5 +244,6 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     this.fragmentSubscription.unsubscribe();
     this.current.dispose();
     this.nav.show();
+    this.modalService.unregisterModal(this.cancelModalId);
   }
 }
