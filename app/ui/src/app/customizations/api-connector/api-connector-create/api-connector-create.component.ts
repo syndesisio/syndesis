@@ -86,18 +86,26 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
       .first(request => !!request && !!request.actionsSummary)
       .subscribe( apiConnectorState => {
         // TODO error handling!
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.apiDef = new ApiDefinition();
-          this.apiDef.createdBy = 'user1';
-          this.apiDef.createdOn = new Date();
-          this.apiDef.tags = [];
-          this.apiDef.description = '';
-          this.apiDef.id = 'api-1';
-          this.apiDef.spec = reader.result;
-          this.currentActiveStep = WizardSteps.ReviewApiConnector;
-        };
-        reader.readAsText(apiConnectorState.specificationFile);
+        this.apiDef = new ApiDefinition();
+        this.apiDef.createdBy = 'user1';
+        this.apiDef.createdOn = new Date();
+        this.apiDef.tags = [];
+        this.apiDef.description = '';
+        this.apiDef.id = 'api-1';
+        this.currentActiveStep = WizardSteps.ReviewApiConnector;
+
+        if ( apiConnectorState.specificationFile ) {
+          const reader = new FileReader();
+
+          reader.onload = () => {
+            this.apiDef.spec = reader.result;
+          };
+
+          reader.readAsText( apiConnectorState.specificationFile );
+        } else {
+          // TODO next line sets spec to the URL. this is not right as spec needs to be set to the URL JSON response
+          this.apiDef.spec = apiConnectorState.configuredProperties.specification;
+        }
       });
 
     // Once the request object is flagged as 'isComplete', we redirect the user to the main listing
