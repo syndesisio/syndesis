@@ -70,7 +70,11 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
     this.integrationOverviews$ = this.integrationStore.list;
     this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(
       integrations => {
-        this.integrations = integrations;
+        this.integrations = integrations.sort((a, b) => {
+          const aTimestamp = this.getTimestamp(a);
+          const bTimestamp = this.getTimestamp(b);
+          return bTimestamp - aTimestamp;
+        });
         this.loading = false;
         this.integrationChartData = [
           [this.PUBLISHED, this.countActiveIntegrations()],
@@ -86,6 +90,10 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
     if (this.integrationOverviewsSubscription) {
       this.integrationOverviewsSubscription.unsubscribe();
     }
+  }
+
+  getTimestamp(integration: Integration) {
+    return integration.updatedAt !== 0 ? integration.updatedAt : integration.createdAt;
   }
 
   //-----  Integration Board Chart ------------------->>
