@@ -46,8 +46,8 @@ client application. For example, enter `{prodname} client application`.
 display a menu and select *OAuth client ID*. 
 .. Select *Web application* and in the page that appears, do the following:
 ... In the *Name* field, enter a name for the OAuth client ID for 
-your installation of {prodname}. This is different from the name you 
-entered for client application itself. For example, enter 
+your installation of {prodname}. This is different from the name that you 
+entered for the client application itself. For example, enter 
 `OAuth client ID for {prodname}`. 
 ... Skip *Authorized JavaScript origins*. 
 ... In the *Authorized redirect URIs* field, paste the callback URL 

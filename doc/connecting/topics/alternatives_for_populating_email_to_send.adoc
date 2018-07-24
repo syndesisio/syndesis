@@ -11,7 +11,7 @@ how you want to populate that email.
 The alternatives for populating an email to send are as follows:
 
 * Add a data mapper step just before the Gmail connection that sends
-an email. In this data mapper step, map one or more data values that were output 
+an email. In this data mapper step, map data fields that are output 
 from previous integration steps to Gmail connection *Send Email* action fields. 
 The *Send Email* action fields are: 
 + 
@@ -21,9 +21,25 @@ The *Send Email* action fields are:
 ** *Email cc*
 ** *Email bcc*
 
-* Configure the Gmail connection *Send Email* action to have static
-values in one or more *Send Email* action fields. 
++
+If you add a data mapper step then you can map one, some, or all 
+*Send Email* action fields. 
+
+* When you add a Gmail connection to an integration, configure the 
+action by specifying values
+in the *Send Email* action input fields. 
+You can specify values in one, some, or all fields. 
 
 * Use both a data mapper step and *Send Email* action configuration to
-populate the fields. In other words, you can map content to some fields
-and specify static content for other fields. 
+populate the fields. In other words, you can configure the 
+*Send Email* action by specifying one or more fields and
+also add a data mapper step that populates other fields. 
+
+When you add a Gmail connection that sends an email, no action configuration
+parameters are required. This is because you might choose to populate an
+email entirely by mapping integration data to the *Send Email* action
+fields. However, the presence of an email address
+in the *Email to* field, either by configuration specification or by 
+mapping, is required. Without an email address to send
+the message to, {prodname} generates a runtime error and the integration
+stops executing. 

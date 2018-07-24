@@ -1,8 +1,8 @@
 [id='add-gmail-connection-start']
 = Obtain emails that are received by a Gmail account
 
-To trigger execution of an integration when a particular Gmail account
-receives an email, add a Gmail connection as the start connection of
+To trigger execution of an integration based on email received by 
+a particular Gmail account, add a Gmail connection as the start connection of
 an integration. When you created the Gmail connection you authorized it
 to access the particular Gmail account that you want to obtain emails
 from. 
@@ -10,12 +10,11 @@ from.
 When the integration is running, the Gmail connection checks 
 this account for emails at intervals that you control. 
 When the connection finds an unread
-email, it passes the email to the next step in the integration and
-marks the email as *read*. A Gmail 
-connection handles one email at a time. 
+email, it passes the email to the next step in the integration and, by default, 
+marks the email as *read*.  
 
-To trigger an integration when a particular Gmail account receives an 
-email:
+To trigger an integration based on email received by 
+a particular Gmail account:
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
@@ -24,7 +23,7 @@ you want to use to start the integration.
 . On the *Choose an Action* page, click the *Receive Email* action. 
 . To configure the *Receive Email* action:
 .. In the *Delay* field, accept the default of 30 seconds or 
-specify how often you want the integration the check for new email. 
+specify how often you want the integration to check for new email. 
 .. In the *Labels* field, leave it blank to obtain any unread email. 
 To obtain only certain emails, 
 specify a comma separated list of labels that are used in the Gmail 
@@ -38,7 +37,7 @@ the integratin return emails that have those labels whether or not they
 were already read. 
 .. In the *Max Results* field, accept the default of *5* or 
 indicate the maximum number of emails that the connection 
-can return. If the connection finds more than this number 
+can return for each poll. If the connection finds more than this number 
 of unread emails, then it returns the most recent *Max Results* emails. 
 +
 When a Gmail connection returns more than one email, the integration
