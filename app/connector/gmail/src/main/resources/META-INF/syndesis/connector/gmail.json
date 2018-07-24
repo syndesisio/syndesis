@@ -22,7 +22,7 @@
   "properties": {
     "clientId": {
       "kind": "parameter",
-      "displayName": "Client Id",
+      "displayName": "Client ID",
       "group": "common",
       "required": true,
       "type": "string",
@@ -33,7 +33,7 @@
       ],
       "secret": false,
       "raw": true,
-      "labelHint": "Client Id",
+      "labelHint": "The client ID that Google provides when you register a client application.",
       "order": "1"
     },
     "clientSecret": {
@@ -49,7 +49,7 @@
       "tags": [
         "oauth-client-secret"
       ],
-      "labelHint": "Client Secret",
+      "labelHint": "The client secret that Google provides when you register a client application.",
       "order": "2"
     },
     "applicationName": {
@@ -62,7 +62,7 @@
       "deprecated": false,
       "secret": false,
       "raw": true,
-      "labelHint": "Application Name",
+      "labelHint": "A name that you choose as the name of an OAuth 2.0 Gmail client. This name appears in the Google developers account list of OAuth clients.",
       "order": "3"
     },
     "accessToken": {
@@ -78,7 +78,7 @@
       ],
       "secret": true,
       "raw": true,
-      "labelHint": "Access Token",
+      "labelHint": "String provided by Google that authorizes access to a Gmail account.",
       "order": "4"
     },
     "refreshToken": {
@@ -91,12 +91,12 @@
       "raw": true,
       "deprecated": false,
       "secret": true,
-      "labelHint": "Refresh Token",
+      "labelHint": "String provided by Google that enables retrieval of a new access token.",
       "order": "5"
     },
     "userId": {
       "kind": "parameter",
-      "displayName": "user Id",
+      "displayName": "User ID",
       "group": "common",
       "required": true,
       "type": "string",
@@ -104,7 +104,7 @@
       "deprecated": false,
       "secret": false,
       "raw": true,
-      "labelHint": "UserId",
+      "labelHint": "Gmail account name that is associated with this registration.",
       "order": "6"
     },
     "googleScopes": {
@@ -174,7 +174,7 @@
   "actions": [
     {
       "name": "Send Email",
-      "description": "Copy one or more objects into a bucket.",
+      "description": "Send an email from the Gmail account that this connection is authorized to access.",
       "id": "io.syndesis:gmail-send-email-connector",
       "pattern": "To",
       "actionType": "connector",
@@ -192,12 +192,12 @@
         ],
         "propertyDefinitionSteps": [
           {
-            "name": "Send Email through GMail",
-            "description": "Set the Email",
+            "name": "Send Email through Gmail",
+            "description": "Specify email content and addresses to send the email to. ",
             "properties": {
               "text": {
                 "kind": "parameter",
-                "displayName": "Email Text",
+                "displayName": "Email text",
                 "group": "producer",
                 "label": "producer",
                 "required": false,
@@ -205,7 +205,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The text to use",
+                "labelHint": "The email message that you want to send.",
                 "order": "3"
               },
               "to": {
@@ -218,7 +218,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The to to use",
+                "labelHint": "One or more comma-separated email addresses to send the email to.",
                 "order": "1"
               },
               "cc": {
@@ -231,7 +231,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The cc to use",
+                "labelHint": "One or more comma-separated email addresses to send a copy of the email to.",
                 "order": "4"
               },
               "bcc": {
@@ -244,7 +244,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The bcc to use",
+                "labelHint": "One or more comma-separated email addresses to send a blind copy of the email to.",
                 "order": "5"
               },
               "subject": {
@@ -257,7 +257,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The subject to use",
+                "labelHint": "The text to insert in the subject line of the email.",
                 "order": "2"
               }
             }
@@ -267,7 +267,7 @@
     },
     {
       "name": "Receive Email",
-      "description": "Receive email",
+      "description": "Obtain email from the Gmail account that this connection is authorized to access.",
       "id": "io.syndesis:gmail-receive-email-connector",
       "pattern": "From",
       "actionType": "connector",
@@ -285,8 +285,8 @@
         ],
         "propertyDefinitionSteps": [
           {
-            "name": "Send Email through GMail",
-            "description": "Set the Email",
+            "name": "Obtain Email from Gmail",
+            "description": "Specify the emails that you want to obtain.",
             "properties": {
               "labels": {
                 "kind": "parameter",
@@ -298,12 +298,12 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "Comma separated list of labels",
+                "labelHint": "Comma separated list of labels that are used in the Gmail account that this connection accesses.",
                 "order": "2"
               },
               "maxResults": {
                 "kind": "parameter",
-                "displayName": "Max Results",
+                "displayName": "Max results",
                 "group": "producer",
                 "label": "producer",
                 "required": false,
@@ -312,7 +312,7 @@
                 "deprecated": false,
                 "secret": false,
                 "defaultValue": "5",
-                "labelHint": "Max Results to consume",
+                "labelHint": "Maximum number of emails to return.",
                 "order": "4"
               },
               "markAsRead": {
@@ -327,7 +327,7 @@
                 "secret": false,
                 "componentProperty": false,
                 "defaultValue": true,
-                "labelHint": "Mark as read the consumed emails",
+                "labelHint": "Indicate that returned emails have been read.",
                 "order": "3"
               },
               "delay": {
@@ -343,7 +343,7 @@
                 "secret": false,
                 "defaultValue": 30000,
                 "componentProperty": false,
-                "labelHint": "Time delay before the next poll",
+                "labelHint": "Time interval between polls for emails.",
                 "order": "1"
               }
             }
