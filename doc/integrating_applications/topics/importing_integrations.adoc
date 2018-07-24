@@ -40,7 +40,8 @@ application that uses the OAuth protocol, register this installation of
 See the appropriate topic:
 
 * {LinkFuseOnlineConnectorGuide}#register-with-dropbox[Register with Dropbox]
-* <<register-with-rest-api,Register with a REST API>>
+* {LinkFuseOnlineConnectorGuide}#register-with-gmail[Register with Gmail]
+* {LinkFuseOnlineConnectorGuide}#register-with-rest-api[Register with a REST API]
 * {LinkFuseOnlineConnectorGuide}#register-with-salesforce_{context}[Register with Salesforce]
 * {LinkFuseOnlineConnectorGuide}#register-with-twitter[Register with Twitter]
 
