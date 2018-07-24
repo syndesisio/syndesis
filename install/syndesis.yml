@@ -606,6 +606,7 @@ objects:
     labels:
       app: syndesis
       syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-db
   spec:
     accessModes:
