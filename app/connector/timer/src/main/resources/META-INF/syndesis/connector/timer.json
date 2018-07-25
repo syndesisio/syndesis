@@ -13,6 +13,7 @@
       "actions": [
         {
             "name": "Simple Timer",
+            "description": "Simple Timer",
             "id": "io.syndesis:timer-action",
             "pattern": "From",
             "actionType": "connector",
@@ -75,14 +76,14 @@
                             "cron": {
                                 "componentProperty": false,
                                 "deprecated": false,
-                                "description": "A cron Expression, for example the expression for every minute is 0 * 0 ? * * *",
+                                "description": "A cron Expression, for example the expression for every minute is 0 0/1 * * * ?",
                                 "displayName": "Cron Expression",
                                 "javaType": "string",
                                 "kind": "parameter",
                                 "required": true,
                                 "secret": false,
                                 "type": "string",
-                                "defaultValue": "0+*+0+?+*+*+*",
+                                "defaultValue": "0+0/1+*+*+*+?",
                                 "labelHint": "Delay between scheduling (executing) expressed as a cron expression"
                             }
                         }
