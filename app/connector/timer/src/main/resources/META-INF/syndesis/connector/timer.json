@@ -31,20 +31,20 @@
                 "propertyDefinitionSteps": [
                     {
                         "description": "Period",
-                        "name": "period",
+                        "name": "Period",
                         "properties": {
                             "period": {
                                 "componentProperty": false,
                                 "deprecated": false,
                                 "description": "Period",
-                                "displayName": "period",
+                                "displayName": "Period",
                                 "javaType": "long",
                                 "kind": "parameter",
-                                "required": false,
+                                "required": true,
                                 "secret": false,
                                 "type": "duration",
-                                "tags": [],
-                                "enum": []
+                                "defaultValue": 60000,
+                                "labelHint": "Delay between scheduling (executing)."
                             }
                         }
                     }
@@ -76,15 +76,15 @@
                             "cron": {
                                 "componentProperty": false,
                                 "deprecated": false,
-                                "description": "Cron Expression",
+                                "description": "A cron Expression, for example the expression for every minute is 0 0/1 * * * ?",
                                 "displayName": "Cron Expression",
                                 "javaType": "string",
                                 "kind": "parameter",
-                                "required": false,
+                                "required": true,
                                 "secret": false,
                                 "type": "string",
-                                "tags": [],
-                                "enum": []
+                                "defaultValue": "0+0/1+*+*+*+?",
+                                "labelHint": "Delay between scheduling (executing) expressed as a cron expression"
                             }
                         }
                     }
