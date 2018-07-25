@@ -50,7 +50,7 @@
             "deprecated": false,
             "secret": false,
             "order": "4",
-            "labelHint": "The avatar that the component will use when sending message to a channel or user"
+            "labelHint": "The avatar that the component will use when sending messages to a channel or user"
         },
         "iconEmoji": {
             "kind": "parameter",
@@ -62,7 +62,7 @@
             "deprecated": false,
             "secret": false,
             "order": "3",
-            "labelHint": "The Slack emogi that will be used for the message avatar"
+            "labelHint": "The Slack emoji that will be used for the message avatar"
         }
     },
     "actions": [
@@ -88,7 +88,7 @@
                 "propertyDefinitionSteps": [
                    {
                         "name":"Username",
-                        "description":"Send a message to specific username",
+                        "description":"Send a message to a specific username",
                         "properties":{
                             "username": {
                                 "kind": "parameter",
@@ -108,7 +108,7 @@
         },
         {
             "name": "Channel",
-            "description": "Publish a message to specific channel",
+            "description": "Publish a message to a specific channel",
             "id": "io.syndesis:slack-channel-connector",
             "pattern": "To",
             "actionType": "connector",
@@ -128,7 +128,7 @@
                 "propertyDefinitionSteps": [
                     {
                         "name":"Channel",
-                        "description":"Send a message to specific channel",
+                        "description":"Send a message to a specific channel",
                         "properties":{
                             "channel": {
                                 "kind": "parameter",
