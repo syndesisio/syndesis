@@ -75,15 +75,15 @@
                             "cron": {
                                 "componentProperty": false,
                                 "deprecated": false,
-                                "description": "Cron Expression",
+                                "description": "A cron Expression, for example the expression for every minute is 0 * 0 ? * * *",
                                 "displayName": "Cron Expression",
                                 "javaType": "string",
                                 "kind": "parameter",
-                                "required": false,
+                                "required": true,
                                 "secret": false,
                                 "type": "string",
-                                "tags": [],
-                                "enum": []
+                                "defaultValue": "0+*+0+?+*+*+*",
+                                "labelHint": "Delay between scheduling (executing) expressed as a cron expression"
                             }
                         }
                     }
