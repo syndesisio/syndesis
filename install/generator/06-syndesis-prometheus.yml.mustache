@@ -177,11 +177,13 @@
           livenessProbe:
             httpGet:
               port: 9090
+            initialDelaySeconds: 60
           ports:
           - containerPort: 9090
           readinessProbe:
             httpGet:
               port: 9090
+            initialDelaySeconds: 30
           # DB QoS class is "Guaranteed" (requests == limits)
           # Note: On OSO there is no Guaranteed class, its always burstable
           resources:
