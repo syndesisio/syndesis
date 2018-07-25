@@ -53,7 +53,11 @@ to which you want to send blind copies of the email.
 +
 If you plan to add a data mapper step just before this Gmail connection,
 and you want to map integration data to some email fields, leave those fields
-blank. Enter values in other fields as needed. 
+blank in the action configuration. Enter values in other action fields as needed. 
++
+A value that you specify in a *Send Email* action configuration field
+has precedence over a value that is mapped from a previous step. For
+more information about this, see <<alternatives-for-populating-email-to-send>>.
 
 
 . Click *Done* to add the connection to the integration. 

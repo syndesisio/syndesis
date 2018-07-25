@@ -27,13 +27,25 @@ If you add a data mapper step then you can map one, some, or all
 
 * When you add a Gmail connection to an integration, configure the 
 action by specifying values
-in the *Send Email* action input fields. 
+in the *Send Email* action fields. 
 You can specify values in one, some, or all fields. 
 
 * Use both a data mapper step and *Send Email* action configuration to
 populate the fields. In other words, you can configure the 
 *Send Email* action by specifying one or more fields and
 also add a data mapper step that populates other fields. 
++
+A value that you specify directly in a *Send Email* action 
+field has precedence over a value that is
+mapped to the *Send Email* action field. In other words, suppose you populate
+a *Send Email* field by specifying a value when you add the connection
+and configure the action 
+and also by mapping a value to the same field. The value that you specify 
+in the action configuration always overrides the value that was mapped. 
+For example, suppose you specify 
+`people@redhat.com` in the *Email to* action field and you also map an
+email field from a previous step to the Gmail *Email to* field. The integration
+always uses `people@redhat.com` and only `people@redhat.com` as the email address. 
 
 When you add a Gmail connection that sends an email, no action configuration
 parameters are required. This is because you might choose to populate an
