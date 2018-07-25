@@ -1,13 +1,12 @@
 import {
   Component,
-  Input,
   OnInit,
   OnDestroy,
   AfterViewInit,
   ChangeDetectorRef
 } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
@@ -15,21 +14,16 @@ import {
 } from '@ng-dynamic-forms/core';
 
 import {
-  Action,
   DataShape,
   FormFactoryService,
-  IntegrationSupportService,
   Step
 } from '@syndesis/ui/platform';
-import { log, getCategory } from '@syndesis/ui/logging';
 import { StepStore, DATA_MAPPER, BASIC_FILTER } from '@syndesis/ui/store';
 import {
   CurrentFlowService,
   FlowEvent,
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
-
-const category = getCategory('IntegrationsCreatePage');
 
 @Component({
   selector: 'syndesis-integration-step-configure',
@@ -52,7 +46,7 @@ export class IntegrationStepConfigureComponent
   dataShape: DataShape;
   loading = false;
   error: any;
-  valid = true;
+  valid = false;
   routeSubscription: Subscription;
   mappings: string;
 

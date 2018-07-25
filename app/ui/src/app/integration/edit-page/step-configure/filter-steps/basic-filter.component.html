@@ -6,18 +6,18 @@
 
         <fieldset formGroupName="filterSettingsGroup" class="filterSettingsGroupContainer">
           <label for="basicFilterPredicateSelect">
-            {{ filterSettingsGroupObj.predicate.label }}
+            {{ form.get('filterSettingsGroup').value.predicateLabel }}
           </label>
           <select
             id="basicFilterPredicateSelect"
             formControlName="predicate"
             class="form-control predicate-select">
-            <option
-              [ngValue]="option.value"
-              *ngFor="let option of predicateOpsModel$ | async; let first = first;">
-              {{ option.label }}
-            </option>
-          </select>
+              <option
+                [ngValue]="option.value"
+                *ngFor="let option of predicateOpsModel$ | async;">
+                {{ option.label }}
+              </option>
+            </select>
         </fieldset>
       </div>
 
