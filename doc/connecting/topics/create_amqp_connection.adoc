@@ -7,7 +7,7 @@ To create an AMQP connection:
 display any available connections. 
 . In the upper right, click *Create Connection* to display
 connectors.  
-. Click the *AMQP* connector.
+. Click the *AMQP Message Broker* connector.
 . Configure the connection by entering: 
 +
 .. In the *Connection URI* field, enter the location you want to send data

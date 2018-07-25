@@ -31,7 +31,7 @@ after registration is in place.
 . In the page that is prompting you to sign in to Gmail, 
 enter the email address of the Google account that you want this connection to
 access from {prodname} and click *Next*. 
-. In response to *openshiftapps.com wants to access your Google Account*,
+. In response to *openshiftapps.com wants to access your Google Account*, 
 click *Allow* to return to {prodname}.
 . In the {prodname} *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.

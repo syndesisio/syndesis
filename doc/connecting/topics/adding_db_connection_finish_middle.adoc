@@ -16,7 +16,7 @@ To add a database connection:
 +
 * *Invoke SQL* operates on data by executing the
 SQL statement you specify.
-* *Invoke Stored Procedure* operates on data by invoking
+* *Invoke stored procedure* operates on data by invoking
 the stored procedure you specify or select.
 . If you selected *Invoke SQL*, in the *SQL Statement* field:
 ** For a middle connection, enter a SQL `SELECT` statement that obtains
@@ -34,8 +34,8 @@ the `SELECT` statement so that it obtains one record.
 operate on one or more records.
 
 +
-If you selected *Invoke Stored Procedure*, in the
-*Stored Procedure* field, select or enter the name of the stored procedure to
+If you selected *Invoke stored procedure*, in the
+*Procedure name* field, select or enter the name of the stored procedure to
 invoke to operate on the data of interest. The stored procedure you specify must
 already exist. The database administrator should have created any stored
 procedures you need to use in an integration.

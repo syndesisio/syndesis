@@ -5,7 +5,7 @@
 In the middle of an integration, to publish messages to an AMQ broker, 
 add an AMQ connection between the start and
 finish connections. You must be creating or editing an integration.
-The integratation's start and finish connections must have already been
+The integration's start and finish connections must have already been
 added. 
 
 To add an AMQ connection as a middle connection:

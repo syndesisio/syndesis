@@ -7,7 +7,7 @@ To create an AMQ connection:
 display any available connections.
 . In the upper right, click *Create Connection* to display
 connectors.  
-. Click the *AMQ* connector.
+. Click the *AMQ Message Broker* connector.
 . Configure the connection by entering: 
 +
 .. In the *Broker URL* field, enter the location that you want to send data
