@@ -67,8 +67,13 @@ public class KubernetesSupport {
             if (sinceTime != null) {
                 url.append("&sinceTime=");
             }
-            Request request = new Request.Builder().url(new URL(url.toString())).get().build();
-            OkHttpClient clone = okHttpClient.newBuilder().readTimeout(0, TimeUnit.MILLISECONDS).build();
+            String podLogUrl = url.toString();
+
+            Thread.currentThread().setName("Logs Controller [running], request: " + podLogUrl);
+            Request request = new Request.Builder().url(new URL(podLogUrl)).get().build();
+            OkHttpClient clone = okHttpClient.newBuilder()
+                .readTimeout(0, TimeUnit.MILLISECONDS)
+                .build();
             clone.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -79,6 +84,7 @@ public class KubernetesSupport {
                 @Override
                 public void onResponse(final Call call, final Response response) throws IOException {
                     executor.execute(() -> {
+                        Thread.currentThread().setName("Logs Controller [running], streaming: " + podLogUrl);
                         try {
                             if( response.code() == 200 ) {
                                 handler.accept(response.body().byteStream());
@@ -88,12 +94,16 @@ public class KubernetesSupport {
                             }
                         } catch (IOException e) {
                             LOG.error("Unexpected Error", e);
+                        } finally {
+                            Thread.currentThread().setName(ActivityTrackingController.IDLE_THREAD_NAME);
                         }
                     });
                 }
             });
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException t) {
             throw new IOException("Unexpected Error", t);
+        } finally {
+            Thread.currentThread().setName(ActivityTrackingController.IDLE_THREAD_NAME);
         }
     }
 

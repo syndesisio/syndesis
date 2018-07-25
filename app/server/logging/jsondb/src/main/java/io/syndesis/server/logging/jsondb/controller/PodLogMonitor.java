@@ -94,7 +94,7 @@ class PodLogMonitor implements Consumer<InputStream> {
             logsController.setPodLogState(podName, state);
         }
         LOG.info("Recovered state: {}", state);
-        logsController.executor.execute(this::run);
+        logsController.execute(podName, this::run);
     }
 
     public void run() {

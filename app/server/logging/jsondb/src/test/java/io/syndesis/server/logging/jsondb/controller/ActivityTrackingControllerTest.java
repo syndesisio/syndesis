@@ -85,7 +85,7 @@ public class ActivityTrackingControllerTest {
 
             @Override
             protected void watchLog(String podName, Consumer<InputStream> handler, String sinceTime) throws IOException {
-                executor.execute(()->{
+                execute("test", ()->{
                     handler.accept(new ByteArrayInputStream(podLogs.getBytes(StandardCharsets.UTF_8)));
                 });
             }
