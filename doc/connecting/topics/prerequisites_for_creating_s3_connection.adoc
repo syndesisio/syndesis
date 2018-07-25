@@ -35,7 +35,7 @@ A user with the login credentials for the AWS account that created or will
 create the bucket obtains the Amazon S3 keys as follows:
 
 . Go to https://aws.amazon.com/s3/.
-. Sign in to the console
+. Hover over *My Account*, select *AWS Management Console* and sign in to the console
 with the AWS account that created the bucket that
 you want to access or with
 the account that you want the connection to use to create the bucket.

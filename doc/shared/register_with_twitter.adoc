@@ -22,7 +22,7 @@ image:../connecting/topics/images/CopyCallbackURL.png[Copy Callback URL] to
 copy the callback URL for your installation of {prodname} to the clipboard. 
 You will need this URL toward the end of this procedure. 
 .. To the right of the *Twitter* entry,
-click *Register* to display the *Client ID* and *Client Secret* fields.
+click *Register* to display the *Consumer Key* and *Consumer Secret* fields.
 . In another browser tab, go to the Twitter *Application Management* web
 site at 
 https://apps.twitter.com 
@@ -47,8 +47,8 @@ something like this:
 .. Click the *Keys and Access Tokens* tab.
 .. Copy the *Consumer Key*.
 . On your {prodname} installation *Settings* page, paste the Twitter
-consumer key into the Twitter *Client ID* field.
+consumer key into the Twitter *Consumer Key* field.
 . On the Twitter *Keys and Access Tokens* tab, copy the
 *Consumer Secret* and paste it into the {prodname} Twitter
-*Client Secret* field.
+*Consumer Secret* field.
 . Click *Save* and then click *Ok*.
