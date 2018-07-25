@@ -134,6 +134,14 @@ export class CurrentConnectionService {
     return this._credentials && this._credentials.type !== undefined;
   }
 
+  hasProperties(): boolean {
+    if (!this.hasConnector()) {
+      return false;
+    }
+    const props = this.connection.connector.properties || {};
+    return Object.keys(props).length > 0;
+  }
+
   get oauthError(): boolean {
     return this._oauthStatus && this._oauthStatus !== 'SUCCESS';
   }
@@ -169,7 +177,6 @@ export class CurrentConnectionService {
   set connection(connection: Connection) {
     this._loaded = false;
     this._connection = connection;
-    const connectorId = connection.connectorId;
     this.events.emit({
       kind: 'connection-check-connector',
       connection: this._connection
