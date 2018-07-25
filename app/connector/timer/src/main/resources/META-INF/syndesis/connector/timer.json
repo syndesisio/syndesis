@@ -13,7 +13,6 @@
       "actions": [
         {
             "name": "Simple Timer",
-            "description": "Simple Timer",
             "id": "io.syndesis:timer-action",
             "pattern": "From",
             "actionType": "connector",
@@ -31,20 +30,20 @@
                 "propertyDefinitionSteps": [
                     {
                         "description": "Period",
-                        "name": "period",
+                        "name": "Period",
                         "properties": {
                             "period": {
                                 "componentProperty": false,
                                 "deprecated": false,
                                 "description": "Period",
-                                "displayName": "period",
+                                "displayName": "Period",
                                 "javaType": "long",
                                 "kind": "parameter",
-                                "required": false,
+                                "required": true,
                                 "secret": false,
                                 "type": "duration",
-                                "tags": [],
-                                "enum": []
+                                "defaultValue": 60000,
+                                "labelHint": "Delay between scheduling (executing)."
                             }
                         }
                     }
