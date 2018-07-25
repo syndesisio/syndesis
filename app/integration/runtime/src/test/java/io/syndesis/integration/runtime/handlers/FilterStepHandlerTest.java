@@ -60,6 +60,64 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
     private ApplicationContext applicationContext;
 
     @Test
+    public void testPlaintextFilterStep() throws Exception {
+        final CamelContext context = new SpringCamelContext(applicationContext);
+
+        try {
+            final RouteBuilder routes = newIntegrationRouteBuilder(
+                new Step.Builder()
+                    .stepKind(StepKind.endpoint)
+                    .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                            .componentScheme("direct")
+                            .putConfiguredProperty("name", "start")
+                            .build())
+                        .build())
+                    .build(),
+                new Step.Builder()
+                    .stepKind(StepKind.expressionFilter)
+                    .putConfiguredProperty("filter", "${body} contains 'number'")
+                    .build(),
+                new Step.Builder()
+                    .stepKind(StepKind.endpoint)
+                    .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                            .componentScheme("mock")
+                            .putConfiguredProperty("name", "result")
+                            .build())
+                        .build())
+                    .build()
+            );
+
+            // Set up the camel context
+            context.addRoutes(routes);
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            final List<String> matchingMessages = Collections.singletonList("Body: [number:9436] Log zo syndesisu");
+            final List<String> notMatchingMessages = Collections.singletonList("something else");
+            final ProducerTemplate template = context.createProducerTemplate();
+            final MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
+
+            List<String> allMessages = new ArrayList<>();
+            allMessages.addAll(matchingMessages);
+            allMessages.addAll(notMatchingMessages);
+
+            result.expectedBodiesReceived(matchingMessages);
+
+            for (Object body : allMessages) {
+                template.sendBody("direct:start", body);
+            }
+
+            result.assertIsSatisfied();
+        } finally {
+            context.stop();
+        }
+    }
+
+    @Test
     public void testExpressionFilterStep() throws Exception {
         final CamelContext context = new SpringCamelContext(applicationContext);
 

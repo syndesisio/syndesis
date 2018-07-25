@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapLikeType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -80,7 +81,7 @@ public final class JsonSimplePredicate implements Predicate {
     public boolean matches(final Exchange exchange) {
         final Message payload = exchange.getIn();
 
-        try (InputStream stream = streamFrom(payload)) {
+        try (InputStream stream = payload.getBody(InputStream.class)) {
             if (stream == null) {
                 return predicate.matches(exchange);
             }
@@ -89,20 +90,26 @@ public final class JsonSimplePredicate implements Predicate {
             // needs to be parsed as JSON, therefore we set a map instead of the
             // string
             final Map<String, Object> json = mapper.readValue(stream, GENERIC_TYPE);
-            if (json == null) {
-                return predicate.matches(exchange);
-            }
-            // Clone the exchange and set the JSON message converted to a Map /
-            // List as in message.
-            // The intention is that only this predicate acts on the converted
-            // value, but the original in-message still continues to carry the
-            // same format.
-            // The predicated is supposed to be read only with respect to the
-            // incoming message.
-            final Exchange exchangeForProcessing = ExchangeHelper.createCopy(exchange, true);
-            exchangeForProcessing.getIn().setBody(json);
 
-            return ognlPredicate.matches(exchangeForProcessing);
+            if (json != null) {
+                // Clone the exchange and set the JSON message converted to a Map /
+                // List as in message.
+                // The intention is that only this predicate acts on the converted
+                // value, but the original in-message still continues to carry the
+                // same format.
+                // The predicated is supposed to be read only with respect to the
+                // incoming message.
+                final Exchange exchangeForProcessing = ExchangeHelper.createCopy(exchange, true);
+                exchangeForProcessing.getIn().setBody(json);
+
+                return ognlPredicate.matches(exchangeForProcessing);
+            }
+        } catch (final JsonParseException e) {
+            LOG.debug("Incoming message is not a json, try to match using simple language");
+            // in case the body is not convertible to a map, the json converter
+            // may throw an exception we do not need to dump on the logs so log
+            // it at trace level.
+            LOG.trace("Unable to parse incoming message body as JSON ", e);
         } catch (final IOException e) {
             LOG.warn("Unable to apply simple filter to the given payload");
             LOG.debug("Unable to parse incoming message body as JSON needed for simple filtering", e);
@@ -125,10 +132,6 @@ public final class JsonSimplePredicate implements Predicate {
         matcher.appendTail(ognl);
 
         return ognl.toString();
-    }
-
-    static InputStream streamFrom(final Message payload) {
-        return payload.getBody(InputStream.class);
     }
 
     static String toOgnl(final Matcher matcher) {
