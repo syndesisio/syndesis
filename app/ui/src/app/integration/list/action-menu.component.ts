@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import {
   Integration,
   IntegrationActionsService,
@@ -17,7 +17,7 @@ import { Action, ActionConfig } from 'patternfly-ng';
     </ng-container>
   `
 })
-export class IntegrationActionMenuComponent implements OnInit {
+export class IntegrationActionMenuComponent implements OnChanges {
   @Input() showViewAction = true;
   @Input() showPrimaryActions = false;
   @Input() integration: Integration;
@@ -28,7 +28,10 @@ export class IntegrationActionMenuComponent implements OnInit {
     private i18NService: I18NService
   ) {}
 
-  ngOnInit() {
+  ngOnChanges() {
+    if (!this.integration) {
+      return;
+    }
     this.actionConfig = {
       primaryActions: [],
       moreActions: [],
@@ -50,7 +53,8 @@ export class IntegrationActionMenuComponent implements OnInit {
         title: this.i18NService.localize('edit'),
         tooltip: this.i18NService.localize('edit-thing', [
           this.integration.name
-        ])
+        ]),
+        visible: this.integrationActionsService.canEdit(this.integration)
       });
     }
     this.actionConfig.moreActions.push({
@@ -100,7 +104,8 @@ export class IntegrationActionMenuComponent implements OnInit {
         title: this.i18NService.localize('integrations.edit-integration'),
         tooltip: this.i18NService.localize('edit-thing', [
           this.integration.name
-        ])
+        ]),
+        disabled: !this.integrationActionsService.canEdit(this.integration)
       });
     }
   }

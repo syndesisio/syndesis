@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ListConfig, ActionConfig } from 'patternfly-ng';
 
-import { Integration, IntegrationDeployment } from '@syndesis/ui/platform';
+import { Integration, IntegrationDeployment, IntegrationActionsService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-history',
@@ -29,6 +29,8 @@ export class IntegrationHistoryComponent {
     '=1': '1 Use',
     other: '# Uses'
   };
+
+  constructor(public integrationActionsService: IntegrationActionsService) {}
 
   onDeploymentAction(
     event: { id: string },

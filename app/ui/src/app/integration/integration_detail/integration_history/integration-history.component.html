@@ -12,10 +12,10 @@
                 </div>
               </div>
               <div class="list-pf-actions">
-                <syndesis-button theme="default" (click)="onDraftAction('publish')" type="button">
+                <syndesis-button theme="default" (click)="onDraftAction('publish')" type="button" [disabled]="!integrationActionsService.canActivate(integration)">
                   {{ 'publish-draft' | synI18n }}
                 </syndesis-button>
-                <syndesis-button theme="default" (click)="onDraftAction('edit')" type="button">
+                <syndesis-button theme="default" (click)="onDraftAction('edit')" type="button" [disabled]="!integrationActionsService.canEdit(integration)">
                   {{ 'edit' | synI18n }}
                 </syndesis-button>
               </div>
@@ -37,8 +37,8 @@
         <ng-template #itemTemplate let-deployment="item" let-index="index">
           <div class="list-pf-left">
             <ng-container *ngIf="deployment.version === integration.deploymentVersion">
-              <ng-container [ngSwitch]="integration.currentState">	 
-                <ng-container *ngSwitchCase="'Pending'">	  
+              <ng-container [ngSwitch]="integration.currentState">
+                <ng-container *ngSwitchCase="'Pending'">
                   <div class="spinner spinner-sm spinner-inline"></div>
                 </ng-container>
                 <ng-container *ngSwitchCase="'Published'">
