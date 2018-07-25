@@ -29,7 +29,7 @@ const REVIEW_INDEX = 3;
   styleUrls: ['./create-page.component.scss']
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
-  currentActiveStep = CONNECTION_BASICS_INDEX;
+  _currentActiveStep = CONNECTION_BASICS_INDEX;
   currentSubscription: Subscription;
   fragmentSubscription: Subscription;
 
@@ -49,6 +49,20 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     return this.current.connection;
   }
 
+  get currentActiveStep() {
+    const page = this.getCurrentPage();
+    switch (page) {
+      case CONNECTION_BASICS:
+        return CONNECTION_BASICS_INDEX;
+      case CONFIGURE_FIELDS:
+        return CONFIGURE_FIELDS_INDEX;
+      case REVIEW:
+        return REVIEW_INDEX;
+      default:
+        return 0;
+    }
+  }
+
   getCurrentPage() {
     const child = this.route.firstChild;
     if (child && child.snapshot) {
@@ -61,7 +75,6 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
 
   canContinue() {
     const page = this.getCurrentPage();
-    const connection = this.current.connection;
     switch (page) {
       case CONNECTION_BASICS:
         return this.connection.name && this.connection.connector;
@@ -122,15 +135,12 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
         target.push('..');
         break;
       case CONFIGURE_FIELDS:
-        this.currentActiveStep = CONNECTION_BASICS_INDEX;
         target.push(CONNECTION_BASICS);
         break;
       case REVIEW:
         if (!this.current.connection.connector.properties) {
-          this.currentActiveStep = CONNECTION_BASICS_INDEX;
           target.push(CONNECTION_BASICS);
         } else {
-          this.currentActiveStep = CONFIGURE_FIELDS_INDEX;
           target.push(CONFIGURE_FIELDS);
         }
         break;
@@ -150,16 +160,13 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     const target = [];
     switch (page) {
       case CONNECTION_BASICS:
-        if (!this.current.connection.connector.properties) {
-          this.currentActiveStep = REVIEW_INDEX;
+        if (!this.current.hasProperties()) {
           target.push(REVIEW);
         } else {
-          this.currentActiveStep = CONFIGURE_FIELDS_INDEX;
           target.push(CONFIGURE_FIELDS);
         }
         break;
       case CONFIGURE_FIELDS:
-        this.currentActiveStep = REVIEW_INDEX;
         target.push(REVIEW);
         break;
       default:
@@ -180,10 +187,6 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     const page = this.getCurrentPage();
     switch (event.kind) {
       case 'connection-set-connection':
-        log.infoc(
-          () => 'Credentials: ' + JSON.stringify(this.current.credentials)
-        );
-        log.infoc(() => 'hasCredentials: ' + this.current.hasCredentials());
         if (!this.current.hasConnector() && page !== CONNECTION_BASICS) {
           setTimeout(() => {
             this.router.navigate([CONNECTION_BASICS], {
@@ -202,7 +205,6 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
           this.current.oauthStatus.status === 'SUCCESS' &&
           page === REVIEW
         ) {
-          this.currentActiveStep++;
           this.goForward();
           return;
         }
