@@ -32,7 +32,11 @@
                 class="form-control"
                 formControlName="path"
                 type="text"
+                [attr.list]="'path-list-' + i"
                 placeholder="Property name">
+              <datalist [attr.id]="'path-list-' + i">
+                <option *ngFor="let path of paths">{{ path }}</option>
+              </datalist>
               <span class="help-block">The data you want to evaluate</span>
               <span *ngIf="!ruleSet.controls.path.pristine && ruleSet.controls.path.errors?.required" class="help-block error">Object property name is required</span>
               <span *ngIf="ruleSet.controls.path.errors?.maxlength" class="help-block error">Maximum Characters Exceeded</span>
