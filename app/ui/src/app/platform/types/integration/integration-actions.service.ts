@@ -12,6 +12,7 @@ import {
 export abstract class IntegrationActionsService {
   abstract canActivate(integration: Integration): boolean;
   abstract canDeactivate(integration: Integration): boolean;
+  abstract canEdit(integration: Integration): boolean;
   abstract requestAction(
     action: string,
     integration: Integration | IntegrationOverview,

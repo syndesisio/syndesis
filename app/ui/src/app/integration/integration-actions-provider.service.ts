@@ -9,7 +9,10 @@ import {
   IntegrationActionsService,
   IntegrationSupportService,
   Step,
-  I18NService
+  I18NService,
+  PENDING,
+  UNPUBLISHED,
+  PUBLISHED
 } from '@syndesis/ui/platform';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
@@ -40,14 +43,16 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     super();
   }
 
-  canActivate(integration: Integration | IntegrationOverview) {
-    // TODO: false if integration.version == lastDeloyed.version && is active.
-    return true; // integration.currentState === UNPUBLISHED || integration.currentState === DRAFT;
+  canActivate(integration: Integration) {
+    return integration.currentState !== PENDING && integration.currentState !== PUBLISHED;
   }
 
-  canDeactivate(integration: Integration | IntegrationOverview) {
-    // TODO: true if lastDeloyed is active.
-    return true; //integration.currentState === PUBLISHED || integration.currentState === PENDING;
+  canEdit(integration: Integration) {
+    return integration.currentState !== PENDING;
+  }
+
+  canDeactivate(integration: Integration) {
+    return integration.currentState !== UNPUBLISHED;
   }
 
   //----- Actions ------------------->>
