@@ -33,11 +33,19 @@ import {
   styleUrls: ['./basic-filter.component.scss']
 })
 export class BasicFilterComponent implements OnChanges, OnDestroy {
-  form: FormGroup; // our model driven form
+  form: FormGroup;
   rulesArray: any = [];
   ruleOpsModel$: Observable<any>;
-  predicateOpsModel$: Observable<any>;
-  filterSettingsGroupObj;
+  predicateOpsModel$: Observable<any> = of([
+    {
+      label: 'ALL of the following',
+      value: 'AND'
+    },
+    {
+      label: 'ANY of the following',
+      value: 'OR'
+    }
+  ]);
   paths: Array<string>;
   loading = true;
   formValueChangeSubscription: Subscription;
@@ -70,18 +78,7 @@ export class BasicFilterComponent implements OnChanges, OnDestroy {
     public currentFlowService: CurrentFlowService,
     public integrationSupportService: IntegrationSupportService,
     private fb: FormBuilder
-  ) {
-    this.predicateOpsModel$ = of([
-      {
-        label: 'ALL of the following',
-        value: 'AND'
-      },
-      {
-        label: 'ANY of the following',
-        value: 'OR'
-      }
-    ]);
-  }
+  ) {}
 
   // this can be valid even if we can't fetch the form data
   initForm(
@@ -98,7 +95,10 @@ export class BasicFilterComponent implements OnChanges, OnDestroy {
 
     let rules: Rule[] = undefined;
     const incomingGroups = [];
-    const self = this;
+    const incomingPredicate = (configuredProperties && configuredProperties.predicate)
+      ? configuredProperties.predicate
+      : null;
+
     // build up the form array from the incoming values (if any)
     if (configuredProperties && configuredProperties.rules) {
       // TODO hackity hack
@@ -116,15 +116,8 @@ export class BasicFilterComponent implements OnChanges, OnDestroy {
     this.ruleOpsModel$ = of(ops);
     this.paths = paths;
 
-    this.filterSettingsGroupObj = {
-      predicate: {
-        label: 'Continue only if incoming data match',
-        options: this.predicateOpsModel$,
-        value: (configuredProperties && configuredProperties.predicate) ? configuredProperties.predicate : 'AND'
-      }
-    };
+    const preloadedPredicate = this.createFilterSettingsGroup(incomingPredicate);
 
-    const preloadedPredicate = this.fb.group(this.filterSettingsGroupObj);
     let preloadedRulesArray;
 
     if (incomingGroups.length > 0) {
@@ -148,6 +141,13 @@ export class BasicFilterComponent implements OnChanges, OnDestroy {
     });
 
     this.loading = false;
+  }
+
+  createFilterSettingsGroup(predicate?: string): FormGroup {
+    return this.fb.group({
+      predicate: [predicate || 'AND', null],
+      predicateLabel: 'Continue only if incoming data match'
+    });
   }
 
   ngOnDestroy() {
