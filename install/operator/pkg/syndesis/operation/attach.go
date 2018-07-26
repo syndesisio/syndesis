@@ -52,47 +52,27 @@ func getAllManagerSelectors() []metav1.ListOptions {
 		{
 			LabelSelector: "app=syndesis,syndesis.io/app=todo",
 		},
-		// In the 7.0 template, the database does not have syndesis.io/type=infrastructure label
-		// It can be removed when it's no longer necessary to upgrade from 7.0 (together with the "legacy" package)
-		{
-			LabelSelector: "syndesis.io/app=syndesis,syndesis.io/component=syndesis-db",
-		},
 	}
 }
 
 func getAllManagedResourceTypes() ([]metav1.TypeMeta, error) {
-	templTypes, err := template.GetDeclaredResourceTypes()
+	metas, err := template.GetDeclaredResourceTypes()
 	if err != nil {
 		return nil, err
 	}
-	// Using a map to remove duplicates
-	metas := make(map[string]metav1.TypeMeta, 0)
-	for _, kType := range templTypes {
-		addResourceTypes(metas, kType.APIVersion, kType.Kind)
-	}
-	addMissingResourceTypes(metas)
-
-	lst := make([]metav1.TypeMeta, 0, len(metas))
-	for _, meta := range metas {
-		lst = append(lst, meta)
-	}
-	return lst, nil
+	return appendMissingResourceTypes(metas), nil
 }
 
-func addMissingResourceTypes(types map[string]metav1.TypeMeta) {
+func appendMissingResourceTypes(metas []metav1.TypeMeta) ([]metav1.TypeMeta){
 	// Add here any resource type that should be attached but may not be present in the template
-	addResourceTypes(types, "batch/v1beta1", "CronJob")
-	addResourceTypes(types, "v1", "ServiceAccount")
-	addResourceTypes(types, "authorization.openshift.io/v1", "RoleBinding")
+	metas = appendTypeMeta(metas, "batch/v1beta1", "CronJob")
+	metas = appendTypeMeta(metas, "v1", "ServiceAccount")
+	return appendTypeMeta(metas, "authorization.openshift.io/v1", "RoleBinding")
 }
 
-func addResourceTypes(types map[string]metav1.TypeMeta, apiVersion string, kind string) {
-	types[typeMetaKey(apiVersion, kind)] = metav1.TypeMeta{
+func appendTypeMeta(metas []metav1.TypeMeta, apiVersion string, kind string) ([]metav1.TypeMeta) {
+	return append(metas,metav1.TypeMeta{
 		APIVersion: apiVersion,
 		Kind: kind,
-	}
-}
-
-func typeMetaKey(apiVersion string, kind string) string {
-	return apiVersion + ";" + kind
+	})
 }

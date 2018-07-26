@@ -9,7 +9,7 @@ import (
 
 
 func GetDeclaredResourceTypes() ([]metav1.TypeMeta, error) {
-	lst := make([]metav1.TypeMeta, 0)
+	types := make(map[metav1.TypeMeta]bool)
 	res, err := util.LoadKubernetesResourceFromAsset("template.yaml")
 	if err != nil {
 		return nil, err
@@ -21,12 +21,20 @@ func GetDeclaredResourceTypes() ([]metav1.TypeMeta, error) {
 			if err != nil {
 				return nil, err
 			}
-			lst = append(lst, metav1.TypeMeta{
+			meta := metav1.TypeMeta{
 				APIVersion: u.GetAPIVersion(),
 				Kind: u.GetKind(),
-			})
+			}
+			types[meta] = true
 		}
-	}
 
-	return lst, nil
+		ret := make([]metav1.TypeMeta, len(types))
+		i := 0
+		for k := range types {
+			ret[i] = k
+			i++
+		}
+		return ret, nil
+	}
+	return nil, nil
 }
