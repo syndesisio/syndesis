@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router, RouterStateSnapshot } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
@@ -19,6 +19,8 @@ import {
   CurrentFlowService,
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
+
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 
 @Component({
   selector: 'syndesis-integration-action-configure',
@@ -52,7 +54,8 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
     public integrationSupport: IntegrationSupportService,
-    private userService: UserService
+    private userService: UserService,
+    public modalService: ModalService
   ) {
     // nothing to do
   }
@@ -303,6 +306,25 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       }
     }
     return props;
+  }
+
+  canDeactivate(nextState: RouterStateSnapshot) {
+    console.log('NEXT STEP: ' + nextState.url);
+    return (
+      nextState.url.includes('/edit/action-configure') ||
+      nextState.url.includes('/edit/step-configure') ||
+      nextState.url.includes('/edit/step-select') ||
+      nextState.url.includes('/integrations/create/connection-select') ||
+      nextState.url.includes('/integrations/create/describe-data') ||
+      nextState.url.includes('/integrations/create/save-or-add-step') ||
+      nextState.url.includes('/integrations/create/integration-basics') ||
+      nextState.url.includes('/integrations/create/action-select') ||
+      nextState.url.includes('/integrations/create/action-configure') ||
+      nextState.url.includes('/connections/create/connection-basics') ||
+      nextState.url.includes('/integrations/create/step-select') ||
+      nextState.url.includes('/integrations/create/step-configure') ||
+      this.modalService.show().then(modal => modal.result)
+    );
   }
 
   ngOnInit() {

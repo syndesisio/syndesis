@@ -28,14 +28,15 @@
                   (click)="cancel()">Cancel
               </button> &nbsp;
                 <button class="btn btn-default"
+                  [routerLink]="['/integrations/save']"
                   (click)="save()"
                   [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress">
                   <span *ngIf="flowPageService.saveInProgress"
                     class="spinner spinner-sm spinner-inline"></span>
                   Save as Draft
                 </button>
-                <button type="button"
-                  class="btn btn-primary"
+                <button class="btn btn-primary"
+                  [routerLink]="['/integrations/publish']"
                   (click)="publish()"
                   [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress">
                   <span *ngIf="flowPageService.publishInProgress"
@@ -94,6 +95,9 @@
           </div>
         </div>
       </div>
+      <syndesis-modal title="{{ 'connections.leave-page-title' | synI18n }}"
+        message="{{ 'connections.leave-page-message' | synI18n }}">
+      </syndesis-modal>
     </div>
   </div>
 </syndesis-loading>

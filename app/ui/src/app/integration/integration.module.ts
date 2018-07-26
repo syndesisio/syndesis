@@ -19,6 +19,8 @@ import {
 } from '@syndesis/ui/integration/integration_detail';
 import { IntegrationLogsComponent } from '@syndesis/ui/integration/integration_logs';
 
+import { CanDeactivateGuard } from '@syndesis/ui/platform';
+
 import {
   IntegrationEditPage,
   IntegrationBasicsComponent,
@@ -47,40 +49,53 @@ const integrationListModuleFwd = forwardRef(() => IntegrationListModule);
 const editIntegrationChildRoutes = [
   {
     path: 'save-or-add-step',
-    component: IntegrationSaveOrAddStepComponent
+    component: IntegrationSaveOrAddStepComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'integration-basics',
-    component: IntegrationBasicsComponent
+    component: IntegrationBasicsComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'connection-select/:position',
-    component: IntegrationSelectConnectionComponent
+    component: IntegrationSelectConnectionComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'action-select/:position',
-    component: IntegrationSelectActionComponent
+    component: IntegrationSelectActionComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'action-configure/:position/:page',
-    component: IntegrationConfigureActionComponent
+    component: IntegrationConfigureActionComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'action-configure/:position',
-    component: IntegrationConfigureActionComponent
+    component: IntegrationConfigureActionComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'describe-data/:position',
-    redirectTo: 'describe-data/:position/input'
+    redirectTo: 'describe-data/:position/input',
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'describe-data/:position/:direction',
-    component: IntegrationDescribeDataComponent
+    component: IntegrationDescribeDataComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
-  { path: 'step-select/:position', component: IntegrationStepSelectComponent },
+  { 
+    path: 'step-select/:position',
+    component: IntegrationStepSelectComponent,
+    canDeactivate: [CanDeactivateGuard]
+  },
   {
     path: 'step-configure/:position',
-    component: IntegrationStepConfigureComponent
+    component: IntegrationStepConfigureComponent,
+    canDeactivate: [CanDeactivateGuard]
   }
 ];
 

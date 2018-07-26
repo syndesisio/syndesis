@@ -1,7 +1,8 @@
 import { filter, switchMap } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, EMPTY, Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 
 import {
   Actions,
@@ -41,7 +42,8 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
-    public router: Router
+    public router: Router,
+    public modalService: ModalService
   ) {
     this.flowSubscription = currentFlowService.events.subscribe(
       (event: FlowEvent) => {
@@ -160,6 +162,24 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
       this.position = +params.get('position');
       this.loadActions();
     });
+  }
+
+  canDeactivate(nextState: RouterStateSnapshot) {
+    console.log('NEXT STEP: ' + nextState.url);
+    return (
+      nextState.url.includes('/edit/action-configure') ||
+      nextState.url.includes('/edit/step-configure') ||
+      nextState.url.includes('/edit/step-select') ||
+      nextState.url.includes('/integrations/create/connection-select') ||
+      nextState.url.includes('/integrations/create/describe-data') ||
+      nextState.url.includes('/integrations/create/save-or-add-step') ||
+      nextState.url.includes('/integrations/create/integration-basics') ||
+      nextState.url.includes('/integrations/create/action-select') ||
+      nextState.url.includes('/integrations/create/action-configure') ||
+      nextState.url.includes('/integrations/create/step-select') ||
+      nextState.url.includes('/integrations/create/step-configure') ||
+      this.modalService.show().then(modal => modal.result)
+    );
   }
 
   ngOnDestroy() {

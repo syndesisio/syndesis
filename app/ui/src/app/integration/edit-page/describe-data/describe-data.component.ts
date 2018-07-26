@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, BehaviorSubject, Observable } from 'rxjs';
 import { CurrentFlowService, FlowPageService, FlowEvent } from '@syndesis/ui/integration/edit-page';
-import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+import { ActivatedRoute, Router, ParamMap, RouterStateSnapshot } from '@angular/router';
 import {
   Step,
   FormFactoryService,
@@ -13,6 +13,7 @@ import {
   DynamicFormControlModel
 } from '@ng-dynamic-forms/core';
 import { FormGroup } from '@angular/forms';
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 
 enum DataShapeDirection {
   INPUT = 'input',
@@ -106,7 +107,8 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public router: Router,
     public formFactoryService: FormFactoryService,
-    public dynamicFormService: DynamicFormService
+    public dynamicFormService: DynamicFormService,
+    public modalService: ModalService
   ) {
     // nothing to do
   }
@@ -238,6 +240,24 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
       this.userDefined = false;
       this.continue();
     }
+  }
+
+  canDeactivate(nextState: RouterStateSnapshot) {
+    console.log('NEXT STEP: ' + nextState.url);
+    return (
+      nextState.url.includes('/edit/action-configure') ||
+      nextState.url.includes('/edit/step-configure') ||
+      nextState.url.includes('/edit/step-select') ||
+      nextState.url.includes('/integrations/create/connection-select') ||
+      nextState.url.includes('/integrations/create/describe-data') ||
+      nextState.url.includes('/integrations/create/save-or-add-step') ||
+      nextState.url.includes('/integrations/create/integration-basics') ||
+      nextState.url.includes('/integrations/create/action-select') ||
+      nextState.url.includes('/integrations/create/action-configure') ||
+      nextState.url.includes('/integrations/create/step-select') ||
+      nextState.url.includes('/integrations/create/step-configure') ||
+      this.modalService.show().then(modal => modal.result)
+    );
   }
 
   ngOnInit() {

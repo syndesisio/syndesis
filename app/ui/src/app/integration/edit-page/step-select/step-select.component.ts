@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { FilterConfig, SortConfig, ToolbarConfig } from 'patternfly-ng';
@@ -15,7 +15,7 @@ import {
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
 import { Extensions, Step, Steps } from '@syndesis/ui/platform';
-import { ObjectPropertyFilterPipe } from '@syndesis/ui/common';
+import { ObjectPropertyFilterPipe, ModalService } from '@syndesis/ui/common';
 
 @Component({
   selector: 'syndesis-integration-step-select',
@@ -31,13 +31,18 @@ export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
   position: number;
   toolbarConfig: ToolbarConfig;
   onlyShowExtensions = false;
+
+  @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
+
   private propertyFilter = new ObjectPropertyFilterPipe();
+  private cancelModalId = 'create-cancellation-modal';
 
   constructor(
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
+    public modalService: ModalService,
     private stepStore: StepStore,
     private extensionStore: ExtensionStore
   ) {
@@ -155,6 +160,27 @@ export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
     });
   }
 
+  canDeactivate(nextState: RouterStateSnapshot) {
+    console.log('NEXT STEP: ' + nextState.url);
+    if (nextState.url == '/integrations') {
+      return this.modalService.show(this.cancelModalId).then(modal => modal.result);
+    }
+    return (
+      nextState.url.includes('/edit/action-configure') ||
+      nextState.url.includes('/edit/step-configure') ||
+      nextState.url.includes('/edit/step-select') ||
+      nextState.url.includes('/integrations/create/connection-select') ||
+      nextState.url.includes('/integrations/create/describe-data') ||
+      nextState.url.includes('/integrations/create/save-or-add-step') ||
+      nextState.url.includes('/integrations/create/integration-basics') ||
+      nextState.url.includes('/integrations/create/action-select') ||
+      nextState.url.includes('/integrations/create/action-configure') ||
+      nextState.url.includes('/integrations/create/step-select') ||
+      nextState.url.includes('/integrations/create/step-configure') ||
+      this.modalService.show().then(modal => modal.result)
+    );
+  }
+
   ngOnInit() {
     this.toolbarConfig = {
       filterConfig: {
@@ -198,6 +224,11 @@ export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
         });
         this.extensionStore.loadAll();
       });
+
+    this.modalService.registerModal(
+      this.cancelModalId,
+      this.cancelModalTemplate
+    );
   }
 
   ngOnDestroy() {

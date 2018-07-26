@@ -61,6 +61,17 @@
           </div>
         </syndesis-loading>
       </div>
+      <syndesis-modal title="{{ 'connections.leave-page-title' | synI18n }}"
+        message="{{ 'connections.leave-page-message' | synI18n }}">
+      </syndesis-modal>
+      <ng-template #cancelModalTemplate>
+        <cancel-confirmation-modal (cancel)="onCancel($event)"
+                                    primaryLabel="{{ 'yes' | synI18n }}"
+                                    secondaryLabel="{{ 'no' | synI18n }}">
+          <p class="lead">{{ 'connections.cancel-create-modal-lead' | synI18n }}</p>
+          <p>{{ 'connections.cancel-create-modal' | synI18n }}</p>
+        </cancel-confirmation-modal>
+      </ng-template>
     </div>
   </div>
 </syndesis-loading>

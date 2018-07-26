@@ -1,6 +1,6 @@
 import { map } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 
 import {
   FlowEvent,
@@ -10,6 +10,7 @@ import {
 import { IntegrationStore } from '@syndesis/ui/store';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { Integration } from '@syndesis/ui/platform';
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -28,7 +29,8 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
-    public router: Router
+    public router: Router,
+    public modalService: ModalService
   ) {}
 
   get errorMessage() {
@@ -149,6 +151,24 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
       );
       return;
     }
+  }
+
+  canDeactivate(nextState: RouterStateSnapshot) {
+    console.log('NEXT STEP: ' + nextState.url);
+    return (
+      nextState.url.includes('/edit/action-configure') ||
+      nextState.url.includes('/edit/step-configure') ||
+      nextState.url.includes('/edit/step-select') ||
+      nextState.url.includes('/integrations/create/connection-select') ||
+      nextState.url.includes('/integrations/create/describe-data') ||
+      nextState.url.includes('/integrations/create/save-or-add-step') ||
+      nextState.url.includes('/integrations/create/integration-basics') ||
+      nextState.url.includes('/integrations/create/action-select') ||
+      nextState.url.includes('/integrations/create/action-configure') ||
+      nextState.url.includes('/integrations/create/step-select') ||
+      nextState.url.includes('/integrations/create/step-configure') ||
+      this.modalService.show().then(modal => modal.result)
+    );
   }
 
   ngOnInit() {
