@@ -1,5 +1,9 @@
 import { map } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
+import { Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 
 import {
@@ -22,8 +26,12 @@ const category = getCategory('IntegrationsCreatePage');
     './save-or-add-step.component.scss'
   ]
 })
-export class IntegrationSaveOrAddStepComponent implements OnInit {
+export class IntegrationSaveOrAddStepComponent implements OnInit, OnDestroy {
   integration: Integration;
+
+  @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
+
+  private cancelModalId = 'create-cancellation-modal';
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -156,19 +164,26 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
   canDeactivate(nextState: RouterStateSnapshot) {
     console.log('NEXT STEP: ' + nextState.url);
     return (
-      nextState.url.includes('/edit/action-configure') ||
-      nextState.url.includes('/edit/step-configure') ||
-      nextState.url.includes('/edit/step-select') ||
-      nextState.url.includes('/integrations/create/connection-select') ||
-      nextState.url.includes('/integrations/create/describe-data') ||
-      nextState.url.includes('/integrations/create/save-or-add-step') ||
-      nextState.url.includes('/integrations/create/integration-basics') ||
-      nextState.url.includes('/integrations/create/action-select') ||
-      nextState.url.includes('/integrations/create/action-configure') ||
-      nextState.url.includes('/integrations/create/step-select') ||
-      nextState.url.includes('/integrations/create/step-configure') ||
+      nextState.url.includes('action-configure') ||
+      nextState.url.includes('step-configure') ||
+      nextState.url.includes('step-select') ||
+      nextState.url.includes('connection-select') ||
+      nextState.url.includes('integration-basics') ||
+      nextState.url.includes('integrations/save') ||
       this.modalService.show().then(modal => modal.result)
     );
+  }
+
+  showCancelModal() {
+    this.modalService.show(this.cancelModalId).then(modal => {
+      if (modal.result) {
+        this.cancel();
+      }
+    });
+  }
+
+  onCancel(doCancel: boolean): void {
+    this.modalService.hide(this.cancelModalId, doCancel);
   }
 
   ngOnInit() {
@@ -179,5 +194,13 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
     if (validate) {
       this.validateFlow();
     }
+    this.modalService.registerModal(
+      this.cancelModalId,
+      this.cancelModalTemplate
+    );
+  }
+
+  ngOnDestroy() {
+    this.modalService.unregisterModal(this.cancelModalId);
   }
 }
