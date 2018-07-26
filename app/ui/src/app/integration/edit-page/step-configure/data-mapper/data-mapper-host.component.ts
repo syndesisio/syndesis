@@ -80,6 +80,9 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   @Input() position: number;
   @Output() mappings = new EventEmitter<string>();
 
+  @Input() valid: boolean;
+  @Output() validChange = new EventEmitter<boolean>();
+
   @ViewChild('dataMapperComponent') dataMapperComponent: DataMapperAppComponent;
 
   cfg: ConfigModel = new ConfigModel();
@@ -98,6 +101,8 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   }
 
   initialize() {
+    // Set this to true always for now...
+    this.validChange.emit(true);
     this.resetConfig();
     const step = this.currentFlowService.getStep(this.position);
 
