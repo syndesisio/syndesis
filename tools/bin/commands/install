@@ -44,8 +44,6 @@ install::run() {
         check_error $route
     fi
 
-    local console=$(readopt --console)
-
     # Setup oc
     setup_oc
 
@@ -53,7 +51,7 @@ install::run() {
     create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
 
     # Apply a template, based on the given arguments
-    create_and_apply_template "$route" "$console" "$(select_template $(hasflag --dev))"
+    create_and_apply_template "$route" "$(select_template $(hasflag --dev))"
 
     if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ] || [ $(hasflag --open -o) ]; then
         wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta
