@@ -1,0 +1,3 @@
+apiVersion: syndesis.io/v1alpha1
+kind: Syndesis
+projectName: syndesis-operator

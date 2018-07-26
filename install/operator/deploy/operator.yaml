@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syndesis-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: syndesis-operator
+  template:
+    metadata:
+      labels:
+        name: syndesis-operator
+    spec:
+      containers:
+        - name: syndesis-operator
+          image: syndesis/syndesis-operator
+          ports:
+          - containerPort: 60000
+            name: metrics
+          command:
+          - syndesis-operator
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: OPERATOR_NAME
+              value: "syndesis-operator"

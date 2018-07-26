@@ -1,0 +1,18 @@
+
+[[override]]
+  name = "k8s.io/api"
+  version = "kubernetes-1.9.3"
+
+[[override]]
+  name = "k8s.io/apimachinery"
+  version = "kubernetes-1.9.3"
+
+[[override]]
+  name = "k8s.io/client-go"
+  version = "kubernetes-1.9.3"
+
+[[constraint]]
+  name = "github.com/operator-framework/operator-sdk"
+  branch = "master"
+  # version = "=v0.0.5"
+
