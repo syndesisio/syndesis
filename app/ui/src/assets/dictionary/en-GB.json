@@ -18,7 +18,7 @@
         "delete-connector-modal": "Deleting a connector deletes all connections that were created from that connector but does not affect a running integration that uses one of those connections.",
         "delete-connector-modal-title": "Confirm Delete?",
         "delete-connector-modal-lead": "Are you sure you want to delete the \"{{0}}\" connector?",
-        "cancel-connector-modal": "You have not completed the Create API Connector process. If you cancel now you will lose data you already entered. Do you still want to cancel?",
+        "cancel-connector-modal": "You have not finished creating the API client connector. If you cancel now you will lose data you already entered. Do you still want to cancel?",
         "cancel-connector-modal-lead": "Do you really want to cancel?"
       }
     },
@@ -80,7 +80,7 @@
       "name-connection": "Name {{connection}}",
       "delete-connection-modal": "Are you sure you want to delete the \"{{0}}\" connection?",
       "delete-connection-modal-title": "Confirm Delete?",
-      "cancel-create-modal": "You have not completed the Create Connection process. If you cancel now you will lose data you already entered. Do you still want to cancel?",
+      "cancel-create-modal": "You have not finished creating the connection. If you cancel now you will lose data you already entered. Do you still want to cancel?",
       "cancel-create-modal-lead": "Do you really want to cancel?"
     },
     "dashboard": {
