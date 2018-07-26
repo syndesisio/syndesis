@@ -6,7 +6,7 @@ An operator for installing and updating [Syndesis](https://github.com/syndesisio
 
 The operator follows the following state diagram:
 
-![Syndesis Operator State Diagram](/doc/syndesis-operator-states.png "Syndesis Operator State Diagram")
+![Syndesis Operator State Diagram](doc/syndesis-operator-states.png "Syndesis Operator State Diagram")
 
 A summary of the states:
 
