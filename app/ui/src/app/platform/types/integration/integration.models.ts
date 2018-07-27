@@ -169,7 +169,7 @@ export interface ActivityStep extends BaseEntity {
 }
 
 export function createStep(): Step {
-  return new Step();
+  return <Step>{ id: key() };
 }
 
 export function createConnectionStep(): Step {

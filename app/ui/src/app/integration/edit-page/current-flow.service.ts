@@ -561,6 +561,12 @@ export class CurrentFlowService {
         break;
       case 'integration-save': {
         log.debugc(() => 'Saving integration: ' + this.integration);
+        // ensure that all steps have IDs before saving
+        this._integration.steps.forEach(s => {
+          if (!s.id) {
+            s.id = key();
+          }
+        });
         // poor man's clone in case we need to munge the data
         const integration = this.getIntegrationClone();
         const tags = integration.tags || [];
