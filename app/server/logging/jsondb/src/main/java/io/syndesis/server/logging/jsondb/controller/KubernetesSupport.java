@@ -45,7 +45,7 @@ public class KubernetesSupport {
 
     public KubernetesSupport(KubernetesClient client) {
         this.client = client;
-        this.okHttpClient = this.client == null ? null : HttpClientUtils.createHttpClient(this.client.getConfiguration());
+        this.okHttpClient = HttpClientUtils.createHttpClient(this.client.getConfiguration());
     }
 
 
