@@ -18,7 +18,7 @@ An API that uses OAuth must have an authorization URL that takes a client
 callback URL as input. For {prodname} to obtain authorization to access an
 API that uses OAuth, you provide the {prodname} callback URL at the client
 API authorization URL. The details for doing this are described in
-<<register-with-rest-api>>.
+{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis[{NameOfFuseOnlineConnectorGuide}, Connecting to REST APIs].
 
 {prodname} cannot create connectors for APIs that support the HTTP 2.0
 protocol.
