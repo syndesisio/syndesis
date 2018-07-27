@@ -3,7 +3,8 @@
 
 In an integration, to connect to a REST API, you must have created a
 connector for that API by uploading an OpenAPI specification that
-describes the API. See <<adding-api-connectors>>.
+describes the API. See 
+{LinkFuseOnlineIntegrationGuide}#adding-api-connectors[{NameOfFuseOnlineIntegrationGuide}, Adding  REST API client connectors].
 
 When a connector for the REST API you want to connect to
 is available in {prodname},

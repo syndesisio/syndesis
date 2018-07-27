@@ -18,11 +18,10 @@ REST API connectors:
 * <<creating-api-connectors>>
 * <<updating-api-connectors>>
 * <<deleting-api-connectors>>
-* <<connecting-to-rest-apis>>
 
 After you create a REST API client connector, for details about using
 that connector in an integration, see
-<<connecting-to-rest-apis>>.
+{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis[{NameOfFuseOnlineConnectorGuide}, Connecting to REST APIs].
 
 include::about_api_connectors.adoc[leveloffset=+1]
 
@@ -33,5 +32,3 @@ include::creating_api_connectors.adoc[leveloffset=+1]
 include::updating_api_connectors.adoc[leveloffset=+1]
 
 include::deleting_api_connectors.adoc[leveloffset=+1]
-
-include::connecting_to_rest_apis.adoc[leveloffset=+1]

@@ -1,7 +1,7 @@
 [id='supported-connectors']
-= Connectors that are provided by {prodname}
+= Connectors that are supported by {prodname}
 
-{prodname} provides the following connectors. 
+{prodname} supports the following connectors. 
 
 [options="header"]
 [cols="1,3"]
@@ -38,6 +38,10 @@ from a particular Gmail account.
 |<<connecting-to-mqtt,MQTT>>
 |Obtain messages from an MQ Telemetry Transport broker or publish messages
 to an MQTT broker. 
+
+|<<connecting-to-rest-apis,REST APIs>>
+|Create a custom REST API client connector by uploading an OpenAPI
+specification. You can then create a connection to that REST API. 
 
 |<<connecting-to-sf,Salesforce>>
 |Create, update, fetch, or delete a Salesforce record. 
