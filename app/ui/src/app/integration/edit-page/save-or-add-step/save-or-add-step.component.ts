@@ -170,6 +170,7 @@ export class IntegrationSaveOrAddStepComponent implements OnInit, OnDestroy {
       nextState.url.includes('connection-select') ||
       nextState.url.includes('integration-basics') ||
       nextState.url.includes('integrations/save') ||
+      nextState.url.includes('integrations/publish') ||
       this.modalService.show().then(modal => modal.result)
     );
   }
