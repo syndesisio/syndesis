@@ -7,12 +7,14 @@ import { ConnectorStore } from '@syndesis/ui/store';
   selector: 'syndesis-card-tech-preview',
   template: `
     <div *ngIf="isTechPreview"
-          class="card-pf-heading syn-card-info"
+          class="syn-card-info text-right"
           data-toggle="tooltip"
-          [title]="'connections.tech-preview-tooltip' | synI18n">{{ 'connections.tech-preview' | synI18n }}</div>
+          [title]="'connections.tech-preview-tooltip' | synI18n">
+            {{ 'connections.tech-preview' | synI18n }}
+            <span class="pficon pficon-info"></span>
+    </div>
   `,
-  styleUrls: ['./card-tech-preview.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./card-tech-preview.component.scss']
 })
 export class CardTechPreviewComponent implements OnInit {
   @Input() item: Connection | Connector;

@@ -1,26 +1,10 @@
 @import 'syndesis-sass';
 
 .syn-card-info {
-  text-align: right;
-
-  &:after {
-    /* taken verbatim from patternfly/_icons.scss */
-    content: $pficon-var-info;
-    display: inline-block;
-    font-family: "#{$icon-font-name-pf}";
-    font-style: normal;
-    font-variant: normal;
-    font-weight: normal;
-    line-height: 1;
-    speak: none;
-    text-transform: none;
-    /* Better Font Rendering =========== */
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    padding-left: $padding-base-horizontal;
-  }
-}
-
-syndesis-card-tech-preview[is-tech-preview=true] + .card-pf-body {
-  height: 219px !important;
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  border-bottom: 1px solid $color-pf-black-300;
+  padding: 5px 10px;
 }
