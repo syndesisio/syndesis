@@ -15,8 +15,8 @@ To start an integration when a message from an MQTT broker is found:
 . On the *Choose a Start Connection* page, click the MQTT connection that
 you want to use to start the integration. 
 . On the *Choose an Action* page, click the *Subscribe* action
-to receive messages from the queue or topic you specify. 
+to receive messages from the queue or topic that you specify. 
 . In the *MQTT queue/topic name* field, enter the name of the queue or topic 
 to subscribe to in order to receive data. 
-. Click *Done* to add the start connection. The connection appears as the
-first step in the integration flow. 
+. Click *Next* to specify the action's input type. See 
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

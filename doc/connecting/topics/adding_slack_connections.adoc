@@ -21,7 +21,7 @@ To add a Slack connection:
 . Click the Slack connection that you want to add to the integration. 
 . Select the action that you want the connection to perform.
 +
-* Click *User name* to send a message to one user. To configure this action,
+* Click *Username* to send a message to one user. To configure this action,
 in the *User name* field, specify the name of the user to send the message
 to. 
 * Click *Channel* to publish a message on a channel. To configure
@@ -29,7 +29,7 @@ this action, in the *Channel* field, specify the channel to publish
 the message to. The integration sends the integration data in 
 a message to that channel. 
 
-. Click *Next* to add the connection to the integration. 
+. Click *Done* to add the connection to the integration. 
 . After you add all connections to the integration, add a data mapping step just 
 before the Slack connection. In the mapping step, map a string
 from a previous step to the Slack *message* field. This string 

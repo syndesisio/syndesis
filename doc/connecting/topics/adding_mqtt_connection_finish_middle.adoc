@@ -15,7 +15,7 @@ To add an MQTT connection that publishes a message:
 +
 * To finish an integration by publishing a message, click the MQTT connection 
 that you want to use. 
-* To publish a message in the middle of an integration, click the connection you
+* To publish a message in the middle of an integration, click the connection that you
 want to use to finish the integration. Configure that connection. When the
 finish connection is part of the integration, in the left panel, hover over
 the plus sign where you want to add an MQTT connection and click
@@ -23,9 +23,7 @@ the plus sign where you want to add an MQTT connection and click
 to publish a message in the middle of an integration. 
 
 . On the *Choose an Action* page, click *Publish*. 
-. In the *MQTT queue/topic name* field, specify the name of he queue or
+. In the *MQTT queue/topic name* field, specify the name of the queue or
 topic to publish the message to. 
-. Click *Done* to add the connection to the integration. 
-
-The connection appears in the integration flow 
-in the location where you added it. 
+.  Click *Next* to specify the action's output type. See 
+{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

@@ -33,7 +33,7 @@ unread emails that have those labels.
 return the same email twice. If *Mark as read* is not selected, the
 connection returns emails that are in the account's in box, whether or
 not they were previously read. Or, if you specify one or more labels, then 
-the integratin return emails that have those labels whether or not they
+the integration return emails that have those labels whether or not they
 were already read. 
 .. In the *Max Results* field, accept the default of *5* or 
 indicate the maximum number of emails that the connection 

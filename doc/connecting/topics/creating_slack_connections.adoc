@@ -11,10 +11,14 @@ display any available connections.
 . In the *Slack webhook URL* field, enter the webhook URL of the
 Slack instance to send messages to. This is the only required parameter. 
 . Optionally, enter values for additional parameters:
-.. In the *Sending user name for messages* field, enter the user name that 
+.. In the *Sending username for messages* field, enter the user name that 
 the bot has when it sends messages to Slack.
-.. In the *Message avatar emoji* field, specify the emoji that the bot
-uses as the message avatar when it sends a message.  
+.. In the *Message avatar emoji* field, specify one emoji, which the bot
+uses as the message avatar when it sends a message. Examples:
+*`:smile:`*, *`:wave:`*, *`:question:`*.
++
+TIP: Search on *emoji cheat sheet* to see some emoji codes.
+ 
 .. In the *Message avatar icon URL* field, specify the URL of 
 the avatar that the bot uses when it sends messages to Slack. 
 

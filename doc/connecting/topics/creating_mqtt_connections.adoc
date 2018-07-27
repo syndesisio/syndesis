@@ -7,7 +7,7 @@ To create an MQTT connection:
 display any available connections.
 . In the upper right, click *Create Connection* to display
 connectors.  
-. Click the *MQTT* connector.
+. Click the *MQTT Message Broker* connector.
 . To configure the connection:
 .. In the *MQTT broker URL* field, enter the location of the MQTT broker
 that you want to send data to or obtain data from. This is the only
