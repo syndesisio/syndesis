@@ -35,12 +35,11 @@ public class TelegramSendMessageCustomizer implements ComponentProxyCustomizer {
 
     private void beforeProducer(Exchange exchange) {
         OutgoingTextMessage message = exchange.getIn().getBody(OutgoingTextMessage.class);
-        if (message != null) {
-            // Chat ID priority (in Syndesis) should be: chatId field in the message, chatId at action level, TelegramChatId header
-            if (this.configuredChatId.isPresent() && message.getChatId() == null) {
-                // Overriding Camel default priority giving action configuration higher priority than header
-                message.setChatId(this.configuredChatId.get());
-            }
+
+        // Chat ID priority (in Syndesis) should be: chatId field in the message, chatId at action level, TelegramChatId header
+        if (message != null && message.getChatId() == null && this.configuredChatId.isPresent()) {
+            // Overriding Camel default priority giving action configuration higher priority than header
+            message.setChatId(this.configuredChatId.get());
         }
     }
 }
