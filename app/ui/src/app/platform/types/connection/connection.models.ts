@@ -40,6 +40,7 @@ export interface Connector extends BaseEntity {
   description: string;
   connectorGroup: BaseEntity;
   tags: Array<string>;
+  metadata?: StringMap<any>;
 }
 
 export interface Organization extends BaseEntity {

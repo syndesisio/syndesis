@@ -38,6 +38,6 @@ export class CardTechPreviewComponent implements OnInit {
   }
 
   private static taggedAsTechPreview(connector: Connector) {
-    return connector.tags && connector.tags.indexOf('tech-preview') >= 0;
+    return connector.metadata && connector.metadata['tech-preview'] === 'true';
   }
 }
