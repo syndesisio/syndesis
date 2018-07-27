@@ -81,7 +81,9 @@
       "delete-connection-modal": "Are you sure you want to delete the \"{{0}}\" connection?",
       "delete-connection-modal-title": "Confirm Delete?",
       "cancel-create-modal": "You have not finished creating the connection. If you cancel now you will lose data you already entered. Do you still want to cancel?",
-      "cancel-create-modal-lead": "Do you really want to cancel?"
+      "cancel-create-modal-lead": "Do you really want to cancel?",
+      "tech-preview": "Technology preview",
+      "tech-preview-tooltip": "We're happy to provide you with this early access preview feature, we encourage to provide feedback but limit our support to best effort."
     },
     "dashboard": {
       "heading": "Dashboard",
