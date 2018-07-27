@@ -35,6 +35,7 @@
           <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select"
                *ngIf="i<8"
                (click)="onSelect(connection)">
+            <syndesis-card-tech-preview [item]="connection"></syndesis-card-tech-preview>
             <div class="card-pf-body">
 
               <!-- Card Icon -->

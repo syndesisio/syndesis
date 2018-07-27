@@ -26,6 +26,7 @@ import { IconPathPipe } from '@syndesis/ui/common/icon-path.pipe';
 import { ParseMarkdownLinksPipe } from '@syndesis/ui/common/parse-markdown-links.pipe';
 import { ButtonComponent } from '@syndesis/ui/common/button.component';
 import { InlineAlertComponent } from '@syndesis/ui/common/inline-alert';
+import { CardTechPreviewComponent } from '@syndesis/ui/common/card-tech-preview.component';
 
 // TODO: Move these services out to a CoreModule
 import { NotificationService } from '@syndesis/ui/common/ui-patternfly';
@@ -64,7 +65,8 @@ import { EmptyStateCardComponent } from '@syndesis/ui/common/empty-state-card/em
     InlineAlertComponent,
     ...SYNDESYS_EDITABLE_DIRECTIVES,
     ...SYNDESYS_VALIDATION_DIRECTIVES,
-    EmptyStateCardComponent
+    EmptyStateCardComponent,
+    CardTechPreviewComponent
   ],
   exports: [
     I18NPipe,
@@ -89,7 +91,8 @@ import { EmptyStateCardComponent } from '@syndesis/ui/common/empty-state-card/em
     InlineAlertComponent,
     ...SYNDESYS_EDITABLE_DIRECTIVES,
     ...SYNDESYS_VALIDATION_DIRECTIVES,
-    EmptyStateCardComponent
+    EmptyStateCardComponent,
+    CardTechPreviewComponent
   ]
 })
 export class SyndesisCommonModule {
