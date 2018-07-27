@@ -127,6 +127,7 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
     return (
       nextState.url.includes('action-select') ||
       nextState.url.includes('action-configure') ||
+      nextState.url.includes('connection-basics') ||
       this.modalService.show().then(modal => modal.result)
     );
   }
