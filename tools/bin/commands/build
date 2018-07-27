@@ -1,6 +1,12 @@
 #!/bin/bash
 
 
+# Image with which container builds are perfomed
+GO_BUILDER_IMAGE="syndesis/godev:1.10"
+
+# Name of the operator image
+OPERATOR_IMAGE="syndesis/syndesis-operator"
+
 build::description() {
     echo "Run Syndesis builds"
 }
@@ -8,24 +14,18 @@ build::description() {
 build::usage() {
     cat <<EOT
 -b  --backend                 Build only backend modules (core, extension, integration, connectors, server, meta)
-    --images                  Build only modules with Docker images (ui, server, meta, s2i)
+    --all-images              Build only modules with Docker images (ui, server, meta, s2i) and create images
 -m  --module <m1>,<m2>, ..    Build modules
                               Modules: ui, server, connector, s2i, meta, integration, extension, common
 -d  --dependencies            Build also all project the specified module depends on
     --skip-tests              Skip unit and system test execution
     --skip-checks             Disable all checks
 -f  --flash                   Skip checks and tests execution (fastest mode)
--i  --image-mode  <mode>      <mode> can be
-                              - "none"      : No images are build (default)
-                              - "openshift" : Build for OpenShift image streams
-                              - "docker"    : Build against a plain Docker daemon
-                              - "auto"      : Automatically detect whether to use
-                                              "openshift" or "docker"
-    --docker                  == --image-mode docker
-    --openshift               == --image-mode openshift
+-i  --image                   Build Docker via s2i images, too
+    --docker                  Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
 -p  --project <project>       Specifies the project to create images in when using '--openshift'
--k  --kill-pods               Kill pods after the image has been created.
-                              Useful when building with image-mode docker
+-e  --ensure                  If building a Go module, run 'dep ensure' before building
+-l  --local                   For Go builds: Use a locally installed go, otherwise run the Go build from a container
 -c  --clean                   Run clean builds (mvn clean)
     --batch-mode              Run mvn in batch mode
     --camel-snapshot          Run a build with a specific Camel snapshot. You'll need to set an environment variable CAMEL_SNAPSHOT_VERSION with the SNAPSHOT version you want to use.
@@ -39,56 +39,135 @@ build::run() {
     # For killing pods:
     source "$(basedir)/commands/util/openshift_funcs"
 
-    call_maven "$(maven_args)"
+    local modules="$(extract_modules)"
+
+    # All Maven modules (all modules minus operator)
+    local maven_modules=$(filter_module "operator" "$modules")
+    if [ -z "$modules" ] || [ -n "$maven_modules" ]; then
+        call_maven "$(maven_args)" "$maven_modules"
+    fi
+
+    # Build operator if required
+    if $(should_build "operator" "$modules"); then
+        build_operator
+    fi
+
+}
+
+build_operator() {
+    echo "=============================================================================="
+    echo "Building syndesis-operator"
+    echo "=============================================================================="
+
+    if [ $(hasflag -l --local) ]; then
+        build_operator_with_local_go
+    else
+        build_operator_within_container
+    fi
+}
+
+build_operator_with_local_go() {
+    echo "Running local build"
+    if [ -z "$GOPATH" ]; then
+        echo "ERROR: You have to set your GOPATH environment variable"
+        exit 1
+    fi
+    local dir=$GOPATH/src/github.com/syndesisio/syndesis/install/operator
+    if [ ! -d "$dir" ]; then
+        echo "ERROR: No directory $dir"
+    fi
+    pushd $dir >/dev/null
+    if [ $(hasflag -e --ensure) ]; then
+        echo "Running 'dep ensure'"
+        dep ensure -vendor-only -v
+    fi
+    if [ $(hasflag -i --image --images) ] && [ $(isOSX) ]; then
+        echo "Cross-compiling syndesis-operator for Linux"
+        GOOS="linux" GOARCH="amd64" go build ./cmd/syndesis-operator
+        create_operator_image
+    else
+        echo "Compiling syndesis-operator with $GO_BUILDER_IMAGE"
+        go build ./cmd/syndesis-operator
+    fi
+
+    popd >/dev/null
+}
+
+build_operator_within_container() {
+    local top_dir=$(appdir ".")
+    if [ $(hasflag -e --ensure) ]; then
+        echo "Running 'dep ensure' with $GO_BUILDER_IMAGE"
+        [ -d "dep-cache" ] || mkdir dep-cache
+        docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
+                   -v $(pwd)/dep-cache:/gopath/pkg/dep \
+                   -v $top_dir:/gopath/src/github.com/syndesisio/syndesis \
+                   $GO_BUILDER_IMAGE \
+                   dep ensure -vendor-only -v
+    fi
+    echo "Creating syndesis-operator with $GO_BUILDER_IMAGE"
+    docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
+               -v $top_dir:/gopath/src/github.com/syndesisio/syndesis \
+               $GO_BUILDER_IMAGE \
+               go build ./cmd/syndesis-operator
+    if [ $(hasflag -i --image --images --docker) ] && [ $(isOSX) ]; then
+        create_operator_image
+    fi
+}
+
+create_operator_image() {
+    if [ $(hasflag --docker) ]; then
+        echo "Creating image $OPERATOR_IMAGE via Docker"
+        docker build -t $OPERATOR_IMAGE .
+        return
+    fi
+
+    setup_oc
+
+    echo "Creating image $OPERATOR_IMAGE via S2I and Docker strategy"
+    if [ -z "$(oc get bc -o name | grep syndesis-operator)" ]; then
+        echo "Creating BuildConfig syndesis-operator"
+        oc new-build --strategy=docker --binary=true --name syndesis-operator
+    fi
+
+    local arch=$(mktemp -t syndesis-operator-docker-XXXX.tgz)
+    tar zcvf $arch Dockerfile syndesis-operator
+    trap "rm $arch" EXIT
+
+    oc start-build --from-archive=$arch syndesis-operator
 }
 
 maven_args() {
     local project=${1:-}
     local args=""
 
-    if [ -n "$(hasflag --flash -f)" ]; then
+    if [ $(hasflag --flash -f) ]; then
         args="$args -Pflash"
     fi
 
-    if [ -n "$(hasflag --skip-tests)" ]; then
+    if [ $(hasflag --skip-tests) ]; then
         args="$args -DskipTests"
     fi
 
-    if [ -n "$(hasflag --skip-checks)" ]; then
+    if [ $(hasflag --skip-checks) ]; then
         args="$args -Pskip-checks"
     fi
 
-    if [ -n "$(hasflag --batch-mode)" ]; then
+    if [ $(hasflag --batch-mode) ]; then
         args="$args --batch-mode"
     fi
 
-    local image_mode="$(readopt --image-mode -i)"
-    if [ -z "${image_mode}" ]; then
-      if [ $(hasflag --docker) ]; then
-          image_mode="docker"
-      elif [ $(hasflag --openshift --s2i) ]; then
-          image_mode="openshift"
-      fi
-    fi
-    if [ "${image_mode}" != "none" ]; then
-        if [ -n "$(hasflag --images)" ] || [ -n "${image_mode}" ]; then
-            #Build images
-            args="$args -Pimage"
-            if [ -n "${image_mode}" ]; then
-                if [ "${image_mode}" == "openshift" ] || [ "${image_mode}" == "s2i" ]; then
-                    args="$args -Dfabric8.mode=openshift"
-                elif [ "${image_mode}" == "docker" ]; then
-                    args="$args -Dfabric8.mode=kubernetes"
-                elif [ "${image_mode}" != "auto" ]; then
-                    echo "ERROR: Invalid --image-mode ${image_mode}. Only 'none', 'openshift', 'docker' or 'auto' supported".
-                    exit 1
-                fi
-            fi
+    if [ $(hasflag --image -i --all-images --docker) ]; then
+        #Build images
+        args="$args -Pimage"
+        if [ $(hasflag --docker) ]; then
+            args="$args -Dfabric8.mode=kubernetes"
+        else
+            args="$args -Dfabric8.mode=openshift"
         fi
     fi
 
     set +o nounset
-    if [ -n "$(hasflag --camel-snapshot)" ]; then
+    if [ $(hasflag --camel-snapshot) ]; then
        if [ -n "$CAMEL_SNAPSHOT_VERSION" ]; then
            args="$args -Dcamel.version=$CAMEL_SNAPSHOT_VERSION"
        else
@@ -105,7 +184,7 @@ maven_args() {
         args="$args -Dfabric8.namespace=${project}"
     fi
 
-    if [ -n "$(hasflag --clean -c)" ]; then
+    if [ "$(hasflag --clean -c)" ]; then
         args="$args clean"
     fi
 
@@ -117,4 +196,98 @@ maven_args() {
     fi
 
     echo $args
+}
+
+
+# All modules, in the right build order
+ALL_MODULES="common extension integration connector meta server s2i ui test operator"
+MODULES=(
+  "operator"
+  "ui"
+  "common"
+  "extension:common"
+  "integration:common extension"
+  "connector:common extension integration"
+  "meta:common extension integration connector"
+  "server:common extension integration connector"
+  "s2i:common extension integration connector server"
+  "test:common extension integration connector server s2i"
+)
+
+
+extract_modules() {
+    local modules=""
+
+    if [ "$(hasflag --backend -b)" ]; then
+        modules="$modules common extension integration connector server meta"
+    fi
+
+    if [ "$(hasflag --all-images)" ]; then
+        modules="$modules ui server meta s2i operator"
+    fi
+
+    local arg_modules=$(readopt --module -m);
+    if [ -n "${arg_modules}" ]; then
+        modules="$modules ${arg_modules//,/ }"
+    fi
+
+    if [ "$(hasflag --dependencies -d)" ]; then
+        local extra_modules=""
+        for module in $modules; do
+            for m in "${MODULES[@]}"; do
+              local k=${m%%:*}
+              if [ "$module" == $k ]; then
+                  local v=${m#*:}
+                  extra_modules="${extra_modules} $v"
+              fi
+            done
+        done
+        modules="$modules $extra_modules"
+    fi
+    if [ -z "$modules" ]; then
+      return
+    fi
+    # Unique modules
+    local unique_modules=$(echo $modules | xargs -n 1 | sort -u | xargs | awk '$1=$1')
+    echo $(order_modules "$unique_modules")
+}
+
+order_modules() {
+    # Fix order
+    local modules="$1"
+    # All modules in the proper order
+    local ret=$ALL_MODULES
+    for cm in "${MODULES[@]}"; do
+      local check_module=${cm%%:*}
+      # Check if $check_module is in the module list
+      if [ -n "${modules##*${check_module}*}" ]; then
+        # No, so remove it from the return value
+        ret=${ret//$check_module/}
+      fi
+    done
+
+    # Normalize return value
+    echo $ret | awk '$1=$1'
+}
+
+filter_module() {
+    local filter="$1"
+    local modules="$2"
+
+    echo ${modules//$filter} | awk '$1=$1'
+
+}
+
+should_build() {
+    local module="$1"
+    local modules="$2"
+    if [ -z "$modules" ]; then
+        # Empty --> Build everything
+        echo "true"
+    elif [ "${modules//$module}" != "${modules}" ]; then
+        # Modules contains module
+        echo "true"
+    else
+        echo "false"
+    fi
 }

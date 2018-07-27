@@ -1,24 +1,11 @@
 #!/bin/bash
 
-# All modules, in the right build order
-ALL_MODULES="common extension integration connector meta server s2i ui test"
-POD_MODULES="meta server ui"
-MODULES=(
-  "ui"
-  "common"
-  "extension:common"
-  "integration:common extension"
-  "connector:common extension integration"
-  "meta:common extension integration connector"
-  "server:common extension integration connector"
-  "s2i:common extension integration connector server"
-  "test:common extension integration connector server s2i"
-)
-
+# Moduls with running pods
+POD_MODULES="meta server ui operator"
 
 call_maven() {
     local args=$1
-    local maven_modules=$(extract_modules)
+    local maven_modules=$2
     check_error $maven_modules
     cd $(appdir)
     if [ -z "${maven_modules}" ]; then
@@ -26,9 +13,6 @@ call_maven() {
         echo "./mvnw $args"
         echo "=============================================================================="
         ./mvnw $args
-        if [ $(hasflag --kill-pods --kill-pod -k) ]; then
-          kill_pods $POD_MODULES
-        fi
     else
       echo "Modules: $maven_modules"
       echo "=============================================================================="
@@ -39,75 +23,6 @@ call_maven() {
         echo "./mvnw $args -f $module ### Processing module $module"
         echo "=============================================================================="
         ./mvnw -f $module $args
-        if [ $(hasflag --kill-pods --kill-pod -k) ]; then
-            kill_pods $module
-        fi
       done
     fi
-}
-
-extract_modules() {
-    local modules=""
-
-    if [ "$(hasflag --backend -b)" ]; then
-        modules="$modules common extension integration connector server meta"
-    fi
-
-    if [ "$(hasflag --images)" ]; then
-        modules="$modules ui server meta s2i"
-    fi
-
-    local arg_modules=$(readopt --module -m);
-    if [ -n "${arg_modules}" ]; then
-        modules="$modules ${arg_modules//,/ }"
-    fi
-
-    if [ "$(hasflag --dependencies -d)" ]; then
-        local extra_modules=""
-        for module in $modules; do
-            for m in "${MODULES[@]}"; do
-              local k=${m%%:*}
-              if [ "$module" == $k ]; then
-                  local v=${m#*:}
-                  extra_modules="${extra_modules} $v"
-              fi
-            done
-        done
-        modules="$modules $extra_modules"
-    fi
-    if [ -z "$modules" ]; then
-      return
-    fi
-    # Unique modules
-    local unique_modules=$(echo $modules | xargs -n 1 | sort -u | xargs | awk '$1=$1')
-    echo $(order_modules "$unique_modules")
-}
-
-order_modules() {
-    # Fix order
-    local modules="$1"
-    # All modules in the proper order
-    local ret=$ALL_MODULES
-    for cm in "${MODULES[@]}"; do
-      local check_module=${cm%%:*}
-      # Check if $check_module is in the module list
-      if [ -n "${modules##*${check_module}*}" ]; then
-        # No, so remove it from the return value
-        ret=${ret//$check_module/}
-      fi
-    done
-
-    # Normalize return value
-    echo $ret | awk '$1=$1'
-}
-
-kill_pods() {
-    setup_oc
-
-    for pod in $@; do
-        if [ "${POD_MODULES/$pod/}" != "${POD_MODULES}" ]; then
-            echo "Killing pods "$(oc get pod -o name | grep "syndesis-$pod")
-            oc get pod -o name | grep "syndesis-$pod" | xargs oc delete
-        fi
-    done
 }

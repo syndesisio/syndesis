@@ -151,6 +151,45 @@ select_template() {
     fi
 }
 
+
+# Install the Syndesis custom resource definition
+install_syndesis_crd() {
+    set -e
+    oc get crd >/dev/null 2>&1
+    local err=$?
+    set +e
+    if [ $err != 0 ]; then
+        echo "ERROR: Cannot install CRD 'Syndesis'. You have to have cluster admin permission to do this"
+        return
+    fi
+
+    local crd_installed=$(oc get crd -o name | grep syndesises.syndesis.io)
+    if [ -z "$crd_installed" ]; then
+        oc create -f $(appdir install/operator/deploy)/syndesis-crd.yml
+    fi
+}
+
+# Deploy operator
+deploy_syndesis_operator() {
+    local operator_installed=$(oc get dc -o name | grep syndesis-operator)
+    if [ -n "$operator_installed" ]; then
+        oc delete dc syndesis-operator
+        wait_for_deployments 0 syndesis-operator
+    fi
+
+    oc create -f $(appdir install/operator/deploy)/syndesis-operator.yml
+}
+
+# Create syndesis resource
+create_syndesis() {
+    local syndesis_installed=$(oc get syndesis -o name | wc -l)
+    if [ $syndesis_installed -gt 0 ]; then
+        oc delete $(oc get syndesis -o name)
+    fi
+
+    oc create -f $(appdir install/operator/deploy)/syndesis.yml
+}
+
 create_oauthclient() {
     local tag=${1:-}
     local use_local_resource=${2:-}
@@ -272,7 +311,7 @@ wait_for_deployments() {
   for dc in $dcs; do
       echo "Waiting for $dc to be scaled to ${replicas_desired}"
       local replicas=$(get_replicas $dc)
-      while [ "$replicas" -ne $replicas_desired ]; do
+      while [ -z "$replicas" ] || [ "$replicas" -ne $replicas_desired ]; do
           echo "Sleeping 10s ..."
           sleep 10
           replicas=$(get_replicas $dc)
@@ -283,11 +322,15 @@ wait_for_deployments() {
 
 get_replicas() {
   local dc=${1}
+  local hasDc=$(oc get dc -o name | grep $dc)
+  if [ -z $hasDc ]; then
+      return
+  fi
   oc get dc $dc -o jsonpath="{.status.availableReplicas}"
 }
 
 patch_imagestreams_for_initial_image() {
-    for is in "syndesis-server" "syndesis-ui" "syndesis-meta" "syndesis-s2i"; do
+    for is in "syndesis-server" "syndesis-ui" "syndesis-meta" "syndesis-s2i" "syndesis-operator"; do
         echo "Patching imagestream $is"
         local replace_kind='{"op": "replace", "path": "/spec/tags/0/from/kind", "value": "ImageStreamTag"}'
         local replace_name="{\"op\": \"replace\", \"path\": \"/spec/tags/0/from/name\", \"value\": \"$is:latest\"}"
