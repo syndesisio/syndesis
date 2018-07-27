@@ -1,17 +1,11 @@
-import { Component, Input, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
 
 import { DonutChartConfig as DonutConfig } from 'patternfly-ng';
 
-import { log } from '@syndesis/ui/logging';
 import {
-  Connection,
-  Connections,
-  IntegrationOverview,
-  IntegrationOverviews,
-  IntegrationSupportService,
   Integration,
+  Integrations,
   I18NService
 } from '@syndesis/ui/platform';
 import { IntegrationStore } from '@syndesis/ui/store';
@@ -21,14 +15,15 @@ import { IntegrationStore } from '@syndesis/ui/store';
   templateUrl: './dashboard-integrations.component.html',
   styleUrls: ['./dashboard-integrations.component.scss']
 })
-export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
+export class DashboardIntegrationsComponent implements OnChanges {
   PENDING: string;
   UNPUBLISHED: string;
   PUBLISHED: string;
-  integrationOverviews$: Observable<Integration[]>;
-  integrations: Array<IntegrationOverview>;
-  loading = true;
 
+  @Input() integrations: Integrations;
+  @Input() loading: boolean;
+
+  sortedIntegrations: Integrations;
   integrationChartData: any[];
 
   integrationsChartConfig: DonutConfig = {
@@ -41,8 +36,6 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
       position: 'right'
     }
   };
-
-  private integrationOverviewsSubscription: Subscription;
 
   constructor(
     public route: ActivatedRoute,
@@ -66,30 +59,17 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnInit() {
-    this.integrationOverviews$ = this.integrationStore.list;
-    this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(
-      integrations => {
-        this.integrations = integrations.sort((a, b) => {
-          const aTimestamp = this.getTimestamp(a);
-          const bTimestamp = this.getTimestamp(b);
-          return bTimestamp - aTimestamp;
-        });
-        this.loading = false;
-        this.integrationChartData = [
-          [this.PUBLISHED, this.countActiveIntegrations()],
-          [this.UNPUBLISHED, this.countInactiveIntegrations()],
-          [this.PENDING, this.countPendingIntegrations()]
-        ];
-      }
-    );
-    this.integrationStore.loadAll();
-  }
-
-  ngOnDestroy() {
-    if (this.integrationOverviewsSubscription) {
-      this.integrationOverviewsSubscription.unsubscribe();
-    }
+  ngOnChanges() {
+    this.sortedIntegrations = this.integrations.sort((a, b) => {
+      const aTimestamp = this.getTimestamp(a);
+      const bTimestamp = this.getTimestamp(b);
+      return bTimestamp - aTimestamp;
+    });
+    this.integrationChartData = [
+      [this.PUBLISHED, this.countActiveIntegrations()],
+      [this.UNPUBLISHED, this.countInactiveIntegrations()],
+      [this.PENDING, this.countPendingIntegrations()]
+    ];
   }
 
   getTimestamp(integration: Integration) {
@@ -153,7 +133,7 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
     }
   }
 
-  goto(integration: IntegrationOverview) {
+  goto(integration: Integration) {
     this.router.navigate(
       ['/integration/edit', integration.id, 'save-or-add-step'],
       { relativeTo: this.route }
