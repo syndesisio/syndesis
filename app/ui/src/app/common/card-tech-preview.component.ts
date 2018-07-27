@@ -14,43 +14,27 @@ import { ConnectorStore } from '@syndesis/ui/store';
   styleUrls: ['./card-tech-preview.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class CardTechPreviewComponent implements OnInit, OnDestroy {
+export class CardTechPreviewComponent implements OnInit {
   @Input() item: Connection | Connector;
   @HostBinding('attr.is-tech-preview')
   isTechPreview: boolean;
-  private connectorsSubscription: Subscription;
-
-  constructor(
-    private connectorStore: ConnectorStore
-  ) {}
 
   ngOnInit(): void {
-    const [connector, connectorId] = CardTechPreviewComponent.determineConnector(this.item);
+    const connector = CardTechPreviewComponent.determineConnector(this.item);
 
     if (connector) {
       this.isTechPreview = CardTechPreviewComponent.taggedAsTechPreview(connector);
-    } else if (connectorId) {
-      this.connectorsSubscription = this.connectorStore.load(connectorId).subscribe(
-        loaded => {
-          this.isTechPreview = CardTechPreviewComponent.taggedAsTechPreview(loaded);
-        });
     }
   }
 
-  ngOnDestroy() {
-    if (this.connectorsSubscription) {
-      this.connectorsSubscription.unsubscribe();
-    }
-  }
-
-  private static determineConnector(connectionOrConnector: Connection | Connector): [Connector, string] {
+  private static determineConnector(connectionOrConnector: Connection | Connector) {
     if ((<Connection>connectionOrConnector).connector) {
       const connection = <Connection>connectionOrConnector;
-      return [connection.connector, connection.connectorId];
+      return connection.connector;
     }
 
     const connector = <Connector>connectionOrConnector;
-    return [connector, connector.id];
+    return connector;
   }
 
   private static taggedAsTechPreview(connector: Connector) {
