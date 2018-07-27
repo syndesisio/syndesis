@@ -19,6 +19,7 @@
 
       .card-pf-body {
         height: 240px;
+        position: relative;
 
         .card-pf-top-element {
           font-size: 46px;
@@ -36,7 +37,9 @@
 
         .card-pf-heading-kebab {
           .dropdown-kebab-pf {
-            margin-top: -8px;
+            position: absolute;
+            top: 15px;
+            right: 0;
 
             &:focus {
               outline: 0;
