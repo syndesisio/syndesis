@@ -4,7 +4,7 @@
     "customizations": {
       "extensions": {
         "heading": "{{extensions}}",
-        "description": "An extension defines one or more custom steps for use in integrations.  Find out more at <a href=\"{{links.userguide}}#adding-extensions\" target=\"_blank\">{{shared.project.name}} Help</a>",
+        "description": "Extensions provide custom features for use in integrations.  Find out more at <a href=\"{{links.userguide}}#developing-extensions\" target=\"_blank\">{{shared.project.name}} Help</a>",
         "import-extension": "Import {{extension}}",
         "step-extension": "{{step}} {{extension}}",
         "connector-extension": "{{connector}} {{extension}}",
@@ -101,11 +101,11 @@
         "heading": "{{connections.connections}}",
         "create-btn-txt": "{{create}} {{connections.connection}}",
         "empty-state-create-header": "{{create}} a {{connections.connection}}",
-        "empty-state-txt": "There are currently no connections available.  Please click on the button below to create one."
+        "empty-state-txt": "There are currently no connections.  Click the button below to create one."
       },
       "integrations": {
         "heading": "{{create}} an {{integrations.integration}}",
-        "empty-state-txt": "There are currently no {{integrations.integrations}} available. Please click on the button below to create one.",
+        "empty-state-txt": "There are currently no {{integrations.integrations}}. Click the button below to create one.",
         "create-btn-txt": "{{create}} {{integrations.integration}}",
         "integration-board-heading": "Integration Board",
         "recent-updates-heading": "Recent Updates"
@@ -120,10 +120,10 @@
     },
     "links": {
       "contactus": "//access.redhat.com/support/cases/#/case/new",
-      "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.1/html-single/integrating_applications_with_ignite",
+      "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.1/html-single/integrating_applications_with_fuse_online",
       "connectorsguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.1/html-single/connecting_fuse_online_to_applications_and_services/",
-      "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.1/html-single/ignite_sample_integration_tutorials/",
-      "oauth-access": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.1/html-single/integrating_applications_with_ignite/#obtaining-authorization-to-access-applications"
+      "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.1/html-single/fuse_online_sample_integration_tutorials/",
+      "oauth-access": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.1/html-single/integrating_applications_with_fuse_online/#obtaining-authorization-to-access-applications"
     },
     "header": {
       "navbartoggle": "Toggle navigation",
@@ -167,14 +167,14 @@
       "buildid": "Build ID",
       "commitid": "Commit ID"
     },
-    "import-db-txt": "Please select the data file to import:",
+    "import-db-txt": "Select the data file to import:",
     "errors": {
       "youareonline": "You're back online",
       "youareoffline": "You went offline",
       "networkonline": "Your internet connection has been restored",
       "networkoffline": "Your internet connection has been interrupted",
       "httperror": "The server returned an error",
-      "httperrordefaultmsg": "Your request could not be completed. Please try again.",
+      "httperrordefaultmsg": "Your request could not be completed. Try again.",
       "httpconnectfailurehdr": "An error occurred connecting to the server.",
       "httpconnectfailuremsg": "Failed to communicate with the server, try refreshing the page, or check the javascript console for more information.",
       "syndesis000": "An unknown error has occurred",
