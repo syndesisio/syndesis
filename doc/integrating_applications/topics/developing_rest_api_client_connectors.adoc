@@ -8,7 +8,7 @@ that support Hypertext Transfer Protocol (HTTP).
 To do this, {prodname} requires a valid
 OpenAPI 2.0 specification that describes a REST API that you want to connect to.
 If the API service provider does not make an OpenAPI specification available
-then you must create the OpenAPI specification.
+then an experienced developer must create the OpenAPI specification.
 
 The following topics provide information and instructions for developing
 REST API connectors:

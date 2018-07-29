@@ -68,7 +68,8 @@ contain data you specify.
 If {prodname} does not provide a connector that you need, an 
 experienced developer can create an extension that defines a custom
 connector. For information about coding the 
-extension and creating its `.jar` file, which is uploaded to 
+extension and creating its `.jar` file, which you upload to 
 {prodname}, see 
-{LinkToolingUserGuide}#IgniteExtension[Developing extensions for
-{prodname} integrations].
+{LinkToolingUserGuide}#IgniteExtension[{NameOfToolingUserGuide}, Developing extensions for
+{prodname} integrations] and 
+{LinkFuseOnlineIntegrationGuide}#developing-extensions[{NameOfFuseOnlineIntegrationGuide}, Developing extensions].

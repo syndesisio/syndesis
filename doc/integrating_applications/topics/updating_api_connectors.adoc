@@ -2,13 +2,22 @@
 = Updating API client connectors
 
 You cannot update an API client connector. If there is
-an update to the API's OpenAPI specification, then you must upload an updated
-OpenAPI file and create a new API client connector.
+an update to the API's OpenAPI specification, then you must upload the updated
+OpenAPI specification and create a new API client connector.
 
 To update integrations to use connections based on the updated OpenAPI
 specification:
 
 . Create a new API client connector based on the updated OpenAPI specification.
-. Create a new connection from the new connector.
-. Edit the integration to remove the old connection and add the new connection.
-. Publish the updated integration.
+To easily distinguish between the old connector and the new connector, 
+you  might want to specify a version number in the connector name or 
+the connector description. 
+. Create a new connection from the new connector. Again, you want to be
+able to easily distinguish between connections created from the old
+connector and connections created from the new connector. A version number
+in the connection name or connection description is helpful.
+. Edit each integration that uses a connection that was created from the
+old connector by removing the old connection and adding the new connection.
+. Publish each updated integration.
+. Recommended, but not required: delete the old connector and the old
+connections. 

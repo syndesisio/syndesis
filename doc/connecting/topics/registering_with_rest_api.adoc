@@ -29,10 +29,12 @@ custom application setting page. Go to that page.
 . On that page:
 .. Provide the {prodname} callback URL, which you copied at the beginning
 of this procedure.
+.. Respond to any other prompts that require your input. 
 .. Obtain the client ID and client secret that the API service assigns to
 your {prodname} environment.
-. In the {prodname} *Settings* page, in the entry for the 
-API service you are registering with, 
-paste the assigned client ID and the client secret.
 
-. Click *Save*.
+. Return to the {prodname} *Settings* page entry for the 
+API service you are registering with and do the following:
+.. Paste the assigned client ID.
+.. Paste the assigned client secret.
+.. Click *Save*.
