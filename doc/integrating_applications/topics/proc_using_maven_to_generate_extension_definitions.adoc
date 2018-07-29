@@ -1,0 +1,145 @@
+[id='using-maven-to-generate-extension-definitions']
+= Using Maven to generate extension definitions
+
+The _extension-maven-plugin_ provides Syndesis Extension support to maven letting you generate the extension definition and package it as proper spring-boot module.
+
+[source,xml]
+----
+<plugin>
+    <groupId>io.syndesis.extension</groupId>
+    <artifactId>extension-maven-plugin</artifactId>
+    <version>${syndesis.version}</version>
+    <executions>
+        <execution>
+        <goals>
+            <goal>generate-metadata</goal> <!--1-->
+            <goal>repackage-extension</goal> <!--2-->
+        </goals>
+        </execution>
+    </executions>
+</plugin>
+----
+<1> generate extension definition.
+<2> package extension.
+
+The _extension-maven-plugin_ define the following goals:
+
+* **generate-metadata** that generates the Syndesis extension definition according to the following rules:
+
+  - includes info from `META-INF/syndesis/syndesis-extension-definition.json` to generate the final descriptor.
+  - information such as _id_, _name_, _description_ and _version_ are computed from the project if not explicit configured through plugin configuration or using `META-INF/syndesis/syndesis-extension-definition.json`
+  - the dependencies list is built including dependencies provided with scope _provided_ and that are managed through the _extension-bom_
+
+-
+* **repackage-extesion** that packages the Syndesis extension definition according ot the following rules:
+
+  - dependencies and related transitive ones not managed through the _extension-bom_ are included in the _lib_ folder of the repackaged jar
+  - dependencies with scope _system_ are added to the _lib_ folder of the repackaged jar for extension of type _Libaries_
+
+Assuming we have the following pom:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.company</groupId>
+  <artifactId>my-extension</artifactId>
+  <version>1.0.0</version>
+  <name>MyExtension</name>
+  <description>A Sample Extension</description>
+  <packaging>jar</packaging>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-bom</artifactId>
+        <version>1.3.10</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.syndesis.extension</groupId>
+      <artifactId>extension-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.lalyos</groupId>
+      <artifactId>jfiglet</artifactId>
+      <version>0.0.8</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.7.0</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-maven-plugin</artifactId>
+        <version>1.3.10</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate-metadata</goal>
+              <goal>repackage-extension</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+----
+
+Then the generated extension descriptor would be:
+
+[source,json]
+----
+{
+  "name": "MyExtension",
+  "description": "A Sample Extension",
+  "extensionId": "com.company:my-extension",
+  "version": "1.0.0",
+  "dependencies": [ {
+    "type": "MAVEN",
+    "id": "io.syndesis.extension:extension-api:jar:1.3.10"
+  } ],
+  "extensionType": "Libraries",
+  "schemaVersion": "v1"
+}
+----
+
+And then generated archive would be:
+
+[source]
+----
+my-extension-1.0.0.jar
+|
++- lib
+|  |
+|  + jfiglet-0.0.8.jar
+|
++- META-INF
+  |
+  +- MANIFEST.MF
+     |
+     +- syndesis
+        |
+        +- syndesis-extension-definition.json
+----

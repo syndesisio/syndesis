@@ -1,0 +1,42 @@
+[id='develop-library-extensions']
+= How to develop library extensions
+
+
+A library extension is an extension that does not contribute steps or connectors to Syndesis but provide additional classpath elements to integrations runtime. The structure of a library extension is the same of any other extension type with the exception that it does not define any action i.e.:
+
+[source,json]
+----
+{
+  "schemaVersion" : "v1",
+  "name" : "Example JDBC Driver Library",
+  "description" : "Syndesis Extension for adding a custom JDBC Driver",
+  "extensionId" : "io.syndesis.extensions:syndesis-library-jdbc-driver",
+  "version" : "1.0.0",
+  "tags" : [ "jdbc-driver" ],
+  "extensionType" : "Libraries"
+}
+----
+
+[WARNING]
+====
+The library support is in its infancy and there are some known limitations:
+
+- Syndesis does not yet offer a way to select which library extension an integration should include, for more info see https://github.com/syndesisio/syndesis/issues/2808[this] issue
+- When using the SQL connector, Syndesis add all the extension that have a tag "jdbc-driver" to integration runtime, for more info see https://github.com/syndesisio/syndesis/issues/2809[this] issue
+====
+
+[TIP]
+====
+To add dependencies not on available on maven repository, you can use `system` dependencies:
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.company</groupId>
+    <artifactId>jdbc-driver</artifactId>
+    <version>1.0</version>
+    <scope>system</scope>
+    <systemPath>${project.basedir}/lib/jdbc-driver-1.0.jar</systemPath>
+</dependency>
+----
+====

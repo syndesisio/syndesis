@@ -8,34 +8,11 @@ include::topics/shared/attributes.adoc[]
 :productpkg: red_hat_fuse
 :version: 7.1
 
-[id='developing-extensions']
-= Developing {prodname} Extensions
+[id='developing-customizations']
+= Developing {prodname} Customizations
 
-If {prodname} does not provide a feature that is needed to create an
-integration, then an expert developer 
-can code an extension that provides the needed function.  
+Add an intro paragraph here.
 
-* <<description-kinds-extensions>>
-* <<overview-extension-content-structure>>
-* <<about-extension-definitions>>
-* <<using-maven-to-generate-extension-definitions>>
-* <<developing-step-extensions>>
-* <<develop-connector-extensions>>
-* <<develop-library-extensions>>
-* <<about-testing>>
+* <<developing-extensions>>
 
-include::topics/con_description_kinds_extensions.adoc[leveloffset=+1]
-
-include::topics/con_overview_extension_content_structure.adoc[leveloffset=+1]
-
-include::topics/con_about_extension_definitions.adoc[leveloffset=+1]
-
-include::topics/proc_using_maven_to_generate_extension_definitions.adoc[leveloffset=+1]
-
-include::topics/assembly_developing_step_extensions.adoc[leveloffset=+1]
-
-include::topics/ref_develop_connector_extensions.adoc[leveloffset=+1]
-
-include::topics/ref_develop_library_extensions.adoc[leveloffset=+1]
-
-include::topics/con_about_testing.adoc[leveloffset=+1]
+include::topics/developing_extensions.adoc[leveloffset=+1]

@@ -1,2 +1,0 @@
-[id='developing-step-extensions']
-= Developing step extensions

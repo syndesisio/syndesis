@@ -1,5 +1,5 @@
-[id='about-extensions']
-= About extensions
+[id='description-kinds-extensions']
+= Description of the kinds of extensions
 
 If {prodname} does not provide a feature that you need, 
 then a developer can code an extension that lets you integrate data the
@@ -7,15 +7,18 @@ way you need to. An extension defines one of the following:
 
 * A single custom connector for creating connections to a particular application
 or service that you want to integrate.
++
+NOTE: {prodname} can create a connector for a REST API client from an
+OpenAPI specification. See <<developing-rest-api-client-connectors>>.
 
 * One or more custom steps that operate on integration data between
 connections.
 
 * A JDBC driver for connecting to a proprietary SQL database, such as Oracle. 
 
-Share your requirements with a developer who codes the extension.
-The developer gives you a `.jar` file that contains the extension.
-You then upload the `.jar` file in {prodname} to make the custom connector, 
+A business integrator shares requirements with a developer who codes the extension.
+The developer provides a `.jar` file that contains the extension.
+The business integrator uploads the `.jar` file in {prodname} to make the custom connector, 
 custom step(s), or JDBC driver available for use within {prodname}.
 
 An extension `.jar` file that you upload to {prodname} always contains 

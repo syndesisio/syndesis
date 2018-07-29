@@ -1,0 +1,31 @@
+[id='developing-extensions']
+= Developing {prodname} extensions
+
+If {prodname} does not provide a feature that is needed to create an
+integration, then an expert developer 
+can code an extension that provides the needed function.  
+
+* <<description-kinds-extensions>>
+* <<overview-extension-content-structure>>
+* <<about-extension-definitions>>
+* <<using-maven-to-generate-extension-definitions>>
+* <<develop-step-extensions>>
+* <<develop-connector-extensions>>
+* <<develop-library-extensions>>
+* <<about-testing>>
+
+include::description_kinds_extensions.adoc[leveloffset=+1]
+
+include::con_overview_extension_content_structure.adoc[leveloffset=+1]
+
+include::con_about_extension_definitions.adoc[leveloffset=+1]
+
+include::proc_using_maven_to_generate_extension_definitions.adoc[leveloffset=+1]
+
+include::develop_step_extensions.adoc[leveloffset=+1]
+
+include::develop_connector_extensions.adoc[leveloffset=+1]
+
+include::develop_library_extensions.adoc[leveloffset=+1]
+
+include::con_about_testing.adoc[leveloffset=+1]

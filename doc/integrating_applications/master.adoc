@@ -21,7 +21,7 @@ The content in this guide is organized as follows:
 * <<connecting-to-applications>>
 * <<creating-integrations>>
 * <<mapping-data>>
-* <<adding-customizations>>
+* <<customizing>>
 * <<managing-integrations>>
 
 To learn how to use {prodname} by creating sample integrations, see:
@@ -37,6 +37,6 @@ include::topics/creating_integrations.adoc[leveloffset=+1]
 
 include::topics/mapping_data.adoc[leveloffset=+1]
 
-include::topics/adding_customizations.adoc[leveloffset=+1]
+include::topics/customizing.adoc[leveloffset=+1]
 
 include::topics/managing_integrations.adoc[leveloffset=+1]

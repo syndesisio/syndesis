@@ -1,4 +1,0 @@
-[id='developing-other-connectors']
-= Developing other connectors
-
-TBA

@@ -1,0 +1,228 @@
+[id='develop-connector-extensions']
+= How to develop connector extensions
+
+If Syndesis does not provide a connector for the system you want to integrate with, an experienced developer can code an extension that contribute a new connector to Syndesis.
+
+[IMPORTANT]
+====
+Syndesis does not **yet** provide a way to automatically generate the extension definition from java code for this extension type.
+====
+
+A connector in its essence, is a proxy for a real camel component that configure the underlying component and create endpoints according to pre-defined options defined in the extension definition and user supplied options collected by Syndesis UI.
+The definition extends the one used for step extension with the following additional items:
+
+- **componentScheme**
++
+Defines the camel component to use. It can be set on _action_ or global level with the _action_ one having precedence.
+- **connectorCustomizers**
++
+A list of classes implementing https://github.com/syndesisio/syndesis/blob/master/app/integration/component-proxy/src/main/java/io/syndesis/integration/component/proxy/ComponentProxyCustomizer.java[ComponentProxyCustomizer] used to customize the behavior of a connector such as manipulating properties before they are applied to the underlying component/endpoint, add pre/post endpoint logic and so on.
++
+[TIP]
+====
+Customizer sets at _action_ level are applied after those configured at global level.
+====
++
+Below an example of acustomizer used to set-up a DataSource from individual options:
++
+[source,java]
+----
+public class DataSourceCustomizer implements ComponentProxyCustomizer, CamelContextAware {
+    private final static Logger LOGGER = LoggerFactory.getLogger(DataSourceCustomizer.class);
+
+    private CamelContext camelContext;
+
+    @Override
+    public void setCamelContext(CamelContext camelContext) { // <1>
+        this.camelContext = camelContext;
+    }
+
+    @Override
+    public CamelContext getCamelContext() { // <1>
+        return this.camelContext;
+    }
+
+    @Override
+    public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        if (!options.containsKey("dataSource")) {
+            if (options.containsKey("user") && options.containsKey("password") && options.containsKey("url")) {
+                try {
+                    BasicDataSource ds = new BasicDataSource();
+
+                    consumeOption(camelContext, options, "user", String.class, ds::setUsername); // <2>
+                    consumeOption(camelContext, options, "password", String.class, ds::setPassword); // <2>
+                    consumeOption(camelContext, options, "url", String.class, ds::setUrl); // <2>
+
+                    options.put("dataSource", ds);
+                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+                    throw new IllegalArgumentException(e);
+                }
+            } else {
+                LOGGER.debug("Not enough information provided to set-up the DataSource");
+            }
+        }
+    }
+}
+----
+<1> By implementing CamelContextAware, the camel context is injected before invoking the customize method
+<2> Process options and remove them from the options map
++
+If the customizer respect java beans conventions, you can also inject the properties and the example above can be rewritten as:
++
+[source,java]
+----
+public class DataSourceCustomizer implements ComponentProxyCustomizer, CamelContextAware {
+    private final static Logger LOGGER = LoggerFactory.getLogger(DataSourceCustomizer.class);
+
+    private CamelContext camelContext;
+    private String userName;
+    private String password;
+    private String url;
+
+    @Override
+    public void setCamelContext(CamelContext camelContext) { // <1>
+        this.camelContext = camelContext;
+    }
+
+    @Override
+    public CamelContext getCamelContext() { // <1>
+        return this.camelContext;
+    }
+
+    public void setUserName(String userName) { // <2>
+      this.userName = userName;
+    }
+
+    public String getUserName() { // <2>
+      return this.userName;
+    }
+
+    public void setPassword(String password) { // <2>
+      this.password = password;
+    }
+
+    public String getPassword() { // <2>
+      return this.password;
+    }
+
+    public void setUrl(String url) { // <2>
+      this.url = url;
+    }
+
+    public String getUrl() { // <2>
+      return this.url;
+    }
+
+    @Override
+    public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        if (!options.containsKey("dataSource")) {
+            if (userName != null && password != null && url != null) {
+                try {
+                    BasicDataSource ds = new BasicDataSource();
+                    ds.setUserName(userName);
+                    ds.setPassword(password);
+                    ds.setUrl(url);
+
+                    options.put("dataSource", ds);
+                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+                    throw new IllegalArgumentException(e);
+                }
+            } else {
+                LOGGER.debug("Not enough information provided to set-up the DataSource");
+            }
+        }
+    }
+}
+----
+<1> By implementing CamelContextAware, the camel context is injected before invoking the customize method
+<2> Process injected options (automatically removed them from the options map)
++
+A customizer can also be used to configure before/after logic such as:
++
+[source,java]
+----
+public class AWSS3DeleteObjectCustomizer implements ComponentProxyCustomizer {
+  	private String filenameKey;
+
+    public void setFilenameKey(String filenameKey) {
+      this.filenameKey = filenameKey;
+    }
+
+    public String getFilenameKey() {
+        return this.filenameKey;
+    }
+
+    @Override
+    public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+      	component.setBeforeProducer(this::beforeProducer);
+    }
+
+    public void beforeProducer(final Exchange exchange) throws IOException {
+      	exchange.getIn().setHeader(S3Constants.S3_OPERATION, S3Operations.deleteObject);
+
+    	  if (filenameKey != null) {
+    		    exchange.getIn().setHeader(S3Constants.KEY, filenameKey);
+    	  }
+    }
+}
+----
+
+- **connectorFactory**
++
+Defines the class implementing https://github.com/syndesisio/syndesis/blob/master/app/integration/component-proxy/src/main/java/io/syndesis/integration/component/proxy/ComponentProxyFactory.java[ComponentProxyFactory] used to create and/or configure the underling component/endpoint.  It can be set on _action_ or global level with the _action_ one having precedence.
++
+To customize the behavior of the https://github.com/syndesisio/syndesis/blob/master/app/integration/component-proxy/src/main/java/io/syndesis/integration/component/proxy/ComponentProxyComponent.java[ComponentProxyComponent] you can override on of the following methods:
++
+- **createDelegateComponent**
++
+This method is invoked when a the proxy starts and it is used to eventually create a dedicated instance of the component with scheme defined by the options _componentScheme_.
++
+[TIP]
+====
+The default behavior of this method is to determine if any of the connector/action options applies at component level and if the same option cannot be applied at endpoint level and only in this case, it creates a custom component instance configured according to the applicable options.
+====
++
+- **configureDelegateComponent**
++
+This method is invoked only if a custom component instance has been created to configure additional behavior of the delegated component instance.
++
+- **createDelegateEndpoint**
++
+This method is invoked when the proxy creates the endpoint and by default creates the endpoint using camel catalog facilities.
++
+- **configureDelegateEndpoint**
++
+This method is invoked after the delegated endpoint has been created to configure additional behavior of the delegated endpoint instance, as example:
++
+[source,java]
+----
+public class IrcComponentProxyFactory implements ComponentProxyFactory {
+
+    @Override
+    public ComponentProxyComponent newInstance(String componentId, String componentScheme) {
+        return new ComponentProxyComponent(componentId, componentScheme) {
+            @Override
+            protected void configureDelegateEndpoint(ComponentDefinition definition, Endpoint endpoint, Map<String, Object> options) throws Exception {
+                if (!(endpoint instanceof IrcEndpoint)) {
+                    throw new IllegalStateException("Endpoint should be of type IrcEndpoint");
+                }
+
+                final IrcEndpoint ircEndpoint = (IrcEndpoint)endpoint;
+                final String channels = (String)options.remove("channels");
+
+                if (ObjectHelper.isNotEmpty(channels)) {
+                    ircEndpoint.getConfiguration().setChannel(
+                        Arrays.asList(channels.split(","))
+                    );
+                }
+            }
+        };
+    }
+}
+----
+
+
+The items above can be set on _action_ level or at global level and behave as follow:
+
+- **componentScheme** and **connectorFactory** set on _action_ level have precedence over the same items defined at global level.
+- **connectorCustomizers** set on _action_ are applied as well as those set at global level.

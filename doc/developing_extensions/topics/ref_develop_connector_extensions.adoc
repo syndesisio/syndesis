@@ -1,2 +1,0 @@
-[id='develop-connector-extensions']
-= How to develop connector extensions

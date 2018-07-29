@@ -1,2 +1,0 @@
-[id='develop-library-extensions']
-= How to develop library extensions
