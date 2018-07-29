@@ -31,13 +31,12 @@
 
       <ng-container *ngIf="connections && connections.length > 0">
         <div class="connection col-lg-3 col-md-4 col-sm-6 card"
-          *ngFor="let connection of connections"
-          (click)="onSelect(connection, $event)">
+          *ngFor="let connection of connections">
 
           <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select"
               [class.active]="connection.id === selectedId">
             <syndesis-card-tech-preview [item]="connection"></syndesis-card-tech-preview>
-            <div class="card-pf-body">
+            <div class="card-pf-body" (click)="onSelect(connection, $event)">
               <div class="card-pf-heading-kebab">
                 <div *ngIf="showKebab">
                   <div dropdown
