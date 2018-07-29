@@ -1,15 +1,18 @@
-import { Component, Input, OnInit, OnDestroy, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, HostBinding } from '@angular/core';
 import { Connection, Connector } from '@syndesis/ui/platform';
-import { Subscription } from 'rxjs';
-import { ConnectorStore } from '@syndesis/ui/store';
 
 @Component({
   selector: 'syndesis-card-tech-preview',
   template: `
+    <ng-template #synTechPreviewInfo>
+      {{ 'connections.tech-preview-info' | synI18n }}
+      <a href="mailto:{{ 'shared.email' | synI18n}}">{{ 'shared.email' | synI18n }}</a>.
+    </ng-template>
     <div *ngIf="isTechPreview"
           class="syn-card-info text-right"
-          data-toggle="tooltip"
-          [title]="'connections.tech-preview-tooltip' | synI18n">
+          outsideClick="true"
+          placement="bottom"
+          [popover]="synTechPreviewInfo">
             {{ 'connections.tech-preview' | synI18n }}
             <span class="pficon pficon-info"></span>
     </div>
@@ -18,6 +21,7 @@ import { ConnectorStore } from '@syndesis/ui/store';
 })
 export class CardTechPreviewComponent implements OnInit {
   @Input() item: Connection | Connector;
+
   @HostBinding('attr.is-tech-preview')
   isTechPreview: boolean;
 

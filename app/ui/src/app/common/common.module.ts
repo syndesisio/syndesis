@@ -34,13 +34,16 @@ import { ModalComponent, ModalService } from '@syndesis/ui/common/modal';
 import { ConfigService } from '@syndesis/ui/config.service';
 import { NavigationService } from '@syndesis/ui/common/navigation.service';
 import { EmptyStateCardComponent } from '@syndesis/ui/common/empty-state-card/empty-state-card.component';
+import { VendorModule } from '@syndesis/ui/vendor';
+
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
     TagInputModule,
-    RouterModule
+    RouterModule,
+    VendorModule
   ],
   declarations: [
     I18NPipe,

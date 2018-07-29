@@ -29,14 +29,13 @@
 
         <!-- Each Connection's Card Container -->
         <div class="col-sm-6 col-md-3 card"
-             *ngFor="let connection of connections; let i = index">
+             *ngFor="let connection of connections">
 
           <!-- Connection Card -->
           <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select"
-               *ngIf="i<8"
-               (click)="onSelect(connection)">
+               *ngIf="i<8">
             <syndesis-card-tech-preview [item]="connection"></syndesis-card-tech-preview>
-            <div class="card-pf-body">
+            <div class="card-pf-body" (click)="onSelect(connection)">
 
               <!-- Card Icon -->
               <div class="card-pf-top-element">
