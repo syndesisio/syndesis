@@ -121,6 +121,7 @@
     "links": {
       "contactus": "//access.redhat.com/support/cases/#/case/new",
       "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/integrating_applications_with_ignite",
+      "connectorsguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.1/html-single/connecting_fuse_online_to_applications_and_services/",
       "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/ignite_sample_integration_tutorials/",
       "oauth-access": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/integrating_applications_with_ignite/#obtaining-authorization-to-access-applications"
     },
@@ -128,7 +129,8 @@
       "navbartoggle": "Toggle navigation",
       "helpmenu": {
         "sampletutorials": "Sample {{integrations.integration}} Tutorials",
-        "userguide": "User Guide"
+        "userguide": "User Guide",
+        "connectorsguide": "Connectors Guide"
       },
       "usermenu": {
         "logout": "Logout"
