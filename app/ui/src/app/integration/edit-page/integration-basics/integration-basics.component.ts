@@ -118,7 +118,6 @@ export class IntegrationBasicsComponent implements OnInit, OnDestroy {
   }
 
   canDeactivate(nextState: RouterStateSnapshot) {
-    console.log('NEXT STEP: ' + nextState.url);
     return (
       nextState.url.includes('integrations') ||
       this.modalService.show().then(modal => modal.result)

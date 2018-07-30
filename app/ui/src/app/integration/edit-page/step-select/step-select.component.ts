@@ -161,7 +161,6 @@ export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
   }
 
   canDeactivate(nextState: RouterStateSnapshot) {
-    console.log('NEXT STEP: ' + nextState.url);
     if (nextState.url == '/integrations') {
       return this.modalService.show(this.cancelModalId).then(modal => modal.result);
     }

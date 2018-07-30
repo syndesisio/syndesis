@@ -243,7 +243,6 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
   }
 
   canDeactivate(nextState: RouterStateSnapshot) {
-    console.log('NEXT STEP: ' + nextState.url);
     return (
       nextState.url.includes('save-or-add-step') ||
       nextState.url.includes('describe-data') ||

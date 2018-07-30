@@ -192,7 +192,6 @@ export class IntegrationStepConfigureComponent
   }
 
   canDeactivate(nextState: RouterStateSnapshot) {
-    console.log('NEXT STEP: ' + nextState.url);
     return (
       nextState.url.includes('save-or-add-step') ||
       this.modalService.show().then(modal => modal.result)

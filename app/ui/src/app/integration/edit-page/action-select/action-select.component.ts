@@ -165,7 +165,6 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
   }
 
   canDeactivate(nextState: RouterStateSnapshot) {
-    console.log('NEXT STEP: ' + nextState.url);
     return (
       nextState.url.includes('action-configure') ||
       this.modalService.show().then(modal => modal.result)

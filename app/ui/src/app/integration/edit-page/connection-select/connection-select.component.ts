@@ -123,7 +123,6 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
   }
 
   canDeactivate(nextState: RouterStateSnapshot) {
-    console.log('NEXT STEP: ' + nextState.url);
     return (
       nextState.url.includes('action-select') ||
       nextState.url.includes('action-configure') ||
