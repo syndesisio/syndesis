@@ -106,11 +106,19 @@ export class OAuthAppsComponent implements OnInit {
   // Returns whether or not this item has stored credentials
   isConfigured(item) {
     const client = item.client || {};
-    return (
-      client.clientId &&
-      client.clientId !== '' &&
-      (client.clientSecret && client.clientSecret !== '')
-    );
+    const properties = client.properties;
+    const configuredProperties = client.configuredProperties;
+    if (!configuredProperties) {
+      return false;
+    }
+    return Object.keys(properties).find(key => {
+      const property = properties[key];
+      if (!property.required) {
+        return false;
+      }
+      const value = configuredProperties[key];
+      return value === null || value === undefined || value === '';
+    }) === undefined;
   }
 
   handleLinks(event: any): void {
