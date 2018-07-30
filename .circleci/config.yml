@@ -31,7 +31,9 @@ push_images: &push_images
         exit 0
       fi
 
-      curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
+      if [ ! -x /usr/bin/docker ]; then
+        curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
+      fi
 
       if [ "${CIRCLE_BRANCH}" == "master" ]; then
         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
@@ -257,7 +259,7 @@ jobs:
           paths:
           - ~/.m2
 
-  # Rest depends on common, connector and integration, mount workspace .m2
+  # "server" depends on common, connector and integration, mount workspace .m2
   server:
     <<: *job_defaults
     environment:
@@ -295,6 +297,28 @@ jobs:
           key: syndesis-mvn-server-{{ checksum "app/server/pom.xml" }}
           paths:
           - ~/.m2
+
+  operator:
+    machine: true
+    environment:
+      DOCKER_IMAGES: syndesis-operator
+      <<: *common_env
+    steps:
+      - checkout
+      - restore_cache:
+          key: syndesis-operator-{{ checksum "install/operator/Gopkg.lock" }}
+      - run:
+          name: Build Operator
+          command: |
+            ./tools/bin/syndesis build --module operator --image --docker --ensure | tee build_log.txt
+      - store_artifacts:
+          path: build_log.txt
+      - <<: *push_images
+      - save_cache:
+          key: syndesis-operator-{{ checksum "install/operator/Gopkg.lock" }}
+          paths:
+          - dep-cache
+          - vendor
 
   system-test:
     <<: *job_defaults
@@ -384,6 +408,7 @@ workflows:
       - license-check
       - ui
       - common
+      - operator
       - extension:
           requires:
            - common

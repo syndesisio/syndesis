@@ -71,7 +71,7 @@ build_operator() {
 
 create_operator_image() {
     local do_docker=${1:-}
-    local tag=${2:latest}
+    local tag=${2:-latest}
 
     local build_dir=$(prepare_docker_context)
     pushd $build_dir > /dev/null
@@ -106,12 +106,11 @@ create_operator_image() {
 
 prepare_docker_context() {
     local dir=$(mktemp -d)
-    local operator_dir=$(appdir "install/operator")
+    local topdir=$(appdir ".")
+    local operator_dir="$topdir/install/operator"
 
-    pushd $operator_dir >/dev/null
-    cp Dockerfile syndesis-operator ${dir}/
-    cp $(appdir "install")/syndesis.yml ${dir}/syndesis-template.yml
-    popd >/dev/null
+    cp $operator_dir/Dockerfile $operator_dir/syndesis-operator ${dir}/
+    cp $topdir/install/syndesis.yml ${dir}/syndesis-template.yml
 
     echo $dir
 }
