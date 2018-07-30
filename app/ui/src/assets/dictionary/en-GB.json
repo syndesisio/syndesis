@@ -120,10 +120,10 @@
     },
     "links": {
       "contactus": "//access.redhat.com/support/cases/#/case/new",
-      "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.1/html-single/integrating_applications_with_fuse_online",
-      "connectorsguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.1/html-single/connecting_fuse_online_to_applications_and_services/",
-      "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.1/html-single/fuse_online_sample_integration_tutorials/",
-      "oauth-access": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.1/html-single/integrating_applications_with_fuse_online/#obtaining-authorization-to-access-applications"
+      "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/{{shared.project.version}}/html-single/integrating_applications_with_fuse_online",
+      "connectorsguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/{{shared.project.version}}/html-single/connecting_fuse_online_to_applications_and_services/",
+      "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/{{shared.project.version}}/html-single/fuse_online_sample_integration_tutorials/",
+      "oauth-access": "//access.redhat.com/documentation/en-us/red_hat_fuse/{{shared.project.version}}/html-single/integrating_applications_with_fuse_online/#obtaining-authorization-to-access-applications"
     },
     "header": {
       "navbartoggle": "Toggle navigation",
@@ -197,7 +197,8 @@
       "pod-logs-url": "{{consoleurl}}/project/{{0}}/browse/pods/{{1}}?tab=logs",
       "pod-events-url": "{{consoleurl}}/project/{{0}}/browse/pods/{{1}}?tab=events",
       "project": {
-        "name": "Syndesis (tokenized)"
+        "name": "Syndesis (tokenized)",
+        "version": "7.1"
       },
       "ok": "Ok",
       "save": "Save",
