@@ -50,12 +50,8 @@ export class OAuthAppModalComponent {
   removeCredentials() {
     const app = {
       ...this.item.client,
-      clientId: null,
-      clientSecret: null,
-      authorizationUrl: null,
-      tokenUrl: null,
-      scopes: null
     };
+    delete app.configuredProperties;
     return this.store
       .delete(app)
       .pipe(take(1))
