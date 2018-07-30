@@ -9,12 +9,12 @@ import { Connection, Connector } from '@syndesis/ui/platform';
       <a href="mailto:{{ 'shared.email' | synI18n}}">{{ 'shared.email' | synI18n }}</a>.
     </ng-template>
     <div *ngIf="isTechPreview"
-          class="syn-card-info text-right"
-          outsideClick="true"
-          placement="bottom"
-          [popover]="synTechPreviewInfo">
+          class="syn-card-info text-right">
             {{ 'connections.tech-preview' | synI18n }}
-            <span class="pficon pficon-info"></span>
+            <span class="pficon pficon-info"
+                  outsideClick="true"
+                  placement="left"
+                  [popover]="synTechPreviewInfo"></span>
     </div>
   `,
   styleUrls: ['./card-tech-preview.component.scss']
