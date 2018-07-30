@@ -21,7 +21,7 @@ const (
 	EnvPostgresqlDatabase				SyndesisEnvVar = "POSTGRESQL_DATABASE"
 	EnvPostgresqlVolumeCapacity			SyndesisEnvVar = "POSTGRESQL_VOLUME_CAPACITY"
 	//EnvPostgresqlSampledbPassword		SyndesisEnvVar = "POSTGRESQL_SAMPLEDB_PASSWORD"
-	//EnvTestSupportEnabled				SyndesisEnvVar = "TEST_SUPPORT_ENABLED"
+	EnvTestSupport				SyndesisEnvVar = "TEST_SUPPORT_ENABLED"
 	//EnvOauthCookieSecret				SyndesisEnvVar = "OAUTH_COOKIE_SECRET"
 	//EnvSyndesisEncryptKey				SyndesisEnvVar = "SYNDESIS_ENCRYPT_KEY"
 	EnvPrometheusVolumeCapacity			SyndesisEnvVar = "PROMETHEUS_VOLUME_CAPACITY"
@@ -58,6 +58,7 @@ var (
 		envDemoDataEnabled,
 		envMaxIntegrationsPerUser,
 		envControllersIntegrationsEnabled,
+		envTestSupport,
 		envImageStreamNamespace,
 		envOpenShiftConsoleUrl,
 
@@ -82,6 +83,7 @@ var (
 		demoDataEnabledFromEnv,
 		maxIntegrationsPerUserFromEnv,
 		controllersIntegrationsEnabledFromEnv,
+		testSupportFromEnv,
 		imageStreamNamespaceFromEnv,
 		openShiftConsoleUrlFromEnv,
 
@@ -212,9 +214,26 @@ func envControllersIntegrationsEnabled(syndesis *v1alpha1.Syndesis) *SyndesisEnv
 	}
 	return nil
 }
+
+func envTestSupport(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if deploy := syndesis.Spec.TestSupport; deploy != nil {
+		return &SyndesisEnvVarConfig{
+			Var: EnvTestSupport,
+			Value: strconv.FormatBool(*deploy),
+		}
+	}
+	return nil
+}
+
 func controllersIntegrationsEnabledFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
 	if v, ok := getBool(config, EnvControllersIntegrationEnabled); ok {
 		syndesis.Spec.DeployIntegrations = &v
+	}
+}
+
+func testSupportFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getBool(config, EnvTestSupport); ok {
+		syndesis.Spec.TestSupport = &v
 	}
 }
 

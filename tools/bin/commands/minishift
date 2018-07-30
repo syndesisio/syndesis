@@ -78,24 +78,30 @@ minishift::run() {
             recreate_project $project "$(hasflag --yes -y)"
         fi
 
-        # Install the Syndesis custom resource definition, requires admin perms
+        # Login as admin to install CRDs
         local user=$(oc whoami)
         local revert_login=$(login_as_admin)
 
+        # Install Syndesis CRD globally (if required)
         local result=$(install_syndesis_crd)
         check_error "$result"
 
-        fixperms "$user"
+        # Adapt
+        fix_permissions_for_operator "$user"
+
+        # Relogin with original user
         $revert_login
 
-        # Deploy operator
-        deploy_syndesis_operator
+        # Deploy operator and wait until its up
+        result=$(deploy_syndesis_operator)
+        check_error "$result"
         wait_for_deployments 1 syndesis-operator
 
         # Create syndesis resource
-        create_syndesis
+        result=$(create_syndesis "syndesis.$(minishift ip).nip.io" "https://$(minishift ip):8443/console")
+        check_error "$result"
 
-        # Wait and finally patch imagestreams for triggers
+        # Wait until everything's up and finally patch imagestreams for triggers
         wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta
         patch_imagestreams_for_initial_image
     fi
@@ -103,43 +109,6 @@ minishift::run() {
     if [ $(hasflag --open -o) ]; then
         open_url "$(minishift openshift service syndesis-oauthproxy --url)"
     fi
-}
-
-# Fix up some extra permissions required for a regular minishift user
-# Must be run when root
-fixperms() {
-    local user="$1"
-    local extra_role_installed=$(oc get role -o name | grep syndesis-minishift-extra)
-    if [ -z "$extra_role_installed" ]; then
-        oc create -f - <<EOT
----
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: syndesis-minishift-extra
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/type: operator
-    syndesis.io/component: syndesis-operator
-rules:
-- apiGroups:
-  - syndesis.io
-  resources:
-  - syndesises
-  - syndesises/finalizers
-  verbs: [ get, list, create, update, delete, deletecollection, watch ]
-- apiGroups:
-  - route.openshift.io
-  resources:
-  - routes/custom-host
-  verbs: [ get, list, create, update, delete, deletecollection, watch ]
----
-
-EOT
-    fi
-
-    oc policy add-role-to-user --role-namespace="$(oc project -q)" syndesis-minishift-extra $user
 }
 
 login_as_admin() {

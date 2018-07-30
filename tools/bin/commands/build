@@ -105,6 +105,7 @@ build_operator_within_container() {
                    dep ensure -vendor-only -v
     fi
     echo "Creating syndesis-operator with $GO_BUILDER_IMAGE"
+    pushd "$top_dir/install/operator" >/dev/null
     docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
                -v $top_dir:/gopath/src/github.com/syndesisio/syndesis \
                $GO_BUILDER_IMAGE \
@@ -112,6 +113,7 @@ build_operator_within_container() {
     if [ $(hasflag -i --image --images --docker) ] && [ $(isOSX) ]; then
         create_operator_image
     fi
+    popd >/dev/null
 }
 
 create_operator_image() {

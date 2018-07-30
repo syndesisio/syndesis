@@ -35,6 +35,7 @@ type SyndesisSpec struct {
 	RouteHostName    		string      `json:"routeHostname,omitempty"`
 	DemoData         		*bool       `json:"demoData,omitempty"`
 	DeployIntegrations		*bool		`json:"deployIntegrations,omitempty"`
+	TestSupport             *bool		`json:"testSupport,omitempty"`
 	ImageStreamNamespace	string		`json:"imageStreamNamespace,omitempty"`
 	IntegrationLimit 		*int        `json:"integrationLimit,omitempty"`
 	Registry 				string		`json:"registry,omitempty"`
@@ -107,10 +108,10 @@ type MetaConfiguration struct {
 }
 
 type Resources struct {
-	v1.ResourceRequirements `json:",inline"`
+	v1.ResourceRequirements `json:",inline,omitempty"`
 }
 
 type ResourcesWithVolume struct {
-	v1.ResourceRequirements 				`json:",inline"`
+	v1.ResourceRequirements 				`json:",inline,omitempty"`
 	VolumeCapacity				string      `json:"volumeCapacity,omitempty"`
 }
