@@ -8,6 +8,9 @@ import (
 
 type SyndesisEnvVar string
 
+// Location from where the template should be loaded
+var TemplateLocation *string
+
 const (
 	EnvRouteHostname 					SyndesisEnvVar = "ROUTE_HOSTNAME"
 	//EnvOpenshiftMaster 					SyndesisEnvVar = "OPENSHIFT_MASTER"

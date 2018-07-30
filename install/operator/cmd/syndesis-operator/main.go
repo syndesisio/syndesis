@@ -15,6 +15,8 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/stub"
 
 	"github.com/sirupsen/logrus"
+	"flag"
+	configuration "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 )
 
 func printVersion() {
@@ -25,6 +27,10 @@ func printVersion() {
 
 func main() {
 	printVersion()
+
+	configuration.TemplateLocation = flag.String("template", "./syndesis-template.yml", "Path to template used for installation")
+	flag.Parse()
+	logrus.Infof("Using template %s", *configuration.TemplateLocation)
 
 	resource := "syndesis.io/v1alpha1"
 	kind := "Syndesis"

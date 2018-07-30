@@ -1,6 +1,6 @@
 {{^Productized}}
 {{^WithDockerImages}}
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     name: {{ Images.Syndesis.Rest }}
@@ -17,7 +17,7 @@
       importPolicy:
         scheduled: true
       name: "{{ Tags.Syndesis }}"
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     name: {{ Images.Syndesis.Ui }}
@@ -34,7 +34,7 @@
       importPolicy:
         scheduled: true
       name: "{{ Tags.Syndesis }}"
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     name: {{ Images.Syndesis.Verifier }}
@@ -51,7 +51,7 @@
       importPolicy:
         scheduled: true
       name: "{{ Tags.Syndesis }}"
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     name: {{ Images.Support.OAuthProxy }}
@@ -68,7 +68,7 @@
       importPolicy:
         scheduled: true
       name: "{{ Tags.OAuthProxy }}"
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     name: {{ Images.Support.Prometheus }}
@@ -86,7 +86,7 @@
         scheduled: true
       name: "{{ Tags.Prometheus }}"
 {{/WithDockerImages}}
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     name: {{ Images.Syndesis.S2i }}

@@ -1,71 +1,7 @@
 #!/bin/bash
 
+# Minimal version for OC
 OC_MIN_VERSION=3.9.0
-
-compare_version_part() {
-    local test=$1
-    local min=$2
-
-    test=`expr $test`
-    min=`expr $min`
-
-    if [ $test -eq $min ]; then
-        echo 0;
-    elif [ $test -gt $min ]; then
-        echo 1;
-    else
-        # $test -lt $min
-        echo -1
-    fi
-}
-
-compare_oc_version() {
-    local test=$1
-    local min=$2
-
-    echo -n "Testing oc version '$test' against required minimum '$min' ... "
-
-    testparts=( ${test//./ } )
-    minparts=( ${min//./ } )
-
-    local i=0
-    while [ $i -lt ${#minparts[@]} ]
-    do
-        local testpart=${testparts[$i]}
-        local minpart=${minparts[$i]}
-
-        if [ -z "$testpart" ]; then
-            # test version does not extend as far as minimum
-            # in parts so append a 0
-            testpart=0
-        fi
-
-        ret=$(compare_version_part $testpart $minpart)
-        if [ $ret == -1 ]; then
-            #
-            # version part is less than minimum while all preceding
-            # parts were equal so version does not meet minimum
-            #
-            echo "ERROR: oc version ($test) should be at least $min"
-            return
-        elif [ $ret == 1 ]; then
-            #
-            # version part is greater than minimum so no need to test
-            # any further parts as version is greater than minimum
-            #
-            echo "OK"
-            return
-        fi
-
-        #
-        # Only if the version part is equal will the loop continue
-        # with further parts.
-        #
-        i=`expr $i + 1`
-    done
-
-    echo "OK"
-}
 
 check_oc_version()
 {
@@ -387,4 +323,69 @@ pod() {
 
 syndesis_deployments() {
   oc get dc -l syndesis.io/app=syndesis -o name | sed -e "s/^deploymentconfigs\///"
+}
+
+compare_version_part() {
+    local test=$1
+    local min=$2
+
+    test=`expr $test`
+    min=`expr $min`
+
+    if [ $test -eq $min ]; then
+        echo 0;
+    elif [ $test -gt $min ]; then
+        echo 1;
+    else
+        # $test -lt $min
+        echo -1
+    fi
+}
+
+compare_oc_version() {
+    local test=$1
+    local min=$2
+
+    echo -n "Testing oc version '$test' against required minimum '$min' ... "
+
+    testparts=( ${test//./ } )
+    minparts=( ${min//./ } )
+
+    local i=0
+    while [ $i -lt ${#minparts[@]} ]
+    do
+        local testpart=${testparts[$i]}
+        local minpart=${minparts[$i]}
+
+        if [ -z "$testpart" ]; then
+            # test version does not extend as far as minimum
+            # in parts so append a 0
+            testpart=0
+        fi
+
+        ret=$(compare_version_part $testpart $minpart)
+        if [ $ret == -1 ]; then
+            #
+            # version part is less than minimum while all preceding
+            # parts were equal so version does not meet minimum
+            #
+            echo "ERROR: oc version ($test) should be at least $min"
+            return
+        elif [ $ret == 1 ]; then
+            #
+            # version part is greater than minimum so no need to test
+            # any further parts as version is greater than minimum
+            #
+            echo "OK"
+            return
+        fi
+
+        #
+        # Only if the version part is equal will the loop continue
+        # with further parts.
+        #
+        i=`expr $i + 1`
+    done
+
+    echo "OK"
 }

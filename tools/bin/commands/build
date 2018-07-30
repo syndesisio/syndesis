@@ -86,7 +86,7 @@ build_operator_with_local_go() {
         GOOS="linux" GOARCH="amd64" go build ./cmd/syndesis-operator
         create_operator_image
     else
-        echo "Compiling syndesis-operator with $GO_BUILDER_IMAGE"
+        echo "Compiling syndesis-operator with local go"
         go build ./cmd/syndesis-operator
     fi
 
@@ -125,14 +125,22 @@ create_operator_image() {
 
     setup_oc
 
+    local tmpdir=$(mktemp -d)
+    trap "rm -rf $tmpdir" EXIT
+
     echo "Creating image $OPERATOR_IMAGE via S2I and Docker strategy"
     if [ -z "$(oc get bc -o name | grep syndesis-operator)" ]; then
         echo "Creating BuildConfig syndesis-operator"
         oc new-build --strategy=docker --binary=true --name syndesis-operator
     fi
 
+    cp Dockerfile syndesis-operator ${tmpdir}/
+    cp $(appdir ".")/install/syndesis.yml ${tmpdir}/syndesis-template.yml
+
     local arch=$(mktemp -t syndesis-operator-docker-XXXX.tgz)
-    tar zcvf $arch Dockerfile syndesis-operator
+    pushd ${tmpdir} >/dev/null
+    tar zcvf $arch Dockerfile syndesis-operator syndesis-template.yml
+    popd >/dev/null
     trap "rm $arch" EXIT
 
     oc start-build --from-archive=$arch syndesis-operator

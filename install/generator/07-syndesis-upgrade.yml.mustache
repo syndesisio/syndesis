@@ -1,4 +1,4 @@
-- apiVersion: v1
+- apiVersion: template.openshift.io/v1
   kind: Template
   metadata:
     labels:
@@ -20,9 +20,6 @@
       openshift.io/documentation-url: "https://syndesis.io"
       openshift.io/support-url: "https://access.redhat.com"
   parameters:
-  - name: OC_LOGIN
-    description: '"oc login" command to connect to syndesis. Paste the login line from "Command Line Tools" section in you OpenShift console'
-    required: true
   - name: SYNDESIS_VERSION
     description: 'The version to upgrade to or "latest" for the newest version'
     value: latest
@@ -35,6 +32,7 @@
     metadata:
       name: syndesis-upgrade-${SYNDESIS_VERSION}
     spec:
+      serviceAccountName: syndesis-operator
       containers:
       - name: upgrade
         image: {{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Upgrade }}:${SYNDESIS_VERSION}
@@ -47,8 +45,6 @@
         args:
           - "--backup"
           - "/opt/backup"
-          - "--oc-login"
-          - "${OC_LOGIN}"
         volumeMounts:
         - mountPath: /opt/backup
           subPath: backup

@@ -12,7 +12,7 @@ import (
 // Each operator instance is bound to a single version currently that can be retrieved from this method.
 func GetSyndesisVersionFromOperatorTemplate() (string, error) {
 
-	templateRes, err := util.LoadKubernetesResourceFromAsset("template.yaml")
+	templateRes, err := util.LoadKubernetesResourceFromFile(*TemplateLocation)
 	if err != nil {
 		return "", err
 	}

@@ -2,15 +2,16 @@ package template
 
 import (
 	"github.com/openshift/api/template/v1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 )
 
 
 func GetDeclaredResourceTypes() ([]metav1.TypeMeta, error) {
 	types := make(map[metav1.TypeMeta]bool)
-	res, err := util.LoadKubernetesResourceFromAsset("template.yaml")
+	res, err := util.LoadKubernetesResourceFromFile(*configuration.TemplateLocation)
 	if err != nil {
 		return nil, err
 	}

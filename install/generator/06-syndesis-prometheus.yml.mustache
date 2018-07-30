@@ -132,7 +132,7 @@
     resources:
       requests:
         storage: ${PROMETHEUS_VOLUME_CAPACITY}
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     name: syndesis-prometheus
