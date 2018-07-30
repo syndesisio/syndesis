@@ -87,7 +87,7 @@ const editIntegrationChildRoutes = [
     component: IntegrationDescribeDataComponent,
     canDeactivate: [CanDeactivateGuard]
   },
-  { 
+  {
     path: 'step-select/:position',
     component: IntegrationStepSelectComponent,
     canDeactivate: [CanDeactivateGuard]
