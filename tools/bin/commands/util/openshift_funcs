@@ -104,6 +104,31 @@ setup_oc() {
     exit 1
 }
 
+determine_console() {
+    local console=$(readopt --console)
+
+    if [ -z "${console}" ]; then
+        #
+        # 1. Show the status of oc
+        # 2. Cut the output to only the first line
+        # 3. Reduce the line to only the https ... url
+        #
+        # If logged out then console should be empty
+        #
+        console=$(oc status | head -n 1 | sed s/.*https/https/)
+    fi
+
+    if [[ ! ${console} =~ .*\/console ]]; then
+        #
+        # Ensure that console is appended on the end of the url
+        #
+        console="${console}/console"
+    fi
+
+    # user specified console url so prefer that
+    echo ${console}
+}
+
 recreate_project() {
     local project=$1
     local dont_ask=${2:-false}
@@ -163,7 +188,6 @@ create_oauthclient() {
 
 create_and_apply_template() {
     local route=$1
-    local console=${2:-}
     local template=${3:-syndesis}
     local tag="$(readopt --tag)"
     local use_local_resource="$(hasflag --local)"
@@ -171,6 +195,13 @@ create_and_apply_template() {
 
     if [ -z "$route" ]; then
         echo "No route given"
+        exit 1
+    fi
+
+    # Determine the url of the console
+    local console=$(determine_console)
+    if [ -x "${console}" ]; then
+        echo "No openshift console url could be determined. Try specifying it using --console <console>."
         exit 1
     fi
 
