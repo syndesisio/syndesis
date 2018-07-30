@@ -187,6 +187,10 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     }
 
     Connector augmentedWithUsage(final Connector connector) {
+        if (connector == null) {
+            return null;
+        }
+
         return augmentedWithUsage(Collections.singletonList(connector)).get(0);
     }
 

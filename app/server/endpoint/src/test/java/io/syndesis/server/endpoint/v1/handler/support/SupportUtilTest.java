@@ -43,6 +43,7 @@ import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.dsl.BuildConfigResource;
 import io.fabric8.openshift.client.dsl.DeployableScalableResource;
 import io.fabric8.openshift.client.server.mock.OpenShiftServer;
+import io.syndesis.common.model.EmptyListResult;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
@@ -120,12 +121,7 @@ public class SupportUtilTest {
         when(client.imageStreamTags()).thenReturn(ist);
 
         IntegrationHandler integrationHandler = mock(IntegrationHandler.class);
-        when(integrationHandler.list(any())).thenReturn(new ListResult<IntegrationOverview>() {
-            @Override
-            public int getTotalCount() {
-                return 0;
-            }
-        });
+        when(integrationHandler.list(any())).thenReturn(new EmptyListResult<IntegrationOverview>());
         IntegrationSupportHandler integrationSupportHandler = mock(IntegrationSupportHandler.class);
 
         SupportUtil supportUtil = new SupportUtil(client, integrationHandler, integrationSupportHandler);
