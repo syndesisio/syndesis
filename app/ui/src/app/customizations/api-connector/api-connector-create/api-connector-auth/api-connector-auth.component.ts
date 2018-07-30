@@ -30,9 +30,12 @@ export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
       authorizationEndpoint,
       tokenEndpoint
     } = this.customConnectorRequest.properties;
+
+    const defaultAuthenticationType = (authenticationType && authenticationType.defaultValue)
+          || (authenticationType.enum.length > 0 && authenticationType.enum[0].value);
     this.authSetupForm = this.formBuilder.group({
       authenticationType: [
-        authenticationType ? authenticationType.defaultValue : ''
+        defaultAuthenticationType
       ],
       authorizationEndpoint: [
         authorizationEndpoint ? authorizationEndpoint.defaultValue : ''
