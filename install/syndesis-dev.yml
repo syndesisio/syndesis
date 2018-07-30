@@ -1,7 +1,7 @@
 #
 # Do not edit, this is a generated file.  To regenerate,  run: ./generator/run.sh
 #
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   name: syndesis-dev
@@ -153,7 +153,7 @@ parameters:
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     name: syndesis-server
@@ -170,7 +170,7 @@ objects:
       importPolicy:
         scheduled: true
       name: "latest"
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     name: syndesis-ui
@@ -187,7 +187,7 @@ objects:
       importPolicy:
         scheduled: true
       name: "latest"
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     name: syndesis-meta
@@ -204,7 +204,7 @@ objects:
       importPolicy:
         scheduled: true
       name: "latest"
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     name: oauth-proxy
@@ -221,7 +221,7 @@ objects:
       importPolicy:
         scheduled: true
       name: "v1.1.0"
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     name: prometheus
@@ -239,7 +239,7 @@ objects:
         scheduled: true
       name: "v2.1.0"
 
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     name: syndesis-s2i
@@ -330,7 +330,7 @@ objects:
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/component: syndesis-ui
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -614,7 +614,7 @@ objects:
     resources:
       requests:
         storage: ${POSTGRESQL_VOLUME_CAPACITY}
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     name: syndesis-db
@@ -743,7 +743,7 @@ objects:
     resources:
       requests:
         storage: ${META_VOLUME_CAPACITY}
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -887,13 +887,15 @@ objects:
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/component: syndesis-oauthproxy
-- apiVersion: v1
+- apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
     labels:
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
+    annotations:
+      console.alpha.openshift.io/overview-app-route: "true"
     name: syndesis
   spec:
     host: ${ROUTE_HOSTNAME}
@@ -905,7 +907,7 @@ objects:
     to:
       kind: Service
       name: syndesis-oauthproxy
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -1047,7 +1049,7 @@ objects:
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/component: syndesis-server
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -1250,7 +1252,7 @@ objects:
       syndesis.io/app: todo
       syndesis.io/component: todo
 
-- apiVersion: v1
+- apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
     labels:
@@ -1271,7 +1273,7 @@ objects:
       name: todo
       weight: 100
 
-- apiVersion: v1
+- apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     labels:
@@ -1286,7 +1288,7 @@ objects:
       - items:
         tag: latest
 
-- apiVersion: v1
+- apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
     labels:
@@ -1317,7 +1319,7 @@ objects:
       - imageChange:
         type: ImageChange
 
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -1387,7 +1389,7 @@ objects:
             kind: ImageStreamTag
             name: todo:latest
         type: ImageChange
-- apiVersion: v1
+- apiVersion: authorization.openshift.io/v1
   kind: RoleBinding
   metadata:
     name: syndesis:editors
@@ -1400,7 +1402,7 @@ objects:
   subjects:
   - kind: ServiceAccount
     name: syndesis-server
-- apiVersion: v1
+- apiVersion: authorization.openshift.io/v1
   kind: RoleBinding
   metadata:
     name: syndesis:viewers
@@ -1547,7 +1549,7 @@ objects:
     resources:
       requests:
         storage: ${PROMETHEUS_VOLUME_CAPACITY}
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     name: syndesis-prometheus
@@ -1627,7 +1629,7 @@ objects:
       type: ImageChange
 
     - type: ConfigChange
-- apiVersion: v1
+- apiVersion: template.openshift.io/v1
   kind: Template
   metadata:
     labels:
@@ -1649,9 +1651,6 @@ objects:
       openshift.io/documentation-url: "https://syndesis.io"
       openshift.io/support-url: "https://access.redhat.com"
   parameters:
-  - name: OC_LOGIN
-    description: '"oc login" command to connect to syndesis. Paste the login line from "Command Line Tools" section in you OpenShift console'
-    required: true
   - name: SYNDESIS_VERSION
     description: 'The version to upgrade to or "latest" for the newest version'
     value: latest
@@ -1664,6 +1663,7 @@ objects:
     metadata:
       name: syndesis-upgrade-${SYNDESIS_VERSION}
     spec:
+      serviceAccountName: syndesis-operator
       containers:
       - name: upgrade
         image: syndesis/syndesis-upgrade:${SYNDESIS_VERSION}
@@ -1676,8 +1676,6 @@ objects:
         args:
           - "--backup"
           - "/opt/backup"
-          - "--oc-login"
-          - "${OC_LOGIN}"
         volumeMounts:
         - mountPath: /opt/backup
           subPath: backup

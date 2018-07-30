@@ -1,0 +1,116 @@
+#!/bin/bash
+
+# Image with which container builds are perfomed
+GO_BUILDER_IMAGE="syndesis/godev:1.10"
+
+# Name of the operator image
+OPERATOR_IMAGE="syndesis/syndesis-operator"
+
+dep_ensure() {
+    local do_local=${1:-}
+
+    if [ "$do_local" ]; then
+        local dir=$(gopath_dir)
+        check_error $dir
+
+        pushd $dir >/dev/null
+        echo "Running 'dep ensure'"
+        dep ensure -vendor-only -v
+    else
+        local top_dir=$(appdir ".")
+        echo "Running 'dep ensure' with $GO_BUILDER_IMAGE"
+        [ -d "dep-cache" ] || mkdir dep-cache
+        docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
+                   -v $(pwd)/dep-cache:/gopath/pkg/dep \
+                   -v $top_dir:/gopath/src/github.com/syndesisio/syndesis \
+                   $GO_BUILDER_IMAGE \
+                   dep ensure -vendor-only -v
+    fi
+}
+
+gopath_dir() {
+    if [ -z "$GOPATH" ]; then
+        echo "ERROR: You have to set your GOPATH environment variable"
+        exit 1
+    fi
+    local dir=$GOPATH/src/github.com/syndesisio/syndesis/install/operator
+    if [ ! -d "$dir" ]; then
+        echo "ERROR: No directory $dir"
+    fi
+    echo $dir
+}
+
+build_operator() {
+    local do_local="${1:-}"
+    local do_linux="${2:-}"
+
+    if [ "${do_local}" ]; then
+        echo "Running local build"
+        local dir=$(gopath_dir)
+        check_error $dir
+        pushd $dir >/dev/null
+        if [ "$do_linux" ] && [ $(isOSX) ]; then
+            echo "Cross-compiling syndesis-operator for Linux"
+            GOOS="linux" GOARCH="amd64" go build ./cmd/syndesis-operator
+        else
+            echo "Compiling syndesis-operator with local go"
+            go build ./cmd/syndesis-operator
+        fi
+        popd >/dev/null
+    else
+        echo "Creating syndesis-operator with $GO_BUILDER_IMAGE"
+        local top_dir=$(appdir ".")
+        pushd "$top_dir/install/operator" >/dev/null
+        docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
+                   -v $top_dir:/gopath/src/github.com/syndesisio/syndesis \
+                   $GO_BUILDER_IMAGE \
+                   go build ./cmd/syndesis-operator
+        popd >/dev/null
+    fi
+}
+
+create_operator_image() {
+    local do_docker=${1:-}
+    local tag=${2:-latest}
+
+    local build_dir=$(prepare_docker_context)
+    pushd $build_dir > /dev/null
+    trap "rm -rf $build_dir" EXIT
+
+    if [ $do_docker ]; then
+        echo "Creating image $OPERATOR_IMAGE via Docker"
+        docker build -t $OPERATOR_IMAGE:${tag} .
+        popd
+        return
+    fi
+
+    setup_oc
+
+    local tmpdir=$(mktemp -d)
+    trap "rm -rf $tmpdir" EXIT
+
+    echo "Creating image $OPERATOR_IMAGE via S2I and Docker strategy"
+    if [ -z "$(oc get bc -o name | grep syndesis-operator)" ]; then
+        echo "Creating BuildConfig syndesis-operator"
+        oc new-build --strategy=docker --binary=true --name syndesis-operator
+    fi
+
+    local arch=$(mktemp -t syndesis-operator-docker-XXXX.tgz)
+    tar zcvf $arch Dockerfile syndesis-operator syndesis-template.yml
+    trap "rm $arch" EXIT
+
+    oc start-build --from-archive=$arch syndesis-operator
+
+    popd
+}
+
+prepare_docker_context() {
+    local dir=$(mktemp -d)
+    local topdir=$(appdir ".")
+    local operator_dir="$topdir/install/operator"
+
+    cp $operator_dir/Dockerfile $operator_dir/syndesis-operator ${dir}/
+    cp $topdir/install/syndesis.yml ${dir}/syndesis-template.yml
+
+    echo $dir
+}

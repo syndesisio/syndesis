@@ -56,7 +56,7 @@ minishift::run() {
 
     # Start minishift if necessary
     if [ -z "$(is_minishift_running)" ]; then
-      start_minishift
+        start_minishift
     fi
 
     # Ensure OC is in the path
@@ -78,19 +78,56 @@ minishift::run() {
             recreate_project $project "$(hasflag --yes -y)"
         fi
 
-        basedir=$(appdir)
-        check_error "$basedir"
+        # Login as admin to install CRDs
+        local user=$(oc whoami)
+        local revert_login=$(login_as_admin)
 
-        create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
+        # Install Syndesis CRD globally (if required)
+        local result=$(install_syndesis_crd)
+        check_error "$result"
 
-        create_and_apply_template "syndesis.$(minishift ip).nip.io" "https://$(minishift ip):8443/console" "$(select_template true)"
+        # Adapt
+        fix_permissions_for_operator "$user"
 
+        # Relogin with original user
+        $revert_login
+
+        # Deploy operator and wait until its up
+        result=$(deploy_syndesis_operator)
+        check_error "$result"
+        wait_for_deployments 1 syndesis-operator
+
+        # Create syndesis resource
+        result=$(create_syndesis "syndesis.$(minishift ip).nip.io" "https://$(minishift ip):8443/console")
+        check_error "$result"
+
+        # Wait until everything's up and finally patch imagestreams for triggers
         wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta
         patch_imagestreams_for_initial_image
     fi
 
     if [ $(hasflag --open -o) ]; then
         open_url "$(minishift openshift service syndesis-oauthproxy --url)"
+    fi
+}
+
+login_as_admin() {
+    local user=$(oc whoami)
+    local token=$(extract_current_token)
+
+    oc login -u system:admin >/dev/null 2>&1
+
+    if [ -n "${token}" ]; then
+        echo "oc login -u ${user} -p $token"
+    else
+        echo "oc login -u ${user}"
+    fi
+}
+
+extract_current_token() {
+    local token=$(oc whoami -t 2>/dev/null)
+    if [ $? == 0 ]; then
+        echo $token
     fi
 }
 
@@ -130,6 +167,9 @@ start_minishift() {
     if [ -n "${vmdriver}" ]; then
         extra_args="${extra_args}--vm-driver ${vmdriver} "
     fi
+
+    minishift addons enable admin-user
+
     echo "Starting minishift ...."
     minishift start ${extra_args:-}--memory ${memory:-$DEFAULT_RAM} --cpus ${cpus:-$DEFAULT_CPUS} --disk-size ${disksize:-$DEFAULT_DISK_SIZE} --openshift-version ${openshift_version:-$DEFAULT_OPENSHIFT_VERSION}
 }

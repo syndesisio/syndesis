@@ -34,7 +34,7 @@ func GetInstallResourcesAsRuntimeObjects(syndesis *v1alpha1.Syndesis, params Ins
 }
 
 func GetInstallResources(syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.RawExtension, error) {
-	res, err := util.LoadKubernetesResourceFromAsset("template.yaml")
+	res, err := util.LoadKubernetesResourceFromFile(*configuration.TemplateLocation)
 	if err != nil {
 		return nil, err
 	}

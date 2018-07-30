@@ -116,6 +116,16 @@ hasflag() {
     done
 }
 
+isOSX() {
+    if [ -z "${OSTYPE}" ]; then
+        if [ $(uname) == "Darwin" ]; then
+            echo "true"
+        fi
+    elif [ "${OSTYPE#darwin}" != "${OSTYPE}" ]; then
+        echo "true"
+    fi
+}
+
 # Read the value of an option.
 readopt() {
     filters="$@"

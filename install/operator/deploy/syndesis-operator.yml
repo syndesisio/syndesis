@@ -22,9 +22,9 @@ rules:
 - apiGroups:
   - syndesis.io
   resources:
-  - "*"
-  verbs:
-  - "*"
+  - syndesises
+  - syndesises/finalizers
+  verbs: [ get, list, create, update, delete, deletecollection, watch ]
 - apiGroups:
   - ""
   resources:
@@ -32,55 +32,52 @@ rules:
   - services
   - endpoints
   - persistentvolumeclaims
-  - events
   - configmaps
   - secrets
   - serviceaccounts
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs: [ get, list ]
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
   - rolebindings
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - template.openshift.io
   resources:
   - processedtemplates
-  verbs:
-  - "create"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - image.openshift.io
   resources:
   - imagestreams
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - apps.openshift.io
   resources:
   - deploymentconfigs
-  verbs:
-  - "*"
-- apiGroups:
-  - route.openshift.io
-  resources:
-  - routes
-  - routes/custom-host
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - build.openshift.io
   resources:
   - buildconfigs
   verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - authorization.openshift.io
   resources:
   - rolebindings
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
+- apiGroups:
+  - route.openshift.io
+  resources:
+  - routes
+  - routes/custom-host
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -129,6 +126,26 @@ subjects:
 roleRef:
   name: edit
 ---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: operator
+    syndesis.io/component: syndesis-operator
+  name: syndesis-operator
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+  - from:
+      kind: DockerImage
+      name: docker.io/syndesis/syndesis-operator:latest
+    importPolicy:
+      scheduled: true
+    name: latest
+---
 apiVersion: v1
 kind: DeploymentConfig
 metadata:
@@ -156,7 +173,7 @@ spec:
       serviceAccountName: syndesis-operator
       containers:
         - name: syndesis-operator
-          image: syndesis/syndesis-operator
+          image: ' '
           command:
           - syndesis-operator
           imagePullPolicy: IfNotPresent
@@ -165,3 +182,13 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - syndesis-operator
+      from:
+        kind: ImageStreamTag
+        name: syndesis-operator:latest
+    type: ImageChange
+  - type: ConfigChange

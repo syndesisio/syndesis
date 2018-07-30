@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Maven modules which create Docker images
-IMAGE_MODULES="ui server meta s2i"
+IMAGE_MODULES="ui server meta s2i operator"
 
 release::description() {
     cat - <<EOT
@@ -55,6 +55,7 @@ get_release_version() {
 
 release::run() {
     source "$(basedir)/commands/util/maven_funcs"
+    source "$(basedir)/commands/util/operator_funcs"
 
     # Main application directory
     local topdir=$(appdir ".")
@@ -110,6 +111,15 @@ release::run() {
 
     # Create the image for the upgrade
     create_upgrade_docker_image "$topdir" "$release_version"
+
+    # Ensure that all dependencies are up-to-date
+    dep_ensure
+
+    # Create the operator image, which use the freshly created template
+    build_operator "" "true"
+
+    # Create the operator image
+    create_operator_image "true" "$release_version"
 
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then

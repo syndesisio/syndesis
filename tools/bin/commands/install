@@ -6,6 +6,9 @@ install::description() {
 
 install::usage() {
     cat <<EOT
+-s  --setup-crd               Install CRDs clusterwide. You have to run this once as cluster-admin
+    --fix-permissions <user>  Add additional permissions to the cluster user. These are required by
+                              the operator to work. You have to run this as cluster-admin.
 -p  --project                 Install into this project. Delete this project
                               if it already exists. By default, install into the current project (without deleting)
     --route                   Route to use. If not given, the route is trying to be detected from the currently
@@ -31,29 +34,37 @@ EOT
 install::run() {
     source "$(basedir)/commands/util/openshift_funcs"
 
+    if [ $(hasflag -s --setup-crd) ]; then
+        echo "Installing Syndesis CRD"
+        local result=$(install_syndesis_crd)
+        check_error "$result"
+        return
+    fi
+
+    if [ -n "$(readopt --fix-permissions)" ]; then
+        fix_permissions_for_operator "$(readopt --fix-permissions)"
+        return
+    fi
+
     # If a project is given, create it new or recreate it
     local project=$(readopt --project -p)
     if [ -n "${project}" ]; then
         recreate_project $project "$(hasflag --yes -y)"
     fi
 
-    # Get route
-    local route=$(readopt --route)
-    if [ -z "${route}" ]; then
-        route="$(guess_route "$project")"
-        check_error $route
-    fi
-
-    local console=$(readopt --console)
-
     # Setup oc
     setup_oc
 
-    # Required OAuthclient
-    create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
+    # Deploy operator and wait until its up
+    result=$(deploy_syndesis_operator)
+    check_error "$result"
+    wait_for_deployments 1 syndesis-operator
 
-    # Apply a template, based on the given arguments
-    create_and_apply_template "$route" "$console" "$(select_template $(hasflag --dev))"
+    # Create syndesis resource
+    local route=$(readopt --route)
+    local console=$(readopt --console)
+    result=$(create_syndesis "$route" "$console")
+    check_error "$result"
 
     if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ] || [ $(hasflag --open -o) ]; then
         wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta

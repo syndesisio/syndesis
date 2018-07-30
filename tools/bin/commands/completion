@@ -431,10 +431,6 @@ __custom_func() {
     esac
 }
 
-_image-modes() {
-    __debug _image-modes
-    COMPREPLY+=(none openshift docker auto)
-}
 
 _modules() {
     __debug _modules
@@ -455,7 +451,7 @@ _syndesis_build() {
 
     flags+=("-b")
     flags+=("--backend")
-    flags+=("--images")
+    flags+=("--all-images")
     flags+=("-m")
     flags_with_completion+=("-m")
 	flags_completion+=("_modules")
@@ -470,17 +466,10 @@ _syndesis_build() {
     flags+=("--flash")
 
     flags+=("-i")
-    flags_with_completion+=("-i")
-	flags_completion+=("_image-modes")
-    flags+=("--image-mode")
-    flags_with_completion+=("--image-mode")
-	flags_completion+=("_image-modes")
+    flags+=("--image")
     flags+=("--docker")
-    flags+=("--openshift")
     flags+=("-p")
     flags+=("--project")
-    flags+=("-k")
-    flags+=("--kill-pods")
     flags+=("-c")
     flags+=("--clean")
     flags+=("--batch-mode")
@@ -517,7 +506,7 @@ _syndesis_dev() {
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
-	
+
 	flags+=("--debug")
 	flags+=("--cookie")
 	flags+=("--refresh")

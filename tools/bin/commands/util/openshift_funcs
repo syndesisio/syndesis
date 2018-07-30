@@ -1,71 +1,7 @@
 #!/bin/bash
 
+# Minimal version for OC
 OC_MIN_VERSION=3.9.0
-
-compare_version_part() {
-    local test=$1
-    local min=$2
-
-    test=`expr $test`
-    min=`expr $min`
-
-    if [ $test -eq $min ]; then
-        echo 0;
-    elif [ $test -gt $min ]; then
-        echo 1;
-    else
-        # $test -lt $min
-        echo -1
-    fi
-}
-
-compare_oc_version() {
-    local test=$1
-    local min=$2
-
-    echo -n "Testing oc version '$test' against required minimum '$min' ... "
-
-    testparts=( ${test//./ } )
-    minparts=( ${min//./ } )
-
-    local i=0
-    while [ $i -lt ${#minparts[@]} ]
-    do
-        local testpart=${testparts[$i]}
-        local minpart=${minparts[$i]}
-
-        if [ -z "$testpart" ]; then
-            # test version does not extend as far as minimum
-            # in parts so append a 0
-            testpart=0
-        fi
-
-        ret=$(compare_version_part $testpart $minpart)
-        if [ $ret == -1 ]; then
-            #
-            # version part is less than minimum while all preceding
-            # parts were equal so version does not meet minimum
-            #
-            echo "ERROR: oc version ($test) should be at least $min"
-            return
-        elif [ $ret == 1 ]; then
-            #
-            # version part is greater than minimum so no need to test
-            # any further parts as version is greater than minimum
-            #
-            echo "OK"
-            return
-        fi
-
-        #
-        # Only if the version part is equal will the loop continue
-        # with further parts.
-        #
-        i=`expr $i + 1`
-    done
-
-    echo "OK"
-}
 
 check_oc_version()
 {
@@ -142,101 +78,176 @@ recreate_project() {
     oc project "${project}"
 }
 
-select_template() {
-    local is_dev=${1:-false}
-    if [ ${is_dev} == "true" ]; then
-        echo "syndesis-dev"
-    else
-        echo "syndesis"
+# Install the Syndesis custom resource definition
+install_syndesis_crd() {
+    set +e
+    oc get crd >/dev/null 2>&1
+    local err=$?
+    set -e
+    if [ $err -ne 0 ]; then
+        echo "ERROR: Cannot install CRD 'Syndesis'. You have to have cluster admin permission to do this"
+        return
+    fi
+
+    local crd_installed=$(oc get crd -o name | grep syndesises.syndesis.io)
+    if [ -z "$crd_installed" ]; then
+        create_openshift_resource "install/operator/deploy/syndesis-crd.yml"
     fi
 }
 
-create_oauthclient() {
-    local tag=${1:-}
-    local use_local_resource=${2:-}
+# Deploy operator
+deploy_syndesis_operator() {
+    local operator_installed=$(oc get dc -o name | grep syndesis-operator)
+    if [ -n "$operator_installed" ]; then
+        oc delete dc syndesis-operator
+        wait_for_deployments 0 syndesis-operator
+    fi
 
-    create_openshift_resource \
-        "install/support/serviceaccount-as-oauthclient-restricted.yml" \
-        "$tag" \
-        "$use_local_resource"
+    create_openshift_resource "install/operator/deploy/syndesis-operator.yml"
 }
 
-create_and_apply_template() {
-    local route=$1
-    local console=${2:-}
-    local template=${3:-syndesis}
-    local tag="$(readopt --tag)"
-    local use_local_resource="$(hasflag --local)"
-    local test_support="$(hasflag --test-support)"
+# Create syndesis resource
+create_syndesis() {
+    local route="${1:-}"
+    local console="${2:-}"
 
-    if [ -z "$route" ]; then
-        echo "No route given"
-        exit 1
-    fi
-
-    create_openshift_resource \
-        "install/${template}.yml" \
-        "$tag" \
-        "$use_local_resource"
-
-    local template_name=$(get_template_name $template $tag)
-    # Use '-restricted' template for tag <= 1.2
-    if [ -n "$tag" ] && [[ $tag =~ 1\.[12] ]]; then
-        template_name="${template_name}-restricted"
-    fi
-
-    local optional_args=""
-    if [ -n "$(readopt --memory-server)" ]; then
-      optional_args="$optional_args -p SERVER_MEMORY_LIMIT=$(readopt --memory-server)"
-    fi
-    if [ -n "$(readopt --memory-meta)" ]; then
-      optional_args="$optional_args -p META_MEMORY_LIMIT=$(readopt --memory-meta)"
-    fi
-    if [ $(hasflag --test-support) ]; then
-      optional_args="$optional_args -p TEST_SUPPORT_ENABLED=true"
-    fi
-
-    oc new-app --template=${template_name} \
-      -p ROUTE_HOSTNAME="${route}" \
-      -p OPENSHIFT_CONSOLE_URL="${console}" \
-      -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
-      -p OPENSHIFT_PROJECT="$(oc project -q)" \
-      -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \
-      $optional_args
-}
-
-# Try first a template with the tag as combination
-get_template_name() {
-    local template=$1
-    local tag=${2:-}
-    if [ -n "$tag" ]; then
-        local candidate="$template-$tag"
-        $(oc get template $candidate >/dev/null 2>&1)
-        if [ $? -eq 0 ]; then
-          echo $candidate
-          return
+    local syndesis_installed=$(oc get syndesis -o name | wc -l)
+    local force=$(hasflag --force)
+    if [ $syndesis_installed -gt 0 ]; then
+        if [ -n "${force}" ]; then
+            oc delete $(oc get syndesis -o name)
         fi
     fi
 
+    local syndesis=$(cat <<EOT
+apiVersion: "syndesis.io/v1alpha1"
+kind: "Syndesis"
+metadata:
+  name: "app"
+spec:
+EOT
+)
+    local extra=""
+    if [ -n "$console" ]; then
+        extra=$(cat <<EOT
 
-    echo $template
+  openShiftConsoleUrl: $console
+EOT
+)
+        syndesis="${syndesis}${extra}"
+    fi
+    if [ -n "$route" ]; then
+        extra=$(cat <<EOT
+
+  routeHostname: $route
+EOT
+)
+        syndesis="${syndesis}${extra}"
+    fi
+    if [ $(hasflag --test-support) ]; then
+        extra=$(cat <<EOT
+
+  testSupport: true
+EOT
+)
+
+        syndesis="${syndesis}${extra}"
+    fi
+
+    local memory_server=$(readopt --memory-server)
+    local memory_meta=$(readopt --memory-meta)
+    if [ -n "$memory_server" ] || [ -n "$memory_meta" ]; then
+        extra=$(cat <<EOT
+
+  components:
+EOT
+)
+    fi
+    if [ -n "$memory_server" ]; then
+        extra=$(cat <<EOT
+
+    server:
+      resources:
+        limits:
+          memory: $memory_server
+EOT
+)
+        syndesis="${syndesis}${extra}"
+    fi
+    if [ -n "$memory_meta" ]; then
+        extra=$(cat <<EOT
+
+    meta:
+      resources:
+        limits:
+          memory: $memory_meta
+EOT
+)
+        syndesis="${syndesis}${extra}"
+    fi
+
+    echo "$syndesis" | cat | oc create -f -
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Error while creating resource"
+        echo "$syndesis"
+        return
+    fi
+}
+
+# Fix up some extra permissions required for a regular minishift user
+# Must be run when root
+fix_permissions_for_operator() {
+    local user="$1"
+    if [ -z "$user" ]; then
+        echo "ERROR: No user provided to fix permissions for"
+        return
+    fi
+    local extra_role_installed=$(oc get role -o name | grep syndesis-extra-permissions)
+    if [ -z "$extra_role_installed" ]; then
+        oc create -f - <<EOT
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: syndesis-extra-permissions
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: operator
+    syndesis.io/component: syndesis-operator
+rules:
+- apiGroups:
+  - syndesis.io
+  resources:
+  - syndesises
+  - syndesises/finalizers
+  verbs: [ get, list, create, update, delete, deletecollection, watch ]
+- apiGroups:
+  - route.openshift.io
+  resources:
+  - routes/custom-host
+  verbs: [ get, list, create, update, delete, deletecollection, watch ]
+---
+
+EOT
+        if [ $? -ne 0 ]; then
+            echo "ERROR: Can not install role 'syndesis-extra-permissions'"
+            return
+        fi
+    fi
+
+    oc policy add-role-to-user --role-namespace="$(oc project -q)" syndesis-extra-permissions $user
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Can not add role 'syndesis-extra-permssionns' to user $user"
+        return
+    fi
 }
 
 create_openshift_resource() {
     local resource=${1:-}
-    local tag=${2:-}
-    local use_local_resource=${3:-}
+    local tag="$(readopt --tag)"
+    local use_local_resource="$(hasflag --local)"
 
-
-    # Adapt to old names if tag is smaller than 1.3. Remove this when going to
-    # GA
-    if [ -n "$tag" ]; then
-        if [[ $tag =~ 1\.[12] ]] && [[ ! $resource =~ restricted ]]; then
-          local base=$(basename $resource .yml)
-          local dir=$(dirname $resource)
-          resource="$dir/../app/deploy/${base}-restricted.yml"
-        fi
-    fi
 
     if [ -n "$use_local_resource" ]; then
         if [ -n "$tag" ]; then
@@ -272,7 +283,7 @@ wait_for_deployments() {
   for dc in $dcs; do
       echo "Waiting for $dc to be scaled to ${replicas_desired}"
       local replicas=$(get_replicas $dc)
-      while [ "$replicas" -ne $replicas_desired ]; do
+      while [ -z "$replicas" ] || [ "$replicas" -ne $replicas_desired ]; do
           echo "Sleeping 10s ..."
           sleep 10
           replicas=$(get_replicas $dc)
@@ -283,42 +294,21 @@ wait_for_deployments() {
 
 get_replicas() {
   local dc=${1}
+  local hasDc=$(oc get dc -o name | grep $dc)
+  if [ -z $hasDc ]; then
+      return
+  fi
   oc get dc $dc -o jsonpath="{.status.availableReplicas}"
 }
 
 patch_imagestreams_for_initial_image() {
-    for is in "syndesis-server" "syndesis-ui" "syndesis-meta" "syndesis-s2i"; do
+    for is in "syndesis-server" "syndesis-ui" "syndesis-meta" "syndesis-s2i" "syndesis-operator"; do
         echo "Patching imagestream $is"
         local replace_kind='{"op": "replace", "path": "/spec/tags/0/from/kind", "value": "ImageStreamTag"}'
         local replace_name="{\"op\": \"replace\", \"path\": \"/spec/tags/0/from/name\", \"value\": \"$is:latest\"}"
         local remove_import_policy='{"op": "remove", "path": "/spec/tags/0/importPolicy"}'
         oc patch is $is --type json -p="[$replace_kind, $replace_name, $remove_import_policy]"
     done
-}
-
-guess_route() {
-    local project=${1:-}
-    if [ -z "${project}" ]; then
-        project=$(oc project -q)
-    fi
-    local log=$(oc create service clusterip smokeservice --tcp=4343 2>&1 && \
-                oc create route edge --service=smokeservice 2>&1)
-    if [ $? != 0 ]; then
-        echo "ERROR: Cannot create pivot route\n$log"
-        exit 1
-    fi
-    local domain=$(oc get route smokeservice -o template  --template='{{.spec.host}}' 2>&1)
-    if [ $? != 0 ]; then
-        echo "ERROR: Cannot extract route: $domain"
-        exit 1
-    fi
-    log=$(oc delete service smokeservice 2>&1 && \
-          oc delete route smokeservice 2>&1)
-    if [ $? != 0 ]; then
-        echo "ERROR: Cannot delete pivot route\n$log"
-        exit 1
-    fi
-    echo "${project}.${domain#*.}"
 }
 
 pod() {
@@ -333,4 +323,69 @@ pod() {
 
 syndesis_deployments() {
   oc get dc -l syndesis.io/app=syndesis -o name | sed -e "s/^deploymentconfigs\///"
+}
+
+compare_version_part() {
+    local test=$1
+    local min=$2
+
+    test=`expr $test`
+    min=`expr $min`
+
+    if [ $test -eq $min ]; then
+        echo 0;
+    elif [ $test -gt $min ]; then
+        echo 1;
+    else
+        # $test -lt $min
+        echo -1
+    fi
+}
+
+compare_oc_version() {
+    local test=$1
+    local min=$2
+
+    echo -n "Testing oc version '$test' against required minimum '$min' ... "
+
+    testparts=( ${test//./ } )
+    minparts=( ${min//./ } )
+
+    local i=0
+    while [ $i -lt ${#minparts[@]} ]
+    do
+        local testpart=${testparts[$i]}
+        local minpart=${minparts[$i]}
+
+        if [ -z "$testpart" ]; then
+            # test version does not extend as far as minimum
+            # in parts so append a 0
+            testpart=0
+        fi
+
+        ret=$(compare_version_part $testpart $minpart)
+        if [ $ret == -1 ]; then
+            #
+            # version part is less than minimum while all preceding
+            # parts were equal so version does not meet minimum
+            #
+            echo "ERROR: oc version ($test) should be at least $min"
+            return
+        elif [ $ret == 1 ]; then
+            #
+            # version part is greater than minimum so no need to test
+            # any further parts as version is greater than minimum
+            #
+            echo "OK"
+            return
+        fi
+
+        #
+        # Only if the version part is equal will the loop continue
+        # with further parts.
+        #
+        i=`expr $i + 1`
+    done
+
+    echo "OK"
 }

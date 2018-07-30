@@ -4,7 +4,6 @@ import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 	appsv1 "github.com/openshift/api/apps/v1"
-	templatev1 "github.com/openshift/api/template/v1"
 )
 
 
@@ -27,16 +26,5 @@ func TestLoadYamlResources(t *testing.T) {
 	assert.NotNil(t, object)
 
 	_, ok := object.(*appsv1.DeploymentConfig)
-	assert.True(t, ok)
-}
-
-func TestLoadYamlAsset(t *testing.T) {
-
-	object, err := LoadKubernetesResourceFromAsset("template.yaml")
-	assert.Nil(t, err)
-
-	assert.NotNil(t, object)
-
-	_, ok := object.(*templatev1.Template)
 	assert.True(t, ok)
 }
