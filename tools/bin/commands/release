@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Maven modules which create Docker images
-IMAGE_MODULES="ui server meta s2i operator"
+JAVA_IMAGE_MODULES="ui server meta s2i"
+
+# All modules which create images
+ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES operator"
 
 release::description() {
     cat - <<EOT
@@ -260,7 +263,7 @@ create_syndesis_docker_images() {
 
     echo "==== Creating Docker images"
     cd $topdir/app
-    for module in $IMAGE_MODULES; do
+    for module in $JAVA_IMAGE_MODULES; do
         # -Pimage binds to fabric8:build
         ./mvnw ${maven_opts} -Prelease,image,flash -Dfabric8.mode=kubernetes -f $module package
     done
@@ -291,7 +294,7 @@ docker_push() {
     local moving_tag=$2
 
     echo "==== Pushing to Docker Hub"
-    for module in $IMAGE_MODULES; do
+    for module in $ALL_IMAGE_MODULES; do
         local image="syndesis/syndesis-$module"
         docker tag "$image:$release_version" "$image:$moving_tag"
         docker push "$image:$release_version"
