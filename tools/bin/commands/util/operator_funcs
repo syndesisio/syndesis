@@ -7,7 +7,7 @@ GO_BUILDER_IMAGE="syndesis/godev:1.10"
 OPERATOR_IMAGE="syndesis/syndesis-operator"
 
 dep_ensure() {
-    local topdir=${1}
+    local top_dir=${1}
     local do_local=${2:-}
 
     if [ "$do_local" ]; then
@@ -41,7 +41,7 @@ gopath_dir() {
 }
 
 build_operator() {
-    local topdir="${1}"
+    local top_dir="${1}"
     local do_local="${2:-}"
     local do_linux="${3:-}"
 
@@ -71,11 +71,11 @@ build_operator() {
 }
 
 create_operator_image() {
-    local topdir=${1}
+    local top_dir=${1}
     local do_docker=${2:-}
     local tag=${3:-latest}
 
-    local build_dir=$(prepare_docker_context "$topdir")
+    local build_dir=$(prepare_docker_context "$top_dir")
     pushd $build_dir > /dev/null
     trap "rm -rf $build_dir" EXIT
 
@@ -107,12 +107,12 @@ create_operator_image() {
 }
 
 prepare_docker_context() {
-    local topdir="${1}"
+    local top_dir="${1}"
     local dir=$(mktemp -d)
-    local operator_dir="$topdir/install/operator"
+    local operator_dir="$top_dir/install/operator"
 
     cp $operator_dir/Dockerfile $operator_dir/syndesis-operator ${dir}/
-    cp $topdir/install/syndesis.yml ${dir}/syndesis-template.yml
+    cp $top_dir/install/syndesis.yml ${dir}/syndesis-template.yml
 
     echo $dir
 }
