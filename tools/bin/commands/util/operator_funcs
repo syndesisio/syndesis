@@ -51,7 +51,7 @@ build_operator() {
         pushd $dir >/dev/null
         if [ "$do_linux" ] && [ $(isOSX) ]; then
             echo "Cross-compiling syndesis-operator for Linux"
-            GOOS="linux" GOARCH="amd64" go build ./cmd/syndesis-operator
+            GOOS="linux" GOARCH="amd64" CGO_ENABLED=0 go build ./cmd/syndesis-operator
         else
             echo "Compiling syndesis-operator with local go"
             go build ./cmd/syndesis-operator
@@ -63,6 +63,7 @@ build_operator() {
         pushd "$top_dir/install/operator" >/dev/null
         docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
                    -v $top_dir:/gopath/src/github.com/syndesisio/syndesis \
+                   -e CGO_ENABLED=0 \
                    $GO_BUILDER_IMAGE \
                    go build ./cmd/syndesis-operator
         popd >/dev/null
