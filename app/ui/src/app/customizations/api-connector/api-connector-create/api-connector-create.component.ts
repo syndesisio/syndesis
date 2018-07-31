@@ -22,6 +22,7 @@ import {
   CustomConnectorRequest,
   CustomApiConnectorAuthSettings
 } from '@syndesis/ui/customizations/api-connector';
+import { I18NService } from '@syndesis/ui/platform';
 
 import { ApiEditorComponent, ApiDefinition } from 'apicurio-design-studio';
 import { OtCommand } from 'oai-ts-commands';
@@ -42,16 +43,20 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   currentActiveStep = 1;
   apiConnectorState$: Observable<ApiConnectorState>;
   displayDefinitionEditor = false;
+  editorHasChanges = false;
 
   @ViewChild('_apiEditor') _apiEditor: ApiEditorComponent;
   apiDef: ApiDefinition;
 
+  @ViewChild('cancelEditorModalTemplate') cancelEditorModalTemplate: TemplateRef<any>;
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
 
+  private cancelEditorModalId = 'create-cancel-editor-modal';
   private cancelModalId = 'create-cancellation-modal';
 
   constructor(
     private apiConnectorStore: Store<ApiConnectorStore>,
+    private i18NService: I18NService,
     private modalService: ModalService,
     private nav: NavigationService,
     private router: Router,
@@ -60,12 +65,8 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.winRef.nativeWindow.dump = YAML.dump;
   }
 
-  public onUserSelection(selection: string): void {
-    //console.log('User selection changed: ', selection);
-  }
-
   public onUserChange(command: OtCommand): void {
-    //console.log('Something happened! ' + JSON.stringify(command));
+    this.editorHasChanges = true;
   }
 
   public showDefinitionEditor(): boolean {
@@ -76,6 +77,10 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.modalService.registerModal(
       this.cancelModalId,
       this.cancelModalTemplate
+    );
+    this.modalService.registerModal(
+      this.cancelEditorModalId,
+      this.cancelEditorModalTemplate
     );
     this.apiConnectorState$ = this.apiConnectorStore.select(
       getApiConnectorState
@@ -99,12 +104,14 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
 
           reader.onload = () => {
             this.apiDef.spec = reader.result;
+            this.apiDef.name = apiConnectorState.name;
           };
 
           reader.readAsText( apiConnectorState.specificationFile );
         } else {
           // TODO next line sets spec to the URL. this is not right as spec needs to be set to the URL JSON response
           this.apiDef.spec = apiConnectorState.configuredProperties.specification;
+          // TODO set this.apiDef.name here
         }
       });
 
@@ -114,6 +121,71 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
       .pipe(first(request => !!request && request.isComplete))
       .subscribe(() => this.redirectBack());
     this.nav.hide();
+  }
+
+  /**
+   * @returns {boolean} `true` if the API Curio editor component is showing or should be shown
+   */
+  get showApiEditor(): boolean {
+    return this.currentActiveStep === 2 && this.displayDefinitionEditor === true;
+  }
+
+  /**
+   * Shows the quit editor confirmation modal only if there are changes in the API Curio editor.
+   */
+  showCancelApiEditorModal(): void {
+    // show cancel dialog only if editor has changes
+    if ( this.editorHasChanges ) {
+      this.modalService.show( this.cancelEditorModalId ).then( modal => {
+        if ( modal.result ) {
+          // go back to review step without using updated API from editor
+          this.editorHasChanges = false;
+          this.displayDefinitionEditor = false;
+      } } );
+    } else {
+      this.displayDefinitionEditor = false;
+    }
+  }
+
+  /**
+   * @param {boolean} doCancel `true` if the modal should be closed
+   */
+  onCancelApiEditor( doCancel: boolean ): void {
+    this.modalService.hide( this.cancelEditorModalId, doCancel );
+  }
+
+  /**
+   * Called when the API Curio editor componenent should be closed and the updated API spec should be used.
+   */
+  onDoneEditing(): void {
+    // save current state of editor
+    const value = this._apiEditor.getValue();
+    this.apiDef.spec = value[ 'spec' ]; // used in onCreateComplete
+    // console.log( '***spec: ' + JSON.stringify( this.apiDef.spec, null, 2 ) );
+
+    // go back to review step
+    this.displayDefinitionEditor = false;
+    // TODO figure out how to rerun validation using update spec
+  }
+
+  get apiName(): string {
+    if ( this.apiDef && this.apiDef.name ) {
+      return this.apiDef.name;
+    }
+
+    return '';
+  }
+
+  /**
+   * @returns {string} the title to use when displaying the API Curio editor component
+   */
+  get editorTitle(): string {
+    if ( this.apiName ) {
+      return this.i18NService.localize( 'customizations.api-client-connectors.edit-specific-api-definition',
+                                        [ this.apiDef.name ] );
+    }
+
+    return this.i18NService.localize( 'customizations.api-client-connectors.edit-api-definition' );
   }
 
   showCancelModal(): void {
@@ -153,12 +225,18 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   }
 
   onCreateComplete(customConnectorRequest: CustomConnectorRequest): void {
+    // update request if changes were made in editor
+    if ( this.editorHasChanges ) {
+      customConnectorRequest.configuredProperties.specification = JSON.stringify( this.apiDef.spec );
+    }
+
     this.apiConnectorStore.dispatch(
       ApiConnectorActions.create(customConnectorRequest)
     );
   }
 
   ngOnDestroy() {
+    this.modalService.unregisterModal(this.cancelEditorModalId);
     this.modalService.unregisterModal(this.cancelModalId);
     this.apiConnectorStore.dispatch(ApiConnectorActions.createCancel());
     this.nav.show();

@@ -15,11 +15,24 @@
         "delete-extension-modal-lead": "Are you sure you want to delete the \"{{0}}\" extension?"
       },
       "api-client-connectors": {
+        "api-client-connector": "API Client Connector",
+        "api-client-connectors": "{{api-client-connector}}s",
         "delete-connector-modal": "Deleting a connector deletes all connections that were created from that connector but does not affect a running integration that uses one of those connections.",
         "delete-connector-modal-title": "Confirm Delete?",
         "delete-connector-modal-lead": "Are you sure you want to delete the \"{{0}}\" connector?",
+        "edit-api-definition": "Edit API Definition",
+        "edit-specific-api-definition": "Edit {{0}} API Definition",
+        "editor-back-button-tooltip": "Go back to Review/Edit API Definition step",
+        "editor-save-button-tooltip": "Save changes and return to Review/Edit API Definition step",
         "cancel-connector-modal": "You have not finished creating the API client connector. If you cancel now you will lose data you already entered. Do you still want to cancel?",
-        "cancel-connector-modal-lead": "Do you really want to cancel?"
+        "cancel-connector-modal-lead": "Do you really want to cancel?",
+        "cancel-api-editor-modal": "The OpenAPI specification of \"{{0}}\" has been changed. If you exit the editor now you will lose your changes. Do you still want to exit editing the API definition?",
+        "cancel-api-editor-unnamed-modal": "The OpenAPI specification has been changed. If you exit the editor now you will lose your changes. Do you still want to exit editing the API definition?",
+        "cancel-api-editor-modal-lead": "Are you sure you want to exit editing the API definition?",
+        "create-upload-spec-step-title": "Upload OpenAPI Specification",
+        "create-review-step-title": "Review Actions",
+        "create-security-step-title": "Specify Security",
+        "create-details-step-title": "Review/Edit Connector Details"
       }
     },
     "integrations": {
@@ -117,7 +130,7 @@
       "home": "{{home}}",
       "integrations": "{{integrations}}",
       "connections": "{{connections}}",
-      "customizations": "Customizations",
+      "customizations": "{{customizations}}",
       "settings": "Settings"
     },
     "links": {
@@ -246,6 +259,7 @@
       "connection-name": "{{Connection}} Name",
       "connections": "{{connection}}s",
       "configuration-required": "Configuration Required",
+      "customizations": "Customizations",
       "step": "Step",
       "steps": "{{step}}s",
       "connector": "Connector",
