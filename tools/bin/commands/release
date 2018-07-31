@@ -116,13 +116,13 @@ release::run() {
     create_upgrade_docker_image "$topdir" "$release_version"
 
     # Ensure that all dependencies are up-to-date
-    dep_ensure
+    dep_ensure "$topdir"
 
     # Create the operator image, which use the freshly created template
-    build_operator "" "true"
+    build_operator "$topdir" "" "true"
 
     # Create the operator image
-    create_operator_image "true" "$release_version"
+    create_operator_image "$topdir" "true" "$release_version"
 
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then

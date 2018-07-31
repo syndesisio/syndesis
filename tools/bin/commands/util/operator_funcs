@@ -7,7 +7,8 @@ GO_BUILDER_IMAGE="syndesis/godev:1.10"
 OPERATOR_IMAGE="syndesis/syndesis-operator"
 
 dep_ensure() {
-    local do_local=${1:-}
+    local topdir=${1}
+    local do_local=${2:-}
 
     if [ "$do_local" ]; then
         local dir=$(gopath_dir)
@@ -17,7 +18,6 @@ dep_ensure() {
         echo "Running 'dep ensure'"
         dep ensure -vendor-only -v
     else
-        local top_dir=$(appdir ".")
         echo "Running 'dep ensure' with $GO_BUILDER_IMAGE"
         [ -d "dep-cache" ] || mkdir dep-cache
         docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
@@ -41,8 +41,9 @@ gopath_dir() {
 }
 
 build_operator() {
-    local do_local="${1:-}"
-    local do_linux="${2:-}"
+    local topdir="${1}"
+    local do_local="${2:-}"
+    local do_linux="${3:-}"
 
     if [ "${do_local}" ]; then
         echo "Running local build"
@@ -59,7 +60,6 @@ build_operator() {
         popd >/dev/null
     else
         echo "Creating syndesis-operator with $GO_BUILDER_IMAGE"
-        local top_dir=$(appdir ".")
         pushd "$top_dir/install/operator" >/dev/null
         docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
                    -v $top_dir:/gopath/src/github.com/syndesisio/syndesis:z \
@@ -71,10 +71,11 @@ build_operator() {
 }
 
 create_operator_image() {
-    local do_docker=${1:-}
-    local tag=${2:-latest}
+    local topdir=${1}
+    local do_docker=${2:-}
+    local tag=${3:-latest}
 
-    local build_dir=$(prepare_docker_context)
+    local build_dir=$(prepare_docker_context "$topdir")
     pushd $build_dir > /dev/null
     trap "rm -rf $build_dir" EXIT
 
@@ -106,8 +107,8 @@ create_operator_image() {
 }
 
 prepare_docker_context() {
+    local topdir="${1}"
     local dir=$(mktemp -d)
-    local topdir=$(appdir ".")
     local operator_dir="$topdir/install/operator"
 
     cp $operator_dir/Dockerfile $operator_dir/syndesis-operator ${dir}/
