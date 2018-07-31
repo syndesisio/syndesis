@@ -72,9 +72,10 @@ public class ActivityTrackingController implements Closeable {
     private final KubernetesClient client;
     private final Map<String, PodLogMonitor> podHandlers = new HashMap<>();
     private final JsonDB jsondb;
-    private final KubernetesSupport kubernetesSupport;
     private ScheduledExecutorService scheduler;
     private ExecutorService executor;
+
+    final KubernetesSupport kubernetesSupport;
 
     protected final LinkedBlockingDeque<BatchOperation> eventQueue = new LinkedBlockingDeque<>(1000);
     protected final AtomicBoolean stopped = new AtomicBoolean();
@@ -209,6 +210,7 @@ public class ActivityTrackingController implements Closeable {
      * @param name
      * @return
      */
+    @SuppressWarnings("PMD.InvalidSlf4jMessageFormat") // false positive
     private static ThreadFactory threadFactory(String name) {
         return r -> {
             Thread thread = new Thread(null, r, name, 1024);
@@ -241,7 +243,7 @@ public class ActivityTrackingController implements Closeable {
                 if (handler == null) {
                     // create a new handler.
                     try {
-                        handler = new PodLogMonitor(this, pod);
+                        handler = createLogMonitor(pod);
                         handler.start();
 
                         LOG.info("Created handler for pod: {}", handler.podName);
@@ -281,6 +283,10 @@ public class ActivityTrackingController implements Closeable {
             Thread.currentThread().setName("Logs Controller Scheduler [idle]");
         }
 
+    }
+
+    protected PodLogMonitor createLogMonitor(Pod pod) throws IOException {
+        return new PodLogMonitor(this, pod);
     }
 
     protected PodList listPods() {

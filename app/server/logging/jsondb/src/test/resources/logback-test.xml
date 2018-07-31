@@ -23,6 +23,4 @@
     <appender-ref ref="STDOUT" />
   </root>
 
-  <logger name="org.testcontainers.utility.RegistryAuthLocator" level="OFF" />
-
 </configuration>

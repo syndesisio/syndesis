@@ -20,9 +20,11 @@ import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -46,9 +48,7 @@ import io.syndesis.server.endpoint.v1.handler.activity.ActivityStep;
 import io.syndesis.server.jsondb.JsonDBException;
 import io.syndesis.server.openshift.OpenShiftService;
 
-/**
- *
- */
+@SuppressWarnings("PMD.GodClass")
 class PodLogMonitor implements Consumer<InputStream> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivityTrackingController.class);
@@ -116,14 +116,14 @@ class PodLogMonitor implements Consumer<InputStream> {
     @Override
     public void accept(InputStream is) {
         if (is != null) {
-            try {
-                try {
-                    processLogStream(is);
-                } finally {
-                    is.close();
-                }
+            try(InputStream stream = is) {
+                processLogStream(stream);
+            } catch (SocketTimeoutException | EOFException e) {
+                LOG.info("Streaming ended for pod {} due to: {}", podName, message(e));
+                LOG.debug("Streaming ended for pod {}", podName, e);
             } catch (InterruptedException | IOException e) {
                 LOG.info("Failure occurred while processing controller for pod: {}", podName, e);
+            } finally {
                 logsController.schedule(this::run, 5, TimeUnit.SECONDS);
             }
         } else {
@@ -131,7 +131,7 @@ class PodLogMonitor implements Consumer<InputStream> {
         }
     }
 
-    private void processLogStream(final InputStream is) throws IOException, InterruptedException {
+    void processLogStream(final InputStream is) throws IOException, InterruptedException {
         ByteArrayOutputStream line = new ByteArrayOutputStream();
         int c;
 
@@ -198,7 +198,7 @@ class PodLogMonitor implements Consumer<InputStream> {
     }
 
     @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ExcessiveMethodLength", "PMD.NPathComplexity", ""})
-    private void processLine(String line) throws IOException {
+    void processLine(String line) throws IOException {
 
         // Does it look like a data of json structured output?
         Matcher matcher = LOG_LINE_REGEX.matcher(line);
@@ -314,7 +314,7 @@ class PodLogMonitor implements Consumer<InputStream> {
         }
     }
 
-    private JsonNode toJsonNode(Map<String, Object> json) throws IOException {
+    private static JsonNode toJsonNode(Map<String, Object> json) throws IOException {
         return Json.reader().readTree(Json.writer().writeValueAsString(json));
     }
 
@@ -325,12 +325,25 @@ class PodLogMonitor implements Consumer<InputStream> {
         batch.put("/integrations/" + integrationId, Boolean.TRUE);
     }
 
-    private String validate(String value) {
+    private static String validate(String value) {
         if (value == null) {
             return null;
         }
         return validateKey(value);
     }
 
+    private static String message(final Throwable e) {
+        final StringBuilder buffy = new StringBuilder()//
+            .append(e.getClass().getName())//
+            .append(": ")//
+            .append(e.getMessage());
+
+        if (e.getCause() != null && e.getCause() != e) {
+            buffy.append(", caused by: ");
+            buffy.append(message(e.getCause()));
+        }
+
+        return buffy.toString();
+    }
 
 }

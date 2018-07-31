@@ -15,90 +15,38 @@
  */
 package io.syndesis.server.logging.jsondb.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Phaser;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
-import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.sun.net.httpserver.HttpServer;
 
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.PodBuilder;
+import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
+import io.syndesis.server.jsondb.JsonDB;
+import io.syndesis.server.openshift.OpenShiftService;
 
 import org.junit.After;
-import org.junit.AssumptionViolatedException;
 import org.junit.Before;
-import org.junit.ClassRule;
 import org.junit.Test;
-import org.testcontainers.containers.Container.ExecResult;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.Network;
-import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy;
-import org.testcontainers.containers.wait.strategy.WaitStrategyTarget;
+import org.skife.jdbi.v2.DBI;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-
-import eu.rekawek.toxiproxy.Proxy;
-import eu.rekawek.toxiproxy.ToxiproxyClient;
-import eu.rekawek.toxiproxy.model.ToxicDirection;
+import static org.mockito.Mockito.mock;
 
 public class KubernetesSupportIT {
-
-    private static final int TOXIPROXY_API_PORT = 8474;
-
-    private static final class CheckSinglePort extends HostPortWaitStrategy {
-        private final int port;
-
-        public CheckSinglePort(final int port) {
-            this.port = port;
-        }
-
-        @Override
-        protected Set<Integer> getLivenessCheckPorts() {
-            final WaitStrategyTarget defaultTarget = waitStrategyTarget;
-            waitStrategyTarget = new WaitStrategyTarget() {
-
-                @Override
-                public String getContainerId() {
-                    return defaultTarget.getContainerId();
-                }
-
-                @Override
-                public InspectContainerResponse getContainerInfo() {
-                    return defaultTarget.getContainerInfo();
-                }
-
-                @Override
-                public List<Integer> getExposedPorts() {
-                    return Collections.singletonList(port);
-                }
-            };
-            return Collections.singleton(toxiproxy.getMappedPort(port));
-        }
-    }
-
-    @ClassRule
-    public static GenericContainer<?> toxiproxy = new GenericContainer<>("shopify/toxiproxy:2.1.3").withExposedPorts(TOXIPROXY_API_PORT, 80).withNetwork(Network.SHARED)
-        .waitingFor(new CheckSinglePort(TOXIPROXY_API_PORT));
 
     final AtomicInteger count = new AtomicInteger(0);
 
@@ -106,11 +54,10 @@ public class KubernetesSupportIT {
 
     HttpServer server;
 
-    private Proxy proxy;
-
     @Before
     public void setup() throws IOException {
         server = HttpServer.create(new InetSocketAddress("0.0.0.0", 0), 0);
+        server.setExecutor(Executors.newCachedThreadPool());
         server.start();
 
         running.set(true);
@@ -118,110 +65,93 @@ public class KubernetesSupportIT {
             exchange.sendResponseHeaders(200, 0);
             try (PrintStream body = new PrintStream(exchange.getResponseBody())) {
                 while (running.get()) {
-                    body.println(count.incrementAndGet());
+                    int current = count.incrementAndGet();
+                    body.println(current);
                     body.flush();
+
+                    if (current > 5) {
+                        // provoke a timeout after 5 lines sent, with the sleep
+                        // below it waits for 1.6 sec
+                        Thread.sleep(600);
+                    }
                     Thread.sleep(1000);
                 }
             } catch (final InterruptedException ignored) {
+                return;
+            } finally {
+                exchange.close();
             }
         });
-
-        final int port = server.getAddress().getPort();
-        final InetAddress addr = determineAccessibleAddress(port);
-        final String upstream = addr.getHostAddress() + ":" + port;
-        proxy = new ToxiproxyClient("localhost", toxiproxy.getMappedPort(TOXIPROXY_API_PORT)).createProxy("http", "0.0.0.0:80", upstream);
     }
 
     @Test
-    public void shouldTolerateNetworkTimeouts() throws IOException {
-        final String masterUrl = "http://" + toxiproxy.getContainerIpAddress() + ":" + toxiproxy.getMappedPort(80);
+    public void shouldTolerateNetworkTimeouts() throws IOException, InterruptedException, ExecutionException {
+        final String masterUrl = "http://0.0.0.0:" + server.getAddress().getPort();
         final Config config = new ConfigBuilder().withMasterUrl(masterUrl).withNamespace("syndesis").build();
 
-        final Thread outer = Thread.currentThread();
-        final AtomicReference<AssertionError> error = new AtomicReference<>();
         final AtomicInteger counter = new AtomicInteger(-1);
 
         try (final NamespacedKubernetesClient client = new DefaultKubernetesClient(config)) {
-            final KubernetesSupport kubernetesSupport = new KubernetesSupport(client);
+            final Phaser phaser = new Phaser(2);
 
-            final Consumer<InputStream> handler = stream -> {
-                try {
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            final int number = Integer.parseInt(line);
-                            if (counter.get() == -1) {
-                                counter.set(number);
-                            } else {
-                                assertThat(counter.compareAndSet(number - 1, number)).as("Skipped over line").isTrue();
-                            }
-                            if (number > 5) {
-                                proxy.toxics().timeout("half open", ToxicDirection.DOWNSTREAM, 0);
-                            }
-                        }
-                    } catch (final IOException e) {
-                        fail("Unable to read log lines", e);
-                    }
-                } catch (final AssertionError e) {
-                    error.set(e);
-                    outer.interrupt();
+            final Pod pod = new PodBuilder()//
+                .withNewMetadata()//
+                .withName("pod")//
+                .addToLabels(OpenShiftService.INTEGRATION_ID_LABEL, "id")//
+                .addToLabels(OpenShiftService.DEPLOYMENT_VERSION_LABEL, "1")//
+                .endMetadata()//
+                .withNewStatus()//
+                .withPhase("Running")//
+                .endStatus()//
+                .build();
+
+            final JsonDB jsondb = mock(JsonDB.class);
+            final DBI dbi = mock(DBI.class);
+
+            // we're using the mock HTTP server to emulate K8S API server, but
+            // only for the log endpoint, so we need to stub out some of the
+            // calls that would go to the live server and replace the
+            // PodLogMonitor with test version
+            final ActivityTrackingController controller = new ActivityTrackingController(jsondb, dbi, client) {
+                @Override
+                protected boolean isPodRunning(String name) {
+                    return true;
+                }
+
+                @Override
+                protected PodList listPods() {
+                    final PodList podList = new PodList();
+                    podList.setItems(Collections.singletonList(pod));
+
+                    return podList;
+                }
+
+                @Override
+                protected PodLogMonitor createLogMonitor(Pod pod) throws IOException {
+                    return new TestPodLogMonitor(this, pod, counter, phaser);
                 }
             };
+            // we change the timeout to 1.5 sec so we don't have to wait for the
+            // default 35min, above we add a timeout after 5 lines of 1.6 sec
+            controller.kubernetesSupport.setReadTimeout(Duration.ofMillis(1500));
+            controller.open();
 
-            final ExecutorService threads = Executors.newFixedThreadPool(2);
-            threads.submit(() -> {
-                try {
-                    kubernetesSupport.watchLog("pod", handler, null, threads);
-                } catch (IOException e) {
-                    error.set(new AssertionError(e));
-                }
-            });
+            // we should have received > 5 log lines
+            phaser.arriveAndAwaitAdvance();
+            assertThat(counter.get()).isGreaterThanOrEqualTo(5);
+
+            // after 5 sec delay controller reschedules
+            // KubernetesSupport::watchLog, some lines are skipped during this,
+            // but for this test we don't care about that
+            phaser.arriveAndAwaitAdvance();
+            assertThat(counter.get()).isGreaterThan(10);
         }
-
-        try {
-            Thread.sleep(15 * 1000);
-        } catch (final InterruptedException ignored) {
-            final AssertionError assertionError = error.get();
-            if (assertionError != null) {
-                throw assertionError;
-            }
-        }
-
-        assertThat(counter.get()).isGreaterThan(10);
     }
 
     @After
     public void stopServer() throws IOException {
         running.compareAndSet(true, false);
         server.stop(0);
-
-        // testcontainers rule get's interrupted by JUnit runner and
-        // subsequently fails the test, this is why we manually stop the
-        // container here so we can handle the interrupted exception
-        final ExecutorService shutdown = Executors.newSingleThreadExecutor();
-        shutdown.submit(toxiproxy::stop);
-        try {
-            shutdown.awaitTermination(2, TimeUnit.SECONDS);
-        } catch (InterruptedException ignored) {
-        }
     }
 
-    private static InetAddress determineAccessibleAddress(final int port) throws IOException {
-        for (final NetworkInterface inf : Collections.list(NetworkInterface.getNetworkInterfaces())) {
-            for (final InetAddress addr : Collections.list(inf.getInetAddresses())) {
-                if (!addr.isLoopbackAddress()) {
-                    try {
-                        final ExecResult result = toxiproxy.execInContainer("/usr/bin/nc", "-zv", addr.getHostAddress() + ":" + port);
-                        if (result.getStderr().contains("open")) {
-                            return addr;
-                        }
-                    } catch (UnsupportedOperationException | InterruptedException ignored) {
-                        continue;
-                    }
-                }
-            }
-        }
-
-        throw new AssumptionViolatedException("Server is bound to a unreachable address from the toxiproxy container");
-    }
 }
