@@ -87,7 +87,7 @@ jobs:
           command: |
             apt-get update
             apt-get install libxss1 patch
-            ./tools/bin/syndesis build --batch-mode --module ui --image-mode=docker | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module ui --docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -146,7 +146,7 @@ jobs:
       - run:
           name: Build Meta
           command: |
-            ./tools/bin/syndesis build --batch-mode --module meta --image-mode=docker | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module meta --docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -249,7 +249,7 @@ jobs:
       - run:
           name: Build S2I Builder image
           command: |
-            ./tools/bin/syndesis build --batch-mode --module s2i --image-mode docker | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module s2i --docker | tee build_log.txt
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
@@ -274,7 +274,7 @@ jobs:
       - run:
           name: Build Server
           command: |
-            ./tools/bin/syndesis build --batch-mode --module server --image-mode docker | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module server --docker | tee build_log.txt
       - run:
           name: Collect API docs
           command: |
