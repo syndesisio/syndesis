@@ -83,7 +83,9 @@
       "cancel-create-modal": "You have not finished creating the connection. If you cancel now you will lose data you already entered. Do you still want to cancel?",
       "cancel-create-modal-lead": "Do you really want to cancel?",
       "tech-preview": "Technology Preview",
-      "tech-preview-info": "Technology Previews provide early access to features that are not yet supported. Feedback about these features is welcome. Send a message to "
+      "tech-preview-info": "provide early access to features that are not yet supported. Feedback about these features is welcome. Send a message to",
+      "tech-preview-link": "https://access.redhat.com/support/offerings/techpreview",
+      "tech-preview-link-text": "Technology Previews"
     },
     "dashboard": {
       "heading": "Dashboard",

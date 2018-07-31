@@ -5,6 +5,8 @@ import { Connection, Connector } from '@syndesis/ui/platform';
   selector: 'syndesis-card-tech-preview',
   template: `
     <ng-template #synTechPreviewInfo>
+      <a rel="nofollow" role="link" target="_blank" href="{{ 'connections.tech-preview-link' | synI18n }}">
+        {{ 'connections.tech-preview-link-text' | synI18n }}</a>
       {{ 'connections.tech-preview-info' | synI18n }}
       <a href="mailto:{{ 'shared.email' | synI18n}}">{{ 'shared.email' | synI18n }}</a>.
     </ng-template>
