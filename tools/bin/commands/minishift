@@ -67,7 +67,8 @@ minishift::run() {
         local context=$(readopt --context -c)
         if [ -z "${context}" ]; then
             #recreate_context $context
-            context="minishift"
+            context=$(minishift profile list |grep '\(Active\)'|awk '{print $2}')
+            context=${context:-minishift}
         fi
 
         # Switch to minishift to be safe when deleting projects
