@@ -19,13 +19,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
+
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithKind;
 import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.util.IndexedProperty;
-import org.immutables.value.Value;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @IndexedProperty.Multiple({
     @IndexedProperty("integrationId"),
@@ -81,6 +82,11 @@ public interface IntegrationDeployment extends IntegrationDeploymentBase, WithId
         Map<String, String> stepsDone = new HashMap<>(getStepsDone());
         stepsDone.remove("deploy");
         return builder().targetState(IntegrationDeploymentState.Unpublished).stepsDone(stepsDone).build();
+    }
+
+    default IntegrationDeployment deleted() {
+        final Integration integration = new Integration.Builder().createFrom(getSpec()).isDeleted(true).build();
+        return builder().spec(integration).build();
     }
 
 }

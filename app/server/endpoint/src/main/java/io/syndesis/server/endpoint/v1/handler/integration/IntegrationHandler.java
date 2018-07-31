@@ -15,19 +15,23 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -36,11 +40,15 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import com.google.common.collect.MapDifference;
-import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.DataShape;
@@ -86,7 +94,9 @@ import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.util.DataManagerSupport;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.MapDifference;
+import com.google.common.collect.Maps;
 
 @SuppressWarnings("PMD.GodClass")
 @Path("/integrations")
@@ -94,6 +104,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class IntegrationHandler extends BaseHandler
     implements Lister<IntegrationOverview>, Getter<IntegrationOverview>, Creator<Integration>, Deleter<Integration>, Updater<Integration>, Validating<Integration> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationHandler.class);
 
     private final OpenShiftService openShiftService;
     private final Inspectors inspectors;
@@ -155,6 +167,7 @@ public class IntegrationHandler extends BaseHandler
 
     @Override
     public Integration create(@Context SecurityContext sec, @ConvertGroup(from = Default.class, to = AllValidations.class) final Integration integration) {
+        checkDuplicateName(null, integration.getName());
 
         Integration encryptedIntegration = encryptionSupport.encrypt(integration);
 
@@ -169,6 +182,8 @@ public class IntegrationHandler extends BaseHandler
 
     @Override
     public void update(String id, @ConvertGroup(from = Default.class, to = AllValidations.class) Integration integration) {
+        checkDuplicateName(id, integration.getName());
+
         Integration existing = getIntegration(id);
 
         Integration updatedIntegration = new Integration.Builder()
@@ -180,6 +195,29 @@ public class IntegrationHandler extends BaseHandler
         getDataManager().update(updatedIntegration);
     }
 
+    @Override
+    public void patch(String id, JsonNode patchJson) throws IOException {
+        // is the integration being renamed?
+        final JsonNode name = patchJson.findValue("name");
+        if (name != null) {
+            checkDuplicateName(id, name.asText());
+        }
+        Updater.super.patch(id, patchJson);
+    }
+
+    // avoid name conflicts with existing integration deployments
+    private void checkDuplicateName(@Nullable String id, String nameText) {
+        final ListResult<IntegrationDeployment> deployments = getDataManager().fetchAll(IntegrationDeployment.class);
+        for (IntegrationDeployment deployment : deployments) {
+            if (!deployment.getIntegrationId().get().equals(id)
+                    && !deployment.getSpec().isDeleted()
+                    && deployment.getSpec().getName().equals(nameText)) {
+                throw new ClientErrorException(
+                        String.format("Name already used by integration %s, version %s", deployment.getSpec().getName(), deployment.getVersion()),
+                        Response.Status.CONFLICT);
+            }
+        }
+    }
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
@@ -218,14 +256,18 @@ public class IntegrationHandler extends BaseHandler
     public void delete(String id) {
         Integration existing = getIntegration(id);
 
-        //Set all integration status to Undeployed.
+        //Set all status to Undeployed and specs as deleted for all deployments
         Set<String> deploymentIds = getDataManager().fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", existing.getId().get());
+        Set<String> deploymentNames = new HashSet<>();
         if (deploymentIds != null && !deploymentIds.isEmpty()) {
             deploymentIds.stream()
                 .map(i -> getDataManager().fetch(IntegrationDeployment.class, i))
                 .filter(r -> r != null)
-                .map(r -> r.unpublishing())
-                .forEach(r -> getDataManager().update(r));
+                .map(r -> r.unpublishing().deleted())
+                .forEach(r -> {
+                    getDataManager().update(r);
+                    deploymentNames.add(r.getSpec().getName());
+                });
         }
 
         Integration updatedIntegration = new Integration.Builder()
@@ -234,7 +276,15 @@ public class IntegrationHandler extends BaseHandler
             .isDeleted(true)
             .build();
 
-        openShiftService.delete(existing.getName());
+        // delete ALL versions
+        for (String name : deploymentNames) {
+            try {
+                openShiftService.delete(name);
+            } catch (KubernetesClientException e) {
+                LOGGER.error("Error deleting integration deployment {}", name);
+            }
+        }
+
         Updater.super.update(id, updatedIntegration);
     }
 
