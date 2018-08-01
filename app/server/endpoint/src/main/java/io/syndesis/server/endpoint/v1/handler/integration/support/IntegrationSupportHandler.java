@@ -359,7 +359,8 @@ public class IntegrationSupportHandler {
 
         // check for duplicate integration name
         String integrationName = integration.getName();
-        final Set<String> names = getAllPropertyValues(IntegrationDeployment.class, d -> d.getSpec().getName(), d -> !d.getSpec().isDeleted());
+        final Set<String> names = getAllPropertyValues(Integration.class, Integration::getName, i -> !i.isDeleted());
+        names.addAll(getAllPropertyValues(IntegrationDeployment.class, d -> d.getSpec().getName(), d -> !d.getSpec().isDeleted()));
         if (names.contains(integrationName)) {
             integrationName = getNextAvailableName(integrationName, names);
             builder.name(integrationName);
