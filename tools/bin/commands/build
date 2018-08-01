@@ -21,6 +21,7 @@ build::usage() {
 -e  --ensure                  If building a Go module, run 'dep ensure' before building
 -l  --local                   For Go builds: Use a locally installed go, otherwise run the Go build from a container
 -c  --clean                   Run clean builds (mvn clean)
+    --resume <m1>             Resume build from maven module (mvn -rf m1)
     --batch-mode              Run mvn in batch mode
     --camel-snapshot          Run a build with a specific Camel snapshot. You'll need to set an environment variable CAMEL_SNAPSHOT_VERSION with the SNAPSHOT version you want to use.
 EOT
@@ -114,6 +115,11 @@ maven_args() {
     fi
     if [ -n "${project}" ]; then
         args="$args -Dfabric8.namespace=${project}"
+    fi
+
+    local resume_from="$(readopt --resume)"
+    if [ -n "${resume_from}" ]; then
+        args="$args -rf ${resume_from}"
     fi
 
     if [ "$(hasflag --clean -c)" ]; then
