@@ -41,8 +41,10 @@ import org.immutables.value.Value;
 @SuppressWarnings("immutables")
 public interface OAuthApp extends WithId<OAuthApp>, WithName, WithProperties {
 
+    String HOST_TAG = "host";
+
     Set<String> OAUTH_TAGS = Collections.unmodifiableSet(new HashSet<>(
-        Arrays.asList(Credentials.CLIENT_ID_TAG, Credentials.CLIENT_SECRET_TAG, Credentials.AUTHORIZATION_URL_TAG, Credentials.ACCESS_TOKEN_URL_TAG, Credentials.SCOPE_TAG)));
+        Arrays.asList(Credentials.CLIENT_ID_TAG, Credentials.CLIENT_SECRET_TAG, Credentials.AUTHORIZATION_URL_TAG, Credentials.ACCESS_TOKEN_URL_TAG, Credentials.SCOPE_TAG, HOST_TAG)));
 
     class Builder extends ImmutableOAuthApp.Builder {
 
@@ -139,6 +141,7 @@ public interface OAuthApp extends WithId<OAuthApp>, WithName, WithProperties {
             .withTaggedPropertyFrom(connector, Credentials.AUTHORIZATION_URL_TAG)//
             .withTaggedPropertyFrom(connector, Credentials.ACCESS_TOKEN_URL_TAG)//
             .withTaggedPropertyFrom(connector, Credentials.SCOPE_TAG)//
+            .withTaggedPropertyFrom(connector, HOST_TAG)//
             .build();
     }
 }
