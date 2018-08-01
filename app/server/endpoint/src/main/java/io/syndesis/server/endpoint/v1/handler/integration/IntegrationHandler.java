@@ -281,7 +281,7 @@ public class IntegrationHandler extends BaseHandler
             try {
                 openShiftService.delete(name);
             } catch (KubernetesClientException e) {
-                LOGGER.error("Error deleting integration deployment {}", name);
+                LOGGER.error("Error deleting integration deployment {}: {}", name, e.getMessage());
             }
         }
 
