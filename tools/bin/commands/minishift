@@ -172,5 +172,9 @@ start_minishift() {
     minishift addons enable admin-user
 
     echo "Starting minishift ...."
-    minishift start ${extra_args:-}--memory ${memory:-$DEFAULT_RAM} --cpus ${cpus:-$DEFAULT_CPUS} --disk-size ${disksize:-$DEFAULT_DISK_SIZE} --openshift-version ${openshift_version:-$DEFAULT_OPENSHIFT_VERSION}
+    minishift start ${extra_args:-}\
+            --memory ${memory:-$DEFAULT_RAM} \
+            --cpus ${cpus:-$DEFAULT_CPUS} \
+            --disk-size ${disksize:-$DEFAULT_DISK_SIZE} \
+            --openshift-version ${openshift_version:-$DEFAULT_OPENSHIFT_VERSION}
 }

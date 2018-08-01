@@ -39,6 +39,8 @@ build::run() {
 
     local modules="$(extract_modules)"
 
+    local top_dir="$(appdir .)"
+
     # All Maven modules (all modules minus operator)
     local maven_modules=$(filter_module "operator" "$modules")
     if [ -z "$modules" ] || [ -n "$maven_modules" ]; then
@@ -47,24 +49,24 @@ build::run() {
 
     # Build operator if required
     if $(should_build "operator" "$modules"); then
-        operator
+        operator $top_dir
     fi
 
 }
 
 operator() {
+    local top_dir=$1
     echo "=============================================================================="
     echo "Building syndesis-operator"
     echo "=============================================================================="
 
-    local topdir=$(appdir ".")
     if [ "$(hasflag -e --ensure)" ]; then
-        dep_ensure "$topdir" "$(hasflag -l --local)"
+        dep_ensure "$top_dir" "$(hasflag -l --local)"
     fi
-    build_operator "$topdir" "$(hasflag -l --local)" "$(hasflag -i --image --images)"
+    build_operator "$top_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)"
 
     if [ "$(hasflag -i --image --images --docker)" ]; then
-        create_operator_image "$topdir" "$(hasflag --docker)"
+        create_operator_image "$top_dir" "$(hasflag --docker)"
     fi
 }
 
