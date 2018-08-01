@@ -20,7 +20,7 @@
   <parent>
     <groupId>io.syndesis.extension</groupId>
     <artifactId>extension-parent</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4.2-20180801</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
