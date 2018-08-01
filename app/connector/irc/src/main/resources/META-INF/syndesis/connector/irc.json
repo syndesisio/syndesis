@@ -47,8 +47,8 @@
                             "nickname": {
                                 "componentProperty": false,
                                 "deprecated": false,
-                                "description": "Nickname",
-                                "displayName": "nickname",
+                                "description": "Nickname for IRC connector user",
+                                "displayName": "Nickname",
                                 "javaType": "string",
                                 "kind": "parameter",
                                 "required": true,
@@ -60,8 +60,8 @@
                             "hostname": {
                                 "componentProperty": false,
                                 "deprecated": false,
-                                "description": "hostname",
-                                "displayName": "hostname",
+                                "description": "IRC Server hostname",
+                                "displayName": "Hostname",
                                 "javaType": "string",
                                 "kind": "parameter",
                                 "required": true,
@@ -73,8 +73,8 @@
                             "port": {
                                 "componentProperty": false,
                                 "deprecated": false,
-                                "description": "port",
-                                "displayName": "port_",
+                                "description": "IRC Server port",
+                                "displayName": "Port",
                                 "javaType": "int",
                                 "kind": "parameter",
                                 "required": true,
@@ -86,8 +86,8 @@
                             "channels": {
                                 "componentProperty": false,
                                 "deprecated": false,
-                                "description": "channels",
-                                "displayName": "channels",
+                                "description": "IRC channels to join",
+                                "displayName": "Channels",
                                 "javaType": "string",
                                 "kind": "parameter",
                                 "required": true,
