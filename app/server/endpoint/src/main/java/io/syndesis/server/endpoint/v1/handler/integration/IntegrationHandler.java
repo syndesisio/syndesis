@@ -15,7 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,13 +24,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
-import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -40,7 +37,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
@@ -94,7 +90,6 @@ import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.util.DataManagerSupport;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 
@@ -167,8 +162,6 @@ public class IntegrationHandler extends BaseHandler
 
     @Override
     public Integration create(@Context SecurityContext sec, @ConvertGroup(from = Default.class, to = AllValidations.class) final Integration integration) {
-        checkDuplicateName(null, integration.getName());
-
         Integration encryptedIntegration = encryptionSupport.encrypt(integration);
 
         Integration updatedIntegration = new Integration.Builder()
@@ -182,8 +175,6 @@ public class IntegrationHandler extends BaseHandler
 
     @Override
     public void update(String id, @ConvertGroup(from = Default.class, to = AllValidations.class) Integration integration) {
-        checkDuplicateName(id, integration.getName());
-
         Integration existing = getIntegration(id);
 
         Integration updatedIntegration = new Integration.Builder()
@@ -193,30 +184,6 @@ public class IntegrationHandler extends BaseHandler
             .build();
 
         getDataManager().update(updatedIntegration);
-    }
-
-    @Override
-    public void patch(String id, JsonNode patchJson) throws IOException {
-        // is the integration being renamed?
-        final JsonNode name = patchJson.findValue("name");
-        if (name != null) {
-            checkDuplicateName(id, name.asText());
-        }
-        Updater.super.patch(id, patchJson);
-    }
-
-    // avoid name conflicts with existing integration deployments
-    private void checkDuplicateName(@Nullable String id, String nameText) {
-        final ListResult<IntegrationDeployment> deployments = getDataManager().fetchAll(IntegrationDeployment.class);
-        for (IntegrationDeployment deployment : deployments) {
-            if (!deployment.getIntegrationId().get().equals(id)
-                    && !deployment.getSpec().isDeleted()
-                    && deployment.getSpec().getName().equals(nameText)) {
-                throw new ClientErrorException(
-                        String.format("Name already used by integration %s, version %s", deployment.getSpec().getName(), deployment.getVersion()),
-                        Response.Status.CONFLICT);
-            }
-        }
     }
 
     @PUT

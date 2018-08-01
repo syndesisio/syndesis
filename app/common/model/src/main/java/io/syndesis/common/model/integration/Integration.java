@@ -15,16 +15,17 @@
  */
 package io.syndesis.common.model.integration;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
+
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.validation.UniqueProperty;
 import io.syndesis.common.model.validation.UniquenessRequired;
-import org.immutables.value.Value;
+import io.syndesis.common.model.validation.integration.NoDuplicateIntegration;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
-@UniqueProperty(value = "name", groups = UniquenessRequired.class)
+@NoDuplicateIntegration(groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
 public interface Integration extends WithId<Integration>, IntegrationBase {
 

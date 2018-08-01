@@ -17,7 +17,6 @@ package io.syndesis.common.model.integration;
 
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.ConstraintViolation;
@@ -25,12 +24,12 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import io.syndesis.common.model.validation.UniqueProperty;
-import io.syndesis.common.model.validation.UniquenessRequired;
-
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.internal.cfg.context.DefaultConstraintMapping;
 import org.junit.Test;
+
+import io.syndesis.common.model.validation.UniquenessRequired;
+import io.syndesis.common.model.validation.integration.NoDuplicateIntegration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,12 +37,12 @@ public class IntegrationTest {
 
     private final Validator validator;
 
-    public static class UniqnenessValidator implements ConstraintValidator<UniqueProperty, Object> {
+    public static class UniqnenessValidator implements ConstraintValidator<NoDuplicateIntegration, Object> {
 
         private static final AtomicBoolean VALID = new AtomicBoolean(true);
 
         @Override
-        public void initialize(final UniqueProperty constraintAnnotation) {
+        public void initialize(final NoDuplicateIntegration constraintAnnotation) {
             // nop
         }
 
@@ -55,7 +54,7 @@ public class IntegrationTest {
 
     public IntegrationTest() {
         final DefaultConstraintMapping mapping = new DefaultConstraintMapping();
-        mapping.constraintDefinition(UniqueProperty.class).validatedBy(UniqnenessValidator.class);
+        mapping.constraintDefinition(NoDuplicateIntegration.class).validatedBy(UniqnenessValidator.class);
         final ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class).configure()
             .addMapping(mapping).buildValidatorFactory();
 
