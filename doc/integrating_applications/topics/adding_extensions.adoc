@@ -8,10 +8,8 @@ The following topics provide details:
 
 * <<making-extensions-available>> 
 * <<managing-extensions>>
-* <<creating-jdbc-driver-library-extensions>>
+
 
 include::making_extensions_available.adoc[leveloffset=+1]
 
 include::managing_extensions.adoc[leveloffset=+1]
-
-include::creating_jdbc_driver_library_extensions.adoc[leveloffset=+1]

@@ -1,7 +1,12 @@
 [id='using-maven-to-generate-extension-definitions']
-= Using Maven to generate extension definitions
+= Description of Maven plugin for generating an extension definition
 
-The _extension-maven-plugin_ provides Syndesis Extension support to maven letting you generate the extension definition and package it as proper spring-boot module.
+The `extension-maven-plugin` provides extension support by
+generating the JSON extension definition and packaging the
+extension as a valid Spring Boot module.
+
+In a Maven `pom.xml` file, the entry for the extension support plugin 
+looks like this:
 
 [source,xml]
 ----
@@ -12,8 +17,8 @@ The _extension-maven-plugin_ provides Syndesis Extension support to maven lettin
     <executions>
         <execution>
         <goals>
-            <goal>generate-metadata</goal> <!--1-->
-            <goal>repackage-extension</goal> <!--2-->
+            <goal>generate-metadata</goal>
+            <goal>repackage-extension</goal> 
         </goals>
         </execution>
     </executions>
@@ -22,12 +27,16 @@ The _extension-maven-plugin_ provides Syndesis Extension support to maven lettin
 <1> generate extension definition.
 <2> package extension.
 
-The _extension-maven-plugin_ define the following goals:
+The `extension-maven-plugin` defines the following goals:
 
-* **generate-metadata** that generates the Syndesis extension definition according to the following rules:
-
-  - includes info from `META-INF/syndesis/syndesis-extension-definition.json` to generate the final descriptor.
-  - information such as _id_, _name_, _description_ and _version_ are computed from the project if not explicit configured through plugin configuration or using `META-INF/syndesis/syndesis-extension-definition.json`
+* *generate-metadata* generates the JSON extension definition 
+according to the following rules:
++
+** Includes specifications from 
+`META-INF/syndesis/syndesis-extension-definition.json` to generate the 
+final descriptor.
+  - information such as _id_, _name_, _description_ and _version_ are computed from the project if not explicit 
+  configured through plugin configuration or using `META-INF/syndesis/syndesis-extension-definition.json`
   - the dependencies list is built including dependencies provided with scope _provided_ and that are managed through the _extension-bom_
 
 -

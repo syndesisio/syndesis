@@ -3,8 +3,14 @@
 
 If {prodname} does not provide a feature that is needed to create an
 integration, then an expert developer 
-can code an extension that provides the needed function.  
+can code an extension that provides the needed behavior.  
 
+The 
+https://github.com/syndesisio/syndesis-extensions[Syndesis extensions repository]
+contains examples of extensions. The following topics describe the 
+requirements and provide additional examples:
+
+* <<procedure-for-developing-extensions>>
 * <<description-kinds-extensions>>
 * <<overview-extension-content-structure>>
 * <<about-extension-definitions>>
@@ -12,7 +18,9 @@ can code an extension that provides the needed function.
 * <<develop-step-extensions>>
 * <<develop-connector-extensions>>
 * <<develop-library-extensions>>
-* <<about-testing>>
+// * <<about-testing>>
+
+include::proc_developing_extensions.adoc[leveloffset=+1]
 
 include::description_kinds_extensions.adoc[leveloffset=+1]
 
@@ -28,4 +36,4 @@ include::develop_connector_extensions.adoc[leveloffset=+1]
 
 include::develop_library_extensions.adoc[leveloffset=+1]
 
-include::con_about_testing.adoc[leveloffset=+1]
+// include::con_about_testing.adoc[leveloffset=+1]

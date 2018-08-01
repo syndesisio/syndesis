@@ -2,27 +2,24 @@
 = Creating JDBC driver library extensions
 
 To connect to a SQL database other than Apache Derby, MySQL, and
-PostgreSQL, a developer 
-creates an extension that wraps a JDBC driver for the database you 
-want to connect to. 
+PostgreSQL, you can create a library extension that wraps a JDBC driver for 
+the database you want to connect to. 
 After uploading this extension to {prodname}, the {prodname}-provided 
 *Database* connector can access the driver to validate and create connections 
-to the proprietary database. 
+to the proprietary database. You do not create 
+a new connector for your particular database.
 
 The Syndesis open source community provides a project for creating an
-extension that wraps a JDBC driver. This kind of extension is referred to
-as a library extension because the result of uploading the extension is that
-you can use the built-in *Database* connector to create connections to 
-your proprietary database. You do not create 
-a new connector for your particular database.
+extension that wraps a JDBC driver. 
 
 Package one driver only in an extension. This makes
 it easier to manage the extension as part of managing your particular database. 
 However, it is possible to create a library extension that wraps more than one driver. 
 
+.Prerequisites
 To use the Syndesis project, you must have a GitHub account.  
 
-To create a JDBC driver library extension:
+.Procedure
 
 . Ensure access to the JDBC driver for the database you want to connect to
 by doing one of the following:
@@ -49,3 +46,13 @@ to build the extension.
     
 The generated `.jar` file is in the `syndesis-library-jdbc-driver/target` 
 folder. Provide this `.jar` file for uploading to {prodname}. 
+
+[NOTE]
+====
+{prodname} does not yet offer a way to select which library extension(s) an 
+integration should include. When you add a database connection to an  
+integration, {prodname} adds all extensions that have
+the `jdbc-driver` tag to integration runtime. This is expected to
+improve in a future release. For more information, see 
+https://github.com/syndesisio/syndesis/issues/2809[this GitHub issue].
+====

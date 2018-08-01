@@ -1,5 +1,5 @@
 [id='develop-step-extensions']
-= How to develop step extensions 
+= Alternatives for developing step extensions 
 
 Syndesis supports different ways to provide custom steps:
 

@@ -1,25 +1,25 @@
 [id='description-kinds-extensions']
 = Description of the kinds of extensions
 
-If {prodname} does not provide a feature that you need, 
-then a developer can code an extension that lets you integrate data the
-way you need to. An extension defines one of the following:
-
-* A single custom connector for creating connections to a particular application
-or service that you want to integrate.
-+
-NOTE: {prodname} can create a connector for a REST API client from an
-OpenAPI specification. See <<developing-rest-api-client-connectors>>.
+An extension defines one of the following:
 
 * One or more custom steps that operate on integration data between
 connections.
 
-* A JDBC driver for connecting to a proprietary SQL database, such as Oracle. 
+* A library resource that an integration runtime uses. For example, 
+a library extension can provide a JDBC driver for connecting to a proprietary 
+SQL database, such as Oracle. 
+
+* A single custom connector for creating connections to a particular application
+or service that you want to integrate.
++
+NOTE: {prodname} can use an OpenAPI specification to create a connector 
+for a REST API client. See <<developing-rest-api-client-connectors>>.
 
 A business integrator shares requirements with a developer who codes the extension.
 The developer provides a `.jar` file that contains the extension.
 The business integrator uploads the `.jar` file in {prodname} to make the custom connector, 
-custom step(s), or JDBC driver available for use within {prodname}.
+custom step(s), or library resource available for use within {prodname}.
 
 An extension `.jar` file that you upload to {prodname} always contains 
 exactly one extension.  
@@ -27,10 +27,3 @@ exactly one extension.
 For an example of uploading and using an extension that provides a step
 that operates on data between connections, see the 
 {LinkFuseOnlineTutorials}#amq-to-rest-api[AMQ to REST API sample integration tutorial].
-
-For custom connectors and custom steps, information about coding the 
-extension and creating the `.jar` file is in the
-{LinkToolingUserGuide}[{NameOfToolingUserGuide}].
-
-For information about creating extensions that provides JDBC drivers, 
-see <<creating-jdbc-driver-library-extensions>>.

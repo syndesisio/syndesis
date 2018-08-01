@@ -1,42 +1,26 @@
 [id='develop-library-extensions']
 = How to develop library extensions
 
+A library extension provides a resource that an 
+integration requires at runtime. A library extension does not contribute steps or 
+connectors to {prodname}. 
 
-A library extension is an extension that does not contribute steps or connectors to Syndesis but provide additional classpath elements to integrations runtime. The structure of a library extension is the same of any other extension type with the exception that it does not define any action i.e.:
+Support for library extensions is evolving. In this release:
 
-[source,json]
-----
-{
-  "schemaVersion" : "v1",
-  "name" : "Example JDBC Driver Library",
-  "description" : "Syndesis Extension for adding a custom JDBC Driver",
-  "extensionId" : "io.syndesis.extensions:syndesis-library-jdbc-driver",
-  "version" : "1.0.0",
-  "tags" : [ "jdbc-driver" ],
-  "extensionType" : "Libraries"
-}
-----
+* You cannot select which library extension(s) an 
+integration should include. For more information, see 
+https://github.com/syndesisio/syndesis/issues/2808[this GitHub issue].
 
-[WARNING]
-====
-The library support is in its infancy and there are some known limitations:
+* When you add a database connection to an integration, 
+{prodname} adds all extensions that 
+have the `jdbc-driver` tag to the integration runtime. For more information, see 
+https://github.com/syndesisio/syndesis/issues/2809[this GitHub issue]. 
 
-- Syndesis does not yet offer a way to select which library extension an integration should include, for more info see https://github.com/syndesisio/syndesis/issues/2808[this] issue
-- When using the SQL connector, Syndesis add all the extension that have a tag "jdbc-driver" to integration runtime, for more info see https://github.com/syndesisio/syndesis/issues/2809[this] issue
-====
+See the following topics for information about creating library extensions:
 
-[TIP]
-====
-To add dependencies not on available on maven repository, you can use `system` dependencies:
+* <<library-extension-definition>>
+* <<creating-jdbc-driver-library-extensions>>
 
-[source,xml]
-----
-<dependency>
-    <groupId>com.company</groupId>
-    <artifactId>jdbc-driver</artifactId>
-    <version>1.0</version>
-    <scope>system</scope>
-    <systemPath>${project.basedir}/lib/jdbc-driver-1.0.jar</systemPath>
-</dependency>
-----
-====
+include::con_library_extension_definition.adoc[leveloffset=+1]
+
+include::creating_jdbc_driver_library_extensions.adoc[leveloffset=+1]
