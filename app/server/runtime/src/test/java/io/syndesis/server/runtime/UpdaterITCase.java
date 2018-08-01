@@ -18,13 +18,13 @@ package io.syndesis.server.runtime;
 import java.util.Collections;
 import java.util.List;
 
-import io.syndesis.common.model.Violation;
-import io.syndesis.common.model.integration.Integration;
-
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import io.syndesis.common.model.Violation;
+import io.syndesis.common.model.integration.Integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,7 +46,7 @@ public class UpdaterITCase extends BaseITCase {
             }, tokenRule.validToken(), HttpStatus.BAD_REQUEST);
 
         assertThat(response.getBody()).containsOnly(
-            new Violation.Builder().error("UniqueProperty").property("name").message("Value 'Existing integration' is not unique").build());
+            new Violation.Builder().error("NoDuplicateIntegration").property("name").message("Integration name 'Existing integration' is not unique").build());
     }
 
 }
