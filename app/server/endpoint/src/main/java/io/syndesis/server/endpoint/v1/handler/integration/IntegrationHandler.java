@@ -17,6 +17,7 @@ package io.syndesis.server.endpoint.v1.handler.integration;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,8 +40,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import com.google.common.collect.MapDifference;
-import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.DataShape;
@@ -86,7 +90,8 @@ import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.util.DataManagerSupport;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
-import org.springframework.stereotype.Component;
+import com.google.common.collect.MapDifference;
+import com.google.common.collect.Maps;
 
 @SuppressWarnings("PMD.GodClass")
 @Path("/integrations")
@@ -94,6 +99,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class IntegrationHandler extends BaseHandler
     implements Lister<IntegrationOverview>, Getter<IntegrationOverview>, Creator<Integration>, Deleter<Integration>, Updater<Integration>, Validating<Integration> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationHandler.class);
 
     private final OpenShiftService openShiftService;
     private final Inspectors inspectors;
@@ -155,7 +162,6 @@ public class IntegrationHandler extends BaseHandler
 
     @Override
     public Integration create(@Context SecurityContext sec, @ConvertGroup(from = Default.class, to = AllValidations.class) final Integration integration) {
-
         Integration encryptedIntegration = encryptionSupport.encrypt(integration);
 
         Integration updatedIntegration = new Integration.Builder()
@@ -179,7 +185,6 @@ public class IntegrationHandler extends BaseHandler
 
         getDataManager().update(updatedIntegration);
     }
-
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
@@ -218,14 +223,18 @@ public class IntegrationHandler extends BaseHandler
     public void delete(String id) {
         Integration existing = getIntegration(id);
 
-        //Set all integration status to Undeployed.
+        //Set all status to Undeployed and specs as deleted for all deployments
         Set<String> deploymentIds = getDataManager().fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", existing.getId().get());
+        Set<String> deploymentNames = new HashSet<>();
         if (deploymentIds != null && !deploymentIds.isEmpty()) {
             deploymentIds.stream()
                 .map(i -> getDataManager().fetch(IntegrationDeployment.class, i))
                 .filter(r -> r != null)
-                .map(r -> r.unpublishing())
-                .forEach(r -> getDataManager().update(r));
+                .map(r -> r.unpublishing().deleted())
+                .forEach(r -> {
+                    getDataManager().update(r);
+                    deploymentNames.add(r.getSpec().getName());
+                });
         }
 
         Integration updatedIntegration = new Integration.Builder()
@@ -234,7 +243,15 @@ public class IntegrationHandler extends BaseHandler
             .isDeleted(true)
             .build();
 
-        openShiftService.delete(existing.getName());
+        // delete ALL versions
+        for (String name : deploymentNames) {
+            try {
+                openShiftService.delete(name);
+            } catch (KubernetesClientException e) {
+                LOGGER.error("Error deleting integration deployment {}: {}", name, e.getMessage());
+            }
+        }
+
         Updater.super.update(id, updatedIntegration);
     }
 
