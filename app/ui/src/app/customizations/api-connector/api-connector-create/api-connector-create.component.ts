@@ -166,6 +166,29 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     // go back to review step
     this.displayDefinitionEditor = false;
     // TODO figure out how to rerun validation using update spec
+
+    // update API name and description on request as that is used to create connector in last step
+    this.apiConnectorState$
+      .map( apiConnectorState => apiConnectorState.createRequest )
+      .subscribe( request => {
+         if ( this.apiDef.spec.info ) {
+           let title = '';
+
+           if ( this.apiDef.spec.info.title ) {
+             title = this.apiDef.spec.info.title;
+           }
+
+           request.name = title;
+
+           let description = '';
+
+           if ( this.apiDef.spec.info.description ) {
+             description = this.apiDef.spec.info.description;
+           }
+
+           request.description = description;
+         }
+       } );
   }
 
   get apiName(): string {
