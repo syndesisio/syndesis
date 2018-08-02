@@ -44,6 +44,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   apiConnectorState$: Observable<ApiConnectorState>;
   displayDefinitionEditor = false;
   editorHasChanges = false;
+  validationResponse: CustomConnectorRequest;
 
   @ViewChild('_apiEditor') _apiEditor: ApiEditorComponent;
   apiDef: ApiDefinition;
@@ -90,6 +91,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
       .first(request => !!request && !!request.actionsSummary)
       .subscribe( apiConnectorState => {
+        this.validationResponse = apiConnectorState;
         // TODO error handling!
         this.apiDef = new ApiDefinition();
         this.apiDef.createdBy = 'user1';
@@ -166,6 +168,18 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     // go back to review step
     this.displayDefinitionEditor = false;
     // TODO figure out how to rerun validation using update spec
+
+    const blob = new Blob([JSON.stringify(this.apiDef.spec)], {type : 'application/json'}) as any;
+    const file = new File([blob], this.validationResponse.specificationFile.name, {type : 'application/json'});
+
+    let request = {
+      ...this.validationResponse,
+      specificationFile: file
+    } as CustomConnectorRequest;
+
+    this.apiConnectorStore.dispatch(
+      ApiConnectorActions.validateSwagger(request)
+    );
   }
 
   get apiName(): string {
