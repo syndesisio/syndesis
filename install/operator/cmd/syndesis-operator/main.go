@@ -28,7 +28,7 @@ func printVersion() {
 func main() {
 	printVersion()
 
-	configuration.TemplateLocation = flag.String("template", "./syndesis-template.yml", "Path to template used for installation")
+	configuration.TemplateLocation = flag.String("template", "/conf/syndesis-template.yml", "Path to template used for installation")
 	flag.Parse()
 	logrus.Infof("Using template %s", *configuration.TemplateLocation)
 
