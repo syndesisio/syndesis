@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-7465-g132915685,</span>
+<span id="revnumber">version 1.1.3-7469-g630838fb1,</span>
 <span id="revdate">2018-08-02</span>
 </div>
 <div id="toc" class="toc2">
@@ -535,8 +535,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#syndesis-build-usage">2.1.1. Usage</a></li>
 <li><a href="#syndesis-build-modules">2.1.2. Modules</a></li>
 <li><a href="#syndesis-build-tuning">2.1.3. Tuning</a></li>
-<li><a href="#syndesis-build-image">2.1.4. Images</a></li>
-<li><a href="#syndesis-build-camel-snapshot">2.1.5. Building with a Camel snapshot</a></li>
+<li><a href="#syndesis-build-operator">2.1.4. Infrastructure Operator</a></li>
+<li><a href="#_examples">2.1.5. Examples</a></li>
 </ul>
 </li>
 <li><a href="#syndesis-ui">2.2. syndesis ui</a></li>
@@ -578,10 +578,11 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#syndesis-install">2.8. syndesis install</a>
 <ul class="sectlevel3">
 <li><a href="#syndesis-install-usage">2.8.1. Usage</a></li>
-<li><a href="#_development_mode">2.8.2. Development mode</a></li>
-<li><a href="#_selecting_the_version">2.8.3. Selecting the version</a></li>
-<li><a href="#_example_2">2.8.4. Example</a></li>
-<li><a href="#_quick_installation">2.8.5. Quick installation</a></li>
+<li><a href="#_initial_setup">2.8.2. Initial Setup</a></li>
+<li><a href="#_installing_syndesis_2">2.8.3. Installing Syndesis</a></li>
+<li><a href="#_development_mode">2.8.4. Development mode</a></li>
+<li><a href="#_selecting_the_version">2.8.5. Selecting the version</a></li>
+<li><a href="#_quick_installation">2.8.6. Quick installation</a></li>
 </ul>
 </li>
 </ul>
@@ -875,8 +876,10 @@ yourscriptname::run() {
 <div class="sect2">
 <h3 id="syndesis-build">2.1. syndesis build</h3>
 <div class="paragraph">
-<p>The primary goal of <code>syndesis</code> is to build Syndesis.
-It is mainly a wrapper around Maven but adds some convenience for common developer workflows.</p>
+<p>The primary goal of <code>syndesis build</code> is to build Syndesis.</p>
+</div>
+<div class="paragraph">
+<p>It is mainly a wrapper around Maven and Go but adds some convenience functionality for common developer workflows.</p>
 </div>
 <div class="sect3">
 <h4 id="syndesis-build-usage">2.1.1. Usage</h4>
@@ -885,99 +888,169 @@ It is mainly a wrapper around Maven but adds some convenience for common develop
 <pre class="CodeRay highlight"><code>Usage: syndesis build [... options ...]
 
 Options for build:
--b  --backend                 Build only backend modules (core, extension, integration, connectors, server, meta)
-    --images                  Build only modules with Docker images (ui, server, meta, s2i)
--m  --module &lt;m1&gt;,&lt;m2&gt;, ..    Build modules
-                              Modules: ui, server, connector, s2i, meta, integration, extension, common
--d  --dependencies            Build also all project the specified module depends on
-    --init                    Install top-level parent pom, too. Only needed when used with -m
-    --skip-tests              Skip unit and system test execution
-    --skip-checks             Disable all checks
--f  --flash                   Skip checks and tests execution (fastest mode)
--i  --image-mode  &lt;mode&gt;      &lt;mode&gt; can be
-                              - "none"      : No images are build (default)
-                              - "openshift" : Build for OpenShift image streams
-                              - "docker"    : Build against a plain Docker daemon
-                              - "auto"      : Automatically detect whether to
-                                              use "openshift" or "docker"
-    --docker                  == --image-mode docker
-    --openshift               == --image-mode openshift
--p  --project &lt;project&gt;       Specifies the project to create images in when using '--images s2i'
--k  --kill-pods               Kill pods after the image has been created.
-                              Useful when building with image-mode docker
--c  --clean                   Run clean builds (mvn clean)
-    --camel-snapshot          Run a build with a specific Camel snapshot. You'll need to set an environment variable CAMEL_SNAPSHOT_VERSION with the SNAPSHOT version you want to use.
-    --batch-mode              Run mvn in batch mode</code></pre>
+    -b  --backend                  Build only backend modules (core, extension, integration,
+                                   connectors, server, meta)
+        --all-images               Build all modules with images: ui, server, meta, s2i, operator
+        --app-images               Build only application modules with Docker images
+                                   (ui, server, meta, s2i)
+                                   and create images
+        --infra-images             Build only infrastructure modules with Docker images
+                                   (operator) and create images
+    -m  --module &lt;m1&gt;,&lt;m2&gt;, ..     Build modules
+                                   Modules: ui, server, connector, s2i, meta, integration,
+                                   extension, common, operator
+    -d  --dependencies             Build also all project the specified module depends on
+        --skip-tests               Skip unit and system test execution
+        --skip-checks              Disable all checks
+    -f  --flash                    Skip checks and tests execution (fastest mode)
+    -i  --image                    Build Docker images, too
+                                   (for those modules creating images)
+        --docker                   Use a plain Docker build for creating images.
+                                   Used by CI for pushing to Docker Hub
+    -p  --project &lt;project&gt;        Specifies the project/namespace to create images in
+    -e  --ensure                   If building the operator, run 'dep ensure' before building.
+                                   Otherwise ignored.
+    -l  --local                    If building the operator, use a locally installed go
+                                   Otherwise run the Go build from a container
+                                   (either local or Minishift's Docker daemon)
+        --clean-cache              Used for the operator build to remove the local dependency cache.
+    -c  --clean                    Run clean builds (mvn clean)
+        --resume &lt;m1&gt;              Resume build from maven module (mvn -rf m1)
+        --batch-mode               Run mvn in batch mode
+        --camel-snapshot &lt;version&gt; Run a build with a specific Camel snapshot.
+                                   If no argument is given the
+                                   environment variable CAMEL_SNAPSHOT_VERSION is used or an error thrown.</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="syndesis-build-modules">2.1.2. Modules</h4>
 <div class="paragraph">
-<p>A plain <code>build</code> command without any options performs a plain <code>mvn install</code> for all modules.
-This compiles all Java and Javascript artefacts and also runs all tests and code checks.</p>
+<p>A plain <code>build</code> command without any options performs a plain <code>mvn install</code> for all Java and UI modules.
+Plus it also builds the infrastructure operator via Go (see <a href="#below">syndesis-build-operator</a> for details)</p>
 </div>
 <div class="paragraph">
-<p>You also can compile only specific modules by using the <code>--module</code> (short: <code>-m</code>) option with a comma-separated list of modules.</p>
+<p>This compiles all Java and Javascript artefacts and also runs all tests and code checks for the application modules.</p>
+</div>
+<div class="paragraph">
+<p>You restrict the build to certain modules, which are divided into two categories: <em>application modules</em> which are the modules building up Syndesis.
+And <em>infrastructure modules</em> which help in managing the application itself.</p>
+</div>
+<div class="paragraph">
+<p>You can individually select specific modules by using the <code>--module</code> (short: <code>-m</code>) option with a comma-separated list of modules, but there
+are also option to combine modules</p>
 </div>
 <div class="paragraph">
 <p>The following modules are available:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 16.6666%;">
-<col style="width: 83.3334%;">
+<col style="width: 21.7391%;">
+<col style="width: 43.4782%;">
+<col style="width: 8.6956%;">
+<col style="width: 8.6956%;">
+<col style="width: 8.6956%;">
+<col style="width: 8.6959%;">
 </colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top"><code>--all-images</code></th>
+<th class="tableblock halign-left valign-top"><code>--backend</code></th>
+<th class="tableblock halign-left valign-top"><code>--app-images</code></th>
+<th class="tableblock halign-left valign-top"><code>--infra-images</code></th>
+</tr>
+</thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>server</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Main backend providing a REST API for the user interface</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ui</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The SPA user interface application</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>meta</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Meta data and verifier used for verifying connections and providing connector metadata</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>connector</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">All connectors used by Syndesis out of the box</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>integration</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Support libraries for running integrations</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>extension</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Tools for developing and running Syndesis custom extensions</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>common</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Common modules containing common code</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>s2i</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">S2I base image used for building the runtime images</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>operator</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Infrastructure operator for managing the application</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Also, to specify each module individually, you can also use some module groups:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>--backend</code> (short: <code>-b</code>) for the modules <code>server</code>, <code>integration</code>, <code>meta</code>, <code>connector</code>, <code>extension</code>, <code>common</code></p>
-</li>
-<li>
-<p><code>--images</code> build all modules which result in Docker images, and also builds the Docker images in addition to the Maven artefacts.</p>
-</li>
-</ul>
+<p>All option ending with <code>-images</code> will also build the corresponding Docker image.</p>
 </div>
 <div class="paragraph">
-<p>When the option <code>--dependencies</code> (short: <code>-d</code>) is given in addition to <code>--modules</code>, also all modules which the specified modules depend on are build, too.</p>
+<p>When you build individual modules you you can provide the option <code>--image</code> (short: <code>-i</code>) to create also the Docker image in the build, when the module is associated with a Docker image.</p>
+</div>
+<div class="paragraph">
+<p>By default images are build via S2I against a running Minishift.
+This is the recommended way for developing as this automatically will trigger a redeployment after the build.
+However, for certain scenarios like when used in a CI system or when doing the release, the image creation can be done against are Docker daemon when the <code>--docker</code> is given.
+For this to work you must have access to Docker daemon, which you can verify with <code>docker ps</code>.</p>
+</div>
+<div class="paragraph">
+<p>When the option <code>--dependencies</code> (short: <code>-d</code>) is given in addition to <code>--modules</code>, also all Maven modules which the specified modules depend on are build, too.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1029,89 +1102,152 @@ The following table shows these options, and also how long a full clean build ov
 </table>
 </div>
 <div class="sect3">
-<h4 id="syndesis-build-image">2.1.4. Images</h4>
+<h4 id="syndesis-build-operator">2.1.4. Infrastructure Operator</h4>
 <div class="paragraph">
-<p>As described in <a href="#syndesis-dev-modes">Development Modes</a> there are two ways how Syndesis Docker images can be created and deployed.</p>
+<p><code>syndesis build</code> can also build the infrastructure operator, which is a golang program.</p>
 </div>
 <div class="paragraph">
-<p>You can decide which mode to use with the option <code>--image-mode</code> (short: <code>-i</code>) and the following options are available:</p>
+<p>You can build the operator by running <code>syndesis build -m operator</code> or
+as part of a module collection like <code>--all-images</code> or <code>--infra-images</code></p>
+</div>
+<div class="paragraph">
+<p>There are three modes, how the operator can be created:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Running you go compiler locally</p>
+</li>
+<li>
+<p>Compiling in a local Docker daemon which allows volume mounts with the localhost</p>
+</li>
+<li>
+<p>Compiling in Minishift Docker daemon, which was made accessible via <code>eval $(minishift docker-env)</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See below for the details.</p>
+</div>
+<div class="paragraph">
+<div class="title">Load dependencies</div>
+<p>In any case, before you compile first you should use the option <code>--ensure</code> (short: <code>-e</code>) to setup the dependency tree.
+This will download all source dependency and cache them locally.
+To get rid of this cache, use the option <code>--clean-cache</code>.
+This might be necessary when <code>go dep</code> 's cache gets into a weird state.</p>
+</div>
+<div class="paragraph">
+<p>If you compile for the first time, then <code>--ensure</code> will be added automatically.</p>
+</div>
+<div class="paragraph">
+<div class="title">Compiling locally</div>
+<p>This is the fastest way for compiling the operator.
+Use the option <code>--local</code> (short: <code>-l</code>) for selecting the local compile mode.</p>
+</div>
+<div class="paragraph">
+<p>It is also the recommended way when you are working on the operator.
+You project setup needs to fit however: The main project directory must be reachable as <code>$GOPATH/src/github.com/syndesisio/syndesis</code>.
+You can either move your project directory to this location or work with a symlink:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">cd ~/Development/syndesis
+mkdir -p $GOPATH/src/github.com/syndesisio
+cd ..
+mv syndesis $GOPATH/src/github.com/syndesisio/
+ln -s $GOPATH/src/github.com/syndesisio/ syndesis</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default this compiles into for your native architecture (amd64, darwin).
+When you use this mode with <code>--image</code> (short: <code>-i</code>) on macOS then go will be used as cross compiler so that the generated bimary can be used in a Linux image.</p>
+</div>
+<div class="paragraph">
+<div class="title">Compiling with a local Docker daemon</div>
+<p>This is the default mode and is used also when doing the release.
+It use a builder image <code>syndesis/godev</code> which is created from the <code>tools/image</code> directory and fetched from Docker Hub.</p>
+</div>
+<div class="paragraph">
+<p>For this mode to work your Docker daemon must support volume mounts to the system from where you are calling <code>syndesis</code>.
+This is the case on Linux for locally installed Docker daemon and for Mac with <em>Docker for Mac</em>.
+It is <strong>not</strong> the case for Minishift which runs in a disconnected VM.
+But see below how you still can use Minishift for building.</p>
+</div>
+<div class="paragraph">
+<p><code>dep ensure</code> and <code>go build</code> will be run from this <code>syndesis/godev</code> image, but with your local directory mounted into the container so that the fetched dependencies can be cached in the local directories <code>dep-cache</code> and <code>vendor</code> so that the can be reused for the next run.
+Also the binary will be stored in your local directory, but this will alway be a Linux (<code>amd64</code>) binary.</p>
+</div>
+<div class="paragraph">
+<div class="title">Compiling with Minishift</div>
+<p>As Minishift is running in a remote VM you cannot bind a volume to your localhost. Therefor when running in Minishift mode the source code will be rsynced to a directory in the Minishift VM (<code>rsync</code> will be installed in the Minishift VM on the first run).</p>
+</div>
+<div class="paragraph">
+<p>The build with <code>syndesis/godev</code> will then be started with a volume mount to the copied directory in the VM.
+After the build the generated binary is copied back with <code>rsync</code> to your local directory.</p>
+</div>
+<div class="paragraph">
+<p>The Minishift mode is automatically detected and selected if <code>DOCKER_CERTS</code> contains a path to <code>.minishift</code>.
+You enable the Minishift Docker daemon for your local CLI with <code>eval $(minishift docker-env)</code></p>
+</div>
+<div class="paragraph">
+<p>Some simple benchmark reveals the following timings (in minutes) :</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 71.4286%;">
+<col style="width: 19.2307%;">
+<col style="width: 26.923%;">
+<col style="width: 26.923%;">
+<col style="width: 26.9233%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Option</th>
-<th class="tableblock halign-left valign-top">Shortcut</th>
-<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Context</th>
+<th class="tableblock halign-left valign-top">Local</th>
+<th class="tableblock halign-left valign-top">Local Docker (macOS)</th>
+<th class="tableblock halign-left valign-top">Minishift Docker</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-i auto</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auto-select the mode based whether you are connected to OpenShift (e.g via Minishift) or not.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cold (no build cache)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0:40</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10:09</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1:36</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-i docker</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--docker</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable Docker build mode. Access to a Docker daemon is required.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-i openshift</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--openshift</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Use OpenShift S2I for building the images. An active login to OpenShift is a precondition for this. You can use <code>--project</code> (<code>-p</code>) for specifying the target namespace where to create the image. By default, it is created in the current namespace</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-i s2i</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--s2i</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Shortcut for <code>--openshift</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-i none</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Don&#8217;t build Docker images even when implicitly enabled (e.g. when using <code>--images</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hot (with dep cache)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0:08</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2:47</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0:13</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Specifying the mode also enables building the Docker images which otherwise would not be built.</p>
-</div>
-<div class="paragraph">
-<p>If the direct Docker mode is used it, you have to restart the Pods, so the newly created images are picked up.
-For this you can use <code>--kill-pods</code> (short: <code>-k</code>) which will kill the corresponding pod after the image has been created.
-This only works when you are connected to an OpenShift cluster (like for minishift)</p>
-</div>
-<div class="listingblock">
-<div class="title">Example</div>
-<div class="content">
-<pre class="CodeRay highlight"><code># Build all image with openshift mode
-syndesis --images --openshift
-
-# Build to the minishift Docker daemon
-eval $(minishift docker-env)
-syndesis -i docker -k
-
-# Or:
-# syndesis --image-mode docker
-
-# Or:
-# syndesis --docker</code></pre>
-</div>
+<p>The fastest mode is obviously the local mode, followed surprisingly by Minishift.
+The local mode is probably slow because of how the macOS daemon mounts ts volumes (which can probably be optimized)</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="syndesis-build-camel-snapshot">2.1.5. Building with a Camel snapshot</h4>
+<h4 id="_examples">2.1.5. Examples</h4>
 <div class="paragraph">
-<p>Suppose you&#8217;ve to build Syndesis with a local Camel snapshot, you can do that with the following commands</p>
+<p>Some common usage examples for <code>syndesis build</code> are</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>export CAMEL_SNAPSHOT_VERSION=2.21.0-SNAPSHOT
-syndesis build --openshift --clean --camel-snapshot</pre>
+<pre class="CodeRay highlight"><code data-lang="shell"># Build all images (app and infrastructure) with S2I
+syndesis build --all-images
+
+# Create all application images and re-deploy Syndesis in the
+# Openshift cluster, but do it as fast as possible. Don't build
+# any golang code
+syndesis build --app-images --flash
+
+# Create the infrastructure operator by running go locally
+# and calling <code>dep ensure before</code>
+syndesis build -m operator --local --ensure
+
+# Use a Camel snapshot for a clean build, build all modules
+syndesis build --clean --camel-snapshot 2.21.0-SNAPSHOT</code></pre>
 </div>
 </div>
 </div>
@@ -1142,29 +1278,31 @@ You can download it directly from <a href="https://github.com/minishift/minishif
 <h4 id="syndesis-minishift-usage">2.3.1. Usage</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>Usage: syndesis minishift [... options ...]
-
-Options for minishift:
-    --install                 Install templates to a running Minishift.
--p  --project                 Install into this project. Delete this project if
-    --reset                   Reset the minishift installation by
-                              'minishift delete &amp;&amp; minishift start'.
-    --full-reset              Full reset by
-                              'minishift stop &amp;&amp; rm -rf ~/.minishift &amp;&amp; minishift start'
-    --memory &lt;mem&gt;            How much memory to use when doing a reset. Default: 4GB
-    --cpus &lt;nr cpus&gt;          How many CPUs to use when doing a reset. Default: 2
-    --disk-size &lt;size&gt;        How many disk space to use when doing a reset. Default: 20GB
-    --show-logs               Show minishift logs during startup
-    --vm-driver &lt;driver&gt;      Which virtual machine driver to use (depends on OS)
-    --openshift-version &lt;ver&gt; Set OpenShift version to use when reseting (default: v3.6.0)
-                              already existing for --install.
-                              Default project: "syndesis"
--i  --image-mode &lt;mode&gt;       Which templates to install: "docker" for plain images,
-                              "openshift" for image streams (default: "openshift")
--o  --open                    Open Syndesis in the browser
-    --memory-server &lt;mem&gt;     Memory limit to set for syndesis-server. Specify as "800Mi"
-    --memory-meta &lt;mem&gt;       Memory limit to set for syndesis-meta. Specify as "512Mi"
-    --test-support            Allow test support endpoint for syndesis-server</code></pre>
+<pre class="CodeRay highlight"><code>--install                 Install templates to a running Minishift.
+-p  --project             Install into this project.
+                          Delete this project if it already exists.
+                          By default, install into the current project (without deleting)
+-c  --context             Install into this context. Default is 'minishift'
+--reset                   Reset and initialize the minishift installation by
+                          'minishift delete &amp;&amp; minishift start'.
+--full-reset              Full reset and initialie by
+                          'minishift stop &amp;&amp; rm -rf ~/.minishift/* &amp;&amp; minishift start'
+--memory &lt;mem&gt;            How much memory to use when doing a reset. Default: 4912
+--cpus &lt;nr cpus&gt;          How many CPUs to use when doing a reset. Default: 2
+--disk-size &lt;size&gt;        How many disk space to use when doing a reset. Default: 20GB
+--vm-driver &lt;driver&gt;      Which virtual machine driver to use (depends on OS)
+--show-logs               Show minishift logs during startup
+--openshift-version &lt;ver&gt; Set OpenShift version to use when reseting (default: v3.9.0)
+--tag &lt;tag&gt;               Syndesis version/tag to install. If not given, then the latest
+                          version from master is installed
+--local                   Use the local resource files instead of fetching them from GitHub
+-o  --open                Open Syndesis in the browser
+-y  --yes                 Assume 'yes' automatically when asking for deleting
+                          a given project.
+--memory-server &lt;mem&gt;     Memory limit to set for syndesis-server. Specify as "800Mi"
+--memory-meta &lt;mem&gt;       Memory limit to set for syndesis-meta. Specify as "512Mi"
+--test-support            Allow test support endpoint for syndesis-server
+--man                     Open HTML documentation in the Syndesis Developer Handbook</code></pre>
 </div>
 </div>
 </div>
@@ -1188,12 +1326,6 @@ Any existing project will be deleted first when specified with <code>--project</
 </td>
 </tr>
 </table>
-</div>
-<div class="paragraph">
-<p>As explained in <a href="#syndesis-dev-modes">Development Modes</a> there are two workflows for developing Syndesis:
-Either with plain Docker images and killing pods (<code>--image-mode docker</code>) or with OpenShift S2I builds and image streams (<code>--image-mode openshift</code>).
-You have to specify the mode already when installing Syndesis as this choice also determines the OpenShift templates to use.
-By default the <code>openshift</code> mode is selected, so you have to specify <code>--image-mode docker</code> only when using the plain Docker image mode.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1871,41 +2003,125 @@ If you want to install to <a href="https://www.openshift.org/minishift/">Minishi
 <h4 id="syndesis-install-usage">2.8.1. Usage</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>-p  --project                 Install into this project. Delete this project
-                              if it already exists. By default, install into the current project
-                              (without recreating)
--y  --yes                     Automatically answer with "yes" when
-                              asked for deleting the project with -p
-    --route                   Route to use. If not given its tried to be autodected
+<pre class="CodeRay highlight"><code>-s  --setup-as-admin &lt;user&gt;   Install CRDs clusterwide and optionally add permission to
+                              the given user so that user can install the operator in
+                              his projects. Otherwise only admin can install the
+                              operator. You have to run this once as cluster admin
+-p  --project                 Install into this project. Delete this project
+                              if it already exists.
+                              By default, install into the current project (without deleting)
+    --route                   Route to use
+    --console                 The URL to the OpenShift console
     --tag &lt;tag&gt;               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --dev                     Prepare for development of Syndesis so that S2I builds of
                               Syndesis images are picked up properly (implies --watch)
 -w  --watch                   Wait until cluster is up
--i  --image-mode &lt;mode&gt;       Which templates to install: "docker" for plain images,
-                              "openshift" for image streams (default: "openshift")
-    --docker                  Shortcut for "--image-mode docker"
     --local                   install from local Git repo when using.
                               By default the resource descriptor is
                               downloaded from GitHub remotely.
 -o  --open                    Open Syndesis in browser when installation is ready
+                              (implies --watch)
+-y  --yes                     Assume 'yes' automatically when asking for deleting
+                              a given project.
     --memory-server &lt;mem&gt;     Memory limit to set for syndesis-server. Specify as "800Mi"
     --memory-meta &lt;mem&gt;       Memory limit to set for syndesis-meta. Specify as "512Mi"
-    --test-support            Allow test support endpoint for syndesis-server</code></pre>
+    --test-support            Allow test support endpoint for syndesis-server
+    --man                     Open HTML documentation in the Syndesis Developer Handbook</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The deployment will always happen for the currently connected OpenShift cluster.
+<p>The deployment will always happen to the currently connected OpenShift cluster.
 So it&#8217;s mandatory that you have logged into the cluster with <code>oc login</code> before.
 You can check the status with <code>oc status</code>.</p>
 </div>
 <div class="paragraph">
+<p>The installation process consist of two steps:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An initial setup which has to performed as <em>cluster admin</em>. This is one-off action which needs to be done only once.</p>
+</li>
+<li>
+<p>Installation of Syndesis into a specific project by the <em>app admin</em>, a regular user of OpenShift. This can be performed as many times as required.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_initial_setup">2.8.2. Initial Setup</h4>
+<div class="paragraph">
+<p>In the initial setup you have to register the custom resource definition (CRD) to allow to deploy <code>Syndesis</code> resources.
+This has to be performed by the admin.</p>
+</div>
+<div class="paragraph">
+<p>In addition, if you want to allow an OpenShift user to install Syndesis on her own, then you have to grant certain permissions to her.</p>
+</div>
+<div class="paragraph">
+<p>To perform this setup step, which needs to be performed only once per cluster, you have to run <code>syndesis</code> <strong>while being connected as a cluster admin</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">syndesis install --setup-as-admin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will install only the CRD. In addition to grant a user <em>developer</em> the proper permission to create a <code>Syndesis</code> resource, you should add the user name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">syndesis install --setup-as-admin developer</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_installing_syndesis_2">2.8.3. Installing Syndesis</h4>
+<div class="paragraph">
+<p>After the CRDs a registered, you can easily install Syndesis simply with</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">syndesis install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Depending on whether you have granted an user access this step has to be done either as admin or as regular user.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example for Minishift</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># Enable the admin user on Minishift
+minishift addons enable admin-user
+
+# Create a minishift instance
+minishift start --memory 4192
+
+# Switch to admin
+oc login -u system:admin
+
+# Register CRD and grant permissions to &quot;developer&quot;
+syndesis --setup-as-admin developer
+
+# Switch to account developer
+oc login -u developer
+
+# Install Syndesis
+syndesis install</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>A route name can be given with <code>--route</code>.
-This script tries to autodetect the route if not provided which works most of the time reliably.
+This step can be omitted as the operator is able to autodetect the route.
 If you provide the route manually, you need to check your OpenShift installation.
 Typically the route name is the name of your OpenShift project followed by the cluster&#8217;s hostname.
 E.g. a route <code>--route proj186023.6a63.fuse-ignite.openshiftapps.com</code> is specific to the Fuse Ignite test cluster <code>6a63.fuse-ignite.openshiftapps.com</code> and for the project <code>proj186023</code>.
 But you don&#8217;t have to provide the route name.</p>
+</div>
+<div class="paragraph">
+<p>If you want to have a link to the OpenShift console to read the Pod logs, you have to add the <code>--console</code> option with the full URL to the console.
+Unfortunately this cannot be autodetected.
+If not given, no link will appear.</p>
 </div>
 <div class="paragraph">
 <p>By default, this commands installs Syndesis in the currently connected project, but you can specify an alternative project with <code>--project &lt;project&gt;</code>.
@@ -1933,30 +2149,23 @@ Don&#8217;t use <code>syndesis install --project $(oc project -q) --yes</code>. 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_development_mode">2.8.2. Development mode</h4>
+<h4 id="_development_mode">2.8.4. Development mode</h4>
 <div class="paragraph">
 <p>As with <a href="#syndesis-minishift">syndesis minishift</a> you can also use this command to set up a development platform for Syndesis.
 <em>Development platform</em> here means, that you can create Docker images on your own with <a href="#syndesis-build">syndesis build</a> and can use them with an automatic redeployment after the build.</p>
 </div>
 <div class="paragraph">
 <p>You can switch on this mode with the option <code>--dev</code>.
-By default, the so-called <em>openshift</em> mode with image stream is used.
-When the template is deployed, these imagestreams refer to Docker images pushed to Docker Hub.
-To change the imagestream references to the images built with <code>syndesis build --images</code>, these imagestreams needs to be patched after the initial images have been fetched from Docker Hub.
+When the operator has deployed the application, the application imagestreams refer to Docker images pushed to Docker Hub.
+To change the imagestream references to the images built with <code>syndesis build --all-images</code>, these imagestreams needs to be patched after the initial images have been fetched from Docker Hub.
 If you use the <code>--dev</code> option then this update is done automatically.</p>
-</div>
-<div class="paragraph">
-<p>Alternatively, you can also use plain Docker image. If you use the <code>--docker</code> option (or <code>--image-mode docker</code>), then the Syndesis OpenShift templates that used Docker images directly is used.</p>
-</div>
-<div class="paragraph">
-<p>See the section about the various <a href="#syndesis-build-image">image modes</a> for more information.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_selecting_the_version">2.8.3. Selecting the version</h4>
+<h4 id="_selecting_the_version">2.8.5. Selecting the version</h4>
 <div class="paragraph">
 <p>With the option <code>--tag</code> you can select a specific version of Syndesis to install.
-By default, the template as it exists currently in your checked out branch is used.</p>
+By default, the currently checked out checked out branch is used.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example</div>
@@ -1973,84 +2182,19 @@ Tags prefixed with <code>fuse-ignite</code> are suited for the Fuse Online clust
 </div>
 </div>
 <div class="sect3">
-<h4 id="_example_2">2.8.4. Example</h4>
-<div class="paragraph">
-<p>Here is a full example how you can install Syndesis from scratch.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash"># Clone Syndes repository to /tmp
-cd /tmp
-git clone --depth=1 https://github.com/syndesisio/syndesis.git    <i class="conum" data-value="1"></i><b>(1)</b>
-cd syndesis
-
-# List tags (optional)
-git --depth=1 --tags fetch                                        <i class="conum" data-value="2"></i><b>(2)</b>
-git tag
-
-# Connect to the fuse-ignite cluster
-oc login https://api.fuse-ignite.openshift.com --token=...        <i class="conum" data-value="3"></i><b>(3)</b>
-
-# Check the project you want to install to
-oc project                                                        <i class="conum" data-value="4"></i><b>(4)</b>
-
-# Find out the route domain
-oc route                                                          <i class="conum" data-value="5"></i><b>(5)</b>
-
-# Install into the existing project (but recreate it before)
-tools/bin/syndesis install \                                      <i class="conum" data-value="6"></i><b>(6)</b>
-    --project $(oc project -q) \                                  <i class="conum" data-value="7"></i><b>(7)</b>
-    --route $(oc project -q).6a63.fuse-ignite.openshiftapps.com \ <i class="conum" data-value="8"></i><b>(8)</b>
-    --tag 1.2 \                                                   <i class="conum" data-value="9"></i><b>(9)</b>
-    --watch</code></pre>
-</div>
-</div>
-<div class="colist arabic">
+<h4 id="_quick_installation">2.8.6. Quick installation</h4>
+<div class="admonitionblock warning">
 <table>
 <tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Clone the Syndesis repository, without history (<code>--depth=1</code>).</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Fetch tags before you can list them.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Login into the target cluster with the token that you find on the OpenShift console.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Check the project. We will overwrite this in this example, so please be sure that you do not accidentally overwrite this project.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Find out the route domain. Either check the documentation of your cluster or, like here, examine already existing routes.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Run <code>syndesis</code> directly out of the cloned Git repository.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>Specify the project as the current project.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="8"></i><b>8</b></td>
-<td>Construct the route from the project name and the route domain.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="9"></i><b>9</b></td>
-<td>Specify the head tag 1.2 which means the latest 1.2 version (== latest upstream TP3 version)</td>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The following scripts are not yet updated and probably don&#8217;t work as expected. Please stay tuned.
+</td>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p>When the last command is finished you will be able to access <code><a href="https://$(oc" class="bare">https://$(oc</a> project -q).6a63.fuse-ignite.openshiftapps.com</code> to access Syndesis version 1.2</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_quick_installation">2.8.5. Quick installation</h4>
 <div class="paragraph">
 <p>If you only want to install Syndesis without developing for, there is even an easier without checking out Syndesis into a local Git repository.</p>
 </div>
@@ -3109,8 +3253,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-7465-g132915685<br>
-Last updated 2018-08-02 14:42:17 UTC
+Version 1.1.3-7469-g630838fb1<br>
+Last updated 2018-08-02 16:06:37 UTC
 </div>
 </div>
 </body>
