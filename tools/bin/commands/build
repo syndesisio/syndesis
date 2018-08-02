@@ -2,28 +2,38 @@
 
 
 build::description() {
-    echo "Run Syndesis builds"
+    cat - <<EOT
+Run Syndesis builds
+
+You select the module with "-m", "--backend", "--app-images", "--infra-images" or "--all-images". If
+no options are given, all modules are build.
+EOT
 }
 
 build::usage() {
     cat <<EOT
--b  --backend                 Build only backend modules (core, extension, integration, connectors, server, meta)
-    --all-images              Build only modules with Docker images (ui, server, meta, s2i) and create images
--m  --module <m1>,<m2>, ..    Build modules
-                              Modules: ui, server, connector, s2i, meta, integration, extension, common
--d  --dependencies            Build also all project the specified module depends on
-    --skip-tests              Skip unit and system test execution
-    --skip-checks             Disable all checks
--f  --flash                   Skip checks and tests execution (fastest mode)
--i  --image                   Build Docker via s2i images, too
-    --docker                  Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
--p  --project <project>       Specifies the project to create images in when using '--openshift'
--e  --ensure                  If building a Go module, run 'dep ensure' before building
--l  --local                   For Go builds: Use a locally installed go, otherwise run the Go build from a container
--c  --clean                   Run clean builds (mvn clean)
-    --resume <m1>             Resume build from maven module (mvn -rf m1)
-    --batch-mode              Run mvn in batch mode
-    --camel-snapshot          Run a build with a specific Camel snapshot. You'll need to set an environment variable CAMEL_SNAPSHOT_VERSION with the SNAPSHOT version you want to use.
+    -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
+        --all-images               Build all modules with images: ui, server, meta, s2i, operator
+        --app-images               Build only application modules with Docker images (ui, server, meta, s2i)
+                                   and create images
+        --infra-images             Build only infrastructure modules with Docker images (operator) and create images
+    -m  --module <m1>,<m2>, ..     Build modules
+                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator
+    -d  --dependencies             Build also all project the specified module depends on
+        --skip-tests               Skip unit and system test execution
+        --skip-checks              Disable all checks
+    -f  --flash                    Skip checks and tests execution (fastest mode)
+    -i  --image                    Build Docker via s2i images, too (for those modules creating images)
+        --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
+    -p  --project <project>        Specifies the project to create images in when using '--openshift'
+    -e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
+    -l  --local                    If building the operator, use a locally installed go
+                                   Otherwise run the Go build from a container (either local or Minishift's Docker daemon)
+    -c  --clean                    Run clean builds (mvn clean)
+        --resume <m1>              Resume build from maven module (mvn -rf m1)
+        --batch-mode               Run mvn in batch mode
+        --camel-snapshot <version> Run a build with a specific Camel snapshot. If no argument is given the
+                                   environment variable CAMEL_SNAPSHOT_VERSION is used or an error thrown.
 EOT
 
 }
@@ -53,6 +63,74 @@ build::run() {
         do_operator $top_dir
     fi
 
+}
+
+maven_args() {
+    local project=${1:-}
+    local args=""
+
+    if [ $(hasflag --flash -f) ]; then
+        args="$args -Pflash"
+    fi
+
+    if [ $(hasflag --skip-tests) ]; then
+        args="$args -DskipTests"
+    fi
+
+    if [ $(hasflag --skip-checks) ]; then
+        args="$args -Pskip-checks"
+    fi
+
+    if [ $(hasflag --batch-mode) ]; then
+        args="$args --batch-mode"
+    fi
+
+    if [ $(hasflag --image -i --all-images --docker) ]; then
+        #Build images
+        args="$args -Pimage"
+        if [ $(hasflag --docker) ]; then
+            args="$args -Dfabric8.mode=kubernetes"
+        else
+            args="$args -Dfabric8.mode=openshift"
+        fi
+    fi
+
+    if [ $(hasflag --camel-snapshot) ]; then
+       local version=$(readopt --camel-snapshot)
+       if [ -z "$version" ]; then
+          version="${CAMEL_SNAPSHOT_VERION:-}"
+       fi
+       if [ -z "$version" ]; then
+          echo "ERROR: you need to provied an argument to --camel-snapshot or set the environment variable CAMEL_SNAPSHOT_VERSION to use --camel-snapshot option".
+          exit 1
+       fi
+       args="$args -Dcamel.version=$version"
+    fi
+
+    if [ -z "$project" ]; then
+        project="$(readopt --project -p)"
+    fi
+    if [ -n "${project}" ]; then
+        args="$args -Dfabric8.namespace=${project}"
+    fi
+
+    local resume_from="$(readopt --resume)"
+    if [ -n "${resume_from}" ]; then
+        args="$args -rf ${resume_from}"
+    fi
+
+    if [ "$(hasflag --clean -c)" ]; then
+        args="$args clean"
+    fi
+
+    local goals="$(readopt --goals)"
+    if [ -n "${goals}" ]; then
+        args="$args ${goals//,/ }"
+    else
+        args="$args install"
+    fi
+
+    echo $args
 }
 
 do_operator() {
@@ -141,73 +219,6 @@ rsync_binary_from_minishift() {
           --progress \
           docker@$(minishift ip):${operator_bin} \
           $local_target_dir
-}
-
-maven_args() {
-    local project=${1:-}
-    local args=""
-
-    if [ $(hasflag --flash -f) ]; then
-        args="$args -Pflash"
-    fi
-
-    if [ $(hasflag --skip-tests) ]; then
-        args="$args -DskipTests"
-    fi
-
-    if [ $(hasflag --skip-checks) ]; then
-        args="$args -Pskip-checks"
-    fi
-
-    if [ $(hasflag --batch-mode) ]; then
-        args="$args --batch-mode"
-    fi
-
-    if [ $(hasflag --image -i --all-images --docker) ]; then
-        #Build images
-        args="$args -Pimage"
-        if [ $(hasflag --docker) ]; then
-            args="$args -Dfabric8.mode=kubernetes"
-        else
-            args="$args -Dfabric8.mode=openshift"
-        fi
-    fi
-
-    set +o nounset
-    if [ $(hasflag --camel-snapshot) ]; then
-       if [ -n "$CAMEL_SNAPSHOT_VERSION" ]; then
-           args="$args -Dcamel.version=$CAMEL_SNAPSHOT_VERSION"
-       else
-           echo "ERROR: you need to set the environment variable CAMEL_SNAPSHOT_VERSION to use --camel-snapshot option".
-           exit 1
-       fi
-    fi
-    set -o nounset
-
-    if [ -z "$project" ]; then
-        project="$(readopt --project -p)"
-    fi
-    if [ -n "${project}" ]; then
-        args="$args -Dfabric8.namespace=${project}"
-    fi
-
-    local resume_from="$(readopt --resume)"
-    if [ -n "${resume_from}" ]; then
-        args="$args -rf ${resume_from}"
-    fi
-
-    if [ "$(hasflag --clean -c)" ]; then
-        args="$args clean"
-    fi
-
-    local goals="$(readopt --goals)"
-    if [ -n "${goals}" ]; then
-        args="$args ${goals//,/ }"
-    else
-        args="$args install"
-    fi
-
-    echo $args
 }
 
 
