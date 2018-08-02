@@ -44,6 +44,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   apiConnectorState$: Observable<ApiConnectorState>;
   displayDefinitionEditor = false;
   editorHasChanges = false;
+  validationResponse: CustomConnectorRequest;
 
   @ViewChild('_apiEditor') _apiEditor: ApiEditorComponent;
   apiDef: ApiDefinition;
@@ -90,6 +91,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
       .first(request => !!request && !!request.actionsSummary)
       .subscribe( apiConnectorState => {
+        this.validationResponse = apiConnectorState;
         // TODO error handling!
         this.apiDef = new ApiDefinition();
         this.apiDef.createdBy = 'user1';
@@ -167,28 +169,17 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.displayDefinitionEditor = false;
     // TODO figure out how to rerun validation using update spec
 
-    // update API name and description on request as that is used to create connector in last step
-    this.apiConnectorState$
-      .map( apiConnectorState => apiConnectorState.createRequest )
-      .subscribe( request => {
-         if ( this.apiDef.spec.info ) {
-           let title = '';
+    const blob = new Blob([JSON.stringify(this.apiDef.spec)], {type : 'application/json'}) as any;
+    const file = new File([blob], this.validationResponse.specificationFile.name, {type : 'application/json'});
 
-           if ( this.apiDef.spec.info.title ) {
-             title = this.apiDef.spec.info.title;
-           }
+    let request = {
+      ...this.validationResponse,
+      specificationFile: file
+    } as CustomConnectorRequest;
 
-           request.name = title;
-
-           let description = '';
-
-           if ( this.apiDef.spec.info.description ) {
-             description = this.apiDef.spec.info.description;
-           }
-
-           request.description = description;
-         }
-       } );
+    this.apiConnectorStore.dispatch(
+      ApiConnectorActions.validateSwagger(request)
+    );
   }
 
   get apiName(): string {
