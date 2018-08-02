@@ -21,7 +21,7 @@ dep_ensure() {
         echo "Running 'dep ensure' with $GO_BUILDER_IMAGE"
         [ -d "dep-cache" ] || mkdir dep-cache
         docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
-                   -v $(pwd)/dep-cache:/gopath/pkg/dep:z \
+                   -v $top_dir/install/operator/dep-cache:/gopath/pkg/dep:z \
                    -v $top_dir:/gopath/src/github.com/syndesisio/syndesis:z \
                    $GO_BUILDER_IMAGE \
                    dep ensure -vendor-only -v
