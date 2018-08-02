@@ -308,7 +308,7 @@ pick_module() {
     local res=""
     for module in $modules; do
         if [ "${pick_list//$module/}" != "${pick_list}" ]; then
-            $res="$res $module"
+            res="$res $module"
         fi
     done
     echo $res | awk '$1=$1'
