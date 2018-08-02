@@ -10,39 +10,107 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
 
 [source,indent=0,subs="verbatim,quotes"]
 ----
+-s  --setup-as-admin <user>   Install CRDs clusterwide and optionally add permission to
+                              the given user so that user can install the operator in
+                              his projects. Otherwise only admin can install the
+                              operator. You have to run this once as cluster admin
 -p  --project                 Install into this project. Delete this project
-                              if it already exists. By default, install into the current project
-                              (without recreating)
--y  --yes                     Automatically answer with "yes" when
-                              asked for deleting the project with -p
-    --route                   Route to use. If not given its tried to be autodected
+                              if it already exists.
+                              By default, install into the current project (without deleting)
+    --route                   Route to use
+    --console                 The URL to the OpenShift console
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --dev                     Prepare for development of Syndesis so that S2I builds of
                               Syndesis images are picked up properly (implies --watch)
 -w  --watch                   Wait until cluster is up
--i  --image-mode <mode>       Which templates to install: "docker" for plain images,
-                              "openshift" for image streams (default: "openshift")
-    --docker                  Shortcut for "--image-mode docker"
     --local                   install from local Git repo when using.
                               By default the resource descriptor is
                               downloaded from GitHub remotely.
 -o  --open                    Open Syndesis in browser when installation is ready
+                              (implies --watch)
+-y  --yes                     Assume 'yes' automatically when asking for deleting
+                              a given project.
     --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
     --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support            Allow test support endpoint for syndesis-server
+    --man                     Open HTML documentation in the Syndesis Developer Handbook
 ----
 
-The deployment will always happen for the currently connected OpenShift cluster.
+The deployment will always happen to the currently connected OpenShift cluster.
 So it's mandatory that you have logged into the cluster with `oc login` before.
 You can check the status with `oc status`.
 
+The installation process consist of two steps:
+
+* An initial setup which has to performed as _cluster admin_. This is one-off action which needs to be done only once.
+* Installation of Syndesis into a specific project by the _app admin_, a regular user of OpenShift. This can be performed as many times as required.
+
+### Initial Setup
+
+In the initial setup you have to register the custom resource definition (CRD) to allow to deploy `Syndesis` resources.
+This has to be performed by the admin.
+
+In addition, if you want to allow an OpenShift user to install Syndesis on her own, then you have to grant certain permissions to her.
+
+To perform this setup step, which needs to be performed only once per cluster, you have to run `syndesis` **while being connected as a cluster admin**:
+
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+syndesis install --setup-as-admin
+----
+
+This will install only the CRD. In addition to grant a user _developer_ the proper permission to create a `Syndesis` resource, you should add the user name:
+
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+syndesis install --setup-as-admin developer
+----
+
+### Installing Syndesis
+
+After the CRDs a registered, you can easily install Syndesis simply with
+
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+syndesis install
+----
+
+Depending on whether you have granted an user access this step has to be done either as admin or as regular user.
+
+.Example for Minishift
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+# Enable the admin user on Minishift
+minishift addons enable admin-user
+
+# Create a minishift instance
+minishift start --memory 4192
+
+# Switch to admin
+oc login -u system:admin
+
+# Register CRD and grant permissions to "developer"
+syndesis --setup-as-admin developer
+
+# Switch to account developer
+oc login -u developer
+
+# Install Syndesis
+syndesis install
+----
+
+
 A route name can be given with `--route`.
-This script tries to autodetect the route if not provided which works most of the time reliably.
+This step can be omitted as the operator is able to autodetect the route.
 If you provide the route manually, you need to check your OpenShift installation.
 Typically the route name is the name of your OpenShift project followed by the cluster's hostname.
 E.g. a route `--route proj186023.6a63.fuse-ignite.openshiftapps.com` is specific to the Fuse Ignite test cluster `6a63.fuse-ignite.openshiftapps.com` and for the project `proj186023`.
 But you don't have to provide the route name.
+
+If you want to have a link to the OpenShift console to read the Pod logs, you have to add the `--console` option with the full URL to the console.
+Unfortunately this cannot be autodetected.
+If not given, no link will appear.
 
 By default, this commands installs Syndesis in the currently connected project, but you can specify an alternative project with `--project <project>`.
 If this project already exists, it gets deleted unconditionally before the deployment, so be careful when using this option.
@@ -61,19 +129,14 @@ As with <<syndesis-minishift,syndesis minishift>> you can also use this command 
 _Development platform_ here means, that you can create Docker images on your own with <<syndesis-build,syndesis build>> and can use them with an automatic redeployment after the build.
 
 You can switch on this mode with the option `--dev`.
-By default, the so-called _openshift_ mode with image stream is used.
-When the template is deployed, these imagestreams refer to Docker images pushed to Docker Hub.
-To change the imagestream references to the images built with `syndesis build --images`, these imagestreams needs to be patched after the initial images have been fetched from Docker Hub.
+When the operator has deployed the application, the application imagestreams refer to Docker images pushed to Docker Hub.
+To change the imagestream references to the images built with `syndesis build --all-images`, these imagestreams needs to be patched after the initial images have been fetched from Docker Hub.
 If you use the `--dev` option then this update is done automatically.
-
-Alternatively, you can also use plain Docker image. If you use the `--docker` option (or `--image-mode docker`), then the Syndesis OpenShift templates that used Docker images directly is used.
-
-See the section about the various <<syndesis-build-image,image modes>> for more information.
 
 ### Selecting the version
 
 With the option `--tag` you can select a specific version of Syndesis to install.
-By default, the template as it exists currently in your checked out branch is used.
+By default, the currently checked out checked out branch is used.
 
 .Example
 [source,bash,indent=0,subs="verbatim,quotes"]
@@ -86,50 +149,9 @@ This example will install the latest Syndesis version of the 1.2 branch to the l
 You can see a list of available tags with `git tag`.
 Tags prefixed with `fuse-ignite` are suited for the Fuse Online cluster as those templates do not contain images streams themselves but refer to the image streams installed on this cluster.
 
-### Example
-
-Here is a full example how you can install Syndesis from scratch.
-
-[source,bash,indent=0,subs="verbatim,quotes"]
-----
-# Clone Syndes repository to /tmp
-cd /tmp
-git clone --depth=1 https://github.com/syndesisio/syndesis.git    <1>
-cd syndesis
-
-# List tags (optional)
-git --depth=1 --tags fetch                                        <2>
-git tag
-
-# Connect to the fuse-ignite cluster
-oc login https://api.fuse-ignite.openshift.com --token=...        <3>
-
-# Check the project you want to install to
-oc project                                                        <4>
-
-# Find out the route domain
-oc route                                                          <5>
-
-# Install into the existing project (but recreate it before)
-tools/bin/syndesis install \                                      <6>
-    --project $(oc project -q) \                                  <7>
-    --route $(oc project -q).6a63.fuse-ignite.openshiftapps.com \ <8>
-    --tag 1.2 \                                                   <9>
-    --watch
-----
-<1> Clone the Syndesis repository, without history (`--depth=1`).
-<2> Fetch tags before you can list them.
-<3> Login into the target cluster with the token that you find on the OpenShift console.
-<4> Check the project. We will overwrite this in this example, so please be sure that you do not accidentally overwrite this project.
-<5> Find out the route domain. Either check the documentation of your cluster or, like here, examine already existing routes.
-<6> Run `syndesis` directly out of the cloned Git repository.
-<7> Specify the project as the current project.
-<8> Construct the route from the project name and the route domain.
-<9> Specify the head tag 1.2 which means the latest 1.2 version (== latest upstream TP3 version)
-
-When the last command is finished you will be able to access `https://$(oc project -q).6a63.fuse-ignite.openshiftapps.com` to access Syndesis version 1.2
-
 ### Quick installation
+
+WARNING: The following scripts are not yet updated and probably don't work as expected. Please stay tuned.
 
 If you only want to install Syndesis without developing for, there is even an easier without checking out Syndesis into a local Git repository.
 
