@@ -92,7 +92,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
       .first(request => !!request && !!request.actionsSummary)
       .subscribe( apiConnectorState => {
         this.validationResponse = apiConnectorState;
-        // TODO error handling!
+
         this.apiDef = new ApiDefinition();
         this.apiDef.createdBy = 'user1';
         this.apiDef.createdOn = new Date();
@@ -163,16 +163,14 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     // save current state of editor
     const value = this._apiEditor.getValue();
     this.apiDef.spec = value[ 'spec' ]; // used in onCreateComplete
-    // console.log( '***spec: ' + JSON.stringify( this.apiDef.spec, null, 2 ) );
 
     // go back to review step
     this.displayDefinitionEditor = false;
-    // TODO figure out how to rerun validation using update spec
 
     const blob = new Blob([JSON.stringify(this.apiDef.spec)], {type : 'application/json'}) as any;
     const file = new File([blob], this.validationResponse.specificationFile.name, {type : 'application/json'});
 
-    let request = {
+    const request = {
       ...this.validationResponse,
       specificationFile: file
     } as CustomConnectorRequest;
