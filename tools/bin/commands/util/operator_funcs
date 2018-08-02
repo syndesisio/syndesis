@@ -52,6 +52,11 @@ build_operator() {
     local do_linux="${3:-}"
     local as_user="${4:-}"
 
+    if [ ! -d "$operator_dir/vendor" ] || [ $(ls "$operator_dir/vendor" | wc -l) == 0 ]; then
+        echo "Running dep ensure implicitely"
+        dep_ensure "$operator_dir" "$do_local" "$as_user"
+    fi
+
     if [ "${do_local}" ]; then
         echo "Running local build"
         local dir=$(gopath_dir)

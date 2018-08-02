@@ -53,7 +53,7 @@ build::run() {
     local top_dir="$(appdir .)"
 
     # All Maven modules (all modules minus operator)
-    local maven_modules=$(filter_module "operator" "$modules")
+    local maven_modules=$(pick_module "$APP_IMAGES" "$modules")
     if [ -z "$modules" ] || [ -n "$maven_modules" ]; then
         call_maven "$(maven_args)" "$maven_modules"
     fi
@@ -224,6 +224,9 @@ rsync_binary_from_minishift() {
 
 # All modules, in the right build order
 ALL_MODULES="common extension integration connector meta server s2i ui test operator"
+APP_IMAGES="ui server meta s2i"
+INFRA_IMAGES="operator"
+ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES"
 MODULES=(
   "operator"
   "ui"
@@ -247,6 +250,14 @@ extract_modules() {
 
     if [ "$(hasflag --all-images)" ]; then
         modules="$modules ui server meta s2i operator"
+    fi
+
+    if [ "$(hasflag --app-images)" ]; then
+        modules="$modules $APP_IMAGES"
+    fi
+
+    if [ "$(hasflag --infra-images)" ]; then
+        modules="$modules $INFRA_IMAGES"
     fi
 
     local arg_modules=$(readopt --module -m);
@@ -293,12 +304,17 @@ order_modules() {
     echo $ret | awk '$1=$1'
 }
 
-filter_module() {
-    local filter="$1"
+pick_module() {
+    local pick_list="$1"
     local modules="$2"
 
-    echo ${modules//$filter} | awk '$1=$1'
-
+    local res=""
+    for module in $modules; do
+        if [ "${pick_list//$module/}" != "${pick_list}" ]; then
+            $res="$res $module"
+        fi
+    done
+    echo $res | awk '$1=$1'
 }
 
 should_build() {
