@@ -26,6 +26,7 @@ public class ControllersConfigurationProperties {
 
     private int maxIntegrationsPerUser = 1;
     private int maxDeploymentsPerUser = 1;
+    private int integrationStateCheckInterval = 60;
 
     public int getMaxIntegrationsPerUser() {
         return maxIntegrationsPerUser;
@@ -43,4 +44,11 @@ public class ControllersConfigurationProperties {
         this.maxDeploymentsPerUser = maxDeploymentsPerUser;
     }
 
+    public void setIntegrationStateCheckInterval(int interval) {
+        this.integrationStateCheckInterval = interval;
+    }
+
+    public int getIntegrationStateCheckInterval() {
+        return integrationStateCheckInterval;
+    }
 }

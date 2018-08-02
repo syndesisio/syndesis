@@ -135,6 +135,11 @@ parameters:
   name: MAX_INTEGRATIONS_PER_USER
   value: "{{#Ocp}}0{{/Ocp}}{{^Ocp}}1{{/Ocp}}"
   required: true
+- description: Interval for checking the state of the integrations.
+  displayName: Integration state check interval
+  name: INTEGRATION_STATE_CHECK_INTERVAL
+  value: "60"
+  required: true
 - description: Key used to perform authentication of client side stored state.
   displayName: Client side state authentication key
   from: '[a-zA-Z0-9]{32}'

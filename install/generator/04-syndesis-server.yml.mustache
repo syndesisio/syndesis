@@ -100,6 +100,8 @@
             value: "1"
           - name: MAX_INTEGRATIONS_PER_USER
             value: ${MAX_INTEGRATIONS_PER_USER}
+          - name: INTEGRATION_STATE_CHECK_INTERVAL
+            value: ${INTEGRATION_STATE_CHECK_INTERVAL}
 {{#Debug}}
           - name: JAVA_DEBUG
             value: "true"
@@ -235,3 +237,4 @@
       controllers:
         maxIntegrationsPerUser: ${MAX_INTEGRATIONS_PER_USER}
         maxDeploymentsPerUser: ${MAX_INTEGRATIONS_PER_USER}
+        integrationStateCheckInterval: ${INTEGRATION_STATE_CHECK_INTERVAL}
