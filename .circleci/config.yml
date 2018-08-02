@@ -118,7 +118,7 @@ jobs:
       - run:
           name: Build Connectors
           command: |
-            ./tools/bin/syndesis build --init --batch-mode --module connector | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module connector | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -172,7 +172,7 @@ jobs:
       - run:
           name: Build Common
           command: |
-            ./tools/bin/syndesis build --init --batch-mode --module common | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module common | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -222,7 +222,7 @@ jobs:
       - run:
           name: Build Connectors
           command: |
-            ./tools/bin/syndesis build --init --batch-mode --module integration | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module integration | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -425,6 +425,7 @@ workflows:
           requires:
             - integration
             - connector
+            - common
       - s2i:
           requires:
             - server

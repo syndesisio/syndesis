@@ -50,7 +50,7 @@ build::run() {
     local top_dir="$(appdir .)"
 
     # All Maven modules (all modules minus operator)
-    local maven_modules=$(pick_module "$APP_IMAGES" "$modules")
+    local maven_modules=$(pick_module "$MAVEN_MODULES" "$modules")
     if [ -z "$modules" ] || [ -n "$maven_modules" ]; then
         call_maven "$(maven_args)" "$maven_modules"
     fi
@@ -82,7 +82,7 @@ maven_args() {
         args="$args --batch-mode"
     fi
 
-    if [ $(hasflag --image -i --all-images --docker) ]; then
+    if [ $(hasflag --image -i --all-images --app-images --infra-images --docker) ]; then
         #Build images
         args="$args -Pimage"
         if [ $(hasflag --docker) ]; then
@@ -221,6 +221,7 @@ rsync_binary_from_minishift() {
 
 # All modules, in the right build order
 ALL_MODULES="common extension integration connector meta server s2i ui test operator"
+MAVEN_MODULES="common extension integration connector meta server s2i ui test"
 APP_IMAGES="ui server meta s2i"
 INFRA_IMAGES="operator"
 ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES"
@@ -308,7 +309,7 @@ pick_module() {
     local res=""
     for module in $modules; do
         if [ "${pick_list//$module/}" != "${pick_list}" ]; then
-            $res="$res $module"
+            res="$res $module"
         fi
     done
     echo $res | awk '$1=$1'
