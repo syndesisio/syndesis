@@ -7,8 +7,9 @@ GO_BUILDER_IMAGE="syndesis/godev:1.10"
 OPERATOR_IMAGE="syndesis/syndesis-operator"
 
 dep_ensure() {
-    local top_dir=${1}
+    local operator_dir=${1}
     local do_local=${2:-}
+    local as_user=${3:-}
 
     if [ "$do_local" ]; then
         local dir=$(gopath_dir)
@@ -20,9 +21,14 @@ dep_ensure() {
     else
         echo "Running 'dep ensure' with $GO_BUILDER_IMAGE"
         [ -d "dep-cache" ] || mkdir dep-cache
+        local extra_opts=""
+        if [ -n "$as_user" ]; then
+            extra_opts="$extra_opts -u $as_user"
+        fi
         docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
-                   -v $top_dir/install/operator/dep-cache:/gopath/pkg/dep:z \
-                   -v $top_dir:/gopath/src/github.com/syndesisio/syndesis:z \
+                   $extra_opts \
+                   -v $operator_dir/dep-cache:/gopath/pkg/dep:z \
+                   -v $operator_dir:/gopath/src/github.com/syndesisio/syndesis/install/operator:z \
                    $GO_BUILDER_IMAGE \
                    dep ensure -vendor-only -v
     fi
@@ -41,9 +47,10 @@ gopath_dir() {
 }
 
 build_operator() {
-    local top_dir="${1}"
+    local operator_dir="${1}"
     local do_local="${2:-}"
     local do_linux="${3:-}"
+    local as_user="${4:-}"
 
     if [ "${do_local}" ]; then
         echo "Running local build"
@@ -60,13 +67,16 @@ build_operator() {
         popd >/dev/null
     else
         echo "Creating syndesis-operator with $GO_BUILDER_IMAGE"
-        pushd "$top_dir/install/operator" >/dev/null
+        local extra_opts=""
+        if [ -n "$as_user" ]; then
+            extra_opts="$extra_opts -u $as_user -e XDG_CACHE_HOME=.cache"
+        fi
         docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
-                   -v $top_dir:/gopath/src/github.com/syndesisio/syndesis:z \
+                   $extra_opts \
+                   -v $operator_dir:/gopath/src/github.com/syndesisio/syndesis/install/operator:z \
                    -e CGO_ENABLED=0 \
                    $GO_BUILDER_IMAGE \
                    go build ./cmd/syndesis-operator
-        popd >/dev/null
     fi
 }
 
