@@ -65,6 +65,12 @@ do_operator() {
         echo "Building on Minishift"
         local minishift_build_dir="/opt/syndesis"
         local operator_source_dir="$top_dir/install/operator"
+
+        if [ $(hasflag --clean-cache) ]; then
+            echo "Cleaning cache on Minishift"
+            minishift ssh "sudo su -c 'rm -rf $minishift_build_dir'"
+        fi
+
         ensure_rcp_on_minishift
         rsync_source_to_minishift $operator_source_dir $minishift_build_dir
         build_operator_from_dir $minishift_build_dir 1000
@@ -97,7 +103,7 @@ is_minishift_docker_daemon() {
 
 ensure_rcp_on_minishift() {
     if ! $(minishift ssh type rsync >/dev/null 2>&1); then
-        echo "Installing rscyn on Minishift"
+        echo "Installing rsync on Minishift"
         minishift ssh sudo "su -c 'yum install -y rsync'"
     fi
 }
@@ -108,6 +114,7 @@ rsync_source_to_minishift() {
 
     echo "Rsync local sources to Minishift VM to $minishift_build_dir"
     # Ensure that target directory exist
+    mkdir_on_minishift $minishift_build_dir $minishift_build_dir/dep-cache $minishift_build_dir/vendor
     minishift ssh "sudo su -c '[ -d $minishift_build_dir ] || (mkdir $minishift_build_dir && chown docker $minishift_build_dir)'"
 
     rsync -az \
@@ -115,6 +122,11 @@ rsync_source_to_minishift() {
           --progress \
           ${operator_source_dir}/ \
           docker@$(minishift ip):${minishift_build_dir}
+}
+
+mkdir_on_minishift() {
+    local dir=${1}
+    minishift ssh "sudo su -c '[ -d $dir ] || (mkdir $dir && chown docker $dir)'"
 }
 
 rsync_binary_from_minishift() {
