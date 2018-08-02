@@ -7,13 +7,7 @@ JAVA_IMAGE_MODULES="ui server meta s2i"
 ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES operator"
 
 release::description() {
-    cat - <<EOT
-Perform a release
-
-This command performs a release but does *no* automated rollback when something fails.
-Please refer to the manual at https://docs.syndesis.io for more details and what needs
-to be cleaned up in case of a failure.
-EOT
+    echo "Perform a release"
 }
 
 release::usage() {

@@ -6,9 +6,9 @@ install::description() {
 
 install::usage() {
     cat <<EOT
--s  --setup-crd               Install CRDs clusterwide. You have to run this once as cluster-admin
-    --fix-permissions <user>  Add additional permissions to the cluster user. These are required by
-                              the operator to work. You have to run this as cluster-admin.
+-s  --setup-as-admin <user>   Install CRDs clusterwide and optionally add permission to the given user so that
+                              user can install the operator in his projects. Othwerwise only admin can install the
+                              operator. You have to run this once as cluster admin
 -p  --project                 Install into this project. Delete this project
                               if it already exists. By default, install into the current project (without deleting)
     --route                   Route to use. If not given, the route is trying to be detected from the currently
@@ -34,15 +34,13 @@ EOT
 install::run() {
     source "$(basedir)/commands/util/openshift_funcs"
 
-    if [ $(hasflag -s --setup-crd) ]; then
+    if [ $(hasflag -s --setup-as-admin) ]; then
         echo "Installing Syndesis CRD"
         local result=$(install_syndesis_crd)
         check_error "$result"
-        return
-    fi
-
-    if [ -n "$(readopt --fix-permissions)" ]; then
-        fix_permissions_for_operator "$(readopt --fix-permissions)"
+        if [ -n "$(readopt --setup-as-admin)" ]; then
+            add_user_permissions_for_operator "$(readopt --setup-as-admin)"
+        fi
         return
     fi
 

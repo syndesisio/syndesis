@@ -2,28 +2,35 @@
 
 
 build::description() {
-    echo "Run Syndesis builds"
+    echo "Build Syndesis builds"
 }
 
 build::usage() {
     cat <<EOT
--b  --backend                 Build only backend modules (core, extension, integration, connectors, server, meta)
-    --all-images              Build only modules with Docker images (ui, server, meta, s2i) and create images
--m  --module <m1>,<m2>, ..    Build modules
-                              Modules: ui, server, connector, s2i, meta, integration, extension, common
--d  --dependencies            Build also all project the specified module depends on
-    --skip-tests              Skip unit and system test execution
-    --skip-checks             Disable all checks
--f  --flash                   Skip checks and tests execution (fastest mode)
--i  --image                   Build Docker via s2i images, too
-    --docker                  Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
--p  --project <project>       Specifies the project to create images in when using '--openshift'
--e  --ensure                  If building a Go module, run 'dep ensure' before building
--l  --local                   For Go builds: Use a locally installed go, otherwise run the Go build from a container
--c  --clean                   Run clean builds (mvn clean)
-    --resume <m1>             Resume build from maven module (mvn -rf m1)
-    --batch-mode              Run mvn in batch mode
-    --camel-snapshot          Run a build with a specific Camel snapshot. You'll need to set an environment variable CAMEL_SNAPSHOT_VERSION with the SNAPSHOT version you want to use.
+    -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
+        --all-images               Build all modules with images: ui, server, meta, s2i, operator
+        --app-images               Build only application modules with Docker images (ui, server, meta, s2i)
+                                   and create images
+        --infra-images             Build only infrastructure modules with Docker images (operator) and create images
+    -m  --module <m1>,<m2>, ..     Build modules
+                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator
+    -d  --dependencies             Build also all project the specified module depends on
+        --skip-tests               Skip unit and system test execution
+        --skip-checks              Disable all checks
+    -f  --flash                    Skip checks and tests execution (fastest mode)
+    -i  --image                    Build Docker via s2i images, too (for those modules creating images)
+        --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
+    -p  --project <project>        Specifies the project / namespace to create images
+    -e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
+    -l  --local                    If building the operator, use a locally installed go
+                                   Otherwise run the Go build from a container (either local or Minishift's Docker  daemon)
+        --clean-cache              Used for the operator build to remove the local dependency cache.
+    -c  --clean                    Run clean builds (mvn clean)
+
+        --resume <m1>              Resume build from maven module (mvn -rf m1)
+        --batch-mode               Run mvn in batch mode
+        --camel-snapshot <version> Run a build with a specific Camel snapshot. If no argument is given the
+                                   environment variable CAMEL_SNAPSHOT_VERSION is used or an error thrown.
 EOT
 
 }
@@ -43,32 +50,16 @@ build::run() {
     local top_dir="$(appdir .)"
 
     # All Maven modules (all modules minus operator)
-    local maven_modules=$(filter_module "operator" "$modules")
+    local maven_modules=$(pick_module "$APP_IMAGES" "$modules")
     if [ -z "$modules" ] || [ -n "$maven_modules" ]; then
         call_maven "$(maven_args)" "$maven_modules"
     fi
 
     # Build operator if required
     if $(should_build "operator" "$modules"); then
-        operator $top_dir
+        do_operator $top_dir
     fi
 
-}
-
-operator() {
-    local top_dir=$1
-    echo "=============================================================================="
-    echo "Building syndesis-operator"
-    echo "=============================================================================="
-
-    if [ "$(hasflag -e --ensure)" ]; then
-        dep_ensure "$top_dir" "$(hasflag -l --local)"
-    fi
-    build_operator "$top_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)"
-
-    if [ "$(hasflag -i --image --images --docker)" ]; then
-        create_operator_image "$top_dir" "$(hasflag --docker)"
-    fi
 }
 
 maven_args() {
@@ -101,16 +92,17 @@ maven_args() {
         fi
     fi
 
-    set +o nounset
     if [ $(hasflag --camel-snapshot) ]; then
-       if [ -n "$CAMEL_SNAPSHOT_VERSION" ]; then
-           args="$args -Dcamel.version=$CAMEL_SNAPSHOT_VERSION"
-       else
-           echo "ERROR: you need to set the environment variable CAMEL_SNAPSHOT_VERSION to use --camel-snapshot option".
-           exit 1
+       local version=$(readopt --camel-snapshot)
+       if [ -z "$version" ]; then
+          version="${CAMEL_SNAPSHOT_VERION:-}"
        fi
+       if [ -z "$version" ]; then
+          echo "ERROR: you need to provied an argument to --camel-snapshot or set the environment variable CAMEL_SNAPSHOT_VERSION to use --camel-snapshot option".
+          exit 1
+       fi
+       args="$args -Dcamel.version=$version"
     fi
-    set -o nounset
 
     if [ -z "$project" ]; then
         project="$(readopt --project -p)"
@@ -138,9 +130,100 @@ maven_args() {
     echo $args
 }
 
+do_operator() {
+    local top_dir=$1
+    echo "=============================================================================="
+    echo "Building syndesis-operator"
+    echo "=============================================================================="
+
+    if [ ! $(hasflag -l --local) ] && $(is_minishift_docker_daemon); then
+        echo "Building on Minishift"
+        local minishift_build_dir="/opt/syndesis"
+        local operator_source_dir="$top_dir/install/operator"
+
+        if [ $(hasflag --clean-cache) ]; then
+            echo "Cleaning cache on Minishift"
+            minishift ssh "sudo su -c 'rm -rf $minishift_build_dir'"
+        fi
+
+        ensure_rcp_on_minishift
+        rsync_source_to_minishift $operator_source_dir $minishift_build_dir
+        build_operator_from_dir $minishift_build_dir 1000
+        rsync_binary_from_minishift $minishift_build_dir/syndesis-operator $operator_source_dir
+    else
+        build_operator_from_dir $top_dir/install/operator
+    fi
+}
+
+build_operator_from_dir() {
+    local operator_dir=${1}
+    local as_user=${2:-}
+    if [ "$(hasflag -e --ensure)" ]; then
+        dep_ensure "$operator_dir" "$(hasflag -l --local)" "$as_user"
+    fi
+    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$as_user"
+
+    if [ "$(hasflag -i --image --images --docker)" ]; then
+        create_operator_image "$operator_dir" "$(hasflag --docker)"
+    fi
+}
+
+is_minishift_docker_daemon() {
+    if [ -n "${DOCKER_CERT_PATH:-}" ] && [ "${DOCKER_CERT_PATH//minishift/}" != "$DOCKER_CERT_PATH" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
+ensure_rcp_on_minishift() {
+    if ! $(minishift ssh type rsync >/dev/null 2>&1); then
+        echo "Installing rsync on Minishift"
+        minishift ssh sudo "su -c 'yum install -y rsync'"
+    fi
+}
+
+rsync_source_to_minishift() {
+    local operator_source_dir=${1}
+    local minishift_build_dir=${2}
+
+    echo "Rsync local sources to Minishift VM to $minishift_build_dir"
+    # Ensure that target directory exist
+    mkdir_on_minishift $minishift_build_dir $minishift_build_dir/dep-cache $minishift_build_dir/vendor
+
+    rsync -az \
+          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i~/.minishift/machines/minishift/id_rsa"\
+          --progress \
+          ${operator_source_dir}/ \
+          docker@$(minishift ip):${minishift_build_dir}
+}
+
+mkdir_on_minishift() {
+    local dirs="$@"
+    for dir in $dirs; do
+        minishift ssh "sudo su -c '[ -d $dir ] || (mkdir -p $dir && chown -R docker $dir)'"
+    done
+}
+
+rsync_binary_from_minishift() {
+    local operator_bin=${1}
+    local local_target_dir=${2}
+
+    echo "Rsync compiled $operator_bin back to $local_target_dir"
+
+    rsync -az \
+          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i~/.minishift/machines/minishift/id_rsa"\
+          --progress \
+          docker@$(minishift ip):${operator_bin} \
+          $local_target_dir
+}
+
 
 # All modules, in the right build order
 ALL_MODULES="common extension integration connector meta server s2i ui test operator"
+APP_IMAGES="ui server meta s2i"
+INFRA_IMAGES="operator"
+ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES"
 MODULES=(
   "operator"
   "ui"
@@ -164,6 +247,14 @@ extract_modules() {
 
     if [ "$(hasflag --all-images)" ]; then
         modules="$modules ui server meta s2i operator"
+    fi
+
+    if [ "$(hasflag --app-images)" ]; then
+        modules="$modules $APP_IMAGES"
+    fi
+
+    if [ "$(hasflag --infra-images)" ]; then
+        modules="$modules $INFRA_IMAGES"
     fi
 
     local arg_modules=$(readopt --module -m);
@@ -210,12 +301,17 @@ order_modules() {
     echo $ret | awk '$1=$1'
 }
 
-filter_module() {
-    local filter="$1"
+pick_module() {
+    local pick_list="$1"
     local modules="$2"
 
-    echo ${modules//$filter} | awk '$1=$1'
-
+    local res=""
+    for module in $modules; do
+        if [ "${pick_list//$module/}" != "${pick_list}" ]; then
+            $res="$res $module"
+        fi
+    done
+    echo $res | awk '$1=$1'
 }
 
 should_build() {
