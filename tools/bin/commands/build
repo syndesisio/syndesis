@@ -50,25 +50,97 @@ build::run() {
 
     # Build operator if required
     if $(should_build "operator" "$modules"); then
-        operator $top_dir
+        do_operator $top_dir
     fi
 
 }
 
-operator() {
+do_operator() {
     local top_dir=$1
     echo "=============================================================================="
     echo "Building syndesis-operator"
     echo "=============================================================================="
 
-    if [ "$(hasflag -e --ensure)" ]; then
-        dep_ensure "$top_dir" "$(hasflag -l --local)"
+    if [ ! $(hasflag -l --local) ] && $(is_minishift_docker_daemon); then
+        echo "Building on Minishift"
+        local minishift_build_dir="/opt/syndesis"
+        local operator_source_dir="$top_dir/install/operator"
+
+        if [ $(hasflag --clean-cache) ]; then
+            echo "Cleaning cache on Minishift"
+            minishift ssh "sudo su -c 'rm -rf $minishift_build_dir'"
+        fi
+
+        ensure_rcp_on_minishift
+        rsync_source_to_minishift $operator_source_dir $minishift_build_dir
+        build_operator_from_dir $minishift_build_dir 1000
+        rsync_binary_from_minishift $minishift_build_dir/syndesis-operator $operator_source_dir
+    else
+        build_operator_from_dir $top_dir/install/operator
     fi
-    build_operator "$top_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)"
+}
+
+build_operator_from_dir() {
+    local operator_dir=${1}
+    local as_user=${2:-}
+    if [ "$(hasflag -e --ensure)" ]; then
+        dep_ensure "$operator_dir" "$(hasflag -l --local)" "$as_user"
+    fi
+    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$as_user"
 
     if [ "$(hasflag -i --image --images --docker)" ]; then
-        create_operator_image "$top_dir" "$(hasflag --docker)"
+        create_operator_image "$operator_dir" "$(hasflag --docker)"
     fi
+}
+
+is_minishift_docker_daemon() {
+    if [ -n "${DOCKER_CERT_PATH:-}" ] && [ "${DOCKER_CERT_PATH//minishift/}" != "$DOCKER_CERT_PATH" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
+ensure_rcp_on_minishift() {
+    if ! $(minishift ssh type rsync >/dev/null 2>&1); then
+        echo "Installing rsync on Minishift"
+        minishift ssh sudo "su -c 'yum install -y rsync'"
+    fi
+}
+
+rsync_source_to_minishift() {
+    local operator_source_dir=${1}
+    local minishift_build_dir=${2}
+
+    echo "Rsync local sources to Minishift VM to $minishift_build_dir"
+    # Ensure that target directory exist
+    mkdir_on_minishift $minishift_build_dir $minishift_build_dir/dep-cache $minishift_build_dir/vendor
+
+    rsync -az \
+          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i~/.minishift/machines/minishift/id_rsa"\
+          --progress \
+          ${operator_source_dir}/ \
+          docker@$(minishift ip):${minishift_build_dir}
+}
+
+mkdir_on_minishift() {
+    local dirs="$@"
+    for dir in $dirs; do
+        minishift ssh "sudo su -c '[ -d $dir ] || (mkdir -p $dir && chown -R docker $dir)'"
+    done
+}
+
+rsync_binary_from_minishift() {
+    local operator_bin=${1}
+    local local_target_dir=${2}
+
+    echo "Rsync compiled $operator_bin back to $local_target_dir"
+
+    rsync -az \
+          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i~/.minishift/machines/minishift/id_rsa"\
+          --progress \
+          docker@$(minishift ip):${operator_bin} \
+          $local_target_dir
 }
 
 maven_args() {
