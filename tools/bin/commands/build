@@ -75,15 +75,15 @@ do_operator() {
 }
 
 build_operator_from_dir() {
-    local top_dir=${1}
+    local operator_dir=${1}
     local as_user=${2:-}
     if [ "$(hasflag -e --ensure)" ]; then
-        dep_ensure "$top_dir" "$(hasflag -l --local)" "$as_user"
+        dep_ensure "$operator_dir" "$(hasflag -l --local)" "$as_user"
     fi
-    build_operator "$top_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$as_user"
+    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$as_user"
 
     if [ "$(hasflag -i --image --images --docker)" ]; then
-        create_operator_image "$top_dir" "$(hasflag --docker)"
+        create_operator_image "$operator_dir" "$(hasflag --docker)"
     fi
 }
 
