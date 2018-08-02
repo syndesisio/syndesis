@@ -115,7 +115,6 @@ rsync_source_to_minishift() {
     echo "Rsync local sources to Minishift VM to $minishift_build_dir"
     # Ensure that target directory exist
     mkdir_on_minishift $minishift_build_dir $minishift_build_dir/dep-cache $minishift_build_dir/vendor
-    minishift ssh "sudo su -c '[ -d $minishift_build_dir ] || (mkdir $minishift_build_dir && chown docker $minishift_build_dir)'"
 
     rsync -az \
           -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i~/.minishift/machines/minishift/id_rsa"\
@@ -125,8 +124,10 @@ rsync_source_to_minishift() {
 }
 
 mkdir_on_minishift() {
-    local dir=${1}
-    minishift ssh "sudo su -c '[ -d $dir ] || (mkdir $dir && chown docker $dir)'"
+    local dirs="$@"
+    for dir in $dirs; do
+        minishift ssh "sudo su -c '[ -d $dir ] || (mkdir -p $dir && chown -R docker $dir)'"
+    done
 }
 
 rsync_binary_from_minishift() {
