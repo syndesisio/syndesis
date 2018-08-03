@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.ToJson;
+import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithModificationTimestamps;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithResourceId;
@@ -77,5 +78,29 @@ public interface IntegrationBase extends WithResourceId, WithVersion, WithModifi
             .map(a -> a.getDescriptor().getConnectorId())//
             .filter(Objects::nonNull)//
             .collect(Collectors.toSet());
+    }
+
+    default Optional<Connection> findConnectionById(String connectionId) {
+        if (getConnections() == null) {
+            return Optional.empty();
+        }
+
+        return getConnections().stream()
+            .filter(WithId.class::isInstance)
+            .filter(connection -> connection.getId().isPresent())
+            .filter(connection -> connectionId.equals(connection.getId().get()))
+            .findFirst();
+    }
+
+    default Optional<Step> findStepById(String stepId) {
+        if (getSteps() == null) {
+            return Optional.empty();
+        }
+
+        return getSteps().stream()
+            .filter(WithId.class::isInstance)
+            .filter(step -> step.getId().isPresent())
+            .filter(step -> stepId.equals(step.getId().get()))
+            .findFirst();
     }
 }

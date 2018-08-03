@@ -43,6 +43,8 @@ public interface LeveledMessage extends WithMetadata {
         SYNDESIS008, // Validation Error
         SYNDESIS009, // Connection has been deleted
         SYNDESIS010, // Multiple extension installed
+        SYNDESIS011, // Integration is out-of-date with its connections and should be re-edited
+        SYNDESIS012, // Published integration is stale and should be republished
     }
 
     enum Level {

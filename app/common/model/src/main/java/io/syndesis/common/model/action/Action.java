@@ -104,4 +104,30 @@ public interface Action extends WithResourceId, WithKind, WithName, WithTags, Wi
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue))
             : Collections.emptyMap();
     }
+
+    /**
+     * A weaker form of equality to {@link #equals(Object)}.
+     * Compares a defining subset of properties to {code}another{code}'s
+     * and in turn tests those properties for equivalence.
+     *<p>
+     * An equals test of a null field and an empty {@link Optional}
+     * will return false whilst they are equivalent so this method will return true.
+     * <p>
+     * Items not tested include:
+     * <ul>
+     * <li>Version id -
+     *        this id can be updated yet the rest of the object is still unchanged;
+     * <li>Updated Date -
+     *        an object can be modified then reverted yet the updated value will be different.
+     * </ul>
+     * <p>
+     * Note
+     * Method can result in 2 instances being equivalent even though some
+     * properties are different. Thus, this should only be used in appropriate
+     * situations.
+     *
+     * @param another an {@link Action} to compare with
+     * @return true if this is equivalent to {code}another{code}, false otherwise
+     */
+    boolean equivalent(Action another);
 }

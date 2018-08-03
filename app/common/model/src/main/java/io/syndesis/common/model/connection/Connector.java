@@ -18,6 +18,7 @@ package io.syndesis.common.model.connection;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 
@@ -81,11 +82,94 @@ public interface Connector extends WithId<Connector>, WithIdVersioned<Connector>
         return Collections.emptyList();
     }
 
+    /**
+     * Provides a summary of the connector's actions
+     * <p>
+     * Note:
+     * Excluded from {@link #hashCode()} and {@link #equals(Object)}
+     *
+     * @return the summary of the connector's actions
+     */
+    @Value.Auxiliary
     Optional<ActionsSummary> getActionsSummary();
 
+    /**
+     * Provide number of connections using this connector
+     * <p>
+     * Note:
+     * Excluded from {@link #hashCode()} and {@link #equals(Object)}
+     *
+     * @return count of integrations
+     */
+    @Value.Auxiliary
     OptionalInt getUses();
 
     default Optional<String> propertyTaggedWith(final String tag) {
         return propertyTaggedWith(getConfiguredProperties(), tag);
+    }
+
+    /**
+     * A weaker form of equality to {@link #equals(Object)}.
+     * Compares a defining subset of properties to {code}another{code}'s
+     * and in turn tests those properties for equivalence.
+     *<p>
+     * An equals test of a null field and an empty {@link Optional}
+     * will return false whilst they are equivalent so this method will return true.
+     * <p>
+     * Items not tested include:
+     * <ul>
+     * <li>Version id -
+     *        this id can be updated yet the rest of the object is still unchanged;
+     * <li>Updated Date -
+     *        an object can be modified then reverted yet the updated value will be different.
+     * </ul>
+     * <p>
+     * Note
+     * Method can result in 2 instances being equivalent even though some
+     * properties are different. Thus, this should only be used in appropriate
+     * situations.
+     *
+     * @param another a {@link Connector} to compare with
+     * @return true if this is equivalent to {code}another{code}, false otherwise
+     */
+    @SuppressWarnings("PMD.NPathComplexity")
+    default boolean equivalent(Connector another) {
+        if (this == another) {
+            return true;
+        }
+
+        if (another == null) {
+            return false;
+        }
+
+        List<ConnectorAction> myActions = getActions();
+        if (myActions == null) {
+            if (another.getActions() != null) {
+                return false;
+            }
+        } else {
+            for (ConnectorAction myAction : myActions) {
+                ConnectorAction anotherAction = another.findActionById(myAction.getId().get()).orElse(null);
+                if (! myAction.equivalent(anotherAction)) {
+                    return false;
+                }
+            }
+        }
+
+        return Objects.equals(getConnectorGroup(), another.getConnectorGroup())
+                        && Objects.equals(getConnectorGroupId(), another.getConnectorGroupId())
+                        && Objects.equals(getDescription(), another.getDescription())
+                        && Objects.equals(getIcon(), another.getIcon())
+                        && getKind().equals(another.getKind())
+                        && Objects.equals(getComponentScheme(), another.getComponentScheme())
+                        && Objects.equals(getConnectorFactory(), another.getConnectorFactory())
+                        && getConnectorCustomizers().equals(another.getConnectorCustomizers())
+                        && Objects.equals(getId(), another.getId())
+                        && getTags().equals(another.getTags())
+                        && Objects.equals(getName(), another.getName())
+                        && getProperties().equals(another.getProperties())
+                        && getConfiguredProperties().equals(another.getConfiguredProperties())
+                        && getDependencies().equals(another.getDependencies())
+                        && getMetadata().equals(another.getMetadata());
     }
 }

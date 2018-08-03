@@ -17,12 +17,15 @@ package io.syndesis.server.update.controller.bulletin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import javax.validation.Validator;
-
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.action.Action;
@@ -34,6 +37,8 @@ import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.util.CollectionsUtils;
 import io.syndesis.common.util.KeyGenerator;
@@ -56,6 +61,70 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
     @Override
     public boolean canHandle(ChangeEvent event) {
         return event.getKind().map(Kind::from).filter(supportedKinds::contains).isPresent();
+    }
+
+    /**
+     * Compares the given connection with the connection fetched from the data manager.
+     * Adds a message with the missing code if there is no connection available or adds a
+     * message with the difference code if the connections differ in their metadata.
+     *
+     * @param connection the connection to compare
+     * @param messages the messages collection to add the message to
+     * @param supplier the supplier for generating the message
+     * @param missingCode the code if the connection is missing
+     * @param differenceCode the code if the connection has different metadata
+     */
+    private void compareConnection(Connection connection,
+                                                                    List<LeveledMessage> messages, Supplier<LeveledMessage.Builder> supplier,
+                                                                    LeveledMessage.Code missingCode, LeveledMessage.Code differenceCode) {
+        Connection newConnection = getDataManager().fetch(Connection.class, connection.getId().get());
+
+        // There's no connection with the given id so this means
+        // that the connection has been deleted or is is not present
+        if (newConnection == null) {
+            messages.add(
+                supplier.get()
+                    .level(LeveledMessage.Level.WARN)
+                    .code(missingCode)
+                    .build()
+            );
+        } else {
+            //
+            // Determine whether the integration's nested connection is
+            // still equivalent to the connection in the database. If not then
+            // flag a warning.
+            //
+            newConnection = includeConnector(newConnection);
+            if (! connection.equivalent(newConnection)) {
+                messages.add(
+                         supplier.get()
+                         .level(LeveledMessage.Level.WARN)
+                         .code(differenceCode)
+                         .build()
+                );
+            }
+        }
+    }
+
+    private Connection includeConnector(Connection connection) {
+        if (connection == null) {
+            return connection;
+        }
+
+        Optional<Connector> connectorOptional = connection.getConnector();
+        if (connectorOptional != null && connectorOptional.isPresent()) {
+            return connection;
+        }
+
+        Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId());
+        if (connector == null) {
+            return connection;
+        }
+
+        Connection.Builder builder = new Connection.Builder();
+        return builder.createFrom(connection)
+                                   .connector(connector)
+                                   .build();
     }
 
     @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.NPathComplexity"})
@@ -195,19 +264,13 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                     final Connection connection = step.getConnection().get();
 
                     if (connection.getId().isPresent()) {
-                        Connection newConnection = dataManager.fetch(Connection.class, connection.getId().get());
-
-                        // There's not connection with the given id so this means
-                        // that the connection has been deleted or is is not present
-                        // in the imported extension
-                        if (newConnection == null) {
-                            messages.add(
-                                supplier.get()
-                                    .level(LeveledMessage.Level.WARN)
-                                    .code(LeveledMessage.Code.SYNDESIS009)
-                                    .build()
-                            );
-                        }
+                        //
+                        // Compare the connection in the draft integration's step
+                        // with the connection from the data manager and log the
+                        // result using the given message codes
+                        //
+                        compareConnection(connection, messages, supplier,
+                                                              LeveledMessage.Code.SYNDESIS009, LeveledMessage.Code.SYNDESIS011);
                     }
 
                     Connector newConnector = dataManager.fetch(Connector.class, connection.getConnectorId());
@@ -240,6 +303,11 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
 
             }
 
+            // **********************
+            // Integration Deployments
+            // **********************
+            messages.addAll(computeDeploymentDifferences(integration));
+
             builder.errors(countMessagesWithLevel(LeveledMessage.Level.ERROR, messages));
             builder.warnings(countMessagesWithLevel(LeveledMessage.Level.WARN, messages));
             builder.notices(countMessagesWithLevel(LeveledMessage.Level.INFO, messages));
@@ -254,5 +322,76 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
         }
 
         return boards;
+    }
+
+    private Collection<? extends LeveledMessage> computeDeploymentDifferences(Integration integration) {
+        String integrationId = integration.getId().get();
+
+        Set<String> deploymentIds = getDataManager().fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", integrationId);
+        if (deploymentIds == null || deploymentIds.isEmpty()) {
+            // No deployments match this integration
+            return Collections.emptyList();
+        }
+
+        List<IntegrationDeployment> deployments = deploymentIds.stream()
+                .map(i -> getDataManager().fetch(IntegrationDeployment.class, i))
+                .filter(r -> r != null)
+                .filter(d -> d.getCurrentState().equals(IntegrationDeploymentState.Published))
+                .collect(Collectors.toList());
+
+        if (deployments.isEmpty()) {
+            // Nothing to do as no deployments have been published
+            return Collections.emptyList();
+        }
+
+        final List<LeveledMessage> messages = new ArrayList<>();
+
+        for (IntegrationDeployment deployment : deployments) {
+            final Supplier<LeveledMessage.Builder> supplier = () -> new LeveledMessage.Builder().putMetadata("deployment", deployment.getId().get());
+
+            Integration deployedInteg = deployment.getSpec();
+
+            // **********************
+            // Draft Integration
+            // **********************
+            if (! integration.equivalent(deployedInteg)) {
+                messages.add(
+                             supplier.get()
+                             .code(LeveledMessage.Code.SYNDESIS012)
+                             .level(LeveledMessage.Level.WARN)
+                             .build()
+                );
+
+                //
+                // Deployment is already stale in comparison to its source integration
+                // so no need to check the connections as well and duplicate the messages
+                //
+                continue;
+            }
+
+            // **********************
+            // Connections
+            // **********************
+            for (Step deployedStep : deployedInteg.getSteps()) {
+                deployedStep.getAction().filter(ConnectorAction.class::isInstance)
+                                            .map(ConnectorAction.class::cast)
+                                            .ifPresent(action -> {
+                                                if (! deployedStep.getConnection().isPresent()) {
+                                                    return;
+                                                }
+
+                                                //
+                                                // Compare the connection in the deployed integration's step
+                                                // with the connection from the data manager and log the
+                                                // result using the given message codes
+                                                //
+                                                final Connection connection = deployedStep.getConnection().get();
+                                                compareConnection(connection, messages, supplier,
+                                                                  LeveledMessage.Code.SYNDESIS009, LeveledMessage.Code.SYNDESIS012);
+                                            });
+            }
+        }
+
+        return messages;
     }
 }
