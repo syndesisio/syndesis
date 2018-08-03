@@ -32,7 +32,8 @@
         "create-upload-spec-step-title": "Upload OpenAPI Specification",
         "create-review-step-title": "Review Actions",
         "create-security-step-title": "Specify Security",
-        "create-details-step-title": "Review/Edit Connector Details"
+        "create-details-step-title": "Review/Edit Connector Details",
+        "edit-tooltip": "{{project.name}} cannot make this specification available for review/edit. If you want to review or edit the API before {{project.name}} creates the connector, try manually downloading the specification and then upload that file."
       }
     },
     "integrations": {
