@@ -49,13 +49,20 @@
     Next
   </button>
 
+  <ng-template #editTooltip>
+    The platform has not been able to download the linked specification. Please try manually downloading it an providing the downloaded file to enable the review/edit feature.
+  </ng-template>
   <button *ngIf="showNextButton"
           (click)="reviewComplete.emit({event: event, displayEditor: true})"
+          [disabled]="!enableEditButton"
           type="button"
           class="connector-form__submit btn btn-default apicurio pull-right">
-    Review/Edit
+    <span [tooltip]="editTooltip"
+          [tooltipEnable]="enableEditButton"
+          placement="top">
+      Review/Edit
+    </span>
   </button>
-
 </div>
 <ng-template #validationFallback>
   <h5 class="connector-fallback">No connector details are currently available.</h5>

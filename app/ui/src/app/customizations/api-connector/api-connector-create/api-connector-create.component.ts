@@ -45,6 +45,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   displayDefinitionEditor = false;
   editorHasChanges = false;
   validationResponse: CustomConnectorRequest;
+  enableEditor = true;
 
   @ViewChild('_apiEditor') _apiEditor: ApiEditorComponent;
   apiDef: ApiDefinition;
@@ -111,9 +112,16 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
 
           reader.readAsText( apiConnectorState.specificationFile );
         } else {
-          // TODO next line sets spec to the URL. this is not right as spec needs to be set to the URL JSON response
-          this.apiDef.spec = apiConnectorState.configuredProperties.specification;
-          // TODO set this.apiDef.name here
+          this.enableEditor = false;
+
+          const fetch$ = Observable
+            .from(fetch(apiConnectorState.configuredProperties.specification))
+            .flatMap(response => response.json());
+
+          fetch$.subscribe(spec => {
+            this.apiDef.spec = spec;
+            this.enableEditor = true;
+          });
         }
       });
 
