@@ -24,6 +24,7 @@ import {
 } from '@syndesis/ui/platform';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { ConfigService } from '@syndesis/ui/config.service';
+import { log } from '@syndesis/ui/logging';
 
 const REPLACE_DRAFT = 'replaceDraft';
 const STOP_INTEGRATION = 'stopIntegration';
@@ -256,8 +257,14 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
               }
               this.deploymentActionConfigs[deployment.id] = actionConfig;
             }
-          }
-        );
+          },
+          error => {
+            if (error.status === 404) {
+              this.router.navigate(['..'], { relativeTo: this.route });
+              return;
+            }
+            log.warn('Error loading integration: ' + JSON.stringify(error));
+          });
         this.loading = true;
         this.integrationStore.load(integrationId);
       });
