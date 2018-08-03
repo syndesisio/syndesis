@@ -133,6 +133,7 @@ export abstract class AbstractStore<
             this.loadAll(retries + 1);
           }, (retries + 1) * 1000);
         } else {
+          this._list.error(error);
           this._loading.next(false);
         }
       });
@@ -178,11 +179,13 @@ export abstract class AbstractStore<
           () => 'Error retrieving ' + this.kind + ': ' + error,
           category,
         );
-        if (retries < 3) {
+        // don't retry if the entity isn't there
+        if (error.status !== 404 && retries < 3) {
           setTimeout(() => {
             this.load(id, retries + 1);
           }, (retries + 1) * 1000);
         } else {
+          this._current.error(error);
           this._loading.next(false);
         }
       },
