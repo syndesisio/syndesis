@@ -47,7 +47,7 @@
             [apiConnectorTemplateName]="'OpenAPI'"
             [apiConnectorData]="(apiConnectorState$ | async)?.createRequest"
             [showNextButton]="true"
-            [showEditButton]="enableEditor"
+            [enableEditButton]="enableEditor"
             (reviewComplete)="onReviewComplete($event)">
           </syndesis-api-connector-review>
           <syndesis-api-connector-auth *ngIf="currentActiveStep == 3"

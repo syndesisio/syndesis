@@ -13,7 +13,7 @@ export class ApiConnectorReviewComponent {
 
   @Input() apiConnectorTemplateName: string;
   @Input() showNextButton: boolean;
-  @Input() showEditButton: boolean;
+  @Input() enableEditButton: boolean;
   @Input()
   set apiConnectorData(value: ApiConnectorData) {
     this.validation = value;
