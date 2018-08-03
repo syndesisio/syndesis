@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
 import { ApiConnectorData } from '@syndesis/ui/customizations/api-connector';
 
@@ -10,6 +10,7 @@ import { ApiConnectorData } from '@syndesis/ui/customizations/api-connector';
 export class ApiConnectorReviewComponent {
   validation: ApiConnectorData;
   importedActions: Array<{ tag: string; count: number }>;
+  fromUrl = false;
 
   @Input() apiConnectorTemplateName: string;
   @Input() showNextButton: boolean;
@@ -24,4 +25,14 @@ export class ApiConnectorReviewComponent {
   }
 
   @Output() reviewComplete = new EventEmitter();
+
+  ngOnInit() {
+    this.checkIfFromUrl();
+  }
+
+  checkIfFromUrl() {
+    if (this.validation.configuredProperties && this.validation.configuredProperties.specification) {
+      this.fromUrl = true;
+    }
+  }
 }

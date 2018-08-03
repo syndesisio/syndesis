@@ -49,7 +49,7 @@
     Next
   </button>
 
-  <button *ngIf="showNextButton"
+  <button *ngIf="showNextButton && !fromUrl"
           (click)="reviewComplete.emit({event: event, displayEditor: true})"
           type="button"
           class="connector-form__submit btn btn-default apicurio pull-right">
