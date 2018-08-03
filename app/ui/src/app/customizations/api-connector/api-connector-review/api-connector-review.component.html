@@ -50,7 +50,7 @@
   </button>
 
   <ng-template #editTooltip>
-    The platform has not been able to download the linked specification. Please try manually downloading it an providing the downloaded file to enable the review/edit feature.
+    {{ 'customizations.api-client-connectors.edit-tooltip' | synI18n }}
   </ng-template>
   <button *ngIf="showNextButton"
           (click)="reviewComplete.emit({event: event, displayEditor: true})"
