@@ -19,18 +19,20 @@ or a library extension.
 . If you are developing a step extension: 
 +
 .. Decide whether to implement it as a Camel route or implement it by using 
-the Syndesis step API.  
+the Syndesis `Step` API.  
 .. If you choose to implement the extension as a Camel route, 
 decide whether to implement XML fragments, a `RouteBuilder` class, or a bean. 
 .. In your Maven project, specify the required metadata, such as the
 `schemaVersion`, extension `name`, `extensionId`, and so on. 
 . Code the classes that implement the feature. 
 . Add dependencies to the project's `pom.xml` file. 
-. For connector and library extensions, create the JSON file that 
+. For connector and library extensions, and for step extensions that
+you implement in XML, create the JSON file that 
 defines the extension. 
 +
-For step extensions, Maven can generate the JSON extension definition file
-for you when you specify corresponding values in your Maven project. 
+For step extensions that you implement in Java, 
+Maven can generate the JSON extension definition file
+for you when you specify corresponding data structure values in your Maven project. 
 . Run Maven to build the extension and create the extension's JAR file. 
 . Test the extension by uploading the JAR file to a {prodname} development 
 environment. 

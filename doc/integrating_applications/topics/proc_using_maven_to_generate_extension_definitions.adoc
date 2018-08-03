@@ -1,12 +1,12 @@
 [id='using-maven-to-generate-extension-definitions']
-= Description of Maven plugin for generating an extension definition
+= Description of Maven plugin that supports extensions
 
-The `extension-maven-plugin` provides extension support by
-generating the JSON extension definition and packaging the
-extension as a valid Spring Boot module.
+The `extension-maven-plugin` supports extension development by
+packaging the extension as a valid Spring Boot module. For step extensions
+that you implement in Java, this plugin can generate the 
+extension definition JSON file. 
 
-In a Maven `pom.xml` file, the entry for the extension support plugin 
-looks like this:
+In your Maven project's`pom.xml` file, add the following plugin declaration:
 
 [source,xml]
 ----
@@ -24,28 +24,49 @@ looks like this:
     </executions>
 </plugin>
 ----
-<1> generate extension definition.
-<2> package extension.
 
 The `extension-maven-plugin` defines the following goals:
 
-* *generate-metadata* generates the JSON extension definition 
-according to the following rules:
+* *generate-metadata* generates the JSON extension definition file 
+that will be in the generated JAR file as follows:
 +
-** Includes specifications from 
-`META-INF/syndesis/syndesis-extension-definition.json` to generate the 
-final descriptor.
-  - information such as _id_, _name_, _description_ and _version_ are computed from the project if not explicit 
-  configured through plugin configuration or using `META-INF/syndesis/syndesis-extension-definition.json`
-  - the dependencies list is built including dependencies provided with scope _provided_ and that are managed through the _extension-bom_
+.. Maven starts with the data structure specifications that are in the 
+`META-INF/syndesis/syndesis-extension-definition.json` file, if there
+is one.
++
+If you are coding in XML, then you must define the extension 
+definition JSON file yourself and it must specify all required
+data structures. 
++
+If you are developing a connector or library extension, then you must
+define the extension definition JSON file yourself and it must specify
+all required data structures. 
++
+If you are developing a step extension in Java, you can: 
++
+** Create the extension definition JSON file yourself. 
+** In your Java code, specify annotations that define all 
+required data structures. You do not create an extension definition
+JSON file.
+** Create an extension definition JSON file and specify some but
+not all  data structures. 
 
--
-* **repackage-extesion** that packages the Syndesis extension definition according ot the following rules:
+.. For step extensions that you develop in Java,
+ Maven obtains missing specifications from code annotations
 
-  - dependencies and related transitive ones not managed through the _extension-bom_ are included in the _lib_ folder of the repackaged jar
-  - dependencies with scope _system_ are added to the _lib_ folder of the repackaged jar for extension of type _Libaries_
+.. Maven adds the dependencies list, which specifies dependencies that are 
+provided with a scope of `provided` and that are managed through the 
+`extension-bom`. 
 
-Assuming we have the following pom:
+* *repackage-extension* packages the extension.
++
+** Dependencies and related transitive dependencies 
+that are not managed through the `extension-bom` are in the `lib` folder 
+of the generated JAR. 
+** For library extensions, dependencies whose scope is `system` are 
+in the `lib` folder of the generated JAR.  
+
+For example, suppose your Maven project has the following `pom.xml` file:
 
 [source,xml]
 ----
@@ -116,7 +137,8 @@ Assuming we have the following pom:
 </project>
 ----
 
-Then the generated extension descriptor would be:
+Based on this `pom.xml` file, the generated extension definition 
+JSON file looks like this:
 
 [source,json]
 ----
@@ -134,7 +156,7 @@ Then the generated extension descriptor would be:
 }
 ----
 
-And then generated archive would be:
+The generated archive has this structure and content:
 
 [source]
 ----

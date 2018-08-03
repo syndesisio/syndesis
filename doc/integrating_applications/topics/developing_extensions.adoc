@@ -3,12 +3,20 @@
 
 If {prodname} does not provide a feature that is needed to create an
 integration, then an expert developer 
-can code an extension that provides the needed behavior.  
-
-The 
+can code an extension that provides the needed behavior.  The
 https://github.com/syndesisio/syndesis-extensions[Syndesis extensions repository]
-contains examples of extensions. The following topics describe the 
-requirements and provide additional examples:
+contains examples of extensions. 
+
+The Fuse Tooling plugin to Red Hat Developer Studio provides a wizard
+that helps you develop a step extension or a connector extension. It is 
+a matter of personal preference whether you choose to develop a step
+extension or a connector extension in Developer Studio or in some other
+IDE. For information about using the Developer Studio plugin, see 
+{LinkFuseToolingUserGuide}#igniteextension[Developing extensions for {prodname} integrations].
+
+In this document, the following topics outline the 
+procedure, describe the requirements, and provide additional examples for
+developing extensions in an IDE that you choose. 
 
 * <<procedure-for-developing-extensions>>
 * <<description-kinds-extensions>>
@@ -18,7 +26,6 @@ requirements and provide additional examples:
 * <<develop-step-extensions>>
 * <<develop-connector-extensions>>
 * <<develop-library-extensions>>
-// * <<about-testing>>
 
 include::proc_developing_extensions.adoc[leveloffset=+1]
 
@@ -35,5 +42,3 @@ include::develop_step_extensions.adoc[leveloffset=+1]
 include::develop_connector_extensions.adoc[leveloffset=+1]
 
 include::develop_library_extensions.adoc[leveloffset=+1]
-
-// include::con_about_testing.adoc[leveloffset=+1]

@@ -4,14 +4,14 @@
 An extension defines one of the following:
 
 * One or more custom steps that operate on integration data between
-connections.
+connections. Each custom step performs one action. This is a step extension. 
 
 * A library resource that an integration runtime uses. For example, 
 a library extension can provide a JDBC driver for connecting to a proprietary 
 SQL database, such as Oracle. 
 
 * A single custom connector for creating connections to a particular application
-or service that you want to integrate.
+or service that you want to integrate. This is a connector extension. 
 +
 NOTE: {prodname} can use an OpenAPI specification to create a connector 
 for a REST API client. See <<developing-rest-api-client-connectors>>.

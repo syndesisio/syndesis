@@ -5,9 +5,11 @@ A library extension provides a resource that an
 integration requires at runtime. A library extension does not contribute steps or 
 connectors to {prodname}. 
 
-Support for library extensions is evolving. In this release:
+Support for library extensions is evolving. In this release, in the 
+{prodname} web interface:
 
-* You cannot select which library extension(s) an 
+*  When you create an integration, 
+you cannot select which library extension(s) an 
 integration should include. For more information, see 
 https://github.com/syndesisio/syndesis/issues/2808[this GitHub issue].
 
