@@ -32,9 +32,10 @@ There must be only at most one label from the "Exclusive" groups.
 | Reference to external projects
 |
 
-| **d/**
-| Day labels for tagging an Epic to talk about at specific day in the daily meeting
+| **source/**
+| Where did the issue originate from (stakeholders)? i.e. `source/qe` indicates that QE raised this issue.
 |
+
 
 | **group/**
 | Internal Syndesis modules
@@ -55,10 +56,6 @@ There must be only at most one label from the "Exclusive" groups.
 | **status/**
 | Status of an issue or PR.
 |
-
-| **target/**
-| Target milestone for an Epic. These are the Technical Preview (TP) targets and GA.
-| ✔︎
 |===
 
 Each label group serves a particular purpose, and for each issue and PR, it should be considered whether a label from a group applies.
