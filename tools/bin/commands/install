@@ -6,9 +6,10 @@ install::description() {
 
 install::usage() {
     cat <<EOT
--s  --setup-as-admin <user>   Install CRDs clusterwide and optionally add permission to the given user so that
-                              user can install the operator in his projects. Othwerwise only admin can install the
-                              operator. You have to run this once as cluster admin
+-s  --setup-as-admin          Install CRDs clusterwide. Use --prepare-for-user if you want a specific user to be
+                              able to install Syndesis. You have to run this option once as cluster admin.
+-u  --prepare-for-user <user> Add permissions for the given user so that user can install the operator
+                              in her projects
 -p  --project                 Install into this project. Delete this project
                               if it already exists. By default, install into the current project (without deleting)
     --route                   Route to use. If not given, the route is trying to be detected from the currently
@@ -34,13 +35,23 @@ EOT
 install::run() {
     source "$(basedir)/commands/util/openshift_funcs"
 
+    local prep_only="false"
     if [ $(hasflag -s --setup-as-admin) ]; then
         echo "Installing Syndesis CRD"
         local result=$(install_syndesis_crd)
         check_error "$result"
-        if [ -n "$(readopt --setup-as-admin)" ]; then
-            add_user_permissions_for_operator "$(readopt --setup-as-admin)"
-        fi
+        prep_only="true"
+    fi
+
+    local user_to_prepare="$(readopt -u --prepare-for-user)"
+    if [ -n  "$user_to_prepare" ]; then
+        echo "Grant permission to create Syndesis to user $user_to_prepare"
+        local result=$(add_user_permissions_for_operator "$user_to_prepare")
+        check_error "$result"
+        prep_only="true"
+    fi
+
+    if $prep_only; then
         return
     fi
 
@@ -53,7 +64,16 @@ install::run() {
     # Setup oc
     setup_oc
 
+    # Check for the proper setup
+    set +e
+    oc get syndesis >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        check_error "ERROR: No CRD Syndesis installed or not enough rights. Please run --setup-as-admin and/or --prepare-for-user as cluster-admin. See 'syndesis install --help' for more information."
+    fi
+    set -e
+
     # Deploy operator and wait until its up
+    echo "Deploying Syndesis operator"
     result=$(deploy_syndesis_operator)
     check_error "$result"
     wait_for_deployments 1 syndesis-operator
