@@ -15,16 +15,6 @@
  */
 package io.syndesis.server.logging.jsondb.controller;
 
-import io.fabric8.kubernetes.api.model.PodList;
-import io.fabric8.kubernetes.api.model.PodListBuilder;
-import io.syndesis.server.jsondb.GetOptions;
-import io.syndesis.server.jsondb.impl.SqlJsonDB;
-import io.syndesis.server.openshift.OpenShiftService;
-import org.h2.jdbcx.JdbcDataSource;
-import org.junit.Before;
-import org.junit.Test;
-import org.skife.jdbi.v2.DBI;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,8 +24,24 @@ import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
+
+import io.fabric8.kubernetes.api.model.PodList;
+import io.fabric8.kubernetes.api.model.PodListBuilder;
+import io.fabric8.kubernetes.client.ConfigBuilder;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.syndesis.server.jsondb.GetOptions;
+import io.syndesis.server.jsondb.impl.SqlJsonDB;
+import io.syndesis.server.openshift.OpenShiftService;
+
+import org.h2.jdbcx.JdbcDataSource;
+import org.junit.Before;
+import org.junit.Test;
+import org.skife.jdbi.v2.DBI;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Used to unit test the LogsController implementation.
@@ -60,7 +66,9 @@ public class ActivityTrackingControllerTest {
         final String expectedDBState = resource("logs-controller-db.json").trim();
         final String podLogs = resource("test-pod-x23x.txt");
 
-        try (ActivityTrackingController controller = new ActivityTrackingController(jsondb, dbi, null) {
+        final KubernetesClient client = mock(KubernetesClient.class);
+        when(client.getConfiguration()).thenReturn(new ConfigBuilder().withMasterUrl("http://master").build());
+        try (ActivityTrackingController controller = new ActivityTrackingController(jsondb, dbi, client) {
 
             @Override
             protected PodList listPods() {
@@ -85,7 +93,7 @@ public class ActivityTrackingControllerTest {
 
             @Override
             protected void watchLog(String podName, Consumer<InputStream> handler, String sinceTime) throws IOException {
-                executor.execute(()->{
+                execute("test", ()->{
                     handler.accept(new ByteArrayInputStream(podLogs.getBytes(StandardCharsets.UTF_8)));
                 });
             }

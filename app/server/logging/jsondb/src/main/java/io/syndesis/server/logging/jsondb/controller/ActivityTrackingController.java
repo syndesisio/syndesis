@@ -64,16 +64,19 @@ import io.syndesis.server.openshift.OpenShiftService;
 @SuppressWarnings({"PMD.DoNotUseThreads", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.CyclomaticComplexity", "PMD.GodClass"})
 public class ActivityTrackingController implements Closeable {
 
+    static final String IDLE_THREAD_NAME = "Logs Controller [idle]";
+
     private static final Logger LOG = LoggerFactory.getLogger(ActivityTrackingController.class);
 
     private final DBI dbi;
     private final KubernetesClient client;
     private final Map<String, PodLogMonitor> podHandlers = new HashMap<>();
     private final JsonDB jsondb;
-    private final KubernetesSupport kubernetesSupport;
     private ScheduledExecutorService scheduler;
+    private ExecutorService executor;
 
-    protected ExecutorService executor;
+    final KubernetesSupport kubernetesSupport;
+
     protected final LinkedBlockingDeque<BatchOperation> eventQueue = new LinkedBlockingDeque<>(1000);
     protected final AtomicBoolean stopped = new AtomicBoolean();
 
@@ -120,6 +123,8 @@ public class ActivityTrackingController implements Closeable {
     }
 
     public void cleanupLogs() {
+        Thread.currentThread().setName("Logs Controller Scheduler [running]: cleanupLogs");
+
         try {
             LOG.info("Purging old controller");
             long until = System.currentTimeMillis() - retention.toMillis();
@@ -136,6 +141,8 @@ public class ActivityTrackingController implements Closeable {
             }
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             LOG.error("Unexpected Error occurred.", e);
+        } finally {
+            Thread.currentThread().setName("Logs Controller Scheduler [idle]");
         }
     }
 
@@ -203,12 +210,18 @@ public class ActivityTrackingController implements Closeable {
      * @param name
      * @return
      */
+    @SuppressWarnings("PMD.InvalidSlf4jMessageFormat") // false positive
     private static ThreadFactory threadFactory(String name) {
-        return r -> new Thread(null, r, name, 1024);
+        return r -> {
+            Thread thread = new Thread(null, r, name, 1024);
+            thread.setUncaughtExceptionHandler((where, throwable) -> LOG.error("Failure running activity tracking task on thread: {}", where.getName(), throwable));
+
+            return thread;
+        };
     }
 
     private void pollPods() {
-
+        Thread.currentThread().setName("Logs Controller Scheduler [running]: pollPods");
         try {
             // clear the marks
             for (PodLogMonitor handler : podHandlers.values()) {
@@ -230,7 +243,7 @@ public class ActivityTrackingController implements Closeable {
                 if (handler == null) {
                     // create a new handler.
                     try {
-                        handler = new PodLogMonitor(this, pod);
+                        handler = createLogMonitor(pod);
                         handler.start();
 
                         LOG.info("Created handler for pod: {}", handler.podName);
@@ -266,8 +279,14 @@ public class ActivityTrackingController implements Closeable {
             }
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException | IOException e) {
             LOG.error("Unexpected Error occurred.", e);
+        } finally {
+            Thread.currentThread().setName("Logs Controller Scheduler [idle]");
         }
 
+    }
+
+    protected PodLogMonitor createLogMonitor(Pod pod) throws IOException {
+        return new PodLogMonitor(this, pod);
     }
 
     protected PodList listPods() {
@@ -286,7 +305,7 @@ public class ActivityTrackingController implements Closeable {
         kubernetesSupport.watchLog(podName, handler, sinceTime, executor);
     }
 
-    public void deletePodLogState(String podName) throws IOException {
+    public void deletePodLogState(String podName) {
         jsondb.delete("/activity/pods/" + podName);
     }
 
@@ -311,6 +330,7 @@ public class ActivityTrackingController implements Closeable {
     }
 
     private void processEventQueue() {
+        Thread.currentThread().setName("Logs Controller [running]: processEventQueue");
         try {
             LOG.info("Batch ingestion work thread started.");
             while (!stopped.get()) {
@@ -355,6 +375,8 @@ public class ActivityTrackingController implements Closeable {
             }
         } catch (InterruptedException e) {
             LOG.error("Interrupted", e);
+        } finally {
+            Thread.currentThread().setName(IDLE_THREAD_NAME);
         }
         LOG.info("Batch ingestion work thread done.");
     }
@@ -381,5 +403,16 @@ public class ActivityTrackingController implements Closeable {
 
     public Duration getRetention() {
         return retention;
+    }
+
+    void execute(String podName, Runnable task) {
+        executor.execute(() -> {
+            Thread.currentThread().setName("Logs Controller [running], pod: " + podName);
+            try {
+                task.run();
+            } finally {
+                Thread.currentThread().setName(IDLE_THREAD_NAME);
+            }
+        });
     }
 }

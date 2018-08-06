@@ -28,7 +28,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -42,10 +44,12 @@ public class KubernetesSupport {
 
     private final KubernetesClient client;
     private final OkHttpClient okHttpClient;
+    /** Read timeout for the HTTP client, we expect to receive at least one log line in 30 mins. */
+    private Duration readTimeout = Duration.ofMinutes(35);
 
     public KubernetesSupport(KubernetesClient client) {
         this.client = client;
-        this.okHttpClient = this.client == null ? null : HttpClientUtils.createHttpClient(this.client.getConfiguration());
+        this.okHttpClient = HttpClientUtils.createHttpClient(this.client.getConfiguration());
     }
 
 
@@ -67,8 +71,13 @@ public class KubernetesSupport {
             if (sinceTime != null) {
                 url.append("&sinceTime=");
             }
-            Request request = new Request.Builder().url(new URL(url.toString())).get().build();
-            OkHttpClient clone = okHttpClient.newBuilder().readTimeout(0, TimeUnit.MILLISECONDS).build();
+            String podLogUrl = url.toString();
+
+            Thread.currentThread().setName("Logs Controller [running], request: " + podLogUrl);
+            Request request = new Request.Builder().url(new URL(podLogUrl)).get().build();
+            OkHttpClient clone = okHttpClient.newBuilder()
+                .readTimeout(readTimeout.toMillis(), TimeUnit.MILLISECONDS)
+                .build();
             clone.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -79,22 +88,35 @@ public class KubernetesSupport {
                 @Override
                 public void onResponse(final Call call, final Response response) throws IOException {
                     executor.execute(() -> {
+                        Thread.currentThread().setName("Logs Controller [running], streaming: " + podLogUrl);
                         try {
-                            if( response.code() == 200 ) {
-                                handler.accept(response.body().byteStream());
+                            if (response.code() == 200) {
+                                try (InputStream responseStream = response.body().byteStream()) {
+                                    handler.accept(responseStream);
+                                }
                             } else {
                                 LOG.info("Failure occurred while processing controller for pod: {}, http status: {}, details: {}", podName, response.code(), response.body().string());
                                 handler.accept(null);
                             }
+                        } catch (SocketTimeoutException timeout) {
+                            LOG.warn("Timed out reading the log stream");
+                            LOG.debug("Timed out reading the log stream", timeout);
                         } catch (IOException e) {
                             LOG.error("Unexpected Error", e);
+                        } finally {
+                            Thread.currentThread().setName(ActivityTrackingController.IDLE_THREAD_NAME);
                         }
                     });
                 }
             });
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException t) {
             throw new IOException("Unexpected Error", t);
+        } finally {
+            Thread.currentThread().setName(ActivityTrackingController.IDLE_THREAD_NAME);
         }
     }
 
+    public void setReadTimeout(final Duration readTimeout) {
+        this.readTimeout = readTimeout;
+    }
 }
