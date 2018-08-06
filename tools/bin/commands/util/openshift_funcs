@@ -36,7 +36,7 @@ setup_oc() {
     set -e
 
     # Error, no oc found
-    echo "ERROR: No 'oc' binary found in path. Please install the client tools from https://github.com/openshift/origin/releases/tag/v3.7.0 (or newer)"
+    echo "ERROR: No 'oc' binary found in path. Please install the client tools from https://github.com/openshift/origin/releases/tag/v3.9.0 (or newer)"
     exit 1
 }
 

@@ -19,6 +19,7 @@ install::usage() {
                               version from master is installed
     --dev                     Prepare for development of Syndesis so that S2I builds of
                               Syndesis images are picked up properly (implies --watch)
+    --force                   Override an existing "Syndesis" if present
 -w  --watch                   Wait until cluster is up
     --local                   install from local Git repo when using. By default the resource descriptor is
                               downloaded from GitHub remotely.
