@@ -10,6 +10,8 @@ install::usage() {
                               able to install Syndesis. You have to run this option once as cluster admin.
 -u  --prepare-for-user <user> Add permissions for the given user so that user can install the operator
                               in her projects
+    --cluster                 Add the permission for all projects in the cluster
+                              (only when used together with --prepare-for-user)
 -p  --project                 Install into this project. Delete this project
                               if it already exists. By default, install into the current project (without deleting)
     --route                   Route to use. If not given, the route is trying to be detected from the currently
@@ -47,7 +49,7 @@ install::run() {
     local user_to_prepare="$(readopt -u --prepare-for-user)"
     if [ -n  "$user_to_prepare" ]; then
         echo "Grant permission to create Syndesis to user $user_to_prepare"
-        local result=$(add_user_permissions_for_operator "$user_to_prepare")
+        local result=$(add_user_permissions_for_operator "$user_to_prepare" $(hasflag --cluster))
         check_error "$result"
         prep_only="true"
     fi
@@ -69,7 +71,7 @@ install::run() {
     set +e
     oc get syndesis >/dev/null 2>&1
     if [ $? -ne 0 ]; then
-        check_error "ERROR: No CRD Syndesis installed or not enough rights. Please run --setup-as-admin and/or --prepare-for-user as cluster-admin. See 'syndesis install --help' for more information."
+        check_error "ERROR: No CRD Syndesis installed or not enough permissions to read them. Please run --setup-as-admin and/or --prepare-for-user as cluster-admin. See 'syndesis install --help' for more information."
     fi
     set -e
 
@@ -94,6 +96,7 @@ install::run() {
     fi
 
     if [ $(hasflag --open -o) ]; then
+        route=$(get_route "syndesis")
         open_url "https://$route"
     fi
 }

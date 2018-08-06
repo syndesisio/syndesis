@@ -10,73 +10,79 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
 
 [source,indent=0,subs="verbatim,quotes"]
 ----
--s  --setup-as-admin <user>   Install CRDs clusterwide and optionally add permission to
-                              the given user so that user can install the operator in
-                              his projects. Otherwise only admin can install the
-                              operator. You have to run this once as cluster admin
+-s  --setup-as-admin          Install CRDs clusterwide. Use --prepare-for-user if you want a specific user to be
+                              able to install Syndesis. You have to run this option once as cluster admin.
+-u  --prepare-for-user <user> Add permissions for the given user so that user can install the operator
+                              in her projects
+    --cluster                 Add the permission for all projects in the cluster
+                              (only when used together with --prepare-for-user)
 -p  --project                 Install into this project. Delete this project
-                              if it already exists.
-                              By default, install into the current project (without deleting)
-    --route                   Route to use
+                              if it already exists. By default, install into the current project (without deleting)
+    --route                   Route to use. If not given, the route is trying to be detected from the currently
+                              connected cluster.
     --console                 The URL to the OpenShift console
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --dev                     Prepare for development of Syndesis so that S2I builds of
                               Syndesis images are picked up properly (implies --watch)
+    --force                   Override an existing "Syndesis" if present
 -w  --watch                   Wait until cluster is up
-    --local                   install from local Git repo when using.
-                              By default the resource descriptor is
+    --local                   install from local Git repo when using. By default the resource descriptor is
                               downloaded from GitHub remotely.
--o  --open                    Open Syndesis in browser when installation is ready
-                              (implies --watch)
+-o  --open                    Open Syndesis in browser when installation is ready (implies --watch)
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
     --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
     --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support            Allow test support endpoint for syndesis-server
-    --man                     Open HTML documentation in the Syndesis Developer Handbook
 ----
 
-The deployment will always happen to the currently connected OpenShift cluster.
+The deployment happens to the currently connected OpenShift cluster.
 So it's mandatory that you have logged into the cluster with `oc login` before.
 You can check the status with `oc status`.
 
-The installation process consist of two steps:
+The installation process consists of two steps:
 
-* An initial setup which has to performed as _cluster admin_. This is one-off action which needs to be done only once.
-* Installation of Syndesis into a specific project by the _app admin_, a regular user of OpenShift. This can be performed as many times as required.
+* An initial setup which has to be performed as _cluster admin_ which is a one-off action which needs to be done only once.
+* Installation of Syndesis into a specific project by the _app admin_, a regular user of OpenShiftm which can be performed as many times as required.
 
 ### Initial Setup
 
-In the initial setup you have to register the custom resource definition (CRD) to allow to deploy `Syndesis` resources.
-This has to be performed by the admin.
+In the initial setup, you have to register the custom resource definition (CRD) to allow to deploy `Syndesis` resources.
+This step has to be performed by the admin.
 
-In addition, if you want to allow an OpenShift user to install Syndesis on her own, then you have to grant certain permissions to her.
+Also, if you want to allow an OpenShift user to install Syndesis on her own, then you have to grant specific permissions to her.
 
-To perform this setup step, which needs to be performed only once per cluster, you have to run `syndesis` **while being connected as a cluster admin**:
+To perform this setup step, which needs to be performed only once per cluster, you have to run `syndesis` **while being connected as a cluster admin**.
+For `minishift` use `oc login -u system:admin` if you have the `admin-user` addon enabled.
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
 syndesis install --setup-as-admin
 ----
 
-This will install only the CRD. In addition to grant a user _developer_ the proper permission to create a `Syndesis` resource, you should add the user name:
+This will install only the CRD. In addition to grant a user _developer_ the proper permission to create a `Syndesis` resource, you should add `--prepare-for-user <user>`:
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-syndesis install --setup-as-admin developer
+syndesis install --setup-as-admin --prepare-for-user <user>
 ----
+
+This call adds permissions to read and write `Syndesis` resource objects for the current project.
+If you would instead want to allow the user managing `Syndesis` resources in the whole cluster, you should add a
+`--cluster`.
+This cluster-wide access is especially required when you plan to use the `--project` option to use a new project or recreate the existing one, as in this case the role association to this project gets lost.
 
 ### Installing Syndesis
 
-After the CRDs a registered, you can easily install Syndesis simply with
+After the CRDs a registered, you can easily install Syndesis directly with
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
 syndesis install
 ----
 
-Depending on whether you have granted an user access this step has to be done either as admin or as regular user.
+Depending on whether you have granted the current user access this step has to be done either as admin or as a regular user.
 
 .Example for Minishift
 [source,bash,indent=0,subs="verbatim,quotes"]
@@ -102,22 +108,22 @@ syndesis install
 
 
 A route name can be given with `--route`.
-This step can be omitted as the operator is able to autodetect the route.
+This step can be omitted as the operator can autodetect the route.
 If you provide the route manually, you need to check your OpenShift installation.
 Typically the route name is the name of your OpenShift project followed by the cluster's hostname.
 E.g. a route `--route proj186023.6a63.fuse-ignite.openshiftapps.com` is specific to the Fuse Ignite test cluster `6a63.fuse-ignite.openshiftapps.com` and for the project `proj186023`.
-But you don't have to provide the route name.
+However, you don't have to provide the route name.
 
 If you want to have a link to the OpenShift console to read the Pod logs, you have to add the `--console` option with the full URL to the console.
-Unfortunately this cannot be autodetected.
-If not given, no link will appear.
+Unfortunately, this cannot be autodetected.
+If not given, no link appears.
 
 By default, this commands installs Syndesis in the currently connected project, but you can specify an alternative project with `--project <project>`.
 If this project already exists, it gets deleted unconditionally before the deployment, so be careful when using this option.
-By default you are asked whether you really want to delete the project for recreation.
+By default, you are asked whether you want to delete the project for recreation.
 You can switch off the security question with the option `--yes` (short: `-y`).
 
-WARNING: Don't use `syndesis install --project $(oc project -q) --yes`. You will shoot yourself into the foot. Ask the author if you want to know more details.
+WARNING: Don't use `syndesis install --project $(oc project -q) --yes`. You shoot yourself into the foot. Ask the author if you want to know more details.
 
 If you want to wait until everything is running (including fetching of the Docker images), you can specify `--watch` (short: `-w`) which blocks the script until everything is set up.
 
@@ -126,12 +132,12 @@ You can also automatically open Syndesis in the browser after the installation w
 ### Development mode
 
 As with <<syndesis-minishift,syndesis minishift>> you can also use this command to set up a development platform for Syndesis.
-_Development platform_ here means, that you can create Docker images on your own with <<syndesis-build,syndesis build>> and can use them with an automatic redeployment after the build.
+_Development platform_ here means that you can create Docker images on your own with <<syndesis-build,syndesis build>> and can use them with an automatic redeployment after the build.
 
 You can switch on this mode with the option `--dev`.
 When the operator has deployed the application, the application imagestreams refer to Docker images pushed to Docker Hub.
 To change the imagestream references to the images built with `syndesis build --all-images`, these imagestreams needs to be patched after the initial images have been fetched from Docker Hub.
-If you use the `--dev` option then this update is done automatically.
+If you use the `--dev` option, then this update is done automatically.
 
 ### Selecting the version
 
@@ -141,10 +147,10 @@ By default, the currently checked out checked out branch is used.
 .Example
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-syndesis install --route syndesis.192.168.64.12.nip.io --tag 1.2
+syndesis install --route syndesis.192.168.64.12.nip.io --tag 1.4
 ----
 
-This example will install the latest Syndesis version of the 1.2 branch to the local cluster.
+This example installs the latest Syndesis version of the 1.4 branch to the local cluster.
 
 You can see a list of available tags with `git tag`.
 Tags prefixed with `fuse-ignite` are suited for the Fuse Online cluster as those templates do not contain images streams themselves but refer to the image streams installed on this cluster.

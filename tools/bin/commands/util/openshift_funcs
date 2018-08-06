@@ -205,16 +205,26 @@ EOT
 # Must be run when root
 add_user_permissions_for_operator() {
     local user="$1"
+    local cluster_wide=${2:-false}
+
     if [ -z "$user" ]; then
         echo "ERROR: No user provided to fix permissions for"
         return
     fi
-    local extra_role_installed=$(oc get role -o name | grep syndesis-extra-permissions)
+    local extra_role_installed="$(oc get role -o name | grep syndesis-extra-permissions)"
+    local kind="Role"
+    local oc_command="policy add-role-to-user --role-namespace=$(oc project -q)"
+    if $cluster_wide; then
+        extra_role_installed=$(oc get clusterrole -o name | grep syndesis-extra-permissions)
+        kind="ClusterRole"
+        oc_command="adm policy add-cluster-role-to-user"
+    fi
+
     set +e
     if [ -z "$extra_role_installed" ]; then
         oc create -f - >/dev/null 2>&1 <<EOT
 ---
-kind: Role
+kind: $kind
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: syndesis-extra-permissions
@@ -244,7 +254,7 @@ EOT
         fi
     fi
 
-    oc policy add-role-to-user --role-namespace="$(oc project -q)" syndesis-extra-permissions $user
+    oc $oc_command syndesis-extra-permissions $user
     if [ $? -ne 0 ]; then
         echo "ERROR: Can not add role 'syndesis-extra-permssionns' to user $user. Does the user exist ?"
         exit 1
@@ -351,6 +361,11 @@ pod() {
       echo "ERROR: More than 1 pod found for $dc ($nr_pods found)"
   fi
   echo $ret
+}
+
+get_route() {
+  local name="${1}"
+  oc get route $name -o jsonpath="{.spec.host}"
 }
 
 syndesis_deployments() {
