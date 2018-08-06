@@ -34,6 +34,8 @@ fields are in the same order as the corresponding content in the
 compound source field. 
 +
 If necessary, drag and drop target fields to achieve the same order. 
+The data mapper automatically updates the index numbers to reflect the 
+new order. 
 
 . If you mapped each part of the compound source field to a target
 field, then skip to the last step.

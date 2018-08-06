@@ -1,5 +1,5 @@
 [id='example-missing-unwanted-data']
-= Example missing or unwanted data when combining or separating fields
+= Example of missing or unwanted data when combining or separating fields
 
 In a data mapping, you might need to identify missing or unwanted data when a source or
 target field contains compound data. For example, consider a 
