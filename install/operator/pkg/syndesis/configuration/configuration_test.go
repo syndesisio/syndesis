@@ -26,6 +26,7 @@ func TestSpecificConfig(t *testing.T) {
 	demodata := true
 	deploy := false
 	limit := 2
+	stateCheckInterval := 120
 	syndesis := v1alpha1.Syndesis{
 		ObjectMeta: v1.ObjectMeta{
 			Namespace: "ns",
@@ -33,11 +34,14 @@ func TestSpecificConfig(t *testing.T) {
 		Spec: v1alpha1.SyndesisSpec{
 			ImageStreamNamespace: "is",
 			DemoData: &demodata,
-			IntegrationLimit: &limit,
+			Integration: v1alpha1.IntegrationSpec{
+				Limit: &limit,
+				StateCheckInterval: &stateCheckInterval,
+			},
 			RouteHostName: "myhost",
 			Registry: "registry",
 			DeployIntegrations: &deploy,
-			Components: v1alpha1.Components{
+			Components: v1alpha1.ComponentsSpec{
 				Db: v1alpha1.DbConfiguration{
 					ImageStreamNamespace: "dbis",
 					Database: "db",
@@ -89,6 +93,7 @@ func TestSpecificConfig(t *testing.T) {
 	assert.Equal(t, "is", config[string(EnvImageStreamNamespace)])
 	assert.Equal(t, "true", config[string(EnvDemoDataEnabled)])
 	assert.Equal(t, "2", config[string(EnvMaxIntegrationsPerUser)])
+	assert.Equal(t, "120", config[string(EnvIntegrationStateCheckInterval)])
 	assert.Equal(t, "myhost", config[string(EnvRouteHostname)])
 	assert.Equal(t, "registry", config[string(EnvSyndesisRegistry)])
 	assert.Equal(t, "false", config[string(EnvControllersIntegrationEnabled)])
