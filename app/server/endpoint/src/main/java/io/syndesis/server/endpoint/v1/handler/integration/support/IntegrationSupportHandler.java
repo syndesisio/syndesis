@@ -15,6 +15,42 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration.support;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.ChangeEvent;
@@ -24,10 +60,12 @@ import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.ModelExport;
 import io.syndesis.common.model.Schema;
 import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.util.Json;
@@ -43,35 +81,6 @@ import io.syndesis.server.jsondb.dao.JsonDbDao;
 import io.syndesis.server.jsondb.dao.Migrator;
 import io.syndesis.server.jsondb.impl.MemorySqlJsonDB;
 import io.syndesis.server.jsondb.impl.SqlJsonDB;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import static org.springframework.util.StreamUtils.nonClosing;
 
@@ -81,9 +90,14 @@ import static org.springframework.util.StreamUtils.nonClosing;
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.GodClass", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.CyclomaticComplexity" })
 public class IntegrationSupportHandler {
 
-    public static final String EXPORT_MODEL_INFO_FILE_NAME = "model-info.json";
-    public static final String EXPORT_MODEL_FILE_NAME = "model.json";
+    private static final String EXPORT_MODEL_INFO_FILE_NAME = "model-info.json";
+    private static final String EXPORT_MODEL_FILE_NAME = "model.json";
+
     private static final Logger LOG = LoggerFactory.getLogger(IntegrationSupportHandler.class);
+    private static final String IMPORTED_SUFFIX = "-imported-";
+
+    private static final BiFunction<Extension, String, Extension> RENAME_EXTENSION = (e, n) -> new Extension.Builder().createFrom(e).name(n).build();
+    private static final BiFunction<Connection, String, Connection> RENAME_CONNECTION = (c, n) -> new Connection.Builder().createFrom(c).name(n).build();
 
     private final Migrator migrator;
     private final SqlJsonDB jsondb;
@@ -280,40 +294,45 @@ public class IntegrationSupportHandler {
         }
 
         ArrayList<ChangeEvent> result = new ArrayList<>();
+        // id->new-name map
+        Map<String, String> renamedIds = new HashMap<>();
+
         // Import the extensions..
         importModels(new JsonDbDao<Extension>(given) {
             @Override
             public Class<Extension> getType() {
                 return Extension.class;
             }
-        }, result);
+        }, RENAME_EXTENSION, renamedIds, result);
 
+        // NOTE: connectors are imported without renaming and ignoring renamed ids
+        // as a matter of fact, the lambda should never be called
         importModels(new JsonDbDao<Connector>(given) {
             @Override
             public Class<Connector> getType() {
                 return Connector.class;
             }
-        }, result);
+        }, (c, n) -> new Connector.Builder().createFrom(c).name(c.getName()).build(), new HashMap<>(), result);
 
         importModels(new JsonDbDao<Connection>(given) {
             @Override
             public Class<Connection> getType() {
                 return Connection.class;
             }
-        }, result);
+        }, RENAME_CONNECTION, renamedIds, result);
 
         importIntegrations(sec, new JsonDbDao<Integration>(given) {
             @Override
             public Class<Integration> getType() {
                 return Integration.class;
             }
-        }, result);
+        }, renamedIds, result);
 
 
         return result;
     }
 
-    private void importIntegrations(SecurityContext sec, JsonDbDao<Integration> export, List<ChangeEvent> result) {
+    private void importIntegrations(SecurityContext sec, JsonDbDao<Integration> export, Map<String, String> renamedIds, List<ChangeEvent> result) {
         for (Integration integration : export.fetchAll().getItems()) {
             Integration.Builder builder = new Integration.Builder()
                 .createFrom(integration)
@@ -323,6 +342,7 @@ public class IntegrationSupportHandler {
             // Do we need to create it?
             String id = integration.getId().get();
             Integration previous = dataManager.fetch(Integration.class, id);
+            resolveDuplicateNames(integration, builder, renamedIds);
             if (previous == null) {
                 LOG.info("Creating integration: {}", integration.getName());
                 integrationHandler.create(sec, builder.build());
@@ -335,11 +355,84 @@ public class IntegrationSupportHandler {
         }
     }
 
-    private <T extends WithId<T>> void importModels(JsonDbDao<T> export, List<ChangeEvent> result) {
+    private void resolveDuplicateNames(Integration integration, Integration.Builder builder, Map<String, String> renamedIds) {
+
+        // check for duplicate integration name
+        String integrationName = integration.getName();
+        final Set<String> names = getAllPropertyValues(Integration.class, Integration::getName, i -> !i.isDeleted());
+        names.addAll(getAllPropertyValues(IntegrationDeployment.class, d -> d.getSpec().getName(), d -> !d.getSpec().isDeleted()));
+        if (names.contains(integrationName)) {
+            integrationName = getNextAvailableName(integrationName, names);
+            builder.name(integrationName);
+        }
+
+        // sync renames of other objects
+        // connections
+        builder.connections(integration.getConnections().stream()
+                .map(c -> renameIfNeeded(c, renamedIds, RENAME_CONNECTION))
+                .collect(Collectors.toList()));
+
+        // steps
+        builder.steps(integration.getSteps().stream()
+                .map(s -> new Step.Builder().createFrom(s)
+                        // step connections
+                        .connection(s.getConnection().map(c -> renameIfNeeded(c, renamedIds, RENAME_CONNECTION)))
+                        // step extensions
+                        .extension(s.getExtension().map(e -> renameIfNeeded(e, renamedIds, RENAME_EXTENSION)))
+                        .build())
+                .collect(Collectors.toList()));
+    }
+
+    private <T extends WithId<T> & WithName> T renameIfNeeded(T model, Map<String, String> renames, BiFunction<T,
+            String, T> nameFunc) {
+        final String name = renames.get(model.getId().get());
+        return name != null ? nameFunc.apply(model, name) : model;
+    }
+
+    private <T extends WithId<T>> Set<String> getAllPropertyValues(Class<T> model, Function<T, String> propertyFunc) {
+        return getAllPropertyValues(model, propertyFunc, d -> true);
+    }
+
+    private <T extends WithId<T>> Set<String> getAllPropertyValues(Class<T> model, Function<T, String> propertyFunc, Function<T, Boolean> filterFunc) {
+        final ListResult<T> deployments = dataManager.fetchAll(model);
+        return deployments.getItems().stream()
+                .filter(d -> filterFunc.apply(d))
+                .map(d -> propertyFunc.apply(d))
+                .collect(Collectors.toSet());
+    }
+
+    private String getNextAvailableName(String name, Set<String> names) {
+        String newName = null;
+        for (int i = 1; newName == null; i++) {
+            final String candidate = name + IMPORTED_SUFFIX + i;
+            if (!names.contains(candidate)) {
+                newName = candidate;
+            }
+        }
+        return newName;
+    }
+
+    private <T extends WithId<T> & WithName> void importModels(JsonDbDao<T> export, BiFunction<T, String, T> renameFunc,
+                                                               Map<String, String> renames, List<ChangeEvent> result) {
+        final Set<String> names = getAllPropertyValues(export.getType(), WithName::getName);
         for (T item : export.fetchAll().getItems()) {
             Kind kind = item.getKind();
             String id = item.getId().get();
             if (dataManager.fetch(export.getType(), id) == null) {
+
+                // resolve duplicate names
+                String name = item.getName();
+                if (names.contains(name)) {
+
+                    // rename item
+                    name = getNextAvailableName(name, names);
+                    item = renameFunc.apply(item, name);
+
+                    names.add(name);
+                    renames.put(id, name);
+                }
+
+                // create new item
                 dataManager.create(item);
 
                 result.add(ChangeEvent.of("created", kind.getModelName(), id));
