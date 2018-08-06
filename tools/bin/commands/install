@@ -6,7 +6,7 @@ install::description() {
 
 install::usage() {
     cat <<EOT
--s  --setup-as-admin          Install CRDs clusterwide. Use --prepare-for-user if you want a specific user to be
+-s  --setup-crd               Install CRDs clusterwide. Use --prepare-for-user if you want a specific user to be
                               able to install Syndesis. You have to run this option once as cluster admin.
 -u  --prepare-for-user <user> Add permissions for the given user so that user can install the operator
                               in her projects
@@ -39,7 +39,7 @@ install::run() {
     source "$(basedir)/commands/util/openshift_funcs"
 
     local prep_only="false"
-    if [ $(hasflag -s --setup-as-admin) ]; then
+    if [ $(hasflag -s --setup-crd ]; then
         echo "Installing Syndesis CRD"
         local result=$(install_syndesis_crd)
         check_error "$result"
@@ -71,7 +71,7 @@ install::run() {
     set +e
     oc get syndesis >/dev/null 2>&1
     if [ $? -ne 0 ]; then
-        check_error "ERROR: No CRD Syndesis installed or not enough permissions to read them. Please run --setup-as-admin and/or --prepare-for-user as cluster-admin. See 'syndesis install --help' for more information."
+        check_error "ERROR: No CRD Syndesis installed or not enough permissions to read them. Please run --setup-crd and/or --prepare-for-user as cluster-admin. See 'syndesis install --help' for more information."
     fi
     set -e
 

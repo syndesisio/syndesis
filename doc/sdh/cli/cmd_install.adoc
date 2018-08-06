@@ -10,7 +10,7 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
 
 [source,indent=0,subs="verbatim,quotes"]
 ----
--s  --setup-as-admin          Install CRDs clusterwide. Use --prepare-for-user if you want a specific user to be
+-s  --setup-crd               Install CRDs clusterwide. Use --prepare-for-user if you want a specific user to be
                               able to install Syndesis. You have to run this option once as cluster admin.
 -u  --prepare-for-user <user> Add permissions for the given user so that user can install the operator
                               in her projects
@@ -58,14 +58,14 @@ For `minishift` use `oc login -u system:admin` if you have the `admin-user` addo
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-syndesis install --setup-as-admin
+syndesis install --setup-crd
 ----
 
 This will install only the CRD. In addition to grant a user _developer_ the proper permission to create a `Syndesis` resource, you should add `--prepare-for-user <user>`:
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-syndesis install --setup-as-admin --prepare-for-user <user>
+syndesis install --setup-crd --prepare-for-user <user>
 ----
 
 This call adds permissions to read and write `Syndesis` resource objects for the current project.
@@ -97,7 +97,7 @@ minishift start --memory 4192
 oc login -u system:admin
 
 # Register CRD and grant permissions to "developer"
-syndesis --setup-as-admin developer
+syndesis --setup-crd --prepate-for-user developer --cluster
 
 # Switch to account developer
 oc login -u developer
