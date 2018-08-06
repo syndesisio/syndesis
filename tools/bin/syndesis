@@ -14,7 +14,7 @@ set -o pipefail
 set -eu
 
 # Save global script args, use "build" as default
-if [ -z "$@" ]; then
+if [ -z "$1" ]; then
     ARGS=("build")
 else
     ARGS=("$@")
