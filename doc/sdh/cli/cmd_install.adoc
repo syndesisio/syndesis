@@ -10,31 +10,36 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
 
 [source,indent=0,subs="verbatim,quotes"]
 ----
--s  --setup-crd               Install CRDs clusterwide. Use --setup-user if you want a specific user to be
-                              able to install Syndesis. You have to run this option once as cluster admin.
--u  --setup-user <user>       Add permissions for the given user so that user can install the operator
-                              in her projects
-    --cluster                 Add the permission for all projects in the cluster
-                              (only when used together with --setup-user)
--p  --project                 Install into this project. Delete this project
-                              if it already exists. By default, install into the current project (without deleting)
-    --route                   Route to use. If not given, the route is trying to be detected from the currently
-                              connected cluster.
-    --console                 The URL to the OpenShift console
-    --tag <tag>               Syndesis version/tag to install. If not given, then the latest
-                              version from master is installed
-    --dev                     Prepare for development of Syndesis so that S2I builds of
-                              Syndesis images are picked up properly (implies --watch)
-    --force                   Override an existing "Syndesis" if present
--w  --watch                   Wait until cluster is up
-    --local                   install from local Git repo when using. By default the resource descriptor is
-                              downloaded from GitHub remotely.
--o  --open                    Open Syndesis in browser when installation is ready (implies --watch)
--y  --yes                     Assume 'yes' automatically when asking for deleting
-                              a given project.
-    --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
-    --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
-    --test-support            Allow test support endpoint for syndesis-server
+-s  --setup               Install CRDs clusterwide. Use --grant if you want a specific user to be
+                          able to install Syndesis. You have to run this option once as
+                          cluster admin.
+-u  --grant <user>        Add permissions for the given user so that user can install
+                          the operator in her projects. Must be run as cluster admin.
+    --cluster             Add the permission for all projects in the cluster
+                          (only when used together with --grant)
+-p  --project             Install into this project. Delete this project
+                          if it already exists. By default, install into the current project
+                          (without deleting)
+    --route               Route to use. If not given, the route is trying to be detected
+                          from the currently connected cluster.
+    --console             The URL to the OpenShift console
+    --tag <tag>           Syndesis version/tag to install. If not given, then the latest
+                          version from master is installed
+    --dev                 Prepare for development of Syndesis so that S2I builds of
+                          Syndesis images are picked up properly (implies --watch)
+    --force               Override an existing "Syndesis" if present
+-w  --watch               Wait until cluster is up
+    --local               install from local Git repo when using. By default the
+                          resource descriptor is downloaded from GitHub remotely.
+-o  --open                Open Syndesis in browser when installation is ready (implies --watch)
+-y  --yes                 Assume 'yes' automatically when asking for deleting
+                          a given project.
+    --memory-server <mem> Memory limit to set for syndesis-server. Specify as "800Mi"
+    --memory-meta <mem>   Memory limit to set for syndesis-meta. Specify as "512Mi"
+    --test-support        Allow test support endpoint for syndesis-server
+
+You have to run `--setup --grant <user>` as a cluster-admin before you can
+install Fuse Online as a user.
 ----
 
 The deployment happens to the currently connected OpenShift cluster.
@@ -58,14 +63,14 @@ For `minishift` use `oc login -u system:admin` if you have the `admin-user` addo
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-syndesis install --setup-crd
+syndesis install --setup
 ----
 
-This will install only the CRD. In addition to grant a user _developer_ the proper permission to create a `Syndesis` resource, you should add `--setup-user <user>`:
+This will install only the CRD. In addition to grant a user _developer_ the proper permission to create a `Syndesis` resource, you should add `--grant <user>`:
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-syndesis install --setup-crd --setup-user <user>
+syndesis install --setup --grant <user>
 ----
 
 This call adds permissions to read and write `Syndesis` resource objects for the current project.
@@ -97,7 +102,7 @@ minishift start --memory 4192
 oc login -u system:admin
 
 # Register CRD and grant permissions to "developer"
-syndesis --setup-crd --prepate-for-user developer --cluster
+syndesis --setup --grant developer --cluster
 
 # Switch to account developer
 oc login -u developer
@@ -123,7 +128,7 @@ If this project already exists, it gets deleted unconditionally before the deplo
 By default, you are asked whether you want to delete the project for recreation.
 You can switch off the security question with the option `--yes` (short: `-y`).
 
-WARNING: Don't use `syndesis install --project $(oc project -q) --yes`. You shoot yourself into the foot. Ask the author if you want to know more details.
+WARNING: Don't use `syndesis install --project $(oc project -q) --yes`. You'll shoot yourself into the foot. Ask the author if you want to know more details.
 
 If you want to wait until everything is running (including fetching of the Docker images), you can specify `--watch` (short: `-w`) which blocks the script until everything is set up.
 
