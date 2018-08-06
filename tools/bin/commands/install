@@ -39,7 +39,7 @@ install::run() {
     source "$(basedir)/commands/util/openshift_funcs"
 
     local prep_only="false"
-    if [ $(hasflag -s --setup-crd ]; then
+    if [ $(hasflag -s --setup-crd) ]; then
         echo "Installing Syndesis CRD"
         local result=$(install_syndesis_crd)
         check_error "$result"
