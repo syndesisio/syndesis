@@ -38,6 +38,7 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import static io.syndesis.server.connector.generator.swagger.TestHelper.reformatJson;
 import static io.syndesis.server.connector.generator.swagger.TestHelper.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -211,11 +212,13 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
             .name("Swagger Petstore")//
             .actionsSummary(actionsSummary)//
             .build();
-        assertThat(summary).isEqualToIgnoringGivenFields(expected, "icon", "description", "properties", "warnings");
+        assertThat(summary).isEqualToIgnoringGivenFields(expected, "icon", "description", "properties", "warnings", "configuredProperties");
         assertThat(summary.getIcon()).startsWith("data:image");
         assertThat(summary.getDescription()).startsWith("This is a sample server Petstore server");
         assertThat(summary.getProperties().keySet()).contains("host", "basePath", "authenticationType", "clientId", "clientSecret",
-            "accessToken", "authorizationEndpoint", "specification");
+            "accessToken", "authorizationEndpoint", "oauthScopes", "specification");
+        assertThat(summary.getConfiguredProperties().keySet()).containsOnly("specification");
+        assertThat(reformatJson(summary.getConfiguredProperties().get("specification"))).isEqualTo(reformatJson(specification));
     }
 
     @Test

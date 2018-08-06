@@ -118,8 +118,13 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                 .actionCountByTags(tagCounts)//
                 .build();
 
-            return new ConnectorSummary.Builder().createFrom(connector).actionsSummary(actionsSummary).errors(swaggerInfo.getErrors())
-                .warnings(swaggerInfo.getWarnings()).build();
+            return new ConnectorSummary.Builder()//
+                .createFrom(connector)//
+                .actionsSummary(actionsSummary)//
+                .errors(swaggerInfo.getErrors())//
+                .warnings(swaggerInfo.getWarnings())//
+                .putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification())//
+                .build();
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception ex) {
             if (!swaggerInfo.getErrors().isEmpty()) {
                 // Just log and return the validation errors if any
