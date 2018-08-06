@@ -55,6 +55,10 @@ export class ConnectionsReviewComponent
     return this.reviewForm.get('name');
   }
 
+  get hasCredentials() {
+    return this.current.hasCredentials();
+  }
+
   createConnection(): void {
     if (this.reviewForm.invalid) {
       this.touchFormFields();
