@@ -1,29 +1,53 @@
 [id='combine-multiple-source-fields-into-one-target-field']
 = Combining multiple source fields into one target field
 
-To combine the content from multiple source fields into one target field:
+In a data mapper step, you can combine multiple source fields into one 
+compound target field. For example, you can map the `FirstName` and `LastName` 
+fields to the `CustomerName` field.
 
-. In the *Target* panel, click the field into which you want to map
-more than one source field.
-. In the *Mapping Details* panel, under *Action*, select *Combine*.
-. In the *Mapping Details* panel, under *Source*, start to overtype
-`*[None]*` with the name of the first source field that you want to map
+.Prerequisite
+For the target field, you must know what type of content is in each
+part of this compound field, the order and index of each part of the content, 
+and the separator between parts, such as a space or comma. See
+<<example-missing-unwanted-data>. 
+
+.Procedure
+
+. In the *Target* panel, click the field into which you want to map more 
+than one source field.
+
+. In the *Sources* panel, click the first field that you want to combine
 into the target field.
-. When the name of the first source field appears, click it. The
-data mapper displays a line from the first source field to the target field.
-. For each additional source field:
-.. In the *Mapping Details* panel, click *Add Source*.
-.. Start to overtype `Search` with the name of the next source field.
-.. When the name of the next source field appears, click it. The data mapper
-displays another line to the target field but this line is from this source
-field.
-. In the *Mapping Details* panel, in the *Separator* field, accept or
-select the character that the data mapper inserts in the target field
-between the source fields. The default is a space.
 
-In the data mapper, blue lines indicates the current focus.
+. In the *Sources* panel, for the each of the other fields that you want to 
+combine into the target field, hover over that field, and press 
+*CTRL-Mouse1* (*CMD-Mouse1* on MacOS).
++
+The data mapper automatically changes the field action from *Map* to *Combine*. 
++
+When you are done you should see a line from each of the source fields to
+the target field. 
 
-To confirm that the mapping is correctly defined, click
+. In the *Mapping Details* panel, in the *Separator* field, accept or select the 
+character that the data mapper inserts in the target field between the content
+from different source fields. The default is a space.
+
+. In the *Mapping Details* panel, under *Sources*, ensure that the source
+fields are in the same order as the corresponding content in the
+compound target field. 
++
+If necessary, drag and drop source fields to achieve the same order. 
+
+. If you mapped a source field to each part of the compound target field,
+then skip to the last step.
++
+If the target field expects data that is not available to be mapped, then in the 
+*Mapping Details* panel, edit the index of each 
+source field so that it is the same as the index of the corresponding data
+in the compound target field. The data mapper automatically adds 
+padding fields as needed to indicate missing data. 
+
+. To confirm that the mapping is correctly defined, in the upper right, click
 image:shared/images/grid.png[Grid] to display the mappings defined in
 this step. A mapping that combines the values of more than one source field
 into one target field looks like this:

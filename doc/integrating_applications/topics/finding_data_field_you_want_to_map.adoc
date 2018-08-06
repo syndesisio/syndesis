@@ -1,19 +1,30 @@
 [id='finding-the-field-you-want-to-map']
-= Finding the data field you want to map
+= Finding the data field that you want to map
 
 In an integration that has a few steps or that operates on a small set
 of data, it is probably easy to find
-the data field you want to map. But in an integration that has many steps,
+the data field that you want to map. But in an integration that has many steps,
 or that has a step that accesses a large set of data, the list of data fields
-might be very long. To quickly find the data field that you
-want to map, you can:
+might be very long. The data mapper displays two columns of data fields:
 
-* Search for it. The *Sources* panel and the *Target* panel each have
+* *Sources* is a list of the data fields that are obtained or
+processed in all previous steps in the integration. 
+* *Target* is a list of the data fields that the next connection expects
+and can process.
+
+To quickly find the data field that you
+want to map, you can do any of the following:
+
+* Search for it. 
++
+The *Sources* panel and the *Target* panel each have
 a search field at the top. If the search field is not visible, click
 image:shared/images/magnifying-glass.png[Magnifying Glass] at the top
 right of the *Sources* or *Target* panel.
 
-* Enter the names of the fields that you want to map. To do this, 
+* Enter the names of the fields that you want to map. 
++
+To do this, 
 in the upper right of the *Configure Mapper* page, click the plus sign
 to display the *Mapping Details* panel. In the *Sources* section, enter
 the name of the source field. In the *Action* section, accept the
@@ -22,6 +33,7 @@ default *Map*, which maps one field to one other field. Or, select
 field that you want to map to. 
 
 * Expand and collapse folders to limit the visible fields.
++
 To view the data fields available in a particular step, expand the 
 folder for that step. 
 +

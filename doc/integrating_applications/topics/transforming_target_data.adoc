@@ -2,7 +2,7 @@
 = Transforming target data
 
 After you define a mapping, you can transform the data in the target
-field to define how you want to store the date. For example, you
+field to define how you want to store the data. For example, you
 could specify the *Capitalize* transformation to ensure that the first
 letter of a data value is uppercase.
 
