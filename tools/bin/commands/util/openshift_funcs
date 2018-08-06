@@ -36,7 +36,7 @@ setup_oc() {
     set -e
 
     # Error, no oc found
-    echo "ERROR: No 'oc' binary found in path. Please install the client tools from https://github.com/openshift/origin/releases/tag/v3.7.0 (or newer)"
+    echo "ERROR: No 'oc' binary found in path. Please install the client tools from https://github.com/openshift/origin/releases/tag/v3.9.0 (or newer)"
     exit 1
 }
 
@@ -78,6 +78,7 @@ recreate_project() {
     oc project "${project}"
 }
 
+
 # Install the Syndesis custom resource definition
 install_syndesis_crd() {
     set +e
@@ -85,13 +86,14 @@ install_syndesis_crd() {
     local err=$?
     set -e
     if [ $err -ne 0 ]; then
-        echo "ERROR: Cannot install CRD 'Syndesis'. You have to have cluster admin permission to do this"
+        echo "ERROR: Cannot install CRD 'Syndesis'. You have to be a cluster admin to do this."
         return
     fi
 
     local crd_installed=$(oc get crd -o name | grep syndesises.syndesis.io)
     if [ -z "$crd_installed" ]; then
-        create_openshift_resource "install/operator/deploy/syndesis-crd.yml"
+        local result=$(create_openshift_resource "install/operator/deploy/syndesis-crd.yml")
+        check_error $result
     fi
 }
 
@@ -99,18 +101,15 @@ install_syndesis_crd() {
 deploy_syndesis_operator() {
     local operator_installed=$(oc get dc -o name | grep syndesis-operator)
     if [ -n "$operator_installed" ]; then
-        oc delete dc syndesis-operator
-        wait_for_deployments 0 syndesis-operator
+        local result=$(delete_openshift_resource "install/operator/deploy/syndesis-operator.yml")
+        check_error $result
+        wait_for_deployments 0 syndesis-operator >/dev/null 2>&1
     fi
 
-    create_openshift_resource "install/operator/deploy/syndesis-operator.yml"
+    local result=$(create_openshift_resource "install/operator/deploy/syndesis-operator.yml")
+    check_error $result
     if [ $(hasflag --local) ]; then
-        # we need to include the `syndesis-template.yml` akka `syndesis.yml` in
-        # the operator image, this adds a ConfigMap that we mount into the
-        # operator container
-        oc delete configmap syndesis-template >/dev/null 2>&1
-        oc create configmap syndesis-template --from-file=template=$(appdir)/../install/syndesis.yml
-        oc patch deploymentconfig syndesis-operator -p '{"spec":{"template":{"spec":{"containers":[{"name":"syndesis-operator","command":["syndesis-operator","-template","/conf/syndesis-template.yml"],"volumeMounts":[{"mountPath":"/conf","name":"syndesis-template-config"}]}],"volumes":[{"configMap":{"name":"syndesis-template","items":[{"key":"template","path":"syndesis-template.yml"}]},"name":"syndesis-template-config"}]}}}}'
+        patch_for_using_template_from_configmap
     fi
 }
 
@@ -202,19 +201,28 @@ EOT
     fi
 }
 
-# Fix up some extra permissions required for a regular minishift user
-# Must be run when root
 add_user_permissions_for_operator() {
     local user="$1"
+    local cluster_wide=${2:-false}
+
     if [ -z "$user" ]; then
         echo "ERROR: No user provided to fix permissions for"
         return
     fi
-    local extra_role_installed=$(oc get role -o name | grep syndesis-extra-permissions)
-    if [ -z "$extra_role_installed" ]; then
-        oc create -f - <<EOT
+    local extra_role_installed="$(oc get role -o name | grep syndesis-extra-permissions | wc -l | xargs)"
+    local kind="Role"
+    local oc_command="policy add-role-to-user --role-namespace=$(oc project -q)"
+    if $cluster_wide; then
+        extra_role_installed="$(oc get clusterrole -o name | grep syndesis-extra-permissions | wc -l | xargs)"
+        kind="ClusterRole"
+        oc_command="adm policy add-cluster-role-to-user"
+    fi
+
+    set +e
+    if [ $extra_role_installed -eq 0 ]; then
+        oc create -f - >/dev/null 2>&1 <<EOT
 ---
-kind: Role
+kind: $kind
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: syndesis-extra-permissions
@@ -239,36 +247,59 @@ rules:
 
 EOT
         if [ $? -ne 0 ]; then
-            echo "ERROR: Can not install role 'syndesis-extra-permissions'"
-            return
+            echo "ERROR: Can not install role 'syndesis-extra-permissions'. Are you running as cluster-admin ?"
+            exit 1
         fi
     fi
 
-    oc policy add-role-to-user --role-namespace="$(oc project -q)" syndesis-extra-permissions $user
+    oc $oc_command syndesis-extra-permissions $user
     if [ $? -ne 0 ]; then
-        echo "ERROR: Can not add role 'syndesis-extra-permssionns' to user $user"
-        return
+        echo "ERROR: Can not add role 'syndesis-extra-permssionns' to user $user. Does the user exist ?"
+        exit 1
     fi
+    set -e
 }
 
 create_openshift_resource() {
-    local resource=${1:-}
+    create_or_delete_openshift_resource "create" "${1:-}"
+}
+
+delete_openshift_resource() {
+    create_or_delete_openshift_resource "delete --ignore-not-found" "${1:-}"
+}
+
+create_or_delete_openshift_resource() {
+    local what=${1}
+    local resource=${2:-}
     local tag="$(readopt --tag)"
     local use_local_resource="$(hasflag --local)"
 
+    local result
 
+    set +e
     if [ -n "$use_local_resource" ]; then
         if [ -n "$tag" ]; then
             pushd $(appdir) >/dev/null
             git fetch --tags
-            git show $tag:${resource} | oc create -f -
+            result=$(git show $tag:${resource} | oc $what -f - >$ERROR_FILE 2>&1)
+            if [ $? -ne 0 ]; then
+                echo "ERROR: Cannot create $resource (tag: $tag)"
+            fi
             popd >/dev/null
         else
-            oc create -f $(appdir)/../$resource
+            result=$(oc $what -f $(appdir)/../$resource >$ERROR_FILE 2>&1)
+            if [ $? -ne 0 ]; then
+                echo "ERROR: Cannot create local $(appdir)/../$resource"
+            fi
         fi
     else
-        oc create -f https://raw.githubusercontent.com/syndesisio/syndesis/${tag:-master}/${resource}
+        local url="https://raw.githubusercontent.com/syndesisio/syndesis/${tag:-master}/${resource}"
+        result=$(oc $what -f $url >$ERROR_FILE 2>&1)
+        if [ $? -ne 0 ]; then
+            echo "ERROR: Cannot create remote resource $url"
+        fi
     fi
+    set -e
 }
 
 scale_deployments() {
@@ -303,7 +334,8 @@ wait_for_deployments() {
 get_replicas() {
   local dc=${1}
   local hasDc=$(oc get dc -o name | grep $dc)
-  if [ -z $hasDc ]; then
+  if [ -z "$hasDc" ]; then
+      echo "0"
       return
   fi
   oc get dc $dc -o jsonpath="{.status.availableReplicas}"
@@ -327,6 +359,11 @@ pod() {
       echo "ERROR: More than 1 pod found for $dc ($nr_pods found)"
   fi
   echo $ret
+}
+
+get_route() {
+  local name="${1}"
+  oc get route $name -o jsonpath="{.spec.host}"
 }
 
 syndesis_deployments() {
@@ -396,4 +433,56 @@ compare_oc_version() {
     done
 
     echo "OK"
+}
+
+
+patch_for_using_template_from_configmap() {
+  # we need to include the `syndesis-template.yml` akka `syndesis.yml` in
+  # the operator image, this adds a ConfigMap that we mount into the
+  # operator container
+  oc delete configmap syndesis-template >/dev/null 2>&1
+  oc create configmap syndesis-template --from-file=template=$(appdir "install")/syndesis.yml
+  local patch=$(cat <<EOT
+  {
+    "spec": {
+      "template": {
+        "spec": {
+          "containers": [
+            {
+              "name": "syndesis-operator",
+              "command": [
+                "syndesis-operator",
+                "-template",
+                "/conf/syndesis-template.yml"
+              ],
+              "volumeMounts": [
+                {
+                  "mountPath": "/conf",
+                  "name": "syndesis-template-config"
+                }
+              ]
+            }
+          ],
+          "volumes": [
+            {
+              "configMap": {
+                "name": "syndesis-template",
+                "items": [
+                  {
+                    "key": "template",
+                    "path": "syndesis-template.yml"
+                  }
+                ]
+              },
+              "name": "syndesis-template-config"
+            }
+          ]
+        }
+      }
+    }
+  }
+EOT
+)
+  oc patch deploymentconfig syndesis-operator -p "$patch"
+
 }

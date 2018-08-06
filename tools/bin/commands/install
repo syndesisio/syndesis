@@ -6,9 +6,12 @@ install::description() {
 
 install::usage() {
     cat <<EOT
--s  --setup-as-admin <user>   Install CRDs clusterwide and optionally add permission to the given user so that
-                              user can install the operator in his projects. Othwerwise only admin can install the
-                              operator. You have to run this once as cluster admin
+-s  --setup                   Install CRDs clusterwide. Use --grant if you want a specific user to be
+                              able to install Syndesis. You have to run this option once as cluster admin.
+-u  --grant <user>            Add permissions for the given user so that user can install the operator
+                              in her projects. Must be run as cluster admin.
+    --cluster                 Add the permission for all projects in the cluster
+                              (only when used together with --grant)
 -p  --project                 Install into this project. Delete this project
                               if it already exists. By default, install into the current project (without deleting)
     --route                   Route to use. If not given, the route is trying to be detected from the currently
@@ -18,6 +21,7 @@ install::usage() {
                               version from master is installed
     --dev                     Prepare for development of Syndesis so that S2I builds of
                               Syndesis images are picked up properly (implies --watch)
+    --force                   Override an existing "Syndesis" if present
 -w  --watch                   Wait until cluster is up
     --local                   install from local Git repo when using. By default the resource descriptor is
                               downloaded from GitHub remotely.
@@ -27,6 +31,8 @@ install::usage() {
     --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
     --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support            Allow test support endpoint for syndesis-server
+
+You have to run `--setup --grant <user>` as a cluster-admin before you can install Fuse Online as a user.
 EOT
 }
 
@@ -34,13 +40,23 @@ EOT
 install::run() {
     source "$(basedir)/commands/util/openshift_funcs"
 
-    if [ $(hasflag -s --setup-as-admin) ]; then
+    local prep_only="false"
+    if [ $(hasflag -s --setup) ]; then
         echo "Installing Syndesis CRD"
         local result=$(install_syndesis_crd)
         check_error "$result"
-        if [ -n "$(readopt --setup-as-admin)" ]; then
-            add_user_permissions_for_operator "$(readopt --setup-as-admin)"
-        fi
+        prep_only="true"
+    fi
+
+    local user_to_prepare="$(readopt -u --grant)"
+    if [ -n  "$user_to_prepare" ]; then
+        echo "Grant permission to create Syndesis to user $user_to_prepare"
+        local result=$(add_user_permissions_for_operator "$user_to_prepare" $(hasflag --cluster))
+        check_error "$result"
+        prep_only="true"
+    fi
+
+    if $prep_only; then
         return
     fi
 
@@ -53,7 +69,16 @@ install::run() {
     # Setup oc
     setup_oc
 
+    # Check for the proper setup
+    set +e
+    oc get syndesis >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        check_error "ERROR: No CRD Syndesis installed or not enough permissions to read them. Please run --setup and/or --grant as cluster-admin. See 'syndesis install --help' for more information."
+    fi
+    set -e
+
     # Deploy operator and wait until its up
+    echo "Deploying Syndesis operator"
     result=$(deploy_syndesis_operator)
     check_error "$result"
     wait_for_deployments 1 syndesis-operator
@@ -73,6 +98,7 @@ install::run() {
     fi
 
     if [ $(hasflag --open -o) ]; then
+        route=$(get_route "syndesis")
         open_url "https://$route"
     fi
 }

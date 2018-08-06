@@ -76,22 +76,9 @@ The Syndesis application consists of a set of Docker images OpenShift resources 
 For development, https://www.openshift.org/minishift/[minishift] is used, and most of the commands assume that you have minishift installed locally and executable directly from your path.
 Minishift can be downloaded and installed from https://github.com/minishift/minishift/releases
 
-You can choose from two different modes how Docker images are installed and updated:
-
-.Docker mode
-The Docker mode avoids OpenShift specific image stream and uses plain Docker image references in the deployment descriptors.
-Without an extra Docker registry push, this only works smoothly on single node OpenShift installation like with Minishift or `oc cluster up`.
-For Minishift, the Docker daemon exposed with `minishift docker-env` is used.
-The advantage of this mode is that building is a bit faster and you avoid the overhead of image streams.
-On the other side, you have to kill pods when images are updated so that the new images are picked up.
-
-.OpenShift mode
-The OpenShift mode uses OpenShift S2I builds and image streams.
+For development OpenShift S2I builds and image streams are used.
 This mode works also when running with a real OpenShift cluster and is not restricted to Minishift usage.
-Another advantage is that a build automatically triggers a redeployment, so you don't have to kill any pods manually (or with this script).
-On the con side is a slightly slower build.
-
-Both modes are currently supported, but the OpenShift mode is recommended.
+The advantage is that a build automatically triggers a redeployment, so you don't have to kill any pods manually.
 
 [[syndesis-commands]]
 .Commands

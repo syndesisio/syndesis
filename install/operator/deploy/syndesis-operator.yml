@@ -97,7 +97,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ---
 kind: RoleBinding
-apiVersion: v1
+apiVersion: authorization.openshift.io/v1
 metadata:
   name: syndesis-operator:view
   labels:
@@ -112,7 +112,7 @@ roleRef:
   name: view
 ---
 kind: RoleBinding
-apiVersion: v1
+apiVersion: authorization.openshift.io/v1
 metadata:
   name: syndesis-operator:edit
   labels:

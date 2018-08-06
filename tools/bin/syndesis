@@ -103,99 +103,6 @@ appdir() {
   echo ${full_dir}
 }
 
-# Checks if a flag is present in the arguments.
-hasflag() {
-    filters="$@"
-    for var in "${ARGS[@]}"; do
-        for filter in $filters; do
-          if [ "$var" = "$filter" ]; then
-              echo 'true'
-              return
-          fi
-        done
-    done
-}
-
-isOSX() {
-    if [ -z "${OSTYPE}" ]; then
-        if [ $(uname) == "Darwin" ]; then
-            echo "true"
-        fi
-    elif [ "${OSTYPE#darwin}" != "${OSTYPE}" ]; then
-        echo "true"
-    fi
-}
-
-# Read the value of an option.
-readopt() {
-    filters="$@"
-    next=false
-    for var in "${ARGS[@]}"; do
-        if $next; then
-            echo $var
-            break;
-        fi
-        for filter in $filters; do
-            if [[ "$var" = ${filter}* ]]; then
-                local value="${var//${filter}=/}"
-                if [ "$value" != "$var" ]; then
-                    echo $value
-                    return
-                fi
-                next=true
-            fi
-        done
-    done
-}
-
-
-check_error() {
-    local msg="$*"
-    if [ "${msg//ERROR/}" != "${msg}" ]; then
-        echo $msg
-        exit 1
-    fi
-}
-
-open_url() {
-    local url=$1
-    local cmd="$(probe_commands open xdg-open chrome firefox)"
-    if [ -z "$cmd" ]; then
-        echo "Cannot find command for opening URL:"
-        echo $url
-        exit 1
-    fi
-    exec $cmd $url
-}
-
-probe_commands() {
-    for cmd in $@; do
-      local ret=$(which $cmd 2>/dev/null)
-      if [ $? -eq 0 ]; then
-          echo $ret
-          return
-      fi
-    done
-}
-
-# ======================================================
-# Git update functions
-git_rebase_upstream() {
-  echo "git fetch upstream master"
-  git fetch upstream master
-  echo -n "git rebase upstream/master"
-  if ! git rebase upstream/master; then
-    echo " (failed)"
-    echo "git stash"
-    git stash
-    echo "git rebase upstream/master"
-    git rebase upstream/master
-    echo "git stash pop"
-    git stash pop
-  else
-    echo
-  fi
-}
 
 run() {
     local first_arg=${1:-}
@@ -257,9 +164,13 @@ run() {
     eval "${command}::run"
 }
 
+source "$(basedir)/commands/util/common_funcs"
+
+ERROR_FILE="$(mktemp /tmp/syndesis-output-XXXXX)"
+trap "print_error $ERROR_FILE" EXIT
+
 if [ $(hasflag --verbose) ]; then
-    export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+    export PS4='+($(basename ${BASH_SOURCE[0]}):${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
     set -x
 fi
-
 run "$@"
