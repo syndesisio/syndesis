@@ -10,7 +10,6 @@
         alt="" />
       <img *ngIf="logoDarkBg" [class]="productBuild ? 'navbar-brand-name product' : 'navbar-brand-name'" [src]="loggedIn ? logoDarkBg : logoWhiteBg"
         alt="{{ appName }}" />
-      <span *ngIf="logoDarkBg === '' && logoWhiteBg === ''" class="navbar-brand-name">{{ appName }}</span>
     </a>
   </ng-template>
 
