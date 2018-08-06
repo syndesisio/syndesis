@@ -13,8 +13,12 @@ set -o pipefail
 # Fail on error and undefined vars (please don't use global vars, but evaluation of functions for return values)
 set -eu
 
-# Save global script args
-ARGS=("$@")
+# Save global script args, use "build" as default
+if [ -z "$@" ]; then
+    ARGS=("build")
+else
+    ARGS=("$@")
+fi
 
 # Display a help message.
 display_help() {
@@ -71,6 +75,7 @@ EOT
 "
     fi
 }
+
 
 # Dir where this script is located
 basedir() {
