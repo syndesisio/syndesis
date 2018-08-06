@@ -166,7 +166,7 @@ run() {
 
 source "$(basedir)/commands/util/common_funcs"
 
-ERROR_FILE="$(mktemp /tmp/syndesis-output-XXXXX)"
+ERROR_FILE="$(mktemp /tmp/syndesis-output.XXXXXX)"
 trap "print_error $ERROR_FILE" EXIT
 
 if [ $(hasflag --verbose) ]; then
