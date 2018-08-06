@@ -41,8 +41,8 @@ something like this:
 `\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
 .. A 100-character description of how you plan to use this app is required. 
 For convenience, you can copy and paste: 
-`A great app, Red Hat Fuse Online, finds tweets that mention my 
-company and then creates sales leads.` 
+`This is a demo application so that I can evaluate how to integrate Twitter 
+with my enterprise applications.`
 .. Click *Create*. 
 .. Click *Create* again to confirm that you reviewed the developer terms. 
 .. At the top of the page for the app you just created, click 
