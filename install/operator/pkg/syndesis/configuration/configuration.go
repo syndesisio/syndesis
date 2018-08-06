@@ -34,11 +34,12 @@ const (
 	EnvServerMemoryLimit				SyndesisEnvVar = "SERVER_MEMORY_LIMIT"
 	//EnvClientStateAuthenticationKey		SyndesisEnvVar = "CLIENT_STATE_AUTHENTICATION_KEY"
 	//EnvClientStateEncryptionKey			SyndesisEnvVar = "CLIENT_STATE_ENCRYPTION_KEY"
-	EnvImageStreamNamespace				SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
-	EnvControllersIntegrationEnabled	SyndesisEnvVar = "CONTROLLERS_INTEGRATION_ENABLED"
-	EnvSyndesisRegistry					SyndesisEnvVar = "SYNDESIS_REGISTRY"
-	EnvDemoDataEnabled					SyndesisEnvVar = "DEMO_DATA_ENABLED"
-	EnvMaxIntegrationsPerUser			SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
+	EnvImageStreamNamespace          SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
+	EnvControllersIntegrationEnabled SyndesisEnvVar = "CONTROLLERS_INTEGRATION_ENABLED"
+	EnvSyndesisRegistry              SyndesisEnvVar = "SYNDESIS_REGISTRY"
+	EnvDemoDataEnabled               SyndesisEnvVar = "DEMO_DATA_ENABLED"
+	EnvMaxIntegrationsPerUser        SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
+	EnvIntegrationStateCheckInterval SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
 
 	EnvSyndesisVersion 					SyndesisEnvVar = "SYNDESIS_VERSION"
 )
@@ -60,6 +61,8 @@ var (
 		envSyndesisRegistry,
 		envDemoDataEnabled,
 		envMaxIntegrationsPerUser,
+		envIntegrationStateCheckInterval,
+
 		envControllersIntegrationsEnabled,
 		envTestSupport,
 		envImageStreamNamespace,
@@ -85,6 +88,8 @@ var (
 		syndesisRegistryFromEnv,
 		demoDataEnabledFromEnv,
 		maxIntegrationsPerUserFromEnv,
+		integrationStateCheckInterval,
+
 		controllersIntegrationsEnabledFromEnv,
 		testSupportFromEnv,
 		imageStreamNamespaceFromEnv,
@@ -194,17 +199,34 @@ func demoDataEnabledFromEnv(config map[string]string, syndesis *v1alpha1.Syndesi
 
 
 func envMaxIntegrationsPerUser(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
-	if integrations := syndesis.Spec.IntegrationLimit; integrations != nil {
+	if integrations := syndesis.Spec.Integration.Limit; integrations != nil {
 		return &SyndesisEnvVarConfig{
-			Var: EnvMaxIntegrationsPerUser,
+			Var:   EnvMaxIntegrationsPerUser,
 			Value: strconv.Itoa(*integrations),
 		}
 	}
 	return nil
 }
+
+func envIntegrationStateCheckInterval(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if i := syndesis.Spec.Integration.StateCheckInterval; i != nil {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvIntegrationStateCheckInterval,
+			Value: strconv.Itoa(*i),
+		}
+	}
+	return nil
+}
+
 func maxIntegrationsPerUserFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
 	if v, ok := getInt(config, EnvMaxIntegrationsPerUser); ok {
-		syndesis.Spec.IntegrationLimit = &v
+		syndesis.Spec.Integration.Limit = &v
+	}
+}
+
+func integrationStateCheckInterval(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getInt(config, EnvIntegrationStateCheckInterval); ok {
+		syndesis.Spec.Integration.StateCheckInterval = &v
 	}
 }
 

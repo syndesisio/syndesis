@@ -15,36 +15,39 @@
  */
 package io.syndesis.server.controller.integration;
 
-import io.syndesis.server.controller.StateChangeHandler;
-import io.syndesis.server.controller.StateChangeHandlerProvider;
-import io.syndesis.common.util.EventBus;
-import io.syndesis.common.util.Json;
-import io.syndesis.common.util.Exceptions;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.common.model.ChangeEvent;
-import io.syndesis.common.model.Kind;
-import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import io.syndesis.server.openshift.OpenShiftService;
-import java.util.HashMap;
-import io.syndesis.common.util.Labels;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+
+import io.syndesis.common.model.ChangeEvent;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.util.EventBus;
+import io.syndesis.common.util.Exceptions;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.Labels;
+import io.syndesis.server.controller.ControllersConfigurationProperties;
+import io.syndesis.server.controller.StateChangeHandler;
+import io.syndesis.server.controller.StateChangeHandlerProvider;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.openshift.OpenShiftService;
 
 /**
  * This class tracks changes to Integrations and attempts to process them so that
@@ -55,19 +58,18 @@ public class IntegrationController {
     private static final Logger LOG = LoggerFactory.getLogger(IntegrationController.class);
 
     private static final String EVENT_BUS_ID = "integration-deployment-controller";
-    private static final long SCHEDULE_INTERVAL_IN_SECONDS = 60;
-
     private final OpenShiftService openShiftService;
     private final DataManager dataManager;
     private final EventBus eventBus;
     private final ConcurrentHashMap<IntegrationDeploymentState, StateChangeHandler> handlers = new ConcurrentHashMap<>();
     private final Set<String> scheduledChecks = ConcurrentHashMap.newKeySet();
+    private final ControllersConfigurationProperties properties;
 
     private ExecutorService executor;
     private ScheduledExecutorService scheduler;
 
     @Autowired
-    public IntegrationController(OpenShiftService openShiftService,DataManager dataManager, EventBus eventBus, StateChangeHandlerProvider handlerFactory) {
+    public IntegrationController(OpenShiftService openShiftService,DataManager dataManager, EventBus eventBus, StateChangeHandlerProvider handlerFactory, ControllersConfigurationProperties properties) {
         this.openShiftService = openShiftService;
         this.dataManager = dataManager;
         this.eventBus = eventBus;
@@ -76,6 +78,7 @@ public class IntegrationController {
                 this.handlers.put(state, handler);
             }
         }
+        this.properties = properties;
     }
 
     @PostConstruct
@@ -84,7 +87,7 @@ public class IntegrationController {
         executor = Executors.newSingleThreadExecutor(threadFactory("Integration Controller"));
         scheduler = Executors.newScheduledThreadPool(2, threadFactory("Integration Controller Scheduler"));
 
-        scheduler.scheduleAtFixedRate(this::scanIntegrationsForWork, 0, 1, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(this::scanIntegrationsForWork, 0, properties.getIntegrationStateCheckInterval(), TimeUnit.SECONDS);
         eventBus.subscribe(EVENT_BUS_ID, getChangeEventSubscription());
     }
 
@@ -240,7 +243,7 @@ public class IntegrationController {
                 LOG.debug("Trigger checkIntegrationStatus, id:{}", integrationId);
                 checkIntegrationStatus(i);
             },
-            SCHEDULE_INTERVAL_IN_SECONDS,
+            properties.getIntegrationStateCheckInterval(),
             TimeUnit.SECONDS
         );
     }

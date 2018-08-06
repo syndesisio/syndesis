@@ -12,8 +12,11 @@ spec:
   # Should deployment of integrations be enabled?
   deployIntegrations: true
   imageStreamNamespace: ""
-  # How many integration are allowed ?
-  integrationLimit: 1
+  integration:
+    # How many integration are allowed ?
+    limit: 1
+    # How to check for state changes ?
+    stateCheckInterval: 60
   # Registry from where to pickup images
   registry: docker.io
   # Component specific configuration
