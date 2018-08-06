@@ -85,6 +85,11 @@ export class IntegrationStatusDetailComponent implements OnChanges {
                                   current,
                                   total]);
       this.barWidth.width = ((current / total) * 100) + '%';
+      const consoleUrl = <string> this.configService.getSettings('consoleUrl');
+      // Check if the console URL is set properly, if not don't set up the log/event link
+      if (!consoleUrl || !consoleUrl.length) {
+        return;
+      }
       this.logUrl = undefined;
       if (statusDetail.linkType && statusDetail.namespace && statusDetail.podName) {
         switch (statusDetail.linkType) {
