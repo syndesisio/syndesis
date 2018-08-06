@@ -48,6 +48,9 @@ If the target field expects data that is not available to be mapped, then in the
 source field so that it is the same as the index of the corresponding data
 in the compound target field. The data mapper automatically adds 
 padding fields as needed to indicate missing data. 
++
+If you accidentally create too many padding fields, click the trash-can 
+icon on each extra padding field to delete it.  
 
 . To confirm that the mapping is correctly defined, in the upper right, click
 image:shared/images/grid.png[Grid] to display the mappings defined in
