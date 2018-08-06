@@ -6,12 +6,12 @@ install::description() {
 
 install::usage() {
     cat <<EOT
--s  --setup-crd               Install CRDs clusterwide. Use --prepare-for-user if you want a specific user to be
+-s  --setup-crd               Install CRDs clusterwide. Use --setup-user if you want a specific user to be
                               able to install Syndesis. You have to run this option once as cluster admin.
--u  --prepare-for-user <user> Add permissions for the given user so that user can install the operator
+-u  --setup-user <user>       Add permissions for the given user so that user can install the operator
                               in her projects
     --cluster                 Add the permission for all projects in the cluster
-                              (only when used together with --prepare-for-user)
+                              (only when used together with --setup-user)
 -p  --project                 Install into this project. Delete this project
                               if it already exists. By default, install into the current project (without deleting)
     --route                   Route to use. If not given, the route is trying to be detected from the currently
@@ -46,7 +46,7 @@ install::run() {
         prep_only="true"
     fi
 
-    local user_to_prepare="$(readopt -u --prepare-for-user)"
+    local user_to_prepare="$(readopt -u --setup-user)"
     if [ -n  "$user_to_prepare" ]; then
         echo "Grant permission to create Syndesis to user $user_to_prepare"
         local result=$(add_user_permissions_for_operator "$user_to_prepare" $(hasflag --cluster))
@@ -71,7 +71,7 @@ install::run() {
     set +e
     oc get syndesis >/dev/null 2>&1
     if [ $? -ne 0 ]; then
-        check_error "ERROR: No CRD Syndesis installed or not enough permissions to read them. Please run --setup-crd and/or --prepare-for-user as cluster-admin. See 'syndesis install --help' for more information."
+        check_error "ERROR: No CRD Syndesis installed or not enough permissions to read them. Please run --setup-crd and/or --setup-user as cluster-admin. See 'syndesis install --help' for more information."
     fi
     set -e
 
