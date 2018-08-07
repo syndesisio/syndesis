@@ -6,7 +6,8 @@
 [ ] Bug report  <!-- Please search GitHub for a similar issue or PR before submitting -->
 [ ] Documentation issue or request
 </code></pre>
-
+<!-- If possible, please choose the appropriate labels for your issue. You find a description of all
+labels used at https://doc.syndesis.io/#dev-labels -->
 
 ## The problem
 <!--
@@ -26,14 +27,14 @@ For features/bugs tackling with UI functionality, drag and drop a screenshot dep
 ## Request and Response Data
 <!--
 Many issues involve both the UI and it's backend, if possible capture relevant request and response data JSON messages and include it here.
-Request and response data can be gathered from your browser's developer tools on the 'Network' tab.  
- + As you reproduce the issue, take note of any network requests that are made.  
- + Requests that result in an error will be highlighted red.  
+Request and response data can be gathered from your browser's developer tools on the 'Network' tab.
+ + As you reproduce the issue, take note of any network requests that are made.
+ + Requests that result in an error will be highlighted red.
  + Click on line in the network tab and then the 'Headers' tab to get the request data
- + Click on the 'Preview' or 'Response' tabs to get the response data.  
+ + Click on the 'Preview' or 'Response' tabs to get the response data.
  + Pretty print the json too -> http://jsonprettyprint.com/
 
-BE CAREFUL NOT TO INCLUDE ANY USER TOKENS!!!!  
+BE CAREFUL NOT TO INCLUDE ANY USER TOKENS!!!!
 Things like connection objects can contain sensitive data in their configuration, make sure to rip these out
 -->
 
