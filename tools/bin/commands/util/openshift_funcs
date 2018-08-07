@@ -209,6 +209,9 @@ add_user_permissions_for_operator() {
         echo "ERROR: No user provided to fix permissions for"
         return
     fi
+
+    # Don't fail on error for a moment, as grep exits with 1 if nothing is found
+    set +e
     local extra_role_installed="$(oc get role -o name | grep syndesis-extra-permissions | wc -l | xargs)"
     local kind="Role"
     local oc_command="policy add-role-to-user --role-namespace=$(oc project -q)"
@@ -218,7 +221,6 @@ add_user_permissions_for_operator() {
         oc_command="adm policy add-cluster-role-to-user"
     fi
 
-    set +e
     if [ $extra_role_installed -eq 0 ]; then
         oc create -f - >/dev/null 2>&1 <<EOT
 ---
