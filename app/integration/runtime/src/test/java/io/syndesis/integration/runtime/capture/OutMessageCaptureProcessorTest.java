@@ -282,13 +282,11 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
             Map<String, Message> messages = OutMessageCaptureProcessor.getCapturedMessageMap(exchange1);
             assertThat(messages.get("s1").getBody()).isEqualTo("Hiram");
             assertThat(messages.get("s2").getBody()).isEqualTo("Hello Hiram");
-            assertThat(messages.get("s3").getBody()).isEqualTo("Hello Hiram");
 
             Exchange exchange2 = result.getExchanges().get(1);
             Map<String, Message> messages2 = OutMessageCaptureProcessor.getCapturedMessageMap(exchange2);
             assertThat(messages2.get("s1").getBody()).isEqualTo("World");
             assertThat(messages2.get("s2").getBody()).isEqualTo("Hello World");
-            assertThat(messages2.get("s3").getBody()).isEqualTo("Hello World");
 
         } finally {
             context.stop();
