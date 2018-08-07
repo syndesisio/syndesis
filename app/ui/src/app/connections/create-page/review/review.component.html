@@ -7,7 +7,7 @@
         </h2>
       </div>
       <div class="card-pf-body">
-        <ng-container *ngIf='!hasCredentials'>
+        <ng-container *ngIf='!hasCredentialError'>
           <form id="reviewForm"
                 [formGroup]="reviewForm"
                 class="form-horizontal"
@@ -48,12 +48,8 @@
             </div>
           </form>
         </ng-container>
-        <ng-container *ngIf='hasCredentials'>
-          <div class="alert alert-warning alert-dismissable"
-               *ngIf="current.oauthError">
-            <button type="button"
-                    class="close"
-                    (click)="current.clearOAuthError()"></button>
+        <ng-container *ngIf='hasCredentialError'>
+          <div class="alert alert-warning alert-dismissable">
             <span class="pficon pficon-warning-triangle-o"></span>
             <p [innerHTML]='current.oauthStatus.message'></p>
           </div>

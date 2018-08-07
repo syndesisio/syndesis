@@ -55,8 +55,8 @@ export class ConnectionsReviewComponent
     return this.reviewForm.get('name');
   }
 
-  get hasCredentials() {
-    return this.current.hasCredentials();
+  get hasCredentialError() {
+    return this.current.oauthStatus && this.current.oauthStatus.status != 'SUCCESS';
   }
 
   createConnection(): void {
