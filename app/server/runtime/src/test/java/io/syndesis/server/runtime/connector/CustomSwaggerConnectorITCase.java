@@ -17,6 +17,7 @@ package io.syndesis.server.runtime.connector;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import io.syndesis.server.connector.generator.ConnectorGenerator;
 import io.syndesis.server.connector.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
@@ -30,8 +31,12 @@ import io.syndesis.server.runtime.BaseITCase;
 
 import okio.Okio;
 
+import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -82,7 +87,7 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
     }
 
     @Test
-    public void shouldOfferCustomConnectorInfoForUploadedSwagger() throws IOException {
+    public void shouldOfferCustomConnectorInfoForUploadedSwagger() throws IOException, JSONException {
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build();
 
         final ResponseEntity<ConnectorSummary> response = post("/api/v1/connectors/custom/info",
@@ -99,8 +104,12 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
 
         final ConnectorSummary got = response.getBody();
 
-        assertThat(got).isEqualToIgnoringGivenFields(expected, "icon");
+        assertThat(got).isEqualToIgnoringGivenFields(expected, "icon", "configuredProperties");
         assertThat(got.getIcon()).startsWith("data:image");
+        assertThat(got.getConfiguredProperties().keySet()).containsOnly("specification");
+        JSONAssert.assertEquals(got.getConfiguredProperties().get("specification"),
+            IOUtils.toString(getClass().getResourceAsStream("/io/syndesis/server/runtime/test-swagger.json"), StandardCharsets.UTF_8),
+            JSONCompareMode.LENIENT);
     }
 
     private MultiValueMap<String, Object> multipartBodyForInfo(final ConnectorSettings connectorSettings, final InputStream is)
