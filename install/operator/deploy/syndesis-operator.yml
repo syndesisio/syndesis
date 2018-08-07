@@ -141,10 +141,10 @@ spec:
   tags:
   - from:
       kind: DockerImage
-      name: docker.io/syndesis/syndesis-operator:latest
+      name: docker.io/syndesis/syndesis-operator:1.5.3
     importPolicy:
       scheduled: true
-    name: latest
+    name: 1.5.3
 ---
 apiVersion: v1
 kind: DeploymentConfig
@@ -189,6 +189,6 @@ spec:
       - syndesis-operator
       from:
         kind: ImageStreamTag
-        name: syndesis-operator:latest
+        name: syndesis-operator:1.5.3
     type: ImageChange
   - type: ConfigChange
