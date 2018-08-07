@@ -95,7 +95,7 @@ create_operator_image() {
     trap "rm -rf $build_dir" EXIT
 
     if [ $do_docker ]; then
-        echo "Creating image $OPERATOR_IMAGE via Docker"
+        echo "Creating image $OPERATOR_IMAGE:$tag via Docker"
         docker build -t $OPERATOR_IMAGE:${tag} .
         popd
         return
@@ -106,7 +106,7 @@ create_operator_image() {
     local tmpdir=$(mktemp -d)
     trap "rm -rf $tmpdir" EXIT
 
-    echo "Creating image $OPERATOR_IMAGE via S2I and Docker strategy"
+    echo "Creating image $OPERATOR_IMAGE:${tag} via S2I and Docker strategy"
     if [ -z "$(oc get bc -o name | grep syndesis-operator)" ]; then
         echo "Creating BuildConfig syndesis-operator"
         oc new-build --strategy=docker --binary=true --name syndesis-operator
