@@ -131,12 +131,6 @@ release::run() {
     # Commit, tag, release, push
     # --------------------------
 
-    # Pushing to Docker Hub
-    docker_push "$release_version" "$moving_tag"
-
-    # Release staging repo
-    release_staging_repo "$topdir" "$maven_opts"
-
     # Git Commit all changed files
     git_commit_files "$topdir" "$release_version"
 
@@ -146,8 +140,14 @@ release::run() {
     # Create template versions for the minor tags (without patchlevels)
     create_moving_tag_release "$topdir" "$release_version" "$moving_tag"
 
+    # Pushing to Docker Hub
+    docker_push "$release_version" "$moving_tag"
+
     # Push everything (if configured)
     git_push "$topdir" "$release_version" "$moving_tag"
+
+    # Release staging repo
+    release_staging_repo "$topdir" "$maven_opts"
 }
 
 create_moving_tag_release() {
@@ -247,6 +247,7 @@ generate_versioned_files() {
     local nr_diff=$(git diff --shortstat syndesis-operator.yml | grep "3 insertions" | wc -l | xargs)
     if [ $nr_diff -ne 1 ]; then
         echo "Patching of syndesis-operator.yml failed"
+        cat syndesis-operator.yml
         git diff --shortstat syndesis-operator.yml
         git diff syndesis-operator.yml | cat -
         exit 1
