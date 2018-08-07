@@ -5,7 +5,7 @@ install::description() {
 }
 
 install::usage() {
-    cat <<EOT
+cat <<"EOT"
 -s  --setup                   Install CRDs clusterwide. Use --grant if you want a specific user to be
                               able to install Syndesis. You have to run this option once as cluster admin.
 -u  --grant <user>            Add permissions for the given user so that user can install the operator
