@@ -65,14 +65,19 @@ check_error() {
 }
 
 print_error() {
+    local exit_code=$?
     local error_file="${1:-}"
+    if [ -f $error_file ] && grep -q "ERROR" $error_file; then
+        cat $error_file
+    elif [ $exit_code -ne 0 ]; then
+        echo "ERROR: Last command exited with $exit_code"
+    fi
+
     if [ -f $error_file ]; then
-        if grep -q "ERROR" $error_file; then
-            cat $error_file
-        fi
         rm $error_file
     fi
 }
+
 open_url() {
     local url=$1
     local cmd="$(probe_commands open xdg-open chrome firefox)"
