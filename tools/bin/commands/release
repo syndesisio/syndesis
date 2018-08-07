@@ -144,7 +144,7 @@ release::run() {
     git_tag_release "$release_version"
 
     # Create template versions for the minor tags (without patchlevels)
-    create_moving_tag_release "$topdir" "$moving_tag"
+    create_moving_tag_release "$topdir" "$release_version" "$moving_tag"
 
     # Push everything (if configured)
     git_push "$topdir" "$release_version" "$moving_tag"
@@ -152,13 +152,15 @@ release::run() {
 
 create_moving_tag_release() {
     local topdir=$1
-    local moving_tag=$2
+    local release_version=$2
+    local moving_tag=$3
 
     if [ ! $(hasflag --snapshot-release) ]; then
         generate_versioned_files $topdir $moving_tag
 
-        # Recreate operator image with the versioned templates and push
-        create_operator_image "$topdir/install/operator" "true" "$moving_tag"
+        # Recreate operator image with the versioned templates and push. Note that because
+        # the templates has already processed, they contain now the $release_version instead of latest
+        create_operator_image "$topdir/install/operator" "true" "$moving_tag" "$release_version"
         docker push "syndesis/syndesis-operator:$moving_tag"
 
         echo "==== Git commit for templates and syndesis-operator.yml, $moving_tag"
@@ -226,6 +228,7 @@ mvn_clean_install() {
 generate_versioned_files() {
     local dir="$1/install"
     local tag="$2"
+    local previous_tag="${3:-latest}"
 
     echo "==== Creating templates for $tag"
     cd $dir/generator
@@ -235,8 +238,8 @@ generate_versioned_files() {
     cd $dir/operator/deploy
 
     sed -i.bak \
-        -e "s/syndesis-operator:latest/syndesis-operator:$tag/" \
-        -e "s/name:[[:space:]]*latest/name: $tag/" \
+        -e "s/syndesis-operator:${previous_tag}/syndesis-operator:$tag/" \
+        -e "s/name:[[:space:]]*${previous_tag}/name: $tag/" \
            syndesis-operator.yml
     rm syndesis-operator.yml.bak
 
