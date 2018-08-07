@@ -1,11 +1,14 @@
 <div class="card-pf-heading">
   <h2 class="card-pf-title">
-    Specify Security
+    {{ 'customizations.api-client-connectors.create-security-step-title' | synI18n }}
   </h2>
 </div>
 <div class="card-pf-body">
+  <p class="fields-status-pf">
+    {{ 'all-fields-required' | synI18n }}
+  </p>
   <p>
-    <strong>Authentication Type</strong>
+    <strong>{{ 'customizations.api-client-connectors.authentication-type' | synI18n }}</strong>
   </p>
   <form [formGroup]="authSetupForm" #form="ngForm" (ngSubmit)="onSubmit(form)" class="form-horizontal" novalidate>
     <fieldset class="container-fluid">
@@ -26,22 +29,39 @@
           </div>
           <ng-container *ngIf="authType.value == 'oauth2'">
             <div *ngIf="authenticationType.checked">
-              <div class="form-group">
-                <label class="col-sm-3 control-label" for="authorizationEndpoint">Authorization URL</label>
+              <div class="form-group" [ngClass]="{'has-error': authUrl.invalid && authUrl.touched}">
+                <label class="col-sm-3 control-label" for="authorizationEndpoint">
+                  {{ 'customizations.api-client-connectors.authorization-endpoint-label' | synI18n }}
+                </label>
                 <div class="col-sm-9">
                   <input class="form-control"
                     [class.syn-submitted]="form.submitted"
+                    id="authorizationEndpoint"
+                    autofocus
                     type="text"
                     formControlName="authorizationEndpoint">
+                  <div *ngIf="authUrl.invalid && authUrl.touched">
+                    <span class="help-block" *ngIf="authUrl.invalid">
+                      {{ 'customizations.api-client-connectors.authorization-endpoint-invalid' | synI18n }}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div class="form-group">
-                <label class="col-sm-3 control-label" for="tokenEndpoint">Access Token URL</label>
+              <div class="form-group" [ngClass]="{'has-error': tokenUrl.invalid && tokenUrl.touched}">
+                <label class="col-sm-3 control-label" for="tokenEndpoint">
+                  {{ 'customizations.api-client-connectors.token-endpoint-label' | synI18n }}
+                </label>
                 <div class="col-sm-9">
                   <input class="form-control"
                     [class.syn-submitted]="form.submitted"
+                    id="tokenEndpoint"
                     type="text"
                     formControlName="tokenEndpoint">
+                  <div *ngIf="tokenUrl.invalid && tokenUrl.touched">
+                    <span class="help-block" *ngIf="tokenUrl.invalid">
+                      {{ 'customizations.api-client-connectors.token-endpoint-invalid' | synI18n }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
