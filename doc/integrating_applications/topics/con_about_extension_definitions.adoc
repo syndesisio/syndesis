@@ -3,9 +3,9 @@
 
 Each extension must have a `.json` file that defines the extension 
 by specifying values for data structures such as name, description, 
-supported actions, and dependencies. For each extenstion type, the
-following table indcates whether Maven can generate the 
-extension definiton JSON file and which data structures are required. 
+supported actions, and dependencies. For each extension type, the
+following table indicates whether Maven can generate the 
+extension definition JSON file and which data structures are required. 
 
 [options="header"]
 [cols="3,1,2"]

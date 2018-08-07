@@ -19,7 +19,8 @@ or a library extension.
 . If you are developing a step extension: 
 +
 .. Decide whether to implement it as a Camel route or implement it by using 
-the Syndesis `Step` API.  
+the Syndesis `Step` API. Information for the Syndesis API is at 
+http://javadoc.io/doc/io.syndesis.extension/extension-api. 
 .. If you choose to implement the extension as a Camel route, 
 decide whether to implement XML fragments, a `RouteBuilder` class, or a bean. 
 .. In your Maven project, specify the required metadata, such as the

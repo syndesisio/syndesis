@@ -4,7 +4,10 @@
 You can implement a custom step by using the Syndesis `Step` API. This
 provides a way to interact with runtime route creation. You can use
 any method provided by the `ProcessorDefinition` class and you can 
-create more complex routes. Here is an example of a step extension 
+create more complex routes. Information for the Syndesis API is at 
+http://javadoc.io/doc/io.syndesis.extension/extension-api.
+
+Here is an example of a step extension 
 that uses the Syndesis `Step` API to implement a split action:  
 
 [source,java]
