@@ -156,11 +156,11 @@ create_moving_tag_release() {
     local moving_tag=$3
 
     if [ ! $(hasflag --snapshot-release) ]; then
-        generate_versioned_files $topdir $moving_tag
+        generate_versioned_files "$topdir" "$moving_tag" "$release_version"
 
         # Recreate operator image with the versioned templates and push. Note that because
         # the templates has already processed, they contain now the $release_version instead of latest
-        create_operator_image "$topdir/install/operator" "true" "$moving_tag" "$release_version"
+        create_operator_image "$topdir/install/operator" "true" "$moving_tag"
         docker push "syndesis/syndesis-operator:$moving_tag"
 
         echo "==== Git commit for templates and syndesis-operator.yml, $moving_tag"
