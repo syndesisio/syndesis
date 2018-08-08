@@ -1,0 +1,14 @@
+[id='how-requests-are-handled']
+= How {prodname} handles HTTP requests
+
+{prodname} can handle HTTP `GET` and `POST` requests.
+
+* `GET` requests data from a specified resource. 
+The query string is in the request URL. When a `GET` request successfully
+triggers an integration, the {prodname} return code is `201`.
++
+When a `GET` request fails to trigger an integration, the {prodname}
+return code is `5xx`. 
+
+* `POST` sends data to a server to create or update a resource. 
+The data for updating the resource is stored in the request body.

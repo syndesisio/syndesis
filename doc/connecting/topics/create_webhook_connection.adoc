@@ -1,0 +1,28 @@
+[id='create-webhook-connection']
+= Create a Webhook connection 
+
+{prodname} provides the Webhook connector that you use to create a 
+Webhook connection. After you create one Webhook connection, you can add 
+it to any number of integrations as the start connection. Each time you 
+add this Webhook connection to an integration, {prodname} provides a new 
+random token for use with that integration. You paste this token to the 
+end of your `GET` or `POST` request. 
+
+To create a Webhook connection:
+
+. In {prodname}, in the left panel, click *Connections* to
+display any available connections.
+. In the upper right, click *Create Connection* to display
+connectors.  
+. Click the *Webhook* connector.
+. In the *Connection Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connections.
+For example, you might enter `Webhook 1`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection. For example,
+enter `*Sample Webhook connection.*`
+. In the upper right, click *Create* to see that the connection you 
+created is now available. If you
+entered the example name, you would 
+see that *Webhook 1* appears as a connection that you can 
+choose to add to an integration.

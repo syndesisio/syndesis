@@ -1,0 +1,28 @@
+[id='about-json-schema-for-http-requests']
+= About the JSON schema for specifying request parameters
+
+In an integration, you typically map header and query parameters 
+in the HTTP request to data fields that the next connection in the 
+integration can process. To make this possible, when you add the Webhook 
+connection to the integration, specify the output data type in a JSON schema 
+that has the following structure: 
+
+----
+{
+  "$schema": "http: //json-schema.org/schema#",
+   "id": "io:syndesis:webhook",
+   "type": "object",
+   "properties": {
+      "parameters": {
+         "type": "object",
+         "properties": {
+         }
+      },
+      "body": {
+         "type": "object",
+         "properties": {
+         }
+      }
+   }
+}
+----

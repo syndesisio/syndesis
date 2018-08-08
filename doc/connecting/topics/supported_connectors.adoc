@@ -63,6 +63,9 @@ JDBC driver for that database.
 |Trigger execution of an integration upon tweets that mention you or that 
 contain data you specify. 
 
+|<<triggering-integrations-with-http-requests,Webhook>>
+|Trigger integrations with HTTP `GET` or `POST` requests.
+
 |===
 
 If {prodname} does not provide a connector that you need, an 

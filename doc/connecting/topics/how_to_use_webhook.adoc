@@ -1,0 +1,28 @@
+[id='how-to-use-webhook']
+= General procedure for using the {prodname} webhook
+
+To trigger execution of an integration with an HTTP `GET` or `POST`
+request, you must do the following:
+
+. Decide whether you want to send a `GET` or `POST` request to {prodname}. 
+. Plan your integration to handle this request. 
+. Create a Webhook connection. 
+. Create any other connections that you want to add to the integration. 
+. Create the integration:
+.. Add the Webhook connection as the start connection.
+.. Add the finish connection and then any other connections that are
+required in the integration. 
++
+For a `GET` request, be sure to add a connection to the application that
+contains the data you want to obtain. For a `POST` request, add a connection
+to the application whose data you want to update. 
+
+.. Add a data mapper step after the Webhook connection. 
+Map the parameter fields in the HTTP request to the data fields in the next connection. 
+.. Add any other steps that the integration needs.
+. Publish the integration and wait for it to be *Running*. 
+. Go to the integration summary page and copy the external URL that 
+{prodname} provides. 
+. Modify this external URL to construct your `GET` or `PULL` request. 
+. Implement the application that sends the HTTP `GET` or `POST` request 
+to {prodname}. 
