@@ -38,6 +38,7 @@ with options:
     --route                   Route to use. If not given, the route is trying to be detected from the currently
                               connected cluster.
    --console <console-url>    The URL to the openshift console
+   --operator-only            Only install the operator but no resource
 -t --tag <tag>                Optional version to use for the installaton ("latest" by default)
    --force                    Override an existing "Syndesis" if present
 
@@ -543,6 +544,12 @@ set -e
 echo "Deploying Syndesis operator"
 result=$(deploy_syndesis_operator)
 check_error "$result"
+
+if [ $(hasflag --operator-only) ]; then
+    exit 0
+fi
+
+# Wait for the deployments to come up
 wait_for_deployments 1 syndesis-operator
 
 # Create syndesis resource

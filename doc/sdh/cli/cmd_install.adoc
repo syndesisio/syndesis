@@ -20,6 +20,7 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
 -p  --project             Install into this project. Delete this project
                           if it already exists. By default, install into the current project
                           (without deleting)
+    --operator-only       Only install the operator but no resource
     --route               Route to use. If not given, the route is trying to be detected
                           from the currently connected cluster.
     --console             The URL to the OpenShift console
