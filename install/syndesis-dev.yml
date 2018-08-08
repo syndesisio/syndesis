@@ -20,11 +20,8 @@ metadata:
     syndesis.io/app: syndesis
     syndesis.io/type: infrastructure
 parameters:
-# Parameters with no defaults (has to be be provided when template is applied):
 - name: ROUTE_HOSTNAME
   description: The external hostname to access Syndesis
-  required: true
-# Parameters with defaults:
 - name: OPENSHIFT_MASTER
   description: Public OpenShift master address
   value: https://localhost:8443
@@ -137,6 +134,11 @@ parameters:
   displayName: Maximum number of integrations
   name: MAX_INTEGRATIONS_PER_USER
   value: "1"
+  required: true
+- description: Interval for checking the state of the integrations.
+  displayName: Integration state check interval
+  name: INTEGRATION_STATE_CHECK_INTERVAL
+  value: "60"
   required: true
 - description: Key used to perform authentication of client side stored state.
   displayName: Client side state authentication key
@@ -1080,6 +1082,8 @@ objects:
             value: "1"
           - name: MAX_INTEGRATIONS_PER_USER
             value: ${MAX_INTEGRATIONS_PER_USER}
+          - name: INTEGRATION_STATE_CHECK_INTERVAL
+            value: ${INTEGRATION_STATE_CHECK_INTERVAL}
           - name: JAVA_DEBUG
             value: "true"
           image: ' '
@@ -1199,6 +1203,7 @@ objects:
       controllers:
         maxIntegrationsPerUser: ${MAX_INTEGRATIONS_PER_USER}
         maxDeploymentsPerUser: ${MAX_INTEGRATIONS_PER_USER}
+        integrationStateCheckInterval: ${INTEGRATION_STATE_CHECK_INTERVAL}
 - apiVersion: v1
   kind: Service
   metadata:
