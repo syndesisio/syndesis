@@ -22,7 +22,7 @@ ARGS=("$@")
 
 
 display_usage() {
-  cat <<EOT
+  cat <<"EOT"
 Syndesis Installation Tool (standalone)
 
 Usage: syndesis-install [options]
