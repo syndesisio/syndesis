@@ -97,7 +97,7 @@ release::run() {
     mvn_clean_install "$topdir" "$maven_opts"
 
     # Create templates for the full syndesis version
-    generate_templates "$topdir" "$release_version"
+    generate_versioned_files "$topdir" "$release_version"
 
     # Build and stage artefacts to Sonatype
     build_and_stage_artefacts "$topdir" "$maven_opts"
@@ -131,12 +131,6 @@ release::run() {
     # Commit, tag, release, push
     # --------------------------
 
-    # Pushing to Docker Hub
-    docker_push "$release_version" "$moving_tag"
-
-    # Release staging repo
-    release_staging_repo "$topdir" "$maven_opts"
-
     # Git Commit all changed files
     git_commit_files "$topdir" "$release_version"
 
@@ -144,22 +138,34 @@ release::run() {
     git_tag_release "$release_version"
 
     # Create template versions for the minor tags (without patchlevels)
-    create_templates_for_moving_tag "$topdir" "$moving_tag"
+    create_moving_tag_release "$topdir" "$release_version" "$moving_tag"
+
+    # Pushing to Docker Hub
+    docker_push "$release_version" "$moving_tag"
 
     # Push everything (if configured)
     git_push "$topdir" "$release_version" "$moving_tag"
+
+    # Release staging repo
+    release_staging_repo "$topdir" "$maven_opts"
 }
 
-create_templates_for_moving_tag() {
+create_moving_tag_release() {
     local topdir=$1
-    local moving_tag=$2
+    local release_version=$2
+    local moving_tag=$3
 
     if [ ! $(hasflag --snapshot-release) ]; then
-        generate_templates $topdir $moving_tag
+        generate_versioned_files "$topdir" "$moving_tag" "$release_version"
 
-        echo "==== Git commit for templates $moving_tag"
+        # Recreate operator image with the versioned templates and push. Note that because
+        # the templates has already processed, they contain now the $release_version instead of latest
+        create_operator_image "$topdir/install/operator" "true" "$moving_tag"
+        docker push "syndesis/syndesis-operator:$moving_tag"
+
+        echo "==== Git commit for templates and syndesis-operator.yml, $moving_tag"
         cd $topdir
-        git_commit ^install/ "Update OpenShift templates for Syndesis $moving_tag"
+        git_commit ^install/ "Update OpenShift templates and syndesis-operator.yml for Syndesis $moving_tag"
 
         echo "==== Git tag $moving_tag"
         git tag -f $moving_tag
@@ -219,13 +225,33 @@ mvn_clean_install() {
     ./mvnw ${maven_opts} -f "$topdir/doc/pom.xml" clean install
 }
 
-generate_templates() {
+generate_versioned_files() {
     local dir="$1/install"
-    local moving_tag="$2"
+    local tag="$2"
+    local previous_tag="${3:-latest}"
 
-    echo "==== Creating templates for $moving_tag"
+    echo "==== Creating templates for $tag"
     cd $dir/generator
-    sh run.sh --syndesis-tag="$moving_tag"
+    sh run.sh --syndesis-tag="$tag"
+
+    echo "==== Updating operator deployment config"
+    cd $dir/operator/deploy
+
+    sed -i.bak \
+        -e "s/syndesis-operator:${previous_tag}/syndesis-operator:$tag/" \
+        -e "s/name:[[:space:]]*'${previous_tag}'/name: '$tag'/" \
+           syndesis-operator.yml
+    rm syndesis-operator.yml.bak
+
+    # Verify that the patch worked
+    local nr_diff=$(git diff --shortstat syndesis-operator.yml | grep "3 insertions" | wc -l | xargs)
+    if [ $nr_diff -ne 1 ]; then
+        echo "Patching of syndesis-operator.yml failed"
+        cat syndesis-operator.yml
+        git diff --shortstat syndesis-operator.yml
+        git diff syndesis-operator.yml | cat -
+        exit 1
+    fi
 }
 
 build_and_stage_artefacts() {
@@ -290,9 +316,14 @@ docker_push() {
     echo "==== Pushing to Docker Hub"
     for module in $ALL_IMAGE_MODULES; do
         local image="syndesis/syndesis-$module"
-        docker tag "$image:$release_version" "$image:$moving_tag"
         docker push "$image:$release_version"
-        docker push "$image:$moving_tag"
+
+        # The operator image needs to be recreated for the moving tag.
+        # This is done in a later step.
+        if [ $module != "operator" ]; then
+            docker tag "$image:$release_version" "$image:$moving_tag"
+            docker push "$image:$moving_tag"
+        fi
     done
 
     # Push out upgrade image
