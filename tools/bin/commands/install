@@ -15,6 +15,7 @@ cat <<"EOT"
 -p  --project                 Install into this project. Delete this project
                               if it already exists. By default, install into the current project (without deleting)
     --route                   Route to use. If not given, the route is trying to be detected from the currently
+    --operator-only           Only install the operator but no resource
                               connected cluster.
     --console                 The URL to the OpenShift console
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
@@ -79,6 +80,11 @@ install::run() {
     echo "Deploying Syndesis operator"
     result=$(deploy_syndesis_operator)
     check_error "$result"
+
+    if [ $(hasflag --operator-only) ]; then
+        exit 0
+    fi
+
     wait_for_deployments 1 syndesis-operator
 
     # Create syndesis resource
