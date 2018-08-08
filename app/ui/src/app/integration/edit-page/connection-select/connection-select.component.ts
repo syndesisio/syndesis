@@ -1,6 +1,6 @@
 import { map, first } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 
 import { log, getCategory } from '@syndesis/ui/logging';
@@ -11,6 +11,8 @@ import {
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
 import { ConnectionStore } from '@syndesis/ui/store';
+
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 
 const category = getCategory('Integrations');
 
@@ -37,6 +39,7 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
+    public modalService: ModalService,
     private userService: UserService
   ) {
     this.flowSubscription = this.currentFlowService.events.subscribe(
@@ -117,6 +120,15 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+  }
+
+  canDeactivate(nextState: RouterStateSnapshot) {
+    return (
+      nextState.url.includes('action-select') ||
+      nextState.url.includes('action-configure') ||
+      nextState.url.includes('connection-basics') ||
+      this.modalService.show().then(modal => modal.result)
+    );
   }
 
   ngOnInit() {

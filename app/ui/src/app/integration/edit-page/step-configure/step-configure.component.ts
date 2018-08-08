@@ -6,7 +6,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
@@ -24,6 +24,8 @@ import {
   FlowEvent,
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
+
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 
 @Component({
   selector: 'syndesis-integration-step-configure',
@@ -58,7 +60,8 @@ export class IntegrationStepConfigureComponent
     public router: Router,
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
-    public stepStore: StepStore
+    public stepStore: StepStore,
+    public modalService: ModalService
   ) {
     this.flowSubscription = this.currentFlowService.events.subscribe(
       (event: FlowEvent) => {
@@ -186,6 +189,13 @@ export class IntegrationStepConfigureComponent
       default:
         break;
     }
+  }
+
+  canDeactivate(nextState: RouterStateSnapshot) {
+    return (
+      nextState.url.includes('save-or-add-step') ||
+      this.modalService.show().then(modal => modal.result)
+    );
   }
 
   ngOnInit() {

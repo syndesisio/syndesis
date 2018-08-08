@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router, RouterStateSnapshot } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
@@ -19,6 +19,8 @@ import {
   CurrentFlowService,
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
+
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 
 @Component({
   selector: 'syndesis-integration-action-configure',
@@ -52,7 +54,8 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
     public integrationSupport: IntegrationSupportService,
-    private userService: UserService
+    private userService: UserService,
+    public modalService: ModalService
   ) {
     // nothing to do
   }
@@ -303,6 +306,16 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       }
     }
     return props;
+  }
+
+  canDeactivate(nextState: RouterStateSnapshot) {
+    return (
+      nextState.url.includes('action-configure') ||
+      nextState.url.includes('describe-data') ||
+      nextState.url.includes('save-or-add-step') ||
+      nextState.url.includes('action-select') ||
+      this.modalService.show().then(modal => modal.result)
+    );
   }
 
   ngOnInit() {

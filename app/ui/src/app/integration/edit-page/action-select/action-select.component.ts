@@ -1,7 +1,8 @@
 import { filter, switchMap } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, EMPTY, Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 
 import {
   Actions,
@@ -41,7 +42,8 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
-    public router: Router
+    public router: Router,
+    public modalService: ModalService
   ) {
     this.flowSubscription = currentFlowService.events.subscribe(
       (event: FlowEvent) => {
@@ -160,6 +162,13 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
       this.position = +params.get('position');
       this.loadActions();
     });
+  }
+
+  canDeactivate(nextState: RouterStateSnapshot) {
+    return (
+      nextState.url.includes('action-configure') ||
+      this.modalService.show().then(modal => modal.result)
+    );
   }
 
   ngOnDestroy() {

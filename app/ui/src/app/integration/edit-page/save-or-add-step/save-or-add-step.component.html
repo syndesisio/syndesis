@@ -25,17 +25,18 @@
               </div>
               <div class="toolbar-pf-action-right">
                 <button class="btn btn-default"
-                  (click)="cancel()">Cancel
+                (click)="showCancelModal()">Cancel
               </button> &nbsp;
                 <button class="btn btn-default"
+                  [routerLink]="['/integrations/save']"
                   (click)="save()"
                   [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress">
                   <span *ngIf="flowPageService.saveInProgress"
                     class="spinner spinner-sm spinner-inline"></span>
                   Save as Draft
                 </button>
-                <button type="button"
-                  class="btn btn-primary"
+                <button class="btn btn-primary"
+                  [routerLink]="['/integrations/publish']"
                   (click)="publish()"
                   [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress">
                   <span *ngIf="flowPageService.publishInProgress"
@@ -94,6 +95,17 @@
           </div>
         </div>
       </div>
+      <syndesis-modal title="{{ 'integrations.leave-page-modal-title' | synI18n }}"
+        message="{{ 'integrations.leave-page-modal' | synI18n }}">
+      </syndesis-modal>
+      <ng-template #cancelModalTemplate>
+        <cancel-confirmation-modal (cancel)="onCancel($event)"
+                                    primaryLabel="{{ 'yes' | synI18n }}"
+                                    secondaryLabel="{{ 'no' | synI18n }}">
+          <p class="lead">{{ 'integrations.edit.cancel-modal-lead' | synI18n }}</p>
+          <p>{{ 'integrations.edit.cancel-modal' | synI18n }}</p>
+        </cancel-confirmation-modal>
+      </ng-template>
     </div>
   </div>
 </syndesis-loading>

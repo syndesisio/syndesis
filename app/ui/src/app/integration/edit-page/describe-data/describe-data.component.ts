@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, BehaviorSubject, Observable } from 'rxjs';
 import { CurrentFlowService, FlowPageService, FlowEvent } from '@syndesis/ui/integration/edit-page';
-import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+import { ActivatedRoute, Router, ParamMap, RouterStateSnapshot } from '@angular/router';
 import {
   Step,
   FormFactoryService,
@@ -13,6 +13,7 @@ import {
   DynamicFormControlModel
 } from '@ng-dynamic-forms/core';
 import { FormGroup } from '@angular/forms';
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 
 enum DataShapeDirection {
   INPUT = 'input',
@@ -106,7 +107,8 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public router: Router,
     public formFactoryService: FormFactoryService,
-    public dynamicFormService: DynamicFormService
+    public dynamicFormService: DynamicFormService,
+    public modalService: ModalService
   ) {
     // nothing to do
   }
@@ -238,6 +240,14 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
       this.userDefined = false;
       this.continue();
     }
+  }
+
+  canDeactivate(nextState: RouterStateSnapshot) {
+    return (
+      nextState.url.includes('save-or-add-step') ||
+      nextState.url.includes('describe-data') ||
+      this.modalService.show().then(modal => modal.result)
+    );
   }
 
   ngOnInit() {
