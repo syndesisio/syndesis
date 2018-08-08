@@ -142,11 +142,11 @@ spec:
   - from:
       kind: DockerImage
       # Keep tag 'latest' here, its used as an anchor in the release script
-      name: docker.io/syndesis/syndesis-operator:latest
+      name: docker.io/syndesis/syndesis-operator:1.4.3
     importPolicy:
       scheduled: true
     # Keep 'latest' here (including single quotes), its used as a pattern anchor in the release script
-    name: 'latest'
+    name: '1.4.3'
 ---
 apiVersion: v1
 kind: DeploymentConfig
@@ -192,6 +192,6 @@ spec:
       from:
         kind: ImageStreamTag
         # Keep tag 'latest' here, its used as an anchor in the release script
-        name: syndesis-operator:latest
+        name: syndesis-operator:1.4.3
     type: ImageChange
   - type: ConfigChange
