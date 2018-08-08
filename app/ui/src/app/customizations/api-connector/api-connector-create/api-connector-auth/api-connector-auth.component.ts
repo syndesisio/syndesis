@@ -47,9 +47,15 @@ export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
       .get('authenticationType')
       .valueChanges.subscribe(value => this.setOAuthFormValidation(value));
 
-    this.setOAuthFormValidation(
-      authenticationType ? authenticationType.defaultValue : ''
-    );
+    this.setOAuthFormValidation( defaultAuthenticationType );
+  }
+
+  get authUrl() {
+    return this.authSetupForm.get( 'authorizationEndpoint' );
+  }
+
+  get tokenUrl() {
+    return this.authSetupForm.get( 'tokenEndpoint' );
   }
 
   onSubmit({ value, valid }): void {
