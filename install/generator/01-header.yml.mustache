@@ -17,11 +17,8 @@ metadata:
     syndesis.io/app: syndesis
     syndesis.io/type: infrastructure
 parameters:
-# Parameters with no defaults (has to be be provided when template is applied):
 - name: ROUTE_HOSTNAME
   description: The external hostname to access Syndesis
-  required: true
-# Parameters with defaults:
 - name: OPENSHIFT_MASTER
   description: Public OpenShift master address
   value: https://localhost:8443
