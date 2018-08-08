@@ -42,4 +42,7 @@ public interface Connection extends WithId<Connection>, ConnectionBase {
     class Builder extends ImmutableConnection.Builder {
     }
 
+    default Builder builder() {
+        return new Builder().createFrom(this);
+    }
 }

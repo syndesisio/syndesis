@@ -16,11 +16,14 @@
 package io.syndesis.server.endpoint.v1.handler.connection;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -37,9 +40,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-
+import org.springframework.stereotype.Component;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
+import io.syndesis.common.model.EmptyListResult;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.bulletin.ConnectionBulletinBoard;
@@ -47,6 +51,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.ConnectionOverview;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.server.credential.CredentialFlowState;
 import io.syndesis.server.credential.Credentials;
@@ -62,7 +67,6 @@ import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.endpoint.v1.util.DataManagerSupport;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 @Path("/connections")
 @Api(value = "connections")
@@ -103,10 +107,11 @@ public class ConnectionHandler
     @Override
     public ListResult<ConnectionOverview> list(@Context UriInfo uriInfo) {
         final DataManager dataManager = getDataManager();
-        final ListResult<Connection> connections = fetchAll(Connection.class, uriInfo);
-        final List<ConnectionOverview> overviews = new ArrayList<>(connections.getTotalCount());
+        final ListResult<Connection> connectionResults = fetchAll(Connection.class, uriInfo);
+        final List<Connection> connections = augmentedWithUsage(connectionResults.getItems());
+        final List<ConnectionOverview> overviews = new ArrayList<>(connectionResults.getTotalCount());
 
-        for (Connection connection: connections.getItems()) {
+        for (Connection connection : connections) {
             final String id = connection.getId().get();
             final ConnectionOverview.Builder builder = new ConnectionOverview.Builder().createFrom(connection);
 
@@ -125,7 +130,8 @@ public class ConnectionHandler
     @Override
     public ConnectionOverview get(final String id) {
         final DataManager dataManager = getDataManager();
-        final Connection connection = dataManager.fetch(Connection.class, id);
+        Connection connection = dataManager.fetch(Connection.class, id);
+        connection = augmentedWithUsage(connection);
 
         if( connection == null ) {
             throw new EntityNotFoundException();
@@ -226,5 +232,51 @@ public class ConnectionHandler
     @Override
     public Validator getValidator() {
         return validator;
+    }
+
+    Connection augmentedWithUsage(final Connection connection) {
+        if (connection == null) {
+            return null;
+        }
+
+        return augmentedWithUsage(Collections.singletonList(connection)).get(0);
+    }
+
+    List<Connection> augmentedWithUsage(final List<Connection> connections) {
+        if (connections == null) {
+            return Collections.emptyList();
+        }
+
+        ListResult<Integration> integrationListResult = getDataManager().fetchAll(Integration.class);
+        if (integrationListResult == null) {
+            integrationListResult = new EmptyListResult<>();
+        }
+
+        List<Integration> items = integrationListResult.getItems();
+
+        Map<String, Long> connectionUsage = items.stream()//
+                                                                                    .filter(i -> !i.isDeleted())//
+                                                                                    .flatMap(i -> {
+                                                                                        // Find the integration connections list
+                                                                                        List<Connection> intConns1 = i.getConnections();
+
+                                                                                        // Find the integration steps and gets their connections
+                                                                                        List<Connection> intConns2 = i.getSteps().stream()
+                                                                                                                                                  .map(s -> s.getConnection().get())
+                                                                                                                                                  .collect(Collectors.toList());
+
+                                                                                        // Combine the lists into a stream and return it
+                                                                                        return Stream.of(intConns1, intConns2)
+                                                                                                                   .flatMap(Collection::stream);
+                                                                                    })//
+                                                                                    .map(c -> c.getId().get())//
+                                                                                    .collect(Collectors.groupingBy(String::toString, Collectors.counting()));
+
+        return connections.stream()//
+                                            .map(c -> {
+                                                final int uses = connectionUsage.getOrDefault(c.getId().get(), 0L).intValue();
+                                                return c.builder().uses(uses).build();
+                                            })//
+                                            .collect(Collectors.toList());
     }
 }

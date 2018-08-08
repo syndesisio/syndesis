@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
-
+import java.util.OptionalInt;
 import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithName;
@@ -60,4 +60,6 @@ public interface ConnectionBase extends WithResourceId, WithTags, WithName, With
      * and reconnect OAuth views.
      */
     boolean isDerived();
+
+    OptionalInt getUses();
 }
