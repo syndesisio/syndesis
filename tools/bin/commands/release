@@ -239,7 +239,7 @@ generate_versioned_files() {
 
     sed -i.bak \
         -e "s/syndesis-operator:${previous_tag}/syndesis-operator:$tag/" \
-        -e "s/name:[[:space:]]*${previous_tag}/name: $tag/" \
+        -e "s/name:[[:space:]]*'${previous_tag}'/name: '$tag'/" \
            syndesis-operator.yml
     rm syndesis-operator.yml.bak
 
