@@ -365,7 +365,12 @@ public class ActivityTrackingController implements Closeable {
                     }
 
                     // Write the batch..
-                    writeBatch(batch);
+                    try {
+                        writeBatch(batch);
+                    } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException e) {
+                        LOG.warn("Unable to write batch of events: ", e.getMessage());
+                        LOG.debug("Unable to write batch of events: ", e);
+                    }
 
                     LOG.debug("Batch ingested {} log events", eventCounter);
 
