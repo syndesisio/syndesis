@@ -99,7 +99,7 @@ public class ActivityTrackingControllerTest {
         }
 
         @Override
-        protected PodLogMonitor createLogMonitor(Pod pod) throws IOException {
+        protected PodLogMonitor createLogMonitor(Pod pod) {
             return new PodLogMonitor(this, pod) {
                 @Override
                 long now() {
