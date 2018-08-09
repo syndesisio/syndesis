@@ -25,7 +25,7 @@ public class TestPodLogMonitor extends PodLogMonitor {
     private final AtomicInteger counter;
     private final Phaser phaser;
 
-    public TestPodLogMonitor(final ActivityTrackingController logsController, final Pod pod, final AtomicInteger counter, final Phaser phaser) throws IOException {
+    public TestPodLogMonitor(final ActivityTrackingController logsController, final Pod pod, final AtomicInteger counter, final Phaser phaser) {
         super(logsController, pod);
         this.counter = counter;
         this.phaser = phaser;

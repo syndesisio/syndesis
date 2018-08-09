@@ -127,7 +127,7 @@ public class KubernetesSupportIT {
                 }
 
                 @Override
-                protected PodLogMonitor createLogMonitor(Pod pod) throws IOException {
+                protected PodLogMonitor createLogMonitor(Pod pod) {
                     return new TestPodLogMonitor(this, pod, counter, phaser);
                 }
             };

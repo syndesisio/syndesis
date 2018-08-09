@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -69,7 +70,7 @@ public class ActivityTrackingController implements Closeable {
 
     private final DBI dbi;
     private final KubernetesClient client;
-    private final Map<String, PodLogMonitor> podHandlers = new HashMap<>();
+    private final Map<String, PodLogMonitor> podHandlers = new ConcurrentHashMap<>();
     private final JsonDB jsondb;
     private ScheduledExecutorService scheduler;
     private ExecutorService executor;
@@ -247,22 +248,13 @@ public class ActivityTrackingController implements Closeable {
                 }
 
                 String name = pod.getMetadata().getName();
-                PodLogMonitor handler = podHandlers.get(name);
+                PodLogMonitor handler = podHandlers.computeIfAbsent(name, n -> createLogMonitor(pod));
 
-                if (handler == null) {
-                    // create a new handler.
-                    try {
-                        handler = createLogMonitor(pod);
-                        handler.start();
-
-                        LOG.info("Created handler for pod: {}", handler.podName);
-                        podHandlers.put(name, handler);
-                    } catch (IOException e) {
-                        LOG.error("Unexpected Error", e);
-                    }
-                } else {
-                    // mark existing handlers as being used.
+                try {
                     handler.markInOpenshift.set(true);
+                    handler.start();
+                } catch (IOException e) {
+                    LOG.error("Unexpected Error", e);
                 }
             }
 
@@ -294,8 +286,12 @@ public class ActivityTrackingController implements Closeable {
 
     }
 
-    protected PodLogMonitor createLogMonitor(Pod pod) throws IOException {
-        return new PodLogMonitor(this, pod);
+    protected PodLogMonitor createLogMonitor(Pod pod) {
+        final PodLogMonitor monitor = new PodLogMonitor(this, pod);
+
+        LOG.info("Created log monitor for pod: {}", monitor.podName);
+
+        return monitor;
     }
 
     protected PodList listPods() {
@@ -393,16 +389,6 @@ public class ActivityTrackingController implements Closeable {
             Thread.currentThread().setName(IDLE_THREAD_NAME);
         }
         LOG.info("Batch ingestion work thread done.");
-    }
-
-    @SuppressWarnings("FutureReturnValueIgnored")
-    protected void schedule(Runnable command, long delay, TimeUnit unit) {
-        if (stopped.get()) {
-            LOG.warn("Not scheduling command: {}, the activity tracking is stopping", command);
-            return;
-        }
-
-        scheduler.schedule(()->{ executor.execute(command); }, delay, unit);
     }
 
     @Value("${controllers.dblogging.retention:50}")

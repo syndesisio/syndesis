@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -57,6 +56,7 @@ class PodLogMonitor implements Consumer<InputStream> {
     // matches log lines like: 2018-06-06T21:54:36.30603486Z {"exchange":"i-LEM51uGKc6IuIjvR95Vz","status":"begin"}
     private static final Pattern LOG_LINE_REGEX = Pattern.compile("^(\\d\\d\\d\\d\\-\\d\\d\\-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d+Z) (\\{.*\\})\\s*");
 
+    private AtomicBoolean running = new AtomicBoolean(false);
     private final ActivityTrackingController logsController;
     protected final AtomicBoolean markInOpenshift = new AtomicBoolean(true);
     protected final AtomicBoolean keepTrying = new AtomicBoolean(true);
@@ -66,26 +66,29 @@ class PodLogMonitor implements Consumer<InputStream> {
     protected PodLogState state;
     protected HashMap<String, InflightData> inflightActivities = new HashMap<>();
 
-    PodLogMonitor(ActivityTrackingController logsController, Pod pod) throws IOException {
+    PodLogMonitor(ActivityTrackingController logsController, Pod pod) {
         this.logsController = logsController;
         this.podName = pod.getMetadata().getName();
         if (this.podName == null) {
-            throw new IOException("Could not determine the pod name");
+            throw new IllegalStateException("Could not determine the pod name");
         }
 
         Map<String, String> labels = pod.getMetadata().getLabels();
         this.integrationId = labels.get(OpenShiftService.INTEGRATION_ID_LABEL);
         if (this.integrationId == null) {
-            throw new IOException("Could not determine the integration id that is being run on the pod: " + this.podName);
+            throw new IllegalStateException("Could not determine the integration id that is being run on the pod: " + this.podName);
         }
 
         this.deploymentVersion = labels.get(OpenShiftService.DEPLOYMENT_VERSION_LABEL);
         if (this.deploymentVersion == null) {
-            throw new IOException("Could not determine the deployment version that is being run on the pod: " + this.podName);
+            throw new IllegalStateException("Could not determine the deployment version that is being run on the pod: " + this.podName);
         }
     }
 
     public void start() throws IOException {
+        if (running.get()) {
+            return;
+        }
 
         // We are just getting started, means we are in the openshift pod
         // list and we need to track pod log state.
@@ -105,31 +108,32 @@ class PodLogMonitor implements Consumer<InputStream> {
             return;
         }
 
-        LOG.info("Getting controller for pod: {}", podName);
-        try {
-            logsController.watchLog(this.podName, this, this.state.time);
-        } catch (IOException e) {
-            LOG.info("Failure occurred while processing controller for pod: {}", podName, e);
-            logsController.schedule(this::run, 5, TimeUnit.SECONDS);
+        if (running.compareAndSet(false, true)) {
+            LOG.info("Getting controller for pod: {}", podName);
+            try {
+                logsController.watchLog(this.podName, this, this.state.time);
+            } catch (IOException e) {
+                LOG.info("Failure occurred while processing controller for pod: {}", podName, e);
+            }
         }
     }
 
     @Override
     public void accept(InputStream is) {
-        if (is != null) {
-            try(InputStream stream = is) {
-                processLogStream(stream);
-            } catch (SocketTimeoutException | EOFException e) {
-                LOG.info("Streaming ended for pod {} due to: {}", podName, message(e));
-                LOG.debug("Streaming ended for pod {}", podName, e);
-            } catch (InterruptedException | IOException e) {
-                LOG.info("Failure occurred while processing controller for pod: {}", podName, e);
-            } finally {
-                logsController.schedule(this::run, 5, TimeUnit.SECONDS);
-                IOUtils.closeQuietly(is);
+        try {
+            if (is == null) {
+                return;
             }
-        } else {
-            logsController.schedule(this::run, 5, TimeUnit.SECONDS);
+
+            processLogStream(is);
+        } catch (SocketTimeoutException | EOFException e) {
+            LOG.info("Streaming ended for pod {} due to: {}", podName, message(e));
+            LOG.debug("Streaming ended for pod {}", podName, e);
+        } catch (InterruptedException | IOException e) {
+            LOG.info("Failure occurred while processing controller for pod: {}", podName, e);
+        } finally {
+            running.set(false);
+            IOUtils.closeQuietly(is);
         }
     }
 
@@ -159,7 +163,6 @@ class PodLogMonitor implements Consumer<InputStream> {
             if (logsController.isPodRunning(podName)) {
                 // odd, why did our stream end??  try to resume processing..
                 LOG.info("End of Log stream for running pod: {}", podName);
-                logsController.schedule(this::run, 5, TimeUnit.SECONDS);
             } else {
                 // Seems like the normal case where stream ends because pod is stopped.
                 LOG.info("End of Log stream for terminated pod: {}", podName);
