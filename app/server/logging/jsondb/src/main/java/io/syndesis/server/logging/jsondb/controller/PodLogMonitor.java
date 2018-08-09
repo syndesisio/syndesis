@@ -65,7 +65,7 @@ class PodLogMonitor implements Consumer<InputStream> {
     protected PodLogState state;
     protected HashMap<String, InflightData> inflightActivities = new HashMap<>();
 
-    public PodLogMonitor(ActivityTrackingController logsController, Pod pod) throws IOException {
+    PodLogMonitor(ActivityTrackingController logsController, Pod pod) throws IOException {
         this.logsController = logsController;
         this.podName = pod.getMetadata().getName();
         if (this.podName == null) {
@@ -217,7 +217,7 @@ class PodLogMonitor implements Consumer<InputStream> {
             // are the required fields set?
             String exchange = validate((String) json.remove("exchange"));
             long keyTimeMillis = KeyGenerator.getKeyTimeMillis(exchange);
-            long until = System.currentTimeMillis() - logsController.getRetention().toMillis();
+            long until = now() - logsController.getRetentionTime().toMillis();
             if( keyTimeMillis < until ) {
                 // This log entry is too old.. don't process it..
                 return;
@@ -312,6 +312,10 @@ class PodLogMonitor implements Consumer<InputStream> {
             rethrow.initCause(e);
             throw rethrow;
         }
+    }
+
+    long now() {
+        return System.currentTimeMillis();
     }
 
     private static JsonNode toJsonNode(Map<String, Object> json) throws IOException {
