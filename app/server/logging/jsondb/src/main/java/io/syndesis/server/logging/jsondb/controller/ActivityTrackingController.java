@@ -49,7 +49,6 @@ import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.syndesis.common.util.DurationConverter;
 import io.syndesis.common.util.Json;
-import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.jsondb.GetOptions;
 import io.syndesis.server.jsondb.JsonDB;
 import io.syndesis.server.jsondb.impl.JsonRecordSupport;
@@ -80,7 +79,10 @@ public class ActivityTrackingController implements Closeable {
     protected final LinkedBlockingDeque<BatchOperation> eventQueue = new LinkedBlockingDeque<>(1000);
     protected final AtomicBoolean stopped = new AtomicBoolean();
 
-    private Duration retention = Duration.ofDays(1);
+    /** The number of retained activity log items */
+    private int retention = 50;
+    /** Logs older than this will not be processed */
+    private Duration retentionTime = Duration.ofDays(1);
     private Duration cleanUpInterval = Duration.ofMinutes(15);
     private Duration startupDelay = Duration.ofSeconds(15);
     private SqlJsonDB.DatabaseKind databaseKind;
@@ -126,16 +128,14 @@ public class ActivityTrackingController implements Closeable {
         Thread.currentThread().setName("Logs Controller Scheduler [running]: cleanupLogs");
 
         try {
-            LOG.info("Purging old controller");
-            long until = System.currentTimeMillis() - retention.toMillis();
-            String untilKey = KeyGenerator.recreateKey(until, 0, 0);
+            LOG.info("Purging old activity logs");
 
             @SuppressWarnings("unchecked")
             Map<String, Object> hashMap = dbGet(HashMap.class, "/activity/integrations"); //NOPMD
             if( hashMap!=null ) {
                 for (String integrationId : hashMap.keySet()) {
-                    String integrationPath = "/activity/exchanges/" + integrationId + "/";
-                    int count = deleteFieldsLT(integrationPath, untilKey);
+                    String integrationPath = "/activity/exchanges/" + integrationId + "/%";
+                    int count = deleteKeepingRetention(integrationPath);
                     LOG.info("deleted {} transactions for integration: {}", count, integrationId);
                 }
             }
@@ -152,19 +152,28 @@ public class ActivityTrackingController implements Closeable {
      * @param path
      * @param field
      */
-    private int deleteFieldsLT(String path, String field) {
+    int deleteKeepingRetention(String path) {
         return dbi.inTransaction((conn, status) -> {
-            StringBuilder sql = new StringBuilder("DELETE from jsondb where path LIKE ? and path < ?");
-            return conn.update(sql.toString(), path+"%", path + field);
+            final String sql = "DELETE FROM jsondb "
+                + "WHERE path LIKE ? AND path NOT IN ("
+                +     "SELECT path FROM jsondb WHERE path LIKE ? ORDER BY path FETCH FIRST (?) ROWS ONLY"
+                + ")";
+
+                return conn.update(sql, path, path, retention);
         });
     }
 
     private void writeBatch(Map<String, Object> batch) {
         dbi.inTransaction((conn, status) -> {
-            String sql = "INSERT into jsondb (path, value, ovalue) values (:path, :value, :ovalue)";
+            final String sql;
             if( databaseKind == SqlJsonDB.DatabaseKind.PostgreSQL ) {
                 // Lets update if the record exists.
-                sql += " ON CONFLICT (path) DO UPDATE SET value = :value, ovalue = :ovalue"; // NOPMD
+                sql =  "INSERT into jsondb (path, value, ovalue) values (:path, :value, :ovalue) "
+                        + "ON CONFLICT (path) DO UPDATE SET value = :value, ovalue = :ovalue";
+            } else if (databaseKind == SqlJsonDB.DatabaseKind.H2) {
+                sql =  "MERGE INTO jsondb (path, value, ovalue) VALUES (:path, :value, :ovalue)";
+            } else {
+                sql = "INSERT into jsondb (path, value, ovalue) values (:path, :value, :ovalue)";
             }
 
             PreparedBatch insert = conn.prepareBatch(sql);
@@ -368,7 +377,7 @@ public class ActivityTrackingController implements Closeable {
                     try {
                         writeBatch(batch);
                     } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException e) {
-                        LOG.warn("Unable to write batch of events: ", e.getMessage());
+                        LOG.warn("Unable to write batch of events: {}", e.getMessage());
                         LOG.debug("Unable to write batch of events: ", e);
                     }
 
@@ -388,12 +397,22 @@ public class ActivityTrackingController implements Closeable {
 
     @SuppressWarnings("FutureReturnValueIgnored")
     protected void schedule(Runnable command, long delay, TimeUnit unit) {
+        if (stopped.get()) {
+            LOG.warn("Not scheduling command: {}, the activity tracking is stopping", command);
+            return;
+        }
+
         scheduler.schedule(()->{ executor.execute(command); }, delay, unit);
     }
 
-    @Value("${controllers.dblogging.retention:1 day}")
-    public void setRetention(String retention) {
-        this.retention = new DurationConverter().convert(retention);
+    @Value("${controllers.dblogging.retention:50}")
+    public void setRetention(int retention) {
+        this.retention = retention;
+    }
+
+    @Value("${controllers.dblogging.retentionTime:1 day}")
+    public void setRetentionTime(final String retentionTime) {
+        this.retentionTime = new DurationConverter().convert(retentionTime);
     }
 
     @Value("${controllers.dblogging.cleanUpPeriod:15 minutes}")
@@ -406,11 +425,20 @@ public class ActivityTrackingController implements Closeable {
         this.startupDelay = new DurationConverter().convert(startupDelay);
     }
 
-    public Duration getRetention() {
+    public int getRetention() {
         return retention;
     }
 
+    public Duration getRetentionTime() {
+        return retentionTime;
+    }
+
     void execute(String podName, Runnable task) {
+        if (stopped.get()) {
+            LOG.warn("Not executing task: {}, for pod {}, the activity tracking is stopping", task, podName);
+            return;
+        }
+
         executor.execute(() -> {
             Thread.currentThread().setName("Logs Controller [running], pod: " + podName);
             try {
