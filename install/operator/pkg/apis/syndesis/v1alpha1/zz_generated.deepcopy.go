@@ -272,15 +272,6 @@ func (in *SyndesisSpec) DeepCopyInto(out *SyndesisSpec) {
 		}
 	}
 	in.Integration.DeepCopyInto(&out.Integration)
-	if in.IntegrationStateCheckInterval != nil {
-		in, out := &in.IntegrationStateCheckInterval, &out.IntegrationStateCheckInterval
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(int)
-			**out = **in
-		}
-	}
 	in.Components.DeepCopyInto(&out.Components)
 	return
 }

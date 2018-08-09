@@ -38,7 +38,6 @@ type SyndesisSpec struct {
 	TestSupport                   *bool           `json:"testSupport,omitempty"`
 	ImageStreamNamespace          string          `json:"imageStreamNamespace,omitempty"`
 	Integration                   IntegrationSpec `json:"integration,omitempty"`
-	IntegrationStateCheckInterval *int            `json:"integrationStateCheckInterval,omitempty"`
 	Registry                      string          `json:"registry,omitempty"`
 	Components                    ComponentsSpec  `json:"components,omitempty"`
 	OpenShiftConsoleUrl           string          `json:"openShiftConsoleUrl,omitempty"`
@@ -46,7 +45,7 @@ type SyndesisSpec struct {
 
 type IntegrationSpec struct {
 	Limit *int       `json:"limit,omitempty"`
-	StateCheckInterval *int `json:"integrationStateCheckInterval,omitempty"`
+	StateCheckInterval *int `json:"stateCheckInterval,omitempty"`
 }
 
 type SyndesisPhase string
