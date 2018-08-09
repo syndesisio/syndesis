@@ -35,9 +35,6 @@ For step extensions that you implement in Java,
 Maven can generate the JSON extension definition file
 for you when you specify corresponding data structure values in your Maven project. 
 . Run Maven to build the extension and create the extension's JAR file. 
-. Test the extension by uploading the JAR file to a {prodname} development 
-environment. 
-. Iteratively update, build and test the extension until it is ready for production. 
 . Provide the JAR file that packages the extension to your business colleague, who will upload it to the
 {prodname} production environment. When you provide the JAR file, let your 
 business colleague know about any configuration settings that require 
