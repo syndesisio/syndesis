@@ -69,7 +69,7 @@ public class KubernetesSupport {
                 .append(pod.getResourceUrl().toString())
                 .append("/log?pretty=false&follow=true&timestamps=true");
             if (sinceTime != null) {
-                url.append("&sinceTime=");
+                url.append("&sinceTime=").append(sinceTime);
             }
             String podLogUrl = url.toString();
 
