@@ -19,6 +19,8 @@ minishift::usage() {
                               'minishift delete && minishift start'.
     --full-reset              Full reset and initialie by
                               'minishift stop && rm -rf ~/.minishift/* && minishift start'
+    --operator-only           Only install the operator but no resource
+                              connected cluster.
     --memory <mem>            How much memory to use when doing a reset. Default: $DEFAULT_RAM
     --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: $DEFAULT_CPUS
     --disk-size <size>        How many disk space to use when doing a reset. Default: $DEFAULT_DISK_SIZE
@@ -96,6 +98,12 @@ minishift::run() {
         # Deploy operator and wait until its up
         result=$(deploy_syndesis_operator)
         check_error "$result"
+
+        if [ $(hasflag --operator-only) ]; then
+            echo "Deployed operator."
+            exit 0
+        fi
+
         wait_for_deployments 1 syndesis-operator
 
         # Create syndesis resource
