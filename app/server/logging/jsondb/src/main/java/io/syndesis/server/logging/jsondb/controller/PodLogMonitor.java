@@ -35,6 +35,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,6 +126,7 @@ class PodLogMonitor implements Consumer<InputStream> {
                 LOG.info("Failure occurred while processing controller for pod: {}", podName, e);
             } finally {
                 logsController.schedule(this::run, 5, TimeUnit.SECONDS);
+                IOUtils.closeQuietly(is);
             }
         } else {
             logsController.schedule(this::run, 5, TimeUnit.SECONDS);
