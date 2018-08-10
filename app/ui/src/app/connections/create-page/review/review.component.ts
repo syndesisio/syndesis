@@ -91,6 +91,7 @@ export class ConnectionsReviewComponent
       this.saved ||
       nextState.url === '/connections/create/cancel' ||
       nextState.url === '/connections/create/configure-fields' ||
+      nextState.url === '/connections/create/connection-basics' ||
       this.modalService.show().then(modal => modal.result)
     );
   }
