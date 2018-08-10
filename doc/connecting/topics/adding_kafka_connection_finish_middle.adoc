@@ -23,7 +23,7 @@ the plus sign where you want to add a Kafka connection and click
 to publish a message in the middle of an integration. 
 
 . On the *Choose an Action* page, click *Publish*. 
-. In the *Topic Name* field, specify the name of the
-topic to publish the data to. 
+. In the *Topic Name* field, click the down carat to display a list
+of topics and click the topic that you want to publish to. 
 .  Click *Next* to specify the action's input type. See 
 {LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

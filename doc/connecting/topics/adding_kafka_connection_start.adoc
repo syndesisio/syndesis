@@ -7,7 +7,7 @@ the integration is running, the Kafka connection continuously watches for data
 in the Kafka topic that you specify. When the connection finds new data,
 it passes that data to the next step in the integration. 
 
-To start an integration when data is available from a Kafka topic:
+To execute an integration each time a Kafka topic receives a message:
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
@@ -15,7 +15,7 @@ To start an integration when data is available from a Kafka topic:
 you want to use to start the integration. 
 . On the *Choose an Action* page, click the *Subscribe* action
 to receive data from the topic that you specify. 
-. In the *Topic Name* field, enter the name of the Kafka topic 
-to subscribe to in order to receive data. 
+. In the *Topic Name* field, click the down carat to display a list
+of topics and click the topic that you want to subscribe to. 
 . Click *Next* to specify the action's output type. See 
 {LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 
