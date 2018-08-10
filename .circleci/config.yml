@@ -71,7 +71,7 @@ save_junit: &save_junit
 irc_notify_on_failure: &irc_notify_on_failure
   run:
     name: "IRC Notify failure to #syndesis"
-    command: bash ./.circleci/sent_irc_notification.sh
+    command: bash ./.circleci/send_irc_notification.sh
     when: on_fail
 
 jobs:
