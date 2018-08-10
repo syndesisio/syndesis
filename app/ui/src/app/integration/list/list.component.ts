@@ -23,7 +23,8 @@ import { IntegrationStore } from '@syndesis/ui/store';
 import {
   Integrations,
   Integration,
-  IntegrationActionsService
+  IntegrationActionsService,
+  WithId
 } from '@syndesis/ui/platform';
 
 @Component({
@@ -56,6 +57,10 @@ export class IntegrationListComponent implements OnInit {
 
   get modalPrimaryText() {
     return this.integrationActionsService.getModalPrimaryText();
+  }
+
+  trackById(index: number, item: WithId): string {
+    return item.id;
   }
 
   ngOnInit() {

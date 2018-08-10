@@ -11,6 +11,7 @@
              [config]="listConfig"
              [itemTemplate]="itemTemplate"
              [actionTemplate]="actionTemplate"
+             [trackBy]="trackById"
              (onActionSelect)="integrationActionsService.requestAction($event.id, undefined)"
              (onClick)="integrationActionsService.requestAction('view', $event.item)">
     <ng-template #itemTemplate
@@ -28,7 +29,7 @@
       <div class="list-pf-content-wrapper">
         <div class="list-pf-main-content integration-content">
           <div *ngIf="complete"
-            class="list-pf-title name syn-truncate__ellipsis" 
+            class="list-pf-title name syn-truncate__ellipsis"
             title="{{ integration.name }}">{{ integration.name }}</div>
           <div class="list-pf-description description syn-truncate__ellipsis"
             title="{{ complete ? integration.description : integration.name }}">
