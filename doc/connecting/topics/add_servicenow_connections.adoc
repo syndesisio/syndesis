@@ -1,0 +1,23 @@
+[id='add-servicenow-connections']
+= Add a ServiceNow connection to an integration
+
+After you create a ServiceNow connection, you can add it to an 
+integration. The procedure for adding a ServiceNow connection to an integration varies
+according to whether you want to use the ServiceNow connection to obtain
+records from ServiceNow or to copy records to ServiceNow. 
+
+.Prerequisite
+
+You must create a ServiceNow connection before you can add it
+to an integration. 
+See <<create-servicenow-connection>>.
+
+
+When you have a ServiceNow connection, see: 
+
+* <<add-servicenow-connection-start>>
+* <<add-servicenow-connection-finish>>
+
+include::add_servicenow_connection_start.adoc[leveloffset=+1]
+
+include::add_servicenow_connection_finish.adoc[leveloffset=+1]

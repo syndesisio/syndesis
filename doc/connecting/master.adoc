@@ -62,7 +62,11 @@ include::topics/connecting_to_rest_apis.adoc[leveloffset=+1]
 
 include::topics/connecting_to_sf.adoc[leveloffset=+1]
 
+<<<<<<< HEAD
 include::topics/connecting_to_concur.adoc[leveloffset=+1]
+=======
+include::topics/connecting_to_servicenow.adoc[leveloffset=+1]
+>>>>>>> user doc: Initial draft of user doc for ServiceNow connector
 
 include::topics/connecting_to_slack.adoc[leveloffset=+1]
 
