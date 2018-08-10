@@ -7,6 +7,12 @@ can code an extension that provides the needed behavior.  The
 https://github.com/syndesisio/syndesis-extensions[Syndesis extensions repository]
 contains examples of extensions. 
 
+A business integrator shares requirements with a developer who codes the 
+extension. The developer provides a `.jar` file that contains the extension. 
+The business integrator uploads the `.jar` file in {prodname} to make the 
+custom connector, custom step(s), or library resource available for use 
+in {prodname}. 
+
 The Fuse Tooling plugin to Red Hat Developer Studio provides a wizard
 that helps you develop a step extension or a connector extension. It is 
 a matter of personal preference whether you choose to develop a step
