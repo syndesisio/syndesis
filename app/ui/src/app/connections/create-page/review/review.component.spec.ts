@@ -8,7 +8,6 @@ describe('ConnectionsReviewComponent', () => {
   let modalService;
   const userService = null;
   const connectionService = null;
-  const detector = null;
   const router = null;
   let nextState;
   let component;

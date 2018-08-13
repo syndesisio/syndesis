@@ -1,10 +1,9 @@
-import { ActionReducerMap, createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector } from '@ngrx/store';
 
-import { BaseReducerModel, PlatformState } from '@syndesis/ui/platform';
+import { PlatformState } from '@syndesis/ui/platform';
 import {
   ApiConnectorState,
-  CustomApiConnectorRequest,
-  CustomConnectorRequest
+  CustomApiConnectorRequest
 } from '@syndesis/ui/customizations/api-connector/api-connector.models';
 import {
   ApiConnectorActions,
@@ -12,10 +11,7 @@ import {
   ApiConnectorFetchFail,
   ApiConnectorCreate,
   ApiConnectorCreateComplete,
-  ApiConnectorCreateCancel,
   ApiConnectorUpdate,
-  ApiConnectorUpdateComplete,
-  ApiConnectorUpdateFail,
   ApiConnectorDelete
 } from '@syndesis/ui/customizations/api-connector/api-connector.actions';
 

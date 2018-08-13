@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 
-import { Connection, MessageCode, MessageLevel } from '@syndesis/ui/platform';
+import { Connection } from '@syndesis/ui/platform';
 import { ConnectionStore } from '@syndesis/ui/store/connection/connection.store';
 
 @Component({

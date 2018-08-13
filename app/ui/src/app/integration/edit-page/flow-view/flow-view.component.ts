@@ -8,7 +8,6 @@ import {
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
-import { log, getCategory } from '@syndesis/ui/logging';
 import {
   CurrentFlowService,
   FlowEvent,
@@ -16,8 +15,6 @@ import {
 } from '@syndesis/ui/integration/edit-page';
 import { ModalService } from '@syndesis/ui/common';
 import { Integration, UserService } from '@syndesis/ui/platform';
-
-const category = getCategory('IntegrationsCreatePage');
 
 @Component({
   selector: 'syndesis-integration-flow-view',

@@ -1,4 +1,4 @@
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
 
 import { ApiModule } from '@syndesis/ui/api';
 import { ConfigService } from '@syndesis/ui/config.service';

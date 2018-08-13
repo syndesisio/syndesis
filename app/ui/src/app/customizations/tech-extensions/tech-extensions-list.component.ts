@@ -3,15 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ExtensionStore } from '@syndesis/ui/store/extension/extension.store';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import {
-  Action,
   ActionConfig,
   ListConfig,
-  ListEvent,
   EmptyStateConfig
 } from 'patternfly-ng';
 import { ConfigService } from '@syndesis/ui/config.service';
 import { TechExtensionDeleteModalComponent } from '@syndesis/ui/customizations/tech-extensions/tech-extension-delete-modal.component';
-import { Extensions, Extension } from '@syndesis/ui/platform';
+import { Extensions } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-tech-extensions-list',

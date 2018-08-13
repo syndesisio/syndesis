@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 
 import { StringMap, FileMap } from '@syndesis/ui/platform';
 import {
-  ApiResponse,
   ApiEndpoint,
   ApiRequestProgress,
   ApiRequestOptions,

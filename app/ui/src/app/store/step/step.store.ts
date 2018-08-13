@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
-  Connection,
-  Action,
-  Extension,
   Extensions,
   Step,
-  Steps,
   DataShapeKinds
 } from '@syndesis/ui/platform';
 

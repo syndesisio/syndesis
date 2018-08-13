@@ -1,6 +1,4 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
 
 import { Connection } from '@syndesis/ui/platform';
 import { ConnectionService } from '@syndesis/ui/store/connection/connection.service';

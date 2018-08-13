@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { resolve } from 'url';
 
 import { ConfigService } from '@syndesis/ui/config.service';

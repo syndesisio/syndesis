@@ -7,11 +7,7 @@ import {
   CurrentFlowService,
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
-import { IntegrationStore } from '@syndesis/ui/store';
-import { log, getCategory } from '@syndesis/ui/logging';
 import { Integration } from '@syndesis/ui/platform';
-
-const category = getCategory('IntegrationsCreatePage');
 
 @Component({
   selector: 'syndesis-integration-save-or-add-step',

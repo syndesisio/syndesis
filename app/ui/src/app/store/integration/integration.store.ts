@@ -1,8 +1,7 @@
 import { filter } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
-import { TypeFactory } from '@syndesis/ui/model';
 import { IntegrationService } from '@syndesis/ui/store/integration/integration.service';
 
 import {

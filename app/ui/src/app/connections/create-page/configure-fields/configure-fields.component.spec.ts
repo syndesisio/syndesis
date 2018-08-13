@@ -2,7 +2,6 @@ import { RouterStateSnapshot } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ConnectionsConfigureFieldsComponent } from '@syndesis/ui/connections/create-page/configure-fields/configure-fields.component';
 import { CurrentConnectionService } from '@syndesis/ui/connections/create-page/current-connection';
-import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 
 describe('ConnectionsConfigureFieldsComponent', () => {
   let current;

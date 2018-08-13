@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 
 import { Connections, Connection } from '@syndesis/ui/platform';
-import { log, getCategory } from '@syndesis/ui/logging';
 import { ConnectionStore } from '@syndesis/ui/store/connection/connection.store';
-
-const category = getCategory('Connections');
 
 @Component({
   selector: 'syndesis-connections-list-page',

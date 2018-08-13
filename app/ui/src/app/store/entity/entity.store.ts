@@ -2,7 +2,6 @@ import {
   of as observableOf,
   merge as observableMerge,
   Observable,
-  Observer,
   BehaviorSubject,
   Subscription,
   Subject
@@ -16,7 +15,6 @@ import { RESTService } from '@syndesis/ui/store/entity/rest.service';
 
 import { log, getCategory } from '@syndesis/ui/logging';
 import { EventsService, ChangeEvent } from '@syndesis/ui/store/entity/events.service';
-import { combineLatest } from '../../../../node_modules/rxjs-compat/operator/combineLatest';
 
 const category = getCategory('AbstractStore');
 

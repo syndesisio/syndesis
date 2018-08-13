@@ -1,5 +1,4 @@
 import { CancelAddStepComponent } from '@syndesis/ui/integration/edit-page/common/cancel-add-step.component';
-import { ActivatedRoute, Router } from '@angular/router';
 
 describe('CancelAddStepComponent', () => {
   let component, currentFlow, route, router;

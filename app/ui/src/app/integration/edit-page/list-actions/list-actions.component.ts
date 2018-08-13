@@ -1,10 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { Actions, Action } from '@syndesis/ui/platform';
-import { log, getCategory } from '@syndesis/ui/logging';
-
-const category = getCategory('Actions');
 
 @Component({
   selector: 'syndesis-list-actions',

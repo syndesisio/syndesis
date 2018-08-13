@@ -8,10 +8,7 @@ import {
   Integration,
   IntegrationDeployment,
   IntegrationDeployments,
-  IntegrationOverview,
-  IntegrationOverviews,
   IntegrationStatus,
-  ApiHttpService,
   IntegrationStatusDetail
 } from '@syndesis/ui/platform';
 

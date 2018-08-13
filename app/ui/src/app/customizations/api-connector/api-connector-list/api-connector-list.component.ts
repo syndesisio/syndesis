@@ -7,12 +7,11 @@ import {
   OnDestroy
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ActionConfig, ListConfig, EmptyStateConfig } from 'patternfly-ng';
 
 import { ModalService } from '@syndesis/ui/common';
-import { log, getCategory } from '@syndesis/ui/logging';
 import { ConfigService } from '@syndesis/ui/config.service';
 import {
   ApiConnectorData,

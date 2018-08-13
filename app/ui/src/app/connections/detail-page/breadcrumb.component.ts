@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { Connection } from '@syndesis/ui/platform';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'syndesis-connection-detail-breadcrumb',

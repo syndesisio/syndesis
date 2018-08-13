@@ -1,6 +1,5 @@
 import { ConfigService } from '@syndesis/ui/config.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { StoreModule } from '@ngrx/store';
 
 import { CoreModule } from '@syndesis/ui/core';
 import { SyndesisCommonModule } from '@syndesis/ui/common';

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 
 import { Connectors, Connector, Connection } from '@syndesis/ui/platform';
-import { TypeFactory } from '@syndesis/ui/model';
 import { CurrentConnectionService } from '@syndesis/ui/connections/create-page/current-connection';
 import { ConnectorStore } from '@syndesis/ui/store/connector/connector.store';
 
