@@ -13,7 +13,6 @@ adhere to this data type specification, then you can map parameter fields to
 fields that the next connection in the integration can process. 
 * If the request succeeds, handle a returned success code of `201`. 
 * If the request fails, handle an HTTP `5xx` error code.
-* Not expect any other response from {prodname}. In other words, a `GET` 
-request does not directly return data to the requesting service. A `POST`
-request does not send a response to the requesting service, other than a
-return code. 
+* Not expect any other response from {prodname}. In other words, 
+sending the request does not directly return data to the requesting
+service other than the return code. 

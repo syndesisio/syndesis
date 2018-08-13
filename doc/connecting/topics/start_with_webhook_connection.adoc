@@ -1,7 +1,7 @@
 [id='start-with-webhook-connection']
 = Create an integration that an HTTP request can trigger
 
-To trigger an integration with an HTTP `GET` or `PUT` request:
+To trigger an integration with an HTTP `GET` or `POST` request:
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.

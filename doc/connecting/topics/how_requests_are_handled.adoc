@@ -1,14 +1,26 @@
 [id='how-requests-are-handled']
 = How {prodname} handles HTTP requests
 
-{prodname} can handle HTTP `GET` and `POST` requests.
+You can specify an HTTP `GET` or `POST` request to trigger execution of
+an integration. Although a `GET` request usually obtains data and a
+`POST` request usually updates data, you can use either request  
+to trigger an integration that does either operation. Any parameters 
+in the request are available for mapping to data fields in the
+next connection that is in the integration. 
 
-* `GET` requests data from a specified resource. 
-The query string is in the request URL. When a `GET` request successfully
+Examples: TBA
+
+A Webhook connection only passes the data it receives to
+the next connection in the integration. 
+When {prodname} receives an HTTP request, it:
+* Returns an HTTP status header to the requester. When a request successfully
 triggers an integration, the {prodname} return code is `201`.
-+
-When a `GET` request fails to trigger an integration, the {prodname}
+When a request fails to trigger an integration, the {prodname}
 return code is `5xx`. 
+* Does not return any other data to the requester.
+* Passes the data in the request to the next connection in the integration. 
 
-* `POST` sends data to a server to create or update a resource. 
-The data for updating the resource is stored in the request body.
+This means that you can define an integration that is triggered by
+a `GET` request and that updates data rather than obtaining data. 
+Likewise, you can define an integration that is triggered by a `POST` request and that obtains data
+rather than updating data.
