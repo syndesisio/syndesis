@@ -1,13 +1,12 @@
-import { Component, OnInit, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
+import { OAuthApp } from '@syndesis/ui/settings';
 import { FormFactoryService } from '@syndesis/ui/platform';
 import { OAuthAppStore } from '@syndesis/ui/store/oauthApp/oauth-app.store';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
-  DynamicFormService,
-  DynamicInputModel
+  DynamicFormService
 } from '@ng-dynamic-forms/core';
 import { Subscription } from 'rxjs';
 

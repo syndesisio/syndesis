@@ -4,7 +4,6 @@ import { NotificationType } from 'patternfly-ng';
 
 import { OAuthAppListItem } from '@syndesis/ui/settings/oauth-apps/oauth-apps.component';
 import { OAuthAppStore } from '@syndesis/ui/store/oauthApp/oauth-app.store';
-import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
 import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notification-service';
 

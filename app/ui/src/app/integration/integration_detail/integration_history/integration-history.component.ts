@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ListConfig, ActionConfig } from 'patternfly-ng';
+import { ListConfig } from 'patternfly-ng';
 
 import { Integration, IntegrationDeployment, IntegrationActionsService } from '@syndesis/ui/platform';
 

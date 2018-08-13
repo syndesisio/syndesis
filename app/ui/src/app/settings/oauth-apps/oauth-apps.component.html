@@ -7,12 +7,10 @@
   " (click)="handleLinks($event)"></p>
   <p>{{ 'settings.oauth-apps.registration-instruction' | synI18n }}
     <pfng-inline-copy
-      [buttonAriaLabel]="'Copy Callback URL'"
-      [value]="callbackURL"
-      (onCopy)="handleCopy($event, {
-        name: 'Callback URL',
-        msg: 'Callback URL Copied'
-      })"></pfng-inline-copy>
+      [buttonAriaLabel]="'settings.oauth-apps.copy-instruction' | synI18n"
+      [tooltipText]="'callback-url' | synI18n"
+      [width]="'335px'"
+      [value]="callbackURL"></pfng-inline-copy>
   </p>
 
   <!-- Modal -->

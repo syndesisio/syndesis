@@ -65,7 +65,7 @@
     "oai-ts-commands": "^0.2.28",
     "oai-ts-core": "^0.2.15",
     "patternfly": "3.51.2",
-    "patternfly-ng": "^4.0.0",
+    "patternfly-ng": "^4.5.0",
     "pluralize": "5.0.0",
     "rxjs": "^6.2.0",
     "snyk": "^1.88.1",

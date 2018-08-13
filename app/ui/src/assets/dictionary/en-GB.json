@@ -45,6 +45,10 @@
       "integration": "{{integration}}",
       "integrations": "{{integrations}}",
       "integration-summary": "{{integration}} Summary",
+      "external-url": {
+        "copy-instruction": "{{copy}} {{external-url}}",
+        "expand-instruction": "{{expand}} {{external-url}}"
+      },
       "edit-integration": "{{edit}} {{integrations.integration}}",
       "publish-thing": "{{integrations.publish}} {{0}}",
       "unpublish-thing": "{{integrations.unpublish}} {{0}}",
@@ -163,6 +167,7 @@
         "description": "To connect to an application that uses the OAuth protocol, obtain a client ID and a client secret from the application. See the {{0}} for help.",
         "documentation-link": "<a href=\"{{links.oauth-access}}\" rel=\"nofollow\">documentation</a>",
         "registration-instruction": "During registration, enter this callback URL:",
+        "copy-instruction": "{{copy}} {{callback-url}}",
         "list": {
           "item": {
             "description": "Access to this application is not configured.",
@@ -321,7 +326,11 @@
       "starting": "Starting",
       "integration-detail-state": "{{0}} ( {{1}} / {{2}} )",
       "log-link": "<a href=\"{{0}}\" target=\"_blank\">View Logs <i class=\"fa fa-external-link\"></i></a>",
-      "bar-width": "{{0}} Complete"
+      "bar-width": "{{0}} Complete",
+      "callback-url": "Callback URL",
+      "external-url": "External URL",
+      "copy": "Copy",
+      "expand": "Expand"
     }
   }
 }
