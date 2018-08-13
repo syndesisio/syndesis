@@ -36,7 +36,7 @@ then the connection obtains the same records every time.
 .. In the *Limit of elements per page* field, enter the maximum number of
 records that you want the connection to obtain.  
 The default is 1000. 
-In this release, pages are not supported. 
+In this release, pagination is not supported. 
 .. In the *Period* field, indicate how often you want to obtain records.
 The default is every minute. In other words, by default, {prodname} executes this
 integration every 60 seconds. 
