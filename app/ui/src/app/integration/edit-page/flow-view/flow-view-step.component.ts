@@ -1,25 +1,18 @@
 import { Component, Input, ViewChild, OnChanges } from '@angular/core';
-import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
 
 import {
   Action,
-  Integration,
   Step,
   DataShape,
   DataShapeKinds
 } from '@syndesis/ui/platform';
-import { ModalService } from '@syndesis/ui/common';
-import { log, getCategory } from '@syndesis/ui/logging';
-import { StepStore, DATA_MAPPER, ENDPOINT } from '@syndesis/ui/store';
+import { StepStore } from '@syndesis/ui/store';
 import {
   CurrentFlowService,
-  FlowEvent,
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
-
-const category = getCategory('IntegrationsCreatePage');
 
 @Component({
   selector: 'syndesis-integration-flow-view-step',

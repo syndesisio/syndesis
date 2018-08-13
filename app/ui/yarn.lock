@@ -360,8 +360,8 @@
   resolved "https://registry.yarnpkg.com/@types/d3-polygon/-/d3-polygon-1.0.6.tgz#db25c630a2afb9191fe51ba61dd37baee9dd44c7"
 
 "@types/d3-quadtree@*":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@types/d3-quadtree/-/d3-quadtree-1.0.5.tgz#1ce1e659eae4530df0cb127f297f1741a367a82e"
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@types/d3-quadtree/-/d3-quadtree-1.0.6.tgz#45da9e603688ba90eedd3d40f6e504764e06e493"
 
 "@types/d3-queue@*":
   version "3.0.6"
@@ -384,8 +384,8 @@
     "@types/d3-time" "*"
 
 "@types/d3-selection@*":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@types/d3-selection/-/d3-selection-1.3.1.tgz#c6227f4e39d429cc429ce3882fd533facc7f014c"
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@types/d3-selection/-/d3-selection-1.3.2.tgz#dd5661a560ba9ce3aba823c424b8d4a1bc7e833f"
 
 "@types/d3-shape@*":
   version "1.2.3"
@@ -6342,9 +6342,9 @@ patternfly-bootstrap-treeview@~2.1.0:
     bootstrap "3.3.x"
     jquery ">= 2.1.x"
 
-patternfly-ng@^4.0.0:
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-4.2.2.tgz#c60359c9f4fcdc2b1e44a68d2cf73b032c508441"
+patternfly-ng@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-4.5.0.tgz#107cb927a45dd8273ba9c940d2097636f5d2c7aa"
   dependencies:
     lodash "^4.17.10"
     patternfly "^3.28.0"

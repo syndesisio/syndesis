@@ -9,12 +9,8 @@ import { ObjectPropertySortConfig } from '@syndesis/ui/common/object-property-so
 import {
   FilterConfig,
   SortConfig,
-  ToolbarConfig,
-  CopyEvent,
-  NotificationType
+  ToolbarConfig
 } from 'patternfly-ng';
-
-import { NotificationService } from '@syndesis/ui/common';
 
 export interface OAuthAppListItem {
   expanded: boolean;
@@ -78,8 +74,7 @@ export class OAuthAppsComponent implements OnInit {
 
   constructor(
     public store: OAuthAppStore,
-    public config: ConfigService,
-    private notificationService: NotificationService
+    public config: ConfigService
   ) {
     this.loading = store.loading;
     this.list = store.list;
@@ -157,17 +152,4 @@ export class OAuthAppsComponent implements OnInit {
       '/api/v1/credentials/callback';
   }
 
-  handleCopy($event: CopyEvent, result: any): void {
-    this.notify(result);
-  }
-
-  notify(result: any): void {
-    this.notificationService.message(
-      NotificationType.SUCCESS,
-      null,
-      result.msg,
-      false,
-      null,
-      null);
-  }
 }

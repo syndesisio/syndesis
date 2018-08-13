@@ -1,6 +1,4 @@
 import { Integration, Step } from '@syndesis/ui/platform';
-import { NotificationService } from '@syndesis/ui/common';
-import { CopyEvent, NotificationType } from 'patternfly-ng';
 import {
   Component,
   Input,
@@ -24,8 +22,6 @@ export class IntegrationDescriptionComponent {
   @Output() viewDetails = new EventEmitter<Step>();
   @Output() attributeUpdated = new EventEmitter<{ [key: string]: string }>();
 
-  constructor(private notificationService: NotificationService) {}
-
   onViewDetails(step: Step): void {
     this.viewDetails.emit(step);
   }
@@ -42,17 +38,4 @@ export class IntegrationDescriptionComponent {
         : '';
   }
 
-  handleCopy($event: CopyEvent, result: any): void {
-    this.notify(result);
-  }
-
-  notify(result: any): void {
-    this.notificationService.message(
-      NotificationType.SUCCESS,
-      null,
-      result.msg,
-      false,
-      null,
-      null);
-  }
 }
