@@ -6,7 +6,6 @@ import { CurrentConnectionService } from '@syndesis/ui/connections/create-page/c
 describe('ConnectionsReviewComponent', () => {
   let current;
   let modalService;
-  const userService = null;
   const connectionService = null;
   const router = null;
   let nextState;
@@ -20,8 +19,7 @@ describe('ConnectionsReviewComponent', () => {
       current,
       modalService,
       connectionService,
-      router,
-      userService
+      router
     );
   });
 

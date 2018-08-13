@@ -1,6 +1,12 @@
 import { Component, Input, OnChanges } from '@angular/core';
 
-import { Integration, IntegrationStatusDetail, I18NService, StringMap, ConsoleLinkType } from '@syndesis/ui/platform';
+import {
+  Integration,
+  IntegrationStatusDetail,
+  I18NService,
+  StringMap,
+  ConsoleLinkType
+} from '@syndesis/ui/platform';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 @Component({

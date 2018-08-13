@@ -2,7 +2,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { Connection } from '@syndesis/ui/platform';
 import { ConnectionService } from '@syndesis/ui/store/connection/connection.service';
-import { ConnectionConfigurationService } from '@syndesis/ui/connections/common/configuration/configuration.service';
 
 @Component({
   selector: 'syndesis-connection-detail-info',
@@ -36,8 +35,7 @@ export class ConnectionDetailInfoComponent {
   @Output() updated = new EventEmitter<Connection>();
 
   constructor(
-    private connectionService: ConnectionService,
-    private configurationService: ConnectionConfigurationService
+    private connectionService: ConnectionService
   ) {}
 
   onAttributeUpdated(attr: string, value) {

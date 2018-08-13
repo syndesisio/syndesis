@@ -1,13 +1,9 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CurrentFlowService } from '@syndesis/ui/integration/edit-page/current-flow.service';
-import { FlowEvent } from '@syndesis/ui/integration/edit-page';
 import {
-  Integration,
-  Step,
-  IntegrationState,
-  PUBLISHED
+  Integration
 } from '@syndesis/ui/platform';
 
 @Injectable()

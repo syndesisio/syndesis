@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { Connection, Connections } from '@syndesis/ui/platform';
 
@@ -19,8 +18,6 @@ export class DashboardConnectionsComponent implements OnInit {
   @Output() selectedConnection = new EventEmitter<Connection>();
   selectedId: string;
   truncateTrail = '…';
-
-  constructor(private router: Router) {}
 
   onSelect(connection: Connection) {
     log.debugc(

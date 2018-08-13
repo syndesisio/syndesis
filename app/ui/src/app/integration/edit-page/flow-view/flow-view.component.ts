@@ -14,7 +14,7 @@ import {
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
 import { ModalService } from '@syndesis/ui/common';
-import { Integration, UserService } from '@syndesis/ui/platform';
+import { Integration } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-flow-view',
@@ -37,7 +37,6 @@ export class FlowViewComponent implements OnDestroy {
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
-    private userService: UserService,
     private modalService: ModalService
   ) {
     this.flowSubscription = this.currentFlowService.events.subscribe(

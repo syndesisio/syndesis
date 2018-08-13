@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 
 import {
   Connection,
-  UserService,
   CanComponentDeactivate
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
@@ -30,8 +29,7 @@ export class ConnectionsReviewComponent
     private current: CurrentConnectionService,
     private modalService: ModalService,
     private connectionService: ConnectionService,
-    private router: Router,
-    private userService: UserService
+    private router: Router
   ) {}
 
   createReviewForm(): FormGroup {

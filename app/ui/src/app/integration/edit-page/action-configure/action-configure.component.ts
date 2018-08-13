@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 import {
   ActionDescriptor,
   FormFactoryService,
-  UserService,
   Action,
   Step,
   IntegrationSupportService
@@ -51,8 +50,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     public router: Router,
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
-    public integrationSupport: IntegrationSupportService,
-    private userService: UserService
+    public integrationSupport: IntegrationSupportService
   ) {
     // nothing to do
   }

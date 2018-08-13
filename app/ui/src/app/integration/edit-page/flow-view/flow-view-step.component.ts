@@ -8,7 +8,6 @@ import {
   DataShape,
   DataShapeKinds
 } from '@syndesis/ui/platform';
-import { StepStore } from '@syndesis/ui/store';
 import {
   CurrentFlowService,
   FlowPageService
@@ -45,8 +44,7 @@ export class FlowViewStepComponent implements OnChanges {
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
-    public router: Router,
-    private stepStore: StepStore
+    public router: Router
   ) {}
 
   get currentStepKind() {
