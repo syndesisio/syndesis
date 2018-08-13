@@ -69,7 +69,7 @@ public class KubernetesSupport {
                 .append(pod.getResourceUrl().toString())
                 .append("/log?pretty=false&follow=true&timestamps=true");
             if (sinceTime != null) {
-                url.append("&sinceTime=");
+                url.append("&sinceTime=").append(sinceTime);
             }
             String podLogUrl = url.toString();
 
@@ -91,9 +91,7 @@ public class KubernetesSupport {
                         Thread.currentThread().setName("Logs Controller [running], streaming: " + podLogUrl);
                         try {
                             if (response.code() == 200) {
-                                try (InputStream responseStream = response.body().byteStream()) {
-                                    handler.accept(responseStream);
-                                }
+                                handler.accept(response.body().byteStream());
                             } else {
                                 LOG.info("Failure occurred while processing controller for pod: {}, http status: {}, details: {}", podName, response.code(), response.body().string());
                                 handler.accept(null);
