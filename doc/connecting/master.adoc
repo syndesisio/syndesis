@@ -27,6 +27,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-ftp>>
 * <<connecting-to-gmail>>
 * <<connecting-to-http>>
+* <<connecting-to-kafka>>
 * <<connecting-to-mqtt>>
 * <<connecting-to-rest-apis>>
 * <<connecting-to-sf>>
@@ -49,6 +50,8 @@ include::topics/connecting_to_ftp.adoc[leveloffset=+1]
 include::topics/connecting_to_gmail.adoc[leveloffset=+1]
 
 include::topics/connecting_to_http.adoc[leveloffset=+1]
+
+include::topics/connecting_to_kafka.adoc[leveloffset=+1]
 
 include::topics/connecting_to_mqtt.adoc[leveloffset=+1]
 
