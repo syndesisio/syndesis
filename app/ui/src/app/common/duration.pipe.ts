@@ -1,6 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { moment } from '@syndesis/ui/vendor';
 

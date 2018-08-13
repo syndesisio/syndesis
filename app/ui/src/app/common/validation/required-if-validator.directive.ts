@@ -1,6 +1,5 @@
 import { Directive, Input } from '@angular/core';
 import {
-  ValidatorFn,
   AbstractControl,
   NG_VALIDATORS,
   Validator

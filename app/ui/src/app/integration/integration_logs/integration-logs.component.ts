@@ -5,7 +5,7 @@ import {
   Integration,
   IntegrationSupportService
 } from '@syndesis/ui/platform';
-import { tap, map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'syndesis-integration-logs',

@@ -1,7 +1,5 @@
-import { DebugElement } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { CoreModule } from '@syndesis/ui/core';

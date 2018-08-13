@@ -1,15 +1,16 @@
-import { Component,
-        OnInit,
-        OnDestroy,
-        ViewChild,
-        TemplateRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  TemplateRef
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { Connection } from '@syndesis/ui/platform';
 import { TypeFactory } from '@syndesis/ui/model';
 import { NavigationService, ModalService } from '@syndesis/ui/common';
-import { log } from '@syndesis/ui/logging';
 import {
   CurrentConnectionService,
   ConnectionEvent

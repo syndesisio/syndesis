@@ -4,7 +4,7 @@ import {
   IntegrationActionsService,
   I18NService
 } from '@syndesis/ui/platform';
-import { Action, ActionConfig } from 'patternfly-ng';
+import { ActionConfig } from 'patternfly-ng';
 
 @Component({
   selector: 'syndesis-integration-action-menu',

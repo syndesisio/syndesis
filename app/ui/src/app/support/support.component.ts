@@ -1,18 +1,12 @@
-import { Component, Input, ViewChild, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import * as fileSaver from 'file-saver';
 
-import { ObjectPropertyFilterConfig } from '@syndesis/ui/common/object-property-filter.pipe';
-import { ObjectPropertySortConfig } from '@syndesis/ui/common/object-property-sort.pipe';
-
 import {
-  Integrations,
-  Integration,
   IntegrationSupportService,
   ApiHttpService
 } from '@syndesis/ui/platform';
-import { log, getCategory } from '@syndesis/ui/logging';
+import { log } from '@syndesis/ui/logging';
 import { IntegrationStore } from '@syndesis/ui/store';
 
 import {

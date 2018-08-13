@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subscription, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { ApiHttpService, Connector, Connectors } from '@syndesis/ui/platform';
 import { RESTService } from '@syndesis/ui/store/entity';

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { EventEmitter, Input, Output } from '@angular/core';
 
 export abstract class EditableComponent {
   @Input() value;

@@ -3,8 +3,7 @@ import {
   Input,
   Output,
   OnInit,
-  EventEmitter,
-  ViewChild
+  EventEmitter
 } from '@angular/core';
 
 import { NotificationType } from 'patternfly-ng';

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LeveledMessage, StringMap, I18NService } from '@syndesis/ui/platform';
+import { LeveledMessage, I18NService } from '@syndesis/ui/platform';
 
 @Injectable()
 export abstract class StatusCodeDecoderService {

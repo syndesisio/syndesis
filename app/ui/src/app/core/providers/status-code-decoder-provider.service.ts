@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   StatusCodeDecoderService,
-  MessageCode,
   LeveledMessage,
-  StringMap,
   I18NService
 } from '@syndesis/ui/platform';
 import { environment } from 'environments/environment';

@@ -1,28 +1,18 @@
 import {
-  ApplicationRef,
   Component,
   Input,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 
 import {
-  Action,
   ActionConfig,
   ListConfig,
-  ListEvent,
   EmptyStateConfig,
-  Notification,
-  NotificationType
 } from 'patternfly-ng';
 
-import { log, getCategory } from '@syndesis/ui/logging';
-import { IntegrationStore } from '@syndesis/ui/store';
 import {
   Integrations,
-  Integration,
   IntegrationActionsService,
   WithId
 } from '@syndesis/ui/platform';

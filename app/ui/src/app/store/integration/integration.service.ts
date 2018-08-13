@@ -3,13 +3,12 @@ import { ApiHttpService,
   Integration,
   Integrations,
   IntegrationSupportService,
-  PENDING,
   IntegrationStatusDetail,
   DetailedState } from '@syndesis/ui/platform';
 import { forkJoin, Observable, of } from 'rxjs';
-import { map, mergeMap, switchMap, catchError } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { RESTService } from '@syndesis/ui/store/entity';
-import { log, getCategory } from '@syndesis/ui/logging';
+import { log } from '@syndesis/ui/logging';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 @Injectable()

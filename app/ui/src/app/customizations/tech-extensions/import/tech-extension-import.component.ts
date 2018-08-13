@@ -5,7 +5,6 @@ import {
   FileUploader,
   FileItem,
   FileLikeObject,
-  FilterFunction,
   FileUploaderOptions,
   ParsedResponseHeaders
 } from 'ng2-file-upload';

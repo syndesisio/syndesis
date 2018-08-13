@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform, ChangeDetectorRef } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 import { ConfigService } from '@syndesis/ui/config.service';
