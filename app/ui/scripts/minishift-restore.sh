@@ -59,8 +59,7 @@ oc replace --force -f - <<EOF
       "syndesis.io/component": "syndesis-ui",
       "syndesis.io/type": "infrastructure"
     },
-    "name": "syndesis-ui",
-    "namespace": "syndesis"
+    "name": "syndesis-ui"
   },
   "subsets": [
     {
