@@ -4,7 +4,7 @@
     <body>
       <trans-unit id="menu.navbartoggle" datatype="html">
         <source>Toggle navigation</source>
-        <target>Toggle navigation</source>
+        <target>Toggle navigation</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">33</context>
@@ -13,7 +13,7 @@
       </trans-unit>
       <trans-unit id="header.helpmenu.title" datatype="html">
         <source>Help</source>
-        <target>Help</source>
+        <target>Help</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">59</context>
@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="header.helpmenu.sampletutorials" datatype="html">
         <source>Sample Integration Tutorials</source>
-        <target>Sample Integration Tutorials</source>
+        <target>Sample Integration Tutorials</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">68</context>
@@ -49,7 +49,7 @@
       </trans-unit>
       <trans-unit id="header.helpmenu.userguide" datatype="html">
         <source>User Guide</source>
-        <target>User Guide</source>
+        <target>User Guide</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">76</context>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="header.helpmenu.connectorsguide" datatype="html">
         <source>Connectors Guide</source>
-        <target>Connectors Guide</source>
+        <target>Connectors Guide</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">83</context>
@@ -77,7 +77,7 @@
       </trans-unit>
       <trans-unit id="b5629d298ff1a69b8db19a4ba2995c76b52da604" datatype="html">
         <source>Support</source>
-        <target>Support</source>
+        <target>Support</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">85</context>
@@ -89,7 +89,7 @@
       </trans-unit>
       <trans-unit id="header.helpmenu.contactus" datatype="html">
         <source>Contact Us</source>
-        <target>Contact Us</source>
+        <target>Contact Us</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">93</context>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="logout" datatype="html">
         <source>Logout</source>
-        <target>Logout</source>
+        <target>Logout</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">127</context>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="sidebar.home" datatype="html">
         <source>Home</source>
-        <target>Home</source>
+        <target>Home</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">154</context>
@@ -129,7 +129,7 @@
       </trans-unit>
       <trans-unit id="sidebar.integrations" datatype="html">
         <source>Integrations</source>
-        <target>Integrations</source>
+        <target>Integrations</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">160</context>
@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="sidebar.connections" datatype="html">
         <source>Connections</source>
-        <target>Connections</source>
+        <target>Connections</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">166</context>
@@ -157,7 +157,7 @@
       </trans-unit>
       <trans-unit id="sidebar.customizations" datatype="html">
         <source>Customizations</source>
-        <target>Customizations</source>
+        <target>Customizations</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">172</context>
@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="sidebar.settings" datatype="html">
         <source>Settings</source>
-        <target>Settings</source>
+        <target>Settings</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">178</context>
@@ -185,7 +185,7 @@
       </trans-unit>
       <trans-unit id="sidebar.user" datatype="html">
         <source>User</source>
-        <target>User</source>
+        <target>User</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">186</context>
