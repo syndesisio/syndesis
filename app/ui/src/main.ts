@@ -1,3 +1,4 @@
+import { LOCALE_ID } from '@angular/core';
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { environment } from 'environments/environment';
@@ -9,6 +10,7 @@ if (environment.production) {
 
 /* tslint:disable:no-console */
 platformBrowserDynamic().bootstrapModule(AppModule, {
-  preserveWhitespaces: true
+  preserveWhitespaces: true,
+  providers: [{provide: LOCALE_ID, useValue: 'en-US' }]
 })
 .catch(err => console.log(err));

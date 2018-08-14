@@ -69,8 +69,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   productBuild = false;
 
-  locale = LOCALE_ID;
-
   notifications: Observable<Notification[]>;
 
   /**
@@ -89,6 +87,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private modalService: ModalService,
     private title: Title,
     private meta: Meta,
+    @Inject(LOCALE_ID) private locale: string,
     @Inject(DOCUMENT) private document: any
   ) {}
 
