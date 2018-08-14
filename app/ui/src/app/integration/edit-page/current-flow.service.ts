@@ -1,11 +1,10 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import {
   Action,
   Connection,
   Connections,
-  createIntegration,
   createStep,
   createConnectionStep,
   DataShapeKinds,
@@ -21,8 +20,6 @@ import {
   IntegrationStore,
   ENDPOINT,
   DATA_MAPPER,
-  EXTENSION,
-  BASIC_FILTER,
   StepStore
 } from '@syndesis/ui/store';
 import { FlowEvent } from '@syndesis/ui/integration/edit-page';

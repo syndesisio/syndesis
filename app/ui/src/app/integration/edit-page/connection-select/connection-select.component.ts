@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 
 import { log, getCategory } from '@syndesis/ui/logging';
-import { Connections, Connection, UserService } from '@syndesis/ui/platform';
+import { Connections, Connection } from '@syndesis/ui/platform';
 import {
   CurrentFlowService,
   FlowEvent,
@@ -36,8 +36,7 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
-    public router: Router,
-    private userService: UserService
+    public router: Router
   ) {
     this.flowSubscription = this.currentFlowService.events.subscribe(
       (event: FlowEvent) => {

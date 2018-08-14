@@ -25,7 +25,6 @@ import {
 import { I18NService } from '@syndesis/ui/platform';
 
 import { ApiEditorComponent, ApiDefinition } from 'apicurio-design-studio';
-import { OtCommand } from 'oai-ts-commands';
 
 enum WizardSteps {
   UploadSwagger = 1,
@@ -67,7 +66,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.winRef.nativeWindow.dump = YAML.dump;
   }
 
-  public onUserChange(command: OtCommand): void {
+  public onUserChange(): void {
     this.editorHasChanges = true;
   }
 

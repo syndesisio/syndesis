@@ -5,8 +5,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { TabsModule } from 'ngx-bootstrap/tabs';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ActionModule, ListModule, ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';
@@ -25,9 +23,7 @@ xdescribe('IntegrationsListComponent', () => {
         SyndesisCommonModule.forRoot(),
         RouterTestingModule.withRoutes([]),
         ModalModule.forRoot(),
-        TooltipModule.forRoot(),
         BsDropdownModule.forRoot(),
-        TabsModule.forRoot(),
         SyndesisStoreModule,
         ActionModule,
         ListModule,

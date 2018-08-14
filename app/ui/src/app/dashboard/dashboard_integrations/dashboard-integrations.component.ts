@@ -8,7 +8,6 @@ import {
   Integrations,
   I18NService
 } from '@syndesis/ui/platform';
-import { IntegrationStore } from '@syndesis/ui/store';
 
 @Component({
   selector: 'syndesis-dashboard-integrations',
@@ -40,12 +39,11 @@ export class DashboardIntegrationsComponent implements OnChanges {
   constructor(
     public route: ActivatedRoute,
     private router: Router,
-    private integrationStore: IntegrationStore,
     private i18NService: I18NService
   ) {
-    this.PUBLISHED = i18NService.localize('integrations.published');
-    this.UNPUBLISHED = i18NService.localize('integrations.unpublished');
-    this.PENDING = i18NService.localize('integrations.pending');
+    this.PUBLISHED = this.i18NService.localize('integrations.published');
+    this.UNPUBLISHED = this.i18NService.localize('integrations.unpublished');
+    this.PENDING = this.i18NService.localize('integrations.pending');
     this.integrationChartData = [
       [this.PUBLISHED, 0],
       [this.UNPUBLISHED, 0],
@@ -54,7 +52,7 @@ export class DashboardIntegrationsComponent implements OnChanges {
     this.integrationsChartConfig.colors[this.PUBLISHED] = '#0088CE'; // PatternFly Blue 400
     this.integrationsChartConfig.colors[this.UNPUBLISHED] = '#D1D1D1'; // PatternFly Black 300
     this.integrationsChartConfig.colors[this.PENDING] = '#EDEDED'; // PatternFly Black 200
-    this.integrationsChartConfig.donut.title = i18NService.localize(
+    this.integrationsChartConfig.donut.title = this.i18NService.localize(
       'integrations.integrations'
     );
   }

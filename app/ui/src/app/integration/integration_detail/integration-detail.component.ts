@@ -9,7 +9,7 @@ import {
   NotificationType
 } from 'patternfly-ng';
 
-import { IntegrationStore, StepStore, EventsService } from '@syndesis/ui/store';
+import { IntegrationStore, StepStore } from '@syndesis/ui/store';
 import {
   Integration,
   Step,
@@ -84,9 +84,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     public integrationSupportService: IntegrationSupportService,
     public integrationActionsService: IntegrationActionsService,
     private config: ConfigService,
-    private eventsService: EventsService,
-    private platformStore: Store<PlatformState>,
-    private configService: ConfigService
+    private platformStore: Store<PlatformState>
   ) {}
 
   get modalTitle() {

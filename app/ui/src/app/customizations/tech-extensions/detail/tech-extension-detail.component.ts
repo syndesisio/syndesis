@@ -28,7 +28,6 @@ export class TechExtensionDetailComponent implements OnInit {
 
   constructor(
     private extensionStore: ExtensionStore,
-    private router: Router,
     private route: ActivatedRoute
   ) {
     this.loading$ = this.extensionStore.loading;

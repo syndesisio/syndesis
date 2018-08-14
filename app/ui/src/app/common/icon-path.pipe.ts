@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, ChangeDetectorRef } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 import { ConfigService } from '@syndesis/ui/config.service';
@@ -18,8 +18,7 @@ export class IconPathPipe implements PipeTransform {
 
   constructor(
     private configService: ConfigService,
-    private sanitizer: DomSanitizer,
-    private changeDetectorRef: ChangeDetectorRef
+    private sanitizer: DomSanitizer
   ) {
     this.apiEndpoint = this.configService.getSettings().apiEndpoint;
   }
