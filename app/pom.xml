@@ -1538,6 +1538,12 @@
       </dependency>
 
       <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${hibernate.validator.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.jdbi</groupId>
         <artifactId>jdbi</artifactId>
         <version>${jdbi.version}</version>
