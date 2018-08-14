@@ -203,7 +203,7 @@ public final class SwaggerHelper {
 
     static JsonNode convertToJson(final String specification) throws IOException, JsonProcessingException {
         final JsonNode specRoot;
-        if (specification.matches("\\s+\\{")) {
+        if (specification.matches("\\s*\\{.*")) {
             specRoot = Json.reader().readTree(specification);
         } else {
             specRoot = Json.convertValue(YAML_PARSER.load(specification), JsonNode.class);
