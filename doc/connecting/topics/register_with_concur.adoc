@@ -1,0 +1,43 @@
+[id='register-with-concur']
+= Register {prodname} as a SAP Concur client application
+
+In an integration, to be able to connect to SAP Concur, you must register 
+your installation of {prodname} as a client application
+that can access SAP Concur. 
+This lets you create any number of integrations that connect
+to SAP Concur. In other words, you need to register a particular
+{prodname} environment with SAP Concur only once.
+
+In each {prodname} environment, there can be only one registration
+of {prodname} as a SAP Concur client application. However, while each SAP Concur 
+connection uses the same registration, it can use different user
+credentials. 
+
+.Prerequisites
+
+* You must know whether you want to register your {prodname} environment 
+with the SAP Concur implementation site or the SAP Concur production site. 
+* To register with the SAP Concur implementation site, you must have received
+implementation site credentials from your SAP Concur administrator.
+* To register with the SAP Concur production site, you must have obtained
+credentials through the SAP Concur production site self help feature.
+
+.Procedure
+
+Perform the following steps with credentials and URLs for the implementation 
+site or the production site:
+
+. In {prodname}, in the left panel, click *Settings*.
+. On the *Settings* page, expand the *SAP Concur* entry. Each input
+parameter is required. {prodname} populates a field if it can.
+. For each input field, specify the value that you have or ensure that
+{prodname} provides the correct value. 
+. Click *Save*. {prodname} immediately tries to validate registration. 
+If registration is not successful, correct the input values and try again. 
+If registration is successful, you can create a SAP Concur connection,
+which you can add to an integration. 
+. To create a SAP Concur connection, click the *create a connection* link
+in the success message. Or, to create a connection later, click *Ok* to 
+contract the entry. 
+
+ 

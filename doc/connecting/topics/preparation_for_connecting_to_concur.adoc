@@ -1,0 +1,36 @@
+[id='preparation-for-connecting-to-concur']
+= Preparation for connecting to SAP Concur
+
+SAP Concur has an implementation site for development work and a production
+site for live use. The implementation site simulates 
+the production site. This lets you create and refine an integration
+before you use it in production with the live SAP Concur site. 
+
+Each {prodname} environment requires its own 
+credentials for accessing each SAP Concur site. Consequently, before
+you can create integrations that connect to SAP Concur:
+
+* Contact your SAP Concur administrator to obtain credentials for
+accessing the SAP Concur implementation site. You need:
+
+** A user name and password for logging in the SAP Concur implementation site
+** Client ID.
+** Client secret.
+** Authorization URL. For the implementation site, this is something like:
+`\https://us-impl.api.concursolutions.com/oauth2/v0/authorize`
+
+** Token URL. For the implementation site, this is something like: 
+`\https://us-impl.api.concursolutions.com/oauth2/v0/token`
+
+** API endpoint URL. For the implementation site, this is something like: 
+`\https://us-impl.api.concursolutions.com`
+
+* Use the SAP Concur self help feature to obtain credentials for 
+accessing the SAP Concur live production site. You need:
+
+** A user name and password for logging in to the SAP Concur production site
+** Client ID
+** Client Secret
+** Authorization URL
+** Token URL
+** API endpoint URL

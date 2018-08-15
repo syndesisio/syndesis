@@ -59,7 +59,7 @@ this procedure.
 image:images/copy_icon.png[the Copy icon] to copy the client ID
 to your clipboard.
 
-. Return to the {prodname} *Settings* page and in the Gmail *Client ID* field, 
+. Return to the {prodname} *Settings* page, expand the Gmail entry, and in the Gmail *Client ID* field, 
 paste the Gmail client ID that you just copied. 
 
 . Return to the Google developers site and to the right of the 
