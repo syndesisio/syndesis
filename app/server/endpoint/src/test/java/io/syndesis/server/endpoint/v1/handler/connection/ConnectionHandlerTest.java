@@ -19,18 +19,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.OptionalInt;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+
 import javax.validation.Validator;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import io.syndesis.common.model.ListResult;
@@ -59,250 +56,107 @@ public class ConnectionHandlerTest {
 
     private final DataManager dataManager = mock(DataManager.class);
 
-    private final io.syndesis.server.endpoint.v1.handler.connection.ConnectionHandler handler =
-                                        new io.syndesis.server.endpoint.v1.handler.connection.ConnectionHandler(
-                                                                                                                dataManager,
-                                                                                                                NO_VALIDATOR,
-                                                                                                                NO_CREDENTIALS,
-                                                                                                                NO_STATE,
-                                                                                                                NO_CONFIG,
-                                                                                                                NO_ENCRYPTION_COMPONENT);
+    private final ConnectionHandler handler = new ConnectionHandler(dataManager, NO_VALIDATOR, NO_CREDENTIALS, NO_STATE, NO_CONFIG, NO_ENCRYPTION_COMPONENT);
 
-    private String[] connectionIds = { "0", "1", "2" };
+    private Connection c1 = newConnectionWithId("c1");
 
-    private Connection[] connections;
+    private Connection c2 = newConnectionWithId("c2");
 
-    private Map<String, Integer> usesMap = new HashMap<>();
+    private Connection c3 = newConnectionWithId("c3");
 
-    @Before
-    public void setup() {
-        connections = new Connection[connectionIds.length];
-
-        for (int i = 0; i < connectionIds.length; ++i) {
-            connections[i] = newConnection(connectionIds[i]);
-        }
-    }
-
-    @After
-    public void tearDown() {
-        connections = null;
-        usesMap.clear();
-    }
-
-    private List<Step> noSteps() {
-        return Collections.emptyList();
-    }
-
-    private List<Connection> noConnections() {
-        return Collections.emptyList();
-    }
-
-    private Connection newConnection(String id) {
-        return new Connection.Builder().id(id).build();
-    }
-
-    private Step newStep(Connection connection) {
-        return new Step.Builder().connection(connection).build();
-    }
-
-    private Connection usedConnection(Connection connection, int usage) {
-        return new Connection.Builder().createFrom(connection).uses(usage).build();
-    }
-
-    private void incrementUsesMap(Connection connection) {
-        if (connection == null)
-            return;
-
-        String id = connection.getId().get();
-        Integer frequency = usesMap.get(id);
-        if (frequency == null) {
-            frequency = 0;
-        }
-
-        usesMap.put(id, ++frequency);
-    }
-
-    private Integration newIntegration(List<Connection> connections, List<Step> steps) {
-        for (Connection connection : connections) {
-            incrementUsesMap(connection);
-        }
-
-        for (Step step : steps) {
-            Connection connection = step.getConnection().get();
-            incrementUsesMap(connection);
-        }
-
-        return new Integration.Builder()
-            .id("test")
-            .name("test")
-            .connections(connections)
-            .steps(steps)
-            .build();
-    }
-
-    private Integration[] createTestIntegrations() {
-        Step step1 = newStep(connections[0]);
-        Step step2 = newStep(connections[1]);
-        Step step3 = newStep(connections[2]);
-
-        List<Integration> integrations = new ArrayList<>();
-        integrations.add(newIntegration(
-                                                  Collections.singletonList(connections[0]),
-                                                  Collections.singletonList(step1)));
-        integrations.add(newIntegration(
-                                                  Arrays.asList(connections[0], connections[1]),
-                                                  Arrays.asList(step1, step2)));
-        integrations.add(newIntegration(
-                                                  Arrays.asList(connections[0], connections[1], connections[2]),
-                                                  Arrays.asList(step1, step2, step3)));
-
-        return integrations.toArray(new Integration[0]);
-    }
-
-    /**
-     * Connections added directly to the integration
-     */
     @Test
-    public void shouldAugmentWithConnectionUsageNoSteps() {
+    public void withNoIntegrationsConnectionUsageShouldBeZero() {
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(emptyList()));
 
-        Integration integration1 = newIntegration(Collections.singletonList(connections[0]), noSteps());
-        Integration integration2 = newIntegration(Arrays.asList(connections[0], connections[1]), noSteps());
-        Integration integration3 = newIntegration(Arrays.asList(connections[0], connections[1], connections[2]), noSteps());
-
-        when(dataManager.fetchAll(Integration.class))
-            .thenReturn(new ListResult.Builder<Integration>().addItem(integration1, integration2, integration3).build());
-
-        final List<Connection> augmented = handler.augmentedWithUsage(Arrays.asList(connections[0], connections[1], connections[2]));
-
-        assertThat(augmented).contains(
-                                       usedConnection(connections[0], usesMap.get(connectionIds[0])),
-                                       usedConnection(connections[1], usesMap.get(connectionIds[1])),
-                                       usedConnection(connections[2], usesMap.get(connectionIds[2])));
+        assertThat(handler.augmentedWithUsage(c1)).isEqualTo(new Connection.Builder().createFrom(c1).uses(0).build());
     }
 
-    /**
-     * Connections added to the steps inside the integration
-     */
     @Test
-    public void shouldAugmentWithConnectionUsageNoDirect() {
-        Step step1 = newStep(connections[0]);
-        Step step2 = newStep(connections[1]);
-        Step step3 = newStep(connections[2]);
+    public void unusedConnectionsShouldHaveUseOfZero() {
+        final Integration emptyIntegration = new Integration.Builder().build();
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(emptyIntegration, emptyIntegration));
 
-        Integration integration1 = newIntegration(noConnections(), Collections.singletonList(step1));
-        Integration integration2 = newIntegration(noConnections(), Arrays.asList(step1, step2));
-        Integration integration3 = newIntegration(noConnections(), Arrays.asList(step1, step2, step3));
-
-        when(dataManager.fetchAll(Integration.class))
-            .thenReturn(new ListResult.Builder<Integration>().addItem(integration1, integration2, integration3).build());
-
-        final List<Connection> augmented = handler.augmentedWithUsage(Arrays.asList(connections[0], connections[1], connections[2]));
-
-        assertThat(augmented).contains(
-                                       usedConnection(connections[0], usesMap.get(connectionIds[0])),
-                                       usedConnection(connections[1], usesMap.get(connectionIds[1])),
-                                       usedConnection(connections[2], usesMap.get(connectionIds[2])));
+        assertThat(handler.augmentedWithUsage(c1)).isEqualTo(new Connection.Builder().createFrom(c1).uses(0).build());
     }
 
-    /**
-     * Connections added to both directly and to the steps inside the integration
-     */
     @Test
-    public void shouldAugmentWithConnectionUsageDirectAndSteps() {
-        Integration[] integrations = createTestIntegrations();
+    public void connectionsReferencedFromTheIntegrationShouldHaveTheirUseCounted() {
+        final Integration usesC1 = new Integration.Builder().addConnection(c1).build();
+        final Integration usesC1andC2 = new Integration.Builder().addConnection(c1, c2).build();
+        final Integration usesC2andC3 = new Integration.Builder().addConnection(c2, c3).build();
+        final Integration usesC1andC2andC3 = new Integration.Builder().addConnection(c1, c2, c3).build();
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(usesC1, usesC1andC2, usesC2andC3, usesC1andC2andC3));
 
-        when(dataManager.fetchAll(Integration.class))
-            .thenReturn(new ListResult.Builder<Integration>().addItem(integrations[0], integrations[1], integrations[2]).build());
+        assertThat(handler.augmentedWithUsage(c1)).isEqualTo(connectionUsed(c1, 3));
+        assertThat(handler.augmentedWithUsage(c2)).isEqualTo(connectionUsed(c2, 3));
+        assertThat(handler.augmentedWithUsage(c3)).isEqualTo(connectionUsed(c3, 2));
 
-        final List<Connection> augmented = handler.augmentedWithUsage(Arrays.asList(connections[0], connections[1], connections[2]));
+        assertThat(handler.augmentedWithUsage(asList(c1, c2, c3))).containsOnly(connectionUsed(c1, 3), connectionUsed(c2, 3), connectionUsed(c3, 2));
+    }
 
-        assertThat(augmented).contains(
-                                       usedConnection(connections[0], usesMap.get(connectionIds[0])),
-                                       usedConnection(connections[1], usesMap.get(connectionIds[1])),
-                                       usedConnection(connections[2], usesMap.get(connectionIds[2])));
+    @Test
+    public void connectionsReferencedFromTheStepsShouldHaveTheirUseCounted() {
+        final Integration usesC1 = new Integration.Builder().addStep(stepUsing(c1)).build();
+        final Integration usesC1andC2 = new Integration.Builder().addStep(stepUsing(c1), stepUsing(c2)).build();
+        final Integration usesC2andC3 = new Integration.Builder().addStep(stepUsing(c2), stepUsing(c3)).build();
+        final Integration usesC1andC2andC3 = new Integration.Builder().addStep(stepUsing(c1), stepUsing(c2), stepUsing(c3)).build();
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(usesC1, usesC1andC2, usesC2andC3, usesC1andC2andC3));
+
+        assertThat(handler.augmentedWithUsage(c1)).isEqualTo(connectionUsed(c1, 3));
+        assertThat(handler.augmentedWithUsage(c2)).isEqualTo(connectionUsed(c2, 3));
+        assertThat(handler.augmentedWithUsage(c3)).isEqualTo(connectionUsed(c3, 2));
+
+        assertThat(handler.augmentedWithUsage(asList(c1, c2, c3))).containsOnly(connectionUsed(c1, 3), connectionUsed(c2, 3), connectionUsed(c3, 2));
+    }
+
+    @Test
+    public void mixedUseOfConnectionsFromIntegrationsAndStepsShouldBeCounted() {
+        final Integration usesC1 = new Integration.Builder().addConnection(c1).build();
+        final Integration usesC1andC2 = new Integration.Builder().addConnection(c1).addStep(stepUsing(c2)).build();
+        final Integration usesC2andC3 = new Integration.Builder().addStep(stepUsing(c2), stepUsing(c3)).build();
+        final Integration usesC1andC2andC3 = new Integration.Builder().addConnection(c1, c2).addStep(stepUsing(c3)).build();
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(usesC1, usesC1andC2, usesC2andC3, usesC1andC2andC3));
+
+        assertThat(handler.augmentedWithUsage(c1)).isEqualTo(connectionUsed(c1, 3));
+        assertThat(handler.augmentedWithUsage(c2)).isEqualTo(connectionUsed(c2, 3));
+        assertThat(handler.augmentedWithUsage(c3)).isEqualTo(connectionUsed(c3, 2));
+
+        assertThat(handler.augmentedWithUsage(asList(c1, c2, c3))).containsOnly(connectionUsed(c1, 3), connectionUsed(c2, 3), connectionUsed(c3, 2));
+    }
+
+    @Test
+    public void someStepsDoNotUseConnectionsAndShouldNotBeConsidered() {
+        final Step stepWithoutConnection = new Step.Builder().build();
+        final Integration integration = new Integration.Builder().addConnection(c1, c2).addStep(stepUsing(c1), stepWithoutConnection, stepUsing(c3)).build();
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(integration));
+
+        assertThat(handler.augmentedWithUsage(c1)).isEqualTo(connectionUsed(c1, 2));
+        assertThat(handler.augmentedWithUsage(c2)).isEqualTo(connectionUsed(c2, 1));
+        assertThat(handler.augmentedWithUsage(c3)).isEqualTo(connectionUsed(c3, 1));
+
+        assertThat(handler.augmentedWithUsage(asList(c1, c2, c3))).containsOnly(connectionUsed(c1, 2), connectionUsed(c2, 1), connectionUsed(c3, 1));
     }
 
     @Test
     public void overviewGetShouldAugmentWithConnectionUsage() {
-        Integration[] integrations = createTestIntegrations();
+        final Step stepWithoutConnection = new Step.Builder().build();
+        final Integration usesC1 = new Integration.Builder().addConnection(c1).build();
+        final Integration usesC1andC2 = new Integration.Builder().addConnection(c1).addStep(stepUsing(c2)).build();
+        final Integration usesC1andC2andC3 = new Integration.Builder().addConnection(c1, c2).addStep(stepUsing(c1), stepWithoutConnection, stepUsing(c3)).build();
 
-        when(dataManager.fetchAll(Integration.class))
-                        .thenReturn(new ListResult.Builder<Integration>().addItem(integrations[0], integrations[1], integrations[2]).build());
-        for (int i = 0; i < connectionIds.length; ++i) {
-            when(dataManager.fetch(Connection.class, connectionIds[i])).thenReturn(connections[i]);
-        }
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(usesC1, usesC1andC2, usesC1andC2andC3));
+        when(dataManager.fetch(Connection.class, "c1")).thenReturn(c1);
 
-        for (int i = 0; i < connectionIds.length; ++i) {
-            String id = connectionIds[i];
-            ConnectionOverview overview = handler.get(id);
-            assertNotNull(overview);
-            OptionalInt uses = overview.getUses();
-            assertThat(uses.isPresent()).isTrue();
-            assertThat(uses.getAsInt()).isEqualTo(usesMap.get(id));
-        }
-    }
-
-    @Test
-    public void overviewGetShouldAugmentWithConnectionUsageNoIntegrations() {
-        when(dataManager.fetchAll(Integration.class))
-                        .thenReturn(new ListResult.Builder<Integration>().build());
-        for (int i = 0; i < connectionIds.length; ++i) {
-            when(dataManager.fetch(Connection.class, connectionIds[i])).thenReturn(connections[i]);
-        }
-
-        for (int i = 0; i < connectionIds.length; ++i) {
-            String id = connectionIds[i];
-            ConnectionOverview overview = handler.get(id);
-            assertNotNull(overview);
-            OptionalInt uses = overview.getUses();
-            assertThat(uses.isPresent()).isTrue();
-            assertThat(uses.getAsInt()).isZero();
-        }
-    }
-
-    @Test
-    @SuppressWarnings( "unchecked" )
-    public void overviewListShouldAugmentWithConnectionUsage() {
-        Integration[] integrations = createTestIntegrations();
-
-        ListResult<Connection> connectionResult = new ListResult.Builder<Connection>()
-                                                                                            .addItem(connections[0], connections[1], connections[2])
-                                                                                            .build();
-
-        DataAccessObject<Connection> dao = mock(DataAccessObject.class);
-        when(dao.fetchAll(Mockito.any())).thenReturn(connectionResult);
-        when(dataManager.getDataAccessObject(Connection.class)).thenReturn(dao);
-
-        // Matches the appearances of each connection in the above integrations
-        ListResult<Integration> integrationResult = new ListResult.Builder<Integration>()
-                                                                                            .addItem(integrations[0], integrations[1], integrations[2])
-                                                                                            .build();
-
-        when(dataManager.fetchAll(Integration.class)).thenReturn(integrationResult);
-
-        UriInfo uriInfo = mock(UriInfo.class);
-        MultivaluedMap<String, String> params = mock(MultivaluedMap.class);
-        when(uriInfo.getQueryParameters()).thenReturn(params);
-
-        ListResult<ConnectionOverview> overviewResult = handler.list(uriInfo);
-        assertNotNull(overviewResult);
-        assertThat(overviewResult.getTotalCount()).isPositive();
-
-        List<ConnectionOverview> items = overviewResult.getItems();
-        for (int i = 0; i < items.size(); ++i) {
-            ConnectionOverview overview = items.get(i);
-            OptionalInt uses = overview.getUses();
-            assertThat(uses.isPresent()).isTrue();
-            assertThat(uses.getAsInt()).isEqualTo(usesMap.get(overview.getId().get()));
-        }
+        final ConnectionOverview overview = handler.get("c1");
+        assertThat(overview).isNotNull();
+        assertThat(overview.getUses()).isPresent();
+        assertThat(overview.getUses().getAsInt()).isEqualTo(4);
     }
 
     @Test
     @SuppressWarnings( "unchecked" )
     public void overviewListShouldAugmentWithConnectionUsageNoIntegrations() {
-        ListResult<Connection> connectionResult = new ListResult.Builder<Connection>()
-                                                                                            .addItem(connections[0], connections[1], connections[2])
-                                                                                            .build();
+        ListResult<Connection> connectionResult = new ListResult.Builder<Connection>().addItem(c1, c2, c3).build();
 
         DataAccessObject<Connection> dao = mock(DataAccessObject.class);
         when(dao.fetchAll(Mockito.any())).thenReturn(connectionResult);
@@ -324,5 +178,17 @@ public class ConnectionHandlerTest {
             assertThat(uses.isPresent()).isTrue();
             assertThat(uses.getAsInt()).isZero();
         }
+    }
+
+    private static Connection newConnectionWithId(final String id) {
+        return new Connection.Builder().id(id).build();
+    }
+
+    private static Connection connectionUsed(final Connection connection, final int times) {
+        return new Connection.Builder().createFrom(connection).uses(times).build();
+    }
+
+    private static Step stepUsing(final Connection connection) {
+        return new Step.Builder().connection(connection).build();
     }
 }
