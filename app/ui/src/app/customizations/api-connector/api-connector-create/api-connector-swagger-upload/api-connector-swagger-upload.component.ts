@@ -27,6 +27,7 @@ export class ApiConnectorSwaggerUploadComponent implements OnInit {
   fileToUpload: File;
   hasBaseDropZoneOver: boolean;
   invalidFileMsg: string;
+  validFileMsg: string;
   swaggerFileUrl: string;
   uploader: FileUploader;
 
@@ -60,6 +61,10 @@ export class ApiConnectorSwaggerUploadComponent implements OnInit {
 
       // pop off file from queue to set file and clear queue
       this.fileToUpload = this.uploader.queue.pop()._file;
+
+      this.validFileMsg = this.i18NService.localize( 'customizations.api-client-connectors.api-upload-valid-file',
+                                                      [ this.fileToUpload.name ] );
+      this.fileSelect.nativeElement.value = '';
     };
 
     this.uploader.onWhenAddingFileFailed = (
@@ -68,7 +73,7 @@ export class ApiConnectorSwaggerUploadComponent implements OnInit {
       // occurs when not a *.json file
       this.invalidFileMsg = this.i18NService.localize( 'customizations.api-client-connectors.api-upload-invalid-file',
                                                        [ file.name ] );
-      this.fileToUpload = null;
+      this.validFileMsg = null;
       this.fileSelect.nativeElement.value = '';
       this.uploader.clearQueue();
     };

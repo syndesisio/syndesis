@@ -35,33 +35,36 @@
       <div class="container-fluid">
         <div class="form-group row"
           [class.syn-visuallyhidden]="!uploadFileOption.checked">
-          <div class="syn-drop-zone"
-               ng2FileDrop
-               [uploader]="uploader"
-               [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
-               (onFileDrop)="onFileDrop($event)"
-               (fileOver)="onFileOver($event)">
-            <p>{{ 'customizations.api-client-connectors.api-file-upload-dnd' | synI18n }}</p>
-            <div class="row syn-drop-zone__file-select">
-              <div>
-                <p>
-                  <input #fileSelect
-                         class="api-file-chooser"
-                         type="file"
-                         ng2FileSelect
-                         [uploader]="uploader">
-                </p>
+          <div class="col-xs-12">
+            <div class="syn-drop-zone"
+                ng2FileDrop
+                [uploader]="uploader"
+                [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
+                (onFileDrop)="onFileDrop($event)"
+                (fileOver)="onFileOver($event)">
+              <p>{{ 'customizations.api-client-connectors.api-file-upload-dnd' | synI18n }}</p>
+              <div class="row syn-drop-zone__file-select">
+                <div class="col-md-5">
+                  <p>
+                    <input #fileSelect
+                      class="api-file-chooser"
+                      type="file"
+                      ng2FileSelect
+                      [uploader]="uploader">
+                  </p>
+                </div>
+                <div class="col-md-7">
+                  <p *ngIf="validFileMsg">
+                    <span class="pficon-ok"></span>
+                    {{ validFileMsg }}
+                  </p>
+                  <p *ngIf="invalidFileMsg">
+                    <span class="pficon-error-circle-o"></span>
+                    {{ invalidFileMsg }}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div>
-              <p class="row" *ngIf="fileToUpload">
-                <span class="pficon-ok"></span>
-                '{{ fileToUpload.name }}' will be uploaded
-              </p>
-              <p class="row" *ngIf="invalidFileMsg">
-                <span class="pficon-error-circle-o"></span>
-                {{ invalidFileMsg }}
-              </p>
+              <p class="help-block"><em>Accepted file type: .json</em></p>
             </div>
           </div>
         </div>
