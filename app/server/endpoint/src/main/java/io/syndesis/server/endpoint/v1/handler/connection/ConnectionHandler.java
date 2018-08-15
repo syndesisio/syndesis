@@ -16,14 +16,16 @@
 package io.syndesis.server.endpoint.v1.handler.connection;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -40,10 +42,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
 import org.springframework.stereotype.Component;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import io.syndesis.common.model.EmptyListResult;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.bulletin.ConnectionBulletinBoard;
@@ -243,40 +245,28 @@ public class ConnectionHandler
     }
 
     List<Connection> augmentedWithUsage(final List<Connection> connections) {
-        if (connections == null) {
+        if (connections == null || connections.isEmpty()) {
             return Collections.emptyList();
         }
 
-        ListResult<Integration> integrationListResult = getDataManager().fetchAll(Integration.class);
-        if (integrationListResult == null) {
-            integrationListResult = new EmptyListResult<>();
+        final ListResult<Integration> integrationsResult = getDataManager().fetchAll(Integration.class);
+        if (integrationsResult == null || integrationsResult.getTotalCount() == 0) {
+            return connections.stream().map(c -> c.builder().uses(0).build()).collect(Collectors.toList());
         }
 
-        List<Integration> items = integrationListResult.getItems();
+        final List<Integration> integrations = integrationsResult.getItems();
 
-        Map<String, Long> connectionUsage = items.stream()//
-                                                                                    .filter(i -> !i.isDeleted())//
-                                                                                    .flatMap(i -> {
-                                                                                        // Find the integration connections list
-                                                                                        List<Connection> intConns1 = i.getConnections();
-
-                                                                                        // Find the integration steps and gets their connections
-                                                                                        List<Connection> intConns2 = i.getSteps().stream()
-                                                                                                                                                  .map(s -> s.getConnection().get())
-                                                                                                                                                  .collect(Collectors.toList());
-
-                                                                                        // Combine the lists into a stream and return it
-                                                                                        return Stream.of(intConns1, intConns2)
-                                                                                                                   .flatMap(Collection::stream);
-                                                                                    })//
-                                                                                    .map(c -> c.getId().get())//
-                                                                                    .collect(Collectors.groupingBy(String::toString, Collectors.counting()));
+        final Map<Connection, Long> connectionUsage = Stream.concat(
+            integrations.stream().flatMap(i -> i.getConnections().stream()),
+            integrations.stream().flatMap(i -> i.getSteps().stream())
+                .map(s -> s.getConnection()).filter(Optional::isPresent).map(Optional::get)
+        ).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
         return connections.stream()//
-                                            .map(c -> {
-                                                final int uses = connectionUsage.getOrDefault(c.getId().get(), 0L).intValue();
-                                                return c.builder().uses(uses).build();
-                                            })//
-                                            .collect(Collectors.toList());
+            .map(c -> {
+                final int uses = connectionUsage.getOrDefault(c, 0L).intValue();
+                return c.builder().uses(uses).build();
+            })//
+            .collect(Collectors.toList());
     }
 }
