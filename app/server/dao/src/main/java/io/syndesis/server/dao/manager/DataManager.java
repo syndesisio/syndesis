@@ -150,6 +150,14 @@ public class DataManager implements DataAccessObjectRegistry {
 
                         if (connector != null) {
                             LOGGER.info("Load connector: {} from resource: {}", connector.getId().orElse(""), resource.getURI());
+                            final String id = connector.getId().get();
+                            final Connector existing = fetch(Connector.class, id);
+                            if (existing != null) {
+                                // the only mutable part of the Connector
+                                final Map<String, String> configuredProperties = existing.getConfiguredProperties();
+
+                                connector = connector.builder().configuredProperties(configuredProperties).build();
+                            }
                             store(connector, Connector.class);
                         }
                     }
