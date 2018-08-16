@@ -1,11 +1,11 @@
 <div class="card-pf-heading">
   <h2 class="card-pf-title">
-    Upload OpenAPI Specification
+    {{ 'customizations.api-client-connectors.create-upload-spec-step-title' | synI18n }}
   </h2>
 </div>
 <div class="card-pf-body">
   <syndesis-validation-error *ngIf="swaggerFileUrlInput.errors?.requiredIfChecked && fetchUrlOption.checked">
-    You must enter a valid URL before submitting the form
+    {{ 'customizations.api-client-connectors.url-validation-error' | synI18n }}
   </syndesis-validation-error>
 
   <syndesis-validation-error *ngIf="validationError">
@@ -17,18 +17,18 @@
   </syndesis-validation-error>
 
   <p>
-    Upload the OpenAPI 2.0 file for your custom API client ocnnector. Custom APIs are RESTful APIs and can be hosted anywhere,
-    as long as a well-documented API specification is available and conforms to the OpenAPI standard.
+    {{ 'customizations.api-client-connectors.url-upload-instructions' | synI18n }}
   </p>
   <p>
-    <strong>Choose how you want to create your connector:</strong>
+    <strong>{{ 'customizations.api-client-connectors.api-upload-choose-method' | synI18n }}</strong>
   </p>
   <form class="form-horizontal syn-form--swagger-upload" (ngSubmit)="onSubmit(swaggerForm, uploadFileOption.checked)" #swaggerForm="ngForm" novalidate>
     <fieldset class="container-fluid">
       <div class="form-group row">
         <div class="col-xs-12 radio">
           <label>
-            <input type="radio" checked="checked" name="connectorSource" #uploadFileOption> Upload an OpenAPI file
+            <input type="radio" checked="checked" name="connectorSource" #uploadFileOption>
+            {{ 'customizations.api-client-connectors.api-file-upload' | synI18n }}
           </label>
         </div>
       </div>
@@ -36,14 +36,44 @@
         <div class="form-group row"
           [class.syn-visuallyhidden]="!uploadFileOption.checked">
           <div class="col-xs-12">
-            <input type="file" (change)="onFile($event)">
+            <div class="syn-drop-zone"
+                ng2FileDrop
+                [uploader]="uploader"
+                [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
+                (onFileDrop)="onFileDrop($event)"
+                (fileOver)="onFileOver($event)">
+              <p>{{ 'customizations.api-client-connectors.api-file-upload-dnd' | synI18n }}</p>
+              <div class="row syn-drop-zone__file-select">
+                <div class="col-md-5">
+                  <p>
+                    <input #fileSelect
+                      class="api-file-chooser"
+                      type="file"
+                      ng2FileSelect
+                      [uploader]="uploader">
+                  </p>
+                </div>
+                <div class="col-md-7">
+                  <p *ngIf="validFileMsg">
+                    <span class="pficon-ok"></span>
+                    {{ validFileMsg }}
+                  </p>
+                  <p *ngIf="invalidFileMsg">
+                    <span class="pficon-error-circle-o"></span>
+                    {{ invalidFileMsg }}
+                  </p>
+                </div>
+              </div>
+              <p class="help-block"><em>{{ 'customizations.api-client-connectors.api-upload-helper-text' | synI18n }}</em></p>
+            </div>
           </div>
         </div>
       </div>
       <div class="form-group row">
         <div class="col-xs-12 radio">
           <label>
-            <input type="radio" name="connectorSource" #fetchUrlOption> Use a URL
+            <input type="radio" name="connectorSource" #fetchUrlOption>
+            {{ 'customizations.api-client-connectors.api-url-upload' | synI18n }}
           </label>
         </div>
       </div>
@@ -59,7 +89,7 @@
               [requiredIf]="fetchUrlOption.checked"
               #swaggerFileUrlInput="ngModel">
             <em class="text-muted">
-              * Note: we will download this for you but any updates to the online version will not be updated in our app.
+              {{ 'customizations.api-client-connectors.api-url-upload-note' | synI18n }}
             </em>
           </div>
         </div>
@@ -69,8 +99,8 @@
     <fieldset>
       <syndesis-button type="submit"
         [loading]="apiConnectorState.loading"
-        [disabled]="(!uploadFileOption.checked && !swaggerFileUrlInput.value) || (uploadFileOption.checked && !swaggerFileList)">
-        Next
+        [disabled]="(!uploadFileOption.checked && !swaggerFileUrlInput.value) || (uploadFileOption.checked && !fileToUpload)">
+        {{ 'next' | synI18n }}
       </syndesis-button>
     </fieldset>
   </form>
