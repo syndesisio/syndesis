@@ -39,6 +39,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -190,4 +191,21 @@ public class DataManagerTest {
         fail("Should fail before getting here");
     }
 
+    @Test
+    public void shouldNotDestroyConfiguredPropertiesOnSecondStartup() {
+        final Connector concur = dataManager.fetch(Connector.class, "concur");
+        final Connector configuredConcur = concur.builder()
+            .putConfiguredProperty("clientId", "my-client-id")
+            .putConfiguredProperty("clientSecret", "my-client-secret")
+            .build();
+
+        dataManager.store(configuredConcur, Connector.class);
+
+        dataManager.resetDeploymentData();
+
+        final Connector afterInit = dataManager.fetch(Connector.class, "concur");
+        assertThat(afterInit.getConfiguredProperties()).contains(
+            entry("clientId", "my-client-id"),
+            entry("clientSecret", "my-client-secret"));
+    }
 }
