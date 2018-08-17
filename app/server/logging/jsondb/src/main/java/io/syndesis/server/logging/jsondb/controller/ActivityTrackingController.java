@@ -157,7 +157,7 @@ public class ActivityTrackingController implements Closeable {
         return dbi.inTransaction((conn, status) -> {
             final String sql = "DELETE FROM jsondb "
                 + "WHERE path LIKE ? AND path NOT IN ("
-                +     "SELECT path FROM jsondb WHERE path LIKE ? ORDER BY path FETCH FIRST (?) ROWS ONLY"
+                +     "SELECT path FROM jsondb WHERE path LIKE ? ORDER BY path DESC FETCH FIRST (?) ROWS ONLY"
                 + ")";
 
                 return conn.update(sql, path, path, retention);
