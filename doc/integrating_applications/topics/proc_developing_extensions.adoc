@@ -5,8 +5,8 @@ Before you start to develop an extension, become familiar with the tasks that
 you will need to accomplish.
 
 .Prerequisites
-- Familiarity with Maven
-- Familiarity with Camel if you are developing an extension that provides
+- Familiarity with https://maven.apache.org/[Maven]
+- Familiarity with https://camel.apache.org/[Camel] if you are developing an extension that provides
 a connector or that provides an integration step that operates on data between connections
 - Experience programming
 
@@ -35,7 +35,9 @@ For step extensions that you implement in Java,
 Maven can generate the JSON extension definition file
 for you when you specify corresponding data structure values in your Maven project. 
 . Run Maven to build the extension and create the extension's JAR file. 
-. Provide the JAR file that packages the extension to your business colleague, who will upload it to the
+. Test the extension by uploading the JAR file to a {prodname} development environment. 
+. Provide the JAR file that packages the extension to your business colleague, 
+who uploads it to a
 {prodname} production environment. When you provide the JAR file, let your 
 business colleague know about any configuration settings that require 
-information beyond what will appear in the {prodname} web interface. 
+information beyond what appears in the {prodname} web interface. 

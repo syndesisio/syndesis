@@ -53,6 +53,10 @@ folder. Provide this `.jar` file for uploading to {prodname}.
 integration should include. When you add a database connection to an  
 integration, {prodname} adds all extensions that have
 the `jdbc-driver` tag to integration runtime. This is expected to
-improve in a future release. For more information, see 
-https://github.com/syndesisio/syndesis/issues/2809[this GitHub issue].
+improve in a future release. 
+
+ifeval::["{location}" == "upstream"]
+For more information, see 
+https://github.com/syndesisio/syndesis/issues/2809[this GitHub issue]. 
+endif::[]
 ====

@@ -10,13 +10,23 @@ Support for library extensions is evolving. In this release, in the
 
 *  When you create an integration, 
 you cannot select which library extension(s) an 
-integration should include. For more information, see 
-https://github.com/syndesisio/syndesis/issues/2808[this GitHub issue].
+integration should include. 
++
+ifeval::["{location}" == "upstream"]
+For more information, see 
+https://github.com/syndesisio/syndesis/issues/2808[this GitHub issue]. 
+endif::[]
 
 * When you add a database connection to an integration, 
 {prodname} adds all extensions that 
-have the `jdbc-driver` tag to the integration runtime. For more information, see 
+have the `jdbc-driver` tag to the integration runtime. 
++
+ifeval::["{location}" == "upstream"]
+For more information, see 
 https://github.com/syndesisio/syndesis/issues/2809[this GitHub issue]. 
+
+endif::[]
+
 
 See the following topics for information about creating library extensions:
 
