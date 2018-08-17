@@ -1,6 +1,10 @@
 [id='guidelines-for-openapi-specifications']
 = Guidelines for OpenAPI specifications
 
+When {prodname} creates a REST API client connector, it maps each resource
+operation in the OpenAPI specification to a connection action. The action name
+and action description come from documentation in the OpenAPI specification.
+
 The more detail that the OpenAPI specification provides, the more support
 {prodname} can offer when connecting to the API. For example,
 the API definition is not required to declare data types for requests

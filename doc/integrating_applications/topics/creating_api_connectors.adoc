@@ -1,5 +1,5 @@
 [id='creating-api-connectors']
-= Creating API client connectors
+= Creating REST API client connectors
 
 To create an API client connector:
 
@@ -34,8 +34,7 @@ want to use to access the API.
 .. *OAuth* -- {prodname} prompts you to enter:
 ... *Authorization URL* is the location for registering {prodname} as
 a client of the API. Registration authorizes {prodname} to access the API.
-See 
-{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis[{NameOfFuseOnlineConnectorGuide}, Connecting to REST APIs].
+See {LinkFuseOnlineConnectorGuide}#register-with-rest-api[Connecting Fuse Online to Applications and Services, Registering {prodname} as a REST API client]. 
 The OpenAPI specification or other
 documentation for the API should specify this URL. If it does not then
 you must contact the service provider to obtain this URL.
@@ -43,7 +42,7 @@ you must contact the service provider to obtain this URL.
 OpenAPI specification or other documentation for the API should provide
 this URL. If it does not then you must contact the service provider.
 . Click *Next*. {prodname} displays the connector's name,
-description, host, and base URL as indicated by the OpenAPI file.
+description, host, and base URL as indicated by the OpenAPI specification.
 For connections that you create from this connector,
 +
 ** {prodname}
@@ -51,8 +50,8 @@ concatenates the host and base URL values to define the endpoint for
 the connection. For example, if the host is `https://example.com` and
 the base URL is `/api/v1` then the connection endpoint is
 `https://example.com/api/v1`.
-** {prodname} applies the schema specified in the OpenAPI file to data
-mapping steps. If the OpenAPI file supports more than one schema then {prodname}
+** {prodname} applies the schema specified in the OpenAPI specification to data
+mapping steps. If the OpenAPI specification supports more than one schema then {prodname}
 uses the TLS (HTTPS) schema.
 . Review the connector details and optionally upload an icon for the connector.
 If you do not upload an icon, {prodname} generates one.
@@ -64,9 +63,9 @@ To override a value obtained from
 the OpenAPI file, edit the field value that you want to change.
 After {prodname} creates a connector,
 you cannot change it. To effect a change, you need to upload an updated
-OpenAPI file so that {prodname} can create a new connector.
+OpenAPI specification so that {prodname} can create a new connector.
 . When you are satisfied with the connector details, click *Create API Connector*.
 {prodname} displays the new connector with the other connectors. 
 
 For details about using your new API connector, see
-{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis[{NameOfFuseOnlineConnectorGuide}, Connecting to REST APIs].
+{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis[Connecting Fuse Online to Applications and Services, Connecting to REST APIs]. 

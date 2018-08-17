@@ -1,20 +1,15 @@
 [id='adding-extensions']
-= Adding extensions
+= Adding and managing extensions
 
 Extensions let you add customizations to {prodname} so you can integrate 
 applications the way you want to. 
 
 The following topics provide details:
 
-* <<about-extensions>>
 * <<making-extensions-available>> 
 * <<managing-extensions>>
-* <<creating-jdbc-driver-library-extensions>>
 
-include::about_extensions.adoc[leveloffset=+1]
 
 include::making_extensions_available.adoc[leveloffset=+1]
 
 include::managing_extensions.adoc[leveloffset=+1]
-
-include::creating_jdbc_driver_library_extensions.adoc[leveloffset=+1]
