@@ -1,19 +1,25 @@
 [id='transforming-target-data']
-= Transforming target data
+= Transforming source or target data
 
-After you define a mapping, you can transform the data in the target
-field to define how you want to store the data. For example, you
-could specify the *Capitalize* transformation to ensure that the first
+In the data mapper, after you define a mapping, you can transform
+any field in the mapping. 
+Transforming a data field defines how you want to store the data. 
+For example, you could specify the *Capitalize* transformation to ensure that the first
 letter of a data value is uppercase.
 
-To transform a target field:
+To transform a field:
 
-. Create the mapping whose target you want to transform.
-. In that mapping, click the target field you want to transform.
-. In the *Mapping Details* panel, click *Add Transformation*.
-. Click the down caret to display the list of transformations.
-. Click the transformation you want to perform.
+. Map the fields. This can be a one-to-one mapping, a combination mapping,
+or a separation mapping.
+. In the *Mapping Details* panel, under *Sources* or under *Targets*, 
+in the box for the field that you want to transform, click the arrow that points to the
+trash can. This displays a field where you can select the transformation
+that you want the data mapper to perform.
+. Click in this field to display the list of transformations.
+. Click the transformation that you want to perform.
 . If the transformation requires any input parameters, specify them
 in the appropriate input fields.
+. To add another transformation, click the arrow that points to the
+trash can again. 
 
 See <<available-transformations>>.
