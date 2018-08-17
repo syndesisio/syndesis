@@ -34,7 +34,6 @@ import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.WithVersion;
 import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
 import org.immutables.value.Value;
 
@@ -47,12 +46,7 @@ public interface IntegrationBase extends WithResourceId, WithVersion, WithModifi
     }
 
     @Value.Default
-    default List<Connection> getConnections() {
-        return Collections.emptyList();
-    }
-
-    @Value.Default
-    default List<Step> getSteps() {
+    default List<Flow> getFlows() {
         return Collections.emptyList();
     }
 
@@ -61,14 +55,13 @@ public interface IntegrationBase extends WithResourceId, WithVersion, WithModifi
         return Collections.emptyList();
     }
 
-    Optional<Scheduler> getScheduler();
-
     @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
     Optional<String> getDescription();
 
     @JsonIgnore
     default Set<String> getUsedConnectorIds() {
-        return getSteps().stream()//
+        return getFlows().stream()//
+            .flatMap(f -> f.getSteps().stream())//
             .map(s -> s.getAction())//
             .filter(Optional::isPresent)//
             .map(Optional::get)//

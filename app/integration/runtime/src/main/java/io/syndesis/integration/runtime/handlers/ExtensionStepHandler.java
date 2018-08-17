@@ -44,7 +44,7 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
 
     @SuppressWarnings("PMD")
     @Override
-    public Optional<ProcessorDefinition<?>> handle(io.syndesis.common.model.integration.Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String stepIndex) {
+    public Optional<ProcessorDefinition<?>> handle(io.syndesis.common.model.integration.Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String flowIndex, String stepIndex) {
         ObjectHelper.notNull(route, "route");
 
         // Model

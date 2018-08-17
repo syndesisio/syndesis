@@ -25,18 +25,18 @@ import io.syndesis.common.model.integration.StepKind;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.util.ObjectHelper;
 
-public class DataMapperStepHandler implements IntegrationStepHandler{
+public class DataMapperStepHandler implements IntegrationStepHandler {
     @Override
     public boolean canHandle(Step step) {
         return StepKind.mapper == step.getStepKind();
     }
 
     @Override
-    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String stepIndex) {
+    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String flowIndex, String stepIndex) {
         ObjectHelper.notNull(route, "route");
 
         return Optional.of(
-            route.toF("atlas:mapping-step-%s.json?encoding=UTF-8&sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP, stepIndex)
+            route.toF("atlas:mapping-flow-%s-step-%s.json?encoding=UTF-8&sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP, flowIndex, stepIndex)
         );
     }
 }

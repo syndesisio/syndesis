@@ -55,7 +55,7 @@ public class SimpleEndpointStepHandler implements IntegrationStepHandler, Integr
 
     @SuppressWarnings({"unchecked", "PMD"})
     @Override
-    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, final String index) {
+    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, final String flowIndex, final String stepIndex) {
         // Model
         final ConnectorAction action = step.getActionAs(ConnectorAction.class).get();
         final ConnectorDescriptor descriptor = action.getDescriptor();
@@ -69,7 +69,7 @@ public class SimpleEndpointStepHandler implements IntegrationStepHandler, Integr
             .stream()
             .filter(action::isEndpointProperty)
             .filter(action::isSecret)
-            .forEach(e -> e.setValue(String.format("{{%s-%s.%s}}", componentScheme, index, e.getKey())));
+            .forEach(e -> e.setValue(String.format("{{%s-%s.%s}}", componentScheme, stepIndex, e.getKey())));
 
         // raw values.
         properties.entrySet()

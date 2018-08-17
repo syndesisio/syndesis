@@ -257,9 +257,9 @@ public class ConnectionHandler
         final List<Integration> integrations = integrationsResult.getItems();
 
         final Map<Connection, Long> connectionUsage = Stream.concat(
-            integrations.stream().flatMap(i -> i.getConnections().stream()),
-            integrations.stream().flatMap(i -> i.getSteps().stream())
-                .map(s -> s.getConnection()).filter(Optional::isPresent).map(Optional::get)
+            integrations.stream().flatMap(i -> i.getFlows().stream().flatMap(f -> f.getConnections().stream())),
+            integrations.stream().flatMap(i -> i.getFlows().stream().flatMap(f-> f.getSteps().stream())
+                .map(s -> s.getConnection()).filter(Optional::isPresent).map(Optional::get))
         ).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
         return connections.stream()//

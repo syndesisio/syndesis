@@ -165,7 +165,10 @@ public class IntegrationSupportHandler {
         for (String id : ids) {
             Integration integration = integrationHandler.getIntegration(id);
             addToExport(memJsonDB, integration);
-            resourceManager.collectDependencies(integration.getSteps(), true).stream()
+            resourceManager.collectDependencies(integration.getFlows().stream()
+                    .flatMap(flow -> flow.getSteps().stream())
+                    .collect(Collectors.toList()), true)
+                .stream()
                 .filter(Dependency::isExtension)
                 .map(Dependency::getId)
                 .forEach(extensions::add);
@@ -190,7 +193,7 @@ public class IntegrationSupportHandler {
 
     private void addToExport(JsonDB export, Integration integration) {
         addModelToExport(export, integration);
-        for (Step step : integration.getSteps()) {
+        integration.getFlows().stream().flatMap(flow -> flow.getSteps().stream()).forEach(step -> {
             Optional<Connection> c = step.getConnection();
             if (c.isPresent()) {
                 Connection connection = c.get();
@@ -205,7 +208,7 @@ public class IntegrationSupportHandler {
                 Extension extension = e.get();
                 addModelToExport(export, extension);
             }
-        }
+        });
     }
 
     private static <T extends WithId<T>> void addModelToExport(JsonDB export, T model) {
@@ -366,21 +369,22 @@ public class IntegrationSupportHandler {
             builder.name(integrationName);
         }
 
-        // sync renames of other objects
-        // connections
-        builder.connections(integration.getConnections().stream()
-                .map(c -> renameIfNeeded(c, renamedIds, RENAME_CONNECTION))
-                .collect(Collectors.toList()));
-
-        // steps
-        builder.steps(integration.getSteps().stream()
-                .map(s -> new Step.Builder().createFrom(s)
-                        // step connections
-                        .connection(s.getConnection().map(c -> renameIfNeeded(c, renamedIds, RENAME_CONNECTION)))
-                        // step extensions
-                        .extension(s.getExtension().map(e -> renameIfNeeded(e, renamedIds, RENAME_EXTENSION)))
-                        .build())
-                .collect(Collectors.toList()));
+        // sync renames of other connections and steps
+        builder.flows(integration.getFlows().stream()
+            .map(flow -> flow.builder()
+                .connections(flow.getConnections().stream()
+                    .map(c -> renameIfNeeded(c, renamedIds, RENAME_CONNECTION))
+                    .collect(Collectors.toList()))
+                .steps(flow.getSteps().stream()
+                    .map(s -> new Step.Builder().createFrom(s)
+                            // step connections
+                            .connection(s.getConnection().map(c -> renameIfNeeded(c, renamedIds, RENAME_CONNECTION)))
+                            // step extensions
+                            .extension(s.getExtension().map(e -> renameIfNeeded(e, renamedIds, RENAME_EXTENSION)))
+                            .build())
+                    .collect(Collectors.toList()))
+                .build())
+            .collect(Collectors.toList()));
     }
 
     private <T extends WithId<T> & WithName> T renameIfNeeded(T model, Map<String, String> renames, BiFunction<T,

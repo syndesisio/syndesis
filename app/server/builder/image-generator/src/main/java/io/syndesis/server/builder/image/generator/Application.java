@@ -60,6 +60,7 @@ import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 
@@ -176,7 +177,7 @@ public class Application implements ApplicationRunner {
             .id("Integration")
             .name("Integration")
             .description("This integration is used to prime the .m2 repo")
-            .steps(steps)
+            .addFlow(new Flow.Builder().steps(steps).build())
             .build();
 
         generate(integration, project);

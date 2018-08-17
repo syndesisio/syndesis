@@ -205,7 +205,7 @@ public class ProjectGeneratorTest {
         assertThat(runtimeDir.resolve("extensions/my-extension-1.jar")).exists();
         assertThat(runtimeDir.resolve("extensions/my-extension-2.jar")).exists();
         assertThat(runtimeDir.resolve("extensions/my-extension-3.jar")).exists();
-        assertThat(runtimeDir.resolve("src/main/resources/mapping-step-2.json")).exists();
+        assertThat(runtimeDir.resolve("src/main/resources/mapping-flow-1-step-2.json")).exists();
     }
 
 

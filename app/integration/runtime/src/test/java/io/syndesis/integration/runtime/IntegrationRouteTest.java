@@ -17,13 +17,17 @@ package io.syndesis.integration.runtime;
 
 import java.util.Collections;
 
+import static java.util.Collections.singleton;
+
 import io.syndesis.common.model.Split;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.PipelineDefinition;
@@ -82,12 +86,17 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
                             .build())
                         .build());
 
-                return new Integration.Builder()
-                    .createFrom(integration)
+                final Flow flow = integration.getFlows().get(0);
+                final Flow flowWithScheduler = flow.builder()
                     .scheduler(new Scheduler.Builder()
                         .type(Scheduler.Type.timer)
                         .expression("1s")
                         .build())
+                    .build();
+
+                return new Integration.Builder()
+                    .createFrom(integration)
+                    .flows(singleton(flowWithScheduler))
                     .build();
             }
         };
@@ -155,9 +164,7 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
                             .build())
                         .build());
 
-                return new Integration.Builder()
-                    .createFrom(integration)
-                    .build();
+                return integration;
             }
         };
 
@@ -210,12 +217,17 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
                             .build())
                         .build());
 
-                return new Integration.Builder()
-                    .createFrom(integration)
+                final Flow flow = integration.getFlows().get(0);
+                final Flow flowWithScheduler = flow.builder()
                     .scheduler(new Scheduler.Builder()
                         .type(Scheduler.Type.timer)
                         .expression("1s")
                         .build())
+                    .build();
+
+                return new Integration.Builder()
+                    .createFrom(integration)
+                    .flows(singleton(flowWithScheduler))
                     .build();
             }
         };

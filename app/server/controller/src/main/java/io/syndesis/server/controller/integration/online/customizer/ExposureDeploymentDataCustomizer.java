@@ -37,8 +37,7 @@ public class ExposureDeploymentDataCustomizer implements DeploymentDataCustomize
         Exposure exposure = Exposure.NONE;
 
         boolean needsDirectExposure = integrationDeployment.getSpec()
-            .getSteps()
-            .stream()
+            .getFlows().stream().flatMap(f -> f.getSteps().stream())
             .flatMap(step -> Optionals.asStream(step.getAction()))
             .flatMap(action -> action.getTags().stream())
             .anyMatch("expose"::equals);

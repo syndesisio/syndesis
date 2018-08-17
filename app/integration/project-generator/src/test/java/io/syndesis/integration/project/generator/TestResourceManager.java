@@ -28,6 +28,7 @@ import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import org.apache.commons.io.IOUtils;
@@ -98,7 +99,9 @@ final class TestResourceManager implements IntegrationResourceManager {
             .id("test-integration")
             .name("Test Integration")
             .description("This is a test integration!")
-            .steps(Arrays.asList(steps))
+            .addFlow(new Flow.Builder()
+                    .steps(Arrays.asList(steps))
+                .build())
             .build();
     }
 }

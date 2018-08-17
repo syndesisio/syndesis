@@ -17,7 +17,9 @@ package io.syndesis.server.update.controller.bulletin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -33,6 +35,7 @@ import io.syndesis.common.model.bulletin.LeveledMessage;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.util.CollectionsUtils;
@@ -63,12 +66,11 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
     protected List<IntegrationBulletinBoard> compute(ChangeEvent event) {
         final List<IntegrationBulletinBoard> boards = new ArrayList<>();
         final DataManager dataManager = getDataManager();
-        final List<Integration> integrations = dataManager.fetchAll(Integration.class).getItems();
+        final Iterator<Integration> integrations = dataManager.fetchAll(Integration.class).getItems().iterator();
         final List<LeveledMessage> messages = new ArrayList<>();
 
-        for (int i = 0; i < integrations.size(); i++) {
-            final Integration integration = integrations.get(i);
-            final List<Step> steps = integration.getSteps();
+        while (integrations.hasNext()) {
+            final Integration integration = integrations.next();
             final String id = integration.getId().get();
 
             final IntegrationBulletinBoard board = dataManager.fetchByPropertyValue(IntegrationBulletinBoard.class, "targetResourceId", id).orElse(null);
@@ -84,160 +86,162 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                     .createdAt(System.currentTimeMillis());
             }
 
-            // reuse messages
-            messages.clear();
+            final Iterator<Flow> flows = integration.getFlows().iterator();
 
-            // the following code is quite ugly but the integration model duplicates
-            // the resources definition in every step so we definitively need to
-            // shrink the model and avoid duplication !
-            //
-            // A step should only include the user defined property and a reference
-            // to the resources the properties apply to
-            for (int s = 0; s < steps.size(); s++) {
-                final int index = s;
-                final Step step = steps.get(s);
-                final Supplier<LeveledMessage.Builder> supplier = () -> new LeveledMessage.Builder().putMetadata("step", step.getId().orElse("step-" + index));
+            while (flows.hasNext()) {
+                final ListIterator<Step> steps = flows.next().getSteps().listIterator();
 
-                if (!step.getAction().isPresent()) {
-                    continue;
+                // the following code is quite ugly but the integration model duplicates
+                // the resources definition in every step so we definitively need to
+                // shrink the model and avoid duplication !
+                //
+                // A step should only include the user defined property and a reference
+                // to the resources the properties apply to
+                while (steps.hasNext()) {
+                    final Step step = steps.next();
+                    final Supplier<LeveledMessage.Builder> supplier = () -> new LeveledMessage.Builder().putMetadata("step", step.getId().orElse("step-" + steps.nextIndex()));
+
+                    if (!step.getAction().isPresent()) {
+                        continue;
+                    }
+
+                    // **********************
+                    // Integration
+                    // **********************
+
+                    messages.addAll(computeValidatorMessages(supplier, integration));
+
+                    // **********************
+                    // Extension Action
+                    // **********************
+
+                    step.getAction().filter(StepAction.class::isInstance).map(StepAction.class::cast).ifPresent(action -> {
+                        if (!step.getExtension().isPresent()) {
+                            return;
+                        }
+
+                        final Extension extension = step.getExtension().get();
+
+                        // When an extension is updated a new entity is written to the db
+                        // so we can't simply lookup by ID but whe need to search for the
+                        // latest installed extension.
+                        //
+                        // This fetchIdsByPropertyValue is not really optimized as it
+                        // ends up in multiple statements sent to the db, we maybe need
+                        // to have a better support for this use-case.
+                        Set<String> ids = dataManager.fetchIdsByPropertyValue(Extension.class,
+                            "extensionId", extension.getExtensionId(),
+                            "status", Extension.Status.Installed.name()
+                        );
+
+                        // No installed extension found, this happen if the extension
+                        // has been deleted.
+                        if (ids.size() == 0) {
+                            messages.add(
+                                supplier.get()
+                                    .level(LeveledMessage.Level.WARN)
+                                    .code(LeveledMessage.Code.SYNDESIS004)
+                                    .build()
+                            );
+
+                            return;
+                        }
+
+                        // More than one installed extension found, this should not
+                        // happen unless something wrong happen at extension activation
+                        // phase
+                        if (ids.size() > 1) {
+                            messages.add(
+                                supplier.get()
+                                    .level(LeveledMessage.Level.WARN)
+                                    .code(LeveledMessage.Code.SYNDESIS010)
+                                    .build()
+                            );
+
+                            return;
+                        }
+
+                        Extension newExtension = dataManager.fetch(Extension.class, ids.iterator().next());
+                        if (newExtension == null) {
+                            messages.add(
+                                supplier.get()
+                                    .level(LeveledMessage.Level.WARN)
+                                    .code(LeveledMessage.Code.SYNDESIS004)
+                                    .build()
+                            );
+                        } else {
+                            Action newAction = newExtension.findActionById(action.getId().get()).orElse(null);
+                            if (newAction == null) {
+                                messages.add(
+                                    supplier.get()
+                                        .level(LeveledMessage.Level.WARN)
+                                        .code(LeveledMessage.Code.SYNDESIS005)
+                                        .build()
+                                );
+                            } else {
+                                messages.addAll(computePropertiesDiffMessages(supplier, action.getProperties(), newAction.getProperties()));
+                                messages.addAll(computeMissingMandatoryPropertiesMessages(supplier, newAction.getProperties(), step.getConfiguredProperties()));
+                                messages.addAll(computeSecretsUpdateMessages(supplier, newAction.getProperties(), step.getConfiguredProperties()));
+                            }
+                        }
+                    });
+
+                    // **********************
+                    // Connector Action
+                    // **********************
+
+                    step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).ifPresent(action -> {
+                        if (!step.getConnection().isPresent()) {
+                            return;
+                        }
+
+                        final Connection connection = step.getConnection().get();
+
+                        if (connection.getId().isPresent()) {
+                            Connection newConnection = dataManager.fetch(Connection.class, connection.getId().get());
+
+                            // There's not connection with the given id so this means
+                            // that the connection has been deleted or is is not present
+                            // in the imported extension
+                            if (newConnection == null) {
+                                messages.add(
+                                    supplier.get()
+                                        .level(LeveledMessage.Level.WARN)
+                                        .code(LeveledMessage.Code.SYNDESIS009)
+                                        .build()
+                                );
+                            }
+                        }
+
+                        Connector newConnector = dataManager.fetch(Connector.class, connection.getConnectorId());
+                        if (newConnector == null) {
+                            messages.add(
+                                supplier.get()
+                                    .level(LeveledMessage.Level.WARN)
+                                    .code(LeveledMessage.Code.SYNDESIS003)
+                                    .build()
+                            );
+                        } else {
+                            Action newAction = newConnector.findActionById(action.getId().get()).orElse(null);
+                            if (newAction == null) {
+                                messages.add(
+                                    supplier.get()
+                                        .level(LeveledMessage.Level.WARN)
+                                        .code(LeveledMessage.Code.SYNDESIS005)
+                                        .build()
+                                );
+                            } else {
+                                Map<String, String> configuredProperties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
+
+                                messages.addAll(computeValidatorMessages(supplier, connection));
+                                messages.addAll(computePropertiesDiffMessages(supplier, action.getProperties(), newAction.getProperties()));
+                                messages.addAll(computeMissingMandatoryPropertiesMessages(supplier, newAction.getProperties(), configuredProperties));
+                                messages.addAll(computeSecretsUpdateMessages(supplier, newAction.getProperties(), configuredProperties));
+                            }
+                        }
+                    });
+
                 }
-
-                // **********************
-                // Integration
-                // **********************
-
-                messages.addAll(computeValidatorMessages(supplier, integration));
-
-                // **********************
-                // Extension Action
-                // **********************
-
-                step.getAction().filter(StepAction.class::isInstance).map(StepAction.class::cast).ifPresent(action -> {
-                    if (!step.getExtension().isPresent()) {
-                        return;
-                    }
-
-                    final Extension extension = step.getExtension().get();
-
-                    // When an extension is updated a new entity is written to the db
-                    // so we can't simply lookup by ID but whe need to search for the
-                    // latest installed extension.
-                    //
-                    // This fetchIdsByPropertyValue is not really optimized as it
-                    // ends up in multiple statements sent to the db, we maybe need
-                    // to have a better support for this use-case.
-                    Set<String> ids = dataManager.fetchIdsByPropertyValue(Extension.class,
-                        "extensionId", extension.getExtensionId(),
-                        "status", Extension.Status.Installed.name()
-                    );
-
-                    // No installed extension found, this happen if the extension
-                    // has been deleted.
-                    if (ids.size() == 0) {
-                        messages.add(
-                            supplier.get()
-                                .level(LeveledMessage.Level.WARN)
-                                .code(LeveledMessage.Code.SYNDESIS004)
-                                .build()
-                        );
-
-                        return;
-                    }
-
-                    // More than one installed extension found, this should not
-                    // happen unless something wrong happen at extension activation
-                    // phase
-                    if (ids.size() > 1) {
-                        messages.add(
-                            supplier.get()
-                                .level(LeveledMessage.Level.WARN)
-                                .code(LeveledMessage.Code.SYNDESIS010)
-                                .build()
-                        );
-
-                        return;
-                    }
-
-                    Extension newExtension = dataManager.fetch(Extension.class, ids.iterator().next());
-                    if (newExtension == null) {
-                        messages.add(
-                            supplier.get()
-                                .level(LeveledMessage.Level.WARN)
-                                .code(LeveledMessage.Code.SYNDESIS004)
-                                .build()
-                        );
-                    } else {
-                        Action newAction = newExtension.findActionById(action.getId().get()).orElse(null);
-                        if (newAction == null) {
-                            messages.add(
-                                supplier.get()
-                                    .level(LeveledMessage.Level.WARN)
-                                    .code(LeveledMessage.Code.SYNDESIS005)
-                                    .build()
-                            );
-                        } else {
-                            messages.addAll(computePropertiesDiffMessages(supplier, action.getProperties(), newAction.getProperties()));
-                            messages.addAll(computeMissingMandatoryPropertiesMessages(supplier, newAction.getProperties(), step.getConfiguredProperties()));
-                            messages.addAll(computeSecretsUpdateMessages(supplier, newAction.getProperties(), step.getConfiguredProperties()));
-                        }
-                    }
-                });
-
-                // **********************
-                // Connector Action
-                // **********************
-
-                step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).ifPresent(action -> {
-                    if (!step.getConnection().isPresent()) {
-                        return;
-                    }
-
-                    final Connection connection = step.getConnection().get();
-
-                    if (connection.getId().isPresent()) {
-                        Connection newConnection = dataManager.fetch(Connection.class, connection.getId().get());
-
-                        // There's not connection with the given id so this means
-                        // that the connection has been deleted or is is not present
-                        // in the imported extension
-                        if (newConnection == null) {
-                            messages.add(
-                                supplier.get()
-                                    .level(LeveledMessage.Level.WARN)
-                                    .code(LeveledMessage.Code.SYNDESIS009)
-                                    .build()
-                            );
-                        }
-                    }
-
-                    Connector newConnector = dataManager.fetch(Connector.class, connection.getConnectorId());
-                    if (newConnector == null) {
-                        messages.add(
-                            supplier.get()
-                                .level(LeveledMessage.Level.WARN)
-                                .code(LeveledMessage.Code.SYNDESIS003)
-                                .build()
-                        );
-                    } else {
-                        Action newAction = newConnector.findActionById(action.getId().get()).orElse(null);
-                        if (newAction == null) {
-                            messages.add(
-                                supplier.get()
-                                    .level(LeveledMessage.Level.WARN)
-                                    .code(LeveledMessage.Code.SYNDESIS005)
-                                    .build()
-                            );
-                        } else {
-                            Map<String, String> configuredProperties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
-
-                            messages.addAll(computeValidatorMessages(supplier, connection));
-                            messages.addAll(computePropertiesDiffMessages(supplier, action.getProperties(), newAction.getProperties()));
-                            messages.addAll(computeMissingMandatoryPropertiesMessages(supplier, newAction.getProperties(), configuredProperties));
-                            messages.addAll(computeSecretsUpdateMessages(supplier, newAction.getProperties(), configuredProperties));
-                        }
-                    }
-                });
-
             }
 
             builder.errors(countMessagesWithLevel(LeveledMessage.Level.ERROR, messages));
@@ -251,6 +255,9 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
             if (!updated.equals(board)) {
                 boards.add(builder.updatedAt(System.currentTimeMillis()).build());
             }
+
+            // reuse messages
+            messages.clear();
         }
 
         return boards;

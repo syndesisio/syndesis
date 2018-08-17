@@ -18,12 +18,14 @@ package io.syndesis.server.endpoint.v1.handler.integration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
@@ -40,9 +42,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import com.google.common.collect.MapDifference;
+import com.google.common.collect.Maps;
 
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.swagger.annotations.Api;
@@ -63,6 +64,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.filter.FilterOptions;
 import io.syndesis.common.model.filter.Op;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentOverview;
@@ -90,8 +92,10 @@ import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.util.DataManagerSupport;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
-import com.google.common.collect.MapDifference;
-import com.google.common.collect.Maps;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 @SuppressWarnings("PMD.GodClass")
 @Path("/integrations")
@@ -346,15 +350,20 @@ public class IntegrationHandler extends BaseHandler
         builder.currentState(IntegrationDeploymentState.Unpublished);
         builder.targetState(IntegrationDeploymentState.Unpublished);
 
-        // Get the latest connection.
-        builder.connections(integration.getConnections().stream()
-            .map(this::toCurrentConnection)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+        // Get the latest connections and steps
+        builder.flows(integration.getFlows().stream()
+            .map(flow -> new Flow.Builder()
+                    .createFrom(flow)
+                    .connections(flow.getConnections().stream()
+                        .map(this::toCurrentConnection)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList()))
+                    .steps(flow.getSteps().stream()
+                        .map(this::toCurrentSteps)
+                        .collect(Collectors.toList()))
+                    .build())
             .collect(Collectors.toList()));
-
-        // Get the latest steps.
-        builder.steps(integration.getSteps().stream().map(this::toCurrentSteps).collect(Collectors.toList()));
 
         IntegrationDeployment deployed = null;
         List<IntegrationDeployment> activeDeployments = new ArrayList<>();
@@ -400,22 +409,40 @@ public class IntegrationHandler extends BaseHandler
     }
 
     private static boolean computeDraft(final Integration current, final Integration deployed) {
-        final List<Step> currentSteps = current.getSteps();
-        final List<Step> deployedSteps = deployed.getSteps();
-        if (currentSteps.size() != deployedSteps.size()) {
+        final List<Flow> currentFlows = current.getFlows();
+        final List<Flow> deployedFlows = deployed.getFlows();
+
+        if (currentFlows.size() != deployedFlows.size()) {
             return true;
         }
 
-        for (int i = 0; i < currentSteps.size(); i++) {
-            final Step currentStep = currentSteps.get(i);
-            final Step deployedStep = deployedSteps.get(i);
+        final Iterator<Flow> currentFlowIterator = currentFlows.iterator();
+        final Iterator<Flow> deployedFlowIterator = deployedFlows.iterator();
+        while (currentFlowIterator.hasNext()) {
+            // makes the assumption that flows are ordered
+            final Flow currentFlow = currentFlowIterator.next();
+            final Flow deployedFlow = deployedFlowIterator.next();
 
-            if (currentStep.getStepKind() != deployedStep.getStepKind()) {
+            final List<Step> currentSteps = currentFlow.getSteps();
+            final List<Step> deployedSteps = deployedFlow.getSteps();
+            if (currentSteps.size() != deployedSteps.size()) {
                 return true;
             }
 
-            if (!currentStep.getConfiguredProperties().equals(deployedStep.getConfiguredProperties())) {
-                return true;
+            final Iterator<Step> currentStepsIterator = currentSteps.iterator();
+            final Iterator<Step> deployedStepsIterator = deployedSteps.iterator();
+
+            while (currentStepsIterator.hasNext()) {
+                final Step currentStep = currentStepsIterator.next();
+                final Step deployedStep = deployedStepsIterator.next();
+
+                if (currentStep.getStepKind() != deployedStep.getStepKind()) {
+                    return true;
+                }
+
+                if (!currentStep.getConfiguredProperties().equals(deployedStep.getConfiguredProperties())) {
+                    return true;
+                }
             }
         }
 

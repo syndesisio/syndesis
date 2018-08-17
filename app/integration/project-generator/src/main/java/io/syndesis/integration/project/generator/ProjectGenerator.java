@@ -25,7 +25,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -56,6 +58,7 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
@@ -112,84 +115,90 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
     public Properties generateApplicationProperties(final Integration integrationDefinition) {
         final Integration integration = sanitize(integrationDefinition, resourceManager);
         final Properties properties = new Properties();
-        final List<? extends Step> steps = integration.getSteps();
 
-        for (int i = 0; i < steps.size(); i++) {
-            final Step step = steps.get(i);
+        final Iterator<Flow> flows = integration.getFlows().iterator();
+        while (flows.hasNext()) {
+            final Flow flow = flows.next();
 
-            // Check if a step is of supported type.
-            if(StepKind.endpoint != step.getStepKind()) {
-                continue;
-            }
+            final List<Step> steps = flow.getSteps();
 
-            // Check if a step has the required options
-            if(step.getAction().filter(ConnectorAction.class::isInstance).isPresent() && step.getConnection().isPresent()) {
-                final String index = Integer.toString(i + 1);
-                final Connection connection = step.getConnection().get();
-                final ConnectorAction action = ConnectorAction.class.cast(step.getAction().get());
-                final ConnectorDescriptor descriptor = action.getDescriptor();
-                final Connector connector = resourceManager.loadConnector(connection).orElseThrow(
-                    () -> new IllegalArgumentException("No connector with id: " + connection.getConnectorId())
-                );
+            for (int i = 0; i < steps.size(); i++) {
+                final Step step = steps.get(i);
 
-                if (connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()) {
-                    // Grab the component scheme from the component descriptor or
-                    // from the connector
-                    final String componentScheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
-                    final Map<String, ConfigurationProperty> configurationProperties = CollectionsUtils.aggregate(connector.getProperties(), action.getProperties());
+                // Check if a step is of supported type.
+                if(StepKind.endpoint != step.getStepKind()) {
+                    continue;
+                }
 
-                    // Workaround for https://github.com/syndesisio/syndesis/issues/1713
-                    for (Map.Entry<String, ConfigurationProperty> entry: configurationProperties.entrySet()) {
-                        if (entry.getValue() != null && entry.getValue().getDefaultValue() != null && !entry.getValue().getDefaultValue().isEmpty()) {
-                            if (connector.isSecret(entry.getKey()) || action.isSecret(entry.getKey())) {
-                                addDecryptedKeyProperty(properties, index, componentScheme, entry.getKey(), entry.getValue().getDefaultValue());
+                // Check if a step has the required options
+                if(step.getAction().filter(ConnectorAction.class::isInstance).isPresent() && step.getConnection().isPresent()) {
+                    final String index = Integer.toString(i + 1);
+                    final Connection connection = step.getConnection().get();
+                    final ConnectorAction action = ConnectorAction.class.cast(step.getAction().get());
+                    final ConnectorDescriptor descriptor = action.getDescriptor();
+                    final Connector connector = resourceManager.loadConnector(connection).orElseThrow(
+                        () -> new IllegalArgumentException("No connector with id: " + connection.getConnectorId())
+                    );
+
+                    if (connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()) {
+                        // Grab the component scheme from the component descriptor or
+                        // from the connector
+                        final String componentScheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
+                        final Map<String, ConfigurationProperty> configurationProperties = CollectionsUtils.aggregate(connector.getProperties(), action.getProperties());
+
+                        // Workaround for https://github.com/syndesisio/syndesis/issues/1713
+                        for (Map.Entry<String, ConfigurationProperty> entry: configurationProperties.entrySet()) {
+                            if (entry.getValue() != null && entry.getValue().getDefaultValue() != null && !entry.getValue().getDefaultValue().isEmpty()) {
+                                if (connector.isSecret(entry.getKey()) || action.isSecret(entry.getKey())) {
+                                    addDecryptedKeyProperty(properties, index, componentScheme, entry.getKey(), entry.getValue().getDefaultValue());
+                                }
                             }
                         }
-                    }
-                    for (Map.Entry<String, String> entry: connection.getConfiguredProperties().entrySet()) {
-                        if (connector.isSecret(entry) || action.isSecret(entry)) {
-                            addDecryptedKeyProperty(properties, index, componentScheme, entry.getKey(), entry.getValue());
-                        }
-                    }
-                    for (Map.Entry<String, String> entry: step.getConfiguredProperties().entrySet()) {
-                        if (connector.isSecret(entry) || action.isSecret(entry)) {
-                            addDecryptedKeyProperty(properties, index, componentScheme, entry.getKey(), entry.getValue());
-                        }
-                    }
-                } else {
-                    // The component scheme is defined as camel connector prefix
-                    // for 'old' style connectors.
-                    final String componentScheme = descriptor.getCamelConnectorPrefix();
-
-                    // endpoint secrets
-                    Stream.of(connector, connection, step)
-                        .filter(WithConfiguredProperties.class::isInstance)
-                        .map(WithConfiguredProperties.class::cast)
-                        .map(WithConfiguredProperties::getConfiguredProperties)
-                        .flatMap(map -> map.entrySet().stream())
-                        .filter(Predicates.or(connector::isEndpointProperty, action::isEndpointProperty))
-                        .filter(Predicates.or(connector::isSecret, action::isSecret))
-                        .forEach(
-                            e -> {
-                                addDecryptedKeyProperty(properties, index, componentScheme, e.getKey(), e.getValue());
+                        for (Map.Entry<String, String> entry: connection.getConfiguredProperties().entrySet()) {
+                            if (connector.isSecret(entry) || action.isSecret(entry)) {
+                                addDecryptedKeyProperty(properties, index, componentScheme, entry.getKey(), entry.getValue());
                             }
-                        );
-
-                    // Component properties triggers connectors aliasing so we
-                    // can have multiple instances of the same connectors
-                    Stream.of(connector, connection, step)
-                        .filter(WithConfiguredProperties.class::isInstance)
-                        .map(WithConfiguredProperties.class::cast)
-                        .map(WithConfiguredProperties::getConfiguredProperties)
-                        .flatMap(map -> map.entrySet().stream())
-                        .filter(Predicates.or(connector::isComponentProperty, action::isComponentProperty))
-                        .forEach(
-                            e -> {
-                                String propKeyPrefix = String.format("%s.configurations.%s", componentScheme, componentScheme);
-                                addDecryptedKeyProperty(properties, index, propKeyPrefix, e.getKey(), e.getValue());
+                        }
+                        for (Map.Entry<String, String> entry: step.getConfiguredProperties().entrySet()) {
+                            if (connector.isSecret(entry) || action.isSecret(entry)) {
+                                addDecryptedKeyProperty(properties, index, componentScheme, entry.getKey(), entry.getValue());
                             }
-                        );
+                        }
+                    } else {
+                        // The component scheme is defined as camel connector prefix
+                        // for 'old' style connectors.
+                        final String componentScheme = descriptor.getCamelConnectorPrefix();
 
+                        // endpoint secrets
+                        Stream.of(connector, connection, step)
+                            .filter(WithConfiguredProperties.class::isInstance)
+                            .map(WithConfiguredProperties.class::cast)
+                            .map(WithConfiguredProperties::getConfiguredProperties)
+                            .flatMap(map -> map.entrySet().stream())
+                            .filter(Predicates.or(connector::isEndpointProperty, action::isEndpointProperty))
+                            .filter(Predicates.or(connector::isSecret, action::isSecret))
+                            .forEach(
+                                e -> {
+                                    addDecryptedKeyProperty(properties, index, componentScheme, e.getKey(), e.getValue());
+                                }
+                            );
+
+                        // Component properties triggers connectors aliasing so we
+                        // can have multiple instances of the same connectors
+                        Stream.of(connector, connection, step)
+                            .filter(WithConfiguredProperties.class::isInstance)
+                            .map(WithConfiguredProperties.class::cast)
+                            .map(WithConfiguredProperties::getConfiguredProperties)
+                            .flatMap(map -> map.entrySet().stream())
+                            .filter(Predicates.or(connector::isComponentProperty, action::isComponentProperty))
+                            .forEach(
+                                e -> {
+                                    String propKeyPrefix = String.format("%s.configurations.%s", componentScheme, componentScheme);
+                                    addDecryptedKeyProperty(properties, index, propKeyPrefix, e.getKey(), e.getValue());
+                                }
+                            );
+
+                    }
                 }
             }
         }
@@ -273,18 +282,21 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 addResource(tos, "configuration/settings.xml", "templates/settings.xml");
                 addAdditionalResources(tos);
 
-                List<Step> steps = integration.getSteps();
-                for (int i = 0; i < steps.size(); i++) {
-                    Step step = steps.get(i);
-                    if (StepKind.mapper == step.getStepKind()) {
-                        final Map<String, String> properties = step.getConfiguredProperties();
-                        final String mapping = properties.get("atlasmapping");
+                final ListIterator<Flow> flows = integration.getFlows().listIterator();
+                while (flows.hasNext()) {
+                    final Flow flow = flows.next();
+                    final ListIterator<Step> steps = flow.getSteps().listIterator();
+                    while (steps.hasNext()) {
+                        Step step = steps.next();
+                        if (StepKind.mapper == step.getStepKind()) {
+                            final Map<String, String> properties = step.getConfiguredProperties();
+                            final String mapping = properties.get("atlasmapping");
 
-                        if (mapping != null) {
-                            final String index = Integer.toString(i+1);
-                            final String resource = "mapping-step-"  +index + ".json";
+                            if (mapping != null) {
+                                final String resource = "mapping-flow-" + flows.nextIndex() + "-step-"  + steps.nextIndex() + ".json";
 
-                            addTarEntry(tos, "src/main/resources/" + resource, mapping.getBytes(StandardCharsets.UTF_8));
+                                addTarEntry(tos, "src/main/resources/" + resource, mapping.getBytes(StandardCharsets.UTF_8));
+                            }
                         }
                     }
                 }
