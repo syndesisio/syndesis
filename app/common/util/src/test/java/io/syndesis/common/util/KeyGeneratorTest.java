@@ -20,6 +20,7 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
 import org.assertj.core.data.Offset;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,6 +41,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Unit tests for KeyGenerator
  */
 public class KeyGeneratorTest {
+
+    @Before
+    public void resetToDefaults() {
+        KeyGenerator.clock = KeyGenerator.DEFAULT_CLOCK;
+        KeyGenerator.randomnessByte = (byte) ThreadLocalRandom.current().nextInt();
+    }
 
     /**
      * Generate keys in a tight loop and verify that we don't generate a dup key
@@ -86,5 +94,22 @@ public class KeyGeneratorTest {
         String key = KeyGenerator.createKey();
         long t2 = KeyGenerator.getKeyTimeMillis(key);
         assertThat(t2).isCloseTo(t1, Offset.offset(500L));
+    }
+
+    @Test
+    public void shouldGenerateKeysInChronologicalOrder() {
+        for (int rnd = Byte.MIN_VALUE; rnd <= Byte.MAX_VALUE; rnd++) {
+            KeyGenerator.randomnessByte = (byte) rnd;
+
+            // 2018-08-17 12:38:48
+            KeyGenerator.clock = () -> 1534509528000L;
+            final String newer = KeyGenerator.createKey();
+
+            // 2018-08-14 11:22:06
+            KeyGenerator.clock = () -> 1534245726000L;
+            final String older = KeyGenerator.createKey();
+
+            assertThat(newer.compareTo(older)).isGreaterThan(0);
+        }
     }
 }
