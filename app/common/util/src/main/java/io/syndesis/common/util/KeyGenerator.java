@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.LongSupplier;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -36,13 +37,17 @@ import static java.lang.System.currentTimeMillis;
  */
 public final class KeyGenerator {
 
-    private static final AtomicLong LAST_TIMESTAMP = new AtomicLong(currentTimeMillis());
-    private static final byte RANDOMNESS_BYTE;
+    static final LongSupplier DEFAULT_CLOCK = () -> currentTimeMillis();
+
+    static LongSupplier clock = DEFAULT_CLOCK;
+
+    private static final AtomicLong LAST_TIMESTAMP = new AtomicLong(clock.getAsLong());
+    static byte randomnessByte;
     private static final AtomicLong RANDOMNESS_LONG;
 
     static {
         final Random random = ThreadLocalRandom.current();
-        RANDOMNESS_BYTE = (byte) random.nextInt();
+        randomnessByte = (byte) random.nextInt();
         RANDOMNESS_LONG = new AtomicLong(random.nextLong());
     }
 
@@ -53,11 +58,11 @@ public final class KeyGenerator {
      * Generates a new key.
      */
     public static String createKey() {
-        final long now = currentTimeMillis();
+        final long now = clock.getAsLong();
 
         final ByteBuffer buffer = ByteBuffer.wrap(new byte[8 + 1 + 8]);
         buffer.putLong(now);
-        buffer.put(RANDOMNESS_BYTE);
+        buffer.put(randomnessByte);
 
         buffer.putLong(getRandomPart(now));
 
