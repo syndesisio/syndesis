@@ -28,6 +28,7 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
@@ -126,7 +127,7 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
             .id("test-integration")
             .name("Test Integration")
             .description("This is a test integration!")
-            .steps(createSteps())
+            .addFlow(new Flow.Builder().steps(createSteps()).build())
             .build();
     }
 

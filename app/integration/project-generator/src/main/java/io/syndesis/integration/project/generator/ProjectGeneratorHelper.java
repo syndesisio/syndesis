@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import com.github.mustachejava.Mustache;
@@ -33,6 +34,7 @@ import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
@@ -138,74 +140,83 @@ public final class ProjectGeneratorHelper {
     }
 
     public static Integration sanitize(Integration integration, IntegrationResourceManager resourceManager) {
-        final List<Step> steps = new ArrayList<>(integration.getSteps());
-        if (steps.isEmpty()) {
+        if (integration.getFlows().isEmpty()) {
             return integration;
         }
 
-        for (int i = 0; i < steps.size(); i++) {
-            final Step source = steps.get(i);
+        final List<Flow> replacementFlows = new ArrayList<>(integration.getFlows());
+        final ListIterator<Flow> flows = replacementFlows.listIterator();
+        while (flows.hasNext()) {
+            final Flow flow = flows.next();
+            if (flow.getSteps().isEmpty()) {
+                continue;
+            }
 
-            if (source.getConnection().isPresent()) {
-                final Connection connection = source.getConnection().get();
+            final List<Step> replacementSteps = new ArrayList<>(flow.getSteps());
+            final ListIterator<Step> steps = replacementSteps.listIterator();
 
-                // If connector is not set, fetch it from data source and update connection
-                if (!connection.getConnector().isPresent()) {
-                    Connector connector = resourceManager.loadConnector(connection.getConnectorId()).orElseThrow(
-                        () -> new IllegalArgumentException("Unable to fetch connector: " + connection.getConnectorId())
-                    );
+            while (steps.hasNext()) {
+                final Step source = steps.next();
 
-                    // Add missing connector to connection.
-                    Connection newConnection = new Connection.Builder()
-                        .createFrom(connection)
-                        .connector(connector)
-                        .build();
+                if (source.getConnection().isPresent()) {
+                    final Connection connection = source.getConnection().get();
 
-                    // Replace with the new 'sanitized' step
-                    steps.set(
-                        i,
-                        new Step.Builder()
-                            .createFrom(source)
-                            .connection(newConnection)
-                            .build()
-                    );
+                    // If connector is not set, fetch it from data source and update connection
+                    if (!connection.getConnector().isPresent()) {
+                        Connector connector = resourceManager.loadConnector(connection.getConnectorId()).orElseThrow(
+                            () -> new IllegalArgumentException("Unable to fetch connector: " + connection.getConnectorId())
+                        );
+
+                        // Add missing connector to connection.
+                        Connection newConnection = new Connection.Builder()
+                            .createFrom(connection)
+                            .connector(connector)
+                            .build();
+
+                        // Replace with the new 'sanitized' step
+                        steps.set(new Step.Builder()
+                                    .createFrom(source)
+                                    .connection(newConnection)
+                                    .build());
+                    }
                 }
+            }
+
+            final Flow.Builder replacementFlowBuider = flow.builder().createFrom(flow).steps(replacementSteps);
+            flows.set(replacementFlowBuider.build());
+
+            // Temporary implementation until https://github.com/syndesisio/syndesis/issues/736
+            // is fully implemented and schedule options are set on integration.
+            if (!flow.getScheduler().isPresent()) {
+                final Step firstStep = replacementSteps.get(0);
+                final Map<String, String> properties = new HashMap<>(firstStep.getConfiguredProperties());
+                String type = properties.remove("schedulerType");
+                final String expr = properties.remove("schedulerExpression");
+
+                if (StringUtils.isNotEmpty(expr)) {
+                    if (StringUtils.isEmpty(type)) {
+                        type = "timer";
+                    }
+
+                    final Flow replacementFlow = replacementFlowBuider.scheduler(new Scheduler.Builder()
+                                                .type(Scheduler.Type.valueOf(type))
+                                                .expression(expr)
+                                                .build())
+                                            .build();
+                    flows.set(replacementFlow);
+                }
+
+                // Replace first step so underlying connector won't fail uri param
+                // validation if schedule options were set.
+                steps.set(new Step.Builder()
+                            .createFrom(firstStep)
+                            .configuredProperties(properties)
+                        .build());
             }
         }
 
-        final Integration.Builder builder = new Integration.Builder().createFrom(integration);
-
-        // Temporary implementation until https://github.com/syndesisio/syndesis/issues/736
-        // is fully implemented and schedule options are set on integration.
-        if (!integration.getScheduler().isPresent()) {
-            Map<String, String> properties = new HashMap<>(steps.get(0).getConfiguredProperties());
-            String type = properties.remove("schedulerType");
-            String expr = properties.remove("schedulerExpression");
-
-            if (StringUtils.isNotEmpty(expr)) {
-                if (StringUtils.isEmpty(type)) {
-                    type = "timer";
-                }
-
-                builder.scheduler(
-                    new Scheduler.Builder()
-                        .type(Scheduler.Type.valueOf(type))
-                        .expression(expr)
-                        .build()
-                );
-            }
-
-            // Replace first step so underlying connector won't fail uri param
-            // validation if schedule options were set.
-            steps.set(
-                0,
-                new Step.Builder()
-                    .createFrom(steps.get(0))
-                    .configuredProperties(properties)
-                    .build()
-            );
-        }
-
-        return builder.steps(steps).build();
+        return new Integration.Builder().createFrom(integration)
+            .flows(replacementFlows)
+            .build();
     }
 }

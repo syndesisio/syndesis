@@ -18,24 +18,26 @@ package io.syndesis.server.runtime;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.syndesis.common.util.Json;
-import io.syndesis.extension.converter.ExtensionConverter;
+
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Json;
+import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.server.endpoint.v1.handler.exception.RestError;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
@@ -253,16 +255,18 @@ public class ExtensionsITCase extends BaseITCase {
             .spec(new Integration.Builder()
                 .id("integration-extension-1")
                 .name("test")
-                .steps(Collections.singletonList(
-                new Step.Builder()
-                    .id("step1")
-                    .name("step1")
-                    .stepKind(StepKind.extension)
-                    .extension(
-                        new Extension.Builder()
-                            .createFrom(created.getBody())
-                            .build())
-                    .build())).build())
+                .addFlow(new Flow.Builder()
+                    .addStep(new Step.Builder()
+                        .id("step1")
+                        .name("step1")
+                        .stepKind(StepKind.extension)
+                        .extension(
+                            new Extension.Builder()
+                                .createFrom(created.getBody())
+                                .build())
+                        .build())
+                    .build())
+                .build())
             .build());
 
         // Create a inactive integration that uses the extension
@@ -274,16 +278,18 @@ public class ExtensionsITCase extends BaseITCase {
             .spec(new Integration.Builder()
                 .id("integration-extension-2")
                 .name("test")
-                .steps(Collections.singletonList(
-                new Step.Builder()
-                    .id("step1")
-                    .name("step1")
-                    .stepKind(StepKind.extension)
-                    .extension(
-                        new Extension.Builder()
-                            .createFrom(created.getBody())
-                            .build())
-                    .build())).build())
+                .addFlow(new Flow.Builder()
+                    .addStep(new Step.Builder()
+                        .id("step1")
+                        .name("step1")
+                        .stepKind(StepKind.extension)
+                        .extension(
+                            new Extension.Builder()
+                                .createFrom(created.getBody())
+                                .build())
+                        .build())
+                    .build())
+                .build())
             .build());
 
         // Get extensions using it
@@ -325,17 +331,18 @@ public class ExtensionsITCase extends BaseITCase {
             .spec(new Integration.Builder()
                 .id("integration-extension")
                 .name("test")
-                //.userId("important user")
-                .steps(Collections.singletonList(
-                new Step.Builder()
-                    .id("step1")
-                    .name("step1")
-                    .stepKind(StepKind.extension)
-                    .extension(
-                        new Extension.Builder()
-                            .createFrom(created.getBody())
-                            .build())
-                    .build())).build())
+                .addFlow(new Flow.Builder()
+                    .addStep(new Step.Builder()
+                        .id("step1")
+                        .name("step1")
+                        .stepKind(StepKind.extension)
+                        .extension(
+                            new Extension.Builder()
+                                .createFrom(created.getBody())
+                                .build())
+                        .build())
+                    .build())
+                .build())
             .build());
 
 

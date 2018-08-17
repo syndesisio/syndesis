@@ -71,7 +71,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
 
     @SuppressWarnings("PMD")
     @Override
-    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, final String index) {
+    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, final String flowIndex, final String stepIndex) {
         // Model
         final Connection connection = step.getConnection().get();
         final Connector connector = connection.getConnector().get();
@@ -81,7 +81,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         // Camel
         final String scheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
         final CamelContext context = builder.getContext();
-        final String componentId = scheme + "-" + index;
+        final String componentId = scheme + "-" + stepIndex;
         final ComponentProxyComponent component = resolveComponent(componentId, scheme, context, connector, descriptor);
         final List<String> customizers = CollectionsUtils.aggregate(ArrayList::new, connector.getConnectorCustomizers(), descriptor.getConnectorCustomizers());
         final Map<String, String> properties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
@@ -100,7 +100,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         properties.entrySet()
             .stream()
             .filter(Predicates.or(connector::isSecret, action::isSecret))
-            .forEach(e -> e.setValue(String.format("{{%s-%s.%s}}", scheme, index, e.getKey())));
+            .forEach(e -> e.setValue(String.format("{{%s-%s.%s}}", scheme, stepIndex, e.getKey())));
 
         // raw values.
         properties.entrySet()

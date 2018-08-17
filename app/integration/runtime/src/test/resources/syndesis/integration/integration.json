@@ -1,56 +1,66 @@
 {
   "description": "This is a test integration!",
   "connections": [],
-  "steps": [
+  "flows": [
     {
-      "action": {
-        "descriptor": {
-          "componentScheme": "direct",
-          "connectorCustomizers": [],
-          "propertyDefinitionSteps": [],
+      "steps": [
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "direct",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "expression"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
           "configuredProperties": {
-            "name": "expression"
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "1"
           }
         },
-        "tags": [],
-        "actionType": "connector",
-        "dependencies": []
-      },
-      "stepKind": "endpoint",
-      "configuredProperties": {},
-      "dependencies": [],
-      "metadata": {
-        "step.index": "1"
-      }
-    },
-    {
-      "stepKind": "split",
-      "configuredProperties": {},
-      "dependencies": [],
-      "metadata": {
-        "step.index": "2"
-      }
-    },
-    {
-      "action": {
-        "descriptor": {
-          "componentScheme": "mock",
-          "connectorCustomizers": [],
-          "propertyDefinitionSteps": [],
+        {
+          "stepKind": "split",
           "configuredProperties": {
-            "name": "expression"
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "2"
           }
         },
-        "tags": [],
-        "actionType": "connector",
-        "dependencies": []
-      },
-      "stepKind": "endpoint",
-      "configuredProperties": {},
-      "dependencies": [],
-      "metadata": {
-        "step.index": "3"
-      }
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "mock",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "expression"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "3"
+          }
+        }
+      ]
     }
   ],
   "resources": [],

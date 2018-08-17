@@ -19,8 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -29,10 +32,14 @@ import javax.validation.Validator;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.mockito.ArgumentMatchers;
+
+import static io.syndesis.server.endpoint.v1.handler.connection.ConnectionHandlerTest.TestIntegrationBulder.testIntegration;
+
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.ConnectionOverview;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.server.credential.Credentials;
@@ -81,10 +88,10 @@ public class ConnectionHandlerTest {
 
     @Test
     public void connectionsReferencedFromTheIntegrationShouldHaveTheirUseCounted() {
-        final Integration usesC1 = new Integration.Builder().addConnection(c1).build();
-        final Integration usesC1andC2 = new Integration.Builder().addConnection(c1, c2).build();
-        final Integration usesC2andC3 = new Integration.Builder().addConnection(c2, c3).build();
-        final Integration usesC1andC2andC3 = new Integration.Builder().addConnection(c1, c2, c3).build();
+        final Integration usesC1 = testIntegration().withFlowConnections(c1).build();
+        final Integration usesC1andC2 = testIntegration().withFlowConnections(c1, c2).build();
+        final Integration usesC2andC3 = testIntegration().withFlowConnections(c2, c3).build();
+        final Integration usesC1andC2andC3 = testIntegration().withFlowConnections(c1, c2, c3).build();
         when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(usesC1, usesC1andC2, usesC2andC3, usesC1andC2andC3));
 
         assertThat(handler.augmentedWithUsage(c1)).isEqualTo(connectionUsed(c1, 3));
@@ -96,10 +103,10 @@ public class ConnectionHandlerTest {
 
     @Test
     public void connectionsReferencedFromTheStepsShouldHaveTheirUseCounted() {
-        final Integration usesC1 = new Integration.Builder().addStep(stepUsing(c1)).build();
-        final Integration usesC1andC2 = new Integration.Builder().addStep(stepUsing(c1), stepUsing(c2)).build();
-        final Integration usesC2andC3 = new Integration.Builder().addStep(stepUsing(c2), stepUsing(c3)).build();
-        final Integration usesC1andC2andC3 = new Integration.Builder().addStep(stepUsing(c1), stepUsing(c2), stepUsing(c3)).build();
+        final Integration usesC1 = testIntegration().withFlowStepsUsingConnections(c1).build();
+        final Integration usesC1andC2 = testIntegration().withFlowStepsUsingConnections(c1, c2).build();
+        final Integration usesC2andC3 = testIntegration().withFlowStepsUsingConnections(c2, c3).build();
+        final Integration usesC1andC2andC3 = testIntegration().withFlowStepsUsingConnections(c1, c2, c3).build();
         when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(usesC1, usesC1andC2, usesC2andC3, usesC1andC2andC3));
 
         assertThat(handler.augmentedWithUsage(c1)).isEqualTo(connectionUsed(c1, 3));
@@ -111,10 +118,10 @@ public class ConnectionHandlerTest {
 
     @Test
     public void mixedUseOfConnectionsFromIntegrationsAndStepsShouldBeCounted() {
-        final Integration usesC1 = new Integration.Builder().addConnection(c1).build();
-        final Integration usesC1andC2 = new Integration.Builder().addConnection(c1).addStep(stepUsing(c2)).build();
-        final Integration usesC2andC3 = new Integration.Builder().addStep(stepUsing(c2), stepUsing(c3)).build();
-        final Integration usesC1andC2andC3 = new Integration.Builder().addConnection(c1, c2).addStep(stepUsing(c3)).build();
+        final Integration usesC1 = testIntegration().withFlowConnections(c1).build();
+        final Integration usesC1andC2 = testIntegration().withFlowConnections(c1).withFlowStepsUsingConnections(c2).build();
+        final Integration usesC2andC3 = testIntegration().withFlowStepsUsingConnections(c2, c3).build();
+        final Integration usesC1andC2andC3 = testIntegration().withFlowConnections(c1, c2).withFlowStepsUsingConnections(c3).build();
         when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(usesC1, usesC1andC2, usesC2andC3, usesC1andC2andC3));
 
         assertThat(handler.augmentedWithUsage(c1)).isEqualTo(connectionUsed(c1, 3));
@@ -127,7 +134,7 @@ public class ConnectionHandlerTest {
     @Test
     public void someStepsDoNotUseConnectionsAndShouldNotBeConsidered() {
         final Step stepWithoutConnection = new Step.Builder().build();
-        final Integration integration = new Integration.Builder().addConnection(c1, c2).addStep(stepUsing(c1), stepWithoutConnection, stepUsing(c3)).build();
+        final Integration integration = testIntegration().withFlowConnections(c1, c2).withFlowStepsUsingConnections(c1, c3).addFlow(new Flow.Builder().addStep(stepWithoutConnection).build()).build();
         when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(integration));
 
         assertThat(handler.augmentedWithUsage(c1)).isEqualTo(connectionUsed(c1, 2));
@@ -140,9 +147,9 @@ public class ConnectionHandlerTest {
     @Test
     public void overviewGetShouldAugmentWithConnectionUsage() {
         final Step stepWithoutConnection = new Step.Builder().build();
-        final Integration usesC1 = new Integration.Builder().addConnection(c1).build();
-        final Integration usesC1andC2 = new Integration.Builder().addConnection(c1).addStep(stepUsing(c2)).build();
-        final Integration usesC1andC2andC3 = new Integration.Builder().addConnection(c1, c2).addStep(stepUsing(c1), stepWithoutConnection, stepUsing(c3)).build();
+        final Integration usesC1 = testIntegration().withFlowConnections(c1).build();
+        final Integration usesC1andC2 = testIntegration().withFlowConnections(c1, c2).build();
+        final Integration usesC1andC2andC3 = testIntegration().withFlowConnections(c1, c2).withFlowStepsUsingConnections(c1, c3).addFlow(new Flow.Builder().addStep(stepWithoutConnection).build()).build();
 
         when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(usesC1, usesC1andC2, usesC1andC2andC3));
         when(dataManager.fetch(Connection.class, "c1")).thenReturn(c1);
@@ -154,12 +161,12 @@ public class ConnectionHandlerTest {
     }
 
     @Test
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void overviewListShouldAugmentWithConnectionUsageNoIntegrations() {
         ListResult<Connection> connectionResult = new ListResult.Builder<Connection>().addItem(c1, c2, c3).build();
 
         DataAccessObject<Connection> dao = mock(DataAccessObject.class);
-        when(dao.fetchAll(Mockito.any())).thenReturn(connectionResult);
+        when(dao.fetchAll(ArgumentMatchers.any())).thenReturn(connectionResult);
         when(dataManager.getDataAccessObject(Connection.class)).thenReturn(dao);
         when(dataManager.fetchAll(Integration.class)).thenReturn(new ListResult.Builder<Integration>().build());
 
@@ -188,7 +195,20 @@ public class ConnectionHandlerTest {
         return new Connection.Builder().createFrom(connection).uses(times).build();
     }
 
-    private static Step stepUsing(final Connection connection) {
-        return new Step.Builder().connection(connection).build();
+    static class TestIntegrationBulder extends Integration.Builder {
+        static TestIntegrationBulder testIntegration() {
+            return new TestIntegrationBulder();
+        }
+
+        TestIntegrationBulder withFlowConnections(final Connection... connections) {
+            return (TestIntegrationBulder) addFlow(new Flow.Builder().addConnection(connections).build());
+        }
+
+        TestIntegrationBulder withFlowStepsUsingConnections(final Connection... connections) {
+            return (TestIntegrationBulder) addFlow(
+                new Flow.Builder().addAllSteps(Arrays.stream(connections).map(c -> new Step.Builder().connection(c).build()).collect(Collectors.toList())).build());
+        }
+
     }
+
 }
