@@ -2,7 +2,9 @@
 = Mapping one source field to one target field
 
 The default mapping behavior maps one source field to one target field.
-To do this:
+For example, map the `Name` field to the `CustomerName` field.
+
+.Procedure
 
 . In the *Sources* panel, click the data field you want to map from.
 +
@@ -24,6 +26,7 @@ image:shared/images/grid.png[Grid] to display the defined mappings.
 Click image:shared/images/grid.png[Grid] again to display the data field
 panels.
 
+.Alternative procedure
 Here is another way to map a single source field to a single target
 field:
 

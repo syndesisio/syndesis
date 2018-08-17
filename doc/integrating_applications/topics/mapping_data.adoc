@@ -1,15 +1,14 @@
 [id='mapping-data']
-= Mapping data to fields for the next connection
+= Mapping integration data to fields for the next connection
 
-In most integrations, you need to map data fields that have
+In most integrations, you need to map data fields that have already 
 been obtained or processed to data fields that the next connection can process.
-{prodname} provides a data mapper to simplify doing this. In an integration,
+{prodname} provides a data mapper to help you do this. In an integration,
 at each point where you need to map data fields, add a data mapper step.
 Details for mapping data fields are in the following topics:
 
-* <<about-mapping-data>>
-* <<finding-the-field-you-want-to-map>>
 * <<identifying-where-data-mapping-is-needed>>
+* <<about-mapping-data>>
 * <<map-one-source-field-to-one-target-field>>
 * <<combine-multiple-source-fields-into-one-target-field>>
 * <<separate-one-source-field-into-multiple-target-fields>>
@@ -17,11 +16,9 @@ Details for mapping data fields are in the following topics:
 * <<available-transformations>>
 * <<viewing-mappings-in-a-step>>
 
-include::about_mapping_data.adoc[leveloffset=+1]
-
-include::finding_data_field_you_want_to_map.adoc[leveloffset=+1]
-
 include::identifying_where_data_mapping_is_needed.adoc[leveloffset=+1]
+
+include::about_mapping_data.adoc[leveloffset=+1]
 
 include::map_one_source_field_to_one_target_field.adoc[leveloffset=+1]
 
