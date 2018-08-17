@@ -1,7 +1,7 @@
 [id='guidelines-for-service-sending-requests']
-= Guidelines for a service that sends a request to {prodname}
+= Guidelines for an HTTP client that invokes a {prodname} Webhook
 
-When you implement a service that sends an HTTP request to {prodname}, 
+When you implement a client that sends an HTTP request to {prodname}, 
 your implementation should:
 
 * Add to the {prodname}-provided external URL to construct a URL that makes a 
@@ -15,4 +15,4 @@ fields that the next connection in the integration can process.
 * If the request fails, handle an HTTP `5xx` error code.
 * Not expect any other response from {prodname}. In other words, 
 sending the request does not directly return data to the requesting
-service other than the return code. 
+client other than the return code. 

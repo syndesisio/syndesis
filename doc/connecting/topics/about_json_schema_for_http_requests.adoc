@@ -26,3 +26,7 @@ that has the following structure:
    }
 }
 ----
+
+In the JSON instance for your HTTP request, 
+under `properties` and `parameters`, add the data structures that you need.
+For an example, see <<how-to-specify-request>>. 

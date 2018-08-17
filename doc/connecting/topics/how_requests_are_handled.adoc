@@ -8,11 +8,16 @@ to trigger an integration that does either operation. Any parameters
 in the request are available for mapping to data fields in the
 next connection that is in the integration. 
 
-Examples: TBA
+To map Webhook connection data, the Webhook connection's data shape must 
+adhere to a specific JSON schema. For examples, see 
+<<how-to-specify-request>>. When a Webhook connection's data shape
+does not conform to this JSON schema, then the integration 
+can access only the data that the `POST` method provides in the HTTP body.
 
 A Webhook connection only passes the data it receives to
 the next connection in the integration. 
 When {prodname} receives an HTTP request, it:
+
 * Returns an HTTP status header to the requester. When a request successfully
 triggers an integration, the {prodname} return code is `201`.
 When a request fails to trigger an integration, the {prodname}
