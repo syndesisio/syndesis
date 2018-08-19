@@ -1,26 +1,19 @@
 [id='create-concur-connection']
 = Create a SAP Concur connection
 
-To create a connection to SAP Concur, you must have registered your
-{prodname} environment as an application that can access SAP Concur.
-If you registered a {prodname} environment with the SAP Concur
-implementation site, then a SAP Concur connection can access only the
-SAP Concur implementation site. If you registered a {prodname}
-environment with the the SAP Concur production site, then 
-a SAP Concur connection can access only the SAP Concur production site. 
-If you did not already register {prodname}, see <<register-with-concur>>.
-
+To connect to SAP Concur in an integration, you must first create a SAP
+Concur connection, which you can then add to any number of integrations. 
 When you create a SAP Concur connection, you authorize the connection to access 
 SAP Concur with the login credentials that you enter when you create
-the connection. After you create a SAP Concur connection, you can 
-add it to multiple integrations.
+the connection. 
 
 .Prerequisites
-
-* You must know whether you want to create a connection to the SAP
-Concur implementation site or the SAP Concur production site.
-* You must have a user account for the SAP Concur site that you 
-want to connect to. 
+* In the {prodname} environment in which you are creating the connection,
+you must have configured the SAP Concur connector.  
+* You should know whether the connector is configured for access to the
+SAP Concur implementation site or the SAP Concur production site. 
+* You must have a user name and password for logging in to the SAP 
+Concur site for which the SAP Concur connector is configured. 
 
 .Procedure
 
@@ -31,22 +24,26 @@ the available connectors. A connector is a template that
 you use to create one or more connections.
 . Click the *SAP Concur* connector.
 . In the *Configure Connection* page, click *Connect SAP Concur*, 
-which takes you to the SAP Concur site. 
+which takes you to the SAP Concur site for which the connector is
+configured. 
 +
-If *Connect SAP Concur* does not appear, then your {prodname} installation
-is not registered as a SAP Concur client application. See
-<<register-with-concur>>. 
+If *Connect SAP Concur* does not appear, then the SAP Concur
+connector in your {prodname} environment
+is not configured.  See
+<<configure-concur-connector-implementation>> or
+<<configure-concur-connector-production>>. 
 +
 If `redirect_uri is improper or not previously registered` appears, then 
-the registration is incorrect. Return to the {prodname} *Settings* page
-to update and validate the registration. See <<register-with-concur>>. 
+the SAP Concur connector configuration is incorrect. 
+Return to the {prodname} *Settings* page
+to update and validate the connector configuration.  
 
-. On the SAP Concur site: 
+. On the SAP Concur OAuth site: 
 .. Enter the email address for the SAP Concur account that you want
 this connection to use to access SAP Concur. 
 .. Ensure that *Username* is selected. 
 .. Click *Continue*. 
-.. Enter your SAP Concur password.
+.. Enter the SAP Concur password associated with the email address.
 .. Click *Sign In*, which returns you to {prodname}. 
 
 . In the {prodname} *Connection Name* field, enter your choice of a name that

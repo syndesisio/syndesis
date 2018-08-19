@@ -1,0 +1,48 @@
+[id='about-implementing-integrations-with-concur']
+= About implementing integrations that connect to SAP Concur
+
+To develop and test integrations that connect to SAP Concur, 
+access the SAP Concur implementation site. When the integration
+is working as expected, export it and then import it to a 
+{prodname} production site. The general procedure
+for implementing integrations is described below. 
+
+It is assumed that there are two {prodname} environments: one for development
+and one for production. 
+
+.Procedure Overview
+
+. A system administrator does the following:
+
+.. Obtain credentials and URLs for access to the SAP Concur implementation site. 
+.. In the {prodname} development environment:  
+... On the *Settings* page, configure the SAP Concur connector with
+SAP Concur implementation site credentials and URLs. 
+... Create a SAP Concur connection.
+.. Tell a business user that a SAP Concur connection to the SAP Concur
+implementation site is available. 
+
+. In the {prodname} development environment, a business user can then:
+.. Create an integration and add a SAP Concur connection to the integration. 
+.. Publish the integration. 
+.. Trigger execution of the integration. 
+.. Check the SAP Concur implementation site to determine if the action was
+successful. 
+.. When the integration is running as expected, export it from {prodname}. 
+
+. A system administrator can then:
+.. Obtain credentials and URLs for access to the SAP Concur production site. 
+.. Import the integration into a {prodname} production environment.
+.. In the {prodname} production environment: 
+... Configure the SAP Concur connector with SAP Concur production site
+credentials. 
+... Create a SAP Concur connection. 
+.. Tell a business user that a SAP Concur connection to the SAP Concur
+production site is available.
+
+. In the {prodname} production environment, a business user can then: 
+.. Create an integration and add a SAP Concur connection to the integration. 
+.. Publish the integration. 
+.. Trigger execution of the integration. 
+.. Check the SAP Concur production site to determine if the action was
+successful. 
