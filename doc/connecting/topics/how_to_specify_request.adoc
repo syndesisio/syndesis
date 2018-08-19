@@ -60,8 +60,15 @@ To understand the parts of the external URL, consider this sample URL:
 
 |`bvGvQdpq308BcHIQQYeysFOK4plFISmghNHkRyOOk3YppitvOd`
 | Webhook connection token that {prodname} provides when you add
-a Webhook connection to an integration. Each integration that
-starts with a Webhook connection has its own token. 
+a Webhook connection to an integration. The token is a random string that 
+provides security in that it makes the URL hard to discern, which prevents 
+anyone else from sending a request. 
+
+In a request, you can specify the token that {prodname} provides or you 
+can define your own. If you define your own, ensure that it is hard to guess.
+
+
+
 
 |===
 
@@ -136,14 +143,16 @@ In this JSON schema:
 
 * The `id` must be set to `io.syndesis.webhook`.
 * The `parameters` section must specify the HTTP query parameters.
-* The `body` section must specify the body content. 
+* The `body` section must specify the body content and it can be
+as complex as you need it to be. For example, it can define
+nested properties as well as arrays. 
 
 This provides the information that the Webhook connector needs
 to prepare the content for the next step in the integration. 
 
 To use `curl` to send an HTTP request, invoke a command such as the following: 
 
-`curl -H 'Content-Type: application/json' -d '{"company":"Gadgets","email":"email","phone":"phone"}'https://i-webhook-params-to-db-myproject.192.168.42.235.nip.io/webhook/ZYWrhaW7dVk097vNsLX3YJ1GyxUFMFRteLpw0z4O69MW7d2Kjg?source=web&status=new`
+`curl -H 'Content-Type: application/json' -d '{"company":"Gadgets","email":"sales@gadgets.com","phone":"+1-202-555-0152"}'https://i-webhook-params-to-db-myproject.192.168.42.235.nip.io/webhook/ZYWrhaW7dVk097vNsLX3YJ1GyxUFMFRteLpw0z4O69MW7d2Kjg?source=web&status=new`
 
 When the Webhook connection receives this request it creates a JSON
 instance that looks like this:
@@ -157,8 +166,8 @@ instance that looks like this:
   },
   "body": {
     "company": "Gadgets",
-    "email": "email",
-    "phone": "phone"
+    "email": "sales@gadgets.com",
+    "phone": "+1-202-555-0152"
   }
 }
 
@@ -167,3 +176,39 @@ instance that looks like this:
 It is this internal JSON instance that enables the following mapping: 
 
 image:images/TODOtoAddLead.png[Map to Add Lead]
+
+.Webhook example with GET and URL parameters
+
+You can change the previous example to 
+send a `GET` request with query parameters but no body. To do this,
+specify the data shape JSON schema as follows: 
+
+[source,json]
+----
+{
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "io:syndesis:webhook",
+  "properties": {
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "body": {
+      "type": "object"
+    }
+  }
+}
+----
+This schema defines an empty body. Here is the `curl` command that sends
+the `GET` request:
+
+`curl 'https://i-webhook-params-to-db-myproject.192.168.42.235.nip.io/webhook/ZYWrhaW7dVk097vNsLX3YJ1GyxUFMFRteLpw0z4O69MW7d2Kjg?source=web&status=new'``

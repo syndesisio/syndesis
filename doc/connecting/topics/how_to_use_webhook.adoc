@@ -19,13 +19,13 @@ HTTP request for accomplishing your goals. Keep the following in mind:
 ** Add a connection to the application that contains the 
 data that you want to obtain or that contains the data that you want to 
 update.
-** A `GET` request is limited to specification of simple key/value
+** A `GET` request is limited to specification of key/value
 parameters. 
 ** A `POST` request can provide an arbitrary body, such
 as an XML or JSON instance. 
 ** {prodname} returns only an HTTP status header and does not return
 any data. Consequently, you can define an integration that is triggered by
-a `GET` request and that updates data rather than simply obtaining data. 
+a `GET` request and that updates data rather than obtaining data. 
 Likewise, you can define an
 integration that is triggered by a `POST` request and that obtains data
 rather than updating data. 

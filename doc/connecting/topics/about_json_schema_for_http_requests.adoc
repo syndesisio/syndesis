@@ -7,6 +7,7 @@ integration can process. To make this possible, when you add the Webhook
 connection to the integration, specify the output data type in a JSON schema 
 that has the following structure: 
 
+[source,json]
 ----
 {
   "$schema": "http: //json-schema.org/schema#",
@@ -15,18 +16,25 @@ that has the following structure:
    "properties": {
       "parameters": {
          "type": "object",
-         "properties": {
+         "properties": { <1>
          }
       },
       "body": {
          "type": "object",
-         "properties": {
+         "properties": { <2>
          }
       }
    }
 }
 ----
 
-In the JSON instance for your HTTP request, 
-under `properties` and `parameters`, add the data structures that you need.
-For an example, see <<how-to-specify-request>>. 
+To add the data structures that you need, in the JSON instance for your HTTP request:
+
+<1> Specify query parameters in the `properties` section under the `parameters` object. 
+<2> Specify the HTTP body schema in the `properties` section under the `body` object. 
+
+While all data that an HTTP client sends is available in the integration, 
+when a Webhook connection's data shape conforms to this JSON schema, 
+then query parameters and body content are available for mapping. 
+
+For examples, see <<how-to-specify-request>>.  
