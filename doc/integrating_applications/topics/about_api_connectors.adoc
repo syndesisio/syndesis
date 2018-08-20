@@ -3,7 +3,9 @@
 
 After you upload an OpenAPI specification to {prodname}, a connector to the REST API
 becomes available. You can select the connector to create
-a REST API client connection, and then add that connection to an integration.
+a REST API client connection. You can then create a new integration and 
+add the REST API client connection, or you can edit an existing integration 
+to add the REST API client connection. 
 
 {prodname} connectors support OAuth 2.0 and HTTP Basic
 Authorization. If access to the REST API requires Transport Layer Security (TLS)
