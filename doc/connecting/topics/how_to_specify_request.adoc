@@ -181,7 +181,16 @@ image:images/TODOtoAddLead.png[Map to Add Lead]
 
 You can change the previous example to 
 send a `GET` request with query parameters but no body. To do this,
-specify the data shape JSON schema as follows: 
+specify the data shape JSON schema as shown below.
+
+[IMPORTANT]
+====
+In this release, it is a known problem that specification of a JSON schema 
+for a Webhook connection output data shape is not applied to `GET` requests. 
+Consequently, the only way to access query parameters in a `GET` request is to 
+create an extension that accesses the query parameters from Camel message 
+headers. It is expected that this limitation will be removed in a future release.
+====
 
 [source,json]
 ----

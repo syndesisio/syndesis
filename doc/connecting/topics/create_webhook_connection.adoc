@@ -1,14 +1,14 @@
 [id='create-webhook-connection']
-= Create a Webhook connection 
+= Use the Webhook connection 
 
-{prodname} provides the Webhook connector that you use to create a 
-Webhook connection. After you create one Webhook connection, you can add 
-it to any number of integrations as the start connection. Each time you 
+{prodname} provides a Webhook connection that you can use in 
+any number of integrations as the start connection. Each time you 
 add this Webhook connection to an integration, {prodname} provides a new 
 random token for use with that integration. You paste this token at the 
 end of your `GET` or `POST` request. 
 
-To create a Webhook connection:
+If you inadvertently delete the Webhook connection, create
+a new one as follows:  
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.

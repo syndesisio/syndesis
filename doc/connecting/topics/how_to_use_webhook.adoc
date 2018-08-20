@@ -6,7 +6,11 @@ request, you must do the following:
 
 . Decide whether you want to send a `GET` or `POST` request to {prodname}. 
 . Plan your integration to handle this request. 
-. Create a Webhook connection. 
+. Create the connection that finishes the integration.
++
+{prodname} provides a Webhook connection that you use as the start 
+connection. 
+ 
 . Create any other connections that you want to add to the integration. 
 . Create the integration:
 .. Add the Webhook connection as the start connection.
