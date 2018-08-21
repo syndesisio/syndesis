@@ -1,0 +1,71 @@
+[id='connecting-to-concur']
+= Connecting to SAP Concur
+
+ifeval::["{location}" == "upstream"]
+
+In an integration, you can connect to SAP Concur and perform
+any one of 85 actions.  
+For example, suppose that you store project codes in a SQL database and
+you need the same project codes in SAP Concur so that expenses can be
+associated with projects. You can create an integration that 
+connects to your SQL database and runs a stored procedure that obtains
+any new project codes. The integration can then connect to SAP Concur and
+upload the new project codes to the appropriate list. 
+
+endif::[]
+
+ifeval::["{location}" == "downstream"]
+
+In an integration, you can connect to SAP Concur to obtain all 
+lists, obtain a particular list, create a list, or update a list. 
+There are additional, unsupported actions that a SAP Concur connection
+can perform. See the note below. 
+
+For example, suppose that you store project codes in a SQL database and
+you need the same project codes in SAP Concur so that expenses can be
+associated with projects. You can create an integration that 
+connects to your SQL database and runs a stored procedure that obtains
+any new project codes. The integration can then connect to SAP Concur and
+upload the new project codes to the appropriate list. 
+
+[IMPORTANT]
+==== 
+In a {prodname} integration, there are 85 actions that a SAP Concur
+connection can perform. However, only the 
+https://developer.concur.com/api-explorer/v3-0/Lists.html[list actions] are supported. 
+All other actions are 
+https://access.redhat.com/support/offerings/techpreview/[Technology Preview features].
+
+====
+endif::[]
+
+See the following topics: 
+
+* <<user-roles-for-connecting-to-concur>>
+* <<about-implementing-integrations-with-concur>>
+* <<obtain-implementation-site-credentials>>
+* <<obtain-production-site-credentials>>
+* <<configure-concur-connector-implementation>>
+* <<configure-concur-connector-production>>
+* <<create-concur-connection>>
+* <<add-concur-connection>>
+* <<identify-concur-fields-for-mapping>>
+
+
+include::user_roles_for_connecting_to_concur.adoc[leveloffset=+1]
+
+include::about_implementing_integrations_with_concur.adoc[leveloffset=+1]
+
+include::obtain_implementation_site_credentials.adoc[leveloffset=+1]
+
+include::obtain_production_site_credentials.adoc[leveloffset=+1]
+
+include::configure_concur_connector_implementation.adoc[leveloffset=+1]
+
+include::configure_concur_connector_production.adoc[leveloffset=+1]
+
+include::create_concur_connection.adoc[leveloffset=+1]
+
+include::add_concur_connection.adoc[leveloffset=+1]
+
+include::identify_concur_fields_for_mapping.adoc[leveloffset=+1]

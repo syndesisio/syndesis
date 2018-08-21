@@ -7,6 +7,7 @@ include::topics/shared/attributes.adoc[]
 :prodnameinurl: fuse-ignite
 :productpkg: red_hat_fuse
 :version: 7.1
+:location: upstream
 
 [id='connecting-to-applications-and-services']
 = Connecting {prodname} to Applications and Services 
@@ -31,6 +32,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-mqtt>>
 * <<connecting-to-rest-apis>>
 * <<connecting-to-sf>>
+* <<connecting-to-concur>>
 * <<connecting-to-slack>>
 * <<connecting-to-databases>>
 * <<connecting-to-twitter>>
@@ -59,6 +61,8 @@ include::topics/connecting_to_mqtt.adoc[leveloffset=+1]
 include::topics/connecting_to_rest_apis.adoc[leveloffset=+1]
 
 include::topics/connecting_to_sf.adoc[leveloffset=+1]
+
+include::topics/connecting_to_concur.adoc[leveloffset=+1]
 
 include::topics/connecting_to_slack.adoc[leveloffset=+1]
 
