@@ -89,8 +89,8 @@ public class DataSourceCustomizer implements ComponentProxyCustomizer, CamelCont
     }
 }
 ----
-<1> By implementing `CamelContextAware`, Syndesis injects the Camel context and then invoking the customize method. 
-<2> Processes options and then removes them from the options map.
+<1> &nbsp;By implementing `CamelContextAware`, Syndesis injects the Camel context and then invoking the customize method. 
+<2> &nbsp;Processes options and then removes them from the options map.
 
 .Example of injecting properties
 
@@ -162,10 +162,10 @@ public class DataSourceCustomizer implements ComponentProxyCustomizer, CamelCont
     }
 }
 ----
-<1> By implementing `CamelContextAware`, Syndesis injects the Camel context 
+<1> &nbsp;By implementing `CamelContextAware`, Syndesis injects the Camel context 
 and then invokes the customize method. This sample code overrides the 
 `setCamelContext()` and `getCamelContext()` methods, and sets the user name. 
-<2> Starting here, the sample code processes the injected options and 
+<2> &nbsp;Starting here, the sample code processes the injected options and 
 automatically removes them from the options map.
 
 .Using a customizer to configure before/after logic

@@ -34,6 +34,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-slack>>
 * <<connecting-to-databases>>
 * <<connecting-to-twitter>>
+* <<triggering-integrations-with-http-requests>>
 
 include::topics/supported_connectors.adoc[leveloffset=+1]
 
@@ -64,3 +65,5 @@ include::topics/connecting_to_slack.adoc[leveloffset=+1]
 include::topics/connecting_to_databases.adoc[leveloffset=+1]
 
 include::topics/connecting_to_twitter.adoc[leveloffset=+1]
+
+include::topics/triggering_integrations_with_http_requests.adoc[leveloffset=+1]
