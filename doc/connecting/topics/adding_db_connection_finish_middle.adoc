@@ -20,14 +20,10 @@ SQL statement you specify.
 the stored procedure you specify or select.
 . If you selected *Invoke SQL*, in the *SQL Statement* field:
 ** For a middle connection, enter a SQL `SELECT` statement that obtains
-one record or enter a SQL `INSERT`, `UPDATE`, or
+one or more records or enter a SQL `INSERT`, `UPDATE`, or
 `DELETE` statement that
 operates on one or more records.
 The database table that contains the data must already exist.
-+
-In this release, when a database connection is a middle connection,
-a `SELECT` statement can obtain only one record. You should define
-the `SELECT` statement so that it obtains one record.
 
 ** For a finish connection, enter a SQL `INSERT`, `UPDATE` or
 `DELETE` statement to
