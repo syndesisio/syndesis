@@ -50,6 +50,6 @@ then the default Webhook connection output data type is in JSON format.
 . Publish the integration and wait for it to be *Running*. 
 . Go to the integration summary page and copy the external URL that 
 {prodname} provides. 
-. Modify this external URL to construct your `GET` or `PULL` request. 
+. Modify this external URL to construct your `GET` or `POST` request. 
 . Implement the application that sends the HTTP `GET` or `POST` request 
 to {prodname}. 

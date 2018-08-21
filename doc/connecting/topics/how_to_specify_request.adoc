@@ -177,11 +177,14 @@ It is this internal JSON instance that enables the following mapping:
 
 image:images/TODOtoAddLead.png[Map to Add Lead]
 
-.Webhook example with GET and URL parameters
+.Webhook examples with GET
 
-You can change the previous example to 
-send a `GET` request with query parameters but no body. To do this,
-specify the data shape JSON schema as shown below.
+To trigger an integration with a `GET` request that does not provide input data, 
+specify the Webhook connection output data shape as a JSON instance with the 
+definition `'{}'`. You can then invoke the following `curl` command, which 
+does not specify query parameters:  
+
+`curl 'https://i-webhook-params-to-db-myproject.192.168.42.235.nip.io/webhook/ZYWrhaW7dVk097vNsLX3YJ1GyxUFMFRteLpw0z4O69MW7d2Kjg'`
 
 [IMPORTANT]
 ====
@@ -191,6 +194,12 @@ Consequently, the only way to access query parameters in a `GET` request is to
 create an extension that accesses the query parameters from Camel message 
 headers. It is expected that this limitation will be removed in a future release.
 ====
+
+When this limitation is removed then you can change the previous `POST` example to 
+send a `GET` request with query parameters but no body. You would 
+specify the Webhook connection output data shape as a JSON schema with the
+definition as shown below.
+
 
 [source,json]
 ----
@@ -221,3 +230,6 @@ This schema defines an empty body. Here is the `curl` command that sends
 the `GET` request:
 
 `curl 'https://i-webhook-params-to-db-myproject.192.168.42.235.nip.io/webhook/ZYWrhaW7dVk097vNsLX3YJ1GyxUFMFRteLpw0z4O69MW7d2Kjg?source=web&status=new'``
+
+In this release, this example works only if you create an extension
+that accesses the query parameters. 
