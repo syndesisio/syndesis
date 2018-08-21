@@ -41,7 +41,9 @@ credentials.
 production site is available.
 
 . In the {prodname} production environment, a business user can then: 
-.. Create an integration and add a SAP Concur connection to the integration. 
+.. Edit the imported integration to replace its SAP Concur connection with 
+a SAP Concur connection that is configured to access the SAP Concur 
+production site.
 .. Publish the integration. 
 .. Trigger execution of the integration. 
 .. Check the SAP Concur production site to determine if the action was
