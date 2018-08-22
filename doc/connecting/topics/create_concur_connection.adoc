@@ -30,8 +30,7 @@ configured.
 If *Connect SAP Concur* does not appear, then the SAP Concur
 connector in your {prodname} environment
 is not configured.  See
-<<configure-concur-connector-implementation>> or
-<<configure-concur-connector-production>>. 
+<<configure-concur-connector>>. 
 +
 If `redirect_uri is improper or not previously registered` appears, then 
 the SAP Concur connector configuration is incorrect. 

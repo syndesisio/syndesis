@@ -42,11 +42,9 @@ endif::[]
 See the following topics: 
 
 * <<user-roles-for-connecting-to-concur>>
-* <<about-implementing-integrations-with-concur>>
-* <<obtain-implementation-site-credentials>>
-* <<obtain-production-site-credentials>>
-* <<configure-concur-connector-implementation>>
-* <<configure-concur-connector-production>>
+* <<obtain-concur-oauth-credentials-implementation>>
+* <<obtain-concur-oauth-credentials-production>>
+* <<configure-concur-connector>>
 * <<create-concur-connection>>
 * <<add-concur-connection>>
 * <<identify-concur-fields-for-mapping>>
@@ -54,15 +52,11 @@ See the following topics:
 
 include::user_roles_for_connecting_to_concur.adoc[leveloffset=+1]
 
-include::about_implementing_integrations_with_concur.adoc[leveloffset=+1]
+include::obtain_concur_oauth_credentials_implementation.adoc[leveloffset=+1]
 
-include::obtain_implementation_site_credentials.adoc[leveloffset=+1]
+include::obtain_concur_oauth_credentials_production.adoc[leveloffset=+1]
 
-include::obtain_production_site_credentials.adoc[leveloffset=+1]
-
-include::configure_concur_connector_implementation.adoc[leveloffset=+1]
-
-include::configure_concur_connector_production.adoc[leveloffset=+1]
+include::configure_concur_connector.adoc[leveloffset=+1]
 
 include::create_concur_connection.adoc[leveloffset=+1]
 
