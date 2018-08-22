@@ -23,6 +23,7 @@ import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -68,6 +69,8 @@ public final class SwaggerHelper {
     private static final String SWAGGER_2_0_SCHEMA_FILE = "/schema/swagger-2.0-schema.json";
 
     private static final Yaml YAML_PARSER = new Yaml();
+
+    private static final Pattern JSON_TEST = Pattern.compile("^\\s*\\{.*");
 
     static {
         try {
@@ -203,7 +206,7 @@ public final class SwaggerHelper {
 
     static JsonNode convertToJson(final String specification) throws IOException, JsonProcessingException {
         final JsonNode specRoot;
-        if (specification.matches("\\s*\\{.*")) {
+        if (JSON_TEST.matcher(specification).matches()) {
             specRoot = Json.reader().readTree(specification);
         } else {
             specRoot = Json.convertValue(YAML_PARSER.load(specification), JsonNode.class);
