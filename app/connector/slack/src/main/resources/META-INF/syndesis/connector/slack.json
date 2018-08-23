@@ -20,7 +20,7 @@
             "kind": "parameter",
             "displayName": "Slack webhook URL",
             "group": "common",
-            "required": true,
+            "required": false,
             "type": "string",
             "javaType": "java.lang.String",
             "deprecated": false,
@@ -63,6 +63,18 @@
             "secret": false,
             "order": "3",
             "labelHint": "The Slack emoji that will be used for the message avatar"
+        },
+        "token": {
+            "kind": "parameter",
+            "displayName": "Token to use",
+            "group": "consumer",
+            "required": false,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "deprecated": false,
+            "secret": false,
+            "order": "5",
+            "labelHint": "The token to use for consuming messages"
         }
     },
     "actions": [
@@ -140,6 +152,73 @@
                                 "deprecated": false,
                                 "secret": false,
                                 "labelHint": "The channel to send the message to"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Read Messages",
+            "description": "Read Messages from a specific channel",
+            "id": "io.syndesis:slack-channel-consumer-connector",
+            "pattern": "From",
+            "actionType": "connector",
+            "descriptor": {
+                "inputDataShape": {
+                    "kind": "none"
+                },
+                "outputDataShape": {
+                     "kind": "java",
+                     "type": "org.apache.camel.component.slack.helper.SlackMessage"
+                },
+                "configuredProperties": {
+                },
+                "propertyDefinitionSteps": [
+                    {
+                        "name":"Channel",
+                        "description":"Consume messages from a specific channel",
+                        "properties":{
+                            "channel": {
+                                "kind": "parameter",
+                                "displayName": "Channel",
+                                "group": "common",
+                                "required": true,
+                                "type": "string",
+                                "javaType": "java.lang.String",
+                                "deprecated": false,
+                                "secret": false,
+                                "labelHint": "The channel from where you want to consume",
+                                "order": "1"
+                            },
+                            "delay": {
+                                "kind": "parameter",
+                                "displayName": "Delay",
+                                "group": "scheduler",
+                                "label": "consumer,scheduler",
+                                "required": false,
+                                "type": "duration",
+                                "javaType": "long",
+                                "optionalPrefix": "consumer.",
+                                "deprecated": false,
+                                "secret": false,
+                                "defaultValue": 500,
+                                "labelHint": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
+                                "order": "2"
+                            },
+                            "maxResults": {
+                                "kind": "parameter",
+                                "displayName": "Maximum Messages to Retrieve",
+                                "group": "consumer",
+                                "label": "consumer",
+                                "required": false,
+                                "type": "string",
+                                "javaType": "java.lang.String",
+                                "deprecated": false,
+                                "secret": false,
+                                "defaultValue": "10",
+                                "labelHint": "Gets the maximum number of messages as a limit to poll at each polling. Is default unlimited but use 0 or negative number to disable it as unlimited.",
+                                "order": "3"
                             }
                         }
                     }

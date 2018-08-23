@@ -15,7 +15,9 @@
  */
 package io.syndesis.connector.slack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.CamelContext;
@@ -24,88 +26,119 @@ import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.apache.camel.component.slack.helper.SlackMessage;
+import org.apache.camel.util.ObjectHelper;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.JSONObject;
 
 public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
 
-    protected SlackVerifierExtension(String defaultScheme, CamelContext context) {
-        super(defaultScheme, context);
-    }
+	protected SlackVerifierExtension(String defaultScheme, CamelContext context) {
+		super(defaultScheme, context);
+	}
 
-    // *********************************
-    // Parameters validation
-    //
-    @Override
-    protected Result verifyParameters(Map<String, Object> parameters) {
-        ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
-                .error(ResultErrorHelper.requiresOption("webhookUrl", parameters));
+	// *********************************
+	// Parameters validation
+	//
+	@Override
+	protected Result verifyParameters(Map<String, Object> parameters) {
+		ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS);
 
-        return builder.build();
-    }
+		if (ObjectHelper.isEmpty(parameters.get("token")) && ObjectHelper.isEmpty(parameters.get("webhookUrl"))) {
+			builder.error(ResultErrorHelper.requiresOption("webhookUrl", parameters));
+			builder.error(ResultErrorHelper.requiresOption("token", parameters));
+		}
 
-    // *********************************
-    // Connectivity validation
-    // *********************************
-    @Override
-    protected Result verifyConnectivity(Map<String, Object> parameters) {
-        return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-                .error(parameters, this::verifyCredentials).build();
-    }
+		return builder.build();
+	}
 
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
+	// *********************************
+	// Connectivity validation
+	// *********************************
+	@Override
+	protected Result verifyConnectivity(Map<String, Object> parameters) {
+		return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
+				.error(parameters, this::verifyCredentials).build();
+	}
 
-        String webhookUrl = (String) parameters.get("webhookUrl");
+	@SuppressWarnings("PMD.AvoidCatchingGenericException")
+	private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
-        try {
-            HttpClient client = HttpClientBuilder.create().useSystemProperties().build();
-            HttpPost httpPost = new HttpPost(webhookUrl);
+		String webhookUrl = (String) parameters.get("webhookUrl");
+		if (ObjectHelper.isNotEmpty(webhookUrl)) {
 
-            // Build Helper object
-            SlackMessage slackMessage;
-            slackMessage = new SlackMessage();
-            slackMessage.setText("Test connection");
+			try {
+				HttpClient client = HttpClientBuilder.create().useSystemProperties().build();
+				HttpPost httpPost = new HttpPost(webhookUrl);
 
-            // Set the post body
-            String json = asJson(slackMessage);
-            StringEntity body = new StringEntity(json);
+				// Build Helper object
+				SlackMessage slackMessage;
+				slackMessage = new SlackMessage();
+				slackMessage.setText("Test connection");
 
-            // Do the post
-            httpPost.setEntity(body);
+				// Set the post body
+				String json = asJson(slackMessage);
+				StringEntity body = new StringEntity(json);
 
-            HttpResponse response = client.execute(httpPost);
+				// Do the post
+				httpPost.setEntity(body);
 
-            // 2xx is OK, anything else we regard as failure
-            if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
-                builder.error(ResultErrorBuilder
-                        .withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION,
-                                "Invalid webhookUrl")
-                        .parameterKey("webhookUrl").build());
-            }
-        } catch (Exception e) {
-            builder.error(ResultErrorBuilder
-                    .withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION,
-                            "Invalid webhookUrl")
-                    .parameterKey("webhookUrl").build());
-        }
-    }
+				HttpResponse response = client.execute(httpPost);
 
-    protected String asJson(SlackMessage message) {
-        Map<String, Object> jsonMap = new HashMap<>();
+				// 2xx is OK, anything else we regard as failure
+				if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
+					builder.error(ResultErrorBuilder
+							.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid webhookUrl")
+							.parameterKey("webhookUrl").build());
+				}
+			} catch (Exception e) {
+				builder.error(ResultErrorBuilder
+						.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid webhookUrl")
+						.parameterKey("webhookUrl").build());
+			}
+		} else if (ObjectHelper.isNotEmpty((String) parameters.get("token"))) {
+			String token = (String) parameters.get("token");
 
-        // Put the values in a map
-        jsonMap.put("text", message.getText());
+			try {
+				HttpClient client = HttpClientBuilder.create().useSystemProperties().build();
+				HttpPost httpPost = new HttpPost("https://slack.com/api/channels.list");
 
-        // Generate a JSONObject
-        JSONObject jsonObject = new JSONObject(jsonMap);
+				List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+				params.add(new BasicNameValuePair("token", token));
+				httpPost.setEntity(new UrlEncodedFormEntity(params));
 
-        // Return the string based on the JSON Object
-        return JSONObject.toJSONString(jsonObject);
-    }
+				HttpResponse response = client.execute(httpPost);
+				// 2xx is OK, anything else we regard as failure
+				if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
+					builder.error(ResultErrorBuilder
+							.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid token")
+							.parameterKey("token").build());
+				}
+			} catch (Exception e) {
+				builder.error(ResultErrorBuilder
+						.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid token")
+						.parameterKey("token").build());
+			}
+
+		}
+	}
+
+	protected String asJson(SlackMessage message) {
+		Map<String, Object> jsonMap = new HashMap<>();
+
+		// Put the values in a map
+		jsonMap.put("text", message.getText());
+
+		// Generate a JSONObject
+		JSONObject jsonObject = new JSONObject(jsonMap);
+
+		// Return the string based on the JSON Object
+		return JSONObject.toJSONString(jsonObject);
+	}
 
 }
