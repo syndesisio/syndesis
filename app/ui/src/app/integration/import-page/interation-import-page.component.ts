@@ -139,13 +139,15 @@ export class IntegrationImportPageComponent implements OnInit, OnDestroy {
       // look through the imported integrations and pull out referenced
       // connections, so we can show if any connections need configuration
       importedIntegrations.forEach(i => {
-        i.steps.filter(s => s.stepKind === 'endpoint').forEach(step => {
-          if (!step.connection) {
-            return;
-          }
-          if (!referencedConnections.find(c => c.id === step.connection.id)) {
-            referencedConnections.push(step.connection);
-          }
+        i.flows.forEach(f => {
+          f.steps.filter(s => s.stepKind === 'endpoint').forEach(step => {
+            if (!step.connection) {
+              return;
+            }
+            if (!referencedConnections.find(c => c.id === step.connection.id)) {
+              referencedConnections.push(step.connection);
+            }
+          });
         });
       });
       const importedConnections = referencedConnections.map(connection => {

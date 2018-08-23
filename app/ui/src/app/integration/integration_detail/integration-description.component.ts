@@ -30,10 +30,10 @@ export class IntegrationDescriptionComponent {
     this.attributeUpdated.emit({ [attribute]: value });
   }
 
-  getStepLineClass(index: number): string {
-    return index === this.integration.steps.length - 1
+  getStepLineClass(flowIndex: number, stepIndex: number): string {
+    return stepIndex === this.integration.flows[flowIndex].steps.length - 1
       ? 'finish'
-      : index === 0
+      : stepIndex === 0
         ? 'start'
         : '';
   }

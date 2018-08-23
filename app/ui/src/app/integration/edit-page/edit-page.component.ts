@@ -26,6 +26,7 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   childRouteSubscription: Subscription;
   flowSubscription: Subscription;
+  fragmentSubscription: Subscription;
   urls: UrlSegment[];
   _canContinue = false;
   position: number;
@@ -92,7 +93,8 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
     if (validate) {
       this.router.navigate(['save-or-add-step'], {
         queryParams: { validate: true },
-        relativeTo: this.route
+        relativeTo: this.route,
+        fragment: this.currentFlowService.flowId
       });
     }
   }
@@ -112,6 +114,12 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
         this.integrationStore.loadOrCreate(integrationId)
       );
 
+    this.fragmentSubscription = this.route.fragment.subscribe(fragment => {
+      if (fragment) {
+        this.currentFlowService.flowId = fragment;
+      }
+    });
+
     this.navigationService.hide();
   }
 
@@ -125,6 +133,9 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
     }
     if (this.flowSubscription) {
       this.flowSubscription.unsubscribe();
+    }
+    if (this.fragmentSubscription) {
+      this.fragmentSubscription.unsubscribe();
     }
   }
 }
