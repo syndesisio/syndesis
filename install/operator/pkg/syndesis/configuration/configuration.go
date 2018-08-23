@@ -1,9 +1,10 @@
 package configuration
 
 import (
+	"strconv"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"k8s.io/api/core/v1"
-	"strconv"
 )
 
 type SyndesisEnvVar string
@@ -15,26 +16,26 @@ var TemplateLocation *string
 var Registry *string
 
 const (
-	EnvRouteHostname 					SyndesisEnvVar = "ROUTE_HOSTNAME"
+	EnvRouteHostname SyndesisEnvVar = "ROUTE_HOSTNAME"
 	//EnvOpenshiftMaster 					SyndesisEnvVar = "OPENSHIFT_MASTER"
-	EnvOpenshiftConsoleUrl				SyndesisEnvVar = "OPENSHIFT_CONSOLE_URL"
-	EnvOpenshiftProject					SyndesisEnvVar = "OPENSHIFT_PROJECT"
-	EnvOpenshiftOauthClientSecret		SyndesisEnvVar = "OPENSHIFT_OAUTH_CLIENT_SECRET"
-	EnvPostgresqlMemoryLimit			SyndesisEnvVar = "POSTGRESQL_MEMORY_LIMIT"
-	EnvPostgresqlImageStreamNamespace	SyndesisEnvVar = "POSTGRESQL_IMAGE_STREAM_NAMESPACE"
-	EnvPostgresqlUser					SyndesisEnvVar = "POSTGRESQL_USER"
+	EnvOpenshiftConsoleUrl            SyndesisEnvVar = "OPENSHIFT_CONSOLE_URL"
+	EnvOpenshiftProject               SyndesisEnvVar = "OPENSHIFT_PROJECT"
+	EnvOpenshiftOauthClientSecret     SyndesisEnvVar = "OPENSHIFT_OAUTH_CLIENT_SECRET"
+	EnvPostgresqlMemoryLimit          SyndesisEnvVar = "POSTGRESQL_MEMORY_LIMIT"
+	EnvPostgresqlImageStreamNamespace SyndesisEnvVar = "POSTGRESQL_IMAGE_STREAM_NAMESPACE"
+	EnvPostgresqlUser                 SyndesisEnvVar = "POSTGRESQL_USER"
 	//EnvPostgresqlPassword				SyndesisEnvVar = "POSTGRESQL_PASSWORD"
-	EnvPostgresqlDatabase				SyndesisEnvVar = "POSTGRESQL_DATABASE"
-	EnvPostgresqlVolumeCapacity			SyndesisEnvVar = "POSTGRESQL_VOLUME_CAPACITY"
+	EnvPostgresqlDatabase       SyndesisEnvVar = "POSTGRESQL_DATABASE"
+	EnvPostgresqlVolumeCapacity SyndesisEnvVar = "POSTGRESQL_VOLUME_CAPACITY"
 	//EnvPostgresqlSampledbPassword		SyndesisEnvVar = "POSTGRESQL_SAMPLEDB_PASSWORD"
-	EnvTestSupport				SyndesisEnvVar = "TEST_SUPPORT_ENABLED"
+	EnvTestSupport SyndesisEnvVar = "TEST_SUPPORT_ENABLED"
 	//EnvOauthCookieSecret				SyndesisEnvVar = "OAUTH_COOKIE_SECRET"
 	//EnvSyndesisEncryptKey				SyndesisEnvVar = "SYNDESIS_ENCRYPT_KEY"
-	EnvPrometheusVolumeCapacity			SyndesisEnvVar = "PROMETHEUS_VOLUME_CAPACITY"
-	EnvPrometheusMemoryLimit			SyndesisEnvVar = "PROMETHEUS_MEMORY_LIMIT"
-	EnvMetaVolumeCapacity				SyndesisEnvVar = "META_VOLUME_CAPACITY"
-	EnvMetaMemoryLimit					SyndesisEnvVar = "META_MEMORY_LIMIT"
-	EnvServerMemoryLimit				SyndesisEnvVar = "SERVER_MEMORY_LIMIT"
+	EnvPrometheusVolumeCapacity SyndesisEnvVar = "PROMETHEUS_VOLUME_CAPACITY"
+	EnvPrometheusMemoryLimit    SyndesisEnvVar = "PROMETHEUS_MEMORY_LIMIT"
+	EnvMetaVolumeCapacity       SyndesisEnvVar = "META_VOLUME_CAPACITY"
+	EnvMetaMemoryLimit          SyndesisEnvVar = "META_MEMORY_LIMIT"
+	EnvServerMemoryLimit        SyndesisEnvVar = "SERVER_MEMORY_LIMIT"
 	//EnvClientStateAuthenticationKey		SyndesisEnvVar = "CLIENT_STATE_AUTHENTICATION_KEY"
 	//EnvClientStateEncryptionKey			SyndesisEnvVar = "CLIENT_STATE_ENCRYPTION_KEY"
 	EnvImageStreamNamespace          SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
@@ -43,24 +44,25 @@ const (
 	EnvDemoDataEnabled               SyndesisEnvVar = "DEMO_DATA_ENABLED"
 	EnvMaxIntegrationsPerUser        SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
 	EnvIntegrationStateCheckInterval SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
+	EnvSarNamespace                  SyndesisEnvVar = "SAR_PROJECT"
 
-	EnvSyndesisVersion 					SyndesisEnvVar = "SYNDESIS_VERSION"
-	EnvUpgradeRegistry                  SyndesisEnvVar = "UPGRADE_REGISTRY"
+	EnvSyndesisVersion SyndesisEnvVar = "SYNDESIS_VERSION"
+	EnvUpgradeRegistry SyndesisEnvVar = "UPGRADE_REGISTRY"
 )
 
 type SyndesisEnvVarConfig struct {
-	Var		SyndesisEnvVar
-	Value	string
+	Var   SyndesisEnvVar
+	Value string
 }
 
 type SyndesisEnvVarExtractor func(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig
 
 type SyndesisEnvVarSetter func(config map[string]string, syndesis *v1alpha1.Syndesis)
 
-
 var (
-	extractors = []SyndesisEnvVarExtractor {
+	extractors = []SyndesisEnvVarExtractor{
 		envOpenshiftProject,
+		envSarNamespace,
 		envRouteHostname,
 		envSyndesisRegistry,
 		envDemoDataEnabled,
@@ -87,7 +89,7 @@ var (
 		envMetaVolumeCapacity,
 	}
 
-	setters = []SyndesisEnvVarSetter {
+	setters = []SyndesisEnvVarSetter{
 		routeHostnameFromEnv,
 		syndesisRegistryFromEnv,
 		demoDataEnabledFromEnv,
@@ -112,6 +114,7 @@ var (
 
 		metaMemoryLimitFromEnv,
 		metaVolumeCapacityFromEnv,
+		sarNamespaceFromEnv,
 	}
 )
 
@@ -132,12 +135,11 @@ func SetConfigurationFromEnvVars(config map[string]string, syndesis *v1alpha1.Sy
 	}
 }
 
-
 // Common
 func envRouteHostname(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	if routeHost := syndesis.Spec.RouteHostName; routeHost != "" {
 		return &SyndesisEnvVarConfig{
-			Var: EnvRouteHostname,
+			Var:   EnvRouteHostname,
 			Value: routeHost,
 		}
 	}
@@ -152,7 +154,7 @@ func routeHostnameFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis)
 func envOpenShiftConsoleUrl(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	if consoleUrl := syndesis.Spec.OpenShiftConsoleUrl; consoleUrl != "" {
 		return &SyndesisEnvVarConfig{
-			Var: EnvOpenshiftConsoleUrl,
+			Var:   EnvOpenshiftConsoleUrl,
 			Value: consoleUrl,
 		}
 	}
@@ -166,8 +168,26 @@ func openShiftConsoleUrlFromEnv(config map[string]string, syndesis *v1alpha1.Syn
 
 func envOpenshiftProject(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	return &SyndesisEnvVarConfig{
-		Var: EnvOpenshiftProject,
+		Var:   EnvOpenshiftProject,
 		Value: syndesis.Namespace,
+	}
+}
+
+func sarNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvSarNamespace); ok {
+		syndesis.Spec.SarNamespace = v
+	}
+}
+
+func envSarNamespace(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	sarNamespace := syndesis.Spec.SarNamespace
+	if sarNamespace == "" {
+		sarNamespace = syndesis.Namespace
+	}
+
+	return &SyndesisEnvVarConfig{
+		Var:   EnvSarNamespace,
+		Value: sarNamespace,
 	}
 }
 
@@ -200,7 +220,6 @@ func demoDataEnabledFromEnv(config map[string]string, syndesis *v1alpha1.Syndesi
 		syndesis.Spec.DemoData = &v
 	}
 }
-
 
 func envMaxIntegrationsPerUser(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	if integrations := syndesis.Spec.Integration.Limit; integrations != nil {
@@ -237,7 +256,7 @@ func integrationStateCheckInterval(config map[string]string, syndesis *v1alpha1.
 func envControllersIntegrationsEnabled(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	if deploy := syndesis.Spec.DeployIntegrations; deploy != nil {
 		return &SyndesisEnvVarConfig{
-			Var: EnvControllersIntegrationEnabled,
+			Var:   EnvControllersIntegrationEnabled,
 			Value: strconv.FormatBool(*deploy),
 		}
 	}
@@ -247,7 +266,7 @@ func envControllersIntegrationsEnabled(syndesis *v1alpha1.Syndesis) *SyndesisEnv
 func envTestSupport(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	if deploy := syndesis.Spec.TestSupport; deploy != nil {
 		return &SyndesisEnvVarConfig{
-			Var: EnvTestSupport,
+			Var:   EnvTestSupport,
 			Value: strconv.FormatBool(*deploy),
 		}
 	}
@@ -269,7 +288,7 @@ func testSupportFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
 func envImageStreamNamespace(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	if namespace := syndesis.Spec.ImageStreamNamespace; namespace != "" {
 		return &SyndesisEnvVarConfig{
-			Var: EnvImageStreamNamespace,
+			Var:   EnvImageStreamNamespace,
 			Value: namespace,
 		}
 	}
@@ -280,7 +299,6 @@ func imageStreamNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Sy
 		syndesis.Spec.ImageStreamNamespace = v
 	}
 }
-
 
 // Postgresql
 func envPostgresqlMemoryLimit(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
@@ -297,7 +315,7 @@ func postgresqlMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.S
 		if syndesis.Spec.Components.Db.Resources.Limits == nil {
 			syndesis.Spec.Components.Db.Resources.Limits = make(v1.ResourceList, 0)
 		}
-		syndesis.Spec.Components.Db.Resources.Limits[v1.ResourceMemory]=v
+		syndesis.Spec.Components.Db.Resources.Limits[v1.ResourceMemory] = v
 	}
 }
 
@@ -315,7 +333,6 @@ func postgresqlImageStreamNamespaceFromEnv(config map[string]string, syndesis *v
 		syndesis.Spec.Components.Db.ImageStreamNamespace = v
 	}
 }
-
 
 func envPostgresqlUser(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	if user := syndesis.Spec.Components.Db.User; user != "" {
@@ -362,7 +379,6 @@ func postgresqlVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha
 	}
 }
 
-
 // Prometheus
 func envPrometheusMemoryLimit(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	if limits := syndesis.Spec.Components.Prometheus.Resources.Limits.Memory(); limits != nil && limits.Value() > 0 {
@@ -378,7 +394,7 @@ func prometheusMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.S
 		if syndesis.Spec.Components.Prometheus.Resources.Limits == nil {
 			syndesis.Spec.Components.Prometheus.Resources.Limits = make(v1.ResourceList, 0)
 		}
-		syndesis.Spec.Components.Prometheus.Resources.Limits[v1.ResourceMemory]=v
+		syndesis.Spec.Components.Prometheus.Resources.Limits[v1.ResourceMemory] = v
 	}
 }
 
@@ -397,7 +413,6 @@ func prometheusVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha
 	}
 }
 
-
 // Server
 func envServerMemoryLimit(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	if limits := syndesis.Spec.Components.Server.Resources.Limits.Memory(); limits != nil && limits.Value() > 0 {
@@ -413,10 +428,9 @@ func serverMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Synde
 		if syndesis.Spec.Components.Server.Resources.Limits == nil {
 			syndesis.Spec.Components.Server.Resources.Limits = make(v1.ResourceList, 0)
 		}
-		syndesis.Spec.Components.Server.Resources.Limits[v1.ResourceMemory]=v
+		syndesis.Spec.Components.Server.Resources.Limits[v1.ResourceMemory] = v
 	}
 }
-
 
 // Meta
 func envMetaMemoryLimit(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
@@ -433,7 +447,7 @@ func metaMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesi
 		if syndesis.Spec.Components.Meta.Resources.Limits == nil {
 			syndesis.Spec.Components.Meta.Resources.Limits = make(v1.ResourceList, 0)
 		}
-		syndesis.Spec.Components.Meta.Resources.Limits[v1.ResourceMemory]=v
+		syndesis.Spec.Components.Meta.Resources.Limits[v1.ResourceMemory] = v
 	}
 }
 
@@ -451,4 +465,3 @@ func metaVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Synd
 		syndesis.Spec.Components.Meta.Resources.VolumeCapacity = v
 	}
 }
-

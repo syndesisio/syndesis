@@ -1,16 +1,16 @@
 package v1alpha1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type SyndesisList struct {
-	metav1.TypeMeta  `json:",inline"`
-	metav1.ListMeta  `json:"metadata"`
-	Items []Syndesis `json:"items"`
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata"`
+	Items           []Syndesis `json:"items"`
 }
 
 func NewSyndesisList() *SyndesisList {
@@ -25,26 +25,27 @@ func NewSyndesisList() *SyndesisList {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type Syndesis struct {
-	metav1.TypeMeta       `json:",inline"`
-	metav1.ObjectMeta     `json:"metadata"`
-	Spec   SyndesisSpec   `json:"spec"`
-	Status SyndesisStatus `json:"status,omitempty"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              SyndesisSpec   `json:"spec"`
+	Status            SyndesisStatus `json:"status,omitempty"`
 }
 
 type SyndesisSpec struct {
-	RouteHostName                 string     `json:"routeHostname,omitempty"`
-	DemoData                      *bool           `json:"demoData,omitempty"`
-	DeployIntegrations            *bool           `json:"deployIntegrations,omitempty"`
-	TestSupport                   *bool           `json:"testSupport,omitempty"`
-	ImageStreamNamespace          string          `json:"imageStreamNamespace,omitempty"`
-	Integration                   IntegrationSpec `json:"integration,omitempty"`
-	Registry                      string          `json:"registry,omitempty"`
-	Components                    ComponentsSpec  `json:"components,omitempty"`
-	OpenShiftConsoleUrl           string          `json:"openShiftConsoleUrl,omitempty"`
+	RouteHostName        string          `json:"routeHostname,omitempty"`
+	DemoData             *bool           `json:"demoData,omitempty"`
+	DeployIntegrations   *bool           `json:"deployIntegrations,omitempty"`
+	TestSupport          *bool           `json:"testSupport,omitempty"`
+	ImageStreamNamespace string          `json:"imageStreamNamespace,omitempty"`
+	Integration          IntegrationSpec `json:"integration,omitempty"`
+	Registry             string          `json:"registry,omitempty"`
+	Components           ComponentsSpec  `json:"components,omitempty"`
+	OpenShiftConsoleUrl  string          `json:"openShiftConsoleUrl,omitempty"`
+	SarNamespace         string          `json:"sarNamespace,omitempty"`
 }
 
 type IntegrationSpec struct {
-	Limit *int       `json:"limit,omitempty"`
+	Limit              *int `json:"limit,omitempty"`
 	StateCheckInterval *int `json:"stateCheckInterval,omitempty"`
 }
 
@@ -116,5 +117,5 @@ type Resources struct {
 
 type ResourcesWithVolume struct {
 	v1.ResourceRequirements `json:",inline,omitempty"`
-	VolumeCapacity string   `json:"volumeCapacity,omitempty"`
+	VolumeCapacity          string `json:"volumeCapacity,omitempty"`
 }
