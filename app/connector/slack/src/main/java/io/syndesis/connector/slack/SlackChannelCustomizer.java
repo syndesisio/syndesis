@@ -31,7 +31,7 @@ public class SlackChannelCustomizer implements ComponentProxyCustomizer {
 	}
 
     private void sanitizeUserOrChannel(Map<String, Object> options) {
-        String username = (String) options.get("username");
+        String username = (String) options.get("receiver");
         String channel = (String) options.remove("channel");
 
         if (channel != null) {
