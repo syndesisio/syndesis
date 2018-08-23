@@ -90,7 +90,7 @@
                         "name":"Username",
                         "description":"Send a message to a specific username",
                         "properties":{
-                            "username": {
+                            "receiver": {
                                 "kind": "parameter",
                                 "displayName": "Username",
                                 "group": "common",
