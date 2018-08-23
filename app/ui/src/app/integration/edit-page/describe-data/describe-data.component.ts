@@ -114,7 +114,8 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
   finishUp() {
     this.router.navigate(['save-or-add-step'], {
       queryParams: { validate: true },
-      relativeTo: this.route.parent
+      relativeTo: this.route.parent,
+      fragment: this.currentFlowService.flowId
     });
   }
 
@@ -207,7 +208,8 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
     const step = this.currentFlowService.getStep(this.position);
     if (!step.action) {
       this.router.navigate(['action-select', this.position], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
+        fragment: this.currentFlowService.flowId
       });
       return;
     }

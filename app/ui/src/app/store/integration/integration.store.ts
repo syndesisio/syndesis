@@ -8,7 +8,9 @@ import {
   createIntegration,
   createStep,
   Integration,
-  Integrations
+  Integrations,
+  Flow,
+  key
 } from '@syndesis/ui/platform';
 
 import { AbstractStore, EventsService, ChangeEvent } from '@syndesis/ui/store/entity';
@@ -41,7 +43,10 @@ export class IntegrationStore extends AbstractStore<
     const start = createStep();
     const end = createStep();
     start.stepKind = end.stepKind = 'endpoint';
-    integration.steps = [start, end];
+    integration.flows = [{
+      id: key(),
+      steps: [start, end]
+    } as Flow];
     return integration;
   }
 }

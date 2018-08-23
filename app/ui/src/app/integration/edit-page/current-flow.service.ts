@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import {
@@ -11,24 +11,28 @@ import {
   DataShape,
   Integration,
   Step,
-  key,
   IntegrationSupportService,
-  ActionDescriptor
+  ActionDescriptor,
+  key,
+  Flow
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import {
   IntegrationStore,
-  ENDPOINT,
   DATA_MAPPER,
-  StepStore
+  ENDPOINT,
+  StepStore,
 } from '@syndesis/ui/store';
 import { FlowEvent } from '@syndesis/ui/integration/edit-page';
 
 const category = getCategory('CurrentFlow');
 
 @Injectable()
-export class CurrentFlowService {
+export class CurrentFlowService implements OnDestroy {
+
   events = new EventEmitter<FlowEvent>();
+
+  public flowId?: string;
 
   private subscription: Subscription;
   private _integration: Integration;
@@ -40,8 +44,11 @@ export class CurrentFlowService {
     private integrationSupportService: IntegrationSupportService
   ) {
     this.subscription = this.events.subscribe((event: FlowEvent) =>
-      this.handleEvent(event)
-    );
+      this.handleEvent(event));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   isValid(): boolean {
@@ -151,13 +158,10 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getSubsequentSteps(position): Array<Step> {
-    if (!this._integration) {
+    if (!this.steps) {
       return undefined;
     }
-    if (!this._integration.steps) {
-      this._integration.steps = [];
-    }
-    return this._integration.steps.slice(position);
+    return this.steps.slice(position);
   }
 
   /**
@@ -203,14 +207,11 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getPreviousSteps(position): Array<Step> {
-    if (!this._integration) {
+    if (!this.steps) {
       return undefined;
-    } else {
-      if (!this._integration.steps) {
-        this._integration.steps = [];
-      }
-      return this._integration.steps.slice(0, position);
     }
+
+    return this.steps.slice(0, position);
   }
 
   /**
@@ -303,7 +304,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getFirstPosition(): number {
-    if (!this.integration) {
+    if (!this.steps) {
       return undefined;
     }
     return 0;
@@ -316,7 +317,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getLastPosition(): number {
-    if (!this.integration) {
+    if (!this.steps) {
       return undefined;
     }
     if (this.steps.length <= 1) {
@@ -349,21 +350,21 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getStep(position: number): Step {
-    if (!this.integration) {
+    if (!this.steps || position === undefined) {
       return undefined;
     }
     return this.steps[position];
   }
 
   isEmpty(): boolean {
-    if (!this.integration) {
+    if (!this.steps) {
       return true;
     }
     return this.steps.length === 0;
   }
 
   atEnd(position: number): boolean {
-    if (!this.integration) {
+    if (!this.steps) {
       return true;
     }
     // position is assumed to be 0 indexed
@@ -571,7 +572,7 @@ export class CurrentFlowService {
       case 'integration-save': {
         log.debugc(() => 'Saving integration: ' + this.integration);
         // ensure that all steps have IDs before saving
-        this._integration.steps.forEach(s => {
+        this.steps.forEach(s => {
           if (!s.id) {
             s.id = key();
           }
@@ -653,28 +654,37 @@ export class CurrentFlowService {
   }
 
   get steps(): Array<Step> {
-    if (!this._integration) {
+    if (!this._integration || !this.flowId)  {
       return undefined;
-    } else {
-      if (!this._integration.steps) {
-        this._integration.steps = [];
-      }
-      return this._integration.steps;
     }
+
+    return this.currentFlow.steps;
   }
 
   set integration(i: Integration) {
     this._loaded = false;
     this._integration = <Integration>i;
-    if (i && i.steps && i.steps.length) {
-      i.steps = i.steps.filter(step => step !== null);
-    }
+    this.flowId = i.flows && i.flows.length > 0 ? i.flows[0].id : undefined;
     setTimeout(() => {
       this.events.emit({
         kind: 'integration-updated',
         integration: this.integration
       });
     }, 10);
+  }
+
+  private get currentFlow() {
+    return this.flow(this.flowId);
+  }
+
+  private flow(id: string): Flow {
+    let flow = this.integration.flows.find(f => f.id === id);
+    if (flow === undefined) {
+      flow = this.createFlowWithId(id);
+      this.integration.flows.push(flow);
+    }
+
+    return flow;
   }
 
   private isUserDefined(dataShape: DataShape) {
@@ -738,5 +748,12 @@ export class CurrentFlowService {
       }
     }
     return props;
+  }
+
+  private createFlowWithId(id: string): Flow {
+    return {
+      id: id,
+      steps: [createConnectionStep(), createConnectionStep()]
+    } as Flow;
   }
 }

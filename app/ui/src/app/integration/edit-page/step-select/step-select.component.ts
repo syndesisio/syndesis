@@ -72,7 +72,8 @@ export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
     if (!step || !('stepKind' in step) || step.stepKind === 'endpoint') {
       // safety net
       this.router.navigate(['save-or-add-step'], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
+        fragment: this.currentFlowService.flowId
       });
       return;
     }

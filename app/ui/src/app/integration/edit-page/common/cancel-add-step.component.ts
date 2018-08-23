@@ -43,13 +43,15 @@ export class CancelAddStepComponent implements OnInit {
         position: this.position,
         onSave: () => {
           this.router.navigate(['save-or-add-step'], {
-            relativeTo: this.route.parent
+            relativeTo: this.route.parent,
+            fragment: this.currentFlowService.flowId
           });
         }
       });
     } else {
       this.router.navigate(['save-or-add-step'], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
+        fragment: this.currentFlowService.flowId
       });
     }
   }

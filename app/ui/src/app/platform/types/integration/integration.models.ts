@@ -5,7 +5,8 @@ import {
   Connection,
   key,
   WithLeveledMessages,
-  StringMap
+  StringMap,
+  WithId
 } from '@syndesis/ui/platform';
 
 export class Step implements BaseEntity {
@@ -51,8 +52,7 @@ export interface IntegrationOverview extends BaseEntity, WithLeveledMessages {
 export type IntegrationOverviews = Array<IntegrationOverview>;
 
 export interface Integration extends IntegrationOverview {
-  steps: Array<Step>;
-  connections: Array<Connection>;
+  flows: Flows;
   userId: string;
   desiredState: IntegrationStatus;
   stepsDone: Array<string>;
@@ -67,6 +67,13 @@ export interface Integration extends IntegrationOverview {
 }
 
 export type Integrations = Array<Integration>;
+
+export interface Flow extends WithId {
+  steps: Array<Step>;
+  connections: Array<Connection>;
+}
+
+export type Flows = Array<Flow>;
 
 export interface IntegrationDeploymentSpec {
   connections: Array<Connection>;

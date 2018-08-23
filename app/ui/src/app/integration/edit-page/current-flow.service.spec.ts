@@ -7,7 +7,9 @@ import {
   createStep,
   Integration,
   Step,
-  Steps
+  Steps,
+  Flow,
+  createConnectionStep
 } from '@syndesis/ui/platform';
 import { CoreModule } from '@syndesis/ui/core';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
@@ -43,11 +45,17 @@ describe('CurrentFlow', () => {
         StepStore
       ]
     });
+    inject([CurrentFlowService], c => c.flowId = 'flow1');
   });
 
   function getDummyIntegration(): Integration {
     const rc = createIntegration();
-    rc.steps = <Steps>[];
+    const flow: Flow = {
+      id: 'flow11',
+      connections: <Connection[]>[],
+      steps: <Step[]>[]
+    };
+    rc.flows = [flow];
 
     const step1 = createStep();
     step1.id = 'foobar';
@@ -55,18 +63,18 @@ describe('CurrentFlow', () => {
     step1.connection = TypeFactory.create<Connection>();
     step1.connection.connectorId = 'timer';
     step1.action = TypeFactory.create<Action>();
-    rc.steps.push(step1);
+    flow.steps.push(step1);
 
     const step2 = createStep();
     step2.id = '3';
     step2.stepKind = 'endpoint';
     step2.connection = TypeFactory.create<Connection>();
     step2.action = TypeFactory.create<Action>();
-    rc.steps.push(step2);
+    flow.steps.push(step2);
 
     const step3 = createStep();
     step3.stepKind = 'log';
-    rc.steps.push(step3);
+    flow.steps.push(step3);
 
     const step4 = createStep();
     step4.id = '4';
@@ -74,7 +82,7 @@ describe('CurrentFlow', () => {
     step4.connection = TypeFactory.create<Connection>();
     step4.connection.connectorId = 'http';
     step4.action = TypeFactory.create<Action>();
-    rc.steps.push(step4);
+    flow.steps.push(step4);
     return rc;
   }
 
@@ -151,8 +159,24 @@ describe('CurrentFlow', () => {
       currentFlowService.integration = <Integration>{};
       expect(currentFlowService.getStartConnection()).toBeUndefined();
       expect(currentFlowService.getEndConnection()).toBeUndefined();
-      expect(currentFlowService.getFirstPosition()).toEqual(0);
-      expect(currentFlowService.getLastPosition()).toEqual(1);
+      expect(currentFlowService.getFirstPosition()).toBeUndefined();
+      expect(currentFlowService.getLastPosition()).toBeUndefined();
+    })
+  );
+
+  it(
+    'Should return an 0 as start and 1 end connection with an minimal integration',
+    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+      const flow = <Flow>{};
+      flow.id = 'flow1';
+      flow.steps = [createConnectionStep(), createConnectionStep()];
+      const integration = <Integration>{};
+      integration.flows = [ flow ];
+      currentFlowService.integration = integration;
+      expect(currentFlowService.getStartConnection()).toBeUndefined();
+      expect(currentFlowService.getEndConnection()).toBeUndefined();
+      expect(currentFlowService.getFirstPosition()).toBe(0);
+      expect(currentFlowService.getLastPosition()).toBe(1);
     })
   );
 });
