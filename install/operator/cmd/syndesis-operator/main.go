@@ -29,6 +29,8 @@ func main() {
 	printVersion()
 
 	configuration.TemplateLocation = flag.String("template", "/conf/syndesis-template.yml", "Path to template used for installation")
+	configuration.Registry = flag.String("registry", "docker.io", "Registry to use for loading images like the upgrade pod")
+
 	flag.Parse()
 	logrus.Infof("Using template %s", *configuration.TemplateLocation)
 
