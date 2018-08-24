@@ -173,7 +173,9 @@ func (a *Upgrade) getUpgradeResources(syndesis *v1alpha1.Syndesis) ([]runtime.Ob
 			OAuthClientSecret: "-",
 		},
 		SyndesisVersion: a.operatorVersion,
+		UpgradeRegistry: configuration.Registry,
 	})
+
 	if err != nil {
 		return nil, err
 	}
