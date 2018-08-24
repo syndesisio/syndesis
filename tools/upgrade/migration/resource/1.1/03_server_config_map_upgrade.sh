@@ -19,7 +19,7 @@ with os.popen("oc get configmap syndesis-server-config -o jsonpath='{.data.appli
   config["features"] = config.get("features", dict())
   config["features"]["monitoring"] = config["features"].get("monitoring", dict())
   config["features"]["monitoring"]["enabled"] = True
-
+  config["builderImageStreamTag"] = "fuse-ignite-s2i:1.3"
   updated = yaml.dump(config, default_flow_style=False)
   print updated.replace('\n', "\\\n").replace('\"', '\\\"')
 EOF
