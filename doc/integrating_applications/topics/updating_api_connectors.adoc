@@ -2,11 +2,15 @@
 = Updating API client connectors
 
 You cannot update an API client connector. If there is
-an update to the API's OpenAPI specification, then you must upload the updated
-OpenAPI specification and create a new API client connector.
+an update to the API's OpenAPI specification, 
+then you must do one of the following:
 
-To update integrations to use connections based on the updated OpenAPI
-specification:
+* Upload the updated OpenAPI specification and create a new API client connector.
+* Upload the out-of-date specification again, update it in Apicurio Studio, 
+and create a new API client connector. 
+
+To update integrations to use connections that are based on 
+the updated OpenAPI specification:
 
 . Create a new API client connector based on the updated OpenAPI specification.
 To easily distinguish between the old connector and the new connector, 

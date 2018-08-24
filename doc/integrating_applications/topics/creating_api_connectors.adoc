@@ -18,14 +18,27 @@ displays information about what needs to be corrected. Select a different
 OpenAPI file to upload or click *Cancel*,
 revise the OpenAPI file, and upload the updated file.
 +
-If the specification is valid and complete, {prodname} displays a summary of
-the actions that the connector will provide. This might include errors and
+If the specification is valid, {prodname} displays a summary of
+the actions that the connector provides. This might include errors and
 warnings about the action specifications.
 
-. To revise the OpenAPI file,
-click *Cancel*, revise the OpenAPI file, and upload the updated file.
+. If you are satisfied with the action summary, click *Next*.
 +
-If you are satisfied with the action summary, click *Next*.
+Or, to revise the OpenAPI specification, in the lower right, click *Review/Edit* 
+to open Apicurio Studio. Update the specification as needed. 
+In the upper right, click *Save* to incorporate your updates into the 
+new API client connector. Then click *Next* to continue creating the 
+API client connector. 
++
+For details about using Apicurio Studio, see https://www.apicur.io/. 
+Sometimes, if you provide a URL for the OpenAPI specification, {prodname} 
+can upload it but  cannot open it for editing. Typically, this is caused by 
+settings on the file’s host. To open the specification for editing, 
+{prodname} requires that the file host has:
++
+* An `https` URL. An `http` URL does not work. 
+* Enabled CORS. 
+
 . Indicate the API's security requirements by selecting one of the
 following:
 .. *No Security*
@@ -63,7 +76,9 @@ To override a value obtained from
 the OpenAPI file, edit the field value that you want to change.
 After {prodname} creates a connector,
 you cannot change it. To effect a change, you need to upload an updated
-OpenAPI specification so that {prodname} can create a new connector.
+OpenAPI specification so that {prodname} can create a new connector
+or you can upload the same specification and then edit it in Apicurio Studio. 
+You then continue the process for creating a new API client connector. 
 . When you are satisfied with the connector details, click *Create API Connector*.
 {prodname} displays the new connector with the other connectors. 
 
