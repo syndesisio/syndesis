@@ -17,6 +17,7 @@ are:
 * Get a single list requires the `id` parameter.
 * Create a new list requires the `content`.
 * Update a list requires the `id` and `content` parameters.
+
 endif::[]
 
 Suppose that an integration starts by executing a SQL stored procedure
