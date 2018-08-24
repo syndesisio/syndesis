@@ -20,6 +20,7 @@ RUN yum install -y "epel-release" \
         "tree" \
         "jq" \
         "origin-clients" \
+        "PyYAML" \
  && mkdir /opt/backup \
  && chgrp -R 0 /opt \
  && chmod -R g=u /opt
