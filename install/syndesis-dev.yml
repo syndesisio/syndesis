@@ -1621,9 +1621,9 @@ objects:
       openshift.io/documentation-url: "https://syndesis.io"
       openshift.io/support-url: "https://access.redhat.com"
   parameters:
-  - name: SYNDESIS_VERSION
-    description: 'The version to upgrade to or "latest" for the newest version'
-    value: latest
+  - name: UPGRADE_REGISTRY
+    description: 'Registry from where to pick up the upgrade pod'
+    value: docker.io
     required: true
   message: |-
     Syndesis upgrade process started
@@ -1631,12 +1631,12 @@ objects:
   - apiVersion: v1
     kind: Pod
     metadata:
-      name: syndesis-upgrade-${SYNDESIS_VERSION}
+      name: syndesis-upgrade-latest
     spec:
       serviceAccountName: syndesis-operator
       containers:
       - name: upgrade
-        image: syndesis/syndesis-upgrade:${SYNDESIS_VERSION}
+        image: ${UPGRADE_REGISTRY}/syndesis/syndesis-upgrade:latest
         env:
           - name: SYNDESIS_UPGRADE_PROJECT
             valueFrom:

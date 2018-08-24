@@ -64,6 +64,7 @@ type tags struct {
 	Postgresql string
 	OAuthProxy string
 	Prometheus string
+	Upgrade string
 }
 
 type Context struct {
@@ -144,6 +145,7 @@ func init() {
 	flags.BoolVar(&context.AllowLocalHost, "allow-localhost", false, "Allow localhost")
 	flags.BoolVar(&context.WithDockerImages, "with-docker-images", false, "With docker images")
 	flags.StringVar(&context.Tags.Syndesis, "syndesis-tag", "latest", "Syndesis Image tag to use")
+	flags.StringVar(&context.Tags.Upgrade, "upgrade-tag", "latest", "Syndesis Upgrade version")
 	flags.BoolVar(&context.Oso, "oso", false, "Generate product templates for SO")
 	flags.BoolVar(&context.Ocp, "ocp", false, "Generate product templates for OCP")
 	flags.BoolVar(&context.EarlyAccess, "early-access", false, "Point repositories to early-access repos")

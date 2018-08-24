@@ -11,6 +11,9 @@ type SyndesisEnvVar string
 // Location from where the template should be loaded
 var TemplateLocation *string
 
+// Registry for looking up images
+var Registry *string
+
 const (
 	EnvRouteHostname 					SyndesisEnvVar = "ROUTE_HOSTNAME"
 	//EnvOpenshiftMaster 					SyndesisEnvVar = "OPENSHIFT_MASTER"
@@ -42,6 +45,7 @@ const (
 	EnvIntegrationStateCheckInterval SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
 
 	EnvSyndesisVersion 					SyndesisEnvVar = "SYNDESIS_VERSION"
+	EnvUpgradeRegistry                  SyndesisEnvVar = "UPGRADE_REGISTRY"
 )
 
 type SyndesisEnvVarConfig struct {
