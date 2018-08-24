@@ -1,5 +1,5 @@
 [id='triggering-integrations-with-http-requests']
-= Triggering integrations with HTTP requests
+= Triggering integrations with HTTP requests (Webhook)
 
 You can trigger an integration by sending an HTTP `GET` or `POST`
 request to an HTTP endpoint that {prodname} exposes. 
