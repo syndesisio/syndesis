@@ -54,6 +54,9 @@ specification. You can then create a connection to that REST API.
 |Obtain all SAP Concur lists, obtain a particular list, create
 a new list, or update a list. Other SAP Concur actions are Technology Preview features. 
 
+|<<connecting-to-servicenow,ServiceNow>>
+|Obtain records from or copy records to your ServiceNow instance. 
+
 |<<connecting-to-slack,Slack>>
 |Send a message to a Slack user or channel. 
 
