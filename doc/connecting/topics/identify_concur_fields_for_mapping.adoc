@@ -9,13 +9,12 @@ SAP Concur parameters for the action that you selected when you added
 the SAP Concur connection to the integration. 
 
 ifeval::["{location}" == "downstream"]
-In this release, the 
-https://developer.concur.com/api-explorer/v3-0/Lists.html[supported SAP Concur actions and their parameters] 
-are: 
+In this release, you might want to invoke the following 
+https://developer.concur.com/api-explorer/v3-0/Lists.html[SAP Concur actions]. 
 
-* Get all lists requires the `limit` and `offset` parameters.
+* Get all lists requires the `limit` parameter. The `offset` parameter is optional.
 * Get a single list requires the `id` parameter.
-* Create a new list requires the `content`.
+* Create a new list requires the `content` parameter.
 * Update a list requires the `id` and `content` parameters.
 
 endif::[]
@@ -32,7 +31,7 @@ you click *Add a Step*.
 . Click *Data Mapper*. When the data fields
 appear, the *Sources* panel on the left displays the fields that are
 available from the database connection. In this example, the
-source fields include `concur-list-id` and `preject-code`.
+source fields include `concur-list-id` and `project-code`.
 The *Target* panel on the right displays the SAP Concur `id` and
 `content` parameters for the update list action, which the connection
 performs. 

@@ -3,6 +3,7 @@
 
 ifeval::["{location}" == "upstream"]
 
+SAP Concur manages business expenses, travel, and invoices. 
 In an integration, you can connect to SAP Concur and perform
 any one of 85 actions.  
 For example, suppose that you store project codes in a SQL database and
@@ -16,6 +17,7 @@ endif::[]
 
 ifeval::["{location}" == "downstream"]
 
+SAP Concur manages business expenses, travel, and invoices. 
 In an integration, you can connect to SAP Concur to obtain all 
 lists, obtain a particular list, create a list, or update a list. 
 There are additional, unsupported actions that a SAP Concur connection
