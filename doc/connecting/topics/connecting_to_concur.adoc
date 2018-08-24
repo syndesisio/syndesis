@@ -30,12 +30,8 @@ upload the new project codes to the appropriate list.
 
 [IMPORTANT]
 ==== 
-In a {prodname} integration, there are 85 actions that a SAP Concur
-connection can perform. However, only the 
-https://developer.concur.com/api-explorer/v3-0/Lists.html[list actions] are supported. 
-All other actions are 
-https://access.redhat.com/support/offerings/techpreview/[Technology Preview features].
-
+In this release, the SAP Concur connector is a 
+https://access.redhat.com/support/offerings/techpreview/[Technology Preview feature].
 ====
 endif::[]
 
