@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.MavenProperties;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,6 +220,11 @@ public class Application implements ApplicationRunner {
 
         @Override
         public Optional<InputStream> loadExtensionBLOB(String extensionId) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<OpenApi> loadOpeApiDefinition(String s) {
             return Optional.empty();
         }
 

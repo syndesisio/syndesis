@@ -22,8 +22,11 @@ import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.util.MavenProperties;
 
 final class TestConstants {
+
+    protected static final MavenProperties MAVEN_PROPERTIES;
 
     protected static final String SYNDESIS_VERSION;
     protected static final String CAMEL_VERSION;
@@ -36,6 +39,11 @@ final class TestConstants {
     protected static final Connector TWITTER_CONNECTOR;
 
     static {
+        MAVEN_PROPERTIES = new MavenProperties();
+        MAVEN_PROPERTIES.addRepository("maven.central", "https://repo1.maven.org/maven2");
+        MAVEN_PROPERTIES.addRepository("redhat.ga", "https://maven.repository.redhat.com/ga");
+        MAVEN_PROPERTIES.addRepository("jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea");
+
         SYNDESIS_VERSION = ResourceBundle.getBundle("test").getString("syndesis.version");
         CAMEL_VERSION = ResourceBundle.getBundle("test").getString("camel.version");
 

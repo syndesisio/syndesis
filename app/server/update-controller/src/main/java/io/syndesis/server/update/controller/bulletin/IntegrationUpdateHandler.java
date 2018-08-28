@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -86,10 +85,12 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                     .createdAt(System.currentTimeMillis());
             }
 
-            final Iterator<Flow> flows = integration.getFlows().iterator();
+            final List<Flow> flows = integration.getFlows();
 
-            while (flows.hasNext()) {
-                final ListIterator<Step> steps = flows.next().getSteps().listIterator();
+            for (int f = 0; f < flows.size(); f++) {
+                final Flow flow = flows.get(f);
+                final String flowId = flow.getId().orElse("flow-" + f);
+                final List<Step> steps = flow.getSteps();
 
                 // the following code is quite ugly but the integration model duplicates
                 // the resources definition in every step so we definitively need to
@@ -97,9 +98,10 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                 //
                 // A step should only include the user defined property and a reference
                 // to the resources the properties apply to
-                while (steps.hasNext()) {
-                    final Step step = steps.next();
-                    final Supplier<LeveledMessage.Builder> supplier = () -> new LeveledMessage.Builder().putMetadata("step", step.getId().orElse("step-" + steps.nextIndex()));
+                for (int s = 0; s < steps.size(); s++) {
+                    final Step step = steps.get(s);
+                    final String stepId = step.getId().orElse("step-" + s);
+                    final Supplier<LeveledMessage.Builder> supplier = () -> new LeveledMessage.Builder().putMetadata("flow", flowId).putMetadata("step", stepId);
 
                     if (!step.getAction().isPresent()) {
                         continue;

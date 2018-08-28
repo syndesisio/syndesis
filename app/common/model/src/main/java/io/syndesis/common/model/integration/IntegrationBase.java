@@ -26,18 +26,18 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithModificationTimestamps;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithResourceId;
+import io.syndesis.common.model.WithResources;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.WithVersion;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
 import org.immutables.value.Value;
 
-public interface IntegrationBase extends WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, ToJson, Serializable {
+public interface IntegrationBase extends WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, ToJson, Serializable, WithResources {
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Value.Default
@@ -50,11 +50,6 @@ public interface IntegrationBase extends WithResourceId, WithVersion, WithModifi
         return Collections.emptyList();
     }
 
-    @Value.Default
-    default List<ResourceIdentifier> getResources() {
-        return Collections.emptyList();
-    }
-
     @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
     Optional<String> getDescription();
 
@@ -62,7 +57,7 @@ public interface IntegrationBase extends WithResourceId, WithVersion, WithModifi
     default Set<String> getUsedConnectorIds() {
         return getFlows().stream()//
             .flatMap(f -> f.getSteps().stream())//
-            .map(s -> s.getAction())//
+            .map(Step::getAction)//
             .filter(Optional::isPresent)//
             .map(Optional::get)//
             .filter(ConnectorAction.class::isInstance)//

@@ -25,10 +25,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -41,17 +40,11 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import io.syndesis.common.util.CollectionsUtils;
-import io.syndesis.common.util.Json;
-import io.syndesis.common.util.MavenProperties;
-import io.syndesis.common.util.Names;
-import io.syndesis.common.util.Optionals;
-import io.syndesis.common.util.Predicates;
-import io.syndesis.integration.api.IntegrationProjectGenerator;
-import io.syndesis.integration.api.IntegrationResourceManager;
-import io.syndesis.integration.project.generator.mvn.MavenGav;
-import io.syndesis.integration.project.generator.mvn.PomContext;
+import io.swagger.models.Swagger;
+import io.swagger.parser.SwaggerParser;
 import io.syndesis.common.model.Dependency;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -62,6 +55,18 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.common.util.CollectionsUtils;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.MavenProperties;
+import io.syndesis.common.util.Names;
+import io.syndesis.common.util.Optionals;
+import io.syndesis.common.util.Predicates;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
+import io.syndesis.integration.api.IntegrationResourceManager;
+import io.syndesis.integration.project.generator.mvn.MavenGav;
+import io.syndesis.integration.project.generator.mvn.PomContext;
+import org.apache.camel.generator.swagger.RestDslGenerator;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -82,6 +87,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
     private final IntegrationResourceManager resourceManager;
     private final Mustache applicationJavaMustache;
     private final Mustache applicationPropertiesMustache;
+    private final Mustache restRoutesMustache;
     private final Mustache pomMustache;
     private final MavenProperties mavenProperties;
 
@@ -94,6 +100,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
         this.applicationJavaMustache = compile(mf, configuration, "Application.java.mustache", "Application.java");
         this.applicationPropertiesMustache = compile(mf, configuration, "application.properties.mustache", "application.properties");
+        this.restRoutesMustache = compile(mf, configuration, "RestRouteConfiguration.java.mustache", "RestRouteConfiguration.java");
         this.pomMustache = compile(mf, configuration, "pom.xml.mustache", "pom.xml");
     }
 
@@ -116,14 +123,15 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         final Integration integration = sanitize(integrationDefinition, resourceManager);
         final Properties properties = new Properties();
 
-        final Iterator<Flow> flows = integration.getFlows().iterator();
-        while (flows.hasNext()) {
-            final Flow flow = flows.next();
-
+        final List<Flow> flows = integration.getFlows();
+        for (int f = 0; f < flows.size(); f++) {
+            final Flow flow = flows.get(f);
+            final int flowIndex = f;
             final List<Step> steps = flow.getSteps();
 
-            for (int i = 0; i < steps.size(); i++) {
-                final Step step = steps.get(i);
+            for (int s = 0; s < steps.size(); s++) {
+                final Step step = steps.get(s);
+                final int stepIndex = s;
 
                 // Check if a step is of supported type.
                 if(StepKind.endpoint != step.getStepKind()) {
@@ -132,7 +140,6 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
                 // Check if a step has the required options
                 if(step.getAction().filter(ConnectorAction.class::isInstance).isPresent() && step.getConnection().isPresent()) {
-                    final String index = Integer.toString(i + 1);
                     final Connection connection = step.getConnection().get();
                     final ConnectorAction action = ConnectorAction.class.cast(step.getAction().get());
                     final ConnectorDescriptor descriptor = action.getDescriptor();
@@ -150,18 +157,18 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                         for (Map.Entry<String, ConfigurationProperty> entry: configurationProperties.entrySet()) {
                             if (entry.getValue() != null && entry.getValue().getDefaultValue() != null && !entry.getValue().getDefaultValue().isEmpty()) {
                                 if (connector.isSecret(entry.getKey()) || action.isSecret(entry.getKey())) {
-                                    addDecryptedKeyProperty(properties, index, componentScheme, entry.getKey(), entry.getValue().getDefaultValue());
+                                    addDecryptedKeyProperty(properties, flowIndex, stepIndex, componentScheme, entry.getKey(), entry.getValue().getDefaultValue());
                                 }
                             }
                         }
                         for (Map.Entry<String, String> entry: connection.getConfiguredProperties().entrySet()) {
                             if (connector.isSecret(entry) || action.isSecret(entry)) {
-                                addDecryptedKeyProperty(properties, index, componentScheme, entry.getKey(), entry.getValue());
+                                addDecryptedKeyProperty(properties, flowIndex, stepIndex, componentScheme, entry.getKey(), entry.getValue());
                             }
                         }
                         for (Map.Entry<String, String> entry: step.getConfiguredProperties().entrySet()) {
                             if (connector.isSecret(entry) || action.isSecret(entry)) {
-                                addDecryptedKeyProperty(properties, index, componentScheme, entry.getKey(), entry.getValue());
+                                addDecryptedKeyProperty(properties, flowIndex, stepIndex, componentScheme, entry.getKey(), entry.getValue());
                             }
                         }
                     } else {
@@ -179,7 +186,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                             .filter(Predicates.or(connector::isSecret, action::isSecret))
                             .forEach(
                                 e -> {
-                                    addDecryptedKeyProperty(properties, index, componentScheme, e.getKey(), e.getValue());
+                                    addDecryptedKeyProperty(properties, flowIndex, stepIndex, componentScheme, e.getKey(), e.getValue());
                                 }
                             );
 
@@ -193,11 +200,12 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                             .filter(Predicates.or(connector::isComponentProperty, action::isComponentProperty))
                             .forEach(
                                 e -> {
-                                    String propKeyPrefix = String.format("%s.configurations.%s", componentScheme, componentScheme);
-                                    addDecryptedKeyProperty(properties, index, propKeyPrefix, e.getKey(), e.getValue());
+                                    String key = String.format("%s.configurations.%s-%d-%d.%s", componentScheme, componentScheme, flowIndex, stepIndex, e.getKey());
+                                    String val = mandatoryDecrypt(resourceManager, e.getKey(), e.getValue());
+
+                                    properties.put(key, val);
                                 }
                             );
-
                     }
                 }
             }
@@ -221,14 +229,14 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 integration.getName(),
                 integration.getDescription().orElse(null),
                 dependencies,
-                    mavenProperties),
+                mavenProperties),
             pomMustache
         );
     }
 
     @SuppressWarnings("PMD.ExcessiveParameterList")
-    private void addDecryptedKeyProperty(Properties properties, String index, String propKeyPrefix, String propertyKey, String propertyVal) {
-        String key = String.format("%s-%s.%s", propKeyPrefix, index, propertyKey);
+    private void addDecryptedKeyProperty(Properties properties, Integer flowIndex, int stepIndex, String propKeyPrefix, String propertyKey, String propertyVal) {
+        String key = String.format("flow-%d.%s-%d.%s", flowIndex, propKeyPrefix, stepIndex, propertyKey);
         String val = mandatoryDecrypt(resourceManager, propertyKey, propertyVal);
 
         properties.put(key, val);
@@ -276,36 +284,20 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(integration));
                 addTarEntry(tos, "pom.xml", generatePom(integration));
 
-                addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
                 addExtensions(tos, integration);
+                addMappingRules(tos, integration);
+                addRestDefinition(tos, integration);
+
+                addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
                 addResource(tos, "prometheus-config.yml", "templates/prometheus-config.yml");
                 addResource(tos, "configuration/settings.xml", "templates/settings.xml");
+
                 addAdditionalResources(tos);
-
-                final ListIterator<Flow> flows = integration.getFlows().listIterator();
-                while (flows.hasNext()) {
-                    final Flow flow = flows.next();
-                    final ListIterator<Step> steps = flow.getSteps().listIterator();
-                    while (steps.hasNext()) {
-                        Step step = steps.next();
-                        if (StepKind.mapper == step.getStepKind()) {
-                            final Map<String, String> properties = step.getConfiguredProperties();
-                            final String mapping = properties.get("atlasmapping");
-
-                            if (mapping != null) {
-                                final String resource = "mapping-flow-" + flows.nextIndex() + "-step-"  + steps.nextIndex() + ".json";
-
-                                addTarEntry(tos, "src/main/resources/" + resource, mapping.getBytes(StandardCharsets.UTF_8));
-                            }
-                        }
-                    }
-                }
 
                 LOGGER.info("Integration [{}]: Project files written to output stream", Names.sanitize(integration.getName()));
             } catch (IOException e) {
                 if (LOGGER.isErrorEnabled()) {
-                    LOGGER.error(String.format("Exception while creating runtime build tar for deployment %s : %s",
-                            integration.getName(), e.toString()), e);
+                    LOGGER.error("Exception while creating runtime build tar for deployment {} : {}", integration.getName(), e.toString(), e);
                 }
             }
         };
@@ -332,6 +324,57 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 );
             }
         }
+    }
+
+    private void addMappingRules(TarArchiveOutputStream tos, Integration integration) throws IOException {
+        final List<Flow> flows = integration.getFlows();
+        for (int f = 0; f < flows.size(); f++) {
+            final Flow flow = flows.get(f);
+            final List<Step> steps = flow.getSteps();
+
+            for (int s = 0; s < steps.size(); s++) {
+                final Step step = steps.get(s);
+
+                if (StepKind.mapper == step.getStepKind()) {
+                    final Map<String, String> properties = step.getConfiguredProperties();
+                    final String mapping = properties.get("atlasmapping");
+
+                    if (mapping != null) {
+                        final String resource = "mapping-flow-" + f + "-step-"  + s + ".json";
+
+                        addTarEntry(tos, "src/main/resources/" + resource, mapping.getBytes(StandardCharsets.UTF_8));
+                    }
+                }
+            }
+        }
+    }
+
+    private void addRestDefinition(TarArchiveOutputStream tos, Integration integration) throws IOException {
+        // assuming that we have a single swagger definition for the moment
+        Optional<ResourceIdentifier> rid = integration.getResources().stream().filter(Kind.OpenApi::sameAs).findFirst();
+        if (!rid.isPresent()) {
+            return;
+        }
+        if (!rid.get().getId().isPresent()) {
+            return;
+        }
+
+        Optional<OpenApi> res = resourceManager.loadOpeApiDefinition(rid.get().getId().get());
+        if (!res.isPresent()) {
+            return;
+        }
+
+        final StringBuilder code = new StringBuilder();
+        final Swagger swagger = new SwaggerParser().parse(new String(res.get().getDocument(), StandardCharsets.UTF_8));
+
+        RestDslGenerator.toAppendable(swagger)
+            .withClassName("RestRoute")
+            .withPackageName("io.syndesis.example")
+            .withoutSourceCodeTimestamps()
+            .generate(code);
+
+        addTarEntry(tos, "src/main/java/io/syndesis/example/RestRoute.java", code.toString().getBytes(StandardCharsets.UTF_8));
+        addTarEntry(tos, "src/main/java/io/syndesis/example/RestRouteConfiguration.java", ProjectGeneratorHelper.generate(integration, restRoutesMustache));
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod")

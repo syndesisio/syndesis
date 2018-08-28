@@ -31,6 +31,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.openapi.OpenApi;
 
 public interface IntegrationResourceManager {
 
@@ -69,6 +70,11 @@ public interface IntegrationResourceManager {
      * Load an extension binary from the underlying storage by id.
      */
     Optional<InputStream> loadExtensionBLOB(String id);
+
+    /**
+     *  Load an OpenApi definition from the underlying storage by id.
+     */
+    Optional<OpenApi> loadOpeApiDefinition(String id);
 
     /**
      * Decrypt a property.

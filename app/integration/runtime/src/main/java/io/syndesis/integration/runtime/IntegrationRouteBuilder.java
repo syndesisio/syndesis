@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -121,17 +120,16 @@ public class IntegrationRouteBuilder extends RouteBuilder {
     public void configure() throws Exception {
         final Integration integration = loadIntegration();
         final List<Flow> flows = integration.getFlows();
-        if (flows.isEmpty()) {
-            return;
-        }
 
-        for (ListIterator<Flow> flow = flows.listIterator(); flow.hasNext();) {
-            configureFlow(flow.next(), String.valueOf(flow.nextIndex()));
+        for (int f = 0; f < flows.size(); f++) {
+            configureFlow(flows.get(f), String.valueOf(f));
         }
     }
 
     private void configureFlow(Flow flow, String flowIndex) throws URISyntaxException {
         final List<Step> steps = flow.getSteps();
+        final String flowId = flow.getId().orElseGet(KeyGenerator::createKey);
+        final String flowName = flow.getName();
 
         if (steps.isEmpty()) {
             return;
@@ -141,7 +139,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
         for (int i = 0; i < steps.size(); i++) {
             final Step step = steps.get(i);
-            final String stepIndex = Integer.toString(i + 1);
+            final String stepIndex = Integer.toString(i);
             final String stepId = step.getId().orElseGet(KeyGenerator::createKey);
             final IntegrationStepHandler handler = findHandler(step);
 
@@ -156,13 +154,14 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 Optional<ProcessorDefinition<?>> definition = handler.handle(step, null, this, flowIndex, stepIndex);
                 if (definition.isPresent()) {
                     parent = definition.get();
-                    parent = configureRouteDefinition(parent, stepId);
+                    parent = configureRouteDefinition(parent, flowName, flowId, stepId);
+                    parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
                     parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                     parent = configureConnectorSplit(step, parent, flowIndex, stepIndex).orElse(parent);
                     parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
                 }
             } else {
-                parent = configureRouteDefinition(parent, stepId);
+                parent = configureRouteDefinition(parent, flowName, flowId, stepId);
                 if (i > 0) {
                     // If parent is not null and this is the first step, a scheduler
                     // has been created as route initiator so d'ont include the
@@ -183,6 +182,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     }
 
                     parent = new SplitStepHandler().handle(splitStep.get(), parent, this, flowIndex, stepIndex).orElse(parent);
+                    parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
                     parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                     parent = parent.process(new OutMessageCaptureProcessor());
                 } else {
@@ -200,7 +200,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
     }
 
-    private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, String stepId) {
+    private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, String flowName, String flowId, String stepId) {
         if (definition instanceof RouteDefinition) {
             final RouteDefinition rd = (RouteDefinition)definition;
             final List<RoutePolicy> rp = rd.getRoutePolicies();
@@ -210,7 +210,11 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 return definition;
             }
 
-            rd.id(stepId);
+            if (ObjectHelper.isNotEmpty(flowName)) {
+                rd.routeDescription(flowName);
+            }
+
+            rd.routeId(flowId);
             rd.routePolicy(new ActivityTrackingPolicy(activityTracker));
             rd.getInputs().get(0).id(stepId);
         }

@@ -58,8 +58,9 @@ public enum Kind {
     User(io.syndesis.common.model.user.User.class),
 
     ConnectionBulletinBoard(io.syndesis.common.model.bulletin.ConnectionBulletinBoard.class),
-    IntegrationBulletinBoard(io.syndesis.common.model.bulletin.IntegrationBulletinBoard.class)
+    IntegrationBulletinBoard(io.syndesis.common.model.bulletin.IntegrationBulletinBoard.class),
 
+    OpenApi(io.syndesis.common.model.openapi.OpenApi.class)
     ;
 
     public final String modelName;
@@ -124,4 +125,7 @@ public enum Kind {
         return (Class<T>) modelClass;
     }
 
+    public boolean sameAs(WithKind other) {
+        return this == other.getKind();
+    }
 }

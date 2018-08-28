@@ -100,7 +100,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         properties.entrySet()
             .stream()
             .filter(Predicates.or(connector::isSecret, action::isSecret))
-            .forEach(e -> e.setValue(String.format("{{%s-%s.%s}}", scheme, stepIndex, e.getKey())));
+            .forEach(e -> e.setValue(String.format("{{flow-%s.%s-%s.%s}}", flowIndex, scheme, stepIndex, e.getKey())));
 
         // raw values.
         properties.entrySet()
