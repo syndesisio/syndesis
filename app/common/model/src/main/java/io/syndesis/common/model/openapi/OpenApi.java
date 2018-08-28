@@ -13,32 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.common.model;
+package io.syndesis.common.model.openapi;
 
 import java.io.Serializable;
-import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.WithMetadata;
+import io.syndesis.common.model.WithName;
+import io.syndesis.common.model.WithVersion;
 import org.immutables.value.Value;
 
-/**
- * Identifies a resource managed by the system.
- */
 @Value.Immutable
-@JsonDeserialize(builder = ResourceIdentifier.Builder.class)
+@JsonDeserialize(builder = OpenApi.Builder.class)
 @SuppressWarnings("immutables")
-public interface ResourceIdentifier extends WithId<ResourceIdentifier>, WithKind, Serializable {
+public interface OpenApi extends WithId<OpenApi>, WithName, WithVersion, WithMetadata, Serializable {
+    /**
+     * The OpenAPI document.
+     */
+    byte[] getDocument();
 
-    Optional<String> name();
-
-    Optional<Integer> getVersion();
-
-    @Override
-    default ResourceIdentifier withId(String id) {
-        return new ResourceIdentifier.Builder().createFrom(this).id(id).build();
-    }
-
-    class Builder extends ImmutableResourceIdentifier.Builder {
-        // allow access to ImmutableResourceIdentifier.Builder
+    class Builder extends ImmutableOpenApi.Builder {
+        // allow access to ImmutableOpenApi.Builder
     }
 }

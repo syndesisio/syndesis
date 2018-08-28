@@ -129,7 +129,6 @@ public final class ProjectGeneratorHelper {
         String answer = propertyKey;
 
         if (propertyVal != null) {
-
             answer = manager.decrypt(propertyVal);
             if (answer == null) {
                 throw new IllegalArgumentException("Unable to decrypt key:" + propertyKey);
@@ -174,10 +173,12 @@ public final class ProjectGeneratorHelper {
                             .build();
 
                         // Replace with the new 'sanitized' step
-                        steps.set(new Step.Builder()
-                                    .createFrom(source)
-                                    .connection(newConnection)
-                                    .build());
+                        steps.set(
+                            new Step.Builder()
+                                .createFrom(source)
+                                .connection(newConnection)
+                                .build()
+                        );
                     }
                 }
             }
@@ -198,20 +199,20 @@ public final class ProjectGeneratorHelper {
                         type = "timer";
                     }
 
-                    final Flow replacementFlow = replacementFlowBuider.scheduler(new Scheduler.Builder()
-                                                .type(Scheduler.Type.valueOf(type))
-                                                .expression(expr)
-                                                .build())
-                                            .build();
+                    final Scheduler scheduler = new Scheduler.Builder().type(Scheduler.Type.valueOf(type)).expression(expr).build();
+                    final Flow replacementFlow = replacementFlowBuider.scheduler(scheduler).build();
+
                     flows.set(replacementFlow);
                 }
 
                 // Replace first step so underlying connector won't fail uri param
                 // validation if schedule options were set.
-                steps.set(new Step.Builder()
-                            .createFrom(firstStep)
-                            .configuredProperties(properties)
-                        .build());
+                steps.set(
+                    new Step.Builder()
+                        .createFrom(firstStep)
+                        .configuredProperties(properties)
+                        .build()
+                );
             }
         }
 

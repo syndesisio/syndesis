@@ -28,6 +28,10 @@
 
   <logger name="io.syndesis.integration" level="DEBUG" />
 
+  <logger name="io.syndesis.integration.project.generator.ProjectGeneratorMain" level="DEBUG" additivity="false">
+    <appender-ref ref="STDOUT"/>
+  </logger>
+
   <root level="INFO">
     <!-- <appender-ref ref="STDOUT"/> -->
     <appender-ref ref="FILE"/>

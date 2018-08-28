@@ -24,17 +24,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
-import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import org.apache.commons.io.IOUtils;
 
 final class TestResourceManager implements IntegrationResourceManager {
-    private final ConcurrentMap<String , Object> resources;
+    private final ConcurrentMap<String, Object> resources;
 
     TestResourceManager() {
         resources = new ConcurrentHashMap<>();
@@ -72,6 +73,20 @@ final class TestResourceManager implements IntegrationResourceManager {
         final InputStream is = IOUtils.toInputStream(id, StandardCharsets.UTF_8);
 
         return Optional.of(is);
+    }
+
+    @Override
+    public Optional<OpenApi> loadOpeApiDefinition(String id) {
+        Object res = resources.get(id);
+        if (res == null) {
+            return Optional.empty();
+        }
+
+        if (res instanceof OpenApi) {
+            return Optional.of((OpenApi) res);
+        }
+
+        return Optional.empty();
     }
 
     @Override

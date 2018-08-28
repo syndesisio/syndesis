@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Properties;
 
 import io.syndesis.common.model.Dependency;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.action.StepAction;
@@ -41,11 +43,12 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.common.util.MavenProperties;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -205,7 +208,7 @@ public class ProjectGeneratorTest {
         assertThat(runtimeDir.resolve("extensions/my-extension-1.jar")).exists();
         assertThat(runtimeDir.resolve("extensions/my-extension-2.jar")).exists();
         assertThat(runtimeDir.resolve("extensions/my-extension-3.jar")).exists();
-        assertThat(runtimeDir.resolve("src/main/resources/mapping-flow-1-step-2.json")).exists();
+        assertThat(runtimeDir.resolve("src/main/resources/mapping-flow-0-step-1.json")).exists();
     }
 
 
@@ -256,7 +259,7 @@ public class ProjectGeneratorTest {
             .build();
         final Connector newConnector = new Connector.Builder()
             .id("new")
-            .addAction(oldAction)
+            .addAction(newAction)
             .putProperty("username",
                 new ConfigurationProperty.Builder()
                     .componentProperty(false)
@@ -303,51 +306,109 @@ public class ProjectGeneratorTest {
 
         TestResourceManager resourceManager = new TestResourceManager();
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager, getMavenProperties());
+        ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager, TestConstants.MAVEN_PROPERTIES);
         Integration integration = resourceManager.newIntegration(s1, s2);
         Properties properties = generator.generateApplicationProperties(integration);
 
         assertThat(properties.size()).isEqualTo(6);
-        assertThat(properties.getProperty("old.configurations.old-1.token")).isEqualTo("my-token-1");
-        assertThat(properties.getProperty("old-1.username")).isEqualTo("my-username-1");
-        assertThat(properties.getProperty("old-1.password")).isEqualTo("my-password-1");
-        assertThat(properties.getProperty("http4-2.token")).isEqualTo("my-token-2");
-        assertThat(properties.getProperty("http4-2.username")).isEqualTo("my-username-2");
-        assertThat(properties.getProperty("http4-2.password")).isEqualTo("my-password-2");
+        assertThat(properties.getProperty("old.configurations.old-0-0.token")).isEqualTo("my-token-1");
+        assertThat(properties.getProperty("flow-0.old-0.username")).isEqualTo("my-username-1");
+        assertThat(properties.getProperty("flow-0.old-0.password")).isEqualTo("my-password-1");
+        assertThat(properties.getProperty("flow-0.http4-1.token")).isEqualTo("my-token-2");
+        assertThat(properties.getProperty("flow-0.http4-1.username")).isEqualTo("my-username-2");
+        assertThat(properties.getProperty("flow-0.http4-1.password")).isEqualTo("my-password-2");
     }
+
+
+    @Test
+    public void testGenerateApplicationWithRestDSL() throws Exception {
+        TestResourceManager resourceManager = new TestResourceManager();
+
+        // ******************
+        // OpenApi
+        // ******************
+
+        URL location = ProjectGeneratorTest.class.getResource("/petstore.json");
+        byte[] content = Files.readAllBytes(Paths.get(location.toURI()));
+
+        resourceManager.put("petstore", new OpenApi.Builder().document(content).id("petstore").build());
+
+
+        // ******************
+        // Integration
+        // ******************
+
+        Step s1 = new Step.Builder()
+            .stepKind(StepKind.endpoint)
+            .action(new ConnectorAction.Builder()
+                .id(KeyGenerator.createKey())
+                .descriptor(new ConnectorDescriptor.Builder()
+                    .connectorId("new")
+                    .componentScheme("direct")
+                    .putConfiguredProperty("name", "start")
+                    .build())
+                .build())
+            .connection(new Connection.Builder()
+                .connector(
+                    new Connector.Builder()
+                        .id("api-provider")
+                        .addDependency(new Dependency.Builder()
+                            .type(Dependency.Type.MAVEN)
+                            .id("io.syndesis.connector:connector-api-provider:1.x.x")
+                            .build())
+                        .build())
+                .build())
+            .build();
+        Step s2 = new Step.Builder()
+            .stepKind(StepKind.endpoint)
+            .action(new ConnectorAction.Builder()
+                .id(KeyGenerator.createKey())
+                .descriptor(new ConnectorDescriptor.Builder()
+                    .connectorId("new")
+                    .componentScheme("log")
+                    .putConfiguredProperty("loggerName", "end")
+                    .build())
+                .build())
+            .build();
+
+        Integration integration = new Integration.Builder()
+            .id("test-integration")
+            .name("Test Integration")
+            .description("This is a test integration!")
+            .addResource(new ResourceIdentifier.Builder()
+                .kind(Kind.OpenApi)
+                .id("petstore")
+                .build())
+            .addFlow(new Flow.Builder()
+                .steps(Arrays.asList(s1, s2))
+                .build())
+            .build();
+
+        ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
+        configuration.getTemplates().setOverridePath(this.basePath);
+        configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+        configuration.setSecretMaskingEnabled(true);
+
+        Path runtimeDir = generate(integration, configuration, resourceManager);
+
+        assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java")).exists();
+        assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java")).exists();
+        assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java")).exists();
+        
+        assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java"), "RestRoute.java");
+        assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java"), "RestRouteConfiguration.java");
+    }
+
     // *****************************
     // Helpers
     // *****************************
 
     private Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
-        final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager, getMavenProperties());
+        Path destination = testFolder.newFolder("integration-project").toPath();
 
-        try (InputStream is = generator.generate(integration)) {
-            Path ret = testFolder.newFolder("integration-project").toPath();
+        generate(destination, integration, generatorConfiguration, resourceManager);
 
-            try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {
-                TarArchiveEntry tarEntry = tis.getNextTarEntry();
-
-                // tarIn is a TarArchiveInputStream
-                while (tarEntry != null) {
-                    // create a file with the same name as the tarEntry
-                    File destPath = new File(ret.toFile(), tarEntry.getName());
-                    if (tarEntry.isDirectory()) {
-                        destPath.mkdirs();
-                    } else {
-                        destPath.getParentFile().mkdirs();
-                        destPath.createNewFile();
-
-                        try(BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath))) {
-                            IOUtils.copy(tis, bout);
-                        }
-                    }
-                    tarEntry = tis.getNextTarEntry();
-                }
-            }
-
-            return ret;
-        }
+        return destination;
     }
 
     private void assertFileContents(ProjectGeneratorConfiguration generatorConfiguration, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException {
@@ -404,11 +465,30 @@ public class ProjectGeneratorTest {
         JSONAssert.assertEquals(expected, actual, JSONCompareMode.STRICT);
     }
 
-    protected MavenProperties getMavenProperties() {
-        MavenProperties mavenProperties = new MavenProperties();
-        mavenProperties.addRepository("maven.central", "https://repo1.maven.org/maven2");
-        mavenProperties.addRepository("redhat.ga", "https://maven.repository.redhat.com/ga");
-        mavenProperties.addRepository("jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea");
-        return mavenProperties;
+    protected static void generate(Path destination, Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
+        final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager,TestConstants.MAVEN_PROPERTIES);
+
+        try (InputStream is = generator.generate(integration)) {
+            try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {
+                TarArchiveEntry tarEntry = tis.getNextTarEntry();
+
+                // tarIn is a TarArchiveInputStream
+                while (tarEntry != null) {
+                    // create a file with the same name as the tarEntry
+                    File destPath = new File(destination.toFile(), tarEntry.getName());
+                    if (tarEntry.isDirectory()) {
+                        destPath.mkdirs();
+                    } else {
+                        destPath.getParentFile().mkdirs();
+                        destPath.createNewFile();
+
+                        try(BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath))) {
+                            IOUtils.copy(tis, bout);
+                        }
+                    }
+                    tarEntry = tis.getNextTarEntry();
+                }
+            }
+        };
     }
 }

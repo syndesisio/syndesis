@@ -1,0 +1,14 @@
+{
+  "id": "api-provider",
+  "name": "Api Provider",
+  "description": "Api Provider",
+  "icon": "",
+  "dependencies": [
+    {
+      "type": "MAVEN",
+      "id": "@project.groupId@:@project.artifactId@:@project.version@"
+    }
+  ],
+  "actions": [
+  ]
+}

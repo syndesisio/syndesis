@@ -69,7 +69,7 @@ public class SimpleEndpointStepHandler implements IntegrationStepHandler, Integr
             .stream()
             .filter(action::isEndpointProperty)
             .filter(action::isSecret)
-            .forEach(e -> e.setValue(String.format("{{%s-%s.%s}}", componentScheme, stepIndex, e.getKey())));
+            .forEach(e -> e.setValue(String.format("{{flow-%s.%s-%s.%s}}", flowIndex, componentScheme, stepIndex, e.getKey())));
 
         // raw values.
         properties.entrySet()

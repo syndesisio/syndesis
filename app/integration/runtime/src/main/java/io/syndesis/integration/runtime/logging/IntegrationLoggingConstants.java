@@ -17,6 +17,7 @@ package io.syndesis.integration.runtime.logging;
 
 public final class IntegrationLoggingConstants {
     public static final String ACTIVITY_ID = "Syndesis.ACTIVITY_ID";
+    public static final String FLOW_ID = "Syndesis.FLOW_ID";
     public static final String STEP_ID = "Syndesis.STEP_ID";
     public static final String STEP_INDEX = "Syndesis.STEP_INDEX";
     public static final String STEP_TRACKER_ID = "Syndesis.STEP_TRACKER_ID";

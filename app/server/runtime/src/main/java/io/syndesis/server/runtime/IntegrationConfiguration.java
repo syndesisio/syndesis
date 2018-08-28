@@ -22,6 +22,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.ResourceIdentifier;
+import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
@@ -66,6 +69,11 @@ public class IntegrationConfiguration {
                         .totalCount(resultList.getTotalCount())
                         .build()
                 ).getItems();
+            }
+
+            @Override
+            public Optional<OpenApi> loadOpeApiDefinition(String id) {
+                return Optional.ofNullable(dataManager.fetch(OpenApi.class, id));
             }
 
             @Override
