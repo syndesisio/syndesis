@@ -170,6 +170,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     // save current state of editor
     const value = this._apiEditor.getValue();
     this.apiDef.spec = value[ 'spec' ]; // used in onCreateComplete
+    this.editorHasChanges = false;
 
     // go back to review step
     this.displayDefinitionEditor = false;
@@ -179,7 +180,10 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
 
     const request = {
       ...this.validationResponse,
-      specificationFile: file
+      specificationFile: file,
+      actionsSummary: {},
+      errors: [],
+      warnings: []
     } as CustomConnectorRequest;
 
     this.apiConnectorStore.dispatch(
