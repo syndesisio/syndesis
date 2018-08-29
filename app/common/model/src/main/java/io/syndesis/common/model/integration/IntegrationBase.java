@@ -37,7 +37,7 @@ import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
 import org.immutables.value.Value;
 
-public interface IntegrationBase extends WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, ToJson, Serializable, WithResources {
+public interface IntegrationBase extends WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, WithSteps, ToJson, Serializable, WithResources {
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Value.Default
