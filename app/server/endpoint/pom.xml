@@ -73,7 +73,7 @@
 
     <dependency>
       <groupId>io.syndesis.server</groupId>
-      <artifactId>server-connector-generator</artifactId>
+      <artifactId>server-api-generator</artifactId>
     </dependency>
 
     <dependency>

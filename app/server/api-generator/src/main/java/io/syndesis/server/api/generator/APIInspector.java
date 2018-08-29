@@ -13,19 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.runtime;
+package io.syndesis.server.api.generator;
 
-import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
+import io.syndesis.common.model.api.APISummary;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+public interface APIInspector {
 
-@Configuration
-public class ConnectorGeneratorConfiguration {
+    APISummary info(String specification, APIValidationContext validation);
 
-    @Bean("swagger-connector-template")
-    public ConnectorGenerator swaggerConnectorGenerator() {
-        return new SwaggerUnifiedShapeConnectorGenerator();
-    }
 }

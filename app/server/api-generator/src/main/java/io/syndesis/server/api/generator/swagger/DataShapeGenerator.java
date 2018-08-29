@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.runtime;
+package io.syndesis.server.api.generator.swagger;
 
-import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
+import io.swagger.models.Operation;
+import io.swagger.models.Swagger;
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-@Configuration
-public class ConnectorGeneratorConfiguration {
+public interface DataShapeGenerator {
 
-    @Bean("swagger-connector-template")
-    public ConnectorGenerator swaggerConnectorGenerator() {
-        return new SwaggerUnifiedShapeConnectorGenerator();
-    }
+    DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
+
+    DataShape createShapeFromRequest(ObjectNode json, Swagger swagger, Operation operation);
+
+    DataShape createShapeFromResponse(ObjectNode json, Swagger swagger, Operation operation);
+
 }

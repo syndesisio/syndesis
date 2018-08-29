@@ -20,14 +20,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import io.syndesis.server.connector.generator.ConnectorGenerator;
+import io.syndesis.common.model.api.APISummary;
+import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.dao.file.IconDao;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorGroup;
 import io.syndesis.common.model.connection.ConnectorSettings;
-import io.syndesis.common.model.connection.ConnectorSummary;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.common.model.icon.Icon;
 import io.syndesis.server.runtime.BaseITCase;
@@ -88,10 +88,10 @@ public class CustomConnectorITCase extends BaseITCase {
                 }
 
                 @Override
-                public ConnectorSummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+                public APISummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
                     final Connector base = generateTestConnector(connectorTemplate, connectorSettings);
 
-                    return new ConnectorSummary.Builder().createFrom(base).actionsSummary(ACTIONS_SUMMARY).build();
+                    return new APISummary.Builder().createFrom(base).actionsSummary(ACTIONS_SUMMARY).build();
                 }
 
                 Connector generateTestConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
@@ -192,9 +192,9 @@ public class CustomConnectorITCase extends BaseITCase {
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).icon("test-icon")
             .build();
 
-        final ResponseEntity<ConnectorSummary> response = post("/api/v1/connectors/custom/info", connectorSettings, ConnectorSummary.class);
+        final ResponseEntity<APISummary> response = post("/api/v1/connectors/custom/info", connectorSettings, APISummary.class);
 
-        final ConnectorSummary expected = new ConnectorSummary.Builder()// \
+        final APISummary expected = new APISummary.Builder()// \
             .name("test-name")//
             .description("test-description")//
             .icon("test-icon")//

@@ -15,7 +15,8 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import io.syndesis.server.connector.generator.ConnectorGenerator;
+import io.syndesis.common.model.api.APISummary;
+import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.dao.file.IconDao;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -23,7 +24,6 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorGroup;
 import io.syndesis.common.model.connection.ConnectorSettings;
-import io.syndesis.common.model.connection.ConnectorSummary;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 
 import org.junit.Test;
@@ -80,7 +80,7 @@ public class CustomConnectorHandlerTest {
             }
 
             @Override
-            public ConnectorSummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+            public APISummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
                 return null;
             }
         });
@@ -116,13 +116,13 @@ public class CustomConnectorHandlerTest {
 
         final ConnectorTemplate template = new ConnectorTemplate.Builder().build();
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId("connector-template").build();
-        final ConnectorSummary preparedSummary = new ConnectorSummary.Builder().build();
+        final APISummary preparedSummary = new APISummary.Builder().build();
 
         when(dataManager.fetch(ConnectorTemplate.class, "connector-template")).thenReturn(template);
         when(applicationContext.getBean("connector-template", ConnectorGenerator.class)).thenReturn(connectorGenerator);
         when(connectorGenerator.info(same(template), same(connectorSettings))).thenReturn(preparedSummary);
 
-        final ConnectorSummary info = handler.info(connectorSettings);
+        final APISummary info = handler.info(connectorSettings);
 
         assertThat(info).isSameAs(preparedSummary);
     }

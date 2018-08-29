@@ -13,19 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.runtime;
+@ImmutablesStyle
+package io.syndesis.server.api.generator.swagger;
 
-import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
-public class ConnectorGeneratorConfiguration {
-
-    @Bean("swagger-connector-template")
-    public ConnectorGenerator swaggerConnectorGenerator() {
-        return new SwaggerUnifiedShapeConnectorGenerator();
-    }
-}
+import io.syndesis.common.util.immutable.ImmutablesStyle;

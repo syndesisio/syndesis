@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.runtime;
+package io.syndesis.server.api.generator;
 
-import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
+/**
+ * Provide additional information on the type of validation that should be performed on the API.
+ */
+public enum APIValidationContext {
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+    /**
+     * No validation required.
+     */
+    NONE,
 
-@Configuration
-public class ConnectorGeneratorConfiguration {
+    /**
+     * Apply all validation rules for APIs exposed by Syndesis.
+     */
+    PROVIDED_API,
 
-    @Bean("swagger-connector-template")
-    public ConnectorGenerator swaggerConnectorGenerator() {
-        return new SwaggerUnifiedShapeConnectorGenerator();
-    }
+    /**
+     * Apply all validation rules for external APIs consumed by Syndesis.
+     */
+    CONSUMED_API
 }
