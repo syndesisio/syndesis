@@ -15,36 +15,15 @@
  */
 package io.syndesis.common.model.integration;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.WithName;
-import io.syndesis.common.model.connection.Connection;
 
 import org.immutables.value.Value;
 
-@Value.Immutable
-@JsonDeserialize(builder = Flow.Builder.class)
-@SuppressWarnings("immutables")
-public interface Flow extends WithName, WithId<Flow>, WithSteps, Serializable {
-
-    class Builder extends ImmutableFlow.Builder {
-        // allow access to ImmutableIntegration.Builder
-    }
+public interface WithSteps {
 
     @Value.Default
-    default List<Connection> getConnections() {
+    default List<Step> getSteps() {
         return Collections.emptyList();
-    }
-
-    Optional<Scheduler> getScheduler();
-
-    default Flow.Builder builder() {
-        return new Flow.Builder().createFrom(this);
     }
 }

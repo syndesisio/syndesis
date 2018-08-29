@@ -73,6 +73,7 @@ import io.syndesis.common.model.integration.IntegrationEndpoint;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.validation.AllValidations;
+import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.SuppressFBWarnings;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
@@ -350,20 +351,38 @@ public class IntegrationHandler extends BaseHandler
         builder.currentState(IntegrationDeploymentState.Unpublished);
         builder.targetState(IntegrationDeploymentState.Unpublished);
 
-        // Get the latest connections and steps
-        builder.flows(integration.getFlows().stream()
-            .map(flow -> new Flow.Builder()
-                    .createFrom(flow)
-                    .connections(flow.getConnections().stream()
-                        .map(this::toCurrentConnection)
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .collect(Collectors.toList()))
-                    .steps(flow.getSteps().stream()
-                        .map(this::toCurrentSteps)
-                        .collect(Collectors.toList()))
-                    .build())
-            .collect(Collectors.toList()));
+        if (!integration.getFlows().isEmpty() && !integration.getSteps().isEmpty()) {
+            throw new IllegalStateException(
+                String.format("Integration has inconsistent state: flows=%d, steps=%d",
+                    integration.getFlows().size(),
+                    integration.getSteps().size()
+                )
+            );
+        }
+
+        if (integration.getFlows().isEmpty() && !integration.getSteps().isEmpty()) {
+            // this means that the integration is an old integration that
+            // does not have the concept of flows so let's create a flow
+            // which wraps the configured steps.
+            builder.addFlow(
+                new Flow.Builder()
+                    .id(KeyGenerator.createKey())
+                    .name("default")
+                    .steps(integration.getSteps())
+                    .build()
+            );
+
+            // and remove the steps
+            builder.steps(Collections.emptyList());
+
+            // when the integration is saved, it is automatically migrated to
+            // the new style.
+        } else {
+            // get the latest flows, connections and steps
+            builder.flows(
+                integration.getFlows().stream().map(this::toCurrentFlow).collect(Collectors.toList())
+            );
+        }
 
         IntegrationDeployment deployed = null;
         List<IntegrationDeployment> activeDeployments = new ArrayList<>();
@@ -447,6 +466,20 @@ public class IntegrationHandler extends BaseHandler
         }
 
         return false;
+    }
+
+    private Flow toCurrentFlow(Flow f) {
+        return new Flow.Builder()
+            .createFrom(f)
+            .connections(f.getConnections().stream()
+                .map(this::toCurrentConnection)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList()))
+            .steps(f.getSteps().stream()
+                .map(this::toCurrentSteps)
+                .collect(Collectors.toList()))
+            .build();
     }
 
     private Optional<Connection> toCurrentConnection(Connection c) {
