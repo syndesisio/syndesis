@@ -71,7 +71,7 @@ public class KafkaMetaDataExtension extends AbstractMetaDataExtension {
                 throw new IllegalStateException("brokers property must have a value.");
             }
         } else {
-            LOG.debug("Topic property already set nothing to do, just return hat we got in topic property: [{}].", topic);
+            LOG.debug("Topic property already set nothing to do, just return what we got in topic property: [{}].", topic);
             Set<String> topicsNames = new HashSet<>();
             topicsNames.add(topic);
             topicsNames = Collections.unmodifiableSet(topicsNames);
