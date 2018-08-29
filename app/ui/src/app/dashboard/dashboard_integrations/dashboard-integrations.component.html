@@ -7,7 +7,9 @@
       </div>
       <h1>{{ 'dashboard.integrations.heading' | synI18n }}</h1>
       <p>{{ 'dashboard.integrations.empty-state-txt' | synI18n }}</p>
-      <button class="btn btn-primary" [routerLink]="['/integrations/create']">{{ 'dashboard.integrations.create-btn-txt' | synI18n }}</button>
+      <div class="blank-slate-pf-main-action">
+        <button class="btn btn-primary btn-lg" [routerLink]="['/integrations/create']">{{ 'dashboard.integrations.create-btn-txt' | synI18n }}</button>
+      </div>
     </div>
 
     <!-- Integrations Row not empty state -->
