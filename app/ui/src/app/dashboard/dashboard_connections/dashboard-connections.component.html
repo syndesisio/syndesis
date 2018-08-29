@@ -19,7 +19,9 @@
         </div>
         <h1>{{ 'dashboard.connections.empty-state-create-header' | synI18n }}</h1>
         <p>{{ 'dashboard.connections.empty-state-txt' | synI18n }}</p>
-        <button class="btn btn-primary" [routerLink]="['/connections/create']">{{ 'dashboard.connections.create-btn-txt' | synI18n }}</button>
+        <div class="blank-slate-pf-main-action">
+          <button class="btn btn-primary btn-lg" [routerLink]="['/connections/create']">{{ 'dashboard.connections.create-btn-txt' | synI18n }}</button>
+        </div>
       </div>
     </ng-container>
 
