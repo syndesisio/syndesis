@@ -253,7 +253,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getPreviousConnection(position): Step {
-    const connections = this.getPreviousConnections(position).reverse();
+    const connections = (this.getPreviousConnections(position) || []).reverse();
     return connections[0];
   }
 
@@ -271,17 +271,29 @@ export class CurrentFlowService {
 
   getPreviousStepIndexWithDataShape(position): number {
     const steps = this.getPreviousStepsWithDataShape(position).reverse();
-    return steps[0].index;
+    if (steps && steps.length) {
+      return steps[0].index;
+    } else {
+      return -1;
+    }
   }
 
   getPreviousStepWithDataShape(position): Step {
     const steps = this.getPreviousStepsWithDataShape(position).reverse();
-    return steps[0].step;
+    if (steps && steps.length) {
+      return steps[0].step;
+    } else {
+      return undefined;
+    }
   }
 
   getSubsequentStepWithDataShape(position): Step {
     const steps = this.getSubsequentStepsWithDataShape(position);
-    return steps[0].step;
+    if (steps && steps.length) {
+      return steps[0].step;
+    } else {
+      return undefined;
+    }
   }
 
   /**
