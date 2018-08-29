@@ -29,7 +29,7 @@ public class KafkaMetaDataAutoConfiguration {
     @Bean("kafka-adapter")
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     @Lazy
-    @ConditionalOnProperty(prefix = "io.syndesis.connector.servicenow.meta", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "io.syndesis.connector.kafka.meta", name = "enabled", matchIfMissing = true)
     public MetadataRetrieval kafkaMetaDataAdapter() {
         return new KafkaMetaDataRetrieval();
     }
