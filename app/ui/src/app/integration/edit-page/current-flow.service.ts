@@ -664,7 +664,9 @@ export class CurrentFlowService implements OnDestroy {
   set integration(i: Integration) {
     this._loaded = false;
     this._integration = <Integration>i;
-    this.flowId = i.flows && i.flows.length > 0 ? i.flows[0].id : undefined;
+    if (!this.flowId) {
+      this.flowId = i.flows && i.flows.length > 0 ? i.flows[0].id : undefined;
+    }
     setTimeout(() => {
       this.events.emit({
         kind: 'integration-updated',

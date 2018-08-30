@@ -49,7 +49,6 @@ export class FlowPageService {
   goBack(path: Array<string | number | boolean>, route: ActivatedRoute) {
     this.router.navigate(path, {
       relativeTo: route.parent,
-      fragment: this.currentFlowService.flowId
     });
   }
 
@@ -61,7 +60,6 @@ export class FlowPageService {
     ) {
       this.router.navigate(['integration-basics'], {
         relativeTo: route.parent,
-        fragment: this.currentFlowService.flowId
       });
       this.initialize();
       return;

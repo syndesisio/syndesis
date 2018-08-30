@@ -72,7 +72,6 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
       onSave: () => {
         this.router.navigate(['action-select', this.position], {
           relativeTo: this.route.parent,
-          fragment: this.currentFlowService.flowId
         });
       }
     });
@@ -93,14 +92,12 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
       /* Safety net */
       this.router.navigate(['save-or-add-step'], {
         relativeTo: this.route.parent,
-        fragment: this.currentFlowService.flowId
       });
       return;
     }
     if (step.connection) {
       this.router.navigate(['action-select', this.position], {
         relativeTo: this.route.parent,
-        fragment: this.currentFlowService.flowId
       });
       return;
     }

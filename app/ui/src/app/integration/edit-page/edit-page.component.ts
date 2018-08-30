@@ -69,6 +69,13 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
 
   handleFlowEvent(event: FlowEvent) {
     const child = this.flowPageService.getCurrentChild(this.route);
+    // check if the flowId and integrationId are available, add the flowId to the URL if needed
+    const integrationId = this.route.snapshot.params.integrationId;
+    const flowId = this.route.snapshot.params.flowId;
+    if (!flowId && integrationId) {
+        this.router.navigate(['integrations', integrationId,  this.currentFlowService.flowId, 'edit']);
+        return;
+    }
     let validate = false;
     switch (event.kind) {
       case 'integration-updated':
@@ -94,7 +101,6 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
       this.router.navigate(['save-or-add-step'], {
         queryParams: { validate: true },
         relativeTo: this.route,
-        fragment: this.currentFlowService.flowId
       });
     }
   }
@@ -109,21 +115,21 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
     );
 
     this.routeSubscription = this.route.paramMap
-      .pipe(map(params => params.get('integrationId')))
-      .subscribe(integrationId =>
-        this.integrationStore.loadOrCreate(integrationId)
-      );
-
-    this.fragmentSubscription = this.route.fragment.subscribe(fragment => {
-      if (fragment) {
-        this.currentFlowService.flowId = fragment;
-      }
-    });
-
+      .pipe(map(params => {
+        return {
+          integrationId: params.get('integrationId'),
+          flowId: params.get('flowId')
+        };
+      }))
+      .subscribe(params => {
+        this.currentFlowService.flowId = params.flowId;
+        this.integrationStore.loadOrCreate(params.integrationId);
+      });
     this.navigationService.hide();
   }
 
   ngOnDestroy() {
+    this.currentFlowService.flowId = undefined;
     this.navigationService.show();
     if (this.integrationSubscription) {
       this.integrationSubscription.unsubscribe();
@@ -133,9 +139,6 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
     }
     if (this.flowSubscription) {
       this.flowSubscription.unsubscribe();
-    }
-    if (this.fragmentSubscription) {
-      this.fragmentSubscription.unsubscribe();
     }
   }
 }
