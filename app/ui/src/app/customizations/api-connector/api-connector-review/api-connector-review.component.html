@@ -1,18 +1,26 @@
 <div class="card-pf-heading">
   <h2 class="card-pf-title">
-    Review Actions
+    {{ 'customizations.api-client-connectors.api-review-title' | synI18n }}
   </h2>
 </div>
 <div class="card-pf-body" *ngIf="validation; else validationFallback">
+  <h5 class="connector-actions__header">
+    {{ 'customizations.api-client-connectors.api-review-api-info-header' | synI18n }}
+  </h5>
+  <ol class="connector-actions__operations">
+    <li [innerHtml]="'customizations.api-client-connectors.api-review-api-name' | synI18n: validation.name"></li>
+    <li [innerHtml]="'customizations.api-client-connectors.api-review-api-description' | synI18n: validation.description"></li>
+  </ol>
+
   <div class="connector-actions" *ngIf="validation?.actionsSummary as actionsSummary">
     <h5 class="connector-actions__header">
-      Imported
+      {{ 'customizations.api-client-connectors.api-review-imported-header' | synI18n }}
     </h5>
     <ol class="connector-actions__operations">
-      <li><strong>{{ actionsSummary.totalActions }}</strong> operations</li>
+      <li [innerHtml]="'customizations.api-client-connectors.api-review-operations-count' | synI18n: actionsSummary.totalActions"></li>
       <ol class="connector-actions__operations">
-        <li *ngFor="let importedAction of importedActions">
-          <strong>{{ importedAction.count }}</strong> tagged {{ importedAction.tag }}
+        <li *ngFor="let importedAction of importedActions"
+            [innerHtml]="'customizations.api-client-connectors.api-review-action-tagged-count' | synI18n: [importedAction.count, importedAction.tag]">
         </li>
       </ol>
     </ol>
@@ -20,7 +28,7 @@
 
   <div class="connector-actions" *ngIf="validation?.errors as errors">
     <h5 class="connector-actions__header" *ngIf="errors.length">
-      Errors
+      {{ 'customizations.api-client-connectors.api-review-errors-header' | synI18n }}
       <span class="connector-actions__label connector-actions__label--error">
         {{ errors.length }}
       </span>
@@ -32,7 +40,7 @@
 
   <div class="connector-actions" *ngIf="validation?.warnings as warnings">
     <h5 class="connector-actions__header" *ngIf="warnings.length">
-      Warnings
+      {{ 'customizations.api-client-connectors.api-review-warnings-header' | synI18n }}
       <span class="connector-actions__label connector-actions__label--warning">
           {{ warnings.length }}
       </span>
@@ -46,7 +54,7 @@
           (click)="reviewComplete.emit({event: event, displayEditor: false})"
           type="button"
           class="connector-form__submit btn btn-primary">
-    Next
+    {{ 'shared.next' | synI18n }}
   </button>
 
   <ng-template #editTooltip>
@@ -60,10 +68,12 @@
     <span [tooltip]="editTooltip"
           [tooltipEnable]="enableEditButton"
           placement="top">
-      Review/Edit
+      {{ 'customizations.api-client-connectors.api-review-edit-button' | synI18n }}
     </span>
   </button>
 </div>
 <ng-template #validationFallback>
-  <h5 class="connector-fallback">No connector details are currently available.</h5>
+  <h5 class="connector-fallback">
+    {{ 'customizations.api-client-connectors.api-review-validation-fallback' | synI18n }}
+  </h5>
 </ng-template>
