@@ -223,7 +223,9 @@
       "syndesis007": "Secrets for this connection need to be updated",
       "syndesis008": "There has been a validation error",
       "syndesis009": "A connection has been deleted from this integration",
-      "syndesis010": "Multiple extensions installed"
+      "syndesis010": "Multiple extensions installed",
+      "syndesis011": "A connection associated with this integration has been modified. To incorporate the changes, please edit the integration.",
+      "syndesis012": "The published integration has become obsolete and its recommended it should be republished."
     },
     "shared": {
       "home": "Home",

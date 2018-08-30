@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
+import org.immutables.value.Value;
 import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithName;
@@ -61,5 +62,14 @@ public interface ConnectionBase extends WithResourceId, WithTags, WithName, With
      */
     boolean isDerived();
 
+    /**
+     * Provides number of integrations using this connection
+     * <p>
+     * Note:
+     * Excluded from {@link #hashCode()} and {@link #equals(Object)}
+     *
+     * @return count of integrations
+     */
+    @Value.Auxiliary
     OptionalInt getUses();
 }
