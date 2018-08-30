@@ -73,7 +73,6 @@ export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
       // safety net
       this.router.navigate(['save-or-add-step'], {
         relativeTo: this.route.parent,
-        fragment: this.currentFlowService.flowId
       });
       return;
     }

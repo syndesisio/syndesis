@@ -81,14 +81,12 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
           this.router.navigate(['save-or-add-step'], {
             queryParams: { validate: true },
             relativeTo: this.route.parent,
-            fragment: this.currentFlowService.flowId
           });
         } else {
           /* Go to the previous configuration page... */
           this.router.navigate(
             ['action-configure', this.position, this.page - 1], {
               relativeTo: this.route.parent,
-              fragment: this.currentFlowService.flowId
             }
           );
         }
@@ -112,7 +110,6 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       onSave: () => {
         this.router.navigate(['describe-data', this.position, direction], {
           relativeTo: this.route.parent,
-          fragment: this.currentFlowService.flowId
         });
       }
     });
@@ -161,7 +158,6 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
           this.router.navigate(
             ['action-configure', this.position, this.page + 1], {
               relativeTo: this.route.parent,
-              fragment: this.currentFlowService.flowId
             }
           );
         }
@@ -191,14 +187,12 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     if (!step || !step.connection) {
       this.router.navigate(['connection-select', this.position], {
         relativeTo: this.route.parent,
-        fragment: this.currentFlowService.flowId
       });
       return;
     }
     if (!step.action) {
       this.router.navigate(['action-select', this.position], {
         relativeTo: this.route.parent,
-        fragment: this.currentFlowService.flowId
       });
       return;
     }
@@ -318,7 +312,6 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
         if (!params.has('page')) {
           this.router.navigate(['0'], {
             relativeTo: this.route,
-            fragment: this.currentFlowService.flowId
           });
           return;
         }

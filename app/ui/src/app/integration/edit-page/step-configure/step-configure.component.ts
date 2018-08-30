@@ -101,7 +101,6 @@ export class IntegrationStepConfigureComponent
         this.router.navigate(['save-or-add-step'], {
           queryParams: { validate: true },
           relativeTo: this.route.parent,
-          fragment: this.currentFlowService.flowId
         });
       }
     });

@@ -174,7 +174,6 @@ export class FlowViewComponent implements OnDestroy {
               } else {
                 this.router.navigate(['save-or-add-step'], {
                   relativeTo: this.route,
-                  fragment: this.currentFlowService.flowId
                 });
               }
             }, 10);

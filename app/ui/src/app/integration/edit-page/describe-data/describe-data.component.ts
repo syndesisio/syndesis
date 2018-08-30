@@ -115,7 +115,6 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
     this.router.navigate(['save-or-add-step'], {
       queryParams: { validate: true },
       relativeTo: this.route.parent,
-      fragment: this.currentFlowService.flowId
     });
   }
 
@@ -209,7 +208,6 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
     if (!step.action) {
       this.router.navigate(['action-select', this.position], {
         relativeTo: this.route.parent,
-        fragment: this.currentFlowService.flowId
       });
       return;
     }

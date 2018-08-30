@@ -90,7 +90,6 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
       onSave: () => {
         this.router.navigate(['step-select', position + 1], {
           relativeTo: this.route,
-          fragment: this.currentFlowService.flowId
         });
       }
     });
@@ -103,7 +102,6 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
       onSave: () => {
         this.router.navigate(['connection-select', position + 1], {
           relativeTo: this.route,
-          fragment: this.currentFlowService.flowId
         });
       }
     });
@@ -137,7 +135,6 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
       this.router.navigate(
         ['connection-select', this.currentFlowService.getFirstPosition()], {
           relativeTo: this.route.parent,
-          fragment: this.currentFlowService.flowId
         }
       );
       return;
@@ -146,7 +143,6 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
       this.router.navigate(
         ['connection-select', this.currentFlowService.getLastPosition()], {
           relativeTo: this.route.parent,
-          fragment: this.currentFlowService.flowId
         }
       );
       return;

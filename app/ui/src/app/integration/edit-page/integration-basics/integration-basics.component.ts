@@ -54,7 +54,6 @@ export class IntegrationBasicsComponent implements OnInit {
     this.router.navigate(['save-or-add-step'], {
       queryParams: { validate: true },
       relativeTo: this.route.parent,
-      fragment: this.currentFlowService.flowId
     });
   }
 
