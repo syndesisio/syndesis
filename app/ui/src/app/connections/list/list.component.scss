@@ -69,8 +69,8 @@
           .alert {
             position: absolute;
             bottom: -2px;
-            left: -2px;
-            right: -2px;
+            left: calc(-#{$gutter} - 2px);
+            right: calc(-#{$gutter} - 2px);
             margin: 0;
             padding-left: 0;
             padding-right: 0;
