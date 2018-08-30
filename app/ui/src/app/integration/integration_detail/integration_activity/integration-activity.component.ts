@@ -94,6 +94,9 @@ export class IntegrationActivityComponent implements OnInit, OnDestroy {
           activitities.forEach(activity => {
             if (activity.steps && Array.isArray(activity.steps)) {
               activity.steps.forEach(step => {
+                step.name = 'n/a';
+                step.isFailed = step.failure && step.failure.length > 0;
+
                 const deployedIntegration = integrationDeployments.find(deployment => deployment.version === +activity.ver);
                 
                 for (let integrationFlow of deployedIntegration.spec.flows) {
@@ -103,9 +106,7 @@ export class IntegrationActivityComponent implements OnInit, OnDestroy {
                       break
                     }
                 }
-
-                step.isFailed = step.failure && step.failure.length > 0;
-
+                
                 const errorMessages = [
                   null,
                   ...step.messages,
