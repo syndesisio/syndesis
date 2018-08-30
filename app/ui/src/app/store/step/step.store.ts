@@ -33,24 +33,17 @@ export const LOG = 'log';
 @Injectable()
 export class StepStore {
   steps: StepKind[] = [
-    {
+    StepStore.requiresInputOutputDataShapes({
       id: undefined,
       connection: undefined,
       action: undefined,
       name: 'Data Mapper',
       description: 'Map fields from the input type to the output type.',
       stepKind: DATA_MAPPER,
-      visible: (
-        position: number,
-        previousSteps: Array<Step>,
-        subsequentSteps: Array<Step>
-      ) =>
-        this.stepsHaveOutputDataShape(previousSteps) &&
-        this.stepsHaveInputDataShape(subsequentSteps),
       properties: {},
       configuredProperties: undefined
-    },
-    {
+    }),
+    StepStore.requiresOutputDataShape({
       id: undefined,
       connection: undefined,
       action: undefined,
@@ -61,7 +54,7 @@ export class StepStore {
       stepKind: BASIC_FILTER,
       properties: undefined,
       configuredProperties: undefined
-    },
+    }),
     {
       id: undefined,
       connection: undefined,
@@ -264,16 +257,9 @@ $\{in.body.title\} // Evaluates true when body contains title.
     // pull out attributes that aren't in the backend model
     const { description, visible, ...step } = this.getStepConfig(stepKind);
     return step;
-  }
+}
 
-  private getStepConfig(stepKind: String) {
-    if (!stepKind) {
-      return undefined;
-    }
-    return this.steps.find(step => step.stepKind === stepKind);
-  }
-
-  private stepsHaveOutputDataShape(steps: Array<Step>): boolean {
+  static stepsHaveOutputDataShape(steps: Array<Step>): boolean {
     return (
       steps.filter(
         s =>
@@ -284,7 +270,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
     );
   }
 
-  private stepsHaveInputDataShape(steps: Array<Step>): boolean {
+  static stepsHaveInputDataShape(steps: Array<Step>): boolean {
     return (
       steps.filter(
         s =>
@@ -294,4 +280,34 @@ $\{in.body.title\} // Evaluates true when body contains title.
       ).length > 0
     );
   }
+
+  static requiresInputOutputDataShapes(obj: StepKind): StepKind {
+    obj.visible = (
+      position: number,
+      previousSteps: Array<Step>,
+      subsequentSteps: Array<Step>
+    ) => {
+      return StepStore.stepsHaveOutputDataShape(previousSteps) && StepStore.stepsHaveInputDataShape(subsequentSteps);
+    };
+    return obj;
+  }
+
+  static requiresOutputDataShape(obj: StepKind): StepKind {
+    obj.visible = (
+      position: number,
+      previousSteps: Array<Step>,
+      subsequentSteps: Array<Step>
+    ) => {
+      return StepStore.stepsHaveOutputDataShape(previousSteps);
+    };
+    return obj;
+  }
+
+  private getStepConfig(stepKind: String) {
+    if (!stepKind) {
+      return undefined;
+    }
+    return this.steps.find(step => step.stepKind === stepKind);
+  }
+
 }
