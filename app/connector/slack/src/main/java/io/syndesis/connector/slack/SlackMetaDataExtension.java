@@ -15,10 +15,6 @@
  */
 package io.syndesis.connector.slack;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -40,6 +36,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static io.syndesis.connector.slack.utils.SlackUtils.readResponse;
 
 public class SlackMetaDataExtension extends AbstractMetaDataExtension {
 
@@ -91,17 +89,5 @@ public class SlackMetaDataExtension extends AbstractMetaDataExtension {
         } else {
             return Optional.empty();
         }
-    }
-
-    @SuppressWarnings("PMD.AssignmentInOperand")
-    private String readResponse(HttpResponse response) throws IOException {
-        InputStream s = response.getEntity().getContent();
-        ByteArrayOutputStream result = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = s.read(buffer)) != -1) {
-            result.write(buffer, 0, length);
-        }
-        return result.toString(StandardCharsets.UTF_8.name());
     }
 }
