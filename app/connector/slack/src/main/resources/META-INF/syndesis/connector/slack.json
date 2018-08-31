@@ -163,6 +163,9 @@
             "description": "Read Messages from a specific channel",
             "id": "io.syndesis:slack-channel-consumer-connector",
             "pattern": "From",
+            "tags": [
+                "dynamic"
+            ],
             "actionType": "connector",
             "descriptor": {
                 "inputDataShape": {
