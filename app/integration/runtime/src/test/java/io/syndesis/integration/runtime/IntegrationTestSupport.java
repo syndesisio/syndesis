@@ -19,10 +19,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import javax.xml.bind.JAXBException;
-
-import io.syndesis.common.model.integration.Flow;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Step;
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ModelHelper;
 import org.apache.camel.model.ProcessorDefinition;
@@ -30,9 +26,29 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.syndesis.common.model.integration.Flow;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.util.StringConstants;
 
-public class IntegrationTestSupport {
+public class IntegrationTestSupport implements StringConstants {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);
+
+    protected ObjectMapper mapper = new ObjectMapper();
+
+    protected static class DataPair {
+        private String key;
+        private Object value;
+
+        public DataPair(String key, Object value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
 
     protected void dumpRoutes(CamelContext context, RoutesDefinition definition) {
         try {
@@ -84,5 +100,50 @@ public class IntegrationTestSupport {
         }
 
         return output;
+    }
+
+    protected DataPair dataPair(String key, String value) {
+        return new DataPair(key, value);
+    }
+
+    protected DataPair dataPair(String key, DataPair... values) {
+        if (values.length == 1)
+            return new DataPair(key, values[0]);
+
+        return new DataPair(key, values);
+    }
+
+    private JsonNode jsonData(DataPair... snippets) {
+        ObjectNode node = mapper.createObjectNode();
+
+        for (DataPair snippet : snippets) {
+            String key = snippet.key.toString();
+
+            if (snippet.value instanceof String) {
+                node.put(key, snippet.value.toString());
+            } else if (snippet.value instanceof String[]) {
+                ArrayNode array = mapper.createArrayNode();
+                Arrays.stream((String[]) snippet.value).forEach(array::add);
+                node.set(key, array);
+            } else if (snippet.value instanceof DataPair[]) {
+                ArrayNode array = mapper.createArrayNode();
+                Arrays.stream((DataPair[]) snippet.value).forEach(me -> {
+                    JsonNode element = jsonData(me);
+                    array.add(element);
+                });
+                node.set(key, array);
+            } else if (snippet.value instanceof DataPair) {
+                JsonNode valueNode = jsonData((DataPair) snippet.value);
+                node.set(key, valueNode);
+            }
+        }
+
+        return node;
+    }
+
+    protected String data(DataPair... snippets) throws Exception {
+        JsonNode jsonNode = jsonData(snippets);
+        String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
+        return json;
     }
 }

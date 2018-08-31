@@ -20,8 +20,14 @@ import java.util.Collections;
 import io.syndesis.integration.runtime.handlers.ConnectorStepHandler;
 import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
+import io.syndesis.integration.runtime.handlers.TemplateStepHandler;
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.action.StepDescriptor;
+import io.syndesis.common.model.action.StepAction.Kind;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
@@ -93,5 +99,20 @@ public class IntegrationStepHandlersTest {
                         .build())
                     .build()))
             .isInstanceOf(EndpointStepHandler.class);
+
+        assertThat(
+            builder.findHandler(
+                new Step.Builder()
+                    .stepKind(StepKind.template)
+                    .action(new StepAction.Builder()
+                            .descriptor(new StepDescriptor.Builder()
+                                .kind(Kind.STEP)
+                                .inputDataShape(new DataShape.Builder()
+                                    .kind(DataShapeKinds.JSON_SCHEMA)
+                                    .build())
+                                .build())
+                            .build())
+                    .build()))
+            .isInstanceOf(TemplateStepHandler.class);
     }
 }
