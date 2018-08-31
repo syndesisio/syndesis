@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
-public class KarafConnectorTest extends ConnectorTestSupport {
+public class KafkaConnectorTest extends ConnectorTestSupport {
 
     @Override
     protected CamelContext createCamelContext() throws Exception {

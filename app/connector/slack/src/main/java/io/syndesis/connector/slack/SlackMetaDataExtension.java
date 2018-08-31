@@ -84,7 +84,7 @@ public class SlackMetaDataExtension extends AbstractMetaDataExtension {
                                 .withAttribute(MetaData.JAVA_TYPE, String.class).withPayload(setChannels).build());
             } catch (Exception e) {
                 throw new IllegalStateException(
-                    "Get information about channels failed with token" + token + " has failed.", e);
+                    "Get information about channels failed with token " + token + " has failed.", e);
             }
         } else {
             return Optional.empty();
