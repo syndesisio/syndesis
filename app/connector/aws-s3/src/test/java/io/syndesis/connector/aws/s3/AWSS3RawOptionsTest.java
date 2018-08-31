@@ -70,8 +70,8 @@ public class AWSS3RawOptionsTest extends CamelTestSupport {
     @Override
     protected Properties useOverridePropertiesWithPropertiesComponent() {
         Properties properties = new Properties();
-        properties.setProperty("aws-s3-1.accessKey", "my-accessKey");
-        properties.setProperty("aws-s3-1.secretKey", "my-secretKey");
+        properties.setProperty("flow-0.aws-s3-0.accessKey", "my-accessKey");
+        properties.setProperty("flow-0.aws-s3-0.secretKey", "my-secretKey");
 
         return properties;
     }

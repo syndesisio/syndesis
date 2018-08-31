@@ -136,6 +136,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
 
         ProcessorDefinition<?> parent = configureRouteScheduler(flow);
+        if (parent != null) {
+            parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
+        }
 
         for (int i = 0; i < steps.size(); i++) {
             final Step step = steps.get(i);
@@ -182,7 +185,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     }
 
                     parent = new SplitStepHandler().handle(splitStep.get(), parent, this, flowIndex, stepIndex).orElse(parent);
-                    parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
                     parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                     parent = parent.process(new OutMessageCaptureProcessor());
                 } else {

@@ -338,6 +338,7 @@ public class IntegrationHandler extends BaseHandler
         return integration;
     }
 
+    @SuppressWarnings("PMD.NPathComplexity")
     private IntegrationOverview toCurrentIntegrationOverview(Integration integration) {
         final DataManager dataManager = getDataManager();
         final String id = integration.getId().get();

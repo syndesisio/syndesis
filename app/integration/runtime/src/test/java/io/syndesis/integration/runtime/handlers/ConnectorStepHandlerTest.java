@@ -60,10 +60,10 @@ import static org.assertj.core.api.Assertions.assertThat;
     properties = {
         "spring.main.banner-mode = off",
         "logging.level.io.syndesis.integration.runtime = DEBUG",
-        "twitter-timeline-0.accessToken = at",
-        "twitter-timeline-0.accessTokenSecret = ats",
-        "twitter-timeline-0.consumerKey = ck",
-        "twitter-timeline-0.consumerSecret = cs"
+        "flow-0.twitter-timeline-0.accessToken = at",
+        "flow-0.twitter-timeline-0.accessTokenSecret = ats",
+        "flow-0.twitter-timeline-0.consumerKey = ck",
+        "flow-0.twitter-timeline-0.consumerSecret = cs"
     }
 )
 @TestExecutionListeners(

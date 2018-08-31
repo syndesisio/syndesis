@@ -98,15 +98,15 @@ export class IntegrationActivityComponent implements OnInit, OnDestroy {
                 step.isFailed = step.failure && step.failure.length > 0;
 
                 const deployedIntegration = integrationDeployments.find(deployment => deployment.version === +activity.ver);
-                
-                for (let integrationFlow of deployedIntegration.spec.flows) {
-                    let integrationStep = integrationFlow.steps.find(integrationStep => integrationStep.id == step.id);
+
+                for (const integrationFlow of deployedIntegration.spec.flows) {
+                    const integrationStep = integrationFlow.steps.find(is => is.id == step.id);
                     if (integrationStep) {
                       step.name = this.fetchStepName(integrationStep);
-                      break
+                      break;
                     }
                 }
-                
+
                 const errorMessages = [
                   null,
                   ...step.messages,
