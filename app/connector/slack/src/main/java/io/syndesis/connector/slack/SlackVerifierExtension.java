@@ -15,11 +15,6 @@
  */
 package io.syndesis.connector.slack;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +35,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import static io.syndesis.connector.slack.utils.SlackUtils.readResponse;
 
 public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
 
@@ -120,6 +117,7 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
                 HttpResponse response = client.execute(httpPost);
 
                 String jsonString = readResponse(response.getEntity().getContent());
+                response.getEntity().getContent().close();
                 if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
                     builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid token").parameterKey("token").build());
                 }
@@ -133,17 +131,6 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
             }
 
         }
-    }
-
-    @SuppressWarnings("PMD.AssignmentInOperand")
-    private String readResponse(InputStream s) throws IOException, UnsupportedEncodingException {
-        ByteArrayOutputStream result = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = s.read(buffer)) != -1) {
-            result.write(buffer, 0, length);
-        }
-        return result.toString(StandardCharsets.UTF_8.name());
     }
 
     protected String asJson(SlackMessage message) {
