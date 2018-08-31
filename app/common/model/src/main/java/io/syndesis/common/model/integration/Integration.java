@@ -41,7 +41,6 @@ public interface Integration extends WithId<Integration>, IntegrationBase {
         // allow access to ImmutableIntegration.Builder
     }
 
-
     /**
      * A weaker form of equality to {@link #equals(Object)}.
      * Compares a defining subset of properties to {code}another{code}'s
@@ -90,26 +89,25 @@ public interface Integration extends WithId<Integration>, IntegrationBase {
             }
         }
 
-        List<Step> mySteps = getSteps();
-        if (mySteps == null) {
-            if (another.getSteps() != null) {
+        List<Flow> myFlows = getFlows();
+        if (myFlows == null) {
+            if (another.getFlows() != null) {
                 return false;
             }
         } else {
-            for (Step myStep : mySteps) {
-                Step anotherStep = another.findStepById(myStep.getId().get()).orElse(null);
-                if (! myStep.equivalent(anotherStep)) {
+            for (Flow myFlow : myFlows) {
+                Flow anotherFlow = another.findFlowById(myFlow.getId().get()).orElse(null);
+                if (!myFlow.equivalent(anotherFlow)) {
                     return false;
                 }
             }
         }
 
         return Objects.equals(getId(), another.getId())
-                            && isDeleted() == another.isDeleted()
-                            && getResources().equals(another.getResources())
-                            && Objects.equals(getScheduler(), another.getScheduler())
-                            && Objects.equals(getDescription(), another.getDescription())
-                            && getTags().equals(another.getTags())
-                            && Objects.equals(getName(), another.getName());
+            && isDeleted() == another.isDeleted()
+            && getResources().equals(another.getResources())
+            && getTags().equals(another.getTags())
+            && Objects.equals(getDescription(), another.getDescription())
+            && Objects.equals(getName(), another.getName());
     }
 }

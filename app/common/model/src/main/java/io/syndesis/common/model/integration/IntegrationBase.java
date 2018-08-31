@@ -35,6 +35,7 @@ import io.syndesis.common.model.WithResources;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.WithVersion;
 import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
 import org.immutables.value.Value;
 
@@ -51,20 +52,25 @@ public interface IntegrationBase extends WithResourceId, WithVersion, WithModifi
         return Collections.emptyList();
     }
 
+    @Value.Default
+    default List<Connection> getConnections() {
+        return Collections.emptyList();
+    }
+
     @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
     Optional<String> getDescription();
 
     @JsonIgnore
     default Set<String> getUsedConnectorIds() {
-        return getFlows().stream()//
-            .flatMap(f -> f.getSteps().stream())//
-            .map(Step::getAction)//
-            .filter(Optional::isPresent)//
-            .map(Optional::get)//
-            .filter(ConnectorAction.class::isInstance)//
-            .map(ConnectorAction.class::cast)//
-            .map(a -> a.getDescriptor().getConnectorId())//
-            .filter(Objects::nonNull)//
+        return getFlows().stream()
+            .flatMap(f -> f.getSteps().stream())
+            .map(Step::getAction)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .filter(ConnectorAction.class::isInstance)
+            .map(ConnectorAction.class::cast)
+            .map(a -> a.getDescriptor().getConnectorId())
+            .filter(Objects::nonNull)
             .collect(Collectors.toSet());
     }
 
@@ -80,15 +86,15 @@ public interface IntegrationBase extends WithResourceId, WithVersion, WithModifi
             .findFirst();
     }
 
-    default Optional<Step> findStepById(String stepId) {
+    default Optional<Flow> findFlowById(String id) {
         if (getSteps() == null) {
             return Optional.empty();
         }
 
-        return getSteps().stream()
+        return getFlows().stream()
             .filter(WithId.class::isInstance)
-            .filter(step -> step.getId().isPresent())
-            .filter(step -> stepId.equals(step.getId().get()))
+            .filter(flow -> flow.getId().isPresent())
+            .filter(flow -> id.equals(flow.getId().get()))
             .findFirst();
     }
 }
