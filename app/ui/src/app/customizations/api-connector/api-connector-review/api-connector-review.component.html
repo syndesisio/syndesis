@@ -50,27 +50,35 @@
     </ol>
   </div>
 
-  <button *ngIf="showNextButton"
-          (click)="reviewComplete.emit({event: event, displayEditor: false})"
-          type="button"
-          class="connector-form__submit btn btn-primary">
-    {{ 'shared.next' | synI18n }}
-  </button>
+  <fieldset class="list-pf-actions">
+    <syndesis-button *ngIf="showNextButton" type="button" theme="default" (click)="onBackPressed()">
+      &lt; {{ 'shared.back' | synI18n }}
+    </syndesis-button>
 
-  <ng-template #editTooltip>
-    {{ 'customizations.api-client-connectors.edit-tooltip' | synI18n }}
-  </ng-template>
-  <button *ngIf="showNextButton"
-          (click)="reviewComplete.emit({event: event, displayEditor: true})"
-          [disabled]="!enableEditButton"
-          type="button"
-          class="connector-form__submit btn btn-default apicurio pull-right">
-    <span [tooltip]="editTooltip"
-          [tooltipEnable]="enableEditButton"
-          placement="top">
-      {{ 'customizations.api-client-connectors.api-review-edit-button' | synI18n }}
-    </span>
-  </button>
+    <syndesis-button *ngIf="showNextButton"
+                     (click)="reviewComplete.emit({event: event, displayEditor: false})"
+                     type="button"
+                     theme="primary">
+      {{ 'shared.next' | synI18n }}
+    </syndesis-button>
+
+    <ng-template #editTooltip>
+      {{ 'customizations.api-client-connectors.edit-tooltip' | synI18n }}
+    </ng-template>
+    <syndesis-button
+            *ngIf="showNextButton"
+            (click)="reviewComplete.emit({event: event, displayEditor: true})"
+            [disabled]="!enableEditButton"
+            type="button"
+            class="review-edit-btn"
+            theme="default">
+      <span [tooltip]="editTooltip"
+            [tooltipEnable]="enableEditButton"
+            placement="top">
+        {{ 'customizations.api-client-connectors.api-review-edit-button' | synI18n }}
+      </span>
+    </syndesis-button>
+  </fieldset>
 </div>
 <ng-template #validationFallback>
   <h5 class="connector-fallback">

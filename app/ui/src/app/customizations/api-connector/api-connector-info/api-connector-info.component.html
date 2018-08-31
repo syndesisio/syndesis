@@ -73,11 +73,15 @@
     </fieldset>
 
     <div class="form-group">
-      <fieldset class="col-sm-9 col-sm-offset-3">
+      <fieldset class="list-pf-actions">
+        <syndesis-button *ngIf="createMode" theme="default" type="button" (click)="onBackPressed()">
+          &lt; {{ 'shared.back' | synI18n }}
+        </syndesis-button>
         <syndesis-button *ngIf="createMode"
-                          type="submit"
-                          [loading]="apiConnectorState.loading"
-                          [disabled]="apiConnectorDataForm.invalid">
+                         class="create-api-btn"
+                         type="submit"
+                         [loading]="apiConnectorState.loading"
+                         [disabled]="apiConnectorDataForm.invalid">
           Create API Connector
         </syndesis-button>
         <ng-container *ngIf="!createMode">

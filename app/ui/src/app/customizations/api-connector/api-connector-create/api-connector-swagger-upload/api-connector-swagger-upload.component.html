@@ -27,7 +27,12 @@
       <div class="form-group row">
         <div class="col-xs-12 radio">
           <label>
-            <input type="radio" checked="checked" name="connectorSource" #uploadFileOption>
+            <input type="radio"
+                   checked="checked"
+                   name="connectorSource"
+                   (click)="uploadMethodChanged(true)"
+                   [checked]="apiFileImport"
+                   #uploadFileOption>
             {{ 'customizations.api-client-connectors.api-file-upload' | synI18n }}
           </label>
         </div>
@@ -73,21 +78,26 @@
       <div class="form-group row">
         <div class="col-xs-12 radio">
           <label>
-            <input type="radio" name="connectorSource" #fetchUrlOption>
+            <input type="radio"
+                   name="connectorSource"
+                   (click)="uploadMethodChanged(false)"
+                   [checked]="!apiFileImport"
+                   #fetchUrlOption>
             {{ 'customizations.api-client-connectors.api-url-upload' | synI18n }}
           </label>
         </div>
       </div>
       <div class="container-fluid">
         <div class="form-group row"
-          [class.syn-visuallyhidden]="!fetchUrlOption.checked">
+          [class.syn-visuallyhidden]="apiFileImport">
           <div class="col-xs-12">
             <input type="text"
               class="form-control"
               [class.syn-invalid]="validationError"
               name="swaggerFileUrl"
               [(ngModel)]="swaggerFileUrl"
-              [requiredIf]="fetchUrlOption.checked"
+              (ngModelChange)="onUrlChanged($event)"
+              [requiredIf]="!apiFileImport"
               #swaggerFileUrlInput="ngModel">
             <em class="text-muted">
               {{ 'customizations.api-client-connectors.api-url-upload-note' | synI18n }}
@@ -100,7 +110,7 @@
     <fieldset>
       <syndesis-button type="submit"
         [loading]="apiConnectorState.loading"
-        [disabled]="(!uploadFileOption.checked && !swaggerFileUrlInput.value) || (uploadFileOption.checked && !fileToUpload)">
+        [disabled]="(!apiFileImport && !swaggerFileUrlInput.value) || (apiFileImport && !fileToUpload)">
         {{ 'next' | synI18n }}
       </syndesis-button>
     </fieldset>
