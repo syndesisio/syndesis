@@ -44,6 +44,7 @@ import io.syndesis.integration.runtime.handlers.DataMapperStepHandler;
 import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.ExpressionFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.ExtensionStepHandler;
+import io.syndesis.integration.runtime.handlers.HeadersStepHandler;
 import io.syndesis.integration.runtime.handlers.LogStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
@@ -96,6 +97,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         this.stepHandlerList.add(new ExtensionStepHandler());
         this.stepHandlerList.add(new SplitStepHandler());
         this.stepHandlerList.add(new LogStepHandler());
+        this.stepHandlerList.add(new HeadersStepHandler());
         this.stepHandlerList.addAll(handlers);
 
         this.activityTracker = activityTracker;
@@ -136,6 +138,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
 
         ProcessorDefinition<?> parent = configureRouteScheduler(flow);
+        if (parent != null) {
+            parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
+        }
 
         for (int i = 0; i < steps.size(); i++) {
             final Step step = steps.get(i);
@@ -182,7 +187,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     }
 
                     parent = new SplitStepHandler().handle(splitStep.get(), parent, this, flowIndex, stepIndex).orElse(parent);
-                    parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
                     parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                     parent = parent.process(new OutMessageCaptureProcessor());
                 } else {
