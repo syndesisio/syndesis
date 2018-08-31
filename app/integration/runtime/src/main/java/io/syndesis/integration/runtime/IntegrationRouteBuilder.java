@@ -44,6 +44,7 @@ import io.syndesis.integration.runtime.handlers.DataMapperStepHandler;
 import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.ExpressionFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.ExtensionStepHandler;
+import io.syndesis.integration.runtime.handlers.HeadersStepHandler;
 import io.syndesis.integration.runtime.handlers.LogStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
@@ -96,6 +97,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         this.stepHandlerList.add(new ExtensionStepHandler());
         this.stepHandlerList.add(new SplitStepHandler());
         this.stepHandlerList.add(new LogStepHandler());
+        this.stepHandlerList.add(new HeadersStepHandler());
         this.stepHandlerList.addAll(handlers);
 
         this.activityTracker = activityTracker;
