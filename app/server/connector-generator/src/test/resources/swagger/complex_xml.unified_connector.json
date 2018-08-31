@@ -34,7 +34,7 @@
           "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
-      "pattern": "To"
+      "pattern": "Pipe"
     }
   ],
   "properties": {

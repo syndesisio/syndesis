@@ -247,7 +247,7 @@
         "pet"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:addPet",
@@ -273,7 +273,7 @@
         "pet"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:findPetsByStatus",
@@ -302,7 +302,7 @@
         "pet"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:findPetsByTags",
@@ -331,7 +331,7 @@
         "pet"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getPetById",
@@ -360,7 +360,7 @@
         "pet"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:updatePetWithForm",
@@ -386,7 +386,7 @@
         "pet"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:deletePet",
@@ -412,7 +412,7 @@
         "pet"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:uploadFile",
@@ -441,7 +441,7 @@
         "pet"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getInventory",
@@ -467,7 +467,7 @@
         "store"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:placeOrder",
@@ -496,7 +496,7 @@
         "store"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getOrderById",
@@ -525,7 +525,7 @@
         "store"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:deleteOrder",
@@ -551,7 +551,7 @@
         "store"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:createUser",
@@ -577,7 +577,7 @@
         "user"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:createUsersWithArrayInput",
@@ -603,7 +603,7 @@
         "user"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:createUsersWithListInput",
@@ -629,7 +629,7 @@
         "user"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:loginUser",
@@ -658,7 +658,7 @@
         "user"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:logoutUser",
@@ -681,7 +681,7 @@
         "user"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getUserByName",
@@ -710,7 +710,7 @@
         "user"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:updateUser",
@@ -736,7 +736,7 @@
         "user"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:deleteUser",
@@ -761,7 +761,7 @@
         "user"
       ],
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     }
   ]
 }
