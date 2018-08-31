@@ -114,16 +114,17 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
         // Timer
         assertThat(route.getInputs()).hasSize(1);
         assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "timer:integration?period=1s");
-        assertThat(route.getOutputs()).hasSize(3);
-        assertThat(getOutput(route, 0)).isInstanceOf(ToDefinition.class);
-        assertThat(getOutput(route, 0)).hasFieldOrPropertyWithValue("uri", "log:timer");
-        assertThat(getOutput(route, 1)).isInstanceOf(ProcessDefinition.class);
-        assertThat(getOutput(route, 2)).isInstanceOf(PipelineDefinition.class);
-        assertThat(getOutput(route, 2).getOutputs()).hasSize(3);
-        assertThat(getOutput(route, 2, 0)).isInstanceOf(SetHeaderDefinition.class);
-        assertThat(getOutput(route, 2, 1)).isInstanceOf(ToDefinition.class);
-        assertThat(getOutput(route, 2, 1)).hasFieldOrPropertyWithValue("uri", "mock:timer");
-        assertThat(getOutput(route, 2, 2)).isInstanceOf(ProcessDefinition.class);
+        assertThat(route.getOutputs()).hasSize(4);
+        assertThat(getOutput(route, 0)).isInstanceOf(SetHeaderDefinition.class);
+        assertThat(getOutput(route, 1)).isInstanceOf(ToDefinition.class);
+        assertThat(getOutput(route, 1)).hasFieldOrPropertyWithValue("uri", "log:timer");
+        assertThat(getOutput(route, 2)).isInstanceOf(ProcessDefinition.class);
+        assertThat(getOutput(route, 3)).isInstanceOf(PipelineDefinition.class);
+        assertThat(getOutput(route, 3).getOutputs()).hasSize(3);
+        assertThat(getOutput(route, 3, 0)).isInstanceOf(SetHeaderDefinition.class);
+        assertThat(getOutput(route, 3, 1)).isInstanceOf(ToDefinition.class);
+        assertThat(getOutput(route, 3, 1)).hasFieldOrPropertyWithValue("uri", "mock:timer");
+        assertThat(getOutput(route, 3, 2)).isInstanceOf(ProcessDefinition.class);
     }
 
     @Test
@@ -180,13 +181,14 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
 
         assertThat(route.getInputs()).hasSize(1);
         assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
-        assertThat(route.getOutputs()).hasSize(2);
+        assertThat(route.getOutputs()).hasSize(3);
         assertThat(getOutput(route, 0)).isInstanceOf(SetHeaderDefinition.class);
-        assertThat(getOutput(route, 1)).isInstanceOf(SplitDefinition.class);
-        assertThat(getOutput(route, 1).getOutputs()).hasSize(3);
-        assertThat(getOutput(route, 1, 0)).isInstanceOf(ProcessDefinition.class);
-        assertThat(getOutput(route, 1, 1)).isInstanceOf(PipelineDefinition.class);
-        assertThat(getOutput(route, 1, 2)).isInstanceOf(PipelineDefinition.class);
+        assertThat(getOutput(route, 1)).isInstanceOf(SetHeaderDefinition.class);
+        assertThat(getOutput(route, 2)).isInstanceOf(SplitDefinition.class);
+        assertThat(getOutput(route, 2).getOutputs()).hasSize(3);
+        assertThat(getOutput(route, 2, 0)).isInstanceOf(ProcessDefinition.class);
+        assertThat(getOutput(route, 2, 1)).isInstanceOf(PipelineDefinition.class);
+        assertThat(getOutput(route, 2, 2)).isInstanceOf(PipelineDefinition.class);
     }
 
     @Test
@@ -244,18 +246,19 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
 
         assertThat(route.getInputs()).hasSize(1);
         assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "timer:integration?period=1s");
-        assertThat(route.getOutputs()).hasSize(2);
-        assertThat(getOutput(route, 0)).isInstanceOf(ToDefinition.class);
-        assertThat(getOutput(route, 1)).isInstanceOf(SplitDefinition.class);
-        assertThat(getOutput(route, 1).getOutputs()).hasSize(3);
-        assertThat(getOutput(route, 1, 0)).isInstanceOf(SetHeaderDefinition.class);
-        assertThat(getOutput(route, 1, 1)).isInstanceOf(ProcessDefinition.class);
-        assertThat(getOutput(route, 1, 2)).isInstanceOf(PipelineDefinition.class);
-        assertThat(getOutput(route, 1, 2).getOutputs()).hasSize(3);
-        assertThat(getOutput(route, 1, 2, 0)).isInstanceOf(SetHeaderDefinition.class);
-        assertThat(getOutput(route, 1, 2, 1)).isInstanceOf(ToDefinition.class);
-        assertThat(getOutput(route, 1, 2, 1)).hasFieldOrPropertyWithValue("uri", "mock:timer");
-        assertThat(getOutput(route, 1, 2, 2)).isInstanceOf(ProcessDefinition.class);
+        assertThat(route.getOutputs()).hasSize(3);
+        assertThat(getOutput(route, 0)).isInstanceOf(SetHeaderDefinition.class);
+        assertThat(getOutput(route, 1)).isInstanceOf(ToDefinition.class);
+        assertThat(getOutput(route, 2)).isInstanceOf(SplitDefinition.class);
+        assertThat(getOutput(route, 2).getOutputs()).hasSize(3);
+        assertThat(getOutput(route, 2, 0)).isInstanceOf(SetHeaderDefinition.class);
+        assertThat(getOutput(route, 2, 1)).isInstanceOf(ProcessDefinition.class);
+        assertThat(getOutput(route, 2, 2)).isInstanceOf(PipelineDefinition.class);
+        assertThat(getOutput(route, 2, 2).getOutputs()).hasSize(3);
+        assertThat(getOutput(route, 2, 2, 0)).isInstanceOf(SetHeaderDefinition.class);
+        assertThat(getOutput(route, 2, 2, 1)).isInstanceOf(ToDefinition.class);
+        assertThat(getOutput(route, 2, 2, 1)).hasFieldOrPropertyWithValue("uri", "mock:timer");
+        assertThat(getOutput(route, 2, 2, 2)).isInstanceOf(ProcessDefinition.class);
     }
 
     // ***************************
