@@ -65,6 +65,7 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
                 rules.add(SyndesisSwaggerValidationRules::validateResponses);
                 rules.add(SyndesisSwaggerValidationRules::validateProvidedAuthTypes);
                 rules.add(SyndesisSwaggerValidationRules::validateUniqueOperationIds);
+                rules.add(SyndesisSwaggerValidationRules::validateNoMissingOperationIds);
                 return;
             case NONE:
                 return;
@@ -245,6 +246,29 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
             .message("Found operations with non unique operationIds: " + String.join(", ", nonUnique.keySet())).build());
 
         return withWarnings.build();
+    }
+
+    static SwaggerModelInfo validateNoMissingOperationIds(final SwaggerModelInfo info) {
+        final Swagger swagger = info.getModel();
+        if (swagger == null) {
+            return info;
+        }
+
+        long countNoOpId = swagger.getPaths().values().stream()
+            .flatMap(p -> p.getOperationMap().values().stream())
+            .filter(o -> o.getOperationId() == null)
+            .count();
+
+        if (countNoOpId == 0) {
+            return info;
+        }
+
+        final SwaggerModelInfo.Builder withErrors = new SwaggerModelInfo.Builder().createFrom(info);
+        withErrors.addError(new Violation.Builder()//
+            .error("missing-operation-ids")
+            .message(countNoOpId + "Operations have no operationId").build());
+
+        return withErrors.build();
     }
 
     private static <T> List<T> notNull(final List<T> value) {

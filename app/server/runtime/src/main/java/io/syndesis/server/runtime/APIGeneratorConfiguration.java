@@ -15,17 +15,24 @@
  */
 package io.syndesis.server.runtime;
 
+import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.ConnectorGenerator;
+import io.syndesis.server.api.generator.swagger.SwaggerAPIGenerator;
 import io.syndesis.server.api.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ConnectorGeneratorConfiguration {
+public class APIGeneratorConfiguration {
 
     @Bean("swagger-connector-template")
     public ConnectorGenerator swaggerConnectorGenerator() {
         return new SwaggerUnifiedShapeConnectorGenerator();
+    }
+
+    @Bean
+    public APIGenerator apiGenerator() {
+        return new SwaggerAPIGenerator();
     }
 }

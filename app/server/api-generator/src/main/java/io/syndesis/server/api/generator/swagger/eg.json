@@ -1,0 +1,323 @@
+{
+  "id": "i-LLEfj7G6V2Z282yl7nOz",
+  "flows": [
+    {
+      "id": "-LLEfb16aLqHaIy7OUlW",
+      "steps": [
+        {
+          "action": {
+            "id": "io.syndesis:api-provider-start",
+            "name": "Provided API",
+            "description": "Start a Syndesis integration from a provided API",
+            "descriptor": {
+              "componentScheme": "direct",
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "any",
+                "metadata": {
+                  "userDefined": "true"
+                }
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "API Provider Configuration",
+                  "name": "configuration",
+                  "properties": {
+                    "name": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "description": "The operation ID as defined in the API spec",
+                      "displayName": "Operation ID",
+                      "javaType": "String",
+                      "kind": "parameter",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "tags": [
+              "expose"
+            ],
+            "actionType": "connector",
+            "pattern": "From",
+            "metadata": {
+              "serverBasePath": "/api"
+            }
+          },
+          "connection": {
+            "id": "i-LLENV6fSaDPEgTZGjr4z",
+            "connector": {
+              "description": "Api Provider",
+              "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgaWQ9IkFwaSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA1MTEgNTExIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTEgNTExOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4Ij4KPGc+Cgk8cGF0aCBkPSJNNDkyLjE2OCwzMDkuNTc5bC0xNy42MjYtMTAuMTc3YzIuOTYtMTQuNzIzLDQuNDU4LTI5LjQ2Niw0LjQ1OC00My45MDJjMC0xNC42NDYtMS40NzQtMjkuNDAzLTQuMzg0LTQzLjk0NmwxNy41NTItMTAuMTM0ICAgYzUuNDM2LTMuMTM4LDkuMzI1LTguMjA2LDEwLjk0OS0xNC4yNjlzMC43OTEtMTIuMzk2LTIuMzQ4LTE3LjgzMmwtNDgtODMuMTM5Yy0zLjEzOS01LjQzNi04LjIwNi05LjMyNS0xNC4yNjktMTAuOTQ5ICAgYy02LjA2NC0xLjYyNC0xMi4zOTYtMC43OTEtMTcuODMzLDIuMzQ4bC0xNy41NjYsMTAuMTQyQzM4MC45MTIsNjguMiwzNTQuNzk4LDUzLjA5MiwzMjcsNDMuNjkyVjIzLjUgICBDMzI3LDEwLjU0MiwzMTYuNDU4LDAsMzAzLjUsMGgtOTZDMTk0LjU0MiwwLDE4NCwxMC41NDIsMTg0LDIzLjV2MjAuMTkzYy0yNy42NSw5LjM2Mi01My43MjgsMjQuNDktNzUuOTk5LDQ0LjA4OEw5MC4zMzIsNzcuNTc5ICAgYy01LjQzNy0zLjEzOS0xMS43Ny0zLjk3My0xNy44MzMtMi4zNDhjLTYuMDYzLDEuNjI1LTExLjEzLDUuNTEzLTE0LjI2OSwxMC45NDlsLTQ4LDgzLjEzOSAgIGMtMy4xMzksNS40MzYtMy45NzIsMTEuNzY5LTIuMzQ4LDE3LjgzMnM1LjUxMywxMS4xMzEsMTAuOTQ5LDE0LjI2OWwxNy42MjYsMTAuMTc3QzMzLjQ5OSwyMjYuMzIsMzIsMjQxLjA2MywzMiwyNTUuNSAgIGMwLDE0LjY0NCwxLjQ3NCwyOS40MDEsNC4zODQsNDMuOTQ1bC0xNy41NTIsMTAuMTM0Yy0xMS4yMjIsNi40NzktMTUuMDgsMjAuODc5LTguNjAyLDMyLjEwMmw0OCw4My4xMzkgICBjNi40NzksMTEuMjIxLDIwLjg3OSwxNS4wOCwzMi4xMDIsOC42MDFsMTcuNTY1LTEwLjE0MmMyMi4xOSwxOS41MjEsNDguMzAzLDM0LjYyOSw3Ni4xMDMsNDQuMDNWNDg3LjUgICBjMCwxMi45NTgsMTAuNTQyLDIzLjUsMjMuNSwyMy41aDk2YzEyLjk1OCwwLDIzLjUtMTAuNTQyLDIzLjUtMjMuNXYtMjAuMTkzYzI3LjY1MS05LjM2Miw1My43MjktMjQuNDksNzYtNDQuMDg3bDE3LjY2OCwxMC4yMDEgICBjMTEuMjIxLDYuNDc5LDI1LjYyMywyLjYyLDMyLjEwMi04LjYwMWw0OC04My4xMzlDNTA3LjI0OCwzMzAuNDU4LDUwMy4zOSwzMTYuMDU4LDQ5Mi4xNjgsMzA5LjU3OXogTTQ4Ny43NzksMzM0LjE4MWwtNDgsODMuMTM4ICAgYy0yLjM0Myw0LjA2LTcuNTUyLDUuNDU1LTExLjYxMSwzLjExMWwtMjIuMzkyLTEyLjkyOGMtMi44NDUtMS42NDMtNi40My0xLjI0Mi04Ljg0MiwwLjk4OSAgIGMtMjIuODkzLDIxLjE3My01MC40MzcsMzcuMTQ4LTc5LjY1Myw0Ni4xOTljLTMuMTQsMC45NzMtNS4yODEsMy44NzctNS4yODEsNy4xNjRWNDg3LjVjMCw0LjY4Ny0zLjgxMyw4LjUtOC41LDguNWgtOTYgICBjLTQuNjg3LDAtOC41LTMuODEzLTguNS04LjV2LTI1LjY0NWMwLTMuMjg3LTIuMTQxLTYuMTkxLTUuMjgtNy4xNjRjLTI5LjM5Ni05LjEwNy01Ni45NzQtMjUuMDYyLTc5Ljc1NS00Ni4xMzkgICBjLTEuNDIxLTEuMzE1LTMuMjUtMS45OTUtNS4wOTUtMS45OTVjLTEuMjg2LDAtMi41NzksMC4zMy0zLjc0OCwxLjAwNUw4Mi44MzIsNDIwLjQzYy00LjA2LDIuMzQzLTkuMjY4LDAuOTQ4LTExLjYxMS0zLjExMSAgIGwtNDgtODMuMTM4Yy0yLjM0My00LjA1OS0wLjk0Ny05LjI2OCwzLjExMS0xMS42MTJsMjIuMjcyLTEyLjg1OWMyLjg0NC0xLjY0Miw0LjI4OS00Ljk0MiwzLjU2Ni04LjE0NiAgIEM0OC43MzksMjg2LjM1Nyw0NywyNzAuODU4LDQ3LDI1NS41YzAtMTUuMSwxLjc2NS0zMC41ODQsNS4yNDctNDYuMDIyYzAuNzIyLTMuMjAzLTAuNzIzLTYuNTA0LTMuNTY2LTguMTQ1TDI2LjMzMiwxODguNDMgICBjLTEuOTY2LTEuMTM1LTMuMzcyLTIuOTY4LTMuOTYtNS4xNjFjLTAuNTg3LTIuMTkzLTAuMjg2LTQuNDg0LDAuODQ5LTYuNDVsNDgtODMuMTM5YzEuMTM1LTEuOTY2LDIuOTY4LTMuMzczLDUuMTYyLTMuOTYgICBjMi4xOTItMC41ODgsNC40ODQtMC4yODYsNi40NSwwLjg0OWwyMi4zOTIsMTIuOTI4YzIuODQ2LDEuNjQ0LDYuNDMsMS4yNDIsOC44NDItMC45ODljMjIuODk0LTIxLjE3Myw1MC40MzctMzcuMTQ4LDc5LjY1My00Ni4xOTkgICBjMy4xNC0wLjk3Myw1LjI4MS0zLjg3Nyw1LjI4MS03LjE2NFYyMy41YzAtNC42ODcsMy44MTMtOC41LDguNS04LjVoOTZjNC42ODcsMCw4LjUsMy44MTMsOC41LDguNXYyNS42NDUgICBjMCwzLjI4NywyLjE0MSw2LjE5MSw1LjI4LDcuMTY0YzI5LjM5NSw5LjEwNiw1Ni45NzMsMjUuMDYxLDc5Ljc1NSw0Ni4xMzljMi40MTIsMi4yMzIsNS45OTcsMi42MzMsOC44NDMsMC45OWwyMi4yOS0xMi44NjkgICBjMS45NjctMS4xMzUsNC4yNTgtMS40MzcsNi40NS0wLjg0OWMyLjE5MywwLjU4OCw0LjAyNiwxLjk5NCw1LjE2MiwzLjk2bDQ4LDgzLjEzOWMxLjEzNSwxLjk2NiwxLjQzNyw0LjI1NywwLjg0OSw2LjQ1ICAgYy0wLjU4OCwyLjE5My0xLjk5NCw0LjAyNi0zLjk2LDUuMTYxbC0yMi4yNzIsMTIuODU5Yy0yLjg0NCwxLjY0Mi00LjI4OSw0Ljk0My0zLjU2Niw4LjE0NmMzLjQzMSwxNS4yMDYsNS4xNywzMC43MDQsNS4xNyw0Ni4wNjUgICBjMCwxNS4xLTEuNzY1LDMwLjU4NC01LjI0Nyw0Ni4wMjFjLTAuNzIyLDMuMjAzLDAuNzIzLDYuNTAzLDMuNTY2LDguMTQ1bDIyLjM0OSwxMi45MDMgICBDNDg4LjcyNywzMjQuOTEzLDQ5MC4xMjMsMzMwLjEyMiw0ODcuNzc5LDMzNC4xODF6IiBmaWxsPSIjOTMzRUM1Ii8+Cgk8cGF0aCBkPSJNMjU1LjUsMTA0QzE3MS45NjIsMTA0LDEwNCwxNzEuOTYzLDEwNCwyNTUuNVMxNzEuOTYyLDQwNywyNTUuNSw0MDdTNDA3LDMzOS4wMzcsNDA3LDI1NS41UzMzOS4wMzgsMTA0LDI1NS41LDEwNHogICAgTTI1NS41LDM5MkMxODAuMjM0LDM5MiwxMTksMzMwLjc2NiwxMTksMjU1LjVTMTgwLjIzNCwxMTksMjU1LjUsMTE5UzM5MiwxODAuMjM0LDM5MiwyNTUuNVMzMzAuNzY2LDM5MiwyNTUuNSwzOTJ6IiBmaWxsPSIjOTMzRUM1Ii8+Cgk8cGF0aCBkPSJNMjgzLjUsMjE2aC0yOGMtNC4xNDIsMC03LjUsMy4zNTgtNy41LDcuNXY2NGMwLDQuMTQyLDMuMzU4LDcuNSw3LjUsNy41czcuNS0zLjM1OCw3LjUtNy41VjI3MWgyMC41ICAgYzE1LjE2NCwwLDI3LjUtMTIuMzM2LDI3LjUtMjcuNVMyOTguNjY0LDIxNiwyODMuNSwyMTZ6IE0yODMuNSwyNTZIMjYzdi0yNWgyMC41YzYuODkzLDAsMTIuNSw1LjYwNywxMi41LDEyLjUgICBTMjkwLjM5MywyNTYsMjgzLjUsMjU2eiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTIxNC41MjIsMjIwLjg2N2MtMS4wOTgtMi45MjctMy44OTYtNC44NjctNy4wMjItNC44NjdoLThjLTMuMTI2LDAtNS45MjUsMS45MzktNy4wMjIsNC44NjdsLTI0LDY0ICAgYy0xLjQ1NSwzLjg3OCwwLjUxMSw4LjIwMSw0LjM4OSw5LjY1NmMzLjg3OCwxLjQ1NSw4LjIwMS0wLjUxMSw5LjY1Ni00LjM4OUwxODYuNjk3LDI3OWgzMy42MDVsNC4xNzUsMTEuMTMzICAgYzEuMTI5LDMuMDExLDMuOTg3LDQuODY5LDcuMDIzLDQuODY5YzAuODc1LDAsMS43NjUtMC4xNTQsMi42MzItMC40NzljMy44NzgtMS40NTQsNS44NDQtNS43NzgsNC4zODktOS42NTZMMjE0LjUyMiwyMjAuODY3eiAgICBNMTkyLjMyMiwyNjRsMTEuMTc4LTI5LjgwN0wyMTQuNjc4LDI2NEgxOTIuMzIyeiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTMyNy41LDIxNmMtNC4xNDIsMC03LjUsMy4zNTgtNy41LDcuNXY2NGMwLDQuMTQyLDMuMzU4LDcuNSw3LjUsNy41czcuNS0zLjM1OCw3LjUtNy41di02NCAgIEMzMzUsMjE5LjM1OCwzMzEuNjQyLDIxNiwzMjcuNSwyMTZ6IiBmaWxsPSIjOTMzRUM1Ii8+Cgk8cGF0aCBkPSJNMzA5LjE1Miw4Ny4zYzUuMjA1LDEuNjU5LDEwLjM5NCwzLjU4NiwxNS40MjEsNS43MjZjMC45NTgsMC40MDgsMS45NTQsMC42MDEsMi45MzQsMC42MDFjMi45MTYsMCw1LjY5LTEuNzEyLDYuOTA0LTQuNTY0ICAgYzEuNjIyLTMuODExLTAuMTUyLTguMjE2LTMuOTYzLTkuODM4Yy01LjQ1OC0yLjMyMy0xMS4wOS00LjQxNS0xNi43NDItNi4yMTZjLTMuOTQ1LTEuMjU4LTguMTY1LDAuOTIyLTkuNDIzLDQuODY4ICAgQzMwMy4wMjYsODEuODIzLDMwNS4yMDYsODYuMDQyLDMwOS4xNTIsODcuM3oiIGZpbGw9IiM5MzNFQzUiLz4KCTxwYXRoIGQ9Ik0xMDAuNDUsMzM5LjkwNGMtMS45ODQtMy42MzYtNi41NDEtNC45NzYtMTAuMTc2LTIuOTkyYy0zLjYzNiwxLjk4NC00Ljk3Niw2LjU0LTIuOTkyLDEwLjE3NiAgIGMzLjExMiw1LjcwNCw2LjU1NywxMS4zMTUsMTAuMjM5LDE2LjY3N2MxLjQ1NCwyLjExNywzLjgwMSwzLjI1NSw2LjE4OSwzLjI1NWMxLjQ2MywwLDIuOTQxLTAuNDI3LDQuMjM5LTEuMzE4ICAgYzMuNDE1LTIuMzQ1LDQuMjgyLTcuMDE0LDEuOTM3LTEwLjQyOEMxMDYuNDkzLDM1MC4zMzIsMTAzLjMxOCwzNDUuMTYxLDEwMC40NSwzMzkuOTA0eiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTI0MC4xNCw0MzEuMzQxYy00MC4xODktMy40NjMtNzguMzM3LTIwLjg3OS0xMDcuNDE2LTQ5LjA0MWMtMi45NzYtMi44ODItNy43MjQtMi44MDUtMTAuNjA1LDAuMTcgICBjLTIuODgxLDIuOTc2LTIuODA2LDcuNzI0LDAuMTcsMTAuNjA1YzMxLjU1LDMwLjU1NSw3Mi45NDcsNDkuNDUyLDExNi41NjMsNTMuMjFjMC4yMTksMC4wMTksMC40MzYsMC4wMjgsMC42NTIsMC4wMjggICBjMy44NTEsMCw3LjEyNy0yLjk0OSw3LjQ2NC02Ljg1NkMyNDcuMzIzLDQzNS4zMzEsMjQ0LjI2Niw0MzEuNjk3LDI0MC4xNCw0MzEuMzQxeiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTM2My40MjUsOTcuMjg3Yy0zLjQyLTIuMzM3LTguMDg3LTEuNDU5LTEwLjQyNCwxLjk2Yy0yLjMzNywzLjQyLTEuNDU5LDguMDg3LDEuOTYsMTAuNDI0ICAgYzM0Ljg0NCwyMy44MTMsNjAuMDQ5LDU5LjI0OCw3MC45NzIsOTkuNzc2YzAuOTAyLDMuMzQ2LDMuOTMsNS41NSw3LjIzNyw1LjU1YzAuNjQ2LDAsMS4zMDMtMC4wODQsMS45NTYtMC4yNiAgIGM0LTEuMDc4LDYuMzY4LTUuMTk0LDUuMjktOS4xOTNDNDI4LjU2NCwxNjEuNTY0LDQwMS4yMjEsMTIzLjExOCwzNjMuNDI1LDk3LjI4N3oiIGZpbGw9IiM5MzNFQzUiLz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K",
+              "id": "api-provider",
+              "version": 3,
+              "actions": [
+                {
+                  "id": "io.syndesis:api-provider-start",
+                  "name": "Provided API",
+                  "description": "Start a Syndesis integration from a provided API",
+                  "descriptor": {
+                    "componentScheme": "direct",
+                    "inputDataShape": {
+                      "kind": "none"
+                    },
+                    "outputDataShape": {
+                      "kind": "any"
+                    },
+                    "propertyDefinitionSteps": [
+                      {
+                        "description": "API Provider Configuration",
+                        "name": "configuration",
+                        "properties": {
+                          "name": {
+                            "componentProperty": false,
+                            "deprecated": false,
+                            "description": "The operation ID as defined in the API spec",
+                            "displayName": "Operation ID",
+                            "javaType": "String",
+                            "kind": "parameter",
+                            "required": true,
+                            "secret": false,
+                            "type": "string"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "tags": [
+                    "expose"
+                  ],
+                  "actionType": "connector",
+                  "pattern": "From",
+                  "metadata": {
+                    "serverBasePath": "/api"
+                  }
+                },
+                {
+                  "id": "io.syndesis:api-provider-end",
+                  "name": "Provided API Return Path",
+                  "description": "End action of Syndesis integrations that start from a provided API",
+                  "descriptor": {
+                    "componentScheme": "log",
+                    "inputDataShape": {
+                      "kind": "any"
+                    },
+                    "outputDataShape": {
+                      "kind": "any"
+                    },
+                    "propertyDefinitionSteps": [
+                      {
+                        "description": "API Provider Return Path Configuration",
+                        "name": "configuration",
+                        "properties": {
+                          "name": {
+                            "componentProperty": false,
+                            "deprecated": false,
+                            "description": "The return code to set in the HTTP response",
+                            "displayName": "Return Code",
+                            "javaType": "String",
+                            "kind": "parameter",
+                            "required": true,
+                            "secret": false,
+                            "type": "string"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "actionType": "connector",
+                  "pattern": "To"
+                }
+              ],
+              "name": "Api Provider",
+              "dependencies": [
+                {
+                  "type": "MAVEN",
+                  "id": "io.syndesis.connector:connector-api-provider:1.5-SNAPSHOT"
+                }
+              ]
+            },
+            "connectorId": "api-provider",
+            "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgaWQ9IkFwaSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA1MTEgNTExIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTEgNTExOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4Ij4KPGc+Cgk8cGF0aCBkPSJNNDkyLjE2OCwzMDkuNTc5bC0xNy42MjYtMTAuMTc3YzIuOTYtMTQuNzIzLDQuNDU4LTI5LjQ2Niw0LjQ1OC00My45MDJjMC0xNC42NDYtMS40NzQtMjkuNDAzLTQuMzg0LTQzLjk0NmwxNy41NTItMTAuMTM0ICAgYzUuNDM2LTMuMTM4LDkuMzI1LTguMjA2LDEwLjk0OS0xNC4yNjlzMC43OTEtMTIuMzk2LTIuMzQ4LTE3LjgzMmwtNDgtODMuMTM5Yy0zLjEzOS01LjQzNi04LjIwNi05LjMyNS0xNC4yNjktMTAuOTQ5ICAgYy02LjA2NC0xLjYyNC0xMi4zOTYtMC43OTEtMTcuODMzLDIuMzQ4bC0xNy41NjYsMTAuMTQyQzM4MC45MTIsNjguMiwzNTQuNzk4LDUzLjA5MiwzMjcsNDMuNjkyVjIzLjUgICBDMzI3LDEwLjU0MiwzMTYuNDU4LDAsMzAzLjUsMGgtOTZDMTk0LjU0MiwwLDE4NCwxMC41NDIsMTg0LDIzLjV2MjAuMTkzYy0yNy42NSw5LjM2Mi01My43MjgsMjQuNDktNzUuOTk5LDQ0LjA4OEw5MC4zMzIsNzcuNTc5ICAgYy01LjQzNy0zLjEzOS0xMS43Ny0zLjk3My0xNy44MzMtMi4zNDhjLTYuMDYzLDEuNjI1LTExLjEzLDUuNTEzLTE0LjI2OSwxMC45NDlsLTQ4LDgzLjEzOSAgIGMtMy4xMzksNS40MzYtMy45NzIsMTEuNzY5LTIuMzQ4LDE3LjgzMnM1LjUxMywxMS4xMzEsMTAuOTQ5LDE0LjI2OWwxNy42MjYsMTAuMTc3QzMzLjQ5OSwyMjYuMzIsMzIsMjQxLjA2MywzMiwyNTUuNSAgIGMwLDE0LjY0NCwxLjQ3NCwyOS40MDEsNC4zODQsNDMuOTQ1bC0xNy41NTIsMTAuMTM0Yy0xMS4yMjIsNi40NzktMTUuMDgsMjAuODc5LTguNjAyLDMyLjEwMmw0OCw4My4xMzkgICBjNi40NzksMTEuMjIxLDIwLjg3OSwxNS4wOCwzMi4xMDIsOC42MDFsMTcuNTY1LTEwLjE0MmMyMi4xOSwxOS41MjEsNDguMzAzLDM0LjYyOSw3Ni4xMDMsNDQuMDNWNDg3LjUgICBjMCwxMi45NTgsMTAuNTQyLDIzLjUsMjMuNSwyMy41aDk2YzEyLjk1OCwwLDIzLjUtMTAuNTQyLDIzLjUtMjMuNXYtMjAuMTkzYzI3LjY1MS05LjM2Miw1My43MjktMjQuNDksNzYtNDQuMDg3bDE3LjY2OCwxMC4yMDEgICBjMTEuMjIxLDYuNDc5LDI1LjYyMywyLjYyLDMyLjEwMi04LjYwMWw0OC04My4xMzlDNTA3LjI0OCwzMzAuNDU4LDUwMy4zOSwzMTYuMDU4LDQ5Mi4xNjgsMzA5LjU3OXogTTQ4Ny43NzksMzM0LjE4MWwtNDgsODMuMTM4ICAgYy0yLjM0Myw0LjA2LTcuNTUyLDUuNDU1LTExLjYxMSwzLjExMWwtMjIuMzkyLTEyLjkyOGMtMi44NDUtMS42NDMtNi40My0xLjI0Mi04Ljg0MiwwLjk4OSAgIGMtMjIuODkzLDIxLjE3My01MC40MzcsMzcuMTQ4LTc5LjY1Myw0Ni4xOTljLTMuMTQsMC45NzMtNS4yODEsMy44NzctNS4yODEsNy4xNjRWNDg3LjVjMCw0LjY4Ny0zLjgxMyw4LjUtOC41LDguNWgtOTYgICBjLTQuNjg3LDAtOC41LTMuODEzLTguNS04LjV2LTI1LjY0NWMwLTMuMjg3LTIuMTQxLTYuMTkxLTUuMjgtNy4xNjRjLTI5LjM5Ni05LjEwNy01Ni45NzQtMjUuMDYyLTc5Ljc1NS00Ni4xMzkgICBjLTEuNDIxLTEuMzE1LTMuMjUtMS45OTUtNS4wOTUtMS45OTVjLTEuMjg2LDAtMi41NzksMC4zMy0zLjc0OCwxLjAwNUw4Mi44MzIsNDIwLjQzYy00LjA2LDIuMzQzLTkuMjY4LDAuOTQ4LTExLjYxMS0zLjExMSAgIGwtNDgtODMuMTM4Yy0yLjM0My00LjA1OS0wLjk0Ny05LjI2OCwzLjExMS0xMS42MTJsMjIuMjcyLTEyLjg1OWMyLjg0NC0xLjY0Miw0LjI4OS00Ljk0MiwzLjU2Ni04LjE0NiAgIEM0OC43MzksMjg2LjM1Nyw0NywyNzAuODU4LDQ3LDI1NS41YzAtMTUuMSwxLjc2NS0zMC41ODQsNS4yNDctNDYuMDIyYzAuNzIyLTMuMjAzLTAuNzIzLTYuNTA0LTMuNTY2LTguMTQ1TDI2LjMzMiwxODguNDMgICBjLTEuOTY2LTEuMTM1LTMuMzcyLTIuOTY4LTMuOTYtNS4xNjFjLTAuNTg3LTIuMTkzLTAuMjg2LTQuNDg0LDAuODQ5LTYuNDVsNDgtODMuMTM5YzEuMTM1LTEuOTY2LDIuOTY4LTMuMzczLDUuMTYyLTMuOTYgICBjMi4xOTItMC41ODgsNC40ODQtMC4yODYsNi40NSwwLjg0OWwyMi4zOTIsMTIuOTI4YzIuODQ2LDEuNjQ0LDYuNDMsMS4yNDIsOC44NDItMC45ODljMjIuODk0LTIxLjE3Myw1MC40MzctMzcuMTQ4LDc5LjY1My00Ni4xOTkgICBjMy4xNC0wLjk3Myw1LjI4MS0zLjg3Nyw1LjI4MS03LjE2NFYyMy41YzAtNC42ODcsMy44MTMtOC41LDguNS04LjVoOTZjNC42ODcsMCw4LjUsMy44MTMsOC41LDguNXYyNS42NDUgICBjMCwzLjI4NywyLjE0MSw2LjE5MSw1LjI4LDcuMTY0YzI5LjM5NSw5LjEwNiw1Ni45NzMsMjUuMDYxLDc5Ljc1NSw0Ni4xMzljMi40MTIsMi4yMzIsNS45OTcsMi42MzMsOC44NDMsMC45OWwyMi4yOS0xMi44NjkgICBjMS45NjctMS4xMzUsNC4yNTgtMS40MzcsNi40NS0wLjg0OWMyLjE5MywwLjU4OCw0LjAyNiwxLjk5NCw1LjE2MiwzLjk2bDQ4LDgzLjEzOWMxLjEzNSwxLjk2NiwxLjQzNyw0LjI1NywwLjg0OSw2LjQ1ICAgYy0wLjU4OCwyLjE5My0xLjk5NCw0LjAyNi0zLjk2LDUuMTYxbC0yMi4yNzIsMTIuODU5Yy0yLjg0NCwxLjY0Mi00LjI4OSw0Ljk0My0zLjU2Niw4LjE0NmMzLjQzMSwxNS4yMDYsNS4xNywzMC43MDQsNS4xNyw0Ni4wNjUgICBjMCwxNS4xLTEuNzY1LDMwLjU4NC01LjI0Nyw0Ni4wMjFjLTAuNzIyLDMuMjAzLDAuNzIzLDYuNTAzLDMuNTY2LDguMTQ1bDIyLjM0OSwxMi45MDMgICBDNDg4LjcyNywzMjQuOTEzLDQ5MC4xMjMsMzMwLjEyMiw0ODcuNzc5LDMzNC4xODF6IiBmaWxsPSIjOTMzRUM1Ii8+Cgk8cGF0aCBkPSJNMjU1LjUsMTA0QzE3MS45NjIsMTA0LDEwNCwxNzEuOTYzLDEwNCwyNTUuNVMxNzEuOTYyLDQwNywyNTUuNSw0MDdTNDA3LDMzOS4wMzcsNDA3LDI1NS41UzMzOS4wMzgsMTA0LDI1NS41LDEwNHogICAgTTI1NS41LDM5MkMxODAuMjM0LDM5MiwxMTksMzMwLjc2NiwxMTksMjU1LjVTMTgwLjIzNCwxMTksMjU1LjUsMTE5UzM5MiwxODAuMjM0LDM5MiwyNTUuNVMzMzAuNzY2LDM5MiwyNTUuNSwzOTJ6IiBmaWxsPSIjOTMzRUM1Ii8+Cgk8cGF0aCBkPSJNMjgzLjUsMjE2aC0yOGMtNC4xNDIsMC03LjUsMy4zNTgtNy41LDcuNXY2NGMwLDQuMTQyLDMuMzU4LDcuNSw3LjUsNy41czcuNS0zLjM1OCw3LjUtNy41VjI3MWgyMC41ICAgYzE1LjE2NCwwLDI3LjUtMTIuMzM2LDI3LjUtMjcuNVMyOTguNjY0LDIxNiwyODMuNSwyMTZ6IE0yODMuNSwyNTZIMjYzdi0yNWgyMC41YzYuODkzLDAsMTIuNSw1LjYwNywxMi41LDEyLjUgICBTMjkwLjM5MywyNTYsMjgzLjUsMjU2eiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTIxNC41MjIsMjIwLjg2N2MtMS4wOTgtMi45MjctMy44OTYtNC44NjctNy4wMjItNC44NjdoLThjLTMuMTI2LDAtNS45MjUsMS45MzktNy4wMjIsNC44NjdsLTI0LDY0ICAgYy0xLjQ1NSwzLjg3OCwwLjUxMSw4LjIwMSw0LjM4OSw5LjY1NmMzLjg3OCwxLjQ1NSw4LjIwMS0wLjUxMSw5LjY1Ni00LjM4OUwxODYuNjk3LDI3OWgzMy42MDVsNC4xNzUsMTEuMTMzICAgYzEuMTI5LDMuMDExLDMuOTg3LDQuODY5LDcuMDIzLDQuODY5YzAuODc1LDAsMS43NjUtMC4xNTQsMi42MzItMC40NzljMy44NzgtMS40NTQsNS44NDQtNS43NzgsNC4zODktOS42NTZMMjE0LjUyMiwyMjAuODY3eiAgICBNMTkyLjMyMiwyNjRsMTEuMTc4LTI5LjgwN0wyMTQuNjc4LDI2NEgxOTIuMzIyeiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTMyNy41LDIxNmMtNC4xNDIsMC03LjUsMy4zNTgtNy41LDcuNXY2NGMwLDQuMTQyLDMuMzU4LDcuNSw3LjUsNy41czcuNS0zLjM1OCw3LjUtNy41di02NCAgIEMzMzUsMjE5LjM1OCwzMzEuNjQyLDIxNiwzMjcuNSwyMTZ6IiBmaWxsPSIjOTMzRUM1Ii8+Cgk8cGF0aCBkPSJNMzA5LjE1Miw4Ny4zYzUuMjA1LDEuNjU5LDEwLjM5NCwzLjU4NiwxNS40MjEsNS43MjZjMC45NTgsMC40MDgsMS45NTQsMC42MDEsMi45MzQsMC42MDFjMi45MTYsMCw1LjY5LTEuNzEyLDYuOTA0LTQuNTY0ICAgYzEuNjIyLTMuODExLTAuMTUyLTguMjE2LTMuOTYzLTkuODM4Yy01LjQ1OC0yLjMyMy0xMS4wOS00LjQxNS0xNi43NDItNi4yMTZjLTMuOTQ1LTEuMjU4LTguMTY1LDAuOTIyLTkuNDIzLDQuODY4ICAgQzMwMy4wMjYsODEuODIzLDMwNS4yMDYsODYuMDQyLDMwOS4xNTIsODcuM3oiIGZpbGw9IiM5MzNFQzUiLz4KCTxwYXRoIGQ9Ik0xMDAuNDUsMzM5LjkwNGMtMS45ODQtMy42MzYtNi41NDEtNC45NzYtMTAuMTc2LTIuOTkyYy0zLjYzNiwxLjk4NC00Ljk3Niw2LjU0LTIuOTkyLDEwLjE3NiAgIGMzLjExMiw1LjcwNCw2LjU1NywxMS4zMTUsMTAuMjM5LDE2LjY3N2MxLjQ1NCwyLjExNywzLjgwMSwzLjI1NSw2LjE4OSwzLjI1NWMxLjQ2MywwLDIuOTQxLTAuNDI3LDQuMjM5LTEuMzE4ICAgYzMuNDE1LTIuMzQ1LDQuMjgyLTcuMDE0LDEuOTM3LTEwLjQyOEMxMDYuNDkzLDM1MC4zMzIsMTAzLjMxOCwzNDUuMTYxLDEwMC40NSwzMzkuOTA0eiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTI0MC4xNCw0MzEuMzQxYy00MC4xODktMy40NjMtNzguMzM3LTIwLjg3OS0xMDcuNDE2LTQ5LjA0MWMtMi45NzYtMi44ODItNy43MjQtMi44MDUtMTAuNjA1LDAuMTcgICBjLTIuODgxLDIuOTc2LTIuODA2LDcuNzI0LDAuMTcsMTAuNjA1YzMxLjU1LDMwLjU1NSw3Mi45NDcsNDkuNDUyLDExNi41NjMsNTMuMjFjMC4yMTksMC4wMTksMC40MzYsMC4wMjgsMC42NTIsMC4wMjggICBjMy44NTEsMCw3LjEyNy0yLjk0OSw3LjQ2NC02Ljg1NkMyNDcuMzIzLDQzNS4zMzEsMjQ0LjI2Niw0MzEuNjk3LDI0MC4xNCw0MzEuMzQxeiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTM2My40MjUsOTcuMjg3Yy0zLjQyLTIuMzM3LTguMDg3LTEuNDU5LTEwLjQyNCwxLjk2Yy0yLjMzNywzLjQyLTEuNDU5LDguMDg3LDEuOTYsMTAuNDI0ICAgYzM0Ljg0NCwyMy44MTMsNjAuMDQ5LDU5LjI0OCw3MC45NzIsOTkuNzc2YzAuOTAyLDMuMzQ2LDMuOTMsNS41NSw3LjIzNyw1LjU1YzAuNjQ2LDAsMS4zMDMtMC4wODQsMS45NTYtMC4yNiAgIGM0LTEuMDc4LDYuMzY4LTUuMTk0LDUuMjktOS4xOTNDNDI4LjU2NCwxNjEuNTY0LDQwMS4yMjEsMTIzLjExOCwzNjMuNDI1LDk3LjI4N3oiIGZpbGw9IiM5MzNFQzUiLz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K",
+            "userId": "developer",
+            "lastUpdated": 1535708889565,
+            "createdDate": 1535708889565,
+            "uses": 0,
+            "name": "Provided API",
+            "isDerived": false
+          },
+          "stepKind": "endpoint",
+          "id": "-LLEfbJZaLqHaIy7OUlW",
+          "configuredProperties": {
+            "name": "aaa"
+          },
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "action": {
+            "id": "io.syndesis:api-provider-end",
+            "name": "Provided API Return Path",
+            "description": "End action of Syndesis integrations that start from a provided API",
+            "descriptor": {
+              "componentScheme": "log",
+              "inputDataShape": {
+                "kind": "any",
+                "metadata": {
+                  "userDefined": "true"
+                }
+              },
+              "outputDataShape": {
+                "kind": "any"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "API Provider Return Path Configuration",
+                  "name": "configuration",
+                  "properties": {
+                    "name": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "description": "The return code to set in the HTTP response",
+                      "displayName": "Return Code",
+                      "javaType": "String",
+                      "kind": "parameter",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "actionType": "connector",
+            "pattern": "To"
+          },
+          "connection": {
+            "id": "i-LLENV6fSaDPEgTZGjr4z",
+            "connector": {
+              "description": "Api Provider",
+              "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgaWQ9IkFwaSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA1MTEgNTExIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTEgNTExOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4Ij4KPGc+Cgk8cGF0aCBkPSJNNDkyLjE2OCwzMDkuNTc5bC0xNy42MjYtMTAuMTc3YzIuOTYtMTQuNzIzLDQuNDU4LTI5LjQ2Niw0LjQ1OC00My45MDJjMC0xNC42NDYtMS40NzQtMjkuNDAzLTQuMzg0LTQzLjk0NmwxNy41NTItMTAuMTM0ICAgYzUuNDM2LTMuMTM4LDkuMzI1LTguMjA2LDEwLjk0OS0xNC4yNjlzMC43OTEtMTIuMzk2LTIuMzQ4LTE3LjgzMmwtNDgtODMuMTM5Yy0zLjEzOS01LjQzNi04LjIwNi05LjMyNS0xNC4yNjktMTAuOTQ5ICAgYy02LjA2NC0xLjYyNC0xMi4zOTYtMC43OTEtMTcuODMzLDIuMzQ4bC0xNy41NjYsMTAuMTQyQzM4MC45MTIsNjguMiwzNTQuNzk4LDUzLjA5MiwzMjcsNDMuNjkyVjIzLjUgICBDMzI3LDEwLjU0MiwzMTYuNDU4LDAsMzAzLjUsMGgtOTZDMTk0LjU0MiwwLDE4NCwxMC41NDIsMTg0LDIzLjV2MjAuMTkzYy0yNy42NSw5LjM2Mi01My43MjgsMjQuNDktNzUuOTk5LDQ0LjA4OEw5MC4zMzIsNzcuNTc5ICAgYy01LjQzNy0zLjEzOS0xMS43Ny0zLjk3My0xNy44MzMtMi4zNDhjLTYuMDYzLDEuNjI1LTExLjEzLDUuNTEzLTE0LjI2OSwxMC45NDlsLTQ4LDgzLjEzOSAgIGMtMy4xMzksNS40MzYtMy45NzIsMTEuNzY5LTIuMzQ4LDE3LjgzMnM1LjUxMywxMS4xMzEsMTAuOTQ5LDE0LjI2OWwxNy42MjYsMTAuMTc3QzMzLjQ5OSwyMjYuMzIsMzIsMjQxLjA2MywzMiwyNTUuNSAgIGMwLDE0LjY0NCwxLjQ3NCwyOS40MDEsNC4zODQsNDMuOTQ1bC0xNy41NTIsMTAuMTM0Yy0xMS4yMjIsNi40NzktMTUuMDgsMjAuODc5LTguNjAyLDMyLjEwMmw0OCw4My4xMzkgICBjNi40NzksMTEuMjIxLDIwLjg3OSwxNS4wOCwzMi4xMDIsOC42MDFsMTcuNTY1LTEwLjE0MmMyMi4xOSwxOS41MjEsNDguMzAzLDM0LjYyOSw3Ni4xMDMsNDQuMDNWNDg3LjUgICBjMCwxMi45NTgsMTAuNTQyLDIzLjUsMjMuNSwyMy41aDk2YzEyLjk1OCwwLDIzLjUtMTAuNTQyLDIzLjUtMjMuNXYtMjAuMTkzYzI3LjY1MS05LjM2Miw1My43MjktMjQuNDksNzYtNDQuMDg3bDE3LjY2OCwxMC4yMDEgICBjMTEuMjIxLDYuNDc5LDI1LjYyMywyLjYyLDMyLjEwMi04LjYwMWw0OC04My4xMzlDNTA3LjI0OCwzMzAuNDU4LDUwMy4zOSwzMTYuMDU4LDQ5Mi4xNjgsMzA5LjU3OXogTTQ4Ny43NzksMzM0LjE4MWwtNDgsODMuMTM4ICAgYy0yLjM0Myw0LjA2LTcuNTUyLDUuNDU1LTExLjYxMSwzLjExMWwtMjIuMzkyLTEyLjkyOGMtMi44NDUtMS42NDMtNi40My0xLjI0Mi04Ljg0MiwwLjk4OSAgIGMtMjIuODkzLDIxLjE3My01MC40MzcsMzcuMTQ4LTc5LjY1Myw0Ni4xOTljLTMuMTQsMC45NzMtNS4yODEsMy44NzctNS4yODEsNy4xNjRWNDg3LjVjMCw0LjY4Ny0zLjgxMyw4LjUtOC41LDguNWgtOTYgICBjLTQuNjg3LDAtOC41LTMuODEzLTguNS04LjV2LTI1LjY0NWMwLTMuMjg3LTIuMTQxLTYuMTkxLTUuMjgtNy4xNjRjLTI5LjM5Ni05LjEwNy01Ni45NzQtMjUuMDYyLTc5Ljc1NS00Ni4xMzkgICBjLTEuNDIxLTEuMzE1LTMuMjUtMS45OTUtNS4wOTUtMS45OTVjLTEuMjg2LDAtMi41NzksMC4zMy0zLjc0OCwxLjAwNUw4Mi44MzIsNDIwLjQzYy00LjA2LDIuMzQzLTkuMjY4LDAuOTQ4LTExLjYxMS0zLjExMSAgIGwtNDgtODMuMTM4Yy0yLjM0My00LjA1OS0wLjk0Ny05LjI2OCwzLjExMS0xMS42MTJsMjIuMjcyLTEyLjg1OWMyLjg0NC0xLjY0Miw0LjI4OS00Ljk0MiwzLjU2Ni04LjE0NiAgIEM0OC43MzksMjg2LjM1Nyw0NywyNzAuODU4LDQ3LDI1NS41YzAtMTUuMSwxLjc2NS0zMC41ODQsNS4yNDctNDYuMDIyYzAuNzIyLTMuMjAzLTAuNzIzLTYuNTA0LTMuNTY2LTguMTQ1TDI2LjMzMiwxODguNDMgICBjLTEuOTY2LTEuMTM1LTMuMzcyLTIuOTY4LTMuOTYtNS4xNjFjLTAuNTg3LTIuMTkzLTAuMjg2LTQuNDg0LDAuODQ5LTYuNDVsNDgtODMuMTM5YzEuMTM1LTEuOTY2LDIuOTY4LTMuMzczLDUuMTYyLTMuOTYgICBjMi4xOTItMC41ODgsNC40ODQtMC4yODYsNi40NSwwLjg0OWwyMi4zOTIsMTIuOTI4YzIuODQ2LDEuNjQ0LDYuNDMsMS4yNDIsOC44NDItMC45ODljMjIuODk0LTIxLjE3Myw1MC40MzctMzcuMTQ4LDc5LjY1My00Ni4xOTkgICBjMy4xNC0wLjk3Myw1LjI4MS0zLjg3Nyw1LjI4MS03LjE2NFYyMy41YzAtNC42ODcsMy44MTMtOC41LDguNS04LjVoOTZjNC42ODcsMCw4LjUsMy44MTMsOC41LDguNXYyNS42NDUgICBjMCwzLjI4NywyLjE0MSw2LjE5MSw1LjI4LDcuMTY0YzI5LjM5NSw5LjEwNiw1Ni45NzMsMjUuMDYxLDc5Ljc1NSw0Ni4xMzljMi40MTIsMi4yMzIsNS45OTcsMi42MzMsOC44NDMsMC45OWwyMi4yOS0xMi44NjkgICBjMS45NjctMS4xMzUsNC4yNTgtMS40MzcsNi40NS0wLjg0OWMyLjE5MywwLjU4OCw0LjAyNiwxLjk5NCw1LjE2MiwzLjk2bDQ4LDgzLjEzOWMxLjEzNSwxLjk2NiwxLjQzNyw0LjI1NywwLjg0OSw2LjQ1ICAgYy0wLjU4OCwyLjE5My0xLjk5NCw0LjAyNi0zLjk2LDUuMTYxbC0yMi4yNzIsMTIuODU5Yy0yLjg0NCwxLjY0Mi00LjI4OSw0Ljk0My0zLjU2Niw4LjE0NmMzLjQzMSwxNS4yMDYsNS4xNywzMC43MDQsNS4xNyw0Ni4wNjUgICBjMCwxNS4xLTEuNzY1LDMwLjU4NC01LjI0Nyw0Ni4wMjFjLTAuNzIyLDMuMjAzLDAuNzIzLDYuNTAzLDMuNTY2LDguMTQ1bDIyLjM0OSwxMi45MDMgICBDNDg4LjcyNywzMjQuOTEzLDQ5MC4xMjMsMzMwLjEyMiw0ODcuNzc5LDMzNC4xODF6IiBmaWxsPSIjOTMzRUM1Ii8+Cgk8cGF0aCBkPSJNMjU1LjUsMTA0QzE3MS45NjIsMTA0LDEwNCwxNzEuOTYzLDEwNCwyNTUuNVMxNzEuOTYyLDQwNywyNTUuNSw0MDdTNDA3LDMzOS4wMzcsNDA3LDI1NS41UzMzOS4wMzgsMTA0LDI1NS41LDEwNHogICAgTTI1NS41LDM5MkMxODAuMjM0LDM5MiwxMTksMzMwLjc2NiwxMTksMjU1LjVTMTgwLjIzNCwxMTksMjU1LjUsMTE5UzM5MiwxODAuMjM0LDM5MiwyNTUuNVMzMzAuNzY2LDM5MiwyNTUuNSwzOTJ6IiBmaWxsPSIjOTMzRUM1Ii8+Cgk8cGF0aCBkPSJNMjgzLjUsMjE2aC0yOGMtNC4xNDIsMC03LjUsMy4zNTgtNy41LDcuNXY2NGMwLDQuMTQyLDMuMzU4LDcuNSw3LjUsNy41czcuNS0zLjM1OCw3LjUtNy41VjI3MWgyMC41ICAgYzE1LjE2NCwwLDI3LjUtMTIuMzM2LDI3LjUtMjcuNVMyOTguNjY0LDIxNiwyODMuNSwyMTZ6IE0yODMuNSwyNTZIMjYzdi0yNWgyMC41YzYuODkzLDAsMTIuNSw1LjYwNywxMi41LDEyLjUgICBTMjkwLjM5MywyNTYsMjgzLjUsMjU2eiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTIxNC41MjIsMjIwLjg2N2MtMS4wOTgtMi45MjctMy44OTYtNC44NjctNy4wMjItNC44NjdoLThjLTMuMTI2LDAtNS45MjUsMS45MzktNy4wMjIsNC44NjdsLTI0LDY0ICAgYy0xLjQ1NSwzLjg3OCwwLjUxMSw4LjIwMSw0LjM4OSw5LjY1NmMzLjg3OCwxLjQ1NSw4LjIwMS0wLjUxMSw5LjY1Ni00LjM4OUwxODYuNjk3LDI3OWgzMy42MDVsNC4xNzUsMTEuMTMzICAgYzEuMTI5LDMuMDExLDMuOTg3LDQuODY5LDcuMDIzLDQuODY5YzAuODc1LDAsMS43NjUtMC4xNTQsMi42MzItMC40NzljMy44NzgtMS40NTQsNS44NDQtNS43NzgsNC4zODktOS42NTZMMjE0LjUyMiwyMjAuODY3eiAgICBNMTkyLjMyMiwyNjRsMTEuMTc4LTI5LjgwN0wyMTQuNjc4LDI2NEgxOTIuMzIyeiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTMyNy41LDIxNmMtNC4xNDIsMC03LjUsMy4zNTgtNy41LDcuNXY2NGMwLDQuMTQyLDMuMzU4LDcuNSw3LjUsNy41czcuNS0zLjM1OCw3LjUtNy41di02NCAgIEMzMzUsMjE5LjM1OCwzMzEuNjQyLDIxNiwzMjcuNSwyMTZ6IiBmaWxsPSIjOTMzRUM1Ii8+Cgk8cGF0aCBkPSJNMzA5LjE1Miw4Ny4zYzUuMjA1LDEuNjU5LDEwLjM5NCwzLjU4NiwxNS40MjEsNS43MjZjMC45NTgsMC40MDgsMS45NTQsMC42MDEsMi45MzQsMC42MDFjMi45MTYsMCw1LjY5LTEuNzEyLDYuOTA0LTQuNTY0ICAgYzEuNjIyLTMuODExLTAuMTUyLTguMjE2LTMuOTYzLTkuODM4Yy01LjQ1OC0yLjMyMy0xMS4wOS00LjQxNS0xNi43NDItNi4yMTZjLTMuOTQ1LTEuMjU4LTguMTY1LDAuOTIyLTkuNDIzLDQuODY4ICAgQzMwMy4wMjYsODEuODIzLDMwNS4yMDYsODYuMDQyLDMwOS4xNTIsODcuM3oiIGZpbGw9IiM5MzNFQzUiLz4KCTxwYXRoIGQ9Ik0xMDAuNDUsMzM5LjkwNGMtMS45ODQtMy42MzYtNi41NDEtNC45NzYtMTAuMTc2LTIuOTkyYy0zLjYzNiwxLjk4NC00Ljk3Niw2LjU0LTIuOTkyLDEwLjE3NiAgIGMzLjExMiw1LjcwNCw2LjU1NywxMS4zMTUsMTAuMjM5LDE2LjY3N2MxLjQ1NCwyLjExNywzLjgwMSwzLjI1NSw2LjE4OSwzLjI1NWMxLjQ2MywwLDIuOTQxLTAuNDI3LDQuMjM5LTEuMzE4ICAgYzMuNDE1LTIuMzQ1LDQuMjgyLTcuMDE0LDEuOTM3LTEwLjQyOEMxMDYuNDkzLDM1MC4zMzIsMTAzLjMxOCwzNDUuMTYxLDEwMC40NSwzMzkuOTA0eiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTI0MC4xNCw0MzEuMzQxYy00MC4xODktMy40NjMtNzguMzM3LTIwLjg3OS0xMDcuNDE2LTQ5LjA0MWMtMi45NzYtMi44ODItNy43MjQtMi44MDUtMTAuNjA1LDAuMTcgICBjLTIuODgxLDIuOTc2LTIuODA2LDcuNzI0LDAuMTcsMTAuNjA1YzMxLjU1LDMwLjU1NSw3Mi45NDcsNDkuNDUyLDExNi41NjMsNTMuMjFjMC4yMTksMC4wMTksMC40MzYsMC4wMjgsMC42NTIsMC4wMjggICBjMy44NTEsMCw3LjEyNy0yLjk0OSw3LjQ2NC02Ljg1NkMyNDcuMzIzLDQzNS4zMzEsMjQ0LjI2Niw0MzEuNjk3LDI0MC4xNCw0MzEuMzQxeiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTM2My40MjUsOTcuMjg3Yy0zLjQyLTIuMzM3LTguMDg3LTEuNDU5LTEwLjQyNCwxLjk2Yy0yLjMzNywzLjQyLTEuNDU5LDguMDg3LDEuOTYsMTAuNDI0ICAgYzM0Ljg0NCwyMy44MTMsNjAuMDQ5LDU5LjI0OCw3MC45NzIsOTkuNzc2YzAuOTAyLDMuMzQ2LDMuOTMsNS41NSw3LjIzNyw1LjU1YzAuNjQ2LDAsMS4zMDMtMC4wODQsMS45NTYtMC4yNiAgIGM0LTEuMDc4LDYuMzY4LTUuMTk0LDUuMjktOS4xOTNDNDI4LjU2NCwxNjEuNTY0LDQwMS4yMjEsMTIzLjExOCwzNjMuNDI1LDk3LjI4N3oiIGZpbGw9IiM5MzNFQzUiLz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K",
+              "id": "api-provider",
+              "version": 3,
+              "actions": [
+                {
+                  "id": "io.syndesis:api-provider-start",
+                  "name": "Provided API",
+                  "description": "Start a Syndesis integration from a provided API",
+                  "descriptor": {
+                    "componentScheme": "direct",
+                    "inputDataShape": {
+                      "kind": "none"
+                    },
+                    "outputDataShape": {
+                      "kind": "any"
+                    },
+                    "propertyDefinitionSteps": [
+                      {
+                        "description": "API Provider Configuration",
+                        "name": "configuration",
+                        "properties": {
+                          "name": {
+                            "componentProperty": false,
+                            "deprecated": false,
+                            "description": "The operation ID as defined in the API spec",
+                            "displayName": "Operation ID",
+                            "javaType": "String",
+                            "kind": "parameter",
+                            "required": true,
+                            "secret": false,
+                            "type": "string"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "tags": [
+                    "expose"
+                  ],
+                  "actionType": "connector",
+                  "pattern": "From",
+                  "metadata": {
+                    "serverBasePath": "/api"
+                  }
+                },
+                {
+                  "id": "io.syndesis:api-provider-end",
+                  "name": "Provided API Return Path",
+                  "description": "End action of Syndesis integrations that start from a provided API",
+                  "descriptor": {
+                    "componentScheme": "log",
+                    "inputDataShape": {
+                      "kind": "any"
+                    },
+                    "outputDataShape": {
+                      "kind": "any"
+                    },
+                    "propertyDefinitionSteps": [
+                      {
+                        "description": "API Provider Return Path Configuration",
+                        "name": "configuration",
+                        "properties": {
+                          "name": {
+                            "componentProperty": false,
+                            "deprecated": false,
+                            "description": "The return code to set in the HTTP response",
+                            "displayName": "Return Code",
+                            "javaType": "String",
+                            "kind": "parameter",
+                            "required": true,
+                            "secret": false,
+                            "type": "string"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "actionType": "connector",
+                  "pattern": "To"
+                }
+              ],
+              "name": "Api Provider",
+              "dependencies": [
+                {
+                  "type": "MAVEN",
+                  "id": "io.syndesis.connector:connector-api-provider:1.5-SNAPSHOT"
+                }
+              ]
+            },
+            "connectorId": "api-provider",
+            "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgaWQ9IkFwaSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA1MTEgNTExIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTEgNTExOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4Ij4KPGc+Cgk8cGF0aCBkPSJNNDkyLjE2OCwzMDkuNTc5bC0xNy42MjYtMTAuMTc3YzIuOTYtMTQuNzIzLDQuNDU4LTI5LjQ2Niw0LjQ1OC00My45MDJjMC0xNC42NDYtMS40NzQtMjkuNDAzLTQuMzg0LTQzLjk0NmwxNy41NTItMTAuMTM0ICAgYzUuNDM2LTMuMTM4LDkuMzI1LTguMjA2LDEwLjk0OS0xNC4yNjlzMC43OTEtMTIuMzk2LTIuMzQ4LTE3LjgzMmwtNDgtODMuMTM5Yy0zLjEzOS01LjQzNi04LjIwNi05LjMyNS0xNC4yNjktMTAuOTQ5ICAgYy02LjA2NC0xLjYyNC0xMi4zOTYtMC43OTEtMTcuODMzLDIuMzQ4bC0xNy41NjYsMTAuMTQyQzM4MC45MTIsNjguMiwzNTQuNzk4LDUzLjA5MiwzMjcsNDMuNjkyVjIzLjUgICBDMzI3LDEwLjU0MiwzMTYuNDU4LDAsMzAzLjUsMGgtOTZDMTk0LjU0MiwwLDE4NCwxMC41NDIsMTg0LDIzLjV2MjAuMTkzYy0yNy42NSw5LjM2Mi01My43MjgsMjQuNDktNzUuOTk5LDQ0LjA4OEw5MC4zMzIsNzcuNTc5ICAgYy01LjQzNy0zLjEzOS0xMS43Ny0zLjk3My0xNy44MzMtMi4zNDhjLTYuMDYzLDEuNjI1LTExLjEzLDUuNTEzLTE0LjI2OSwxMC45NDlsLTQ4LDgzLjEzOSAgIGMtMy4xMzksNS40MzYtMy45NzIsMTEuNzY5LTIuMzQ4LDE3LjgzMnM1LjUxMywxMS4xMzEsMTAuOTQ5LDE0LjI2OWwxNy42MjYsMTAuMTc3QzMzLjQ5OSwyMjYuMzIsMzIsMjQxLjA2MywzMiwyNTUuNSAgIGMwLDE0LjY0NCwxLjQ3NCwyOS40MDEsNC4zODQsNDMuOTQ1bC0xNy41NTIsMTAuMTM0Yy0xMS4yMjIsNi40NzktMTUuMDgsMjAuODc5LTguNjAyLDMyLjEwMmw0OCw4My4xMzkgICBjNi40NzksMTEuMjIxLDIwLjg3OSwxNS4wOCwzMi4xMDIsOC42MDFsMTcuNTY1LTEwLjE0MmMyMi4xOSwxOS41MjEsNDguMzAzLDM0LjYyOSw3Ni4xMDMsNDQuMDNWNDg3LjUgICBjMCwxMi45NTgsMTAuNTQyLDIzLjUsMjMuNSwyMy41aDk2YzEyLjk1OCwwLDIzLjUtMTAuNTQyLDIzLjUtMjMuNXYtMjAuMTkzYzI3LjY1MS05LjM2Miw1My43MjktMjQuNDksNzYtNDQuMDg3bDE3LjY2OCwxMC4yMDEgICBjMTEuMjIxLDYuNDc5LDI1LjYyMywyLjYyLDMyLjEwMi04LjYwMWw0OC04My4xMzlDNTA3LjI0OCwzMzAuNDU4LDUwMy4zOSwzMTYuMDU4LDQ5Mi4xNjgsMzA5LjU3OXogTTQ4Ny43NzksMzM0LjE4MWwtNDgsODMuMTM4ICAgYy0yLjM0Myw0LjA2LTcuNTUyLDUuNDU1LTExLjYxMSwzLjExMWwtMjIuMzkyLTEyLjkyOGMtMi44NDUtMS42NDMtNi40My0xLjI0Mi04Ljg0MiwwLjk4OSAgIGMtMjIuODkzLDIxLjE3My01MC40MzcsMzcuMTQ4LTc5LjY1Myw0Ni4xOTljLTMuMTQsMC45NzMtNS4yODEsMy44NzctNS4yODEsNy4xNjRWNDg3LjVjMCw0LjY4Ny0zLjgxMyw4LjUtOC41LDguNWgtOTYgICBjLTQuNjg3LDAtOC41LTMuODEzLTguNS04LjV2LTI1LjY0NWMwLTMuMjg3LTIuMTQxLTYuMTkxLTUuMjgtNy4xNjRjLTI5LjM5Ni05LjEwNy01Ni45NzQtMjUuMDYyLTc5Ljc1NS00Ni4xMzkgICBjLTEuNDIxLTEuMzE1LTMuMjUtMS45OTUtNS4wOTUtMS45OTVjLTEuMjg2LDAtMi41NzksMC4zMy0zLjc0OCwxLjAwNUw4Mi44MzIsNDIwLjQzYy00LjA2LDIuMzQzLTkuMjY4LDAuOTQ4LTExLjYxMS0zLjExMSAgIGwtNDgtODMuMTM4Yy0yLjM0My00LjA1OS0wLjk0Ny05LjI2OCwzLjExMS0xMS42MTJsMjIuMjcyLTEyLjg1OWMyLjg0NC0xLjY0Miw0LjI4OS00Ljk0MiwzLjU2Ni04LjE0NiAgIEM0OC43MzksMjg2LjM1Nyw0NywyNzAuODU4LDQ3LDI1NS41YzAtMTUuMSwxLjc2NS0zMC41ODQsNS4yNDctNDYuMDIyYzAuNzIyLTMuMjAzLTAuNzIzLTYuNTA0LTMuNTY2LTguMTQ1TDI2LjMzMiwxODguNDMgICBjLTEuOTY2LTEuMTM1LTMuMzcyLTIuOTY4LTMuOTYtNS4xNjFjLTAuNTg3LTIuMTkzLTAuMjg2LTQuNDg0LDAuODQ5LTYuNDVsNDgtODMuMTM5YzEuMTM1LTEuOTY2LDIuOTY4LTMuMzczLDUuMTYyLTMuOTYgICBjMi4xOTItMC41ODgsNC40ODQtMC4yODYsNi40NSwwLjg0OWwyMi4zOTIsMTIuOTI4YzIuODQ2LDEuNjQ0LDYuNDMsMS4yNDIsOC44NDItMC45ODljMjIuODk0LTIxLjE3Myw1MC40MzctMzcuMTQ4LDc5LjY1My00Ni4xOTkgICBjMy4xNC0wLjk3Myw1LjI4MS0zLjg3Nyw1LjI4MS03LjE2NFYyMy41YzAtNC42ODcsMy44MTMtOC41LDguNS04LjVoOTZjNC42ODcsMCw4LjUsMy44MTMsOC41LDguNXYyNS42NDUgICBjMCwzLjI4NywyLjE0MSw2LjE5MSw1LjI4LDcuMTY0YzI5LjM5NSw5LjEwNiw1Ni45NzMsMjUuMDYxLDc5Ljc1NSw0Ni4xMzljMi40MTIsMi4yMzIsNS45OTcsMi42MzMsOC44NDMsMC45OWwyMi4yOS0xMi44NjkgICBjMS45NjctMS4xMzUsNC4yNTgtMS40MzcsNi40NS0wLjg0OWMyLjE5MywwLjU4OCw0LjAyNiwxLjk5NCw1LjE2MiwzLjk2bDQ4LDgzLjEzOWMxLjEzNSwxLjk2NiwxLjQzNyw0LjI1NywwLjg0OSw2LjQ1ICAgYy0wLjU4OCwyLjE5My0xLjk5NCw0LjAyNi0zLjk2LDUuMTYxbC0yMi4yNzIsMTIuODU5Yy0yLjg0NCwxLjY0Mi00LjI4OSw0Ljk0My0zLjU2Niw4LjE0NmMzLjQzMSwxNS4yMDYsNS4xNywzMC43MDQsNS4xNyw0Ni4wNjUgICBjMCwxNS4xLTEuNzY1LDMwLjU4NC01LjI0Nyw0Ni4wMjFjLTAuNzIyLDMuMjAzLDAuNzIzLDYuNTAzLDMuNTY2LDguMTQ1bDIyLjM0OSwxMi45MDMgICBDNDg4LjcyNywzMjQuOTEzLDQ5MC4xMjMsMzMwLjEyMiw0ODcuNzc5LDMzNC4xODF6IiBmaWxsPSIjOTMzRUM1Ii8+Cgk8cGF0aCBkPSJNMjU1LjUsMTA0QzE3MS45NjIsMTA0LDEwNCwxNzEuOTYzLDEwNCwyNTUuNVMxNzEuOTYyLDQwNywyNTUuNSw0MDdTNDA3LDMzOS4wMzcsNDA3LDI1NS41UzMzOS4wMzgsMTA0LDI1NS41LDEwNHogICAgTTI1NS41LDM5MkMxODAuMjM0LDM5MiwxMTksMzMwLjc2NiwxMTksMjU1LjVTMTgwLjIzNCwxMTksMjU1LjUsMTE5UzM5MiwxODAuMjM0LDM5MiwyNTUuNVMzMzAuNzY2LDM5MiwyNTUuNSwzOTJ6IiBmaWxsPSIjOTMzRUM1Ii8+Cgk8cGF0aCBkPSJNMjgzLjUsMjE2aC0yOGMtNC4xNDIsMC03LjUsMy4zNTgtNy41LDcuNXY2NGMwLDQuMTQyLDMuMzU4LDcuNSw3LjUsNy41czcuNS0zLjM1OCw3LjUtNy41VjI3MWgyMC41ICAgYzE1LjE2NCwwLDI3LjUtMTIuMzM2LDI3LjUtMjcuNVMyOTguNjY0LDIxNiwyODMuNSwyMTZ6IE0yODMuNSwyNTZIMjYzdi0yNWgyMC41YzYuODkzLDAsMTIuNSw1LjYwNywxMi41LDEyLjUgICBTMjkwLjM5MywyNTYsMjgzLjUsMjU2eiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTIxNC41MjIsMjIwLjg2N2MtMS4wOTgtMi45MjctMy44OTYtNC44NjctNy4wMjItNC44NjdoLThjLTMuMTI2LDAtNS45MjUsMS45MzktNy4wMjIsNC44NjdsLTI0LDY0ICAgYy0xLjQ1NSwzLjg3OCwwLjUxMSw4LjIwMSw0LjM4OSw5LjY1NmMzLjg3OCwxLjQ1NSw4LjIwMS0wLjUxMSw5LjY1Ni00LjM4OUwxODYuNjk3LDI3OWgzMy42MDVsNC4xNzUsMTEuMTMzICAgYzEuMTI5LDMuMDExLDMuOTg3LDQuODY5LDcuMDIzLDQuODY5YzAuODc1LDAsMS43NjUtMC4xNTQsMi42MzItMC40NzljMy44NzgtMS40NTQsNS44NDQtNS43NzgsNC4zODktOS42NTZMMjE0LjUyMiwyMjAuODY3eiAgICBNMTkyLjMyMiwyNjRsMTEuMTc4LTI5LjgwN0wyMTQuNjc4LDI2NEgxOTIuMzIyeiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTMyNy41LDIxNmMtNC4xNDIsMC03LjUsMy4zNTgtNy41LDcuNXY2NGMwLDQuMTQyLDMuMzU4LDcuNSw3LjUsNy41czcuNS0zLjM1OCw3LjUtNy41di02NCAgIEMzMzUsMjE5LjM1OCwzMzEuNjQyLDIxNiwzMjcuNSwyMTZ6IiBmaWxsPSIjOTMzRUM1Ii8+Cgk8cGF0aCBkPSJNMzA5LjE1Miw4Ny4zYzUuMjA1LDEuNjU5LDEwLjM5NCwzLjU4NiwxNS40MjEsNS43MjZjMC45NTgsMC40MDgsMS45NTQsMC42MDEsMi45MzQsMC42MDFjMi45MTYsMCw1LjY5LTEuNzEyLDYuOTA0LTQuNTY0ICAgYzEuNjIyLTMuODExLTAuMTUyLTguMjE2LTMuOTYzLTkuODM4Yy01LjQ1OC0yLjMyMy0xMS4wOS00LjQxNS0xNi43NDItNi4yMTZjLTMuOTQ1LTEuMjU4LTguMTY1LDAuOTIyLTkuNDIzLDQuODY4ICAgQzMwMy4wMjYsODEuODIzLDMwNS4yMDYsODYuMDQyLDMwOS4xNTIsODcuM3oiIGZpbGw9IiM5MzNFQzUiLz4KCTxwYXRoIGQ9Ik0xMDAuNDUsMzM5LjkwNGMtMS45ODQtMy42MzYtNi41NDEtNC45NzYtMTAuMTc2LTIuOTkyYy0zLjYzNiwxLjk4NC00Ljk3Niw2LjU0LTIuOTkyLDEwLjE3NiAgIGMzLjExMiw1LjcwNCw2LjU1NywxMS4zMTUsMTAuMjM5LDE2LjY3N2MxLjQ1NCwyLjExNywzLjgwMSwzLjI1NSw2LjE4OSwzLjI1NWMxLjQ2MywwLDIuOTQxLTAuNDI3LDQuMjM5LTEuMzE4ICAgYzMuNDE1LTIuMzQ1LDQuMjgyLTcuMDE0LDEuOTM3LTEwLjQyOEMxMDYuNDkzLDM1MC4zMzIsMTAzLjMxOCwzNDUuMTYxLDEwMC40NSwzMzkuOTA0eiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTI0MC4xNCw0MzEuMzQxYy00MC4xODktMy40NjMtNzguMzM3LTIwLjg3OS0xMDcuNDE2LTQ5LjA0MWMtMi45NzYtMi44ODItNy43MjQtMi44MDUtMTAuNjA1LDAuMTcgICBjLTIuODgxLDIuOTc2LTIuODA2LDcuNzI0LDAuMTcsMTAuNjA1YzMxLjU1LDMwLjU1NSw3Mi45NDcsNDkuNDUyLDExNi41NjMsNTMuMjFjMC4yMTksMC4wMTksMC40MzYsMC4wMjgsMC42NTIsMC4wMjggICBjMy44NTEsMCw3LjEyNy0yLjk0OSw3LjQ2NC02Ljg1NkMyNDcuMzIzLDQzNS4zMzEsMjQ0LjI2Niw0MzEuNjk3LDI0MC4xNCw0MzEuMzQxeiIgZmlsbD0iIzkzM0VDNSIvPgoJPHBhdGggZD0iTTM2My40MjUsOTcuMjg3Yy0zLjQyLTIuMzM3LTguMDg3LTEuNDU5LTEwLjQyNCwxLjk2Yy0yLjMzNywzLjQyLTEuNDU5LDguMDg3LDEuOTYsMTAuNDI0ICAgYzM0Ljg0NCwyMy44MTMsNjAuMDQ5LDU5LjI0OCw3MC45NzIsOTkuNzc2YzAuOTAyLDMuMzQ2LDMuOTMsNS41NSw3LjIzNyw1LjU1YzAuNjQ2LDAsMS4zMDMtMC4wODQsMS45NTYtMC4yNiAgIGM0LTEuMDc4LDYuMzY4LTUuMTk0LDUuMjktOS4xOTNDNDI4LjU2NCwxNjEuNTY0LDQwMS4yMjEsMTIzLjExOCwzNjMuNDI1LDk3LjI4N3oiIGZpbGw9IiM5MzNFQzUiLz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K",
+            "userId": "developer",
+            "lastUpdated": 1535708889565,
+            "createdDate": 1535708889565,
+            "uses": 0,
+            "name": "Provided API",
+            "isDerived": false
+          },
+          "stepKind": "endpoint",
+          "id": "-LLEfdJwaLqHaIy7OUlW",
+          "configuredProperties": {
+            "name": "aaaa"
+          },
+          "metadata": {
+            "configured": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "version": 1,
+  "createdAt": 1535713931793,
+  "updatedAt": 0,
+  "tags": [
+    "api-provider"
+  ],
+  "name": "aaa"
+}
