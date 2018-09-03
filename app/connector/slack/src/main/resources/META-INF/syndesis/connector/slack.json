@@ -26,6 +26,8 @@
             "deprecated": false,
             "secret": false,
             "order": "1",
+            "raw": true,
+            "secret": true,
             "labelHint": "The webhook URL used to send messages to"
         },
         "username": {
@@ -37,7 +39,7 @@
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
-            "order": "2",
+            "order": "3",
             "labelHint": "This is the username that the bot will have when sending messages to a channel or user"
         },
         "iconUrl": {
@@ -49,7 +51,7 @@
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
-            "order": "4",
+            "order": "5",
             "labelHint": "The avatar that the component will use when sending messages to a channel or user"
         },
         "iconEmoji": {
@@ -61,19 +63,21 @@
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
-            "order": "3",
+            "order": "4",
             "labelHint": "The Slack emoji that will be used for the message avatar"
         },
         "token": {
             "kind": "parameter",
-            "displayName": "Token to use",
+            "displayName": "Token for accessing slack API",
             "group": "consumer",
             "required": false,
             "type": "string",
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
-            "order": "5",
+            "order": "2",
+            "raw": true,
+            "secret": true,
             "labelHint": "The token to use for consuming messages"
         }
     },
