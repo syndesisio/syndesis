@@ -15,7 +15,10 @@
  */
 package io.syndesis.integration.project.generator;
 
+import java.util.Optional;
+
 import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
@@ -43,14 +46,16 @@ public class ProjectGeneratorHelperTest {
                 .build()
         );
 
-        assertThat(source.getSteps().get(0).getConnection().isPresent()).isTrue();
-        assertThat(source.getSteps().get(0).getConnection().get().getConnector().isPresent()).isFalse();
+        final Optional<Connection> unsanitizedConnection = source.getFlows().get(0).getSteps().get(0).getConnection();
+        assertThat(unsanitizedConnection.isPresent()).isTrue();
+        assertThat(unsanitizedConnection.get().getConnector().isPresent()).isFalse();
 
         Integration sanitized = ProjectGeneratorHelper.sanitize(source, resourceManager);
 
-        assertThat(sanitized.getSteps().get(0).getConnection().isPresent()).isTrue();
-        assertThat(sanitized.getSteps().get(0).getConnection().get().getConnector().isPresent()).isTrue();
-        assertThat(sanitized.getSteps().get(0).getConnection().get().getConnector().get()).isEqualTo(TestConstants.TIMER_CONNECTOR);
+        final Optional<Connection> sanitizedConnection = sanitized.getFlows().get(0).getSteps().get(0).getConnection();
+        assertThat(sanitizedConnection.isPresent()).isTrue();
+        assertThat(sanitizedConnection.get().getConnector().isPresent()).isTrue();
+        assertThat(sanitizedConnection.get().getConnector().get()).isEqualTo(TestConstants.TIMER_CONNECTOR);
     }
 
     @Test
@@ -70,16 +75,17 @@ public class ProjectGeneratorHelperTest {
                 .build()
         );
 
-        assertThat(source.getScheduler().isPresent()).isFalse();
+        assertThat(source.getFlows().get(0).getScheduler().isPresent()).isFalse();
 
         Integration sanitized = ProjectGeneratorHelper.sanitize(source, resourceManager);
 
-        assertThat(sanitized.getScheduler().isPresent()).isTrue();
-        assertThat(sanitized.getScheduler().get()).hasFieldOrPropertyWithValue("type", Scheduler.Type.timer);
-        assertThat(sanitized.getScheduler().get()).hasFieldOrPropertyWithValue("expression", "1s");
-        assertThat(sanitized.getSteps().get(0).getStepKind()).isEqualTo(StepKind.endpoint);
-        assertThat(sanitized.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-type");
-        assertThat(sanitized.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-expression");
+        final Flow sanitizedFlow = sanitized.getFlows().get(0);
+        assertThat(sanitizedFlow.getScheduler().isPresent()).isTrue();
+        assertThat(sanitizedFlow.getScheduler().get()).hasFieldOrPropertyWithValue("type", Scheduler.Type.timer);
+        assertThat(sanitizedFlow.getScheduler().get()).hasFieldOrPropertyWithValue("expression", "1s");
+        assertThat(sanitizedFlow.getSteps().get(0).getStepKind()).isEqualTo(StepKind.endpoint);
+        assertThat(sanitizedFlow.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-type");
+        assertThat(sanitizedFlow.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-expression");
     }
 
     @Test
@@ -98,15 +104,16 @@ public class ProjectGeneratorHelperTest {
                 .build()
         );
 
-        assertThat(source.getScheduler().isPresent()).isFalse();
+        assertThat(source.getFlows().get(0).getScheduler().isPresent()).isFalse();
 
         Integration sanitized = ProjectGeneratorHelper.sanitize(source, resourceManager);
 
-        assertThat(sanitized.getScheduler().isPresent()).isTrue();
-        assertThat(sanitized.getScheduler().get()).hasFieldOrPropertyWithValue("type", Scheduler.Type.timer);
-        assertThat(sanitized.getScheduler().get()).hasFieldOrPropertyWithValue("expression", "1s");
-        assertThat(sanitized.getSteps().get(0).getStepKind()).isEqualTo(StepKind.endpoint);
-        assertThat(sanitized.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-type");
-        assertThat(sanitized.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-expression");
+        final Flow sanitizedFlow = sanitized.getFlows().get(0);
+        assertThat(sanitizedFlow.getScheduler().isPresent()).isTrue();
+        assertThat(sanitizedFlow.getScheduler().get()).hasFieldOrPropertyWithValue("type", Scheduler.Type.timer);
+        assertThat(sanitizedFlow.getScheduler().get()).hasFieldOrPropertyWithValue("expression", "1s");
+        assertThat(sanitizedFlow.getSteps().get(0).getStepKind()).isEqualTo(StepKind.endpoint);
+        assertThat(sanitizedFlow.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-type");
+        assertThat(sanitizedFlow.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-expression");
     }
 }

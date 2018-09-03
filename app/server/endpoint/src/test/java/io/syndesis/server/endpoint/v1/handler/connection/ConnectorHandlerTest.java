@@ -51,6 +51,7 @@ import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
@@ -181,7 +182,7 @@ public class ConnectorHandlerTest {
       return new Integration.Builder()
           .id("test")
           .name("test")
-          .steps(steps)
+          .addFlow(new Flow.Builder().steps(steps).build())
           .build();
     }
 }

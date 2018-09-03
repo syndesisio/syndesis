@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +31,7 @@ import io.syndesis.common.model.Split;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
@@ -44,6 +44,7 @@ import io.syndesis.integration.runtime.handlers.DataMapperStepHandler;
 import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.ExpressionFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.ExtensionStepHandler;
+import io.syndesis.integration.runtime.handlers.HeadersStepHandler;
 import io.syndesis.integration.runtime.handlers.LogStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
@@ -96,6 +97,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         this.stepHandlerList.add(new ExtensionStepHandler());
         this.stepHandlerList.add(new SplitStepHandler());
         this.stepHandlerList.add(new LogStepHandler());
+        this.stepHandlerList.add(new HeadersStepHandler());
         this.stepHandlerList.addAll(handlers);
 
         this.activityTracker = activityTracker;
@@ -119,17 +121,30 @@ public class IntegrationRouteBuilder extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         final Integration integration = loadIntegration();
-        final List<Step> steps = Collections.unmodifiableList(integration.getSteps());
+        final List<Flow> flows = integration.getFlows();
+
+        for (int f = 0; f < flows.size(); f++) {
+            configureFlow(flows.get(f), String.valueOf(f));
+        }
+    }
+
+    private void configureFlow(Flow flow, String flowIndex) throws URISyntaxException {
+        final List<Step> steps = flow.getSteps();
+        final String flowId = flow.getId().orElseGet(KeyGenerator::createKey);
+        final String flowName = flow.getName();
 
         if (steps.isEmpty()) {
             return;
         }
 
-        ProcessorDefinition<?> parent = configureRouteScheduler(integration);
+        ProcessorDefinition<?> parent = configureRouteScheduler(flow);
+        if (parent != null) {
+            parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
+        }
 
         for (int i = 0; i < steps.size(); i++) {
             final Step step = steps.get(i);
-            final String stepIndex = Integer.toString(i + 1);
+            final String stepIndex = Integer.toString(i);
             final String stepId = step.getId().orElseGet(KeyGenerator::createKey);
             final IntegrationStepHandler handler = findHandler(step);
 
@@ -141,16 +156,17 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     throw new IllegalStateException("The handler for step kind " + step.getKind() + " is not a consumer");
                 }
 
-                Optional<ProcessorDefinition<?>> definition = handler.handle(step, null, this, stepIndex);
+                Optional<ProcessorDefinition<?>> definition = handler.handle(step, null, this, flowIndex, stepIndex);
                 if (definition.isPresent()) {
                     parent = definition.get();
-                    parent = configureRouteDefinition(parent, stepId);
+                    parent = configureRouteDefinition(parent, flowName, flowId, stepId);
+                    parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
                     parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
-                    parent = configureConnectorSplit(step, parent, stepIndex).orElse(parent);
+                    parent = configureConnectorSplit(step, parent, flowIndex, stepIndex).orElse(parent);
                     parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
                 }
             } else {
-                parent = configureRouteDefinition(parent, stepId);
+                parent = configureRouteDefinition(parent, flowName, flowId, stepId);
                 if (i > 0) {
                     // If parent is not null and this is the first step, a scheduler
                     // has been created as route initiator so d'ont include the
@@ -158,7 +174,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     parent = createPipeline(parent, stepId);
                 }
 
-                parent = handler.handle(step, parent, this, stepIndex).orElse(parent);
+                parent = handler.handle(step, parent, this, flowIndex, stepIndex).orElse(parent);
 
                 Optional<Step> splitStep = getConnectorSplitAsStep(step);
                 if (splitStep.isPresent()) {
@@ -170,7 +186,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                         }
                     }
 
-                    parent = new SplitStepHandler().handle(splitStep.get(), parent, this, stepIndex).orElse(parent);
+                    parent = new SplitStepHandler().handle(splitStep.get(), parent, this, flowIndex, stepIndex).orElse(parent);
                     parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                     parent = parent.process(new OutMessageCaptureProcessor());
                 } else {
@@ -188,7 +204,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
     }
 
-    private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, String stepId) {
+    private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, String flowName, String flowId, String stepId) {
         if (definition instanceof RouteDefinition) {
             final RouteDefinition rd = (RouteDefinition)definition;
             final List<RoutePolicy> rp = rd.getRoutePolicies();
@@ -198,7 +214,11 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 return definition;
             }
 
-            rd.id(stepId);
+            if (ObjectHelper.isNotEmpty(flowName)) {
+                rd.routeDescription(flowName);
+            }
+
+            rd.routeId(flowId);
             rd.routePolicy(new ActivityTrackingPolicy(activityTracker));
             rd.getInputs().get(0).id(stepId);
         }
@@ -216,9 +236,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
      * If the integration has a scheduler, start the route with a timer or quartz2
      * endpoint.
      */
-    private ProcessorDefinition<?> configureRouteScheduler(Integration integration) throws URISyntaxException {
-        if (integration.getScheduler().isPresent()) {
-            Scheduler scheduler = integration.getScheduler().get();
+    private ProcessorDefinition<?> configureRouteScheduler(final Flow flow) throws URISyntaxException {
+        if (flow.getScheduler().isPresent()) {
+            Scheduler scheduler = flow.getScheduler().get();
 
             // We now support simple timer only, cron support will be supported
             // later on.
@@ -232,7 +252,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
                 RouteDefinition route = this.from(uri);
                 route.getInputs().get(0).setId("integration-scheduler");
-                integration.getId().ifPresent(route::setId);
+                flow.getId().ifPresent(route::setId);
 
                 return route;
             } else {
@@ -262,7 +282,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return Optional.empty();
     }
 
-    private Optional<ProcessorDefinition<?>> configureConnectorSplit(Step step, ProcessorDefinition<?> route, String index) {
+    private Optional<ProcessorDefinition<?>> configureConnectorSplit(Step step, ProcessorDefinition<?> route, String flowIndex, String stepIndex) {
         if (step.getAction().filter(ConnectorAction.class::isInstance).isPresent()) {
             final ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
             final ConnectorDescriptor descriptor = action.getDescriptor();
@@ -278,7 +298,8 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     splitBuilder.build(),
                     route,
                     this,
-                    index);
+                    flowIndex,
+                    stepIndex);
             }
         }
 

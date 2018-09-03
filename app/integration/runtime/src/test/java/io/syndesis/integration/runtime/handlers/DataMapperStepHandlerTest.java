@@ -114,22 +114,23 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
             assertThat(route).isNotNull();
             assertThat(route.getInputs()).hasSize(1);
             assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
-            assertThat(route.getOutputs()).hasSize(4);
+            assertThat(route.getOutputs()).hasSize(5);
             assertThat(route.getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(route.getOutputs().get(1)).isInstanceOf(ProcessDefinition.class);
+            assertThat(route.getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
 
             // Atlas
-            assertThat(route.getOutputs().get(2)).isInstanceOf(PipelineDefinition.class);
-            assertThat(route.getOutputs().get(2).getOutputs()).hasSize(3);
-            assertThat(route.getOutputs().get(2).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(route.getOutputs().get(2).getOutputs().get(1)).isInstanceOf(ToDefinition.class);
-            assertThat(route.getOutputs().get(2).getOutputs().get(1)).hasFieldOrPropertyWithValue(
+            assertThat(route.getOutputs().get(3)).isInstanceOf(PipelineDefinition.class);
+            assertThat(route.getOutputs().get(3).getOutputs()).hasSize(3);
+            assertThat(route.getOutputs().get(3).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(3).getOutputs().get(1)).isInstanceOf(ToDefinition.class);
+            assertThat(route.getOutputs().get(3).getOutputs().get(1)).hasFieldOrPropertyWithValue(
                 "uri",
-                "atlas:mapping-step-2.json?encoding=UTF-8&sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP
+                "atlas:mapping-flow-0-step-1.json?encoding=UTF-8&sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP
             );
 
-            assertThat(route.getOutputs().get(2).getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
-            assertThat(route.getOutputs().get(3)).isInstanceOf(PipelineDefinition.class);
+            assertThat(route.getOutputs().get(3).getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
+            assertThat(route.getOutputs().get(4)).isInstanceOf(PipelineDefinition.class);
         } finally {
             context.stop();
         }

@@ -63,7 +63,7 @@ public class EndpointStepHandler implements IntegrationStepHandler, IntegrationS
 
     @SuppressWarnings({"unchecked", "PMD"})
     @Override
-    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, final String stepIndex) {
+    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, final String flowIndex, final String stepIndex) {
         // Model
         final Connection connection = step.getConnection().get();
         final Connector connector = connection.getConnector().get();
@@ -79,7 +79,7 @@ public class EndpointStepHandler implements IntegrationStepHandler, IntegrationS
             .stream()
             .filter(Predicates.or(connector::isEndpointProperty, action::isEndpointProperty))
             .filter(Predicates.or(connector::isSecret, action::isSecret))
-            .forEach(e -> e.setValue(String.format("{{%s-%s.%s}}", componentScheme, stepIndex, e.getKey())));
+            .forEach(e -> e.setValue(String.format("{{flow-%s.%s-%s.%s}}", flowIndex, componentScheme, stepIndex, e.getKey())));
 
         // raw values.
         properties.entrySet()

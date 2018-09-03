@@ -46,6 +46,22 @@
       <artifactId>integration-api</artifactId>
     </dependency>
 
+    <!-- camel -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-swagger-rest-dsl-generator</artifactId>
+      <version>${camel.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-models</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-parser</artifactId>
+    </dependency>
+
     <!-- spring -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

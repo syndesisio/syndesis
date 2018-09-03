@@ -100,7 +100,7 @@ export class IntegrationStepConfigureComponent
       onSave: () => {
         this.router.navigate(['save-or-add-step'], {
           queryParams: { validate: true },
-          relativeTo: this.route.parent
+          relativeTo: this.route.parent,
         });
       }
     });

@@ -61,7 +61,7 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
       action: action,
       onSave: () => {
         this.router.navigate(['action-configure', this.position], {
-          relativeTo: this.route.parent
+          relativeTo: this.route.parent,
         });
       }
     });
@@ -82,7 +82,7 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
     if (!step) {
       /* Safety net */
       this.router.navigate(['save-or-add-step'], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
       return;
     }
@@ -94,7 +94,7 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
     }
     if (step.action) {
       this.router.navigate(['action-configure', this.position], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
       return;
     }

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.MavenProperties;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,7 @@ import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 
@@ -176,7 +178,7 @@ public class Application implements ApplicationRunner {
             .id("Integration")
             .name("Integration")
             .description("This integration is used to prime the .m2 repo")
-            .steps(steps)
+            .addFlow(new Flow.Builder().steps(steps).build())
             .build();
 
         generate(integration, project);
@@ -218,6 +220,11 @@ public class Application implements ApplicationRunner {
 
         @Override
         public Optional<InputStream> loadExtensionBLOB(String extensionId) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<OpenApi> loadOpeApiDefinition(String s) {
             return Optional.empty();
         }
 

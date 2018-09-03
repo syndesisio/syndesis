@@ -70,8 +70,8 @@ public class ActiveMQConnectionTest extends ConnectorTestSupport {
     @Test
     public void connectionTest() throws Exception {
         final String message = UUID.randomUUID().toString();
-        final SjmsComponent sjms1 = context.getComponent("sjms-sjms-1", SjmsComponent.class);
-        final SjmsComponent sjms2 = context.getComponent("sjms-sjms-2", SjmsComponent.class);
+        final SjmsComponent sjms1 = context.getComponent("sjms-sjms-0", SjmsComponent.class);
+        final SjmsComponent sjms2 = context.getComponent("sjms-sjms-1", SjmsComponent.class);
 
         Assertions.assertThat(sjms1).isNotEqualTo(sjms2);
 

@@ -15,14 +15,6 @@
  */
 package io.syndesis.server.update.controller.bulletin;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.validation.Validator;
-import org.junit.Test;
+
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.Action.Pattern;
@@ -39,11 +31,22 @@ import io.syndesis.common.model.bulletin.IntegrationBulletinBoard;
 import io.syndesis.common.model.bulletin.LeveledMessage;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.server.dao.manager.DataManager;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class IntegrationUpdateHandlerTest {
 
@@ -69,19 +72,19 @@ public class IntegrationUpdateHandlerTest {
 
     private Connector newSqlConnector() {
         ConnectorAction action1 = new ConnectorAction.Builder()
-                                    .id(SQL_CONNECTOR_ACTION_ID)
-                                    .actionType("connector")
-                                    .description("Invoke SQL to obtain ...")
-                                    .name("Invoke SQL")
-                                    .addTag("dynamic")
-                                    .pattern(Pattern.To)
-                                    .build();
+            .id(SQL_CONNECTOR_ACTION_ID)
+            .actionType("connector")
+            .description("Invoke SQL to obtain ...")
+            .name("Invoke SQL")
+            .addTag("dynamic")
+            .pattern(Pattern.To)
+            .build();
 
         return new Connector.Builder()
-                                   .id(CONNECTOR_ID)
-                                   .name(SQL_CONNECTOR_NAME)
-                                   .addAction(action1)
-                                   .build();
+           .id(CONNECTOR_ID)
+           .name(SQL_CONNECTOR_NAME)
+           .addAction(action1)
+           .build();
     }
 
     private Connection newSqlConnection(Connector connector) {
@@ -94,38 +97,38 @@ public class IntegrationUpdateHandlerTest {
         configuredProperties.put("url",  "jdbc:postgresql://syndesis-db:5432/sampledb");
 
         return new Connection.Builder()
-                                .id(CONNECTION_ID)
-                                .addTag("dynamic")
-                                .configuredProperties(configuredProperties)
-                                .connector(connector)
-                                .connectorId("sql")
-                                .description("Connection to Sampledb")
-                                .icon("fa-database")
-                                .name("PostgresDB")
-                                .build();
+            .id(CONNECTION_ID)
+            .addTag("dynamic")
+            .configuredProperties(configuredProperties)
+            .connector(connector)
+            .connectorId("sql")
+            .description("Connection to Sampledb")
+            .icon("fa-database")
+            .name("PostgresDB")
+            .build();
     }
 
     private Step newSqlStep(Connection connection) {
         ConnectorAction action = new ConnectorAction.Builder()
-                                                            .actionType("connector")
-                                                            .id(SQL_CONNECTOR_ACTION_ID)
-                                                            .name("Invoke SQL")
-                                                            .pattern(Pattern.To)
-                                                            .addTag("dynamic")
-                                                            .build();
+            .actionType("connector")
+            .id(SQL_CONNECTOR_ACTION_ID)
+            .name("Invoke SQL")
+            .pattern(Pattern.To)
+            .addTag("dynamic")
+            .build();
 
         return new Step.Builder()
-                        .connection(connection)
-                        .id("SomeLongId")
-                        .action(action)
-                        .build();
+            .connection(connection)
+            .id("SomeLongId")
+            .action(action)
+            .build();
     }
 
     private Integration newSqlIntegration(String id, Connection connection) {
         return new Integration.Builder()
             .id(id)
             .name(id)
-            .addStep(newSqlStep(connection))
+            .addFlow(new Flow.Builder().id(id + ":flow").addStep(newSqlStep(connection)).build())
             .createdAt(INTEGRATION_CREATED_AT)
             .updatedAt(INTEGRATION_UPDATED_AT)
             .build();
@@ -137,18 +140,19 @@ public class IntegrationUpdateHandlerTest {
         stepsDone.put("deploy", "2");
 
         IntegrationDeployment.Builder builder = new IntegrationDeployment.Builder()
-                        .id(id + ":" + version)
-                        .createdAt(DEPLOYMENT_CREATED_AT)
-                        .spec(integration)
-                        .integrationId(Optional.of(id))
-                        .stepsDone(stepsDone)
-                        .targetState(IntegrationDeploymentState.Published)
-                        .userId("developer")
-                        .version(version)
-                        .updatedAt(DEPLOYMENT_UPDATED_AT);
+            .id(id + ":" + version)
+            .createdAt(DEPLOYMENT_CREATED_AT)
+            .spec(integration)
+            .integrationId(Optional.of(id))
+            .stepsDone(stepsDone)
+            .targetState(IntegrationDeploymentState.Published)
+            .userId("developer")
+            .version(version)
+            .updatedAt(DEPLOYMENT_UPDATED_AT);
 
-        if (published)
+        if (published) {
             builder = builder.currentState(IntegrationDeploymentState.Published);
+        }
 
         return builder.build();
     }
@@ -184,14 +188,13 @@ public class IntegrationUpdateHandlerTest {
 
         // Returns the unchanged integration
         when(dataManager.fetchAll(Integration.class))
-                            .thenReturn(new ListResult.Builder<Integration>()
-                                                                .addItem(sqlIntegration).build());
+            .thenReturn(new ListResult.Builder<Integration>().addItem(sqlIntegration).build());
 
         ChangeEvent event = new ChangeEvent.Builder()
-                                                                    .action("updated")
-                                                                    .id(CONNECTION_ID)
-                                                                    .kind("connection")
-                                                                    .build();
+            .action("updated")
+            .id(CONNECTION_ID)
+            .kind("connection")
+            .build();
 
         List<IntegrationBulletinBoard> boards = updateHandler.compute(event);
         assertFalse(boards.isEmpty());
@@ -226,17 +229,17 @@ public class IntegrationUpdateHandlerTest {
         properties.put("blah", "blah");
 
         Connector modSqlConnector = new Connector.Builder()
-                                                                                .createFrom(sqlConnector)
-                                                                                .configuredProperties(properties)
-                                                                                .name(connectorNewName)
-                                                                                .build();
+            .createFrom(sqlConnector)
+            .configuredProperties(properties)
+            .name(connectorNewName)
+            .build();
 
         assertFalse(sqlConnector.equivalent(modSqlConnector));
 
         Connection modSqlConnection = new Connection.Builder()
-                                                                                .createFrom(sqlConnection)
-                                                                                .connector(modSqlConnector)
-                                                                                .build();
+            .createFrom(sqlConnection)
+            .connector(modSqlConnector)
+            .build();
 
         assertNotEquals(sqlConnection, modSqlConnection);
 
@@ -251,15 +254,13 @@ public class IntegrationUpdateHandlerTest {
         when(dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", id)).thenReturn(ids);
 
         // Returns the ORIGINAL integration
-        when(dataManager.fetchAll(Integration.class))
-                            .thenReturn(new ListResult.Builder<Integration>()
-                                                                .addItem(sqlIntegration).build());
+        when(dataManager.fetchAll(Integration.class)).thenReturn(new ListResult.Builder<Integration>().addItem(sqlIntegration).build());
 
         ChangeEvent event = new ChangeEvent.Builder()
-                                                                    .action("updated")
-                                                                    .id(CONNECTION_ID)
-                                                                    .kind("connection")
-                                                                    .build();
+            .action("updated")
+            .id(CONNECTION_ID)
+            .kind("connection")
+            .build();
 
         List<IntegrationBulletinBoard> boards = updateHandler.compute(event);
         assertFalse(boards.isEmpty());
@@ -268,7 +269,7 @@ public class IntegrationUpdateHandlerTest {
         IntegrationBulletinBoard board = boards.get(0);
         List<LeveledMessage> messages = board.getMessages();
         assertFalse(messages.isEmpty());
-        assertEquals(2, messages.size());
+        assertEquals(1, messages.size());
 
         messages.forEach(message -> {
             switch (message.getCode()) {
@@ -306,29 +307,29 @@ public class IntegrationUpdateHandlerTest {
         properties.put("blah", "blah");
 
         Connector modSqlConnector = new Connector.Builder()
-                                                                                .createFrom(sqlConnector)
-                                                                                .configuredProperties(properties)
-                                                                                .name(connectorNewName)
-                                                                                .build();
+            .createFrom(sqlConnector)
+            .configuredProperties(properties)
+            .name(connectorNewName)
+            .build();
 
         assertFalse(sqlConnector.equivalent(modSqlConnector));
 
         Connection modSqlConnection = new Connection.Builder()
-                                                                                .createFrom(sqlConnection)
-                                                                                .connector(modSqlConnector)
-                                                                                .build();
+            .createFrom(sqlConnection)
+            .connector(modSqlConnector)
+            .build();
 
         assertNotEquals(sqlConnection, modSqlConnection);
 
         Step modStep = new Step.Builder()
-                                          .createFrom(sqlIntegration.getSteps().get(0))
-                                          .connection(modSqlConnection)
-                                          .build();
+          .createFrom(sqlIntegration.getFlows().get(0).getSteps().get(0))
+          .connection(modSqlConnection)
+          .build();
 
         Integration modSqlIntegration = new Integration.Builder()
-                                                                                .createFrom(sqlIntegration)
-                                                                                .steps(Collections.singletonList(modStep))
-                                                                                .build();
+            .createFrom(sqlIntegration)
+            .flows(Collections.singleton(new Flow.Builder().id(id + ":flow").addStep(modStep).build()))
+            .build();
 
         assertFalse(sqlIntegration.equivalent(modSqlIntegration));
 
@@ -343,15 +344,13 @@ public class IntegrationUpdateHandlerTest {
         when(dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", id)).thenReturn(ids);
 
         // Returns the MODIFIED integration
-        when(dataManager.fetchAll(Integration.class))
-                            .thenReturn(new ListResult.Builder<Integration>()
-                                                                .addItem(modSqlIntegration).build());
+        when(dataManager.fetchAll(Integration.class)).thenReturn(new ListResult.Builder<Integration>().addItem(modSqlIntegration).build());
 
         ChangeEvent event = new ChangeEvent.Builder()
-                                                                    .action("updated")
-                                                                    .id(CONNECTION_ID)
-                                                                    .kind("connection")
-                                                                    .build();
+            .action("updated")
+            .id(CONNECTION_ID)
+            .kind("connection")
+            .build();
 
         List<IntegrationBulletinBoard> boards = updateHandler.compute(event);
         assertFalse(boards.isEmpty());
@@ -392,29 +391,29 @@ public class IntegrationUpdateHandlerTest {
         properties.put("blah", "blah");
 
         Connector modSqlConnector = new Connector.Builder()
-                                                                                .createFrom(sqlConnector)
-                                                                                .configuredProperties(properties)
-                                                                                .name(connectorNewName)
-                                                                                .build();
+            .createFrom(sqlConnector)
+            .configuredProperties(properties)
+            .name(connectorNewName)
+            .build();
 
         assertFalse(sqlConnector.equivalent(modSqlConnector));
 
         Connection modSqlConnection = new Connection.Builder()
-                                                                                .createFrom(sqlConnection)
-                                                                                .connector(modSqlConnector)
-                                                                                .build();
+            .createFrom(sqlConnection)
+            .connector(modSqlConnector)
+            .build();
 
         assertFalse(sqlConnection.equivalent(modSqlConnection));
 
         Step modStep = new Step.Builder()
-                                          .createFrom(sqlIntegration.getSteps().get(0))
-                                          .connection(modSqlConnection)
-                                          .build();
+            .createFrom(sqlIntegration.getFlows().get(0).getSteps().get(0))
+            .connection(modSqlConnection)
+            .build();
 
         Integration modSqlIntegration = new Integration.Builder()
-                                                                                .createFrom(sqlIntegration)
-                                                                                .steps(Collections.singletonList(modStep))
-                                                                                .build();
+            .createFrom(sqlIntegration)
+            .flows(Collections.singleton(new Flow.Builder().steps(Collections.singletonList(modStep)).build()))
+            .build();
 
         assertFalse(sqlIntegration.equivalent(modSqlIntegration));
 
@@ -429,15 +428,13 @@ public class IntegrationUpdateHandlerTest {
         when(dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", id)).thenReturn(ids);
 
         // Returns the changed integration
-        when(dataManager.fetchAll(Integration.class))
-                            .thenReturn(new ListResult.Builder<Integration>()
-                                                                .addItem(modSqlIntegration).build());
+        when(dataManager.fetchAll(Integration.class)).thenReturn(new ListResult.Builder<Integration>().addItem(modSqlIntegration).build());
 
         ChangeEvent event = new ChangeEvent.Builder()
-                                                                    .action("updated")
-                                                                    .id(CONNECTION_ID)
-                                                                    .kind("connection")
-                                                                    .build();
+            .action("updated")
+            .id(CONNECTION_ID)
+            .kind("connection")
+            .build();
 
         List<IntegrationBulletinBoard> boards = updateHandler.compute(event);
         assertFalse(boards.isEmpty());

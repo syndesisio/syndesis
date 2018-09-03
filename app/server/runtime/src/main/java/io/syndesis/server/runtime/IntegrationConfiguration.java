@@ -22,12 +22,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
-import io.syndesis.integration.api.IntegrationResourceManager;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.extension.Extension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,6 +67,11 @@ public class IntegrationConfiguration {
                         .totalCount(resultList.getTotalCount())
                         .build()
                 ).getItems();
+            }
+
+            @Override
+            public Optional<OpenApi> loadOpeApiDefinition(String id) {
+                return Optional.ofNullable(dataManager.fetch(OpenApi.class, id));
             }
 
             @Override

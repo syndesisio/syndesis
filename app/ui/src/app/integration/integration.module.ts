@@ -106,6 +106,10 @@ const routes: Routes = [
   {
     path: ':integrationId/edit',
     component: IntegrationEditPage,
+  },
+  {
+    path: ':integrationId/:flowId/edit',
+    component: IntegrationEditPage,
     children: editIntegrationChildRoutes
   }
 ];

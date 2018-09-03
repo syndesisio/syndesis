@@ -270,11 +270,11 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   //-----  Icons ------------------->>
 
   getStart(integration: Integration) {
-    return integration.steps ? integration.steps[0] : ({} as Step);
+    return integration.flows.length > 0 && integration.flows[0].steps.length > 0 ? integration.flows[0].steps[0] : ({} as Step);
   }
 
   getFinish(integration: Integration) {
-    return integration.steps ? integration.steps.slice(-1)[0] : ({} as Step);
+    return integration.flows.length > 0 && integration.flows[0].steps.length > 0 ? integration.flows[0].steps.slice(-1)[0] : ({} as Step);
   }
 
   //-----  Modal ------------------->>

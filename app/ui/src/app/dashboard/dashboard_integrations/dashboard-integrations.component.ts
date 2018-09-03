@@ -133,8 +133,10 @@ export class DashboardIntegrationsComponent implements OnChanges {
 
   goto(integration: Integration) {
     this.router.navigate(
-      ['/integration/edit', integration.id, 'save-or-add-step'],
-      { relativeTo: this.route }
+      ['/integration/edit', integration.id, 'save-or-add-step'], {
+        relativeTo: this.route,
+        fragment: integration.flows[0].id
+      }
     );
   }
 }

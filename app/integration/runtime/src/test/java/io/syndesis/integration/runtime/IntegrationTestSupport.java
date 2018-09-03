@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import javax.xml.bind.JAXBException;
 
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import org.apache.camel.CamelContext;
@@ -70,7 +71,9 @@ public class IntegrationTestSupport {
             .id("test-integration")
             .name("Test Integration")
             .description("This is a test integration!")
-            .steps(Arrays.asList(steps))
+            .addFlow(new Flow.Builder()
+                    .steps(Arrays.asList(steps))
+                .build())
             .build();
     }
 

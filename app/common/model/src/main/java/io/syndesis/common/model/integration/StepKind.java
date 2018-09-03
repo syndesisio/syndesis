@@ -23,5 +23,6 @@ public enum StepKind {
     extension,
     mapper,
     split,
-    log
+    log,
+    headers
 }

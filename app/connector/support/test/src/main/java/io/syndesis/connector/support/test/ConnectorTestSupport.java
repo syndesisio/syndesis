@@ -28,9 +28,11 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.MavenProperties;
 import io.syndesis.integration.api.IntegrationResourceManager;
@@ -126,7 +128,7 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
             .id("test-integration")
             .name("Test Integration")
             .description("This is a test integration!")
-            .steps(createSteps())
+            .addFlow(new Flow.Builder().steps(createSteps()).build())
             .build();
     }
 
@@ -161,6 +163,11 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
         @Override
         public List<Extension> loadExtensionsByTag(String tag) {
             return Collections.emptyList();
+        }
+
+        @Override
+        public Optional<OpenApi> loadOpeApiDefinition(String s) {
+            return Optional.empty();
         }
 
         @Override

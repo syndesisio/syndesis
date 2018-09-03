@@ -31,6 +31,8 @@ public interface ResourceIdentifier extends WithId<ResourceIdentifier>, WithKind
 
     Optional<String> name();
 
+    Optional<Integer> getVersion();
+
     @Override
     default ResourceIdentifier withId(String id) {
         return new ResourceIdentifier.Builder().createFrom(this).id(id).build();

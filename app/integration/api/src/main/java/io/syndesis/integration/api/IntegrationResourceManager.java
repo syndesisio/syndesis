@@ -31,6 +31,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.openapi.OpenApi;
 
 public interface IntegrationResourceManager {
 
@@ -71,6 +72,11 @@ public interface IntegrationResourceManager {
     Optional<InputStream> loadExtensionBLOB(String id);
 
     /**
+     *  Load an OpenApi definition from the underlying storage by id.
+     */
+    Optional<OpenApi> loadOpeApiDefinition(String id);
+
+    /**
      * Decrypt a property.
      */
     String decrypt(String encrypted);
@@ -79,7 +85,7 @@ public interface IntegrationResourceManager {
      * Collect dependencies.
      */
     default Collection<Dependency> collectDependencies(Integration integration) {
-        return collectDependencies(integration.getSteps(), true);
+        return collectDependencies(integration.getFlows().stream().flatMap(flow -> flow.getSteps().stream()).collect(Collectors.toList()), true);
     }
 
     /**

@@ -17,6 +17,9 @@ package io.syndesis.integration.runtime.capture;
 
 import java.util.Map;
 
+import static java.util.Collections.singleton;
+
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
@@ -257,10 +260,16 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
                     .build()
             );
 
-            integration = new Integration.Builder().createFrom(integration)
+            final Flow flow = integration.getFlows().get(0);
+            final Flow flowWithScheduler = flow.builder()
                 .scheduler(new Scheduler.Builder()
                     .expression("60s")
                     .build())
+            .build();
+
+            integration = new Integration.Builder()
+                .createFrom(integration)
+                .flows(singleton(flowWithScheduler))
                 .build();
 
             IntegrationRouteBuilder routes = newIntegrationRouteBuilder(integration);

@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithModificationTimestamps;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithResourceId;
+import io.syndesis.common.model.WithResources;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.WithVersion;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -39,7 +39,7 @@ import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
 import org.immutables.value.Value;
 
-public interface IntegrationBase extends WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, ToJson, Serializable {
+public interface IntegrationBase extends WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, WithSteps, ToJson, Serializable, WithResources {
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Value.Default
@@ -48,35 +48,29 @@ public interface IntegrationBase extends WithResourceId, WithVersion, WithModifi
     }
 
     @Value.Default
+    default List<Flow> getFlows() {
+        return Collections.emptyList();
+    }
+
+    @Value.Default
     default List<Connection> getConnections() {
         return Collections.emptyList();
     }
-
-    @Value.Default
-    default List<Step> getSteps() {
-        return Collections.emptyList();
-    }
-
-    @Value.Default
-    default List<ResourceIdentifier> getResources() {
-        return Collections.emptyList();
-    }
-
-    Optional<Scheduler> getScheduler();
 
     @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
     Optional<String> getDescription();
 
     @JsonIgnore
     default Set<String> getUsedConnectorIds() {
-        return getSteps().stream()//
-            .map(s -> s.getAction())//
-            .filter(Optional::isPresent)//
-            .map(Optional::get)//
-            .filter(ConnectorAction.class::isInstance)//
-            .map(ConnectorAction.class::cast)//
-            .map(a -> a.getDescriptor().getConnectorId())//
-            .filter(Objects::nonNull)//
+        return getFlows().stream()
+            .flatMap(f -> f.getSteps().stream())
+            .map(Step::getAction)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .filter(ConnectorAction.class::isInstance)
+            .map(ConnectorAction.class::cast)
+            .map(a -> a.getDescriptor().getConnectorId())
+            .filter(Objects::nonNull)
             .collect(Collectors.toSet());
     }
 
@@ -92,15 +86,15 @@ public interface IntegrationBase extends WithResourceId, WithVersion, WithModifi
             .findFirst();
     }
 
-    default Optional<Step> findStepById(String stepId) {
+    default Optional<Flow> findFlowById(String id) {
         if (getSteps() == null) {
             return Optional.empty();
         }
 
-        return getSteps().stream()
+        return getFlows().stream()
             .filter(WithId.class::isInstance)
-            .filter(step -> step.getId().isPresent())
-            .filter(step -> stepId.equals(step.getId().get()))
+            .filter(flow -> flow.getId().isPresent())
+            .filter(flow -> id.equals(flow.getId().get()))
             .findFirst();
     }
 }

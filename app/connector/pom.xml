@@ -39,6 +39,7 @@
     <module>support/test</module>
 
     <module>activemq</module>
+    <module>api-provider</module>
     <module>amqp</module>
     <module>aws-s3</module>
     <module>dropbox</module>

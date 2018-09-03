@@ -20,13 +20,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.security.crypto.encrypt.TextEncryptor;
-import org.springframework.stereotype.Component;
-
 import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.Step;
+
+import org.springframework.security.crypto.encrypt.TextEncryptor;
+import org.springframework.stereotype.Component;
 
 /**
  * Handy methods used to apply encryption to configured secrets.
@@ -73,7 +74,13 @@ public class EncryptionComponent {
     public Integration encrypt(Integration integration) {
         return new Integration.Builder()
             .createFrom(integration)
-            .steps(encrypt(integration.getSteps()))
+            .flows(integration.getFlows()
+                .stream()
+                .map(f -> new Flow.Builder()
+                    .createFrom(f)
+                    .steps(encrypt(f.getSteps()))
+                    .build())
+                .collect(Collectors.toList()))
             .build();
     }
 

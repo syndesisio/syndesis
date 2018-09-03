@@ -60,10 +60,10 @@ import static org.assertj.core.api.Assertions.assertThat;
     properties = {
         "spring.main.banner-mode = off",
         "logging.level.io.syndesis.integration.runtime = DEBUG",
-        "twitter-timeline-1.accessToken = at",
-        "twitter-timeline-1.accessTokenSecret = ats",
-        "twitter-timeline-1.consumerKey = ck",
-        "twitter-timeline-1.consumerSecret = cs"
+        "flow-0.twitter-timeline-0.accessToken = at",
+        "flow-0.twitter-timeline-0.accessTokenSecret = ats",
+        "flow-0.twitter-timeline-0.consumerKey = ck",
+        "flow-0.twitter-timeline-0.consumerSecret = cs"
     }
 )
 @TestExecutionListeners(
@@ -164,7 +164,7 @@ public class ConnectorStepHandlerTest extends IntegrationTestSupport {
                 }
                 if (endpoint instanceof ComponentProxyEndpoint) {
                     assertThat(endpoint.getEndpointUri()).isEqualTo(
-                        "twitter-timeline-1"
+                        "twitter-timeline-0"
                     );
                 }
             }
