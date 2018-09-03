@@ -20,9 +20,11 @@ import io.swagger.annotations.ApiOperation;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.api.generator.APIGenerator;
+import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
@@ -87,7 +89,13 @@ public class ApiHandler extends BaseHandler {
 
         ProvidedApiTemplate template = new ProvidedApiTemplate(apiProviderConnection, API_PROVIDER_START_ACTION_ID, API_PROVIDER_END_ACTION_ID);
 
-        return apiGenerator.generateIntegration(spec, template);
+        APIIntegration apiIntegration = apiGenerator.generateIntegration(spec, template);
+
+        if (apiIntegration.getSpec() != null) {
+            getDataManager().store(apiIntegration.getSpec(), OpenApi.class);
+        }
+
+        return apiIntegration.getIntegration();
     }
 
     @POST

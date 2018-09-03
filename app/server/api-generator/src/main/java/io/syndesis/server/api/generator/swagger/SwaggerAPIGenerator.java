@@ -5,6 +5,8 @@ import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -14,15 +16,18 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.api.generator.APIGenerator;
+import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -86,7 +91,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
     }
 
     @Override
-    public Integration generateIntegration(String specification, ProvidedApiTemplate template) {
+    public APIIntegration generateIntegration(String specification, ProvidedApiTemplate template) {
         SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.NONE);
         Swagger swagger = info.getModel();
 
@@ -150,7 +155,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     .action(modifiedEndAction)
                     .connection(template.getConnection())
                     .stepKind(StepKind.endpoint)
-                    .putConfiguredProperty("name", "501") // TODO set the 501 return code on the right property
+                    .putConfiguredProperty("loggerName", "501") // TODO set the 501 return code on the right property
                     .putMetadata("configured", "true")
                     .build();
 
@@ -167,6 +172,18 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
         }
 
-        return integration.build();
+        String apiId = KeyGenerator.createKey();
+        OpenApi api = new OpenApi.Builder()
+            .id(apiId)
+            .name(name)
+            .document(specification.getBytes(StandardCharsets.UTF_8))
+            .build();
+
+        integration.addResource(new ResourceIdentifier.Builder()
+            .id(apiId)
+            .kind(Kind.OpenApi)
+            .build());
+
+        return new APIIntegration(integration.build(), api);
     }
 }

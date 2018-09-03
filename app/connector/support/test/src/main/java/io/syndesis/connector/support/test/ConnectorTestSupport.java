@@ -166,7 +166,7 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
         }
 
         @Override
-        public Optional<OpenApi> loadOpeApiDefinition(String s) {
+        public Optional<OpenApi> loadOpenApiDefinition(String s) {
             return Optional.empty();
         }
 

@@ -76,7 +76,7 @@ final class TestResourceManager implements IntegrationResourceManager {
     }
 
     @Override
-    public Optional<OpenApi> loadOpeApiDefinition(String id) {
+    public Optional<OpenApi> loadOpenApiDefinition(String id) {
         Object res = resources.get(id);
         if (res == null) {
             return Optional.empty();

@@ -359,7 +359,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
             return;
         }
 
-        Optional<OpenApi> res = resourceManager.loadOpeApiDefinition(rid.get().getId().get());
+        Optional<OpenApi> res = resourceManager.loadOpenApiDefinition(rid.get().getId().get());
         if (!res.isPresent()) {
             return;
         }

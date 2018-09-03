@@ -18,7 +18,9 @@ package io.syndesis.common.model;
 import java.io.Serializable;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.common.util.json.StringTrimmingConverter;
 import org.immutables.value.Value;
 
 /**
@@ -27,7 +29,15 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = ResourceIdentifier.Builder.class)
 @SuppressWarnings("immutables")
-public interface ResourceIdentifier extends WithId<ResourceIdentifier>, WithKind, Serializable {
+public interface ResourceIdentifier extends WithId<ResourceIdentifier>, Serializable {
+
+    /**
+     * Refers to the "target" resource kind.
+     */
+    @JsonDeserialize(contentConverter = StringTrimmingConverter.class)
+    @JsonIgnore(false)
+    @Override
+    Kind getKind();
 
     Optional<String> name();
 

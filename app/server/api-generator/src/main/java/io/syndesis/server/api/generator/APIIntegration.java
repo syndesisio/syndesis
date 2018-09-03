@@ -15,16 +15,26 @@
  */
 package io.syndesis.server.api.generator;
 
-import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.openapi.OpenApi;
 
-/**
- * This is a facade for API related operations.
- */
-public interface APIGenerator {
+public class APIIntegration {
 
-    APISummary info(String specification, APIValidationContext validation);
+    private Integration integration;
 
-    APIIntegration generateIntegration(String specification, ProvidedApiTemplate template);
+    private OpenApi spec;
+
+    public APIIntegration(Integration integration, OpenApi spec) {
+        this.integration = integration;
+        this.spec = spec;
+    }
+
+    public Integration getIntegration() {
+        return integration;
+    }
+
+    public OpenApi getSpec() {
+        return spec;
+    }
 
 }

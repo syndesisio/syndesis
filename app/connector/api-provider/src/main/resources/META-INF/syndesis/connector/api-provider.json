@@ -68,7 +68,7 @@
             "description": "API Provider Return Path Configuration",
             "name": "configuration",
             "properties": {
-              "name": {
+              "loggerName": {
                 "componentProperty": false,
                 "deprecated": false,
                 "description": "The return code to set in the HTTP response",
