@@ -32,7 +32,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -98,8 +97,8 @@ public class SwaggerAPIGenerator implements APIGenerator {
         SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.NONE);
         Swagger swagger = info.getModel();
 
-        String name = Optional.ofNullable(swagger.getInfo())
-            .flatMap(i -> Optional.ofNullable(i.getTitle()))
+        String name = ofNullable(swagger.getInfo())
+            .flatMap(i -> ofNullable(i.getTitle()))
             .orElse(null);
 
         Integration.Builder integration = new Integration.Builder()

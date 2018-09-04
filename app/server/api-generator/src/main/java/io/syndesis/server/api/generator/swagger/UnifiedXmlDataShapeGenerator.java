@@ -53,11 +53,6 @@ import org.dom4j.Element;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import static io.syndesis.server.api.generator.swagger.util.SwaggerHelper.dereference;
-import static io.syndesis.server.api.generator.swagger.util.XmlSchemaHelper.addElement;
-import static io.syndesis.server.api.generator.swagger.util.XmlSchemaHelper.nameOf;
-import static io.syndesis.server.api.generator.swagger.util.XmlSchemaHelper.xmlTargetNamespaceOrNull;
-
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @SuppressWarnings("PMD.GodClass")

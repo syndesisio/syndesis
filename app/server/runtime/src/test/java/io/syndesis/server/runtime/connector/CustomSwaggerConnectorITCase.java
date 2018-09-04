@@ -105,7 +105,7 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
         final APISummary got = response.getBody();
 
         assertThat(got).isEqualToIgnoringGivenFields(expected, "icon", "configuredProperties");
-        assertThat(got.getIcon()).startsWith("data:image");
+        assertThat(got.getIcon()).matches(s -> s.isPresent() && s.get().startsWith("data:image"));
         assertThat(got.getConfiguredProperties().keySet()).containsOnly("specification");
         JSONAssert.assertEquals(got.getConfiguredProperties().get("specification"),
             IOUtils.toString(getClass().getResourceAsStream("/io/syndesis/server/runtime/test-swagger.json"), StandardCharsets.UTF_8),

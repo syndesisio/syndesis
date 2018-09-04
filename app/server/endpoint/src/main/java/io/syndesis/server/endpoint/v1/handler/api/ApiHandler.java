@@ -33,8 +33,6 @@ import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import okio.BufferedSource;
 import okio.Okio;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
@@ -50,8 +48,6 @@ import java.io.InputStream;
 @Api(value = "apis")
 @Component
 public class ApiHandler extends BaseHandler {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApiHandler.class);
 
     private static final String API_PROVIDER_CONNECTION_ID = "api-provider";
     private static final String API_PROVIDER_START_ACTION_ID = "io.syndesis:api-provider-start";
@@ -70,11 +66,12 @@ public class ApiHandler extends BaseHandler {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation("Provides a integration from a API specification. Does not store it in the database")
     public Integration createIntegrationFromAPI(@MultipartForm final APIFormData apiFormData) {
-        String spec = getSpec(apiFormData);
         Connection apiProviderConnection = getDataManager().fetch(Connection.class, API_PROVIDER_CONNECTION_ID);
         if (apiProviderConnection == null) {
             throw new IllegalStateException("Cannot find api-provider connection with id: " + API_PROVIDER_CONNECTION_ID);
         }
+
+        String spec = getSpec(apiFormData);
         if (!apiProviderConnection.getConnector().isPresent()) {
             Connector apiProviderConnector = getDataManager().fetch(Connector.class, apiProviderConnection.getConnectorId());
             apiProviderConnection = new Connection.Builder()

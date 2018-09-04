@@ -16,7 +16,6 @@
 package io.syndesis.server.api.generator;
 
 import io.syndesis.common.model.api.APISummary;
-import io.syndesis.common.model.integration.Integration;
 
 /**
  * This is a facade for API related operations.
