@@ -155,7 +155,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     .action(modifiedEndAction)
                     .connection(template.getConnection())
                     .stepKind(StepKind.endpoint)
-                    .putConfiguredProperty("loggerName", "501") // TODO set the 501 return code on the right property
+                    .putConfiguredProperty("httpResponseCode", "501")
                     .putMetadata("configured", "true")
                     .build();
 

@@ -182,8 +182,9 @@ public class EndpointController {
                 while (part.startsWith("/")) {
                     part = part.substring(1);
                 }
-                while (part.endsWith("/")) {
-                    part = part.substring(part.length() - 1);
+
+                while (res.length() > 0 && res.lastIndexOf("/") == res.length() - 1) {
+                    res.deleteCharAt(res.length() - 1);
                 }
                 res.append('/').append(part);
             }

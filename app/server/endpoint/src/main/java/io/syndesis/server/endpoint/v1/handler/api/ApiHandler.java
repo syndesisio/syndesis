@@ -107,9 +107,14 @@ public class ApiHandler extends BaseHandler {
     public Integration createIntegrationFromAPIAndSave(@MultipartForm final APIFormData apiFormData) {
         Integration integrationData = createIntegrationFromAPI(apiFormData);
 
+        String name = integrationData.getName();
+        if (name == null) {
+            name = KeyGenerator.createKey();
+        }
+
         Integration integration = new Integration.Builder()
             .createFrom(integrationData)
-            .name("test-" + KeyGenerator.createKey())
+            .name(name)
             .createdAt(System.currentTimeMillis())
             .build();
 

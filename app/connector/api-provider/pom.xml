@@ -60,6 +60,10 @@
       <artifactId>javax.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>io.syndesis.integration</groupId>
+      <artifactId>integration-component-proxy</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
