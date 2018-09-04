@@ -102,7 +102,11 @@
           "description": "Enter any information about this data type that might be helpful to you."
         },
         "delete-step-modal": "Are you sure you want to delete this step from the integration?",
-        "delete-step-modal-title": "Confirm Delete?"
+        "delete-step-modal-title": "Confirm Delete?",
+        "cancel-edit-modal": "If you cancel now you will lose any unsaved work. Do you still want to cancel?",
+        "cancel-edit-modal-lead": "Do you really want to cancel?",
+        "cancel-edit-modal-primary-text": "Yes",
+        "cancel-edit-modal-secondary-text": "No"
       }
     },
     "connections": {
