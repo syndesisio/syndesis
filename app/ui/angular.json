@@ -61,6 +61,12 @@
             ]
           },
           "configurations": {
+            "it": {
+              "aot": true,
+              "i18nFile": "src/locale/messages.it.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "it"
+            },
             "production": {
               "optimization": true,
               "outputHashing": "all",
@@ -76,7 +82,10 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
-              ]
+              ],
+              "i18nFile": "src/locale/messages.en.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "en"
             }
           }
         },
@@ -86,6 +95,9 @@
             "browserTarget": "syndesis-ui:build"
           },
           "configurations": {
+            "it": {
+              "browserTarget": "syndesis-ui:build:it"
+            },
             "production": {
               "browserTarget": "syndesis-ui:build:production"
             }

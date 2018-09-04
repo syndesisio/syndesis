@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file target-language="it" original="ng2.template" source-language="en" datatype="plaintext">
+        <body>
+            <trans-unit datatype="html" id="menu.navbartoggle">
+                <source>Toggle navigation</source>
+                <target>Mostra/nascondi la barra di navigazione</target>
+                <note from="description" priority="1">The sidebar toggle button, also known as hamburger icon</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">33</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit datatype="html" id="header.helpmenu.title">
+                <source>Help</source>
+                <target>Aiuto</target>
+                <note from="description" priority="1">Dropdown title</note>
+                <note from="meaning" priority="1">Topbar - Help dropdown</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">59</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">208</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">209</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">214</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit datatype="html" id="header.helpmenu.sampletutorials">
+                <source>Sample Integration Tutorials</source>
+                <target>Tutorial per una integrazione di esempio</target>
+                <note from="description" priority="1">Title of the Customer Portal link</note>
+                <note from="meaning" priority="1">Topbar - Help dropdown</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">68</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">223</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit datatype="html" id="header.helpmenu.userguide">
+                <source>User Guide</source>
+                <target>Guida utente</target>
+                <note from="description" priority="1">Title of the Customer Portal link</note>
+                <note from="meaning" priority="1">Topbar - Help dropdown</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">76</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">231</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit datatype="html" id="header.helpmenu.connectorsguide">
+                <source>Connectors Guide</source>
+                <target>Guida ai Connettori</target>
+                <note from="description" priority="1">Title of the Customer Portal link</note>
+                <note from="meaning" priority="1">Topbar - Help dropdown</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">83</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">238</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="b5629d298ff1a69b8db19a4ba2995c76b52da604" datatype="html">
+                <source>Support</source>
+                <target>Supporto</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">85</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">240</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit datatype="html" id="header.helpmenu.contactus">
+                <source>Contact Us</source>
+                <target>Contattaci</target>
+                <note from="description" priority="1">Title of the Customer Portal link</note>
+                <note from="meaning" priority="1">Topbar - Help dropdown</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">93</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">248</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="logout" datatype="html">
+                <source>Logout</source>
+                <target>Logout</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">127</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">197</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit datatype="html" id="sidebar.home">
+                <source>Home</source>
+                <target>Home</target>
+                <note from="description" priority="1">Navigation item</note>
+                <note from="meaning" priority="1">Sidebar</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">154</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">155</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit datatype="html" id="sidebar.integrations">
+                <source>Integrations</source>
+                <target>Integrazioni</target>
+                <note from="description" priority="1">Navigation item</note>
+                <note from="meaning" priority="1">Sidebar</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">160</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">161</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit datatype="html" id="sidebar.connections">
+                <source>Connections</source>
+                <target>Connessioni</target>
+                <note from="description" priority="1">Navigation item</note>
+                <note from="meaning" priority="1">Sidebar</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">166</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">167</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit datatype="html" id="sidebar.customizations">
+                <source>Customizations</source>
+                <target>Personalizzazioni</target>
+                <note from="description" priority="1">Navigation item</note>
+                <note from="meaning" priority="1">Sidebar</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">172</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">173</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit datatype="html" id="sidebar.settings">
+                <source>Settings</source>
+                <target>Configurazioni</target>
+                <note from="description" priority="1">Navigation item</note>
+                <note from="meaning" priority="1">Sidebar</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">178</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">179</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit datatype="html" id="sidebar.user">
+                <source>User</source>
+                <target>Utente</target>
+                <note from="description" priority="1">Navigation item</note>
+                <note from="meaning" priority="1">Sidebar</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">186</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">187</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit datatype="html" id="import-db-txt">
+                <source>Select the data file to import:</source>
+                <target>Seleziona il file da importare:</target>
+                <note from="description" priority="1">Import selection modal</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">app/app.component.ts</context>
+                    <context context-type="linenumber">261</context>
+                </context-group>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

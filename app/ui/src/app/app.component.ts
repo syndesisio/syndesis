@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, Inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Inject, LOCALE_ID } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
@@ -56,6 +56,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   appName = 'Syndesis';
 
   /**
+   * @type {string}
+   * Version of the application. Used to generate links to external resources.
+   */
+  appVersion = '0.0';
+
+  /**
    * @type {boolean}
    * Flag used to determine whether or not the user is a first time user.
    */
@@ -81,6 +87,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private modalService: ModalService,
     private title: Title,
     private meta: Meta,
+    @Inject(LOCALE_ID) private locale: string,
     @Inject(DOCUMENT) private document: any
   ) {}
 
@@ -88,6 +95,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new PlatformActions.AppBootstrap());
 
     this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
+    this.appVersion = this.config.getSettings('branding', 'appVersion', '99.99');
     this.title.setTitle(this.appName);
     this.meta.updateTag({ content: this.appName }, 'id="appName"');
     this.meta.updateTag({ content: this.appName }, 'id="appTitle"');
