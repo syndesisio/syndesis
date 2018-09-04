@@ -133,7 +133,7 @@
         }
       },
       "actionType": "connector",
-      "pattern": "To"
+      "pattern": "Pipe"
     }
   ]
 }

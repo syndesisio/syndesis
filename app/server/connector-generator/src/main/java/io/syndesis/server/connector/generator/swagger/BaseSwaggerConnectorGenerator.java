@@ -228,7 +228,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                     .id(createActionId(connectorId, connectorGav, operation))//
                     .name(description.name)//
                     .description(description.description)//
-                    .pattern(Action.Pattern.To)//
+                    .pattern(Action.Pattern.Pipe)//
                     .descriptor(descriptor).tags(ofNullable(operation.getTags()).orElse(Collections.emptyList()))//
                     .build();
 
