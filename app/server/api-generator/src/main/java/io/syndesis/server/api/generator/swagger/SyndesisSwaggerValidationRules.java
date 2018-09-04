@@ -263,12 +263,12 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
             return info;
         }
 
-        final SwaggerModelInfo.Builder withErrors = new SwaggerModelInfo.Builder().createFrom(info);
-        withErrors.addError(new Violation.Builder()//
+        final SwaggerModelInfo.Builder withWarnings = new SwaggerModelInfo.Builder().createFrom(info);
+        withWarnings.addWarning(new Violation.Builder()//
             .error("missing-operation-ids")
-            .message(countNoOpId + "Operations have no operationId").build());
+            .message("Some operations (" + countNoOpId + ") have no operationId").build());
 
-        return withErrors.build();
+        return withWarnings.build();
     }
 
     private static <T> List<T> notNull(final List<T> value) {

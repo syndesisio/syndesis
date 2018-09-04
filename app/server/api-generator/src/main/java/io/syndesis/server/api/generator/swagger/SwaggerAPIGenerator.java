@@ -17,6 +17,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.api.generator.APIGenerator;
@@ -29,8 +30,10 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -101,8 +104,10 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
         Integration.Builder integration = new Integration.Builder()
             .id(KeyGenerator.createKey())
+            .createdAt(System.currentTimeMillis())
             .name(name);
 
+        Set<String> alreadyUsedOperationIds = new HashSet<>();
         Map<String, Path> paths = swagger.getPaths();
         for (Map.Entry<String, Path> pathEntry : paths.entrySet()) {
             Path path = pathEntry.getValue();
@@ -113,13 +118,9 @@ public class SwaggerAPIGenerator implements APIGenerator {
                 String operationName = operation.getSummary();
                 String operationDescription = operationEntry.getKey() + " " + pathEntry.getKey();
 
-                String operationId = operation.getOperationId();
-                if (operationId == null) {
-                    // TODO relax this constraint using strategy from connector generator
-                    throw new IllegalArgumentException("Missing operation ID operation " + operationName + " at " + operationDescription);
-                }
-
-
+                String operationId = requireUniqueOperationId(operation.getOperationId(), alreadyUsedOperationIds);
+                alreadyUsedOperationIds.add(operationId);
+                operation.setOperationId(operationId); // Update swagger spec
 
                 String key = KeyGenerator.createKey();
 
@@ -172,11 +173,14 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
         }
 
+        // TODO: evaluate what can be shrinked (e.g. SwaggerHelper#minimalSwaggerUsedByComponent)
+        byte[] updatedSwagger = Json.toString(swagger).getBytes(StandardCharsets.UTF_8);
+
         String apiId = KeyGenerator.createKey();
         OpenApi api = new OpenApi.Builder()
             .id(apiId)
             .name(name)
-            .document(specification.getBytes(StandardCharsets.UTF_8))
+            .document(updatedSwagger)
             .build();
 
         integration.addResource(new ResourceIdentifier.Builder()
@@ -186,4 +190,21 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
         return new APIIntegration(integration.build(), api);
     }
+
+    protected String requireUniqueOperationId(String preferredOperationId, Set<String> alreadyUsedOperationIds) {
+        String baseId = preferredOperationId;
+        if (baseId == null) {
+            baseId = "operation";
+        }
+        // Sanitize for using it in direct
+        baseId = baseId.replaceAll("[^A-Za-z0-9-_]", "");
+
+        int counter = 0;
+        String newId = baseId;
+        while (alreadyUsedOperationIds.contains(newId)) {
+            newId = baseId + "-" + (++counter);
+        }
+        return newId;
+    }
+
 }

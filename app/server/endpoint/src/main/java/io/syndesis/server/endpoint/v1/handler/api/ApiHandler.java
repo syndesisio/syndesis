@@ -17,6 +17,7 @@ package io.syndesis.server.endpoint.v1.handler.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Integration;
@@ -25,6 +26,7 @@ import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
+import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
@@ -68,13 +70,7 @@ public class ApiHandler extends BaseHandler {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation("Provides a integration from a API specification. Does not store it in the database")
     public Integration createIntegrationFromAPI(@MultipartForm final APIFormData apiFormData) {
-        final String spec;
-        try (BufferedSource source = Okio.buffer(Okio.source(apiFormData.getSpecification()))) {
-            spec = source.readUtf8();
-        } catch (IOException e) {
-            throw SyndesisServerException.launderThrowable("Failed to read specification", e);
-        }
-
+        String spec = getSpec(apiFormData);
         Connection apiProviderConnection = getDataManager().fetch(Connection.class, API_PROVIDER_CONNECTION_ID);
         if (apiProviderConnection == null) {
             throw new IllegalStateException("Cannot find api-provider connection with id: " + API_PROVIDER_CONNECTION_ID);
@@ -103,23 +99,39 @@ public class ApiHandler extends BaseHandler {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation("Test resource for testing the creation of APIs without UI")
-    // TODO: delete me
     public Integration createIntegrationFromAPIAndSave(@MultipartForm final APIFormData apiFormData) {
-        Integration integrationData = createIntegrationFromAPI(apiFormData);
+        Integration integration = createIntegrationFromAPI(apiFormData);
 
-        String name = integrationData.getName();
+        String name = integration.getName();
         if (name == null) {
-            name = KeyGenerator.createKey();
+            integration = new Integration.Builder()
+                .createFrom(integration)
+                .name(KeyGenerator.createKey())
+                .build();
         }
-
-        Integration integration = new Integration.Builder()
-            .createFrom(integrationData)
-            .name(name)
-            .createdAt(System.currentTimeMillis())
-            .build();
 
         getDataManager().store(integration, Integration.class);
         return integration;
+    }
+
+    @POST
+    @Path("/info")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @ApiOperation("Validates the API and provides a summary of the operations")
+    public APISummary info(@MultipartForm final APIFormData apiFormData) {
+        String spec = getSpec(apiFormData);
+        return apiGenerator.info(spec, APIValidationContext.PROVIDED_API);
+    }
+
+    protected String getSpec(APIFormData apiFormData) {
+        final String spec;
+        try (BufferedSource source = Okio.buffer(Okio.source(apiFormData.getSpecification()))) {
+            spec = source.readUtf8();
+        } catch (IOException e) {
+            throw SyndesisServerException.launderThrowable("Failed to read specification", e);
+        }
+        return spec;
     }
 
     public static class APIFormData {
