@@ -1,3 +1,9 @@
+---
+name: User Interface
+about: Template for UI related issues (including e.g. screenshots)
+
+---
+
 ## This is a...
 <!-- Check ONLY one of the following options with "x" -->
 <pre><code>
