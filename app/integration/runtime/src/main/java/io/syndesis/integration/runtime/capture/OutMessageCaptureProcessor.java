@@ -22,6 +22,7 @@ import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
+import org.apache.camel.impl.MessageSupport;
 
 /**
  * Used to capture the out messages of processors with configured ids.  The messages are placed into
@@ -39,6 +40,9 @@ public class OutMessageCaptureProcessor implements Processor {
         if (id != null) {
             Message copy = message.copy();
             Map<String, Message> outMessagesMap = getCapturedMessageMap(exchange);
+            if (copy instanceof MessageSupport && copy.getExchange() == null) {
+                ((MessageSupport) copy).setExchange(message.getExchange());
+            }
 
             outMessagesMap.put(id, copy);
         }
