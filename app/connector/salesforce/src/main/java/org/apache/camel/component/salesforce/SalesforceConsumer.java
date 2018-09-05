@@ -145,6 +145,7 @@ public class SalesforceConsumer extends DefaultConsumer {
 
         try {
             getAsyncProcessor().process(exchange, new AsyncCallback() {
+                @Override
                 public void done(boolean doneSync) {
                     // noop
                     if (log.isTraceEnabled()) {
