@@ -1,15 +1,15 @@
 [id='comparison-of-sample-integrations']
-= Comparison of sample integrations
+= Choose the sample integration to create first
 
 You can create the sample integrations in any order. To help you decide
 which one to try first, the following table compares them.
 
 [cols="4*"]
 |===
-|*Comparison Point*
-|*Twitter to Salesforce*
-|*Salesforce to Database*
-|*AMQ to REST API*
+|&nbsp;
+|<<twitter-to-salesforce,Twitter to Salesforce>>
+|<<salesforce-to-db,Salesforce to Database>>
+|<<amq-to-rest-api,AMQ to REST API>>
 
 |Average time to complete
 |25 minutes. This includes the time needed to obtain Twitter and Salesforce accounts.

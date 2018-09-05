@@ -14,6 +14,8 @@ to receive messages from the queue you specify.
 the name of the queue to obtain data from.
 . Click in the *Destination Type* field and select *Queue*.
 . Leave the other fields blank.
+. Click *Next*. {prodname} prompts you to specify the output data type. 
+This is not needed for this sample integration. 
 . Click *Done* to add the start connection to the integration.
 
 After connecting to AMQ, the integration watches for

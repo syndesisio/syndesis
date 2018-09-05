@@ -7,3 +7,6 @@ This account must have Salesforce API access, which is available in a
 Salesforce Enterprise account or a Salesforce Developer account. To obtain
 a free developer account, visit https://developer.salesforce.com/signup.
 It takes less than two minutes to obtain a Salesforce account.
+
+Also, you must be logged in to your {prodname} environment. 
+See <<logging-in-and-out>>.

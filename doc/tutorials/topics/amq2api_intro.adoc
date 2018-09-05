@@ -20,6 +20,9 @@ and extending {prodname} by leading you through the procedures for:
 
 {prodname} provides the extension file and the OpenAPI file.
 
+To create this integration, you must be logged in to {prodname}.
+See <<logging-in-and-out>>. 
+
 To implement the AMQ to REST API sample integration, the main steps are:
 
 . <<amq2api-create-amq-connection>>
