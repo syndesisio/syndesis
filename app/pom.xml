@@ -652,6 +652,9 @@
           <groupId>org.basepom.maven</groupId>
           <artifactId>duplicate-finder-maven-plugin</artifactId>
           <configuration>
+            <ignoredClassPatterns>
+              <ignoredClassPattern>org.apache.camel.component.salesforce.SalesforceConsumer</ignoredClassPattern>
+            </ignoredClassPatterns>
             <ignoredResourcePatterns combine.children="append">
               <ignoredResourcePattern>resources/catalog.cat</ignoredResourcePattern>
               <ignoredResourcePattern>mozilla/public-suffix-list.txt</ignoredResourcePattern>

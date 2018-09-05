@@ -188,15 +188,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.basepom.maven</groupId>
-        <artifactId>duplicate-finder-maven-plugin</artifactId>
-        <configuration>
-          <ignoredClassPatterns>
-            <ignoredClassPattern>org.apache.camel.component.salesforce.SalesforceConsumer</ignoredClassPattern>
-          </ignoredClassPatterns>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
