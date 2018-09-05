@@ -15,6 +15,8 @@ Salesforce Enterprise account or a Salesforce Developer account. To obtain
 a free developer account, visit https://developer.salesforce.com/signup.
 It takes less than two minutes to obtain a Salesforce account.
 
+* You must be logged in to your {prodname} environment. See <<logging-in-and-out>>. 
+
 ////
 * Add the `TwitterScreenName` custom field to the Salesforce
 contact object. See the
