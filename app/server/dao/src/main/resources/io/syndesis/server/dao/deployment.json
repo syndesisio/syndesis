@@ -50,6 +50,17 @@
     }
   },
   {
+    "kind": "connection",
+    "data": {
+      "id": "api-provider",
+      "name": "API Provider",
+      "description": "Expose Restful APIs",
+      "icon": "fa-asterisk",
+      "connectorId": "api-provider",
+      "configuredProperties": {}
+    }
+  },
+  {
     "kind": "connector-template",
     "data": {
       "id": "swagger-connector-template",

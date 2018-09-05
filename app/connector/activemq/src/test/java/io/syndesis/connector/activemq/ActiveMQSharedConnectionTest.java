@@ -59,8 +59,8 @@ public class ActiveMQSharedConnectionTest extends ActiveMQConnectorTestSupport {
     @Test
     public void sharedConnectionTest() throws Exception {
         final String message = UUID.randomUUID().toString();
-        final SjmsComponent sjms1 = context.getComponent("sjms-sjms-0", SjmsComponent.class);
-        final SjmsComponent sjms2 = context.getComponent("sjms-sjms-1", SjmsComponent.class);
+        final SjmsComponent sjms1 = context.getComponent("sjms-sjms-0-0", SjmsComponent.class);
+        final SjmsComponent sjms2 = context.getComponent("sjms-sjms-0-1", SjmsComponent.class);
 
         Assertions.assertThat(sjms1).isEqualTo(sjms2);
 

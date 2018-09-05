@@ -19,7 +19,7 @@ import java.util.function.BiFunction;
 
 import javax.persistence.EntityNotFoundException;
 
-import io.syndesis.server.connector.generator.ConnectorGenerator;
+import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;

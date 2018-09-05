@@ -49,7 +49,7 @@ import io.swagger.annotations.ApiResponses;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.integration.api.IntegrationResourceManager;
-import io.syndesis.server.connector.generator.util.IconGenerator;
+import io.syndesis.server.api.generator.util.IconGenerator;
 import io.syndesis.server.dao.file.FileDAO;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.extension.converter.BinaryExtensionAnalyzer;

@@ -70,7 +70,7 @@ public class IntegrationConfiguration {
             }
 
             @Override
-            public Optional<OpenApi> loadOpeApiDefinition(String id) {
+            public Optional<OpenApi> loadOpenApiDefinition(String id) {
                 return Optional.ofNullable(dataManager.fetch(OpenApi.class, id));
             }
 

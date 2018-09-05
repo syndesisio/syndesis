@@ -18,6 +18,7 @@ package io.syndesis.common.model.openapi;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithMetadata;
 import io.syndesis.common.model.WithName;
@@ -28,6 +29,12 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = OpenApi.Builder.class)
 @SuppressWarnings("immutables")
 public interface OpenApi extends WithId<OpenApi>, WithName, WithVersion, WithMetadata, Serializable {
+
+    @Override
+    default Kind getKind() {
+        return Kind.OpenApi;
+    }
+
     /**
      * The OpenAPI document.
      */

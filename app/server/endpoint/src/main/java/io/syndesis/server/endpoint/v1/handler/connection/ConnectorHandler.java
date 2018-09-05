@@ -39,6 +39,7 @@ import javax.ws.rs.core.UriInfo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
+import io.syndesis.common.model.api.APISummary;
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.file.IconDao;
@@ -50,7 +51,6 @@ import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.connection.ConnectorSummary;
 import io.syndesis.common.model.filter.FilterOptions;
 import io.syndesis.common.model.filter.Op;
 import io.syndesis.common.model.icon.Icon;
@@ -121,7 +121,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             return connector;
         }
 
-        final ConnectorSummary summary = new ConnectorSummary.Builder().createFrom(connector).build();
+        final APISummary summary = new APISummary.Builder().createFrom(connector).build();
 
         return connector.builder().actionsSummary(summary.getActionsSummary()).build();
     }
@@ -164,7 +164,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     public ListResult<Connector> list(final UriInfo uriInfo) {
         final List<Connector> connectors = Lister.super.list(uriInfo).getItems().stream()
             .map(c -> {
-                final ConnectorSummary summary = new ConnectorSummary.Builder().createFrom(c).build();
+                final APISummary summary = new APISummary.Builder().createFrom(c).build();
 
                 return c.builder().actionsSummary(summary.getActionsSummary()).build();
             })

@@ -81,7 +81,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         // Camel
         final String scheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
         final CamelContext context = builder.getContext();
-        final String componentId = scheme + "-" + stepIndex;
+        final String componentId = scheme + "-" + flowIndex + "-" + stepIndex;
         final ComponentProxyComponent component = resolveComponent(componentId, scheme, context, connector, descriptor);
         final List<String> customizers = CollectionsUtils.aggregate(ArrayList::new, connector.getConnectorCustomizers(), descriptor.getConnectorCustomizers());
         final Map<String, String> properties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());

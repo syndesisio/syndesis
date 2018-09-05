@@ -15,12 +15,12 @@
  */
 package io.syndesis.server.runtime.connector;
 
-import io.syndesis.server.connector.generator.ConnectorGenerator;
+import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
-import io.syndesis.common.model.connection.ConnectorSummary;
+import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.server.runtime.BaseITCase;
 import org.junit.Before;
@@ -61,10 +61,10 @@ public class ConnectorTemplateITCase extends BaseITCase {
                 }
 
                 @Override
-                public ConnectorSummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+                public APISummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
                     final Connector base = generateTestConnector(connectorTemplate, connectorSettings);
 
-                    return new ConnectorSummary.Builder().createFrom(base).actionsSummary(ACTIONS_SUMMARY).build();
+                    return new APISummary.Builder().createFrom(base).actionsSummary(ACTIONS_SUMMARY).build();
                 }
 
                 Connector generateTestConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {

@@ -90,7 +90,7 @@ public class EndpointStepHandler implements IntegrationStepHandler, IntegrationS
         // any configuredProperties on action descriptor are considered
         properties.putAll(descriptor.getConfiguredProperties());
 
-        String uri = String.format("%s-%s", componentScheme, stepIndex);
+        String uri = String.format("%s-%s-%s", componentScheme, flowIndex, stepIndex);
 
         if (ObjectHelper.isNotEmpty(uri) && ObjectHelper.isNotEmpty(properties)) {
             try {

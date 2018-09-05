@@ -154,7 +154,7 @@ public class ConnectorStepHandlerTest extends IntegrationTestSupport {
             context.start();
 
             assertThat(context.getComponentNames()).contains("twitter-timeline");
-            assertThat(context.getComponentNames()).doesNotContain("twitter-timeline-twitter-timeline-1");
+            assertThat(context.getComponentNames()).doesNotContain("twitter-timeline-twitter-timeline-0-1");
 
             for (Endpoint endpoint: context.getEndpoints()) {
                 if (endpoint instanceof TwitterTimelineEndpoint) {
@@ -164,7 +164,7 @@ public class ConnectorStepHandlerTest extends IntegrationTestSupport {
                 }
                 if (endpoint instanceof ComponentProxyEndpoint) {
                     assertThat(endpoint.getEndpointUri()).isEqualTo(
-                        "twitter-timeline-0"
+                        "twitter-timeline-0-0"
                     );
                 }
             }

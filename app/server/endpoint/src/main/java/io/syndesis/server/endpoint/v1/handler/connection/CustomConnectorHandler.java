@@ -19,12 +19,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.dao.file.IconDao;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
-import io.syndesis.common.model.connection.ConnectorSummary;
 import io.syndesis.common.model.icon.Icon;
 import okio.BufferedSource;
 import okio.Okio;
@@ -122,7 +122,7 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation("Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
-    public ConnectorSummary info(final ConnectorSettings connectorSettings) {
+    public APISummary info(final ConnectorSettings connectorSettings) {
         return withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
             (generator, template) -> generator.info(template, connectorSettings));
     }
@@ -132,7 +132,7 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation("Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
-    public ConnectorSummary info(@MultipartForm final CustomConnectorFormData connectorFormData) {
+    public APISummary info(@MultipartForm final CustomConnectorFormData connectorFormData) {
         try {
             final String specification;
             try (BufferedSource source = Okio.buffer(Okio.source(connectorFormData.getSpecification()))) {

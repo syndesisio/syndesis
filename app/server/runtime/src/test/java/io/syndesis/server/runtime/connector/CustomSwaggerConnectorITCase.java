@@ -19,13 +19,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import io.syndesis.server.connector.generator.ConnectorGenerator;
-import io.syndesis.server.connector.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
+import io.syndesis.common.model.api.APISummary;
+import io.syndesis.server.api.generator.ConnectorGenerator;
+import io.syndesis.server.api.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
-import io.syndesis.common.model.connection.ConnectorSummary;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.server.runtime.BaseITCase;
 
@@ -90,11 +90,11 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
     public void shouldOfferCustomConnectorInfoForUploadedSwagger() throws IOException, JSONException {
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build();
 
-        final ResponseEntity<ConnectorSummary> response = post("/api/v1/connectors/custom/info",
+        final ResponseEntity<APISummary> response = post("/api/v1/connectors/custom/info",
             multipartBodyForInfo(connectorSettings, getClass().getResourceAsStream("/io/syndesis/server/runtime/test-swagger.json")),
-            ConnectorSummary.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+            APISummary.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        final ConnectorSummary expected = new ConnectorSummary.Builder()// \
+        final APISummary expected = new APISummary.Builder()// \
             .name("Todo App API")//
             .description("unspecified")//
             .actionsSummary(TestConfiguration.ACTIONS_SUMMARY)//
@@ -102,10 +102,10 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
                 .message("Operation DELETE /api/{id} does not provide a response schema for code 204").build())
             .build();
 
-        final ConnectorSummary got = response.getBody();
+        final APISummary got = response.getBody();
 
         assertThat(got).isEqualToIgnoringGivenFields(expected, "icon", "configuredProperties");
-        assertThat(got.getIcon()).startsWith("data:image");
+        assertThat(got.getIcon()).matches(s -> s.isPresent() && s.get().startsWith("data:image"));
         assertThat(got.getConfiguredProperties().keySet()).containsOnly("specification");
         JSONAssert.assertEquals(got.getConfiguredProperties().get("specification"),
             IOUtils.toString(getClass().getResourceAsStream("/io/syndesis/server/runtime/test-swagger.json"), StandardCharsets.UTF_8),

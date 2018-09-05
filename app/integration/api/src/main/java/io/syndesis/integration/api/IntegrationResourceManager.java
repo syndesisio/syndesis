@@ -74,7 +74,7 @@ public interface IntegrationResourceManager {
     /**
      *  Load an OpenApi definition from the underlying storage by id.
      */
-    Optional<OpenApi> loadOpeApiDefinition(String id);
+    Optional<OpenApi> loadOpenApiDefinition(String id);
 
     /**
      * Decrypt a property.
