@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -130,11 +129,7 @@ public class DataManager implements DataAccessObjectRegistry {
     private void loadData() {
         try {
             final ResourcePatternResolver resolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
-            Stream<Resource> resources1 = Arrays.stream(resolver.getResources("classpath:/META-INF/syndesis/connector/*.json"));
-            Stream<Resource> resources2 = Arrays.stream(resolver.getResources("classpath:/META-INF/syndesis/api-connectors/*.json"));
-            final Resource[] resources = Stream.concat(resources1, resources2).toArray(
-                    size -> new Resource[size]);
-
+            final Resource[] resources = resolver.getResources("classpath:/META-INF/syndesis/connector/*.json");
             if (resources != null) {
                 ReadApiClientData reader = new ReadApiClientData(encryptionComponent);
 

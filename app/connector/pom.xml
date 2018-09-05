@@ -60,6 +60,7 @@
     <module>twitter</module>
     <module>servicenow</module>
     <module>webhook</module>
+    <module>concur</module>
   </modules>
 
   <build>
