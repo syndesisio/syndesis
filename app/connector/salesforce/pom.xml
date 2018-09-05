@@ -27,6 +27,9 @@
 
   <artifactId>connector-salesforce</artifactId>
   <name>Connector :: Salesforce</name>
+  <properties>
+    <bayeux-api.version>3.1.2</bayeux-api.version>
+  </properties>
   <packaging>jar</packaging>
 
   <dependencyManagement>
@@ -114,6 +117,15 @@
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.cometd.java</groupId>
+      <artifactId>bayeux-api</artifactId>
+      <version>${bayeux-api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
 
     <!-- test -->
     <dependency>
@@ -175,6 +187,15 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredClassPatterns>
+            <ignoredClassPattern>org.apache.camel.component.salesforce.SalesforceConsumer</ignoredClassPattern>
+          </ignoredClassPatterns>
+        </configuration>
       </plugin>
     </plugins>
   </build>
