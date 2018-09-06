@@ -44,7 +44,6 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   displayDefinitionEditor = false;
   editorHasChanges = false;
   validationResponse: CustomConnectorRequest;
-  enableEditor = true;
 
   @ViewChild('_apiEditor') _apiEditor: ApiEditorComponent;
   apiDef: ApiDefinition;
@@ -111,16 +110,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
 
           reader.readAsText( apiConnectorState.specificationFile );
         } else {
-          this.enableEditor = false;
-
-          const fetch$ = Observable
-            .from(fetch(apiConnectorState.configuredProperties.specification))
-            .flatMap(response => response.json());
-
-          fetch$.subscribe(spec => {
-            this.apiDef.spec = spec;
-            this.enableEditor = true;
-          });
+          this.apiDef.spec = apiConnectorState.configuredProperties.specification;
         }
       });
 
