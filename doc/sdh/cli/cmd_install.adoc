@@ -29,6 +29,8 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
     --dev                 Prepare for development of Syndesis so that S2I builds of
                           Syndesis images are picked up properly (implies --watch)
     --force               Override an existing "Syndesis" if present
+-r  --route <route>       Use the given route.
+                          By default "syndesis.<minishift ip>.nip.io" is used.
 -w  --watch               Wait until cluster is up
     --local               install from local Git repo when using. By default the
                           resource descriptor is downloaded from GitHub remotely.
