@@ -25,7 +25,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
@@ -44,7 +43,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
-
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -73,7 +71,6 @@ import io.syndesis.common.model.integration.IntegrationEndpoint;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.validation.AllValidations;
-import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.SuppressFBWarnings;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
@@ -93,7 +90,6 @@ import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.util.DataManagerSupport;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -365,10 +361,15 @@ public class IntegrationHandler extends BaseHandler
             // this means that the integration is an old integration that
             // does not have the concept of flows so let's create a flow
             // which wraps the configured steps.
+            //
+            // We do generate a stable flowId based on integration id the endpoint
+            // is invoked multiple times, the flow id does not change.
+            //
             builder.addFlow(
                 new Flow.Builder()
-                    .id(KeyGenerator.createKey())
-                    .name("default")
+                    .id(String.format("%s:flows:fromSteps", integration.getId().get()))
+                    .name(integration.getName())
+                    .description(integration.getDescription())
                     .steps(integration.getSteps())
                     .build()
             );
