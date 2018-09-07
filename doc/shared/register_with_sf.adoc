@@ -24,6 +24,9 @@ of {prodname} as a Salesforce client. However, while each Salesforce
 connection uses the same registration, it can use different user
 credentials. 
 
+To complete this procedure, you must be logged in to your {prodname}
+environment. If you are not already logged in, see <<logging-in-and-out>>. 
+
 Perform these steps to register {prodname} as a Salesforce client application:
 
 . In {prodname}:
@@ -63,9 +66,9 @@ image:shared/images/SF-message-to-wait-a-few-minutes.png[title="Short Wait"]
 .. Copy the consumer key that Salesforce provides.
 . Return to your {prodname} *Settings* page and paste the
 Salesforce-provided
-consumer key into the Salesforce *Client ID* field.
-. Back in Salesforce, copy the consumer secret that Salesforce provides.
+consumer key into the {prodname} Salesforce *Client ID* field.
+. Return to Salesforce and copy the consumer secret that Salesforce provides.
 . Return to your {prodname} *Settings* page and paste the
-Salesforce-provided consumer secret into the Salesforce
+Salesforce-provided consumer secret into the {prodname} Salesforce
 *Client Secret* field.
 . Click *Save* and then click *Ok*.

@@ -6,8 +6,7 @@ To start the AMQ broker:
 
 . In a browser, go to the 
 https://console.fuse-ignite.openshift.com/console/[OpenShift Web Console, window="_blank"]. 
-Your installation of
-{prodname} runs on OpenShift Online.
+Your {prodname} environment runs on OpenShift Online.
 
 . In the console, click the name of your {prodname} project, which is
 something like `proj123456`.

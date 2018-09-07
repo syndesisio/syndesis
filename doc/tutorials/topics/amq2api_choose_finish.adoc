@@ -3,7 +3,7 @@
 
 To add the finish connection to the integration:
 
-. On the *Choose a Finish Connection* page, click the To Do app
+. In {prodname}, on the *Choose a Finish Connection* page, click the To Do app
 connection that you created. If you assigned the example name, you would
 click *Todo App API Client*.
 

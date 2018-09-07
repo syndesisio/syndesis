@@ -4,7 +4,7 @@
 Add a data mapping step that correlates Twitter mention fields to
 Salesforce contact fields:
 
-. In the left panel, hover over the plus sign between the filter
+. In {prodname}, in the left panel, hover over the plus sign between the filter
 step and the finish connection to display a pop-up in which
 you click *Add a Step*.
 . Click *Data Mapper* and wait a few moments. When the data fields

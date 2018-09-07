@@ -3,7 +3,7 @@
 
 To confirm that the Twitter to Salesforce sample integration is working:
 
-. In the panel on the left, click *Integrations* to see that the integration you
+. In {prodname} in the panel on the left, click *Integrations* to see that the integration you
 created is a *Running* integration. If you entered the example name, you
 would see that *Twitter to Salesforce Sample Integration* is running.
 
