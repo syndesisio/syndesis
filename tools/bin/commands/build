@@ -204,7 +204,7 @@ rsync_source_to_minishift() {
     mkdir_on_minishift $minishift_build_dir $minishift_build_dir/dep-cache $minishift_build_dir/vendor
 
     rsync -az \
-          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.minishift/machines/minishift/id_rsa"\
+          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes -o PasswordAuthentication=no -i ~/.minishift/machines/minishift/id_rsa"\
           --progress \
           ${operator_source_dir}/ \
           docker@$(minishift ip):${minishift_build_dir}
@@ -224,7 +224,7 @@ rsync_binary_from_minishift() {
     echo "Rsync compiled $operator_bin back to $local_target_dir"
 
     rsync -az \
-          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i~/.minishift/machines/minishift/id_rsa"\
+          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes -o PasswordAuthentication=no -i ~/.minishift/machines/minishift/id_rsa"\
           --progress \
           docker@$(minishift ip):${operator_bin} \
           $local_target_dir
