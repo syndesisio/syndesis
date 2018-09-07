@@ -15,6 +15,17 @@
  */
 package io.syndesis.server.api.generator.swagger;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
+
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
@@ -42,17 +53,6 @@ import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static java.util.Optional.ofNullable;
 
 public class SwaggerAPIGenerator implements APIGenerator {
 
@@ -116,13 +116,16 @@ public class SwaggerAPIGenerator implements APIGenerator {
             .flatMap(i -> ofNullable(i.getTitle()))
             .orElse(null);
 
+        String integrationId = KeyGenerator.createKey();
+
         Integration.Builder integration = new Integration.Builder()
-            .id(KeyGenerator.createKey())
+            .id(integrationId)
             .createdAt(System.currentTimeMillis())
             .name(name);
 
         Set<String> alreadyUsedOperationIds = new HashSet<>();
         Map<String, Path> paths = swagger.getPaths();
+
         for (Map.Entry<String, Path> pathEntry : paths.entrySet()) {
             Path path = pathEntry.getValue();
 
@@ -135,8 +138,6 @@ public class SwaggerAPIGenerator implements APIGenerator {
                 String operationId = requireUniqueOperationId(operation.getOperationId(), alreadyUsedOperationIds);
                 alreadyUsedOperationIds.add(operationId);
                 operation.setOperationId(operationId); // Update swagger spec
-
-                String key = KeyGenerator.createKey();
 
                 DataShape startDataShape = dataShapeGenerator.createShapeFromRequest(info.getResolvedJsonGraph(), swagger, operation);
                 Action startAction = template.getStartAction().orElseThrow(() -> new IllegalStateException("cannot find start action"));
@@ -175,7 +176,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     .build();
 
                 Flow flow = new Flow.Builder()
-                    .id(key)
+                    .id(String.format("%s:flows:%s", integrationId, operationId))
                     .addStep(startStep)
                     .addStep(endStep)
                     .name(operationName)
