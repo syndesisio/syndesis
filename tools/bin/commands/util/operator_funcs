@@ -85,6 +85,19 @@ build_operator() {
     fi
 }
 
+create_multi_stage_operator_image() {
+    local operator_dir=${1}
+    local tag=${2:-latest}
+
+    local build_dir=$(prepare_multistage_docker_context "$operator_dir")
+    pushd $build_dir > /dev/null
+    trap "rm -rf $build_dir" EXIT
+
+    echo "Creating multi stage image $OPERATOR_IMAGE:$tag via Docker"
+    docker build -t $OPERATOR_IMAGE:${tag} .
+    popd
+}
+
 create_operator_image() {
     local operator_dir=${1}
     local do_docker=${2:-}
@@ -119,6 +132,20 @@ create_operator_image() {
     oc start-build --from-archive=$arch syndesis-operator
 
     popd
+}
+
+prepare_multistage_docker_context() {
+    local operator_dir="${1}"
+    local dir=$(mktemp -d)
+
+    cp $operator_dir/Dockerfile-with-build ${dir}/Dockerfile
+    cp $operator_dir/Gopkg* ${dir}/
+    for i in "cmd" "pkg" "test" "tmp"; do
+        rsync -a $operator_dir/${i} ${dir}/ 2>&1 >/dev/null
+    done
+    cp $operator_dir/../syndesis.yml ${dir}/syndesis-template.yml
+
+    echo $dir
 }
 
 prepare_docker_context() {
