@@ -71,14 +71,12 @@
     </fieldset>
 
     <fieldset>
-      <div class="list-pf-actions">
-        <syndesis-button theme="default" type="button" (click)="onBackPressed()">
-          &lt; {{ 'shared.back' | synI18n }}
-        </syndesis-button>
-        <syndesis-button type="submit" [disabled]="authSetupForm.invalid">
-          {{ 'shared.next' | synI18n }}
-        </syndesis-button>
-      </div>
+      <syndesis-button theme="default" type="button" (click)="onBackPressed()">
+        &lt; {{ 'shared.back' | synI18n }}
+      </syndesis-button>
+      <syndesis-button type="submit" [disabled]="authSetupForm.invalid">
+        {{ 'shared.next' | synI18n }}
+      </syndesis-button>
     </fieldset>
   </form>
 </div>
