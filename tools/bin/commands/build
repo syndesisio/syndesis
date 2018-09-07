@@ -20,6 +20,7 @@ build::usage() {
     -f  --flash                    Skip checks and tests execution (fastest mode)
     -i  --image                    Build Docker via s2i images, too (for those modules creating images)
         --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
+        --multi-stage              Multi-stage Dockerfile support for operator build (experimental)
     -p  --project <project>        Specifies the project / namespace to create images
     -e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
     -l  --local                    If building the operator, use a locally installed go
@@ -136,10 +137,21 @@ do_operator() {
     echo "Building syndesis-operator"
     echo "=============================================================================="
 
+    local operator_dir="$top_dir/install/operator"
+
+    # New multi stage build for creating the operator image all in one step
+    if [ $(hasflag -i --image --docker) ] && [ $(hasflag --multi-stage) ]; then
+        if $(is_minishift_docker_daemon); then
+            echo "ERROR: Multistage build is not supported on Minishift as the Docker daemon in Minishift is too old"
+            exit 1
+        fi
+        create_multi_stage_operator_image "$operator_dir"
+        return
+    fi
+
     if [ ! $(hasflag -l --local) ] && $(is_minishift_docker_daemon); then
         echo "Building on Minishift"
         local minishift_build_dir="/opt/syndesis"
-        local operator_source_dir="$top_dir/install/operator"
 
         if [ $(hasflag --clean-cache) ]; then
             echo "Cleaning cache on Minishift"
@@ -147,11 +159,15 @@ do_operator() {
         fi
 
         ensure_rcp_on_minishift
-        rsync_source_to_minishift $operator_source_dir $minishift_build_dir
-        build_operator_from_dir $minishift_build_dir 1000
-        rsync_binary_from_minishift $minishift_build_dir/syndesis-operator $operator_source_dir
+        rsync_source_to_minishift "$operator_dir" "$minishift_build_dir"
+        build_operator_from_dir "$minishift_build_dir" 1000
+        rsync_binary_from_minishift "$minishift_build_dir/syndesis-operator" "$operator_dir"
     else
-        build_operator_from_dir $top_dir/install/operator
+        build_operator_from_dir "$operator_dir"
+    fi
+
+    if [ "$(hasflag -i --image --docker)" ]; then
+        create_operator_image "$operator_dir" "$(hasflag --docker)"
     fi
 }
 
@@ -162,10 +178,6 @@ build_operator_from_dir() {
         dep_ensure "$operator_dir" "$(hasflag -l --local)" "$as_user"
     fi
     build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$as_user"
-
-    if [ "$(hasflag -i --image --images --docker)" ]; then
-        create_operator_image "$operator_dir" "$(hasflag --docker)"
-    fi
 }
 
 is_minishift_docker_daemon() {
