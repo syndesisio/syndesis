@@ -3,7 +3,7 @@
 
 To confirm that the AMQ to REST API integration is working:
 
-. In the left panel, click *Integrations*.
+. In {prodname}, in the left panel, click *Integrations*.
 . Confirm that your AMQ to REST API integration is *Running*. 
 The integration must be *Running* before you continue with 
 these instructions.

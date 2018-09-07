@@ -1,6 +1,9 @@
 [id='amq2api-create-connection-to-amq-broker']
 = Create a connection to that AMQ broker
 
+To complete this procedure, you must be logged in to your {prodname}
+environment. If you are not already logged in, see <<logging-in-and-out>>. 
+
 To create a connection to the AMQ broker that is running in your
 Fuse Online project in OpenShift:
 

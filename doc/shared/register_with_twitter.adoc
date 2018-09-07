@@ -49,9 +49,10 @@ with my enterprise applications.`
 the *Keys and tokens* tab. 
 .. Copy the API key. 
 
-. Return to your {prodname} *Settings* page, paste the Twitter
-consumer API key into the Twitter *Consumer Key* field.
-. On the Twitter *Keys and tokens* tab, copy the consumer API secret key. 
-and paste it into the {prodname} Twitter
+. Return to your {prodname} *Settings* page and paste the Twitter
+consumer API key into the {prodname} Twitter *Consumer Key* field.
+. Return to the Twitter *Keys and tokens* tab and copy the consumer API secret key. 
+. Return to your {prodname} *Settings* page and paste the Twitter
+consumer API secret key into the {prodname} Twitter
 *Consumer Secret* field.
 . Click *Save* and then click *Ok*.

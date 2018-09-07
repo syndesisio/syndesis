@@ -1,7 +1,7 @@
 [id='t2sf-choose-finish-connection']
 = Choose the finish connection
 
-To add the finish connection to the integration:
+In {prodname}, to add the finish connection to the integration:
 
 . On the *Choose a Finish Connection* page, click the Salesforce
 connection you created. If you gave it the example name, you

@@ -3,7 +3,7 @@
 
 To add a step that maps Salesforce fields to database fields:
 
-. In the left panel, hover over the plus sign immediately after the
+. In {prodname}, in the left panel, hover over the plus sign immediately after the
 start connection to display a pop-up in which you click *Add a Step*.
 
 . Click *Data Mapper* and wait a few moments. When the data fields

@@ -1,7 +1,7 @@
 [id='t2sf-choose-start-connection']
 = Choose the start connection
 
-To choose the start connection:
+In {prodname}, to choose the start connection:
 
 . On the left, click *Integrations*.
 . In the upper right, click *Create Integration*.

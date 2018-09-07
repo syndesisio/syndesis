@@ -5,7 +5,7 @@ Add a basic filter step that checks tweets that mention you
 for particular content. The integration
 continues only if that content is present.
 
-To add a basic filter step:
+In {prodname}, to add a basic filter step:
 
 . In the main panel, click *Add a step*.
 . Click *Basic Filter*.

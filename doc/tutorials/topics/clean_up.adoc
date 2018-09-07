@@ -6,7 +6,7 @@
 When you are done working with a sample integration, stop it and
 delete it:
 
-. In the left panel, click *Integrations*.
+. In {prodname}, in the left panel, click *Integrations*.
 . In the main panel, identify the entry for the sample integration that 
 you want to stop.
 . In that entry, to the right, click

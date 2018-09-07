@@ -3,7 +3,7 @@
 
 To choose the start connection:
 
-. On the left, click *Integrations*.
+. In {prodname}, on the left, click *Integrations*.
 . Click *Create Integration*.
 . On the *Choose a Start Connection* page, click your
 Salesforce connection. If you specified the example name,
