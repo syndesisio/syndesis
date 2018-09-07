@@ -204,7 +204,7 @@ rsync_source_to_minishift() {
     mkdir_on_minishift $minishift_build_dir $minishift_build_dir/dep-cache $minishift_build_dir/vendor
 
     rsync -az \
-          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i~/.minishift/machines/minishift/id_rsa"\
+          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.minishift/machines/minishift/id_rsa"\
           --progress \
           ${operator_source_dir}/ \
           docker@$(minishift ip):${minishift_build_dir}
