@@ -52,14 +52,14 @@
 
   <fieldset>
     <syndesis-button *ngIf="showNextButton" type="button" theme="default" (click)="onBackPressed()">
-      &lt; {{ 'shared.back' | synI18n }}
+      {{ 'shared.back-button' | synI18n }}
     </syndesis-button>
 
     <syndesis-button *ngIf="showNextButton"
                      (click)="reviewComplete.emit({event: event, displayEditor: false})"
                      type="button"
                      theme="primary">
-      {{ 'shared.next' | synI18n }}
+      {{ 'shared.next-button' | synI18n }}
     </syndesis-button>
 
     <ng-template #editTooltip>
