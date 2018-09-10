@@ -72,6 +72,7 @@ import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.common.util.SuppressFBWarnings;
+import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.dao.manager.operators.IdPrefixFilter;
@@ -106,15 +107,17 @@ public class IntegrationHandler extends BaseHandler
     private final OpenShiftService openShiftService;
     private final Inspectors inspectors;
     private final EncryptionComponent encryptionSupport;
+    private final APIGenerator apiGenerator;
 
     private final Validator validator;
 
-    public IntegrationHandler(final DataManager dataMgr, OpenShiftService openShiftService, final Validator validator, final Inspectors inspectors, final EncryptionComponent encryptionSupport) {
+    public IntegrationHandler(final DataManager dataMgr, OpenShiftService openShiftService, final Validator validator, final Inspectors inspectors, final EncryptionComponent encryptionSupport, final APIGenerator apiGenerator) {
         super(dataMgr);
         this.openShiftService = openShiftService;
         this.validator = validator;
         this.inspectors = inspectors;
         this.encryptionSupport = encryptionSupport;
+        this.apiGenerator = apiGenerator;
     }
 
     @Override
@@ -183,6 +186,8 @@ public class IntegrationHandler extends BaseHandler
             .version(existing.getVersion()+1)
             .updatedAt(System.currentTimeMillis())
             .build();
+
+        updatedIntegration = apiGenerator.updateFlowExcerpts(updatedIntegration);
 
         getDataManager().update(updatedIntegration);
     }

@@ -48,6 +48,8 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, Seria
     @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
     Optional<String> getDescription();
 
+    Optional<String> getExcerpt();
+
     default Flow.Builder builder() {
         return new Flow.Builder().createFrom(this);
     }

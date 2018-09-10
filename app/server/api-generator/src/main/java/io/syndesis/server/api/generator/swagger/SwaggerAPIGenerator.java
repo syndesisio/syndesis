@@ -15,17 +15,6 @@
  */
 package io.syndesis.server.api.generator.swagger;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static java.util.Optional.ofNullable;
-
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
@@ -38,6 +27,7 @@ import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.api.APISummary;
+import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
@@ -53,6 +43,19 @@ import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
 
 public class SwaggerAPIGenerator implements APIGenerator {
 
@@ -94,7 +97,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                 .actionsSummary(actionsSummary)//
                 .errors(swaggerInfo.getErrors())//
                 .warnings(swaggerInfo.getWarnings())//
-                .putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification())//
+                .putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification())// needed if the user wants to change it
                 .build();
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception ex) {
             if (!swaggerInfo.getErrors().isEmpty()) {
@@ -108,6 +111,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
     }
 
     @Override
+    @SuppressWarnings({"PMD.ExcessiveMethodLength"})
     public APIIntegration generateIntegration(String specification, ProvidedApiTemplate template) {
         SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.NONE);
         Swagger swagger = info.getModel();
@@ -120,6 +124,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
         Integration.Builder integration = new Integration.Builder()
             .id(integrationId)
+            .addTag("api-provider")
             .createdAt(System.currentTimeMillis())
             .name(name);
 
@@ -143,6 +148,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                 Action startAction = template.getStartAction().orElseThrow(() -> new IllegalStateException("cannot find start action"));
                 Action modifiedStartAction = new ConnectorAction.Builder()
                     .createFrom(startAction)
+                    .addTag("locked-action")
                     .descriptor(new ConnectorDescriptor.Builder()
                         .createFrom(startAction.getDescriptor())
                         .outputDataShape(startDataShape)
@@ -161,6 +167,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                 Action endAction = template.getEndAction().orElseThrow(() -> new IllegalStateException("cannot find end action"));
                 Action modifiedEndAction = new ConnectorAction.Builder()
                     .createFrom(endAction)
+                    .addTag("locked-action")
                     .descriptor(new ConnectorDescriptor.Builder()
                         .createFrom(endAction.getDescriptor())
                         .inputDataShape(endDataShape)
@@ -177,6 +184,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
                 Flow flow = new Flow.Builder()
                     .id(String.format("%s:flows:%s", integrationId, operationId))
+                    .excerpt("501 Not Implemented")
                     .addStep(startStep)
                     .addStep(endStep)
                     .name(operationName)
@@ -206,6 +214,21 @@ public class SwaggerAPIGenerator implements APIGenerator {
         return new APIIntegration(integration.build(), api);
     }
 
+    @Override
+    public Integration updateFlowExcerpts(Integration integration) {
+        // Update excerpt for api provider endpoints only
+        if (integration == null || !integration.getTags().contains("api-provider")) {
+            return integration;
+        }
+
+        return new Integration.Builder()
+            .createFrom(integration)
+            .flows(integration.getFlows().stream()
+                .map(this::flowWithExcerpts)
+                .collect(Collectors.toList()))
+            .build();
+    }
+
     protected String requireUniqueOperationId(String preferredOperationId, Set<String> alreadyUsedOperationIds) {
         String baseId = preferredOperationId;
         if (baseId == null) {
@@ -220,6 +243,48 @@ public class SwaggerAPIGenerator implements APIGenerator {
             newId = baseId + "-" + (++counter);
         }
         return newId;
+    }
+
+    protected Flow flowWithExcerpts(Flow flow) {
+        List<Step> steps = flow.getSteps();
+        if (steps == null || steps.isEmpty()) {
+            return flow;
+        }
+
+        Step last = steps.get(steps.size() - 1);
+        if (last.getConfiguredProperties().containsKey("httpResponseCode")) {
+            String responseCode = last.getConfiguredProperties().get("httpResponseCode");
+            String responseDesc = decodeHttpReturnCode(steps, responseCode);
+            return new Flow.Builder()
+                .createFrom(flow)
+                .excerpt(responseDesc)
+                .build();
+        } else if (flow.getExcerpt().isPresent()) {
+            return new Flow.Builder()
+                .createFrom(flow)
+                .excerpt(Optional.empty())
+                .build();
+        }
+        return flow;
+    }
+
+    protected String decodeHttpReturnCode(List<Step> steps, String code) {
+        if (code == null || steps.isEmpty()) {
+            return code;
+        }
+        Step lastStep = steps.get(steps.size() - 1);
+        Optional<Action> lastAction = lastStep.getAction();
+        if (!lastAction.isPresent()) {
+            return code;
+        }
+        Optional<String> httpCodeDescription = lastAction
+            .flatMap(a -> ofNullable(a.getProperties().get("httpResponseCode")))
+            .flatMap(prop -> prop.getEnum().stream()
+                .filter(e -> code.equals(e.getValue()))
+                .map(ConfigurationProperty.PropertyValue::getLabel)
+                .findFirst()
+            );
+        return httpCodeDescription.orElse(code);
     }
 
 }

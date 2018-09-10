@@ -16,6 +16,7 @@
 package io.syndesis.server.api.generator;
 
 import io.syndesis.common.model.api.APISummary;
+import io.syndesis.common.model.integration.Integration;
 
 /**
  * This is a facade for API related operations.
@@ -25,5 +26,7 @@ public interface APIGenerator {
     APISummary info(String specification, APIValidationContext validation);
 
     APIIntegration generateIntegration(String specification, ProvidedApiTemplate template);
+
+    Integration updateFlowExcerpts(Integration integration);
 
 }

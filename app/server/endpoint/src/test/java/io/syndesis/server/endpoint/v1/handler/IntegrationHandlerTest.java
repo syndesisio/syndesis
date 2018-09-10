@@ -20,6 +20,8 @@ import java.util.Optional;
 
 import javax.validation.Validator;
 
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.inspector.Inspectors;
@@ -33,6 +35,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -46,6 +49,7 @@ public class IntegrationHandlerTest {
     private IntegrationHandler handler;
     private Inspectors inspectors;
     private OpenShiftService openShiftService;
+    private APIGenerator apiGenerator;
 
     @Before
     public void setUp() {
@@ -53,7 +57,9 @@ public class IntegrationHandlerTest {
         Validator validator = mock(Validator.class);
         openShiftService = mock(OpenShiftService.class);
         inspectors = mock(Inspectors.class);
-        handler = new IntegrationHandler(manager, openShiftService, validator, inspectors, new EncryptionComponent(null));
+        apiGenerator = mock(APIGenerator.class);
+        when(apiGenerator.updateFlowExcerpts(any(Integration.class))).then(ctx -> ctx.getArguments()[0]);
+        handler = new IntegrationHandler(manager, openShiftService, validator, inspectors, new EncryptionComponent(null), apiGenerator);
     }
 
     @Test
