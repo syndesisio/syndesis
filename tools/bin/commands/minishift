@@ -30,6 +30,8 @@ minishift::usage() {
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --local                   Use the local resource files instead of fetching them from GitHub
+-r  --route <route>           Use the given route.
+                              By default "syndesis.<minishift ip>.nip.io" is used.
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
@@ -107,7 +109,11 @@ minishift::run() {
         wait_for_deployments 1 syndesis-operator
 
         # Create syndesis resource
-        result=$(create_syndesis "syndesis.$(minishift ip).nip.io" "https://$(minishift ip):8443/console")
+        local route=$(readopt --route -r)
+        if [ -z "$route" ]; then
+            route="syndesis.$(minishift ip).nip.io"
+        fi
+        result=$(create_syndesis "$route" "https://$(minishift ip):8443/console")
         check_error "$result"
 
         # Wait until everything's up and finally patch imagestreams for triggers
