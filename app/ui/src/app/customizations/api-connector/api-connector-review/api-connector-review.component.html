@@ -50,7 +50,7 @@
     </ol>
   </div>
 
-  <fieldset class="list-pf-actions">
+  <fieldset>
     <syndesis-button *ngIf="showNextButton" type="button" theme="default" (click)="onBackPressed()">
       &lt; {{ 'shared.back' | synI18n }}
     </syndesis-button>
@@ -70,7 +70,7 @@
             (click)="reviewComplete.emit({event: event, displayEditor: true})"
             [disabled]="!enableEditButton"
             type="button"
-            class="review-edit-btn"
+            class="pull-right"
             theme="default">
       <span [tooltip]="editTooltip"
             [tooltipEnable]="enableEditButton"
