@@ -81,7 +81,22 @@ const editIntegrationChildRoutes = [
   {
     path: 'step-configure/:position',
     component: IntegrationStepConfigureComponent
-  }
+  }/*,
+  // OpenAPI loader page
+  {
+    path: 'api-provider/create',
+    component: ApiProviderSpecComponent
+  },
+  // OpenAPI operations list
+  {
+    path: 'api-provider/:id',
+    component: ApiProviderOperationsComponent
+  },
+  // OpenAPI operation flow editor
+  {
+    path: 'api-provider/:id/:operationId',
+    component: ApiProviderOperationComponent
+  }*/
 ];
 
 const routes: Routes = [
