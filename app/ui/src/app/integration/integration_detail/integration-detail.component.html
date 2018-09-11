@@ -1,7 +1,13 @@
 <syndesis-modal [title]="modalTitle" [message]="modalMessage" [type]="modalType" [primaryText]="modalPrimaryText">
 </syndesis-modal>
-<syndesis-loading [loading]="loading">
-  <div *ngIf="integration" class="integration-detail syn-scrollable">
+
+<div *ngIf="loading; else content">
+  <syndesis-loading [loading]="true">
+  </syndesis-loading>
+</div>
+
+<ng-template #content>
+  <div class="integration-detail syn-scrollable">
     <div class="toolbar syn-toolbar--inverted">
       <div class="row toolbar-pf">
         <div class="col-sm-12">
@@ -108,4 +114,4 @@
       </div>
     </div>
   </div>
-</syndesis-loading>
+</ng-template>

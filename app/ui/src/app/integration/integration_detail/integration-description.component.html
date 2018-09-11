@@ -2,12 +2,12 @@
   <ng-container [ngSwitch]="integrationType">
     <ng-container *ngSwitchCase="IntegrationTypes.ApiProvider">
       <div *ngTemplateOutlet="multiflowApiProvider;context:{
-        flowsCount: integration ? integration.flows.length : null
+        flowsCount: integration.flows.length
       }"></div>
     </ng-container>
     <ng-container *ngSwitchDefault>
       <div *ngTemplateOutlet="stepsBreadcrumb;context:{
-        steps: integration && integration.flows ? integration.flows[0].steps : null
+        steps: integration.flows[0].steps
       }"></div>
     </ng-container>
   </ng-container>
