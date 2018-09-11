@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,8 @@ import static java.util.Optional.ofNullable;
 public class SwaggerAPIGenerator implements APIGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SwaggerAPIGenerator.class);
+
+    private static final String EXCERPT_METADATA_KEY = "excerpt";
 
     private DataShapeGenerator dataShapeGenerator;
 
@@ -184,7 +187,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
                 Flow flow = new Flow.Builder()
                     .id(String.format("%s:flows:%s", integrationId, operationId))
-                    .excerpt("501 Not Implemented")
+                    .putMetadata(EXCERPT_METADATA_KEY, "501 Not Implemented")
                     .addStep(startStep)
                     .addStep(endStep)
                     .name(operationName)
@@ -257,12 +260,14 @@ public class SwaggerAPIGenerator implements APIGenerator {
             String responseDesc = decodeHttpReturnCode(steps, responseCode);
             return new Flow.Builder()
                 .createFrom(flow)
-                .excerpt(responseDesc)
+                .putMetadata(EXCERPT_METADATA_KEY, responseDesc)
                 .build();
-        } else if (flow.getExcerpt().isPresent()) {
+        } else if (flow.getMetadata(EXCERPT_METADATA_KEY).isPresent()) {
+            Map<String, String> newMetadata = new HashMap<>(flow.getMetadata());
+            newMetadata.remove(EXCERPT_METADATA_KEY);
             return new Flow.Builder()
                 .createFrom(flow)
-                .excerpt(Optional.empty())
+                .metadata(newMetadata)
                 .build();
         }
         return flow;
