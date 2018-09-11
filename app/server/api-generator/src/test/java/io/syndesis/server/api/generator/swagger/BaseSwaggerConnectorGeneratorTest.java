@@ -240,4 +240,5 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
             .putConfiguredProperty("specification", SwaggerHelper.serialize(swagger))//
             .build();
     }
+
 }
