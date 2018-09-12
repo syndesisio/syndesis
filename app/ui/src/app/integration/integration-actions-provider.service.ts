@@ -12,7 +12,7 @@ import {
   I18NService,
   PENDING,
   UNPUBLISHED,
-  PUBLISHED
+  PUBLISHED, IntegrationType
 } from '@syndesis/ui/platform';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
@@ -69,7 +69,11 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
       case 'view':
         return this.router.navigate(['/integrations', integration.id]);
       case 'edit':
-        return this.router.navigate(['/integrations', integration.id, 'edit']);
+        if ((integration as Integration).type && (integration as Integration).type === IntegrationType.ApiProvider) {
+          return this.router.navigate(['/integrations', integration.id, 'operations']);
+        } else {
+          return this.router.navigate(['/integrations', integration.id, 'edit']);
+        }
       case 'export':
         return this.integrationSupportService
           .exportIntegration(integration.id)

@@ -13,6 +13,7 @@ import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-s
 import { IntegrationListModule } from '@syndesis/ui/integration/list';
 import { IntegrationListPage } from '@syndesis/ui/integration/list-page';
 import { IntegrationImportPageComponent } from '@syndesis/ui/integration/import-page';
+import { IntegrationApiProviderOperationsComponent } from '@syndesis/ui/integration/api-provider';
 import {
   IntegrationDetailComponent,
   INTEGRATION_DETAIL_DIRECTIVES
@@ -81,7 +82,8 @@ const editIntegrationChildRoutes = [
   {
     path: 'step-configure/:position',
     component: IntegrationStepConfigureComponent
-  }/*,
+  },
+  /*,
   // OpenAPI loader page
   {
     path: 'api-provider/create',
@@ -121,6 +123,10 @@ const routes: Routes = [
   {
     path: ':integrationId/edit',
     component: IntegrationEditPage,
+  },
+  {
+    path: ':integrationId/operations',
+    component: IntegrationApiProviderOperationsComponent
   },
   {
     path: ':integrationId/:flowId/edit',
@@ -163,6 +169,7 @@ const routes: Routes = [
     IntegrationSaveOrAddStepComponent,
     IntegrationSelectActionComponent,
     IntegrationSelectConnectionComponent,
+    IntegrationApiProviderOperationsComponent,
     FlowViewComponent,
     FlowViewStepComponent,
     ListActionsComponent,
