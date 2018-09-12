@@ -15,12 +15,12 @@ import {
   FlowPageService
 } from '../edit-page/index';
 import { Extensions, Integration, Step, Steps } from '../../platform/index';
-import { NavigationService, ObjectPropertyFilterPipe } from '../../common/index';
+import { NavigationService, ObjectPropertyFilterConfig, ObjectPropertyFilterPipe, ObjectPropertySortConfig } from '../../common/index';
 
 @Component({
   selector: 'syndesis-integration-api-provider-operations',
   templateUrl: './operations.component.html',
-  styleUrls: ['./operations.component.scss']
+  styleUrls: ['../integration-common.scss', './operations.component.scss']
 })
 export class IntegrationApiProviderOperationsComponent implements OnInit, OnDestroy {
   integration: Observable<Integration>;
@@ -28,12 +28,49 @@ export class IntegrationApiProviderOperationsComponent implements OnInit, OnDest
 
   integrationSubscription: Subscription;
   routeSubscription: Subscription;
-  childRouteSubscription: Subscription;
-  flowSubscription: Subscription;
-  fragmentSubscription: Subscription;
-  urls: UrlSegment[];
-  _canContinue = false;
-  position: number;
+
+  filter: ObjectPropertyFilterConfig = {
+    filter: '',
+    propertyName: 'name'
+  };
+  sort: ObjectPropertySortConfig = {
+    sortField: 'name',
+    descending: false
+  };
+
+  toolbarConfig = {
+    filterConfig: {
+      fields: [
+        {
+          id: 'name',
+          title: 'Name',
+          placeholder: 'Filter by Name...',
+          type: 'text'
+        },
+        {
+          id: 'description',
+          title: 'Url',
+          placeholder: 'Filter by Url...',
+          type: 'text'
+        }
+      ]
+    } as FilterConfig,
+    sortConfig: {
+      fields: [
+        {
+          id: 'name',
+          title: 'Name',
+          sortType: 'alpha'
+        },
+        {
+          id: 'description',
+          title: 'Url',
+          sortType: 'alpha'
+        }
+      ],
+      isAscending: true
+    } as SortConfig
+  } as ToolbarConfig;
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -46,11 +83,8 @@ export class IntegrationApiProviderOperationsComponent implements OnInit, OnDest
     this.integration = this.integrationStore.resource;
     this.loading = this.integrationStore.loading;
     this.integrationStore.clear();
-    this.flowSubscription = this.currentFlowService.events.subscribe(
-      (event: FlowEvent) => {
-      }
-    );
   }
+
   ngOnInit() {
     this.integrationSubscription = this.integration.subscribe(
       (i: Integration) => {
@@ -83,8 +117,23 @@ export class IntegrationApiProviderOperationsComponent implements OnInit, OnDest
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
     }
-    if (this.flowSubscription) {
-      this.flowSubscription.unsubscribe();
+  }
+
+  // Handles events when the user interacts with the toolbar filter
+  filterChanged($event) {
+    // TODO update our pipe to handle multiple filters
+    if ($event.appliedFilters.length === 0) {
+      this.filter.filter = '';
     }
+    $event.appliedFilters.forEach(filter => {
+      this.filter.propertyName = filter.field.id;
+      this.filter.filter = filter.value;
+    });
+  }
+
+  // Handles events when the user interacts with the toolbar sort
+  sortChanged($event) {
+    this.sort.sortField = $event.field.id;
+    this.sort.descending = !$event.isAscending;
   }
 }

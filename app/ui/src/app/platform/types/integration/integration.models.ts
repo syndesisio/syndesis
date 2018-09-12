@@ -75,6 +75,11 @@ export interface Integration extends IntegrationOverview {
 export type Integrations = Array<Integration>;
 
 export interface Flow extends WithId {
+  name: string;
+  description: string;
+  metadata: {
+    excerpt: string
+  };
   steps: Array<Step>;
   connections: Array<Connection>;
 }

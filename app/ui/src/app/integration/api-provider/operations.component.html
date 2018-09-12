@@ -38,9 +38,41 @@
         <div class="syn-scrollable--body">
           <div class="container-fluid">
             <div class="title">
-              <h1>TODO</h1>
+              <h1>Choose operation</h1>
             </div>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam aspernatur dignissimos dolorem ex hic impedit inventore laudantium, nam nemo officiis quasi quibusdam quisquam repudiandae similique temporibus vel veniam voluptatum!</p>
+            <p>Click an operation to integrate an integration flow.</p>
+
+            <!-- Toolbar -->
+            <pfng-toolbar [config]="toolbarConfig"
+                          (onFilterChange)="filterChanged($event)"
+                          (onSortChange)="sortChanged($event)">
+            </pfng-toolbar>
+
+            <ng-container *ngIf="loading | async; else content">
+              <syndesis-loading loading="true"></syndesis-loading>
+            </ng-container>
+            <ng-template #content>
+              <div class="list-view-pf-view">
+                <pfng-list [items]="currentFlowService.integration.flows  | objectPropertyFilter:filter | objectPropertySort:sort"
+                           [itemTemplate]="itemTemplate">
+                  <ng-template #itemTemplate
+                               let-flow="item"
+                               let-index="index">
+                    <div class="list-pf-content-wrapper">
+                      <div class="list-pf-main-content">
+                        <div class="list-pf-title">{{flow.name}}</div>
+                        <div class="list-pf-description text-overflow-pf">{{flow.description}}</div>
+                      </div>
+                      <div class="list-pf-additional-content">
+                        <div>
+                          {{flow.metadata.excerpt}}
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </pfng-list>
+              </div>
+            </ng-template>
           </div>
         </div>
       </div>

@@ -52,8 +52,13 @@ describe('CurrentFlow', () => {
     const rc = createIntegration();
     const flow: Flow = {
       id: 'flow11',
+      name: 'flow11',
+      description: 'flow11',
       connections: <Connection[]>[],
-      steps: <Step[]>[]
+      steps: <Step[]>[],
+      metadata: {
+        excerpt: 'flow11'
+      }
     };
     rc.flows = [flow];
 
