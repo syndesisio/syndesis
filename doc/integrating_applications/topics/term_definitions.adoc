@@ -1,10 +1,10 @@
 [id='understanding-terms']
-= Understanding {prodname} terms
+= Descriptions of {prodname} constructs
 
-When you integrate applications with {prodname}, you create an
+To use {prodname}, you create an
 integration by working with connectors,
-connections, actions, and steps. See the following sections to
-learn about each of these constructs.
+connections, actions, and steps. The following sections describe
+these constructs.
 
 * <<about-integrations>>
 * <<about-connectors>>

@@ -1,8 +1,7 @@
 [id='planning']
 = Planning integrations
 
-Some planning so that you have answers to the following questions is
-helpful before you create an integration.
+Consider the following questions before you create an integration.
 
 To start the integration:
 
