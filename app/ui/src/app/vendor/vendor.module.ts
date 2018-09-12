@@ -26,6 +26,8 @@ import {
   PaginationModule,
 } from 'patternfly-ng';
 
+import { CodemirrorModule } from 'ng2-codemirror';
+
 const imports = [
   AlertModule.forRoot(),
   CollapseModule.forRoot(),
@@ -43,7 +45,8 @@ const imports = [
   CardModule,
   ListModule,
   ToolbarModule,
-  FileUploadModule
+  FileUploadModule,
+  CodemirrorModule
 ];
 
 const _exports = [
@@ -64,7 +67,8 @@ const _exports = [
   ListModule,
   ToolbarModule,
   PaginationModule,
-  FileUploadModule
+  FileUploadModule,
+  CodemirrorModule
 ];
 
 @NgModule({
