@@ -1,5 +1,5 @@
 [id='about-steps']
-= About steps
+= About integration steps
 
 An integration is a set of ordered steps. Each step operates on data.
 Some steps operate on data while connected to an application or service

@@ -10,4 +10,4 @@ creating a Salesforce account, updating a Salesforce account, and
 searching Salesforce.
 
 Some actions require additional configuration and {prodname}
-prompts you for this information if it is needed.
+prompts you for this information.

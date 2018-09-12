@@ -17,7 +17,8 @@ This guide provides information and instructions for using
 
 The content in this guide is organized as follows:
 
-* <<understanding>>
+* <<high-level-overview>>
+* <<how-to-get-ready>>
 * <<logging-in-and-out>>
 * <<connecting-to-applications>>
 * <<creating-integrations>>
@@ -28,7 +29,9 @@ The content in this guide is organized as follows:
 To learn how to use {prodname} by creating sample integrations, see:
 {LinkFuseOnlineTutorials}[{NameOfFuseOnlineTutorials}].
 
-include::topics/understanding.adoc[leveloffset=+1]
+include::topics/high_level_overview.adoc[leveloffset=+1]
+
+include::topics/how_to_get_ready.adoc[leveloffset=+1]
 
 include::topics/shared/log_in.adoc[leveloffset=+1]
 

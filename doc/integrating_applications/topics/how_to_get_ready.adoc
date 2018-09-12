@@ -1,0 +1,17 @@
+[id='how-to-get-ready']
+= How to get ready to create integrations
+
+Some planning and an understanding of the workflow for creating an 
+integration can help you create integrations that meet your needs. 
+The following topics provide information for getting ready to create 
+integrations. 
+
+* <<planning>>
+* <<workflow-overview>>
+* <<how-you-use>>
+
+include::planning_integrations.adoc[leveloffset=+1]
+
+include::workflow_overview.adoc[leveloffset=+1]
+
+include::how_you_use.adoc[leveloffset=+1]

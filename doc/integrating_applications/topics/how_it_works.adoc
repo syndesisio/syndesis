@@ -1,19 +1,20 @@
 [id='how-it-works']
 = How {prodname} works
 
-{prodname} lets you enable data transfer between different applications. For example,
-each time a customer is mentioned in Twitter, you might want to capture that
-mention in your Salesforce account for that customer. Another example is a service
-that makes stock trade recommendations. You can capture recommendations of interest
-and forward them to a service that automates stock transfers.
-
 {prodname} provides a web browser interface that lets you integrate two or
 more different applications or services without writing code. It also provides
 features that allow you to introduce code if it is needed for complex
 use cases.
 
-To create and run a simple integration,
-the main steps are:
+{prodname} lets you enable data transfer between different applications. 
+For example, a business analyst can use {prodname} to capture 
+tweets that mention customers and then leverage the data obtained from 
+Twitter to update Salesforce accounts. Another example is a service
+that makes stock trade recommendations. You can use {prodname} to 
+capture recommendations for buying or selling stocks of interest
+and forward those recommendations to a service that automates stock transfers.
+
+To create and run a simple integration, the main steps are:
 
 . Create a connection to each application that you want to integrate.
 . Select the start connection. This connection is to the application that
@@ -27,4 +28,4 @@ finish connection.
 . Click *Publish* to start running the integration.
 
 The {prodname} dashboard lets you monitor and manage integrations. You can
-see which integrations are running, start, stop, and edit integrations.
+see which integrations are running, and you can start, stop, and edit integrations.

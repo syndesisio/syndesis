@@ -1,7 +1,7 @@
 [id='benefits']
-= Benefits of {prodname}
+= Benefits of using {prodname}
 
-With {prodname}, you can:
+{prodname} has a number of benefits: 
 
 * Integrate data from different applications or services without writing code.
 
