@@ -1,6 +1,6 @@
 <section class="integration-description">
-  <ng-container [ngSwitch]="integrationType">
-    <ng-container *ngSwitchCase="IntegrationTypes.ApiProvider">
+  <ng-container [ngSwitch]="integration.type">
+    <ng-container *ngSwitchCase="IntegrationType.ApiProvider">
       <div *ngTemplateOutlet="multiflowApiProvider;context:{
         flowsCount: integration.flows.length
       }"></div>

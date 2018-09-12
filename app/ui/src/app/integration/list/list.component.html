@@ -18,7 +18,7 @@
                  let-integration="item"
                  let-index="index">
       <div class="list-view-pf-left integration-icons">
-        <ng-container *ngIf="integration.flows.length === 1;else multiflowIntegration">
+        <ng-container *ngIf="integration.type === IntegrationType.SingleFlow;else multiflowIntegration">
           <span *ngIf="integrationActionsService.getStart(integration).connection; let connection">
             <img class="syn-icon-small" [src]="connection | synIconPath" aria-hidden="true">
           </span>

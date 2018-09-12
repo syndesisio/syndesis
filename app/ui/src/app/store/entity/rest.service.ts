@@ -19,7 +19,10 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
   get(id: string): Observable<T> {
     return this.apiHttpService
       .setEndpointUrl(this.getEndpointSegment(id))
-      .get();
+      .get()
+      .pipe(
+        map(this.transformFn)
+      );
   }
 
   list(): Observable<L> {
@@ -37,14 +40,20 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
   create(obj: T): Observable<T> {
     return this.apiHttpService
       .setEndpointUrl(this.getEndpointSegment())
-      .post(obj);
+      .post(obj)
+      .pipe(
+        map(this.transformFn)
+      );
   }
 
   update(obj: T): Observable<T> {
     return this.apiHttpService
       .setEndpointUrl(this.getEndpointSegment(obj.id))
       .put(obj)
-      .pipe(map((response: any) => (response !== null ? response : [])));
+      .pipe(
+        map((response: any) => (response !== null ? response : [])),
+        map(this.transformFn)
+      );
   }
 
   delete(obj: T): Observable<any> {
@@ -56,7 +65,10 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
   patch(id: string, attributes: any): Observable<any> {
     return this.apiHttpService
       .setEndpointUrl(this.getEndpointSegment(id))
-      .patch(attributes);
+      .patch(attributes)
+      .pipe(
+        map(this.transformFn)
+      );
   }
 
   private getEndpointSegment(id?: string): string {

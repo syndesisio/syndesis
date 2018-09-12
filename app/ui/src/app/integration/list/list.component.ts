@@ -12,6 +12,7 @@ import {
 } from 'patternfly-ng';
 
 import {
+  IntegrationType,
   Integrations,
   IntegrationActionsService,
   WithId
@@ -26,6 +27,7 @@ export class IntegrationListComponent implements OnInit {
   @Input() complete: boolean;
   @Input() integrations: Integrations = [];
   listConfig: ListConfig;
+  IntegrationType = IntegrationType;
 
   constructor(
     public route: ActivatedRoute,
