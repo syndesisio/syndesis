@@ -47,6 +47,8 @@ export class FormFactoryProviderService extends FormFactoryService {
       let type = (field.type || '').toLowerCase();
       // first normalize the type
       switch (type) {
+        case 'date':
+          break;
         case 'duration':
           break;
         case 'boolean':
