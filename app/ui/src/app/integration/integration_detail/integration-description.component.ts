@@ -1,10 +1,10 @@
-import { Flow, Integration, IntegrationType, Step } from '@syndesis/ui/platform';
+import { Integration, IntegrationType, Step } from '@syndesis/ui/platform';
 import {
   Component,
   Input,
   Output,
   EventEmitter,
-  ViewEncapsulation, OnChanges
+  ViewEncapsulation
 } from '@angular/core';
 
 import { StepStore } from '@syndesis/ui/store';

@@ -8,11 +8,12 @@ import {
   DeploymentOverview,
   IntegrationActionsService,
   IntegrationSupportService,
+  IntegrationType,
   Step,
   I18NService,
   PENDING,
   UNPUBLISHED,
-  PUBLISHED, IntegrationType
+  PUBLISHED
 } from '@syndesis/ui/platform';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
