@@ -9,52 +9,56 @@
     <!-- Add/Edit Integration -->
     <div class="main-panel wizard-main">
       <div class="syn-scrollable">
-        <!-- Toolbar -->
-        <div class="toolbar syn-toolbar--inverted">
-          <div class="container-fluid">
-            <!-- Toolbar: Breadcrumbs -->
-            <div class="row toolbar-pf">
-              <div class="col-sm-12">
-                <div class="toolbar-pf-actions">
-                  <div class="inline-block">
-                    <ol class="breadcrumb">
-                      <li>
-                        <a [routerLink]="['/']">Home</a>
-                      </li>
-                      <li>
-                        <a [routerLink]="['/integrations']">Integrations</a>
-                      </li>
-                      <li class="active">WUT</li>
-                    </ol>
-                  </div>
-                  <div class="toolbar-pf-action-right">
-                    <syndesis-cancel-add-step></syndesis-cancel-add-step>
+        <ng-container *ngIf="loading | async; else content">
+          <syndesis-loading loading="true"></syndesis-loading>
+        </ng-container>
+
+        <ng-template #content>
+          <!-- Toolbar -->
+          <div class="toolbar syn-toolbar--inverted">
+            <div class="container-fluid">
+              <!-- Toolbar: Breadcrumbs -->
+              <div class="row toolbar-pf">
+                <div class="col-sm-12">
+                  <div class="toolbar-pf-actions">
+                    <div class="inline-block">
+                      <ol class="breadcrumb">
+                        <li>
+                          <a [routerLink]="['/']">Home</a>
+                        </li>
+                        <li>
+                          <a [routerLink]="['/integrations']">Integrations</a>
+                        </li>
+                        <li>
+                          <a [routerLink]="['/integrations', currentFlowService.integration.id]">{{currentFlowService.integration.name}}</a>
+                        </li>
+                        <li class="active">Choose operation</li>
+                      </ol>
+                    </div>
+                    <div class="toolbar-pf-action-right">
+                      <syndesis-cancel-add-step></syndesis-cancel-add-step>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="syn-scrollable--body">
-          <div class="container-fluid">
-            <div class="title">
-              <h1>Choose operation</h1>
-            </div>
-            <p>Click an operation to integrate an integration flow.</p>
+          <div class="syn-scrollable--body">
+            <div class="container-fluid">
+              <div class="title">
+                <h1>Choose operation</h1>
+              </div>
+              <p>Click an operation to integrate an integration flow.</p>
 
-            <!-- Toolbar -->
-            <pfng-toolbar [config]="toolbarConfig"
-                          (onFilterChange)="filterChanged($event)"
-                          (onSortChange)="sortChanged($event)">
-            </pfng-toolbar>
-
-            <ng-container *ngIf="loading | async; else content">
-              <syndesis-loading loading="true"></syndesis-loading>
-            </ng-container>
-            <ng-template #content>
+              <!-- Toolbar -->
+              <pfng-toolbar [config]="toolbarConfig"
+                            (onFilterChange)="filterChanged($event)"
+                            (onSortChange)="sortChanged($event)">
+              </pfng-toolbar>
               <div class="list-view-pf-view">
                 <pfng-list [items]="currentFlowService.integration.flows  | objectPropertyFilter:filter | objectPropertySort:sort"
-                           [itemTemplate]="itemTemplate">
+                           [itemTemplate]="itemTemplate"
+                           (onClick)="handleClick($event)">
                   <ng-template #itemTemplate
                                let-flow="item"
                                let-index="index">
@@ -72,9 +76,9 @@
                   </ng-template>
                 </pfng-list>
               </div>
-            </ng-template>
+            </div>
           </div>
-        </div>
+        </ng-template>
       </div>
     </div>
   </div>

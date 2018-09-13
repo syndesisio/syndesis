@@ -85,6 +85,7 @@
           [integration]="integration"
           [stepStore]="stepStore"
           (viewDetails)="viewDetails($event)"
+          (viewApiProviderOperations)="viewApiProviderOperations($event)"
           (attributeUpdated)="attributeUpdated(integration.id, $event)">
         </syndesis-integration-description>
 

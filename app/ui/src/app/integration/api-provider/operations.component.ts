@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { FilterConfig, SortConfig, ToolbarConfig } from 'patternfly-ng';
+import { FilterConfig, ListEvent, SortConfig, ToolbarConfig } from 'patternfly-ng';
 import {
   ExtensionStore,
   EXTENSION,
@@ -14,7 +14,7 @@ import {
   FlowEvent,
   FlowPageService
 } from '../edit-page/index';
-import { Extensions, Integration, Step, Steps } from '../../platform/index';
+import { Extensions, Flow, Integration, Step, Steps } from '../../platform/index';
 import { NavigationService, ObjectPropertyFilterConfig, ObjectPropertyFilterPipe, ObjectPropertySortConfig } from '../../common/index';
 
 @Component({
@@ -135,5 +135,14 @@ export class IntegrationApiProviderOperationsComponent implements OnInit, OnDest
   sortChanged($event) {
     this.sort.sortField = $event.field.id;
     this.sort.descending = !$event.isAscending;
+  }
+
+  handleClick($event: ListEvent): void {
+    this.router.navigate([
+      'integrations',
+      this.currentFlowService.integration.id,
+      ($event.item as Flow).id,
+      'edit'
+    ]);
   }
 }

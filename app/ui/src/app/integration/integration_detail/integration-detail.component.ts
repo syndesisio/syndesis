@@ -109,6 +109,12 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  viewApiProviderOperations(integration: Integration) {
+    if (integration) {
+      this.router.navigate(['/integrations/', integration.id, 'operations']);
+    }
+  }
+
   nameUpdated(id: string, $event) {
     this.attributeUpdated(id, { name: $event });
   }

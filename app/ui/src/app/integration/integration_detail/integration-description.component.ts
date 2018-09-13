@@ -20,12 +20,21 @@ export class IntegrationDescriptionComponent {
   @Input() stepStore: StepStore;
 
   @Output() viewDetails = new EventEmitter<Step>();
+  @Output() viewApiProviderOperations = new EventEmitter<Integration>();
   @Output() attributeUpdated = new EventEmitter<{ [key: string]: string }>();
 
   protected IntegrationType = IntegrationType;
 
   onViewDetails(step: Step): void {
     this.viewDetails.emit(step);
+  }
+
+  onApiProviderClick(): void {
+    this.viewDetails.emit(this.integration.flows[0].steps[0]);
+  }
+
+  onApiProviderFlowsClick(): void {
+    this.viewApiProviderOperations.emit(this.integration);
   }
 
   onAttributeUpdated(attribute: string, value: string): void {

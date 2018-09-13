@@ -103,7 +103,7 @@
       id: 'api-provider',
       connectionName: 'API Provider',
       actionName: '',
-      onClick: null,
+      onClick: onApiProviderClick.bind(this),
       iconSrc: './../../assets/icons/api-provider.connection.png',
       class: 'start'
     }"></div>
@@ -115,7 +115,7 @@
       connectionName: flowsCount + ' Flows',
       badge: flowsCount,
       actionName: '',
-      onClick: null,
+      onClick: onApiProviderFlowsClick.bind(this),
       iconSrc: './../../assets/icons/multi-flow.connection.png',
       class: 'finish'
     }"></div>

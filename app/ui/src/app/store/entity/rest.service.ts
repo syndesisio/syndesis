@@ -52,7 +52,6 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
       .put(obj)
       .pipe(
         map((response: any) => (response !== null ? response : [])),
-        map(this.transformFn)
       );
   }
 
@@ -65,10 +64,7 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
   patch(id: string, attributes: any): Observable<any> {
     return this.apiHttpService
       .setEndpointUrl(this.getEndpointSegment(id))
-      .patch(attributes)
-      .pipe(
-        map(this.transformFn)
-      );
+      .patch(attributes);
   }
 
   private getEndpointSegment(id?: string): string {
