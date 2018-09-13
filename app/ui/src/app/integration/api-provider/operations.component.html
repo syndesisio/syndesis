@@ -30,7 +30,9 @@
                           <a [routerLink]="['/integrations']">Integrations</a>
                         </li>
                         <li>
-                          <a [routerLink]="['/integrations', currentFlowService.integration.id]">{{currentFlowService.integration.name}}</a>
+                          <a [routerLink]="['/integrations', currentFlowService.integration.id]">
+                            {{ currentFlowService.integration.name }}
+                          </a>
                         </li>
                         <li class="active">Choose operation</li>
                       </ol>
@@ -64,12 +66,12 @@
                                let-index="index">
                     <div class="list-pf-content-wrapper">
                       <div class="list-pf-main-content">
-                        <div class="list-pf-title">{{flow.name}}</div>
-                        <div class="list-pf-description text-overflow-pf">{{flow.description}}</div>
+                        <div class="list-pf-title">{{ flow.name }}</div>
+                        <div class="list-pf-description text-overflow-pf">{{ flow.description }}</div>
                       </div>
                       <div class="list-pf-additional-content">
                         <div>
-                          {{flow.metadata.excerpt}}
+                          {{ flow.metadata.excerpt }}
                         </div>
                       </div>
                     </div>

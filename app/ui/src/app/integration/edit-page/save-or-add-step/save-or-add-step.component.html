@@ -22,7 +22,7 @@
                   </li>
                   <li *ngIf="currentFlowService.integration?.type === IntegrationType.ApiProvider">
                     <a [routerLink]="['/integrations', currentFlowService.integration?.id, 'operations']">
-                      {{currentFlowService.currentFlow.name}}
+                      {{ currentFlowService.currentFlow.name }}
                     </a>
                   </li>
                   <li class="active">Save or Add Step</li>

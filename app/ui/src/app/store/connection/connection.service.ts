@@ -6,7 +6,6 @@ import { TypeFactory } from '@syndesis/ui/model';
 import { RESTService } from '@syndesis/ui/store/entity';
 import { ConfigService } from '@syndesis/ui/config.service';
 
-
 @Injectable()
 export class ConnectionService extends RESTService<Connection, Connections> {
   constructor(apiHttpService: ApiHttpService, configService: ConfigService) {
