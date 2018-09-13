@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { ApiConnectorData } from '@syndesis/ui/customizations/api-connector';
+import { ApiConnectorData, CustomConnectorRequest } from '@syndesis/ui/customizations/api-connector';
 
 @Component({
   selector: 'syndesis-api-connector-review',
@@ -24,5 +24,10 @@ export class ApiConnectorReviewComponent {
     }));
   }
 
+  @Output() backPressed = new EventEmitter();
   @Output() reviewComplete = new EventEmitter();
+
+  onBackPressed() {
+    this.backPressed.emit();
+  }
 }

@@ -21,6 +21,7 @@ export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
   authSetupFormValueSubscription: Subscription;
   @Input() customConnectorRequest: CustomConnectorRequest;
   @Output() authSetup = new EventEmitter();
+  @Output() backPressed = new EventEmitter();
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -29,18 +30,27 @@ export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
       authenticationType,
       authorizationEndpoint,
       tokenEndpoint
-    } = this.customConnectorRequest.properties;
+    } = this.customConnectorRequest.configuredProperties;
 
-    const defaultAuthenticationType = (authenticationType && authenticationType.defaultValue)
-          || (authenticationType.enum.length > 0 && authenticationType.enum[0].value);
+    const properties = this.customConnectorRequest.properties;
+    const defaultAuthenticationType =
+      authenticationType ? authenticationType
+                         : (properties.authenticationType && properties.authenticationType.defaultValue)
+                           || (properties.authenticationType.enum.length > 0 && properties.authenticationType.enum[0].value);
     this.authSetupForm = this.formBuilder.group({
       authenticationType: [
-        defaultAuthenticationType
+        authenticationType ? authenticationType : defaultAuthenticationType
       ],
       authorizationEndpoint: [
-        authorizationEndpoint ? authorizationEndpoint.defaultValue : ''
+        authorizationEndpoint ? authorizationEndpoint
+                              : properties.authorizationEndpoint ? properties.authorizationEndpoint.defaultValue
+                                                                 : ''
       ],
-      tokenEndpoint: [tokenEndpoint ? tokenEndpoint.defaultValue : '']
+      tokenEndpoint: [
+        tokenEndpoint ? tokenEndpoint
+                      : properties.tokenEndpoint ? properties.tokenEndpoint.defaultValue
+                                                 : ''
+      ]
     });
 
     this.authSetupFormValueSubscription = this.authSetupForm
@@ -56,6 +66,10 @@ export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
 
   get tokenUrl() {
     return this.authSetupForm.get( 'tokenEndpoint' );
+  }
+
+  onBackPressed() {
+    this.backPressed.emit();
   }
 
   onSubmit({ value, valid }): void {

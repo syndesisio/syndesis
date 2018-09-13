@@ -45,6 +45,12 @@
           <syndesis-api-connector-swagger-upload
             [apiConnectorState]="apiConnectorState$ | async"
             *ngIf="currentActiveStep == 1"
+            [apiFileImport]="useApiFileImport"
+            (useFileImportChanged)="onApiFileImportChanged($useFileImport)"
+            [apiFile]="apiFile"
+            (apiFileChanged)="onApiFileChanged($event)"
+            [apiUrl]="apiUrl"
+            (apiUrlChanged)="onApiUrlChanged($event)"
             (request)="onValidationRequest($event)">
           </syndesis-api-connector-swagger-upload>
           <syndesis-api-connector-review *ngIf="currentActiveStep == 2 && displayDefinitionEditor === false"
@@ -52,15 +58,18 @@
             [apiConnectorData]="(apiConnectorState$ | async)?.createRequest"
             [showNextButton]="true"
             [enableEditButton]="true"
-            (reviewComplete)="onReviewComplete($event)">
+            (reviewComplete)="onReviewComplete($event)"
+            (backPressed)="onBackPressed()">
           </syndesis-api-connector-review>
           <syndesis-api-connector-auth *ngIf="currentActiveStep == 3"
             [customConnectorRequest]="(apiConnectorState$ | async)?.createRequest"
-            (authSetup)="onAuthSetup($event)">
+            (authSetup)="onAuthSetup($event)"
+            (backPressed)="onBackPressed()">
           </syndesis-api-connector-auth>
           <syndesis-api-connector-info *ngIf="currentActiveStep == 4"
             [apiConnectorState]="apiConnectorState$ | async"
-            (update)="onCreateComplete($event)">
+            (update)="onCreateComplete($event)"
+            (backPressed)="onBackPressed()">
           </syndesis-api-connector-info>
         </div>
 
@@ -72,7 +81,7 @@
                         [tooltip]="'customizations.api-client-connectors.editor-back-button-tooltip' | synI18n"
                         placement="auto"
                         (click)="showCancelApiEditorModal()">
-                  &lt; {{ 'shared.back' | synI18n }}
+                  {{ 'shared.back-button' | synI18n }}
                 </button>
                 <h2>
                   {{ editorTitle }}

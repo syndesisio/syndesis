@@ -17,7 +17,8 @@ import { Component, Input } from '@angular/core';
   styles: [
     `
     :host-context(.is-margin-reset) .submit { margin: 0; }
-    .syndesis-button { display: flex; justify-content: center; }
+    ::ng-deep syndesis-button + syndesis-button { margin-left: 5px; }
+    .syndesis-button { display: inline-flex; justify-content: center; }
     .syndesis-button__spinner { display: block; margin: 0; }
     .syndesis-button__spinner + .syndesis-button__label { padding-left: 1em; }
   `

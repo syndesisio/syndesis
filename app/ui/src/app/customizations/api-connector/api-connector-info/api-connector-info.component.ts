@@ -16,6 +16,7 @@ export class ApiConnectorInfoComponent implements OnInit {
   @Input() apiConnectorState: ApiConnectorState;
   @Input() apiConnectorData: ApiConnectorData;
   @Output() update = new EventEmitter<CustomConnectorRequest>();
+  @Output() backPressed = new EventEmitter();
 
   @ViewChild('connectorIconImg') connectorIconImg: ElementRef;
   @ViewChild('connectorIconInput') connectorIconInput: ElementRef;
@@ -105,6 +106,10 @@ export class ApiConnectorInfoComponent implements OnInit {
         this.iconFile = fileList[0];
       }
     }
+  }
+
+  onBackPressed() {
+    this.backPressed.emit();
   }
 
   onSubmit(): void {

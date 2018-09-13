@@ -71,8 +71,11 @@
     </fieldset>
 
     <fieldset>
+      <syndesis-button theme="default" type="button" (click)="onBackPressed()">
+        {{ 'shared.back-button' | synI18n }}
+      </syndesis-button>
       <syndesis-button type="submit" [disabled]="authSetupForm.invalid">
-        Next
+        {{ 'shared.next-button' | synI18n }}
       </syndesis-button>
     </fieldset>
   </form>

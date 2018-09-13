@@ -44,6 +44,9 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   displayDefinitionEditor = false;
   editorHasChanges = false;
   validationResponse: CustomConnectorRequest;
+  useApiFileImport = true; // default to file import (false is a URL import)
+  apiUrl: string;
+  apiFile: File;
 
   @ViewChild('_apiEditor') _apiEditor: ApiEditorComponent;
   apiDef: ApiDefinition;
@@ -63,6 +66,12 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     private winRef: WindowRef
   ) {
     this.winRef.nativeWindow.dump = YAML.dump;
+    this.apiDef = new ApiDefinition();
+    this.apiDef.createdBy = 'user1';
+    this.apiDef.createdOn = new Date();
+    this.apiDef.tags = [];
+    this.apiDef.description = '';
+    this.apiDef.id = 'api-1';
   }
 
   public onUserChange(): void {
@@ -88,29 +97,30 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
 
     // Once the request validation results are yielded for the 1st time, we move user to step 2
     this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
-      .first(request => !!request && !!request.actionsSummary)
       .subscribe( apiConnectorState => {
-        this.validationResponse = apiConnectorState;
+        if ( apiConnectorState.actionsSummary ) {
+          this.validationResponse = apiConnectorState;
 
-        this.apiDef = new ApiDefinition();
-        this.apiDef.createdBy = 'user1';
-        this.apiDef.createdOn = new Date();
-        this.apiDef.tags = [];
-        this.apiDef.description = '';
-        this.apiDef.id = 'api-1';
-        this.currentActiveStep = WizardSteps.ReviewApiConnector;
+          // move to review step from first step
+          if ( this.currentActiveStep == 1 ) {
+            this.currentActiveStep = WizardSteps.ReviewApiConnector;
+          }
 
-        if ( apiConnectorState.specificationFile ) {
-          const reader = new FileReader();
+          if ( this.currentActiveStep == WizardSteps.ReviewApiConnector ) {
+            // read in API spec and perform validation if current step is the review step
+            if ( apiConnectorState.specificationFile ) {
+              const reader = new FileReader();
 
-          reader.onload = () => {
-            this.apiDef.spec = reader.result;
-            this.apiDef.name = apiConnectorState.name;
-          };
+              reader.onload = () => {
+                this.apiDef.spec = reader.result;
+                this.apiDef.name = apiConnectorState.name;
+              };
 
-          reader.readAsText( apiConnectorState.specificationFile );
-        } else {
-          this.apiDef.spec = apiConnectorState.configuredProperties.specification;
+              reader.readAsText( apiConnectorState.specificationFile );
+            } else {
+              this.apiDef.spec = apiConnectorState.configuredProperties.specification;
+            }
+          }
         }
       });
 
@@ -165,9 +175,26 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     // go back to review step
     this.displayDefinitionEditor = false;
 
-    const blob = new Blob([JSON.stringify(this.apiDef.spec)], {type : 'application/json'}) as any;
-    const file = new File([blob], this.validationResponse.specificationFile.name, {type : 'application/json'});
+    const fileName = () => {
+      // use name of file being uploaded
+      if ( this.validationResponse.specificationFile.name && this.validationResponse.specificationFile.name ) {
+        return this.validationResponse.specificationFile.name;
+      }
 
+      // since URL spec was edited we need to create a file from the spec
+      if ( this.apiDef.spec && this.apiDef.spec.info && this.apiDef.spec.info.title ) {
+        // remove whitespace from spec title
+        return this.apiDef.spec.info.title.replace( /\s+/g, '' ) + '-edited-from-url';
+      }
+
+      // should not happen
+      return 'api-edited-from-url';
+    };
+
+    const blob = new Blob([JSON.stringify(this.apiDef.spec)], {type : 'application/json'}) as any;
+    const file = new File([blob], fileName(), {type : 'application/json'});
+
+    // clear out current validation and request a new one be done
     const request = {
       ...this.validationResponse,
       specificationFile: file,
@@ -179,6 +206,15 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.apiConnectorStore.dispatch(
       ApiConnectorActions.validateSwagger(request)
     );
+  }
+
+  /**
+   * Called when the upload step changes import method (file or URL).
+   *
+   * @param fileImport `true` if import should be done by file; otherwise it will be a URL import.
+   */
+  onApiFileImportChanged( fileImport: boolean ) {
+    this.useApiFileImport = fileImport;
   }
 
   get apiName(): string {
@@ -228,6 +264,43 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
       this.displayDefinitionEditor = false;
       this.currentActiveStep = WizardSteps.UpdateAuthSettings;
     }
+  }
+
+  /**
+   * Called when the back button has been pressed on one of the steps.
+   */
+  onBackPressed() {
+    this.currentActiveStep -= 1;
+
+    // clear out review results when going back to upload step
+    if ( this.currentActiveStep === WizardSteps.UploadSwagger ) {
+      this.validationResponse.actionsSummary = null;
+      this.validationResponse.errors = [];
+      this.validationResponse.warnings = [];
+
+      // make sure for URL import that the file has been cleared out
+      if ( !this.useApiFileImport ) {
+        this.validationResponse.specificationFile = null;
+      }
+    }
+  }
+
+  /**
+   * Called when the upload step file selection changes.
+   *
+   * @param newFile the selected file
+   */
+  onApiFileChanged( newFile: File ): void {
+    this.apiFile = newFile;
+  }
+
+  /**
+   * Called when the upload step has a change to the URL.
+   *
+   * @param newUrl the new URL
+   */
+  onApiUrlChanged( newUrl: string ): void {
+    this.apiUrl = newUrl;
   }
 
   onAuthSetup(authSettings: CustomApiConnectorAuthSettings): void {
