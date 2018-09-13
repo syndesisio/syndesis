@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, identity } from 'rxjs';
 
 import { BaseEntity, ApiHttpService } from '@syndesis/ui/platform';
 import { ConfigService } from '@syndesis/ui/config.service';
@@ -10,7 +10,8 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
     public apiHttpService: ApiHttpService,
     public endpoint: string,
     public kind: string,
-    configService: ConfigService
+    configService: ConfigService,
+    protected transformFn: (T) => T = identity
   ) {
     this.perPage = configService.getSettings().perPage || 50;
   }
@@ -18,7 +19,10 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
   get(id: string): Observable<T> {
     return this.apiHttpService
       .setEndpointUrl(this.getEndpointSegment(id))
-      .get();
+      .get()
+      .pipe(
+        map(this.transformFn)
+      );
   }
 
   list(): Observable<L> {
@@ -27,22 +31,28 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
       .get()
       .pipe(
         map((response: any) => {
-            return Array.isArray(response) ? response : response.items || ([] as L);
-        })
+          const items: L =  Array.isArray(response) ? response : response.items || ([] as L);
+          return items.map(this.transformFn) as L;
+        }),
       );
   }
 
   create(obj: T): Observable<T> {
     return this.apiHttpService
       .setEndpointUrl(this.getEndpointSegment())
-      .post(obj);
+      .post(obj)
+      .pipe(
+        map(this.transformFn)
+      );
   }
 
   update(obj: T): Observable<T> {
     return this.apiHttpService
       .setEndpointUrl(this.getEndpointSegment(obj.id))
       .put(obj)
-      .pipe(map((response: any) => (response !== null ? response : [])));
+      .pipe(
+        map((response: any) => (response !== null ? response : [])),
+      );
   }
 
   delete(obj: T): Observable<any> {

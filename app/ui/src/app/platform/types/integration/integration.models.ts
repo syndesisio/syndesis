@@ -37,6 +37,11 @@ export type IntegrationStatus =
   | 'Unpublished'
   | 'Error';
 
+export enum IntegrationType {
+  SingleFlow = 'SingleFlow',
+  ApiProvider = 'ApiProvider'
+}
+
 export interface IntegrationOverview extends BaseEntity, WithLeveledMessages {
   version?: number;
   tags: Array<string>;
@@ -64,11 +69,17 @@ export interface Integration extends IntegrationOverview {
   createdAt: number;
   url: string;
   statusDetail?: IntegrationStatusDetail;
+  type: IntegrationType;
 }
 
 export type Integrations = Array<Integration>;
 
 export interface Flow extends WithId {
+  name: string;
+  description: string;
+  metadata: {
+    excerpt: string
+  };
   steps: Array<Step>;
   connections: Array<Connection>;
 }

@@ -18,13 +18,25 @@
                  let-integration="item"
                  let-index="index">
       <div class="list-view-pf-left integration-icons">
-        <span *ngIf="integrationActionsService.getStart(integration).connection; let connection">
-          <img class="syn-icon-small" [src]="connection | synIconPath" aria-hidden="true">
-        </span>
-        <span class="fa fa-angle-right"></span>
-        <span *ngIf="integrationActionsService.getFinish(integration).connection; let connection">
-          <img  class="syn-icon-small" [src]="connection | synIconPath" aria-hidden="true">
-        </span>
+        <ng-container *ngIf="integration.type === IntegrationType.SingleFlow;else multiflowIntegration">
+          <span *ngIf="integrationActionsService.getStart(integration).connection; let connection">
+            <img class="syn-icon-small" [src]="connection | synIconPath" aria-hidden="true">
+          </span>
+          <span class="fa fa-angle-right"></span>
+          <span *ngIf="integrationActionsService.getFinish(integration).connection; let connection">
+            <img class="syn-icon-small" [src]="connection | synIconPath" aria-hidden="true">
+          </span>
+        </ng-container>
+        <ng-template #multiflowIntegration>
+          <span *ngIf="integrationActionsService.getStart(integration).connection; let connection">
+            <img class="syn-icon-small" [src]="connection | synIconPath" aria-hidden="true">
+          </span>
+          <span class="fa fa-angle-right"></span>
+          <span class="icon">
+            <img class="syn-icon-small" src="./../../assets/icons/multi-flow.connection.png" aria-hidden="true">
+            <span class="badge">{{ integration.flows.length }}</span>
+          </span>
+        </ng-template>
       </div>
       <div class="list-pf-content-wrapper">
         <div class="list-pf-main-content integration-content">

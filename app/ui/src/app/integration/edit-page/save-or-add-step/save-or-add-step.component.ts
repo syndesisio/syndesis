@@ -7,7 +7,7 @@ import {
   CurrentFlowService,
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
-import { Integration } from '@syndesis/ui/platform';
+import { Integration, IntegrationType } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-save-or-add-step',
@@ -19,6 +19,7 @@ import { Integration } from '@syndesis/ui/platform';
 })
 export class IntegrationSaveOrAddStepComponent implements OnInit {
   integration: Integration;
+  IntegrationType = IntegrationType;
 
   constructor(
     public currentFlowService: CurrentFlowService,

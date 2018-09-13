@@ -1,32 +1,17 @@
 <section class="integration-description">
-  <div *ngFor="let flow of integration?.flows; let flowIndex=index;">
-    <div *ngFor="let step of flow.steps; let stepIndex=index; let last=last"
-          class="step-block inline-block text-center">
-      <ng-container [ngSwitch]="step.stepKind">
-        <div *ngSwitchCase="'endpoint'"
-              id="{{ step.connection?.name | synSlugify }}"
-              class="text-center connection"
-              (click)="onViewDetails(step)"
-              title="{{ step.connection?.name }}&nbsp;{{ step.action?.name }}">
-          <div [class]="'step-line ' + getStepLineClass(flowIndex, stepIndex)"></div>
-          <div class="icon">
-            <img class="syn-icon-small" [src]="step.connection | synIconPath">
-          </div>
-          <div class="syn-truncate__ellipsis">{{ step.connection?.name | capitalize }}</div>
-        </div>
-        <div *ngSwitchDefault
-              id="{{ (step.name || step.stepKind) | synSlugify }}"
-              class="text-center step">
-          <div class="step-line"></div>
-          <div class="icon not-connection">
-            <div class="icon-line"></div>
-          </div>
-          <div>{{ stepStore.getStepName(step) }}</div>
-        </div>
-      </ng-container>
-      <span *ngIf="!last" class="step-sep fa fa-angle-right"></span>
-    </div>
-  </div>
+  <ng-container [ngSwitch]="integration.type">
+    <ng-container *ngSwitchCase="IntegrationType.ApiProvider">
+      <div *ngTemplateOutlet="multiflowApiProvider;context:{
+        flowsCount: integration.flows.length
+      }"></div>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <div *ngTemplateOutlet="stepsBreadcrumb;context:{
+        steps: integration.flows[0].steps
+      }"></div>
+    </ng-container>
+  </ng-container>
+
   <div *ngIf="integration.url" class="block-copy-container container-fluid">
     <div class="col-sm-8">
       <p>
@@ -49,3 +34,90 @@
     </syndesis-editable-textarea>
   </p>
 </section>
+
+<!-- end of output template -->
+
+<ng-template #stepConnection
+             let-id="id"
+             let-connectionName="connectionName"
+             let-actionName="actionName"
+             let-iconSrc="iconSrc"
+             let-onClick="onClick()"
+             let-badge="badge"
+             let-class="class">
+  <div [id]="id"
+       class="text-center connection"
+       (click)="onClick"
+       title="{{ connectionName }}&nbsp;{{ actionName }}">
+    <div [class]="'step-line ' + class"></div>
+    <div class="icon">
+      <img class="syn-icon-small" [src]="iconSrc">
+      <span *ngIf="badge"
+            class="badge">
+        {{ badge }}
+      </span>
+    </div>
+    <div class="syn-truncate__ellipsis">{{ connectionName | capitalize }}</div>
+  </div>
+</ng-template>
+
+<ng-template #stepDefault let-id="id" let-name="name">
+  <div [id]="id"
+       class="text-center step">
+    <div class="step-line"></div>
+    <div class="icon not-connection">
+      <div class="icon-line"></div>
+    </div>
+    <div>{{ name }}</div>
+  </div>
+</ng-template>
+
+<ng-template #stepsBreadcrumb let-steps="steps">
+  <div *ngFor="let step of steps; let stepIndex=index; let last=last"
+       class="step-block inline-block text-center">
+    <ng-container [ngSwitch]="step.stepKind">
+      <ng-container *ngSwitchCase="'endpoint'">
+        <div *ngTemplateOutlet="stepConnection;context:{
+          id: step.connection?.name | synSlugify,
+          connectionName: step.connection?.name,
+          actionName: step.action?.name,
+          onClick: onViewDetails.bind(this, step),
+          iconSrc: step.connection | synIconPath,
+          class: getStepLineClass(stepIndex)
+        }"></div>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <div *ngTemplateOutlet="stepDefault;context:{
+          id: (step.name || step.stepKind) | synSlugify,
+          name: stepStore.getStepName(step)
+        }"></div>
+      </ng-container>
+    </ng-container>
+    <span *ngIf="!last" class="step-sep fa fa-angle-right"></span>
+  </div>
+</ng-template>
+
+<ng-template #multiflowApiProvider let-flowsCount="flowsCount">
+  <div class="step-block inline-block text-center">
+    <div *ngTemplateOutlet="stepConnection;context:{
+      id: 'api-provider',
+      connectionName: 'API Provider',
+      actionName: '',
+      onClick: onApiProviderClick.bind(this),
+      iconSrc: './../../assets/icons/api-provider.connection.png',
+      class: 'start'
+    }"></div>
+    <span class="step-sep fa fa-angle-right"></span>
+  </div>
+  <div class="step-block inline-block text-center">
+    <div *ngTemplateOutlet="stepConnection;context:{
+      id: 'multi-flow',
+      connectionName: flowsCount + ' Flows',
+      badge: flowsCount,
+      actionName: '',
+      onClick: onApiProviderFlowsClick.bind(this),
+      iconSrc: './../../assets/icons/multi-flow.connection.png',
+      class: 'finish'
+    }"></div>
+  </div>
+</ng-template>

@@ -20,6 +20,11 @@
                       [routerLink]="['/integrations', currentFlowService.integration?.id]">{{ flowPageService.integrationName }}</a>
                     <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
                   </li>
+                  <li *ngIf="currentFlowService.integration?.type === IntegrationType.ApiProvider">
+                    <a [routerLink]="['/integrations', currentFlowService.integration?.id, 'operations']">
+                      {{ currentFlowService.currentFlow.name }}
+                    </a>
+                  </li>
                   <li class="active">Save or Add Step</li>
                 </ol>
               </div>

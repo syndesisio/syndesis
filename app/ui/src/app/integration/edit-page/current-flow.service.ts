@@ -675,7 +675,7 @@ export class CurrentFlowService implements OnDestroy {
     }, 10);
   }
 
-  private get currentFlow() {
+  get currentFlow() {
     return this.flow(this.flowId);
   }
 

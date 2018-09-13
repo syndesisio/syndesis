@@ -1,22 +1,34 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService,
+import {
+  ApiHttpService,
+  DetailedState,
   Integration,
   Integrations,
-  IntegrationSupportService,
   IntegrationStatusDetail,
-  DetailedState } from '@syndesis/ui/platform';
-import { forkJoin, Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+  IntegrationSupportService,
+  IntegrationType
+} from '@syndesis/ui/platform';
+import { forkJoin, Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { RESTService } from '@syndesis/ui/store/entity';
 import { log } from '@syndesis/ui/logging';
 import { ConfigService } from '@syndesis/ui/config.service';
+
+function transform(integration: Integration): Integration {
+  if (integration.flows.length > 1) {
+    integration.type = IntegrationType.ApiProvider;
+  } else {
+    integration.type = IntegrationType.SingleFlow;
+  }
+  return integration;
+}
 
 @Injectable()
 export class IntegrationService extends RESTService<Integration, Integrations> {
   constructor(apiHttpService: ApiHttpService,
               configService: ConfigService,
               protected integrationSupportService: IntegrationSupportService) {
-    super(apiHttpService, 'integrations', 'integration', configService);
+    super(apiHttpService, 'integrations', 'integration', configService, transform);
   }
 
   get(id: string): Observable<Integration> {

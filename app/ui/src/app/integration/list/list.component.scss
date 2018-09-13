@@ -13,6 +13,20 @@
       margin: 0 10px 0 10px;
       font-size: 18px;
     }
+
+    .icon {
+      position: relative;
+      .badge {
+        position: absolute;
+        background: #ec7a08;
+        border-radius: 50%;
+        padding: 5px;
+        top: -16px;
+        right: -16px;
+        cursor: pointer;
+      }
+    }
+
   }
 
   .integration-content {
