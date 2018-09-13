@@ -9,16 +9,18 @@ import { ConnectionStore } from '@syndesis/ui/store/connection/connection.store'
   selector: 'syndesis-connection-detail-page',
   template: `
     <syndesis-connection-detail-breadcrumb></syndesis-connection-detail-breadcrumb>
-    <syndesis-loading [loading]="loading | async" class="syn-scrollable--body">
-      <ng-container *ngIf="connection">
-        <syndesis-connection-detail-info [connection]="connection"
-                                         (updated)="update($event)">
-        </syndesis-connection-detail-info>
-        <br *ngIf="connection.board?.messages?.length !== 0">
-        <syndesis-connection-detail-configuration [connection]="connection"
-                                                  (updated)="update($event)">
-        </syndesis-connection-detail-configuration>
-      </ng-container>
+    <syndesis-loading [loading]="loading | async" class="syn-scrollable--body" [content]="content">
+      <ng-template #content>
+        <ng-container *ngIf="connection">
+          <syndesis-connection-detail-info [connection]="connection"
+                                          (updated)="update($event)">
+          </syndesis-connection-detail-info>
+          <br *ngIf="connection.board?.messages?.length !== 0">
+          <syndesis-connection-detail-configuration [connection]="connection"
+                                                    (updated)="update($event)">
+          </syndesis-connection-detail-configuration>
+        </ng-container>
+      </ng-template>
     </syndesis-loading>
   `,
   styleUrls: ['./detail-page.component.scss']

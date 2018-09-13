@@ -1,92 +1,94 @@
-<syndesis-loading [loading]="!integration">
-  <dl class="dl-horizontal" *ngIf="integration?.isDraft">
-    <dt>{{ 'draft' | synI18n }}:</dt>
-    <dd>
-      <div class="list-pf">
-        <div class="list-pf-item">
-          <div class="list-pf-container">
-            <div class="list-pf-content list-pf-content-flex">
-              <div class="pfng-list-content">
-                <div class="list-pf-left">
-                  <em>{{ 'draft' | synI18n }}</em>
+<syndesis-loading [loading]="!integration" [content]="content">
+  <ng-template #content>
+    <dl class="dl-horizontal" *ngIf="integration?.isDraft">
+      <dt>{{ 'draft' | synI18n }}:</dt>
+      <dd>
+        <div class="list-pf">
+          <div class="list-pf-item">
+            <div class="list-pf-container">
+              <div class="list-pf-content list-pf-content-flex">
+                <div class="pfng-list-content">
+                  <div class="list-pf-left">
+                    <em>{{ 'draft' | synI18n }}</em>
+                  </div>
                 </div>
-              </div>
-              <div class="list-pf-actions">
-                <syndesis-button theme="default" (click)="onDraftAction('publish')" type="button" [disabled]="!integrationActionsService.canActivate(integration)">
-                  {{ 'publish-draft' | synI18n }}
-                </syndesis-button>
-                <syndesis-button theme="default" (click)="onDraftAction('edit')" type="button" [disabled]="!integrationActionsService.canEdit(integration)">
-                  {{ 'edit' | synI18n }}
-                </syndesis-button>
+                <div class="list-pf-actions">
+                  <syndesis-button theme="default" (click)="onDraftAction('publish')" type="button" [disabled]="!integrationActionsService.canActivate(integration)">
+                    {{ 'publish-draft' | synI18n }}
+                  </syndesis-button>
+                  <syndesis-button theme="default" (click)="onDraftAction('edit')" type="button" [disabled]="!integrationActionsService.canEdit(integration)">
+                    {{ 'edit' | synI18n }}
+                  </syndesis-button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </dd>
-  </dl>
-  <dl class="dl-horizontal" *ngIf="integration?.deployments && integration?.deployments.length">
-    <dt>{{ 'history' | synI18n }}:</dt>
-    <dd>
-      <pfng-list
-        [items]="integration?.deployments | objectPropertySort:{ sortField: 'version', descending: true }"
-        [config]="deploymentListConfig"
-        [itemTemplate]="itemTemplate"
-        [expandTemplate]="expandTemplate"
-        [actionTemplate]="actionTemplate">
-        <ng-template #itemTemplate let-deployment="item" let-index="index">
-          <div class="list-pf-left">
-            <ng-container *ngIf="deployment.version === integration.deploymentVersion">
-              <ng-container [ngSwitch]="integration.currentState">
-                <ng-container *ngSwitchCase="'Pending'">
-                  <div class="spinner spinner-sm spinner-inline"></div>
-                </ng-container>
-                <ng-container *ngSwitchCase="'Published'">
-                  <span class="pficon pficon-ok"></span>
-                </ng-container>
-                <ng-container *ngSwitchCase="'Unpublished'">
-                </ng-container>
-                <ng-container *ngSwitchCase="'Error'">
-                  <span class="pficon pficon-error"></span>
+      </dd>
+    </dl>
+    <dl class="dl-horizontal" *ngIf="integration?.deployments && integration?.deployments.length">
+      <dt>{{ 'history' | synI18n }}:</dt>
+      <dd>
+        <pfng-list
+          [items]="integration?.deployments | objectPropertySort:{ sortField: 'version', descending: true }"
+          [config]="deploymentListConfig"
+          [itemTemplate]="itemTemplate"
+          [expandTemplate]="expandTemplate"
+          [actionTemplate]="actionTemplate">
+          <ng-template #itemTemplate let-deployment="item" let-index="index">
+            <div class="list-pf-left">
+              <ng-container *ngIf="deployment.version === integration.deploymentVersion">
+                <ng-container [ngSwitch]="integration.currentState">
+                  <ng-container *ngSwitchCase="'Pending'">
+                    <div class="spinner spinner-sm spinner-inline"></div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Published'">
+                    <span class="pficon pficon-ok"></span>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Unpublished'">
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Error'">
+                    <span class="pficon pficon-error"></span>
+                  </ng-container>
                 </ng-container>
               </ng-container>
-            </ng-container>
-          </div>
-          <div class="list-pf-content-wrapper">
-            <div class="list-pf-main-content">
-              <div class="list-pf-title">
-                {{ 'version' | synI18n }}: {{ deployment.version }}
+            </div>
+            <div class="list-pf-content-wrapper">
+              <div class="list-pf-main-content">
+                <div class="list-pf-title">
+                  {{ 'version' | synI18n }}: {{ deployment.version }}
+                </div>
               </div>
             </div>
-          </div>
-          <div class="list-pf-additional-content">
-            <span *ngIf="deployment.updatedAt">{{ 'last-published-on' | synI18n }} {{ deployment.updatedAt | date:'medium' }}</span>
-            <span>{{ deployment.timesUsed | i18nPlural:usesMapping }} </span>
-          </div>
-        </ng-template>
-        <ng-template #expandTemplate let-deployment="item" let-index="index">
-          <div class="row">
-            <div class="col-md-6">
-              <dl class="dl-horizontal" *ngIf="deployment.createdAt">
-                <dt>{{ 'created-at' | synI18n }}:</dt>
-                <dd>{{ deployment.createdAt | date:'medium' }}</dd>
-              </dl>
+            <div class="list-pf-additional-content">
+              <span *ngIf="deployment.updatedAt">{{ 'last-published-on' | synI18n }} {{ deployment.updatedAt | date:'medium' }}</span>
+              <span>{{ deployment.timesUsed | i18nPlural:usesMapping }} </span>
             </div>
-            <div class="col-md-6">
-              <dl class="dl-horizontal">
-                <dt></dt>
-                <dd></dd>
-              </dl>
+          </ng-template>
+          <ng-template #expandTemplate let-deployment="item" let-index="index">
+            <div class="row">
+              <div class="col-md-6">
+                <dl class="dl-horizontal" *ngIf="deployment.createdAt">
+                  <dt>{{ 'created-at' | synI18n }}:</dt>
+                  <dd>{{ deployment.createdAt | date:'medium' }}</dd>
+                </dl>
+              </div>
+              <div class="col-md-6">
+                <dl class="dl-horizontal">
+                  <dt></dt>
+                  <dd></dd>
+                </dl>
+              </div>
             </div>
-          </div>
-        </ng-template>
-        <ng-template #actionTemplate let-deployment="item" let-index="index">
-          <pfng-action class="list-pf-actions"
-            [config]="deploymentActionConfigs[deployment.id]"
-            (onActionSelect)="onDeploymentAction($event, deployment)">
-          </pfng-action>
-        </ng-template>
-      </pfng-list>
-    </dd>
-  </dl>
+          </ng-template>
+          <ng-template #actionTemplate let-deployment="item" let-index="index">
+            <pfng-action class="list-pf-actions"
+              [config]="deploymentActionConfigs[deployment.id]"
+              (onActionSelect)="onDeploymentAction($event, deployment)">
+            </pfng-action>
+          </ng-template>
+        </pfng-list>
+      </dd>
+    </dl>
+  </ng-template>
 </syndesis-loading>

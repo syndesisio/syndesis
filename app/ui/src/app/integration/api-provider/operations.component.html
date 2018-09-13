@@ -9,78 +9,76 @@
     <!-- Add/Edit Integration -->
     <div class="main-panel wizard-main">
       <div class="syn-scrollable">
-        <ng-container *ngIf="loading | async; else content">
-          <syndesis-loading loading="true"></syndesis-loading>
-        </ng-container>
-
-        <ng-template #content>
-          <!-- Toolbar -->
-          <div class="toolbar syn-toolbar--inverted">
-            <div class="container-fluid">
-              <!-- Toolbar: Breadcrumbs -->
-              <div class="row toolbar-pf">
-                <div class="col-sm-12">
-                  <div class="toolbar-pf-actions">
-                    <div class="inline-block">
-                      <ol class="breadcrumb">
-                        <li>
-                          <a [routerLink]="['/']">Home</a>
-                        </li>
-                        <li>
-                          <a [routerLink]="['/integrations']">Integrations</a>
-                        </li>
-                        <li>
-                          <a [routerLink]="['/integrations', currentFlowService.integration.id]">
-                            {{ currentFlowService.integration.name }}
-                          </a>
-                        </li>
-                        <li class="active">Choose operation</li>
-                      </ol>
-                    </div>
-                    <div class="toolbar-pf-action-right">
-                      <syndesis-cancel-add-step></syndesis-cancel-add-step>
+        <syndesis-loading [loading]="loading | async" [content]="content">
+          <ng-template #content>
+            <!-- Toolbar -->
+            <div class="toolbar syn-toolbar--inverted">
+              <div class="container-fluid">
+                <!-- Toolbar: Breadcrumbs -->
+                <div class="row toolbar-pf">
+                  <div class="col-sm-12">
+                    <div class="toolbar-pf-actions">
+                      <div class="inline-block">
+                        <ol class="breadcrumb">
+                          <li>
+                            <a [routerLink]="['/']">Home</a>
+                          </li>
+                          <li>
+                            <a [routerLink]="['/integrations']">Integrations</a>
+                          </li>
+                          <li>
+                            <a [routerLink]="['/integrations', currentFlowService.integration.id]">
+                              {{ currentFlowService.integration.name }}
+                            </a>
+                          </li>
+                          <li class="active">Choose operation</li>
+                        </ol>
+                      </div>
+                      <div class="toolbar-pf-action-right">
+                        <syndesis-cancel-add-step></syndesis-cancel-add-step>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="syn-scrollable--body">
-            <div class="container-fluid">
-              <div class="title">
-                <h1>Choose operation</h1>
-              </div>
-              <p>Click an operation to integrate an integration flow.</p>
+            <div class="syn-scrollable--body">
+              <div class="container-fluid">
+                <div class="title">
+                  <h1>Choose operation</h1>
+                </div>
+                <p>Click an operation to integrate an integration flow.</p>
 
-              <!-- Toolbar -->
-              <pfng-toolbar [config]="toolbarConfig"
-                            (onFilterChange)="filterChanged($event)"
-                            (onSortChange)="sortChanged($event)">
-              </pfng-toolbar>
-              <div class="list-view-pf-view">
-                <pfng-list [items]="currentFlowService.integration.flows  | objectPropertyFilter:filter | objectPropertySort:sort"
-                           [itemTemplate]="itemTemplate"
-                           (onClick)="handleClick($event)">
-                  <ng-template #itemTemplate
-                               let-flow="item"
-                               let-index="index">
-                    <div class="list-pf-content-wrapper">
-                      <div class="list-pf-main-content">
-                        <div class="list-pf-title">{{ flow.name }}</div>
-                        <div class="list-pf-description text-overflow-pf">{{ flow.description }}</div>
-                      </div>
-                      <div class="list-pf-additional-content">
-                        <div>
-                          {{ flow.metadata.excerpt }}
+                <!-- Toolbar -->
+                <pfng-toolbar [config]="toolbarConfig"
+                              (onFilterChange)="filterChanged($event)"
+                              (onSortChange)="sortChanged($event)">
+                </pfng-toolbar>
+                <div class="list-view-pf-view">
+                  <pfng-list [items]="currentFlowService.integration.flows  | objectPropertyFilter:filter | objectPropertySort:sort"
+                            [itemTemplate]="itemTemplate"
+                            (onClick)="handleClick($event)">
+                    <ng-template #itemTemplate
+                                let-flow="item"
+                                let-index="index">
+                      <div class="list-pf-content-wrapper">
+                        <div class="list-pf-main-content">
+                          <div class="list-pf-title">{{ flow.name }}</div>
+                          <div class="list-pf-description text-overflow-pf">{{ flow.description }}</div>
+                        </div>
+                        <div class="list-pf-additional-content">
+                          <div>
+                            {{ flow.metadata.excerpt }}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </ng-template>
-                </pfng-list>
+                    </ng-template>
+                  </pfng-list>
+                </div>
               </div>
             </div>
-          </div>
-        </ng-template>
+          </ng-template>
+        </syndesis-loading>
       </div>
     </div>
   </div>

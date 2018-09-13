@@ -8,47 +8,46 @@
     {{ stateError | async }}
   </syndesis-validation-error>
 
-  <syndesis-loading [loading]="(apiConnectorState$ | async)?.loading">
+  <syndesis-loading [loading]="(apiConnectorState$ | async)?.loading" [content]="content">
 
-    <syndesis-list-toolbar [items]="apiConnectors$" [filterTags]="false" [filteredItems]="filteredApiConnectors$" [viewTemplate]="viewTemplate">
-      <ng-template #viewTemplate>
-        <div class="toolbar-pf-action-right">
-          <button type="button"
-                  class="btn btn-primary"
-                  *ngIf="(filteredApiConnectors$ | async).length > 0"
-                  routerLink="/customizations/api-connector/create/swagger-connector">
-            Create API Connector
+    <ng-template #content>
+      <syndesis-list-toolbar [items]="apiConnectors$" [filterTags]="false" [filteredItems]="filteredApiConnectors$" [viewTemplate]="viewTemplate">
+        <ng-template #viewTemplate>
+          <div class="toolbar-pf-action-right">
+              <button type="button" class="btn btn-primary" *ngIf="(filteredApiConnectors$ | async).length > 0" routerLink="/customizations/api-connector/create/swagger-connector">
+              Create API Connector
+            </button>
+          </div>
+        </ng-template>
+      </syndesis-list-toolbar>
+
+      <pfng-list [items]="filteredApiConnectors$ | async" [config]="listConfig" [itemTemplate]="itemTemplate" [actionTemplate]="actionTemplate"
+        (onActionSelect)="handleAction($event)" (onClick)="handleClick($event)">
+        <ng-template #itemTemplate let-item="item" let-index="index">
+          <div class="list-pf-content-wrapper">
+            <div class="list-pf-additional-content">
+              <div class="list-pf-title">{{ item.name }}</div>
+            </div>
+            <div class="list-pf-main-content">
+              <div class="list-pf-description" text-overflow-pf [innerHtml]="item.description | synParseMarkdownLinks">
+              </div>
+            </div>
+            <div class="list-pf-additional-content">
+              <div *ngIf="item.uses !== null && item.uses !== undefined">
+                <strong>Used by integrations
+                  <span [innerHtml]="item.uses | i18nPlural: itemUseMapping"></span>
+                </strong>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #actionTemplate let-item="item" let-index="index">
+          <button type="button" (click)="onDelete(item)" [disabled]="item.uses > 0" class="foo btn btn-default">
+            Delete
           </button>
-        </div>
-      </ng-template>
-    </syndesis-list-toolbar>
-
-    <pfng-list [items]="filteredApiConnectors$ | async" [config]="listConfig" [itemTemplate]="itemTemplate" [actionTemplate]="actionTemplate"
-      (onActionSelect)="handleAction($event)" (onClick)="handleClick($event)">
-      <ng-template #itemTemplate let-item="item" let-index="index">
-        <div class="list-pf-content-wrapper">
-          <div class="list-pf-additional-content">
-            <div class="list-pf-title">{{ item.name }}</div>
-          </div>
-          <div class="list-pf-main-content">
-            <div class="list-pf-description" text-overflow-pf [innerHtml]="item.description | synParseMarkdownLinks">
-            </div>
-          </div>
-          <div class="list-pf-additional-content">
-            <div *ngIf="item.uses !== null && item.uses !== undefined">
-              <strong>Used by integrations
-                <span [innerHtml]="item.uses | i18nPlural: itemUseMapping"></span>
-              </strong>
-            </div>
-          </div>
-        </div>
-      </ng-template>
-      <ng-template #actionTemplate let-item="item" let-index="index">
-        <button type="button" (click)="onDelete(item)" [disabled]="item.uses > 0" class="foo btn btn-default">
-          Delete
-        </button>
-      </ng-template>
-    </pfng-list>
+        </ng-template>
+      </pfng-list>
+    </ng-template>
   </syndesis-loading>
 </div>
 

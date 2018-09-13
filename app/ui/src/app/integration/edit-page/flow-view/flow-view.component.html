@@ -37,76 +37,78 @@
                   message="{{ 'integrations.edit.delete-step-modal' | synI18n }}">
   </syndesis-modal>
 
-  <syndesis-loading [loading]="!loaded()" class="syn-scrollable">
+  <syndesis-loading [loading]="!loaded()" class="syn-scrollable" [content]="content">
 
-    <!-- Header -->
-    <div class="row name">
-      <div class="col-md-12">
-        <div class="vertical-align">
-          <div class="integration-name">
-            <input type="text"
-                  #nameInput
-                  class="form-control integration-name-field"
-                  placeholder="Enter integration name..."
-                  [title]="integrationName"
-                  [(ngModel)]="integrationName"
-                  [readonly]="!editingName"
-                  (blur)="stopEditingName()"
-                  (click)="!editingName && startEditingName()"
-                  (keyup)="$event.keyCode == 13 && stopEditingName()"
-                  size="1">
-          </div>
-          <div class="integration-name-edit" *ngIf="!editingName">
-            <button
-              aria-label="Edit Integration Name"
-              class="btn btn-link integration-name-edit-btn"
-              type="button"
-              (click)="startEditingName()">
-              <span class="fa fa-pencil"></span>
-            </button>
+    <ng-template #content>
+      <!-- Header -->
+      <div class="row name">
+        <div class="col-md-12">
+          <div class="vertical-align">
+            <div class="integration-name">
+              <input type="text"
+                    #nameInput
+                    class="form-control integration-name-field"
+                    placeholder="Enter integration name..."
+                    [title]="integrationName"
+                    [(ngModel)]="integrationName"
+                    [readonly]="!editingName"
+                    (blur)="stopEditingName()"
+                    (click)="!editingName && startEditingName()"
+                    (keyup)="$event.keyCode == 13 && stopEditingName()"
+                    size="1">
+            </div>
+            <div class="integration-name-edit" *ngIf="!editingName">
+              <button
+                aria-label="Edit Integration Name"
+                class="btn btn-link integration-name-edit-btn"
+                type="button"
+                (click)="startEditingName()">
+                <span class="fa fa-pencil"></span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="flow-view-container syn-scrollable--body"
-         [ngClass]="{ 'collapsed': isCollapsed }">
+      <div class="flow-view-container syn-scrollable--body"
+          [ngClass]="{ 'collapsed': isCollapsed }">
 
-      <!-- First Step -->
-      <div class="step start">
-        <syndesis-integration-flow-view-step [step]="startConnection()"
-                                              [position]="firstPosition()"
-                                              [currentPosition]="currentPosition"
-                                              [currentState]="currentState"></syndesis-integration-flow-view-step>
-      </div>
-
-      <!-- First Step: Save or Add Step -->
-      <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: 0 }"></ng-container>
-
-      <!-- Middle Steps -->
-      <ng-template ngFor
-                   let-step
-                   [ngForOf]="getMiddleSteps()"
-                   let-position="index">
-        <div class="step">
-          <syndesis-integration-flow-view-step [step]="step"
-                                                [position]="position + 1"
+        <!-- First Step -->
+        <div class="step start">
+          <syndesis-integration-flow-view-step [step]="startConnection()"
+                                                [position]="firstPosition()"
                                                 [currentPosition]="currentPosition"
                                                 [currentState]="currentState"></syndesis-integration-flow-view-step>
         </div>
 
-        <!-- Middle Steps: Save or Add Step -->
-        <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: (position + 1) }"></ng-container>
-      </ng-template>
+        <!-- First Step: Save or Add Step -->
+        <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: 0 }"></ng-container>
 
-      <!-- Last Step -->
-      <div class="step finish">
-        <syndesis-integration-flow-view-step [step]="endConnection()"
-                                              [position]="lastPosition()"
-                                              [currentPosition]="currentPosition"
-                                              [currentState]="currentState"></syndesis-integration-flow-view-step>
+        <!-- Middle Steps -->
+        <ng-template ngFor
+                    let-step
+                    [ngForOf]="getMiddleSteps()"
+                    let-position="index">
+          <div class="step">
+            <syndesis-integration-flow-view-step [step]="step"
+                                                  [position]="position + 1"
+                                                  [currentPosition]="currentPosition"
+                                                  [currentState]="currentState"></syndesis-integration-flow-view-step>
+          </div>
+
+          <!-- Middle Steps: Save or Add Step -->
+          <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: (position + 1) }"></ng-container>
+        </ng-template>
+
+        <!-- Last Step -->
+        <div class="step finish">
+          <syndesis-integration-flow-view-step [step]="endConnection()"
+                                                [position]="lastPosition()"
+                                                [currentPosition]="currentPosition"
+                                                [currentState]="currentState"></syndesis-integration-flow-view-step>
+        </div>
       </div>
-    </div>
+    </ng-template>
   </syndesis-loading>
   <button
     class="btn btn-default toggle-collapsed"
