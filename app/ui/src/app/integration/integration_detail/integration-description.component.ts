@@ -23,7 +23,7 @@ export class IntegrationDescriptionComponent {
   @Output() viewApiProviderOperations = new EventEmitter<Integration>();
   @Output() attributeUpdated = new EventEmitter<{ [key: string]: string }>();
 
-  protected IntegrationType = IntegrationType;
+  IntegrationType = IntegrationType;
 
   onViewDetails(step: Step): void {
     this.viewDetails.emit(step);
