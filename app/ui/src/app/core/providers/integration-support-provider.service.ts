@@ -183,6 +183,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
       .get();
   }
 
+  // @ts-ignore
   private watchOverview(id: string): Observable<IntegrationOverview> {
     return observableMerge(
       this.getOverview(id),
@@ -209,6 +210,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
       .pipe(map((value: any) => value.items || []));
   }
 
+  // @ts-ignore
   private watchOverviews(): Observable<IntegrationOverviews> {
     return observableMerge(
       this.getOverviews(),

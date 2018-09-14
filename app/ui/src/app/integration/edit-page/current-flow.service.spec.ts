@@ -1,4 +1,4 @@
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
 
 import {
   Connection,
@@ -7,12 +7,10 @@ import {
   createStep,
   Integration,
   Step,
-  Steps,
   Flow,
   createConnectionStep
 } from '@syndesis/ui/platform';
 import { CoreModule } from '@syndesis/ui/core';
-import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { ApiModule } from '@syndesis/ui/api';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { TypeFactory } from '@syndesis/ui/model';
@@ -23,8 +21,7 @@ import {
   StepStore
 } from '@syndesis/ui/store';
 import {
-  CurrentFlowService,
-  FlowEvent
+  CurrentFlowService
 } from '@syndesis/ui/integration/edit-page';
 import { ConfigService } from '@syndesis/ui/config.service';
 

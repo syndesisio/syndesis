@@ -38,7 +38,7 @@ export class I18NEffects {
         this.i18nService.persistLocale(locale);
         moment.locale(locale);
 
-        const localePath = `@angular/common/locales/${locale}.js`;
+        // const localePath = `@angular/common/locales/${locale}.js`;
         // TODO: Fix Angular's locale registration and raised warnings
         //import(localePath).then(locale => registerLocaleData(locale.default));
       })

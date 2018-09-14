@@ -43,7 +43,7 @@ export class ConnectorService extends RESTService<Connector, Connectors> {
         // Try and clear any stale cookies, though we can't touch HttpOnly ones
         document.cookie.split(';').forEach(function(c) {
           if (c.startsWith('cred-')) {
-            const newCookie = c
+            c
               .replace(/^ +/, '')
               .replace(
                 /=.*/,

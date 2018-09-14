@@ -1,6 +1,6 @@
 import { map } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 
 import { NavigationService } from '@syndesis/ui/common';
@@ -9,9 +9,6 @@ import { Integration } from '@syndesis/ui/platform';
 import { FlowEvent } from '@syndesis/ui/integration/edit-page';
 import { CurrentFlowService } from '@syndesis/ui/integration/edit-page/current-flow.service';
 import { FlowPageService } from '@syndesis/ui/integration/edit-page/flow-page.service';
-import { log, getCategory } from '@syndesis/ui/logging';
-
-const category = getCategory('IntegrationsEditPage');
 
 @Component({
   selector: 'syndesis-integration-edit-page',

@@ -25,7 +25,6 @@ import {
 } from '@atlasmap/atlasmap-data-mapper';
 
 import { ConfigService } from '@syndesis/ui/config.service';
-import { getCategory } from '@syndesis/ui/logging';
 import {
   DataShapeKinds,
   DataShape,
@@ -42,8 +41,6 @@ import {
  *
  * https://github.com/atlasmap/atlasmap-ui/blob/master/src/app/lib/syndesis-data-mapper/components/data.mapper.example.host.component.ts
  */
-
-const category = getCategory('data-mapper');
 
 const MAPPING_KEY = 'atlasmapping';
 

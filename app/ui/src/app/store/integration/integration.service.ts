@@ -91,6 +91,7 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
   }
 
   // design time function
+  // @ts-ignore
   private forceDetailedState(integration: Integration) {
     integration.currentState = 'Pending';
     integration.statusDetail = {

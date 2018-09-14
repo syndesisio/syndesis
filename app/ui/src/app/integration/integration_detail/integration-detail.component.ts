@@ -41,18 +41,11 @@ const stopIntegration = {
   title: 'Unpublish',
   tooltip: 'Unpublish this integration'
 } as PFAction;
-const createDraft = {
-  id: CREATE_DRAFT,
-  title: 'Create Draft',
-  tooltip: 'Create a new draft from this version'
-} as PFAction;
 const publish = {
   id: PUBLISH,
   title: 'Publish',
   tooltip: 'Publish this version of the integration'
 } as PFAction;
-
-const DEFAULT_POLLING_INTERVAL = 5000;
 
 @Component({
   selector: 'syndesis-integration-detail-page',

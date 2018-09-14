@@ -210,7 +210,7 @@ export function integrationReducer(
     case IntegrationActions.DELETE_INTEGRATION_FAIL: {
       const error = (action as IntegrationActions.IntegrationDeleteFail)
         .payload;
-      const restCollection = state.collection.filter(
+      state.collection.filter(
         item => item.id !== state.inserted.id
       );
 

@@ -45,7 +45,7 @@ export class ConnectionConfigurationService {
         break;
       default:
     }
-    const formModel = this.formFactory.createFormModel(
+    this.formFactory.createFormModel(
       config,
       values,
       controls

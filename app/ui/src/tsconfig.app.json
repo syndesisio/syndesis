@@ -24,7 +24,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "noUnusedParameters": false,
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": false,
     "outDir": "../dist/out-tsc",
     "sourceMap": true,

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { ApiConnectorData, CustomConnectorRequest } from '@syndesis/ui/customizations/api-connector';
+import { ApiConnectorData } from '@syndesis/ui/customizations/api-connector';
 
 @Component({
   selector: 'syndesis-api-connector-review',

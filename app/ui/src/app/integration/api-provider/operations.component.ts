@@ -1,21 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { FilterConfig, ListEvent, SortConfig, ToolbarConfig } from 'patternfly-ng';
 import {
-  ExtensionStore,
-  EXTENSION,
-  StepStore,
-  StepKind, IntegrationStore
+  IntegrationStore
 } from '../../store/index';
 import {
   CurrentFlowService,
-  FlowEvent,
   FlowPageService
 } from '../edit-page/index';
-import { Extensions, Flow, Integration, Step, Steps } from '../../platform/index';
-import { NavigationService, ObjectPropertyFilterConfig, ObjectPropertyFilterPipe, ObjectPropertySortConfig } from '../../common/index';
+import { Flow, Integration } from '../../platform/index';
+import { NavigationService, ObjectPropertyFilterConfig, ObjectPropertySortConfig } from '../../common/index';
 
 @Component({
   selector: 'syndesis-integration-api-provider-operations',

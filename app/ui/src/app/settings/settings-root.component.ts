@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+// import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'syndesis-settings-root',
@@ -7,5 +7,5 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./settings-root.component.scss']
 })
 export class SettingsRootComponent {
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  // constructor(private route: ActivatedRoute, private router: Router) {}
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, Renderer2, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import {
@@ -27,7 +27,7 @@ export class ApiConnectorInfoComponent implements OnInit {
   iconFile: File;
   originalValue = {};
 
-  constructor(private formBuilder: FormBuilder, private renderer: Renderer2) {}
+  constructor(private formBuilder: FormBuilder) {}
 
   get processingError(): string {
     return this.apiConnectorState.hasErrors
