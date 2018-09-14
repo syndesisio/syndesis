@@ -1,7 +1,7 @@
 daysUntilStale: 90
 daysUntilClose: 7
 exemptLabels:
-  - priority/p0
+  - prio/p0
   - status/never-stale
 staleLabel: status/stale
 markComment: >
