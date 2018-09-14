@@ -40,18 +40,6 @@ export class ConnectorService extends RESTService<Connector, Connectors> {
     return Observable.create( observer => {
       // TODO we probably don't need all these nested setTimeouts, but...
       setTimeout(() => {
-        // Try and clear any stale cookies, though we can't touch HttpOnly ones
-        document.cookie.split(';').forEach(function(c) {
-          if (c.startsWith('cred-')) {
-            c
-              .replace(/^ +/, '')
-              .replace(
-                /=.*/,
-                '=;expires=' + new Date().toUTCString() + ';path=/'
-              );
-          }
-        });
-
         setTimeout(() => {
           const returnUrl = `${window.location.pathname.replace(
             /[^/]*$/,
