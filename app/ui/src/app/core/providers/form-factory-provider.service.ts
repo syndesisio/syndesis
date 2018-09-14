@@ -47,9 +47,20 @@ export class FormFactoryProviderService extends FormFactoryService {
       let type = (field.type || '').toLowerCase();
       // first normalize the type
       switch (type) {
+        // these have native input field types
+        case 'time':
         case 'date':
-          break;
         case 'duration':
+        case 'color':
+        case 'datetime-local':
+        case 'email':
+        case 'file':
+        case 'month':
+        case 'range':
+        case 'tel':
+        case 'url':
+        case 'week':
+        case 'search':
           break;
         case 'boolean':
         case 'checkbox':
