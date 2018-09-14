@@ -99,7 +99,6 @@ export class I18NProviderService extends I18NService {
     ...keys: string[]
   ): string {
     let translationMatch: DictionaryEntry | string = dictionary;
-    let lastValidKey = keys[0];
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index];
       translationMatch = translationMatch[key];
@@ -107,7 +106,6 @@ export class I18NProviderService extends I18NService {
       if (!translationMatch) {
         return fallbackValue;
       }
-      lastValidKey = key;
     }
 
     return translationMatch.toString();

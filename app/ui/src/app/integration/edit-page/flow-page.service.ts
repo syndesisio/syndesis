@@ -64,7 +64,6 @@ export class FlowPageService {
       this.initialize();
       return;
     }
-    const router = this.router;
     this.currentFlowService.events.emit({
       kind: 'integration-save',
       publish: this.publishInProgress,

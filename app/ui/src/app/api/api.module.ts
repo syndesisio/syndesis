@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule, Optional } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClientXsrfModule } from '@angular/common/http';
 
@@ -18,8 +18,6 @@ export function endpointsLazyLoaderFactory(apiEndpoints: Endpoints, apiConfigSer
   ],
 })
 export class ApiModule {
-  constructor(@Optional() private apiEndpointsLazyLoaderService: SYNDESIS_API_PROVIDERS.ApiEndpointsLazyLoaderService) { }
-
   static forRoot(apiEndpoints?: Endpoints): Array<ModuleWithProviders> {
     return [{
       ngModule: ApiModule,

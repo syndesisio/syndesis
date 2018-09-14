@@ -179,7 +179,6 @@ export class ApiHttpProviderService extends ApiHttpService {
     );
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     const method = options && options.method ? options.method : 'POST';
-    const headers = new HttpHeaders();
     const requestOptions = {
       reportProgress: true,
       ...options

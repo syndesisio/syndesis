@@ -451,7 +451,6 @@ export class CurrentFlowService implements OnDestroy {
       }
       case 'integration-set-properties': {
         const position = +event['position'];
-        const action = event['action'];
         const properties = this.stringifyValues(event['properties']);
         const step = this.steps[position] || createStep();
         step.configuredProperties = properties;

@@ -9,8 +9,6 @@ import {
   Integration,
   IntegrationDeployment,
   IntegrationDeployments,
-  IntegrationOverview,
-  IntegrationOverviews,
   IntegrationStatus,
   IntegrationSupportService,
   ApiHttpService,
@@ -175,51 +173,5 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.integrationStatusDetails)
       .get<IntegrationStatusDetail[]>();
-  }
-
-  private getOverview(id: string): Observable<any> {
-    return this.apiHttpService
-      .setEndpointUrl(integrationEndpoints.overview, { id })
-      .get();
-  }
-
-  private watchOverview(id: string): Observable<IntegrationOverview> {
-    return observableMerge(
-      this.getOverview(id),
-      this.eventsService.changeEvents.pipe(
-        filter(event => {
-          switch (event.kind) {
-            case 'integration':
-              return event.id === id;
-            case 'integration-deployment':
-              return event.id.startsWith(id);
-            default:
-              return false;
-          }
-        }),
-        mergeMap(event => this.getOverview(id))
-      )
-    );
-  }
-
-  private getOverviews(): Observable<IntegrationOverviews> {
-    return this.apiHttpService
-      .setEndpointUrl(integrationEndpoints.overviews)
-      .get()
-      .pipe(map((value: any) => value.items || []));
-  }
-
-  private watchOverviews(): Observable<IntegrationOverviews> {
-    return observableMerge(
-      this.getOverviews(),
-      this.eventsService.changeEvents.pipe(
-        filter(
-          event =>
-            event.kind === 'integration' ||
-            event.kind === 'integration-deployment'
-        ),
-        mergeMap(event => this.getOverviews())
-      )
-    );
   }
 }

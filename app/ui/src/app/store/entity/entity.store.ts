@@ -32,7 +32,6 @@ export abstract class AbstractStore<
   private _list: BehaviorSubject<L>;
 
   private _current: BehaviorSubject<T>;
-  private currentSub: Subscription;
   private currentId: string;
 
   private _loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -52,7 +51,7 @@ export abstract class AbstractStore<
     this._list = new BehaviorSubject<L>(initialList);
     this._current = new BehaviorSubject<T>(initialCurrent);
     this.changeEvents = this.setChangeEventsFilter(this.eventService.changeEvents);
-    this.currentSub = this._current.asObservable().subscribe(current => {
+    this._current.asObservable().subscribe(current => {
       if (!current) {
         this.currentId = undefined;
         return;

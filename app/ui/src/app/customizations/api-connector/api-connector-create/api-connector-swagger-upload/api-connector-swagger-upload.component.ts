@@ -35,7 +35,6 @@ export class ApiConnectorSwaggerUploadComponent implements OnInit {
   invalidFileMsg: string;
   swaggerFileUrl: string;
   uploader: FileUploader;
-  private urlChanged = false;
 
   constructor( private i18NService: I18NService ) {
     // nothing to do
