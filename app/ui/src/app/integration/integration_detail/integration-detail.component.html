@@ -1,118 +1,115 @@
 <syndesis-modal [title]="modalTitle" [message]="modalMessage" [type]="modalType" [primaryText]="modalPrimaryText">
 </syndesis-modal>
 
-<div *ngIf="loading; else content">
-  <syndesis-loading [loading]="true">
-  </syndesis-loading>
-</div>
-
-<ng-template #content>
-  <div class="integration-detail syn-scrollable">
-    <div class="toolbar syn-toolbar--inverted">
-      <div class="row toolbar-pf">
-        <div class="col-sm-12">
-          <div class="toolbar-pf-actions">
-            <div class="inline-block">
-              <ol class="breadcrumb">
-                <li>
-                  <a [routerLink]="['/']">{{ 'home' | synI18n }}</a>
-                </li>
-                <li>
-                  <a [routerLink]="['/integrations']">{{ 'integrations.integrations' | synI18n }}</a>
-                </li>
-                <li class="active">
-                  <strong>{{ 'integrations.integration-summary' | synI18n }}</strong>
-                </li>
-              </ol>
-            </div>
-            <div class="toolbar-pf-action-right">
-              <syndesis-integration-action-menu [integration]="integration" [showPrimaryActions]="true" [showViewAction]="false">
-              </syndesis-integration-action-menu>
+<syndesis-loading [loading]="loading" [content]="content">
+  <ng-template #content>
+    <div class="integration-detail syn-scrollable">
+      <div class="toolbar syn-toolbar--inverted">
+        <div class="row toolbar-pf">
+          <div class="col-sm-12">
+            <div class="toolbar-pf-actions">
+              <div class="inline-block">
+                <ol class="breadcrumb">
+                  <li>
+                    <a [routerLink]="['/']">{{ 'home' | synI18n }}</a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/integrations']">{{ 'integrations.integrations' | synI18n }}</a>
+                  </li>
+                  <li class="active">
+                    <strong>{{ 'integrations.integration-summary' | synI18n }}</strong>
+                  </li>
+                </ol>
+              </div>
+              <div class="toolbar-pf-action-right">
+                <syndesis-integration-action-menu [integration]="integration" [showPrimaryActions]="true" [showViewAction]="false">
+                </syndesis-integration-action-menu>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="integration-detail__body row syn-scrollable--body">
-      <div class="integration-detail__info integration-detail__row">
-        <h1 class="integration-detail__name">
-          <syndesis-editable-text [value]="integration.name" [validationFn]="validateName" (onSave)="nameUpdated(integration.id, $event)"></syndesis-editable-text>
-        </h1>
-        <div>
-          <ng-container [ngSwitch]="integration.currentState">
-            <ng-container *ngSwitchCase="'Pending'">
-              <syndesis-integration-status-detail [integration]="integration"></syndesis-integration-status-detail>
+      <div class="integration-detail__body row syn-scrollable--body">
+        <div class="integration-detail__info integration-detail__row">
+          <h1 class="integration-detail__name">
+            <syndesis-editable-text [value]="integration.name" [validationFn]="validateName" (onSave)="nameUpdated(integration.id, $event)"></syndesis-editable-text>
+          </h1>
+          <div>
+            <ng-container [ngSwitch]="integration.currentState">
+              <ng-container *ngSwitchCase="'Pending'">
+                <syndesis-integration-status-detail [integration]="integration"></syndesis-integration-status-detail>
+              </ng-container>
+              <ng-container *ngSwitchCase="'Published'">
+                <span class="pficon pficon-ok"></span> {{ 'published-integration' | synI18n }} version {{ integration.deploymentVersion }}
+              </ng-container>
+              <ng-container *ngSwitchCase="'Unpublished'">
+                {{ 'integrations.unpublished' | synI18n }}
+              </ng-container>
+              <ng-container *ngSwitchCase="'Error'">
+                <span class="pficon pficon-error"></span> {{ 'integrations.' + integration.currentState | synI18n }}<span *ngIf="integration.deploymentVersion"> version {{ integration.deploymentVersion }}</span>
+              </ng-container>
             </ng-container>
-            <ng-container *ngSwitchCase="'Published'">
-              <span class="pficon pficon-ok"></span> {{ 'published-integration' | synI18n }} version {{ integration.deploymentVersion }}
-            </ng-container>
-            <ng-container *ngSwitchCase="'Unpublished'">
-              {{ 'integrations.unpublished' | synI18n }}
-            </ng-container>
-            <ng-container *ngSwitchCase="'Error'">
-              <span class="pficon pficon-error"></span> {{ 'integrations.' + integration.currentState | synI18n }}<span *ngIf="integration.deploymentVersion"> version {{ integration.deploymentVersion }}</span>
-            </ng-container>
-          </ng-container>
+          </div>
+        </div>
+
+        <div *ngIf="integration.board?.messages && integration.board?.messages.length" class="integration-detail__row">
+          <div *ngFor="let message of integration.board.messages">
+            <syndesis-inline-alert [message]="message"></syndesis-inline-alert>
+          </div>
+        </div>
+
+        <ul class="syn-tabs row nav nav-tabs nav-tabs-pf toolbar-pf integration-detail__tabs">
+          <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'description'">
+            <a [routerLink]="['/integrations', integration.id]">{{ 'details' | synI18n }}</a>
+          </li>
+          <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'activity'">
+            <a [routerLink]="['/integrations', integration.id]"
+              [queryParams]="{ view: 'activity' }">
+              {{ 'activity' | synI18n }}
+            </a>
+          </li>
+          <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'logs'" *ngIf="loggingEnabled">
+            <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'logs' }">{{ 'logs' | synI18n }}</a>
+          </li>
+          <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'metrics'">
+            <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'metrics' }">{{ 'metrics' | synI18n }}</a>
+          </li>
+        </ul>
+
+        <div class="integration-detail__outlet" *ngIf="(selectedTabbedView$ | async) === 'description'">
+          <syndesis-integration-description
+            [integration]="integration"
+            [stepStore]="stepStore"
+            (viewDetails)="viewDetails($event)"
+            (viewApiProviderOperations)="viewApiProviderOperations($event)"
+            (attributeUpdated)="attributeUpdated(integration.id, $event)">
+          </syndesis-integration-description>
+
+          <syndesis-integration-history
+            [integration]="integration"
+            [deploymentActionConfigs]="deploymentActionConfigs"
+            (deploymentAction)="deploymentAction($event)"
+            (draftAction)="draftAction($event)">
+          </syndesis-integration-history>
+        </div>
+
+        <div class="integration-detail__outlet" *ngIf="(selectedTabbedView$ | async) === 'logs'">
+          <syndesis-integration-logs [integration]="integration"></syndesis-integration-logs>
+        </div>
+
+        <div class="integration-detail__outlet" *ngIf="(selectedTabbedView$ | async) === 'activity'">
+          <syndesis-integration-activity [integration]="integration">
+          </syndesis-integration-activity>
+        </div>
+
+        <div class="integration-detail__outlet" *ngIf="(selectedTabbedView$ | async) === 'metrics'">
+          <syndesis-integration-metrics
+            [integration]="integration"
+            [integrationMetrics]="integrationMetrics$ | async"
+            (refresh)="onRefreshMetrics()">
+          </syndesis-integration-metrics>
         </div>
       </div>
-
-      <div *ngIf="integration.board?.messages && integration.board?.messages.length" class="integration-detail__row">
-        <div *ngFor="let message of integration.board.messages">
-          <syndesis-inline-alert [message]="message"></syndesis-inline-alert>
-        </div>
-      </div>
-
-      <ul class="syn-tabs row nav nav-tabs nav-tabs-pf toolbar-pf integration-detail__tabs">
-        <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'description'">
-          <a [routerLink]="['/integrations', integration.id]">{{ 'details' | synI18n }}</a>
-        </li>
-        <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'activity'">
-          <a [routerLink]="['/integrations', integration.id]"
-            [queryParams]="{ view: 'activity' }">
-            {{ 'activity' | synI18n }}
-          </a>
-        </li>
-        <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'logs'" *ngIf="loggingEnabled">
-          <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'logs' }">{{ 'logs' | synI18n }}</a>
-        </li>
-        <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'metrics'">
-          <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'metrics' }">{{ 'metrics' | synI18n }}</a>
-        </li>
-      </ul>
-
-      <div class="integration-detail__outlet" *ngIf="(selectedTabbedView$ | async) === 'description'">
-        <syndesis-integration-description
-          [integration]="integration"
-          [stepStore]="stepStore"
-          (viewDetails)="viewDetails($event)"
-          (viewApiProviderOperations)="viewApiProviderOperations($event)"
-          (attributeUpdated)="attributeUpdated(integration.id, $event)">
-        </syndesis-integration-description>
-
-        <syndesis-integration-history
-          [integration]="integration"
-          [deploymentActionConfigs]="deploymentActionConfigs"
-          (deploymentAction)="deploymentAction($event)"
-          (draftAction)="draftAction($event)">
-        </syndesis-integration-history>
-      </div>
-
-      <div class="integration-detail__outlet" *ngIf="(selectedTabbedView$ | async) === 'logs'">
-        <syndesis-integration-logs [integration]="integration"></syndesis-integration-logs>
-      </div>
-
-      <div class="integration-detail__outlet" *ngIf="(selectedTabbedView$ | async) === 'activity'">
-        <syndesis-integration-activity [integration]="integration">
-        </syndesis-integration-activity>
-      </div>
-
-      <div class="integration-detail__outlet" *ngIf="(selectedTabbedView$ | async) === 'metrics'">
-        <syndesis-integration-metrics
-          [integration]="integration"
-          [integrationMetrics]="integrationMetrics$ | async"
-          (refresh)="onRefreshMetrics()">
-        </syndesis-integration-metrics>
-      </div>
     </div>
-  </div>
-</ng-template>
+  </ng-template>
+</syndesis-loading>

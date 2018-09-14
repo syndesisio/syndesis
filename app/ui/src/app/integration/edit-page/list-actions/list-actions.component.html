@@ -1,23 +1,24 @@
-<syndesis-loading [loading]="loading">
+<syndesis-loading [loading]="loading" [content]="content">
+  <ng-template #content>
+    <div class="integrations list-actions">
 
-  <div class="integrations list-actions">
+      <div class="action col-xs-12" title="{{action.name}}"
+          *ngFor="let action of actions | derp"
+          (click)="onSelect(action)"
+          [class.active]="isSelected(action)">
 
-    <div class="action col-xs-12" title="{{action.name}}"
-         *ngFor="let action of actions | derp"
-         (click)="onSelect(action)"
-         [class.active]="isSelected(action)">
+        <!-- Name -->
+        <div class="col-xs-4 name">
+          {{ action.name }}
+        </div>
 
-      <!-- Name -->
-      <div class="col-xs-4 name">
-        {{ action.name }}
-      </div>
-
-      <!-- Description -->
-      <div class="col-xs-8 description">
-        <div class="list-group-item-text">
-          {{ action.description | truncate : truncateLimit : truncateTrail }}
+        <!-- Description -->
+        <div class="col-xs-8 description">
+          <div class="list-group-item-text">
+            {{ action.description | truncate : truncateLimit : truncateTrail }}
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </ng-template>
 </syndesis-loading>

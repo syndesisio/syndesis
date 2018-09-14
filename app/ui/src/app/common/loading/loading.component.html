@@ -1,6 +1,11 @@
-<ng-container *ngIf="loading">
+<ng-container *ngIf="loading; else body">
   <div class="syn-loading">
       <div class="spinner spinner-lg loading"></div>
   </div>
 </ng-container>
-<ng-content *ngIf="!loading"></ng-content>
+<ng-template #body>
+  <ng-container *ngIf="content" [ngTemplateOutlet]="content"></ng-container>
+  <ng-container *ngIf="!content">
+    <ng-content></ng-content>
+  </ng-container>
+</ng-template>

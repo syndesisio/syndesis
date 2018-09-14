@@ -10,21 +10,23 @@
   </div>
   <div class="modal-body">
     <span aria-hidden="true" class="pficon pficon-error-circle-o"></span>
-    <syndesis-loading [loading]="loading">
-      <p [ngClass]="{'lead': integrations && integrations.length > 0 }">
-        {{ 'customizations.extensions.delete-extension-modal-lead' | synI18n: extension?.name }}
-      </p>
-      <ng-container *ngIf="integrations && integrations.length > 0">
-        <p>{{ 'customizations.extensions.delete-extension-modal' | synI18n }}</p>
-        <ul class="delete-extension-list">
-          <li *ngFor="let integration of integrations">
-            <strong>{{ integration.name }}</strong>
-            <span *ngIf="integration.description">
-              {{ integration.description }}
-            </span>
-          </li>
-        </ul>
-      </ng-container>
+    <syndesis-loading [loading]="loading" [content]="content">
+      <ng-template #content>
+        <p [ngClass]="{'lead': integrations && integrations.length > 0 }">
+          {{ 'customizations.extensions.delete-extension-modal-lead' | synI18n: extension?.name }}
+        </p>
+        <ng-container *ngIf="integrations && integrations.length > 0">
+          <p>{{ 'customizations.extensions.delete-extension-modal' | synI18n }}</p>
+          <ul class="delete-extension-list">
+            <li *ngFor="let integration of integrations">
+              <strong>{{ integration.name }}</strong>
+              <span *ngIf="integration.description">
+                {{ integration.description }}
+              </span>
+            </li>
+          </ul>
+        </ng-container>
+      </ng-template>
     </syndesis-loading>
   </div>
   <div class="modal-footer">

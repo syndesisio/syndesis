@@ -1,121 +1,101 @@
-<syndesis-loading [loading]="loading">
-  <div class="container-cards-pf connections-list container-fluid">
-    <div class="row row-cards-pf cards">
+<syndesis-loading [loading]="loading" [content]="content">
+  <ng-template #content>
+    <div class="container-cards-pf connections-list container-fluid">
+      <div class="row row-cards-pf cards">
 
-      <syndesis-modal title="{{ 'connections.delete-connection-modal-title' | synI18n }}"
-                      type="delete"
-                      message="{{ 'connections.delete-connection-modal' | synI18n: selectedForDelete?.name }}">
-      </syndesis-modal>
+        <syndesis-modal title="{{ 'connections.delete-connection-modal-title' | synI18n }}" type="delete" message="{{ 'connections.delete-connection-modal' | synI18n: selectedForDelete?.name }}">
+        </syndesis-modal>
 
-      <ng-container *ngIf="connections && connections.length === 0">
-        <div class="blank-slate-pf">
-          <div class="blank-slate-pf-icon">
-            <span class="pficon pficon pficon-add-circle-o"></span>
+        <ng-container *ngIf="connections && connections.length === 0">
+          <div class="blank-slate-pf">
+            <div class="blank-slate-pf-icon">
+              <span class="pficon pficon pficon-add-circle-o"></span>
+            </div>
+            <ng-container *ngIf="!isConnectors">
+              <h1>Create a Connection</h1>
+              <p>There are currently no connections available. Please click on the button below to create one.</p>
+              <div class="blank-slate-pf-main-action">
+                <button class="btn btn-primary btn-lg" [routerLink]="['/connections/create']">Create Connection</button>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="isConnectors">
+              <h1>Register Applications</h1>
+              <p>There are currently no applications registered.</p>
+              <p>Before you can create a connection, you must register your applications to allow {{ 'shared.project.name'
+                | synI18n }} to access information and act on your behalf</p>
+              <div class="blank-slate-pf-main-action">
+                <button class="btn btn-primary" [routerLink]="['/settings/oauth-clients']">Register Applications</button>
+              </div>
+            </ng-container>
           </div>
-          <ng-container *ngIf="!isConnectors">
-            <h1>Create a Connection</h1>
-            <p>There are currently no connections available. Please click on the button below to create one.</p>
-            <div class="blank-slate-pf-main-action">
-              <button class="btn btn-primary btn-lg"
-                [routerLink]="['/connections/create']">Create Connection</button>
-            </div>
-          </ng-container>
-          <ng-container *ngIf="isConnectors">
-            <h1>Register Applications</h1>
-            <p>There are currently no applications registered.</p>
-            <p>Before you can create a connection, you must register your applications to allow {{ 'shared.project.name' | synI18n }} to access information
-              and act on your behalf</p>
-            <div class="blank-slate-pf-main-action">
-              <button class="btn btn-primary"
-                [routerLink]="['/settings/oauth-clients']">Register Applications</button>
-            </div>
-          </ng-container>
-        </div>
-      </ng-container>
+        </ng-container>
 
-      <ng-container *ngIf="connections && connections.length > 0">
-        <div class="connection col-lg-3 col-md-4 col-sm-6 card"
-          *ngFor="let connection of connections">
+        <ng-container *ngIf="connections && connections.length > 0">
+          <div class="connection col-lg-3 col-md-4 col-sm-6 card" *ngFor="let connection of connections">
 
-          <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select"
-              [class.active]="connection.id === selectedId">
-            <syndesis-card-tech-preview [item]="connection"></syndesis-card-tech-preview>
-            <div class="card-pf-body" (click)="onSelect(connection, $event)">
-              <div class="card-pf-heading-kebab">
-                <div *ngIf="showKebab">
-                  <div dropdown
-                      class="dropdown dropdown-kebab-pf"
-                      placement="bottom">
-                    <button dropdownToggle
-                            class="btn btn-link dropdown-toggle"
-                            type="button"
-                            id="dropdownKebabRight9"
-                            (click)="$event.stopPropagation()">
-                      <span class="fa fa-ellipsis-v"></span>
-                    </button>
-                    <ul *dropdownMenu
-                        class="dropdown-menu dropdown-menu-right"
-                        role="menu">
-                      <li role="menuitem">
-                        <a [routerLink]="['/connections', connection.id]"
-                          class="dropdown-item">View</a>
-                      </li>
-                      <li role="menuitem">
-                        <a [routerLink]="['/connections', connection.id]"
-                          [queryParams]="{ edit: true }"
-                          class="dropdown-item">Edit</a>
-                      </li>
-                      <!--
+            <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select" [class.active]="connection.id === selectedId">
+              <syndesis-card-tech-preview [item]="connection"></syndesis-card-tech-preview>
+              <div class="card-pf-body" (click)="onSelect(connection, $event)">
+                <div class="card-pf-heading-kebab">
+                  <div *ngIf="showKebab">
+                    <div dropdown class="dropdown dropdown-kebab-pf" placement="bottom">
+                      <button dropdownToggle class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight9" (click)="$event.stopPropagation()">
+                        <span class="fa fa-ellipsis-v"></span>
+                      </button>
+                      <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li role="menuitem">
+                          <a [routerLink]="['/connections', connection.id]" class="dropdown-item">View</a>
+                        </li>
+                        <li role="menuitem">
+                          <a [routerLink]="['/connections', connection.id]" [queryParams]="{ edit: true }" class="dropdown-item">Edit</a>
+                        </li>
+                        <!--
                     <li role="menuitem">
                       <a class="dropdown-item">Duplicate</a>
                     </li>
                     -->
-                      <li>
-                        <a (click)="requestDelete(connection); $event.stopPropagation()"
-                          class="dropdown-item">Delete</a>
-                      </li>
-                    </ul>
+                        <li>
+                          <a (click)="requestDelete(connection); $event.stopPropagation()" class="dropdown-item">Delete</a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <!-- Card Icon -->
-              <div class="card-pf-top-element">
-                <span class="card-pf-icon-large image-icon">
-                  <img class="syn-icon-medium" [src]="connection | synIconPath">
-                </span>
-              </div>
+                <!-- Card Icon -->
+                <div class="card-pf-top-element">
+                  <span class="card-pf-icon-large image-icon">
+                    <img class="syn-icon-medium" [src]="connection | synIconPath">
+                  </span>
+                </div>
 
-              <!-- Card Name -->
-              <h2 class="card-pf-title text-center syn-truncate__ellipsis"
-                  (click)="onSelect(connection)"
-                  title="{{ connection.name }}">
-                {{ connection.name }}
-              </h2>
+                <!-- Card Name -->
+                <h2 class="card-pf-title text-center syn-truncate__ellipsis" (click)="onSelect(connection)" title="{{ connection.name }}">
+                  {{ connection.name }}
+                </h2>
 
-              <!-- Card Description / Item Overview -->
-              <p class="card-pf-info text-center" title="{{ connection.description }}">
-                {{ connection.description | truncate : '50' : truncateTrail }}
-              </p>
-              <div *ngIf="connection.board?.notices || connection.board?.warnings || connection.board?.errors"
-                class="connection-config-alert">
-                <div class="alert alert-warning">
-                  <span class="pficon pficon-warning-triangle-o"></span>
-                  Configuration Required
+                <!-- Card Description / Item Overview -->
+                <p class="card-pf-info text-center" title="{{ connection.description }}">
+                  {{ connection.description | truncate : '50' : truncateTrail }}
+                </p>
+                <div *ngIf="connection.board?.notices || connection.board?.warnings || connection.board?.errors" class="connection-config-alert">
+                  <div class="alert alert-warning">
+                    <span class="pficon pficon-warning-triangle-o"></span>
+                    Configuration Required
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="showNewConnection && connections.length > 0">
-        <syndesis-empty-state-card class="col-lg-3 col-md-4 col-sm-6"
-          (click)="onSelect(undefined, $event)">
-          <div class="empty-state-card__body">
-            <button class="btn btn-default">Create Connection</button>
-          </div>
-        </syndesis-empty-state-card>
-      </ng-container>
+        </ng-container>
+        <ng-container *ngIf="showNewConnection && connections.length > 0">
+          <syndesis-empty-state-card class="col-lg-3 col-md-4 col-sm-6" (click)="onSelect(undefined, $event)">
+            <div class="empty-state-card__body">
+              <button class="btn btn-default">Create Connection</button>
+            </div>
+          </syndesis-empty-state-card>
+        </ng-container>
+      </div>
     </div>
-  </div>
+  </ng-template>
 </syndesis-loading>

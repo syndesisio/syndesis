@@ -1,24 +1,26 @@
 <div class="row">
   <div class="col-md-12">
     <h1>Support</h1>
-      <p>To obtain support, download diagnostic information through this page and open a request on the <a [attr.href]="'links.contactus' | synI18n">Red Hat Customer portal</a>. 
+      <p>To obtain support, download diagnostic information through this page and open a request on the <a [attr.href]="'links.contactus' | synI18n">Red Hat Customer portal</a>.
         If the downloaded zip file is less than 1 GB, attach it to the case. For a larger zip file, tell the support team that the zip file is larger than 1 GB and ask for <a href="https://access.redhat.com/solutions/2112">instructions</a>.</p>
     <h2>Version</h2>
-    <syndesis-loading [loading]="!(version$ | async)">
-      <div *ngIf="version$ | async as versionInfo">
-        <dl class="dl-horizontal" *ngIf="versionInfo.version">
-          <dt>{{ 'shared.project.name' | synI18n }}:</dt>
-          <dd id="productVersion">{{ versionInfo.version }}</dd>
-        </dl>
-        <dl class="dl-horizontal" *ngIf="versionInfo['build-id']">
-          <dt>{{ 'support.buildid' | synI18n }}:</dt>
-          <dd id="buildID">{{ versionInfo['build-id'] }}</dd>
-        </dl>
-        <dl class="dl-horizontal" *ngIf="versionInfo['commit-id']">
-          <dt>{{ 'support.commitid' | synI18n }}:</dt>
-          <dd id="commitID">{{ versionInfo['commit-id'] }}</dd>
-        </dl>
-      </div>
+    <syndesis-loading [loading]="!(version$ | async)" [content]="content">
+      <ng-template #content>
+        <div *ngIf="version$ | async as versionInfo">
+          <dl class="dl-horizontal" *ngIf="versionInfo.version">
+            <dt>{{ 'shared.project.name' | synI18n }}:</dt>
+            <dd id="productVersion">{{ versionInfo.version }}</dd>
+          </dl>
+          <dl class="dl-horizontal" *ngIf="versionInfo['build-id']">
+            <dt>{{ 'support.buildid' | synI18n }}:</dt>
+            <dd id="buildID">{{ versionInfo['build-id'] }}</dd>
+          </dl>
+          <dl class="dl-horizontal" *ngIf="versionInfo['commit-id']">
+            <dt>{{ 'support.commitid' | synI18n }}:</dt>
+            <dd id="commitID">{{ versionInfo['commit-id'] }}</dd>
+          </dl>
+        </div>
+      </ng-template>
     </syndesis-loading>
 
     <h2>Download Troubleshooting Diagnostics</h2>

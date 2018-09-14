@@ -26,116 +26,118 @@
     </div>
   </div>
 </div>
-<syndesis-loading [loading]="loading$ | async">
-  <div class="row row-cards-pf" *ngIf="extension$ | async; let extension">
-    <div class="col-xs-12">
-      <syndesis-tech-extension-delete-modal></syndesis-tech-extension-delete-modal>
-      <div class="card-pf">
-        <div class="card-pf-heading">
-          <div class="card-pf-title">
-            <div class="row">
-              <h1 class="col-sm-8 extension__title">
-                {{ extension.name }}
-                <span class="extension__title__id">(ID: {{ extension.extensionId }})</span>
-              </h1>
-              <div class="col-sm-4 text-right">
-                <button type="button"
-                        class="btn btn-primary"
-                        [routerLink]="['..', 'import', extension.id, { 'name': extension.name }]">Update</button>
-                <button type="button"
-                        class="btn btn-default"
-                        (click)="deleteModal.prompt(extension)">Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-pf-body">
-          <div class="extension__group">
-            <h3>Overview</h3>
-            <dl class="dl-horizontal">
-              <dt>
-                Name
-              </dt>
-              <dd>
-                {{ extension.name }}
-              </dd>
-              <dt>
-                Description
-              </dt>
-              <dd>
-                {{ extension.description }}
-              </dd>
-              <dt>
-                Type
-              </dt>
-              <dd>
-                <ng-container [ngSwitch]="extension.extensionType">
-                  <span *ngSwitchCase="'Steps'">Step Extension</span>
-                  <span *ngSwitchCase="'Connectors'">Connector Extension</span>
-                  <span *ngSwitchCase="'Libraries'">Library Extension</span>
-                  <span *ngSwitchDefault>Unknown Extension</span>
-                </ng-container>
-              </dd>
-              <dt>
-                Last Update
-              </dt>
-              <dd>
-                {{ extension.lastUpdated | date : 'medium' }}
-              </dd>
-            </dl>
-          </div>
-          <div class="extension__group">
-            <ng-container [ngSwitch]="extension.extensionType">
-              <h3 *ngSwitchCase="'Steps'">Supported Steps</h3>
-              <h3 *ngSwitchCase="'Connectors'">Supported Actions</h3>
-            </ng-container>
-            <div class="row">
-              <div class="col-xs-offset-1 col-xs-11">
-                <div *ngFor="let action of extension.actions">
-                  <strong>
-                    {{ action.name }}
-                  </strong>
-                  - {{ action.description }}
+<syndesis-loading [loading]="loading$ | async" [content]="content">
+  <ng-template #content>
+    <div class="row row-cards-pf" *ngIf="extension$ | async; let extension">
+      <div class="col-xs-12">
+        <syndesis-tech-extension-delete-modal></syndesis-tech-extension-delete-modal>
+        <div class="card-pf">
+          <div class="card-pf-heading">
+            <div class="card-pf-title">
+              <div class="row">
+                <h1 class="col-sm-8 extension__title">
+                  {{ extension.name }}
+                  <span class="extension__title__id">(ID: {{ extension.extensionId }})</span>
+                </h1>
+                <div class="col-sm-4 text-right">
+                  <button type="button"
+                          class="btn btn-primary"
+                          [routerLink]="['..', 'import', extension.id, { 'name': extension.name }]">Update</button>
+                  <button type="button"
+                          class="btn btn-default"
+                          (click)="deleteModal.prompt(extension)">Delete</button>
                 </div>
               </div>
             </div>
           </div>
-          <ng-container *ngIf="integrations$ | async; let integrations">
+          <div class="card-pf-body">
             <div class="extension__group">
-              <h3 class="section-heading intermediate">Usage</h3>
+              <h3>Overview</h3>
+              <dl class="dl-horizontal">
+                <dt>
+                  Name
+                </dt>
+                <dd>
+                  {{ extension.name }}
+                </dd>
+                <dt>
+                  Description
+                </dt>
+                <dd>
+                  {{ extension.description }}
+                </dd>
+                <dt>
+                  Type
+                </dt>
+                <dd>
+                  <ng-container [ngSwitch]="extension.extensionType">
+                    <span *ngSwitchCase="'Steps'">Step Extension</span>
+                    <span *ngSwitchCase="'Connectors'">Connector Extension</span>
+                    <span *ngSwitchCase="'Libraries'">Library Extension</span>
+                    <span *ngSwitchDefault>Unknown Extension</span>
+                  </ng-container>
+                </dd>
+                <dt>
+                  Last Update
+                </dt>
+                <dd>
+                  {{ extension.lastUpdated | date : 'medium' }}
+                </dd>
+              </dl>
+            </div>
+            <div class="extension__group">
+              <ng-container [ngSwitch]="extension.extensionType">
+                <h3 *ngSwitchCase="'Steps'">Supported Steps</h3>
+                <h3 *ngSwitchCase="'Connectors'">Supported Actions</h3>
+              </ng-container>
               <div class="row">
                 <div class="col-xs-offset-1 col-xs-11">
-                  <p *ngIf="integrations"
-                     [innerHtml]="integrations.length | i18nPlural: integrationLengthMapping"></p>
-                  <table class="table"
-                         *ngIf="integrations.length">
-                    <thead>
-                      <tr>
-                        <th>
-                          Integration Name
-                        </th>
-                        <th>
-                          Integration Description
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let integration of integrations">
-                        <td>
-                          <a [routerLink]="['/integrations', integration.id]">{{ integration.name }}</a>
-                        </td>
-                        <td>
-                          {{ integration.description }}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div *ngFor="let action of extension.actions">
+                    <strong>
+                      {{ action.name }}
+                    </strong>
+                    - {{ action.description }}
+                  </div>
                 </div>
               </div>
             </div>
-          </ng-container>
+            <ng-container *ngIf="integrations$ | async; let integrations">
+              <div class="extension__group">
+                <h3 class="section-heading intermediate">Usage</h3>
+                <div class="row">
+                  <div class="col-xs-offset-1 col-xs-11">
+                    <p *ngIf="integrations"
+                      [innerHtml]="integrations.length | i18nPlural: integrationLengthMapping"></p>
+                    <table class="table"
+                          *ngIf="integrations.length">
+                      <thead>
+                        <tr>
+                          <th>
+                            Integration Name
+                          </th>
+                          <th>
+                            Integration Description
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let integration of integrations">
+                          <td>
+                            <a [routerLink]="['/integrations', integration.id]">{{ integration.name }}</a>
+                          </td>
+                          <td>
+                            {{ integration.description }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </ng-template>
 </syndesis-loading>

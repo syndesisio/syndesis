@@ -23,14 +23,16 @@
   </pfng-toolbar>
 
   <!-- List displayed here -->
-  <syndesis-loading [loading]="loading | async">
-    <pfng-list [items]="items | objectPropertyFilter:filter | objectPropertySort:sort"
-                [config]="listConfig"
-                [itemTemplate]="listItemMain"
-                [actionTemplate]="actions"
-                [expandTemplate]="listItemExpansion"
-                (onClick)="$event.item.expanded = !$event.item.expanded">
-    </pfng-list>
+  <syndesis-loading [loading]="loading | async" [content]="content">
+    <ng-template #content>
+      <pfng-list [items]="items | objectPropertyFilter:filter | objectPropertySort:sort"
+                  [config]="listConfig"
+                  [itemTemplate]="listItemMain"
+                  [actionTemplate]="actions"
+                  [expandTemplate]="listItemExpansion"
+                  (onClick)="$event.item.expanded = !$event.item.expanded">
+      </pfng-list>
+    </ng-template>
   </syndesis-loading>
 
   <!-- One list item, main row -->

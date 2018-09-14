@@ -1,84 +1,85 @@
-<syndesis-loading [loading]="loading">
-  <div class="syndesis-dashboard-integrations">
-    <!-- Integrations row empty State -->
-    <div class="blank-slate-pf" *ngIf="integrations?.length === 0">
-      <div class="blank-slate-pf-icon">
-        <span class="pficon pficon pficon-add-circle-o"></span>
-      </div>
-      <h1>{{ 'dashboard.integrations.heading' | synI18n }}</h1>
-      <p>{{ 'dashboard.integrations.empty-state-txt' | synI18n }}</p>
-      <div class="blank-slate-pf-main-action">
-        <button class="btn btn-primary btn-lg" [routerLink]="['/integrations/create']">{{ 'dashboard.integrations.create-btn-txt' | synI18n }}</button>
-      </div>
-    </div>
-
-    <!-- Integrations Row not empty state -->
-    <ng-container *ngIf="integrations?.length > 0">
-      <div class="row row-cards-pf syndesis-dashboard__row">
-
-        <!-- Top Integrations -->
-        <div class="col-md-7 top-integrations">
-          <div class="card-pf">
-            <div class="card-pf-heading">
-              <p class="card-pf-heading-details">
-                {{ 'last-n-items' | synI18n: [ ('30' | synI18n), (('days' | synI18n) | lowercase) ] }}
-              </p>
-              <h2 class="card-pf-title">
-                {{ 'top-n-items' | synI18n: [ ('5' | synI18n), ('integrations.integrations' | synI18n) ] }}
-              </h2>
-            </div>
-            <div class="card-pf-body">
-              <syndesis-integration-list [integrations]="sortedIntegrations.slice(0, 5)" complete="true"></syndesis-integration-list>
-            </div>
-          </div>
+<syndesis-loading [loading]="loading" [content]="content">
+  <ng-template #content>
+    <div class="syndesis-dashboard-integrations">
+      <!-- Integrations row empty State -->
+      <div class="blank-slate-pf" *ngIf="integrations?.length === 0">
+        <div class="blank-slate-pf-icon">
+          <span class="pficon pficon pficon-add-circle-o"></span>
         </div>
+        <h1>{{ 'dashboard.integrations.heading' | synI18n }}</h1>
+        <p>{{ 'dashboard.integrations.empty-state-txt' | synI18n }}</p>
+        <div class="blank-slate-pf-main-action">
+          <button class="btn btn-primary btn-lg" [routerLink]="['/integrations/create']">{{ 'dashboard.integrations.create-btn-txt' | synI18n }}</button>
+        </div>
+      </div>
 
-        <div class="col-md-5">
-          <!-- Integration Board -->
-          <div class="card-pf integration-board">
-            <div class="card-pf-heading">
-              <h2 class="card-pf-title">
-                {{ 'dashboard.integrations.integration-board-heading' | synI18n }}
-              </h2>
-            </div>
-            <div class="card-pf-body">
-              <div *ngIf="!loading">
-                <pfng-donut-chart [chartData]="integrationChartData" [config]="integrationsChartConfig"></pfng-donut-chart>
+      <!-- Integrations Row not empty state -->
+      <ng-container *ngIf="integrations?.length > 0">
+        <div class="row row-cards-pf syndesis-dashboard__row">
+
+          <!-- Top Integrations -->
+          <div class="col-md-7 top-integrations">
+            <div class="card-pf">
+              <div class="card-pf-heading">
+                <p class="card-pf-heading-details">
+                  {{ 'last-n-items' | synI18n: [ ('30' | synI18n), (('days' | synI18n) | lowercase) ] }}
+                </p>
+                <h2 class="card-pf-title">
+                  {{ 'top-n-items' | synI18n: [ ('5' | synI18n), ('integrations.integrations' | synI18n) ] }}
+                </h2>
+              </div>
+              <div class="card-pf-body">
+                <syndesis-integration-list [integrations]="sortedIntegrations.slice(0, 5)" complete="true"></syndesis-integration-list>
               </div>
             </div>
           </div>
 
-          <!-- Recent Updates -->
-          <div class="card-pf recent-updates">
-            <div class="card-pf-heading">
-              <h2 class="card-pf-title">
-                {{ 'dashboard.integrations.recent-updates-heading' | synI18n }}
-              </h2>
+          <div class="col-md-5">
+            <!-- Integration Board -->
+            <div class="card-pf integration-board">
+              <div class="card-pf-heading">
+                <h2 class="card-pf-title">
+                  {{ 'dashboard.integrations.integration-board-heading' | synI18n }}
+                </h2>
+              </div>
+              <div class="card-pf-body">
+                <div *ngIf="!loading">
+                  <pfng-donut-chart [chartData]="integrationChartData" [config]="integrationsChartConfig"></pfng-donut-chart>
+                </div>
+              </div>
             </div>
-            <div class="card-pf-body">
-              <div class="row" *ngFor="let integration of sortedIntegrations; let i=index">
-                <div class="update col-xs-12" *ngIf="i<5" (click)="goto(integration)">
-                  <div class="col-sm-5">
-                    <a [routerLink]=" ['/integrations', integration.id] ">
-                      {{ integration.name }}
-                    </a>
-                  </div>
-                  <div class="col-sm-3">
-                    <span [ngClass]="'label ' + getLabelClass(integration)">
-                      {{ 'integrations.' + integration.currentState | synI18n }}
-                    </span>
-                  </div>
-                  <div class="col-sm-4">
-                    {{ getTimestamp(integration) | date:'d MMM HH:mm' }}
+
+            <!-- Recent Updates -->
+            <div class="card-pf recent-updates">
+              <div class="card-pf-heading">
+                <h2 class="card-pf-title">
+                  {{ 'dashboard.integrations.recent-updates-heading' | synI18n }}
+                </h2>
+              </div>
+              <div class="card-pf-body">
+                <div class="row" *ngFor="let integration of sortedIntegrations; let i=index">
+                  <div class="update col-xs-12" *ngIf="i<5" (click)="goto(integration)">
+                    <div class="col-sm-5">
+                      <a [routerLink]=" ['/integrations', integration.id] ">
+                        {{ integration.name }}
+                      </a>
+                    </div>
+                    <div class="col-sm-3">
+                      <span [ngClass]="'label ' + getLabelClass(integration)">
+                        {{ 'integrations.' + integration.currentState | synI18n }}
+                      </span>
+                    </div>
+                    <div class="col-sm-4">
+                      {{ getTimestamp(integration) | date:'d MMM HH:mm' }}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
-
-      </div>
-    </ng-container>
-  </div>
-
+      </ng-container>
+    </div>
+  </ng-template>
 </syndesis-loading>
