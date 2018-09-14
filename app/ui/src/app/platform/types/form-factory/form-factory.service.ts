@@ -63,6 +63,9 @@ export abstract class FormFactoryService {
     }
     Object.keys(data).forEach(key => {
       const prop = properties[key];
+      if (prop.secret && data[key] === '') {
+        delete data[key];
+      }
       if ((prop && prop.trim === false) || prop.secret) {
         return;
       }
