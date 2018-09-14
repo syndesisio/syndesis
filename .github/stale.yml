@@ -1,0 +1,9 @@
+daysUntilStale: 60
+daysUntilClose: 7
+exemptLabels:
+  - priority/p0
+staleLabel: pr/stale
+markComment: >
+  This issue has been automatically marked as stale because it has not had any activity since 60 days. It will be closed if no further activity occurs within 7 days. Thank you for your contributions!
+closeComment: false
+only: issues
