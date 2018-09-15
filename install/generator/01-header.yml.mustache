@@ -79,11 +79,11 @@ parameters:
   name: DEMO_DATA_ENABLED
   required: true
   value: "false"
-- description: Registry from where to fetch Syndesis images
+{{^Productized}}- description: Registry from where to fetch Syndesis images
   displayName: Syndesis Image Registry
   name: SYNDESIS_REGISTRY
   value: '{{ Registry }}'
-- description: Should deployment of integrations be enabled?
+{{/Productized}}- description: Should deployment of integrations be enabled?
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
   value: 'true'
