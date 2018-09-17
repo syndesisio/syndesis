@@ -28,6 +28,9 @@
         "outputDataShape": {
           "kind": "any"
         },
+        "connectorCustomizers": [
+          "io.syndesis.connector.apiprovider.ApiProviderStartEndpointCustomizer"
+        ],
         "propertyDefinitionSteps": [
           {
             "description": "API Provider Configuration",
@@ -61,14 +64,14 @@
           "kind": "any"
         },
         "outputDataShape": {
-          "kind": "any"
+          "kind": "none"
         },
         "configuredProperties": {
           "beanName": "io.syndesis.connector.apiprovider.NoOpBean",
           "method": "process"
         },
         "connectorCustomizers": [
-          "io.syndesis.connector.apiprovider.ApiProviderConnectorCustomizer"
+          "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
         ],
         "propertyDefinitionSteps": [
           {

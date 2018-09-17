@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.webhook;
+package io.syndesis.connector.support.processor;
 
-import java.io.ByteArrayInputStream;
-import java.util.Arrays;
-import java.util.Collection;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
-
+import io.syndesis.common.util.Json;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.Test;
@@ -30,10 +27,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.Mockito;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.io.ByteArrayInputStream;
+import java.util.Arrays;
+import java.util.Collection;
 
 @RunWith(Parameterized.class)
 public class WrapperProcessorTest {
@@ -75,18 +73,20 @@ public class WrapperProcessorTest {
 
     @Test
     public void testCases() throws Exception {
-        final WrapperProcessor processor = new WrapperProcessor(schema);
+        String schemaStr = Json.writer().forType(JsonSchema.class).writeValueAsString(schema);
+        JsonNode schemaNode = Json.reader().forType(JsonNode.class).readTree(schemaStr);
+        final HttpRequestWrapperProcessor processor = new HttpRequestWrapperProcessor(schemaNode);
 
-        final Exchange exchange = mock(Exchange.class);
-        final Message message = mock(Message.class);
-        when(exchange.getIn()).thenReturn(message);
-        when(message.getBody()).thenReturn(givenBody);
-        when(message.getHeader("param1", String.class)).thenReturn("param_value1");
-        when(message.getHeader("param2", String.class)).thenReturn("param_value2");
+        final Exchange exchange = Mockito.mock(Exchange.class);
+        final Message message = Mockito.mock(Message.class);
+        Mockito.when(exchange.getIn()).thenReturn(message);
+        Mockito.when(message.getBody()).thenReturn(givenBody);
+        Mockito.when(message.getHeader("param1", String.class)).thenReturn("param_value1");
+        Mockito.when(message.getHeader("param2", String.class)).thenReturn("param_value2");
 
         processor.process(exchange);
 
-        verify(message).setBody(replacedBody);
+        Mockito.verify(message).setBody(replacedBody);
     }
 
 }
