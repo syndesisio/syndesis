@@ -47,3 +47,5 @@ node_modules
 target
 ui/bin
 ui/node
+/app/ui/cmd/bindata_assetfs.go
+/app/ui/cmd/go-bindata

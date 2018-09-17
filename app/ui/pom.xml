@@ -219,6 +219,23 @@
       </activation>
       <build>
         <plugins>
+
+          <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>exec-maven-plugin</artifactId>
+              <executions>
+                  <execution>
+                      <goals>
+                          <goal>exec</goal>
+                      </goals>
+                      <phase>package</phase>
+                      <configuration>
+                          <workingDirectory>${project.basedir}/cmd</workingDirectory>
+                          <executable>${project.basedir}/cmd/build.sh</executable>
+                      </configuration>
+                  </execution>
+              </executions>
+          </plugin>
           <plugin>
             <groupId>io.fabric8</groupId>
             <artifactId>fabric8-maven-plugin</artifactId>
@@ -243,6 +260,9 @@
                   <build>
                     <assembly>
                       <inline>
+                        <fileSet>
+                          <directory>target/go</directory>
+                        </fileSet>
                         <fileSet>
                           <directory>dist</directory>
                         </fileSet>
