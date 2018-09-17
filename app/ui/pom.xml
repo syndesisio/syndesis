@@ -139,7 +139,7 @@
           <followSymLinks>false</followSymLinks>
           <filesets>
             <fileset>
-              <directory>src</directory>
+              <directory>src/config</directory>
               <includes>
                 <include>config.json</include>
                 <include>config.json.bak</include>

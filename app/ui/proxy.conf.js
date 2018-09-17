@@ -1,4 +1,4 @@
-const config = require('./src/config.json');
+const config = require('./src/config/config.json');
 
 const defaultApiBase = "https://syndesis-staging.b6ff.rh-idev.openshiftapps.com";
 
