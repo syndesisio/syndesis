@@ -51,14 +51,6 @@ public class ApiProviderReturnPathCustomizer implements ComponentProxyCustomizer
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        try {
-            consumeOption(this.context, options, HTTP_RESPONSE_CODE_PROPERTY, Integer.class, code ->
-                component.setAfterProducer(statusCodeUpdater(code))
-            );
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-
         if (inputDataShape != null && inputDataShape.getKind() == DataShapeKinds.JSON_SCHEMA && inputDataShape.getSpecification() != null) {
             try {
                 final JsonNode schema = READER.readTree(inputDataShape.getSpecification());
@@ -67,11 +59,19 @@ public class ApiProviderReturnPathCustomizer implements ComponentProxyCustomizer
                 extraneousProperties.removeAll(Arrays.asList("parameters", "body"));
 
                 if (!properties.isEmpty() && extraneousProperties.isEmpty()) {
-                    component.setAfterProducer(new HttpRequestUnwrapperProcessor(schema));
+                    component.setBeforeProducer(new HttpRequestUnwrapperProcessor(schema));
                 }
             } catch (IOException e) {
                 throw new RuntimeCamelException(e);
             }
+        }
+
+        try {
+            consumeOption(this.context, options, HTTP_RESPONSE_CODE_PROPERTY, Integer.class, code ->
+                component.setAfterProducer(statusCodeUpdater(code))
+            );
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+            throw new IllegalArgumentException(e);
         }
     }
 
