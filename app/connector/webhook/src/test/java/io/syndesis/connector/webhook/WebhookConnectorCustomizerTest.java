@@ -19,6 +19,7 @@ import java.util.Collections;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.connector.support.processor.HttpRequestWrapperProcessor;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
 import org.apache.camel.Exchange;
@@ -75,9 +76,9 @@ public class WebhookConnectorCustomizerTest {
         customizer.customize(component, Collections.emptyMap());
 
         final Processor beforeConsumer = component.getBeforeConsumer();
-        assertThat(beforeConsumer).isInstanceOf(WrapperProcessor.class);
-        final WrapperProcessor wrapper = (WrapperProcessor) beforeConsumer;
-        assertThat(wrapper.parameters).containsOnly("source", "status");
+        assertThat(beforeConsumer).isInstanceOf(HttpRequestWrapperProcessor.class);
+        final HttpRequestWrapperProcessor wrapper = (HttpRequestWrapperProcessor) beforeConsumer;
+        assertThat(wrapper.getParameters()).containsOnly("source", "status");
     }
 
     @Test

@@ -1217,6 +1217,12 @@
 
       <dependency>
         <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-support-processor</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-support-verifier</artifactId>
         <version>${project.version}</version>
       </dependency>

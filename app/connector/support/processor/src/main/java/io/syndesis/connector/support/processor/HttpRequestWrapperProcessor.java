@@ -13,40 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.webhook;
-
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+package io.syndesis.connector.support.processor;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
-
 import io.syndesis.common.util.Json;
-
+import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.util.ObjectHelper;
 
-class WrapperProcessor implements Processor {
-    final Set<String> parameters;
+import java.io.InputStream;
+import java.util.Set;
 
-    static final ObjectReader READER = Json.reader().forType(JsonNode.class);
+public class HttpRequestWrapperProcessor implements Processor {
+    private final Set<String> parameters;
 
-    WrapperProcessor(ObjectSchema schema) {
-        final Map<String, JsonSchema> properties = schema.getProperties();
+    private static final ObjectReader READER = Json.reader().forType(JsonNode.class);
 
-        final JsonSchema parametersSchema = properties.get("parameters");
-        if (!(parametersSchema instanceof ObjectSchema)) {
-            parameters = Collections.emptySet();
-        } else {
-            parameters = ((ObjectSchema) parametersSchema).getProperties().keySet();
-        }
+    public HttpRequestWrapperProcessor(JsonNode schema) {
+        this.parameters = SimpleJsonSchemaInspector.getProperties(schema, "parameters");
     }
 
     @Override
@@ -75,10 +63,14 @@ class WrapperProcessor implements Processor {
                     rootNode.set("body", READER.readValue(stream));
                 }
             }
-        } else if (body != null){
+        } else if (body != null) {
             rootNode.putPOJO("body", body);
         }
 
         message.setBody(Json.toString(rootNode));
+    }
+
+    public Set<String> getParameters() {
+        return parameters;
     }
 }

@@ -36,6 +36,7 @@
     <module>support/verifier</module>
     <module>support/maven-plugin</module>
     <module>support/catalog</module>
+    <module>support/processor</module>
     <module>support/test</module>
 
     <module>activemq</module>

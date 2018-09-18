@@ -15,29 +15,30 @@
  */
 package io.syndesis.connector.webhook;
 
-import java.io.IOException;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
-
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeAware;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Json;
+import io.syndesis.connector.support.processor.HttpRequestWrapperProcessor;
+import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
 import org.apache.camel.Exchange;
 import org.apache.camel.RuntimeCamelException;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 public class WebhookConnectorCustomizer implements ComponentProxyCustomizer, CamelContextAware, DataShapeAware {
     public static final String SCHEMA_ID = "io:syndesis:webhook";
 
-    static final ObjectReader READER = Json.reader().forType(ObjectSchema.class);
+    static final ObjectReader READER = Json.reader();
 
     private CamelContext camelContext;
     private DataShape inputDataShape;
@@ -77,19 +78,19 @@ public class WebhookConnectorCustomizer implements ComponentProxyCustomizer, Cam
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         if (outputDataShape != null && outputDataShape.getKind() == DataShapeKinds.JSON_SCHEMA && outputDataShape.getSpecification() != null) {
             try {
-                final ObjectSchema schema = READER.readValue(outputDataShape.getSpecification());
-                if (SCHEMA_ID.equals(schema.getId())) {
+                final JsonNode schema = READER.readTree(outputDataShape.getSpecification());
+                if (Optional.of(SCHEMA_ID).equals(SimpleJsonSchemaInspector.getId(schema))) {
+                    Set<String> properties = SimpleJsonSchemaInspector.getProperties(schema);
                     // check that the schema contains the right properties
-                    if (!(schema.getProperties().get("parameters") instanceof ObjectSchema)) {
+                    if (!properties.contains("parameters")) {
                         throw new IllegalArgumentException("JsonSchema does not define parameters property");
                     }
 
-                    final JsonSchema bodySchema = schema.getProperties().get("body");
-                    if (bodySchema != null && !(bodySchema instanceof ObjectSchema)) {
+                    if (!properties.contains("body")) {
                         throw new IllegalArgumentException("JsonSchema does not define body property");
                     }
 
-                    component.setBeforeConsumer(new WrapperProcessor(schema));
+                    component.setBeforeConsumer(new HttpRequestWrapperProcessor(schema));
                 }
             } catch (IOException e) {
                 throw new RuntimeCamelException(e);
