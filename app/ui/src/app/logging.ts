@@ -2,18 +2,23 @@ import {
   Category,
   CategoryLogger,
   CategoryServiceFactory,
-  CategoryDefaultConfiguration,
+  CategoryConfiguration,
   LogLevel
 } from 'typescript-logging';
 
 // TODO typescript-logging will support a console API to change this at runtime in the future, for now we'll use localStorage
-const storedLogLevel =
-  typeof localStorage !== 'undefined' && localStorage.getItem('logLevel');
-const logLevel = LogLevel[storedLogLevel] || LogLevel.Info;
+let logLevel = LogLevel.Info;
+try {
+  const storedLogLevel =
+    typeof localStorage !== 'undefined' && localStorage.getItem('logLevel');
+  logLevel = LogLevel.fromString(storedLogLevel);
+} catch (e) {
+  // probably nothing has been set in the localStorage
+}
 
 // default configuration
 CategoryServiceFactory.setDefaultConfiguration(
-  new CategoryDefaultConfiguration(logLevel)
+  new CategoryConfiguration(logLevel)
 );
 
 const rootCategory = new Category('root');

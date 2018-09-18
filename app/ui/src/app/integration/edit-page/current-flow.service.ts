@@ -438,7 +438,7 @@ export class CurrentFlowService implements OnDestroy {
           this.steps[position].id = key();
         }
         this.maybeDoAction(event['onSave']);
-        log.debugc(() => 'Set step at position: ' + position, category);
+        log.debug(() => 'Set step at position: ' + position, category);
         break;
       }
       case 'integration-set-metadata': {
@@ -456,7 +456,7 @@ export class CurrentFlowService implements OnDestroy {
         step.configuredProperties = properties;
         this.steps[position] = step;
         this.maybeDoAction(event['onSave']);
-        log.debugc(
+        log.debug(
           () =>
             'Set properties at position: ' +
             position +
@@ -479,7 +479,7 @@ export class CurrentFlowService implements OnDestroy {
         step.stepKind = stepKind;
         this.steps[position] = step;
         this.maybeDoAction(event['onSave']);
-        log.debugc(
+        log.debug(
           () => 'Set action ' + action.name + ' at position: ' + position,
           category
         );
@@ -552,7 +552,7 @@ export class CurrentFlowService implements OnDestroy {
         step.connection = connection;
         this.steps[position] = step;
         this.maybeDoAction(event['onSave']);
-        log.debugc(
+        log.debug(
           () =>
             'Set connection ' + connection.name + ' at position: ' + position,
           category
@@ -569,7 +569,7 @@ export class CurrentFlowService implements OnDestroy {
         this.maybeDoAction(event['onSave']);
         break;
       case 'integration-save': {
-        log.debugc(() => 'Saving integration: ' + this.integration);
+        log.debug(() => 'Saving integration: ' + this.integration);
         // ensure that all steps have IDs before saving
         this.steps.forEach(s => {
           if (!s.id) {
@@ -588,7 +588,7 @@ export class CurrentFlowService implements OnDestroy {
           }
         });
         const finishUp = (i: Integration, subscription: Subscription) => {
-          log.debugc(
+          log.debug(
             () => 'Saved integration: ' + JSON.stringify(i, undefined, 2),
             category
           );
@@ -616,7 +616,7 @@ export class CurrentFlowService implements OnDestroy {
             }
           },
           (reason: any) => {
-            log.infoc(
+            log.info(
               () =>
                 'Error saving integration: ' +
                 JSON.stringify(reason, undefined, 2),
@@ -634,7 +634,7 @@ export class CurrentFlowService implements OnDestroy {
       default:
         break;
     }
-    // log.debugc(() => 'integration: ' + JSON.stringify(this._integration, undefined, 2), category);
+    // log.debug(() => 'integration: ' + JSON.stringify(this._integration, undefined, 2), category);
   }
 
   getIntegrationClone(): Integration {

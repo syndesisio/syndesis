@@ -63,7 +63,7 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
       return this.gotoCreateConnection();
     }
 
-    log.debugc(() => 'Selected connection: ' + connection.name, category);
+    log.debug(() => 'Selected connection: ' + connection.name, category);
 
     this.currentFlowService.events.emit({
       kind: 'integration-set-connection',

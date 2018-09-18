@@ -71,7 +71,7 @@
     "snyk": "^1.88.1",
     "tether": "1.4.0",
     "ts-helpers": "1.1.2",
-    "typescript-logging": "0.4.0",
+    "typescript-logging": "0.6.2",
     "url": "^0.11.0",
     "yamljs": "^0.3.0",
     "zone.js": "^0.8.26"

@@ -20,7 +20,7 @@ export class DashboardConnectionsComponent implements OnInit {
   truncateTrail = '…';
 
   onSelect(connection: Connection) {
-    log.debugc(
+    log.debug(
       () => 'Selected connection (list): ' + connection.name,
       category
     );
@@ -29,7 +29,7 @@ export class DashboardConnectionsComponent implements OnInit {
   }
 
   ngOnInit() {
-    log.debugc(
+    log.debug(
       () =>
         'Got connections: ' + JSON.stringify(this.connections, undefined, 2),
       category
