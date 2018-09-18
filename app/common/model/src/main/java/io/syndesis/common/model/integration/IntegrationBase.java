@@ -47,6 +47,16 @@ public interface IntegrationBase extends WithResourceId, WithVersion, WithModifi
         return false;
     }
 
+    /**
+     * @deprecated steps have been superseded by flows
+     */
+    @Override
+    @Deprecated
+    @Value.Default
+    default List<Step> getSteps() {
+        return Collections.emptyList();
+    }
+
     @Value.Default
     default List<Flow> getFlows() {
         return Collections.emptyList();
