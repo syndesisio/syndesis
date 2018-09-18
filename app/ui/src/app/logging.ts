@@ -2,7 +2,7 @@ import {
   Category,
   CategoryLogger,
   CategoryServiceFactory,
-  CategoryDefaultConfiguration,
+  CategoryConfiguration,
   LogLevel
 } from 'typescript-logging';
 
@@ -18,7 +18,7 @@ try {
 
 // default configuration
 CategoryServiceFactory.setDefaultConfiguration(
-  new CategoryDefaultConfiguration(logLevel)
+  new CategoryConfiguration(logLevel)
 );
 
 const rootCategory = new Category('root');

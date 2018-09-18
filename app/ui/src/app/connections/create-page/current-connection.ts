@@ -58,7 +58,7 @@ export class CurrentConnectionService {
   }
 
   handleEvent(event: ConnectionEvent) {
-    // log.infoc(() => 'connection event: ' + JSON.stringify(event), category);
+    // log.info(() => 'connection event: ' + JSON.stringify(event), category);
     switch (event.kind) {
       case 'connection-check-connector':
         if (!this.fetchConnector(this._connection.connectorId)) {
@@ -109,7 +109,7 @@ export class CurrentConnectionService {
     return this.connectorStore.acquireCredentials(connectorId)
       .pipe(
         mergeMap((resp: any) => {
-          log.infoc(() => 'Got response: ' + JSON.stringify(resp));
+          log.info(() => 'Got response: ' + JSON.stringify(resp));
           return resp;
         }),
         catchError((error: any) => {
@@ -120,7 +120,7 @@ export class CurrentConnectionService {
           this._oauthStatus = {
             message: message
           };
-          log.infoc(() => 'Error response initiating oauth flow:' + JSON.stringify(error));
+          log.info(() => 'Error response initiating oauth flow:' + JSON.stringify(error));
           return error;
         })
       );
@@ -199,7 +199,7 @@ export class CurrentConnectionService {
           });
         },
         error => {
-          log.infoc(
+          log.info(
             () =>
               'Failed to fetch connector credentials: ' + JSON.stringify(error),
             category
@@ -234,12 +234,12 @@ export class CurrentConnectionService {
         },
         error => {
           try {
-            log.infoc(
+            log.info(
               () => 'Failed to fetch connector: ' + JSON.stringify(error),
               category
             );
           } catch (err) {
-            log.infoc(() => 'Failed to fetch connector: ' + error, category);
+            log.info(() => 'Failed to fetch connector: ' + error, category);
           }
           this.events.emit({
             kind: 'connection-check-credentials',

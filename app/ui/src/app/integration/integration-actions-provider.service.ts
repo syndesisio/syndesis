@@ -189,7 +189,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   // TODO: Refactor into single method for both cases
   // Open modal to confirm activation
   requestActivate(integration: Integration | IntegrationOverview) {
-    log.debugc(
+    log.debug(
       () =>
         'Selected integration for activation: ' +
         JSON.stringify(integration['id'])
@@ -200,7 +200,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
 
   // Open modal to confirm deactivation
   requestDeactivate(integration: Integration | IntegrationOverview) {
-    log.debugc(
+    log.debug(
       () =>
         'Selected integration for deactivation: ' +
         JSON.stringify(integration['id'])
@@ -211,7 +211,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
 
   // Open modal to confirm delete
   requestDelete(integration: Integration | IntegrationOverview) {
-    log.debugc(
+    log.debug(
       () =>
         'Selected integration for delete: ' + JSON.stringify(integration['id'])
     );
@@ -222,7 +222,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   // TODO: Refactor into single method for both cases
   // Actual activate/deactivate action once the user confirms
   activateAction(integration: Integration | IntegrationOverview): Promise<any> {
-    log.debugc(
+    log.debug(
       () =>
         'Selected integration for activation: ' +
         JSON.stringify(integration['id'])
@@ -234,7 +234,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   deactivateAction(
     integration: Integration | IntegrationOverview
   ): Promise<any> {
-    log.debugc(
+    log.debug(
       () =>
         'Selected integration for deactivation: ' +
         JSON.stringify(integration['id'])
@@ -246,7 +246,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
 
   // Actual delete action once the user confirms
   deleteAction(integration: Integration | IntegrationOverview): Promise<any> {
-    log.debugc(
+    log.debug(
       () =>
         'Selected integration for delete: ' + JSON.stringify(integration['id'])
     );

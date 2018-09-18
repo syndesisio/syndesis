@@ -54,7 +54,7 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
   }
 
   onSelected(action: Action) {
-    log.debugc(() => 'Selected action: ' + action.name, category);
+    log.debug(() => 'Selected action: ' + action.name, category);
     this.currentFlowService.events.emit({
       kind: 'integration-set-action',
       position: this.position,

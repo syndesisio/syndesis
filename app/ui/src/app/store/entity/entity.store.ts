@@ -121,7 +121,7 @@ export abstract class AbstractStore<
       },
       error => {
         error = this.massageError(error);
-        log.debugc(
+        log.debug(
           () => 'Error retrieving ' + plural(this.kind) + ': ' + error,
           category,
         );
@@ -172,7 +172,7 @@ export abstract class AbstractStore<
       },
       error => {
         error = this.massageError(error);
-        log.debugc(
+        log.debug(
           () => 'Error retrieving ' + this.kind + ': ' + error,
           category,
         );
@@ -198,7 +198,7 @@ export abstract class AbstractStore<
       },
       error => {
         error = this.massageError(error);
-        log.debugc(
+        log.debug(
           () =>
             'Error creating ' +
             this.kind +
@@ -231,7 +231,7 @@ export abstract class AbstractStore<
       },
       error => {
         error = this.massageError(error);
-        log.debugc(
+        log.debug(
           () =>
             'Error updating ' +
             this.kind +
@@ -268,7 +268,7 @@ export abstract class AbstractStore<
       },
       error => {
         error = this.massageError(error);
-        log.debugc(
+        log.debug(
           () =>
             'Error updating ' +
             this.kind +

@@ -43,7 +43,7 @@ export class ConnectionsListComponent implements OnInit {
   //----- Initialization ------------------->>
 
   ngOnInit() {
-    log.debugc(
+    log.debug(
       () =>
         'Got connections: ' + JSON.stringify(this.connections, undefined, 2),
       category
@@ -77,7 +77,7 @@ export class ConnectionsListComponent implements OnInit {
 
   // Open modal to confirm delete
   requestDelete(connection: Connection, $event) {
-    log.debugc(() => 'Selected connection for delete: ' + connection.id);
+    log.debug(() => 'Selected connection for delete: ' + connection.id);
     this.selectedForDelete = connection;
     this.modalService
       .show()
@@ -87,7 +87,7 @@ export class ConnectionsListComponent implements OnInit {
   //-----  Selecting a Connection ------------------->>
   onSelect(connection: Connection) {
     if (connection) {
-      log.debugc(
+      log.debug(
         () => 'Selected connection (list): ' + connection.name,
         category
       );

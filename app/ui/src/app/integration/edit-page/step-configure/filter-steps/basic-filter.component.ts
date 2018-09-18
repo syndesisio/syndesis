@@ -173,11 +173,11 @@ export class BasicFilterComponent implements OnChanges, OnDestroy {
       })
       .catch(error => {
         try {
-          log.infoc(
+          log.info(
             () => 'Failed to fetch filter form data: ' + JSON.parse(error)
           );
         } catch (err) {
-          log.infoc(() => 'Failed to fetch filter form data: ' + error);
+          log.info(() => 'Failed to fetch filter form data: ' + error);
         }
         // we can handle this for now using default values
         this.initForm();

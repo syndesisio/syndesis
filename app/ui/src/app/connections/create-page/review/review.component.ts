@@ -73,7 +73,7 @@ export class ConnectionsReviewComponent
           this.router.navigate(['connections']);
         },
         error: (reason: any) => {
-          log.debugc(
+          log.debug(
             () =>
               'Error creating connection: ' +
               JSON.stringify(reason, undefined, 2),

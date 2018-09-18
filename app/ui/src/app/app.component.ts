@@ -159,7 +159,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   resetDB() {
     this.testSupport
       .resetDB()
-      .subscribe(() => log.debugc(() => 'DB has been reset'));
+      .subscribe(() => log.debug(() => 'DB has been reset'));
   }
 
   /**
@@ -179,7 +179,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       if (modal.result) {
         return this.testSupport
           .restoreDB(modal['json'])
-          .subscribe(() => log.debugc(() => 'DB has been imported'));
+          .subscribe(() => log.debug(() => 'DB has been imported'));
       }
     });
   }

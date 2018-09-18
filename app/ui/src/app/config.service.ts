@@ -29,7 +29,7 @@ export class ConfigService {
       .get(configJson)
       .toPromise()
       .then(config => {
-        log.debugc(
+        log.debug(
           () => 'Received config: ' + JSON.stringify(config, undefined, 2),
           category
         );
@@ -41,7 +41,7 @@ export class ConfigService {
 
         this.settingsSubject.next(this.settingsRepository);
 
-        log.debugc(
+        log.debug(
           () =>
             'Using merged config: ' +
             JSON.stringify(this.settingsRepository, undefined, 2),
@@ -51,7 +51,7 @@ export class ConfigService {
         return this;
       })
       .catch(() => {
-        log.warnc(
+        log.warn(
           () =>
             'Error: Configuration service unreachable! Using defaults: ' +
             JSON.stringify(this.settingsRepository),
