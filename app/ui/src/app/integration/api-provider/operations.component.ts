@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FilterConfig, ListEvent, SortConfig, ToolbarConfig } from 'patternfly-ng';
 import {
@@ -10,7 +10,7 @@ import {
   CurrentFlowService,
   FlowPageService
 } from '../edit-page/index';
-import { Flow, Integration } from '../../platform/index';
+import { Flow, Integration, Flows } from '../../platform/index';
 import { NavigationService, ObjectPropertyFilterConfig, ObjectPropertySortConfig } from '../../common/index';
 
 @Component({
@@ -21,6 +21,9 @@ import { NavigationService, ObjectPropertyFilterConfig, ObjectPropertySortConfig
 export class IntegrationApiProviderOperationsComponent implements OnInit, OnDestroy {
   integration: Observable<Integration>;
   readonly loading: Observable<boolean>;
+
+  flows$ = new BehaviorSubject<Flows>([]);
+  filteredFlows$ = new BehaviorSubject<Flows>([]);
 
   integrationSubscription: Subscription;
   routeSubscription: Subscription;
@@ -86,6 +89,7 @@ export class IntegrationApiProviderOperationsComponent implements OnInit, OnDest
       (i: Integration) => {
         if (i) {
           this.currentFlowService.integration = i;
+          this.flows$.next(this.currentFlowService.flows);
         }
       }
     );
@@ -113,24 +117,6 @@ export class IntegrationApiProviderOperationsComponent implements OnInit, OnDest
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
     }
-  }
-
-  // Handles events when the user interacts with the toolbar filter
-  filterChanged($event) {
-    // TODO update our pipe to handle multiple filters
-    if ($event.appliedFilters.length === 0) {
-      this.filter.filter = '';
-    }
-    $event.appliedFilters.forEach(filter => {
-      this.filter.propertyName = filter.field.id;
-      this.filter.filter = filter.value;
-    });
-  }
-
-  // Handles events when the user interacts with the toolbar sort
-  sortChanged($event) {
-    this.sort.sortField = $event.field.id;
-    this.sort.descending = !$event.isAscending;
   }
 
   handleClick($event: ListEvent): void {

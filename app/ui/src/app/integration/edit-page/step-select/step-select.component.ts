@@ -128,7 +128,7 @@ export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
 
   onSortChange($event) {
     const ascending = this.toolbarConfig.sortConfig.isAscending;
-    this.filteredSteps.sort((a, b) => {
+    this.filteredSteps = this.filteredSteps.sort((a, b) => {
       if (ascending) {
         return a.name.localeCompare(b.name);
       } else {
@@ -174,6 +174,7 @@ export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
         ]
       } as FilterConfig,
       sortConfig: {
+        isAscending: true,
         fields: [
           {
             id: 'name',

@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OAuthAppStore } from '@syndesis/ui/store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { ConfigService } from '@syndesis/ui/config.service';
 
-import { ObjectPropertyFilterConfig } from '@syndesis/ui/common/object-property-filter.pipe';
-import { ObjectPropertySortConfig } from '@syndesis/ui/common/object-property-sort.pipe';
 import {
   FilterConfig,
   SortConfig,
-  ToolbarConfig
+  ToolbarConfig,
+  FilterField
 } from 'patternfly-ng';
 
 export interface OAuthAppListItem {
+  name: string;
   expanded: boolean;
   client: OAuthApp;
 }
@@ -22,18 +22,9 @@ export interface OAuthAppListItem {
   templateUrl: 'oauth-apps.component.html',
   styleUrls: ['./oauth-apps.component.scss']
 })
-export class OAuthAppsComponent implements OnInit {
+export class OAuthAppsComponent implements OnInit, OnDestroy {
   // Holds the candidate for clearing credentials
   selectedItem: OAuthAppListItem;
-  // Pipe configuration
-  filter: ObjectPropertyFilterConfig = {
-    filter: '',
-    propertyName: 'client.name'
-  };
-  sort: ObjectPropertySortConfig = {
-    sortField: 'client.name',
-    descending: false
-  };
   // List configuration
   listConfig = {
     multiSelect: false,
@@ -64,38 +55,22 @@ export class OAuthAppsComponent implements OnInit {
     } as SortConfig
   } as ToolbarConfig;
   // Data
-  list: Observable<OAuthApps>;
-  loading: Observable<boolean>;
+  loading$: Observable<boolean>;
+  oauthApps$ = new BehaviorSubject<Array<OAuthAppListItem>>([]);
+  filteredOAuthApps$ = new BehaviorSubject<Array<OAuthAppListItem>>([]);
   isLoading = true;
 
   items: Array<OAuthAppListItem> = [];
 
   callbackURL: string;
+  filterFields: Array<FilterField> = [];
+  subscription: Subscription;
 
   constructor(
     public store: OAuthAppStore,
     public config: ConfigService
   ) {
-    this.loading = store.loading;
-    this.list = store.list;
-  }
-
-  // Handles events when the user interacts with the toolbar filter
-  filterChanged($event) {
-    // TODO update our pipe to handle multiple filters
-    if ($event.appliedFilters.length === 0) {
-      this.filter.filter = '';
-    }
-    $event.appliedFilters.forEach(filter => {
-      this.filter.propertyName = filter.field.id;
-      this.filter.filter = filter.value;
-    });
-  }
-
-  // Handles events when the user interacts with the toolbar sort
-  sortChanged($event) {
-    this.sort.sortField = $event.field.id;
-    this.sort.descending = !$event.isAscending;
+    this.loading$ = store.loading;
   }
 
   // Returns whether or not this item has stored credentials
@@ -131,7 +106,7 @@ export class OAuthAppsComponent implements OnInit {
 
   // view initialization
   ngOnInit() {
-    this.list.subscribe((apps: OAuthApps) => {
+    this.subscription = this.store.list.subscribe((apps: OAuthApps) => {
       const oldItems = this.items;
       this.items = [];
       for (const app of apps) {
@@ -139,10 +114,12 @@ export class OAuthAppsComponent implements OnInit {
           return item.client.id === app.id;
         });
         this.items.push({
+          name: app.name,
           expanded: oldApp ? oldApp.expanded : false,
           client: app
         });
       }
+      this.oauthApps$.next(this.items);
     });
     this.store.loadAll();
     this.callbackURL =
@@ -150,6 +127,12 @@ export class OAuthAppsComponent implements OnInit {
       '//' +
       window.location.hostname +
       '/api/v1/credentials/callback';
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
 }
