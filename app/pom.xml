@@ -38,7 +38,6 @@
 
     <!-- Atlasmap version -->
     <atlasmap.version>1.36.0</atlasmap.version>
-    <camel-atlasmap.version>${atlasmap.version}</camel-atlasmap.version>
 
     <!-- Image names -->
     <image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
