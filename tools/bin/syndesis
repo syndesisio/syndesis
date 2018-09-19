@@ -10,15 +10,15 @@
 # Fail on a single failed command in a pipeline (if supported)
 set -o pipefail
 
-# Fail on error and undefined vars (please don't use global vars, but evaluation of functions for return values)
-set -eu
-
 # Save global script args, use "build" as default
 if [ -z "$1" ]; then
     ARGS=("build")
 else
     ARGS=("$@")
 fi
+
+# Fail on error and undefined vars (please don't use global vars, but evaluation of functions for return values)
+set -eu
 
 # Display a help message.
 display_help() {
