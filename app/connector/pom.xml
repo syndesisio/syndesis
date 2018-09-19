@@ -46,6 +46,7 @@
     <module>dropbox</module>
     <module>ftp</module>
     <module>gmail</module>
+    <module>google-calendar</module>
     <module>http</module>
     <module>irc</module>
     <module>kafka</module>
