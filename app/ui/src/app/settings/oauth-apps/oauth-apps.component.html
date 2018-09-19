@@ -17,15 +17,16 @@
   <syndesis-oauth-app-modal #modal></syndesis-oauth-app-modal>
 
   <!-- Toolbar -->
-  <pfng-toolbar [config]="toolbarConfig"
-                (onFilterChange)="filterChanged($event)"
-                (onSortChange)="sortChanged($event)">
-  </pfng-toolbar>
+  <syndesis-list-toolbar [items]="oauthApps$"
+                        [filterTags]="false"
+                        [filteredItems]="filteredOAuthApps$"
+                        [filterFields]="filterFields">
+  </syndesis-list-toolbar>
 
   <!-- List displayed here -->
-  <syndesis-loading [loading]="loading | async" [content]="content">
+  <syndesis-loading [loading]="loading$ | async" [content]="content">
     <ng-template #content>
-      <pfng-list [items]="items | objectPropertyFilter:filter | objectPropertySort:sort"
+      <pfng-list [items]="filteredOAuthApps$ | async"
                   [config]="listConfig"
                   [itemTemplate]="listItemMain"
                   [actionTemplate]="actions"

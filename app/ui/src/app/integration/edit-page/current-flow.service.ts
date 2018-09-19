@@ -14,7 +14,8 @@ import {
   IntegrationSupportService,
   ActionDescriptor,
   key,
-  Flow
+  Flow,
+  Flows
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import {
@@ -643,6 +644,10 @@ export class CurrentFlowService implements OnDestroy {
 
   get loaded(): boolean {
     return this._loaded;
+  }
+
+  get flows(): Flows {
+    return this.integration.flows;
   }
 
   get integration(): Integration {
