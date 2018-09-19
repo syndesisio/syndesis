@@ -29,6 +29,7 @@ export const CALL_ROUTE = 'callRoute';
 export const CONDITIONAL_PROCESSING = 'conditionalProcessing';
 export const SPLIT = 'split';
 export const LOG = 'log';
+export const TEMPLATE = 'template';
 
 @Injectable()
 export class StepStore {
@@ -54,6 +55,16 @@ export class StepStore {
       stepKind: BASIC_FILTER,
       properties: undefined,
       configuredProperties: undefined
+    }),
+    StepStore.requiresOutputDataShape({
+      id: undefined,
+      connection: undefined,
+      action: undefined,
+      name: 'Template',
+      stepKind: TEMPLATE,
+      description: 'Upload a Mustache template to define a custom step',
+      configuredProperties: undefined,
+      properties: undefined
     }),
     {
       id: undefined,
@@ -247,7 +258,9 @@ $\{in.body.title\} // Evaluates true when body contains title.
   // Check if we need a custom form handling which stores the parsed
   // properties in customProperties
   isCustomStep(step: Step): boolean {
-    return step.stepKind === BASIC_FILTER || step.stepKind === DATA_MAPPER;
+    return step.stepKind === BASIC_FILTER ||
+            step.stepKind === DATA_MAPPER ||
+            step.stepKind === TEMPLATE;
   }
 
   getDefaultStepDefinition(stepKind: String): Step {

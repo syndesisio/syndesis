@@ -24,5 +24,6 @@ public enum StepKind {
     mapper,
     split,
     log,
-    headers
+    headers,
+    template
 }

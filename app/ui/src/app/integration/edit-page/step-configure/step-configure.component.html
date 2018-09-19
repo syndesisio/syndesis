@@ -66,6 +66,32 @@
                   </div>
                 </div>
               </div>
+              <div *ngSwitchCase="'template'">
+                <div class="row">
+                  <div class="col-md-12"
+                       *ngIf="step && dataShape">
+                    <div class="template">
+                      <div class="title">
+                        <h1>Upload Template</h1>
+                      </div>
+                      <p>An integration can have one custom step that you define by uploading a template.</p>
+                      <div class="row row-cards-pf">
+                        <div class="card-pf">
+                          <div class="card-pf-body">
+                            <syndesis-templater [(configuredProperties)]="customProperties"
+                                                [(valid)]="valid"
+                                                [dataShape]="dataShape"
+                                                [position]="position"></syndesis-templater>
+                            <div class="control-buttons">
+                              <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div *ngSwitchCase="'ruleFilter'">
                 <div class="row">
                   <div class="col-md-12"

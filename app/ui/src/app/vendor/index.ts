@@ -13,4 +13,12 @@ import {
 
 export { FileItem, FileLikeObject, FileUploader, FileUploaderOptions, ParsedResponseHeaders };
 
+import 'codemirror/addon/display/placeholder.js';
+import 'codemirror/addon/mode/overlay.js';
+import * as CodeMirror from 'codemirror/lib/codemirror.js';
+export { CodeMirror };
+
+import * as Mustache from 'mustache/mustache.js';
+export { Mustache };
+
 export * from '@syndesis/ui/vendor/vendor.module';

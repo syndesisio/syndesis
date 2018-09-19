@@ -103,6 +103,19 @@
         },
         "delete-step-modal": "Are you sure you want to delete this step from the integration?",
         "delete-step-modal-title": "Confirm Delete?"
+      },
+      "steps": {
+        "templater-file-upload": "Upload a file",
+        "templater-file-upload-dnd": "Drag and drop your template file here",
+        "templater-upload-valid-file": "Successfully uploaded '{{0}}'.",
+        "templater-upload-invalid-file": "'{{0}}' is not a valid file. Only files that end in '.tmpl' can be uploaded.",
+        "templater-upload-helper-text-size": "Max: 1 file (up to 1MB)",
+        "templater-upload-helper-text-type": "Accepted file type: .tmpl",
+        "templater-url-upload": "Use an URL",
+        "templater-url-upload-note": "* Note: After uploading this template, Syndesis/Fuse Online does not automatically obtain any updates to it. You would have to edit the step and re-upload the template to incorporates the updates.",
+        "templater-create": "Create",
+        "templater-create-editor-title": "Copy and paste or enter text to define the template:",
+        "templater-import-review": "Import review:"
       }
     },
     "connections": {

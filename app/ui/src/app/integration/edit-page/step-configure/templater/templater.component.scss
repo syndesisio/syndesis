@@ -1,0 +1,23 @@
+@import 'syndesis-sass';
+
+.templater-form legend {
+  font-size: small;
+}
+
+.template-file-url-text {
+  padding-right: 0;
+}
+
+.template-file-url-btn {
+  padding-left: 0;
+}
+
+.templater-form .CodeMirror {
+  border: 2px solid #d1d1d1;
+  height: 15em;
+}
+
+.templater-form .cm-mustache {
+  color: #b21eab;
+  font-weight: bold;
+}
