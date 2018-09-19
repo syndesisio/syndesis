@@ -28,7 +28,7 @@
 
   <properties>
     <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
-    <camel.version>2.21.0.fuse-720007</camel.version>
+    <camel.version>2.21.0.fuse-720021</camel.version>
     <atlasmap.version>1.36.0</atlasmap.version>
   </properties>
 
@@ -283,6 +283,11 @@
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-api-provider</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-google-calendar</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

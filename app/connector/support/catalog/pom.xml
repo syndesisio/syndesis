@@ -140,6 +140,11 @@
       <artifactId>connector-api-provider</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connector-google-calendar</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
