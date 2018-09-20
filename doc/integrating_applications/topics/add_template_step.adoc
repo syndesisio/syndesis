@@ -1,0 +1,56 @@
+[id='add-template-step']
+= Adding a template step
+
+A template step allows data to be reshaped into a single consistent
+format, by providing a pattern of text with substitutable symbols. Specific
+data values are mapped to those symbols and populated at runtime.
+
+The template step has specific requirements for both its data input and output:
+* both input and output requires data to be in the form of a JSON object.
+* the symbols specified in the template must have data values mapped to them in
+  order for data to populate them.
+* once the data has been shaped into the template format, the output value is
+  stored in a single 'message' attribute. This attribute must be mapped to the
+  next step or connection.
+* mapping is performed in both cases using the data mapping step (see
+  <<add-data-mapping-step>>).
+
+The template needs to be specified and the step allows this to either be
+created from scratch or loaded from a file. The currently supported syntax
+for the template is https://mustache.github.io[Mustache], with
+https://velocity.apache.org[Velocity] and
+https://freemarker.apache.org[Freemarker] are excepted to be added at a later
+date.
+
+To add a template step, you must be creating a new integration or
+editing an integration. Due to the input and output specification requirements
+the integration must already have its start and finish connections.
+
+To add a template step:
+
+. In the integration visualization panel on the left, hover over the
+image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
+at the location where you want to add a log step.
+. In the popup, click *Add a Step*.
+. On the *Choose a Step* page, click *Template*.
+. On the *Upload Template* page, select *Upload a file* or *create*
+  a template. The former displays a button for choosing a
+  local template file (requires a .tmpl extension) while the latter choice
+  displays the template editor.
+
++
+The editor only allows valid syntax so the *Done* button will be disabled
+should the syntax be invalid.
+
+. When the template step configuration is complete, click *Done* to add the
+  step to the integration.
+. The connections or steps either side of the template step will require
+data mapping:
+* Insert a data mapping step prior to the template step. This will allow you
+  to map values in the preceding connection data to the symbols entered into
+  the template.
+* Insert a data mapping step after the the template step. The generated
+  template/data combination is placed into a *message* attribute hence this
+  should be mapped to whatever preferred attribute of the target connection.
+. When the integration is complete, it can be published and output data will
+  appear formatted according to the syntax rules stipulated by the template.
