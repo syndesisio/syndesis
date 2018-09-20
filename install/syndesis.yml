@@ -1625,6 +1625,16 @@ objects:
     Syndesis upgrade process started
   objects:
   - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: syndesis-upgrade
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${POSTGRESQL_VOLUME_CAPACITY}
+  - apiVersion: v1
     kind: Pod
     metadata:
       name: syndesis-upgrade-latest
@@ -1649,5 +1659,5 @@ objects:
       volumes:
       - name: backup-dir
         persistentVolumeClaim:
-          claimName: syndesis-db
+          claimName: syndesis-upgrade
       restartPolicy: Never
