@@ -111,7 +111,7 @@
     }
   },
   "configuredProperties": {
-    "specification": "{\"swagger\":\"2.0\",\"host\":\"example.com\",\"basePath\":\"/api\",\"schemes\":[\"http\"],\"paths\":{\"/complex/{pathParam}\":{\"post\":{\"operationId\":\"complexOperation\",\"consumes\":[\"application/xml\"],\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"pathParam\",\"in\":\"path\"}]}}}}",
+    "specification": "{\"swagger\":\"2.0\",\"host\":\"example.com\",\"basePath\":\"/api\",\"schemes\":[\"http\"],\"paths\":{\"/complex/{pathParam}\":{\"post\":{\"operationId\":\"complexOperation\",\"consumes\":[\"application/xml\"],\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"pathParam\",\"in\":\"path\"},{\"name\":\"queryParam\",\"in\":\"query\"}]}}}}",
     "host": "http://example.com",
     "basePath": "/api"
   }
