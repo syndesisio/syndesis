@@ -114,7 +114,7 @@ public final class SwaggerHelper {
                         final ObjectNode param = (ObjectNode) i.next();
                         param.remove(Arrays.asList("description", "type", "required", "format"));
 
-                        if (!"path".equals(param.get("in").textValue())) {
+                        if (!"path".equals(param.get("in").textValue()) && !"query".equals(param.get("in").textValue())) {
                             i.remove();
                         }
                     }
