@@ -1634,6 +1634,14 @@ objects:
     metadata:
       name: syndesis-upgrade-latest
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                "syndesis.io/app": "syndesis"
+                "syndesis.io/component": "syndesis-db"
+            topologyKey: "kubernetes.io/hostname"
       serviceAccountName: syndesis-operator
       containers:
       - name: upgrade
