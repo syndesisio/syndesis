@@ -75,7 +75,7 @@
     <errorprone.version>2.3.1</errorprone.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.21.0.fuse-710018</camel.version>
+    <camel.version>2.21.0.fuse-710021</camel.version>
 
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
     <dep.plugin.pmd.version>3.8</dep.plugin.pmd.version>
