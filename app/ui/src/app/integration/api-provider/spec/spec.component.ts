@@ -2,19 +2,21 @@ import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/c
 // import { Observable } from 'rxjs';
 // import { first, map } from 'rxjs/operators';
 import { I18NService } from '@syndesis/ui/platform';
-import { ModalService, NavigationService, OpenApiData } from '@syndesis/ui/common';
+import { ModalService, NavigationService, OpenApiUploadSpecification } from '@syndesis/ui/common';
 // import {
-//   ApiConnectorActions,
+//   ApiProviderActions,
 //   ApiConnectorState,
 //   ApiConnectorStore, CustomApiConnectorAuthSettings,
 //   CustomConnectorRequest,
 //   getApiConnectorState
 // } from '@syndesis/ui/customizations/api-connector/index';
 import { ApiDefinition, /*ApiEditorComponent*/ } from 'apicurio-design-studio';
-// import { Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { WindowRef } from '@syndesis/ui/customizations/window-ref';
 import { Router } from '@angular/router';
 import * as YAML from 'yamljs';
+import { ApiProviderActions } from '@syndesis/ui/integration/api-provider/api-provider.actions';
+import { ApiProviderStore } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
 
 enum WizardSteps {
   UploadSwagger = 1,
@@ -48,7 +50,7 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   private cancelModalId = 'create-cancellation-modal';
 
   constructor(
-    // private apiConnectorStore: Store<ApiConnectorStore>,
+    private apiProviderStore: Store<ApiProviderStore>,
     private i18NService: I18NService,
     private modalService: ModalService,
     private nav: NavigationService,
@@ -81,7 +83,7 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
       this.cancelEditorModalId,
       this.cancelEditorModalTemplate
     );
-    // this.apiConnectorState$ = this.apiConnectorStore.select(
+    // this.apiConnectorState$ = this.apiProviderStore.select(
     //   getApiConnectorState
     // );
 
@@ -193,8 +195,8 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
       warnings: []
     } as CustomConnectorRequest;
 
-    this.apiConnectorStore.dispatch(
-      ApiConnectorActions.validateSwagger(request)
+    this.apiProviderStore.dispatch(
+      ApiProviderActions.validateSwagger(request)
     );*/
   }
 
@@ -239,11 +241,10 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     this.modalService.hide(this.cancelModalId, doCancel);
   }
 
-  onSpecification(specification: OpenApiData) {
-    /*this.apiConnectorStore.dispatch(
-      ApiConnectorActions.validateSwagger(request)
-    );*/
-    console.log(specification);
+  onSpecification(specification: OpenApiUploadSpecification) {
+    this.apiProviderStore.dispatch(
+      ApiProviderActions.validateSwagger(specification)
+    );
   }
 
   onReviewComplete({event: event, displayEditor: displayEditor}): void {
@@ -300,15 +301,15 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
       customConnectorRequest.configuredProperties.specification = JSON.stringify( this.apiDef.spec );
     }
 
-    this.apiConnectorStore.dispatch(
-      ApiConnectorActions.create(customConnectorRequest)
+    this.apiProviderStore.dispatch(
+      ApiProviderActions.create(customConnectorRequest)
     );
   }*/
 
   ngOnDestroy() {
     this.modalService.unregisterModal(this.cancelEditorModalId);
     this.modalService.unregisterModal(this.cancelModalId);
-    // this.apiConnectorStore.dispatch(ApiConnectorActions.createCancel());
+    // this.apiProviderStore.dispatch(ApiProviderActions.createCancel());
     this.nav.show();
   }
 

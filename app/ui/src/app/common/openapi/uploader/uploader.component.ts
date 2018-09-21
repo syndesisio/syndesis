@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, Input, ElementRef, ViewChild, TemplateRef } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 
 import {
   OpenApiUploadSpecification

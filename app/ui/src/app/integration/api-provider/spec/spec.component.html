@@ -60,7 +60,7 @@
               <strong>{{ 'customizations.api-client-connectors.api-upload-choose-method' | synI18n }}</strong>
             </p>
             <openapi-uploader
-              [loading]="false"
+              [loading]="apiProviderStore.loading"
               [apiFileImport]="useApiFileImport"
               (useFileImportChanged)="onApiFileImportChanged($useFileImport)"
               [apiFile]="apiFile"
