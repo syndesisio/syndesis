@@ -1,0 +1,149 @@
+<article class="wizard syn-scrollable"
+         onDragStart="return false;"
+         ondragenter="return false;"
+         ondragover="return false;"
+         ondrop="return false;">
+  <section class="wizard__ui wizard__nav" *ngIf="!showApiEditor">
+    <nav class="wizard-nav row toolbar-pf">
+      <div class="col-sm-12">
+        <div class="toolbar-pf-actions">
+          <div class="wizard-nav__breadcrumbs inline-block">
+            <ol class="breadcrumb no-bottom-margin">
+              <li>
+                <a routerLink="/">{{ 'menu.home' | synI18n }}</a>
+              </li>
+              <li>
+                <a routerLink="/customizations/api-connector">{{ 'menu.customizations' | synI18n }}</a>
+              </li>
+              <li class="active">
+                <strong>{{ 'customizations.api-client-connectors.api-client-connector' | synI18n }}</strong>
+              </li>
+            </ol>
+          </div>
+          <div class="wizard-nav__buttons toolbar-pf-action-right">
+            <button class="wizard-nav__button btn btn-default" (click)="showCancelModal()">
+              {{ 'shared.cancel' | synI18n }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </section>
+
+  <div class="wizard__main syn-scrollable--body container-fluid">
+
+    <section class="wizard__ui wizard__body wizard__body--step1">
+      <div class="row row-cards-pf"
+           *ngIf="currentActiveStep == 1">
+        <div class="card-pf">
+          <div class="card-pf-heading">
+            <h2 class="card-pf-title">
+              {{ 'customizations.api-client-connectors.create-upload-spec-step-title' | synI18n }}
+            </h2>
+          </div>
+          <div class="card-pf-body">
+            <!--<syndesis-validation-error *ngIf="swaggerFileUrlInput.errors?.requiredIfChecked && fetchUrlOption.checked">
+              {{ 'customizations.api-client-connectors.url-validation-error' | synI18n }}
+            </syndesis-validation-error>
+
+            <syndesis-validation-error *ngIf="validationError">
+              {{ validationError.message }}
+            </syndesis-validation-error>
+
+            <syndesis-validation-error *ngIf="processingError">
+              {{ processingError }}
+            </syndesis-validation-error>-->
+            <p>
+              {{ 'customizations.api-client-connectors.url-upload-instructions' | synI18n }}
+            </p>
+            <p>
+              <strong>{{ 'customizations.api-client-connectors.api-upload-choose-method' | synI18n }}</strong>
+            </p>
+            <openapi-uploader
+              [loading]="false"
+              [apiFileImport]="useApiFileImport"
+              (useFileImportChanged)="onApiFileImportChanged($useFileImport)"
+              [apiFile]="apiFile"
+              (apiFileChanged)="onApiFileChanged($event)"
+              [apiUrl]="apiUrl"
+              (apiUrlChanged)="onApiUrlChanged($event)"
+              (spec)="onSpecification($event)">
+            </openapi-uploader>
+          </div>
+          <!--<api-provider-validator *ngIf="currentActiveStep == 2 && displayDefinitionEditor === false"-->
+                                         <!--[apiConnectorTemplateName]="'OpenAPI'"-->
+                                         <!--[apiConnectorData]="(apiConnectorState$ | async)?.createRequest"-->
+                                         <!--[showNextButton]="true"-->
+                                         <!--[enableEditButton]="true"-->
+                                         <!--(reviewComplete)="onReviewComplete($event)"-->
+                                         <!--(backPressed)="onBackPressed()">-->
+          <!--</api-provider-validator>-->
+
+
+          <div class="api-connector-editor syn-scrollable" *ngIf="showApiEditor">
+            <div class="toolbar-pf">
+              <div class="toolbar-pf-actions api-connector-editor__header">
+                <div class="api-connector-editor__title">
+                  <button class="btn btn-link"
+                          [tooltip]="'customizations.api-client-connectors.editor-back-button-tooltip' | synI18n"
+                          placement="auto"
+                          (click)="showCancelApiEditorModal()">
+                    {{ 'shared.back-button' | synI18n }}
+                  </button>
+                  <h2>
+                    {{ editorTitle }}
+                  </h2>
+                </div>
+                <div class="api-connector-editor__actions toolbar-pf-action-right">
+                  <button class="btn btn-default"
+                          [tooltip]="'customizations.api-client-connectors.editor-back-button-tooltip' | synI18n"
+                          placement="auto"
+                          (click)="showCancelApiEditorModal()">
+                    {{ 'shared.cancel' | synI18n }}
+                  </button>
+                  <button class="btn btn-primary"
+                          *ngIf="currentActiveStep === 2 && displayDefinitionEditor === true"
+                          [disabled]="!editorHasChanges"
+                          [tooltip]="'customizations.api-client-connectors.editor-save-button-tooltip' | synI18n"
+                          placement="auto"
+                          container="body"
+                          (click)="onDoneEditing()">
+                    {{ 'shared.save' | synI18n }}
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="api-connector-editor__body syn-scrollable--body">
+              <!--<api-provider-editor #_apiEditor-->
+                          <!--[api]="apiDef"-->
+                          <!--[embedded]="true"-->
+                          <!--(onCommandExecuted)="onUserChange($event)">-->
+              <!--</api-provider-editor>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>
+
+<ng-template #cancelModalTemplate>
+  <cancel-confirmation-modal
+    (cancel)="onCancel($event)"
+    primaryLabel="Yes"
+    secondaryLabel="No">
+    <p class="lead">{{ 'customizations.api-client-connectors.cancel-connector-modal-lead' | synI18n }}</p>
+    <p>{{ 'customizations.api-client-connectors.cancel-connector-modal' | synI18n }}</p>
+  </cancel-confirmation-modal>
+</ng-template>
+
+<ng-template #cancelEditorModalTemplate>
+  <cancel-confirmation-modal
+    (cancel)="onCancelApiEditor($event)"
+    primaryLabel="Yes"
+    secondaryLabel="No">
+    <p class="lead">{{ 'customizations.api-client-connectors.cancel-api-editor-modal-lead' | synI18n }}</p>
+    <p *ngIf="apiName">{{ 'customizations.api-client-connectors.cancel-api-editor-modal' | synI18n: apiName }}</p>
+    <p *ngIf="!apiName">{{ 'customizations.api-client-connectors.cancel-api-editor-unnamed-modal' | synI18n }}</p>
+  </cancel-confirmation-modal>
+</ng-template>

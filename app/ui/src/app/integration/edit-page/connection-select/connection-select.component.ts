@@ -64,15 +64,22 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
     }
 
     log.debug(() => 'Selected connection: ' + connection.name, category);
+    log.trace(() => JSON.stringify(connection, null, 2), category);
 
     this.currentFlowService.events.emit({
       kind: 'integration-set-connection',
       position: this.position,
       connection: connection,
       onSave: () => {
-        this.router.navigate(['action-select', this.position], {
-          relativeTo: this.route.parent,
-        });
+        if (connection.id === 'api-provider') {
+          this.router.navigate(['api-provider', 'create'], {
+            relativeTo: this.route.parent,
+          });
+        } else {
+          this.router.navigate(['action-select', this.position], {
+            relativeTo: this.route.parent,
+          });
+        }
       }
     });
   }
