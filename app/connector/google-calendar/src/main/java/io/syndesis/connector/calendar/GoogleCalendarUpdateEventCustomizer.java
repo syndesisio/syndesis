@@ -54,6 +54,7 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
     private String endDate;
     private String startTime;
     private String endTime;
+    private String location;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
@@ -71,6 +72,7 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
         endDate = (String)options.get("endDate");
         startTime = (String)options.get("startTime");
         endTime = (String)options.get("endTime");
+        location = (String)options.get("location");
         options.put("apiName", GoogleCalendarApiCollection.getCollection().getApiName(CalendarEventsApiMethod.class).getName());
         options.put("methodName", "update");
     }
@@ -105,7 +107,9 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
                 DateTime end = new DateTime(date);
                 event.setEnd(new EventDateTime().setDateTime(end));
             }
-
+            if (ObjectHelper.isNotEmpty(location)) {
+                event.setLocation(location);
+            }
         }
 
         in.setHeader("CamelGoogleCalendar.content", event);

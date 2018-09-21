@@ -301,6 +301,19 @@
                 "secret": false,
                 "labelHint": "The ending time of the calendar Event.",
                 "order": "8"
+              },
+              "location": {
+                "kind": "parameter",
+                "displayName": "Location",
+                "group": "producer",
+                "label": "producer",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "deprecated": false,
+                "secret": false,
+                "labelHint": "The location of the event as free text",
+                "order": "9"
               }
             }
           }
@@ -450,6 +463,19 @@
                 "secret": false,
                 "labelHint": "The ending time of the calendar Event.",
                 "order": "9"
+              },
+              "location": {
+                "kind": "parameter",
+                "displayName": "Location",
+                "group": "producer",
+                "label": "producer",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "deprecated": false,
+                "secret": false,
+                "labelHint": "The location of the event as free text",
+                "order": "10"
               }
             }
           }
