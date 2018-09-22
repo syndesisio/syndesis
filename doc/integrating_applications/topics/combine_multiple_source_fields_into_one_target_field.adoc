@@ -1,5 +1,5 @@
 [id='combine-multiple-source-fields-into-one-target-field']
-= Combining multiple source fields into one target field
+= Combine multiple source fields into one target field
 
 In a data mapper step, you can combine multiple source fields into one 
 compound target field. For example, you can map the `FirstName` and `LastName` 
@@ -16,11 +16,13 @@ and the separator between parts, such as a space or comma. See
 . In the *Target* panel, click the field into which you want to map more 
 than one source field.
 
-. In the *Sources* panel, click the first field that you want to combine
-into the target field.
-
-. In the *Sources* panel, for the each of the other fields that you want to 
-combine into the target field, hover over that field, and press 
+. In the *Sources* panel, if there is a field that contains the fields
+that you want to map to the target field, then click that container field 
+to map all contained fields to the target field. 
++
+To individually select each source field, click the first field that 
+you want to combine into the target field. For each of the other fields 
+that you want to combine into the target field, hover over that field, and press 
 *CTRL-Mouse1* (*CMD-Mouse1* on MacOS).
 +
 The data mapper automatically changes the field action from *Map* to *Combine*. 
@@ -41,7 +43,7 @@ The data mapper automatically updates the index numbers to reflect the
 new order. 
 
 . If you mapped a source field to each part of the compound target field,
-then skip to the last step.
+then skip to the next step.
 +
 If the target field expects data that is not available to be mapped, then in the 
 *Mapping Details* panel, edit the index of each 
@@ -51,6 +53,25 @@ padding fields as needed to indicate missing data.
 +
 If you accidentally create too many padding fields, click the trash-can 
 icon on each extra padding field to delete it.  
+
+. Preview the data mapping result: 
+.. In the upper right of the data mapper, click 
+image:shared/images/EditorSettings.png[Editor settings] and select 
+*Show Mapping Preview* to display a text input field on each source
+field and a read-only result field on the target field. 
+.. In each source field's data input field, enter text. As you enter content, 
+the mapping result appears in the read-only field on the target field.
++
+If you reorder the source fields or add a transformation to the mapping
+then the result field on the target field reflects this. If the data mapper
+detects any errors, it displays informative messages at the top of the 
+*Mapping Details* panel. 
+
+.. Hide the preview fields by clicking 
+image:shared/images/EditorSettings.png[Editor settings] again and selecting
+*Hide Mapping Preview*. If you redisplay the preview fields, any data
+that you entered in them is still there and it 
+remains there until you exit the data mapper. 
 
 . To confirm that the mapping is correctly defined, in the upper right, click
 image:shared/images/grid.png[Grid] to display the mappings defined in

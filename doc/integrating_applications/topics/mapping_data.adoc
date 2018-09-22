@@ -7,27 +7,30 @@ been obtained or processed to data fields that the next connection can process.
 at each point where you need to map data fields, add a data mapper step.
 Details for mapping data fields are in the following topics:
 
-* <<identifying-where-data-mapping-is-needed>>
-* <<about-mapping-data>>
+* <<identify-where-data-mapping-is-needed>>
+* <<find-the-field-you-want-to-map>>
 * <<map-one-source-field-to-one-target-field>>
+* <<example-missing-unwanted-data>>
 * <<combine-multiple-source-fields-into-one-target-field>>
 * <<separate-one-source-field-into-multiple-target-fields>>
-* <<transforming-target-data>>
+* <<transform-target-data>>
 * <<available-transformations>>
-* <<viewing-mappings-in-a-step>>
+* <<view-mappings-in-a-step>>
 
-include::identifying_where_data_mapping_is_needed.adoc[leveloffset=+1]
+include::identify_where_data_mapping_is_needed.adoc[leveloffset=+1]
 
-include::about_mapping_data.adoc[leveloffset=+1]
+include::find_data_field_you_want_to_map.adoc[leveloffset=+1]
 
 include::map_one_source_field_to_one_target_field.adoc[leveloffset=+1]
+
+include::example_missing_unwanted_data.adoc[leveloffset=+1]
 
 include::combine_multiple_source_fields_into_one_target_field.adoc[leveloffset=+1]
 
 include::separate_one_source_field_into_multiple_target_fields.adoc[leveloffset=+1]
 
-include::transforming_target_data.adoc[leveloffset=+1]
+include::transform_target_data.adoc[leveloffset=+1]
 
 include::available_transformations.adoc[leveloffset=+1]
 
-include::viewing_mappings_in_a_step.adoc[leveloffset=+1]
+include::view_mappings_in_a_step.adoc[leveloffset=+1]

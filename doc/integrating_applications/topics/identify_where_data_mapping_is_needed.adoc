@@ -1,5 +1,5 @@
-[id='identifying-where-data-mapping-is-needed']
-= Identifying where data mapping is needed
+[id='identify-where-data-mapping-is-needed']
+= Identify where data mapping is needed
 
 To identify where data mapping is needed:
 
