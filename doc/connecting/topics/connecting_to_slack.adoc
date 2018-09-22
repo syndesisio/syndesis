@@ -1,8 +1,8 @@
-[id='connecting-to-slack_{context}']
+[id='connecting-to-slack']
 = Connecting to Slack
 
 As a business user, you can create an integration that connects to Slack. A 
-connection to Slack can do one of the following:
+connection to Slack can do either one of the following:
 
 * Trigger execution of the integration when a channel that you specify
 receives a message. The integration passes the message to the next
@@ -14,8 +14,8 @@ processes it in some way. You can finish an integration by
 notifying a Slack channel or user that the process was successful.
 
 To connect to Slack in an integration, create a Slack 
-connection. You can then add that same connection to any number of
-integrations. Details are in the following topics:
+connection and then add the connection to an integration. 
+Details are in the following topics:
 
 * <<creating-slack-connections_{context}>>
 * <<add-slack-connection-start_{context}>>

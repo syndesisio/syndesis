@@ -1,15 +1,25 @@
 [id='creating-slack-connections_{context}']
 = Create a Slack connection
 
-To create a connection to an instance of Slack:
+In an integration, a Slack connection can retrieve messages from a 
+channel that you specify or send a message to a channel or user. 
+You can use the same Slack connection in any number of integrations. 
+
+.Prerequisites
+
+* You created a Slack app for connecting {prodname} to Slack.
+* You can obtain the Slack webhook URL for your Slack app.
+* You can obtain a legacy token that authorizes access to your Slack app. 
+
+.Procedure
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
 . In the upper right, click *Create Connection* to display
 {prodname} connectors.
 . Click the *Slack* connector.
-. In the *Slack webhook URL* field, enter the webhook URL of the
-Slack instance to send messages to.
+. In the *Slack webhook URL* field, enter the webhook URL for your 
+Slack app. 
 . In the *Token for accessing Slack API* field, enter the Slack-provided token, 
 which you can 
 https://api.slack.com/custom-integrations/legacy-tokens[obtain from Slack.]

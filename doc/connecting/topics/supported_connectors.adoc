@@ -57,8 +57,9 @@ a new list, or update a list. Other SAP Concur actions are Technology Preview fe
 |<<connecting-to-servicenow,ServiceNow>>
 |Obtain records from or copy records to your ServiceNow instance. 
 
-|<<connecting-to-slack_{context},Slack>>
-|Send a message to a Slack user or channel. 
+|<<connecting-to-slack,Slack>>
+|Obtain messages from a channel or send a message to a 
+Slack channel or user. 
 
 |<<connecting-to-databases, SQL databases>>
 |Invoke a SQL statement or a SQL stored procedure on an Apache Derby, 
