@@ -34,7 +34,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-sf>>
 * <<connecting-to-concur>>
 * <<connecting-to-servicenow>>
-* <<connecting-to-slack>>
+* <<connecting-to-slack_{context}>>
 * <<connecting-to-databases>>
 * <<connecting-to-twitter>>
 * <<triggering-integrations-with-http-requests>>

@@ -1,8 +1,14 @@
-[id='connecting-to-slack']
+[id='connecting-to-slack_{context}']
 = Connecting to Slack
 
-In an integration, you can connect to an instance of Slack and deliver
-a message to a particular user or to a channel. For example, this is
+As a business user, you can create an integration that connects to Slack. A 
+connection to Slack can do one of the following:
+
+* Trigger execution of the integration when a channel that you specify
+receives a message. The integration passes the message to the next
+step in the integration.
+
+* Deliver a message to a particular user or to a channel. For example, this is
 useful when an integration downloads a file from an FTP server and 
 processes it in some way. You can finish an integration by 
 notifying a Slack channel or user that the process was successful.
@@ -11,9 +17,12 @@ To connect to Slack in an integration, create a Slack
 connection. You can then add that same connection to any number of
 integrations. Details are in the following topics:
 
-* <<creating-slack-connections>>
-* <<adding-slack-connections>>
+* <<creating-slack-connections_{context}>>
+* <<add-slack-connection-start_{context}>>
+* <<add-slack-connection-middle-finish_{context}>>
 
 include::creating_slack_connections.adoc[leveloffset=+1]
 
-include::adding_slack_connections.adoc[leveloffset=+1]
+include::add_slack_connection_start.adoc[leveloffset=+1]
+
+include::add_slack_connection_middle_finish.adoc[leveloffset=+1]
