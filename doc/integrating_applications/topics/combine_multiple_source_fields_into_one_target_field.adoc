@@ -69,7 +69,9 @@ detects any errors, it displays informative messages at the top of the
 
 .. Hide the preview fields by clicking 
 image:shared/images/EditorSettings.png[Editor settings] again and selecting
-*Hide Mapping Preview*. If you redisplay the preview fields, any data
+*Hide Mapping Preview*. 
++
+If you redisplay the preview fields, any data
 that you entered in them is still there and it 
 remains there until you exit the data mapper. 
 
@@ -78,3 +80,7 @@ image:shared/images/grid.png[Grid] to display the mappings defined in
 this step. A mapping that combines the values of more than one source field
 into one target field looks like this:
 image:images/CombineMapping.png[Combine Fields Mapping]. 
++
+You can also preview mapping results in this view. Click 
+image:shared/images/EditorSettings.png[Editor settings], select 
+*Show Mapping Preview*, and enter text as described in the previous step. 
