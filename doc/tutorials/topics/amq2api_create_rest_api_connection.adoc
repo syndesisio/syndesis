@@ -11,9 +11,9 @@ available connectors.
 . In the *Todo App API Configuration*, notice that {prodname} populates the
 *Authentication Type*, *Base Path*, and *Host* fields from the
 connector information.
-. In the *Password* field, enter any value. For this sample integration,
-password and user name values are required but they are not used.
-. In the *Username* field, enter any value.
+. In the *Username* field, enter any value. For this sample integration,
+user name and password values are required but they are not used.
+. In the *Password* field, enter any value. 
 . Click *Next*.
 . In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.

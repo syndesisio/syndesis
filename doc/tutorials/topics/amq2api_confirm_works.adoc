@@ -19,7 +19,8 @@ to the AMQ broker in your OpenShift project.
 +
 Successful execution returns a task from the To Do app client API. The task
 identifies the ID of the damaged item and the contact information for its
-vendor.
+vendor. If the task does not appear in a moment or two, try reloading the
+page. 
 . Edit the XML message to specify two damaged items:
 .. Click *Show JMS Form* to display the message input box again.
 .. In the XML message, change the entry for the undamaged item to
@@ -27,10 +28,9 @@ specify `damaged="true"`.
 .. Click *Send JMS Message*. The To Do app client API returns a new
 task that contains IDs for two damaged items and contact information for
 the two vendors.
-. Edit the XML message to specify an unknown vendor:
+. Edit the XML message to specify an ID that you make up:
 .. Click *Show JMS Form*.
-.. In the XML message, for an item that has `damaged="true"`, change the name
-of the vendor.
+.. In the XML message, for the item that has `damaged="true"`, change the item
+ID, for example, to `1234`.
 .. Click *Send JMS Message*. The To Do app client API returns a new
-task that indicates that there is no contact information for the vendor of
-a damaged item. The To Do app accesses a database that has only two vendors.
+task with the item ID that you just entered.
