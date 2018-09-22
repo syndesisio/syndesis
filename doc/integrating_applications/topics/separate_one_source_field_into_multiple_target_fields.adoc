@@ -52,11 +52,11 @@ image:shared/images/EditorSettings.png[Editor settings] and select
 *Show Mapping Preview* to display a text input field on the source
 field and read-only result fields on each target field. 
 .. In the source field's data input field, enter text. Be sure to enter
-the separator character between the parts of the field.As you enter content, 
+the separator character between the parts of the field. As you enter content, 
 the mapping result appears in the read-only fields on the target fields.
 +
 If you reorder the target fields or add a transformation to a target field 
-then the result fields on the target fields reflects this. If the data mapper
+then the result fields on the target fields reflect this. If the data mapper
 detects any errors, it displays informative messages at the top of the 
 *Mapping Details* panel. 
 
