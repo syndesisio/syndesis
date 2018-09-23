@@ -19,6 +19,7 @@ import { ApiProviderOperationsComponent } from '@syndesis/ui/integration/api-pro
 import { ApiProviderSpecComponent } from '@syndesis/ui/integration/api-provider/spec/spec.component';
 import { RouterModule, Routes } from '@angular/router';
 import { VendorModule } from '@syndesis/ui/vendor';
+import { FormsModule } from '@angular/forms';
 
 const routes: Routes = [];
 
@@ -29,6 +30,7 @@ const routes: Routes = [];
     PatternflyUIModule,
     VendorModule,
     OpenApiModule,
+    FormsModule,
     ApiModule.forChild(apiProviderEndpoints),
     StoreModule.forFeature('apiProviderState', apiProviderReducer),
     EffectsModule.forFeature([ApiProviderEffects]),

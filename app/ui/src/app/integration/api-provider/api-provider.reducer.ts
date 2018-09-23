@@ -3,27 +3,17 @@ import { createFeatureSelector } from '@ngrx/store';
 import { PlatformState } from '@syndesis/ui/platform';
 import {
   ApiProviderState,
-  CustomApiProviderRequest
 } from '@syndesis/ui/integration/api-provider/api-provider.models';
 import {
   ApiProviderActions
 } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 
-const initialCreateRequest: CustomApiProviderRequest = {
-  connectorTemplateId: null,
-  isComplete: false,
-  isOK: false,
-  isRequested: false
-};
-
 const initialState: ApiProviderState = {
-  list: [],
-  createRequest: initialCreateRequest,
-  deleted: null,
   loading: false,
   loaded: false,
   hasErrors: false,
-  errors: []
+  errors: [],
+  createRequest: {}
 };
 
 export function apiProviderReducer(
@@ -34,7 +24,8 @@ export function apiProviderReducer(
     case ApiProviderActions.VALIDATE_SWAGGER: {
       return {
         ...state,
-        createRequest: action.payload,
+        uploadSpecification: action.payload,
+        createRequest: {},
         loading: true,
         hasErrors: false,
         errors: []
@@ -42,16 +33,12 @@ export function apiProviderReducer(
     }
 
     case ApiProviderActions.VALIDATE_SWAGGER_COMPLETE: {
-      const { validationDetails, errors } = action.payload;
+      const { errors, ...createRequest } = action.payload;
       return {
         ...state,
-        createRequest: {
-          ...state.createRequest,
-          ...action.payload,
-          validationDetails: validationDetails
-        },
+        createRequest,
         loading: false,
-        hasErrors: false,
+        hasErrors: !!errors,
         errors: errors
       };
     }
@@ -64,6 +51,17 @@ export function apiProviderReducer(
         errors: [action.payload]
       };
     }
+
+    case ApiProviderActions.CREATE_CANCEL: {
+      return {
+        ...state,
+        createRequest: {},
+        loading: false,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
 
     default: {
       return state;

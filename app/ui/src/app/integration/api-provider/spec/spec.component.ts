@@ -1,28 +1,20 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
-// import { Observable } from 'rxjs';
-// import { first, map } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { I18NService } from '@syndesis/ui/platform';
-import { ModalService, NavigationService, OpenApiUploadSpecification } from '@syndesis/ui/common';
-// import {
-//   ApiProviderActions,
-//   ApiConnectorState,
-//   ApiConnectorStore, CustomApiConnectorAuthSettings,
-//   CustomConnectorRequest,
-//   getApiConnectorState
-// } from '@syndesis/ui/customizations/api-connector/index';
-import { ApiDefinition, /*ApiEditorComponent*/ } from 'apicurio-design-studio';
+import { ModalService, NavigationService, OpenApiUploaderValueType, OpenApiUploadSpecification } from '@syndesis/ui/common';
 import { Store } from '@ngrx/store';
 import { WindowRef } from '@syndesis/ui/customizations/window-ref';
 import { Router } from '@angular/router';
 import * as YAML from 'yamljs';
 import { ApiProviderActions } from '@syndesis/ui/integration/api-provider/api-provider.actions';
-import { ApiProviderStore } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
+import { ApiProviderStore, getApiProviderState } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
+import { ApiProviderData, ApiProviderState, ApiProviderValidationError } from '@syndesis/ui/integration/api-provider/api-provider.models';
+import { Observable } from 'rxjs';
+import { ApiDefinition } from 'apicurio-design-studio';
 
 enum WizardSteps {
-  UploadSwagger = 1,
-  ReviewApiConnector = 2,
-  UpdateAuthSettings = 3,
-  SubmitRequest = 4
+  UploadSpecification = 1,
+  ReviewApiProvider = 2,
+  SubmitRequest = 3
 }
 
 @Component({
@@ -31,17 +23,17 @@ enum WizardSteps {
   styleUrls: ['../../integration-common.scss', './spec.component.scss']
 })
 export class ApiProviderSpecComponent implements OnInit, OnDestroy {
-  currentActiveStep = WizardSteps.UploadSwagger;
-  // apiConnectorState$: Observable<ApiConnectorState>;
+  OpenApiUploaderValueType = OpenApiUploaderValueType;
+  currentActiveStep = WizardSteps.UploadSpecification;
+  apiProviderState$: Observable<ApiProviderState>;
   displayDefinitionEditor = false;
   editorHasChanges = false;
-  // validationResponse: CustomConnectorRequest;
-  useApiFileImport = true; // default to file import (false is a URL import)
-  apiUrl: string;
-  apiFile: File;
+  validationResponse: ApiProviderData;
+  uploaderValue: OpenApiUploadSpecification;
+  apiDef: ApiDefinition;
+  validationErrors: ApiProviderValidationError[];
 
   // @ViewChild('_apiEditor') _apiEditor: ApiEditorComponent;
-  apiDef: ApiDefinition;
 
   @ViewChild('cancelEditorModalTemplate') cancelEditorModalTemplate: TemplateRef<any>;
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
@@ -58,12 +50,6 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     private winRef: WindowRef
   ) {
     this.winRef.nativeWindow.dump = YAML.dump;
-    this.apiDef = new ApiDefinition();
-    this.apiDef.createdBy = 'user1';
-    this.apiDef.createdOn = new Date();
-    this.apiDef.tags = [];
-    this.apiDef.description = '';
-    this.apiDef.id = 'api-1';
   }
 
   public onUserChange(): void {
@@ -83,42 +69,35 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
       this.cancelEditorModalId,
       this.cancelEditorModalTemplate
     );
-    // this.apiConnectorState$ = this.apiProviderStore.select(
-    //   getApiConnectorState
-    // );
 
-    /*// Once the request validation results are yielded for the 1st time, we move user to step 2
-    this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
-      .subscribe( apiConnectorState => {
-        if ( apiConnectorState.actionsSummary ) {
-          this.validationResponse = apiConnectorState;
+    this.apiProviderState$ = this.apiProviderStore.select(
+      getApiProviderState
+    );
+
+    this.apiProviderState$.map(apiProviderState => apiProviderState.errors)
+      .subscribe(errors => this.validationErrors = errors);
+
+    // Once the request validation results are yielded for the 1st time, we move user to step 2
+    this.apiProviderState$.map(apiProviderState => apiProviderState.createRequest)
+      .subscribe( apiProviderState => {
+        if ( apiProviderState.actionsSummary ) {
+          this.validationResponse = apiProviderState;
 
           // move to review step from first step
-          if ( this.currentActiveStep == 1 ) {
-            this.currentActiveStep = WizardSteps.ReviewApiConnector;
+          if ( this.currentActiveStep == WizardSteps.UploadSpecification ) {
+            this.currentActiveStep = WizardSteps.ReviewApiProvider;
           }
 
-          if ( this.currentActiveStep == WizardSteps.ReviewApiConnector ) {
-            // read in API spec and perform validation if current step is the review step
-            if ( apiConnectorState.specificationFile ) {
-              const reader = new FileReader();
-
-              reader.onload = () => {
-                this.apiDef.spec = reader.result;
-                this.apiDef.name = apiConnectorState.name;
-              };
-
-              reader.readAsText( apiConnectorState.specificationFile );
-            } else {
-              this.apiDef.spec = apiConnectorState.configuredProperties.specification;
-            }
+          if ( this.currentActiveStep == WizardSteps.ReviewApiProvider ) {
+            this.apiDef.spec = apiProviderState.configuredProperties.specification;
           }
         }
       });
 
+    /*
     // Once the request object is flagged as 'isComplete', we redirect the user to the main listing
-    this.apiConnectorState$
-      .pipe(map(apiConnectorState => apiConnectorState.createRequest))
+    this.apiProviderState$
+      .pipe(map(apiProviderState => apiProviderState.createRequest))
       .pipe(first(request => !!request && request.isComplete))
       .subscribe(() => this.redirectBack());*/
     this.nav.hide();
@@ -193,20 +172,11 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
       actionsSummary: {},
       errors: [],
       warnings: []
-    } as CustomConnectorRequest;
+    } as CustomProviderRequest;
 
     this.apiProviderStore.dispatch(
       ApiProviderActions.validateSwagger(request)
     );*/
-  }
-
-  /**
-   * Called when the upload step changes import method (file or URL).
-   *
-   * @param fileImport `true` if import should be done by file; otherwise it will be a URL import.
-   */
-  onApiFileImportChanged( fileImport: boolean ) {
-    this.useApiFileImport = fileImport;
   }
 
   get apiName(): string {
@@ -241,10 +211,15 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     this.modalService.hide(this.cancelModalId, doCancel);
   }
 
-  onSpecification(specification: OpenApiUploadSpecification) {
-    this.apiProviderStore.dispatch(
-      ApiProviderActions.validateSwagger(specification)
-    );
+  onSpecification() {
+    if (this.uploaderValue.type === OpenApiUploaderValueType.Spec) {
+      this.currentActiveStep = WizardSteps.ReviewApiProvider;
+      this.apiDef = this.uploaderValue.spec as ApiDefinition;
+    } else {
+      this.apiProviderStore.dispatch(
+        ApiProviderActions.validateSwagger(this.uploaderValue)
+      );
+    }
   }
 
   onReviewComplete({event: event, displayEditor: displayEditor}): void {
@@ -254,7 +229,7 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
 
     } else {
       this.displayDefinitionEditor = false;
-      this.currentActiveStep = WizardSteps.UpdateAuthSettings;
+      this.currentActiveStep = WizardSteps.SubmitRequest;
     }
   }
 
@@ -265,7 +240,7 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     this.currentActiveStep -= 1;
 
     /*// clear out review results when going back to upload step
-    if ( this.currentActiveStep === WizardSteps.UploadSwagger ) {
+    if ( this.currentActiveStep === WizardSteps.UploadSpecification ) {
       this.validationResponse.actionsSummary = null;
       this.validationResponse.errors = [];
       this.validationResponse.warnings = [];
@@ -277,43 +252,25 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     }*/
   }
 
-  /**
-   * Called when the upload step file selection changes.
-   *
-   * @param newFile the selected file
-   */
-  onApiFileChanged( newFile: File ): void {
-    this.apiFile = newFile;
-  }
-
-  /**
-   * Called when the upload step has a change to the URL.
-   *
-   * @param newUrl the new URL
-   */
-  onApiUrlChanged( newUrl: string ): void {
-    this.apiUrl = newUrl;
-  }
-
-  /*onCreateComplete(customConnectorRequest: CustomConnectorRequest): void {
+  /*onCreateComplete(customProviderRequest: CustomProviderRequest): void {
     // update request if changes were made in editor
     if ( this.editorHasChanges ) {
-      customConnectorRequest.configuredProperties.specification = JSON.stringify( this.apiDef.spec );
+      customProviderRequest.configuredProperties.specification = JSON.stringify( this.apiDef.spec );
     }
 
     this.apiProviderStore.dispatch(
-      ApiProviderActions.create(customConnectorRequest)
+      ApiProviderActions.create(customProviderRequest)
     );
   }*/
 
   ngOnDestroy() {
     this.modalService.unregisterModal(this.cancelEditorModalId);
     this.modalService.unregisterModal(this.cancelModalId);
-    // this.apiProviderStore.dispatch(ApiProviderActions.createCancel());
+    this.apiProviderStore.dispatch(ApiProviderActions.createCancel());
     this.nav.show();
   }
 
   private redirectBack(): void {
-    this.router.navigate(['customizations', 'api-connector']);
+    this.router.navigate(['/integrations']);
   }
 }

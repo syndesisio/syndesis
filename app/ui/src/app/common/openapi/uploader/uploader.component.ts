@@ -1,42 +1,70 @@
-import { Component, Output, EventEmitter, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
-
-import {
-  OpenApiUploadSpecification
-} from '@syndesis/ui/common/openapi';
-
+import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { OpenApiUploaderValue, OpenApiUploaderValueType, OpenApiUploadSpecification } from '@syndesis/ui/common/openapi';
 import { I18NService } from '@syndesis/ui/platform';
+import { FileLikeObject, FileUploader, FileUploaderOptions } from '@syndesis/ui/vendor';
+import { ApiDefinition } from 'apicurio-design-studio';
 
-import {
-  FileLikeObject,
-  FileUploader,
-  FileUploaderOptions
-} from '@syndesis/ui/vendor';
+const URL_PATTERN = 'https?://.+';
 
 @Component({
   selector: 'openapi-uploader',
   templateUrl: './uploader.component.html',
-  styleUrls: ['./uploader.component.scss']
+  styleUrls: ['./uploader.component.scss'],
+  providers: [
+  {
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => OpenApiUploaderComponent),
+    multi: true
+  }
+]
 })
-export class OpenApiUploaderComponent implements OnInit {
-  @Input() loading = false;
-  @Input() apiFileImport: boolean;
-  @Input() apiFile: File;
-  @Input() apiUrl: string;
-  @Output() spec = new EventEmitter<OpenApiUploadSpecification>();
-  @Output() useFileImportChanged = new EventEmitter<boolean>();
-  @Output() apiFileChanged = new EventEmitter<File>();
-  @Output() apiUrlChanged = new EventEmitter<string>();
+export class OpenApiUploaderComponent implements OnInit, ControlValueAccessor {
+  @Input() allowFileUpload = true;
+  @Input() allowUrl = true;
+  @Input() allowSpecCreation = false;
+  @Input() isInvalid = false;
+  @Input() apiFileUploadLabel = 'openapi.api-file-upload';
+  @Input() apiFileUploadDragAndDrop = 'openapi.api-file-upload-dnd';
+  @Input() apiFileUploadHelp = 'openapi.api-upload-helper-text';
+  @Input() apiUrlUploadLabel = 'openapi.api-url-upload';
+  @Input() apiUrlUploadNote = 'openapi.api-url-upload-note';
+  @Input() apiSpecificationCreationLabel = 'openapi.api-spec-creation';
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
-  fileToUpload: File;
+  URL_PATTERN = URL_PATTERN;
+  isDisabled = false;
+  OpenApiUploaderValueType = OpenApiUploaderValueType;
   hasBaseDropZoneOver: boolean;
   invalidFileMsg: string;
   swaggerFileUrl: string;
   uploader: FileUploader;
+  _value = {
+    type: OpenApiUploaderValueType.File,
+    spec: null
+  } as OpenApiUploadSpecification;
+
+  get value() {
+    return this._value;
+  }
+
+  set value({ type, spec }) {
+    this._value = { type, spec };
+    if (type !== this.OpenApiUploaderValueType.Url) {
+      this.propagateChange(this._value);
+    } else {
+      this.propagateChange({
+        type,
+        spec: (spec as string || '').match(URL_PATTERN) ? spec : null
+      });
+    }
+  }
 
   constructor( private i18NService: I18NService ) {
     // nothing to do
   }
+
+  propagateChange = (_: any) => void(0);
 
   ngOnInit() {
     this.uploader = new FileUploader(
@@ -63,8 +91,7 @@ export class OpenApiUploaderComponent implements OnInit {
       }
 
       // pop off file from queue to set file and clear queue
-      this.fileToUpload = this.uploader.queue.pop()._file;
-      this.apiFileChanged.emit( this.fileToUpload );
+      this.uploadMethodChanged(OpenApiUploaderValueType.File, this.uploader.queue.pop()._file);
 
       // clear selected file name label
       this.fileSelect.nativeElement.value = '';
@@ -74,22 +101,17 @@ export class OpenApiUploaderComponent implements OnInit {
       file: FileLikeObject
     ): any => {
       // occurs when not a *.json file
-      this.invalidFileMsg = this.i18NService.localize( 'customizations.api-client-connectors.api-upload-invalid-file',
+      this.invalidFileMsg = this.i18NService.localize( 'openapi.api-upload-invalid-file',
         [ file.name ] );
       this.fileSelect.nativeElement.value = '';
       this.uploader.clearQueue();
     };
   }
 
-  uploadMethodChanged( useFileUpload: boolean ): void {
-    this.apiFileImport = useFileUpload;
-    this.useFileImportChanged.emit( this.apiFileImport );
-  }
-
   get validFileMsg(): string {
-    if ( this.fileToUpload ) {
-      return this.i18NService.localize( 'customizations.api-client-connectors.api-upload-valid-file',
-        [ this.fileToUpload.name ] );
+    if ( this.value.spec ) {
+      return this.i18NService.localize( 'openapi.api-upload-valid-file',
+        [ (this.value.spec as File).name ] );
     }
 
     return null;
@@ -104,25 +126,37 @@ export class OpenApiUploaderComponent implements OnInit {
     this.hasBaseDropZoneOver = e;
   }
 
-  onSubmit({ valid }, attachFile: boolean): void {
-    // on submit clear out the import method that isn't being used
-    if ( this.apiFileImport ) {
-      this.swaggerFileUrl = null;
-    } else {
-      this.fileToUpload = null;
-    }
-
-    if ((this.swaggerFileUrl && valid) || this.fileToUpload ) {
-      const uploadSpecification: OpenApiUploadSpecification = {
-        url: this.swaggerFileUrl,
-        file: this.fileToUpload
-      };
-
-      this.spec.next(uploadSpecification);
-    }
+  uploadMethodChanged(type: OpenApiUploaderValueType, spec: OpenApiUploaderValue): void {
+    this.value = {
+      type,
+      spec
+    };
   }
 
-  onUrlChanged( newUrl: string ): void {
-    this.apiUrlChanged.emit( newUrl );
+  makeNewApiDefinition(): ApiDefinition {
+    const apiDef = new ApiDefinition();
+    apiDef.createdBy = 'user1';
+    apiDef.createdOn = new Date();
+    apiDef.tags = [];
+    apiDef.description = '';
+    apiDef.id = 'api-1';
+    return apiDef;
+  }
+
+  registerOnChange(fn: any): void {
+    this.propagateChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
+
+  writeValue(obj: OpenApiUploadSpecification): void {
+    if (obj) {
+      this._value = obj;
+    }
   }
 }

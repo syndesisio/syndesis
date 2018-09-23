@@ -42,11 +42,10 @@ export class ApiProviderService {
     const apiHttpService = this.apiHttpService.setEndpointUrl(
       apiProviderEndpoints.validateOpenApiSpecification
     );
-    const { file, url } = uploadSpec;
     return apiHttpService.upload<ApiProviderData>(
       // @ts-ignore
       {
-        specification: url || file
+        specification: uploadSpec.spec
       },
       {}
     );

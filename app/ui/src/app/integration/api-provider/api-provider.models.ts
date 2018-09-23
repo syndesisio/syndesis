@@ -1,8 +1,7 @@
 import {
   StringMap,
-  BaseReducerModel,
-  BaseRequestModel
 } from '@syndesis/ui/platform';
+import { OpenApiUploadSpecification } from '@syndesis/ui/common';
 
 export interface ApiProviderValidationError {
   error?: string;
@@ -10,7 +9,7 @@ export interface ApiProviderValidationError {
   property?: string;
 }
 
-export interface RequestProperties extends CustomApiProviderAuthSettings {
+export interface RequestProperties {
   specification?: string;
 }
 
@@ -22,6 +21,14 @@ export interface ApiProviderData {
   name?: string;
   description?: string;
   warnings?: Array<{ key: string; longdesc: string }>;
-  errors?: Array<ApiProviderValidationError>;
   configuredProperties?: RequestProperties;
+}
+
+export interface ApiProviderState {
+  loading: boolean;
+  loaded: boolean;
+  hasErrors: boolean;
+  errors?: Array<ApiProviderValidationError>;
+  uploadSpecification?: OpenApiUploadSpecification;
+  createRequest: ApiProviderData;
 }

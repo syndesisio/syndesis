@@ -53,19 +53,14 @@
         "api-review-validation-fallback": "No connector details are currently available.",
         "api-review-warnings-header": "Warnings",
         "api-upload-choose-method": "Choose how you want to create your connector:",
-        "url-upload-instructions": "Upload the OpenAPI 2.0 file for your custom API client connector. Custom APIs are RESTful APIs and can be hosted anywhere, as long as a well-documented API specification is available and conforms to the OpenAPI standard.",
-        "api-upload-valid-file": "Successfully uploaded '{{0}}'.",
-        "api-upload-invalid-file": "'{{0}}' is not a valid file. Only files that end in '.json' can be uploaded.",
-        "api-upload-helper-text": "Accepted file type: .json",
-        "api-url-upload": "Use a URL",
-        "api-url-upload-note": "* Note: After uploading this specification, Syndesis/Fuse Online does not automatically obtain any updates to it. You would have to upload an updated specification and create a new API client connector that incorporates the updates.",
-        "url-validation-error": "You must enter a valid URL before submitting the form."
+        "url-upload-instructions": "Upload the OpenAPI 2.0 file for your custom API client connector. Custom APIs are RESTful APIs and can be hosted anywhere, as long as a well-documented API specification is available and conforms to the OpenAPI standard."
       }
     },
     "integrations": {
       "integration": "{{integration}}",
       "integrations": "{{integrations}}",
       "integration-summary": "{{integration}} Summary",
+      "new-integration": "New {{integration}}",
       "external-url": {
         "copy-instruction": "{{copy}} {{external-url}}",
         "expand-instruction": "{{expand}} {{external-url}}"
@@ -116,6 +111,10 @@
         "templater-create": "Create",
         "templater-create-editor-title": "Copy and paste or enter text to define the template:",
         "templater-import-review": "Import review:"
+      },
+      "api-provider": {
+        "creation-title": "Start integration with an API call",
+        "creation-subtitle": "Execute this integration when a client invokes an operation defined by this API."
       }
     },
     "connections": {
@@ -369,6 +368,17 @@
       "external-url": "External URL",
       "copy": "Copy",
       "expand": "Expand"
+    },
+    "openapi": {
+      "api-file-upload": "Upload an OpenAPI file",
+      "api-file-upload-dnd": "Drag and drop your OpenAPI file here or",
+      "api-upload-helper-text": "Accepted file type: .json",
+      "api-url-upload": "Use a URL",
+      "api-url-upload-note": "* Note: After uploading this specification, Syndesis/Fuse Online does not automatically obtain any updates to it. You would have to upload an updated specification and create a new API client connector that incorporates the updates.",
+      "api-spec-creation": "Create from scratch",
+      "api-upload-invalid-file": "'{{0}}' is not a valid file. Only files that end in '.json' can be uploaded.",
+      "url-validation-error": "You must enter a valid URL before submitting the form.",
+      "api-upload-valid-file": "Successfully uploaded '{{0}}'."
     }
   }
 }
