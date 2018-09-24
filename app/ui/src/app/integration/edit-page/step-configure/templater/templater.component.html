@@ -3,7 +3,7 @@
 
     <div class="form-group">
 
-      <legend>Choose how you want to add a template:</legend>
+      <p class="template-form-lbl">{{ 'integrations.steps.templater-choice' | synI18n }}</p>
       <fieldset class="container-fluid">
 
         <!-- Radio button & compoment for file choose / dnd -->
@@ -68,8 +68,8 @@
 
       <!-- Editor for review and editing content -->
       <div class="form-group">
-        <legend [hidden]="!fileName || editType !== 'upload'">{{ 'integrations.steps.templater-import-review' | synI18n }}</legend>
-        <legend [hidden]="editType !== 'create'">{{ 'integrations.steps.templater-create-editor-title' | synI18n }}</legend>
+        <p class="template-form-lbl" [hidden]="!fileName || editType !== 'upload'">{{ 'integrations.steps.templater-import-review' | synI18n }}</p>
+        <p class="template-form-lbl" [hidden]="editType !== 'create'">{{ 'integrations.steps.templater-create-editor-title' | synI18n }}</p>
 
         <div class="form-group row" [hidden]="!templateContent && editType !== 'create'">
           <div class="col-xs-8 template-file-create-text">
