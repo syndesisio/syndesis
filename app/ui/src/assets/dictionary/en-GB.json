@@ -53,7 +53,13 @@
         "api-review-validation-fallback": "No connector details are currently available.",
         "api-review-warnings-header": "Warnings",
         "api-upload-choose-method": "Choose how you want to create your connector:",
-        "url-upload-instructions": "Upload the OpenAPI 2.0 file for your custom API client connector. Custom APIs are RESTful APIs and can be hosted anywhere, as long as a well-documented API specification is available and conforms to the OpenAPI standard."
+        "url-upload-instructions": "Upload the OpenAPI 2.0 file for your custom API client connector. Custom APIs are RESTful APIs and can be hosted anywhere, as long as a well-documented API specification is available and conforms to the OpenAPI standard.",
+        "api-upload-valid-file": "Successfully uploaded '{{0}}'.",
+        "api-upload-invalid-file": "'{{0}}' is not a valid file. Only files that end in '.json' can be uploaded.",
+        "api-upload-helper-text": "Accepted file type: .json",
+        "api-url-upload": "Use a URL",
+        "api-url-upload-note": "* Note: After uploading this specification, Syndesis/Fuse Online does not automatically obtain any updates to it. You would have to upload an updated specification and create a new API client connector that incorporates the updates.",
+        "url-validation-error": "You must enter a valid URL before submitting the form."
       }
     },
     "integrations": {
@@ -374,7 +380,7 @@
       "api-file-upload-dnd": "Drag and drop your OpenAPI file here or",
       "api-upload-helper-text": "Accepted file type: .json",
       "api-url-upload": "Use a URL",
-      "api-url-upload-note": "* Note: After uploading this specification, Syndesis/Fuse Online does not automatically obtain any updates to it. You would have to upload an updated specification and create a new API client connector that incorporates the updates.",
+      "api-url-upload-note": "* Note: After uploading this specification, Syndesis/Fuse Online does not automatically obtain any updates to it.",
       "api-spec-creation": "Create from scratch",
       "api-upload-invalid-file": "'{{0}}' is not a valid file. Only files that end in '.json' can be uploaded.",
       "url-validation-error": "You must enter a valid URL before submitting the form.",

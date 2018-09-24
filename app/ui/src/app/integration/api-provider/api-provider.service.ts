@@ -1,26 +1,25 @@
 // import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { OpenApiUploadSpecification } from '@syndesis/ui/common';
+import { OpenApiValidationResponse, OpenApiUploadSpecification } from '@syndesis/ui/common';
 import { Observable } from 'rxjs';
 
 import { ApiHttpService } from '@syndesis/ui/platform';
 // import {
 //   ApiProviders,
-//   ApiProviderData,
+//   OpenApiValidationResponse,
 //   CustomConnectorRequest
 // } from '@syndesis/ui/integration/api-provider/api-provider.models';
 
 import { apiProviderEndpoints } from '@syndesis/ui/integration/api-provider/api-provider.api';
-import { ApiProviderData } from '@syndesis/ui/integration/api-provider/api-provider.models';
 
 @Injectable()
 export class ApiProviderService {
   constructor(private apiHttpService: ApiHttpService) {}
 /*
-  getCustomConnector(id: string): Observable<ApiProviderData> {
+  getCustomConnector(id: string): Observable<OpenApiValidationResponse> {
     return this.apiHttpService
       .setEndpointUrl(apiProviderEndpoints.selectApiProvider, { id })
-      .get<ApiProviderData>();
+      .get<OpenApiValidationResponse>();
   }
 
   getCustomConnectorList(): Observable<ApiProviders> {
@@ -38,11 +37,11 @@ export class ApiProviderService {
 
   validateOpenApiSpecification(
     uploadSpec: OpenApiUploadSpecification
-  ): Observable<ApiProviderData> {
+  ): Observable<OpenApiValidationResponse> {
     const apiHttpService = this.apiHttpService.setEndpointUrl(
       apiProviderEndpoints.validateOpenApiSpecification
     );
-    return apiHttpService.upload<ApiProviderData>(
+    return apiHttpService.upload<OpenApiValidationResponse>(
       // @ts-ignore
       {
         specification: uploadSpec.spec

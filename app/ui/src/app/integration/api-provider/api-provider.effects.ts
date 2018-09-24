@@ -1,34 +1,39 @@
-import { /*filter,*/ mergeMap, map, /*switchMap,*/ catchError } from 'rxjs/operators';
+import { mergeMap, map, catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
-
-// import { EventsService } from '@syndesis/ui/store';
 import { ApiProviderService } from '@syndesis/ui/integration/api-provider/api-provider.service';
 import {
   ApiProviderActions,
   ApiProviderValidateSwagger
 } from '@syndesis/ui/integration/api-provider/api-provider.actions';
+import { ApiProviderStore, getApiProviderUploadSpecification } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
 
 @Injectable()
 export class ApiProviderEffects {
 
   @Effect()
   validateSwagger$: Observable<Action> = this.actions$
-    .ofType<ApiProviderValidateSwagger>(ApiProviderActions.VALIDATE_SWAGGER)
+    .ofType<ApiProviderValidateSwagger>(ApiProviderActions.VALIDATE_SPEC)
+    .withLatestFrom(this.apiProviderStore.select(getApiProviderUploadSpecification))
     .pipe(
-      mergeMap(action =>
+      mergeMap(([action, uploadSpecification]) =>
         this.apiProviderService
-          .validateOpenApiSpecification(action.payload)
+          .validateOpenApiSpecification(uploadSpecification)
           .pipe(
-            map(response => ({
-              type: ApiProviderActions.VALIDATE_SWAGGER_COMPLETE,
-              payload: response
-            })),
+            map(response => {
+              if (response.actionsSummary) {
+                return {
+                  type: ApiProviderActions.VALIDATE_SPEC_COMPLETE,
+                  payload: response
+                };
+              }
+              throw response;
+            }),
             catchError(error =>
               of({
-                type: ApiProviderActions.VALIDATE_SWAGGER_FAIL,
+                type: ApiProviderActions.VALIDATE_SPEC_FAIL,
                 payload: error
               })
             )
@@ -39,5 +44,6 @@ export class ApiProviderEffects {
   constructor(
     private actions$: Actions,
     private apiProviderService: ApiProviderService,
+    private apiProviderStore: Store<ApiProviderStore>
   ) {}
 }

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OpenApiValidatorComponent } from './validator.component';
+import { OpenApiReviewComponent } from './review.component';
 
-describe('OpenApiValidatorComponent', () => {
-  let component: OpenApiValidatorComponent;
-  let fixture: ComponentFixture<OpenApiValidatorComponent>;
+describe('OpenApiReviewComponent', () => {
+  let component: OpenApiReviewComponent;
+  let fixture: ComponentFixture<OpenApiReviewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OpenApiValidatorComponent ]
+      declarations: [ OpenApiReviewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OpenApiValidatorComponent);
+    fixture = TestBed.createComponent(OpenApiReviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

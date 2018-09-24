@@ -48,14 +48,16 @@ export class OpenApiUploaderComponent implements OnInit, ControlValueAccessor {
     return this._value;
   }
 
-  set value({ type, spec }) {
-    this._value = { type, spec };
+  set value({ type, spec, valid }) {
+    this._value = { type, spec, valid };
     if (type !== this.OpenApiUploaderValueType.Url) {
       this.propagateChange(this._value);
     } else {
+      spec = (spec as string || '').match(URL_PATTERN) ? spec : null;
       this.propagateChange({
         type,
-        spec: (spec as string || '').match(URL_PATTERN) ? spec : null
+        spec,
+        valid: !!spec
       });
     }
   }
@@ -129,18 +131,14 @@ export class OpenApiUploaderComponent implements OnInit, ControlValueAccessor {
   uploadMethodChanged(type: OpenApiUploaderValueType, spec: OpenApiUploaderValue): void {
     this.value = {
       type,
-      spec
+      spec,
+      valid: !!spec
     };
   }
 
   makeNewApiDefinition(): ApiDefinition {
     const apiDef = new ApiDefinition();
-    apiDef.createdBy = 'user1';
-    apiDef.createdOn = new Date();
-    apiDef.tags = [];
-    apiDef.description = '';
-    apiDef.id = 'api-1';
-    return apiDef;
+    return apiDef.spec;
   }
 
   registerOnChange(fn: any): void {
@@ -148,6 +146,7 @@ export class OpenApiUploaderComponent implements OnInit, ControlValueAccessor {
   }
 
   registerOnTouched(fn: any): void {
+    // we don't need this
   }
 
   setDisabledState(isDisabled: boolean): void {
