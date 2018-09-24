@@ -1,0 +1,38 @@
+[id='develop-library-extensions']
+= How to develop library extensions
+
+A library extension provides a resource that an 
+integration requires at runtime. A library extension does not contribute steps or 
+connectors to {prodname}. 
+
+Support for library extensions is evolving. In this release, in the 
+{prodname} web interface:
+
+*  When you create an integration, 
+you cannot select which library extension(s) an 
+integration should include. 
++
+ifeval::["{location}" == "upstream"]
+For more information, see 
+https://github.com/syndesisio/syndesis/issues/2808[this GitHub issue]. 
+endif::[]
+
+* When you add a database connection to an integration, 
+{prodname} adds all extensions that 
+have the `jdbc-driver` tag to the integration runtime. 
++
+ifeval::["{location}" == "upstream"]
+For more information, see 
+https://github.com/syndesisio/syndesis/issues/2809[this GitHub issue]. 
+
+endif::[]
+
+
+See the following topics for information about creating library extensions:
+
+* <<library-extension-definition>>
+* <<creating-jdbc-driver-library-extensions>>
+
+include::con_library_extension_definition.adoc[leveloffset=+1]
+
+include::creating_jdbc_driver_library_extensions.adoc[leveloffset=+1]

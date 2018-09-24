@@ -1,8 +1,6 @@
 [id='developing-extensions']
 = Developing extensions
 
-// NOTE TO ME: CHECKOUT MASTER AND PULL FROM UPSTREAM BEFORE DOING ANY WORK
-
 If Syndesis does not provide a feature that you need, an expert developer can code an extension that lets you integrate data the way you need.
 
 == Packaging
@@ -265,7 +263,7 @@ my-extension-1.0.0.jar
 |
 +- lib
 |  |
-|  + jfiglet-0.0.8.jar
+|  + jfiglet-0.0.8.jar
 |
 +- META-INF
   |

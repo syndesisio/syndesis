@@ -25,5 +25,5 @@ to publish a message in the middle of an integration.
 . On the *Choose an Action* page, click *Publish*. 
 . In the *MQTT queue/topic name* field, specify the name of the queue or
 topic to publish the message to. 
-.  Click *Next* to specify the action's output type. See 
+.  Click *Next* to specify the action's input type. See 
 {LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

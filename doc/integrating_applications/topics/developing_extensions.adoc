@@ -1,0 +1,50 @@
+[id='developing-extensions']
+= Developing {prodname} extensions
+
+If {prodname} does not provide a feature that is needed to create an
+integration, then an expert developer 
+can code an extension that provides the needed behavior.  The
+https://github.com/syndesisio/syndesis-extensions[Syndesis extensions repository]
+contains examples of extensions. 
+
+A business integrator shares requirements with a developer who codes the 
+extension. The developer provides a `.jar` file that contains the extension. 
+The business integrator uploads the `.jar` file in {prodname} to make the 
+custom connector, custom step(s), or library resource available for use 
+in {prodname}. 
+
+The Fuse Tooling plugin to Red Hat Developer Studio provides a wizard
+that helps you develop a step extension or a connector extension. It is 
+a matter of personal preference whether you choose to develop a step
+extension or a connector extension in Developer Studio or in some other
+IDE. For information about using the Developer Studio plugin, see 
+{LinkToolingUserGuide}#igniteextension[Developing extensions for {prodname} integrations].
+
+In this document, the following topics outline the 
+procedure, describe the requirements, and provide additional examples for
+developing extensions in an IDE that you choose. 
+
+* <<procedure-for-developing-extensions>>
+* <<description-kinds-extensions>>
+* <<overview-extension-content-structure>>
+* <<about-extension-definitions>>
+* <<using-maven-to-generate-extension-definitions>>
+* <<develop-step-extensions>>
+* <<develop-connector-extensions>>
+* <<develop-library-extensions>>
+
+include::proc_developing_extensions.adoc[leveloffset=+1]
+
+include::description_kinds_extensions.adoc[leveloffset=+1]
+
+include::con_overview_extension_content_structure.adoc[leveloffset=+1]
+
+include::con_about_extension_definitions.adoc[leveloffset=+1]
+
+include::proc_using_maven_to_generate_extension_definitions.adoc[leveloffset=+1]
+
+include::develop_step_extensions.adoc[leveloffset=+1]
+
+include::develop_connector_extensions.adoc[leveloffset=+1]
+
+include::develop_library_extensions.adoc[leveloffset=+1]

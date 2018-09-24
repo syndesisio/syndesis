@@ -18,5 +18,5 @@ you want to use to start the integration.
 to receive messages from the queue or topic that you specify. 
 . In the *MQTT queue/topic name* field, enter the name of the queue or topic 
 to subscribe to in order to receive data. 
-. Click *Next* to specify the action's input type. See 
+. Click *Next* to specify the action's output type. See 
 {LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 

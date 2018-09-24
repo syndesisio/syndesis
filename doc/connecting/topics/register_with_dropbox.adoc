@@ -1,11 +1,11 @@
 [id='register-with-dropbox']
 = Register {prodname} as a Dropbox client
 
-You must register your installation of {prodname} as a client application
+You must register your {prodname} environment as a client application
 that can access Dropbox.
 This lets you create any number of integrations that connect
 to Dropbox. In other words, you need to register a particular
-installation of {prodname} with Dropbox only once.
+{prodname} environment with Dropbox only once.
 
 In each {prodname} environment, there can be only one registration
 of {prodname} as a Dropbox client application. However, while each Dropbox 
@@ -18,7 +18,7 @@ Perform these steps:
 .. In the left panel, click *Settings*.
 .. On the *Settings* page, near the top, to the right of the callback URL, 
 click 
-image:images/CopyCallbackURL.png[Copy Callback URL] to 
+image:shared/images/CopyCallback.png[Copy Callback URL] to 
 copy the callback URL for your installation of {prodname} to the clipboard. 
 You will need this URL toward the end of this procedure. 
 . In another browser tab, go  to `https://www.dropbox.com` 
@@ -47,6 +47,6 @@ the input field for *OAuth2 Redirect URIs*, paste your {prodname} URL,
 which you copied to the clipboard at the beginning of this procedure. 
 .. Click *Add*. 
 
-Your installation of {prodname} is now registered as a Dropbox client, which 
+Your {prodname} environment is now registered as a Dropbox client, which 
 means that {prodname} can access content in the Dropbox account that
 you signed into. 

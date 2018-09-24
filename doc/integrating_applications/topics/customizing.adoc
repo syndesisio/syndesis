@@ -1,0 +1,44 @@
+[id='customizing']
+= Customizing {prodname}
+
+{prodname} provides many connectors that you can use to connect to 
+common applications and services. There are also a number of built-in
+steps for processing data in common ways. However, if {prodname} does
+not provide a feature that you need, talk with a developer about 
+your requirements. An experienced developer can help you customize
+integrations by providing any of the following:
+
+* An OpenAPI specification that {prodname} can
+use to create a connector for a REST API client. 
++
+You upload this specification to
+{prodname} and {prodname} creates a connector according to the specification. 
+You then use the connector to create a connection that you
+can add to an integration. For example, many retail web sites provide
+a REST API client interface that a developer can capture in an 
+OpenAPI specification.  
+
+* A `JAR` file that implements a {prodname} extension. An extension
+can be any one of the following:  
++
+** One or more steps that operate on integration data between connections
+** A connector for an application or service
+** A library resource such as a JDBC driver for a proprietary SQL database
++
+You upload this `JAR` file to {prodname} and {prodname} makes the 
+custom feature provided by the extension available. 
+
+See the following topics for details:
+
+* <<developing-rest-api-client-connectors>>
+* <<adding-api-connectors>>
+* <<developing-extensions>>
+* <<adding-extensions>>
+
+include::developing_rest_api_client_connectors.adoc[leveloffset=+1]
+
+include::adding_api_connectors.adoc[leveloffset=+1]
+
+include::developing_extensions.adoc[leveloffset=+1]
+
+include::adding_extensions.adoc[leveloffset=+1]

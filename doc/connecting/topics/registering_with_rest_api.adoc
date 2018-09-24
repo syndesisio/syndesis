@@ -15,7 +15,7 @@ To register {prodname} as an authorized API client application:
 
 . In {prodname}:
 .. On the *Settings* page, near the top, to the right of the callback URL, click
-image:images/CopyCallback.png[Copy Callback URL] to 
+image:shared/images/CopyCallback.png[Copy Callback URL] to 
 copy the callback URL for your {prodname} environment to the clipboard. 
 You will need this URL later in this procedure. 
 .. Look for the name of the API you want to connect to and click its
@@ -24,15 +24,16 @@ You will need this URL later in this procedure.
 . In another browser window, you must register {prodname} as an OAuth
 client of the API you want to connect to. The exact steps for doing this
 vary for each API service. Typically, the API service provides an OAuth
-custom application setting page. Go to that page.
+custom application setting page. Go to that page and do the following:
 
-. On that page:
 .. Provide the {prodname} callback URL, which you copied at the beginning
 of this procedure.
+.. Respond to any other prompts that require your input. 
 .. Obtain the client ID and client secret that the API service assigns to
 your {prodname} environment.
-. In the {prodname} *Settings* page, in the entry for the 
-API service you are registering with, 
-paste the assigned client ID and the client secret.
 
-. Click *Save*.
+. Return to the {prodname} *Settings* page entry for the 
+API service you are registering with and do the following:
+.. Paste the assigned client ID.
+.. Paste the assigned client secret.
+.. Click *Save*.

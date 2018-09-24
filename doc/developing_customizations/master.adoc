@@ -13,10 +13,6 @@ include::topics/shared/attributes.adoc[]
 
 Add an intro paragraph here.
 
-* <<developing-api-client-connectors>>
-* <<developing-custom-steps>>
-* <<developing-other-connectors>>
-
-include::topics/developing_api_client_connectors.adoc[leveloffset=+1]
+* <<developing-extensions>>
 
 include::topics/developing_extensions.adoc[leveloffset=+1]
