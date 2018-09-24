@@ -12,7 +12,7 @@
   "actions": [
     {
       "name": "Incoming Webhook",
-      "description": "Start a Syndesis integration from a Webhook",
+      "description": "Start an integration from a Webhook",
       "id": "io.syndesis:webhook-incoming",
       "pattern": "From",
       "actionType": "connector",
