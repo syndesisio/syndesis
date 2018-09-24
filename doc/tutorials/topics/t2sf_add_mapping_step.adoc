@@ -16,18 +16,17 @@ and the *Target* panel on the right displays the Salesforce fields.
 glass image:shared/images/magnifying-glass.png[title="Magnifying Glass"]
 to display the search field and enter `*name*`.
 .. Under the `user` folder, click the `name` field.
-.. In the *Mapping Details* panel, under *Action*, click
-the down caret and select *Separate*.
-.. Below that, under *Targets*, in the input field, start to type
-`*FirstName*`. When */FirstName* appears below the field, click it.
-The data mapper displays a line from the Twitter *name* field to the
-Salesforce *FirstName* field.
-.. In the lower right, click *Add Target*.
-.. In the new target, in the input field, start to type
-`*LastName*`. When */LastName* appears below the field, click it.
+.. In the *Target* panel, scroll down and click *FirstName*. The
+data mapper displays a line from the source *name* field to the
+target *FirstName* field. 
+.. In the *Target* panel, scroll down, hover over *LastName*, and press 
+*CTRL-Mouse1* (*CMD-Mouse1* on MacOS) to select *LastName*. 
 The data mapper displays another line from the Twitter
 *name* field, but this time it goes to the Salesforce *LastName* field.
 The blue lines indicate the current focus.
++
+In the *Mapping Details* panel, you can see that the data mapper
+automatically changed the action from *Map* to *Separate*. 
 . Map the Twitter `screenName` field to the Salesforce
 `Title` field:
 .. In the *Sources* panel, scroll down to click
@@ -40,11 +39,12 @@ to display the search field and enter `*Title*`.
 from the Twitter *screenName* field to the Salesforce *Title* field.
 . Map the Twitter `text` field to the Salesforce
 `Description` field:
-.. In the *Sources* search field, enter `*text*` and under
-*Status*, click the *text* field.
-.. In the *Target* search field, enter `*description*` and then click the
+.. In the *Sources* search field, enter `*text*` and click the
+ *text* field.
+.. In the *Target* search field, enter `*description*`.
+.. Click the
 Salesforce *Description* field to create the mapping.
-.. In the upper right, click
+. In the upper right, click
 the grid icon image:shared/images/grid.png[title="Grid"] to
 display the list of mappings, which should look like this:
 image:images/t2sf-mappings.png[Data Mappings]

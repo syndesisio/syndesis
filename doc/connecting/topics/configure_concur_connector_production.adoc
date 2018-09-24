@@ -1,0 +1,51 @@
+[id='configure-concur-connector-production']
+= Configure the SAP Concur connector for the production site
+
+To deploy an integration that connects to SAP Concur,
+you configure the SAP Concur connector in a {prodname} production environment 
+for access to the SAP Concur production site. 
+This lets you create any number of integrations that connect
+to the SAP Concur production site. In other words, you need to
+configure the SAP Concur connector once in a given
+{prodname} environment.
+
+.Prerequisites
+You obtained OAuth credentials that authorize your {prodname} 
+production environment to access
+the SAP Concur production site. 
+
+.Procedure
+
+. In a {prodname} production environment, in the left panel, click *Settings*.
+. On the *Settings* page, expand the *SAP Concur* entry. 
+. In the *Client ID* field, enter the client ID that you received for the
+SAP Concur production site.
+. In the *Client Secret* field, enter the client secret that you received
+for the SAP Concur production site. 
++
+{prodname} populates the other fields. For the SAP Concur production
+site, the values are something like these:
++
+* *Authorization URL*: 
+`\https://us.api.concursolutions.com/oauth2/v0/authorize`
+* *Token URL*: 
+`\https://us.api.concursolutions.com/oauth2/v0/token`
+* *Scopes*: 
+`LIST` is the minimum and it authorizes execution of the SAP Concur list
+actions. 
+* *API endpoint URL*: 
+`\https://us.api.concursolutions.com`
+
+. Click *Save*. {prodname} immediately tries to validate the connector. 
+If validation is not successful, correct the input values and try again. 
+If validation is successful, you can create a SAP Concur connection,
+which you can add to an integration. 
+. To create a SAP Concur connection, click the *create a connection* link
+in the success message. Or, to create a connection later, click *Ok* to 
+contract the SAP Concur entry in the *Settings* page. 
+
+ 
+
+ 
+ 
+ 

@@ -35,6 +35,10 @@ from a particular Gmail account.
 |Connect to an HTTP or HTTPS endpoint and execute the
 `GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, OR `PATCH` method.
 
+|<<connecting-to-kafka,Kafka>>
+|Obtain streams of records from
+or publish streams of records to a Kafka topic that you specify 
+
 |<<connecting-to-mqtt,MQTT>>
 |Obtain messages from an MQ Telemetry Transport broker or publish messages
 to an MQTT broker. 
@@ -45,6 +49,13 @@ specification. You can then create a connection to that REST API.
 
 |<<connecting-to-sf,Salesforce>>
 |Create, update, fetch, or delete a Salesforce record. 
+
+|<<connecting-to-concur,SAP Concur>>
+|Obtain all SAP Concur lists, obtain a particular list, create
+a new list, or update a list. Other SAP Concur actions are Technology Preview features. 
+
+|<<connecting-to-servicenow,ServiceNow>>
+|Obtain records from or copy records to your ServiceNow instance. 
 
 |<<connecting-to-slack,Slack>>
 |Send a message to a Slack user or channel. 
@@ -59,12 +70,16 @@ JDBC driver for that database.
 |Trigger execution of an integration upon tweets that mention you or that 
 contain data you specify. 
 
+|<<triggering-integrations-with-http-requests,Webhook>>
+|Trigger integrations with HTTP `GET` or `POST` requests.
+
 |===
 
 If {prodname} does not provide a connector that you need, an 
 experienced developer can create an extension that defines a custom
 connector. For information about coding the 
-extension and creating its `.jar` file, which is uploaded to 
+extension and creating its `.jar` file, which you upload to 
 {prodname}, see 
-{LinkToolingUserGuide}#IgniteExtension[Developing extensions for
-{prodname} integrations].
+{LinkToolingUserGuide}#IgniteExtension[{NameOfToolingUserGuide}, Developing extensions for
+{prodname} integrations] and 
+{LinkFuseOnlineIntegrationGuide}#developing-extensions[{NameOfFuseOnlineIntegrationGuide}, Developing extensions].

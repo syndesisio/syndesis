@@ -1,6 +1,10 @@
 [id='guidelines-for-openapi-specifications']
 = Guidelines for OpenAPI specifications
 
+When {prodname} creates a REST API client connector, it maps each resource
+operation in the OpenAPI specification to a connection action. The action name
+and action description come from documentation in the OpenAPI specification.
+
 The more detail that the OpenAPI specification provides, the more support
 {prodname} can offer when connecting to the API. For example,
 the API definition is not required to declare data types for requests
@@ -9,11 +13,17 @@ defines the corresponding connection action as typeless. However, in an
 integration, you cannot add a data mapping step immediately before or
 immediately after an API connection that performs a typeless action.
 
-One remedy for this is to add more information to the OpenAPI specification
-before you upload it to {prodname}. Identify the OpenAPI resource operations that
+One remedy for this is to add more information to the OpenAPI specification.
+Identify the OpenAPI resource operations that
 will map to the actions you want the API connection to perform. In the
 OpenAPI specification, ensure that there is a JSON schema that specifies
 each operation's request and response types.
+
+After you upload the specification, {prodname} gives you an opportunity 
+to review and edit it in Apicurio Studio, which is a visual editor for 
+designing APIs based on the OpenAPI specification. You can add more detail, 
+save  your updates, and {prodname} creates an API client connector hat 
+incorporates your updates. 
 
 If the OpenAPI specification for the API declares support for
 `application/json` content type and also `application/xml` content type

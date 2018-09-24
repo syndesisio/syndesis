@@ -3,11 +3,11 @@
 [id='register-with-salesforce_{context}']
 = Register {prodname} as a Salesforce client application
 
-You must register your installation of {prodname} as a client application
+You must register your {prodname} environment as a client application
 that can access Salesforce.
 This lets you create any number of integrations that connect
 to Salesforce. In other words, you need to register a particular 
-installation of {prodname} with Salesforce only once.
+{prodname} environment with Salesforce only once.
 
 ifeval::["{context}" == "t2sf"]
 If you already registered {prodname} as a Salesforce
@@ -31,7 +31,7 @@ Perform these steps to register {prodname} as a Salesforce client application:
 .. On the *Settings* page, near the top, to the right of the callback URL, 
 click 
 image:images/CopyCallback.png[Copy Callback URL] to 
-copy the callback URL for your installation of {prodname} to the clipboard. 
+copy the callback URL for your {prodname} environment to the clipboard. 
 You will need this URL toward the end of this procedure. 
 .. To the right of the *Salesforce* entry,
 click *Register* to display the *Client ID* and *Client Secret* fields.
@@ -61,11 +61,11 @@ For example:
 image:shared/images/SF-message-to-wait-a-few-minutes.png[title="Short Wait"]
 .. Click *Continue*.
 .. Copy the consumer key that Salesforce provides.
-. Return to your {prodname} installation *Settings* page and paste the
+. Return to your {prodname} *Settings* page and paste the
 Salesforce-provided
 consumer key into the Salesforce *Client ID* field.
 . Back in Salesforce, copy the consumer secret that Salesforce provides.
-. Return to your {prodname} installation *Settings* page and paste the
+. Return to your {prodname} *Settings* page and paste the
 Salesforce-provided consumer secret into the Salesforce
 *Client Secret* field.
 . Click *Save* and then click *Ok*.

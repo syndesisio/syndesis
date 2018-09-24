@@ -1,4 +1,0 @@
-[id='developing-custom-steps']
-= Developing custom steps
-
-TBA

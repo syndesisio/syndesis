@@ -22,6 +22,6 @@ include::integrating_applications/master.adoc[offsetlevel=+1]
 
 include::connecting/master.adoc[offsetlevel=+1]
 
-include::developing_customizations/master.adoc[offsetlevel=+1]
+include::developing_extensions/master.adoc[offsetlevel=+1]
 
 include::managing_environments/master.adoc[offsetlevel=+1]

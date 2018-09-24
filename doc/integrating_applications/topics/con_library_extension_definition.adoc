@@ -1,0 +1,38 @@
+[id='library-extension-definition']
+= Description of library extension definition and structure
+
+A library extension does not define any actions. 
+Here is a sample definition for a library extension:
+
+[source,json]
+----
+{
+  "schemaVersion" : "v1",
+  "name" : "Example JDBC Driver Library",
+  "description" : "Syndesis Extension for adding a custom JDBC Driver",
+  "extensionId" : "io.syndesis.extensions:syndesis-library-jdbc-driver",
+  "version" : "1.0.0",
+  "tags" : [ "jdbc-driver" ],
+  "extensionType" : "Libraries"
+}
+----
+
+Other than the lack of actions, the structure of a library extension 
+is the same as the structure of a step or connector extension. See 
+<<overview-extension-content-structure>> and 
+<<about-extension-definitions>>.
+
+In a Maven project that creates a library extension, to add dependencies 
+that are not available from a Maven repository, 
+specify a `system` dependency, for example: 
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.company</groupId>
+    <artifactId>jdbc-driver</artifactId>
+    <version>1.0</version>
+    <scope>system</scope>
+    <systemPath>${project.basedir}/lib/jdbc-driver-1.0.jar</systemPath>
+</dependency>
+----
