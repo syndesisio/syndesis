@@ -32,6 +32,7 @@ public class PrometheusConfigurationProperties {
     private String componentLabel = "syndesis_io_component";
     private String typeLabel = "type";
     private String metricsHistoryRange = "1d";
+    private int topIntegrationsCount = 5;
 
     public String getService() {
         return service;
@@ -79,5 +80,13 @@ public class PrometheusConfigurationProperties {
 
     public void setMetricsHistoryRange(String metricsHistoryRange) {
         this.metricsHistoryRange = metricsHistoryRange;
+    }
+
+    public int getTopIntegrationsCount() {
+        return topIntegrationsCount;
+    }
+
+    public void setTopIntegrationsCount(int topIntegrationsCount) {
+        this.topIntegrationsCount = topIntegrationsCount;
     }
 }

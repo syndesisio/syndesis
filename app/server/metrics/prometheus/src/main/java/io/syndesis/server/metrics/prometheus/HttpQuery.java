@@ -63,6 +63,8 @@ public interface HttpQuery {
 
     Optional<String> getAggregationOperator();
 
+    List<String> getAggregationOperatorParameters();
+
     String getMetric();
 
     List<LabelValue> getLabelValues();
@@ -83,6 +85,17 @@ public interface HttpQuery {
         if (aggregationOperator != null && !aggregationOperator.isEmpty()) {
             queryExpression.append(aggregationOperator).append('(');
             closeAggregation = true;
+        }
+
+        // are there aggregation operator parameters?
+        if (closeAggregation) {
+            final List<String> params = getAggregationOperatorParameters();
+            if (params != null && !params.isEmpty()) {
+                for (String param : params) {
+                    queryExpression.append(param);
+                    queryExpression.append(',');
+                }
+            }
         }
 
         // is there a query function?

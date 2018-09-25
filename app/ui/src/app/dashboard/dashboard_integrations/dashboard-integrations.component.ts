@@ -6,7 +6,8 @@ import { DonutChartConfig as DonutConfig } from 'patternfly-ng';
 import {
   Integration,
   Integrations,
-  I18NService
+  I18NService,
+  IntegrationState
 } from '@syndesis/ui/platform';
 
 @Component({
@@ -20,9 +21,11 @@ export class DashboardIntegrationsComponent implements OnChanges {
   PUBLISHED: string;
 
   @Input() integrations: Integrations;
+  @Input() integrationState: IntegrationState;
   @Input() loading: boolean;
 
-  sortedIntegrations: Integrations;
+  sortedIntegrationsByTimestamp: Integrations;
+  sortedIntegrationsByMessageCount: Integrations;
   integrationChartData: any[];
 
   integrationsChartConfig: DonutConfig = {
@@ -58,11 +61,25 @@ export class DashboardIntegrationsComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    this.sortedIntegrations = this.integrations.sort((a, b) => {
+    const byTimestamp = (a, b) => {
       const aTimestamp = this.getTimestamp(a);
       const bTimestamp = this.getTimestamp(b);
       return bTimestamp - aTimestamp;
+    };
+    const topIntegrations = this.integrationState.metrics.summary.topIntegrations || {};
+    const topIntegrationsArray = Object.keys(topIntegrations).map(key => {
+      return {
+        id: key,
+        count: topIntegrations[key]
+      } as any;
+    }).sort((a, b) => {
+      return b.count - a.count;
     });
+    this.sortedIntegrationsByTimestamp = this.integrations.concat().sort(byTimestamp);
+    this.sortedIntegrationsByMessageCount = this.sortedIntegrationsByTimestamp.concat().sort((a, b) => {
+      const index = topIntegrationsArray.findIndex(i => i.id === b.id);
+      return index === -1 ? topIntegrationsArray.length + 1 : index;
+    }).reverse();
     this.integrationChartData = [
       [this.PUBLISHED, this.countActiveIntegrations()],
       [this.UNPUBLISHED, this.countInactiveIntegrations()],

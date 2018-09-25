@@ -7,7 +7,8 @@ const initialIntegrationMetrics: IntegrationMetrics = {
   messages: 0,
   errors: 0,
   start: Date.now(),
-  lastProcessed: Date.now()
+  lastProcessed: Date.now(),
+  topIntegrations: {}
 };
 
 const initialState: IntegrationState = {

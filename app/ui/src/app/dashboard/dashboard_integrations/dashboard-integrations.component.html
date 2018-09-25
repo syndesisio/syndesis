@@ -29,7 +29,7 @@
                 </h2>
               </div>
               <div class="card-pf-body">
-                <syndesis-integration-list [integrations]="sortedIntegrations.slice(0, 5)" complete="true"></syndesis-integration-list>
+                <syndesis-integration-list [integrations]="sortedIntegrationsByMessageCount.slice(0, 5)" complete="true"></syndesis-integration-list>
               </div>
             </div>
           </div>
@@ -57,7 +57,7 @@
                 </h2>
               </div>
               <div class="card-pf-body">
-                <div class="row" *ngFor="let integration of sortedIntegrations; let i=index">
+                <div class="row" *ngFor="let integration of sortedIntegrationsByTimestamp; let i=index">
                   <div class="update col-xs-12" *ngIf="i<5" (click)="goto(integration)">
                     <div class="col-sm-5">
                       <a [routerLink]=" ['/integrations', integration.id] ">

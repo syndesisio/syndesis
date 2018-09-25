@@ -21,7 +21,7 @@
         [connections]="connections"
         (refresh)="onRefreshDashboard()">
       </syndesis-dashboard-metrics>
-      <syndesis-dashboard-integrations [integrations]="integrations" [loading]="integrationsLoading"></syndesis-dashboard-integrations>
+      <syndesis-dashboard-integrations [integrations]="integrations" [loading]="integrationsLoading" [integrationState]="integrationState"></syndesis-dashboard-integrations>
 
       <!-- connections -->
       <syndesis-dashboard-connections [connections]="connections" [loading]="connectionsLoading" (selectedConnection)="selectedConnection($event)"></syndesis-dashboard-connections>
