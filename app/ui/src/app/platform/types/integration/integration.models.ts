@@ -207,6 +207,7 @@ export interface IntegrationMetrics {
   errors: number;
   start: number;
   lastProcessed: number;
+  topIntegrations: StringMap<number>;
 }
 
 export interface IntegrationState

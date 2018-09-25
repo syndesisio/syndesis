@@ -14,13 +14,12 @@ module.exports = function (config) {
       require('karma-mocha-reporter')
     ],
     files: [
-      
+
       './node_modules/jquery/dist/jquery.min.js',
-      './node_modules/jquery-match-height/dist/jquery.matchHeight-min.js',
-      './node_modules/chart.js/dist/Chart.js'
+      './node_modules/jquery-match-height/dist/jquery.matchHeight-min.js'
     ],
     preprocessors: {
-      
+
     },
     mime: {
       'text/x-typescript': ['ts', 'tsx']
@@ -54,7 +53,6 @@ module.exports = function (config) {
         flags: [
           '--no-sandbox',
           '--disable-setuid-sandbox'
-
       ],
         debug: true
       }
