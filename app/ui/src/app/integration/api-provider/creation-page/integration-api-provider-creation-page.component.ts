@@ -8,9 +8,7 @@ import {
   OpenApiValidationError
 } from '@syndesis/ui/common';
 import { Store } from '@ngrx/store';
-import { WindowRef } from '@syndesis/ui/customizations/window-ref';
 import { Router } from '@angular/router';
-import * as YAML from 'yamljs';
 import { ApiProviderActions } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
   ApiProviderStore, getApiProviderUploadSpecification,
@@ -29,8 +27,6 @@ import { Observable } from 'rxjs';
 export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   ApiProviderWizardSteps = ApiProviderWizardSteps;
   OpenApiUploaderValueType = OpenApiUploaderValueType;
-  displayDefinitionEditor = false;
-  editorHasChanges = false;
   validationResponse: OpenApiValidationResponse;
 
   currentActiveStep$: Observable<ApiProviderWizardSteps>;
@@ -38,8 +34,6 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   validationError$: Observable<OpenApiValidationError>;
   validationResponse$: Observable<OpenApiValidationResponse>;
   validationLoading$: Observable<boolean>;
-
-  // @ViewChild('_apiEditor') _apiEditor: ApiEditorComponent;
 
   @ViewChild('cancelEditorModalTemplate') cancelEditorModalTemplate: TemplateRef<any>;
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
@@ -51,18 +45,8 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     private apiProviderStore: Store<ApiProviderStore>,
     private modalService: ModalService,
     private nav: NavigationService,
-    private router: Router,
-    private winRef: WindowRef
+    private router: Router
   ) {
-    this.winRef.nativeWindow.dump = YAML.dump;
-  }
-
-  public onUserChange(): void {
-    this.editorHasChanges = true;
-  }
-
-  public showDefinitionEditor(): boolean {
-    return true;
   }
 
   ngOnInit() {
@@ -92,7 +76,8 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
         default:
           break;
       }
-    })
+    });
+
     this.nav.hide();
   }
 
@@ -128,17 +113,6 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
       ApiProviderActions.previousStep()
     );
   }
-
-  /*onCreateComplete(customProviderRequest: CustomProviderRequest): void {
-    // update request if changes were made in editor
-    if ( this.editorHasChanges ) {
-      customProviderRequest.configuredProperties.specification = JSON.stringify( this.apiDef.spec );
-    }
-
-    this.apiProviderStore.dispatch(
-      ApiProviderActions.create(customProviderRequest)
-    );
-  }*/
 
   ngOnDestroy() {
     this.modalService.unregisterModal(this.cancelEditorModalId);
