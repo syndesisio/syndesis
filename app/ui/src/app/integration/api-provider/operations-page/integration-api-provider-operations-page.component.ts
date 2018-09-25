@@ -15,8 +15,8 @@ import { NavigationService, ObjectPropertyFilterConfig, ObjectPropertySortConfig
 
 @Component({
   selector: 'syndesis-integration-api-provider-operations',
-  templateUrl: './operations.component.html',
-  styleUrls: ['../../integration-common.scss', './operations.component.scss']
+  templateUrl: './integration-api-provider-operations-page.component.html',
+  styleUrls: ['../../integration-common.scss', './integration-api-provider-operations-page.component.scss']
 })
 export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
   integration: Observable<Integration>;

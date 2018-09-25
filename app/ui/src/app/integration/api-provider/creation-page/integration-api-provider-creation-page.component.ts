@@ -23,8 +23,8 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'syndesis-integration-api-provider-spec',
-  templateUrl: './spec.component.html',
-  styleUrls: ['../../integration-common.scss', './spec.component.scss']
+  templateUrl: './integration-api-provider-creation-page.component.html',
+  styleUrls: ['../../integration-common.scss', './integration-api-provider-creation-page.component.scss']
 })
 export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   ApiProviderWizardSteps = ApiProviderWizardSteps;

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { OpenApiValidationResponse } from '@syndesis/ui/common';
 
 @Component({
-  selector: 'api-provider-spec-step-validate',
+  selector: 'api-provider-creation-step-validate',
   templateUrl: './step-validate.component.html',
 })
 export class StepValidateComponent {

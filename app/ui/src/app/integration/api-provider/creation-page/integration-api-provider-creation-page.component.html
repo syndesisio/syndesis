@@ -39,7 +39,7 @@
         <p>{{ 'integrations.api-provider.creation-subtitle' | synI18n }}</p>
 
         <section>
-          <api-provider-spec-step-upload
+          <api-provider-creation-step-upload
             *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.UploadSpecification"
             [uploadSpecification]="uploadSpecification$ | async"
             [errors]="validationError$ | async"
@@ -47,16 +47,16 @@
             (onUploadSpecificationChange)="onUploadSpecificationChange($event)"
             (onDone)="onStepDone()"
           >
-          </api-provider-spec-step-upload>
+          </api-provider-creation-step-upload>
 
-          <api-provider-spec-step-validate
+          <api-provider-creation-step-validate
             *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.ReviewApiProvider"
             [validationResponse]="validationResponse$ | async"
             [loading]="validationLoading$ | async"
             (onDone)="onStepDone()"
             (onBack)="onBackPressed()"
             (onEdit)="null">
-          </api-provider-spec-step-validate>
+          </api-provider-creation-step-validate>
         </section>
       </div>
     </div>

@@ -5,7 +5,7 @@ import {
 } from '@syndesis/ui/common';
 
 @Component({
-  selector: 'api-provider-spec-step-upload',
+  selector: 'api-provider-creation-step-upload',
   templateUrl: './step-upload.component.html',
 })
 export class StepUploadComponent {
