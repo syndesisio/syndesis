@@ -18,14 +18,14 @@ package io.syndesis.common.model.metrics;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationMetricsSummary.Builder.class)
@@ -56,6 +56,12 @@ public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSumm
     Optional<Date> getLastProcessed();
 
     Optional<List<IntegrationDeploymentMetrics>> getIntegrationDeploymentMetrics();
+
+    /**
+     * @return Map of top 'N' (configured in metrics service, default 5) integrations by total messages.
+     * Only valid when retrieving total metrics summary.
+     */
+    Optional<Map<String, Long>> getTopIntegrations();
 
     class Builder extends ImmutableIntegrationMetricsSummary.Builder {
         // allow access to ImmutablIntegrationMetricsSummary.Builder
