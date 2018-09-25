@@ -30,6 +30,11 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
+
 import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
@@ -38,10 +43,6 @@ import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
 import io.syndesis.common.util.CollectionsUtils;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.endpoint.metrics.MetricsProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(value = "metrics.kind", havingValue = "prometheus")
@@ -64,6 +65,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private static final BinaryOperator<Date> MAX_DATE = (date1, date2) -> date1 == null
         ? date2
         : date2 == null ? date1 : date1.after(date2) ? date1 : date2;
+    public static final String OPERATOR_TOPK = "topk";
 
     private final String serviceName;
     private final String integrationIdLabel;
@@ -71,6 +73,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private final String componentLabel;
     private final String typeLabel;
     private final String metricsHistoryRange;
+    private final int topIntegrationsCount;
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final DateFormat dateFormat = //2018-03-14T23:34:09Z
@@ -92,6 +95,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         this.componentLabel = config.getComponentLabel();
         this.typeLabel = config.getTypeLabel();
         this.metricsHistoryRange = config.getMetricsHistoryRange();
+        this.topIntegrationsCount = config.getTopIntegrationsCount();
         this.openShiftClient = openShiftClient;
     }
 
@@ -196,12 +200,16 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
             final Optional<Date> lastFailureTime = getAggregateMetricValue(METRIC_FAILURE_TIMESTAMP, Date.class, "max");
             final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
 
+            // get top 5 integrations by total messages
+
+
             return new IntegrationMetricsSummary.Builder()
                 .metricsProvider("prometheus")
                 .start(startTime)
                 .lastProcessed(Optional.ofNullable(lastProcessedTime))
                 .messages(totalMessages.orElse(0L))
                 .errors(failedMessages.orElse(0L))
+                .topIntegrations(getTopIntegrations())
                 .build();
          } catch (ParseException e) {
              throw new SyndesisServerException(e.getMessage(),e);
@@ -234,6 +242,17 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
         validateResponse(response);
         return QueryResult.getFirstValue(response, clazz);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Map<String, Long> getTopIntegrations() {
+        HttpQuery queryTotalMessages = new HttpQuery.Builder().from(createInstantHttpQuery(METRIC_TOTAL, OPERATOR_TOPK))
+                .addAggregationOperatorParameters(Integer.toString(topIntegrationsCount))
+                .addByLabels(integrationIdLabel)
+                .build();
+        QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
+        validateResponse(response);
+        return (Map<String, Long>) QueryResult.getValueMap(response, integrationIdLabel, Long.class);
     }
 
     private HttpQuery createSummaryHttpQuery(String integrationId, String metric, String aggregationOperator) {
