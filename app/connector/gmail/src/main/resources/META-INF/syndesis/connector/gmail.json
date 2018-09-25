@@ -10,7 +10,7 @@
     }
   ],
   "configuredProperties": {
-    "tokenUrl": "https://accounts.google.com/o/oauth2/token",
+    "tokenUrl": "https://www.googleapis.com/oauth2/v4/token",
     "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
     "authenticationType": "oauth2",
     "googleScopes": "https://mail.google.com/",
