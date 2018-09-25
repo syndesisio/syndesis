@@ -1,0 +1,29 @@
+<div class="row row-cards-pf">
+  <div class="card-pf">
+    <div class="card-pf-body">
+      <syndesis-validation-error *ngFor="let error of errors">
+        {{ error.message }}
+      </syndesis-validation-error>
+
+      <form class="form-horizontal syn-form--swagger-upload"
+            (ngSubmit)="onDone.emit()"
+            #openApiForm="ngForm"
+            novalidate>
+        <openapi-uploader [ngModel]="uploadSpecification"
+                          (ngModelChange)="onUploadSpecificationChange.emit($event)"
+                          name="uploaderValue"
+                          [allowSpecCreation]="true"
+                          [isInvalid]="(errors)">
+        </openapi-uploader>
+        <fieldset>
+          <syndesis-button type="submit"
+                           [loading]="loading"
+                           [disabled]="!uploadSpecification.valid">
+            {{ 'shared.next-button' | synI18n }}
+          </syndesis-button>
+        </fieldset>
+      </form>
+
+    </div>
+  </div>
+</div>

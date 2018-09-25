@@ -9,6 +9,10 @@ const initialState: ApiProviderState = {
   loading: false,
   loaded: false,
   hasErrors: false,
+  uploadSpecification: {
+    type: OpenApiUploaderValueType.File,
+    valid: false
+  },
   wizardStep: ApiProviderWizardSteps.UploadSpecification
 };
 

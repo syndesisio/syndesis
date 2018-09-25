@@ -16,7 +16,7 @@ export interface ApiProviderState {
   loaded: boolean;
   hasErrors: boolean;
   wizardStep: ApiProviderWizardSteps;
-  uploadSpecification?: OpenApiUploadSpecification;
+  uploadSpecification: OpenApiUploadSpecification;
   validationResponse?: OpenApiValidationResponse;
   validationErrors?: OpenApiValidationError;
 }

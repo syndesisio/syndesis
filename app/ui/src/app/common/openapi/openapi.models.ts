@@ -33,6 +33,6 @@ export enum OpenApiUploaderValueType {
 
 export interface OpenApiUploadSpecification {
   type: OpenApiUploaderValueType;
-  spec: OpenApiUploaderValue;
+  spec?: OpenApiUploaderValue;
   valid: boolean;
 }

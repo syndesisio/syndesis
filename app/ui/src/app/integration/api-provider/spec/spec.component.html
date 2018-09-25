@@ -39,89 +39,29 @@
         <p>{{ 'integrations.api-provider.creation-subtitle' | synI18n }}</p>
 
         <section>
-          <ng-container *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.UploadSpecification; then uploadStep"></ng-container>
-          <ng-container *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.ReviewApiProvider; then validateStep"></ng-container>
+          <api-provider-spec-step-upload
+            *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.UploadSpecification"
+            [uploadSpecification]="uploadSpecification$ | async"
+            [errors]="validationError$ | async"
+            [loading]="validationLoading$ | async"
+            (onUploadSpecificationChange)="onUploadSpecificationChange($event)"
+            (onDone)="onStepDone()"
+          >
+          </api-provider-spec-step-upload>
+
+          <api-provider-spec-step-validate
+            *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.ReviewApiProvider"
+            [validationResponse]="validationResponse$ | async"
+            [loading]="validationLoading$ | async"
+            (onDone)="onStepDone()"
+            (onBack)="onBackPressed()"
+            (onEdit)="null">
+          </api-provider-spec-step-validate>
         </section>
       </div>
     </div>
   </div>
 </article>
-
-<ng-template #uploadStep>
-  <div class="row row-cards-pf">
-    <div class="card-pf">
-      <div class="card-pf-body">
-        <ng-container *ngIf="validationError$ | async">
-          <syndesis-validation-error *ngFor="let error of (validationError$ | async).errors">
-            {{ error.message }}
-          </syndesis-validation-error>
-        </ng-container>
-
-        <form class="form-horizontal syn-form--swagger-upload"
-              (ngSubmit)="onStepDone()"
-              #openApiForm="ngForm"
-              novalidate>
-          <openapi-uploader [ngModel]="(uploadSpecification$ | async)"
-                            (ngModelChange)="onUploadSpecificationChange($event)"
-                            name="uploaderValue"
-                            [allowSpecCreation]="true"
-                            [isInvalid]="(validationError$ | async)">
-          </openapi-uploader>
-          <fieldset>
-            <syndesis-button type="submit"
-                             [loading]="(validationLoading$ | async)"
-                             [disabled]="!(uploadSpecification$ | async)?.valid">
-              {{ 'shared.next-button' | synI18n }}
-            </syndesis-button>
-          </fieldset>
-        </form>
-
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #validateStep>
-  <div class="row row-cards-pf">
-    <div class="card-pf">
-      <div class="card-pf-body">
-        <syndesis-loading
-          [loading]="validationLoading$ | async"
-          [content]="validationContent">
-        </syndesis-loading>
-        <ng-template #validationContent>
-          <openapi-review [validatorData]="(validationResponse$ | async)">
-          </openapi-review>
-
-          <fieldset>
-            <syndesis-button type="button" theme="default" (click)="onBackPressed()">
-              {{ 'shared.back-button' | synI18n }}
-            </syndesis-button>
-
-            <syndesis-button (click)="onStepDone()"
-                             type="button"
-                             theme="primary">
-              {{ 'shared.next-button' | synI18n }}
-            </syndesis-button>
-
-            <ng-template #editTooltip>
-              {{ 'customizations.api-client-connectors.edit-tooltip' | synI18n }}
-            </ng-template>
-            <syndesis-button (click)="null"
-                             type="button"
-                             class="pull-right"
-                             theme="default">
-              <span [tooltip]="editTooltip"
-                    placement="top">
-                {{ 'customizations.api-client-connectors.api-review-edit-button' | synI18n }}
-              </span>
-            </syndesis-button>
-          </fieldset>
-        </ng-template>
-      </div>
-    </div>
-  </div>
-</ng-template>
 
 <ng-template #cancelModalTemplate>
   <cancel-confirmation-modal

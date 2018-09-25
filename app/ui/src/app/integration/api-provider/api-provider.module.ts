@@ -20,6 +20,8 @@ import { ApiProviderSpecComponent } from '@syndesis/ui/integration/api-provider/
 import { RouterModule, Routes } from '@angular/router';
 import { VendorModule } from '@syndesis/ui/vendor';
 import { FormsModule } from '@angular/forms';
+import { StepUploadComponent } from './spec/step-upload/step-upload.component';
+import { StepValidateComponent } from './spec/step-validate/step-validate.component';
 
 const routes: Routes = [];
 
@@ -40,7 +42,9 @@ const routes: Routes = [];
   ],
   declarations: [
     ApiProviderOperationsComponent,
-    ApiProviderSpecComponent
+    ApiProviderSpecComponent,
+    StepUploadComponent,
+    StepValidateComponent,
   ],
   exports: [
     ApiProviderOperationsComponent,
