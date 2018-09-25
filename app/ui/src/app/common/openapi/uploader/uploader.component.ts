@@ -3,7 +3,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { OpenApiUploaderValue, OpenApiUploaderValueType, OpenApiUploadSpecification } from '@syndesis/ui/common/openapi';
 import { I18NService } from '@syndesis/ui/platform';
 import { FileLikeObject, FileUploader, FileUploaderOptions } from '@syndesis/ui/vendor';
-import { ApiDefinition } from 'apicurio-design-studio';
 
 const URL_PATTERN = 'https?://.+';
 
@@ -136,9 +135,16 @@ export class OpenApiUploaderComponent implements OnInit, ControlValueAccessor {
     };
   }
 
-  makeNewApiDefinition(): ApiDefinition {
-    const apiDef = new ApiDefinition();
-    return apiDef.spec;
+  makeNewApiDefinition(): string {
+    return `{
+  "swagger": "2.0",
+  "info": {
+    "title": "Untitled API",
+    "description": "",
+    "version": "0.0.0"
+  },
+  "paths": {}
+}`;
   }
 
   registerOnChange(fn: any): void {

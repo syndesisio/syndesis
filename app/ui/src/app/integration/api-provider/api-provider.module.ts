@@ -22,6 +22,7 @@ import { VendorModule } from '@syndesis/ui/vendor';
 import { FormsModule } from '@angular/forms';
 import { StepUploadComponent } from './creation-page/step-upload/step-upload.component';
 import { StepValidateComponent } from './creation-page/step-validate/step-validate.component';
+import { StepEditorComponent } from './creation-page/step-editor/step-editor.component';
 
 const routes: Routes = [];
 
@@ -45,6 +46,7 @@ const routes: Routes = [];
     ApiProviderSpecComponent,
     StepUploadComponent,
     StepValidateComponent,
+    StepEditorComponent,
   ],
   exports: [
     ApiProviderOperationsComponent,

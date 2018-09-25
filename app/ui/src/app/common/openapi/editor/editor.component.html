@@ -1,3 +1,40 @@
-<p>
-  editor works!
-</p>
+<div class="openapi-editor syn-scrollable">
+  <div class="toolbar-pf">
+    <div class="toolbar-pf-actions openapi-editor__header">
+      <div class="openapi-editor__title">
+        <button class="btn btn-link"
+                [tooltip]="'customizations.api-client-connectors.editor-back-button-tooltip' | synI18n"
+                placement="auto"
+                (click)="onBack.emit()">
+          {{ 'shared.back-button' | synI18n }}
+        </button>
+        <h2>
+          {{ title }}
+        </h2>
+      </div>
+      <div class="openapi-editor__actions toolbar-pf-action-right">
+        <button class="btn btn-default"
+                [tooltip]="'customizations.api-client-connectors.editor-back-button-tooltip' | synI18n"
+                placement="auto"
+                (click)="onCancel.emit()">
+          {{ 'shared.cancel' | synI18n }}
+        </button>
+        <button class="btn btn-primary"
+                [disabled]="!editorHasChanges"
+                [tooltip]="'customizations.api-client-connectors.editor-save-button-tooltip' | synI18n"
+                placement="auto"
+                container="body"
+                (click)="onDoneEditing()">
+          {{ 'shared.save' | synI18n }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="openapi-editor__body syn-scrollable--body">
+    <api-editor #_apiEditor
+                [api]="apiDefinition"
+                [embedded]="true"
+                (onCommandExecuted)="onChanges()">
+    </api-editor>
+  </div>
+</div>

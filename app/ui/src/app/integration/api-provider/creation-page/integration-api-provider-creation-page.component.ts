@@ -11,7 +11,7 @@ import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { ApiProviderActions } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
-  ApiProviderStore, getApiProviderUploadSpecification,
+  ApiProviderStore, getApiProviderSpecification, getApiProviderUploadSpecification,
   getApiProviderValidationError,
   getApiProviderValidationLoading,
   getApiProviderValidationResponse, getApiProviderWizardStep
@@ -34,6 +34,7 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   validationError$: Observable<OpenApiValidationError>;
   validationResponse$: Observable<OpenApiValidationResponse>;
   validationLoading$: Observable<boolean>;
+  specification$: Observable<string>;
 
   @ViewChild('cancelEditorModalTemplate') cancelEditorModalTemplate: TemplateRef<any>;
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
@@ -64,6 +65,7 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     this.validationError$ = this.apiProviderStore.select(getApiProviderValidationError);
     this.validationResponse$ = this.apiProviderStore.select(getApiProviderValidationResponse);
     this.validationLoading$ = this.apiProviderStore.select(getApiProviderValidationLoading);
+    this.specification$ = this.apiProviderStore.select(getApiProviderSpecification);
 
     this.currentActiveStep$.subscribe(step => {
       switch (step) {
@@ -93,7 +95,13 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     this.modalService.hide(this.cancelModalId, doCancel);
   }
 
-  onUploadSpecificationChange(spec: OpenApiUploadSpecification) {
+  onUploadSpecificationChange(uploadSpecification: OpenApiUploadSpecification) {
+    this.apiProviderStore.dispatch(
+      ApiProviderActions.uploadSpecification(uploadSpecification)
+    );
+  }
+
+  onSpecificationEdited(spec: string) {
     this.apiProviderStore.dispatch(
       ApiProviderActions.updateSpecification(spec)
     );
@@ -102,6 +110,12 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   onStepDone() {
     this.apiProviderStore.dispatch(
       ApiProviderActions.nextStep()
+    );
+  }
+
+  onEditSpecification() {
+    this.apiProviderStore.dispatch(
+      ApiProviderActions.editSpecification()
     );
   }
 

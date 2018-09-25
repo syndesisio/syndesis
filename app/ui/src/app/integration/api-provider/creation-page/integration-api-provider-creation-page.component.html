@@ -55,8 +55,17 @@
             [loading]="validationLoading$ | async"
             (onDone)="onStepDone()"
             (onBack)="onBackPressed()"
-            (onEdit)="null">
+            (onEdit)="onEditSpecification()">
           </api-provider-creation-step-validate>
+
+          <api-provider-creation-step-editor
+            *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.EditSpecification"
+            [title]="'Provide API Definition - Create from Scratch'"
+            [specification]="(specification$ | async)"
+            (onBack)="onBackPressed()"
+            (onCancel)="showCancelModal()"
+            (onSave)="onSpecificationEdited($event)">
+          </api-provider-creation-step-editor>
         </section>
       </div>
     </div>

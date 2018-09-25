@@ -6,10 +6,12 @@ import { OpenApiValidationResponse, OpenApiUploadSpecification } from '@syndesis
 export class ApiProviderActions {
   static NEXT_STEP = '[API Provider] Go to the next step';
   static PREV_STEP = '[API Provider] Back to the previous step';
-  static UPDATE_SPEC = '[API Provider] Update OpenApi specification source';
+  static UPLOAD_SPEC = '[API Provider] Upload OpenApi specification source';
   static VALIDATE_SPEC = '[API Provider] OpenApi validation request';
   static VALIDATE_SPEC_COMPLETE = '[API Provider] OpenApi validation complete';
   static VALIDATE_SPEC_FAIL = '[API Provider] OpenApi validation failed';
+  static EDIT_SPEC = '[API Provider] Show Apicurio editor';
+  static UPDATE_SPEC = '[API Provider] Update specification with the value coming from Apicurio';
   static CREATE_CANCEL = '[API Provider] Create API Provider integration cancelled';
 
   static nextStep(): ApiProviderNextStep {
@@ -20,10 +22,10 @@ export class ApiProviderActions {
     return new ApiProviderPreviousStep();
   }
 
-  static updateSpecification(
+  static uploadSpecification(
     payload: OpenApiUploadSpecification
-  ): ApiProviderUpdateSpecification {
-    return new ApiProviderUpdateSpecification(payload);
+  ): ApiProviderUploadSpecification {
+    return new ApiProviderUploadSpecification(payload);
   }
 
   static validateSwagger(): ApiProviderValidateSwagger {
@@ -42,6 +44,16 @@ export class ApiProviderActions {
     return new ApiProviderValidateSwaggerFail(payload);
   }
 
+  static editSpecification(): ApiProviderEditSpecification {
+    return new ApiProviderEditSpecification();
+  }
+
+  static updateSpecification(
+    payload: string
+  ): ApiProviderUpdateSpecification {
+    return new ApiProviderUpdateSpecification(payload);
+  }
+
   static createCancel(): ApiProviderCreateCancel {
     return new ApiProviderCreateCancel();
   }
@@ -55,8 +67,8 @@ export class ApiProviderPreviousStep implements Action {
   readonly type = ApiProviderActions.PREV_STEP;
 }
 
-export class ApiProviderUpdateSpecification implements Action {
-  readonly type = ApiProviderActions.UPDATE_SPEC;
+export class ApiProviderUploadSpecification implements Action {
+  readonly type = ApiProviderActions.UPLOAD_SPEC;
 
   constructor(public payload: OpenApiUploadSpecification) {}
 }
@@ -79,4 +91,14 @@ export class ApiProviderValidateSwaggerFail implements Action {
 
 export class ApiProviderCreateCancel implements Action {
   readonly type = ApiProviderActions.CREATE_CANCEL;
+}
+
+export class ApiProviderEditSpecification implements Action {
+  readonly type = ApiProviderActions.EDIT_SPEC;
+}
+
+export class ApiProviderUpdateSpecification implements Action {
+  readonly type = ApiProviderActions.UPDATE_SPEC;
+
+  constructor(public payload: string) {}
 }

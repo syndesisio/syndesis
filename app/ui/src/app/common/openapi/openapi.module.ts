@@ -5,6 +5,7 @@ import { ApicurioCommonComponentsModule, ApicurioEditorModule } from 'apicurio-d
 import { FileUploadModule } from 'ng2-file-upload';
 
 import { SyndesisCommonModule } from '@syndesis/ui/common';
+import { VendorModule } from '@syndesis/ui/vendor';
 import { OpenApiReviewComponent } from '@syndesis/ui/common/openapi/review/review.component';
 import { OpenApiEditorComponent } from '@syndesis/ui/common/openapi/editor/editor.component';
 import { OpenApiUploaderComponent } from '@syndesis/ui/common/openapi/uploader/uploader.component';
@@ -17,6 +18,7 @@ import { OpenApiUploaderComponent } from '@syndesis/ui/common/openapi/uploader/u
     ApicurioCommonComponentsModule,
     FormsModule,
     FileUploadModule,
+    VendorModule
   ],
   declarations: [
     OpenApiReviewComponent,

@@ -42,6 +42,12 @@ export function previousStep(state: ApiProviderState): ApiProviderState {
         wizardStep: ApiProviderWizardSteps.UploadSpecification
       };
 
+    case ApiProviderWizardSteps.EditSpecification:
+      return {
+        ...state,
+        wizardStep: ApiProviderWizardSteps.ReviewApiProvider
+      };
+
     default:
       return state;
   }
@@ -60,7 +66,7 @@ export function apiProviderReducer(
       return previousStep(state);
     }
 
-    case ApiProviderActions.UPDATE_SPEC: {
+    case ApiProviderActions.UPLOAD_SPEC: {
       return {
         ...state,
         uploadSpecification: action.payload,
@@ -97,6 +103,25 @@ export function apiProviderReducer(
       };
     }
 
+    case ApiProviderActions.EDIT_SPEC: {
+      return {
+        ...state,
+        wizardStep: ApiProviderWizardSteps.EditSpecification
+      };
+    }
+
+    case ApiProviderActions.UPDATE_SPEC: {
+      return {
+        ...state,
+        uploadSpecification: {
+          type: OpenApiUploaderValueType.Spec,
+          spec: action.payload,
+          valid: true
+        },
+        wizardStep: ApiProviderWizardSteps.ReviewApiProvider
+      };
+    }
+
     case ApiProviderActions.CREATE_CANCEL: {
       return {
         ...initialState
@@ -129,7 +154,7 @@ export const getApiProviderUploadSpecification = createSelector(
 
 export const getApiProviderValidationError = createSelector(
   getApiProviderState,
-  (state: ApiProviderState) => state.validationErrors
+  (state: ApiProviderState) => state.validationErrors && state.validationErrors.errors
 );
 
 export const getApiProviderValidationResponse = createSelector(
@@ -145,4 +170,18 @@ export const getApiProviderValidationLoading = createSelector(
 export const getApiProviderValidationLoaded = createSelector(
   getApiProviderState,
   (state: ApiProviderState) => state.loaded
+);
+
+export const getApiProviderSpecification = createSelector(
+  getApiProviderUploadSpecification,
+  getApiProviderValidationResponse,
+  (uploadSpecification, validationResponse): string => {
+    if (validationResponse && validationResponse.configuredProperties) {
+      return validationResponse.configuredProperties.specification;
+    }
+    if (uploadSpecification.type === OpenApiUploaderValueType.Spec) {
+      return uploadSpecification.spec as string;
+    }
+    return null;
+  }
 );
