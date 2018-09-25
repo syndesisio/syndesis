@@ -15,6 +15,14 @@
  */
 package io.syndesis.server.update.controller.bulletin;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.validation.Validator;
-
+import org.junit.Test;
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.Action.Pattern;
@@ -36,19 +44,11 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.support.Equivalencer;
+import io.syndesis.common.util.StringConstants;
 import io.syndesis.server.dao.manager.DataManager;
-import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-public class IntegrationUpdateHandlerTest {
+public class IntegrationUpdateHandlerTest implements StringConstants {
 
     private static final String SQL_CONNECTOR_ACTION_ID = "sql-connector";
 
@@ -234,7 +234,8 @@ public class IntegrationUpdateHandlerTest {
             .name(connectorNewName)
             .build();
 
-        assertFalse(sqlConnector.equivalent(modSqlConnector));
+        Equivalencer equiv = new Equivalencer();
+        assertFalse(equiv.equivalent(null, sqlConnector, modSqlConnector));
 
         Connection modSqlConnection = new Connection.Builder()
             .createFrom(sqlConnection)
@@ -274,6 +275,15 @@ public class IntegrationUpdateHandlerTest {
         messages.forEach(message -> {
             switch (message.getCode()) {
                 case SYNDESIS011:
+                    Optional<String> detail = message.getDetail();
+                    assertTrue(detail.isPresent());
+                    String msg = detail.get();
+                    assertEquals(
+                                 "PostgresDB:Connection > SQL Connector:Connector$name" + NEW_LINE +
+                                 TAB + "=> 'SQL Connec ... '" + NEW_LINE +
+                                 TAB + "=> 'SQL Connec ... _new'" + NEW_LINE,
+                                 msg);
+                    break;
                 case SYNDESIS012:
                     break;
                 default:
@@ -312,7 +322,8 @@ public class IntegrationUpdateHandlerTest {
             .name(connectorNewName)
             .build();
 
-        assertFalse(sqlConnector.equivalent(modSqlConnector));
+        Equivalencer equiv = new Equivalencer();
+        assertFalse(equiv.equivalent(null, sqlConnector, modSqlConnector));
 
         Connection modSqlConnection = new Connection.Builder()
             .createFrom(sqlConnection)
@@ -331,7 +342,8 @@ public class IntegrationUpdateHandlerTest {
             .flows(Collections.singleton(new Flow.Builder().id(id + ":flow").addStep(modStep).build()))
             .build();
 
-        assertFalse(sqlIntegration.equivalent(modSqlIntegration));
+        equiv = new Equivalencer();
+        assertFalse(equiv.equivalent(null, sqlIntegration, modSqlIntegration));
 
         // Returns the changed sql connection
         when(dataManager.fetch(Connection.class, CONNECTION_ID)).thenReturn(modSqlConnection);
@@ -396,14 +408,16 @@ public class IntegrationUpdateHandlerTest {
             .name(connectorNewName)
             .build();
 
-        assertFalse(sqlConnector.equivalent(modSqlConnector));
+        Equivalencer equiv = new Equivalencer();
+        assertFalse(equiv.equivalent(null, sqlConnector, modSqlConnector));
 
         Connection modSqlConnection = new Connection.Builder()
             .createFrom(sqlConnection)
             .connector(modSqlConnector)
             .build();
 
-        assertFalse(sqlConnection.equivalent(modSqlConnection));
+        equiv = new Equivalencer();
+        assertFalse(equiv.equivalent(null, sqlConnection, modSqlConnection));
 
         Step modStep = new Step.Builder()
             .createFrom(sqlIntegration.getFlows().get(0).getSteps().get(0))
@@ -415,7 +429,8 @@ public class IntegrationUpdateHandlerTest {
             .flows(Collections.singleton(new Flow.Builder().steps(Collections.singletonList(modStep)).build()))
             .build();
 
-        assertFalse(sqlIntegration.equivalent(modSqlIntegration));
+        equiv = new Equivalencer();
+        assertFalse(equiv.equivalent(null, sqlIntegration, modSqlIntegration));
 
         // Returns the changed sql connection
         when(dataManager.fetch(Connection.class, CONNECTION_ID)).thenReturn(modSqlConnection);

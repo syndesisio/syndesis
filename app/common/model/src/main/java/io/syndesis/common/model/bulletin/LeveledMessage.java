@@ -65,6 +65,8 @@ public interface LeveledMessage extends WithMetadata {
 
     Optional<String> getMessage();
 
+    Optional<String> getDetail();
+
     class Builder extends ImmutableLeveledMessage.Builder {
         // allow access to the immutable builder
     }

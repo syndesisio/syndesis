@@ -20,16 +20,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
-
+import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.common.model.Split;
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithSplit;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorDescriptor.Builder.class)
@@ -108,58 +105,5 @@ public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredPro
     @Value.Default
     default List<String> getConnectorCustomizers() {
         return Collections.emptyList();
-    }
-
-    /**
-     * A weaker form of equality to {@link #equals(Object)}.
-     * Compares a defining subset of properties to {code}another{code}'s
-     * and in turn tests those properties for equivalence.
-     *<p>
-     * An equals test of a null field and an empty {@link Optional}
-     * will return false whilst they are equivalent so this method will return true.
-     * <p>
-     * Items not tested include:
-     * <ul>
-     * <li>Version id -
-     *        this id can be updated yet the rest of the object is still unchanged;
-     * <li>Updated Date -
-     *        an object can be modified then reverted yet the updated value will be different.
-     * </ul>
-     * <p>
-     * Note
-     * Method can result in 2 instances being equivalent even though some
-     * properties are different. Thus, this should only be used in appropriate
-     * situations.
-     *
-     * @param another a {@link ConnectorDescriptor} to compare with
-     * @return true if this is equivalent to {code}another{code}, false otherwise
-     */
-    default boolean equivalent(ConnectorDescriptor another) {
-        if (this == another) {
-            return true;
-        }
-
-        if (another == null) {
-            return false;
-        }
-
-        //
-        // The json parser appears to create a new empty split object rather than
-        // an empty optional
-        //
-        Split split = getSplit().orElse(new Split.Builder().build());
-        Split anotherSplit = another.getSplit().orElse(new Split.Builder().build());
-
-        return split.equals(anotherSplit)
-                        && Objects.equals(getConnectorId(), another.getConnectorId())
-                        && Objects.equals(getCamelConnectorGAV(), another.getCamelConnectorGAV())
-                        && Objects.equals(getCamelConnectorPrefix(), another.getCamelConnectorPrefix())
-                        && Objects.equals(getComponentScheme(), another.getComponentScheme())
-                        && Objects.equals(getConnectorFactory(), another.getConnectorFactory())
-                        && getConnectorCustomizers().equals(another.getConnectorCustomizers())
-                        && Objects.equals(getInputDataShape(), another.getInputDataShape())
-                        && Objects.equals(getOutputDataShape(), another.getOutputDataShape())
-                        && getPropertyDefinitionSteps().equals(another.getPropertyDefinitionSteps())
-                        && getConfiguredProperties().equals(another.getConfiguredProperties());
     }
 }

@@ -125,6 +125,11 @@ public interface StringConstants {
         String DOT_DOT = ".."; //$NON-NLS-1$
 
         /**
+         * Ellipse
+         */
+        String ELLIPSE = "..."; //$NON-NLS-1$
+
+        /**
          * class
          */
         String CLASS = "class"; //$NON-NLS-1$
