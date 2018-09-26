@@ -15,11 +15,22 @@
  */
 package io.syndesis.server.credential;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.util.Json;
 
 import org.springframework.social.oauth2.TokenStrategy;
 
 public class OAuth2ConnectorProperties extends ConnectorSettings {
+
+    private static final TypeReference<Map<String, String>> MAP_TYPE = new TypeReference<Map<String,String>>() {
+        // type token pattern
+    };
 
     private final String accessTokenUrl;
 
@@ -33,6 +44,8 @@ public class OAuth2ConnectorProperties extends ConnectorSettings {
 
     private final boolean useParameters;
 
+    private final Map<String, String> additionalQueryParameters;
+
     public OAuth2ConnectorProperties(final Connector connector) {
         super(connector);
 
@@ -43,6 +56,10 @@ public class OAuth2ConnectorProperties extends ConnectorSettings {
             .orElse(TokenStrategy.AUTHORIZATION_HEADER);
         useParameters = optionalProperty(connector, Credentials.AUTHORIZE_USING_PARAMETERS_TAG).map(Boolean::valueOf).orElse(false);
         scope = optionalProperty(connector, Credentials.SCOPE_TAG).orElse(null);
+
+        additionalQueryParameters = optionalProperty(connector, Credentials.ADDITIONAL_QUERY_PARAMETERS_TAG)
+            .map(params -> readJsonMap(params))
+            .orElse(Collections.emptyMap());
     }
 
     public String getAccessTokenUrl() {
@@ -67,6 +84,18 @@ public class OAuth2ConnectorProperties extends ConnectorSettings {
 
     public boolean isUseParametersForClientCredentials() {
         return useParameters;
+    }
+
+    public Map<String, String> getAdditionalQueryParameters() {
+        return additionalQueryParameters;
+    }
+
+    private static Map<String, String> readJsonMap(String params) {
+        try {
+            return Json.reader().forType(MAP_TYPE).readValue(params);
+        } catch (IOException e) {
+            throw new ExceptionInInitializerError(e);
+        }
     }
 
 }

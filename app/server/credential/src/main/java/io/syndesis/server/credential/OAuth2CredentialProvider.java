@@ -16,6 +16,11 @@
 package io.syndesis.server.credential;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import io.syndesis.common.model.connection.Connection;
 
@@ -32,17 +37,19 @@ public final class OAuth2CredentialProvider<S> extends BaseCredentialProvider {
 
     private final String id;
 
-    public OAuth2CredentialProvider(final String id, final OAuth2ConnectionFactory<S> connectionFactory,
-        final Applicator<AccessGrant> applicator) {
+    private final Map<String, List<String>> additionalQueryParameters;
+
+    public OAuth2CredentialProvider(final String id, final OAuth2ConnectionFactory<S> connectionFactory, final Applicator<AccessGrant> applicator,
+        final Map<String, String> additionalQueryParameters) {
         this.id = id;
         this.connectionFactory = connectionFactory;
         this.applicator = applicator;
+        this.additionalQueryParameters = additionalQueryParameters.entrySet().stream().collect(Collectors.toMap(Entry::getKey, e -> Collections.singletonList(e.getValue())));
     }
 
     @Override
     public AcquisitionMethod acquisitionMethod() {
-        return new AcquisitionMethod.Builder().label(labelFor(id)).icon(iconFor(id)).type(Type.OAUTH2)
-            .description(descriptionFor(id)).build();
+        return new AcquisitionMethod.Builder().label(labelFor(id)).icon(iconFor(id)).type(Type.OAUTH2).description(descriptionFor(id)).build();
     }
 
     @Override
@@ -56,8 +63,7 @@ public final class OAuth2CredentialProvider<S> extends BaseCredentialProvider {
     public CredentialFlowState finish(final CredentialFlowState givenFlowState, final URI baseUrl) {
         final OAuth2CredentialFlowState flowState = flowState(givenFlowState);
 
-        final AccessGrant accessGrant = connectionFactory.getOAuthOperations().exchangeForAccess(flowState.getCode(),
-            callbackUrlFor(baseUrl, EMPTY), null);
+        final AccessGrant accessGrant = connectionFactory.getOAuthOperations().exchangeForAccess(flowState.getCode(), callbackUrlFor(baseUrl, EMPTY), null);
 
         return new OAuth2CredentialFlowState.Builder().createFrom(flowState).accessGrant(accessGrant).build();
     }
@@ -69,10 +75,10 @@ public final class OAuth2CredentialProvider<S> extends BaseCredentialProvider {
 
     @Override
     public CredentialFlowState prepare(final String connectorId, final URI baseUrl, final URI returnUrl) {
-        final OAuth2CredentialFlowState.Builder flowState = new OAuth2CredentialFlowState.Builder().returnUrl(returnUrl)
-            .providerId(id);
+        final OAuth2CredentialFlowState.Builder flowState = new OAuth2CredentialFlowState.Builder().returnUrl(returnUrl).providerId(id);
 
         final OAuth2Parameters parameters = new OAuth2Parameters();
+        parameters.putAll(additionalQueryParameters);
 
         final String callbackUrl = callbackUrlFor(baseUrl, EMPTY);
         parameters.setRedirectUri(callbackUrl);

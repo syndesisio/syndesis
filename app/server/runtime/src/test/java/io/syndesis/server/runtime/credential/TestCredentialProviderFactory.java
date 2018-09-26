@@ -15,6 +15,8 @@
  */
 package io.syndesis.server.runtime.credential;
 
+import java.util.Collections;
+
 import io.syndesis.server.credential.CredentialProvider;
 import io.syndesis.server.credential.CredentialProviderFactory;
 import io.syndesis.server.credential.OAuth2Applicator;
@@ -26,7 +28,6 @@ import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Template;
-import org.springframework.util.MultiValueMap;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -51,10 +52,8 @@ public class TestCredentialProviderFactory implements CredentialProviderFactory 
         applicator.setRefreshTokenProperty("refreshToken");
 
         final CredentialProvider credentialProvider = new OAuth2CredentialProvider<>("test-provider", connectionFactory,
-            applicator);
+            applicator, Collections.emptyMap());
 
-        @SuppressWarnings({ "unchecked", "rawtypes" })
-        final Class<MultiValueMap<String, String>> additionalParametersType = (Class) MultiValueMap.class;
         final OAuth2Operations operations = spy(new OAuth2Template("testClientId", "testClientSecret",
             "https://test/oauth2/authorize", "https://test/oauth2/token"));
         doReturn(new AccessGrant("token")).when(operations).exchangeForAccess(ArgumentMatchers.anyString(),

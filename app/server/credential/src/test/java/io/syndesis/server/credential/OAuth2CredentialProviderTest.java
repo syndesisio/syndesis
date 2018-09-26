@@ -15,6 +15,8 @@
  */
 package io.syndesis.server.credential;
 
+import java.util.Collections;
+
 import org.junit.Test;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 
@@ -27,7 +29,7 @@ public class OAuth2CredentialProviderTest {
     public void shouldCreateAcquisitionMethod() {
         @SuppressWarnings("unchecked")
         final OAuth2CredentialProvider<?> oauth2 = new OAuth2CredentialProvider<>("provider2",
-            mock(OAuth2ConnectionFactory.class), mock(Applicator.class));
+            mock(OAuth2ConnectionFactory.class), mock(Applicator.class), Collections.emptyMap());
 
         final AcquisitionMethod method2 = new AcquisitionMethod.Builder().description("provider2")
             .label("provider2").icon("provider2").type(Type.OAUTH2).build();
