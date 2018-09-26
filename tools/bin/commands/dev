@@ -129,7 +129,27 @@ dev::run() {
         echo $cookie_cached
     elif [ $(hasflag --version) ]; then
         oc get secret syndesis-global-config -o jsonpath={.data.syndesis} | base64 --decode
-    elif [ $(hasflag --cleanup ) ]; then
-        oc delete pods $(oc get pods --field-selector=status.phase=Succeeded -o=jsonpath='{range .items[*]}{.metadata.name} ')
+    elif [ $(hasflag --cleanup) ]; then
+        echo -n Removing stale pods...
+        local old_pods=$(oc get pods --field-selector=status.phase=Succeeded -o=jsonpath='{range .items[*]}{.metadata.name} ')
+        if [ -n "$old_pods" ]; then
+            oc delete pods "$old_pods"
+        fi
+        echo -e -n 'done\nRemoving stale builds...'
+        oc --as system:admin adm prune builds --confirm
+        echo -e -n 'done\nRemoving stale deployments...'
+        oc --as system:admin adm prune deployments --confirm
+        echo -e -n 'done\nRemoving stale images...'
+        if [ ! "$(oc --as system:admin -n default get route docker-registry -o name 2>/dev/null)" ]; then
+            local cmd='oc --as system:admin expose service docker-registry -n default'
+            local output=$(eval $cmd)
+            if [ $? -ne 0 ]; then
+                echo Unable to expose OpenShift registry via: $cmd
+                echo $output
+            fi
+            sleep 5 # give the router time to reload the configuration
+        fi
+        oc --as system:admin adm prune images --registry-url=http://$(oc --as system:admin -n default get route docker-registry -o jsonpath='{.spec.host}') --confirm
+        echo done
     fi
 }
