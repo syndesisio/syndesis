@@ -67,10 +67,10 @@ export class OAuthAppsComponent implements OnInit, OnDestroy {
   subscription: Subscription;
 
   constructor(
-    public store: OAuthAppStore,
-    public config: ConfigService
+    public oauthAppStore: OAuthAppStore,
+    public configService: ConfigService
   ) {
-    this.loading$ = store.loading;
+    this.loading$ = oauthAppStore.loading;
   }
 
   // Returns whether or not this item has stored credentials
@@ -83,7 +83,7 @@ export class OAuthAppsComponent implements OnInit, OnDestroy {
     }
     return Object.keys(properties).find(key => {
       const property = properties[key];
-      if (!property.required) {
+      if (!property.required || property.type === 'hidden') {
         return false;
       }
       const value = configuredProperties[key];
@@ -106,7 +106,7 @@ export class OAuthAppsComponent implements OnInit, OnDestroy {
 
   // view initialization
   ngOnInit() {
-    this.subscription = this.store.list.subscribe((apps: OAuthApps) => {
+    this.subscription = this.oauthAppStore.list.subscribe((apps: OAuthApps) => {
       const oldItems = this.items;
       this.items = [];
       for (const app of apps) {
@@ -121,7 +121,7 @@ export class OAuthAppsComponent implements OnInit, OnDestroy {
       }
       this.oauthApps$.next(this.items);
     });
-    this.store.loadAll();
+    this.oauthAppStore.loadAll();
     this.callbackURL =
       window.location.protocol +
       '//' +

@@ -17,4 +17,9 @@ export class OAuthAppStore extends AbstractStore<
   protected get kind() {
     return 'OAuthApp';
   }
+
+  loadAll() {
+    // Force a reload as no events get generated for oauth apps
+    super.loadAll(1);
+  }
 }
