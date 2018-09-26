@@ -51,13 +51,9 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
     protected Result verifyParameters(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS);
 
-        if (ObjectHelper.isEmpty(parameters.get("token")) && ObjectHelper.isEmpty(parameters.get("webhookUrl"))) {
+        if (ObjectHelper.isEmpty(parameters.get("token")) || ObjectHelper.isEmpty(parameters.get("webhookUrl"))) {
             builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.GENERIC,
-                    "You must specify a webhookUrl (for producer) or a token (for consumer)").parameterKey("webhookUrl").parameterKey("token").build());
-        }
-        if (ObjectHelper.isNotEmpty(parameters.get("token")) && ObjectHelper.isNotEmpty(parameters.get("webhookUrl"))) {
-            builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.GENERIC,
-                    "You must specify a webhookUrl (for producer) or a token (for consumer). You can't specify both.").parameterKey("webhookUrl").parameterKey("token").build());
+                    "You must specify a webhookUrl and a token").parameterKey("webhookUrl").parameterKey("token").build());
         }
         return builder.build();
     }
