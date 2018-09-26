@@ -48,6 +48,7 @@ const (
 
 	EnvSyndesisVersion SyndesisEnvVar = "SYNDESIS_VERSION"
 	EnvUpgradeRegistry SyndesisEnvVar = "UPGRADE_REGISTRY"
+    EnvUpgradeVolumeCapacity       SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
 )
 
 type SyndesisEnvVarConfig struct {
@@ -87,6 +88,8 @@ var (
 
 		envMetaMemoryLimit,
 		envMetaVolumeCapacity,
+
+		envUpgradeVolumeCapacity,
 	}
 
 	setters = []SyndesisEnvVarSetter{
@@ -115,6 +118,8 @@ var (
 		metaMemoryLimitFromEnv,
 		metaVolumeCapacityFromEnv,
 		sarNamespaceFromEnv,
+
+		upgradeVolumeCapacityFromEnv,
 	}
 )
 
@@ -464,4 +469,19 @@ func metaVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Synd
 	if v, ok := getString(config, EnvMetaVolumeCapacity); ok {
 		syndesis.Spec.Components.Meta.Resources.VolumeCapacity = v
 	}
+}
+
+func envUpgradeVolumeCapacity(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+    if capacity := syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity; capacity != "" {
+        return &SyndesisEnvVarConfig{
+            Var:   EnvUpgradeVolumeCapacity,
+            Value: capacity,
+        }
+    }
+    return nil
+}
+func upgradeVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+    if v, ok := getString(config, EnvUpgradeVolumeCapacity); ok {
+        syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity = v
+    }
 }
