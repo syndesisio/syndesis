@@ -113,6 +113,10 @@
     padding-top: $gutter;
     margin-bottom: 25px;
   }
+
+  &.syn-invalid {
+    border-color: $color-pf-red;
+  }
 }
 
 /// Transparent toolbar

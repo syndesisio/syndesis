@@ -1,0 +1,34 @@
+<div class="row row-cards-pf">
+  <div class="card-pf">
+    <div class="card-pf-body">
+      <syndesis-validation-error *ngIf="creationError">
+        {{ creationError.message }}
+      </syndesis-validation-error>
+
+      <syndesis-loading
+        [loading]="loading"
+        [content]="validationContent">
+      </syndesis-loading>
+
+      <ng-template #validationContent>
+        <openapi-review [validatorData]="validationResponse">
+        </openapi-review>
+
+        <fieldset>
+          <syndesis-button (click)="onEdit.emit()" type="button" theme="default">
+              {{ 'integrations.api-provider.api-review-edit-button' | synI18n }}
+          </syndesis-button>
+        </fieldset>
+        <fieldset>
+          <syndesis-button (click)="onDone.emit()" type="button" theme="primary">
+            {{ 'shared.done' | synI18n }}
+          </syndesis-button>
+
+          <syndesis-button type="button" theme="default" (click)="onCancel.emit()">
+            {{ 'shared.cancel' | synI18n }}
+          </syndesis-button>
+        </fieldset>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,106 @@
+<fieldset class="container-fluid">
+  <ng-container *ngIf="allowFileUpload">
+    <div class="form-group row">
+      <div class="col-xs-12 radio">
+        <label>
+          <input type="radio"
+                 checked="checked"
+                 name="connectorSource"
+                 (click)="uploadMethodChanged(OpenApiUploaderValueType.File, null)"
+                 [checked]="value.type === OpenApiUploaderValueType.File"
+                 [disabled]="isDisabled"
+                 #uploadFileOption>
+          {{ apiFileUploadLabel | synI18n }}
+        </label>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="form-group row"
+           [class.syn-visuallyhidden]="!uploadFileOption.checked">
+        <div class="col-xs-12">
+          <div class="syn-drop-zone"
+               [class.syn-invalid]="isInvalid"
+               ng2FileDrop
+               [uploader]="uploader"
+               [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
+               (onFileDrop)="onFileDrop($event)"
+               (fileOver)="onFileOver($event)">
+            <p>{{ apiFileUploadDragAndDrop | synI18n }}</p>
+            <div class="row syn-drop-zone__file-select">
+              <div class="col-md-5">
+                <p>
+                  <input #fileSelect
+                         class="api-file-chooser"
+                         type="file"
+                         accept="application/json"
+                         ng2FileSelect
+                         [uploader]="uploader"
+                         [requiredIf]="value.type === OpenApiUploaderValueType.File"
+                         [disabled]="isDisabled">
+                </p>
+              </div>
+              <div class="col-md-7">
+                <p *ngIf="validFileMsg">
+                  <span class="pficon-ok"></span>
+                  {{ validFileMsg }}
+                </p>
+                <p *ngIf="invalidFileMsg">
+                  <span class="pficon-error-circle-o"></span>
+                  {{ invalidFileMsg }}
+                </p>
+              </div>
+            </div>
+            <p class="help-block"><em>{{ apiFileUploadHelp | synI18n }}</em></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <div class="form-group row" *ngIf="allowUrl">
+    <div class="col-xs-12 radio">
+      <label>
+        <input type="radio"
+               name="connectorSource"
+               [disabled]="isDisabled"
+               (click)="uploadMethodChanged(OpenApiUploaderValueType.Url, null)"
+               [checked]="value.type === OpenApiUploaderValueType.Url"
+               #fetchUrlOption>
+        {{ apiUrlUploadLabel | synI18n }}
+      </label>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="form-group row"
+         [class.syn-visuallyhidden]="value.type !== OpenApiUploaderValueType.Url">
+      <div class="col-xs-12">
+        <input type="text"
+               class="form-control"
+               [class.syn-invalid]="isInvalid"
+               [pattern]="URL_PATTERN"
+               name="swaggerFileUrl"
+               [disabled]="isDisabled"
+               [(ngModel)]="value.spec"
+               (ngModelChange)="uploadMethodChanged(OpenApiUploaderValueType.Url, $event)"
+               [requiredIf]="value.type === OpenApiUploaderValueType.Url"
+               #fetchUrlValue>
+        <em class="text-muted">
+          {{ apiUrlUploadNote | synI18n }}
+        </em>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row" *ngIf="allowSpecCreation">
+    <div class="col-xs-12 radio">
+      <label>
+        <input type="radio"
+               name="connectorSource"
+               [disabled]="isDisabled"
+               (click)="uploadMethodChanged(OpenApiUploaderValueType.Spec, makeNewApiDefinition())"
+               [checked]="value.type === OpenApiUploaderValueType.Spec"
+               #createSpecOption>
+        {{ apiSpecificationCreationLabel | synI18n }}
+      </label>
+    </div>
+  </div>
+</fieldset>
+

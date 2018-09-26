@@ -1,0 +1,17 @@
+<openapi-editor
+  [title]="'integrations.api-provider.editor-title' | synI18n"
+  [specification]="specification"
+  (onBack)="onBack.emit()"
+  (onCancel)="showCancelModal()"
+  (onSave)="onApiDefinitionChange($event)">
+</openapi-editor>
+
+<ng-template #cancelModalTemplate>
+  <cancel-confirmation-modal
+    (cancel)="onCancelModalCancel($event)"
+    primaryLabel="Yes"
+    secondaryLabel="No">
+    <p class="lead">{{ 'integrations.api-provider.cancel-api-editor-modal-lead' | synI18n }}</p>
+    <p>{{ 'integrations.api-provider.cancel-api-editor-modal' | synI18n: specificationTitle }}</p>
+  </cancel-confirmation-modal>
+</ng-template>

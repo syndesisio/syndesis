@@ -13,12 +13,16 @@ import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-s
 import { IntegrationListModule } from '@syndesis/ui/integration/list';
 import { IntegrationListPage } from '@syndesis/ui/integration/list-page';
 import { IntegrationImportPageComponent } from '@syndesis/ui/integration/import-page';
-import { IntegrationApiProviderOperationsComponent } from '@syndesis/ui/integration/api-provider';
 import {
   IntegrationDetailComponent,
   INTEGRATION_DETAIL_DIRECTIVES
 } from '@syndesis/ui/integration/integration_detail';
 import { IntegrationLogsComponent } from '@syndesis/ui/integration/integration_logs';
+import {
+  ApiProviderModule,
+  ApiProviderOperationsComponent,
+  ApiProviderSpecComponent
+} from '@syndesis/ui/integration/api-provider';
 
 import {
   IntegrationEditPage,
@@ -84,22 +88,11 @@ const editIntegrationChildRoutes = [
     path: 'step-configure/:position',
     component: IntegrationStepConfigureComponent
   },
-  /*,
   // OpenAPI loader page
   {
     path: 'api-provider/create',
     component: ApiProviderSpecComponent
-  },
-  // OpenAPI operations list
-  {
-    path: 'api-provider/:id',
-    component: ApiProviderOperationsComponent
-  },
-  // OpenAPI operation flow editor
-  {
-    path: 'api-provider/:id/:operationId',
-    component: ApiProviderOperationComponent
-  }*/
+  }
 ];
 
 const routes: Routes = [
@@ -127,7 +120,7 @@ const routes: Routes = [
   },
   {
     path: ':integrationId/operations',
-    component: IntegrationApiProviderOperationsComponent
+    component: ApiProviderOperationsComponent
   },
   {
     path: ':integrationId/:flowId/edit',
@@ -150,6 +143,7 @@ const routes: Routes = [
     DataMapperModule,
     integrationSupportModuleFwd,
     integrationListModuleFwd,
+    ApiProviderModule
   ],
   declarations: [
     ...INTEGRATION_DETAIL_DIRECTIVES,
@@ -171,7 +165,6 @@ const routes: Routes = [
     IntegrationSaveOrAddStepComponent,
     IntegrationSelectActionComponent,
     IntegrationSelectConnectionComponent,
-    IntegrationApiProviderOperationsComponent,
     FlowViewComponent,
     FlowViewStepComponent,
     ListActionsComponent,

@@ -66,6 +66,7 @@
       "integration": "{{integration}}",
       "integrations": "{{integrations}}",
       "integration-summary": "{{integration}} Summary",
+      "new-integration": "New {{integration}}",
       "external-url": {
         "copy-instruction": "{{copy}} {{external-url}}",
         "expand-instruction": "{{expand}} {{external-url}}"
@@ -117,6 +118,17 @@
         "templater-create": "Create",
         "templater-create-editor-title": "Copy and paste or enter text to define the template:",
         "templater-import-review": "Import review:"
+      },
+      "api-provider": {
+        "creation-title": "Start integration with an API call",
+        "creation-subtitle": "Execute this integration when a client invokes an operation defined by this API.",
+        "cancel-api-editor-modal": "The OpenAPI specification of \"{{0}}\" has been changed. If you exit the editor now you will lose your changes. Do you still want to exit editing the API definition?",
+        "cancel-api-editor-unnamed-modal": "The OpenAPI specification has been changed. If you exit the editor now you will lose your changes. Do you still want to exit editing the API definition?",
+        "cancel-api-editor-modal-lead": "Are you sure you want to exit editing the API definition?",
+        "cancel-modal": "You have not finished creating an API definition. If you cancel now you will lose data you already entered. Do you still want to cancel?",
+        "cancel-modal-lead": "Do you really want to cancel?",
+        "api-review-edit-button": "Review/Edit",
+        "editor-title": "Provide API Definition"
       }
     },
     "connections": {
@@ -370,6 +382,17 @@
       "external-url": "External URL",
       "copy": "Copy",
       "expand": "Expand"
+    },
+    "openapi": {
+      "api-file-upload": "Upload an OpenAPI file",
+      "api-file-upload-dnd": "Drag and drop your OpenAPI file here or",
+      "api-upload-helper-text": "Accepted file type: .json",
+      "api-url-upload": "Use a URL",
+      "api-url-upload-note": "* Note: After uploading this specification, Syndesis/Fuse Online does not automatically obtain any updates to it.",
+      "api-spec-creation": "Create from scratch",
+      "api-upload-invalid-file": "'{{0}}' is not a valid file. Only files that end in '.json' can be uploaded.",
+      "url-validation-error": "You must enter a valid URL before submitting the form.",
+      "api-upload-valid-file": "Successfully uploaded '{{0}}'."
     }
   }
 }

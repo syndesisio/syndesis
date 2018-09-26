@@ -1,0 +1,58 @@
+<div class="card-pf-heading">
+  <h2 class="card-pf-title">
+    {{ 'customizations.api-client-connectors.api-review-title' | synI18n }}
+  </h2>
+</div>
+<div class="card-pf-body" *ngIf="validation; else validationFallback">
+  <h5 class="openapi-review-actions__header">
+    {{ 'customizations.api-client-connectors.api-review-api-info-header' | synI18n }}
+  </h5>
+  <ol class="openapi-review-actions__operations">
+    <li [innerHtml]="'customizations.api-client-connectors.api-review-api-name' | synI18n: validation.name"></li>
+    <li [innerHtml]="'customizations.api-client-connectors.api-review-api-description' | synI18n: validation.description"></li>
+  </ol>
+
+  <div class="openapi-review-actions" *ngIf="validation?.actionsSummary as actionsSummary">
+    <h5 class="openapi-review-actions__header">
+      {{ 'customizations.api-client-connectors.api-review-imported-header' | synI18n }}
+    </h5>
+    <ol class="openapi-review-actions__operations">
+      <li [innerHtml]="'customizations.api-client-connectors.api-review-operations-count' | synI18n: actionsSummary.totalActions"></li>
+      <ol class="openapi-review-actions__operations">
+        <li *ngFor="let importedAction of importedActions"
+            [innerHtml]="'customizations.api-client-connectors.api-review-action-tagged-count' | synI18n: [importedAction.count, importedAction.tag]">
+        </li>
+      </ol>
+    </ol>
+  </div>
+
+  <div class="openapi-review-actions" *ngIf="validation?.errors as errors">
+    <h5 class="openapi-review-actions__header" *ngIf="errors.length">
+      {{ 'customizations.api-client-connectors.api-review-errors-header' | synI18n }}
+      <span class="openapi-review-actions__label openapi-review-actions__label--error">
+        {{ errors.length }}
+      </span>
+    </h5>
+    <ol *ngIf="errors.length">
+      <li *ngFor="let error of errors">{{ error.message }}</li>
+    </ol>
+  </div>
+
+  <div class="openapi-review-actions" *ngIf="validation?.warnings as warnings">
+    <h5 class="openapi-review-actions__header" *ngIf="warnings.length">
+      {{ 'customizations.api-client-connectors.api-review-warnings-header' | synI18n }}
+      <span class="openapi-review-actions__label openapi-review-actions__label--warning">
+          {{ warnings.length }}
+      </span>
+    </h5>
+    <ol *ngIf="warnings.length">
+      <li *ngFor="let warning of warnings">{{ warning.message }}</li>
+    </ol>
+  </div>
+</div>
+
+<ng-template #validationFallback>
+  <h5 class="openapi-review-fallback">
+    {{ 'customizations.api-client-connectors.api-review-validation-fallback' | synI18n }}
+  </h5>
+</ng-template>

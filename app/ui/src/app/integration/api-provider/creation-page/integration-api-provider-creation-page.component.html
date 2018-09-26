@@ -1,0 +1,83 @@
+<article class="wizard syn-scrollable"
+         onDragStart="return false;"
+         ondragenter="return false;"
+         ondragover="return false;"
+         ondrop="return false;">
+  <div class="syn-scrollable">
+    <!-- Toolbar -->
+    <div class="toolbar syn-toolbar--inverted">
+      <div class="container-fluid">
+        <!-- Toolbar: Breadcrumbs -->
+        <div class="row toolbar-pf">
+          <div class="col-sm-12">
+            <div class="toolbar-pf-actions">
+              <div class="inline-block">
+                <ol class="breadcrumb">
+                  <li>
+                    <a [routerLink]="['/']">{{ 'shared.home' | synI18n }}</a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/integrations']">{{ 'integrations.integrations' | synI18n }}</a>
+                  </li>
+                  <li>{{ 'integrations.new-integration' | synI18n }}</li>
+                  <li class="active">{{ 'integrations.api-provider.creation-title' | synI18n }}</li>
+                </ol>
+              </div>
+              <div class="toolbar-pf-action-right">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="syn-scrollable--body">
+      <div class="container-fluid">
+
+        <div class="title">
+          <h1>{{ 'integrations.api-provider.creation-title' | synI18n }}</h1>
+        </div>
+        <p>{{ 'integrations.api-provider.creation-subtitle' | synI18n }}</p>
+
+        <section>
+          <api-provider-creation-step-upload
+            *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.UploadSpecification"
+            [uploadSpecification]="uploadSpecification$ | async"
+            [errors]="validationErrors$ | async"
+            [loading]="validationLoading$ | async"
+            (onUploadSpecificationChange)="onUploadSpecificationChange($event)"
+            (onDone)="onStepDone()"
+            (onCancel)="showCancelModal()">
+          </api-provider-creation-step-upload>
+
+          <api-provider-creation-step-validate
+            *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.ReviewApiProvider"
+            [validationResponse]="validationResponse$ | async"
+            [loading]="validationLoading$ | async"
+            [creationError]="creationError$ | async"
+            (onDone)="createIntegration()"
+            (onCancel)="showCancelModal()"
+            (onEdit)="onEditSpecification()">
+          </api-provider-creation-step-validate>
+
+          <api-provider-creation-step-editor
+            *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.EditSpecification"
+            [specification]="(specificationForEditor$ | async)"
+            (onBack)="onBackPressed()"
+            (onCancel)="onBackPressed()"
+            (onSave)="onSpecificationEdited($event)">
+          </api-provider-creation-step-editor>
+        </section>
+      </div>
+    </div>
+  </div>
+</article>
+
+<ng-template #cancelModalTemplate>
+  <cancel-confirmation-modal
+    (cancel)="onCancelModalCancel($event)"
+    primaryLabel="Yes"
+    secondaryLabel="No">
+    <p class="lead">{{ 'integrations.api-provider.cancel-modal-lead' | synI18n }}</p>
+    <p>{{ 'integrations.api-provider.cancel-modal' | synI18n }}</p>
+  </cancel-confirmation-modal>
+</ng-template>

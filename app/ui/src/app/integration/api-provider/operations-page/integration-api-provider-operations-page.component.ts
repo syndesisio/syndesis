@@ -5,20 +5,20 @@ import { map } from 'rxjs/operators';
 import { FilterConfig, ListEvent, SortConfig, ToolbarConfig } from 'patternfly-ng';
 import {
   IntegrationStore
-} from '../../store/index';
+} from '@syndesis/ui/store';
 import {
   CurrentFlowService,
   FlowPageService
-} from '../edit-page/index';
-import { Flow, Integration, Flows } from '../../platform/index';
-import { NavigationService, ObjectPropertyFilterConfig, ObjectPropertySortConfig } from '../../common/index';
+} from '@syndesis/ui/integration/edit-page';
+import { Flow, Integration, Flows } from '@syndesis/ui/platform';
+import { NavigationService, ObjectPropertyFilterConfig, ObjectPropertySortConfig } from '@syndesis/ui/common';
 
 @Component({
   selector: 'syndesis-integration-api-provider-operations',
-  templateUrl: './operations.component.html',
-  styleUrls: ['../integration-common.scss', './operations.component.scss']
+  templateUrl: './integration-api-provider-operations-page.component.html',
+  styleUrls: ['../../integration-common.scss', './integration-api-provider-operations-page.component.scss']
 })
-export class IntegrationApiProviderOperationsComponent implements OnInit, OnDestroy {
+export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
   integration: Observable<Integration>;
   readonly loading: Observable<boolean>;
 
