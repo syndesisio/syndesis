@@ -93,6 +93,11 @@ export abstract class AbstractStore<
   loadAll(retries = 0) {
     if (!retries && this.listSubscription) {
       return;
+    } else {
+      // forcing a reload in this case
+      if (this.listSubscription) {
+        this.listSubscription.unsubscribe();
+      }
     }
     this._loading.next(true);
     this.listSubscription = observableMerge(
