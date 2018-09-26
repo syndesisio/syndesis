@@ -8,7 +8,10 @@ import {
   ApiProviderActions,
   ApiProviderValidateSwagger
 } from '@syndesis/ui/integration/api-provider/api-provider.actions';
-import { ApiProviderStore, getApiProviderUploadSpecification } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
+import {
+  ApiProviderStore,
+  getApiProviderSpecificationForValidation
+} from '@syndesis/ui/integration/api-provider/api-provider.reducer';
 
 @Injectable()
 export class ApiProviderEffects {
@@ -16,11 +19,13 @@ export class ApiProviderEffects {
   @Effect()
   validateSwagger$: Observable<Action> = this.actions$
     .ofType<ApiProviderValidateSwagger>(ApiProviderActions.VALIDATE_SPEC)
-    .withLatestFrom(this.apiProviderStore.select(getApiProviderUploadSpecification))
+    .withLatestFrom(this.apiProviderStore.select(
+      getApiProviderSpecificationForValidation
+    ))
     .pipe(
-      mergeMap(([action, uploadSpecification]) =>
+      mergeMap(([action, spec]) =>
         this.apiProviderService
-          .validateOpenApiSpecification(uploadSpecification)
+          .validateOpenApiSpecification(spec)
           .pipe(
             map(response => {
               if (response.actionsSummary) {

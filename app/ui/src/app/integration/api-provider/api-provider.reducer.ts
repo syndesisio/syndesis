@@ -3,7 +3,12 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { PlatformState } from '@syndesis/ui/platform';
 import { ApiProviderState, ApiProviderWizardSteps } from '@syndesis/ui/integration/api-provider/api-provider.models';
 import { ApiProviderActions } from '@syndesis/ui/integration/api-provider/api-provider.actions';
-import { OpenApiUploaderValueType } from '@syndesis/ui/common';
+import {
+  OpenApiUploaderValue,
+  OpenApiUploaderValueType,
+  OpenApiValidationErrorMessage,
+  OpenApiValidationResponse
+} from '@syndesis/ui/common';
 
 const initialState: ApiProviderState = {
   loading: false,
@@ -13,7 +18,8 @@ const initialState: ApiProviderState = {
     type: OpenApiUploaderValueType.File,
     valid: false
   },
-  wizardStep: ApiProviderWizardSteps.UploadSpecification
+  wizardStep: ApiProviderWizardSteps.UploadSpecification,
+  specificationForEditor: null
 };
 
 export function nextStep(state: ApiProviderState): ApiProviderState {
@@ -24,7 +30,11 @@ export function nextStep(state: ApiProviderState): ApiProviderState {
         wizardStep:
           state.uploadSpecification.type === OpenApiUploaderValueType.Spec ?
             ApiProviderWizardSteps.EditSpecification :
-            ApiProviderWizardSteps.ReviewApiProvider
+            ApiProviderWizardSteps.ReviewApiProvider,
+        specificationForEditor:
+          state.uploadSpecification.type === OpenApiUploaderValueType.Spec ?
+            state.uploadSpecification.spec as string :
+            state.specificationForEditor
       };
     }
 
@@ -39,7 +49,8 @@ export function previousStep(state: ApiProviderState): ApiProviderState {
     case ApiProviderWizardSteps.ReviewApiProvider:
       return {
         ...state,
-        wizardStep: ApiProviderWizardSteps.UploadSpecification
+        wizardStep: ApiProviderWizardSteps.UploadSpecification,
+        specificationForEditor: null
       };
 
     case ApiProviderWizardSteps.EditSpecification:
@@ -88,7 +99,8 @@ export function apiProviderReducer(
         validationErrors: null,
         loading: false,
         hasErrors: false,
-        wizardStep: ApiProviderWizardSteps.ReviewApiProvider
+        wizardStep: ApiProviderWizardSteps.ReviewApiProvider,
+        specificationForEditor: (action.payload as OpenApiValidationResponse).configuredProperties.specification
       };
     }
 
@@ -99,7 +111,8 @@ export function apiProviderReducer(
         hasErrors: true,
         validationResponse: null,
         validationErrors: action.payload,
-        wizardStep: ApiProviderWizardSteps.UploadSpecification
+        wizardStep: ApiProviderWizardSteps.UploadSpecification,
+        specificationForEditor: null
       };
     }
 
@@ -113,12 +126,8 @@ export function apiProviderReducer(
     case ApiProviderActions.UPDATE_SPEC: {
       return {
         ...state,
-        uploadSpecification: {
-          type: OpenApiUploaderValueType.Spec,
-          spec: action.payload,
-          valid: true
-        },
-        wizardStep: ApiProviderWizardSteps.ReviewApiProvider
+        wizardStep: ApiProviderWizardSteps.ReviewApiProvider,
+        specificationForEditor: action.payload
       };
     }
 
@@ -154,7 +163,7 @@ export const getApiProviderUploadSpecification = createSelector(
 
 export const getApiProviderValidationError = createSelector(
   getApiProviderState,
-  (state: ApiProviderState) => state.validationErrors && state.validationErrors.errors
+  (state: ApiProviderState): OpenApiValidationErrorMessage[] => state.validationErrors && state.validationErrors.errors
 );
 
 export const getApiProviderValidationResponse = createSelector(
@@ -172,16 +181,12 @@ export const getApiProviderValidationLoaded = createSelector(
   (state: ApiProviderState) => state.loaded
 );
 
-export const getApiProviderSpecification = createSelector(
-  getApiProviderUploadSpecification,
-  getApiProviderValidationResponse,
-  (uploadSpecification, validationResponse): string => {
-    if (validationResponse && validationResponse.configuredProperties) {
-      return validationResponse.configuredProperties.specification;
-    }
-    if (uploadSpecification.type === OpenApiUploaderValueType.Spec) {
-      return uploadSpecification.spec as string;
-    }
-    return null;
-  }
+export const getApiProviderSpecificationForEditor = createSelector(
+  getApiProviderState,
+  (state: ApiProviderState): string => state.specificationForEditor
+);
+
+export const getApiProviderSpecificationForValidation = createSelector(
+  getApiProviderState,
+  (state: ApiProviderState): OpenApiUploaderValue => state.specificationForEditor || state.uploadSpecification.spec
 );

@@ -5,13 +5,15 @@ import {
   OpenApiValidationResponse,
   OpenApiUploaderValueType,
   OpenApiUploadSpecification,
-  OpenApiValidationError
+  OpenApiValidationErrorMessage
 } from '@syndesis/ui/common';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { ApiProviderActions } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
-  ApiProviderStore, getApiProviderSpecification, getApiProviderUploadSpecification,
+  ApiProviderStore,
+  getApiProviderSpecificationForEditor,
+  getApiProviderUploadSpecification,
   getApiProviderValidationError,
   getApiProviderValidationLoading,
   getApiProviderValidationResponse, getApiProviderWizardStep
@@ -31,10 +33,10 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
 
   currentActiveStep$: Observable<ApiProviderWizardSteps>;
   uploadSpecification$: Observable<OpenApiUploadSpecification>;
-  validationError$: Observable<OpenApiValidationError>;
+  validationError$: Observable<OpenApiValidationErrorMessage[]>;
   validationResponse$: Observable<OpenApiValidationResponse>;
   validationLoading$: Observable<boolean>;
-  specification$: Observable<string>;
+  specificationForEditor$: Observable<string>;
 
   @ViewChild('cancelEditorModalTemplate') cancelEditorModalTemplate: TemplateRef<any>;
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
@@ -65,7 +67,7 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     this.validationError$ = this.apiProviderStore.select(getApiProviderValidationError);
     this.validationResponse$ = this.apiProviderStore.select(getApiProviderValidationResponse);
     this.validationLoading$ = this.apiProviderStore.select(getApiProviderValidationLoading);
-    this.specification$ = this.apiProviderStore.select(getApiProviderSpecification);
+    this.specificationForEditor$ = this.apiProviderStore.select(getApiProviderSpecificationForEditor);
 
     this.currentActiveStep$.subscribe(step => {
       switch (step) {

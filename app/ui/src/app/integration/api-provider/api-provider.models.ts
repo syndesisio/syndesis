@@ -19,4 +19,5 @@ export interface ApiProviderState {
   uploadSpecification: OpenApiUploadSpecification;
   validationResponse?: OpenApiValidationResponse;
   validationErrors?: OpenApiValidationError;
+  specificationForEditor: string;
 }

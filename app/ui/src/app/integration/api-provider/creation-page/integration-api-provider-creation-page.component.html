@@ -61,7 +61,7 @@
           <api-provider-creation-step-editor
             *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.EditSpecification"
             [title]="'Provide API Definition - Create from Scratch'"
-            [specification]="(specification$ | async)"
+            [specification]="(specificationForEditor$ | async)"
             (onBack)="onBackPressed()"
             (onCancel)="showCancelModal()"
             (onSave)="onSpecificationEdited($event)">

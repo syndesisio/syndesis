@@ -1,6 +1,6 @@
 // import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { OpenApiValidationResponse, OpenApiUploadSpecification } from '@syndesis/ui/common';
+import { OpenApiValidationResponse, OpenApiUploaderValue } from '@syndesis/ui/common';
 import { Observable } from 'rxjs';
 
 import { ApiHttpService } from '@syndesis/ui/platform';
@@ -36,7 +36,7 @@ export class ApiProviderService {
   */
 
   validateOpenApiSpecification(
-    uploadSpec: OpenApiUploadSpecification
+    uploadSpec: OpenApiUploaderValue
   ): Observable<OpenApiValidationResponse> {
     const apiHttpService = this.apiHttpService.setEndpointUrl(
       apiProviderEndpoints.validateOpenApiSpecification
@@ -44,7 +44,7 @@ export class ApiProviderService {
     return apiHttpService.upload<OpenApiValidationResponse>(
       // @ts-ignore
       {
-        specification: uploadSpec.spec
+        specification: uploadSpec
       },
       {}
     );
