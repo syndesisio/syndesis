@@ -19,7 +19,11 @@
           <syndesis-button type="submit"
                            [loading]="loading"
                            [disabled]="!uploadSpecification.valid">
-            {{ 'shared.next-button' | synI18n }}
+            {{ 'shared.next' | synI18n }}
+          </syndesis-button>
+
+          <syndesis-button type="button" theme="default" (click)="onCancel.emit()">
+            {{ 'shared.cancel' | synI18n }}
           </syndesis-button>
         </fieldset>
       </form>

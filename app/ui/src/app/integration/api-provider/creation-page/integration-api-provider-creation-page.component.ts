@@ -38,11 +38,8 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   validationLoading$: Observable<boolean>;
   specificationForEditor$: Observable<string>;
 
-  @ViewChild('cancelEditorModalTemplate') cancelEditorModalTemplate: TemplateRef<any>;
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
-
-  private cancelEditorModalId = 'create-cancel-editor-modal';
-  private cancelModalId = 'create-cancellation-modal';
+  private cancelModalId = 'api-provider-create-cancellation-modal';
 
   constructor(
     private apiProviderStore: Store<ApiProviderStore>,
@@ -56,10 +53,6 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     this.modalService.registerModal(
       this.cancelModalId,
       this.cancelModalTemplate
-    );
-    this.modalService.registerModal(
-      this.cancelEditorModalId,
-      this.cancelEditorModalTemplate
     );
 
     this.currentActiveStep$ = this.apiProviderStore.select(getApiProviderWizardStep);
@@ -80,7 +73,7 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     });
   }
 
-  onCancel(doCancel: boolean): void {
+  onCancelModalCancel(doCancel: boolean): void {
     this.modalService.hide(this.cancelModalId, doCancel);
   }
 
@@ -118,7 +111,6 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.modalService.unregisterModal(this.cancelEditorModalId);
     this.modalService.unregisterModal(this.cancelModalId);
     this.apiProviderStore.dispatch(ApiProviderActions.createCancel());
     this.nav.show();

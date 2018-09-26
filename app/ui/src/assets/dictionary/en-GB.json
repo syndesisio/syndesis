@@ -120,7 +120,14 @@
       },
       "api-provider": {
         "creation-title": "Start integration with an API call",
-        "creation-subtitle": "Execute this integration when a client invokes an operation defined by this API."
+        "creation-subtitle": "Execute this integration when a client invokes an operation defined by this API.",
+        "cancel-api-editor-modal": "The OpenAPI specification of \"{{0}}\" has been changed. If you exit the editor now you will lose your changes. Do you still want to exit editing the API definition?",
+        "cancel-api-editor-unnamed-modal": "The OpenAPI specification has been changed. If you exit the editor now you will lose your changes. Do you still want to exit editing the API definition?",
+        "cancel-api-editor-modal-lead": "Are you sure you want to exit editing the API definition?",
+        "cancel-modal": "You have not finished creating an API definition. If you cancel now you will lose data you already entered. Do you still want to cancel?",
+        "cancel-modal-lead": "Do you really want to cancel?",
+        "api-review-edit-button": "Review/Edit",
+        "editor-title": "Provide API Definition"
       }
     },
     "connections": {

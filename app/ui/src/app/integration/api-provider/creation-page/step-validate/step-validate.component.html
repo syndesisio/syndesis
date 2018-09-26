@@ -10,27 +10,17 @@
         </openapi-review>
 
         <fieldset>
-          <syndesis-button type="button" theme="default" (click)="onBack.emit()">
-            {{ 'shared.back-button' | synI18n }}
+          <syndesis-button (click)="onEdit.emit()" type="button" theme="default">
+              {{ 'integrations.api-provider.api-review-edit-button' | synI18n }}
+          </syndesis-button>
+        </fieldset>
+        <fieldset>
+          <syndesis-button (click)="onDone.emit()" type="button" theme="primary">
+            {{ 'shared.done' | synI18n }}
           </syndesis-button>
 
-          <syndesis-button (click)="onNext.emit()"
-                           type="button"
-                           theme="primary">
-            {{ 'shared.next-button' | synI18n }}
-          </syndesis-button>
-
-          <ng-template #editTooltip>
-            {{ 'customizations.api-client-connectors.edit-tooltip' | synI18n }}
-          </ng-template>
-          <syndesis-button (click)="onEdit.emit()"
-                           type="button"
-                           class="pull-right"
-                           theme="default">
-              <span [tooltip]="editTooltip"
-                    placement="top">
-                {{ 'customizations.api-client-connectors.api-review-edit-button' | synI18n }}
-              </span>
+          <syndesis-button type="button" theme="default" (click)="onCancel.emit()">
+            {{ 'shared.cancel' | synI18n }}
           </syndesis-button>
         </fieldset>
       </ng-template>

@@ -45,7 +45,8 @@
             [errors]="validationError$ | async"
             [loading]="validationLoading$ | async"
             (onUploadSpecificationChange)="onUploadSpecificationChange($event)"
-            (onDone)="onStepDone()">
+            (onDone)="onStepDone()"
+            (onCancel)="showCancelModal()">
           </api-provider-creation-step-upload>
 
           <api-provider-creation-step-validate
@@ -53,16 +54,15 @@
             [validationResponse]="validationResponse$ | async"
             [loading]="validationLoading$ | async"
             (onDone)="onStepDone()"
-            (onBack)="onBackPressed()"
+            (onCancel)="showCancelModal()"
             (onEdit)="onEditSpecification()">
           </api-provider-creation-step-validate>
 
           <api-provider-creation-step-editor
             *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.EditSpecification"
-            [title]="'Provide API Definition - Create from Scratch'"
             [specification]="(specificationForEditor$ | async)"
             (onBack)="onBackPressed()"
-            (onCancel)="showCancelModal()"
+            (onCancel)="onBackPressed()"
             (onSave)="onSpecificationEdited($event)">
           </api-provider-creation-step-editor>
         </section>
@@ -73,21 +73,10 @@
 
 <ng-template #cancelModalTemplate>
   <cancel-confirmation-modal
-    (cancel)="onCancel($event)"
+    (cancel)="onCancelModalCancel($event)"
     primaryLabel="Yes"
     secondaryLabel="No">
-    <p class="lead">{{ 'customizations.api-client-connectors.cancel-connector-modal-lead' | synI18n }}</p>
-    <p>{{ 'customizations.api-client-connectors.cancel-connector-modal' | synI18n }}</p>
-  </cancel-confirmation-modal>
-</ng-template>
-
-<ng-template #cancelEditorModalTemplate>
-  <cancel-confirmation-modal
-    (cancel)="onCancelApiEditor($event)"
-    primaryLabel="Yes"
-    secondaryLabel="No">
-    <p class="lead">{{ 'customizations.api-client-connectors.cancel-api-editor-modal-lead' | synI18n }}</p>
-    <p *ngIf="apiName">{{ 'customizations.api-client-connectors.cancel-api-editor-modal' | synI18n: apiName }}</p>
-    <p *ngIf="!apiName">{{ 'customizations.api-client-connectors.cancel-api-editor-unnamed-modal' | synI18n }}</p>
+    <p class="lead">{{ 'integrations.api-provider.cancel-modal-lead' | synI18n }}</p>
+    <p>{{ 'integrations.api-provider.cancel-modal' | synI18n }}</p>
   </cancel-confirmation-modal>
 </ng-template>

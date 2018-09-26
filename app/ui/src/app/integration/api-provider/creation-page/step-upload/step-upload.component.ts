@@ -13,5 +13,6 @@ export class StepUploadComponent {
   @Input() errors: OpenApiValidationErrorMessage[];
   @Input() loading: boolean;
   @Output() onDone = new EventEmitter<void>();
+  @Output() onCancel = new EventEmitter<void>();
   @Output() onUploadSpecificationChange = new EventEmitter<OpenApiUploadSpecification>();
 }
