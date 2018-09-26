@@ -2,7 +2,8 @@
 
 :host {
   .syn-connection-detail-info__header,
-  .syn-connection-detail-info__description {
+  .syn-connection-detail-info__description,
+  .syn-connection-detail-info__usage {
     margin-bottom: $gutter;
   }
 

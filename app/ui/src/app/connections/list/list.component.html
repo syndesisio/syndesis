@@ -12,19 +12,24 @@
               <span class="pficon pficon pficon-add-circle-o"></span>
             </div>
             <ng-container *ngIf="!isConnectors">
-              <h1>Create a Connection</h1>
-              <p>There are currently no connections available. Please click on the button below to create one.</p>
+              <h1>{{ 'connections.create-connection-heading' | synI18n }}</h1>
+              <p>{{ 'connections.create-connection-msg' | synI18n }}</p>
               <div class="blank-slate-pf-main-action">
-                <button class="btn btn-primary btn-lg" [routerLink]="['/connections/create']">Create Connection</button>
+                <button class="btn btn-primary btn-lg"
+                        [routerLink]="['/connections/create']">
+                  {{ 'connections.create-connection' | synI18n }}
+                </button>
               </div>
             </ng-container>
             <ng-container *ngIf="isConnectors">
-              <h1>Register Applications</h1>
-              <p>There are currently no applications registered.</p>
-              <p>Before you can create a connection, you must register your applications to allow {{ 'shared.project.name'
-                | synI18n }} to access information and act on your behalf</p>
+              <h1>{{ 'connections.register-applications' | synI18n }}</h1>
+              <p>{{ 'connections.no-applications-msg' | synI18n }}</p>
+              <p>{{ 'connections.no-applications-detail-msg' | synI18n }}</p>
               <div class="blank-slate-pf-main-action">
-                <button class="btn btn-primary" [routerLink]="['/settings/oauth-clients']">Register Applications</button>
+                <button class="btn btn-primary"
+                        [routerLink]="['/settings/oauth-clients']">
+                  {{ 'connections.register-applications' | synI18n }}
+                </button>
               </div>
             </ng-container>
           </div>
@@ -44,18 +49,35 @@
                       </button>
                       <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
                         <li role="menuitem">
-                          <a [routerLink]="['/connections', connection.id]" class="dropdown-item">View</a>
+                          <a [routerLink]="['/connections', connection.id]"
+                             class="dropdown-item">
+                            {{ 'shared.view' | synI18n }}
+                          </a>
                         </li>
                         <li role="menuitem">
-                          <a [routerLink]="['/connections', connection.id]" [queryParams]="{ edit: true }" class="dropdown-item">Edit</a>
+                          <a [routerLink]="['/connections', connection.id]"
+                             [queryParams]="{ edit: true }"
+                             class="dropdown-item">
+                            {{ 'shared.edit' | synI18n }}
+                          </a>
                         </li>
                         <!--
                     <li role="menuitem">
                       <a class="dropdown-item">Duplicate</a>
                     </li>
                     -->
-                        <li>
-                          <a (click)="requestDelete(connection); $event.stopPropagation()" class="dropdown-item">Delete</a>
+                        <li *ngIf="!isBeingUsed(connection)">
+                          <a (click)="requestDelete(connection); $event.stopPropagation()" class="dropdown-item">
+                            {{ 'shared.delete' | synI18n }}
+                          </a>
+                        </li>
+                        <li *ngIf="isBeingUsed(connection)"
+                            class="disabled-menu-item"
+                            [tooltip]="'connections.delete-not-allowed' | synI18n"
+                            placement="bottom"
+                            container="body"
+                            (click)="$event.stopPropagation()">
+                          {{ 'shared.delete' | synI18n }}
                         </li>
                       </ul>
                     </div>
@@ -81,7 +103,7 @@
                 <div *ngIf="connection.board?.notices || connection.board?.warnings || connection.board?.errors" class="connection-config-alert">
                   <div class="alert alert-warning">
                     <span class="pficon pficon-warning-triangle-o"></span>
-                    Configuration Required
+                    {{ 'shared.configuration-required' | synI18n }}
                   </div>
                 </div>
               </div>
@@ -91,7 +113,9 @@
         <ng-container *ngIf="showNewConnection && connections.length > 0">
           <syndesis-empty-state-card class="col-lg-3 col-md-4 col-sm-6" (click)="onSelect(undefined, $event)">
             <div class="empty-state-card__body">
-              <button class="btn btn-default">Create Connection</button>
+              <button class="btn btn-default">
+                {{ 'connections.create-connection' | synI18n }}
+              </button>
             </div>
           </syndesis-empty-state-card>
         </ng-container>

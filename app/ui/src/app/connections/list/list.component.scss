@@ -94,3 +94,9 @@
     }
   }
 }
+
+.disabled-menu-item {
+  color: lightgray;
+  cursor: not-allowed;
+  margin-left: 10px;
+}
