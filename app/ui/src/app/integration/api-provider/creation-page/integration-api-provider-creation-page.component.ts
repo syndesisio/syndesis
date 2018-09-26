@@ -69,19 +69,6 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     this.validationLoading$ = this.apiProviderStore.select(getApiProviderValidationLoading);
     this.specificationForEditor$ = this.apiProviderStore.select(getApiProviderSpecificationForEditor);
 
-    this.currentActiveStep$.subscribe(step => {
-      switch (step) {
-        case ApiProviderWizardSteps.ReviewApiProvider: {
-          this.apiProviderStore.dispatch(
-            ApiProviderActions.validateSwagger()
-          );
-          break;
-        }
-        default:
-          break;
-      }
-    });
-
     this.nav.hide();
   }
 
