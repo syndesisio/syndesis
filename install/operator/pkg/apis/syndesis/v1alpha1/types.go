@@ -1,16 +1,16 @@
 package v1alpha1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type SyndesisList struct {
-	metav1.TypeMeta  `json:",inline"`
-	metav1.ListMeta  `json:"metadata"`
-	Items []Syndesis `json:"items"`
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata"`
+	Items           []Syndesis `json:"items"`
 }
 
 func NewSyndesisList() *SyndesisList {
@@ -25,10 +25,10 @@ func NewSyndesisList() *SyndesisList {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type Syndesis struct {
-	metav1.TypeMeta       `json:",inline"`
-	metav1.ObjectMeta     `json:"metadata"`
-	Spec   SyndesisSpec   `json:"spec"`
-	Status SyndesisStatus `json:"status,omitempty"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              SyndesisSpec   `json:"spec"`
+	Status            SyndesisStatus `json:"status,omitempty"`
 }
 
 type SyndesisSpec struct {
@@ -44,7 +44,7 @@ type SyndesisSpec struct {
 }
 
 type IntegrationSpec struct {
-	Limit *int       `json:"limit,omitempty"`
+	Limit              *int `json:"limit,omitempty"`
 	StateCheckInterval *int `json:"stateCheckInterval,omitempty"`
 }
 
@@ -85,10 +85,11 @@ type SyndesisStatus struct {
 }
 
 type ComponentsSpec struct {
-	Db         DbConfiguration         `json:"db,omitempty"`
-	Prometheus PrometheusConfiguration `json:"prometheus,omitempty"`
-	Server     ServerConfiguration     `json:"server,omitempty"`
-	Meta       MetaConfiguration       `json:"meta,omitempty"`
+    Db         DbConfiguration         `json:"db,omitempty"`
+    Prometheus PrometheusConfiguration `json:"prometheus,omitempty"`
+    Server     ServerConfiguration     `json:"server,omitempty"`
+    Meta       MetaConfiguration       `json:"meta,omitempty"`
+    Upgrade    UpgradeConfiguration    `json:"upgrade,omitempty"`
 }
 
 type DbConfiguration struct {
@@ -110,11 +111,19 @@ type MetaConfiguration struct {
 	Resources ResourcesWithVolume `json:"resources,omitempty"`
 }
 
+type UpgradeConfiguration struct {
+    Resources VolumeOnlyResources `json:"resources,omitempty"`
+}
+
 type Resources struct {
 	v1.ResourceRequirements `json:",inline,omitempty"`
 }
 
 type ResourcesWithVolume struct {
-	v1.ResourceRequirements `json:",inline,omitempty"`
-	VolumeCapacity string   `json:"volumeCapacity,omitempty"`
+    v1.ResourceRequirements `json:",inline,omitempty"`
+    VolumeCapacity          string `json:"volumeCapacity,omitempty"`
+}
+
+type VolumeOnlyResources struct {
+    VolumeCapacity string `json:"volumeCapacity,omitempty"`
 }
