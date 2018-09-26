@@ -4,11 +4,6 @@ import { OpenApiValidationResponse, OpenApiUploaderValue } from '@syndesis/ui/co
 import { Observable } from 'rxjs';
 
 import { ApiHttpService } from '@syndesis/ui/platform';
-// import {
-//   ApiProviders,
-//   OpenApiValidationResponse,
-//   CustomConnectorRequest
-// } from '@syndesis/ui/integration/api-provider/api-provider.models';
 
 import { apiProviderEndpoints } from '@syndesis/ui/integration/api-provider/api-provider.api';
 
