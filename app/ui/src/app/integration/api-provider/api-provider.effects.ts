@@ -5,12 +5,16 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 import { ApiProviderService } from '@syndesis/ui/integration/api-provider/api-provider.service';
 import {
-  ApiProviderActions, ApiProviderNextStep, ApiProviderPreviousStep,
+  ApiProviderActions,
+  ApiProviderNextStep,
+  ApiProviderPreviousStep,
+  ApiProviderUpdateSpecification,
   ApiProviderValidateSwagger
 } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
   ApiProviderStore,
-  getApiProviderSpecificationForValidation, getApiProviderWizardStep
+  getApiProviderSpecificationForValidation,
+  getApiProviderWizardStep
 } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
 import { ApiProviderWizardSteps } from '@syndesis/ui/integration/api-provider/api-provider.models';
 
@@ -19,7 +23,7 @@ export class ApiProviderEffects {
 
   @Effect()
   reviewStep$: Observable<Action> = this.actions$
-    .ofType<ApiProviderPreviousStep | ApiProviderNextStep>(
+    .ofType<ApiProviderPreviousStep | ApiProviderNextStep | ApiProviderUpdateSpecification>(
       ApiProviderActions.PREV_STEP,
       ApiProviderActions.NEXT_STEP,
       ApiProviderActions.UPDATE_SPEC

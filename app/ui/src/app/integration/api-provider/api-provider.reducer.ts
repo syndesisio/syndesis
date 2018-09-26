@@ -188,5 +188,6 @@ export const getApiProviderSpecificationForEditor = createSelector(
 
 export const getApiProviderSpecificationForValidation = createSelector(
   getApiProviderState,
-  (state: ApiProviderState): OpenApiUploaderValue => state.specificationForEditor || state.uploadSpecification.spec
+  (state: ApiProviderState): OpenApiUploaderValue =>
+    state.specificationForEditor || state.uploadSpecification.spec
 );

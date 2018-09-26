@@ -45,8 +45,7 @@
             [errors]="validationError$ | async"
             [loading]="validationLoading$ | async"
             (onUploadSpecificationChange)="onUploadSpecificationChange($event)"
-            (onDone)="onStepDone()"
-          >
+            (onDone)="onStepDone()">
           </api-provider-creation-step-upload>
 
           <api-provider-creation-step-validate
