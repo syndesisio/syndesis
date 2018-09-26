@@ -1,10 +1,15 @@
 <div class="row row-cards-pf">
   <div class="card-pf">
     <div class="card-pf-body">
+      <syndesis-validation-error *ngIf="creationError">
+        {{ creationError.message }}
+      </syndesis-validation-error>
+
       <syndesis-loading
         [loading]="loading"
         [content]="validationContent">
       </syndesis-loading>
+
       <ng-template #validationContent>
         <openapi-review [validatorData]="validationResponse">
         </openapi-review>

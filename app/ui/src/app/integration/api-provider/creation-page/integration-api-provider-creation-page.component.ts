@@ -11,7 +11,7 @@ import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { ApiProviderActions } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
-  ApiProviderStore,
+  ApiProviderStore, getApiProviderCreationError,
   getApiProviderSpecificationForEditor,
   getApiProviderUploadSpecification,
   getApiProviderValidationError,
@@ -20,6 +20,7 @@ import {
 } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
 import { ApiProviderWizardSteps } from '@syndesis/ui/integration/api-provider/api-provider.models';
 import { Observable } from 'rxjs';
+import { ActionReducerError } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-api-provider-spec',
@@ -33,10 +34,11 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
 
   currentActiveStep$: Observable<ApiProviderWizardSteps>;
   uploadSpecification$: Observable<OpenApiUploadSpecification>;
-  validationError$: Observable<OpenApiValidationErrorMessage[]>;
+  validationErrors$: Observable<OpenApiValidationErrorMessage[]>;
   validationResponse$: Observable<OpenApiValidationResponse>;
   validationLoading$: Observable<boolean>;
   specificationForEditor$: Observable<string>;
+  creationError$: Observable<ActionReducerError>;
 
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
   private cancelModalId = 'api-provider-create-cancellation-modal';
@@ -57,10 +59,11 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
 
     this.currentActiveStep$ = this.apiProviderStore.select(getApiProviderWizardStep);
     this.uploadSpecification$ = this.apiProviderStore.select(getApiProviderUploadSpecification);
-    this.validationError$ = this.apiProviderStore.select(getApiProviderValidationError);
+    this.validationErrors$ = this.apiProviderStore.select(getApiProviderValidationError);
     this.validationResponse$ = this.apiProviderStore.select(getApiProviderValidationResponse);
     this.validationLoading$ = this.apiProviderStore.select(getApiProviderValidationLoading);
     this.specificationForEditor$ = this.apiProviderStore.select(getApiProviderSpecificationForEditor);
+    this.creationError$ = this.apiProviderStore.select(getApiProviderCreationError);
 
     this.nav.hide();
   }
@@ -98,6 +101,12 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   onEditSpecification() {
     this.apiProviderStore.dispatch(
       ApiProviderActions.editSpecification()
+    );
+  }
+
+  createIntegration() {
+    this.apiProviderStore.dispatch(
+      ApiProviderActions.createIntegration()
     );
   }
 

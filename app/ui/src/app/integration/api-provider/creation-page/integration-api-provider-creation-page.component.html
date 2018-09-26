@@ -42,7 +42,7 @@
           <api-provider-creation-step-upload
             *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.UploadSpecification"
             [uploadSpecification]="uploadSpecification$ | async"
-            [errors]="validationError$ | async"
+            [errors]="validationErrors$ | async"
             [loading]="validationLoading$ | async"
             (onUploadSpecificationChange)="onUploadSpecificationChange($event)"
             (onDone)="onStepDone()"
@@ -53,7 +53,8 @@
             *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.ReviewApiProvider"
             [validationResponse]="validationResponse$ | async"
             [loading]="validationLoading$ | async"
-            (onDone)="onStepDone()"
+            [creationError]="creationError$ | async"
+            (onDone)="createIntegration()"
             (onCancel)="showCancelModal()"
             (onEdit)="onEditSpecification()">
           </api-provider-creation-step-validate>

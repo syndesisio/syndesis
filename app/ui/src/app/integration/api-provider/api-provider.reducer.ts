@@ -1,7 +1,10 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { PlatformState } from '@syndesis/ui/platform';
-import { ApiProviderState, ApiProviderWizardSteps } from '@syndesis/ui/integration/api-provider/api-provider.models';
+import { ActionReducerError, PlatformState } from '@syndesis/ui/platform';
+import {
+  ApiProviderState,
+  ApiProviderWizardSteps
+} from '@syndesis/ui/integration/api-provider/api-provider.models';
 import { ApiProviderActions } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
   OpenApiUploaderValue,
@@ -131,6 +134,23 @@ export function apiProviderReducer(
       };
     }
 
+    case ApiProviderActions.CREATE: {
+      return {
+        ...state,
+        loading: true,
+        hasErrors: false,
+      };
+    }
+
+    case ApiProviderActions.CREATE_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        hasErrors: true,
+        creationError: action.payload,
+      };
+    }
+
     case ApiProviderActions.CREATE_CANCEL: {
       return {
         ...initialState
@@ -190,4 +210,10 @@ export const getApiProviderSpecificationForValidation = createSelector(
   getApiProviderState,
   (state: ApiProviderState): OpenApiUploaderValue =>
     state.specificationForEditor || state.uploadSpecification.spec
+);
+
+export const getApiProviderCreationError = createSelector(
+  getApiProviderState,
+  (state: ApiProviderState): ActionReducerError =>
+    state.creationError
 );

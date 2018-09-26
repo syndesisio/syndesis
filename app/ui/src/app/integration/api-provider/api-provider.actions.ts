@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 
 import { ActionReducerError } from '@syndesis/ui/platform';
 import { OpenApiValidationResponse, OpenApiUploadSpecification } from '@syndesis/ui/common';
+import { ApiProviderIntegration } from '@syndesis/ui/integration/api-provider/api-provider.models';
 
 export class ApiProviderActions {
   static NEXT_STEP = '[API Provider] Go to the next step';
@@ -12,6 +13,9 @@ export class ApiProviderActions {
   static VALIDATE_SPEC_FAIL = '[API Provider] OpenApi validation failed';
   static EDIT_SPEC = '[API Provider] Show Apicurio editor';
   static UPDATE_SPEC = '[API Provider] Update specification with the value coming from Apicurio';
+  static CREATE = '[API Provider] Create integration request';
+  static CREATE_COMPLETE = '[API Provider] Create integration complete';
+  static CREATE_FAIL = '[API Provider] Create integration failed';
   static CREATE_CANCEL = '[API Provider] Create API Provider integration cancelled';
 
   static nextStep(): ApiProviderNextStep {
@@ -54,6 +58,10 @@ export class ApiProviderActions {
     return new ApiProviderUpdateSpecification(payload);
   }
 
+  static createIntegration(): ApiProviderCreate {
+    return new ApiProviderCreate();
+  }
+
   static createCancel(): ApiProviderCreateCancel {
     return new ApiProviderCreateCancel();
   }
@@ -69,7 +77,6 @@ export class ApiProviderPreviousStep implements Action {
 
 export class ApiProviderUploadSpecification implements Action {
   readonly type = ApiProviderActions.UPLOAD_SPEC;
-
   constructor(public payload: OpenApiUploadSpecification) {}
 }
 
@@ -79,13 +86,11 @@ export class ApiProviderValidateSwagger implements Action {
 
 export class ApiProviderValidateSwaggerComplete implements Action {
   readonly type = ApiProviderActions.VALIDATE_SPEC_COMPLETE;
-
   constructor(public payload: OpenApiValidationResponse) {}
 }
 
 export class ApiProviderValidateSwaggerFail implements Action {
   readonly type = ApiProviderActions.VALIDATE_SPEC_COMPLETE;
-
   constructor(public payload: ActionReducerError) {}
 }
 
@@ -99,6 +104,19 @@ export class ApiProviderEditSpecification implements Action {
 
 export class ApiProviderUpdateSpecification implements Action {
   readonly type = ApiProviderActions.UPDATE_SPEC;
-
   constructor(public payload: string) {}
+}
+
+export class ApiProviderCreate implements Action {
+  readonly type = ApiProviderActions.CREATE;
+}
+
+export class ApiProviderCreateComplete implements Action {
+  readonly type = ApiProviderActions.CREATE_COMPLETE;
+  constructor(public payload: ApiProviderIntegration) {}
+}
+
+export class ApiProviderCreateFail implements Action {
+  readonly type = ApiProviderActions.CREATE_FAIL;
+  constructor(public payload: ActionReducerError) {}
 }

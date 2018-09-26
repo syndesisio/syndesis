@@ -1,22 +1,23 @@
-import { mergeMap, map, catchError } from 'rxjs/operators';
+import { mergeMap, map, catchError, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 import { ApiProviderService } from '@syndesis/ui/integration/api-provider/api-provider.service';
 import {
-  ApiProviderActions,
+  ApiProviderActions, ApiProviderCreate, ApiProviderCreateComplete,
   ApiProviderNextStep,
   ApiProviderPreviousStep,
   ApiProviderUpdateSpecification,
   ApiProviderValidateSwagger
 } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
-  ApiProviderStore,
+  ApiProviderStore, getApiProviderSpecificationForEditor,
   getApiProviderSpecificationForValidation,
   getApiProviderWizardStep
 } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
 import { ApiProviderWizardSteps } from '@syndesis/ui/integration/api-provider/api-provider.models';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ApiProviderEffects {
@@ -68,9 +69,44 @@ export class ApiProviderEffects {
       )
     );
 
+  @Effect()
+  createIntegration$: Observable<Action> = this.actions$
+    .ofType<ApiProviderCreate>(ApiProviderActions.CREATE)
+    .withLatestFrom(this.apiProviderStore.select(
+      getApiProviderSpecificationForEditor
+    ))
+    .pipe(
+      mergeMap(([action, spec]) =>
+        this.apiProviderService
+          .createIntegration(spec)
+          .pipe(
+            map(response => ({
+              type: ApiProviderActions.CREATE_COMPLETE,
+              payload: response
+            })),
+            catchError(error =>
+              of({
+                type: ApiProviderActions.CREATE_FAIL,
+                payload: error
+              })
+            )
+          )
+      )
+    );
+
+  @Effect({ dispatch: false })
+  integrationCreated$: Observable<Action> = this.actions$
+    .pipe(
+      ofType<ApiProviderCreateComplete>(ApiProviderActions.CREATE_COMPLETE),
+      tap((action: ApiProviderCreateComplete) => this.router.navigate([
+        '/integrations', action.payload.id , 'operations'
+      ]))
+    );
+
   constructor(
     private actions$: Actions,
     private apiProviderService: ApiProviderService,
-    private apiProviderStore: Store<ApiProviderStore>
+    private apiProviderStore: Store<ApiProviderStore>,
+    private router: Router
   ) {}
 }
