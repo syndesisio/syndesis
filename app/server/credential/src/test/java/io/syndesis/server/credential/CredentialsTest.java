@@ -15,17 +15,17 @@
  */
 package io.syndesis.server.credential;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.net.URI;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.dao.manager.EncryptionComponent;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,11 +46,13 @@ import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.util.MultiValueMap;
 
-import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.dao.manager.EncryptionComponent;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CredentialsTest {
@@ -164,7 +166,7 @@ public class CredentialsTest {
         @SuppressWarnings("unchecked")
         final Applicator<AccessGrant> applicator = mock(Applicator.class);
         when(locator.providerWithId("providerId"))
-            .thenReturn(new OAuth2CredentialProvider<>("providerId", oauth2, applicator));
+        .thenReturn(new OAuth2CredentialProvider<>("providerId", oauth2, applicator, Collections.emptyMap()));
 
         when(oauth2.getScope()).thenReturn("scope");
         when(oauth2.generateState()).thenReturn("state-token");
@@ -188,6 +190,43 @@ public class CredentialsTest {
         assertThat(capturedParameters.getRedirectUri()).isEqualTo("https://syndesis.io/api/v1/credentials/callback");
         assertThat(capturedParameters.getScope()).isEqualTo("scope");
         assertThat(capturedParameters.getState()).isEqualTo("state-token");
+    }
+
+    @Test
+    public void shouldAcquireOAuth2CredentialsWithAdditionalQueryParameters() {
+        final OAuth2ConnectionFactory<?> oauth2 = mock(OAuth2ConnectionFactory.class);
+        @SuppressWarnings("unchecked")
+        final Applicator<AccessGrant> applicator = mock(Applicator.class);
+        final Map<String, String> queryParameters = new HashMap<>();
+        queryParameters.put("q1", "v1");
+        queryParameters.put("q2", "v2");
+        when(locator.providerWithId("providerId"))
+            .thenReturn(new OAuth2CredentialProvider<>("providerId", oauth2, applicator, queryParameters));
+
+        when(oauth2.getScope()).thenReturn("scope");
+        when(oauth2.generateState()).thenReturn("state-token");
+        final OAuth2Operations operations = mock(OAuth2Operations.class);
+        when(oauth2.getOAuthOperations()).thenReturn(operations);
+        final ArgumentCaptor<OAuth2Parameters> parameters = ArgumentCaptor.forClass(OAuth2Parameters.class);
+        when(operations.buildAuthorizeUrl(parameters.capture())).thenReturn("https://provider.io/oauth/authorize");
+
+        final AcquisitionFlow acquisition = credentials.acquire("providerId", URI.create("https://syndesis.io/api/v1/"),
+            URI.create("/ui#state"));
+
+        final CredentialFlowState expectedFlowState = new OAuth2CredentialFlowState.Builder().key("state-token")
+            .providerId("providerId").redirectUrl("https://provider.io/oauth/authorize")
+            .returnUrl(URI.create("/ui#state")).build();
+
+        final AcquisitionFlow expected = new AcquisitionFlow.Builder().type(Type.OAUTH2)
+            .redirectUrl("https://provider.io/oauth/authorize").state(expectedFlowState).build();
+        assertThat(acquisition).isEqualTo(expected);
+
+        final OAuth2Parameters capturedParameters = parameters.getValue();
+        assertThat(capturedParameters.getRedirectUri()).isEqualTo("https://syndesis.io/api/v1/credentials/callback");
+        assertThat(capturedParameters.getScope()).isEqualTo("scope");
+        assertThat(capturedParameters.getState()).isEqualTo("state-token");
+        assertThat(capturedParameters.get("q1")).containsOnly("v1");
+        assertThat(capturedParameters.get("q2")).containsOnly("v2");
     }
 
     @Test
@@ -264,13 +303,13 @@ public class CredentialsTest {
         applicator.setRefreshTokenProperty("refreshTokenProperty");
 
         when(locator.providerWithId("providerId"))
-            .thenReturn(new OAuth2CredentialProvider<>("providerId", oauth2, applicator));
+        .thenReturn(new OAuth2CredentialProvider<>("providerId", oauth2, applicator, Collections.emptyMap()));
         final OAuth2Operations operations = mock(OAuth2Operations.class);
         when(oauth2.getOAuthOperations()).thenReturn(operations);
 
         final AccessGrant accessGrant = new AccessGrant("accessToken", "scope", "refreshToken", 1L);
         when(operations.exchangeForAccess("code", "https://syndesis.io/api/v1/credentials/callback", null))
-            .thenReturn(accessGrant);
+        .thenReturn(accessGrant);
 
         final CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder().providerId("providerId")
             .returnUrl(URI.create("/ui#state")).code("code").state("state").build();
@@ -279,6 +318,6 @@ public class CredentialsTest {
             URI.create("https://syndesis.io/api/v1/"));
 
         assertThat(finalFlowState)
-            .isEqualTo(new OAuth2CredentialFlowState.Builder().createFrom(flowState).accessGrant(accessGrant).build());
+        .isEqualTo(new OAuth2CredentialFlowState.Builder().createFrom(flowState).accessGrant(accessGrant).build());
     }
 }

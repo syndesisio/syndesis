@@ -57,7 +57,7 @@ public class OAuth2CredentialProviderFactory implements CredentialProviderFactor
         applicator.setClientIdProperty("clientId");
         applicator.setClientSecretProperty("clientSecret");
 
-        return new OAuth2CredentialProvider<>("oauth2", connectionFactory, applicator);
+        return new OAuth2CredentialProvider<>("oauth2", connectionFactory, applicator, oauth2Properties.getAdditionalQueryParameters());
     }
 
     @Override

@@ -50,6 +50,8 @@ public final class Credentials {
 
     public static final String TOKEN_STRATEGY_TAG = "oauth-token-strategy";
 
+    public static final String ADDITIONAL_QUERY_PARAMETERS_TAG = "oauth-additional-query-parameters";
+
     private final CredentialProviderLocator credentialProviderLocator;
 
     private final DataManager dataManager;
