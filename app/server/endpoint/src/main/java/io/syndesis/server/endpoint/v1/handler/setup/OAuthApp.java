@@ -53,9 +53,13 @@ public interface OAuthApp extends WithId<OAuthApp>, WithName, WithProperties {
 
             if (maybeProperty.isPresent()) {
                 final Entry<String, ConfigurationProperty> property = maybeProperty.get();
-                final String propertyName = property.getKey();
 
                 final ConfigurationProperty configuration = property.getValue();
+                if ("hidden".equals(configuration.getType())) {
+                    return this;
+                }
+
+                final String propertyName = property.getKey();
                 putProperty(propertyName, configuration);
 
                 final Optional<String> maybeValue = connector.propertyTaggedWith(tag);

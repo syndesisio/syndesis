@@ -65,6 +65,32 @@ public class OAuthAppTest {
     }
 
     @Test
+    public void shouldComputeDerived() {
+        assertThat(new OAuthApp.Builder().build().isDerived()).isFalse();
+
+        assertThat(new OAuthApp.Builder()//
+            .putProperty("clientId", CLIENT_ID_PROPERTY)//
+            .putProperty("clientSecret", CLIENT_SECRET_PROPERTY)//
+            .build()//
+            .isDerived()).isFalse();
+
+        assertThat(new OAuthApp.Builder()//
+            .putProperty("clientId", CLIENT_ID_PROPERTY)//
+            .putProperty("clientSecret", CLIENT_SECRET_PROPERTY)//
+            .putConfiguredProperty("clientId", "client-id")//
+            .build()//
+            .isDerived()).isFalse();
+
+        assertThat(new OAuthApp.Builder()//
+            .putProperty("clientId", CLIENT_ID_PROPERTY)//
+            .putProperty("clientSecret", CLIENT_SECRET_PROPERTY)//
+            .putConfiguredProperty("clientId", "client-id")//
+            .putConfiguredProperty("clientSecret", "client-secret")//
+            .build()//
+            .isDerived()).isTrue();
+    }
+
+    @Test
     public void shouldCreateFromConnector() {
         final OAuthApp oauthApp = OAuthApp.fromConnector(connector);
 
@@ -88,6 +114,27 @@ public class OAuthAppTest {
         final OAuthApp oauthApp = OAuthApp.fromConnector(emptyConnector);
 
         final OAuthApp expected = new OAuthApp.Builder().build();
+
+        assertThat(oauthApp).isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldOmitHiddenProperties() {
+        final Connector withHiddenProperty = new Connector.Builder().createFrom(connector)
+            .putProperty("theHiddenOne",
+                new ConfigurationProperty.Builder().type("hidden").addTag(Credentials.AUTHENTICATION_URL_TAG).build())
+            .build();
+        final OAuthApp oauthApp = OAuthApp.fromConnector(withHiddenProperty);
+
+        final OAuthApp expected = new OAuthApp.Builder()//
+            .id("connector-id")//
+            .name("Connector")//
+            .icon("svg-icon")//
+            .putProperty("clientId", CLIENT_ID_PROPERTY)//
+            .putProperty("clientSecret", CLIENT_SECRET_PROPERTY)//
+            .putConfiguredProperty("clientId", "client-id")//
+            .putConfiguredProperty("clientSecret", "client-secret")//
+            .build();
 
         assertThat(oauthApp).isEqualTo(expected);
     }
@@ -129,31 +176,5 @@ public class OAuthAppTest {
             .build();
 
         assertThat(updated).isEqualTo(expected);
-    }
-
-    @Test
-    public void shouldComputeDerived() {
-        assertThat(new OAuthApp.Builder().build().isDerived()).isFalse();
-
-        assertThat(new OAuthApp.Builder()//
-            .putProperty("clientId", CLIENT_ID_PROPERTY)//
-            .putProperty("clientSecret", CLIENT_SECRET_PROPERTY)//
-            .build()//
-            .isDerived()).isFalse();
-
-        assertThat(new OAuthApp.Builder()//
-            .putProperty("clientId", CLIENT_ID_PROPERTY)//
-            .putProperty("clientSecret", CLIENT_SECRET_PROPERTY)//
-            .putConfiguredProperty("clientId", "client-id")//
-            .build()//
-            .isDerived()).isFalse();
-
-        assertThat(new OAuthApp.Builder()//
-            .putProperty("clientId", CLIENT_ID_PROPERTY)//
-            .putProperty("clientSecret", CLIENT_SECRET_PROPERTY)//
-            .putConfiguredProperty("clientId", "client-id")//
-            .putConfiguredProperty("clientSecret", "client-secret")//
-            .build()//
-            .isDerived()).isTrue();
     }
 }
