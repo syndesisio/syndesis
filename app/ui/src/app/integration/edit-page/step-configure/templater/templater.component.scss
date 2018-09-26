@@ -1,23 +1,31 @@
 @import 'syndesis-sass';
 
-.template-form-lbl {
-  font-weight: 600;
-}
+.templater-form {
+  &-file-url-text {
+    padding-right: 0;
+  }
 
-.template-file-url-text {
-  padding-right: 0;
-}
+  &-file-url-btn {
+    padding-left: 0;
+  }
 
-.template-file-url-btn {
-  padding-left: 0;
-}
+  &-editor {
+    &:not(.create) {
+      padding-top: $gutter / 2;
+    }
 
-.templater-form .CodeMirror {
-  border: 2px solid #d1d1d1;
-  height: 15em;
-}
+    &.create {
+      padding-left: $gutter * 2;
+    }
+  }
 
-.templater-form .cm-mustache {
-  color: #b21eab;
-  font-weight: bold;
+  .CodeMirror {
+    border: 2px solid $color-pf-black-300;
+    height: 15em;
+  }
+
+  .cm-mustache {
+    color: #b21eab;
+    font-weight: bold;
+  }
 }

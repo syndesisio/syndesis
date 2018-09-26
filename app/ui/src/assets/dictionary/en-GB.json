@@ -116,7 +116,7 @@
         "templater-url-upload": "Use an URL",
         "templater-url-upload-note": "* Note: After uploading this template, Syndesis/Fuse Online does not automatically obtain any updates to it. You would have to edit the step and re-upload the template to incorporates the updates.",
         "templater-create": "Create",
-        "templater-create-editor-title": "Copy and paste or enter text to define the template:",
+        "templater-create-editor-title": "Copy and paste a template or enter text that defines a template.",
         "templater-import-review": "Import review:"
       },
       "api-provider": {
