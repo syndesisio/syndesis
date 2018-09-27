@@ -10,11 +10,12 @@
     }
   ],
   "configuredProperties": {
-    "tokenUrl": "https://accounts.google.com/o/oauth2/token",
+    "tokenUrl": "https://www.googleapis.com/oauth2/v4/token",
     "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
     "authenticationType": "oauth2",
     "googleScopes": "https://www.googleapis.com/auth/calendar",
-    "applicationName": "calendar-syndesis"
+    "applicationName": "calendar-syndesis",
+    "additionalOAuthQueryParameters": "{\"access_type\": \"offline\"}"
   },
   "tags": [
     "verifier"
@@ -169,6 +170,20 @@
       "secret": true,
       "componentProperty": true,
       "description": "The access token"
+    },
+    "additionalOAuthQueryParameters": {
+      "kind": "parameter",
+      "displayName": "Additional OAuth query parameters",
+      "group": "security",
+      "required": true,
+      "type": "hidden",
+      "javaType": "java.lang.String",
+      "deprecated": false,
+      "secret": false,
+      "raw": true,
+      "tags": [
+        "oauth-additional-query-parameters"
+      ]
     }
   },
   "actions": [
