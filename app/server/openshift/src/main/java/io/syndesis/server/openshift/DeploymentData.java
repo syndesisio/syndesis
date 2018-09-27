@@ -16,10 +16,11 @@
 package io.syndesis.server.openshift;
 
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DeploymentData {
+public final class DeploymentData {
 
     private final Map<String, String> annotations = new HashMap<>();
     private final Map<String, String> labels = new HashMap<>();
@@ -28,7 +29,7 @@ public class DeploymentData {
     private String image;
     private int version;
 
-    private Exposure exposure = Exposure.NONE;
+    private EnumSet<Exposure> exposure = EnumSet.noneOf(Exposure.class);
 
     public Map<String, String> getAnnotations() {
         return annotations;
@@ -50,7 +51,7 @@ public class DeploymentData {
         return image;
     }
 
-    public Exposure getExposure() {
+    public EnumSet<Exposure> getExposure() {
         return exposure;
     }
 
@@ -66,11 +67,11 @@ public class DeploymentData {
             this(new DeploymentData());
         }
 
-        private Builder(DeploymentData deploymentData) {
-            this.that = deploymentData;
+        private Builder(final DeploymentData deploymentData) {
+            that = deploymentData;
         }
 
-        public Builder createFrom(DeploymentData deploymentData) {
+        public Builder createFrom(final DeploymentData deploymentData) {
             return new Builder(deploymentData);
         }
 
@@ -78,32 +79,32 @@ public class DeploymentData {
             return that;
         }
 
-        public DeploymentData.Builder addLabel(String name, String value) {
-             that.labels.put(name, value);
-             return this;
+        public DeploymentData.Builder addLabel(final String name, final String value) {
+            that.labels.put(name, value);
+            return this;
         }
 
-        public DeploymentData.Builder addAnnotation(String name, String value) {
-             that.annotations.put(name, value);
-             return this;
+        public DeploymentData.Builder addAnnotation(final String name, final String value) {
+            that.annotations.put(name, value);
+            return this;
         }
 
-        public DeploymentData.Builder addSecretEntry(String name, String value) {
-             that.secret.put(name, value);
-             return this;
+        public DeploymentData.Builder addSecretEntry(final String name, final String value) {
+            that.secret.put(name, value);
+            return this;
         }
 
-        public DeploymentData.Builder withImage(String image) {
+        public DeploymentData.Builder withImage(final String image) {
             that.image = image;
             return this;
         }
 
-        public DeploymentData.Builder withVersion(int version) {
+        public DeploymentData.Builder withVersion(final int version) {
             that.version = version;
             return this;
         }
 
-        public DeploymentData.Builder withExposure(Exposure exposure) {
+        public DeploymentData.Builder withExposure(final EnumSet<Exposure> exposure) {
             that.exposure = exposure;
             return this;
         }

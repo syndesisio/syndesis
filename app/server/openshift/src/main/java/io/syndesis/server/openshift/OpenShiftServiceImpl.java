@@ -18,6 +18,7 @@ package io.syndesis.server.openshift;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -325,13 +326,18 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     private void ensureSecret(String name, DeploymentData deploymentData) {
+        final Map<String, String> secrets = deploymentData.getSecret();
+        if (secrets.isEmpty()) {
+            return;
+        }
+
         openShiftClient.secrets().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
                 .withName(name)
                 .addToAnnotations(deploymentData.getAnnotations())
                 .addToLabels(deploymentData.getLabels())
             .endMetadata()
-            .withStringData(deploymentData.getSecret())
+            .withStringData(secrets)
             .done();
     }
 
@@ -341,16 +347,21 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     private void ensureExposure(String name, DeploymentData deploymentData) {
-        Exposure exposure = deploymentData.getExposure();
-        if (exposure == null || Exposure.NONE.equals(exposure)) {
+        final EnumSet<Exposure> exposure = deploymentData.getExposure();
+        if (exposure == null || exposure.isEmpty()) {
             removeRoute(name);
             removeService(name);
-        } else if (Exposure.DIRECT.equals(exposure)) {
-            ensureService(name, deploymentData);
-            ensureRoute(name, deploymentData);
         } else {
-            LOGGER.error("Unsupported exposure method {}", exposure);
+            if (exposure.contains(Exposure.SERVICE)) {
+                ensureService(name, deploymentData);
+            }
+
+            if (exposure.contains(Exposure.ROUTE)) {
+                ensureRoute(name, deploymentData);
+            }
+
         }
+
     }
 
     private boolean removeExposure(String name) {
@@ -444,7 +455,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return OPENSHIFT_PREFIX + Names.sanitize(name);
     }
 
-    private static Map<String, String> defaultLabels() {
+    static Map<String, String> defaultLabels() {
         final HashMap<String, String> labels = new HashMap<String, String>();
         labels.put("syndesis.io/type", "integration");
         labels.put("syndesis.io/app", "syndesis");
