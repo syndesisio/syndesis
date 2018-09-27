@@ -25,7 +25,3 @@ export interface ApiProviderState {
   creationError?: ActionReducerError;
   specificationForEditor: string;
 }
-
-export interface ApiProviderIntegration {
-  id: string;
-}

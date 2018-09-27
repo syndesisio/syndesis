@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { OpenApiValidationResponse, OpenApiUploaderValue } from '@syndesis/ui/common';
 import { Observable } from 'rxjs';
 
-import { ApiHttpService } from '@syndesis/ui/platform';
+import { ApiHttpService, Integration, integrationEndpoints } from '@syndesis/ui/platform';
 
 import { apiProviderEndpoints } from '@syndesis/ui/integration/api-provider/api-provider.api';
 
@@ -26,11 +26,11 @@ export class ApiProviderService {
     );
   }
 
-  createIntegration(
+  getIntegrationFromSpecification(
     specification: string
   ): Observable<any> {
     const apiHttpService = this.apiHttpService.setEndpointUrl(
-      apiProviderEndpoints.createIntegration
+      apiProviderEndpoints.getIntegrationFromSpecification
     );
 
     return apiHttpService.upload(
@@ -39,5 +39,15 @@ export class ApiProviderService {
         specification
       }
     );
+  }
+
+  createIntegration(
+    integration: Integration
+  ): Observable<any> {
+    const apiHttpService = this.apiHttpService.setEndpointUrl(
+      integrationEndpoints.integrations
+    );
+
+    return apiHttpService.post(integration);
   }
 }
