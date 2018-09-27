@@ -140,6 +140,17 @@ public class OAuthAppTest {
     }
 
     @Test
+    public void shouldUpdateConnectorWithDefaultValuesIfNoneGiven() {
+        final Connector withHiddenProperty = new Connector.Builder().createFrom(connector)
+            .putProperty("defaulted",
+                new ConfigurationProperty.Builder().type("hidden").addTag(Credentials.AUTHENTICATION_URL_TAG).defaultValue("I'm a default").build())
+            .build();
+        final Connector updated = OAuthApp.fromConnector(withHiddenProperty).update(withHiddenProperty);
+
+        assertThat(updated.getConfiguredProperties()).containsEntry("defaulted", "I'm a default");
+    }
+
+    @Test
     public void shouldUpdateConnectorKeepingTheSameValues() {
         final Connector updated = OAuthApp.fromConnector(connector).update(connector);
 
