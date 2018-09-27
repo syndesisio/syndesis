@@ -13,11 +13,13 @@ export class ApiProviderActions {
   static VALIDATE_SPEC_FAIL = '[API Provider] OpenApi validation failed';
   static EDIT_SPEC = '[API Provider] Show Apicurio editor';
   static UPDATE_SPEC = '[API Provider] Update specification with the value coming from Apicurio';
-  static UPDATE_SPEC_TITLE = '[API Provider] Update specification title with the value coming from the currentFlowService';
   static CREATE = '[API Provider] Create integration request';
   static CREATE_COMPLETE = '[API Provider] Create integration complete';
   static CREATE_FAIL = '[API Provider] Create integration failed';
   static CREATE_CANCEL = '[API Provider] Create API Provider integration cancelled';
+  static UPDATE_INTEGRATION_NAME = '[API Provider] Update integration name';
+  static UPDATE_INTEGRATION_NAME_FROM_SERVICE = '[API Provider] Updated integration name from the currentFlowService';
+  static UPDATE_INTEGRATION_DESCRIPTION = '[API Provider] Update integration description';
 
   static nextStep(): ApiProviderNextStep {
     return new ApiProviderNextStep();
@@ -59,10 +61,16 @@ export class ApiProviderActions {
     return new ApiProviderUpdateSpecification(payload);
   }
 
-  static updateSpecificationTitle(
+  static updateIntegrationName(
     payload: string
-  ): ApiProviderUpdateSpecificationTitle {
-    return new ApiProviderUpdateSpecificationTitle(payload);
+  ): ApiProviderUpdateIntegrationName {
+    return new ApiProviderUpdateIntegrationName(payload);
+  }
+
+  static updateIntegrationDescription(
+    payload: string
+  ): ApiProviderUpdateIntegrationDescription {
+    return new ApiProviderUpdateIntegrationDescription(payload);
   }
 
   static createIntegration(): ApiProviderCreate {
@@ -114,11 +122,6 @@ export class ApiProviderUpdateSpecification implements Action {
   constructor(public payload: string) {}
 }
 
-export class ApiProviderUpdateSpecificationTitle implements Action {
-  readonly type = ApiProviderActions.UPDATE_SPEC_TITLE;
-  constructor(public payload: string) {}
-}
-
 export class ApiProviderCreate implements Action {
   readonly type = ApiProviderActions.CREATE;
 }
@@ -131,4 +134,14 @@ export class ApiProviderCreateComplete implements Action {
 export class ApiProviderCreateFail implements Action {
   readonly type = ApiProviderActions.CREATE_FAIL;
   constructor(public payload: ActionReducerError) {}
+}
+
+export class ApiProviderUpdateIntegrationName implements Action {
+  readonly type = ApiProviderActions.UPDATE_INTEGRATION_NAME;
+  constructor(public payload: string) {}
+}
+
+export class ApiProviderUpdateIntegrationDescription implements Action {
+  readonly type = ApiProviderActions.UPDATE_INTEGRATION_DESCRIPTION;
+  constructor(public payload: string) {}
 }

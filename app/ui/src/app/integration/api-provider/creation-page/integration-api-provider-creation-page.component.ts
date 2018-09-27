@@ -14,11 +14,13 @@ import {
   getApiProviderCreationError,
   getApiProviderIntegrationName,
   getApiProviderSpecificationForEditor,
+  getApiProviderSpecificationTitle,
   getApiProviderUploadSpecification,
   getApiProviderValidationError,
-  getApiProviderValidationLoading,
+  getApiProviderLoading,
   getApiProviderValidationResponse,
-  getApiProviderWizardStep
+  getApiProviderWizardStep,
+  getApiProviderIntegrationDescription
 } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
 import {
   ApiProviderValidationResponse,
@@ -37,13 +39,15 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   OpenApiUploaderValueType = OpenApiUploaderValueType;
   validationResponse: ApiProviderValidationResponse;
 
+  loading$: Observable<boolean>;
   currentActiveStep$: Observable<ApiProviderWizardSteps>;
   uploadSpecification$: Observable<OpenApiUploadSpecification>;
   validationErrors$: Observable<OpenApiValidationErrorMessage[]>;
   validationResponse$: Observable<ApiProviderValidationResponse>;
-  validationLoading$: Observable<boolean>;
   integrationName$: Observable<string>;
   specificationForEditor$: Observable<string>;
+  specificationTitle$: Observable<string>;
+  integrationDescription$: Observable<string>;
   creationError$: Observable<ActionReducerError>;
 
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
@@ -63,13 +67,15 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
       this.cancelModalTemplate
     );
 
+    this.loading$ = this.apiProviderStore.select(getApiProviderLoading);
     this.currentActiveStep$ = this.apiProviderStore.select(getApiProviderWizardStep);
     this.uploadSpecification$ = this.apiProviderStore.select(getApiProviderUploadSpecification);
     this.validationErrors$ = this.apiProviderStore.select(getApiProviderValidationError);
     this.validationResponse$ = this.apiProviderStore.select(getApiProviderValidationResponse);
-    this.validationLoading$ = this.apiProviderStore.select(getApiProviderValidationLoading);
     this.integrationName$ = this.apiProviderStore.select(getApiProviderIntegrationName);
     this.specificationForEditor$ = this.apiProviderStore.select(getApiProviderSpecificationForEditor);
+    this.specificationTitle$ = this.apiProviderStore.select(getApiProviderSpecificationTitle);
+    this.integrationDescription$ = this.apiProviderStore.select(getApiProviderIntegrationDescription);
     this.creationError$ = this.apiProviderStore.select(getApiProviderCreationError);
 
     this.nav.hide();
@@ -108,6 +114,18 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   onEditSpecification() {
     this.apiProviderStore.dispatch(
       ApiProviderActions.editSpecification()
+    );
+  }
+
+  updateIntegrationName(name: string) {
+    this.apiProviderStore.dispatch(
+      ApiProviderActions.updateIntegrationName(name)
+    );
+  }
+
+  updateIntegrationDescription(description: string) {
+    this.apiProviderStore.dispatch(
+      ApiProviderActions.updateIntegrationDescription(description)
     );
   }
 

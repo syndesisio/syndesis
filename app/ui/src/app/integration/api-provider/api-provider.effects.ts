@@ -5,14 +5,19 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 import { ApiProviderService } from '@syndesis/ui/integration/api-provider/api-provider.service';
 import {
-  ApiProviderActions, ApiProviderCreate, ApiProviderCreateComplete,
+  ApiProviderActions,
+  ApiProviderCreate,
+  ApiProviderCreateComplete,
   ApiProviderNextStep,
   ApiProviderPreviousStep,
+  ApiProviderUpdateIntegrationName,
   ApiProviderUpdateSpecification,
-  ApiProviderValidateSwagger
+  ApiProviderValidateSwagger,
+  ApiProviderValidateSwaggerComplete
 } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
   ApiProviderStore,
+  getApiProviderIntegrationDescription,
   getApiProviderIntegrationName,
   getApiProviderSpecificationForEditor,
   getApiProviderSpecificationForValidation,
@@ -27,12 +32,46 @@ import { Integration } from '@syndesis/ui/platform';
 export class ApiProviderEffects {
 
   @Effect()
-  currentFlow$ = this.currentFlowService.events
+  syncIntegrationNameFromService$ = this.currentFlowService.events
     .filter((event: FlowEvent) => event.kind === 'integration-set-property' && event.property === 'name')
     .map((event: FlowEvent) => ({
-      type: ApiProviderActions.UPDATE_SPEC_TITLE,
+      type: ApiProviderActions.UPDATE_INTEGRATION_NAME_FROM_SERVICE,
       payload: event.value
     }));
+
+  @Effect({ dispatch: false })
+  syncIntegrationNameWithFromForm$ = this.actions$
+    .ofType<ApiProviderUpdateIntegrationName>(
+      ApiProviderActions.UPDATE_INTEGRATION_NAME,
+    )
+    .pipe(
+      tap(action => {
+        this.currentFlowService.events.emit({
+          kind: 'integration-set-property',
+          property: 'name',
+          value: action.payload
+        });
+      })
+    );
+
+  @Effect({ dispatch: false })
+  setInitialIntegrationName$ = this.actions$
+    .ofType<ApiProviderValidateSwaggerComplete>(
+      ApiProviderActions.VALIDATE_SPEC_COMPLETE,
+    )
+    .withLatestFrom(this.apiProviderStore.select(
+      getApiProviderIntegrationName
+    ))
+    .filter(([action, integrationName]) => !integrationName)
+    .pipe(
+      tap(([action, integrationName]) => {
+        this.currentFlowService.events.emit({
+          kind: 'integration-set-property',
+          property: 'name',
+          value: action.payload.name
+        });
+      })
+    );
 
   @Effect()
   reviewStep$: Observable<Action> = this.actions$
@@ -90,13 +129,17 @@ export class ApiProviderEffects {
     .withLatestFrom(this.apiProviderStore.select(
       getApiProviderIntegrationName
     ))
+    .withLatestFrom(this.apiProviderStore.select(
+      getApiProviderIntegrationDescription
+    ))
     .pipe(
-      mergeMap(([[action, spec], integrationName]) =>
+      mergeMap(([[[action, spec], integrationName], integrationDescription]) =>
         this.apiProviderService
           .getIntegrationFromSpecification(spec)
           .pipe(
             mergeMap((integrationFromSpec: Integration) => {
-              integrationFromSpec.name = integrationName || integrationFromSpec.name;
+              integrationFromSpec.name = integrationName;
+              integrationFromSpec.description = integrationDescription;
               return this.apiProviderService
                 .createIntegration(integrationFromSpec)
                 .pipe(

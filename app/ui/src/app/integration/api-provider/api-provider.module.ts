@@ -27,6 +27,7 @@ import { FormsModule } from '@angular/forms';
 import { StepUploadComponent } from './creation-page/step-upload/step-upload.component';
 import { StepValidateComponent } from './creation-page/step-validate/step-validate.component';
 import { StepEditorComponent } from './creation-page/step-editor/step-editor.component';
+import { StepNameComponent } from './creation-page/step-name/step-name.component';
 
 const routes: Routes = [];
 
@@ -51,6 +52,7 @@ const routes: Routes = [];
     StepUploadComponent,
     StepValidateComponent,
     StepEditorComponent,
+    StepNameComponent,
   ],
   exports: [
     ApiProviderOperationsComponent,

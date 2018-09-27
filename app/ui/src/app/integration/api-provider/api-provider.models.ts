@@ -11,7 +11,8 @@ export enum ApiProviderWizardSteps {
   UploadSpecification = 1,
   ReviewApiProvider = 2,
   EditSpecification = 3,
-  SubmitRequest = 4
+  IntegrationName = 4,
+  SubmitRequest = 5
 }
 
 export type ApiProviderCreationErrors = Array<{ error: string; message: string }>;
@@ -26,6 +27,7 @@ export interface ApiProviderState {
   validationErrors?: OpenApiValidationError;
   creationError?: ActionReducerError;
   integrationName?: string;
+  integrationDescription?: string;
   specificationForEditor: string;
 }
 

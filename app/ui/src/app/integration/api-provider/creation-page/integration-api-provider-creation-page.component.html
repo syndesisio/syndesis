@@ -43,7 +43,7 @@
             *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.UploadSpecification"
             [uploadSpecification]="uploadSpecification$ | async"
             [errors]="validationErrors$ | async"
-            [loading]="validationLoading$ | async"
+            [loading]="loading$ | async"
             (onUploadSpecificationChange)="onUploadSpecificationChange($event)"
             (onDone)="onStepDone()"
             (onCancel)="showCancelModal()">
@@ -52,9 +52,8 @@
           <api-provider-creation-step-validate
             *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.ReviewApiProvider"
             [validationResponse]="validationResponse$ | async"
-            [loading]="validationLoading$ | async"
-            [creationError]="creationError$ | async"
-            (onDone)="createIntegration()"
+            [loading]="loading$ | async"
+            (onDone)="onStepDone()"
             (onCancel)="showCancelModal()"
             (onEdit)="onEditSpecification()">
           </api-provider-creation-step-validate>
@@ -66,6 +65,18 @@
             (onCancel)="onBackPressed()"
             (onSave)="onSpecificationEdited($event)">
           </api-provider-creation-step-editor>
+
+          <api-provider-creation-step-name
+            *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.IntegrationName"
+            [loading]="loading$ | async"
+            [name]="(integrationName$ | async)"
+            [description]="integrationDescription$ | async"
+            [creationError]="creationError$ | async"
+            (onNameChange)="updateIntegrationName($event)"
+            (onDescriptionChange)="updateIntegrationDescription($event)"
+            (onSave)="createIntegration()"
+            (onBack)="onBackPressed()">
+          </api-provider-creation-step-name>
         </section>
       </div>
     </div>
