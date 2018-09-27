@@ -112,7 +112,7 @@ export class TemplaterComponent implements OnInit {
         this.templateContent = this.configuredProperties.template;
       }
 
-      if (this.configuredProperties.fileName) {
+      if (this.configuredProperties.fileName || ! this.configuredProperties.template) {
         this.fileName = this.configuredProperties.fileName;
         this.editType = 'upload';
       } else {
