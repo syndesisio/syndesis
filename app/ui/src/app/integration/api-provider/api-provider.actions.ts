@@ -1,8 +1,7 @@
 import { Action } from '@ngrx/store';
 
-import { ActionReducerError } from '@syndesis/ui/platform';
+import { ActionReducerError, Integration } from '@syndesis/ui/platform';
 import { OpenApiValidationResponse, OpenApiUploadSpecification } from '@syndesis/ui/common';
-import { ApiProviderIntegration } from '@syndesis/ui/integration/api-provider/api-provider.models';
 
 export class ApiProviderActions {
   static NEXT_STEP = '[API Provider] Go to the next step';
@@ -113,7 +112,7 @@ export class ApiProviderCreate implements Action {
 
 export class ApiProviderCreateComplete implements Action {
   readonly type = ApiProviderActions.CREATE_COMPLETE;
-  constructor(public payload: ApiProviderIntegration) {}
+  constructor(public payload: Integration) {}
 }
 
 export class ApiProviderCreateFail implements Action {

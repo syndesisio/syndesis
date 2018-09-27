@@ -18,6 +18,7 @@ import {
 } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
 import { ApiProviderWizardSteps } from '@syndesis/ui/integration/api-provider/api-provider.models';
 import { Router } from '@angular/router';
+import { Integration } from '@syndesis/ui/platform';
 
 @Injectable()
 export class ApiProviderEffects {
@@ -78,12 +79,18 @@ export class ApiProviderEffects {
     .pipe(
       mergeMap(([action, spec]) =>
         this.apiProviderService
-          .createIntegration(spec)
+          .getIntegrationFromSpecification(spec)
           .pipe(
-            map(response => ({
-              type: ApiProviderActions.CREATE_COMPLETE,
-              payload: response
-            })),
+            mergeMap((integrationFromSpec: Integration) => {
+              return this.apiProviderService
+                .createIntegration(integrationFromSpec)
+                .pipe(
+                  map((newIntegration: Integration) => ({
+                    type: ApiProviderActions.CREATE_COMPLETE,
+                    payload: newIntegration
+                  }))
+                );
+            }),
             catchError(error =>
               of({
                 type: ApiProviderActions.CREATE_FAIL,
