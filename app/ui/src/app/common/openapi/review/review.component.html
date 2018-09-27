@@ -3,16 +3,16 @@
     {{ 'customizations.api-client-connectors.api-review-title' | synI18n }}
   </h2>
 </div>
-<div class="card-pf-body" *ngIf="validation; else validationFallback">
+<div class="card-pf-body" *ngIf="actionsSummary; else validationFallback">
   <h5 class="openapi-review-actions__header">
     {{ 'customizations.api-client-connectors.api-review-api-info-header' | synI18n }}
   </h5>
   <ol class="openapi-review-actions__operations">
-    <li [innerHtml]="'customizations.api-client-connectors.api-review-api-name' | synI18n: validation.name"></li>
-    <li [innerHtml]="'customizations.api-client-connectors.api-review-api-description' | synI18n: validation.description"></li>
+    <li [innerHtml]="'customizations.api-client-connectors.api-review-api-name' | synI18n: name"></li>
+    <li [innerHtml]="'customizations.api-client-connectors.api-review-api-description' | synI18n: description"></li>
   </ol>
 
-  <div class="openapi-review-actions" *ngIf="validation?.actionsSummary as actionsSummary">
+  <div class="openapi-review-actions" *ngIf="actionsSummary as actionsSummary">
     <h5 class="openapi-review-actions__header">
       {{ 'customizations.api-client-connectors.api-review-imported-header' | synI18n }}
     </h5>
@@ -26,7 +26,7 @@
     </ol>
   </div>
 
-  <div class="openapi-review-actions" *ngIf="validation?.errors as errors">
+  <div class="openapi-review-actions" *ngIf="errors as errors">
     <h5 class="openapi-review-actions__header" *ngIf="errors.length">
       {{ 'customizations.api-client-connectors.api-review-errors-header' | synI18n }}
       <span class="openapi-review-actions__label openapi-review-actions__label--error">
@@ -38,7 +38,7 @@
     </ol>
   </div>
 
-  <div class="openapi-review-actions" *ngIf="validation?.warnings as warnings">
+  <div class="openapi-review-actions" *ngIf="warnings as warnings">
     <h5 class="openapi-review-actions__header" *ngIf="warnings.length">
       {{ 'customizations.api-client-connectors.api-review-warnings-header' | synI18n }}
       <span class="openapi-review-actions__label openapi-review-actions__label--warning">

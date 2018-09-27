@@ -1,18 +1,12 @@
 import { StringMap } from '@syndesis/ui/platform';
 
-export interface OpenApiValidationResponse {
-  actionsSummary: {
-    totalActions: number;
-    actionCountByTags?: StringMap<number>;
-  };
-  name: string;
-  description: string;
-  warnings?: Array<{ key: string; longdesc: string }>;
-  errors?: Array<{ key: string; longdesc: string }>;
-  configuredProperties?: {
-    specification: string;
-  };
+export interface OpenApiValidationActionsSummary {
+  totalActions: number;
+  actionCountByTags?: StringMap<number>;
 }
+
+export type OpenApiValidationWarnings = Array<{ key: string; longdesc: string }>;
+export type OpenApiValidationErrors = Array<{ key: string; longdesc: string }>;
 
 export interface OpenApiValidationErrorMessage {
   error?: string;

@@ -128,7 +128,8 @@
         "cancel-modal": "You have not finished creating an API definition. If you cancel now you will lose data you already entered. Do you still want to cancel?",
         "cancel-modal-lead": "Do you really want to cancel?",
         "api-review-edit-button": "Review/Edit",
-        "editor-title": "Provide API Definition"
+        "editor-title": "Provide API Definition",
+        "error-saving-integration": "Error saving {{integrations.integration}}:"
       }
     },
     "connections": {

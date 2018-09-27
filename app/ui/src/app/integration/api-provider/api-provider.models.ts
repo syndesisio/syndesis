@@ -1,7 +1,9 @@
 import {
-  OpenApiValidationResponse,
   OpenApiUploadSpecification,
-  OpenApiValidationError
+  OpenApiValidationActionsSummary,
+  OpenApiValidationError,
+  OpenApiValidationErrors,
+  OpenApiValidationWarnings
 } from '@syndesis/ui/common';
 import { ActionReducerError } from '@syndesis/ui/platform';
 
@@ -20,8 +22,20 @@ export interface ApiProviderState {
   hasErrors: boolean;
   wizardStep: ApiProviderWizardSteps;
   uploadSpecification: OpenApiUploadSpecification;
-  validationResponse?: OpenApiValidationResponse;
+  validationResponse?: ApiProviderValidationResponse;
   validationErrors?: OpenApiValidationError;
   creationError?: ActionReducerError;
+  integrationName?: string;
   specificationForEditor: string;
+}
+
+export interface ApiProviderValidationResponse {
+  actionsSummary: OpenApiValidationActionsSummary;
+  name: string;
+  description: string;
+  warnings?: OpenApiValidationWarnings;
+  errors?: OpenApiValidationErrors;
+  configuredProperties?: {
+    specification: string;
+  };
 }

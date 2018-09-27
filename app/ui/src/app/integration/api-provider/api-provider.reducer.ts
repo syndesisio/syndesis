@@ -2,15 +2,14 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { ActionReducerError, PlatformState } from '@syndesis/ui/platform';
 import {
-  ApiProviderState,
+  ApiProviderState, ApiProviderValidationResponse,
   ApiProviderWizardSteps
 } from '@syndesis/ui/integration/api-provider/api-provider.models';
 import { ApiProviderActions } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
   OpenApiUploaderValue,
   OpenApiUploaderValueType,
-  OpenApiValidationErrorMessage,
-  OpenApiValidationResponse
+  OpenApiValidationErrorMessage
 } from '@syndesis/ui/common';
 
 const initialState: ApiProviderState = {
@@ -103,7 +102,7 @@ export function apiProviderReducer(
         loading: false,
         hasErrors: false,
         wizardStep: ApiProviderWizardSteps.ReviewApiProvider,
-        specificationForEditor: (action.payload as OpenApiValidationResponse).configuredProperties.specification
+        specificationForEditor: (action.payload as ApiProviderValidationResponse).configuredProperties.specification
       };
     }
 
@@ -131,6 +130,14 @@ export function apiProviderReducer(
         ...state,
         wizardStep: ApiProviderWizardSteps.ReviewApiProvider,
         specificationForEditor: action.payload
+      };
+    }
+
+    case ApiProviderActions.UPDATE_SPEC_TITLE: {
+      return {
+        ...state,
+        wizardStep: ApiProviderWizardSteps.ReviewApiProvider,
+        integrationName: action.payload
       };
     }
 
@@ -199,6 +206,11 @@ export const getApiProviderValidationLoading = createSelector(
 export const getApiProviderValidationLoaded = createSelector(
   getApiProviderState,
   (state: ApiProviderState) => state.loaded
+);
+
+export const getApiProviderIntegrationName = createSelector(
+  getApiProviderState,
+  (state: ApiProviderState): string => state.integrationName
 );
 
 export const getApiProviderSpecificationForEditor = createSelector(

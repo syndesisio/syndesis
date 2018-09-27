@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/c
 import {
   ModalService,
   NavigationService,
-  OpenApiValidationResponse,
   OpenApiUploaderValueType,
   OpenApiUploadSpecification,
   OpenApiValidationErrorMessage
@@ -11,14 +10,20 @@ import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { ApiProviderActions } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
-  ApiProviderStore, getApiProviderCreationError,
+  ApiProviderStore,
+  getApiProviderCreationError,
+  getApiProviderIntegrationName,
   getApiProviderSpecificationForEditor,
   getApiProviderUploadSpecification,
   getApiProviderValidationError,
   getApiProviderValidationLoading,
-  getApiProviderValidationResponse, getApiProviderWizardStep
+  getApiProviderValidationResponse,
+  getApiProviderWizardStep
 } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
-import { ApiProviderWizardSteps } from '@syndesis/ui/integration/api-provider/api-provider.models';
+import {
+  ApiProviderValidationResponse,
+  ApiProviderWizardSteps
+} from '@syndesis/ui/integration/api-provider/api-provider.models';
 import { Observable } from 'rxjs';
 import { ActionReducerError } from '@syndesis/ui/platform';
 
@@ -30,13 +35,14 @@ import { ActionReducerError } from '@syndesis/ui/platform';
 export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   ApiProviderWizardSteps = ApiProviderWizardSteps;
   OpenApiUploaderValueType = OpenApiUploaderValueType;
-  validationResponse: OpenApiValidationResponse;
+  validationResponse: ApiProviderValidationResponse;
 
   currentActiveStep$: Observable<ApiProviderWizardSteps>;
   uploadSpecification$: Observable<OpenApiUploadSpecification>;
   validationErrors$: Observable<OpenApiValidationErrorMessage[]>;
-  validationResponse$: Observable<OpenApiValidationResponse>;
+  validationResponse$: Observable<ApiProviderValidationResponse>;
   validationLoading$: Observable<boolean>;
+  integrationName$: Observable<string>;
   specificationForEditor$: Observable<string>;
   creationError$: Observable<ActionReducerError>;
 
@@ -62,6 +68,7 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     this.validationErrors$ = this.apiProviderStore.select(getApiProviderValidationError);
     this.validationResponse$ = this.apiProviderStore.select(getApiProviderValidationResponse);
     this.validationLoading$ = this.apiProviderStore.select(getApiProviderValidationLoading);
+    this.integrationName$ = this.apiProviderStore.select(getApiProviderIntegrationName);
     this.specificationForEditor$ = this.apiProviderStore.select(getApiProviderSpecificationForEditor);
     this.creationError$ = this.apiProviderStore.select(getApiProviderCreationError);
 

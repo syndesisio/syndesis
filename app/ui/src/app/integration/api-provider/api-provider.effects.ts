@@ -12,16 +12,27 @@ import {
   ApiProviderValidateSwagger
 } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
-  ApiProviderStore, getApiProviderSpecificationForEditor,
+  ApiProviderStore,
+  getApiProviderIntegrationName,
+  getApiProviderSpecificationForEditor,
   getApiProviderSpecificationForValidation,
   getApiProviderWizardStep
 } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
 import { ApiProviderWizardSteps } from '@syndesis/ui/integration/api-provider/api-provider.models';
 import { Router } from '@angular/router';
+import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration';
 import { Integration } from '@syndesis/ui/platform';
 
 @Injectable()
 export class ApiProviderEffects {
+
+  @Effect()
+  currentFlow$ = this.currentFlowService.events
+    .filter((event: FlowEvent) => event.kind === 'integration-set-property' && event.property === 'name')
+    .map((event: FlowEvent) => ({
+      type: ApiProviderActions.UPDATE_SPEC_TITLE,
+      payload: event.value
+    }));
 
   @Effect()
   reviewStep$: Observable<Action> = this.actions$
@@ -76,19 +87,29 @@ export class ApiProviderEffects {
     .withLatestFrom(this.apiProviderStore.select(
       getApiProviderSpecificationForEditor
     ))
+    .withLatestFrom(this.apiProviderStore.select(
+      getApiProviderIntegrationName
+    ))
     .pipe(
-      mergeMap(([action, spec]) =>
+      mergeMap(([[action, spec], integrationName]) =>
         this.apiProviderService
           .getIntegrationFromSpecification(spec)
           .pipe(
             mergeMap((integrationFromSpec: Integration) => {
+              integrationFromSpec.name = integrationName || integrationFromSpec.name;
               return this.apiProviderService
                 .createIntegration(integrationFromSpec)
                 .pipe(
                   map((newIntegration: Integration) => ({
                     type: ApiProviderActions.CREATE_COMPLETE,
                     payload: newIntegration
-                  }))
+                  })),
+                  catchError(error =>
+                    of({
+                      type: ApiProviderActions.CREATE_FAIL,
+                      payload: error
+                    })
+                  )
                 );
             }),
             catchError(error =>
@@ -102,7 +123,7 @@ export class ApiProviderEffects {
     );
 
   @Effect({ dispatch: false })
-  integrationCreated$: Observable<Action> = this.actions$
+  integrationCreated$ = this.actions$
     .pipe(
       ofType<ApiProviderCreateComplete>(ApiProviderActions.CREATE_COMPLETE),
       tap((action: ApiProviderCreateComplete) => this.router.navigate([
@@ -114,6 +135,7 @@ export class ApiProviderEffects {
     private actions$: Actions,
     private apiProviderService: ApiProviderService,
     private apiProviderStore: Store<ApiProviderStore>,
-    private router: Router
+    private router: Router,
+    private currentFlowService: CurrentFlowService
   ) {}
 }
