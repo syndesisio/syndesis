@@ -10,12 +10,8 @@
     }
   ],
   "configuredProperties": {
-    "tokenUrl": "https://www.googleapis.com/oauth2/v4/token",
-    "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
     "authenticationType": "oauth2",
-    "googleScopes": "https://mail.google.com/",
-    "applicationName": "gmail-syndesis",
-    "additionalOAuthQueryParameters": "{\"access_type\": \"offline\"}"
+    "applicationName": "gmail-syndesis"
   },
   "tags": [
     "verifier"
@@ -121,7 +117,8 @@
       "labelHint": "UserId",
       "tags": [
         "oauth-scope"
-      ]
+      ],
+      "defaultValue": "https://mail.google.com/"
     },
     "tokenUrl": {
       "kind": "property",
@@ -137,7 +134,8 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "The access token"
+      "description": "The access token",
+      "defaultValue": "https://www.googleapis.com/oauth2/v4/token"
     },
     "authorizationUrl": {
       "kind": "property",
@@ -153,7 +151,8 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "The access token"
+      "description": "The access token",
+      "defaultValue": "https://accounts.google.com/o/oauth2/v2/auth"
     },
     "authenticationType": {
       "kind": "property",
@@ -183,7 +182,8 @@
       "raw": true,
       "tags": [
         "oauth-additional-query-parameters"
-      ]
+      ],
+      "defaultValue": "{\"access_type\": \"offline\"}"
     }
   },
   "actions": [

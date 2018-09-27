@@ -43,8 +43,12 @@ public interface OAuthApp extends WithId<OAuthApp>, WithName, WithProperties {
 
     String HOST_TAG = "host";
 
+    /**
+     * Set of tags that we expect the UI to show and the users to configure.
+     */
     Set<String> OAUTH_TAGS = Collections.unmodifiableSet(new HashSet<>(
-        Arrays.asList(Credentials.CLIENT_ID_TAG, Credentials.CLIENT_SECRET_TAG, Credentials.AUTHORIZATION_URL_TAG, Credentials.ACCESS_TOKEN_URL_TAG, Credentials.SCOPE_TAG, HOST_TAG)));
+        Arrays.asList(Credentials.CLIENT_ID_TAG, Credentials.CLIENT_SECRET_TAG, Credentials.AUTHORIZATION_URL_TAG,
+            Credentials.AUTHENTICATION_URL_TAG, Credentials.ACCESS_TOKEN_URL_TAG, Credentials.SCOPE_TAG, HOST_TAG)));
 
     class Builder extends ImmutableOAuthApp.Builder {
 
@@ -123,11 +127,19 @@ public interface OAuthApp extends WithId<OAuthApp>, WithName, WithProperties {
                 final Entry<String, ConfigurationProperty> property = maybeProperty.get();
                 final String propertyName = property.getKey();
 
-                final String updatedValue = configuredProperties.get(propertyName);
-                if (updatedValue == null) {
+                final String configuredValue = configuredProperties.get(propertyName);
+                final String value;
+                if (configuredValue == null) {
+                    final ConfigurationProperty configuration = property.getValue();
+                    value = configuration.getDefaultValue();
+                } else {
+                    value = configuredValue;
+                }
+
+                if (value == null) {
                     updated.remove(propertyName);
                 } else {
-                    updated.put(propertyName, updatedValue);
+                    updated.put(propertyName, value);
                 }
             }
         }
@@ -136,16 +148,15 @@ public interface OAuthApp extends WithId<OAuthApp>, WithName, WithProperties {
     }
 
     static OAuthApp fromConnector(final Connector connector) {
-        return new Builder()//
+        final Builder builder = new Builder()//
             .id(connector.getId())//
             .name(connector.getName())//
-            .icon(connector.getIcon())//
-            .withTaggedPropertyFrom(connector, Credentials.CLIENT_ID_TAG)//
-            .withTaggedPropertyFrom(connector, Credentials.CLIENT_SECRET_TAG)//
-            .withTaggedPropertyFrom(connector, Credentials.AUTHORIZATION_URL_TAG)//
-            .withTaggedPropertyFrom(connector, Credentials.ACCESS_TOKEN_URL_TAG)//
-            .withTaggedPropertyFrom(connector, Credentials.SCOPE_TAG)//
-            .withTaggedPropertyFrom(connector, HOST_TAG)//
-            .build();
+            .icon(connector.getIcon());
+
+        for (final String tag : OAUTH_TAGS) {
+            builder.withTaggedPropertyFrom(connector, tag);
+        }
+
+        return builder.build();
     }
 }
