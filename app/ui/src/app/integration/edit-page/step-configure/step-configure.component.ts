@@ -148,11 +148,14 @@ export class IntegrationStepConfigureComponent
       });
       return;
     }
-
-    const prevStep = this.currentFlowService.getPreviousStepWithDataShape(
-      this.position
-    );
-    this.dataShape = prevStep.action.descriptor.outputDataShape;
+    try {
+      const prevStep = this.currentFlowService.getPreviousStepWithDataShape(
+        this.position
+      );
+      this.dataShape = prevStep.action.descriptor.outputDataShape;
+    } catch (err) {
+      // no datashape is available, not a fatal problem in general
+    }
     this.loadFormSetup(this.step);
   }
 
