@@ -112,7 +112,14 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
               const reader = new FileReader();
 
               reader.onload = () => {
-                this.apiDef.spec = reader.result;
+                if ( apiConnectorState.specificationFile.name.endsWith( '.json' ) ) {
+                  this.apiDef.spec = reader.result;
+                } else {
+                  // Uploading YAML file. Apicurio only accepts JSON string but does accept YAML JS object so convert.
+                  const spec = YAML.parse( reader.result );
+                  this.apiDef.spec = spec;
+                }
+
                 this.apiDef.name = apiConnectorState.name;
               };
 
