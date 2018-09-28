@@ -20,6 +20,7 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.openshift.Exposure;
 
 import org.junit.Test;
@@ -44,10 +45,28 @@ public class ExposureDeploymentDataCustomizerTest {
     }
 
     @Test
-    public void shouldDetermineExposureKind() {
-        assertThat(ExposureDeploymentDataCustomizer.determineExposure(simpleIntegration)).isEmpty();
+    public void shouldDetermineWhenExposureIsNotNeeded() {
+        final ExposureDeploymentDataCustomizer customizer = new ExposureDeploymentDataCustomizer(
+            new ControllersConfigurationProperties());
 
-        assertThat(ExposureDeploymentDataCustomizer.determineExposure(exposedIntegration))
-            .containsOnly(Exposure.SERVICE, Exposure.ROUTE);
+        assertThat(customizer.determineExposure(simpleIntegration)).isEmpty();
+    }
+
+    @Test
+    public void shouldDetermineExposureWhen3scaleIsNotEnabled() {
+        final ExposureDeploymentDataCustomizer customizer = new ExposureDeploymentDataCustomizer(
+            new ControllersConfigurationProperties());
+
+        assertThat(customizer.determineExposure(exposedIntegration)).containsOnly(Exposure.SERVICE, Exposure.ROUTE);
+    }
+
+    @Test
+    public void shouldDetermineExposureWhen3scaleIsEnabled() {
+        final ControllersConfigurationProperties properties = new ControllersConfigurationProperties();
+        properties.setExposeVia3scale(true);
+
+        final ExposureDeploymentDataCustomizer customizer = new ExposureDeploymentDataCustomizer(properties);
+
+        assertThat(customizer.determineExposure(exposedIntegration)).containsOnly(Exposure.SERVICE, Exposure._3SCALE);
     }
 }

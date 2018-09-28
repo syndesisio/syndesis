@@ -19,6 +19,7 @@ import java.util.EnumSet;
 
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.util.Optionals;
+import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.openshift.DeploymentData;
 import io.syndesis.server.openshift.Exposure;
 
@@ -26,6 +27,12 @@ import io.syndesis.server.openshift.Exposure;
  * Sets the right exposure (e.g. HTTP routes) into the deployment data.
  */
 public final class ExposureDeploymentDataCustomizer implements DeploymentDataCustomizer {
+
+    private final boolean exposeVia3scale;
+
+    public ExposureDeploymentDataCustomizer(ControllersConfigurationProperties properties) {
+        exposeVia3scale = properties.isExposeVia3scale();
+    }
 
     @Override
     public DeploymentData customize(final DeploymentData data, final IntegrationDeployment integrationDeployment) {
@@ -35,8 +42,12 @@ public final class ExposureDeploymentDataCustomizer implements DeploymentDataCus
             .build();
     }
 
-    static EnumSet<Exposure> determineExposure(final IntegrationDeployment integrationDeployment) {
+    EnumSet<Exposure> determineExposure(final IntegrationDeployment integrationDeployment) {
         if (needsExposure(integrationDeployment)) {
+            if (exposeVia3scale) {
+                return EnumSet.of(Exposure.SERVICE, Exposure._3SCALE);
+            }
+
             return EnumSet.of(Exposure.ROUTE, Exposure.SERVICE);
         }
 
