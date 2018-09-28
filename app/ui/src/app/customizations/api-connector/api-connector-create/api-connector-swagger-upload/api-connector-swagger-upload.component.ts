@@ -59,12 +59,13 @@ export class ApiConnectorSwaggerUploadComponent implements OnInit {
 
     this.uploader = new FileUploader(
       {
-        allowedMimeType: [ 'application/json' ],
         filters: [
           {
             name: 'filename filter',
             fn: ( item: FileLikeObject, options: FileUploaderOptions ) => {
-              return item.name.endsWith( '.json' );
+              return item.name.endsWith( '.json' )
+                     || item.name.endsWith( '.yaml' )
+                     || item.name.endsWith( '.yml' );
             }
           }
         ]
@@ -91,10 +92,11 @@ export class ApiConnectorSwaggerUploadComponent implements OnInit {
     this.uploader.onWhenAddingFileFailed = (
       file: FileLikeObject
     ): any => {
-      // occurs when not a *.json file
+      // occurs when not a *.json, *.yaml, or *.yml file
       this.invalidFileMsg = this.i18NService.localize( 'customizations.api-client-connectors.api-upload-invalid-file',
                                                        [ file.name ] );
       this.fileSelect.nativeElement.value = '';
+      this.fileToUpload = null;
       this.uploader.clearQueue();
     };
   }
