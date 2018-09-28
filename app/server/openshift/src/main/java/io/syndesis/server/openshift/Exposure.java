@@ -28,6 +28,11 @@ public enum Exposure {
     /**
      * Expose the integration using a OpenShift service.
      */
-    SERVICE;
+    SERVICE,
+
+    /**
+     * Expose via 3scale.
+     */
+    _3SCALE;
 
 }

@@ -20,14 +20,12 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.Quantity;
@@ -43,6 +41,9 @@ import io.fabric8.openshift.api.model.UserBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -85,7 +86,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
         ensureDeploymentConfig(sName, deploymentData);
         ensureSecret(sName, deploymentData);
-        ensureExposure(sName, deploymentData);
+        ensureExposure(name, deploymentData);
 
         DeploymentConfig deployment = openShiftClient.deploymentConfigs().withName(sName).deployLatest();
         return String.valueOf(deployment.getStatus().getLatestVersion());
@@ -346,20 +347,20 @@ public class OpenShiftServiceImpl implements OpenShiftService {
        return openShiftClient.secrets().withName(projectName).delete();
     }
 
-    private void ensureExposure(String name, DeploymentData deploymentData) {
+    private void ensureExposure(String unsanitizedName, DeploymentData deploymentData) {
+        final String sanitizedName = openshiftName(unsanitizedName);
         final EnumSet<Exposure> exposure = deploymentData.getExposure();
         if (exposure == null || exposure.isEmpty()) {
-            removeRoute(name);
-            removeService(name);
+            removeRoute(sanitizedName);
+            removeService(sanitizedName);
         } else {
             if (exposure.contains(Exposure.SERVICE)) {
-                ensureService(name, deploymentData);
+                ensureService(unsanitizedName, deploymentData);
             }
 
             if (exposure.contains(Exposure.ROUTE)) {
-                ensureRoute(name, deploymentData);
+                ensureRoute(sanitizedName, deploymentData);
             }
-
         }
 
     }
@@ -369,12 +370,17 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return removeService(name) && res;
     }
 
-    private void ensureService(String name, DeploymentData deploymentData) {
+    private void ensureService(String unsanitizedName, DeploymentData deploymentData) {
+        final Map<String, String> labels = prepareServiceLabels(deploymentData);
+        final Map<String, String> annotations = prepareServiceAnnotations(unsanitizedName, deploymentData);
+
+        final String name = openshiftName(unsanitizedName);
+
         openShiftClient.services().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
                 .withName(name)
-                .addToAnnotations(deploymentData.getAnnotations())
-                .addToLabels(deploymentData.getLabels())
+                .addToAnnotations(annotations)
+                .addToLabels(labels)
             .endMetadata()
             .withNewSpec()
                 .addToSelector(INTEGRATION_NAME_LABEL, name)
@@ -386,6 +392,27 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                 .endPort()
             .endSpec()
             .done();
+    }
+
+    static Map<String, String> prepareServiceLabels(final DeploymentData deploymentData) {
+        final Map<String, String> labels = new LinkedHashMap<>(deploymentData.getLabels());
+        if (deploymentData.getExposure().contains(Exposure._3SCALE)) {
+            labels.put("discovery.3scale.net", "true");
+        }
+
+        return labels;
+    }
+
+    static Map<String, String> prepareServiceAnnotations(final String name, final DeploymentData deploymentData) {
+        final Map<String, String> annotations = new LinkedHashMap<>(deploymentData.getAnnotations());
+        if (deploymentData.getExposure().contains(Exposure._3SCALE)) {
+            annotations.put("discovery.3scale.net/scheme", "http");
+            annotations.put("discovery.3scale.net/port", "8080");
+            annotations.put("discovery.3scale.net/path", "/api");
+            annotations.put("discovery.3scale.net/description-path", "/api/api-docs/" + name);
+        }
+
+        return annotations;
     }
 
     private boolean removeService(String name) {
