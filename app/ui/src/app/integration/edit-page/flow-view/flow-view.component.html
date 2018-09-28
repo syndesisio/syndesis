@@ -76,37 +76,46 @@
         <!-- First Step -->
         <div class="step start">
           <syndesis-integration-flow-view-step [step]="startConnection()"
-                                                [position]="firstPosition()"
-                                                [currentPosition]="currentPosition"
-                                                [currentState]="currentState"></syndesis-integration-flow-view-step>
+                                               [position]="firstPosition()"
+                                               [currentPosition]="currentPosition"
+                                               [currentState]="currentState"
+                                               [apiProvider]="isApiProvider()">
+          </syndesis-integration-flow-view-step>
         </div>
 
-        <!-- First Step: Save or Add Step -->
-        <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: 0 }"></ng-container>
+        <ng-container *ngIf="!(isApiProvider() && isApiProviderOperationsPage()); else apiProviderSanta">
 
-        <!-- Middle Steps -->
-        <ng-template ngFor
-                    let-step
-                    [ngForOf]="getMiddleSteps()"
-                    let-position="index">
-          <div class="step">
-            <syndesis-integration-flow-view-step [step]="step"
-                                                  [position]="position + 1"
+          <!-- First Step: Save or Add Step -->
+          <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: 0 }"></ng-container>
+
+          <!-- Middle Steps -->
+          <ng-template ngFor
+                      let-step
+                      [ngForOf]="getMiddleSteps()"
+                      let-position="index">
+            <div class="step">
+              <syndesis-integration-flow-view-step [step]="step"
+                                                    [position]="position + 1"
+                                                    [currentPosition]="currentPosition"
+                                                    [currentState]="currentState"></syndesis-integration-flow-view-step>
+            </div>
+
+            <!-- Middle Steps: Save or Add Step -->
+            <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: (position + 1) }"></ng-container>
+          </ng-template>
+
+          <!-- Last Step -->
+          <div class="step finish">
+            <syndesis-integration-flow-view-step [step]="endConnection()"
+                                                  [position]="lastPosition()"
                                                   [currentPosition]="currentPosition"
                                                   [currentState]="currentState"></syndesis-integration-flow-view-step>
           </div>
+        </ng-container>
 
-          <!-- Middle Steps: Save or Add Step -->
-          <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: (position + 1) }"></ng-container>
+        <ng-template #apiProviderSanta>
+          !!!
         </ng-template>
-
-        <!-- Last Step -->
-        <div class="step finish">
-          <syndesis-integration-flow-view-step [step]="endConnection()"
-                                                [position]="lastPosition()"
-                                                [currentPosition]="currentPosition"
-                                                [currentState]="currentState"></syndesis-integration-flow-view-step>
-        </div>
       </div>
     </ng-template>
   </syndesis-loading>

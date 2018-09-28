@@ -55,6 +55,10 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     // nothing to do
   }
 
+  isApiProvider() {
+    return this.step.connection.connectorId === 'api-provider';
+  }
+
   goBack() {
     const step = this.currentFlowService.getStep(this.position);
     step.action = undefined;
