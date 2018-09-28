@@ -125,13 +125,20 @@ public interface OAuthApp extends WithId<OAuthApp>, WithName, WithProperties {
 
             if (maybeProperty.isPresent()) {
                 final Entry<String, ConfigurationProperty> property = maybeProperty.get();
+                final ConfigurationProperty propertyDefinition = property.getValue();
                 final String propertyName = property.getKey();
 
                 final String configuredValue = configuredProperties.get(propertyName);
                 final String value;
-                if (configuredValue == null) {
-                    final ConfigurationProperty configuration = property.getValue();
-                    value = configuration.getDefaultValue();
+                if (configuredValue == null && "hidden".equals(propertyDefinition.getType())) {
+                    final ConfigurationProperty configuration = propertyDefinition;
+
+                    final String currentValue = current.get(propertyName);
+                    if (currentValue == null) {
+                        value = configuration.getDefaultValue();
+                    } else {
+                        value = currentValue;
+                    }
                 } else {
                     value = configuredValue;
                 }
