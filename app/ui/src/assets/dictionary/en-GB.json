@@ -122,6 +122,8 @@
       "api-provider": {
         "creation-title": "Start integration with an API call",
         "creation-subtitle": "Execute this integration when a client invokes an operation defined by this API.",
+        "save-title": "Give this integration a name",
+        "save-subtitle": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis eius expedita minima minus rem sint? Corporis cum deserunt dolor id laboriosam libero nihil quibusdam quo repellendus rerum? Ad vel, voluptas.",
         "cancel-api-editor-modal": "The OpenAPI specification of \"{{0}}\" has been changed. If you exit the editor now you will lose your changes. Do you still want to exit editing the API definition?",
         "cancel-api-editor-unnamed-modal": "The OpenAPI specification has been changed. If you exit the editor now you will lose your changes. Do you still want to exit editing the API definition?",
         "cancel-api-editor-modal-lead": "Are you sure you want to exit editing the API definition?",

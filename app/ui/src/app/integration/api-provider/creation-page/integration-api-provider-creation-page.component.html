@@ -33,10 +33,19 @@
     <div class="syn-scrollable--body">
       <div class="container-fluid">
 
-        <div class="title">
-          <h1>{{ 'integrations.api-provider.creation-title' | synI18n }}</h1>
-        </div>
-        <p>{{ 'integrations.api-provider.creation-subtitle' | synI18n }}</p>
+        <ng-container *ngIf="(currentActiveStep$ | async) != ApiProviderWizardSteps.IntegrationName; else creationHeader">
+          <div class="title">
+            <h1>{{ 'integrations.api-provider.creation-title' | synI18n }}</h1>
+          </div>
+          <p>{{ 'integrations.api-provider.creation-subtitle' | synI18n }}</p>
+        </ng-container>
+
+        <ng-template #creationHeader>
+          <div class="title">
+            <h1>{{ 'integrations.api-provider.save-title' | synI18n }}</h1>
+          </div>
+          <p>{{ 'integrations.api-provider.save-subtitle' | synI18n }}</p>
+        </ng-template>
 
         <section>
           <api-provider-creation-step-upload

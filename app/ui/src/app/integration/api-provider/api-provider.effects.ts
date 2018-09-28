@@ -12,8 +12,7 @@ import {
   ApiProviderPreviousStep,
   ApiProviderUpdateIntegrationName,
   ApiProviderUpdateSpecification,
-  ApiProviderValidateSwagger,
-  ApiProviderValidateSwaggerComplete
+  ApiProviderValidateSwagger
 } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
   ApiProviderStore,
@@ -50,25 +49,6 @@ export class ApiProviderEffects {
           kind: 'integration-set-property',
           property: 'name',
           value: action.payload
-        });
-      })
-    );
-
-  @Effect({ dispatch: false })
-  setInitialIntegrationName$ = this.actions$
-    .ofType<ApiProviderValidateSwaggerComplete>(
-      ApiProviderActions.VALIDATE_SPEC_COMPLETE,
-    )
-    .withLatestFrom(this.apiProviderStore.select(
-      getApiProviderIntegrationName
-    ))
-    .filter(([action, integrationName]) => !integrationName)
-    .pipe(
-      tap(([action, integrationName]) => {
-        this.currentFlowService.events.emit({
-          kind: 'integration-set-property',
-          property: 'name',
-          value: action.payload.name
         });
       })
     );

@@ -256,24 +256,8 @@ export const getApiProviderSpecificationTitle = createSelector(
     return '';
   }
 );
-
-export const getApiProviderSpecificationDescription = createSelector(
-  getApiProviderSpecificationForEditor,
-  (spec: string): string => {
-    try {
-      return JSON.parse(spec).info.description;
-    } catch (e) {
-      // noop
-    }
-    return '';
-  }
-);
-
 export const getApiProviderIntegrationDescription = createSelector(
   getApiProviderState,
-  getApiProviderSpecificationDescription,
-  (state: ApiProviderState, specificationDescription): string =>
-    state.integrationDescription === undefined
-      ? specificationDescription
-      : state.integrationDescription
+  (state: ApiProviderState): string =>
+    state.integrationDescription
 );

@@ -17,41 +17,41 @@
 
       <ng-template #content>
         <form class="form-horizontal" (submit)="onSave.emit()">
-        <div class="form-group required">
-          <label class="col-sm-3 control-label required-pf">
-            Integration Name
-          </label>
-          <div class="col-sm-9">
-            <input type="text"
-                   name="nameInput"
-                   data-id="nameInput"
-                   [ngModel]="name"
-                   (ngModelChange)="onNameChange.emit($event)"
-                   class="form-control">
+          <div class="form-group required">
+            <label class="col-sm-3 control-label required-pf">
+              Integration Name
+            </label>
+            <div class="col-sm-9">
+              <input type="text"
+                     name="nameInput"
+                     data-id="nameInput"
+                     [ngModel]="name"
+                     (ngModelChange)="onNameChange.emit($event)"
+                     class="form-control">
+            </div>
           </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-3 control-label">Description</label>
-          <div class="col-sm-9">
-            <textarea data-id="descriptionInput"
-                      name="descriptionInput"
-                      class="form-control"
-                      [ngModel]="description"
-                      (ngModelChange)="onDescriptionChange.emit($event)"
-                      rows="2"></textarea>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Description</label>
+            <div class="col-sm-9">
+              <textarea data-id="descriptionInput"
+                        name="descriptionInput"
+                        class="form-control"
+                        [ngModel]="description"
+                        (ngModelChange)="onDescriptionChange.emit($event)"
+                        rows="2"></textarea>
+            </div>
           </div>
-        </div>
 
-        <fieldset>
-          <syndesis-button type="submit">
-            {{ 'shared.save-and-continue' | synI18n }}
-          </syndesis-button>
+          <fieldset>
+            <syndesis-button type="submit" [disabled]="!name">
+              {{ 'shared.save-and-continue' | synI18n }}
+            </syndesis-button>
 
-          <syndesis-button type="button" theme="default" (click)="onBack.emit()">
-            {{ 'shared.back' | synI18n }}
-          </syndesis-button>
-        </fieldset>
-      </form>
+            <syndesis-button type="button" theme="default" (click)="onBack.emit()">
+              {{ 'shared.back' | synI18n }}
+            </syndesis-button>
+          </fieldset>
+        </form>
       </ng-template>
     </div>
   </div>
