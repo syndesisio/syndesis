@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Scope;
 @Configuration
 @ConditionalOnProperty(prefix = "io.syndesis.connector.meta", name = "enabled")
 public class GoogleCalendarMetaDataAutoConfiguration {
-    @Bean("calendar-adapter")
+    @Bean("google-calendar-adapter")
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     @Lazy
     @ConditionalOnProperty(prefix = "io.syndesis.connector.calendar.meta", name = "enabled", matchIfMissing = true)
