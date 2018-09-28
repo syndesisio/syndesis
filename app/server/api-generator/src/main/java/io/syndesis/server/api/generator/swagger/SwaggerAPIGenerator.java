@@ -45,7 +45,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -82,7 +81,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
             final Map<String, Integer> tagCounts = paths.entrySet().stream()//
                 .flatMap(p -> p.getValue().getOperations().stream())//
                 .peek(o -> total.incrementAndGet())//
-                .flatMap(o -> ofNullable(o.getTags()).orElse(Collections.emptyList()).stream().distinct())//
+                .flatMap(o -> SwaggerHelper.sanitizeTags(o.getTags()))//
                 .collect(//
                     Collectors.groupingBy(//
                         Function.identity(), //
