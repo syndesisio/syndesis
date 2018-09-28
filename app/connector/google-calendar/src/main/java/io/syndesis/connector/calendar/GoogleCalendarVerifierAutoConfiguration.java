@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Scope;
 @ConditionalOnProperty(prefix = "io.syndesis.connector.verifier", name = "enabled")
 public class GoogleCalendarVerifierAutoConfiguration {
 
-    @Bean("calendar")
+    @Bean("google-calendar")
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     @Lazy
     @ConditionalOnProperty(prefix = "io.syndesis.connector.calendar.verifier", name = "enabled", matchIfMissing = true)
