@@ -1,0 +1,177 @@
+{
+    "id": "fhir",
+    "name": "FHIR",
+    "description": "Communicate with a FHIR server",
+    "icon": "fhir",
+    "dependencies": [
+        {
+            "type": "MAVEN",
+            "id": "@project.groupId@:@project.artifactId@:@project.version@"
+        }
+    ],
+    "metadata": {
+      "tech-preview": true
+    },
+    "componentScheme": "fhir",
+    "configuredProperties": {
+    },
+    "tags": [
+        "verifier"
+    ],
+    "properties": {
+        "serverUrl": {
+            "kind": "parameter",
+            "displayName": "FHIR server URL",
+            "group": "common",
+            "required": true,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "deprecated": false,
+            "secret": false,
+            "order": "1",
+            "defaultValue": "http://fhirtest.uhn.ca/baseDstu3",
+            "labelHint": "The base URL of your FHIR server"
+        },
+        "fhirVersion": {
+          "kind": "parameter",
+          "displayName": "FHIR version",
+          "group": "common",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "enum": [
+            {
+            "value": "DSTU3",
+            "label": "DSTU3"
+            }
+          ],
+          "deprecated": false,
+          "secret": false,
+          "order": "2",
+          "defaultValue": "DSTU3",
+          "labelHint": "The FHIR version to use. Only DSTU3 is currently supported."
+        }
+    },
+    "actions": [
+        {
+            "name": "Read",
+            "description": "Read a resource from the server",
+            "id": "io.syndesis:fhir-read-connector",
+            "pattern": "To",
+            "tags": [
+              "dynamic"
+            ],
+            "actionType": "connector",
+            "descriptor": {
+              "inputDataShape": {
+                "kind": "java",
+                "type": "io.syndesis.connector.fhir.FhirReadMessageModel"
+              },
+              "outputDataShape": {
+                "kind": "xml-schema"
+              },
+              "connectorCustomizers": [
+                "io.syndesis.connector.fhir.FhirReadCustomizer"
+              ],
+              "propertyDefinitionSteps": [
+                {
+                  "name": "Read resource from the server",
+                  "description": "Specify the resource id and type to read",
+                  "properties": {
+                    "id": {
+                      "kind": "parameter",
+                      "displayName": "Resource id",
+                      "group": "common",
+                      "required": false,
+                      "type": "String",
+                      "javaType": "java.lang.String",
+                      "deprecated": false,
+                      "secret": false,
+                      "labelHint": "The resource id"
+                    },
+                    "resourceType": {
+                      "kind": "parameter",
+                      "displayName": "Resource Type",
+                      "group": "common",
+                      "required": false,
+                      "type": "String",
+                      "javaType": "java.lang.String",
+                      "defaultValue": "Patient",
+                      "deprecated": false,
+                      "secret": false,
+                      "labelHint": "The resource type e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html"
+                    },
+                    "version": {
+                      "kind": "parameter",
+                      "displayName": "Resource version",
+                      "group": "common",
+                      "required": false,
+                      "type": "String",
+                      "javaType": "java.lang.String",
+                      "deprecated": false,
+                      "secret": false,
+                      "labelHint": "The version e.g \"123\""
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+          "name": "Update",
+          "description": "Update or create a resource from the server",
+          "id": "io.syndesis:fhir-update-connector",
+          "pattern": "To",
+          "tags": [
+            "dynamic"
+          ],
+          "actionType": "connector",
+          "descriptor": {
+            "inputDataShape": {
+              "kind": "xml-schema"
+
+            },
+            "outputDataShape": {
+              "kind": "java",
+              "type": "ca.uhn.fhir.rest.api.MethodOutcome"
+            },
+            "configuredProperties": {
+            },
+            "connectorCustomizers": [
+              "io.syndesis.connector.fhir.FhirUpdateCustomizer"
+            ],
+            "propertyDefinitionSteps": [
+              {
+                "name": "Update or create a resource from the server",
+                "description": "Specify the resource to update or create",
+                "properties": {
+                  "resource": {
+                    "kind": "parameter",
+                    "displayName": "Resource",
+                    "group": "common",
+                    "required": false,
+                    "type": "String",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "labelHint": "The resource to update"
+                  },
+                  "resourceType": {
+                    "kind": "parameter",
+                    "displayName": "Resource Type",
+                    "group": "common",
+                    "required": false,
+                    "type": "String",
+                    "javaType": "java.lang.String",
+                    "defaultValue": "Patient",
+                    "deprecated": false,
+                    "secret": false,
+                    "labelHint": "The resource type only \"Patient\" is supported."
+                  }
+                }
+              }
+            ]
+          }
+        }
+    ]
+}

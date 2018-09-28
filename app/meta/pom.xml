@@ -276,6 +276,12 @@
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-fhir</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-salesforce</artifactId>
       <scope>runtime</scope>
     </dependency>

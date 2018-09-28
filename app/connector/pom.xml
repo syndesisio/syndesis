@@ -45,6 +45,7 @@
     <module>aws-s3</module>
     <module>dropbox</module>
     <module>ftp</module>
+    <module>fhir</module>
     <module>gmail</module>
     <module>google-calendar</module>
     <module>http</module>
