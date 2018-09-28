@@ -243,6 +243,9 @@ export class FlowViewStepComponent implements OnChanges {
   }
 
   gotoPageFor(step) {
+    if (this.currentState === 'api-provider') {
+      return;
+    }
     switch (step.stepKind) {
       case 'endpoint':
         if (!step.connection) {
