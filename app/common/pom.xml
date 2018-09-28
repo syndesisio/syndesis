@@ -35,7 +35,6 @@
   <modules>
     <module>util</module>
     <module>model</module>
-    <module>resteasy-spring-boot-starter</module>
   </modules>
 
   <profiles>
