@@ -21,13 +21,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
-import static java.util.Optional.ofNullable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -59,6 +59,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
+import static java.util.Optional.ofNullable;
+
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 public final class SwaggerHelper {
@@ -72,6 +74,8 @@ public final class SwaggerHelper {
     private static final Yaml YAML_PARSER = new Yaml();
 
     private static final Pattern JSON_TEST = Pattern.compile("^\\s*\\{.*");
+
+    private static final Pattern JSONDB_DISALLOWED_KEY_CHARS = Pattern.compile("[^ -\"&-\\-0-Z\\^-\u007E\u0080-\u10FFFF]");
 
     static {
         try {
@@ -91,6 +95,32 @@ public final class SwaggerHelper {
 
     public static ModelImpl dereference(final RefProperty property, final Swagger swagger) {
         return (ModelImpl) swagger.getDefinitions().get(property.getSimpleRef());
+    }
+
+    /**
+     * Makes sure that the tag used as a key in a JSON object is a valid
+     * key determined by io.syndesis.server.jsondb.impl.JsonRecordSupport::validateKey.
+     */
+    public static String sanitizeTag(final String tag) {
+        if (tag == null || tag.trim().isEmpty()) {
+            return null;
+        }
+
+        final String sanitized = JSONDB_DISALLOWED_KEY_CHARS.matcher(tag).replaceAll("").trim();
+        // 768 is maximum length for keys JSONDB supports
+        if (sanitized.length() > 768) {
+            return sanitized.substring(0, Math.min(tag.length(), 768));
+        }
+
+        return sanitized;
+    }
+
+    public static Stream<String> sanitizeTags(final List<String> list) {
+        if (list == null || list.isEmpty()) {
+            return Stream.empty();
+        }
+
+        return list.stream().map(SwaggerHelper::sanitizeTag).filter(Objects::nonNull).distinct();
     }
 
     /**

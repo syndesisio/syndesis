@@ -209,6 +209,12 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis.server</groupId>
+      <artifactId>server-jsondb</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>

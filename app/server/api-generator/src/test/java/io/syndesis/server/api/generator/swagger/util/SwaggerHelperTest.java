@@ -16,29 +16,35 @@
 package io.syndesis.server.api.generator.swagger.util;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.swagger.AbstractSwaggerConnectorTest;
 import io.syndesis.server.api.generator.swagger.SwaggerModelInfo;
+import io.syndesis.server.jsondb.impl.JsonRecordSupport;
 
 import org.junit.Test;
 
 import static io.syndesis.server.api.generator.swagger.TestHelper.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
 
     @Test
     public void testThatAllSwaggerFilesAreValid() throws IOException {
-        final String[] specifications = {"/swagger/concur.swagger.json", "/swagger/petstore.swagger.json", "/swagger/todo.swagger.yaml"};
+        final String[] specifications = {"/swagger/concur.swagger.json", "/swagger/petstore.swagger.json",
+            "/swagger/todo.swagger.yaml"};
 
         for (final String specificationFile : specifications) {
             final String specification = resource(specificationFile);
             final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.CONSUMED_API);
 
-            assertThat(info.getErrors()).withFailMessage("Specification " + specificationFile + " has errors: " + info.getErrors())
-                .isEmpty();
+            assertThat(info.getErrors())
+                .withFailMessage("Specification " + specificationFile + " has errors: " + info.getErrors()).isEmpty();
         }
     }
 
@@ -49,7 +55,8 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
 
         assertThat(info.getErrors()).hasSize(1);
         assertThat(info.getWarnings()).isEmpty();
-        assertThat(info.getErrors().get(0).message()).startsWith("object instance has properties which are not allowed by the schema");
+        assertThat(info.getErrors().get(0).message())
+            .startsWith("object instance has properties which are not allowed by the schema");
         assertThat(info.getErrors().get(0).property()).contains("/paths/~1pet/put");
         assertThat(info.getErrors().get(0).error()).contains("validation");
     }
@@ -90,4 +97,22 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
         assertThat(info.getWarnings()).hasSize(3);
     }
 
+    @Test
+    public void shouldSanitizeTags() {
+        assertThat(SwaggerHelper.sanitizeTag("tag")).isEqualTo("tag");
+        assertThat(SwaggerHelper.sanitizeTag(".]t%a$g#[/")).isEqualTo("tag");
+
+        final char[] str = new char[1024];
+        final String randomString = IntStream.range(0, str.length)
+            .map(x -> (int) (Character.MAX_CODE_POINT * Math.random())).mapToObj(i -> new String(Character.toChars(i)))
+            .collect(Collectors.joining(""));
+        final String sanitized = SwaggerHelper.sanitizeTag(randomString);
+        assertThatCode(() -> JsonRecordSupport.validateKey(sanitized)).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void shouldSanitizeListOfTags() {
+        assertThat(SwaggerHelper.sanitizeTags(Arrays.asList("tag", "wag ", " bag", ".]t%a$g#[/")))
+            .containsExactly("tag", "wag", "bag");
+    }
 }
