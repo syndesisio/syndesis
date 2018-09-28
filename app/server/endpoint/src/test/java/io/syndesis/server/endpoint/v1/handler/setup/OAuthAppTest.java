@@ -27,9 +27,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class OAuthAppTest {
 
-    static final ConfigurationProperty CLIENT_ID_PROPERTY = new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_ID_TAG).build();
+    static final ConfigurationProperty CLIENT_ID_PROPERTY = new ConfigurationProperty.Builder()
+        .addTag(Credentials.CLIENT_ID_TAG).build();
 
-    static final ConfigurationProperty CLIENT_SECRET_PROPERTY = new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_SECRET_TAG).build();
+    static final ConfigurationProperty CLIENT_SECRET_PROPERTY = new ConfigurationProperty.Builder()
+        .addTag(Credentials.CLIENT_SECRET_TAG).build();
 
     final Connector connector = new Connector.Builder()//
         .id("connector-id")//
@@ -142,12 +144,35 @@ public class OAuthAppTest {
     @Test
     public void shouldUpdateConnectorWithDefaultValuesIfNoneGiven() {
         final Connector withHiddenProperty = new Connector.Builder().createFrom(connector)
-            .putProperty("defaulted",
-                new ConfigurationProperty.Builder().type("hidden").addTag(Credentials.AUTHENTICATION_URL_TAG).defaultValue("I'm a default").build())
+            .putProperty("defaulted", new ConfigurationProperty.Builder().type("hidden")
+                .addTag(Credentials.AUTHENTICATION_URL_TAG).defaultValue("I'm a default").build())
             .build();
         final Connector updated = OAuthApp.fromConnector(withHiddenProperty).update(withHiddenProperty);
 
         assertThat(updated.getConfiguredProperties()).containsEntry("defaulted", "I'm a default");
+    }
+
+    @Test
+    public void shouldKeepConnectorConfiguredPropertiesIfNoneGiven() {
+        final Connector withConfiguredProperty = new Connector.Builder().createFrom(connector)
+            .putProperty("configured",
+                new ConfigurationProperty.Builder().type("hidden").addTag(Credentials.AUTHENTICATION_URL_TAG).build())
+            .putConfiguredProperty("configured", "initial").build();
+        final Connector updated = OAuthApp.fromConnector(withConfiguredProperty).update(withConfiguredProperty);
+
+        assertThat(updated.getConfiguredProperties()).containsEntry("configured", "initial");
+    }
+
+    @Test
+    public void shouldSetConfiguredPropertyIfGivenEvenIfConfiguredPropertyOrDefaultExists() {
+        final Connector withHiddenProperty = new Connector.Builder().createFrom(connector)
+            .putProperty("prop", new ConfigurationProperty.Builder().type("hidden")
+                .addTag(Credentials.AUTHENTICATION_URL_TAG).defaultValue("I'm a default").build())
+            .putConfiguredProperty("prop", "initial").build();
+        final Connector updated = OAuthApp.fromConnector(withHiddenProperty).update(
+            new Connector.Builder().createFrom(withHiddenProperty).putConfiguredProperty("prop", "new-value").build());
+
+        assertThat(updated.getConfiguredProperties()).containsEntry("prop", "new-value");
     }
 
     @Test

@@ -10,7 +10,10 @@
     }
   ],
   "configuredProperties": {
+    "tokenUrl": "https://www.googleapis.com/oauth2/v4/token",
+    "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
     "authenticationType": "oauth2",
+    "googleScopes": "https://www.googleapis.com/auth/calendar",
     "applicationName": "calendar-syndesis",
     "additionalOAuthQueryParameters": "{\"access_type\": \"offline\"}"
   },
@@ -118,8 +121,7 @@
       "labelHint": "UserId",
       "tags": [
         "oauth-scope"
-      ],
-      "defaultValue": "https://www.googleapis.com/auth/calendar"
+      ]
     },
     "tokenUrl": {
       "kind": "property",
@@ -135,8 +137,7 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "The access token",
-      "defaultValue": "https://accounts.google.com/o/oauth2/token"
+      "description": "The access token"
     },
     "authorizationUrl": {
       "kind": "property",
@@ -152,8 +153,7 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "The access token",
-      "defaultValue": "https://accounts.google.com/o/oauth2/v2/auth"
+      "description": "The access token"
     },
     "authenticationType": {
       "kind": "property",
