@@ -14,8 +14,8 @@ Details for mapping data fields are in the following topics:
 * <<combine-multiple-source-fields-into-one-target-field>>
 * <<separate-one-source-field-into-multiple-target-fields>>
 * <<transform-target-data>>
-* <<available-transformations>>
 * <<view-mappings-in-a-step>>
+* <<available-transformations>>
 
 include::identify_where_data_mapping_is_needed.adoc[leveloffset=+1]
 
@@ -31,6 +31,6 @@ include::separate_one_source_field_into_multiple_target_fields.adoc[leveloffset=
 
 include::transform_target_data.adoc[leveloffset=+1]
 
-include::available_transformations.adoc[leveloffset=+1]
-
 include::view_mappings_in_a_step.adoc[leveloffset=+1]
+
+include::available_transformations.adoc[leveloffset=+1]

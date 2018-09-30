@@ -54,13 +54,13 @@ padding fields as needed to indicate missing data.
 If you accidentally create too many padding fields, click the trash-can 
 icon on each extra padding field to delete it.  
 
-. Preview the data mapping result: 
+. Optionally, preview the data mapping result: 
 .. In the upper right of the data mapper, click 
 image:shared/images/EditorSettings.png[Editor settings] and select 
 *Show Mapping Preview* to display a text input field on each source
 field and a read-only result field on the target field. 
-.. In each source field's data input field, enter text. As you enter content, 
-the mapping result appears in the read-only field on the target field.
+.. In each source field's data input field, enter text. Click outside the
+text box to display the mapping result in the read-only field on the target field.
 +
 If you reorder the source fields or add a transformation to the mapping
 then the result field on the target field reflects this. If the data mapper
@@ -69,7 +69,7 @@ detects any errors, it displays informative messages at the top of the
 
 .. Hide the preview fields by clicking 
 image:shared/images/EditorSettings.png[Editor settings] again and selecting
-*Hide Mapping Preview*. 
+*Show Mapping Preview*. 
 +
 If you redisplay the preview fields, any data
 that you entered in them is still there and it 
