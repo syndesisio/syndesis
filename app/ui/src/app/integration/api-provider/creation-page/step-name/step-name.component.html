@@ -5,7 +5,7 @@
         {{ 'integrations.api-provider.error-saving-integration' | synI18n }}
         <ul>
           <li *ngFor="let error of creationError.data">
-            {{error.message}}
+            {{ error.message }}
           </li>
         </ul>
       </syndesis-validation-error>
