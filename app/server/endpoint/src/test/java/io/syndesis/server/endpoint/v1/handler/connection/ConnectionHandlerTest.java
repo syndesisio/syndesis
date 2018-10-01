@@ -17,6 +17,8 @@ package io.syndesis.server.endpoint.v1.handler.connection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +34,6 @@ import javax.validation.Validator;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 
 import static io.syndesis.server.endpoint.v1.handler.connection.ConnectionHandlerTest.TestIntegrationBulder.testIntegration;
 
@@ -43,7 +44,6 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.server.credential.Credentials;
-import io.syndesis.server.dao.manager.DataAccessObject;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
@@ -165,9 +165,7 @@ public class ConnectionHandlerTest {
     public void overviewListShouldAugmentWithConnectionUsageNoIntegrations() {
         ListResult<Connection> connectionResult = new ListResult.Builder<Connection>().addItem(c1, c2, c3).build();
 
-        DataAccessObject<Connection> dao = mock(DataAccessObject.class);
-        when(dao.fetchAll(ArgumentMatchers.any())).thenReturn(connectionResult);
-        when(dataManager.getDataAccessObject(Connection.class)).thenReturn(dao);
+        when(dataManager.fetchAll(eq(Connection.class), any())).thenReturn(connectionResult);
         when(dataManager.fetchAll(Integration.class)).thenReturn(new ListResult.Builder<Integration>().build());
 
         UriInfo uriInfo = mock(UriInfo.class);
