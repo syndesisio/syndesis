@@ -9,77 +9,77 @@
     <!-- Add/Edit Integration -->
     <div class="main-panel wizard-main">
       <div class="syn-scrollable">
-        <syndesis-loading [loading]="loading | async" [content]="content">
-          <ng-template #content>
-            <!-- Toolbar -->
-            <div class="toolbar syn-toolbar--inverted">
-              <div class="container-fluid">
-                <!-- Toolbar: Breadcrumbs -->
-                <div class="row toolbar-pf">
-                  <div class="col-sm-12">
-                    <div class="toolbar-pf-actions">
-                      <div class="inline-block">
-                        <ol class="breadcrumb">
-                          <li>
-                            <a [routerLink]="['/']">Home</a>
-                          </li>
-                          <li>
-                            <a [routerLink]="['/integrations']">Integrations</a>
-                          </li>
-                          <li>
-                            <a [routerLink]="['/integrations', currentFlowService.integration.id]">
-                              {{ currentFlowService.integration.name }}
-                            </a>
-                          </li>
-                          <li class="active">Choose operation</li>
-                        </ol>
-                      </div>
-                      <div class="toolbar-pf-action-right">
-                      </div>
-                    </div>
+        <!-- Toolbar -->
+        <div class="toolbar syn-toolbar--inverted">
+          <div class="container-fluid">
+            <!-- Toolbar: Breadcrumbs -->
+            <div class="row toolbar-pf">
+              <div class="col-sm-12">
+                <div class="toolbar-pf-actions">
+                  <div class="inline-block">
+                    <ol class="breadcrumb">
+                      <li>
+                        <a [routerLink]="['/']">Home</a>
+                      </li>
+                      <li>
+                        <a [routerLink]="['/integrations']">Integrations</a>
+                      </li>
+                      <li>
+                        <a [routerLink]="['/integrations', currentFlowService.integration.id]">
+                          {{ currentFlowService.integration.name }}
+                        </a>
+                      </li>
+                      <li class="active">Choose operation</li>
+                    </ol>
+                  </div>
+                  <div class="toolbar-pf-action-right">
                   </div>
                 </div>
               </div>
             </div>
-            <div class="syn-scrollable--body">
-              <div class="container-fluid">
-                <div class="title">
-                  <h1>Choose operation</h1>
+          </div>
+        </div>
+        <div class="syn-scrollable--body">
+          <div class="container-fluid">
+            <div class="title">
+              <h1>Choose operation</h1>
+            </div>
+            <p>Click an operation to integrate an integration flow.</p>
+
+            <syndesis-loading [loading]="loading | async" [content]="content">
+            </syndesis-loading>
+          </div>
+        </div>
+        <ng-template #content>
+          <!-- Toolbar -->
+          <syndesis-list-toolbar [items]="flows$"
+                                 [filterTags]="false"
+                                 [filteredItems]="filteredFlows$"
+                                 [filterFields]="filterFields">
+          </syndesis-list-toolbar>
+
+          <div class="list-view-pf-view operations-list">
+            <pfng-list [items]="filteredFlows$ | async"
+                     [itemTemplate]="itemTemplate"
+                     (onClick)="handleClick($event)">
+            <ng-template #itemTemplate
+                         let-flow="item"
+                         let-index="index">
+              <div class="list-pf-content-wrapper">
+                <div class="list-pf-main-content">
+                  <div class="list-pf-title">{{ flow.name }}</div>
+                  <div class="list-pf-description text-overflow-pf">{{ flow.description }}</div>
                 </div>
-                <p>Click an operation to integrate an integration flow.</p>
-
-                <!-- Toolbar -->
-                <syndesis-list-toolbar [items]="flows$"
-                                      [filterTags]="false"
-                                      [filteredItems]="filteredFlows$"
-                                      [filterFields]="filterFields">
-                </syndesis-list-toolbar>
-
-                <div class="list-view-pf-view">
-                  <pfng-list [items]="filteredFlows$ | async"
-                            [itemTemplate]="itemTemplate"
-                            (onClick)="handleClick($event)">
-                    <ng-template #itemTemplate
-                                let-flow="item"
-                                let-index="index">
-                      <div class="list-pf-content-wrapper">
-                        <div class="list-pf-main-content">
-                          <div class="list-pf-title">{{ flow.name }}</div>
-                          <div class="list-pf-description text-overflow-pf">{{ flow.description }}</div>
-                        </div>
-                        <div class="list-pf-additional-content">
-                          <div>
-                            {{ flow.metadata.excerpt }}
-                          </div>
-                        </div>
-                      </div>
-                    </ng-template>
-                  </pfng-list>
+                <div class="list-pf-additional-content">
+                  <div>
+                    {{ flow.metadata.excerpt }}
+                  </div>
                 </div>
               </div>
-            </div>
-          </ng-template>
-        </syndesis-loading>
+            </ng-template>
+          </pfng-list>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>

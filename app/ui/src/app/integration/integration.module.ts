@@ -53,6 +53,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { WindowRef } from '@syndesis/ui/customizations/window-ref';
 import { ApiProviderService } from '@syndesis/ui/integration/api-provider/api-provider.service';
+import { FlowViewMultiFlowComponent } from '@syndesis/ui/integration/edit-page/flow-view/flow-view-multiflow.component';
 
 const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
 const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
@@ -178,6 +179,7 @@ const routes: Routes = [
     IntegrationSelectConnectionComponent,
     FlowViewComponent,
     FlowViewStepComponent,
+    FlowViewMultiFlowComponent,
     ListActionsComponent,
     StepVisiblePipe,
     CancelAddStepComponent,
