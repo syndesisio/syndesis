@@ -58,7 +58,7 @@
         "api-upload-invalid-file": "'{{0}}' is not a valid file. Only files that end in '.json', '.yaml', or '.yml' can be uploaded.",
         "api-upload-helper-text": "Accepted file types: .json, .yaml, and .yml",
         "api-url-upload": "Use a URL",
-        "api-url-upload-note": "* Note: After uploading this specification, Syndesis/Fuse Online does not automatically obtain any updates to it. You would have to upload an updated specification and create a new API client connector that incorporates the updates.",
+        "api-url-upload-note": "* Note: After uploading this specification, {{shared.project.name}} does not automatically obtain any updates to it. You would have to upload an updated specification and create a new API client connector that incorporates the updates.",
         "url-validation-error": "You must enter a valid URL before submitting the form."
       }
     },
@@ -114,7 +114,7 @@
         "templater-upload-helper-text-size": "Max: 1 file (up to 1MB)",
         "templater-upload-helper-text-type": "Accepted file type: .tmpl",
         "templater-url-upload": "Use an URL",
-        "templater-url-upload-note": "* Note: After uploading this template, Syndesis/Fuse Online does not automatically obtain any updates to it. You would have to edit the step and re-upload the template to incorporates the updates.",
+        "templater-url-upload-note": "* Note: After uploading this template, {{shared.project.name}} does not automatically obtain any updates to it. You would have to edit the step and re-upload the template to incorporates the updates.",
         "templater-create": "Create",
         "templater-create-editor-title": "Copy and paste a template or enter text that defines a template.",
         "templater-import-review": "Import review:"
@@ -123,7 +123,7 @@
         "creation-title": "Start integration with an API call",
         "creation-subtitle": "Execute this integration when a client invokes an operation defined by this API.",
         "save-title": "Give this integration a name",
-        "save-subtitle": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis eius expedita minima minus rem sint? Corporis cum deserunt dolor id laboriosam libero nihil quibusdam quo repellendus rerum? Ad vel, voluptas.",
+        "save-subtitle": "To add OpenAPI operations to this integration, specify a name for this integration so {{shared.project.name}} can save and update your work in the draft version.",
         "cancel-api-editor-modal": "The OpenAPI specification of \"{{0}}\" has been changed. If you exit the editor now you will lose your changes. Do you still want to exit editing the API definition?",
         "cancel-api-editor-unnamed-modal": "The OpenAPI specification has been changed. If you exit the editor now you will lose your changes. Do you still want to exit editing the API definition?",
         "cancel-api-editor-modal-lead": "Are you sure you want to exit editing the API definition?",
@@ -392,7 +392,7 @@
       "api-file-upload-dnd": "Drag and drop your OpenAPI file here or",
       "api-upload-helper-text": "Accepted file type: .json",
       "api-url-upload": "Use a URL",
-      "api-url-upload-note": "* Note: After uploading this specification, Syndesis/Fuse Online does not automatically obtain any updates to it.",
+      "api-url-upload-note": "* Note: After uploading this specification, {{shared.project.name}} does not automatically obtain any updates to it.",
       "api-spec-creation": "Create from scratch",
       "api-upload-invalid-file": "'{{0}}' is not a valid file. Only files that end in '.json' can be uploaded.",
       "url-validation-error": "You must enter a valid URL before submitting the form.",
