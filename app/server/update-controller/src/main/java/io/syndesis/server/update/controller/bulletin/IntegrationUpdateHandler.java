@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
-
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.action.Action;
@@ -43,6 +42,9 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.support.Equivalencer;
+import io.syndesis.common.model.validation.TargetWithDomain;
+import io.syndesis.common.model.validation.connection.ConnectionWithDomain;
+import io.syndesis.common.model.validation.integration.IntegrationWithDomain;
 import io.syndesis.common.util.CollectionsUtils;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.dao.manager.DataManager;
@@ -142,7 +144,27 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
     protected List<IntegrationBulletinBoard> compute(ChangeEvent event) {
         final List<IntegrationBulletinBoard> boards = new ArrayList<>();
         final DataManager dataManager = getDataManager();
+
+        /*
+         * Assemble all the artifact collections that are going to be checked in the data manager.
+         * This does it once rather than repeatedly in the various loops since getting stuff from the
+         * DataManager is quite expensive and slow.
+         *
+         * see #3717
+         */
         final List<Integration> integrations = dataManager.fetchAll(Integration.class).getItems();
+        final List<IntegrationDeployment> deployments =
+                dataManager.fetchAll(IntegrationDeployment.class).getItems().stream()
+                .filter(d -> !d.getSpec().isDeleted())
+                .collect(Collectors.toList());
+        final Set<Integration> deployedIintegrations = deployments.stream()
+                .map(d -> d.getSpec())
+                .collect(Collectors.toSet());
+        final List<Connection> connections = dataManager.fetchAll(Connection.class).getItems();
+        final Collection<Integration> allIntegrations = new ArrayList<Integration>(integrations.size() + deployedIintegrations.size());
+        allIntegrations.addAll(integrations);
+        allIntegrations.addAll(deployedIintegrations);
+
         final List<LeveledMessage> messages = new ArrayList<>();
 
         for (int i = 0; i < integrations.size(); i++) {
@@ -191,7 +213,8 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                     // Integration
                     // **********************
 
-                    messages.addAll(computeValidatorMessages(supplier, integration));
+                    TargetWithDomain<Integration> intTarget = new IntegrationWithDomain(integration, allIntegrations);
+                    messages.addAll(computeValidatorMessages(supplier, intTarget));
 
                     // **********************
                     // Extension Action
@@ -313,7 +336,8 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                             } else {
                                 Map<String, String> configuredProperties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
 
-                                messages.addAll(computeValidatorMessages(supplier, connection));
+                                ConnectionWithDomain connTarget = new ConnectionWithDomain(connection, connections);
+                                messages.addAll(computeValidatorMessages(supplier, connTarget));
                                 messages.addAll(computePropertiesDiffMessages(supplier, action.getProperties(), newAction.getProperties()));
                                 messages.addAll(computeMissingMandatoryPropertiesMessages(supplier, newAction.getProperties(), configuredProperties));
                                 messages.addAll(computeSecretsUpdateMessages(supplier, newAction.getProperties(), configuredProperties));
@@ -327,7 +351,7 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
             // **********************
             // Integration Deployments
             // **********************
-            messages.addAll(computeDeploymentDifferences(integration));
+            messages.addAll(computeDeploymentDifferences(integration, deployments));
 
             builder.errors(countMessagesWithLevel(LeveledMessage.Level.ERROR, messages));
             builder.warnings(countMessagesWithLevel(LeveledMessage.Level.WARN, messages));
@@ -348,18 +372,9 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
         return boards;
     }
 
-    private Collection<? extends LeveledMessage> computeDeploymentDifferences(Integration integration) {
-        String integrationId = integration.getId().get();
-
-        Set<String> deploymentIds = getDataManager().fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", integrationId);
-        if (deploymentIds == null || deploymentIds.isEmpty()) {
-            // No deployments match this integration
-            return Collections.emptyList();
-        }
-
-        List<IntegrationDeployment> deployments = deploymentIds.stream()
-                .map(i -> getDataManager().fetch(IntegrationDeployment.class, i))
-                .filter(r -> r != null)
+    private Collection<? extends LeveledMessage> computeDeploymentDifferences(Integration integration, Collection<IntegrationDeployment> allDeployments) {
+        List<IntegrationDeployment> deployments = allDeployments.stream()
+                .filter(d -> d.getIntegrationId().equals(integration.getId()))
                 .filter(d -> d.getCurrentState().equals(IntegrationDeploymentState.Published))
                 .collect(Collectors.toList());
 

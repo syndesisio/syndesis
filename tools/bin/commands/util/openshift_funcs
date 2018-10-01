@@ -177,6 +177,7 @@ EOT
       resources:
         limits:
           memory: $memory_server
+          cpu: 750m
 EOT
 )
         syndesis="${syndesis}${extra}"

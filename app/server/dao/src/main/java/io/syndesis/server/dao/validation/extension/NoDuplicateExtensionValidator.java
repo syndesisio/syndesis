@@ -15,14 +15,14 @@
  */
 package io.syndesis.server.dao.validation.extension;
 
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.common.model.extension.Extension;
-import io.syndesis.common.model.validation.extension.NoDuplicateExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import java.util.Set;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.validation.extension.ExtensionWithDomain;
+import io.syndesis.common.model.validation.extension.NoDuplicateExtension;
+import io.syndesis.server.dao.manager.DataManager;
 
 public class NoDuplicateExtensionValidator implements ConstraintValidator<NoDuplicateExtension, Extension> {
 
@@ -36,6 +36,10 @@ public class NoDuplicateExtensionValidator implements ConstraintValidator<NoDupl
 
     @Override
     public boolean isValid(final Extension value, final ConstraintValidatorContext context) {
+        if (value instanceof ExtensionWithDomain) {
+            return isValid((ExtensionWithDomain) value);
+        }
+
         if (value.getExtensionId() == null) {
             return true;
         }
@@ -52,8 +56,26 @@ public class NoDuplicateExtensionValidator implements ConstraintValidator<NoDupl
                 return false;
             }
         }
-
         return true;
     }
 
+    private boolean isValid(final ExtensionWithDomain value) {
+        Extension target = value.getTarget();
+        if (target.getExtensionId() == null) {
+            return true;
+        }
+
+        for (Extension other : value.getDomain()) {
+            if (other.idEquals(target.getExtensionId())) {
+                continue;
+            }
+
+            boolean installed = other.getStatus().isPresent() && other.getStatus().get() == Extension.Status.Installed;
+            if (installed) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

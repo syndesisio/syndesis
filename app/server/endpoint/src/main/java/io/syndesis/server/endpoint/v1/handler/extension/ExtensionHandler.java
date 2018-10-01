@@ -15,6 +15,15 @@
  */
 package io.syndesis.server.endpoint.v1.handler.extension;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -33,26 +42,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.stereotype.Component;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.common.util.SyndesisServerException;
-import io.syndesis.integration.api.IntegrationResourceManager;
-import io.syndesis.server.api.generator.util.IconGenerator;
-import io.syndesis.server.dao.file.FileDAO;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -64,6 +60,14 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.common.model.validation.NonBlockingValidations;
+import io.syndesis.common.model.validation.extension.ExtensionWithDomain;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
+import io.syndesis.integration.api.IntegrationResourceManager;
+import io.syndesis.server.api.generator.util.IconGenerator;
+import io.syndesis.server.dao.file.FileDAO;
+import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.util.FilterOptionsParser;
 import io.syndesis.server.endpoint.util.PaginationFilter;
 import io.syndesis.server.endpoint.util.ReflectiveFilterer;
@@ -75,11 +79,6 @@ import io.syndesis.server.endpoint.v1.operations.Getter;
 import io.syndesis.server.endpoint.v1.operations.Lister;
 import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
-
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.stereotype.Component;
 
 @Path("/extensions")
 @Api(value = "extensions")
@@ -325,13 +324,18 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     }
 
     private Set<Violation> doValidate(Extension extension) {
-        final Set<ConstraintViolation<Extension>> constraintViolations = getValidator().validate(extension, Default.class, AllValidations.class);
+        ListResult<Extension> result = getDataManager().fetchAll(Extension.class);
+        ExtensionWithDomain target = new ExtensionWithDomain(extension, result.getItems());
+
+        final Set<ConstraintViolation<ExtensionWithDomain>> constraintViolations =
+            getValidator().validate(target, Default.class, AllValidations.class);
 
         if (!constraintViolations.isEmpty()) {
             throw new ConstraintViolationException(constraintViolations);
         }
 
-        Set<ConstraintViolation<Extension>> warnings = getValidator().validate(extension, NonBlockingValidations.class);
+        Set<ConstraintViolation<ExtensionWithDomain>> warnings =
+            getValidator().validate(target, NonBlockingValidations.class);
         return warnings.stream()
             .map(Violation.Builder::fromConstraintViolation)
             .collect(Collectors.toSet());
