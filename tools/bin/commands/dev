@@ -133,7 +133,7 @@ dev::run() {
         echo -n Removing stale pods...
         local old_pods=$(oc get pods --field-selector=status.phase=Succeeded -o=jsonpath='{range .items[*]}{.metadata.name} ')
         if [ -n "$old_pods" ]; then
-            oc delete pods "$old_pods"
+            oc delete pods $old_pods
         fi
         echo -e -n 'done\nRemoving stale builds...'
         oc --as system:admin adm prune builds --confirm
