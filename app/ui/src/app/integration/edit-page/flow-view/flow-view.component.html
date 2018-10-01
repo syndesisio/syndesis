@@ -83,7 +83,7 @@
           </syndesis-integration-flow-view-step>
         </div>
 
-        <ng-container *ngIf="!(isApiProvider() && isApiProviderOperationsPage()); else apiProviderSanta">
+        <ng-container *ngIf="!(isApiProvider() && isApiProviderOperationsPage()); else apiProvider">
 
           <!-- First Step: Save or Add Step -->
           <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: 0 }"></ng-container>
@@ -113,7 +113,7 @@
           </div>
         </ng-container>
 
-        <ng-template #apiProviderSanta>
+        <ng-template #apiProvider>
           <syndesis-integration-multiflow-view-step></syndesis-integration-multiflow-view-step>
         </ng-template>
       </div>
