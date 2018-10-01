@@ -54,6 +54,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { WindowRef } from '@syndesis/ui/customizations/window-ref';
 import { ApiProviderService } from '@syndesis/ui/integration/api-provider/api-provider.service';
 import { FlowViewMultiFlowComponent } from '@syndesis/ui/integration/edit-page/flow-view/flow-view-multiflow.component';
+import { ApiConnectorGuard } from '@syndesis/ui/integration/api-provider/api-provider.guard';
 
 const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
 const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
@@ -100,7 +101,8 @@ const editIntegrationChildRoutes = [
   // OpenAPI loader page
   {
     path: 'api-provider/create',
-    component: ApiProviderSpecComponent
+    component: ApiProviderSpecComponent,
+    canActivate: [ApiConnectorGuard]
   }
 ];
 
@@ -190,6 +192,12 @@ const routes: Routes = [
     StepEditorComponent,
     StepNameComponent,
   ],
-  providers: [CurrentFlowService, FlowPageService, WindowRef, ApiProviderService]
+  providers: [
+    CurrentFlowService,
+    FlowPageService,
+    WindowRef,
+    ApiProviderService,
+    ApiConnectorGuard
+  ]
 })
 export class IntegrationModule {}

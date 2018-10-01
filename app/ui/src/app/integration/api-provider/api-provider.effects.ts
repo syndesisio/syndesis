@@ -160,9 +160,5 @@ export class ApiProviderEffects {
     private apiProviderStore: Store<ApiProviderStore>,
     private router: Router,
     private currentFlowService: CurrentFlowService
-  ) {
-    if (!this.currentFlowService.getStartStep()) {
-      this.router.navigate(['/integrations', 'create']);
-    }
-  }
+  ) {}
 }
