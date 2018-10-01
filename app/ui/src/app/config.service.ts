@@ -9,7 +9,7 @@ const category = getCategory('ConfigService');
 
 const defaults = environment.config;
 
-const defaultConfigJson = '/config.json';
+const defaultConfigJson = '/config/config.json';
 
 @Injectable()
 export class ConfigService {

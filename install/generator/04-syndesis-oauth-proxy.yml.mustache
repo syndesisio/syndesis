@@ -77,9 +77,11 @@
             - --provider=openshift
             - --client-id=system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
+            - --upstream-ca=/etc/pki/tls/certs/ca-bundle.crt
+            - --upstream-ca=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
             - --upstream=http://syndesis-server/api/
             - --upstream=http://syndesis-server/mapper/
-            - --upstream=http://syndesis-ui/
+            - --upstream=https://syndesis-ui.${OPENSHIFT_PROJECT}.svc/
             - --tls-cert=/etc/tls/private/tls.crt
             - --tls-key=/etc/tls/private/tls.key
             - --cookie-secret=$(OAUTH_COOKIE_SECRET)

@@ -6,7 +6,7 @@
   "homepage": "https://github.com/syndesisio/syndesis",
   "bugs": "https://github.com/syndesisio/syndesis/issues",
   "scripts": {
-    "cleanup": "rimraf src/config.json src/config.json.bak",
+    "cleanup": "rimraf src/config/config.json src/config/config.json.bak",
     "copy:assets": "yarn ncp node_modules/@atlasmap/atlasmap-data-mapper/src/assets/dm src/assets/dm",
     "format": "yarn prettier --no-color --single-quote --trailing-comma none --write \"./src/**/*.{ts,css,scss,js,json}\"",
     "generate": "node ./scripts/generate-ts.js",

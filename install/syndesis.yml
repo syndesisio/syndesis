@@ -327,11 +327,13 @@ objects:
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-ui
+    annotations:
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-ui-tls
   spec:
     ports:
-    - port: 80
+    - port: 443
       protocol: TCP
-      targetPort: 8080
+      targetPort: 8443
     selector:
       app: syndesis
       syndesis.io/app: syndesis
@@ -377,21 +379,38 @@ objects:
           image: ' '
 
           imagePullPolicy: IfNotPresent
-          livenessProbe:
-            httpGet:
-              path: "/"
-              port: 8080
-            initialDelaySeconds: 30
+          command:
+            - /syndesis-ui
+            - --port=8080
+            - --tls-port=8443
+            - --tls-cert=/etc/tls/private/tls.crt
+            - --tls-key=/etc/tls/private/tls.key
+            - --path=/html
+            - --etags
+            - --spa
+          volumeMounts:
+          - mountPath: /etc/tls/private
+            name: syndesis-ui-tls
+          - mountPath: /html/config
+            name: config-volume
+          ports:
+          - containerPort: 8443
+            name: public
+            protocol: TCP
           readinessProbe:
             httpGet:
-              path: "/"
-              port: 8080
-            initialDelaySeconds: 1
-          ports:
-          - containerPort: 8080
-          volumeMounts:
-          - mountPath: /usr/share/nginx/html/config
-            name: config-volume
+              port: 8443
+              path: /
+              scheme: HTTPS
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+          livenessProbe:
+            httpGet:
+              port: 8443
+              path: /
+              scheme: HTTPS
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
           # Set to burstable with a low memory footprint to start (50 Mi)
           resources:
             limits:
@@ -399,6 +418,9 @@ objects:
             requests:
               memory: 50Mi
         volumes:
+        - name: syndesis-ui-tls
+          secret:
+            secretName: syndesis-ui-tls
         - configMap:
             name: syndesis-ui-config
           name: config-volume
@@ -914,9 +936,11 @@ objects:
             - --provider=openshift
             - --client-id=system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
+            - --upstream-ca=/etc/pki/tls/certs/ca-bundle.crt
+            - --upstream-ca=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
             - --upstream=http://syndesis-server/api/
             - --upstream=http://syndesis-server/mapper/
-            - --upstream=http://syndesis-ui/
+            - --upstream=https://syndesis-ui.${OPENSHIFT_PROJECT}.svc/
             - --tls-cert=/etc/tls/private/tls.crt
             - --tls-key=/etc/tls/private/tls.key
             - --cookie-secret=$(OAUTH_COOKIE_SECRET)

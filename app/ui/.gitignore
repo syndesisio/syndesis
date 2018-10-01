@@ -44,8 +44,8 @@ Thumbs.db
 /.history
 /yarn-error.log
 
-src/config.json
-src/config.json.bak
+src/config/config.json
+src/config/config.json.bak
 users.json
 scripts/swagger.json
 src/app/_model.ts
