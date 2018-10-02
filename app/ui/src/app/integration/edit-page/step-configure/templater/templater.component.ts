@@ -4,9 +4,7 @@ import {
   Input,
   Output,
   ViewEncapsulation,
-  OnInit,
-  ElementRef,
-  ViewChild
+  OnInit
 } from '@angular/core';
 import {
   I18NService,
@@ -17,7 +15,6 @@ import {
   IntegrationSupportService
 } from '@syndesis/ui/platform';
 import { CurrentFlowService } from '@syndesis/ui/integration/edit-page';
-import { log } from '@syndesis/ui/logging';
 import {
   FileLikeObject,
   FileUploader,
@@ -42,9 +39,6 @@ export class TemplaterComponent implements OnInit {
   @Output() configuredPropertiesChange = new EventEmitter<String>();
   @Output() validChange = new EventEmitter<boolean>();
 
-  // The file selection component when defining template by file
-  @ViewChild('fileSelect') fileSelect: ElementRef;
-
   // The instance of the CodeMirror editor when initialised
   //
   // TODO
@@ -54,22 +48,15 @@ export class TemplaterComponent implements OnInit {
   // @ViewChild('templateEditor') private templateEditor: any;
 
   /*
-   * Choice of input
-   */
-  editType: string;
-
-  /*
    * The template content string
    */
   templateContent: string;
 
-  /*
-   * Variables for use with the FileUploader
-   */
-  hasBaseDropZoneOver: boolean;
   invalidFileMsg: string;
   uploader: FileUploader;
-  fileName: string; // Filename assigned if successfully uploaded
+  editorFocused: boolean;
+  validationErrors: string[] = [];
+  validationErrorsExpanded: boolean = false;
 
   /*
    * Variables for use with the create template editor
@@ -89,11 +76,6 @@ export class TemplaterComponent implements OnInit {
   constructor(private i18NService: I18NService, public currentFlowService: CurrentFlowService,
               public integrationSupportService: IntegrationSupportService) {}
 
-  public get validFileMsg(): string {
-    return this.fileName ?
-      this.i18NService.localize('integrations.steps.templater-upload-valid-file', [this.fileName]) : '';
-  }
-
   ngOnInit() {
     //
     // Initialise the out data shape specification
@@ -111,32 +93,23 @@ export class TemplaterComponent implements OnInit {
       if (this.configuredProperties.template) {
         this.templateContent = this.configuredProperties.template;
       }
-
-      if (this.configuredProperties.fileName || ! this.configuredProperties.template) {
-        this.fileName = this.configuredProperties.fileName;
-        this.editType = 'upload';
-      } else {
-        this.editType = 'create';
-      }
     }
 
     this.initUploader();
     this.initCodeMirror();
   }
 
-  onFileDrop(e) {
-    // clear out text next to 'Choose File' button
-    this.fileSelect.nativeElement.value = '';
+  onEditorFocus() {
+    this.editorFocused = true;
+    this.invalidFileMsg = null;
   }
 
-  onFileOver(e) {
-    this.hasBaseDropZoneOver = e;
+  onEditorBlur() {
+    this.editorFocused = false;
   }
 
   onChange() {
-    if (this.editType === 'create') {
-      this.fileName = null;
-    }
+    this.validationErrors = [];
 
     if (this.templateContent) {
       this.valid = true;
@@ -156,9 +129,10 @@ export class TemplaterComponent implements OnInit {
       symbols = this.extractTemplateSymbols();
 
     } catch (exception) {
-      this.valid = false;
-      log.error('Failed to parse template', exception);
+      this.validationErrors.push(exception.message);
     }
+
+    this.valid = this.validationErrors.length === 0;
 
     this.validChange.emit(this.valid);
     if (!this.valid) {
@@ -213,11 +187,13 @@ export class TemplaterComponent implements OnInit {
       template: this.templateContent
     };
 
-    if (this.fileName) {
-      formattedProperties.fileName = this.fileName;
-    }
-
     this.configuredPropertiesChange.emit(formattedProperties);
+  }
+
+  expandCollapseValidDetail() {
+    this.validationErrorsExpanded = !this.validationErrorsExpanded;
+
+
   }
 
   private initUploader() {
@@ -246,13 +222,12 @@ export class TemplaterComponent implements OnInit {
 
       // pop off file from queue to set file and clear queue
       const fileToUpload = this.uploader.queue.pop()._file;
-      this.fileName = fileToUpload.name;
-      this.fileSelect.nativeElement.value = '';
 
       const reader = new FileReader();
       reader.onload = () => {
         this.templateContent = reader.result;
         this.onChange();
+        console.log("template content: " + this.templateContent);
       };
 
       reader.readAsText(fileToUpload);
@@ -263,8 +238,6 @@ export class TemplaterComponent implements OnInit {
     ): any => {
       // occurs when not a *.json file
       this.invalidFileMsg = this.i18NService.localize('integrations.steps.templater-upload-invalid-file', [file.name]);
-      this.fileName = null;
-      this.fileSelect.nativeElement.value = '';
       this.uploader.clearQueue();
     };
   }
@@ -306,6 +279,91 @@ export class TemplaterComponent implements OnInit {
     });
   }
 
+  private parseMustache(): any[] {
+    this.validationErrors = [];
+
+    //
+    // Help do an initial parse of the braces in the syntax
+    // Mustache does not currently do this in its parsing so
+    // we will do it instead.
+    // Populates the validationErrors collection to provide
+    // as clear validation detail as possible.
+    //
+
+    let openSymbol:number = 0;
+    let closeSymbol: number = 0;
+    let reset: boolean = false;
+
+    for (var i = 0; i < this.templateContent.length; i++) {
+      if (reset) {
+        // Successfully parsed a symbol so reset for next
+        openSymbol = 0;
+        closeSymbol = 0;
+      }
+
+      const ch = this.templateContent.charAt(i);
+      if (ch === '{') {
+        if (closeSymbol > 0) {
+          // Found an open symbol before all close symbols
+          this.validationErrors.push(
+            this.i18NService.localize('integrations.steps.templater-illegal-open-symbol', [i]));
+          reset = true;
+          continue;
+        }
+
+        if (openSymbol >= 2) {
+          // Too many open symbols encountered
+          this.validationErrors.push(
+            this.i18NService.localize('integrations.steps.templater-too-many-open-symbols', [i]));
+          reset = true;
+          continue;
+        }
+
+        openSymbol++;
+
+      } else if (ch === '}') {
+        if (openSymbol < 2) {
+          // Found a close symbol before all the open symbols
+          this.validationErrors.push(
+            this.i18NService.localize('integrations.steps.templater-illegal-close-symbol', [i]));
+          reset = true;
+          continue;
+        }
+
+        if (closeSymbol >= 2) {
+          // Too many close symbols encountered
+          this.validationErrors.push(
+            this.i18NService.localize('integrations.steps.templater-too-many-close-symbols', [i]));
+          reset = true;
+          continue;
+        }
+
+        closeSymbol++;
+        continue;
+      } else {
+        if (openSymbol === 1) {
+          // Should have encountered another open symbol but not
+          this.validationErrors.push(
+            this.i18NService.localize('integrations.steps.templater-expected-open-symbol', [i]));
+          reset = true;
+          continue;
+        }
+
+        if (closeSymbol === 1) {
+          // Should have encountered another close symbol but not
+          this.validationErrors.push(
+            this.i18NService.localize('integrations.steps.templater-expected-close-symbol', [i]));
+          reset = true;
+          continue;
+        }
+      }
+
+      reset = openSymbol == 2 && closeSymbol == 2;
+    }
+
+    return Mustache.parse(this.templateContent);
+  }
+
   private extractTemplateSymbols(): any[] {
     const symbols: string[] = [];
 
@@ -313,7 +371,7 @@ export class TemplaterComponent implements OnInit {
       return symbols;
     }
 
-    const tokens: any[] = Mustache.parse(this.templateContent);
+    const tokens: any[] = this.parseMustache();
 
     Mustache.clearCache();
     for (const token of tokens) {
@@ -324,9 +382,7 @@ export class TemplaterComponent implements OnInit {
       const symbol: any = {};
       symbol.id = token[1];
 
-      if (token[0] === '#') {
-        symbol.type = 'array';
-      } else if (token[0] === 'name') {
+      if (token[0] === 'name') {
         symbol.type = 'string';
       } else {
         continue; // not currently supported

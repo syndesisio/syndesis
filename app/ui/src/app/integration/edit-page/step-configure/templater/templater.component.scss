@@ -1,6 +1,20 @@
 @import 'syndesis-sass';
 
 .templater-form {
+
+  margin-bottom: 2em;
+
+  .file-upload-input-hidden {
+    visibility: hidden;
+    position: absolute;
+    overflow: hidden;
+    width: 0px;
+    height:0px;
+    border:none;
+    margin:0;
+    padding:0
+  }
+
   &-file-url-text {
     padding-right: 0;
   }
@@ -21,11 +35,45 @@
 
   .CodeMirror {
     border: 2px solid $color-pf-black-300;
-    height: 15em;
+    height: 25em;
   }
 
   .cm-mustache {
     color: #b21eab;
     font-weight: bold;
+  }
+
+  &-validation {
+
+    a:hover, a:focus {
+      text-decoration: none;
+    }
+
+    .view-all {
+      cursor: default;
+      padding-left: 2em;
+
+      .caret {
+        position: relative;
+
+        &:not(.expanded) {
+          &:before {
+            font-family: FontAwesome;
+            top: 0;
+            content: "\f106";
+          }
+        }
+
+        &.expanded:before {
+          font-family: FontAwesome;
+          top: 0;
+          content: "\f107";
+        }
+      }
+    }
+
+    .validation-error-text {
+      padding-left: 3em;
+    }
   }
 }
