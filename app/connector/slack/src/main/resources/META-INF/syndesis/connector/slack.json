@@ -1,7 +1,7 @@
 {
     "id": "slack",
     "name": "Slack",
-    "description": "Send messages to users and channels.",
+    "description": "Obtain and send messages.",
     "icon": "slack",
     "dependencies": [
         {
@@ -18,7 +18,7 @@
     "properties": {
         "webhookUrl": {
             "kind": "parameter",
-            "displayName": "Slack webhook URL",
+            "displayName": "Slack Webhook URL",
             "group": "common",
             "required": true,
             "type": "string",
@@ -28,11 +28,11 @@
             "order": "1",
             "raw": true,
             "secret": true,
-            "labelHint": "The webhook URL used to send messages to"
+            "labelHint": "The webhook URL to send messages to."
         },
         "username": {
             "kind": "parameter",
-            "displayName": "Sending Username for messages",
+            "displayName": "Sending User Name for Messages",
             "group": "common",
             "required": false,
             "type": "string",
@@ -40,11 +40,11 @@
             "deprecated": false,
             "secret": false,
             "order": "3",
-            "labelHint": "This is the username that the bot will have when sending messages to a channel or user"
+            "labelHint": "The user name that the bot will have when sending messages to a channel or user."
         },
         "iconUrl": {
             "kind": "parameter",
-            "displayName": "Message avatar icon URL",
+            "displayName": "Message Avatar Icon URL",
             "group": "common",
             "required": false,
             "type": "string",
@@ -52,11 +52,11 @@
             "deprecated": false,
             "secret": false,
             "order": "5",
-            "labelHint": "The avatar that the component will use when sending messages to a channel or user"
+            "labelHint": "The avatar that the connection will use when sending messages to a channel or user."
         },
         "iconEmoji": {
             "kind": "parameter",
-            "displayName": "Message avatar emoji",
+            "displayName": "Message Avatar Emoji",
             "group": "common",
             "required": false,
             "type": "string",
@@ -64,11 +64,11 @@
             "deprecated": false,
             "secret": false,
             "order": "4",
-            "labelHint": "The Slack emoji that will be used for the message avatar"
+            "labelHint": "The Slack emoji that will be used for the message avatar."
         },
         "token": {
             "kind": "parameter",
-            "displayName": "Token for accessing slack API",
+            "displayName": "Token for Accessing Slack API",
             "group": "consumer",
             "required": true,
             "type": "string",
@@ -78,13 +78,13 @@
             "order": "2",
             "raw": true,
             "secret": true,
-            "labelHint": "The token to use for consuming messages"
+            "labelHint": "The token to use for obtaining messages from a Slack channel."
         }
     },
     "actions": [
         {
-            "name": "Username",
-            "description": "Publish a message to specific username",
+            "name": "User Name",
+            "description": "Send a message to specific Slack user.",
             "id": "io.syndesis:slack-username-connector",
             "pattern": "To",
             "actionType": "connector",
@@ -103,8 +103,8 @@
                 },
                 "propertyDefinitionSteps": [
                    {
-                        "name":"Username",
-                        "description":"Send a message to a specific username",
+                        "name":"User Name",
+                        "description":"Send a message to a specific Slack user.",
                         "properties":{
                             "receiver": {
                                 "kind": "parameter",
@@ -115,7 +115,7 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "labelHint": "The username to send the message to"
+                                "labelHint": "The name of the Slack user to send the message to."
                             }
                         }
                     }
@@ -124,7 +124,7 @@
         },
         {
             "name": "Channel",
-            "description": "Publish a message to a specific channel",
+            "description": "Send a message to a specific Slack channel.",
             "id": "io.syndesis:slack-channel-connector",
             "pattern": "To",
             "actionType": "connector",
@@ -144,7 +144,7 @@
                 "propertyDefinitionSteps": [
                     {
                         "name":"Channel",
-                        "description":"Send a message to a specific channel",
+                        "description":"Send a message to a specific Slack channel.",
                         "properties":{
                             "channel": {
                                 "kind": "parameter",
@@ -155,7 +155,7 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "labelHint": "The channel to send the message to"
+                                "labelHint": "The name of the Slack channel to send the message to."
                             }
                         }
                     }
