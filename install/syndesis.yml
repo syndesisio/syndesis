@@ -1652,7 +1652,7 @@ objects:
       - ReadWriteOnce
       resources:
         requests:
-          storage: ${POSTGRESQL_VOLUME_CAPACITY}
+          storage: ${UPGRADE_VOLUME_CAPACITY}
   - apiVersion: v1
     kind: Pod
     metadata:
