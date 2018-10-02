@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
 
 import { ActionReducerError, Integration } from '@syndesis/ui/platform';
-import { OpenApiValidationResponse, OpenApiUploadSpecification } from '@syndesis/ui/common';
+import { OpenApiUploadSpecification } from '@syndesis/ui/common';
+import { ApiProviderValidationResponse } from '@syndesis/ui/integration/api-provider/api-provider.models';
 
 export class ApiProviderActions {
   static NEXT_STEP = '[API Provider] Go to the next step';
@@ -16,6 +17,9 @@ export class ApiProviderActions {
   static CREATE_COMPLETE = '[API Provider] Create integration complete';
   static CREATE_FAIL = '[API Provider] Create integration failed';
   static CREATE_CANCEL = '[API Provider] Create API Provider integration cancelled';
+  static UPDATE_INTEGRATION_NAME = '[API Provider] Update integration name';
+  static UPDATE_INTEGRATION_NAME_FROM_SERVICE = '[API Provider] Updated integration name from the currentFlowService';
+  static UPDATE_INTEGRATION_DESCRIPTION = '[API Provider] Update integration description';
 
   static nextStep(): ApiProviderNextStep {
     return new ApiProviderNextStep();
@@ -36,7 +40,7 @@ export class ApiProviderActions {
   }
 
   static validateSwaggerComplete(
-    payload: OpenApiValidationResponse
+    payload: ApiProviderValidationResponse
   ): ApiProviderValidateSwaggerComplete {
     return new ApiProviderValidateSwaggerComplete(payload);
   }
@@ -55,6 +59,18 @@ export class ApiProviderActions {
     payload: string
   ): ApiProviderUpdateSpecification {
     return new ApiProviderUpdateSpecification(payload);
+  }
+
+  static updateIntegrationName(
+    payload: string
+  ): ApiProviderUpdateIntegrationName {
+    return new ApiProviderUpdateIntegrationName(payload);
+  }
+
+  static updateIntegrationDescription(
+    payload: string
+  ): ApiProviderUpdateIntegrationDescription {
+    return new ApiProviderUpdateIntegrationDescription(payload);
   }
 
   static createIntegration(): ApiProviderCreate {
@@ -85,7 +101,7 @@ export class ApiProviderValidateSwagger implements Action {
 
 export class ApiProviderValidateSwaggerComplete implements Action {
   readonly type = ApiProviderActions.VALIDATE_SPEC_COMPLETE;
-  constructor(public payload: OpenApiValidationResponse) {}
+  constructor(public payload: ApiProviderValidationResponse) {}
 }
 
 export class ApiProviderValidateSwaggerFail implements Action {
@@ -118,4 +134,14 @@ export class ApiProviderCreateComplete implements Action {
 export class ApiProviderCreateFail implements Action {
   readonly type = ApiProviderActions.CREATE_FAIL;
   constructor(public payload: ActionReducerError) {}
+}
+
+export class ApiProviderUpdateIntegrationName implements Action {
+  readonly type = ApiProviderActions.UPDATE_INTEGRATION_NAME;
+  constructor(public payload: string) {}
+}
+
+export class ApiProviderUpdateIntegrationDescription implements Action {
+  readonly type = ApiProviderActions.UPDATE_INTEGRATION_DESCRIPTION;
+  constructor(public payload: string) {}
 }

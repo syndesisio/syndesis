@@ -33,6 +33,8 @@ export class FlowViewStepComponent implements OnChanges {
   // the current state/page of the current step
   @Input() currentState: string;
 
+  @Input() apiProvider: boolean;
+
   @ViewChild('datamapperInfoPop') datamapperInfoPop: PopoverDirective;
 
   inputDataShapeText: string;
@@ -243,6 +245,9 @@ export class FlowViewStepComponent implements OnChanges {
   }
 
   gotoPageFor(step) {
+    if (this.apiProvider) {
+      return;
+    }
     switch (step.stepKind) {
       case 'endpoint':
         if (!step.connection) {

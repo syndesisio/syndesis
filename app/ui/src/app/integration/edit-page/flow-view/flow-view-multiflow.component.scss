@@ -1,0 +1,66 @@
+@import 'syndesis-sass';
+
+@mixin line {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background-color: #d4d4d4;
+  top: -59px;
+  bottom: 0;
+  left: 50%;
+}
+
+.multiflow-step {
+
+  .icon-container {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: absolute;
+    float: left;
+    left: 120px;
+    margin-left: -22px;
+    &:nth-child(1) {
+      transform: translateX(-80px);
+      z-index: 3;
+      &:before {
+        @include line;
+        transform: rotate(20deg) translateX(3px);
+      }
+    }
+    &:nth-child(2) {
+      transform: translateX(-47px);
+      z-index: 2;
+    }
+    &:nth-child(3) {
+      transform: translateX(-14px);
+      z-index: 1;
+      &:before {
+        @include line;
+        transform: rotate(-20deg) translateX(-3px);
+      }
+    }
+  }
+
+  .icon {
+    border-radius: 50%;
+    border: 3px dashed $color-pf-black-300;
+    padding: 11px;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    .fa {
+      color: #d1d1d1;
+      line-height: 1.15;
+    }
+  }
+}

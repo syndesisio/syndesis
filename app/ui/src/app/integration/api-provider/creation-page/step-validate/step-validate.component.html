@@ -1,17 +1,18 @@
 <div class="row row-cards-pf">
   <div class="card-pf">
     <div class="card-pf-body">
-      <syndesis-validation-error *ngIf="creationError">
-        {{ creationError.message }}
-      </syndesis-validation-error>
-
       <syndesis-loading
         [loading]="loading"
         [content]="validationContent">
       </syndesis-loading>
 
       <ng-template #validationContent>
-        <openapi-review [validatorData]="validationResponse">
+        <openapi-review
+          [name]="validationResponse.name"
+          [description]="validationResponse.description || 'No description provided'"
+          [warnings]="validationResponse.warnings"
+          [errors]="validationResponse.errors"
+          [actionsSummary]="validationResponse.actionsSummary">
         </openapi-review>
 
         <fieldset>
@@ -21,7 +22,7 @@
         </fieldset>
         <fieldset>
           <syndesis-button (click)="onDone.emit()" type="button" theme="primary">
-            {{ 'shared.done' | synI18n }}
+            {{ 'shared.next' | synI18n }}
           </syndesis-button>
 
           <syndesis-button type="button" theme="default" (click)="onCancel.emit()">

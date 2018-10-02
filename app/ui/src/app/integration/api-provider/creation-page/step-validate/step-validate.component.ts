@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { OpenApiValidationResponse } from '@syndesis/ui/common';
-import { ActionReducerError } from '@syndesis/ui/platform';
+import { ApiProviderValidationResponse } from '@syndesis/ui/integration/api-provider/api-provider.models';
 
 @Component({
   selector: 'api-provider-creation-step-validate',
@@ -8,8 +7,7 @@ import { ActionReducerError } from '@syndesis/ui/platform';
 })
 export class StepValidateComponent {
   @Input() loading: boolean;
-  @Input() validationResponse: OpenApiValidationResponse;
-  @Input() creationError: ActionReducerError;
+  @Input() validationResponse: ApiProviderValidationResponse;
   @Output() onDone = new EventEmitter<boolean>();
   @Output() onEdit = new EventEmitter<boolean>();
   @Output() onCancel = new EventEmitter<boolean>();

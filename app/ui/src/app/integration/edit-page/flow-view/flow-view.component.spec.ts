@@ -8,6 +8,7 @@ import { CoreModule } from '@syndesis/ui/core';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { FlowViewComponent } from '@syndesis/ui/integration/edit-page/flow-view/flow-view.component';
 import { FlowViewStepComponent } from '@syndesis/ui/integration/edit-page/flow-view/flow-view-step.component';
+import { FlowViewMultiFlowComponent } from '@syndesis/ui/integration/edit-page/flow-view/flow-view-multiflow.component';
 import { SyndesisStoreModule } from '@syndesis/ui/store';
 import { IntegrationService } from '@syndesis/ui/store/integration/integration.service';
 import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';
@@ -39,7 +40,11 @@ describe('FlowViewComponent', () => {
         CoreModule.forRoot(),
         VendorModule
       ],
-      declarations: [FlowViewComponent, FlowViewStepComponent],
+      declarations: [
+        FlowViewComponent,
+        FlowViewStepComponent,
+        FlowViewMultiFlowComponent
+      ],
       providers: [
         CurrentFlowService,
         FlowPageService,

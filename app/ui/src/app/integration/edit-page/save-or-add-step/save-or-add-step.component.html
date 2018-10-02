@@ -32,7 +32,12 @@
                 <div class="toolbar-pf-action-right">
                   <button class="btn btn-default"
                     (click)="cancel()">Cancel
-                </button> &nbsp;
+                  </button> &nbsp;
+                  <a class="btn btn-default"
+                     *ngIf="currentFlowService.integration?.type === IntegrationType.ApiProvider"
+                     [routerLink]="['/integrations', currentFlowService.integration?.id, 'operations']">
+                    Go to Operation List
+                  </a>
                   <button class="btn btn-default"
                     (click)="save()"
                     [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress">

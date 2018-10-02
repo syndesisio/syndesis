@@ -1,4 +1,4 @@
-import { NgModule, forwardRef } from '@angular/core';
+import { forwardRef, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
@@ -6,45 +6,55 @@ import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { DataMapperModule } from '@atlasmap/atlasmap-data-mapper';
 
 import { VendorModule } from '@syndesis/ui/vendor';
-import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
+import { OpenApiModule, PatternflyUIModule, SyndesisCommonModule } from '@syndesis/ui/common';
 import { ConnectionsModule } from '@syndesis/ui/connections';
 
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { IntegrationListModule } from '@syndesis/ui/integration/list';
 import { IntegrationListPage } from '@syndesis/ui/integration/list-page';
 import { IntegrationImportPageComponent } from '@syndesis/ui/integration/import-page';
-import {
-  IntegrationDetailComponent,
-  INTEGRATION_DETAIL_DIRECTIVES
-} from '@syndesis/ui/integration/integration_detail';
+import { INTEGRATION_DETAIL_DIRECTIVES, IntegrationDetailComponent } from '@syndesis/ui/integration/integration_detail';
 import { IntegrationLogsComponent } from '@syndesis/ui/integration/integration_logs';
 import {
-  ApiProviderModule,
+  ApiProviderEffects,
+  apiProviderEndpoints,
   ApiProviderOperationsComponent,
-  ApiProviderSpecComponent
+  apiProviderReducer,
+  ApiProviderSpecComponent,
+  StepEditorComponent,
+  StepNameComponent,
+  StepUploadComponent,
+  StepValidateComponent
 } from '@syndesis/ui/integration/api-provider';
 
 import {
-  IntegrationEditPage,
-  IntegrationBasicsComponent,
-  IntegrationSelectConnectionComponent,
-  IntegrationConfigureActionComponent,
-  IntegrationSelectActionComponent,
-  IntegrationSaveOrAddStepComponent,
-  IntegrationStepSelectComponent,
-  IntegrationDescribeDataComponent,
-  StepVisiblePipe,
-  IntegrationStepConfigureComponent,
-  DataMapperHostComponent,
   BasicFilterComponent,
-  TemplaterComponent,
-  ListActionsComponent,
   CancelAddStepComponent,
+  CurrentFlowService,
+  DataMapperHostComponent,
+  FlowPageService,
   FlowViewComponent,
   FlowViewStepComponent,
-  CurrentFlowService,
-  FlowPageService
+  IntegrationBasicsComponent,
+  IntegrationConfigureActionComponent,
+  IntegrationDescribeDataComponent,
+  IntegrationEditPage,
+  IntegrationSaveOrAddStepComponent,
+  IntegrationSelectActionComponent,
+  IntegrationSelectConnectionComponent,
+  IntegrationStepConfigureComponent,
+  IntegrationStepSelectComponent,
+  ListActionsComponent,
+  StepVisiblePipe,
+  TemplaterComponent
 } from '@syndesis/ui/integration/edit-page';
+import { ApiModule } from '@syndesis/ui/api';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { WindowRef } from '@syndesis/ui/customizations/window-ref';
+import { ApiProviderService } from '@syndesis/ui/integration/api-provider/api-provider.service';
+import { FlowViewMultiFlowComponent } from '@syndesis/ui/integration/edit-page/flow-view/flow-view-multiflow.component';
+import { ApiConnectorGuard } from '@syndesis/ui/integration/api-provider/api-provider.guard';
 
 const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
 const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
@@ -91,7 +101,8 @@ const editIntegrationChildRoutes = [
   // OpenAPI loader page
   {
     path: 'api-provider/create',
-    component: ApiProviderSpecComponent
+    component: ApiProviderSpecComponent,
+    canActivate: [ApiConnectorGuard]
   }
 ];
 
@@ -137,13 +148,16 @@ const routes: Routes = [
     DynamicFormsCoreModule,
     PatternflyUIModule,
     RouterModule.forChild(routes),
+    ApiModule.forChild(apiProviderEndpoints),
+    StoreModule.forFeature('apiProviderState', apiProviderReducer),
+    EffectsModule.forFeature([ApiProviderEffects]),
     ConnectionsModule,
     VendorModule,
     syndesisCommonModuleFwd,
     DataMapperModule,
     integrationSupportModuleFwd,
     integrationListModuleFwd,
-    ApiProviderModule
+    OpenApiModule
   ],
   declarations: [
     ...INTEGRATION_DETAIL_DIRECTIVES,
@@ -167,10 +181,23 @@ const routes: Routes = [
     IntegrationSelectConnectionComponent,
     FlowViewComponent,
     FlowViewStepComponent,
+    FlowViewMultiFlowComponent,
     ListActionsComponent,
     StepVisiblePipe,
-    CancelAddStepComponent
+    CancelAddStepComponent,
+    ApiProviderOperationsComponent,
+    ApiProviderSpecComponent,
+    StepUploadComponent,
+    StepValidateComponent,
+    StepEditorComponent,
+    StepNameComponent,
   ],
-  providers: [CurrentFlowService, FlowPageService]
+  providers: [
+    CurrentFlowService,
+    FlowPageService,
+    WindowRef,
+    ApiProviderService,
+    ApiConnectorGuard
+  ]
 })
 export class IntegrationModule {}

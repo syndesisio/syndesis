@@ -118,6 +118,20 @@ export class FlowViewComponent implements OnDestroy {
     return this.currentFlowService.getMiddleSteps();
   }
 
+  isApiProvider() {
+    try {
+      return this.startConnection().connection.connectorId === 'api-provider';
+    } catch (e) {
+      // noop
+    }
+    return false;
+  }
+
+  isApiProviderOperationsPage() {
+    return this.router.url.startsWith('/integrations') &&
+      this.router.url.endsWith('/operations');
+  }
+
   insertStepAfter(position: number) {
     this.popovers.forEach(popover => popover.hide());
 

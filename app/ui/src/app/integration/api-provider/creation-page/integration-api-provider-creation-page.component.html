@@ -33,17 +33,26 @@
     <div class="syn-scrollable--body">
       <div class="container-fluid">
 
-        <div class="title">
-          <h1>{{ 'integrations.api-provider.creation-title' | synI18n }}</h1>
-        </div>
-        <p>{{ 'integrations.api-provider.creation-subtitle' | synI18n }}</p>
+        <ng-container *ngIf="(currentActiveStep$ | async) != ApiProviderWizardSteps.IntegrationName; else creationHeader">
+          <div class="title">
+            <h1>{{ 'integrations.api-provider.creation-title' | synI18n }}</h1>
+          </div>
+          <p>{{ 'integrations.api-provider.creation-subtitle' | synI18n }}</p>
+        </ng-container>
+
+        <ng-template #creationHeader>
+          <div class="title">
+            <h1>{{ 'integrations.api-provider.save-title' | synI18n }}</h1>
+          </div>
+          <p>{{ 'integrations.api-provider.save-subtitle' | synI18n }}</p>
+        </ng-template>
 
         <section>
           <api-provider-creation-step-upload
             *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.UploadSpecification"
             [uploadSpecification]="uploadSpecification$ | async"
             [errors]="validationErrors$ | async"
-            [loading]="validationLoading$ | async"
+            [loading]="loading$ | async"
             (onUploadSpecificationChange)="onUploadSpecificationChange($event)"
             (onDone)="onStepDone()"
             (onCancel)="showCancelModal()">
@@ -52,9 +61,8 @@
           <api-provider-creation-step-validate
             *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.ReviewApiProvider"
             [validationResponse]="validationResponse$ | async"
-            [loading]="validationLoading$ | async"
-            [creationError]="creationError$ | async"
-            (onDone)="createIntegration()"
+            [loading]="loading$ | async"
+            (onDone)="onStepDone()"
             (onCancel)="showCancelModal()"
             (onEdit)="onEditSpecification()">
           </api-provider-creation-step-validate>
@@ -66,6 +74,18 @@
             (onCancel)="onBackPressed()"
             (onSave)="onSpecificationEdited($event)">
           </api-provider-creation-step-editor>
+
+          <api-provider-creation-step-name
+            *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.IntegrationName"
+            [loading]="loading$ | async"
+            [name]="(integrationName$ | async)"
+            [description]="integrationDescription$ | async"
+            [creationError]="creationError$ | async"
+            (onNameChange)="updateIntegrationName($event)"
+            (onDescriptionChange)="updateIntegrationDescription($event)"
+            (onSave)="createIntegration()"
+            (onBack)="onBackPressed()">
+          </api-provider-creation-step-name>
         </section>
       </div>
     </div>
