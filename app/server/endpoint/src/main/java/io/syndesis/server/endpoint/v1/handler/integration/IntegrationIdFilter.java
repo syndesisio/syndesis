@@ -16,24 +16,30 @@
 package io.syndesis.server.endpoint.v1.handler.integration;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 
-final class IntegrationIdFilter implements Function<ListResult<IntegrationDeployment>, ListResult<IntegrationDeployment>> {
-    private final String integrationId;
+final class IntegrationIdFilter
+    implements Function<ListResult<IntegrationDeployment>, ListResult<IntegrationDeployment>> {
 
-    IntegrationIdFilter(String integrationId) {
-        this.integrationId = integrationId;
+    final String integrationId;
+
+    IntegrationIdFilter(final String integrationId) {
+        this.integrationId = Objects.requireNonNull(integrationId, "integrationId");
     }
 
     @Override
-    public ListResult<IntegrationDeployment> apply(ListResult<IntegrationDeployment> list) {
-        List<IntegrationDeployment> filtered = list.getItems().stream()
-            .filter(i -> integrationId == null || integrationId.equals(i.getIntegrationId().orElse(null)))
-            .collect(Collectors.toList());
+    public ListResult<IntegrationDeployment> apply(final ListResult<IntegrationDeployment> list) {
+        if (integrationId == null) {
+            return list;
+        }
+
+        final List<IntegrationDeployment> filtered = list.getItems().stream()
+            .filter(i -> i.getSpec().idEquals(integrationId)).collect(Collectors.toList());
 
         return ListResult.of(filtered);
     }

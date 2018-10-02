@@ -7,7 +7,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RestRouteConfiguration {
 
-    @Bean(name = "rest-route")
+    @Bean
+    public RouteBuilder specificationRoute() {
+        return new RouteBuilder() {
+            @Override
+            public void configure() throws Exception {
+                restConfiguration()
+                    .apiContextPath("/.api-doc")
+                    .apiContextRouteId("doc-api")
+                    .component("servlet");
+            }
+        };
+    }
+
+    @Bean
     public RouteBuilder restRoute() {
         return new RestRoute();
     }

@@ -21,13 +21,18 @@ package io.syndesis.server.openshift;
 public enum Exposure {
 
     /**
-     * Default: do not expose the integration.
-     */
-    NONE,
-
-    /**
      * Expose the integration using a HTTP route.
      */
-    DIRECT;
+    ROUTE,
+
+    /**
+     * Expose the integration using a OpenShift service.
+     */
+    SERVICE,
+
+    /**
+     * Expose via 3scale.
+     */
+    _3SCALE;
 
 }

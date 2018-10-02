@@ -7,6 +7,10 @@
     {
       "type": "MAVEN",
       "id": "@project.groupId@:@project.artifactId@:@project.version@"
+    },
+    {
+      "type": "MAVEN",
+      "id": "org.apache.camel:camel-swagger-java:@camel.version@"
     }
   ],
   "actions": [

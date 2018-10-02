@@ -22,18 +22,16 @@ import java.util.stream.Collectors;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.integration.Integration;
 
-/**
- *
- */
-public class DeletedFilter implements Function<ListResult<Integration>, ListResult<Integration>> {
+public final class DeletedFilter implements Function<ListResult<Integration>, ListResult<Integration>> {
     @Override
-    public ListResult<Integration> apply(ListResult<Integration> list) {
-        List<Integration> filtered = list.getItems().stream()
-            .filter(i -> !i.isDeleted())
+    public ListResult<Integration> apply(final ListResult<Integration> list) {
+        if (!list.iterator().hasNext()) {
+            return list;
+        }
+
+        final List<Integration> filtered = list.getItems().stream().filter(i -> !i.isDeleted())
             .collect(Collectors.toList());
 
-        return new ListResult.Builder<Integration>()
-            .totalCount(filtered.size())
-            .addAllItems(filtered).build();
+        return new ListResult.Builder<Integration>().totalCount(filtered.size()).addAllItems(filtered).build();
     }
 }

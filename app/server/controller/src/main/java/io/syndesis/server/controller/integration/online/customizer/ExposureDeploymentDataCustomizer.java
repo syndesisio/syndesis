@@ -15,37 +15,50 @@
  */
 package io.syndesis.server.controller.integration.online.customizer;
 
+import java.util.EnumSet;
+
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.util.Optionals;
+import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.openshift.DeploymentData;
 import io.syndesis.server.openshift.Exposure;
 
 /**
  * Sets the right exposure (e.g. HTTP routes) into the deployment data.
  */
-public class ExposureDeploymentDataCustomizer implements DeploymentDataCustomizer {
+public final class ExposureDeploymentDataCustomizer implements DeploymentDataCustomizer {
+
+    private final boolean exposeVia3scale;
+
+    public ExposureDeploymentDataCustomizer(ControllersConfigurationProperties properties) {
+        exposeVia3scale = properties.isExposeVia3scale();
+    }
 
     @Override
-    public DeploymentData customize(DeploymentData data, IntegrationDeployment integrationDeployment) {
+    public DeploymentData customize(final DeploymentData data, final IntegrationDeployment integrationDeployment) {
         return new DeploymentData.Builder()
             .createFrom(data)
-            .withExposure(getExposure(integrationDeployment))
+            .withExposure(determineExposure(integrationDeployment))
             .build();
     }
 
-    private Exposure getExposure(IntegrationDeployment integrationDeployment) {
-        Exposure exposure = Exposure.NONE;
+    EnumSet<Exposure> determineExposure(final IntegrationDeployment integrationDeployment) {
+        if (needsExposure(integrationDeployment)) {
+            if (exposeVia3scale) {
+                return EnumSet.of(Exposure.SERVICE, Exposure._3SCALE);
+            }
 
-        boolean needsDirectExposure = integrationDeployment.getSpec()
+            return EnumSet.of(Exposure.ROUTE, Exposure.SERVICE);
+        }
+
+        return EnumSet.noneOf(Exposure.class);
+    }
+
+    static boolean needsExposure(final IntegrationDeployment integrationDeployment) {
+        return integrationDeployment.getSpec()
             .getFlows().stream().flatMap(f -> f.getSteps().stream())
             .flatMap(step -> Optionals.asStream(step.getAction()))
             .flatMap(action -> action.getTags().stream())
             .anyMatch("expose"::equals);
-
-        if (needsDirectExposure) {
-            exposure = Exposure.DIRECT;
-        }
-
-        return exposure;
     }
 }

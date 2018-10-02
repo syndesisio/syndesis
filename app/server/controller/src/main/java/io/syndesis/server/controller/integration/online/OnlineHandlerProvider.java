@@ -58,7 +58,7 @@ public class OnlineHandlerProvider extends BaseHandler implements StateChangeHan
                 openShiftService(),
                 projectGenerator,
                 properties,
-                Collections.singletonList(new ExposureDeploymentDataCustomizer())
+                Collections.singletonList(new ExposureDeploymentDataCustomizer(properties))
             ),
             new UnpublishHandler(openShiftService()));
     }

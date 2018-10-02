@@ -18,15 +18,14 @@ package io.syndesis.server.openshift;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.Quantity;
@@ -42,6 +41,9 @@ import io.fabric8.openshift.api.model.UserBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -79,14 +81,14 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public String deploy(String name, DeploymentData deploymentData) {
-        final String sName = openshiftName(name);
-        LOGGER.debug("Deploy {}", sName);
+        final String sanitizedName = openshiftName(name);
+        LOGGER.debug("Deploy {}", sanitizedName);
 
-        ensureDeploymentConfig(sName, deploymentData);
-        ensureSecret(sName, deploymentData);
-        ensureExposure(sName, deploymentData);
+        ensureDeploymentConfig(sanitizedName, deploymentData);
+        ensureSecret(sanitizedName, deploymentData);
+        ensureExposure(sanitizedName, deploymentData);
 
-        DeploymentConfig deployment = openShiftClient.deploymentConfigs().withName(sName).deployLatest();
+        DeploymentConfig deployment = openShiftClient.deploymentConfigs().withName(sanitizedName).deployLatest();
         return String.valueOf(deployment.getStatus().getLatestVersion());
     }
 
@@ -325,13 +327,18 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     private void ensureSecret(String name, DeploymentData deploymentData) {
+        final Map<String, String> secrets = deploymentData.getSecret();
+        if (secrets.isEmpty()) {
+            return;
+        }
+
         openShiftClient.secrets().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
                 .withName(name)
                 .addToAnnotations(deploymentData.getAnnotations())
                 .addToLabels(deploymentData.getLabels())
             .endMetadata()
-            .withStringData(deploymentData.getSecret())
+            .withStringData(secrets)
             .done();
     }
 
@@ -340,17 +347,21 @@ public class OpenShiftServiceImpl implements OpenShiftService {
        return openShiftClient.secrets().withName(projectName).delete();
     }
 
-    private void ensureExposure(String name, DeploymentData deploymentData) {
-        Exposure exposure = deploymentData.getExposure();
-        if (exposure == null || Exposure.NONE.equals(exposure)) {
-            removeRoute(name);
-            removeService(name);
-        } else if (Exposure.DIRECT.equals(exposure)) {
-            ensureService(name, deploymentData);
-            ensureRoute(name, deploymentData);
+    private void ensureExposure(String sanitizedName, DeploymentData deploymentData) {
+        final EnumSet<Exposure> exposure = deploymentData.getExposure();
+        if (exposure == null || exposure.isEmpty()) {
+            removeRoute(sanitizedName);
+            removeService(sanitizedName);
         } else {
-            LOGGER.error("Unsupported exposure method {}", exposure);
+            if (exposure.contains(Exposure.SERVICE)) {
+                ensureService(sanitizedName, deploymentData);
+            }
+
+            if (exposure.contains(Exposure.ROUTE)) {
+                ensureRoute(sanitizedName, deploymentData);
+            }
         }
+
     }
 
     private boolean removeExposure(String name) {
@@ -359,11 +370,14 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     private void ensureService(String name, DeploymentData deploymentData) {
+        final Map<String, String> labels = prepareServiceLabels(deploymentData);
+        final Map<String, String> annotations = prepareServiceAnnotations(deploymentData);
+
         openShiftClient.services().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
                 .withName(name)
-                .addToAnnotations(deploymentData.getAnnotations())
-                .addToLabels(deploymentData.getLabels())
+                .addToAnnotations(annotations)
+                .addToLabels(labels)
             .endMetadata()
             .withNewSpec()
                 .addToSelector(INTEGRATION_NAME_LABEL, name)
@@ -375,6 +389,27 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                 .endPort()
             .endSpec()
             .done();
+    }
+
+    static Map<String, String> prepareServiceLabels(final DeploymentData deploymentData) {
+        final Map<String, String> labels = new LinkedHashMap<>(deploymentData.getLabels());
+        if (deploymentData.getExposure().contains(Exposure._3SCALE)) {
+            labels.put("discovery.3scale.net", "true");
+        }
+
+        return labels;
+    }
+
+    static Map<String, String> prepareServiceAnnotations(final DeploymentData deploymentData) {
+        final Map<String, String> annotations = new LinkedHashMap<>(deploymentData.getAnnotations());
+        if (deploymentData.getExposure().contains(Exposure._3SCALE)) {
+            annotations.put("discovery.3scale.net/scheme", "http");
+            annotations.put("discovery.3scale.net/port", "8080");
+            annotations.put("discovery.3scale.net/path", "/api");
+            annotations.put("discovery.3scale.net/description-path", "/.api-doc/swagger.json");
+        }
+
+        return annotations;
     }
 
     private boolean removeService(String name) {
@@ -444,7 +479,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return OPENSHIFT_PREFIX + Names.sanitize(name);
     }
 
-    private static Map<String, String> defaultLabels() {
+    static Map<String, String> defaultLabels() {
         final HashMap<String, String> labels = new HashMap<String, String>();
         labels.put("syndesis.io/type", "integration");
         labels.put("syndesis.io/app", "syndesis");
