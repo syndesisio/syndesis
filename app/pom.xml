@@ -99,7 +99,7 @@
     <maven-archetype-packaging.version>2.0</maven-archetype-packaging.version>
     <archetype-packaging.version>2.2</archetype-packaging.version>
     <maven-archetype-plugin.version>2.2</maven-archetype-plugin.version>
-    <maven-resolver-api.version>1.0.3</maven-resolver-api.version>
+    <maven-resolver-api.version>1.1.1</maven-resolver-api.version>
 
     <maven-common-artifact-filters.version>1.4</maven-common-artifact-filters.version>
     <maven-shared-utils.version>3.1.0</maven-shared-utils.version>
