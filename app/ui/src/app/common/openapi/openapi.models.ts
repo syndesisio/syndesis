@@ -5,8 +5,19 @@ export interface OpenApiValidationActionsSummary {
   actionCountByTags?: StringMap<number>;
 }
 
-export type OpenApiValidationWarnings = Array<{ key: string; longdesc: string }>;
-export type OpenApiValidationErrors = Array<{ key: string; longdesc: string }>;
+export interface OpenApiValidationWarning {
+  error: string;
+  message: string;
+}
+
+export interface OpenApiValidationError {
+  error: string;
+  message: string;
+  property: string;
+}
+
+export type OpenApiValidationWarnings = OpenApiValidationWarning[];
+export type OpenApiValidationErrors = OpenApiValidationError[];
 
 export interface OpenApiValidationErrorMessage {
   error?: string;

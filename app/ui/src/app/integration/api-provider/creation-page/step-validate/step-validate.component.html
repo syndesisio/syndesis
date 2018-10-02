@@ -9,7 +9,7 @@
       <ng-template #validationContent>
         <openapi-review
           [name]="validationResponse.name"
-          [description]="validationResponse.description"
+          [description]="validationResponse.description || 'No description provided'"
           [warnings]="validationResponse.warnings"
           [errors]="validationResponse.errors"
           [actionsSummary]="validationResponse.actionsSummary">

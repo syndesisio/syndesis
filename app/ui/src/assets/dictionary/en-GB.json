@@ -396,7 +396,19 @@
       "api-spec-creation": "Create from scratch",
       "api-upload-invalid-file": "'{{0}}' is not a valid file. Only files that end in '.json' can be uploaded.",
       "url-validation-error": "You must enter a valid URL before submitting the form.",
-      "api-upload-valid-file": "Successfully uploaded '{{0}}'."
+      "api-upload-valid-file": "Successfully uploaded '{{0}}'.",
+      "api-review-action-tagged-count": "<strong>{{0}}</strong> tagged {{1}}",
+      "api-review-api-description": "<strong>Description:</strong> {{0}}",
+      "api-review-api-info-header": "API Definition",
+      "api-review-api-name": "<strong>Name:</strong> {{0}}",
+      "api-review-edit-button": "Review/Edit",
+      "api-review-errors-header": "Errors",
+      "api-review-imported-header": "Imported",
+      "api-review-operations-count": "<strong>{{0}}</strong> operations",
+      "api-review-no-operations": "<strong>0</strong> operations",
+      "api-review-title": "Review Actions",
+      "api-review-validation-fallback": "No connector details are currently available.",
+      "api-review-warnings-header": "Warnings"
     }
   }
 }
