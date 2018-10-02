@@ -156,6 +156,11 @@ parameters:
   generate: expression
   name: CLIENT_STATE_ENCRYPTION_KEY
   required: true
+- description: Volume space available for the upgrade process (backup data), e.g. 512Mi, 2Gi.
+  displayName: Upgrade Volume Capacity
+  name: UPGRADE_VOLUME_CAPACITY
+  required: true
+  value: 1Gi
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
@@ -580,6 +585,20 @@ objects:
     resources:
       requests:
         storage: ${POSTGRESQL_VOLUME_CAPACITY}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: syndesis-upgrade
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${UPGRADE_VOLUME_CAPACITY}
 
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
@@ -1630,6 +1649,16 @@ objects:
     Syndesis upgrade process started
   objects:
   - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: syndesis-upgrade
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${POSTGRESQL_VOLUME_CAPACITY}
+  - apiVersion: v1
     kind: Pod
     metadata:
       name: syndesis-upgrade-latest
@@ -1654,5 +1683,5 @@ objects:
       volumes:
       - name: backup-dir
         persistentVolumeClaim:
-          claimName: syndesis-db
+          claimName: syndesis-upgrade
       restartPolicy: Never
