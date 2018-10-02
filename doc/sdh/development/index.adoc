@@ -3,6 +3,7 @@
 
 include::groups.adoc[]
 include::labels.adoc[]
+include::comms.adoc[]
 include::local.adoc[]
 include::ui.adoc[]
 
