@@ -22,7 +22,6 @@ import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.openapi.OpenApi;
-import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
@@ -53,7 +52,7 @@ public class ApiHandler extends BaseHandler {
     private static final String API_PROVIDER_START_ACTION_ID = "io.syndesis:api-provider-start";
     private static final String API_PROVIDER_END_ACTION_ID = "io.syndesis:api-provider-end";
 
-    private APIGenerator apiGenerator;
+    private final APIGenerator apiGenerator;
 
     public ApiHandler(final DataManager dataMgr, APIGenerator apiGenerator) {
         super(dataMgr);
@@ -89,26 +88,6 @@ public class ApiHandler extends BaseHandler {
         }
 
         return apiIntegration.getIntegration();
-    }
-
-    @POST
-    @Path("/generator/save")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @ApiOperation("Test resource for testing the creation of APIs without UI")
-    public Integration createIntegrationFromAPIAndSave(@MultipartForm final APIFormData apiFormData) {
-        Integration integration = createIntegrationFromAPI(apiFormData);
-
-        String name = integration.getName();
-        if (name == null) {
-            integration = new Integration.Builder()
-                .createFrom(integration)
-                .name(KeyGenerator.createKey())
-                .build();
-        }
-
-        getDataManager().store(integration, Integration.class);
-        return integration;
     }
 
     @POST
