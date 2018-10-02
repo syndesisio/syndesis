@@ -90,6 +90,7 @@ export function apiProviderReducer(
       return {
         ...state,
         uploadSpecification: action.payload,
+        validationErrors: null
       };
     }
 
