@@ -199,7 +199,7 @@ public class OpenShiftServiceImplTest {
                 .addToAnnotations("discovery.3scale.net/scheme", "http")
                 .addToAnnotations("discovery.3scale.net/port", "8080")
                 .addToAnnotations("discovery.3scale.net/path", "/api")
-                .addToAnnotations("discovery.3scale.net/description-path", "/api/api-docs/" + name)
+                .addToAnnotations("discovery.3scale.net/description-path", "/.api-doc/swagger.json")
             .endMetadata()
             .withNewSpec()
                 .addNewPort()

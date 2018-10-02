@@ -81,14 +81,14 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public String deploy(String name, DeploymentData deploymentData) {
-        final String sName = openshiftName(name);
-        LOGGER.debug("Deploy {}", sName);
+        final String sanitizedName = openshiftName(name);
+        LOGGER.debug("Deploy {}", sanitizedName);
 
-        ensureDeploymentConfig(sName, deploymentData);
-        ensureSecret(sName, deploymentData);
-        ensureExposure(name, deploymentData);
+        ensureDeploymentConfig(sanitizedName, deploymentData);
+        ensureSecret(sanitizedName, deploymentData);
+        ensureExposure(sanitizedName, deploymentData);
 
-        DeploymentConfig deployment = openShiftClient.deploymentConfigs().withName(sName).deployLatest();
+        DeploymentConfig deployment = openShiftClient.deploymentConfigs().withName(sanitizedName).deployLatest();
         return String.valueOf(deployment.getStatus().getLatestVersion());
     }
 
@@ -347,15 +347,14 @@ public class OpenShiftServiceImpl implements OpenShiftService {
        return openShiftClient.secrets().withName(projectName).delete();
     }
 
-    private void ensureExposure(String unsanitizedName, DeploymentData deploymentData) {
-        final String sanitizedName = openshiftName(unsanitizedName);
+    private void ensureExposure(String sanitizedName, DeploymentData deploymentData) {
         final EnumSet<Exposure> exposure = deploymentData.getExposure();
         if (exposure == null || exposure.isEmpty()) {
             removeRoute(sanitizedName);
             removeService(sanitizedName);
         } else {
             if (exposure.contains(Exposure.SERVICE)) {
-                ensureService(unsanitizedName, deploymentData);
+                ensureService(sanitizedName, deploymentData);
             }
 
             if (exposure.contains(Exposure.ROUTE)) {
@@ -370,11 +369,9 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return removeService(name) && res;
     }
 
-    private void ensureService(String unsanitizedName, DeploymentData deploymentData) {
+    private void ensureService(String name, DeploymentData deploymentData) {
         final Map<String, String> labels = prepareServiceLabels(deploymentData);
-        final Map<String, String> annotations = prepareServiceAnnotations(unsanitizedName, deploymentData);
-
-        final String name = openshiftName(unsanitizedName);
+        final Map<String, String> annotations = prepareServiceAnnotations(deploymentData);
 
         openShiftClient.services().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
@@ -403,13 +400,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return labels;
     }
 
-    static Map<String, String> prepareServiceAnnotations(final String name, final DeploymentData deploymentData) {
+    static Map<String, String> prepareServiceAnnotations(final DeploymentData deploymentData) {
         final Map<String, String> annotations = new LinkedHashMap<>(deploymentData.getAnnotations());
         if (deploymentData.getExposure().contains(Exposure._3SCALE)) {
             annotations.put("discovery.3scale.net/scheme", "http");
             annotations.put("discovery.3scale.net/port", "8080");
             annotations.put("discovery.3scale.net/path", "/api");
-            annotations.put("discovery.3scale.net/description-path", "/api/api-docs/" + name);
+            annotations.put("discovery.3scale.net/description-path", "/.api-doc/swagger.json");
         }
 
         return annotations;

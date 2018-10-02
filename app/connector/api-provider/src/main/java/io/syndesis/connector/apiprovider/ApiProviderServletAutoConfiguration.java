@@ -15,9 +15,12 @@
  */
 package io.syndesis.connector.apiprovider;
 
+import java.util.Arrays;
+
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,11 +34,19 @@ public class ApiProviderServletAutoConfiguration {
     public ServletRegistrationBean apiProviderServletRegistrationBean() {
         ServletRegistrationBean mapping = new ServletRegistrationBean();
         mapping.setServlet(new CamelHttpTransportServlet());
-        mapping.addUrlMappings("/api/*");
+        mapping.addUrlMappings("/*");
         mapping.setName("CamelServlet");
         mapping.setLoadOnStartup(1);
 
         return mapping;
     }
 
+    @Bean
+    public FilterRegistrationBean apiSpecificationContentType() {
+        final FilterRegistrationBean filter = new FilterRegistrationBean();
+        filter.setUrlPatterns(Arrays.asList("/.api-doc/swagger.json", "/.api-doc/swagger.yaml"));
+        filter.setFilter(new SpecificationContentTypeFilter());
+
+        return filter;
+    }
 }
