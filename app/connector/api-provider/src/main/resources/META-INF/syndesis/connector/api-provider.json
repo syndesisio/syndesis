@@ -21,9 +21,6 @@
       "pattern": "From",
       "actionType": "connector",
       "tags": ["expose"],
-      "metadata": {
-        "serverBasePath": "/api/"
-      },
       "descriptor": {
         "componentScheme": "direct",
         "inputDataShape": {

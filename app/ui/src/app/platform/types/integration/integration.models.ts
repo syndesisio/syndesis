@@ -3,6 +3,7 @@ import {
   Action,
   BaseEntity,
   Connection,
+  ConfigurationProperty,
   key,
   WithLeveledMessages,
   StringMap,
@@ -70,6 +71,8 @@ export interface Integration extends IntegrationOverview {
   url: string;
   statusDetail?: IntegrationStatusDetail;
   type: IntegrationType;
+  properties: StringMap<ConfigurationProperty>;
+  configuredProperties: StringMap<string>;
 }
 
 export type Integrations = Array<Integration>;

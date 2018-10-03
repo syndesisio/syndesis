@@ -25,6 +25,7 @@ public final class DeploymentData {
     private final Map<String, String> annotations = new HashMap<>();
     private final Map<String, String> labels = new HashMap<>();
     private final Map<String, String> secret = new HashMap<>();
+    private final Map<String, String> properties = new HashMap<>();
 
     private String image;
     private int version;
@@ -41,6 +42,10 @@ public final class DeploymentData {
 
     public Map<String, String> getSecret() {
         return secret;
+    }
+
+    public Map<String, String> getProperties() {
+        return properties;
     }
 
     public int getVersion() {
@@ -91,6 +96,11 @@ public final class DeploymentData {
 
         public DeploymentData.Builder addSecretEntry(final String name, final String value) {
             that.secret.put(name, value);
+            return this;
+        }
+
+        public DeploymentData.Builder addProperty(final String name, final String value) {
+            that.properties.put(name, value);
             return this;
         }
 

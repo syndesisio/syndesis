@@ -403,10 +403,11 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     static Map<String, String> prepareServiceAnnotations(final DeploymentData deploymentData) {
         final Map<String, String> annotations = new LinkedHashMap<>(deploymentData.getAnnotations());
         if (deploymentData.getExposure().contains(Exposure._3SCALE)) {
+            final String basePath = deploymentData.getProperties().get("api-basePath");
             annotations.put("discovery.3scale.net/scheme", "http");
             annotations.put("discovery.3scale.net/port", "8080");
-            annotations.put("discovery.3scale.net/path", "/api");
-            annotations.put("discovery.3scale.net/description-path", "/.api-doc/swagger.json");
+            annotations.put("discovery.3scale.net/path", basePath);
+            annotations.put("discovery.3scale.net/description-path", basePath + "/.api-doc/swagger.json");
         }
 
         return annotations;
