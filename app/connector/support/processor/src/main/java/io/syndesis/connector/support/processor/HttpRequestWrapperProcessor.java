@@ -23,6 +23,8 @@ import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
+import org.apache.camel.impl.DefaultMessage;
+import org.apache.camel.util.ExchangeHelper;
 import org.apache.camel.util.ObjectHelper;
 
 import java.io.InputStream;
@@ -67,7 +69,11 @@ public class HttpRequestWrapperProcessor implements Processor {
             rootNode.putPOJO("body", body);
         }
 
-        message.setBody(Json.toString(rootNode));
+        final String newBody = Json.toString(rootNode);
+        final Message replacement = new DefaultMessage(exchange.getContext());
+        replacement.copyFromWithNewBody(message, newBody);
+
+        ExchangeHelper.replaceMessage(exchange, replacement, false);
     }
 
     public Set<String> getParameters() {
