@@ -51,7 +51,7 @@ export class DashboardMetricsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.uptimeStart = moment(this.integrationMetrics.start).format(
-      'MMM Do HH:mm A'
+      'MMM Do LT'
     ); // eg January 12nd 8:53 pm
 
     this.dateTime = moment(this.integrationMetrics.start).format(
