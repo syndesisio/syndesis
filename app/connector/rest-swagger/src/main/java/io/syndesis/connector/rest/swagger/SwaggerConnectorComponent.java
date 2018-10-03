@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.camel.Endpoint;
+import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 import org.apache.camel.component.connector.DefaultConnectorEndpoint;
@@ -237,7 +238,9 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
 
         final Processor headerSetter = exchange -> exchange.getIn().getHeaders().putAll(determineHeaders(parameters));
 
-        final Processor combinedBeforeProducers = Pipeline.newInstance(getCamelContext(), new PayloadConverter(), headerSetter);
+        final Processor headerRemover = exchange -> exchange.getIn().removeHeader(Exchange.HTTP_URI);
+
+        final Processor combinedBeforeProducers = Pipeline.newInstance(getCamelContext(), new PayloadConverter(), headerSetter, headerRemover);
         endpoint.setBeforeProducer(combinedBeforeProducers);
 
         if (authenticationType == AuthenticationType.oauth2 && refreshToken != null && !refreshTokenRetryStatuses.isEmpty()) {
