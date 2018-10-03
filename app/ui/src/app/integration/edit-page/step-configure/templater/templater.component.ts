@@ -58,6 +58,7 @@ export class TemplaterComponent implements OnInit {
   editorFocused: boolean;
   validationErrors: any[] = [];
   validationErrorsExpanded = false;
+  dragEnter: boolean;
 
   /*
    * Variables for use with the create template editor
@@ -109,6 +110,18 @@ export class TemplaterComponent implements OnInit {
 
   onEditorBlur() {
     this.editorFocused = false;
+  }
+
+  onEditorDragenter() {
+    this.dragEnter = true;
+  }
+
+  onEditorDragleave() {
+    this.dragEnter = false;
+  }
+
+  onEditorDrop() {
+    this.dragEnter = false;
   }
 
   onChange() {

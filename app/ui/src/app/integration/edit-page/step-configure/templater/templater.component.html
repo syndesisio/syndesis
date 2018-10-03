@@ -2,7 +2,7 @@
 
   <p>
     {{ 'integrations.steps.templater-instruct-text1' | synI18n }}
-    <a (click)="fileUpload.click()">
+    <a role="button" (click)="fileUpload.click()">
       {{ 'integrations.steps.templater-instruct-text2' | synI18n }}
     </a>
     {{ 'integrations.steps.templater-instruct-text3' | synI18n }}
@@ -20,38 +20,28 @@
 
   <p class="help-block"><em>{{ 'integrations.steps.templater-upload-helper-text-size-type' | synI18n }}</em></p>
 
-  <div [hidden]="editorFocused || templateContent">{{ 'integrations.steps.templater-editor-placeholder' | synI18n }}</div>
-
-  <div class="templater-form-editor">
-    <div class="col-xs-12">
-      <div class="form-group row">
-        <div id="template-editor">
-          <codemirror name="templateEditor" #templateEditor [(ngModel)]="templateContent"
-                      [config]="editorConfig" (focus)="onEditorFocus()" (blur)="onEditorBlur()">
-          </codemirror>
-        </div>
+  <div class="col-xs-12">
+    <div class="form-group row">
+      <div id="template-editor" class="template-editor"
+           [ngClass]="{'show-placeholder' : !editorFocused && !templateContent, 'drag-enter' : dragEnter}"
+           [attr.data-placeholder]="'integrations.steps.templater-editor-placeholder' | synI18n"
+           [attr.data-drag-enter]="'integrations.steps.templater-editor-drag-enter' | synI18n">
+        <codemirror name="templateEditor" #templateEditor [(ngModel)]="templateContent"
+                    [config]="editorConfig"
+                    (focus)="onEditorFocus()"
+                    (blur)="onEditorBlur()"
+                    (dragenter)="onEditorDragenter()"
+                    (dragleave)="onEditorDragleave()"
+                    (drop)="onEditorDrop()">
+        </codemirror>
+      </div>
+    
+      <div class="templater-form-validation">
+        <p *ngIf="invalidFileMsg">
+          <span class="pficon-error-circle-o"></span>
+          {{ invalidFileMsg }}
+        </p>
       </div>
     </div>
   </div>
-
-  <p *ngIf="invalidFileMsg">
-    <span class="pficon-error-circle-o"></span>
-    {{ invalidFileMsg }}
-  </p>
-
-  <div class="templater-form-validation" *ngIf="validationErrors.length > 0">
-    <span class="pficon-error-circle-o"></span>
-    {{ 'integrations.steps.templater-validation-errors' | synI18n }} ({{validationErrors.length}})
-
-    <a class="view-all" (click)="expandCollapseValidDetail()">
-      View all <i class="caret" [ngClass]="{'expanded': validationErrorsExpanded === true}"></i>
-    </a>
-
-    <div *ngIf="validationErrorsExpanded">
-      <li *ngFor="let error of validationErrors" class="validation-error-text">
-        {{error.message}}
-      </li>
-    </div>
-  </div>
-
 </form>
