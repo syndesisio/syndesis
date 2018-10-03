@@ -16,6 +16,7 @@
 package io.syndesis.server.controller.integration.online.customizer;
 
 import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
@@ -68,5 +69,23 @@ public class ExposureDeploymentDataCustomizerTest {
         final ExposureDeploymentDataCustomizer customizer = new ExposureDeploymentDataCustomizer(properties);
 
         assertThat(customizer.determineExposure(exposedIntegration)).containsOnly(Exposure.SERVICE, Exposure._3SCALE);
+    }
+
+    @Test
+    public void shouldNotExposeWebHooksVia3scaleWhen3scaleIsEnabled() {
+        final ControllersConfigurationProperties properties = new ControllersConfigurationProperties();
+        properties.setExposeVia3scale(true);
+
+        final ExposureDeploymentDataCustomizer customizer = new ExposureDeploymentDataCustomizer(properties);
+
+        final IntegrationDeployment webHookIntegration = new IntegrationDeployment.Builder()
+            .spec(new Integration.Builder()
+                .addFlow(new Flow.Builder().addStep(new Step.Builder().action(new ConnectorAction.Builder()
+                    .descriptor(new ConnectorDescriptor.Builder().connectorId("webhook").build()).addTag("expose")
+                    .build()).build()).build())
+                .build())
+            .build();
+
+        assertThat(customizer.determineExposure(webHookIntegration)).containsOnly(Exposure.SERVICE, Exposure.ROUTE);
     }
 }
