@@ -123,6 +123,8 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         final Integration integration = sanitize(integrationDefinition, resourceManager);
         final Properties properties = new Properties();
 
+        properties.putAll(integration.getConfiguredProperties());
+
         final List<Flow> flows = integration.getFlows();
         for (int f = 0; f < flows.size(); f++) {
             final Flow flow = flows.get(f);

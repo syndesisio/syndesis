@@ -18,6 +18,7 @@ package io.syndesis.connector.apiprovider;
 import java.util.Arrays;
 
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -30,11 +31,17 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnWebApplication
 public class ApiProviderServletAutoConfiguration {
 
+    String basePath;
+
+    public ApiProviderServletAutoConfiguration(final @Value("${api-basePath}") String basePath) {
+        this.basePath = basePath;
+    }
+
     @Bean
     public ServletRegistrationBean apiProviderServletRegistrationBean() {
         ServletRegistrationBean mapping = new ServletRegistrationBean();
         mapping.setServlet(new CamelHttpTransportServlet());
-        mapping.addUrlMappings("/*");
+        mapping.addUrlMappings(basePath + "/*");
         mapping.setName("CamelServlet");
         mapping.setLoadOnStartup(1);
 
@@ -44,7 +51,7 @@ public class ApiProviderServletAutoConfiguration {
     @Bean
     public FilterRegistrationBean apiSpecificationContentType() {
         final FilterRegistrationBean filter = new FilterRegistrationBean();
-        filter.setUrlPatterns(Arrays.asList("/.api-doc/swagger.json", "/.api-doc/swagger.yaml"));
+        filter.setUrlPatterns(Arrays.asList(basePath + "/.api-doc/swagger.json", basePath + "/.api-doc/swagger.yaml"));
         filter.setFilter(new SpecificationContentTypeFilter());
 
         return filter;

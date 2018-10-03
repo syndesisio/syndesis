@@ -65,6 +65,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.ExcessiveMethodLength" })
 @RunWith(Parameterized.class)
@@ -307,16 +308,21 @@ public class ProjectGeneratorTest {
         TestResourceManager resourceManager = new TestResourceManager();
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
         ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager, TestConstants.MAVEN_PROPERTIES);
-        Integration integration = resourceManager.newIntegration(s1, s2);
+        Integration integration = new Integration.Builder()
+            .createFrom(resourceManager.newIntegration(s1, s2))
+            .putConfiguredProperty("integration", "property")
+            .build();
         Properties properties = generator.generateApplicationProperties(integration);
 
-        assertThat(properties.size()).isEqualTo(6);
-        assertThat(properties.getProperty("old.configurations.old-0-0.token")).isEqualTo("my-token-1");
-        assertThat(properties.getProperty("flow-0.old-0.username")).isEqualTo("my-username-1");
-        assertThat(properties.getProperty("flow-0.old-0.password")).isEqualTo("my-password-1");
-        assertThat(properties.getProperty("flow-0.http4-1.token")).isEqualTo("my-token-2");
-        assertThat(properties.getProperty("flow-0.http4-1.username")).isEqualTo("my-username-2");
-        assertThat(properties.getProperty("flow-0.http4-1.password")).isEqualTo("my-password-2");
+        assertThat(properties).containsOnly(
+            entry("integration", "property"),
+            entry("old.configurations.old-0-0.token", "my-token-1"),
+            entry("flow-0.old-0.username", "my-username-1"),
+            entry("flow-0.old-0.password", "my-password-1"),
+            entry("flow-0.http4-1.token", "my-token-2"),
+            entry("flow-0.http4-1.username", "my-username-2"),
+            entry("flow-0.http4-1.password", "my-password-2")
+        );
     }
 
 
@@ -394,7 +400,7 @@ public class ProjectGeneratorTest {
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java")).exists();
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java")).exists();
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java")).exists();
-        
+
         assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java"), "RestRoute.java");
         assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java"), "RestRouteConfiguration.java");
     }

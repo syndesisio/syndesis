@@ -37,6 +37,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.server.openshift.DeploymentData;
+import io.syndesis.server.openshift.DeploymentData.Builder;
 import io.syndesis.server.openshift.OpenShiftService;
 
 public class PublishHandler extends BaseHandler implements StateChangeHandler {
@@ -139,7 +140,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
 
         String integrationId = integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId"));
         String version = Integer.toString(integrationDeployment.getVersion());
-        DeploymentData data = DeploymentData.builder()
+        final Builder deploymentDataBuilder = DeploymentData.builder()
             .withVersion(integrationDeployment.getVersion())
             .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationId))
             .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
@@ -147,8 +148,11 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
             .addAnnotation(OpenShiftService.INTEGRATION_NAME_ANNOTATION, integration.getName())
             .addAnnotation(OpenShiftService.INTEGRATION_ID_LABEL, integrationId)
             .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
-            .addSecretEntry("application.properties", propsToString(applicationProperties))
-            .build();
+            .addSecretEntry("application.properties", propsToString(applicationProperties));
+
+        integration.getConfiguredProperties().forEach((k, v) -> deploymentDataBuilder.addProperty(k, v));
+
+        DeploymentData data = deploymentDataBuilder.build();
 
         if (this.customizers != null && !this.customizers.isEmpty()) {
             for (DeploymentDataCustomizer customizer : customizers) {

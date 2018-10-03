@@ -1,11 +1,18 @@
 package io.syndesis.example;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RestRouteConfiguration {
+
+    String basePath;
+
+    public RestRouteConfiguration(final @Value("${api-basePath}") String basePath) {
+        this.basePath = basePath;
+    }
 
     @Bean
     public RouteBuilder specificationRoute() {
@@ -13,7 +20,8 @@ public class RestRouteConfiguration {
             @Override
             public void configure() throws Exception {
                 restConfiguration()
-                    .apiContextPath("/.api-doc")
+                    .contextPath(basePath)
+                    .apiContextPath(".api-doc")
                     .apiContextRouteId("doc-api")
                     .component("servlet");
             }
