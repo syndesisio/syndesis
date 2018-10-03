@@ -45,3 +45,6 @@ spec:
         limits:
           memory: 512Mi
         volumeCapacity: 1Gi
+    upgrade:
+      resources:
+        volumeCapacity: 1Gi
