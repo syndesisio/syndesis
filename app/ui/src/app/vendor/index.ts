@@ -15,6 +15,7 @@ export { FileItem, FileLikeObject, FileUploader, FileUploaderOptions, ParsedResp
 
 import 'codemirror/addon/display/placeholder.js';
 import 'codemirror/addon/mode/overlay.js';
+import 'codemirror/addon/lint/lint.js';
 import * as CodeMirror from 'codemirror/lib/codemirror.js';
 export { CodeMirror };
 

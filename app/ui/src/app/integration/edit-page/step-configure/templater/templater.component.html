@@ -27,8 +27,7 @@
       <div class="form-group row">
         <div id="template-editor">
           <codemirror name="templateEditor" #templateEditor [(ngModel)]="templateContent"
-                      [config]="editorConfig" (change)="onChange()"
-                      (focus)="onEditorFocus()" (blur)="onEditorBlur()">
+                      [config]="editorConfig" (focus)="onEditorFocus()" (blur)="onEditorBlur()">
           </codemirror>
         </div>
       </div>
@@ -50,7 +49,7 @@
 
     <div *ngIf="validationErrorsExpanded">
       <li *ngFor="let error of validationErrors" class="validation-error-text">
-        {{error}}
+        {{error.message}}
       </li>
     </div>
   </div>
