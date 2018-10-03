@@ -24,6 +24,9 @@
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/naming.xml/ClassNamingConventions">
+    <properties>
+      <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]*" />
+    </properties>
     <priority>4</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/LogicInversion">
@@ -106,7 +109,8 @@
   </rule>
   <rule ref="rulesets/java/codesize.xml/CyclomaticComplexity">
     <properties>
-      <property name="reportLevel" value="20" />
+      <property name="methodReportLevel" value="100" />
+      <property name="classReportLevel" value="100" />
     </properties>
     <priority>3</priority>
   </rule>
@@ -263,9 +267,6 @@
   <rule ref="rulesets/java/finalizers.xml/FinalizeOverloaded">
     <priority>3</priority>
   </rule>
-  <rule ref="rulesets/java/javabeans.xml/MissingSerialVersionUID">
-    <priority>3</priority>
-  </rule>
   <rule ref="rulesets/java/basic.xml/DontCallThreadRun">
     <priority>3</priority>
   </rule>
@@ -380,7 +381,7 @@
       <property name="minimum" value="3" />
     </properties>
   </rule>
-  <rule ref="rulesets/java/naming.xml/MisleadingVariableName">
+  <rule ref="rulesets/java/naming.xml/MIsLeadingVariableName">
     <priority>4</priority>
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyTryBlock">

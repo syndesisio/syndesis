@@ -33,7 +33,7 @@ public interface MetaData {
 
         public final Status status;
 
-        private Type(final Status status) {
+        Type(final Status status) {
             this.status = status;
         }
     }
