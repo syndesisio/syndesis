@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -37,6 +38,7 @@ import io.syndesis.common.model.WithResources;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.WithVersion;
 import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
 
@@ -75,16 +77,27 @@ public interface IntegrationBase extends WithProperties, WithResourceId, WithVer
 
     @JsonIgnore
     default Set<String> getUsedConnectorIds() {
-        return getFlows().stream()
-            .flatMap(f -> f.getSteps().stream())
-            .map(Step::getAction)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .filter(ConnectorAction.class::isInstance)
-            .map(ConnectorAction.class::cast)
-            .map(a -> a.getDescriptor().getConnectorId())
-            .filter(Objects::nonNull)
-            .collect(Collectors.toSet());
+        return Stream.concat(
+            getFlows().stream()
+                .flatMap(f -> f.getSteps().stream())
+                .map(Step::getConnection)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(Connection::getConnectorId),
+
+            getFlows().stream()
+                .flatMap(f -> f.getSteps().stream())
+                .map(Step::getAction)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(ConnectorAction.class::isInstance)
+                .map(ConnectorAction.class::cast)
+                .map(ConnectorAction::getDescriptor)
+                .filter(Objects::nonNull)
+                .map(ConnectorDescriptor::getConnectorId)
+            )
+        .filter(Objects::nonNull)
+        .collect(Collectors.toSet());
     }
 
     default Optional<Connection> findConnectionById(String connectionId) {

@@ -44,7 +44,7 @@ public final class ExposureDeploymentDataCustomizer implements DeploymentDataCus
 
     EnumSet<Exposure> determineExposure(final IntegrationDeployment integrationDeployment) {
         if (needsExposure(integrationDeployment)) {
-            if (exposeVia3scale) {
+            if (exposeVia3scale && isNotWebhook(integrationDeployment)) {
                 return EnumSet.of(Exposure.SERVICE, Exposure._3SCALE);
             }
 
@@ -52,6 +52,10 @@ public final class ExposureDeploymentDataCustomizer implements DeploymentDataCus
         }
 
         return EnumSet.noneOf(Exposure.class);
+    }
+
+    static boolean isNotWebhook(IntegrationDeployment integrationDeployment) {
+        return !integrationDeployment.getSpec().getUsedConnectorIds().contains("webhook");
     }
 
     static boolean needsExposure(final IntegrationDeployment integrationDeployment) {
