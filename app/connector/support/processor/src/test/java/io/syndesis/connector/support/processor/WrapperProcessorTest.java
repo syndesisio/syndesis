@@ -15,23 +15,32 @@
  */
 package io.syndesis.connector.support.processor;
 
+import java.io.ByteArrayInputStream;
+import java.util.Arrays;
+import java.util.Collection;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
+
 import io.syndesis.common.util.Json;
+
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.spi.HeadersMapFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
-import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
 
-import java.io.ByteArrayInputStream;
-import java.util.Arrays;
-import java.util.Collection;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(Parameterized.class)
 public class WrapperProcessorTest {
@@ -77,16 +86,21 @@ public class WrapperProcessorTest {
         JsonNode schemaNode = Json.reader().forType(JsonNode.class).readTree(schemaStr);
         final HttpRequestWrapperProcessor processor = new HttpRequestWrapperProcessor(schemaNode);
 
-        final Exchange exchange = Mockito.mock(Exchange.class);
-        final Message message = Mockito.mock(Message.class);
-        Mockito.when(exchange.getIn()).thenReturn(message);
-        Mockito.when(message.getBody()).thenReturn(givenBody);
-        Mockito.when(message.getHeader("param1", String.class)).thenReturn("param_value1");
-        Mockito.when(message.getHeader("param2", String.class)).thenReturn("param_value2");
+        final Exchange exchange = mock(Exchange.class);
+        final Message message = mock(Message.class);
+        final CamelContext camelContext = mock(CamelContext.class);
+        when(camelContext.getHeadersMapFactory()).thenReturn(mock(HeadersMapFactory.class));
+        when(exchange.getIn()).thenReturn(message);
+        when(exchange.getContext()).thenReturn(camelContext);
+        when(message.getBody()).thenReturn(givenBody);
+        when(message.getHeader("param1", String.class)).thenReturn("param_value1");
+        when(message.getHeader("param2", String.class)).thenReturn("param_value2");
 
         processor.process(exchange);
 
-        Mockito.verify(message).setBody(replacedBody);
+        final ArgumentCaptor<Message> replacement = ArgumentCaptor.forClass(Message.class);
+        verify(exchange).setIn(replacement.capture());
+        assertThat(replacement.getValue().getBody()).isEqualTo(replacedBody);
     }
 
 }
