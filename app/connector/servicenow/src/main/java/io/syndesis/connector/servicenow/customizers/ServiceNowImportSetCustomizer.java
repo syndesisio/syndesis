@@ -39,7 +39,7 @@ public class ServiceNowImportSetCustomizer implements ComponentProxyCustomizer {
         exchange.getIn().setHeader(ServiceNowConstants.RESOURCE, ServiceNowConstants.RESOURCE_IMPORT);
         exchange.getIn().setHeader(ServiceNowConstants.ACTION, ServiceNowConstants.ACTION_CREATE);
         exchange.getIn().setHeader(ServiceNowConstants.RETRIEVE_TARGET_RECORD, false);
-        exchange.getIn().setHeader(ServiceNowConstants.REQUEST_MODEL, java.lang.String.class);
+        exchange.getIn().setHeader(ServiceNowConstants.REQUEST_MODEL, String.class);
         exchange.getIn().setHeader(ServiceNowConstants.RESPONSE_MODEL, ImportSetResult.class);
     }
 }
