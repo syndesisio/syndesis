@@ -40,13 +40,18 @@
       width: auto;
       padding-right: 50px;
       padding-bottom: 20px;
+      ::ng-deep .step {
+        &:not(:last-child) .icon-container {
+          padding-bottom: 20px;
+          height: 75px;
+        }
+      }
     }
 
     ::ng-deep {
       .step {
         .icon-container {
           width: 55px;
-          height: 55px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -146,29 +151,34 @@
   ////////////////////////////////////////////////////////////////////////////////
   // LEFT-HAND NAV BAR W/ STEPS
   ////////////////////////////////////////////////////////////////////////////////
-  .step {
-    flex: 0 0 auto;
-
-    &.finish {
+  .flow-view-container {
+    .step {
       flex: 0 0 auto;
-      min-height: 0px;
-    }
-
-    &.step-insert {
-      flex: 0 0 auto;
-
-      a {
-        text-decoration: none;
+  
+      &.finish {
+        flex: 0 0 auto;
+        min-height: 0px;
       }
-
-      .square-icon {
-        position: relative;
-        cursor: pointer;
-
-        .fa.fa-plus-square {
-          color: #158acc;
-          background-color: white;
-          font-size: x-large;
+  
+      &.step-insert {
+        flex: 0 0 auto;
+        .icon-container {
+          height: 50px;
+        }
+  
+        a {
+          text-decoration: none;
+        }
+  
+        .square-icon {
+          position: relative;
+          cursor: pointer;
+  
+          .fa.fa-plus-square {
+            color: #158acc;
+            background-color: white;
+            font-size: 24px;
+          }
         }
       }
     }
