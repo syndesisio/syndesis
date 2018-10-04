@@ -120,6 +120,10 @@ public enum Kind {
         return modelName;
     }
 
+    public String getPluralModelName() {
+        return modelName + "s";
+    }
+
     @SuppressWarnings("unchecked")
     public <T extends WithId<T>> Class<T> getModelClass() {
         return (Class<T>) modelClass;
