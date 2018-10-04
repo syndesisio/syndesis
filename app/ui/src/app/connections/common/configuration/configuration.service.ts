@@ -27,7 +27,7 @@ export class ConnectionConfigurationService {
 
   getFormModel(connection: Connection): DynamicFormControlModel[] {
     const configAndValues = this.getFormConfig(connection);
-    const config = (this.formConfig = configAndValues.config);
+    const config = this.formConfig = configAndValues.config;
     const values = configAndValues.values;
     let controls = ['*'];
     // TODO temporary client-side hack to tweak form ordering
