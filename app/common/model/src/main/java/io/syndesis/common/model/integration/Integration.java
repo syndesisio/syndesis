@@ -15,14 +15,10 @@
  */
 package io.syndesis.common.model.integration;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.validation.UniquenessRequired;
 import io.syndesis.common.model.validation.integration.NoDuplicateIntegration;
 
@@ -39,75 +35,5 @@ public interface Integration extends WithId<Integration>, IntegrationBase {
 
     class Builder extends ImmutableIntegration.Builder {
         // allow access to ImmutableIntegration.Builder
-    }
-
-    /**
-     * A weaker form of equality to {@link #equals(Object)}.
-     * Compares a defining subset of properties to {code}another{code}'s
-     * and in turn tests those properties for equivalence.
-     *<p>
-     * An equals test of a null field and an empty {@link Optional}
-     * will return false whilst they are equivalent so this method will return true.
-     * <p>
-     * Items not tested include:
-     * <ul>
-     * <li>Version id -
-     *        this id can be updated yet the rest of the object is still unchanged;
-     * <li>Updated Date -
-     *        an object can be modified then reverted yet the updated value will be different.
-     * </ul>
-     *<p>
-     * Note
-     * Method can result in 2 instances being equivalent even though some
-     * properties are different. Thus, this should only be used in appropriate
-     * situations.
-     *
-     * @param another a {@link Integration} to compare with
-     * @return true if this is equivalent to {code}another{code}, false otherwise
-     */
-    @SuppressWarnings("PMD.NPathComplexity")
-    default boolean equivalent(Integration another) {
-        if (this == another) {
-            return true;
-        }
-
-        if (another == null) {
-            return false;
-        }
-
-        List<Connection> myConnections = getConnections();
-        if (myConnections == null) {
-            if (another.getConnections() != null) {
-                return false;
-            }
-        } else {
-            for (Connection myConnection : myConnections) {
-                Connection anotherConnection = another.findConnectionById(myConnection.getId().get()).orElse(null);
-                if (! myConnection.equivalent(anotherConnection)) {
-                    return false;
-                }
-            }
-        }
-
-        List<Flow> myFlows = getFlows();
-        if (myFlows == null) {
-            if (another.getFlows() != null) {
-                return false;
-            }
-        } else {
-            for (Flow myFlow : myFlows) {
-                Flow anotherFlow = another.findFlowById(myFlow.getId().get()).orElse(null);
-                if (!myFlow.equivalent(anotherFlow)) {
-                    return false;
-                }
-            }
-        }
-
-        return Objects.equals(getId(), another.getId())
-            && isDeleted() == another.isDeleted()
-            && getResources().equals(another.getResources())
-            && getTags().equals(another.getTags())
-            && Objects.equals(getDescription(), another.getDescription())
-            && Objects.equals(getName(), another.getName());
     }
 }

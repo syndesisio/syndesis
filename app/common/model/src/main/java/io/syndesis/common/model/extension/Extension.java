@@ -18,11 +18,10 @@ package io.syndesis.common.model.extension;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 import javax.validation.constraints.NotNull;
-
+import org.immutables.value.Value;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -42,7 +41,6 @@ import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.common.model.validation.NonBlockingValidations;
 import io.syndesis.common.model.validation.extension.NoDuplicateExtension;
 import io.syndesis.common.util.IndexedProperty;
-import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Extension.Builder.class)
@@ -132,69 +130,5 @@ public interface Extension extends WithId<Extension>, WithActions<Action>, WithN
     }
 
     class Builder extends ImmutableExtension.Builder {
-    }
-
-    /**
-     * A weaker form of equality to {@link #equals(Object)}.
-     * Compares a defining subset of properties to {code}another{code}'s
-     * and in turn tests those properties for equivalence.
-     *<p>
-     * An equals test of a null field and an empty {@link Optional}
-     * will return false whilst they are equivalent so this method will return true.
-     * <p>
-     * Items not tested include:
-     * <ul>
-     * <li>Version id -
-     *        this id can be updated yet the rest of the object is still unchanged;
-     * <li>Updated Date -
-     *        an object can be modified then reverted yet the updated value will be different.
-     * </ul>
-     * <p>
-     * Note
-     * Method can result in 2 instances being equivalent even though some
-     * properties are different. Thus, this should only be used in appropriate
-     * situations.
-     *
-     * @param another a {@link Extension} to compare with
-     * @return true if this is equivalent to {code}another{code}, false otherwise
-     */
-    @SuppressWarnings("PMD.NPathComplexity")
-    default boolean equivalent(Extension another) {
-        if (this == another) {
-            return true;
-        }
-
-        if (another == null) {
-            return false;
-        }
-
-        List<Action> myActions = getActions();
-        if (myActions == null) {
-            if (another.getActions() != null) {
-                return false;
-            }
-        } else {
-            for (Action myAction : myActions) {
-                Action anotherAction = another.findActionById(myAction.getId().get()).orElse(null);
-                if (! myAction.equivalent(anotherAction)) {
-                    return false;
-                }
-            }
-        }
-
-        return Objects.equals(getExtensionId(), another.getExtensionId())
-                        && Objects.equals(getSchemaVersion(), another.getSchemaVersion())
-                        && Objects.equals(getStatus(), another.getStatus())
-                        && Objects.equals(getIcon(), another.getIcon())
-                        && Objects.equals(getDescription(), another.getDescription())
-                        && Objects.equals(getUserId(), another.getUserId())
-                        && Objects.equals(getExtensionType(), another.getExtensionType())
-                        && Objects.equals(getId(), another.getId())
-                        && Objects.equals(getName(), another.getName())
-                        && getTags().equals(another.getTags())
-                        && getProperties().equals(another.getProperties())
-                        && getConfiguredProperties().equals(another.getConfiguredProperties())
-                        && getDependencies().equals(another.getDependencies())
-                        && getMetadata().equals(another.getMetadata());
     }
 }

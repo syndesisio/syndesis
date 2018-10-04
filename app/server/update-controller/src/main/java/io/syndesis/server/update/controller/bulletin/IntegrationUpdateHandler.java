@@ -42,6 +42,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.support.Equivalencer;
 import io.syndesis.common.util.CollectionsUtils;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.dao.manager.DataManager;
@@ -101,11 +102,14 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
             // flag a warning.
             //
             newConnection = includeConnector(newConnection);
-            if (! connection.equivalent(newConnection)) {
+            Equivalencer equiv = new Equivalencer();
+            if (! equiv.equivalent(null, connection, newConnection)) {
+                String message = equiv.message();
                 messages.add(
                      supplier.get()
                          .level(LeveledMessage.Level.WARN)
                          .code(differenceCode)
+                         .detail(message)
                          .build()
                 );
             }
@@ -374,11 +378,14 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
             // Draft Integration
             // **********************
 
-            if (! integration.equivalent(deployedInteg)) {
+            Equivalencer equiv = new Equivalencer();
+            if (! equiv.equivalent(null, integration, deployedInteg)) {
+                String message = equiv.message();
                 messages.add(
                      supplier.get()
                          .code(LeveledMessage.Code.SYNDESIS012)
                          .level(LeveledMessage.Level.WARN)
+                         .detail(message)
                          .build()
                 );
 
