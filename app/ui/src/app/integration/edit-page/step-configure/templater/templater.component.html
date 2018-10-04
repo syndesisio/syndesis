@@ -1,88 +1,45 @@
-<p>
-  <strong>{{ 'integrations.steps.templater-choice' | synI18n }}</strong>
-</p>
+<form (change)="onChange()" class="templater-form">
+  <p>
+    {{ 'integrations.steps.templater-instruct-text1' | synI18n }}
+    <a role="button" (click)="fileUpload.click()">
+      {{ 'integrations.steps.templater-instruct-text2' | synI18n }}
+    </a>
+    {{ 'integrations.steps.templater-instruct-text3' | synI18n }}
+  </p>
 
-<form (change)="onChange()" class="templater-form form-horizontal">
-  <fieldset class="container-fluid">
+  <span class="file-upload-input-hidden">
+    <input
+      #fileUpload
+      class="templater-form-file-chooser"
+      type="file"
+      accept="application/tmpl"
+      ng2FileSelect
+      [uploader]="uploader"/>
+  </span>
 
-    <!-- Radio button & compoment for file choose / dnd -->
+  <p class="help-block"><em>{{ 'integrations.steps.templater-upload-helper-text-size-type' | synI18n }}</em></p>
+
+  <div class="col-xs-12">
     <div class="form-group row">
-      <div class="col-xs-12 radio">
-        <label>
-          <input type="radio" name="templateSource" value="upload" [(ngModel)]="editType">
-          {{ 'integrations.steps.templater-file-upload' | synI18n }}
-        </label>
+      <div id="template-editor" class="template-editor"
+           [ngClass]="{'show-placeholder' : !editorFocused && !templateContent, 'drag-enter' : dragEnter}"
+           [attr.data-placeholder]="'integrations.steps.templater-editor-placeholder' | synI18n"
+           [attr.data-drag-enter]="'integrations.steps.templater-editor-drag-enter' | synI18n">
+        <codemirror name="templateEditor" #templateEditor [(ngModel)]="templateContent"
+                    [config]="editorConfig"
+                    (focus)="onEditorFocus()"
+                    (blur)="onEditorBlur()"
+                    (dragenter)="onEditorDragenter()"
+                    (dragleave)="onEditorDragleave()"
+                    (drop)="onEditorDrop()">
+        </codemirror>
       </div>
-    </div>
-    <div class="container-fluid">
-      <div class="form-group row" [class.syn-visuallyhidden]="editType !== 'upload'">
-        <div class="col-xs-12">
-          <div class="syn-drop-zone"
-              ng2FileDrop
-              [uploader]="uploader"
-              [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
-              (onFileDrop)="onFileDrop($event)"
-              (fileOver)="onFileOver($event)">
-            <p>{{ 'integrations.steps.templater-file-upload-dnd' | synI18n }}</p>
-            <div class="row syn-drop-zone__file-select">
-              <div class="col-md-5">
-                <p>
-                  <input #fileSelect
-                    class="templater-form-file-chooser"
-                    type="file"
-                    accept="application/tmpl"
-                    ng2FileSelect
-                    [uploader]="uploader">
-                </p>
-              </div>
-              <div class="col-md-7">
-                <p *ngIf="validFileMsg">
-                  <span class="pficon-ok"></span>
-                  {{ validFileMsg }}
-                </p>
-                <p *ngIf="invalidFileMsg">
-                  <span class="pficon-error-circle-o"></span>
-                  {{ invalidFileMsg }}
-                </p>
-              </div>
-            </div>
-            <p class="help-block"><em>{{ 'integrations.steps.templater-upload-helper-text-size' | synI18n }}</em></p>
-            <p class="help-block"><em>{{ 'integrations.steps.templater-upload-helper-text-type' | synI18n }}</em></p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Radio button and compoment for create -->
-    <div class="form-group row">
-      <div class="col-xs-12 radio">
-        <label>
-          <input type="radio" name="templateSource" value="create" [(ngModel)]="editType">
-          {{ 'integrations.steps.templater-create' | synI18n }}
-        </label>
-      </div>
-    </div>
-  </fieldset>
-  <!-- Editor for review and editing content -->
-  <div class="templater-form-editor"
-       [ngClass]="{'create': editType !== 'upload'}">
-    <div class="form-group">
-      <div class="col-xs-12">
-        <p [hidden]="!fileName || editType !== 'upload'">
-          <strong>{{ 'integrations.steps.templater-import-review' | synI18n }}</strong>
+    
+      <div class="templater-form-validation">
+        <p *ngIf="invalidFileMsg">
+          <span class="pficon-error-circle-o"></span>
+          {{ invalidFileMsg }}
         </p>
-        <p class="text-muted" [hidden]="editType !== 'create'">
-          <i>{{ 'integrations.steps.templater-create-editor-title' | synI18n }}</i>
-        </p>
-        <div class="form-group row" [hidden]="!templateContent && editType !== 'create'">
-          <div class="col-xs-8 templater-form-file-create-text">
-            <div id="template-editor">
-              <codemirror name="templateEditor" #templateEditor [(ngModel)]="templateContent"
-                          [config]="editorConfig" (change)="onChange()">
-              </codemirror>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
