@@ -1,56 +1,97 @@
-[id='add-template-step']
-= Adding a template step
+[id='add-template-step_{context}']
+= Add a template step
 
-A template step allows data to be reshaped into a single consistent
-format, by providing a pattern of text with substitutable symbols. Specific
-data values are mapped to those symbols and populated at runtime.
+In an integration, a template step takes data from a source and 
+inserts it into the format that is defined in a template that you upload to {prodname}.
+The benefit of a template step is that it provides data output in a 
+consistent format that you specify. 
 
-The template step has specific requirements for both its data input and output:
-* both input and output requires data to be in the form of a JSON object.
-* the symbols specified in the template must have data values mapped to them in
-  order for data to populate them.
-* once the data has been shaped into the template format, the output value is
-  stored in a single 'message' attribute. This attribute must be mapped to the
-  next step or connection.
-* mapping is performed in both cases using the data mapping step (see
-  <<add-data-mapping-step>>).
+The template defines placeholders and can also specify static text. 
+When you create the integration, you add a template step, map source fields 
+to the template placeholders, and then map template content to the next step 
+in the integration. When the integration executes, {prodname}
+inserts the values that are in the mapped source fields into an
+instance of the template and passes the result to the next step in the integration.
 
-The template needs to be specified and the step allows this to either be
-created from scratch or loaded from a file. The currently supported syntax
-for the template is https://mustache.github.io[Mustache], with
+In this release, only https://mustache.github.io[Mustache] templates are
+supported. It is expected that 
 https://velocity.apache.org[Velocity] and
-https://freemarker.apache.org[Freemarker] are excepted to be added at a later
-date.
+https://freemarker.apache.org[Freemarker] templates will be supported
+in a future release. 
 
-To add a template step, you must be creating a new integration or
-editing an integration. Due to the input and output specification requirements
-the integration must already have its start and finish connections.
+.Prerequisites
+* You must be creating or editing an integration. If you are creating an
+integration then it must already have its start and finish connections.
+* If you plan to upload a template then you must be able to navigate to it 
+and its file extension must be `.tmpl`.
+Alternatively, you can create the template when you add the template step.
 
-To add a template step:
+.Procedure
 
 . In the integration visualization panel on the left, hover over the
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
-at the location where you want to add a log step.
+at the location where you want to add a template step.
 . In the popup, click *Add a Step*.
-. On the *Choose a Step* page, click *Template*.
-. On the *Upload Template* page, select *Upload a file* or *create*
-  a template. The former displays a button for choosing a
-  local template file (requires a .tmpl extension) while the latter choice
-  displays the template editor.
+. On the *Choose a Step* page, click *Template*, which displays the 
+*Upload Template* page with *Upload a file* selected. 
++
+* If you have a template file that you want to upload, click *Browse*,
+navigate to the file, and upload it.
++
+* If you want to define a template now, select *Create*.
 
 +
-The editor only allows valid syntax so the *Done* button will be disabled
-should the syntax be invalid.
+{prodname} displays a template editor that contains the
+template that you uploaded or that is empty.
 
-. When the template step configuration is complete, click *Done* to add the
-  step to the integration.
-. The connections or steps either side of the template step will require
-data mapping:
-* Insert a data mapping step prior to the template step. This will allow you
-  to map values in the preceding connection data to the symbols entered into
-  the template.
-* Insert a data mapping step after the the template step. The generated
-  template/data combination is placed into a *message* attribute hence this
-  should be mapped to whatever preferred attribute of the target connection.
-. When the integration is complete, it can be published and output data will
-  appear formatted according to the syntax rules stipulated by the template.
+. In the template editor, review, and if needed, edit the template you 
+uploaded, or add text that defines a template. 
+Here is an example of a valid template:
++
+----
+At {{body.time}}, {{body.name}} tweeted:
+{{body.text}}
+----
++
+The *Done* button is active only when the editor contains a valid template.
+
+. Click *Done* to add the template step to the integration.
++ 
+Input to a template step must be in the form of a JSON object so a data
+mapping step is required before a template step
+. Add a data mapper step before the template step:
+.. In the left panel, hover over the  
+image:images/PlusSignToAddStepOrConnection.png[Plus Sign] that is 
+immediately before the template step you just added and click *Add a Step*. 
+.. On the *Choose a Step* page, click *Data Mapper*.
+.. In the data mapper, map a source field to each template placeholder field. 
++
+For example, using the template above, you would map a source field 
+to each of these template fields:
++
+* `body.time`
+* `body.name`
+* `body.text`
+.. In the upper right, click *Done* to add the data mapper step to the 
+integration.
+
++
+Output from a template step is always a JSON object so a data mapper step
+is required after a template step.
+. Add a data mapper step after the template step:
+.. In the left panel, hover over the  
+image:images/PlusSignToAddStepOrConnection.png[Plus Sign] that is 
+immediately after the template step you just added and click *Add a Step*. 
+.. On the *Choose a Step* page, click *Data Mapper*.
+.. In the data mapper, map the template's *message* field, which 
+always contains the result of inserting source fields into the
+template, to a target field. For example, suppose that a Gmail connection is 
+next in the integration and you want to send the result of the template step
+as the content of a Gmail message. To do this, you would map the *message* 
+source field to the *text* target field.
+.. In the upper right, click *Done*. 
+
+
+.Additional resource
+
+* For details about mapping fields, see <<mapping-data>>. 
