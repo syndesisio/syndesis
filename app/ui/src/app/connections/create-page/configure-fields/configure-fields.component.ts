@@ -33,14 +33,13 @@ export class ConnectionsConfigureFieldsComponent
   ngOnInit() {
     this.formModel = this.configurationService.getFormModel(this.connection);
     this.formGroup = this.formService.createFormGroup(this.formModel);
-    this.formChangesSubscription = this.formGroup.valueChanges.subscribe(
-      data => {
-        this.connection.configuredProperties = this.configurationService.sanitize(
-          data
-        );
-      }
-    );
-
+    const updateConnectionConfig =
+      data => this.connection.configuredProperties = this.configurationService.sanitize(data);
+    // Set any initial default config
+    updateConnectionConfig(this.formGroup.value);
+    // Update the config when there's form changes
+    this.formChangesSubscription =
+      this.formGroup.valueChanges.subscribe(updateConnectionConfig);
     this.current.formGroup = this.hasCredentials ? null : this.formGroup;
   }
 
