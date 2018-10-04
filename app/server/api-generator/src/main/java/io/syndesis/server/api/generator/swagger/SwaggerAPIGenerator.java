@@ -213,8 +213,15 @@ public class SwaggerAPIGenerator implements APIGenerator {
             .kind(Kind.OpenApi)
             .build());
 
+        final String givenBasePath = swagger.getBasePath();
+        final String basePath;
+        if (givenBasePath == null || givenBasePath.trim().isEmpty()) {
+            basePath = "/api";
+        } else {
+            basePath = givenBasePath.replaceFirst("^(/.*)/$", "$1"); // drop the trailing slash
+        }
+
         integration.putProperty("api-basePath", new ConfigurationProperty.Builder().type("hidden").build());
-        final String basePath = swagger.getBasePath().replaceFirst("^(/.*)/$", "$1"); // drop the trailing slash
         integration.putConfiguredProperty("api-basePath", basePath);
 
         return new APIIntegration(integration.build(), api);
