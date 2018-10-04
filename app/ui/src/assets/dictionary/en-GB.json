@@ -111,6 +111,7 @@
         "templater-instruct-text3": "the file.",
         "templater-upload-helper-text-size-type": "Max: 1 file (up to 1MB), accepted file type: .tmpl",
         "templater-editor-placeholder": "Drop a file, paste in text, or start typing",
+        "templater-editor-drag-enter": "Drop file here to upload",
         "templater-validation-errors": "Vaidation errors",
         "templater-illegal-open-symbol": "Illegal open symbol at line: {{0}}, column: {{1}}",
         "templater-too-many-open-symbols": "Too many open symbols at line: {{0}}, column: {{1}}",
