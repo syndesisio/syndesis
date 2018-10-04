@@ -127,6 +127,9 @@
             "description": "Send a message to a specific Slack channel.",
             "id": "io.syndesis:slack-channel-connector",
             "pattern": "To",
+            "tags": [
+                "dynamic"
+            ],
             "actionType": "connector",
             "descriptor": {
                 "connectorCustomizers": [
