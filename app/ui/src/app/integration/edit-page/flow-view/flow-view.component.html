@@ -126,5 +126,8 @@
     [tooltip]="toggleButtonTooltip"
     aria-label="Integration Visualization Pane Details Toggle"
     placement="right"></button>
-  <ng-template #toggleButtonTooltip><div class="syn-nowrap">Expand info</div></ng-template>
+    <ng-template #toggleButtonTooltip>
+      <div *ngIf="!isCollapsed">Collapse</div>
+      <div *ngIf="isCollapsed">Expand</div>
+    </ng-template>
 </div>

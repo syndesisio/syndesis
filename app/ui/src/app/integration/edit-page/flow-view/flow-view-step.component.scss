@@ -60,12 +60,6 @@
 
     &.not-connection {
       background-color: #ffffff;
-      border-width: 10px;
-      padding: 5px 0px;
-      border-radius: 100px;
-      height: 33px;
-      margin: 11px;
-      width: 32px;
     }
 
     .connection-icon {
@@ -103,9 +97,10 @@
       background: #ec7a08;
       border-radius: 50%;
       padding: 5px;
-      top: -6px;
-      right: -6px;
       cursor: pointer;
+      top: 0;
+      right: 0;
+      transform: translate(25%, -25%);
 
       &::before {
         color: $color-pf-white;
