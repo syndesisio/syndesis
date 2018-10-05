@@ -18,8 +18,8 @@ package io.syndesis.server.endpoint.v1.handler.integration.support;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +53,6 @@ import org.springframework.stereotype.Component;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -61,6 +60,7 @@ import io.syndesis.common.model.ModelExport;
 import io.syndesis.common.model.Schema;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithName;
+import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
@@ -224,10 +224,9 @@ public class IntegrationSupportHandler {
     @POST
     @Path("/import")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ChangeEvent> importIntegration(@Context SecurityContext sec, InputStream is) {
+    public Map<String, List<WithResourceId>> importIntegration(@Context SecurityContext sec, InputStream is) {
         try (ZipInputStream zis = new ZipInputStream(is)) {
-            HashSet<String> extensionIds = new HashSet<>();
-            ArrayList<ChangeEvent> changeEvents = new ArrayList<>();
+            Map<String, List<WithResourceId>> imported = new HashMap<>();
             ModelExport modelExport = null;
             while (true) {
                 ZipEntry entry = zis.getNextEntry();
@@ -242,18 +241,14 @@ public class IntegrationSupportHandler {
                 if (EXPORT_MODEL_FILE_NAME.equals(entry.getName())) {
                     CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsondb.getIndexes());
                     memJsonDB.set("/", nonClosing(zis));
-                    changeEvents.addAll(importModels(sec, modelExport, memJsonDB));
+                    imported.putAll(importModels(sec, modelExport, memJsonDB));
                     memJsonDB.close();
-                    for (ChangeEvent changeEvent : changeEvents) {
-                        if( changeEvent.getKind().get().equals("extension") ) {
-                            extensionIds.add(changeEvent.getId().get());
-                        }
-                    }
                 }
 
                 // import missing extensions that were in the model.
                 if( entry.getName().startsWith("extensions/") ) {
-                    for (String extensionId : extensionIds) {
+                    for (WithResourceId extension : imported.getOrDefault("extensions", Collections.emptyList())) {
+                        final String extensionId = extension.getId().get();
                         if( entry.getName().equals("extensions/" + Names.sanitize(extensionId) + ".jar") ) {
                             String path = "/extensions/" + extensionId;
                             InputStream existing = extensionDataManager.getExtensionDataAccess().read(path);
@@ -268,11 +263,11 @@ public class IntegrationSupportHandler {
 
                 zis.closeEntry();
             }
-            if (changeEvents.isEmpty()) {
+            if (imported.isEmpty()) {
                 LOG.info("Could not import integration: No integration data model found.");
                 throw new ClientErrorException("Does not look like an integration export.", Response.Status.BAD_REQUEST);
             }
-            return changeEvents;
+            return imported;
         } catch (IOException e) {
             if (LOG.isInfoEnabled()) {
                 LOG.info("Could not import integration: " + e, e);
@@ -281,7 +276,7 @@ public class IntegrationSupportHandler {
         }
     }
 
-    public List<ChangeEvent> importModels(SecurityContext sec, ModelExport export, JsonDB given) throws IOException {
+    public Map<String, List<WithResourceId>> importModels(SecurityContext sec, ModelExport export, JsonDB given) throws IOException {
 
         // Apply per version migrations to get the schema upgraded on the import.
         int from = export.schemaVersion();
@@ -296,7 +291,7 @@ public class IntegrationSupportHandler {
             migrator.migrate(given, version);
         }
 
-        ArrayList<ChangeEvent> result = new ArrayList<>();
+        Map<String, List<WithResourceId>> result = new HashMap<>();
         // id->new-name map
         Map<String, String> renamedIds = new HashMap<>();
 
@@ -335,7 +330,7 @@ public class IntegrationSupportHandler {
         return result;
     }
 
-    private void importIntegrations(SecurityContext sec, JsonDbDao<Integration> export, Map<String, String> renamedIds, List<ChangeEvent> result) {
+    private void importIntegrations(SecurityContext sec, JsonDbDao<Integration> export, Map<String, String> renamedIds, Map<String, List<WithResourceId>> result) {
         for (Integration integration : export.fetchAll().getItems()) {
             Integration.Builder builder = new Integration.Builder()
                 .createFrom(integration)
@@ -349,11 +344,11 @@ public class IntegrationSupportHandler {
             if (previous == null) {
                 LOG.info("Creating integration: {}", integration.getName());
                 integrationHandler.create(sec, builder.build());
-                result.add(ChangeEvent.of("created", integration.getKind().getModelName(), id));
+                addImportedItemResult(result, integration);
             } else {
                 LOG.info("Updating integration: {}", integration.getName());
                 integrationHandler.update(id, builder.version(previous.getVersion()+1).build());
-                result.add(ChangeEvent.of("updated", integration.getKind().getModelName(), id));
+                addImportedItemResult(result, integration);
             }
         }
     }
@@ -393,15 +388,15 @@ public class IntegrationSupportHandler {
         return name != null ? nameFunc.apply(model, name) : model;
     }
 
-    private <T extends WithId<T>> Set<String> getAllPropertyValues(Class<T> model, Function<T, String> propertyFunc) {
+    private <T extends WithId<T> & WithName> Set<String> getAllPropertyValues(Class<T> model, Function<T, String> propertyFunc) {
         return getAllPropertyValues(model, propertyFunc, d -> true);
     }
 
     private <T extends WithId<T>> Set<String> getAllPropertyValues(Class<T> model, Function<T, String> propertyFunc, Function<T, Boolean> filterFunc) {
         final ListResult<T> deployments = dataManager.fetchAll(model);
         return deployments.getItems().stream()
-                .filter(d -> filterFunc.apply(d))
-                .map(d -> propertyFunc.apply(d))
+                .filter(filterFunc::apply)
+                .map(propertyFunc::apply)
                 .collect(Collectors.toSet());
     }
 
@@ -417,10 +412,9 @@ public class IntegrationSupportHandler {
     }
 
     private <T extends WithId<T> & WithName> void importModels(JsonDbDao<T> export, BiFunction<T, String, T> renameFunc,
-                                                               Map<String, String> renames, List<ChangeEvent> result) {
-        final Set<String> names = getAllPropertyValues(export.getType(), WithName::getName);
+                                                               Map<String, String> renames, Map<String, List<WithResourceId>> result) {
+        final Set<String> names = getAllPropertyValues(export.getType(), o -> o.getName());
         for (T item : export.fetchAll().getItems()) {
-            Kind kind = item.getKind();
             String id = item.getId().get();
             if (dataManager.fetch(export.getType(), id) == null) {
 
@@ -439,9 +433,17 @@ public class IntegrationSupportHandler {
                 // create new item
                 dataManager.create(item);
 
-                result.add(ChangeEvent.of("created", kind.getModelName(), id));
+                addImportedItemResult(result, item);
             }
         }
+    }
+
+    private static <T extends WithId<T> & WithName> void addImportedItemResult(Map<String, List<WithResourceId>> result,
+        T item) {
+        final Kind kind = item.getKind();
+        final List<WithResourceId> imported = result.computeIfAbsent(kind.getPluralModelName(), (key) -> new ArrayList<>());
+
+        imported.add(item);
     }
 
     private static void addEntry(ZipOutputStream os, String path, byte[] content) throws IOException {
