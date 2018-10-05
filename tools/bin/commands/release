@@ -18,8 +18,6 @@ release::usage() {
     --snapshot-release        Snapshot release which can be created on a daily basis.
                               A timestamped version will be created automatically, and no Maven artefacts
                               are pushed to maven central. No moving tag will be moved, too.
-    --dev-version <version>   Next development version. If not given, set to "<major>.<minor>-SNAPSHOT"
-                              as calculated from --release-version (e.g. "1.2-SNAPSHOT")
     --settings <file>         Path to a custom settings.xml to use for the release.
                               This file must contain all the credentials to be used for Sonatype.
                               By default ~/.m2/settings.xml is used.

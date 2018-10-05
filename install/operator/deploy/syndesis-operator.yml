@@ -65,7 +65,6 @@ rules:
   - build.openshift.io
   resources:
   - buildconfigs
-  verbs:
   verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - authorization.openshift.io
