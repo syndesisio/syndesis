@@ -39,6 +39,7 @@ with options:
                               connected cluster.
    --console <console-url>    The URL to the openshift console
    --operator-only            Only install the operator but no resource
+   --legacy                   Install in legacy mode via templates (only recommended in legacy envs)
 -t --tag <tag>                Optional version to use for the installaton ("latest" by default)
    --force                    Override an existing "Syndesis" if present
 
@@ -487,6 +488,119 @@ get_route() {
 }
 
 # ==============================================================
+# Legacy support for installing Syndesis with a pure template
+# Please remove this section until the next "=========" when completely
+# switched to operators.
+
+install_in_legacy_mode() {
+    local project=${1:-}
+
+    # Try to find route
+    local route=$(readopt --route)
+    if [ -z "${route}" ]; then
+        route="$(guess_route "$project")"
+        check_error $route
+    fi
+
+    local tag=$(readopt --tag -t)
+    local console=$(readopt --console)
+
+    # Required OAuthclient
+    create_oauthclient "$tag"
+
+    # Apply a template, based on the given arguments
+    create_and_apply_template "$route" "$console" "" "$tag"
+
+    if [ -n "$tag" ]; then
+        label="Syndesis $tag"
+    else
+        label="latest Syndesis"
+    fi
+    cat <<EOT
+=======================================================================
+Congratulation, $label has been installed successfully in legacy mode !
+Open now your browser at the following URL:
+
+https://$route
+
+Enjoy !
+EOT
+}
+
+guess_route() {
+    local project=${1:-}
+    if [ -z "${project}" ]; then
+        project=$(oc project -q)
+    fi
+    local log=$(oc create service clusterip smokeservice --tcp=4343 2>&1 && \
+                oc create route edge --service=smokeservice 2>&1)
+    if [ $? != 0 ]; then
+        echo "ERROR: Cannot create pivot route\n$log"
+        exit 1
+    fi
+    local domain=$(oc get route smokeservice -o template  --template='{{.spec.host}}' 2>&1)
+    if [ $? != 0 ]; then
+        echo "ERROR: Cannot extract route: $domain"
+        exit 1
+    fi
+    log=$(oc delete service smokeservice 2>&1 && \
+          oc delete route smokeservice 2>&1)
+    if [ $? != 0 ]; then
+        echo "ERROR: Cannot delete pivot route\n$log"
+        exit 1
+    fi
+    echo "${project}.${domain#*.}"
+}
+
+create_oauthclient() {
+    local tag=${1:-master}
+    create_openshift_resource \
+        "install/support/serviceaccount-as-oauthclient-restricted.yml" \
+        "$tag"
+}
+
+create_and_apply_template() {
+    local route=$1
+    local console=${2:-}
+    local template=${3:-syndesis}
+    local tag=${4:-}
+
+    if [ -z "$route" ]; then
+        echo "No route given"
+        exit 1
+    fi
+
+    create_openshift_resource \
+        "install/${template}.yml" \
+        "$tag"
+
+    oc new-app --template "$(get_template_name $template $tag)"\
+      -p ROUTE_HOSTNAME="${route}" \
+      -p OPENSHIFT_CONSOLE_URL="$console" \
+      -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
+      -p OPENSHIFT_PROJECT="$(oc project -q)" \
+      -p SAR_PROJECT="$(oc project -q)" \
+      -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+}
+
+# Try first a template with the tag as combination
+get_template_name() {
+    local template=$1
+    local tag=${2:-}
+    if [ -n "$tag" ]; then
+        local candidate="$template-$tag"
+        $(oc get template $candidate >/dev/null 2>&1)
+        if [ $? -eq 0 ]; then
+          echo $candidate
+          return
+        fi
+    fi
+
+
+    echo $template
+}
+
+# ============================================================== (end-of-legacy)
 
 if [ $(hasflag --help -h) ]; then
     display_usage
@@ -532,6 +646,11 @@ fi
 # Check for OC
 setup_oc
 
+if [ $(hasflag --legacy) ]; then
+    install_in_legacy_mode "$project"
+    exit 0
+fi
+
 # Check for the proper setup
 set +e
 oc get syndesis >/dev/null 2>&1
@@ -554,6 +673,7 @@ wait_for_deployments 1 syndesis-operator
 
 # Create syndesis resource
 echo "Creating Syndesis resource"
+
 route=$(readopt --route)
 console=$(readopt --console)
 result=$(create_syndesis "$route" "$console")
