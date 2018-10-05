@@ -58,6 +58,8 @@
           position: relative;
           flex-shrink: 0;
           cursor: pointer;
+          padding-bottom: 20px;
+          height: 75px;
         }
 
         &:not(:last-child) .icon-container {
