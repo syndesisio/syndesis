@@ -1,0 +1,55 @@
+// Module included in the following assemblies:
+// connecting_to_log.adoc
+
+[id='comparison-log-step-connection_{context}']
+= Comparison of log steps and log connections
+
+To log information about the messages that an integration processes, 
+you can add one or more log steps to an integration and/or you can
+add one or more log connections to an integration. The following
+table indicates whether a log step or a log connection 
+can do what you want. 
+
+[options="header"]
+[cols="2,1,1"]
+|====
+
+|To do this
+|Add a log step
+|Add a log connection
+
+|Log messages at the level you specify (ERROR, WARN, INFO, DEBUG, TRACE, OFF)
+|
+|image:images/CheckMark.png[Yes]
+
+|Log message IDs
+|
+|image:images/CheckMark.png[Yes]
+
+|Log message headers
+|image:images/CheckMark.png[Yes]
+|image:images/CheckMark.png[Yes]
+
+|Log message body (the message itself)
+|image:images/CheckMark.png[Yes]
+|image:images/CheckMark.png[Yes]
+
+|Log text that you specify
+|image:images/CheckMark.png[Yes]
+|image:images/CheckMark.png[Yes]
+
+|Specify a Camel Simple expression that {prodname} resolves to text and sends to the log
+|image:images/CheckMark.png[Yes]
+|
+
+|Finish and integration
+|
+|image:images/CheckMark.png[Yes]
+
+|====
+
+In an integration, a log connection cannot be the start connection.
+
+.Additional resources
+* {LinkFuseOnlineIntegrationGuide}creating-integrations#add-log-step[Add a log step to an integration]
+* <<add-log-connection_{context}>>

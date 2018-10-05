@@ -1,0 +1,35 @@
+// This assembly is included in the following assemblies:
+// master.adoc
+
+ifdef::context[:parent-context: {context}]
+
+[id='connecting-to-log']
+= Connecting to an integration's log
+
+:context: connect-to-log
+
+For each integration step, {prodname} logs:
+
+* The date and time that the step was executed
+* How long it took to execute the step
+* Whether execution was successful
+* The error message if execution was not successful
+
+To log information about the messages that an integration processes, 
+add a log step and/or a log connection to an integration. 
+
+* <<comparison-log-step-connection_{context}>>
+* <<add-log-connection_{context}>>
+* <<create-replacement-log-connection_{context}>>
+
+
+include::comparison_log_step_connection.adoc[leveloffset=+1]
+
+include::add_log_connection.adoc[leveloffset=+1]
+
+include::create_replacement_log_connection.adoc[leveloffset=+1]
+
+
+
+ifdef::parent-context[:context: {parent-context}]
+ifndef::parent-context[:!context:]

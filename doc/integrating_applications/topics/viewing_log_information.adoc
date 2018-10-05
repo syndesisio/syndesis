@@ -1,16 +1,16 @@
 [id='viewing-log-information']
-= Viewing integration log information
+= Viewing an integration's log
 
-{prodname} provides log information for each integration version that
-it executes. To see this information:
+{prodname} provides log information for each execution of an integration. 
+To see this information:
 
 . In the left panel, click *Integrations*.
 . Click the entry for the integration for which you want to view log
 information.
 . In the integration's summary page, click the *Activity* tab.
-. Optionally, enter date and/or keyword filters to limit the versions
+. Optionally, enter date and/or keyword filters to limit the executions
 listed.
-. Click the integration version for which you want to view log information.
+. Click the integration execution for which you want to view log information.
 
 For each integration step, {prodname} provides:
 
@@ -24,8 +24,8 @@ add a log step to the
 integration. A log step provides information about each message it
 receives and can provide custom text that you specify.
 If you add a log step, then it appears as one of the integration's
-steps when you expand the integration version that you want to view log
-information for.  You view {prodname} information for a log step in the 
+steps when you expand the integration execution that you want to view log
+information for. You view {prodname} information for a log step in the 
 same way that you view {prodname} information for any other step. 
 
 To add a log step, see <<add-log-step>>.

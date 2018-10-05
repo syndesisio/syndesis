@@ -2,12 +2,13 @@
 include::topics/shared/attributes.adoc[]
 
 :prodname: Syndesis
-:prodversion: 7.1
+:prodversion: 7.2
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
 :productpkg: red_hat_fuse
-:version: 7.1
+:version: 7.2
 :location: upstream
+:context: top
 
 [id='connecting-to-applications-and-services']
 = Connecting {prodname} to Applications and Services 
@@ -28,7 +29,8 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-ftp>>
 * <<connecting-to-gmail>>
 * <<connecting-to-http>>
-* <<connecting-to-kafka>>
+* <<connecting-to-log>>
+* <<connecting-to-kafka>> 
 * <<connecting-to-mqtt>>
 * <<connecting-to-rest-apis>>
 * <<connecting-to-sf>>
@@ -55,6 +57,8 @@ include::topics/connecting_to_ftp.adoc[leveloffset=+1]
 include::topics/connecting_to_gmail.adoc[leveloffset=+1]
 
 include::topics/connecting_to_http.adoc[leveloffset=+1]
+
+include::topics/connecting_to_log.adoc[leveloffset=+1]
 
 include::topics/connecting_to_kafka.adoc[leveloffset=+1]
 

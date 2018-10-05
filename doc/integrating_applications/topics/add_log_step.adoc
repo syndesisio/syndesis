@@ -1,8 +1,8 @@
 [id='add-log-step']
 = Adding a log step
 
-{prodname} provides log information for each integration version that
-it executes. To learn what information is automatically logged,
+{prodname} provides log information for each execution of an integration. 
+To learn what information is automatically logged,
 see <<viewing-log-information>>.
 
 To log additional information between any two steps, add a log step to the
@@ -17,6 +17,11 @@ http://camel.apache.org/simple.html[Apache Camel Simple language] expression.
 To add a log step, you must be creating a new integration or
 editing an integration. The integration must already have
 its start and finish connections.
+
+To finish an integration by logging information about the messages that an
+integration processes, or to log message information at a particular log level, 
+ {LinkFuseOnlineConnectorGuide}#connecting-to-log[add a log connection]
+instead of a log step. 
 
 To add a log step:
 
@@ -34,11 +39,13 @@ enter one of the following:
 +
 If you enter an expression, {prodname} resolves the 
 expression and logs the resulting text. 
-. When log step configuration is complete, click *Done* to add the step
+. When log step configuration is complete, click *LinkFuseOnlineConnectorGuideDone* to add the step
 to the integration. 
 . When the integration is complete, publish it to start seeing output
 from the new log step.
 
+.Additional Resources
+* {LinkFuseOnlineConnectorGuide}#add-log-connection_{context}[Add a log connection].
 After an integration that has a log step has been executed, output from
 its log step appears in the integration's *Activity* tab. See
 <<viewing-log-information>>.
