@@ -52,14 +52,13 @@
       .step {
         .icon-container {
           width: 55px;
+          height: 55px;
           display: flex;
           align-items: center;
           justify-content: center;
           position: relative;
           flex-shrink: 0;
           cursor: pointer;
-          padding-bottom: 20px;
-          height: 75px;
         }
 
         &:not(:last-child) .icon-container {
