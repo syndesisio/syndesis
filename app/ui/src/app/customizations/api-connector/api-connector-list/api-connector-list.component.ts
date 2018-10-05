@@ -107,6 +107,9 @@ export class ApiConnectorListComponent implements OnInit, OnDestroy {
 
   handleClick(event: { item: ApiConnectorData }): void {
     const apiConnector = event.item;
+    this.apiConnectorStore.dispatch(
+      ApiConnectorActions.setConnectorData( event.item, this.route )
+    );
     this.router.navigate([apiConnector.id], { relativeTo: this.route });
   }
 

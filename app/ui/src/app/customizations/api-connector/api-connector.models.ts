@@ -1,13 +1,22 @@
 import {
   StringMap,
   BaseReducerModel,
-  BaseRequestModel
+  BaseRequestModel,
+  ActionReducerError
 } from '@syndesis/ui/platform';
+import {
+  OpenApiUploadSpecification,
+  OpenApiValidationActionsSummary,
+  OpenApiValidationError,
+  OpenApiValidationErrors,
+  OpenApiValidationWarnings
+} from '@syndesis/ui/common';
 
-export interface ApiConnectorValidationError {
-  error?: string;
-  message: string;
-  property?: string;
+export enum ApiConnectorWizardStep {
+  UploadSwagger = 1,
+  ReviewApiConnector = 2,
+  UpdateAuthSettings = 3,
+  SubmitRequest = 4
 }
 
 export interface RequestProperties extends CustomApiConnectorAuthSettings {
@@ -25,7 +34,7 @@ export interface ApiConnectorData {
   name?: string;
   description?: string;
   warnings?: Array<{ key: string; longdesc: string }>;
-  errors?: Array<ApiConnectorValidationError>;
+  errors?: Array<OpenApiValidationError>;
   icon?: string;
   configuredProperties?: RequestProperties;
   properties?: {
@@ -71,4 +80,22 @@ export interface ApiConnectorState extends BaseReducerModel {
   list: ApiConnectors;
   createRequest: CustomConnectorRequest;
   deleted?: ApiConnectorData;
+  wizardStep: ApiConnectorWizardStep;
+  showApiEditor: boolean;
+  uploadSpecification: OpenApiUploadSpecification;
+  validationResponse?: ApiConnectorValidationResponse;
+  validationErrors?: OpenApiValidationError;
+  creationError?: ActionReducerError;
+  specificationForEditor: string;
+}
+
+export interface ApiConnectorValidationResponse {
+  actionsSummary: OpenApiValidationActionsSummary;
+  name: string;
+  description: string;
+  warnings?: OpenApiValidationWarnings;
+  errors?: OpenApiValidationErrors;
+  configuredProperties?: {
+    specification: string;
+  };
 }

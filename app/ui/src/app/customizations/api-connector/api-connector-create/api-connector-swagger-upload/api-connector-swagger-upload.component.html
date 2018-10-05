@@ -4,114 +4,27 @@
   </h2>
 </div>
 <div class="card-pf-body">
-  <syndesis-validation-error *ngIf="swaggerFileUrlInput.errors?.requiredIfChecked && fetchUrlOption.checked">
-    {{ 'customizations.api-client-connectors.url-validation-error' | synI18n }}
+  <syndesis-validation-error *ngFor="let error of errors">
+    {{ error.message }}
   </syndesis-validation-error>
 
-  <syndesis-validation-error *ngIf="validationError">
-    {{ validationError.message }}
-  </syndesis-validation-error>
-
-  <syndesis-validation-error *ngIf="processingError">
-    {{ processingError }}
-  </syndesis-validation-error>
-
-  <p>
-    {{ 'customizations.api-client-connectors.url-upload-instructions' | synI18n }}
-  </p>
-  <p>
-    <strong>{{ 'customizations.api-client-connectors.api-upload-choose-method' | synI18n }}</strong>
-  </p>
-  <form class="form-horizontal syn-form--swagger-upload" (ngSubmit)="onSubmit(swaggerForm, uploadFileOption.checked)" #swaggerForm="ngForm" novalidate>
-    <fieldset class="container-fluid">
-      <div class="form-group row">
-        <div class="col-xs-12 radio">
-          <label>
-            <input type="radio"
-                   checked="checked"
-                   name="connectorSource"
-                   (click)="uploadMethodChanged(true)"
-                   [checked]="apiFileImport"
-                   #uploadFileOption>
-            {{ 'customizations.api-client-connectors.api-file-upload' | synI18n }}
-          </label>
-        </div>
-      </div>
-      <div class="container-fluid">
-        <div class="form-group row"
-          [class.syn-visuallyhidden]="!uploadFileOption.checked">
-          <div class="col-xs-12">
-            <div class="syn-drop-zone"
-                ng2FileDrop
-                [uploader]="uploader"
-                [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
-                (onFileDrop)="onFileDrop($event)"
-                (fileOver)="onFileOver($event)">
-              <p>{{ 'customizations.api-client-connectors.api-file-upload-dnd' | synI18n }}</p>
-              <div class="row syn-drop-zone__file-select">
-                <div class="col-md-5">
-                  <p>
-                    <input #fileSelect
-                      class="api-file-chooser"
-                      type="file"
-                      ng2FileSelect
-                      [uploader]="uploader">
-                  </p>
-                </div>
-                <div class="col-md-7">
-                  <p *ngIf="validFileMsg">
-                    <span class="pficon-ok"></span>
-                    {{ validFileMsg }}
-                  </p>
-                  <p *ngIf="invalidFileMsg">
-                    <span class="pficon-error-circle-o"></span>
-                    {{ invalidFileMsg }}
-                  </p>
-                </div>
-              </div>
-              <p class="help-block"><em>{{ 'customizations.api-client-connectors.api-upload-helper-text' | synI18n }}</em></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-xs-12 radio">
-          <label>
-            <input type="radio"
-                   name="connectorSource"
-                   (click)="uploadMethodChanged(false)"
-                   [checked]="!apiFileImport"
-                   #fetchUrlOption>
-            {{ 'customizations.api-client-connectors.api-url-upload' | synI18n }}
-          </label>
-        </div>
-      </div>
-      <div class="container-fluid">
-        <div class="form-group row"
-          [class.syn-visuallyhidden]="apiFileImport">
-          <div class="col-xs-12">
-            <input type="text"
-              class="form-control"
-              [class.syn-invalid]="validationError"
-              name="swaggerFileUrl"
-              [(ngModel)]="swaggerFileUrl"
-              (ngModelChange)="onUrlChanged($event)"
-              [requiredIf]="!apiFileImport"
-              #swaggerFileUrlInput="ngModel">
-            <em class="text-muted">
-              {{ 'customizations.api-client-connectors.api-url-upload-note' | synI18n }}
-            </em>
-          </div>
-        </div>
-      </div>
-    </fieldset>
-
+  <form class="form-horizontal syn-form--swagger-upload"
+        (ngSubmit)="onDone.emit()"
+        #openApiForm="ngForm"
+        novalidate>
+    <openapi-uploader [ngModel]="uploadSpecification"
+                      (ngModelChange)="onUploadSpecificationChange.emit($event)"
+                      name="uploaderValue"
+                      [allowSpecCreation]="false"
+                      [isInvalid]="(errors)">
+    </openapi-uploader>
     <fieldset>
       <syndesis-button type="submit"
-        [loading]="apiConnectorState.loading"
-        [disabled]="(!apiFileImport && !swaggerFileUrlInput.value) || (apiFileImport && !fileToUpload)">
+                       [loading]="loading"
+                       [disabled]="!uploadSpecification.valid">
         {{ 'shared.next-button' | synI18n }}
       </syndesis-button>
     </fieldset>
   </form>
+
 </div>

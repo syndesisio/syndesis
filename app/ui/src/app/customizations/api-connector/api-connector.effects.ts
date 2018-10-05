@@ -1,7 +1,7 @@
-import { filter, mergeMap, map, switchMap, catchError } from 'rxjs/operators';
+import { filter, mergeMap, map, switchMap, catchError, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
+import { Action, Store } from '@ngrx/store';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 
 import { EventsService } from '@syndesis/ui/store';
@@ -11,8 +11,19 @@ import {
   ApiConnectorValidateSwagger,
   ApiConnectorCreate,
   ApiConnectorUpdate,
-  ApiConnectorDelete
+  ApiConnectorDelete,
+  ApiConnectorPreviousStep,
+  ApiConnectorNextStep,
+  ApiConnectorUpdateSpecification,
+  ApiConnectorCreateComplete,
+  ApiConnectorSetData
 } from '@syndesis/ui/customizations/api-connector/api-connector.actions';
+import {
+  ApiConnectorStore, getApiConnectorSpecificationForValidation,
+  getApiConnectorWizardStep
+} from '@syndesis/ui/customizations/api-connector/api-connector.reducer';
+import { ApiConnectorWizardStep } from '@syndesis/ui/customizations/api-connector/api-connector.models';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ApiConnectorEffects {
@@ -21,7 +32,8 @@ export class ApiConnectorEffects {
     .ofType(
       ApiConnectorActions.FETCH,
       ApiConnectorActions.UPDATE_FAIL,
-      ApiConnectorActions.DELETE_FAIL
+      ApiConnectorActions.DELETE_FAIL,
+      ApiConnectorActions.CREATE_CANCEL
     )
     .pipe(
       mergeMap(() =>
@@ -43,12 +55,32 @@ export class ApiConnectorEffects {
     );
 
   @Effect()
+  reviewStep$: Observable<Action> = this.actions$
+    .ofType<ApiConnectorPreviousStep | ApiConnectorNextStep | ApiConnectorUpdateSpecification>(
+      ApiConnectorActions.PREV_STEP,
+      ApiConnectorActions.NEXT_STEP,
+      ApiConnectorActions.UPDATE_SPEC
+    )
+    .withLatestFrom(this.apiConnectorStore.select(
+      getApiConnectorWizardStep
+    ))
+    .filter(([action, step]) => step === ApiConnectorWizardStep.ReviewApiConnector)
+    .map(action => {
+      return {
+        type: ApiConnectorActions.VALIDATE_SWAGGER
+      };
+    });
+
+  @Effect()
   validateSwagger$: Observable<Action> = this.actions$
     .ofType<ApiConnectorValidateSwagger>(ApiConnectorActions.VALIDATE_SWAGGER)
+    .withLatestFrom(this.apiConnectorStore.select(
+      getApiConnectorSpecificationForValidation
+    ))
     .pipe(
-      mergeMap(action =>
+      mergeMap(([action, request]) =>
         this.apiConnectorService
-          .validateCustomConnectorInfo(action.payload)
+          .validateCustomConnectorInfo(request)
           .pipe(
             map(response => ({
               type: ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE,
@@ -153,9 +185,29 @@ export class ApiConnectorEffects {
       })
     );
 
+  @Effect({ dispatch: false })
+  connectorCreated$ = this.actions$
+    .pipe(
+      ofType<ApiConnectorCreateComplete>(ApiConnectorActions.CREATE_COMPLETE),
+      tap((action: ApiConnectorCreateComplete) => this.router.navigate([
+        '/customizations', 'api-connector'
+      ]))
+    );
+
+  @Effect({ dispatch: false })
+  showConnectorDetail$ = this.actions$
+    .pipe(
+      ofType<ApiConnectorSetData>(ApiConnectorActions.SET_CONNECTOR_DATA),
+      tap((action: ApiConnectorSetData) =>
+        this.router.navigate([action.payload.id], { relativeTo: action.route })
+      )
+    );
+
   constructor(
     private actions$: Actions,
     private apiConnectorService: ApiConnectorService,
+    private apiConnectorStore: Store<ApiConnectorStore>,
+    private router: Router,
     private eventsService: EventsService
   ) {}
 }

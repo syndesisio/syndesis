@@ -1,87 +1,39 @@
-<div class="card-pf-heading">
-  <h2 class="card-pf-title">
-    {{ 'customizations.api-client-connectors.api-review-title' | synI18n }}
-  </h2>
+<div class="row row-cards-pf">
+  <div class="card-pf">
+    <div class="card-pf-body">
+      <syndesis-loading
+        [loading]="loading"
+        [content]="validationContent">
+      </syndesis-loading>
+
+      <ng-template #validationContent>
+        <openapi-review
+          [name]="validation.name"
+          [description]="validation.description || 'No description provided'"
+          [warnings]="validation.warnings"
+          [errors]="validation.errors"
+          [actionsSummary]="validation.actionsSummary">
+        </openapi-review>
+
+        <fieldset>
+          <syndesis-button *ngIf="showNextButton"
+                           [disabled]="!enableEditButton"
+                           (click)="onEdit.emit()"
+                           type="button"
+                           theme="default">
+            {{ 'customizations.api-client-connectors.api-review-edit-button' | synI18n }}
+          </syndesis-button>
+        </fieldset>
+        <fieldset>
+          <syndesis-button *ngIf="showNextButton" type="button" theme="default" (click)="onBack.emit()">
+            {{ 'shared.back-button' | synI18n }}
+          </syndesis-button>
+
+          <syndesis-button *ngIf="showNextButton" (click)="onDone.emit()" type="button" theme="primary">
+            {{ 'shared.next-button' | synI18n }}
+          </syndesis-button>
+        </fieldset>
+      </ng-template>
+    </div>
+  </div>
 </div>
-<div class="card-pf-body" *ngIf="validation; else validationFallback">
-  <h5 class="connector-actions__header">
-    {{ 'customizations.api-client-connectors.api-review-api-info-header' | synI18n }}
-  </h5>
-  <ol class="connector-actions__operations">
-    <li [innerHtml]="'customizations.api-client-connectors.api-review-api-name' | synI18n: validation.name"></li>
-    <li [innerHtml]="'customizations.api-client-connectors.api-review-api-description' | synI18n: validation.description"></li>
-  </ol>
-
-  <div class="connector-actions" *ngIf="validation?.actionsSummary as actionsSummary">
-    <h5 class="connector-actions__header">
-      {{ 'customizations.api-client-connectors.api-review-imported-header' | synI18n }}
-    </h5>
-    <ol class="connector-actions__operations">
-      <li [innerHtml]="'customizations.api-client-connectors.api-review-operations-count' | synI18n: actionsSummary.totalActions"></li>
-      <ol class="connector-actions__operations">
-        <li *ngFor="let importedAction of importedActions"
-            [innerHtml]="'customizations.api-client-connectors.api-review-action-tagged-count' | synI18n: [importedAction.count, importedAction.tag]">
-        </li>
-      </ol>
-    </ol>
-  </div>
-
-  <div class="connector-actions" *ngIf="validation?.errors as errors">
-    <h5 class="connector-actions__header" *ngIf="errors.length">
-      {{ 'customizations.api-client-connectors.api-review-errors-header' | synI18n }}
-      <span class="connector-actions__label connector-actions__label--error">
-        {{ errors.length }}
-      </span>
-    </h5>
-    <ol *ngIf="errors.length">
-      <li *ngFor="let error of errors">{{ error.message }}</li>
-    </ol>
-  </div>
-
-  <div class="connector-actions" *ngIf="validation?.warnings as warnings">
-    <h5 class="connector-actions__header" *ngIf="warnings.length">
-      {{ 'customizations.api-client-connectors.api-review-warnings-header' | synI18n }}
-      <span class="connector-actions__label connector-actions__label--warning">
-          {{ warnings.length }}
-      </span>
-    </h5>
-    <ol *ngIf="warnings.length">
-      <li *ngFor="let warning of warnings">{{ warning.message }}</li>
-    </ol>
-  </div>
-
-  <fieldset>
-    <syndesis-button *ngIf="showNextButton" type="button" theme="default" (click)="onBackPressed()">
-      {{ 'shared.back-button' | synI18n }}
-    </syndesis-button>
-
-    <syndesis-button *ngIf="showNextButton"
-                     (click)="reviewComplete.emit({event: event, displayEditor: false})"
-                     type="button"
-                     theme="primary">
-      {{ 'shared.next-button' | synI18n }}
-    </syndesis-button>
-
-    <ng-template #editTooltip>
-      {{ 'customizations.api-client-connectors.edit-tooltip' | synI18n }}
-    </ng-template>
-    <syndesis-button
-            *ngIf="showNextButton"
-            (click)="reviewComplete.emit({event: event, displayEditor: true})"
-            [disabled]="!enableEditButton"
-            type="button"
-            class="pull-right"
-            theme="default">
-      <span [tooltip]="editTooltip"
-            [tooltipEnable]="enableEditButton"
-            placement="top">
-        {{ 'customizations.api-client-connectors.api-review-edit-button' | synI18n }}
-      </span>
-    </syndesis-button>
-  </fieldset>
-</div>
-<ng-template #validationFallback>
-  <h5 class="connector-fallback">
-    {{ 'customizations.api-client-connectors.api-review-validation-fallback' | synI18n }}
-  </h5>
-</ng-template>

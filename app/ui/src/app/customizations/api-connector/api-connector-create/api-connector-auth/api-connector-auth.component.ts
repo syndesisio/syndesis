@@ -19,9 +19,11 @@ import { CustomConnectorRequest } from '@syndesis/ui/customizations/api-connecto
 export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
   authSetupForm: FormGroup;
   authSetupFormValueSubscription: Subscription;
+
   @Input() customConnectorRequest: CustomConnectorRequest;
   @Output() authSetup = new EventEmitter();
-  @Output() backPressed = new EventEmitter();
+  @Output() onBack = new EventEmitter<boolean>();
+  @Output() onDone = new EventEmitter<void>();
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -68,13 +70,10 @@ export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
     return this.authSetupForm.get( 'tokenEndpoint' );
   }
 
-  onBackPressed() {
-    this.backPressed.emit();
-  }
-
   onSubmit({ value, valid }): void {
     if (valid) {
       this.authSetup.emit(value);
+      this.onDone.emit();
     }
   }
 
