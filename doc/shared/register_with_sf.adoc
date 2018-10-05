@@ -24,9 +24,6 @@ of {prodname} as a Salesforce client. However, while each Salesforce
 connection uses the same registration, it can use different user
 credentials. 
 
-To complete this procedure, you must be logged in to your {prodname}
-environment. If you are not already logged in, see <<logging-in-and-out>>. 
-
 Perform these steps to register {prodname} as a Salesforce client application:
 
 . In {prodname}:
