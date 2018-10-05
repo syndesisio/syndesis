@@ -77,6 +77,7 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
         options.put("methodName", "update");
     }
 
+    @SuppressWarnings("PMD.NPathComplexity")
     private void beforeProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
 
         final Message in = exchange.getIn();
@@ -109,6 +110,9 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
             }
             if (ObjectHelper.isNotEmpty(location)) {
                 event.setLocation(location);
+            }
+            if (ObjectHelper.isEmpty(eventId)) {
+                eventId = event.getId();
             }
         }
 
