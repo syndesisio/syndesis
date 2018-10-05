@@ -189,7 +189,7 @@
   "actions": [
     {
       "name": "Send Event",
-      "description": "Send an event from to the Calendar account that this connection is authorized to access.",
+      "description": "Create an event into a specific Calendar.",
       "id": "io.syndesis:google-calendar-insert-event-connector",
       "pattern": "To",
       "tags": [
@@ -338,7 +338,7 @@
     },
     {
       "name": "Update Event",
-      "description": "Update an event in the Calendar account that this connection is authorized to access.",
+      "description": "Update an event in a specific Calendar.",
       "id": "io.syndesis:google-calendar-update-event-connector",
       "pattern": "To",
       "tags": [
@@ -500,7 +500,7 @@
     },
     {
       "name": "Get a specific Event",
-      "description": "Obtain an event from the Google Calendar account that this connection is authorized to access.",
+      "description": "Obtain an event from a specific Calendar.",
       "id": "io.syndesis:google-calendar-get-event-connector",
       "pattern": "To",
       "tags": [
