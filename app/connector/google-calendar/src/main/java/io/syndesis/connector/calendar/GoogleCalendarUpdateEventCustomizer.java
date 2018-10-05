@@ -110,6 +110,9 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
             if (ObjectHelper.isNotEmpty(location)) {
                 event.setLocation(location);
             }
+            if (ObjectHelper.isEmpty(eventId)) {
+                eventId = event.getId();
+            }
         }
 
         in.setHeader("CamelGoogleCalendar.content", event);
