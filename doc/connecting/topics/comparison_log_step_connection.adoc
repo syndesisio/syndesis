@@ -18,31 +18,32 @@ can do what you want.
 |Add a log step
 |Add a log connection
 
+|Log the ID of each message
+|
+|image:images/CheckMark.png[Yes]
+
+|Log the headers in each message 
+|image:images/CheckMark.png[Yes]
+|image:images/CheckMark.png[Yes]
+
+|Log the body of each message
+|image:images/CheckMark.png[Yes]
+|image:images/CheckMark.png[Yes]
+
+|Log text that you specify for each message
+|image:images/CheckMark.png[Yes]
+|image:images/CheckMark.png[Yes]
+
+|Specify a Camel Simple expression that {prodname} resolves to text for each message and then sends to the log
+|image:images/CheckMark.png[Yes]
+|
+
+|Finish an integration
+|
+|image:images/CheckMark.png[Yes]
+
+
 |Log messages at the level you specify (ERROR, WARN, INFO, DEBUG, TRACE, OFF)
-|
-|image:images/CheckMark.png[Yes]
-
-|Log message IDs
-|
-|image:images/CheckMark.png[Yes]
-
-|Log message headers
-|image:images/CheckMark.png[Yes]
-|image:images/CheckMark.png[Yes]
-
-|Log message body (the message itself)
-|image:images/CheckMark.png[Yes]
-|image:images/CheckMark.png[Yes]
-
-|Log text that you specify
-|image:images/CheckMark.png[Yes]
-|image:images/CheckMark.png[Yes]
-
-|Specify a Camel Simple expression that {prodname} resolves to text and sends to the log
-|image:images/CheckMark.png[Yes]
-|
-
-|Finish and integration
 |
 |image:images/CheckMark.png[Yes]
 
