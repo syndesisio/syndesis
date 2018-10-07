@@ -59,6 +59,7 @@ import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.validation.AllValidations;
@@ -337,8 +338,12 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     }
 
     private Set<ResourceIdentifier> integrations(Extension extension) {
+        final Set<String> deletedIntegrationIds = getDataManager().fetchAll(Integration.class).getItems().stream()
+            .filter(Integration::isDeleted)
+            .map(i -> i.getId().get())
+            .collect(Collectors.toSet());
         return getDataManager().fetchAll(IntegrationDeployment.class).getItems().stream()
-            .filter(integrationDeployment -> isIntegrationActiveAndUsingExtension(integrationDeployment, extension))
+            .filter(integrationDeployment -> isIntegrationActiveAndUsingExtension(integrationDeployment, deletedIntegrationIds, extension))
             .map(this::toIntegrationResourceIdentifier)
             .distinct()
             .collect(Collectors.toSet());
@@ -352,8 +357,13 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             .build();
     }
 
-    private boolean isIntegrationActiveAndUsingExtension(IntegrationDeployment integrationDeployment, Extension extension) {
+    private boolean isIntegrationActiveAndUsingExtension(IntegrationDeployment integrationDeployment, Set<String> deletedIntegrationIds, Extension extension) {
         if (integrationDeployment == null || extension == null || integrationDeployment.getSpec() == null) {
+            return false;
+        }
+
+        final String integrationId = integrationDeployment.getIntegrationId().get();
+        if (deletedIntegrationIds.contains(integrationId)) {
             return false;
         }
 
@@ -368,7 +378,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             .anyMatch(ext -> ext.getId().equals(extension.getExtensionId()));
     }
 
-    private Extension enhance(Extension extension) {
+    Extension enhance(Extension extension) {
         return new Extension.Builder()
             .createFrom(extension)
             .uses(integrations(extension).size())
