@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ToJson;
@@ -101,6 +103,7 @@ public interface Connector extends WithId<Connector>, WithIdVersioned<Connector>
      * @return count of integrations
      */
     @Value.Auxiliary
+    @JsonProperty(access = Access.READ_ONLY)
     OptionalInt getUses();
 
     default Optional<String> propertyTaggedWith(final String tag) {
