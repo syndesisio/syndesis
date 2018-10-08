@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -256,15 +255,18 @@ public class ConnectionHandler
 
         final List<Integration> integrations = integrationsResult.getItems();
 
-        final Map<Connection, Long> connectionUsage = Stream.concat(
-            integrations.stream().flatMap(i -> i.getFlows().stream().flatMap(f -> f.getConnections().stream())),
-            integrations.stream().flatMap(i -> i.getFlows().stream().flatMap(f-> f.getSteps().stream())
-                .map(s -> s.getConnection()).filter(Optional::isPresent).map(Optional::get))
-        ).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        final Map<String, Long> connectionUsage = Stream.concat(
+            integrations.stream().filter(i -> !i.isDeleted()).flatMap(i -> i.getConnections().stream()),
+            Stream.concat(
+                integrations.stream().filter(i -> !i.isDeleted()).flatMap(i -> i.getFlows().stream().flatMap(f -> f.getConnections().stream())),
+                integrations.stream().filter(i -> !i.isDeleted()).flatMap(i -> i.getFlows().stream().flatMap(f-> f.getSteps().stream())
+                    .map(s -> s.getConnection()).filter(Optional::isPresent).map(Optional::get))
+                )
+            ).collect(Collectors.groupingBy(c -> c.getId().get(), Collectors.counting()));
 
         return connections.stream()//
             .map(c -> {
-                final int uses = connectionUsage.getOrDefault(c, 0L).intValue();
+                final int uses = connectionUsage.getOrDefault(c.getId().get(), 0L).intValue();
                 return c.builder().uses(uses).build();
             })//
             .collect(Collectors.toList());

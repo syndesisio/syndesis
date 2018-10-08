@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
+
 import org.immutables.value.Value;
 import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithConfiguredProperties;
@@ -28,7 +29,8 @@ import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.environment.Organization;
 
-public interface ConnectionBase extends WithResourceId, WithTags, WithName, WithConfiguredProperties, ToJson, Serializable {
+public interface ConnectionBase
+    extends WithResourceId, WithTags, WithName, WithConfiguredProperties, ToJson, Serializable {
 
     Optional<Organization> getOrganization();
 
@@ -40,6 +42,7 @@ public interface ConnectionBase extends WithResourceId, WithTags, WithName, With
 
     /**
      * Actual options how this connection is configured
+     *
      * @return list of options
      */
     Map<String, String> getOptions();
@@ -56,17 +59,16 @@ public interface ConnectionBase extends WithResourceId, WithTags, WithName, With
 
     /**
      * A flag denoting that the some of connection properties were derived.
-     * Ostensibly used to mark the {@link #getConfiguredProperties()} being
-     * set by the OAuth flow so that the UI can alternate between full edit
-     * and reconnect OAuth views.
+     * Ostensibly used to mark the {@link #getConfiguredProperties()} being set
+     * by the OAuth flow so that the UI can alternate between full edit and
+     * reconnect OAuth views.
      */
     boolean isDerived();
 
     /**
      * Provides number of integrations using this connection
      * <p>
-     * Note:
-     * Excluded from {@link #hashCode()} and {@link #equals(Object)}
+     * Note: Excluded from {@link #hashCode()} and {@link #equals(Object)}
      *
      * @return count of integrations
      */

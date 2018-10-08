@@ -157,7 +157,22 @@ public class ConnectionHandlerTest {
         final ConnectionOverview overview = handler.get("c1");
         assertThat(overview).isNotNull();
         assertThat(overview.getUses()).isPresent();
-        assertThat(overview.getUses().getAsInt()).isEqualTo(4);
+        assertThat(overview.getUses()).hasValue(4);
+    }
+
+    @Test
+    public void connectionsUsedInDeletedIntegrationsShouldNotBeCountedAsUsed() {
+        final Integration integration1 = testIntegration().withFlowConnections(c1).isDeleted(true).build();
+        final Integration integration2 = testIntegration().withFlowStepsUsingConnections(c1).isDeleted(true).build();
+        final Integration integration3 = testIntegration().addConnection(c1).isDeleted(true).build();
+
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(integration1, integration2, integration3));
+        when(dataManager.fetch(Connection.class, "c1")).thenReturn(c1);
+
+        final ConnectionOverview overview = handler.get("c1");
+        assertThat(overview).isNotNull();
+        assertThat(overview.getUses()).isPresent();
+        assertThat(overview.getUses()).hasValue(0);
     }
 
     @Test
