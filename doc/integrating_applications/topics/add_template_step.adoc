@@ -22,8 +22,7 @@ in a future release.
 .Prerequisites
 * You must be creating or editing an integration. If you are creating an
 integration then it must already have its start and finish connections.
-* If you plan to upload a template then you must be able to navigate to it 
-and its file extension must be `.tmpl`.
+* If you plan to upload a template then you must be able to navigate to it.
 Alternatively, you can create the template when you add the template step.
 
 .Procedure
@@ -32,31 +31,34 @@ Alternatively, you can create the template when you add the template step.
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
 at the location where you want to add a template step.
 . In the popup, click *Add a Step*.
-. On the *Choose a Step* page, click *Template*, which displays the 
-*Upload Template* page with *Upload a file* selected. 
-+
-* If you have a template file that you want to upload, click *Browse*,
-navigate to the file, and upload it.
-+
-* If you want to define a template now, select *Create*.
+. On the *Choose a Step* page, click *Template*. This displays the 
+*Upload Template* page, which prompts you to choose how you want to define 
+the template. 
 
-+
-{prodname} displays a template editor that contains the
-template that you uploaded or that is empty.
+. Do one of the following:
 
-. In the template editor, review, and if needed, edit the template you 
-uploaded, or add text that defines a template. 
-Here is an example of a valid template:
+* Drag and drop a template file or a file that contains text that you
+want to modify to create a template, into the template editor. 
+* Click *browse to upload*, navigate to a file, and upload it. 
+* In the template editor, start typing to define a template.
+
+. In the template editor, ensure that the content defines a valid
+template. {prodname} displays 
+image:images/RedCircleXError.png[a red error indicator] to the left of
+a line that contains a syntax error. Hover over the red indicator for hints
+about how to resolve the error. Here is an example of a valid template:
 +
 ----
 At {{body.time}}, {{body.name}} tweeted:
 {{body.text}}
 ----
-+
-The *Done* button is active only when the editor contains a valid template.
 
 . Click *Done* to add the template step to the integration.
 + 
+If the *Done* button is not enabled then there is at least one syntax error 
+in the template. You must correct the error before you can add this 
+Template step to the integration. 
++
 Input to a template step must be in the form of a JSON object so a data
 mapping step is required before a template step
 . Add a data mapper step before the template step:
@@ -92,6 +94,7 @@ source field to the *text* target field.
 .. In the upper right, click *Done*. 
 
 
-.Additional resource
+.Additional resources
 
 * For details about mapping fields, see <<mapping-data>>. 
+* https://mustache.github.io/mustache.5.html[Mustache Manual]
