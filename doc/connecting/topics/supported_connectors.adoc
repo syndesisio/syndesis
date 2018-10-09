@@ -61,11 +61,14 @@ a new list, or update a list. Other SAP Concur actions are Technology Preview fe
 |Obtain messages from a channel or send a message to a 
 Slack channel or user. 
 
-|<<connecting-to-databases, SQL databases>>
+|<<connecting-to-databases,SQL databases>>
 |Invoke a SQL statement or a SQL stored procedure on an Apache Derby, 
 MySQL, or PostgreSQL database. To connect to other types of SQL databases,
 you upload a {prodname} library extension that contains a 
 JDBC driver for that database. 
+
+|<<triggering-integrations-with-timers,Timer>>
+| Set a simple timer or a `cron` timer to trigger integration execution.
 
 |<<connecting-to-twitter,Twitter>>
 |Trigger execution of an integration upon tweets that mention you or that 
