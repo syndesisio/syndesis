@@ -17,7 +17,6 @@ package io.syndesis.server.api.generator.swagger;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,10 +53,10 @@ import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.api.generator.APIValidationContext;
-import io.syndesis.server.api.generator.swagger.util.OperationDescription;
-import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
+import io.syndesis.server.api.generator.swagger.util.OperationDescription;
+import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 import io.syndesis.server.api.generator.util.ActionComparator;
 
 import org.slf4j.Logger;
@@ -107,7 +106,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
             final Map<String, Integer> tagCounts = paths.entrySet().stream()//
                 .flatMap(p -> p.getValue().getOperations().stream())//
                 .peek(o -> total.incrementAndGet())//
-                .flatMap(o -> ofNullable(o.getTags()).orElse(Collections.emptyList()).stream().distinct())//
+                .flatMap(o -> SwaggerHelper.sanitizeTags(o.getTags()).distinct())//
                 .collect(//
                     Collectors.groupingBy(//
                         Function.identity(), //
@@ -230,7 +229,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                     .name(description.name)//
                     .description(description.description)//
                     .pattern(Action.Pattern.To)//
-                    .descriptor(descriptor).tags(ofNullable(operation.getTags()).orElse(Collections.emptyList()))//
+                    .descriptor(descriptor).tags(SwaggerHelper.sanitizeTags(operation.getTags()).distinct()::iterator)//
                     .build();
 
                 actions.add(action);
