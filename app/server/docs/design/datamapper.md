@@ -66,7 +66,7 @@ The kind of DataShape represented by the enum [DataShapeKinds](https://github.co
 4. **xml-schema**: Data type is represented by XML Schema. DataShape `specification` must contain XML Schema document.
 5. **xml-instance**: Data type is represented by XML instance. DataShape `specification` must contain XML instance document.
 6. **any**: Data type is not structured. For example, byte array or free format text. Data Mapper will ignore this DataShape if kind is `any`.
-7. **none**: No data. Data Mapper will ignore this DataShape if kind is `none`.
+7. **none**: No data type. If input DataShape kind is `none`, that step doesn't read data. If output DataShape kind is `none`, that step doesn't modify data. Since in many case input message body is just transfered to output message body, output DataShape kind = `none` often means passthrough. Data Mapper will ignore the DataShape if kind is `none`.
 
 ### DataShape type
 If DataShape `kind` is `java`, this property holds fully qualified class name. Otherwise this is ignored by Data Mapper.
