@@ -29,7 +29,9 @@
       <img class="syn-icon-small"
             *ngIf="step.stepKind === 'endpoint' && step.connection"
             [src]="step.connection | synIconPath">
-      <span class="pficon pficon-warning-triangle-o data-mismatch"
+        <ng-template #stepNameTooltip><div class="syn-nowrap">{{ stepName }}</div></ng-template>
+    </div>
+    <span class="pficon pficon-warning-triangle-o data-mismatch"
         *ngIf="shouldAddDatamapper || previousStepShouldDefineDataShape"
         [popover]="addDatamapper"
         #datamapperInfoPop="bs-popover"
@@ -38,9 +40,8 @@
         placement="right"
         outsideClick="true"
         (click)="toggleAddDatamapperInfo(); $event.stopPropagation();"
-        container="body"></span>
-        <ng-template #stepNameTooltip><div class="">{{ stepName }}</div></ng-template>
-    </div>
+        container="body">
+      </span>
   </div>
 
   <!-- Step Item Wrapper -->
