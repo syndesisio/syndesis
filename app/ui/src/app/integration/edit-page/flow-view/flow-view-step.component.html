@@ -22,14 +22,13 @@
   <div class="icon-container" (click)="gotoPageFor(step)">
     <div [ngClass]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
       placement="right"
-      [tooltip]="stepNameTooltip"
+      [tooltip]="stepName"
       container="body">
       <i [ngClass]="getIconClass()"
           *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
       <img class="syn-icon-small"
             *ngIf="step.stepKind === 'endpoint' && step.connection"
             [src]="step.connection | synIconPath">
-        <ng-template #stepNameTooltip><div>{{ stepName }}</div></ng-template>
     </div>
     <span class="pficon pficon-warning-triangle-o data-mismatch"
         *ngIf="shouldAddDatamapper || previousStepShouldDefineDataShape"
