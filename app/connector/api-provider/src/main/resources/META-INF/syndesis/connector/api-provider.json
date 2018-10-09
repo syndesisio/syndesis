@@ -13,6 +13,9 @@
       "id": "org.apache.camel:camel-swagger-java:@camel.version@"
     }
   ],
+  "metadata": {
+    "tech-preview": true
+  },
   "actions": [
     {
       "name": "Provided API",
