@@ -29,7 +29,7 @@
       <img class="syn-icon-small"
             *ngIf="step.stepKind === 'endpoint' && step.connection"
             [src]="step.connection | synIconPath">
-        <ng-template #stepNameTooltip><div class="syn-nowrap">{{ stepName }}</div></ng-template>
+        <ng-template #stepNameTooltip><div>{{ stepName }}</div></ng-template>
     </div>
     <span class="pficon pficon-warning-triangle-o data-mismatch"
         *ngIf="shouldAddDatamapper || previousStepShouldDefineDataShape"
