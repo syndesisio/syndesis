@@ -216,7 +216,7 @@
             "properties": {
               "summary": {
                 "kind": "parameter",
-                "displayName": "Summary text",
+                "displayName": "Event title",
                 "group": "producer",
                 "label": "producer",
                 "required": true,
@@ -224,12 +224,12 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The summary of the calendar Event.",
+                "labelHint": "The event title",
                 "order": "1"
               },
               "calendarId": {
                 "kind": "parameter",
-                "displayName": "The calendar name",
+                "displayName": "Calendar name",
                 "group": "producer",
                 "label": "producer",
                 "required": true,
@@ -242,7 +242,7 @@
               },
               "attendees": {
                 "kind": "parameter",
-                "displayName": "Attendees list",
+                "displayName": "Guest list",
                 "group": "producer",
                 "label": "producer",
                 "required": false,
@@ -250,8 +250,8 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "One or more comma-separated email addresses of the attendees.",
-                "order": "3"
+                "labelHint": "One or more comma-separated guest email addresses",
+                "order": "9"
               },
               "description": {
                 "kind": "parameter",
@@ -263,8 +263,8 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The description of the calendar Event.",
-                "order": "4"
+                "labelHint": "The event description",
+                "order": "7"
               },
               "startDate": {
                 "kind": "parameter",
@@ -277,7 +277,7 @@
                 "deprecated": false,
                 "secret": false,
                 "labelHint": "The starting date of the calendar Event.",
-                "order": "5"
+                "order": "3"
               },
               "startTime": {
                 "kind": "parameter",
@@ -290,7 +290,7 @@
                 "deprecated": false,
                 "secret": false,
                 "labelHint": "The starting time of the calendar Event.",
-                "order": "6"
+                "order": "4"
               },
               "endDate": {
                 "kind": "parameter",
@@ -303,7 +303,7 @@
                 "deprecated": false,
                 "secret": false,
                 "labelHint": "The ending date of the calendar Event.",
-                "order": "7"
+                "order": "5"
               },
               "endTime": {
                 "kind": "parameter",
@@ -316,7 +316,7 @@
                 "deprecated": false,
                 "secret": false,
                 "labelHint": "The ending time of the calendar Event.",
-                "order": "8"
+                "order": "6"
               },
               "location": {
                 "kind": "parameter",
@@ -329,7 +329,7 @@
                 "deprecated": false,
                 "secret": false,
                 "labelHint": "The location of the event as free text",
-                "order": "9"
+                "order": "8"
               }
             }
           }
@@ -365,7 +365,7 @@
             "properties": {
               "summary": {
                 "kind": "parameter",
-                "displayName": "Summary text",
+                "displayName": "Event title",
                 "group": "producer",
                 "label": "producer",
                 "required": false,
@@ -373,12 +373,12 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The summary of the calendar Event.",
+                "labelHint": "The event title",
                 "order": "3"
               },
               "calendarId": {
                 "kind": "parameter",
-                "displayName": "The calendar name",
+                "displayName": "Calendar name",
                 "group": "producer",
                 "label": "producer",
                 "required": true,
@@ -391,7 +391,7 @@
               },
               "eventId": {
                 "kind": "parameter",
-                "displayName": "The event Id to get",
+                "displayName": "Event id",
                 "group": "producer",
                 "label": "producer",
                 "required": false,
@@ -399,12 +399,12 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The event Id to get",
+                "labelHint": "The event Id of the event to update",
                 "order": "2"
               },
               "attendees": {
                 "kind": "parameter",
-                "displayName": "Attendees list",
+                "displayName": "Guest list",
                 "group": "producer",
                 "label": "producer",
                 "required": false,
@@ -412,12 +412,12 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "One or more comma-separated email addresses of the attendees.",
-                "order": "4"
+                "labelHint": "One or more comma-separated guest email addresses",
+                "order": "10"
               },
               "description": {
                 "kind": "parameter",
-                "displayName": "Event Description",
+                "displayName": "Event description",
                 "group": "producer",
                 "label": "producer",
                 "required": false,
@@ -425,8 +425,8 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The description of the calendar Event.",
-                "order": "5"
+                "labelHint": "The event description",
+                "order": "8"
               },
               "startDate": {
                 "kind": "parameter",
@@ -439,7 +439,7 @@
                 "deprecated": false,
                 "secret": false,
                 "labelHint": "The starting date of the calendar Event.",
-                "order": "6"
+                "order": "4"
               },
               "startTime": {
                 "kind": "parameter",
@@ -452,7 +452,7 @@
                 "deprecated": false,
                 "secret": false,
                 "labelHint": "The starting time of the calendar Event.",
-                "order": "7"
+                "order": "5"
               },
               "endDate": {
                 "kind": "parameter",
@@ -465,7 +465,7 @@
                 "deprecated": false,
                 "secret": false,
                 "labelHint": "The ending date of the calendar Event.",
-                "order": "8"
+                "order": "6"
               },
               "endTime": {
                 "kind": "parameter",
@@ -478,7 +478,7 @@
                 "deprecated": false,
                 "secret": false,
                 "labelHint": "The ending time of the calendar Event.",
-                "order": "9"
+                "order": "7"
               },
               "location": {
                 "kind": "parameter",
@@ -491,7 +491,7 @@
                 "deprecated": false,
                 "secret": false,
                 "labelHint": "The location of the event as free text",
-                "order": "10"
+                "order": "9"
               }
             }
           }
@@ -526,7 +526,7 @@
             "properties": {
               "calendarId": {
                 "kind": "parameter",
-                "displayName": "Calendar Id",
+                "displayName": "Calendar name",
                 "group": "producer",
                 "label": "producer",
                 "required": true,
@@ -534,20 +534,20 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The calendar ID to consume from",
+                "labelHint": "The calendar name",
                 "order": "1"
               },
               "eventId": {
                 "kind": "parameter",
-                "displayName": "The event Id to get",
+                "displayName": "Event id",
                 "group": "producer",
                 "label": "producer",
-                "required": true,
+                "required": false,
                 "type": "string",
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The event Id to get",
+                "labelHint": "The event Id of the event to update",
                 "order": "2"
               }
             }
@@ -556,7 +556,7 @@
       }
     },
     {
-      "name": "Receive Events",
+      "name": "Get Events",
       "description": "Obtain events from the Google Calendar account that this connection is authorized to access.",
       "id": "io.syndesis:google-calendar-receive-events-connector",
       "pattern": "From",
@@ -580,15 +580,15 @@
             "properties": {
               "calendarId": {
                 "kind": "parameter",
-                "displayName": "Calendar Id",
+                "displayName": "Calendar name",
                 "group": "producer",
                 "label": "producer",
-                "required": false,
+                "required": true,
                 "type": "string",
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The calendar ID to consume from",
+                "labelHint": "The calendar name",
                 "order": "2"
               },
               "maxResults": {
@@ -616,7 +616,7 @@
                 "deprecated": false,
                 "secret": false,
                 "defaultValue": true,
-                "labelHint": "Set this to true if you want to consume from the current date",
+                "labelHint": "If true you will consume events from the current date",
                 "order": "4"
               },
               "considerLastUpdate": {
@@ -630,7 +630,7 @@
                 "deprecated": false,
                 "secret": false,
                 "defaultValue": false,
-                "labelHint": "Set this to true if you want to consume from the last event update date on the next poll.",
+                "labelHint": "If true, in the next poll, you'll get events starting from the last update date of the last event from the last poll",
                 "order": "5"
               },
               "query": {
@@ -643,7 +643,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "Query events for the consumer",
+                "labelHint": "Free text search terms to find events that match these terms in any field, except for extended properties.",
                 "order": "6"
               },
               "delay": {
