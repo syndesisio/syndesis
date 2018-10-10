@@ -365,7 +365,7 @@
             "properties": {
               "summary": {
                 "kind": "parameter",
-                "displayName": "Event tile",
+                "displayName": "Event title",
                 "group": "producer",
                 "label": "producer",
                 "required": false,
@@ -556,7 +556,7 @@
       }
     },
     {
-      "name": "Receive Events",
+      "name": "Get Events",
       "description": "Obtain events from the Google Calendar account that this connection is authorized to access.",
       "id": "io.syndesis:google-calendar-receive-events-connector",
       "pattern": "From",
@@ -580,15 +580,15 @@
             "properties": {
               "calendarId": {
                 "kind": "parameter",
-                "displayName": "Calendar Id",
+                "displayName": "Calendar name",
                 "group": "producer",
                 "label": "producer",
-                "required": false,
+                "required": true,
                 "type": "string",
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "The calendar ID to consume from",
+                "labelHint": "The calendar name",
                 "order": "2"
               },
               "maxResults": {
@@ -616,7 +616,7 @@
                 "deprecated": false,
                 "secret": false,
                 "defaultValue": true,
-                "labelHint": "Set this to true if you want to consume from the current date",
+                "labelHint": "If true you will consume events from the current date",
                 "order": "4"
               },
               "considerLastUpdate": {
@@ -630,7 +630,7 @@
                 "deprecated": false,
                 "secret": false,
                 "defaultValue": false,
-                "labelHint": "Set this to true if you want to consume from the last event update date on the next poll.",
+                "labelHint": "If true, in the next poll, you'll get events starting from the last update date of the last event from the last poll",
                 "order": "5"
               },
               "query": {
@@ -643,7 +643,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "Query events for the consumer",
+                "labelHint": "Free text search terms to find events that match these terms in any field, except for extended properties.",
                 "order": "6"
               },
               "delay": {
