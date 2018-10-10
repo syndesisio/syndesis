@@ -5,13 +5,13 @@
 of your integrations. See: 
 
 * <<viewing-integration-history>>
-* <<viewing-log-information>>
+* <<viewing-integration-activity-information>>
 * <<viewing-integration-metrics>>
 * <<viewing-system-metrics>>
 
 include::viewing_integration_history.adoc[leveloffset=+1]
 
-include::viewing_log_information.adoc[leveloffset=+1]
+include::viewing_integration_activity.adoc[leveloffset=+1]
 
 include::viewing_integration_metrics.adoc[leveloffset=+1]
 

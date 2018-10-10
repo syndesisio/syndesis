@@ -2,11 +2,11 @@
 include::topics/shared/attributes.adoc[]
 
 :prodname: Syndesis
-:prodversion: 7.1
+:prodversion: 7.2
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
 :productpkg: red_hat_fuse
-:version: 7.1
+:version: 7.2
 :location: upstream
 
 [id='integrating_applications']

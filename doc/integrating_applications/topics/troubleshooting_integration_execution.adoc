@@ -1,8 +1,8 @@
 [id='troubleshooting-integration-execution']
 = Troubleshooting integration execution
 
-If an integration stops working, check its logs and activity details.
-See <<viewing-log-information>> and <<viewing-integration-history>>. 
+If an integration stops working, check its activity and history details.
+See <<viewing-integration-activity-information>> and <<viewing-integration-history>>. 
 
 For a connection to an application that uses OAuth, 
 you might see an error message that indicates

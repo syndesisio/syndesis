@@ -1,7 +1,7 @@
-[id='viewing-log-information']
-= Viewing an integration's log
+[id='viewing-integration-activity-information']
+= Viewing information about an integration's activity
 
-{prodname} provides log information for each execution of an integration. 
+{prodname} provides activity information for each execution of an integration. 
 To see this information:
 
 . In the left panel, click *Integrations*.
@@ -19,13 +19,16 @@ For each integration step, {prodname} provides:
 * Whether execution was successful
 * The error message if execution was not successful
 
-To log additional information between any two steps, you can
+To obtain additional information between any two steps, you can
 add a log step to the
 integration. A log step provides information about each message it
 receives and can provide custom text that you specify.
 If you add a log step, then it appears as one of the integration's
-steps when you expand the integration execution that you want to view log
+steps when you expand the integration execution that you want to view activity
 information for. You view {prodname} information for a log step in the 
 same way that you view {prodname} information for any other step. 
 
-To add a log step, see <<add-log-step>>.
+.Additional resources
+* To add a log step, see <<add-log-step>>.
+* To finish an integration by logging message information, 
+{LinkFuseOnlineConnectorGuide}#connecting-to-log[add a log connection.]

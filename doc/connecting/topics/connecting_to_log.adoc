@@ -8,15 +8,21 @@ ifdef::context[:parent-context: {context}]
 
 :context: connect-to-log
 
-For each integration step, {prodname} logs:
+For each integration step, {prodname} provides the following activity 
+information:
 
 * The date and time that the step was executed
 * How long it took to execute the step
 * Whether execution was successful
 * The error message if execution was not successful
 
-To log information about the messages that an integration processes, 
-add a log step and/or a log connection to an integration. 
+In {prodname}, to view this information, display the integration's summary
+and click the *Activity* tab. See also:
+{LinkFuseOnlineIntegrationGuide}managing-integrations#viewing-integration-activity-information[Viewing integration activity information].
+
+To obtain more information about integration execution, you can 
+log information about the messages that an integration processes by 
+adding a log step and/or a log connection to an integration. 
 
 * <<comparison-log-step-connection_{context}>>
 * <<add-log-connection_{context}>>

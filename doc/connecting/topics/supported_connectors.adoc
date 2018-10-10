@@ -36,7 +36,7 @@ from a particular Gmail account.
 `GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, OR `PATCH` method.
 
 |<<connecting-to-log,Log>>
-|Send information about messages that an integration processes to the integration log. 
+|Send information about messages that an integration processes to the integration's log. 
 
 |<<connecting-to-kafka,Kafka>>
 |Obtain streams of records from

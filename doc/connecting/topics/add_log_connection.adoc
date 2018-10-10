@@ -63,14 +63,27 @@ the behavior for each log level.
 |*TRACE*
 |`ERROR`, `WARN`, `INFO`, `DEBUG`, `TRACE`
 
+|*OFF*
+| No logging. After creating and testing an integration, you might no 
+longer need the logging provided by the log connection. Edit the 
+integration, edit its log connection to select *OFF*, and re-publish 
+the integration. 
+
 |====
 
 . Select one or more checkboxes to indicate what information to send
 to the log for each message. Choices include message ID, message
 headers, and message body. 
++
+If you do not select any checkboxes, then for each logged message, 
+{prodname} logs several internal IDs, how long it took to process 
+the message, whether there was an error, and an error message if 
+there was one. This is comparable to the information that {prodname} 
+provides for each integration step, which you can view in the 
+*Activity* tab of the integration summary. 
 
 . Click *Done* to add the log connection to the integration. 
 
 .Additional resource
 
-* {LinkFuseOnlineIntegrationGuide}#managing-integrations#viewing-log-information[View log entries]
+* {LinkFuseOnlineIntegrationGuide}managing-integrations#viewing-integration-activity-information[View integration activity]
