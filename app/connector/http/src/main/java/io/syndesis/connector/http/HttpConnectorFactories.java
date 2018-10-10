@@ -22,6 +22,8 @@ import io.syndesis.integration.component.proxy.ComponentDefinition;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyFactory;
 import org.apache.camel.Component;
+import org.apache.camel.Endpoint;
+import org.apache.camel.catalog.DefaultCamelCatalog;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.StringHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -50,8 +52,18 @@ public final class HttpConnectorFactories {
                 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
                 protected Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> options) throws Exception {
                     options.put("httpUri", computeHttpUri("http", options));
-
+                    
                     return super.buildEndpointOptions(remaining, options);
+                }
+                
+                @Override
+                @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+                protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) throws Exception {
+                    // Build the delegate uri using the catalog
+                	DefaultCamelCatalog catalog = new DefaultCamelCatalog(false);
+                    String uri = catalog.asEndpointUri(scheme, options, false);
+                    final String uriFinal = uri + "&httpClient.redirectsEnabled=true";
+                    return getCamelContext().getEndpoint(uriFinal);
                 }
             };
         }
@@ -79,6 +91,16 @@ public final class HttpConnectorFactories {
                     options.put("httpUri", computeHttpUri("https", options));
 
                     return super.buildEndpointOptions(remaining, options);
+                }
+                
+                @Override
+                @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+                protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) throws Exception {
+                    // Build the delegate uri using the catalog
+                	DefaultCamelCatalog catalog = new DefaultCamelCatalog(false);
+                    String uri = catalog.asEndpointUri(scheme, options, false);
+                    final String uriFinal = uri + "&httpClient.redirectsEnabled=true";
+                    return getCamelContext().getEndpoint(uriFinal);
                 }
             };
         }
