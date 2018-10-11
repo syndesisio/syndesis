@@ -34,16 +34,21 @@ public class LogStepHandler implements IntegrationStepHandler {
 
     @Override
     public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String flowIndex, String stepIndex) {
-        if( step.getId().isPresent() ) {
-            String stepId = step.getId().get();
-            return Optional.of(route.log(LoggingLevel.INFO, (String) null, stepId, createMessage(step)));
-        } else {
-            return Optional.of(route.log(LoggingLevel.INFO, createMessage(step)));
+        final String message = createMessage(step);
+        if (message.isEmpty()) {
+            return Optional.empty();
         }
+
+        if (step.getId().isPresent()) {
+            String stepId = step.getId().get();
+            return Optional.of(route.log(LoggingLevel.INFO, (String) null, stepId, message));
+        }
+
+        return Optional.of(route.log(LoggingLevel.INFO, message));
     }
 
 
-    private static String createMessage(Step l) {
+    static String createMessage(Step l) {
         StringBuilder sb = new StringBuilder(128);
         String customText = getCustomText(l.getConfiguredProperties());
         Boolean isContextLoggingEnabled = isContextLoggingEnabled(l.getConfiguredProperties());
