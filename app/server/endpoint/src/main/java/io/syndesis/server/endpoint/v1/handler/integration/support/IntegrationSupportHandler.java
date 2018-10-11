@@ -57,6 +57,7 @@ import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.ModelExport;
+import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.Schema;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithName;
@@ -68,6 +69,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Names;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
@@ -209,6 +211,20 @@ public class IntegrationSupportHandler {
                 addModelToExport(export, extension);
             }
         });
+
+        addResourcesToExport(export, integration);
+    }
+
+    private void addResourcesToExport(final JsonDB export, final Integration integration) {
+        for (ResourceIdentifier resourceIdentifier : integration.getResources()) {
+            if (resourceIdentifier.getKind() == Kind.OpenApi) {
+                final Optional<OpenApi> openApiResource = resourceManager.loadOpenApiDefinition(resourceIdentifier.getId().get());
+
+                if (openApiResource.isPresent()) {
+                    addModelToExport(export, openApiResource.get());
+                }
+            }
+        }
     }
 
     private static <T extends WithId<T>> void addModelToExport(JsonDB export, T model) {
@@ -326,6 +342,12 @@ public class IntegrationSupportHandler {
             }
         }, renamedIds, result);
 
+        importModels(new JsonDbDao<OpenApi>(given) {
+            @Override
+            public Class<OpenApi> getType() {
+                return OpenApi.class;
+            }
+        }, (a, n) -> new OpenApi.Builder().createFrom(a).name(n).build(), new HashMap<>(), result);
 
         return result;
     }
