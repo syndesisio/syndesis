@@ -1,16 +1,7 @@
 @import 'syndesis-sass';
 
-@mixin line {
-  content: '';
-  position: absolute;
-  width: 2px;
-  background-color: #d4d4d4;
-  top: -59px;
-  bottom: 0;
-  left: 50%;
-}
-
 .multiflow-step {
+  position: relative;
 
   .icon-container {
     width: 55px;
@@ -18,30 +9,48 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    cursor: pointer;
     position: absolute;
-    float: left;
-    left: 120px;
-    margin-left: -22px;
-    &:nth-child(1) {
-      transform: translateX(-80px);
-      z-index: 3;
-      &:before {
-        @include line;
-        transform: rotate(20deg) translateX(3px);
+    left: 0;
+    top: 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 2px;
+      background-color: #d4d4d4;
+      top: -100px;
+      bottom: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+
+      ::ng-deep .flow-view-container.collapsed & {
+        top: -50px;
       }
     }
-    &:nth-child(2) {
-      transform: translateX(-47px);
-      z-index: 2;
-    }
-    &:nth-child(3) {
-      transform: translateX(-14px);
-      z-index: 1;
+
+    &:nth-child(1) {
+      transform: translateX(-75%);
+
       &:before {
-        @include line;
-        transform: rotate(-20deg) translateX(-3px);
+        transform: translateX(-50%) rotate(18deg);
+        transform-origin: bottom left;
+
+        ::ng-deep .flow-view-container.collapsed & {
+          transform: translateX(-50%) rotate(30deg);
+        }
+      }
+    }
+
+    &:nth-child(3) {
+      transform: translateX(75%);
+
+      &:before {
+        transform: translateX(-50%) rotate(-18deg);
+        transform-origin: bottom right;
+
+        ::ng-deep .flow-view-container.collapsed & {
+          transform: translateX(-50%) rotate(-30deg);
+        }
       }
     }
   }
