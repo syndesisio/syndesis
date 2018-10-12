@@ -643,7 +643,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "labelHint": "Free text search terms to find events that match these terms in any field, except for extended properties.",
+                "labelHint": "Free text string to apply on all the fields of events.",
                 "order": "6"
               },
               "delay": {
