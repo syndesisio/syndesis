@@ -17,7 +17,6 @@ package io.syndesis.connector.calendar;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,8 +29,6 @@ import javax.mail.internet.AddressException;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.component.google.calendar.internal.CalendarEventsApiMethod;
-import org.apache.camel.component.google.calendar.internal.GoogleCalendarApiCollection;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.commons.lang3.StringUtils;
 
@@ -41,36 +38,14 @@ import com.google.api.services.calendar.model.EventAttendee;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
-public class GoogleCalendarGetEventCustomizer implements ComponentProxyCustomizer {
-
-    private String eventId;
-    private String calendarId;
+public class GoogleCalendarEventsCustomizer implements ComponentProxyCustomizer {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        setApiMethod(options);
-        component.setBeforeProducer(this::beforeProducer);
-        component.setAfterProducer(this::afterProducer);
+        component.setBeforeConsumer(this::beforeConsumer);
     }
 
-    private void setApiMethod(Map<String, Object> options) {
-        calendarId = (String) options.get("calendarId");
-        eventId = (String) options.get("eventId");
-
-        options.put("apiName",
-                GoogleCalendarApiCollection.getCollection().getApiName(CalendarEventsApiMethod.class).getName());
-        options.put("methodName", "get");
-    }
-
-    private void beforeProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
-
-        final Message in = exchange.getIn();
-
-        in.setHeader("CamelGoogleCalendar.eventId", eventId);
-        in.setHeader("CamelGoogleCalendar.calendarId", calendarId);
-    }
-
-    private void afterProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
+    private void beforeConsumer(Exchange exchange) throws MessagingException, IOException {
 
         final Message in = exchange.getIn();
         final Event event = exchange.getIn().getBody(Event.class);

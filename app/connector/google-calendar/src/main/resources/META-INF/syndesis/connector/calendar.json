@@ -200,11 +200,11 @@
         "componentScheme": "google-calendar",
         "inputDataShape": {
           "kind": "java",
-          "type": "com.google.api.services.calendar.model.Event"
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "outputDataShape": {
           "kind": "java",
-          "type": "com.google.api.services.calendar.model.Event"
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "connectorCustomizers": [
           "io.syndesis.connector.calendar.GoogleCalendarSendEventCustomizer"
@@ -349,11 +349,11 @@
         "componentScheme": "google-calendar",
         "inputDataShape": {
           "kind": "java",
-          "type": "com.google.api.services.calendar.model.Event"
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "outputDataShape": {
           "kind": "java",
-          "type": "com.google.api.services.calendar.model.Event"
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "connectorCustomizers": [
           "io.syndesis.connector.calendar.GoogleCalendarUpdateEventCustomizer"
@@ -514,7 +514,7 @@
         },
         "outputDataShape": {
           "kind": "java",
-          "type": "com.google.api.services.calendar.model.Event"
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "connectorCustomizers": [
           "io.syndesis.connector.calendar.GoogleCalendarGetEventCustomizer"
@@ -571,8 +571,11 @@
         },
         "outputDataShape": {
           "kind": "java",
-          "type": "com.google.api.services.calendar.model.Event"
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
+        "connectorCustomizers": [
+          "io.syndesis.connector.calendar.GoogleCalendarEventsCustomizer"
+        ],
         "propertyDefinitionSteps": [
           {
             "name": "Obtain Events from Calendar",
