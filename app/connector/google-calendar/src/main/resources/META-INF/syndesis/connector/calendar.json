@@ -571,8 +571,11 @@
         },
         "outputDataShape": {
           "kind": "java",
-          "type": "com.google.api.services.calendar.model.Event"
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
+        "connectorCustomizers": [
+          "io.syndesis.connector.calendar.GoogleCalendarEventsCustomizer"
+        ],
         "propertyDefinitionSteps": [
           {
             "name": "Obtain Events from Calendar",
