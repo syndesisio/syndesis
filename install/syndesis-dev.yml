@@ -585,20 +585,6 @@ objects:
     resources:
       requests:
         storage: ${POSTGRESQL_VOLUME_CAPACITY}
-- apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    name: syndesis-upgrade
-    labels:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/type: infrastructure
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: ${UPGRADE_VOLUME_CAPACITY}
 
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
@@ -1623,6 +1609,20 @@ objects:
       type: ImageChange
 
     - type: ConfigChange
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: syndesis-upgrade
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${UPGRADE_VOLUME_CAPACITY}
 - apiVersion: template.openshift.io/v1
   kind: Template
   metadata:
