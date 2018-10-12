@@ -33,6 +33,7 @@ import org.apache.camel.Message;
 import org.apache.camel.component.google.calendar.internal.CalendarEventsApiMethod;
 import org.apache.camel.component.google.calendar.internal.GoogleCalendarApiCollection;
 import org.apache.camel.util.ObjectHelper;
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
@@ -59,6 +60,7 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setApiMethod(options);
         component.setBeforeProducer(this::beforeProducer);
+        component.setAfterProducer(this::afterProducer);
     }
 
     private void setApiMethod(Map<String, Object> options) {
@@ -79,41 +81,70 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
     private void beforeProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
 
         final Message in = exchange.getIn();
-        Event event;
-        event = exchange.getIn().getBody(Event.class);
-        if (event == null) {
-            event = new Event();
+        final GoogleCalendarEventModel event = exchange.getIn().getBody(GoogleCalendarEventModel.class);
+        if (event != null) {
 
-            if (ObjectHelper.isNotEmpty(summary)) {
-                event.setSummary(summary);
+            if (ObjectHelper.isNotEmpty(event.getTitle())) {
+                summary = event.getTitle();
             }
-            if (ObjectHelper.isNotEmpty(description)) {
-                event.setDescription(description);
+            if (ObjectHelper.isNotEmpty(event.getDescription())) {
+                description = event.getDescription();
             }
-            if (ObjectHelper.isNotEmpty(attendees)) {
-                event.setAttendees(getAttendeesList(attendees));
+            if (ObjectHelper.isNotEmpty(event.getAttendees())) {
+                attendees = event.getAttendees();
             }
-            if (ObjectHelper.isNotEmpty(startDate) && ObjectHelper.isNotEmpty(startTime)) {
-                String composedTime = startDate + " " + startTime;
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-                Date date = dateFormat.parse(composedTime);
-                DateTime start = new DateTime(date);
-                event.setStart(new EventDateTime().setDateTime(start));
+            if (ObjectHelper.isNotEmpty(event.getStartDate()) && ObjectHelper.isNotEmpty(event.getStartTime())) {
+                startDate = event.getStartDate();
+                startTime = event.getStartTime();
             }
-            if (ObjectHelper.isNotEmpty(endDate) && ObjectHelper.isNotEmpty(endTime)) {
-                String composedTime = endDate + " " + endTime;
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-                Date date = dateFormat.parse(composedTime);
-                DateTime end = new DateTime(date);
-                event.setEnd(new EventDateTime().setDateTime(end));
+            if (ObjectHelper.isNotEmpty(event.getEndDate()) && ObjectHelper.isNotEmpty(event.getEndTime())) {
+                endDate = event.getEndDate();
+                endTime = event.getEndTime();
             }
-            if (ObjectHelper.isNotEmpty(location)) {
-                event.setLocation(location);
+            if (ObjectHelper.isNotEmpty(event.getLocation())) {
+                location = event.getLocation();
             }
         }
 
-        in.setHeader("CamelGoogleCalendar.content", event);
+        in.setHeader("CamelGoogleCalendar.content", createGoogleEvent());
         in.setHeader("CamelGoogleCalendar.calendarId", calendarId);
+    }
+
+    private void afterProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
+
+        final Message in = exchange.getIn();
+        final Event event = exchange.getIn().getBody(Event.class);
+        GoogleCalendarEventModel model = new GoogleCalendarEventModel();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        if (event != null) {
+
+            if (ObjectHelper.isNotEmpty(event.getSummary())) {
+                model.setTitle(event.getSummary());
+            }
+            if (ObjectHelper.isNotEmpty(event.getDescription())) {
+                model.setDescription(event.getDescription());
+            }
+            if (ObjectHelper.isNotEmpty(event.getAttendees())) {
+                model.setAttendees(getAttendeesString(event.getAttendees()));
+            }
+            if (ObjectHelper.isNotEmpty(event.getStart())) {
+                model.setStartDate(dateFormat.format(new Date(event.getStart().getDateTime().getValue())));
+                model.setStartTime(timeFormat.format(new Date(event.getStart().getDateTime().getValue())));
+            }
+            if (ObjectHelper.isNotEmpty(event.getEnd())) {
+                model.setEndDate(dateFormat.format(new Date(event.getEnd().getDateTime().getValue())));
+                model.setEndTime(timeFormat.format(new Date(event.getEnd().getDateTime().getValue())));
+            }
+            if (ObjectHelper.isNotEmpty(event.getLocation())) {
+                model.setLocation(event.getLocation());
+            }
+            if (ObjectHelper.isNotEmpty(event.getId())) {
+                model.setEventId(event.getId());
+            }
+        }
+
+        in.setBody(model);
     }
 
     private List<EventAttendee> getAttendeesList(String attendeesString) throws AddressException {
@@ -125,5 +156,33 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
             attendeesList.add(attendee);
         }
         return attendeesList;
+    }
+
+    private String getAttendeesString(List<EventAttendee> attendees) throws AddressException {
+        String attendeesString;
+        List<String> attendeesList = new ArrayList<>();
+        for (EventAttendee eventAttendee : attendees) {
+            attendeesList.add(eventAttendee.getEmail());
+        }
+        attendeesString = StringUtils.join(attendeesList, ',');
+        return attendeesString;
+    }
+
+    private Event createGoogleEvent() throws AddressException, ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        Event event = new Event();
+        event.setSummary(summary);
+        event.setDescription(description);
+        event.setAttendees(getAttendeesList(attendees));
+        String composedTime = startDate + " " + startTime;
+        Date startDate = dateFormat.parse(composedTime);
+        DateTime start = new DateTime(startDate);
+        event.setStart(new EventDateTime().setDateTime(start));
+        composedTime = endDate + " " + endTime;
+        Date endDate = dateFormat.parse(composedTime);
+        DateTime end = new DateTime(endDate);
+        event.setEnd(new EventDateTime().setDateTime(end));
+        event.setLocation(location);
+        return event;
     }
 }
