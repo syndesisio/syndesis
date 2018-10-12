@@ -81,7 +81,7 @@ public class GoogleCalendarEventsCustomizer implements ComponentProxyCustomizer 
 
         in.setBody(model);
     }
-    
+
     private String getAttendeesString(List<EventAttendee> attendees) throws AddressException {
         String attendeesString;
         List<String> attendeesList = new ArrayList<>();
