@@ -18,7 +18,6 @@ import { CurrentFlowService } from '@syndesis/ui/integration/edit-page';
 import {
   FileLikeObject,
   FileUploader,
-  FileUploaderOptions,
   Mustache
 } from '@syndesis/ui/vendor';
 import { MustacheMode } from './mustache-mode';
@@ -213,15 +212,7 @@ export class TemplaterComponent implements OnInit {
   private initUploader() {
     this.uploader = new FileUploader(
       {
-        allowedMimeType: [ 'application/tmpl', '' ],
-        filters: [
-          {
-            name: 'filename filter',
-            fn: ( item: FileLikeObject, options: FileUploaderOptions ) => {
-              return item.name.endsWith( '.tmpl' );
-            }
-          }
-        ]
+        maxFileSize: 1024
       }
     );
 
