@@ -50,6 +50,9 @@
 
     ::ng-deep {
       .step {
+        position: relative;
+        z-index: 1;
+  
         .icon-container {
           width: 55px;
           height: 55px;
@@ -58,7 +61,6 @@
           justify-content: center;
           position: relative;
           flex-shrink: 0;
-          z-index: 4;
           cursor: pointer;
         }
 
@@ -156,7 +158,7 @@
   .flow-view-container {
     .step {
       flex: 0 0 auto;
-  
+
       &.finish {
         flex: 0 0 auto;
         min-height: 0px;
@@ -164,6 +166,8 @@
   
       &.step-insert {
         flex: 0 0 auto;
+        z-index: 2;
+
         .icon-container {
           height: 50px;
         }
