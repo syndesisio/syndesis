@@ -149,6 +149,11 @@ parameters:
   generate: expression
   name: CLIENT_STATE_ENCRYPTION_KEY
   required: true
+- description: Volume space available for the upgrade process (backup data), e.g. 512Mi, 2Gi.
+  displayName: Upgrade Volume Capacity
+  name: UPGRADE_VOLUME_CAPACITY
+  required: true
+  value: 1Gi
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
