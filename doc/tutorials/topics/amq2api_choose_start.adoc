@@ -1,7 +1,17 @@
-[id='amq2api-choose-start-connection']
+// Module included in the following assemblies:
+// amq2api_create_integration.adoc
+
+[id='amq2api-choose-start-connection_{context}']
 = Choose the start connection
 
-To choose the start connection:
+In {prodname}, to create the sample AMQ to REST API sample integration,
+the first task is to choose the start connection. 
+
+.Prerequisites
+* You started the provided AMQ broker. 
+* You created an AMQ connection. 
+
+.Procedure
 
 . In {prodname}, on the left, click *Integrations*.
 . Click *Create Integration*.

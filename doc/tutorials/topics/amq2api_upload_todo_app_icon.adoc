@@ -1,11 +1,15 @@
-[id='amq2api-upload-todo-app-icon']
+// Module included in the following assemblies:
+// amq2api_intro.adoc
+
+[id='amq2api-upload-todo-app-icon_{context}']
 = Upload the To Do app icon
 
 To show the flow of an integration, {prodname} displays icons that identify
 the applications that the integration is connecting to. Your {prodname}
-installation provides an icon for the To Do app.
+environment provides an icon for the To Do app. Follow these instructions
+to upload it.  
 
-To upload the To Do app icon:
+.Procedure
 
 . Display the To Do app icon:
 

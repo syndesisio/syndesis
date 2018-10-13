@@ -1,7 +1,20 @@
-[id='sf2db-confirm-working']
+// Module included in the following assemblies:
+// sf2db_intro.adoc
+
+[id='sf2db-confirm-working_{context}']
 = Confirm that the Salesforce to database integration works
 
-To confirm that the Salesforce to database integration is working:
+To confirm that the Salesforce to database integration is working, 
+create a new lead in Salesforce and then open the web app that 
+{prodname} provides for viewing updates to the sample database. 
+
+.Prerequisites
+
+* In {prodname}, *Running* appears next to the name that you specified
+for the Salesforce to database sample integration when you published it.
+* You can access your Salesforce account. 
+
+.Procedure
 
 . In the left panel, click *Integrations*.
 . If necessary, wait until your sample integration is a *Running* integration.

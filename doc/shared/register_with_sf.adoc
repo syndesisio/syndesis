@@ -1,31 +1,39 @@
-// Reused in
-//"t2sf_intro.adoc", "sf2db_intro.adoc"
+// Module included in the following assemblies:
+// tutorials t2sf_intro.adoc
+// tutorials sf2db_intro.adoc
+// connecting connecting_to_sf.adoc
+
 [id='register-with-salesforce_{context}']
 = Register {prodname} as a Salesforce client application
 
-You must register your {prodname} environment as a client application
+In an integration, to connect to Salesforce, the first thing you must do is
+register your {prodname} environment as a client application
 that can access Salesforce.
 This lets you create any number of integrations that connect
-to Salesforce. In other words, you need to register a particular 
+to Salesforce. In other words, you need to register a particular
 {prodname} environment with Salesforce only once.
+
+In each {prodname} environment, there can be only one registration
+of {prodname} as a Salesforce client application. However, while each Salesforce
+connection uses the same registration, it can use different user
+credentials. 
 
 ifeval::["{context}" == "t2sf"]
 If you already registered {prodname} as a Salesforce
-client and created a Salesforce connection, skip to <<create-twitter-sf-integration>>.
+client and created a Salesforce connection, skip to <<create-twitter-sf-integration_{context}>>.
 endif::[]
 
 ifeval::["{context}" == "sf2db"]
 If you already registered {prodname} as a Salesforce
-client and created a Salesforce connection, skip to  <<create-sf-db-integration>>.
+client and created a Salesforce connection, skip to  <<create-sf-db-integration_{context}>>.
 endif::[]
 
-In each {prodname} environment, there can be only one registration
-of {prodname} as a Salesforce client. However, while each Salesforce 
-connection uses the same registration, it can use different user
-credentials. 
+ 
+.Prerequisites
+* You are logged in to {prodname}. The URL for accessing {prodname} is in the 
+email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
 
-Perform these steps to register {prodname} as a Salesforce client application:
-
+.Procedure
 . In {prodname}:
 .. In the left panel, click *Settings*.
 .. On the *Settings* page, near the top, to the right of the callback URL, 

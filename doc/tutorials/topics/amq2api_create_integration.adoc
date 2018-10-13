@@ -1,13 +1,18 @@
-[id='amq2api-create-integration']
+// Module included in the following assemblies:
+// amq2api_intro.adoc
+
+:parent-context: {context}
+[id='amq2api-create-integration_{context}']
 = Create and deploy AMQ to REST API sample integration
+:context: create-amq
 
 To create and deploy the AMQ to REST API sample integration, the main steps are:
 
-. <<amq2api-choose-start-connection>>
-. <<amq2api-choose-finish-connection>>
-. <<amq2api-add-damage-reporter-step>>
-. <<amq2api-add-mapping-step>>
-. <<amq2api-name-and-publish>>
+. <<amq2api-choose-start-connection_{context}>>
+. <<amq2api-choose-finish-connection_{context}>>
+. <<amq2api-add-damage-reporter-step_{context}>>
+. <<amq2api-add-mapping-step_{context}>>
+. <<amq2api-name-and-publish_{context}>>
 
 include::amq2api_choose_start.adoc[leveloffset=+1]
 
@@ -18,3 +23,5 @@ include::amq2api_add_damage_reporter_step.adoc[leveloffset=+1]
 include::amq2api_add_mapping_step.adoc[leveloffset=+1]
 
 include::amq2api_name_and_publish.adoc[leveloffset=+1]
+
+:context: {parent-context}

@@ -1,8 +1,19 @@
-[id='t2sf-confirm-working']
+// Module included in the following assemblies:
+// t2sf_intro.adoc
+
+[id='t2sf-confirm-working_{context}']
 = Confirm that the Twitter to Salesforce integration works
 
-To confirm that the Twitter to Salesforce sample integration is working:
+To confirm that the Twitter to Salesforce sample integration is working,
+tweet some messages and check for results in Salesforce. 
 
+.Prerequisites
+
+* In {prodname}, *Running* appears next to the name that you specified
+for the Twitter to Salesforce sample integration when you published it.
+* You can access your Twitter and Salesforce accounts. 
+
+.Procedure
 . In {prodname} in the panel on the left, click *Integrations* to see that the integration you
 created is a *Running* integration. If you entered the example name, you
 would see that *Twitter to Salesforce Sample Integration* is running.

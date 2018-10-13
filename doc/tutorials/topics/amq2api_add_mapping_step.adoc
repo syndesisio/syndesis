@@ -1,10 +1,18 @@
-[id='amq2api-add-mapping-step']
+// Module included in the following assemblies:
+// amq2api_create_integration.adoc
+
+[id='amq2api-add-mapping-step_{context}']
 = Add a data mapping step
 
-Add a data mapping step that correlates the `task` field in the
+To continue creating the AMQ to REST API sample integration, you need to add a 
+data mapping step. This step correlates the `task` field in the
 output from the damage reporter step to the `task` field in the
-database that the REST API accesses:
+database that the REST API accesses. 
 
+.Prerequisite
+* You added the Damage Reporter step to the integration. 
+
+.Procedure
 . In {prodname}, in the left panel, hover over the plus sign between the damage reporter
 step and the finish connection to display a pop-up in which
 you click *Add a Step*.

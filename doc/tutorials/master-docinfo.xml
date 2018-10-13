@@ -1,5 +1,5 @@
 <productname>Syndesis</productname>
-<productnumber>7.1</productnumber>
+<productnumber>{version}</productnumber>
 <subtitle>How business users can share data among different applications</subtitle>
 <abstract>
  <para>Follow step-by-step instructions to create, deploy, and test sample integrations. </para>

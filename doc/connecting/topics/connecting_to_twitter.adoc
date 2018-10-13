@@ -3,8 +3,8 @@
 
 To connect to Twitter in an integration, see the following topics:
 
-* <<register-with-twitter>>
-* <<create-twitter-connection>>
+* <<register-with-twitter_{context}>>
+* <<create-twitter-connection_{context}>>
 * <<adding-twitter-connections>>
 
 You need a Twitter developer account to authorize access from your

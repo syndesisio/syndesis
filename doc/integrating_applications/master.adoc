@@ -2,15 +2,16 @@
 include::topics/shared/attributes.adoc[]
 
 :prodname: Syndesis
-:prodversion: 7.1
+:prodversion: 7.2
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
 :productpkg: red_hat_fuse
-:version: 7.1
+:version: 7.2
 :location: upstream
 
 [id='integrating_applications']
 = Integrating Applications with {prodname}
+:context: userguide
 
 This guide provides information and instructions for using
 {prodname}'s web interface to integrate applications.
@@ -19,7 +20,7 @@ The content in this guide is organized as follows:
 
 * <<high-level-overview>>
 * <<how-to-get-ready>>
-* <<logging-in-and-out>>
+// * <<logging-in-and-out_{context}>>
 * <<connecting-to-applications>>
 * <<creating-integrations>>
 * <<mapping-data>>
@@ -33,7 +34,7 @@ include::topics/high_level_overview.adoc[leveloffset=+1]
 
 include::topics/how_to_get_ready.adoc[leveloffset=+1]
 
-include::topics/shared/log_in.adoc[leveloffset=+1]
+// include::topics/shared/log_in.adoc[leveloffset=+1]
 
 include::topics/connecting_to_applications.adoc[leveloffset=+1]
 

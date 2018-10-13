@@ -1,4 +1,7 @@
-[id='amq2api-create-rest-api-connector']
+// Module included in the following assemblies:
+// amq2api_intro.adoc
+
+[id='amq2api-create-rest-api-connector_{context}']
 = Create a REST API connector
 
 {prodname} can create connectors for REST APIs
@@ -6,11 +9,11 @@ that support Hypertext Transfer Protocol (HTTP)/1.0 or HTTP/1.1.
 To do this, {prodname} requires a valid
 OpenAPI 2.0 specification that describes a REST API you want to connect to.
 
-Your {prodname} installation provides the To Do app, which has a REST API
-for accessing a database that contains tasks. Your installation also provides
+Your {prodname} environment provides the To Do app, which has a REST API
+for accessing a database that contains tasks. Your environment also provides
 an OpenAPI (Swagger) specification for this API.
 
-To create a REST API connector for the To Do app:
+.Procedure
 
 . Identify the URL for your {prodname} installation's copy of the
 OpenAPI specification:
@@ -40,6 +43,6 @@ it should be something like this:
 `\https://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com`.
 .. Confirm that the value in the *Base URL* field is `/api`. 
 . Click *Create API Connector*.
-
++
 {prodname} displays the *API Client Connectors* tab with an entry for
 the *Todo App API* that you just created.

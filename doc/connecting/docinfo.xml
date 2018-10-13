@@ -1,5 +1,5 @@
 <productname>Syndesis</productname>
-<productnumber>1.1</productnumber>
+<productnumber>{version}</productnumber>
 <subtitle>Guide for using provided connectors</subtitle>
 <abstract>
  <para>Syndesis provides integration as a service.</para>

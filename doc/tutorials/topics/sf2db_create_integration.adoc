@@ -1,14 +1,24 @@
-[id='create-sf-db-integration']
+// Module included in the following assemblies:
+// sf2db_intro.adoc
+
+:parent-context: {context}
+[id='create-sf-db-integration_{context}']
 = Create and deploy Salesforce to database sample integration
 
+:context: sf2db-create
 To create and deploy an integration that uses the Salesforce
 connection and the database connection,
  the main steps are:
 
-* <<sf2db-choose-start-connection>>
-* <<sf2db-choose-finish-connection>>
-* <<sf2db-add-data-mapping-step>>
-* <<sf2db-name-and-publish>>
+* <<sf2db-choose-start-connection_{context}>>
+* <<sf2db-choose-finish-connection_{context}>>
+* <<sf2db-add-data-mapping-step_{context}>>
+* <<sf2db-name-and-publish_{context}>>
+
+.Prerequisites
+* You registered your {prodname} environment as a Salesforce client and
+created a {prodname} Salesforce connection. 
+* {prodname} is open and you are logged in. 
 
 include::sf2db_choose_start.adoc[leveloffset=+1]
 
@@ -17,3 +27,5 @@ include::sf2db_choose_finish.adoc[leveloffset=+1]
 include::sf2db_add_mapping_step.adoc[leveloffset=+1]
 
 include::sf2db_name_and_publish.adoc[leveloffset=+1]
+
+:context: {parent-context}

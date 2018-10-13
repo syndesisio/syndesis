@@ -3,7 +3,7 @@
 
 You must create a Twitter connection before you can add a Twitter
 connection to an integration. If you did not already create a Twitter connection,
-see <<create-twitter-connection>>.
+see <<create-twitter-connection_{context}>>.
 
 A connection to Twitter must be the start connection in an integration. 
 You must be creating an integration and being prompted to choose
