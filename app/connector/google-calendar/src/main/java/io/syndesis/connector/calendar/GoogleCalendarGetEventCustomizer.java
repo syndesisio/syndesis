@@ -86,12 +86,20 @@ public class GoogleCalendarGetEventCustomizer implements ComponentProxyCustomize
                 model.setAttendees(getAttendeesString(event.getAttendees()));
             }
             if (ObjectHelper.isNotEmpty(event.getStart())) {
-                model.setStartDate(dateFormat.format(new Date(event.getStart().getDateTime().getValue())));
-                model.setStartTime(timeFormat.format(new Date(event.getStart().getDateTime().getValue())));
+                if (event.getStart().getDateTime() != null) {
+                    model.setStartDate(dateFormat.format(new Date(event.getStart().getDateTime().getValue())));
+                    model.setStartTime(timeFormat.format(new Date(event.getStart().getDateTime().getValue())));
+                } else {
+                    model.setStartDate(dateFormat.format(new Date(event.getStart().getDate().getValue())));
+                }
             }
             if (ObjectHelper.isNotEmpty(event.getEnd())) {
-                model.setEndDate(dateFormat.format(new Date(event.getEnd().getDateTime().getValue())));
-                model.setEndTime(timeFormat.format(new Date(event.getEnd().getDateTime().getValue())));
+                if (event.getEnd().getDateTime() != null) {
+                    model.setEndDate(dateFormat.format(new Date(event.getEnd().getDateTime().getValue())));
+                    model.setEndTime(timeFormat.format(new Date(event.getEnd().getDateTime().getValue())));
+                } else {
+                    model.setEndDate(dateFormat.format(new Date(event.getEnd().getDate().getValue())));
+                }
             }
             if (ObjectHelper.isNotEmpty(event.getLocation())) {
                 model.setLocation(event.getLocation());
