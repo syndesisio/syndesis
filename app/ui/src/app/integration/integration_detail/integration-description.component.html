@@ -54,11 +54,11 @@
   </div>
 </ng-template>
 
-<ng-template #stepDefault let-id="id" let-name="name">
+<ng-template #stepDefault let-id="id" let-name="name"  let-iconSrc="iconSrc">
   <div [id]="id"
        class="text-center step">
     <div class="icon">
-      <img class="syn-icon-small" src="" alt="{{ name }}">
+      <img class="syn-icon-small" [src]="iconSrc" alt="{{ name }}">
     </div>
     <div>{{ name }}</div>
   </div>
@@ -81,7 +81,8 @@
       <ng-container *ngSwitchDefault>
         <div *ngTemplateOutlet="stepDefault;context:{
           id: (step.name || step.stepKind) | synSlugify,
-          name: stepStore.getStepName(step)
+          name: stepStore.getStepName(step),
+          iconSrc: step | synIconPath
         }"></div>
       </ng-container>
     </ng-container>
