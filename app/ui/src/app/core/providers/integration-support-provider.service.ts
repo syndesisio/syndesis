@@ -57,7 +57,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.updateState, {
         id: integration.id,
-        version: integration.deploymentVersion
+        version: integration.version
       })
       .post({
         targetState: UNPUBLISHED
