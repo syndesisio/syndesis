@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,7 @@ import io.swagger.models.Response;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.AbstractSerializableParameter;
 import io.swagger.models.parameters.BodyParameter;
+import io.swagger.models.parameters.HeaderParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.MapProperty;
 import io.swagger.models.properties.ObjectProperty;
@@ -45,7 +48,6 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -53,9 +55,18 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
+    private static final Map<String, String> DEFAULT_PROPERTIES;
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static final Class<AbstractSerializableParameter<?>> PARAM_CLASS = (Class) AbstractSerializableParameter.class;
     private static final List<String> PROPERTIES_TO_REMOVE_ON_MERGE = Arrays.asList("$schema", "title");
+
+    static {
+        final Map<String, String> defaultProperties = new HashMap<>();
+        defaultProperties.put("Status", "integer");
+        defaultProperties.put("Content-Type", "string");
+
+        DEFAULT_PROPERTIES = Collections.unmodifiableMap(defaultProperties);
+    }
 
     @Override
     public DataShape createShapeFromRequest(final ObjectNode json, final Swagger swagger, final Operation operation) {
@@ -63,7 +74,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
         final ObjectNode parametersSchema = createJsonSchemaForParametersOf(operation);
 
-        return unifiedJsonSchema(bodySchema, parametersSchema);
+        return unifiedJsonSchema("Request", "API request payload", bodySchema, parametersSchema);
     }
 
     @Override
@@ -78,17 +89,11 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
         final Model responseSchema = response.getResponseSchema();
         final String description = response.getDescription();
 
-        final JsonNode schema = createSchemaFromModel(json, description, responseSchema);
+        final ObjectNode bodySchema = createSchemaFromModel(json, description, responseSchema);
 
-        String schemaString;
-        try {
-            schemaString = Json.writer().writeValueAsString(schema);
-        } catch (final JsonProcessingException e) {
-            throw new IllegalStateException("Unable to serialize given JSON specification in response schema: " + schema, e);
-        }
+        final ObjectNode parametersSchema = createJsonSchemaWithProperties(DEFAULT_PROPERTIES);
 
-        return new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).name("Response").description("API response payload")
-            .specification(schemaString).build();
+        return unifiedJsonSchema("Response", "API response payload", bodySchema, parametersSchema);
     }
 
     private static void addEnumsTo(final ObjectNode parameterParameter, final AbstractSerializableParameter<?> serializableParameter) {
@@ -150,6 +155,18 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
             return null;
         }
 
+        return createSchemaFor(serializableParameters);
+    }
+
+    private static ObjectNode createJsonSchemaWithProperties(final Map<String, String> defaultProperties) {
+        final List<AbstractSerializableParameter<?>> parameters = defaultProperties.entrySet().stream()//
+            .map(e -> new HeaderParameter().name(e.getKey()).type(e.getValue()))//
+            .collect(Collectors.toList());
+
+        return createSchemaFor(parameters);
+    }
+
+    private static ObjectNode createSchemaFor(final List<AbstractSerializableParameter<?>> serializableParameters) {
         final ObjectNode schema = JsonSchemaHelper.newJsonObjectSchema();
         final ObjectNode properties = schema.putObject("properties");
 
@@ -187,7 +204,6 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
             addEnumsTo(parameterParameter, serializableParameter);
         }
-
         return schema;
     }
 
@@ -279,7 +295,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
         }
     }
 
-    private static DataShape unifiedJsonSchema(final ObjectNode bodySchema, final ObjectNode parametersSchema) {
+    private static DataShape unifiedJsonSchema(final String name, final String description, final ObjectNode bodySchema, final ObjectNode parametersSchema) {
         if (bodySchema == null && parametersSchema == null) {
             return DATA_SHAPE_NONE;
         }
@@ -298,8 +314,8 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
         }
 
         return new DataShape.Builder()//
-            .name("Request")//
-            .description("API request payload")//
+            .name(name)//
+            .description(description)//
             .kind(DataShapeKinds.JSON_SCHEMA)//
             .specification(JsonSchemaHelper.serializeJson(unifiedSchema))//
             .build();

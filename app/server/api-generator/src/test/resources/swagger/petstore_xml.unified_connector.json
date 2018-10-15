@@ -635,7 +635,7 @@
           "description": "API response payload",
           "kind": "json-schema",
           "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\",\"title\":\"successful operation\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"string\"},\"parameters\":{\"type\":\"object\",\"properties\":{\"Status\":{\"title\":\"Status\",\"type\":\"integer\"},\"Content-Type\":{\"title\":\"Content-Type\",\"type\":\"string\"}}}}}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:loginUser",
@@ -899,5 +899,6 @@
       ],
       "type": "string"
     }
-  }
+  },
+  "version": 1
 }
