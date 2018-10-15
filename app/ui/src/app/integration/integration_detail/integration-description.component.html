@@ -43,7 +43,6 @@
              let-actionName="actionName"
              let-iconSrc="iconSrc"
              let-onClick="onClick()"
-             let-badge="badge"
              let-class="class">
   <div [id]="id"
        class="text-center connection"
@@ -52,10 +51,6 @@
     <div [class]="'step-line ' + class"></div>
     <div class="icon">
       <img class="syn-icon-small" [src]="iconSrc">
-      <span *ngIf="badge"
-            class="badge">
-        {{ badge }}
-      </span>
     </div>
     <div class="syn-truncate__ellipsis">{{ connectionName | capitalize }}</div>
   </div>

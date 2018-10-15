@@ -16,14 +16,19 @@
 
     .icon {
       position: relative;
-      .badge {
+
+      .syn-badge {
         position: absolute;
         background: #ec7a08;
-        border-radius: 50%;
-        padding: 5px;
-        top: -16px;
-        right: -16px;
-        cursor: pointer;
+        border-radius: 10px;
+        top: 0;
+        right: 0;
+        height: 20px;
+        min-width: 20px;
+        line-height: 1;
+        transform: translate(75%, -75%);
+        color: $color-pf-white;
+        padding: 4px;
       }
     }
 
