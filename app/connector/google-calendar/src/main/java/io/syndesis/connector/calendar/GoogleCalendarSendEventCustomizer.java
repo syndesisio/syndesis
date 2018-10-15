@@ -19,9 +19,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -33,16 +31,16 @@ import org.apache.camel.Message;
 import org.apache.camel.component.google.calendar.internal.CalendarEventsApiMethod;
 import org.apache.camel.component.google.calendar.internal.GoogleCalendarApiCollection;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.commons.lang3.StringUtils;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
-import com.google.common.base.Splitter;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+
+import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesList;
+import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesString;
 
 public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomizer {
 
@@ -145,27 +143,6 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
         }
 
         in.setBody(model);
-    }
-
-    private List<EventAttendee> getAttendeesList(String attendeesString) throws AddressException {
-        List<String> list = Splitter.on(',').splitToList(attendeesString);
-        List<EventAttendee> attendeesList = new ArrayList<EventAttendee>();
-        for (String string : list) {
-            EventAttendee attendee = new EventAttendee();
-            attendee.setEmail(string);
-            attendeesList.add(attendee);
-        }
-        return attendeesList;
-    }
-
-    private String getAttendeesString(List<EventAttendee> attendees) throws AddressException {
-        String attendeesString;
-        List<String> attendeesList = new ArrayList<>();
-        for (EventAttendee eventAttendee : attendees) {
-            attendeesList.add(eventAttendee.getEmail());
-        }
-        attendeesString = StringUtils.join(attendeesList, ',');
-        return attendeesString;
     }
 
     private Event createGoogleEvent() throws AddressException, ParseException {

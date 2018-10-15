@@ -18,25 +18,22 @@ package io.syndesis.connector.calendar;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.commons.lang3.StringUtils;
 
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventAttendee;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+
+import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesString;
 
 public class GoogleCalendarEventsCustomizer implements ComponentProxyCustomizer {
 
@@ -80,15 +77,5 @@ public class GoogleCalendarEventsCustomizer implements ComponentProxyCustomizer 
         }
 
         in.setBody(model);
-    }
-
-    private String getAttendeesString(List<EventAttendee> attendees) throws AddressException {
-        String attendeesString;
-        List<String> attendeesList = new ArrayList<>();
-        for (EventAttendee eventAttendee : attendees) {
-            attendeesList.add(eventAttendee.getEmail());
-        }
-        attendeesString = StringUtils.join(attendeesList, ',');
-        return attendeesString;
     }
 }
