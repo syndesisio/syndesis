@@ -33,11 +33,12 @@
                   <button class="btn btn-default"
                     (click)="cancel()">Cancel
                   </button> &nbsp;
-                  <a class="btn btn-default"
+                  <button class="btn btn-default"
                      *ngIf="currentFlowService.integration?.type === IntegrationType.ApiProvider"
-                     [routerLink]="['/integrations', currentFlowService.integration?.id, 'operations']">
+                     [disabled]="flowPageService.saveInProgress || flowPageService.publishInProgress"
+                     (click)="save(['/integrations', currentFlowService.integration?.id, 'operations'])">
                     Go to Operation List
-                  </a>
+                  </button>
                   <button class="btn btn-default"
                     (click)="save()"
                     [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress">

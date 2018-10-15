@@ -44,8 +44,8 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
     this.flowPageService.cancel();
   }
 
-  save() {
-    this.flowPageService.save(this.route);
+  save(targetRoute) {
+    this.flowPageService.save(this.route, targetRoute);
   }
 
   publish() {

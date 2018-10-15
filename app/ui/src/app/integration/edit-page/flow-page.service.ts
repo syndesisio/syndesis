@@ -52,7 +52,7 @@ export class FlowPageService {
     });
   }
 
-  doSave(route: ActivatedRoute) {
+  doSave(route: ActivatedRoute, targetRoute?) {
     this.errorMessage = undefined;
     if (
       !this.currentFlowService.integration.name ||
@@ -70,6 +70,9 @@ export class FlowPageService {
       action: (i: Integration) => {
         if (this.saveInProgress) {
           this.initialize();
+          if (targetRoute) {
+            this.router.navigate(targetRoute);
+          }
           return;
         }
         const target = i.id ? ['/integrations', i.id] : ['/integrations'];
@@ -89,10 +92,10 @@ export class FlowPageService {
     });
   }
 
-  save(route: ActivatedRoute) {
+  save(route: ActivatedRoute, targetRoute?: Array<string>) {
     this.initialize();
     this.saveInProgress = true;
-    this.doSave(route);
+    this.doSave(route, targetRoute);
   }
 
   publish(route: ActivatedRoute) {
