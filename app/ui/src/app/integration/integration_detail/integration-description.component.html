@@ -42,15 +42,13 @@
              let-connectionName="connectionName"
              let-actionName="actionName"
              let-iconSrc="iconSrc"
-             let-onClick="onClick()"
-             let-class="class">
+             let-onClick="onClick()">
   <div [id]="id"
        class="text-center connection"
        (click)="onClick"
        title="{{ connectionName }}&nbsp;{{ actionName }}">
-    <div [class]="'step-line ' + class"></div>
     <div class="icon">
-      <img class="syn-icon-small" [src]="iconSrc">
+      <img class="syn-icon-small" [src]="iconSrc" alt="{{ connectionName }}">
     </div>
     <div class="syn-truncate__ellipsis">{{ connectionName | capitalize }}</div>
   </div>
@@ -59,9 +57,8 @@
 <ng-template #stepDefault let-id="id" let-name="name">
   <div [id]="id"
        class="text-center step">
-    <div class="step-line"></div>
-    <div class="icon not-connection">
-      <div class="icon-line"></div>
+    <div class="icon">
+      <img class="syn-icon-small" src="" alt="{{ name }}">
     </div>
     <div>{{ name }}</div>
   </div>
