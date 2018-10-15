@@ -4,6 +4,7 @@ import {
   BaseEntity,
   Connection,
   ConfigurationProperty,
+  Extension,
   key,
   WithLeveledMessages,
   StringMap,
@@ -19,6 +20,7 @@ export class Step implements BaseEntity {
   configuredProperties: {};
   stepKind?: string;
   metadata?: StringMap<any>;
+  extension?: Extension;
 
   constructor() {
     this.id = key();
