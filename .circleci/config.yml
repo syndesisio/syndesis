@@ -335,6 +335,35 @@ jobs:
           - vendor
       - <<: *irc_notify_on_failure
 
+  upgrade:
+    <<: *job_defaults
+    environment:
+      DOCKER_IMAGES: syndesis-upgrade
+      <<: *common_env
+    steps:
+      - setup_remote_docker
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-server-{{ checksum "app/server/pom.xml" }}
+      - <<: *load_m2
+      - run:
+          name: Install Docker
+          command: |
+            if [ ! -x /usr/bin/docker ]; then
+              curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
+            fi
+      - run:
+          name: Build CLI jar
+          command: |
+            ./tools/bin/syndesis build --batch-mode --flash --module server
+      - run:
+          name: Build upgrade image
+          command: |
+            bash ./tools/upgrade/build.sh
+      - <<: *push_images
+      - <<: *irc_notify_on_failure
+
+
   system-test:
     <<: *job_defaults
     environment:
@@ -445,5 +474,11 @@ workflows:
             - connector
             - common
       - s2i:
+          requires:
+            - server
+      - upgrade:
+          filters:
+            branches:
+              only: master
           requires:
             - server
