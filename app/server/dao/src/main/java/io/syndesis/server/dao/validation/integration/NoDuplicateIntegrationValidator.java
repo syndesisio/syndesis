@@ -19,13 +19,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.validation.integration.IntegrationWithDomain;
 import io.syndesis.common.model.validation.integration.NoDuplicateIntegration;
 import io.syndesis.server.dao.manager.DataManager;
 
@@ -39,23 +38,7 @@ public class NoDuplicateIntegrationValidator implements ConstraintValidator<NoDu
         // The annotation has no useful values
     }
 
-    @Override
-    public boolean isValid(final Integration value, final ConstraintValidatorContext context) {
-        final String name = value.getName();
-        if (name == null) {
-            return true;
-        }
-
-        // name should be unique among all other draft and deployed integrations
-        final Set<String> names = dataManager.fetchAll(Integration.class).getItems().stream()
-                .filter(i -> !i.isDeleted() && !i.getId().equals(value.getId()))
-                .map(WithName::getName)
-                .collect(Collectors.toSet());
-        names.addAll(dataManager.fetchAll(IntegrationDeployment.class).getItems().stream()
-                .filter(d -> !d.getSpec().isDeleted() && !d.getSpec().getId().equals(value.getId()))
-                .map(d -> d.getSpec().getName())
-                .collect(Collectors.toSet()));
-
+    private boolean searchName(final String name, final Set<String> names, final ConstraintValidatorContext context) {
         final boolean exists = names.contains(name);
         if (exists) {
             context.disableDefaultConstraintViolation();
@@ -67,4 +50,43 @@ public class NoDuplicateIntegrationValidator implements ConstraintValidator<NoDu
         return !exists;
     }
 
+    private boolean isValid(final IntegrationWithDomain value, final ConstraintValidatorContext context) {
+        Integration target = value.getTarget();
+        final String name = target.getName();
+        if (name == null) {
+            return true;
+        }
+
+        // name should be unique among all other draft and deployed integrations
+        final Set<String> names = value.getDomain().stream()
+                .filter(i -> !i.isDeleted() && !i.getId().equals(target.getId()))
+                .map(WithName::getName)
+                .collect(Collectors.toSet());
+
+        return searchName(name, names, context);
+    }
+
+    @Override
+    public boolean isValid(final Integration value, final ConstraintValidatorContext context) {
+        if (value instanceof IntegrationWithDomain) {
+            return isValid((IntegrationWithDomain) value, context);
+        }
+
+        final String name = value.getName();
+        if (name == null) {
+            return true;
+        }
+
+        // name should be unique among all other draft and deployed integrations
+        final Set<String> names = dataManager.fetchAll(Integration.class).getItems().stream()
+                        .filter(i -> !i.isDeleted() && !i.getId().equals(value.getId()))
+                         .map(WithName::getName)
+                         .collect(Collectors.toSet());
+                names.addAll(dataManager.fetchAll(IntegrationDeployment.class).getItems().stream()
+                        .filter(d -> !d.getSpec().isDeleted() && !d.getSpec().getId().equals(value.getId()))
+                        .map(d -> d.getSpec().getName())
+                        .collect(Collectors.toSet()));
+
+       return searchName(name, names, context);
+    }
 }

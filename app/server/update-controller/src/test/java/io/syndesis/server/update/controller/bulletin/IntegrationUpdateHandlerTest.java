@@ -177,10 +177,16 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
         IntegrationDeployment integrationDeployment = newIntegrationDeployment(id, 1, sqlIntegration, true);
 
         // Returns the unchanged sql connection
+        when(dataManager.fetchAll(Connection.class)).thenReturn(
+                                                                new ListResult.Builder<Connection>()
+                                                                .addItem(sqlConnection).build());
         when(dataManager.fetch(Connection.class, CONNECTION_ID)).thenReturn(sqlConnection);
         when(dataManager.fetch(Connector.class, CONNECTOR_ID)).thenReturn(sqlConnector);
 
         // Returns the integration deployment
+        when(dataManager.fetchAll(IntegrationDeployment.class)).thenReturn(
+                                                                new ListResult.Builder<IntegrationDeployment>()
+                                                                .addItem(integrationDeployment).build());
         when(dataManager.fetch(IntegrationDeployment.class, id)).thenReturn(integrationDeployment);
 
         Set<String> ids = Collections.singleton(id);
@@ -245,10 +251,16 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
         assertNotEquals(sqlConnection, modSqlConnection);
 
         // Returns the changed sql connection
+        when(dataManager.fetchAll(Connection.class)).thenReturn(
+                                                                           new ListResult.Builder<Connection>()
+                                                                           .addItem(modSqlConnection).build());
         when(dataManager.fetch(Connection.class, CONNECTION_ID)).thenReturn(modSqlConnection);
         when(dataManager.fetch(Connector.class, CONNECTOR_ID)).thenReturn(modSqlConnector);
 
         // Returns the integration deployment
+        when(dataManager.fetchAll(IntegrationDeployment.class)).thenReturn(
+                                                                           new ListResult.Builder<IntegrationDeployment>()
+                                                                           .addItem(integrationDeployment).build());
         when(dataManager.fetch(IntegrationDeployment.class, id)).thenReturn(integrationDeployment);
 
         Set<String> ids = Collections.singleton(id);
@@ -346,10 +358,16 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
         assertFalse(equiv.equivalent(null, sqlIntegration, modSqlIntegration));
 
         // Returns the changed sql connection
+        when(dataManager.fetchAll(Connection.class)).thenReturn(
+                                                                new ListResult.Builder<Connection>()
+                                                                .addItem(modSqlConnection).build());
         when(dataManager.fetch(Connection.class, CONNECTION_ID)).thenReturn(modSqlConnection);
         when(dataManager.fetch(Connector.class, CONNECTOR_ID)).thenReturn(modSqlConnector);
 
         // Returns the integration deployment
+        when(dataManager.fetchAll(IntegrationDeployment.class)).thenReturn(
+                                                                new ListResult.Builder<IntegrationDeployment>()
+                                                                .addItem(integrationDeployment).build());
         when(dataManager.fetch(IntegrationDeployment.class, id)).thenReturn(integrationDeployment);
 
         Set<String> ids = Collections.singleton(id);
@@ -433,10 +451,16 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
         assertFalse(equiv.equivalent(null, sqlIntegration, modSqlIntegration));
 
         // Returns the changed sql connection
+        when(dataManager.fetchAll(Connection.class)).thenReturn(
+                                                                new ListResult.Builder<Connection>()
+                                                                .addItem(modSqlConnection).build());
         when(dataManager.fetch(Connection.class, CONNECTION_ID)).thenReturn(modSqlConnection);
         when(dataManager.fetch(Connector.class, CONNECTOR_ID)).thenReturn(modSqlConnector);
 
         // Returns the integration deployment
+        when(dataManager.fetchAll(IntegrationDeployment.class)).thenReturn(
+                                                                new ListResult.Builder<IntegrationDeployment>()
+                                                                .addItem(integrationDeployment).build());
         when(dataManager.fetch(IntegrationDeployment.class, id)).thenReturn(integrationDeployment);
 
         Set<String> ids = Collections.singleton(id);

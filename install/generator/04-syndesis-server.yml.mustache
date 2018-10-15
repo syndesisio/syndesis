@@ -143,8 +143,10 @@
           resources:
             limits:
               memory: ${SERVER_MEMORY_LIMIT}
+              cpu: 750m
             requests:
               memory: 256Mi
+              cpu: 450m
         volumes:
         - name: config-volume
           configMap:
