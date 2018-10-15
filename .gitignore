@@ -41,6 +41,7 @@ hs_err_pid*
 # System Files
 .DS_Store
 Thumbs.db
+.directory
 
 # Build generated files
 node_modules

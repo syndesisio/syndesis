@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-
+import { Step } from '@syndesis/ui/platform';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 interface IconConnection {
@@ -23,7 +23,26 @@ export class IconPathPipe implements PipeTransform {
     this.apiEndpoint = this.configService.getSettings().apiEndpoint;
   }
 
-  transform(connection: IconConnection, isConnector?: boolean): SafeUrl | null {
+  transform(thing: IconConnection | Step, isConnector?: boolean): SafeUrl | null {
+    if ('stepKind' in thing) {
+      return this.transformStep(thing as Step);
+    } else {
+      return this.transformConnection(thing as IconConnection, isConnector);
+    }
+  }
+
+  private transformStep(step: Step): SafeUrl | null {
+    if (!step) {
+      return this.toSafeUrl('');
+    }
+    if (step.extension) {
+      return this.toSafeUrl(step.extension.icon);
+    }
+    const iconPath = `./../../assets/icons/steps/${step.stepKind}.svg`;
+    return this.toSafeUrl(iconPath);
+  }
+
+  private transformConnection(connection: IconConnection, isConnector?: boolean): SafeUrl | null {
     if (
       connection &&
       (connection.icon instanceof File || connection.iconFile)

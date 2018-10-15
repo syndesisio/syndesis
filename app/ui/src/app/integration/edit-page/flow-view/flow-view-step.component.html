@@ -21,6 +21,9 @@
       <img class="syn-icon-small"
             *ngIf="step.stepKind === 'endpoint' && step.connection"
             [src]="step.connection | synIconPath">
+      <img class="syn-icon-small"
+            *ngIf="step.stepKind && step.stepKind !== 'endpoint'"
+            [src]="step | synIconPath">
     </div>
     <span class="pficon pficon-warning-triangle-o data-mismatch"
         *ngIf="shouldAddDatamapper || previousStepShouldDefineDataShape"
