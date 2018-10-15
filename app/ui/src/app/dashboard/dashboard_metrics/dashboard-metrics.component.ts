@@ -8,13 +8,13 @@ import {
 } from '@angular/core';
 
 import { ConfigService } from '@syndesis/ui/config.service';
-import { moment } from '@syndesis/ui/vendor';
 import {
   Connections,
   IntegrationState,
   Integrations,
   IntegrationMetrics
 } from '@syndesis/ui/platform';
+import { DatePipe } from '@syndesis/ui/common';
 
 const DEFAULT_POLLING_INTERVAL = 5000;
 
@@ -50,13 +50,9 @@ export class DashboardMetricsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.uptimeStart = moment(this.integrationMetrics.start).format(
-      'MMM Do LT'
-    ); // eg January 12nd 8:53 pm
-
-    this.dateTime = moment(this.integrationMetrics.start).format(
-      'YYYY-MM-DD HH:mm'
-    ); // eg 2018-07-13 09:05
+    const datePipe = new DatePipe();
+    this.uptimeStart = datePipe.transform(this.integrationMetrics.start);
+    this.dateTime = datePipe.transform(this.integrationMetrics.start, 'time');
 
     let pollingInterval: number;
 

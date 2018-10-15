@@ -11,6 +11,7 @@ import { LoadingComponent } from '@syndesis/ui/common/loading/loading.component'
 import { SYNDESYS_VALIDATION_DIRECTIVES } from '@syndesis/ui/common/validation';
 import { WizardProgressBarComponent } from '@syndesis/ui/common/wizard_progress_bar';
 
+import { DatePipe } from '@syndesis/ui/common/date.pipe';
 import { I18NPipe } from '@syndesis/ui/common/i18n.pipe';
 import { DerpPipe } from '@syndesis/ui/common/derp.pipe';
 import { ObjectPropertyFilterPipe } from '@syndesis/ui/common/object-property-filter.pipe';
@@ -46,6 +47,7 @@ import { VendorModule } from '@syndesis/ui/vendor';
     VendorModule
   ],
   declarations: [
+    DatePipe,
     I18NPipe,
     DerpPipe,
     ObjectPropertyFilterPipe,
@@ -72,6 +74,7 @@ import { VendorModule } from '@syndesis/ui/vendor';
     CardTechPreviewComponent
   ],
   exports: [
+    DatePipe,
     I18NPipe,
     DerpPipe,
     ObjectPropertyFilterPipe,

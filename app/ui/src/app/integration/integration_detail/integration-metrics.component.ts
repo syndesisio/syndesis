@@ -7,12 +7,12 @@ import {
   EventEmitter
 } from '@angular/core';
 
-import { moment } from '@syndesis/ui/vendor';
 import { ConfigService } from '@syndesis/ui/config.service';
 import {
   Integration,
   IntegrationMetrics
 } from '@syndesis/ui/platform';
+import { DatePipe } from '@syndesis/ui/common';
 
 const DEFAULT_POLLING_INTERVAL = 5000;
 
@@ -33,9 +33,7 @@ export class IntegrationMetricsComponent implements OnInit, OnDestroy {
   constructor(private configService: ConfigService) {}
 
   ngOnInit() {
-    this.uptimeStart = moment(this.integrationMetrics.start).format(
-      'MMM Do HH:mm A'
-    ); // eg January 12nd 8:53 pm
+    this.uptimeStart = new DatePipe().transform(this.integrationMetrics.start);
 
     let pollingInterval: number;
 
