@@ -1,9 +1,7 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
-  AfterViewInit,
-  ChangeDetectorRef
+  OnDestroy
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,7 +32,7 @@ import {
   ]
 })
 export class IntegrationStepConfigureComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy {
   flowSubscription: Subscription;
   position: number;
   step: Step;
@@ -51,7 +49,6 @@ export class IntegrationStepConfigureComponent
   mappings: string;
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
@@ -204,12 +201,11 @@ export class IntegrationStepConfigureComponent
       this.dataShape = undefined;
       this.error = undefined;
       this.position = +params.get('position');
-      this.loadForm();
+      setTimeout(() => {
+        // defer executing this until the view handles the above changes
+        this.loadForm();
+      }, 1);
     });
-  }
-
-  ngAfterViewInit() {
-    this.changeDetectorRef.detectChanges();
   }
 
   ngOnDestroy() {

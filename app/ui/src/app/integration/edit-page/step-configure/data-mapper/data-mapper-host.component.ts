@@ -98,8 +98,11 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   }
 
   initialize() {
-    // Set this to true always for now...
-    this.validChange.emit(true);
+    setTimeout(() => {
+      // Set this to true always for now, defer emitting it until
+      // the next change detection cycle
+      this.validChange.emit(true);
+    }, 1);
     this.resetConfig();
     const step = this.currentFlowService.getStep(this.position);
 
