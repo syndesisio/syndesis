@@ -3,6 +3,7 @@
 .flow-view {
   height: 100%;
   position: relative;
+  z-index: 0;
 
   .toggle-collapsed {
     position: absolute;
@@ -51,7 +52,6 @@
     ::ng-deep {
       .step {
         position: relative;
-        z-index: 1;
   
         .icon-container {
           width: 55px;
