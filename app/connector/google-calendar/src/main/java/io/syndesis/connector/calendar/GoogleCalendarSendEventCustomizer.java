@@ -76,6 +76,7 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
         options.put("methodName", "insert");
     }
 
+    @SuppressWarnings("PMD.NPathComplexity")
     private void beforeProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
 
         final Message in = exchange.getIn();
@@ -91,12 +92,16 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
             if (ObjectHelper.isNotEmpty(event.getAttendees())) {
                 attendees = event.getAttendees();
             }
-            if (ObjectHelper.isNotEmpty(event.getStartDate()) && ObjectHelper.isNotEmpty(event.getStartTime())) {
+            if (ObjectHelper.isNotEmpty(event.getStartDate())) {
                 startDate = event.getStartDate();
+            }
+            if (ObjectHelper.isNotEmpty(event.getStartTime())) {
                 startTime = event.getStartTime();
             }
-            if (ObjectHelper.isNotEmpty(event.getEndDate()) && ObjectHelper.isNotEmpty(event.getEndTime())) {
+            if (ObjectHelper.isNotEmpty(event.getEndDate())) {
                 endDate = event.getEndDate();
+            }
+            if (ObjectHelper.isNotEmpty(event.getEndTime())) {
                 endTime = event.getEndTime();
             }
             if (ObjectHelper.isNotEmpty(event.getLocation())) {
@@ -108,6 +113,7 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
         in.setHeader("CamelGoogleCalendar.calendarId", calendarId);
     }
 
+    @SuppressWarnings("PMD.NPathComplexity")
     private void afterProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
 
         final Message in = exchange.getIn();
@@ -127,12 +133,20 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
                 model.setAttendees(getAttendeesString(event.getAttendees()));
             }
             if (ObjectHelper.isNotEmpty(event.getStart())) {
-                model.setStartDate(dateFormat.format(new Date(event.getStart().getDateTime().getValue())));
-                model.setStartTime(timeFormat.format(new Date(event.getStart().getDateTime().getValue())));
+                if (event.getStart().getDateTime() != null) {
+                    model.setStartDate(dateFormat.format(new Date(event.getStart().getDateTime().getValue())));
+                    model.setStartTime(timeFormat.format(new Date(event.getStart().getDateTime().getValue())));
+                } else {
+                    model.setStartDate(dateFormat.format(new Date(event.getStart().getDate().getValue())));
+                }
             }
             if (ObjectHelper.isNotEmpty(event.getEnd())) {
-                model.setEndDate(dateFormat.format(new Date(event.getEnd().getDateTime().getValue())));
-                model.setEndTime(timeFormat.format(new Date(event.getEnd().getDateTime().getValue())));
+                if (event.getEnd().getDateTime() != null) {
+                    model.setEndDate(dateFormat.format(new Date(event.getEnd().getDateTime().getValue())));
+                    model.setEndTime(timeFormat.format(new Date(event.getEnd().getDateTime().getValue())));
+                } else {
+                    model.setEndDate(dateFormat.format(new Date(event.getEnd().getDate().getValue())));
+                }
             }
             if (ObjectHelper.isNotEmpty(event.getLocation())) {
                 model.setLocation(event.getLocation());
