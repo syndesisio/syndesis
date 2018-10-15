@@ -42,6 +42,7 @@ public class GoogleCalendarEventsCustomizer implements ComponentProxyCustomizer 
         component.setBeforeConsumer(this::beforeConsumer);
     }
 
+    @SuppressWarnings("PMD.NPathComplexity")
     private void beforeConsumer(Exchange exchange) throws MessagingException, IOException {
 
         final Message in = exchange.getIn();

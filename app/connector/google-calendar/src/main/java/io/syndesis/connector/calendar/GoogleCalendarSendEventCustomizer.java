@@ -76,6 +76,7 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
         options.put("methodName", "insert");
     }
 
+    @SuppressWarnings("PMD.NPathComplexity")
     private void beforeProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
 
         final Message in = exchange.getIn();
@@ -112,6 +113,7 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
         in.setHeader("CamelGoogleCalendar.calendarId", calendarId);
     }
 
+    @SuppressWarnings("PMD.NPathComplexity")
     private void afterProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
 
         final Message in = exchange.getIn();

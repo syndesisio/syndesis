@@ -118,6 +118,7 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
         in.setHeader("CamelGoogleCalendar.calendarId", calendarId);
     }
 
+    @SuppressWarnings("PMD.NPathComplexity")
     private void afterProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
 
         final Message in = exchange.getIn();
