@@ -70,12 +70,13 @@ export class OpenApiUploaderComponent implements OnInit, ControlValueAccessor {
   ngOnInit() {
     this.uploader = new FileUploader(
       {
-        allowedMimeType: [ 'application/json' ],
         filters: [
           {
             name: 'filename filter',
             fn: ( item: FileLikeObject, options: FileUploaderOptions ) => {
-              return item.name.endsWith( '.json' );
+              return item.name.endsWith('.json')
+                || item.name.endsWith('.yaml')
+                || item.name.endsWith('.yml');
             }
           }
         ]
@@ -106,6 +107,7 @@ export class OpenApiUploaderComponent implements OnInit, ControlValueAccessor {
         [ file.name ] );
       this.fileSelect.nativeElement.value = '';
       this.uploader.clearQueue();
+      this.uploadMethodChanged(OpenApiUploaderValueType.File, null);
     };
   }
 

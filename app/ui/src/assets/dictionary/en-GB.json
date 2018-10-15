@@ -400,11 +400,11 @@
     "openapi": {
       "api-file-upload": "Upload an OpenAPI file",
       "api-file-upload-dnd": "Drag and drop your OpenAPI file here or",
-      "api-upload-helper-text": "Accepted file type: .json",
+      "api-upload-helper-text": "Accepted file type: .json, .yaml and .yml",
       "api-url-upload": "Use a URL",
       "api-url-upload-note": "* Note: After uploading this specification, {{shared.project.name}} does not automatically obtain any updates to it.",
       "api-spec-creation": "Create from scratch",
-      "api-upload-invalid-file": "'{{0}}' is not a valid file. Only files that end in '.json' can be uploaded.",
+      "api-upload-invalid-file": "'{{0}}' is not a valid file. Only files that end in '.json', '.yaml' or '.yml' can be uploaded.",
       "url-validation-error": "You must enter a valid URL before submitting the form.",
       "api-upload-valid-file": "Successfully uploaded '{{0}}'.",
       "api-review-action-tagged-count": "<strong>{{0}}</strong> tagged {{1}}",
