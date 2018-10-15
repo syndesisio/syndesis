@@ -41,6 +41,7 @@
       width: auto;
       padding-right: 50px;
       padding-bottom: 20px;
+
       ::ng-deep .step {
         &:not(:last-child) .icon-container {
           padding-bottom: 20px;
@@ -52,7 +53,7 @@
     ::ng-deep {
       .step {
         position: relative;
-  
+
         .icon-container {
           width: 55px;
           height: 55px;
