@@ -61,7 +61,7 @@
               </div>
             </div>
             <div class="list-pf-additional-content">
-              <span *ngIf="deployment.updatedAt">{{ 'last-published-on' | synI18n }} {{ deployment.updatedAt | date:'medium' }}</span>
+              <span *ngIf="deployment.updatedAt">{{ 'last-published-on' | synI18n }} {{ deployment.updatedAt | synDate:'medium' }}</span>
               <span>{{ deployment.timesUsed | i18nPlural:usesMapping }} </span>
             </div>
           </ng-template>
@@ -70,7 +70,7 @@
               <div class="col-md-6">
                 <dl class="dl-horizontal" *ngIf="deployment.createdAt">
                   <dt>{{ 'created-at' | synI18n }}:</dt>
-                  <dd>{{ deployment.createdAt | date:'medium' }}</dd>
+                  <dd>{{ deployment.createdAt | synDate:'medium' }}</dd>
                 </dl>
               </div>
               <div class="col-md-6">

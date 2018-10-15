@@ -9,3 +9,4 @@ export * from '@syndesis/ui/common/object-property-filter.pipe';
 export * from '@syndesis/ui/common/object-property-sort.pipe';
 export * from '@syndesis/ui/common/inline-alert';
 export * from '@syndesis/ui/common/openapi';
+export * from '@syndesis/ui/common/date.pipe';

@@ -26,7 +26,7 @@
           <div class="card-pf-body">
             <p class="card-pf-aggregate-status-notifications">
               <span class="card-pf-aggregate-status-notification">
-                {{ (integrationMetrics.lastProcessed | date:'short') || 'n/a' }}
+                {{ (integrationMetrics.lastProcessed | synDate:'short') || 'n/a' }}
               </span>
             </p>
           </div>

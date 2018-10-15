@@ -2,7 +2,7 @@
   <p class="integration-activity__toolbar-text" *ngIf='openshiftConsoleURL'>
     <a href="{{openshiftConsoleURL}}" target="integration-logs">View Log in OpenShift</a>
   </p>
-  <p class="integration-activity__toolbar-text">Last refresh today at {{ lastRefresh | date: 'mediumTime' }}</p>
+  <p class="integration-activity__toolbar-text">Last refresh today at {{ lastRefresh | synDate: 'mediumTime' }}</p>
   <syndesis-button theme="default" (click)="fetchActivities()" type="button" [loading]="onRefresh" class="is-margin-reset">
     Refresh
   </syndesis-button>
@@ -32,10 +32,10 @@
         <div class="list-view-pf-body">
           <div class="list-view-pf-description">
             <div class="list-group-item-heading">
-              {{ activity.at | date: 'M/d/yy' }}
+              {{ activity.at | synDate: 'shortdate' }}
             </div>
             <div class="list-group-item-text">
-              {{ activity.at | date: 'mediumTime' }}
+              {{ activity.at | synDate: 'mediumTime' }}
             </div>
           </div>
           <div class="list-view-pf-additional-info">
@@ -65,7 +65,7 @@
             <tbody>
               <tr *ngFor="let step of activity.steps" class="syn-nowrap integration-step">
                 <td>{{ step.name }}</td>
-                <td>{{ step.at | date:'medium' }}</td>
+                <td>{{ step.at | synDate:'medium' }}</td>
                 <td>{{ step.duration | synDuration:'ns' }}</td>
                 <td *ngIf="step.isFailed">
                   <i class="pficon pficon-error-circle-o"></i> Error</td>
