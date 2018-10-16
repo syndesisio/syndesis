@@ -76,4 +76,6 @@ image:images/SeparateMapping.png[Separate Fields Mapping].
 +
 You can also preview mapping results in this view. Click 
 image:shared/images/EditorSettings.png[Editor settings], select 
-*Show Mapping Preview*, and enter text as described in the previous step. 
+*Show Mapping Preview*, and enter text as described in the previous step.
+Preview fields appear for only the selected mapping. Click another
+mapping in the table to view preview fields for it. 

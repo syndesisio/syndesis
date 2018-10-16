@@ -58,8 +58,9 @@ icon on each extra padding field to delete it.
 .. In the upper right of the data mapper, click 
 image:shared/images/EditorSettings.png[Editor settings] and select 
 *Show Mapping Preview* to display a text input field on each source
-field and a read-only result field on the target field. 
-.. In each source field's data input field, enter text. Click outside the
+field for the currently selected mapping and a read-only result field 
+on the target field of the currently selected mapping. 
+.. In the source data input fields, enter text. Click outside the
 text box to display the mapping result in the read-only field on the target field.
 +
 If you reorder the source fields or add a transformation to the mapping
@@ -83,4 +84,6 @@ image:images/CombineMapping.png[Combine Fields Mapping].
 +
 You can also preview mapping results in this view. Click 
 image:shared/images/EditorSettings.png[Editor settings], select 
-*Show Mapping Preview*, and enter text as described in the previous step. 
+*Show Mapping Preview*, and enter text as described in the previous step.
+Preview fields appear for only the selected mapping. Click another
+mapping in the table to view preview fields for it. 

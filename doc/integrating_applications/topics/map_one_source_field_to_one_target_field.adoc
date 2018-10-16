@@ -40,6 +40,16 @@ image:shared/images/EditorSettings.png[Editor settings] again and selecting
 
 . Optionally, to confirm that the mapping is defined, in the upper right, click
 image:shared/images/grid.png[Grid] to display the defined mappings.
+
++
+You can also preview data mapping results in this view. 
+If preview fields are not visible, 
+click image:shared/images/EditorSettings.png[Editor settings] and select 
+*Show Mapping Preview*. Enter data as described in the previous step.
+In the table of defined mappings, preview fields 
+appear for only the selected mapping. To see preview fields for another 
+mapping, select it. 
++
 Click image:shared/images/grid.png[Grid] again to display the data field
 panels.
 
