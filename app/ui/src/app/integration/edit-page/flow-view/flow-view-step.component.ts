@@ -33,7 +33,8 @@ export class FlowViewStepComponent implements OnChanges {
   // the current state/page of the current step
   @Input() currentState: string;
 
-  @Input() apiProvider: boolean;
+  @Input() isApiProvider: boolean;
+  @Input() isApiProviderOperationsPage: boolean;
 
   @ViewChild('datamapperInfoPop') datamapperInfoPop: PopoverDirective;
 
@@ -245,7 +246,7 @@ export class FlowViewStepComponent implements OnChanges {
   }
 
   gotoPageFor(step) {
-    if (this.apiProvider) {
+    if (this.isApiProvider) {
       return;
     }
     switch (step.stepKind) {
@@ -371,6 +372,14 @@ export class FlowViewStepComponent implements OnChanges {
     }
   }
 
+  getFlowName() {
+    return this.currentFlowService.getCurrentFlowName();
+  }
+
+  getFlowDescription() {
+    return this.currentFlowService.getCurrentFlowDescription();
+  }
+
   private getStepIndex() {
     return this.getPosition() + 1;
   }
@@ -381,6 +390,9 @@ export class FlowViewStepComponent implements OnChanges {
     }
     switch (step.stepKind) {
       case 'endpoint':
+        if (this.isApiProvider && this.getPosition() === 0 && !this.isApiProviderOperationsPage) {
+          return this.getFlowName();
+        }
         if (step.action && step.action.name) {
           return step.action.name;
         }

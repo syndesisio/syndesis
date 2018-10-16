@@ -90,6 +90,26 @@ export class CurrentFlowService implements OnDestroy {
   }
 
   /**
+   * Returns the current flow name
+   *
+   * @returns {string}
+   * @memberof CurrentFlow
+   */
+  getCurrentFlowName(): string {
+    return this.currentFlow.name;
+  }
+
+  /**
+   * Returns the current flow description
+   *
+   * @returns {string}
+   * @memberof CurrentFlow
+   */
+  getCurrentFlowDescription(): string {
+    return this.currentFlow.description;
+  }
+
+  /**
    * Returns the first step in the integration flow
    *
    * @returns {Step}
