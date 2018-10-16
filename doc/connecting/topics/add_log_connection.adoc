@@ -7,7 +7,7 @@
 To log information about the messages that an integration processes, 
 add one or more log connections to the integration. A log connection takes
 each input message from the previous step in the integration, sends 
-the details you specify to the integration's log, and passes the message
+the details that you specify to the integration's log, and passes the message
 to the next step in the integration. 
 
 {prodname} provides a log connection that you can add to any number
@@ -72,8 +72,12 @@ the integration.
 |====
 
 . Select one or more checkboxes to indicate what information to send
-to the log for each message. Choices include message ID, message
-headers, and message body. 
+to the log for each message. Choices include: 
++
+* *Message ID*
+* *Message headers*
+* *Message body*
+
 +
 If you do not select any checkboxes, then for each logged message, 
 {prodname} logs several internal IDs, how long it took to process 

@@ -6,9 +6,13 @@
 
 To log information about the messages that an integration processes, 
 you can add one or more log steps to an integration and/or you can
-add one or more log connections to an integration. A log connection 
-cannot be an integration’s start connection. Typically, a log connection 
-is most useful as an integration’s finish connection. The following
+add one or more log connections to an integration. 
+
+A log connection cannot be an integration’s start connection. 
+Typically, a log connection is most useful as an integration’s 
+finish connection. 
+
+The following
 table indicates whether a log step or a log connection 
 can do what you want. 
 
@@ -20,7 +24,7 @@ can do what you want.
 |Add a log step
 |Add a log connection
 
-|Log the ID of each message. Internally, this is the exchange ID. 
+|Log the ID of each message. (Internally, this ID is the exchange ID.) 
 |
 |image:images/CheckMark.png[Yes]
 

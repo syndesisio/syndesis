@@ -16,11 +16,11 @@ information:
 * Whether execution was successful
 * The error message if execution was not successful
 
-In {prodname}, to view this information, display the integration's summary
-and click the *Activity* tab. See also:
+To view this information in {prodname}, display the integration's summary
+and then click the *Activity* tab. See also:
 {LinkFuseOnlineIntegrationGuide}managing-integrations#viewing-integration-activity-information[Viewing integration activity information].
 
-To obtain more information about integration execution, you can 
+To obtain further details about integration execution, you can 
 log information about the messages that an integration processes by 
 adding a log step and/or a log connection to an integration. 
 
