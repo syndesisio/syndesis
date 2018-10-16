@@ -56,5 +56,5 @@ can do what you want.
 |====
 
 .Additional resources
-* {LinkFuseOnlineIntegrationGuide}creating-integrations#add-log-step[Add a log step to an integration]
+* {LinkFuseOnlineIntegrationGuide}creating-integrations#add-log-step[Add a log step to an integration] in {NameOfFuseOnlineIntegrationGuide}.
 * <<add-log-connection_{context}>>
