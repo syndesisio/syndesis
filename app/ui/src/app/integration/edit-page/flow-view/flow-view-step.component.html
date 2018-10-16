@@ -1,3 +1,20 @@
+<h3 *ngIf="isApiProvider"
+    class="flow-view-step-title">
+  <ng-container *ngIf="isApiProviderOperationsPage; else notOperationsPage">
+    <span>API Provider</span>
+    <ng-template #apiProviderFlowInfo>Provided API</ng-template>
+    <i class="fa fa-info-circle"
+       [tooltip]="apiProviderFlowInfo"
+       placement="bottom"></i>
+  </ng-container>
+  <ng-template #notOperationsPage>
+    <span>{{ getFlowName() }}</span>
+    <ng-template #apiProviderFlowInfo>{{ getFlowDescription() }}</ng-template>
+    <i class="fa fa-info-circle"
+       [tooltip]="apiProviderFlowInfo"
+       placement="bottom"></i>
+  </ng-template>
+</h3>
 <div *ngIf="step"
      class="flow-view-step">
 

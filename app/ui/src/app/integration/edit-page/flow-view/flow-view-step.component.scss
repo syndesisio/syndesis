@@ -1,6 +1,37 @@
 @import 'flow-view.component';
 @import 'syndesis-sass';
 
+.flow-view-step-title {
+  flex: 1;
+  margin-left: -35px;
+  margin-right: -35px;
+  margin-bottom: 40px;
+  width: 370px;
+  overflow: hidden;
+
+  span {
+    float: left;
+    padding-right: 3px;
+    width: calc(100% - 18px);
+  }
+
+  i {
+    cursor: pointer;
+    color: $color-pf-blue-400;
+    display: inline-block;
+  }
+
+  ::ng-deep .collapsed & {
+    width: 125px;
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // FLOW-VIEW-STEP
 //
