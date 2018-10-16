@@ -10,6 +10,7 @@ import {
 
 @Injectable()
 export abstract class IntegrationActionsService {
+  abstract canPublish(integration: Integration): boolean;
   abstract canActivate(integration: Integration): boolean;
   abstract canDeactivate(integration: Integration): boolean;
   abstract canEdit(integration: Integration): boolean;

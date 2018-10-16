@@ -13,7 +13,7 @@
                   </div>
                 </div>
                 <div class="list-pf-actions">
-                  <syndesis-button theme="default" (click)="onDraftAction('publish')" type="button" [disabled]="!integrationActionsService.canActivate(integration)">
+                  <syndesis-button theme="default" (click)="onDraftAction('publish')" type="button" [disabled]="!integrationActionsService.canPublish(integration)">
                     {{ 'publish-draft' | synI18n }}
                   </syndesis-button>
                   <syndesis-button theme="default" (click)="onDraftAction('edit')" type="button" [disabled]="!integrationActionsService.canEdit(integration)">

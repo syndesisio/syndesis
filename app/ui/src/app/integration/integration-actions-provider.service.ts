@@ -44,6 +44,10 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     super();
   }
 
+  canPublish(integration: Integration) {
+    return integration.currentState !== PENDING;
+  }
+
   canActivate(integration: Integration) {
     return integration.currentState !== PENDING && integration.currentState !== PUBLISHED;
   }
