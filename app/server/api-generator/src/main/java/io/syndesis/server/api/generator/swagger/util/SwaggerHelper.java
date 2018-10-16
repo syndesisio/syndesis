@@ -21,13 +21,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import static java.util.Optional.ofNullable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -38,7 +41,6 @@ import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-
 import io.swagger.models.HttpMethod;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.Operation;
@@ -53,13 +55,10 @@ import io.syndesis.common.util.Json;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.swagger.SwaggerModelInfo;
 import io.syndesis.server.api.generator.swagger.SyndesisSwaggerValidationRules;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
-
-import static java.util.Optional.ofNullable;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -176,7 +175,7 @@ public final class SwaggerHelper {
         }
     }
 
-    public static OperationDescription operationDescriptionOf(final Swagger swagger, final Operation operation) {
+    public static OperationDescription operationDescriptionOf(final Swagger swagger, final Operation operation, final BiFunction<String, String, String> consumer) {
         final Entry<String, Path> pathEntry = swagger.getPaths().entrySet().stream()
             .filter(e -> e.getValue().getOperations().contains(operation)).findFirst().get();
         final String path = pathEntry.getKey();
@@ -190,7 +189,7 @@ public final class SwaggerHelper {
 
         final String name = ofNullable(toLiteralNull(specifiedSummary)).orElseGet(() -> method + " " + path);
         final String description = ofNullable(toLiteralNull(specifiedDescription))
-            .orElseGet(() -> "Send " + method + " request to " + path);
+            .orElseGet(() -> consumer.apply(method.name(), path));
 
         return new OperationDescription(name, description);
     }

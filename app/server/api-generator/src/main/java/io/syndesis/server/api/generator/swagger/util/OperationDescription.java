@@ -28,7 +28,7 @@ public final class OperationDescription {
     public OperationDescription(final String name, final String description) {
         this.name = Objects.requireNonNull(name, "operation name");
         this.description = Objects.requireNonNull(description, "operation description");
-        hashCode = 31 * name.hashCode() + 7 * description.hashCode();
+        this.hashCode = 31 * name.hashCode() + 7 * description.hashCode();
     }
 
     @Override

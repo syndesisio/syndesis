@@ -15,6 +15,20 @@
  */
 package io.syndesis.server.api.generator.swagger;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
+
+import com.google.common.base.Strings;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
@@ -43,19 +57,6 @@ import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static java.util.Optional.ofNullable;
 
 public class SwaggerAPIGenerator implements APIGenerator {
 
@@ -183,6 +184,14 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     .putConfiguredProperty("httpResponseCode", "501")
                     .putMetadata("configured", "true")
                     .build();
+
+                if (Strings.isNullOrEmpty(operationName)) {
+                    operationName = SwaggerHelper.operationDescriptionOf(
+                        swagger,
+                        operation,
+                        (m, p) -> "Receiving " + m + " request on " + p
+                    ).description;
+                }
 
                 Flow flow = new Flow.Builder()
                     .id(String.format("%s:flows:%s", integrationId, operationId))
