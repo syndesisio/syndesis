@@ -27,11 +27,15 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
+import org.apache.camel.Processor;
 import org.apache.camel.RuntimeCamelException;
+import org.apache.camel.processor.Pipeline;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,6 +51,7 @@ public class ApiProviderStartEndpointCustomizer implements ComponentProxyCustomi
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        final List<Processor> beforeConsumers = new ArrayList<>(2);
         if (outputDataShape != null && outputDataShape.getKind() == DataShapeKinds.JSON_SCHEMA && outputDataShape.getSpecification() != null) {
             try {
                 final JsonNode schema = READER.readTree(outputDataShape.getSpecification());
@@ -55,12 +60,20 @@ public class ApiProviderStartEndpointCustomizer implements ComponentProxyCustomi
                 extraneousProperties.removeAll(Arrays.asList("parameters", "body"));
 
                 if (!properties.isEmpty() && extraneousProperties.isEmpty()) {
-                    component.setBeforeConsumer(new HttpRequestWrapperProcessor(schema));
+                    beforeConsumers.add(new HttpRequestWrapperProcessor(schema));
                 }
             } catch (IOException e) {
                 throw new RuntimeCamelException(e);
             }
         }
+
+        // removes all non Syndesis.* headers, this is so the headers that might
+        // influence HTTP components in the flow after this connector don't
+        // interpret them, for instance the `Host` header is particularly
+        // troublesome
+        beforeConsumers.add((e) -> e.getIn().removeHeaders("*", "Syndesis.*"));
+
+        component.setBeforeConsumer(Pipeline.newInstance(context, beforeConsumers));
     }
 
     @Override
