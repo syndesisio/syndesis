@@ -6,60 +6,60 @@
       <syndesis-integration-flow-view></syndesis-integration-flow-view>
     </div>
 
-    <!-- Add/Edit Integration -->
     <div class="main-panel wizard-main">
-      <div class="syn-scrollable">
-        <!-- Toolbar -->
-        <div class="toolbar syn-toolbar--inverted">
-          <div class="container-fluid">
-            <!-- Toolbar: Breadcrumbs -->
-            <div class="row toolbar-pf">
-              <div class="col-sm-12">
-                <div class="toolbar-pf-actions">
-                  <div class="inline-block">
-                    <ol class="breadcrumb">
-                      <li>
-                        <a [routerLink]="['/']">Home</a>
-                      </li>
-                      <li>
-                        <a [routerLink]="['/integrations']">Integrations</a>
-                      </li>
-                      <li>
-                        <a [routerLink]="['/integrations', currentFlowService.integration.id]">
-                          {{ currentFlowService.integration.name }}
-                        </a>
-                      </li>
-                      <li class="active">Choose operation</li>
-                    </ol>
-                  </div>
-                  <div class="toolbar-pf-action-right">
-                  </div>
-                </div>
+      <syndesis-loading [loading]="loading | async" [content]="content">
+      </syndesis-loading>
+    </div>
+  </div>
+</div>
+
+<ng-template #content>
+  <div class="syn-scrollable">
+    <!-- Toolbar -->
+    <div class="toolbar syn-toolbar--inverted">
+      <div class="container-fluid">
+        <!-- Toolbar: Breadcrumbs -->
+        <div class="row toolbar-pf">
+          <div class="col-sm-12">
+            <div class="toolbar-pf-actions">
+              <div class="inline-block">
+                <ol class="breadcrumb">
+                  <li>
+                    <a [routerLink]="['/']">Home</a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/integrations']">Integrations</a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/integrations', currentFlowService.integration.id]">
+                      {{ currentFlowService.integration.name }}
+                    </a>
+                  </li>
+                  <li class="active">Choose operation</li>
+                </ol>
+              </div>
+              <div class="toolbar-pf-action-right">
               </div>
             </div>
           </div>
         </div>
-        <div class="syn-scrollable--body">
-          <div class="container-fluid">
-            <div class="title">
-              <h1>Choose operation</h1>
-            </div>
-            <p>Click an operation to integrate an integration flow.</p>
-
-            <syndesis-loading [loading]="loading | async" [content]="content">
-            </syndesis-loading>
-          </div>
+      </div>
+    </div>
+    <div class="syn-scrollable--body">
+      <div class="container-fluid">
+        <div class="title">
+          <h1>Choose operation</h1>
         </div>
-        <ng-template #content>
-          <!-- Toolbar -->
-          <syndesis-list-toolbar [items]="flows$"
-                                 [filterTags]="false"
-                                 [filteredItems]="filteredFlows$"
-                                 [filterFields]="filterFields">
-          </syndesis-list-toolbar>
+        <p>Click an operation to integrate an integration flow.</p>
 
-          <div class="list-view-pf-view operations-list">
-            <pfng-list [items]="filteredFlows$ | async"
+        <!-- Toolbar -->
+        <syndesis-list-toolbar [items]="flows$"
+                               [filterTags]="false"
+                               [filteredItems]="filteredFlows$">
+        </syndesis-list-toolbar>
+
+        <div class="list-view-pf-view operations-list">
+          <pfng-list [items]="filteredFlows$ | async"
                      [itemTemplate]="itemTemplate"
                      (onClick)="handleClick($event)">
             <ng-template #itemTemplate
@@ -78,9 +78,8 @@
               </div>
             </ng-template>
           </pfng-list>
-          </div>
-        </ng-template>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</ng-template>
