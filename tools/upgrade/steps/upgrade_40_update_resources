@@ -31,6 +31,10 @@ NOTE: No resources from generated integration pods are upgraded. This needs to b
 After this, the upgrade of the new version with an `oc replace` for all other resource objects extracted <<step-create-upgrade-json, previously>>.
 This command will automatically spin up new versions (or the same if unchanged in this release) for all deployments.
 
+If you add to the special directory "always", then this update script will be always called.
+Hence, it needs to be idempotent as if it detects that it already performed its update then this
+should be a no-op.
+
 .Rollback
 Restore all the resource objects backuped in a previous step
 EOT
@@ -132,18 +136,28 @@ run_update_scripts() {
     local tag=$3
     local migrationdir=$4
 
+    # Only when --migration is given we will check for migration scripts
     if [ -z "${migrationdir}" ]; then
         return
     fi
 
     local resourcedir=${migrationdir}/resource
+
+    if [ -d ${resourcedir}/any ]; then
+        for script in $(ls ${resourcedir}/any/*); do
+            echo "      - Executing any/$(basename $script)"
+            source ${script}
+        done
+    fi
+
     if [ ! -d ${resourcedir}/${tag} ]; then
         echo "      - No update scripts found for ${tag} in ${resourcedir}"
         return
     fi
 
     for script in $(ls ${resourcedir}/${tag}/*); do
-      echo "      - Executing $tag/$(basename $script)"
-      source ${script}
+        echo "      - Executing $tag/$(basename $script)"
+        source ${script}
     done
+
 }
