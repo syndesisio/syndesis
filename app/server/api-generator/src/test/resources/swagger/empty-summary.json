@@ -1,0 +1,111 @@
+{
+  "basePath": "/api/v1",
+  "definitions": {
+    "Hello": {
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "info": {
+    "title": "Greeting REST API",
+    "version": "1.0"
+  },
+  "paths": {
+    "/hi": {
+      "get": {
+        "operationId": "operation-1",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hi",
+            "responseSchema": {
+              "$ref": "#/definitions/Hello"
+            },
+            "schema": {
+              "$ref": "#/definitions/Hello"
+            }
+          }
+        },
+        "tags": [
+          "hello"
+        ]
+      },
+      "post": {
+        "operationId": "operation-2",
+        "summary": "post operation",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Hello"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hi",
+            "responseSchema": {
+              "$ref": "#/definitions/Hello"
+            },
+            "schema": {
+              "$ref": "#/definitions/Hello"
+            }
+          }
+        },
+        "tags": [
+          "hello"
+        ]
+      },
+      "put": {
+        "operationId": "operation-3",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Hello"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hi",
+            "responseSchema": {
+              "$ref": "#/definitions/Hello"
+            },
+            "schema": {
+              "$ref": "#/definitions/Hello"
+            }
+          }
+        },
+        "tags": [
+          "hello"
+        ]
+      }
+    }
+  },
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "tags": [
+    {
+      "description": "Greeting to {name}",
+      "name": "greetings/"
+    }
+  ]
+}

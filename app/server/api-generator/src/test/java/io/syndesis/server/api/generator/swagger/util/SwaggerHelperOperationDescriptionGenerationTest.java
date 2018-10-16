@@ -46,7 +46,7 @@ public class SwaggerHelperOperationDescriptionGenerationTest {
 
     @Test
     public void shouldDetermineOperationDescriptions() {
-        assertThat(SwaggerHelper.operationDescriptionOf(swagger, operation)).isEqualTo(expected);
+        assertThat(SwaggerHelper.operationDescriptionOf(swagger, operation, (m, p) -> "Send " + m + " request to " + p)).isEqualTo(expected);
     }
 
     @Parameters

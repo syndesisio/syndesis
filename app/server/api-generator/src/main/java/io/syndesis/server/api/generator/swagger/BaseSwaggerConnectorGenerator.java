@@ -222,7 +222,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                     .connectorId(connectorId)//
                     .build();
 
-                final OperationDescription description = SwaggerHelper.operationDescriptionOf(swagger, operation);
+                final OperationDescription description = SwaggerHelper.operationDescriptionOf(swagger, operation, (m, p) -> "Send " + m + " request to " + p);
 
                 final ConnectorAction action = new ConnectorAction.Builder()//
                     .id(createActionId(connectorId, connectorGav, operation))//
