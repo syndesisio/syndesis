@@ -1,5 +1,5 @@
 [id='separate-one-source-field-into-multiple-target-fields']
-= Separating one source field into multiple target fields
+= Separate one source field into multiple target fields
 
 In a data mapper step, you can separate a compound source field into multiple
 target fields. For  example, map the `Name` field to the `FirstName` and
@@ -38,7 +38,7 @@ The data mapper automatically updates the index numbers to reflect the
 new order. 
 
 . If you mapped each part of the compound source field to a target
-field, then skip to the last step.
+field, then skip to the next step.
 +
 If the source field contains data that you do not need, then in the 
 *Mapping Details* panel, edit the index of each 
@@ -46,8 +46,36 @@ target field so that it is the same as the index of the corresponding data
 in the compound source field. The data mapper automatically adds 
 padding fields as needed to indicate unwanted data. 
 
+. Optionally, preview the data mapping result: 
+.. In the upper right of the data mapper, click 
+image:shared/images/EditorSettings.png[Editor settings] and select 
+*Show Mapping Preview* to display a text input field on the source
+field and read-only result fields on each target field. 
+.. In the source field's data input field, enter text. Be sure to enter
+the separator character between the parts of the field. Click outside 
+the text box to display the mapping result in the read-only fields 
+on the target fields.
++
+If you reorder the target fields or add a transformation to a target field 
+then the result fields on the target fields reflect this. If the data mapper
+detects any errors, it displays informative messages at the top of the 
+*Mapping Details* panel. 
+
+.. Hide the preview fields by clicking 
+image:shared/images/EditorSettings.png[Editor settings] again and selecting
+*Show Mapping Preview*. 
++
+If you redisplay the preview fields, any data that you entered in them is 
+still there and it remains there until you exit the data mapper. 
+
 . To confirm that the mapping is correctly defined, click
 image:shared/images/grid.png[Grid] to display the mappings defined in
 this step. A mapping that separates the value of a source field into
 multiple target fields looks like this:
 image:images/SeparateMapping.png[Separate Fields Mapping]. 
++
+You can also preview mapping results in this view. Click 
+image:shared/images/EditorSettings.png[Editor settings], select 
+*Show Mapping Preview*, and enter text as described in the previous step.
+Preview fields appear for only the selected mapping. Click another
+mapping in the table to view preview fields for it. 

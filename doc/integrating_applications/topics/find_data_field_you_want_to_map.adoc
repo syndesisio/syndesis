@@ -1,11 +1,12 @@
-[id='finding-the-field-you-want-to-map']
-= Finding the data field that you want to map
+[id='find-the-field-you-want-to-map']
+= Find the data field that you want to map
 
-In an integration that has a few steps or that operates on a small set
-of data, it is probably easy to find
-the data field that you want to map. But in an integration that has many steps,
-or that has a step that accesses a large set of data, the list of data fields
-might be very long. The data mapper displays two columns of data fields:
+In a relatively simple integration, mapping data fields is easy
+and intuitive. In more complex integrations or integrations that handle
+large sets of data fields, mapping from source to target is easier when
+you have some background about how to use the data mapper. 
+
+The data mapper displays two columns of data fields:
 
 * *Sources* is a list of the data fields that are obtained or
 processed in all previous steps in the integration. 

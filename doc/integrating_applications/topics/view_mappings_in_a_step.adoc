@@ -1,5 +1,5 @@
-[id='viewing-mappings-in-a-step']
-= Viewing the mappings in a step
+[id='view-mappings-in-a-step']
+= View the mappings in a step
 
 While you are adding or editing a data mapper step, you can view the mappings
 already defined in this step. This lets you check whether the

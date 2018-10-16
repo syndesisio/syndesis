@@ -1,5 +1,5 @@
-[id='transforming-target-data']
-= Transforming source or target data
+[id='transform-target-data']
+= Transform source or target data
 
 In the data mapper, after you define a mapping, you can transform
 any field in the mapping. 
