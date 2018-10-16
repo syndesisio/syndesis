@@ -521,8 +521,8 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-8047-ga143ba12e,</span>
-<span id="revdate">2018-10-15</span>
+<span id="revnumber">version 1.1.3-8049-gc30e3a3a1,</span>
+<span id="revdate">2018-10-16</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Syndesis Developer Handbook</div>
@@ -877,41 +877,37 @@ yourscriptname::run() {
 <h4 id="syndesis-build-usage">2.1.1. Usage</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>Usage: syndesis build [... options ...]
+<pre class="CodeRay highlight"><code>Build Syndesis builds
+
+Usage: syndesis build [... options ...]
 
 Options for build:
-    -b  --backend                  Build only backend modules (core, extension, integration,
-                                   connectors, server, meta)
-        --all-images               Build all modules with images: ui, server, meta, s2i, operator
-        --app-images               Build only application modules with Docker images
-                                   (ui, server, meta, s2i)
+    -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
+        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade
+        --app-images               Build only application modules with Docker images (ui, server, meta, s2i)
                                    and create images
-        --infra-images             Build only infrastructure modules with Docker images
-                                   (operator) and create images
+        --infra-images             Build only infrastructure modules with Docker images (operator, upgrade) and create images
     -m  --module &lt;m1&gt;,&lt;m2&gt;, ..     Build modules
-                                   Modules: ui, server, connector, s2i, meta, integration,
-                                   extension, common, operator
+                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator, upgrade
     -d  --dependencies             Build also all project the specified module depends on
         --skip-tests               Skip unit and system test execution
         --skip-checks              Disable all checks
     -f  --flash                    Skip checks and tests execution (fastest mode)
-    -i  --image                    Build Docker images, too
-                                   (for those modules creating images)
-        --docker                   Use a plain Docker build for creating images.
-                                   Used by CI for pushing to Docker Hub
-    -p  --project &lt;project&gt;        Specifies the project/namespace to create images in
-    -e  --ensure                   If building the operator, run 'dep ensure' before building.
-                                   Otherwise ignored.
+    -i  --image                    Build Docker via s2i images, too (for those modules creating images)
+        --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
+        --multi-stage              Multi-stage Dockerfile support for operator build (experimental)
+    -p  --project &lt;project&gt;        Specifies the project / namespace to create images
+    -e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
     -l  --local                    If building the operator, use a locally installed go
-                                   Otherwise run the Go build from a container
-                                   (either local or Minishift's Docker daemon)
+                                   Otherwise run the Go build from a container (either local or Minishift's Docker  daemon)
         --clean-cache              Used for the operator build to remove the local dependency cache.
     -c  --clean                    Run clean builds (mvn clean)
+
         --resume &lt;m1&gt;              Resume build from maven module (mvn -rf m1)
         --batch-mode               Run mvn in batch mode
-        --camel-snapshot &lt;version&gt; Run a build with a specific Camel snapshot.
-                                   If no argument is given the
-                                   environment variable CAMEL_SNAPSHOT_VERSION is used or an error thrown.</code></pre>
+        --camel-snapshot &lt;version&gt; Run a build with a specific Camel snapshot. If no argument is given the
+                                   environment variable CAMEL_SNAPSHOT_VERSION is used or an error thrown.
+        --man                      Open HTML documentation in the Syndesis Developer Handbook</code></pre>
 </div>
 </div>
 </div>
@@ -3295,8 +3291,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-8047-ga143ba12e<br>
-Last updated 2018-10-15 19:33:19 UTC
+Version 1.1.3-8049-gc30e3a3a1<br>
+Last updated 2018-10-16 07:11:17 UTC
 </div>
 </div>
 </body>
