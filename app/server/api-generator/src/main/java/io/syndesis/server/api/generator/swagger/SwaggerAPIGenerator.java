@@ -174,6 +174,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     .descriptor(new ConnectorDescriptor.Builder()
                         .createFrom(endAction.getDescriptor())
                         .inputDataShape(endDataShape)
+                        .addConnectorCustomizer("io.syndesis.connector.rest.swagger.ResponseCustomizer")
                         .build())
                     .build();
                 Step endStep = new Step.Builder()

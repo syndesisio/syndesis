@@ -20,9 +20,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 
-import javax.activation.MimeType;
-import javax.activation.MimeTypeParseException;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
@@ -34,70 +31,19 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.Processor;
-import org.apache.camel.util.MessageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-public final class PayloadConverter implements Processor {
+public final class RequestPayloadConverter extends PayloadConverterBase {
 
-    private static final MimeType JSON;
-
-    private static final Logger LOG = LoggerFactory.getLogger(PayloadConverter.class);
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
-    private static final MimeType NONE;
-
-    private static final MimeType XML;
-
-    private static final XMLInputFactory XML_INPUT_FACTORY = XMLInputFactory.newInstance();
-
-    static {
-        try {
-            JSON = createMimeType("application/json");
-            XML = createMimeType("application/xml");
-            NONE = createMimeType("application/octet-stream");
-        } catch (final MimeTypeParseException e) {
-            throw new ExceptionInInitializerError(e);
-        }
-    }
+    private static final Logger LOG = LoggerFactory.getLogger(RequestPayloadConverter.class);
 
     @Override
-    public void process(final Exchange exchange) {
-        final Message in = exchange.getIn();
-
-        final String contentType = MessageHelper.getContentType(in);
-
-        try {
-            final MimeType mimeType = createMimeType(contentType);
-
-            if (mimeType.match(JSON)) {
-                convertAsJson(in);
-            } else if (mimeType.match(XML)) {
-                convertAsXml(in);
-            }
-        } catch (final MimeTypeParseException ignored) {
-            // we can't parse the MIME type
-        }
-
-    }
-
-    private static String bodyAsString(final Message in) {
-        final String body = in.getBody(String.class);
-        if (body == null) {
-            return null;
-        }
-        return body;
-    }
-
-    private static void convertAsJson(final Message in) {
+    void convertAsJson(final Message in) {
         final String body = bodyAsString(in);
         if (body == null) {
             return;
@@ -128,7 +74,8 @@ public final class PayloadConverter implements Processor {
         }
     }
 
-    private static void convertAsXml(final Message in) {
+    @Override
+    void convertAsXml(final Message in) {
         final String body = bodyAsString(in);
         if (body == null) {
             return;
@@ -137,8 +84,7 @@ public final class PayloadConverter implements Processor {
         try {
             final XMLStreamReader bodyReader = XML_INPUT_FACTORY.createXMLStreamReader(new StringReader(body));
 
-            final XMLStreamReader eventReader = XML_INPUT_FACTORY.createFilteredReader(bodyReader,
-                new XmlPayloadProcessor(in.getHeaders()));
+            final XMLStreamReader eventReader = XML_INPUT_FACTORY.createFilteredReader(bodyReader, new XmlPayloadProcessor(in.getHeaders()));
 
             final Source source = new StAXSource(eventReader);
             final ByteArrayOutputStream out = new ByteArrayOutputStream(body.length());
@@ -155,13 +101,6 @@ public final class PayloadConverter implements Processor {
             return;
         }
 
-    }
-
-    private static MimeType createMimeType(final String raw) throws MimeTypeParseException {
-        if (raw == null) {
-            return NONE;
-        }
-        return new MimeType(raw);
     }
 
 }

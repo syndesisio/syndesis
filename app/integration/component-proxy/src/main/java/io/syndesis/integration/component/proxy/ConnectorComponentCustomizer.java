@@ -15,7 +15,8 @@
  */
 package io.syndesis.integration.component.proxy;
 
-@FunctionalInterface
-public interface ComponentProxyCustomizer extends ComponentCustomizer<ComponentProxyComponent> {
+import org.apache.camel.component.connector.ConnectorComponent;
+
+public interface ConnectorComponentCustomizer extends ComponentCustomizer<ConnectorComponent> {
 
 }

@@ -39,6 +39,10 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-catalog</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-connector</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
