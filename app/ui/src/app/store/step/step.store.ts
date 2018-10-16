@@ -43,7 +43,7 @@ export class StepStore {
       stepKind: DATA_MAPPER,
       properties: {},
       configuredProperties: undefined
-    }),
+    }, true, false),
     StepStore.requiresOutputDataShape({
       id: undefined,
       connection: undefined,
@@ -278,7 +278,8 @@ $\{in.body.title\} // Evaluates true when body contains title.
         s =>
           s.action &&
           s.action.descriptor.outputDataShape &&
-          s.action.descriptor.outputDataShape.kind !== DataShapeKinds.NONE
+          s.action.descriptor.outputDataShape.kind !== DataShapeKinds.NONE &&
+          s.action.descriptor.outputDataShape.kind !== DataShapeKinds.ANY
       ).length > 0
     );
   }
@@ -289,18 +290,31 @@ $\{in.body.title\} // Evaluates true when body contains title.
         s =>
           s.action &&
           s.action.descriptor.inputDataShape &&
-          s.action.descriptor.inputDataShape.kind !== DataShapeKinds.NONE
+          s.action.descriptor.inputDataShape.kind !== DataShapeKinds.NONE &&
+          s.action.descriptor.inputDataShape.kind !== DataShapeKinds.ANY
       ).length > 0
     );
   }
 
-  static requiresInputOutputDataShapes(obj: StepKind): StepKind {
+  static requiresInputOutputDataShapes(obj: StepKind, anyPrevious = true, anySubsequent = true): StepKind {
     obj.visible = (
       position: number,
       previousSteps: Array<Step>,
       subsequentSteps: Array<Step>
     ) => {
-      return StepStore.stepsHaveOutputDataShape(previousSteps) && StepStore.stepsHaveInputDataShape(subsequentSteps);
+      if (!anyPrevious) {
+        // only test the first previous step that has some kind of data shape
+        previousSteps = [[].concat(previousSteps).reverse()
+          .find(s => 'action' in s && 'descriptor' in s.action && 'outputDataShape' in s.action.descriptor)];
+      }
+      if (!anySubsequent) {
+        // only test the next subsequent step that has a data shape
+        subsequentSteps = [subsequentSteps
+          .find(s => 'action' in s && 'descriptor' in s.action && 'inputDataShape' in s.action.descriptor)];
+
+      }
+      return StepStore.stepsHaveOutputDataShape(previousSteps)
+         && StepStore.stepsHaveInputDataShape(subsequentSteps);
     };
     return obj;
   }
