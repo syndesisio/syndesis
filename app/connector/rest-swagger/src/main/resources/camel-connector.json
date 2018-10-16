@@ -16,6 +16,7 @@
   "outputDataType" : "json",
   "componentOptions" : [ "host", "basePath" ],
   "endpointValues" : {
+    "componentName" : "http4",
     "consumes" : "application/json"
   },
   "endpointOptions" : [ "operationId" ],
