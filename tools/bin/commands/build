@@ -8,12 +8,12 @@ build::description() {
 build::usage() {
     cat <<EOT
     -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
-        --all-images               Build all modules with images: ui, server, meta, s2i, operator
+        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade
         --app-images               Build only application modules with Docker images (ui, server, meta, s2i)
                                    and create images
-        --infra-images             Build only infrastructure modules with Docker images (operator) and create images
+        --infra-images             Build only infrastructure modules with Docker images (operator, upgrade) and create images
     -m  --module <m1>,<m2>, ..     Build modules
-                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator
+                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator, upgrade
     -d  --dependencies             Build also all project the specified module depends on
         --skip-tests               Skip unit and system test execution
         --skip-checks              Disable all checks
@@ -56,11 +56,15 @@ build::run() {
         call_maven "$(maven_args)" "$maven_modules"
     fi
 
-    # Build operator if required
+    # Build operator if requested
     if $(should_build "operator" "$modules"); then
         do_operator $top_dir
     fi
 
+    # Build image for upgrade pod if requested
+    if $(should_build "upgrade" "$modules") && [ $(hasflag -i --image --docker) ]; then
+        do_upgrade_pod $top_dir
+    fi
 }
 
 maven_args() {
@@ -171,6 +175,30 @@ do_operator() {
     fi
 }
 
+do_upgrade_pod() {
+    local top_dir=$1
+    echo "=============================================================================="
+    echo "Building syndesis-upgrade"
+    echo "=============================================================================="
+
+    local cli_jar=${top_dir}/app/server/cli/target/syndesis-cli.jar
+    if [ ! -f $cli_jar ]; then
+        echo "Cannot find $cli_jar to include in the upgrade pod. Please run 'syndesis build -f -m server' to create it"
+        exit 1
+    fi
+
+    local upgrade_src=${top_dir}/tools/upgrade
+    local build_dir=$(mktemp -d)
+    trap "rm -rf '$build_dir'" EXIT
+
+    cp -r ${upgrade_src}/* ${build_dir}
+    cp ${top_dir}/install/syndesis.yml ${build_dir}
+    cp $cli_jar ${build_dir}
+
+    echo "Creating image syndesis/syndesis-upgrade:latest"
+    docker build --build-arg version=latest -t syndesis/syndesis-upgrade:latest ${build_dir}
+}
+
 build_operator_from_dir() {
     local operator_dir=${1}
     local as_user=${2:-}
@@ -232,12 +260,13 @@ rsync_binary_from_minishift() {
 
 
 # All modules, in the right build order
-ALL_MODULES="common extension integration connector meta server s2i ui test operator"
+ALL_MODULES="common extension integration connector meta server s2i ui test operator upgrade"
 MAVEN_MODULES="common extension integration connector meta server s2i ui test"
 APP_IMAGES="ui server meta s2i"
-INFRA_IMAGES="operator"
+INFRA_IMAGES="operator upgrade"
 ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES"
 MODULES=(
+  "upgrade:server common extension integration connector"
   "operator"
   "ui"
   "common"

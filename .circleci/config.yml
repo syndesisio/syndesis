@@ -359,7 +359,7 @@ jobs:
       - run:
           name: Build upgrade image
           command: |
-            bash ./tools/upgrade/build.sh
+            ./tools/bin/syndesis build --batch-mode --module upgrade --docker
       - <<: *push_images
       - <<: *irc_notify_on_failure
 
