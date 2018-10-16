@@ -4,7 +4,7 @@
 	 viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#832EAB;}
-	.st1{fill:#FECD00;}
+	.st1{fill:#C32265;}
 	.st2{fill:#00AEEF;}
 	.st3{fill:none;}
 	.st4{fill:#8DC63F;}
@@ -30,8 +30,8 @@
 	.st24{fill:#3F9C35;}
 	.st25{fill:#8FCED8;}
 	.st26{fill:#D21F21;}
-	.st27{fill:#FFF8DA;}
-	.st28{fill:#C32265;}
+	.st27{fill:#009444;}
+	.st28{fill:#4FE89C;}
 	.st29{fill:#D6D6D6;}
 	.st30{fill:#F1F1F1;}
 	.st31{fill:#8C3123;}
@@ -57,44 +57,47 @@
 	.st51{fill:#296AD9;}
 	.st52{fill:#2A71E9;}
 	.st53{fill:#286EE6;}
-	.st54{fill:#009444;}
-	.st55{fill:#006838;}
-	.st56{fill:#BCBEC0;}
-	.st57{fill:#2BB673;}
-	.st58{fill:#F7941E;}
-	.st59{fill:#EF4136;}
-	.st60{fill:#FFFFFF;stroke:#231F20;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st61{fill:#D1D3D4;stroke:#231F20;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st62{fill:#231F20;stroke:#231F20;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st63{fill:none;stroke:#231F20;stroke-width:10;stroke-miterlimit:10;}
-	.st64{fill:none;stroke:#231F20;stroke-width:10;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st65{fill:#E1DFE4;}
-	.st66{fill:#35474F;}
-	.st67{fill:#FC002F;}
-	.st68{fill:#FDD518;}
-	.st69{fill:#00E769;}
-	.st70{fill:#D1D3D4;}
-	.st71{fill:#27AAE1;}
-	.st72{fill:#231F20;stroke:#27AAE1;stroke-miterlimit:10;}
-	.st73{fill:url(#SVGID_2_);}
-	.st74{fill:url(#SVGID_3_);}
-	.st75{fill:url(#SVGID_4_);}
-	.st76{fill:url(#SVGID_5_);}
-	.st77{fill:url(#SVGID_6_);}
-	.st78{fill:url(#SVGID_7_);}
+	.st54{fill:#BCBEC0;}
+	.st55{fill:#FFFFFF;stroke:#231F20;stroke-width:13.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st56{fill:#00AEEF;stroke:#231F20;stroke-width:13.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st57{fill:#231F20;stroke:#231F20;stroke-width:13.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st58{fill:none;stroke:#231F20;stroke-width:13.75;stroke-miterlimit:10;}
+	.st59{fill:none;stroke:#231F20;stroke-width:13.75;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st60{fill:none;stroke:#231F20;stroke-width:9.5201;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st61{fill:none;stroke:#231F20;stroke-width:7.8079;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st62{fill:#D1D3D4;}
+	.st63{fill:url(#SVGID_2_);}
+	.st64{fill:url(#SVGID_3_);}
+	.st65{fill:url(#SVGID_4_);}
+	.st66{fill:url(#SVGID_5_);}
+	.st67{fill:url(#SVGID_6_);}
+	.st68{fill:url(#SVGID_7_);}
+	.st69{fill:#00A79D;}
+	.st70{fill:#4E376B;}
+	.st71{fill:#004981;}
+	.st72{fill:#106599;}
+	.st73{fill:#1E78AF;}
+	.st74{fill:#4396C9;}
+	.st75{fill:#63AAD6;}
+	.st76{fill:#B8DDF4;}
+	.st77{fill:#1F8893;}
+	.st78{fill:none;stroke:#000000;stroke-width:6.3625;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st79{fill:#FFFFFF;stroke:#000000;stroke-width:5.3826;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st80{fill:#42BCBC;stroke:#000000;stroke-width:6.2798;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st81{fill:none;stroke:#000000;stroke-width:5.3826;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st82{fill:none;stroke:#000000;stroke-width:3.1813;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
 </style>
 <g id="Layer_1">
 	<g>
-		<circle class="st59" cx="150" cy="150" r="150"/>
 		<g>
-			<rect x="123.9" y="50" class="st60" width="52.9" height="43.1"/>
-			<rect x="63.7" y="206.9" class="st61" width="52.9" height="43.1"/>
-			<rect x="183.3" y="206.9" class="st61" width="52.9" height="43.1"/>
+			<rect x="114.1" y="12.5" class="st55" width="72.8" height="59.3"/>
+			<rect x="31.4" y="228.2" class="st56" width="72.8" height="59.3"/>
+			<rect x="195.8" y="228.2" class="st56" width="72.8" height="59.3"/>
 			
-				<rect x="133.9" y="133" transform="matrix(0.7071 0.7071 -0.7071 0.7071 148.7406 -62.0947)" class="st62" width="30.9" height="30.9"/>
-			<line class="st63" x1="149.3" y1="93.1" x2="149.3" y2="126.6"/>
-			<polyline class="st64" points="171.2,148.5 206.9,148.5 206.9,206.9 			"/>
-			<polyline class="st64" points="125.9,148.5 90.2,148.5 90.2,206.9 			"/>
+				<rect x="127.8" y="126.7" transform="matrix(0.7071 0.7071 -0.7071 0.7071 148.2683 -62.0807)" class="st57" width="42.5" height="42.5"/>
+			<line class="st58" x1="149.1" y1="71.8" x2="149.1" y2="117.9"/>
+			<polyline class="st59" points="179.1,147.9 228.2,147.9 228.2,228.2 			"/>
+			<polyline class="st59" points="116.8,147.9 67.8,147.9 67.8,228.2 			"/>
 		</g>
 	</g>
 </g>
