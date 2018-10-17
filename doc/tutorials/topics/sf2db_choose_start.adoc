@@ -1,7 +1,17 @@
-[id='sf2db-choose-start-connection']
+// Module included in the following assemblies:
+// sf2db_create_integration.adoc
+
+[id='sf2db-choose-start-connection_{context}']
 = Choose the start connection
 
-To choose the start connection:
+In {prodname}, to create the sample Salesforce to database integration, 
+the first task is to choose the start connection. 
+
+.Prerequisites
+
+* You created a Salesforce connection. 
+
+.Procedure
 
 . In {prodname}, on the left, click *Integrations*.
 . Click *Create Integration*.
@@ -12,8 +22,9 @@ you would click *SF Connect 1*.
 . In the *Object name* field, select *Lead*.
 . Click *Done* to add the start connection to the integration.
 
-After connecting to Salesforce, the integration watches for
-notifications that a Salesforce *Lead*
+.Results
+When {prodname} executes the integration, after connecting to Salesforce, 
+the integration watches for notifications that a Salesforce *Lead*
 record was created.
 When the integration finds such a notification, it passes the new
 lead's data to the next step in the integration.

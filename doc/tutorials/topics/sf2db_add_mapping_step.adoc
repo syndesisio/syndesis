@@ -1,8 +1,18 @@
-[id='sf2db-add-data-mapping-step']
+// Module included in the following assemblies:
+// sf2db_create_integration.adoc
+
+[id='sf2db-add-data-mapping-step_{context}']
 = Add a data mapping step
 
-To add a step that maps Salesforce fields to database fields:
+To continue creating the Salesforce to database sample integration,
+add a data mapping step that correlates Salesforce lead fields to
+fields in the sample database. 
 
+.Prerequisites
+* The integration's start connection is to Salesforce.
+* The integration's finish connection is to the PostgresDB sample database. 
+
+.Procedure
 . In {prodname}, in the left panel, hover over the plus sign immediately after the
 start connection to display a pop-up in which you click *Add a Step*.
 

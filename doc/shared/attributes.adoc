@@ -78,17 +78,17 @@
 
 :reg: ®
 
-:reldate: August 2018
+:reldate: December 2018
 
 :router: Apache Camel
 
 :servicemix: Apache ServiceMix
 
-:springBootFullVersion: 1.5.12.RELEASE
+:springBootFullVersion: 1.5.13.RELEASE
 
 :trade: ™
 
-:version: 7.1
+:version: 7.2
 
 // Include attributes for deep linking
 include::attributes-links.adoc[]

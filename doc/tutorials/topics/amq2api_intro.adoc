@@ -1,4 +1,8 @@
-[id='amq-to-rest-api']
+// Module included in the following assemblies:
+// master.adoc
+
+:parent-context: {context}
+[id='amq-to-rest-api_{context}']
 = Implement an AMQ to REST API sample integration
 
 :context: amq2api
@@ -20,19 +24,24 @@ and extending {prodname} by leading you through the procedures for:
 
 {prodname} provides the extension file and the OpenAPI file.
 
-To create this integration, you must be logged in to {prodname}.
-If you are not already logged in, see <<logging-in-and-out>>. 
+ifeval::["{location}" == "downstream"]
+.Prerequisite
+
+* You must be logged in to {prodname}.
+If you are not already logged in, see <<logging-in-and-out_tutorials>>. 
+endif::[]
 
 To implement the AMQ to REST API sample integration, the main steps are:
 
-. <<amq2api-create-amq-connection>>
-. <<amq2api-create-custom-step>>
-. <<amq2api-create-rest-api-connector>>
-. <<amq2api-upload-todo-app-icon>>
-. <<amq2api-create-rest-api-connection>>
-. <<amq2api-create-integration>>
-. <<amq2api-confirm-works>>
+. <<amq2api-create-amq-connection_{context}>>
+. <<amq2api-create-custom-step_{context}>>
+. <<amq2api-create-rest-api-connector_{context}>>
+. <<amq2api-upload-todo-app-icon_{context}>>
+. <<amq2api-create-rest-api-connection_{context}>>
+. <<amq2api-create-integration_{context}>>
+. <<amq2api-confirm-works_{context}>>
 . <<cleanup_{context}>>
+
 
 include::amq2api_create_amq_connection.adoc[leveloffset=+1]
 
@@ -49,3 +58,5 @@ include::amq2api_create_integration.adoc[leveloffset=+1]
 include::amq2api_confirm_works.adoc[leveloffset=+1]
 
 include::clean_up.adoc[leveloffset=+1]
+
+:context: {parent-context}

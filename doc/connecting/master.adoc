@@ -2,15 +2,16 @@
 include::topics/shared/attributes.adoc[]
 
 :prodname: Syndesis
-:prodversion: 7.1
+:prodversion: 7.2
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
 :productpkg: red_hat_fuse
-:version: 7.1
+:version: 7.2
 :location: upstream
 
 [id='connecting-to-applications-and-services']
 = Connecting {prodname} to Applications and Services 
+:context: connectors
 
 To integrate applications, you create a connection to each application
 or service that you want to integrate. You then create an integration and

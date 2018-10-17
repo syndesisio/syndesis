@@ -1,7 +1,7 @@
 [id='connecting-to-sf']
 = Connecting to Salesforce
 
-:context: ug
+:context: salesforce
 To connect to Salesforce in an integration, see the following topics:
 
 * <<register-with-salesforce_{context}>>

@@ -1,7 +1,11 @@
-[id='logging-in-and-out']
+// Module included in the following assemblies:
+// tutorials/master.adoc
+// integrating_applications/master.adoc
+
+[id='logging-in-and-out_{context}']
 = What to expect when using {prodname} for the first time
 
-To use {prodname} on OpenShift Online, Red Hat provides a link.
+To enable access to {prodname} on OpenShift Online, Red Hat provides a link.
 Clicking this link displays the
 *Red Hat OpenShift Online Log In* page, which prompts you to log in by
 using your Red Hat account. Logging in prompts you to authorize

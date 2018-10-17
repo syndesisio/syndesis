@@ -1,7 +1,12 @@
-[id='register-with-twitter']
+// Module included in the following assemblies:
+// tutorials t2sf_intro.adoc
+// connecting connecting_to_twitter.adoc
+
+[id='register-with-twitter_{context}']
 = Register {prodname} as a Twitter client application
 
-You must register your {prodname} environment as a client application
+In an integration, to connect to Twitter, the first thing you must do is
+register your {prodname} environment as a client application
 that can access Twitter.
 This lets you create any number of integrations that connect
 to Twitter. In other words, you need to register a particular
@@ -12,7 +17,11 @@ of {prodname} as a Twitter client application. However, while each Twitter
 connection uses the same registration, it can use different user
 credentials. 
 
-Perform these steps:
+.Prerequisites
+* You are logged in to {prodname}. The URL for accessing {prodname} is in the 
+email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
+
+.Procedure
 
 . In {prodname}:
 .. In the left panel, click *Settings*.

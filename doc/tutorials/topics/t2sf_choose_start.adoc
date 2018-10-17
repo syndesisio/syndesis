@@ -1,7 +1,17 @@
-[id='t2sf-choose-start-connection']
+// Module included in the following assemblies:
+// t2sf_create_integration.adoc
+
+[id='t2sf-choose-start-connection_{context}']
 = Choose the start connection
 
-In {prodname}, to choose the start connection:
+In {prodname}, to create the sample Twitter to Salesforce integration, 
+the first task is to choose the start connection. 
+
+.Prerequisites
+
+* You created a Twitter connection. 
+
+.Procedure
 
 . On the left, click *Integrations*.
 . In the upper right, click *Create Integration*.
@@ -12,6 +22,7 @@ When the integration starts, it uses the credentials defined in
 this connection to connect to Twitter.
 . On the *Choose an Action* page, click *Mention*.
 
+.Results
 After
 connecting to Twitter, the integration monitors Twitter for mentions
 that include your Twitter screen name. A match triggers the

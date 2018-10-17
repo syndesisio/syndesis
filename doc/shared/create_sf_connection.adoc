@@ -1,25 +1,35 @@
-// Reused in
-// "t2sf_intro.adoc", "sf2db_intro.adoc", "connectiong_to_sf.adoc"
+// Module included in the following assemblies:
+// tutorials t2sf_intro.adoc
+// tutorials sf2db_intro.adoc
+// connecting connecting_to_sf.adoc
+
 [id='create-salesforce-connection_{context}']
 = Create a Salesforce connection
 
-A connection to Salesforce requires registration of
-{prodname} as an application that can access Salesforce.
+To create an integration that accesses data in Salesforce, you 
+must first create a Salesforce connection.  
+After you create a Salesforce connection, you can use it in multiple 
+integrations.
 
+.Prerequisites
+* You are logged in to {prodname}. The URL for accessing {prodname} is in the 
+email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
+* {prodname} is open in a web browser. 
+* You must have already registered your {prodname} environment as an
+application that can access Salesforce. 
++
 ifeval::["{context}" == "t2sf"]
-If you did not already register {prodname} see <<register-with-salesforce_{context}>>.
+If you did not already register {prodname}, see <<register-with-salesforce_{context}>>.
 endif::[]
-
 ifeval::["{context}" == "sf2db"]
 If you did not already register {prodname}, see <<register-with-salesforce_{context}>>.
 endif::[]
-
++
 Be sure to wait 2 - 10 minutes after registering your {prodname}
 installation as a Salesforce client before you try to create a
-Salesforce connection. After you create a Salesforce connection, you can use it
-in multiple integrations.
+Salesforce connection. 
 
-To create a Salesforce connection:
+.Procedure
 
 . In {prodname}, in the left panel, click *Connections* to display available connections.
 . In the upper right, click *Create Connection* to display

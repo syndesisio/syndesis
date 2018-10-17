@@ -1,7 +1,17 @@
-[id='amq2api-create-rest-api-connection']
+// Module included in the following assemblies:
+// amq2api_intro.adoc
+
+[id='amq2api-create-rest-api-connection_{context}']
 = Create a REST API connection
 
-To create a connection to the To Do app REST API:
+In an integration, before you can connect to a REST API, you create a REST API 
+client connector and then use that connector to create a connection. 
+Follow the instructions here to create a connection to the To Do app REST API. 
+
+.Prerequisite
+* You created the Todo App API connector. 
+
+.Procedure
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
