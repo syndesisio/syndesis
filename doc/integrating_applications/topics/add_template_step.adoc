@@ -13,6 +13,9 @@ in the integration. When the integration executes, {prodname}
 inserts the values that are in the mapped source fields into an
 instance of the template and passes the result to the next step in the integration.
 
+A typical integration might have one template step but more than one 
+template step in an integration is allowed. 
+
 In this release, only https://mustache.github.io[Mustache] templates are
 supported. It is expected that 
 https://velocity.apache.org[Velocity] and
@@ -20,10 +23,9 @@ https://freemarker.apache.org[Freemarker] templates will be supported
 in a future release. 
 
 .Prerequisites
-* You must be creating or editing an integration. If you are creating an
+* You must be creating or editing an integration. 
+* If you are creating an
 integration then it must already have its start and finish connections.
-* If you plan to upload a template then you must be able to navigate to it.
-Alternatively, you can create the template when you add the template step.
 
 .Procedure
 
@@ -42,8 +44,15 @@ want to modify to create a template, into the template editor.
 * Click *browse to upload*, navigate to a file, and upload it. 
 * In the template editor, start typing to define a template.
 
-. In the template editor, ensure that the content defines a valid
-template. {prodname} displays 
++
+You might upload a template that is valid in other environments but that 
+has errors in {prodname}. This is because {prodname} requires the `body.`
+prefix for each placeholder that is specified inside double curly braces. 
+For example, while `{{text}}` is valid in a typical template, you must 
+specify `{{body.text}}` in a template that you use with {prodname}. 
+
+. In the template editor, ensure that the content defines a template
+that is valid for use with {prodname}. {prodname} displays 
 image:images/RedCircleXError.png[a red error indicator] to the left of
 a line that contains a syntax error. Hover over the red indicator for hints
 about how to resolve the error. Here is an example of a valid template:
@@ -52,6 +61,11 @@ about how to resolve the error. Here is an example of a valid template:
 At {{body.time}}, {{body.name}} tweeted:
 {{body.text}}
 ----
++
+Inside each set of double curly braces, the `body.` prefix is required. 
+Data mapping does not work if the `body.` prefix is missing. 
+For example, if you upload a template that does not have the `body.` prefix 
+on each placeholder, {prodname} displays an error icon on those lines.
 
 . Click *Done* to add the template step to the integration.
 + 
