@@ -18,10 +18,10 @@
      class="flow-view-step">
 
   <ng-template #dataWarningPopover>
-    <div *ngIf="previousStepShouldDefineDataShape">
+    <div *ngIf="shouldAddDatamapper">
       <a [routerLink]="" (click)="addDataMapper()">Add a data mapping step</a> before this connection to resolve the difference.
     </div>
-    <div *ngIf="shouldAddDatamapper">
+    <div *ngIf="previousStepShouldDefineDataShape">
       <a [routerLink]="" (click)="visitPreviousStepDescribeData()">Define the data type</a> for the previous step to resolve this warning.
     </div>
   </ng-template>
