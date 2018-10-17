@@ -59,6 +59,9 @@ export class MustacheMode {
   private validator(text: string, options: any): any[] {
     this._errors = [];
 
+    const symRegex = /^body\.[A-Za-z_]+$/g;
+    const format = '{{body.xyz}}';
+
     let line = 0;
     let startCol = 0;
     let endCol = 0;
@@ -66,6 +69,7 @@ export class MustacheMode {
     let openSymbol = 0;
     let closeSymbol = 0;
     let haveSymbol = false;
+    let theSymbol = '';
     let reset = false;
 
     if (text.length === 0) {
@@ -86,13 +90,27 @@ export class MustacheMode {
       startCol = endCol - 1;
 
       if (reset) {
+
+        // Check the symbol has a body prefix
+        if (theSymbol.length > 0 && ! theSymbol.match(symRegex)) {
+          const msg = this.i18NService.localize(
+            'integrations.steps.templater-wrong-symbol-format',
+            ['{{' + theSymbol + '}}', format, line, endCol]
+          );
+          this._errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
+        }
+
         // Successfully parsed a symbol so reset for next
         openSymbol = 0;
         closeSymbol = 0;
+        theSymbol = '';
       }
 
       const ch = text.charAt(i);
+
       if (ch === '{') {
+        openSymbol++;
+
         if (closeSymbol > 0) {
           // Found an open symbol before all close symbols
           const msg = this.i18NService.localize('integrations.steps.templater-illegal-open-symbol', [line, endCol]);
@@ -106,7 +124,7 @@ export class MustacheMode {
           continue;
         }
 
-        if (openSymbol >= 2) {
+        if (openSymbol > 2) {
           // Too many open symbols encountered
           const msg = this.i18NService.localize('integrations.steps.templater-too-many-open-symbols', [line, endCol]);
           this._errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
@@ -114,9 +132,9 @@ export class MustacheMode {
           continue;
         }
 
-        openSymbol++;
-
       } else if (ch === '}') {
+        closeSymbol++;
+
         if (openSymbol < 2) {
           // Found a close symbol before all the open symbols
           const msg = this.i18NService.localize('integrations.steps.templater-illegal-close-symbol', [line, endCol]);
@@ -125,7 +143,7 @@ export class MustacheMode {
           continue;
         }
 
-        if (closeSymbol >= 2) {
+        if (closeSymbol > 2) {
           // Too many close symbols encountered
           const msg = this.i18NService.localize('integrations.steps.templater-too-many-close-symbols', [line, endCol]);
           this._errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
@@ -133,13 +151,16 @@ export class MustacheMode {
           continue;
         }
 
-        closeSymbol++;
-
       } else {
 
         //
         // Handle all other types of character
         //
+
+        // Record the symbol text for checking
+        if (openSymbol === 2 && closeSymbol === 0) {
+          theSymbol = theSymbol + ch;
+        }
 
         if (openSymbol === 1) {
           // Should have encountered another open symbol but not
@@ -164,7 +185,7 @@ export class MustacheMode {
         }
       }
 
-      reset = openSymbol == 2 && closeSymbol == 2;
+      reset = openSymbol === 2 && closeSymbol === 2;
       if (reset) {
         // Text contains at least 1 parseable symbol so at least the text is not just constants
         haveSymbol = true;
