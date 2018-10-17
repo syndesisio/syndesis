@@ -113,7 +113,7 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
             }
         }
 
-        in.setHeader("CamelGoogleCalendar.content", createGoogleEvent());
+        in.setHeader("CamelGoogleCalendar.content", createGoogleEvent(summary, description, attendees, startDate, startTime, endDate, endTime, location));
         in.setHeader("CamelGoogleCalendar.eventId", eventId);
         in.setHeader("CamelGoogleCalendar.calendarId", calendarId);
     }
@@ -164,20 +164,36 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
         in.setBody(model);
     }
 
-    private Event createGoogleEvent() throws AddressException, ParseException {
+    private Event createGoogleEvent(String summary, String description, String attendees, String startDate, String startTime, String endDate, String endTime, String location) throws AddressException, ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        DateFormat dateOnlyFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Event event = new Event();
         event.setSummary(summary);
         event.setDescription(description);
         event.setAttendees(getAttendeesList(attendees));
-        String composedTime = startDate + " " + startTime;
-        Date startDate = dateFormat.parse(composedTime);
-        DateTime start = new DateTime(startDate);
-        event.setStart(new EventDateTime().setDateTime(start));
-        composedTime = endDate + " " + endTime;
-        Date endDate = dateFormat.parse(composedTime);
-        DateTime end = new DateTime(endDate);
-        event.setEnd(new EventDateTime().setDateTime(end));
+        String composedTime;
+        if (ObjectHelper.isNotEmpty(startTime)) {
+            composedTime = startDate + " " + startTime;
+            Date startMidDate = dateFormat.parse(composedTime);
+            DateTime start = new DateTime(startMidDate);
+            event.setStart(new EventDateTime().setDateTime(start));
+        } else {
+            composedTime = startDate;
+            DateTime startDateTime = new DateTime(composedTime);
+            EventDateTime startEventDateTime = new EventDateTime().setDate(startDateTime);
+            event.setStart(startEventDateTime);
+        }
+        if (ObjectHelper.isNotEmpty(endTime)) {
+            composedTime = endDate + " " + endTime;
+            Date endMidDate = dateFormat.parse(composedTime);
+            DateTime end = new DateTime(endMidDate);
+            event.setEnd(new EventDateTime().setDateTime(end));
+        } else {
+            composedTime = endDate;
+            DateTime endDateTime = new DateTime(composedTime);
+            EventDateTime endEventDateTime = new EventDateTime().setDate(endDateTime);
+            event.setEnd(endEventDateTime);
+        }
         event.setLocation(location);
         return event;
     }
