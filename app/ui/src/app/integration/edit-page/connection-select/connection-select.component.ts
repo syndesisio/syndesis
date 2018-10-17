@@ -71,15 +71,10 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
       position: this.position,
       connection: connection,
       onSave: () => {
-        if (connection.connectorId === 'api-provider') {
-          this.router.navigate(['api-provider', 'create'], {
-            relativeTo: this.route.parent,
-          });
-        } else {
-          this.router.navigate(['action-select', this.position], {
-            relativeTo: this.route.parent,
-          });
-        }
+        this.router.navigate(['action-select', this.position], {
+          relativeTo: this.route.parent,
+          replaceUrl: true
+        });
       }
     });
   }

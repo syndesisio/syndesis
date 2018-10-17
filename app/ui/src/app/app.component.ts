@@ -17,6 +17,14 @@ import { ConfigService } from '@syndesis/ui/config.service';
 import { log } from '@syndesis/ui/logging';
 import { TestSupportService } from '@syndesis/ui/store/test-support.service';
 import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notification-service';
+import {
+  Event,
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router
+} from '@angular/router';
 
 @Component({
   selector: 'syndesis-root',
@@ -81,6 +89,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private modalService: ModalService,
     private title: Title,
     private meta: Meta,
+    private router: Router,
     @Inject(DOCUMENT) private document: any
   ) {}
 
@@ -143,6 +152,18 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.notifications = this.notificationService.getNotificationsObservable();
     this.showClose = true;
+
+    this.router.events.subscribe((value: Event) => {
+      if (value instanceof NavigationStart) {
+        log.debug('NavigationStart: ' + value.url);
+      } else if (value instanceof NavigationEnd) {
+        log.debug('NavigationEnd: ' + value.url);
+      } else if (value instanceof NavigationCancel) {
+        log.debug('NavigationCancel: ' + value.url);
+      } else if (value instanceof NavigationError) {
+        log.debug('NavigationError: ' + value.url);
+      }
+    });
   }
 
   /**
