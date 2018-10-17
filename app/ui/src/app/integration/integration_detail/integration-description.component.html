@@ -2,7 +2,7 @@
   <ng-container [ngSwitch]="integration.type">
     <ng-container *ngSwitchCase="IntegrationType.ApiProvider">
       <div *ngTemplateOutlet="multiflowApiProvider;context:{
-        flowsCount: integration.flows.length
+        flowsCount: integration.getFlowsCount()
       }"></div>
     </ng-container>
     <ng-container *ngSwitchDefault>
@@ -105,7 +105,7 @@
   <div class="step-block inline-block text-center">
     <div *ngTemplateOutlet="stepConnection;context:{
       id: 'multi-flow',
-      connectionName: flowsCount + ' Flows',
+      connectionName: flowsCount + ' Flow' + (flowsCount === 1 ? '' : 's'),
       badge: flowsCount,
       actionName: '',
       onClick: onApiProviderFlowsClick.bind(this),

@@ -34,7 +34,7 @@
           <span class="fa fa-angle-right"></span>
           <span class="icon">
             <img class="syn-icon-small" src="./../../assets/icons/multi-flow.connection.png" aria-hidden="true">
-            <span class="syn-badge" tooltip="{{ integration.flows.length }} implemented flows" container="body" placement="right">{{ integration.flows.length }}</span>
+            <span class="syn-badge" tooltip="{{ integration.getFlowsCount() }} implemented flow{{ integration.getFlowsCount() === 1 ? '' : 's'}}" container="body" placement="right">{{ integration.getFlowsCount() }}</span>
           </span>
         </ng-template>
       </div>
