@@ -160,6 +160,14 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
       this.position = +params.get('position');
       this.loadActions();
     });
+
+    this.connector$.subscribe(connector => {
+      if (connector && connector.id === 'api-provider') {
+        this.router.navigate(['api-provider', 'create'], {
+          relativeTo: this.route.parent,
+        });
+      }
+    });
   }
 
   ngOnDestroy() {
