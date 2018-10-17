@@ -2,16 +2,18 @@
 swagger: "2.0"
 info:
   title: "Todo App API"
+  description: "Example Todo Application API"
   version: "1.0.0"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 host: "hostname"
+basePath: /api
 schemes:
   - "http"
   - "https"
 paths:
-  /api:
+  /:
     get:
       tags:
         - tasks
@@ -49,7 +51,7 @@ paths:
           description: All is good
           schema:
             $ref: "#/definitions/Task"
-  /api/{id}:
+  /{id}:
     get:
       tags:
         - tasks

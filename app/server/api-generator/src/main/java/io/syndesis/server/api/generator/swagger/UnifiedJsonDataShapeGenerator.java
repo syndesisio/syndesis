@@ -49,6 +49,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
@@ -211,7 +212,14 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
         if (schema instanceof ArrayModel) {
             final Property items = ((ArrayModel) schema).getItems();
 
-            return createSchemaFromProperty(json, name, items);
+            final ObjectNode itemSchema = createSchemaFromProperty(json, name, items);
+            itemSchema.remove(Arrays.asList("$schema", "title"));
+
+            final ObjectNode jsonSchema = JsonNodeFactory.instance.objectNode();
+            jsonSchema.put("type", "array");
+            jsonSchema.set("items", itemSchema);
+
+            return jsonSchema;
         } else if (schema instanceof ModelImpl) {
             return createSchemaFromModelImpl(name, schema);
         }
@@ -239,7 +247,17 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
                 throw new IllegalStateException("Unable to serialize/read given JSON specification in response schema: " + schema, e);
             }
         } else if (schema instanceof StringProperty) {
-            return null;
+            final ObjectNode jsonSchema = JsonNodeFactory.instance.objectNode();
+            final String format = schema.getFormat();
+            if (format != null) {
+                jsonSchema.put("format", format);
+            }
+            final String type = schema.getType();
+            if (type != null) {
+                jsonSchema.put("type", type);
+            }
+
+            return jsonSchema;
         }
 
         final String reference = JsonSchemaHelper.determineSchemaReference(schema);

@@ -1547,7 +1547,7 @@
           "description": "API response payload",
           "kind": "json-schema",
           "name": "Response",
-          "specification": "{\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\"},\"parameters\":{\"type\":\"object\",\"properties\":{\"Status\":{\"title\":\"Status\",\"type\":\"integer\"},\"Content-Type\":{\"title\":\"Content-Type\",\"type\":\"string\"}}}},\"$schema\":\"http://json-schema.org/draft-04/schema#\"}"
+          "specification": "{\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"parameters\":{\"type\":\"object\",\"properties\":{\"Status\":{\"title\":\"Status\",\"type\":\"integer\"},\"Content-Type\":{\"title\":\"Content-Type\",\"type\":\"string\"}}}},\"$schema\":\"http://json-schema.org/draft-04/schema#\"}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:runQuery",
@@ -1934,7 +1934,7 @@
           "description": "API response payload",
           "kind": "json-schema",
           "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"properties\":{\"parameters\":{\"properties\":{\"Content-Type\":{\"title\":\"Content-Type\",\"type\":\"string\"},\"Status\":{\"title\":\"Status\",\"type\":\"integer\"}},\"type\":\"object\"}},\"type\":\"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"properties\":{\"body\":{\"items\":{\"format\":\"byte\",\"type\":\"string\"},\"type\":\"array\"},\"parameters\":{\"properties\":{\"Content-Type\":{\"title\":\"Content-Type\",\"type\":\"string\"},\"Status\":{\"title\":\"Status\",\"type\":\"integer\"}},\"type\":\"object\"}},\"type\":\"object\"}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getDocumentContent",
@@ -3305,7 +3305,7 @@
           "description": "API response payload",
           "kind": "json-schema",
           "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"properties\":{\"parameters\":{\"properties\":{\"Content-Type\":{\"title\":\"Content-Type\",\"type\":\"string\"},\"Status\":{\"title\":\"Status\",\"type\":\"integer\"}},\"type\":\"object\"}},\"type\":\"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"properties\":{\"body\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"parameters\":{\"properties\":{\"Content-Type\":{\"title\":\"Content-Type\",\"type\":\"string\"},\"Status\":{\"title\":\"Status\",\"type\":\"integer\"}},\"type\":\"object\"}},\"type\":\"object\"}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getAvailableSignals",
