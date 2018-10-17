@@ -166,7 +166,6 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
 
     private Event createGoogleEvent(String summary, String description, String attendees, String startDate, String startTime, String endDate, String endTime, String location) throws AddressException, ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        DateFormat dateOnlyFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Event event = new Event();
         event.setSummary(summary);
         event.setDescription(description);
