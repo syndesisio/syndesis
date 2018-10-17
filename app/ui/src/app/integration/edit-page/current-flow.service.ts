@@ -83,6 +83,10 @@ export class CurrentFlowService implements OnDestroy {
         // safety net
         return true;
       }
+      if (connection.connectorId === 'api-provider') {
+        // api provider can be used only for From actions
+        return false;
+      }
       return connection.connector.actions.some(action => {
         return action.pattern === 'To';
       });
