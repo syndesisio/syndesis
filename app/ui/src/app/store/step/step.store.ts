@@ -62,7 +62,7 @@ export class StepStore {
       action: undefined,
       name: 'Template',
       stepKind: TEMPLATE,
-      description: 'Upload a Mustache template to define a custom step',
+      description: 'Upload or create a Mustache template to define consistent output data.',
       configuredProperties: undefined,
       properties: undefined
     }),
