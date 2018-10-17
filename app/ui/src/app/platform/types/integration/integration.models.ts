@@ -42,7 +42,8 @@ export type IntegrationStatus =
 
 export enum IntegrationType {
   SingleFlow = 'SingleFlow',
-  ApiProvider = 'ApiProvider'
+  ApiProvider = 'ApiProvider',
+  MultiFlow = 'MultiFlow'
 }
 
 export interface IntegrationOverview extends BaseEntity, WithLeveledMessages {
@@ -75,6 +76,7 @@ export interface Integration extends IntegrationOverview {
   type: IntegrationType;
   properties: StringMap<ConfigurationProperty>;
   configuredProperties: StringMap<string>;
+  getFlowsCount(): number;
 }
 
 export type Integrations = Array<Integration>;

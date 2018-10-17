@@ -14,12 +14,23 @@ import { RESTService } from '@syndesis/ui/store/entity';
 import { log } from '@syndesis/ui/logging';
 import { ConfigService } from '@syndesis/ui/config.service';
 
+function getFlowsCount(integration: Integration) {
+  return integration.type === IntegrationType.ApiProvider
+    ? integration.flows.filter(flow => flow.metadata.excerpt !== '501 Not Implemented').length
+    : integration.flows.length;
+}
+
 function transform(integration: Integration): Integration {
   if (integration.flows.length > 1) {
-    integration.type = IntegrationType.ApiProvider;
+    if (integration.tags.indexOf('api-provider') >= 0) {
+      integration.type = IntegrationType.ApiProvider;
+    } else {
+      integration.type = IntegrationType.MultiFlow;
+    }
   } else {
     integration.type = IntegrationType.SingleFlow;
   }
+  integration.getFlowsCount = getFlowsCount.bind(null, integration);
   return integration;
 }
 
