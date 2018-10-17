@@ -1,4 +1,6 @@
 [id='monitoring-integration-metrics']
 = Monitoring integration metrics
 
-Add the topic contents here.
+This chapter describes Prometheus configuration for metrics collection in {prodname}.
+
+include::external_prometheus.adoc[leveloffset=+1]
