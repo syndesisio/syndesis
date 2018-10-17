@@ -1,12 +1,14 @@
 [id='add-log-step']
 = Adding a log step
 
-{prodname} provides log information for each integration version that
-it executes. To learn what information is automatically logged,
-see <<viewing-log-information>>.
+{prodname} provides information about each execution of an integration. 
+To learn what information is automatically provided,
+see <<viewing-integration-activity-information>>.
 
-To log additional information between any two steps, add a log step to the
-integration. For each message that it receives, a log step can provide
+To obtain additional information, between any two steps, add a log step or a 
+log connection to the integration. See {LinkFuseOnlineConnectorGuide}connecting-to-log#comparison-log-step-connection_{context}[Comparison of log step and log connection].
+
+For each message that it receives, a log step can provide
 one or more of the following:
 
 * The message's header, which provides metadata about the message.
@@ -17,6 +19,11 @@ http://camel.apache.org/simple.html[Apache Camel Simple language] expression.
 To add a log step, you must be creating a new integration or
 editing an integration. The integration must already have
 its start and finish connections.
+
+To finish an integration by logging information about the messages that an
+integration processes, or to log message information at a particular log level, 
+ {LinkFuseOnlineConnectorGuide}#connecting-to-log[add a log connection]
+instead of a log step. 
 
 To add a log step:
 
@@ -39,6 +46,9 @@ to the integration.
 . When the integration is complete, publish it to start seeing output
 from the new log step.
 
-After an integration that has a log step has been executed, output from
+.Additional resources
+* {LinkFuseOnlineConnectorGuide}connecting-to-log#comparison-log-step-connection_{context}[Comparison of log step and log connection].
+* {LinkFuseOnlineConnectorGuide}connecting-to-log#add-log-connection_{context}[Add a log connection].
+* After an integration that has a log step has been executed, output from
 its log step appears in the integration's *Activity* tab. See
-<<viewing-log-information>>.
+<<viewing-integration-activity-information>>.
