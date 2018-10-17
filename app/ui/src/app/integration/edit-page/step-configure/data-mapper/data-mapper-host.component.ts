@@ -93,16 +93,9 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     public configService: ConfigService,
     public initializationService: InitializationService,
     public support: IntegrationSupportService
-  ) {
-    this.resetConfig();
-  }
+  ) { }
 
   initialize() {
-    setTimeout(() => {
-      // Set this to true always for now, defer emitting it until
-      // the next change detection cycle
-      this.validChange.emit(true);
-    }, 1);
     this.resetConfig();
     const step = this.currentFlowService.getStep(this.position);
 
@@ -134,6 +127,15 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   initializeMapper() {
     if (this.outstandingTasks == 0) {
       this.initializationService.initialize();
+      // TODO: defers this until the next change detection, should
+      // be a candidate for removal though.
+      setTimeout(() => {
+        // Set this to true always for now, defer emitting it until
+        // the next change detection cycle
+        this.validChange.emit(true);
+        // manually triggers the mapper's line machine
+        this.cfg.mappingService.mappingUpdatedSource.next();
+      }, 1);
     }
   }
 
