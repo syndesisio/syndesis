@@ -95,9 +95,18 @@ export class IntegrationStepConfigureComponent
       position: this.position,
       properties: this.formFactory.sanitizeValues({ ...data }, this.formConfig),
       onSave: () => {
-        this.router.navigate(['save-or-add-step'], {
-          queryParams: { validate: true },
-          relativeTo: this.route.parent,
+        // flag that this step is configured too for consistency
+        // with how connections are configured
+        this.currentFlowService.events.emit({
+          kind: 'integration-set-metadata',
+          position: this.position,
+          metadata: { configured: 'true' },
+          onSave: () => {
+            this.router.navigate(['save-or-add-step'], {
+              queryParams: { validate: true },
+              relativeTo: this.route.parent,
+            });
+          }
         });
       }
     });

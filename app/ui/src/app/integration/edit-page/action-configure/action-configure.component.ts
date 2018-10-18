@@ -110,7 +110,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     this.currentFlowService.events.emit({
       kind: 'integration-set-metadata',
       position: this.position,
-      metadata: { configured: true },
+      metadata: { configured: 'true' },
       onSave: () => {
         this.router.navigate(['describe-data', this.position, direction], {
           relativeTo: this.route.parent,
