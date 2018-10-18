@@ -812,9 +812,9 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-apicurio-design-studio@^0.2.15:
-  version "0.2.15"
-  resolved "https://registry.yarnpkg.com/apicurio-design-studio/-/apicurio-design-studio-0.2.15.tgz#fe5d3fc9910e9f19eb2ecd15a1edb8143bdda1ab"
+apicurio-design-studio@^0.2.17:
+  version "0.2.17"
+  resolved "https://registry.yarnpkg.com/apicurio-design-studio/-/apicurio-design-studio-0.2.17.tgz#aad76be4cfa9d2227f15f9de108fdf8b084ef350"
   dependencies:
     tslib "^1.7.1"
 
@@ -5969,16 +5969,16 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
 
-oai-ts-commands@^0.2.41:
-  version "0.2.42"
-  resolved "https://registry.yarnpkg.com/oai-ts-commands/-/oai-ts-commands-0.2.42.tgz#aa77eeac3554f6f744d5c48f66067c984bbb49d2"
+oai-ts-commands@^0.2.48:
+  version "0.2.48"
+  resolved "https://registry.yarnpkg.com/oai-ts-commands/-/oai-ts-commands-0.2.48.tgz#59d00549bbfb4f3fc32ea1f6dd3f8eccdf1c6e5a"
   dependencies:
     core-js "2.4.1"
-    oai-ts-core "0.2.23"
+    oai-ts-core "0.2.26"
 
-oai-ts-core@0.2.23, oai-ts-core@^0.2.23:
-  version "0.2.23"
-  resolved "https://registry.yarnpkg.com/oai-ts-core/-/oai-ts-core-0.2.23.tgz#080c2855fde11ee3fd2649cc1e2594cf6e3f21b1"
+oai-ts-core@0.2.26, oai-ts-core@^0.2.26:
+  version "0.2.26"
+  resolved "https://registry.yarnpkg.com/oai-ts-core/-/oai-ts-core-0.2.26.tgz#152083bddfdb8ebe13e15df4e33ad05fe4848bb4"
   dependencies:
     core-js "2.4.1"
 
