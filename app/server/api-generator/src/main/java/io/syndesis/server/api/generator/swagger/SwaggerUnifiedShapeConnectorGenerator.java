@@ -42,6 +42,8 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
 
         actionDescriptor.putConfiguredProperty("operationId", operation.getOperationId());
 
+        actionDescriptor.addConnectorCustomizer("io.syndesis.connector.rest.swagger.ResponseCustomizer");
+
         return actionDescriptor;
     }
 

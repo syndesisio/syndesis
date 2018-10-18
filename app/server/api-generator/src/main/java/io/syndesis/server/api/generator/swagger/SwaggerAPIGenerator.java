@@ -55,6 +55,8 @@ import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +66,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
     private static final String EXCERPT_METADATA_KEY = "excerpt";
 
-    private DataShapeGenerator dataShapeGenerator;
+    private final DataShapeGenerator dataShapeGenerator;
 
     public SwaggerAPIGenerator() {
         this.dataShapeGenerator = new UnifiedDataShapeGenerator();
@@ -174,6 +176,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     .descriptor(new ConnectorDescriptor.Builder()
                         .createFrom(endAction.getDescriptor())
                         .inputDataShape(endDataShape)
+                        .addConnectorCustomizer("io.syndesis.connector.rest.swagger.ResponseCustomizer")
                         .build())
                     .build();
                 Step endStep = new Step.Builder()
@@ -224,7 +227,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
         final String givenBasePath = swagger.getBasePath();
         final String basePath;
-        if (givenBasePath == null || givenBasePath.trim().isEmpty()) {
+        if (StringUtils.isEmpty(givenBasePath)) {
             basePath = "/api";
         } else {
             basePath = givenBasePath.replaceFirst("^(/.*)/$", "$1"); // drop the trailing slash

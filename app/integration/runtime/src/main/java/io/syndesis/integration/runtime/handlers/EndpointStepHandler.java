@@ -17,6 +17,7 @@ package io.syndesis.integration.runtime.handlers;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,6 +33,8 @@ import io.syndesis.common.util.Predicates;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 
+import org.apache.camel.Component;
+import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.URISupport;
@@ -90,7 +93,8 @@ public class EndpointStepHandler implements IntegrationStepHandler, IntegrationS
         // any configuredProperties on action descriptor are considered
         properties.putAll(descriptor.getConfiguredProperties());
 
-        String uri = String.format("%s-%s-%s", componentScheme, flowIndex, stepIndex);
+        final String componentName = String.format("%s-%s-%s", componentScheme, flowIndex, stepIndex);
+        String uri = componentName;
 
         if (ObjectHelper.isNotEmpty(uri) && ObjectHelper.isNotEmpty(properties)) {
             try {
@@ -99,6 +103,10 @@ public class EndpointStepHandler implements IntegrationStepHandler, IntegrationS
                 throw ObjectHelper.wrapRuntimeCamelException(e);
             }
         }
+
+        final ModelCamelContext context = builder.getContext();
+        final Component component = context.getComponent(componentName);
+        HandlerCustomizer.customizeComponent(context, connector, descriptor, component, new HashMap<>(properties));
 
         if (route == null) {
             route = builder.from(uri);

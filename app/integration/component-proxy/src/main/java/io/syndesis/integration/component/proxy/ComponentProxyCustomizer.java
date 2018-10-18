@@ -15,52 +15,7 @@
  */
 package io.syndesis.integration.component.proxy;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.TypeConverter;
-
 @FunctionalInterface
-public interface ComponentProxyCustomizer {
-    /**
-     * Customize the specified {@link ComponentProxyComponent}. The customizer
-     * has to remove remove customizer specific properties once they are consumed.
-     *
-     * @param component the component to customize
-     * @param options the component options
-     */
-    void customize(ComponentProxyComponent component, Map<String, Object> options);
+public interface ComponentProxyCustomizer extends ComponentCustomizer<ComponentProxyComponent> {
 
-
-    // **************************
-    // Helpers
-    // **************************
-
-    default void consumeOption(Map<String, Object> options, String name, Consumer<Object> consumer) {
-        Object val = options.remove(name);
-        if (val != null) {
-            consumer.accept(val);
-        }
-    }
-
-    /**
-     * Removes the option with the given name and invokes the consumer performing
-     * property placeholders resolution and type conversion.
-     */
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    default <T> void consumeOption(CamelContext camelContext, Map<String, Object> options, String name, Class<T> type, Consumer<T> consumer) throws Exception {
-        TypeConverter converter = camelContext.getTypeConverter();
-        Object val = options.remove(name);
-
-        if (val != null) {
-            if (val instanceof String) {
-                val = camelContext.resolvePropertyPlaceholders((String)val);
-            }
-
-            consumer.accept(
-                converter.mandatoryConvertTo(type, val)
-            );
-        }
-    }
 }

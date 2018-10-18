@@ -240,7 +240,7 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
 
         final Processor headerRemover = exchange -> exchange.getIn().removeHeader(Exchange.HTTP_URI);
 
-        final Processor combinedBeforeProducers = Pipeline.newInstance(getCamelContext(), new PayloadConverter(), headerSetter, headerRemover);
+        final Processor combinedBeforeProducers = Pipeline.newInstance(getCamelContext(), new RequestPayloadConverter(), headerSetter, headerRemover);
         endpoint.setBeforeProducer(combinedBeforeProducers);
 
         if (authenticationType == AuthenticationType.oauth2 && refreshToken != null && !refreshTokenRetryStatuses.isEmpty()) {

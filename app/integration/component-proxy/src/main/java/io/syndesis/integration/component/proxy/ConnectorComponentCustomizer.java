@@ -13,28 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator;
+package io.syndesis.integration.component.proxy;
 
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.openapi.OpenApi;
+import org.apache.camel.component.connector.ConnectorComponent;
 
-public final class APIIntegration {
-
-    private final Integration integration;
-
-    private final OpenApi spec;
-
-    public APIIntegration(final Integration integration, final OpenApi spec) {
-        this.integration = integration;
-        this.spec = spec;
-    }
-
-    public Integration getIntegration() {
-        return integration;
-    }
-
-    public OpenApi getSpec() {
-        return spec;
-    }
+public interface ConnectorComponentCustomizer extends ComponentCustomizer<ConnectorComponent> {
 
 }
