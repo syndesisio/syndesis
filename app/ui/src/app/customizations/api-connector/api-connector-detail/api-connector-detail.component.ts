@@ -11,7 +11,8 @@ import {
   ApiConnectorState,
   ApiConnectorStore,
   getApiConnectorState,
-  CustomConnectorRequest
+  CustomConnectorRequest,
+  getApiConnectorRequest
 } from '@syndesis/ui/customizations/api-connector';
 import { ConfigService } from '@syndesis/ui/config.service';
 
@@ -24,6 +25,7 @@ export class ApiConnectorDetailComponent implements OnInit {
   readonly apiEndpoint: String;
   apiConnectorState$: Observable<ApiConnectorState>;
   apiConnectorData$: Observable<ApiConnectorData>;
+  createRequest$: Observable<CustomConnectorRequest>;
 
   constructor(
     private apiConnectorStore: Store<ApiConnectorStore>,
@@ -36,6 +38,9 @@ export class ApiConnectorDetailComponent implements OnInit {
   ngOnInit() {
     this.apiConnectorState$ = this.apiConnectorStore.select<ApiConnectorState>(
       getApiConnectorState
+    );
+    this.createRequest$ = this.apiConnectorStore.select<CustomConnectorRequest>(
+      getApiConnectorRequest
     );
 
     this.apiConnectorData$ = this.route.paramMap

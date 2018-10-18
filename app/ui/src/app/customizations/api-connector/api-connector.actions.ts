@@ -7,8 +7,16 @@ import {
   ApiConnectorData,
   CustomApiConnectorAuthSettings
 } from '@syndesis/ui/customizations/api-connector/api-connector.models';
+import { OpenApiUploadSpecification } from '@syndesis/ui/common';
+import { ActivatedRoute } from '@angular/router';
 
 export class ApiConnectorActions {
+  static NEXT_STEP = '[API Connectors] Go to the next step';
+  static PREV_STEP = '[API Connectors] Back to the previous step';
+  static UPLOAD_SPEC = '[API Connectors] Upload OpenApi specification source';
+  static EDIT_SPEC = '[API Connectors] Show Apicurio editor';
+  static UPDATE_SPEC = '[API Connectors] Update specification with the value coming from Apicurio';
+  static CANCEL_EDIT_SPEC = '[API Connectors] Closes the Apicurio Editor without saving any changes';
   static FETCH = '[API Connectors] Fetch connectors request';
   static FETCH_COMPLETE = '[API Connectors] Fetch operation complete';
   static FETCH_FAIL = '[API Connectors] Fetch operation failed';
@@ -26,6 +34,35 @@ export class ApiConnectorActions {
   static DELETE = '[API Connectors] Delete custom connector';
   static DELETE_COMPLETE = '[API Connectors] Custom connector successfully deleted';
   static DELETE_FAIL = '[API Connectors] Delete custom connector failed';
+  static SET_CONNECTOR_DATA = '[API Connectors] Sets the Api Connector data';
+
+  static nextStep(): ApiConnectorNextStep {
+    return new ApiConnectorNextStep();
+  }
+
+  static previousStep(): ApiConnectorPreviousStep {
+    return new ApiConnectorPreviousStep();
+  }
+
+  static uploadSpecification(
+    payload: OpenApiUploadSpecification
+  ): ApiConnectorUploadSpecification {
+    return new ApiConnectorUploadSpecification(payload);
+  }
+
+  static cancelEditSpecification(): ApiConnectorCancelEditSpecification {
+    return new ApiConnectorCancelEditSpecification();
+  }
+
+  static editSpecification(): ApiConnectorEditSpecification {
+    return new ApiConnectorEditSpecification();
+  }
+
+  static updateSpecification(
+    payload: string
+  ): ApiConnectorUpdateSpecification {
+    return new ApiConnectorUpdateSpecification(payload);
+  }
 
   static fetch() {
     return new ApiConnectorFetch();
@@ -97,6 +134,13 @@ export class ApiConnectorActions {
 
   static createCancel(): ApiConnectorCreateCancel {
     return new ApiConnectorCreateCancel();
+  }
+
+  static setConnectorData(
+    payload: ApiConnectorData,
+    route: ActivatedRoute
+  ): ApiConnectorSetData {
+    return new ApiConnectorSetData(payload, route);
   }
 }
 
@@ -192,4 +236,36 @@ export class ApiConnectorDeleteFail implements Action {
 
 export class ApiConnectorCreateCancel implements Action {
   readonly type = ApiConnectorActions.CREATE_CANCEL;
+}
+
+export class ApiConnectorNextStep implements Action {
+  readonly type = ApiConnectorActions.NEXT_STEP;
+}
+
+export class ApiConnectorPreviousStep implements Action {
+  readonly type = ApiConnectorActions.PREV_STEP;
+}
+
+export class ApiConnectorUploadSpecification implements Action {
+  readonly type = ApiConnectorActions.UPLOAD_SPEC;
+  constructor(public payload: OpenApiUploadSpecification) {}
+}
+
+export class ApiConnectorEditSpecification implements Action {
+  readonly type = ApiConnectorActions.EDIT_SPEC;
+}
+
+export class ApiConnectorUpdateSpecification implements Action {
+  readonly type = ApiConnectorActions.UPDATE_SPEC;
+  constructor(public payload: string) {}
+}
+
+export class ApiConnectorCancelEditSpecification implements Action {
+  readonly type = ApiConnectorActions.CANCEL_EDIT_SPEC;
+}
+
+export class ApiConnectorSetData implements Action {
+  readonly type = ApiConnectorActions.SET_CONNECTOR_DATA;
+
+  constructor(public payload: ApiConnectorData, public route: ActivatedRoute) {}
 }

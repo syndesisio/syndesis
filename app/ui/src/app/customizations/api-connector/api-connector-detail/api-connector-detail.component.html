@@ -59,9 +59,13 @@
             [apiConnectorState]="apiConnectorState$ | async"
             (update)="onUpdate($event)">
           </syndesis-api-connector-info>
-          <syndesis-api-connector-review *ngIf="apiConnectorData.actionsSummary"
+          <syndesis-api-connector-review
+            *ngIf="(createRequest$ | async).actionsSummary"
             [apiConnectorTemplateName]="apiConnectorData.name"
-            [apiConnectorData]="apiConnectorData">
+            [enableEditButton]="false"
+            [loading]="(loading$ | async)"
+            [showNextButton]="false"
+            [validation]="(createRequest$ | async)">
           </syndesis-api-connector-review>
         </div>
       </div>

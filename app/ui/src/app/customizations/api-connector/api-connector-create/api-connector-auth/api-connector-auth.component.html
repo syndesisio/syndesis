@@ -71,7 +71,7 @@
     </fieldset>
 
     <fieldset>
-      <syndesis-button theme="default" type="button" (click)="onBackPressed()">
+      <syndesis-button theme="default" type="button" (click)="onBack.emit()">
         {{ 'shared.back-button' | synI18n }}
       </syndesis-button>
       <syndesis-button type="submit" [disabled]="authSetupForm.invalid">

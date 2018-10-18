@@ -1,5 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ApiConnectorData } from '@syndesis/ui/customizations/api-connector';
 
 @Component({
@@ -8,26 +7,15 @@ import { ApiConnectorData } from '@syndesis/ui/customizations/api-connector';
   styleUrls: ['./api-connector-review.component.scss']
 })
 export class ApiConnectorReviewComponent {
-  validation: ApiConnectorData;
-  importedActions: Array<{ tag: string; count: number }>;
 
   @Input() apiConnectorTemplateName: string;
-  @Input() showNextButton: boolean;
   @Input() enableEditButton: boolean;
-  @Input()
-  set apiConnectorData(value: ApiConnectorData) {
-    this.validation = value;
-    const actionCountByTags = value.actionsSummary.actionCountByTags || {};
-    this.importedActions = Object.keys(actionCountByTags).map(key => ({
-      tag: key,
-      count: +actionCountByTags[key]
-    }));
-  }
+  @Input() loading: boolean;
+  @Input() showNextButton: boolean;
+  @Input() validation: ApiConnectorData;
 
-  @Output() backPressed = new EventEmitter();
-  @Output() reviewComplete = new EventEmitter();
+  @Output() onBack = new EventEmitter<boolean>();
+  @Output() onDone = new EventEmitter<boolean>();
+  @Output() onEdit = new EventEmitter<boolean>();
 
-  onBackPressed() {
-    this.backPressed.emit();
-  }
 }
