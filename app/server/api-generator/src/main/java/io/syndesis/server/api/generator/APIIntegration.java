@@ -18,13 +18,13 @@ package io.syndesis.server.api.generator;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.openapi.OpenApi;
 
-public class APIIntegration {
+public final class APIIntegration {
 
-    private Integration integration;
+    private final Integration integration;
 
-    private OpenApi spec;
+    private final OpenApi spec;
 
-    public APIIntegration(Integration integration, OpenApi spec) {
+    public APIIntegration(final Integration integration, final OpenApi spec) {
         this.integration = integration;
         this.spec = spec;
     }

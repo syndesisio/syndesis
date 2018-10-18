@@ -34,13 +34,13 @@ public final class ResponseCustomizer implements ConnectorComponentCustomizer, O
 
     private static final Logger LOG = LoggerFactory.getLogger(ResponseCustomizer.class);
 
-    private boolean addResponseConverter;
-
     private DataShape dataShape;
+
+    private boolean isUnifiedDataShape;
 
     @Override
     public void customize(final ConnectorComponent component, final Map<String, Object> options) {
-        if (addResponseConverter) {
+        if (isUnifiedDataShape) {
             component.setAfterProducer(new ResponsePayloadConverter());
         }
     }
@@ -54,14 +54,14 @@ public final class ResponseCustomizer implements ConnectorComponentCustomizer, O
     public void setOutputDataShape(final DataShape dataShape) {
         this.dataShape = dataShape;
 
-        addResponseConverter = shouldAddResponseConverter(dataShape);
+        isUnifiedDataShape = isUnifiedDataShape(dataShape);
     }
 
     static boolean isNullNode(final JsonNode node) {
         return node == null || node.isNull();
     }
 
-    static boolean shouldAddResponseConverter(final DataShape dataShape) {
+    static boolean isUnifiedDataShape(final DataShape dataShape) {
         if (dataShape == null || dataShape.getKind() != DataShapeKinds.JSON_SCHEMA) {
             return false;
         }

@@ -72,7 +72,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
 
         private final Element schema;
 
-        public SchemaPrefixAndElement(final String prefix, final Element schema) {
+        SchemaPrefixAndElement(final String prefix, final Element schema) {
             this.prefix = prefix;
             this.schema = schema;
         }

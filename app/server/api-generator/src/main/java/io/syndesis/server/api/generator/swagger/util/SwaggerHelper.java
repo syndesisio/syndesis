@@ -101,7 +101,7 @@ public final class SwaggerHelper {
      * key determined by io.syndesis.server.jsondb.impl.JsonRecordSupport::validateKey.
      */
     public static String sanitizeTag(final String tag) {
-        if (tag == null || tag.trim().isEmpty()) {
+        if (StringUtils.isEmpty(tag)) {
             return null;
         }
 

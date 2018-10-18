@@ -24,6 +24,8 @@ import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.syndesis.common.util.Json;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -85,6 +87,14 @@ public final class JsonSchemaHelper {
         schema.put("type", "object");
 
         return schema;
+    }
+
+    public static ObjectNode parseJsonSchema(final String schema) {
+        try {
+            return (ObjectNode) Json.reader().readTree(schema);
+        } catch (final IOException e) {
+            throw new IllegalStateException("Unable to parse given JSON schema: " + StringUtils.abbreviate(schema, 100), e);
+        }
     }
 
     public static ObjectNode resolvableNodeForSpecification(final ObjectNode json) {

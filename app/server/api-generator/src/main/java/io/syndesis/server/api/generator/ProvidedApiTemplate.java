@@ -25,15 +25,15 @@ import java.util.Optional;
 /**
  * Collects template data needed by the API generator for provided APIs.
  */
-public class ProvidedApiTemplate {
+public final class ProvidedApiTemplate {
 
-    private Connection connection;
+    private final Connection connection;
 
-    private String startActionId;
+    private final String startActionId;
 
-    private String endActionId;
+    private final String endActionId;
 
-    public ProvidedApiTemplate(Connection connection, String startActionId, String endActionId) {
+    public ProvidedApiTemplate(final Connection connection, final String startActionId, final String endActionId) {
         this.connection = Objects.requireNonNull(connection, "connection cannot be null");
         this.startActionId = Objects.requireNonNull(startActionId, "startActionId cannot be null");
         this.endActionId = Objects.requireNonNull(endActionId, "endActionId cannot be null");
@@ -59,7 +59,7 @@ public class ProvidedApiTemplate {
         return getAction(this.endActionId);
     }
 
-    protected Optional<? extends Action> getAction(String id) {
+    Optional<? extends Action> getAction(final String id) {
         return Optionals.asStream(this.connection.getConnector())
             .flatMap(c -> c.getActions().stream())
             .filter(a -> a.getId().equals(Optional.of(id)))

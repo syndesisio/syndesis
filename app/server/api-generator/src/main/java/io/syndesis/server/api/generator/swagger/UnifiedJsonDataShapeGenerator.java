@@ -15,7 +15,6 @@
  */
 package io.syndesis.server.api.generator.swagger;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
@@ -242,7 +241,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
             try {
                 final String schemaString = Json.writer().writeValueAsString(schema);
 
-                return parseJsonSchema(schemaString);
+                return JsonSchemaHelper.parseJsonSchema(schemaString);
             } catch (final JsonProcessingException e) {
                 throw new IllegalStateException("Unable to serialize/read given JSON specification in response schema: " + schema, e);
             }
@@ -303,14 +302,6 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
         }
 
         return name;
-    }
-
-    private static ObjectNode parseJsonSchema(final String schema) {
-        try {
-            return (ObjectNode) Json.reader().readTree(schema);
-        } catch (final IOException e) {
-            throw new IllegalStateException("Unable to parse given JSON schema: " + StringUtils.abbreviate(schema, 100), e);
-        }
     }
 
     private static DataShape unifiedJsonSchema(final String name, final String description, final ObjectNode bodySchema, final ObjectNode parametersSchema) {

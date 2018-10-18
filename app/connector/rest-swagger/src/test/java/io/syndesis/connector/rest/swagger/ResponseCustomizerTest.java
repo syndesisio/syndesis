@@ -26,20 +26,18 @@ public class ResponseCustomizerTest {
 
     @Test
     public void shouldDetermineAddingResponseConverter() {
-        assertThat(ResponseCustomizer.shouldAddResponseConverter(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)
+        assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)
             .specification("{\"properties\":{\"body\":{},\"parameters\":{\"type\":\"object\",\"properties\":{\"Status\":{},\"Content-Type\":{}}}}}").build()))
                 .isTrue();
     }
 
     @Test
     public void shouldDetermineAddingResponseConverterRobustly() {
-        assertThat(ResponseCustomizer.shouldAddResponseConverter(null)).isFalse();
-        assertThat(ResponseCustomizer.shouldAddResponseConverter(new DataShape.Builder().build())).isFalse();
-        assertThat(ResponseCustomizer.shouldAddResponseConverter(new DataShape.Builder().kind(DataShapeKinds.JAVA).build())).isFalse();
-        assertThat(ResponseCustomizer.shouldAddResponseConverter(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).build())).isFalse();
-        assertThat(ResponseCustomizer.shouldAddResponseConverter(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification("xyz").build()))
-            .isFalse();
-        assertThat(ResponseCustomizer.shouldAddResponseConverter(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification("{}").build()))
-            .isFalse();
+        assertThat(ResponseCustomizer.isUnifiedDataShape(null)).isFalse();
+        assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().build())).isFalse();
+        assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JAVA).build())).isFalse();
+        assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).build())).isFalse();
+        assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification("xyz").build())).isFalse();
+        assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification("{}").build())).isFalse();
     }
 }
