@@ -21,12 +21,14 @@
     border-style: solid;
     border-width: 3px;
     border-color: $color-pf-blue;
-    padding: 11px;
     width: 55px;
     height: 55px;
     margin: 0 auto 5px;
     background-color: $color-pf-white;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &.not-connection {
       position: relative;
