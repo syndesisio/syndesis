@@ -9,9 +9,6 @@
            "id": "@project.groupId@:@project.artifactId@:@project.version@"
       }
   ],
-  "metadata": {
-    "tech-preview": true
-  },
   "properties": {
     "authorizationToken": {
       "kind": "property",
