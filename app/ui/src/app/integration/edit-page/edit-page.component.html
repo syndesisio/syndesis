@@ -1,17 +1,13 @@
 <syndesis-loading [loading]="loading | async" [content]="content">
   <ng-template #content>
-    <div class="integrations edit">
-      <div [class]="getPageRow()">
-
-        <!-- Sidebar -->
-        <div class="wizard-sidebar">
-          <syndesis-integration-flow-view></syndesis-integration-flow-view>
-        </div>
-
-        <!-- Add/Edit Integration -->
-        <div class="main-panel {{ getPageContainer() }}">
-          <router-outlet></router-outlet>
-        </div>
+    <div class="integrations edit row">
+      <!-- Sidebar -->
+      <div class="wizard-sidebar">
+        <syndesis-integration-flow-view></syndesis-integration-flow-view>
+      </div>
+      <!-- Add/Edit Integration -->
+      <div class="main-panel {{ getPageContainer() }}">
+        <router-outlet></router-outlet>
       </div>
     </div>
   </ng-template>

@@ -46,15 +46,6 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
     );
   }
 
-  getPageRow() {
-    switch (this.flowPageService.getCurrentStepKind(this.route)) {
-      case 'mapper':
-        return 'row datamapper';
-      default:
-        return 'row';
-    }
-  }
-
   getPageContainer() {
     switch (this.flowPageService.getCurrentStepKind(this.route)) {
       case 'mapper':
