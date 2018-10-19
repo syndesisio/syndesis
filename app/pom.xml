@@ -556,6 +556,7 @@
             <mapping combine.children="append">
               <provides>SCRIPT_STYLE</provides>
               <assemble>SCRIPT_STYLE</assemble>
+              <xsd>XML_PREFIX</xsd>
             </mapping>
             <includes>
               <include>**/src/**</include>
@@ -1278,6 +1279,12 @@
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-ftp</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-fhir</artifactId>
         <version>${project.version}</version>
       </dependency>
 

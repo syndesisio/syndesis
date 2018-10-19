@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    io.syndesis.connector.fhir.FhirVerifierAutoConfiguration,\
+    io.syndesis.connector.fhir.FhirMetaDataAutoConfiguration
