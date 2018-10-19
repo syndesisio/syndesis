@@ -62,8 +62,10 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
     static {
         final Map<String, String> defaultProperties = new HashMap<>();
-        defaultProperties.put("Status", "integer");
-        defaultProperties.put("Content-Type", "string");
+        //https://github.com/syndesisio/syndesis/issues/3807 
+        //let's not add these so the dataShapes are the same
+        //defaultProperties.put("Status", "integer");
+        //defaultProperties.put("Content-Type", "string");
 
         DEFAULT_PROPERTIES = Collections.unmodifiableMap(defaultProperties);
     }
@@ -162,8 +164,11 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
         final List<AbstractSerializableParameter<?>> parameters = defaultProperties.entrySet().stream()//
             .map(e -> new HeaderParameter().name(e.getKey()).type(e.getValue()))//
             .collect(Collectors.toList());
-
-        return createSchemaFor(parameters);
+        if (parameters.isEmpty()) {
+            return null;
+        } else {
+            return createSchemaFor(parameters);
+        }
     }
 
     private static ObjectNode createSchemaFor(final List<AbstractSerializableParameter<?>> serializableParameters) {
