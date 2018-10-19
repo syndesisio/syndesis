@@ -556,6 +556,7 @@
             <mapping combine.children="append">
               <provides>SCRIPT_STYLE</provides>
               <assemble>SCRIPT_STYLE</assemble>
+              <xsd>XML_PREFIX</xsd>
             </mapping>
             <includes>
               <include>**/src/**</include>
