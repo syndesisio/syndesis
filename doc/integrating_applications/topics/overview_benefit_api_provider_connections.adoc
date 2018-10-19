@@ -1,0 +1,40 @@
+// Module included in the following assemblies:
+// trigger_integrations_with_api_calls.adoc
+
+[id='overview-benefit-api-provider-connections_{context}']
+= Overview and benefit of API Provider connections
+
+{prodname} can connect to REST API services that are defined by an OpenAPI 2.0
+specification that you provide. The benefit of these kinds of connections,
+referred to as API Provider connections, is that a call from a REST API client
+can trigger execution of an integration. 
+
+One kind of integration periodically monitors an application or 
+service and triggers execution of the integration when it finds a new
+event or message. For example, an integration might start with a Twitter
+connection that watches for tweets that contain `Red Hat`. {prodname}
+executes the integration only when the connection to Twitter finds such tweets.
+
+Another approach is to call an API when a particular event occurs. This call
+triggers execution of the integration. To set this up, you upload an OpenAPI 2.0
+specification to {prodname}. {prodname} publishes the API and provides the URL 
+where the service is available. In {prodname}, for each operation that the OpenAPI 
+specification defines, you add connections and steps that process data
+as required for the particular operation. For example, consider a human 
+resources application that calls a REST API service that {prodname} has 
+made available. Suppose the call invokes the operation that adds a new
+employee. The integration flow that handles this call could:
+
+* Connect to an application that creates an expense report for new employee 
+equipment.
+* Connect to a SQL database to add an internal ticket for setting up new 
+equipment.
+* Connect to Google mail to send a message to the new employee that provides 
+orientation information. 
+
+There are many ways to call the REST APIs that trigger integration execution, 
+including: 
+
+* A web browser page that takes data input and generates the call.
+* An application that explicitly calls the REST APIs. 
+* Other APIs that call the REST API, for example a webhook. 

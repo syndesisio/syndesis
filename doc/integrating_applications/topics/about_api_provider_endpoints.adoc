@@ -1,0 +1,16 @@
+// Module included in the following assemblies:
+// trigger_integrations_with_api_calls.adoc
+
+[id='about-api-provider-endpoints_{context}']
+= About API Provider endpoints
+
+After you publish an integration that starts with an API Provider 
+connection, {prodname} provides the external URL for your REST API
+service. This is where {prodname} publishes your REST API service. This 
+external URL is the base URL for calls to your REST API service endpoints. 
+{prodname} displays this URL in the integration's summary page.
+
+Since each operation that the OpenAPI specification defines has its own 
+flow, each operation also has its own REST API service endpoint. Each endpoint 
+specifies the base URL and optionally specifies the subpath for triggering
+execution of a particular integration flow.  
