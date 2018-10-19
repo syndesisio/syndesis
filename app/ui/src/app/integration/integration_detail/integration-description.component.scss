@@ -13,6 +13,28 @@
 
   & > .text-center {
     position: relative;
+
+    &.step {
+      padding-top: 12px;
+      .icon {
+        margin-bottom: 15px;
+      }
+    }
+  }
+  .step-line {
+    position: absolute;
+    height: 3px;
+    top: 27px;
+    z-index: -5;
+    left: -2px;
+    right: -2px;
+    background-color: $color-pf-black-600;
+    &.start {
+      left: 50px;
+    }
+    &.finish {
+      right: 50px;
+    }
   }
 
   .icon {
@@ -35,9 +57,20 @@
       border-width: 10px;
       padding: 5px 0px;
       border-radius: 100px;
-      height: 33px;
+      height: 32px;
       margin-bottom: 15px;
       width: 32px;
+
+      .icon-line {
+        position: absolute;
+        height: 3px;
+        background-color: $color-pf-white;
+        top: 50%;
+        transform: translateY(-50%);
+        left: -8px;
+        right: -8px;
+        border-radius: 1px;
+      }
     }
 
     .connection-icon {
