@@ -1,0 +1,49 @@
+// Module included in the following assemblies:
+// trigger_integrations_with_api_calls.adoc
+
+[id='create-integration-operation-flows_{context}']
+= Create the integration's operation flows
+
+Short description of the procedure.
+
+.Prerequisites
+
+* 
+
+.Procedure
+
+. 
+
+The piece I am still hung up on is setting the return code. 
+When you are creating the integration/flow how can you say what the return code should be?
+The short answer is that in this Technology Preview you can select only some kind of success message. We only implemented the happy path. We will return a 201 if creation is successful when you do the first request.
+
+What should we tell the user?
+
+The last step in the flow is the return .
+
+Tell them to select 201 when creating something. 
+200 OK
+can be selected for just about anything. 
+You can pick one return path
+It should be a happy path
+No support for error paths. 
+
+200 OK is also good for the delete one
+
+200 is always appropriate and if you can find a better match select it. 
+
+Most of the other codes are there for error handling which we do not do in this release. 
+
+Assign the return codes. 
+Republish
+
+We set a return path.
+Where does that go to. 
+The response goes to whoever asked. 
+When we use curl then it gets displayed in our terminal.
+If we use the browser, then the response goes to the browser. 
+
+.Additional resources
+
+* 

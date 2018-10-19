@@ -8,6 +8,8 @@ include::topics/shared/attributes.adoc[]
 :productpkg: red_hat_fuse
 :version: 7.2
 :location: upstream
+:parent-context: ug
+:context: ug
 
 [id='integrating_applications']
 = Integrating Applications with {prodname}
@@ -45,3 +47,5 @@ include::topics/mapping_data.adoc[leveloffset=+1]
 include::topics/customizing.adoc[leveloffset=+1]
 
 include::topics/managing_integrations.adoc[leveloffset=+1]
+
+include::topics/trigger_integrations_with_api_calls.adoc[leveloffset=+1]
