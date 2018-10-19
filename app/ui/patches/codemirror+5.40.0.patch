@@ -1,0 +1,25 @@
+patch-package
+--- a/node_modules/codemirror/addon/lint/lint.js
++++ b/node_modules/codemirror/addon/lint/lint.js
+@@ -93,11 +93,6 @@
+     return marker;
+   }
+
+-  function getMaxSeverity(a, b) {
+-    if (a == "error") return a;
+-    else return b;
+-  }
+-
+   function groupByLine(annotations) {
+     var lines = [];
+     for (var i = 0; i < annotations.length; ++i) {
+@@ -174,7 +169,8 @@
+         var ann = anns[i];
+         var severity = ann.severity;
+         if (!severity) severity = "error";
+-        maxSeverity = getMaxSeverity(maxSeverity, severity);
++
++        if (maxSeverity !== "error") maxSeverity = severity;
+
+         if (options.formatAnnotation) ann = options.formatAnnotation(ann);
+         if (state.hasGutter) tipLabel.appendChild(annotationTooltip(ann));
