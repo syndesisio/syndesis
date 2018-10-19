@@ -36,6 +36,11 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesUserDetailsService;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Profile("!development")
 @Configuration
@@ -59,8 +64,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
+
+            .cors()
+            .and()
+
             .addFilter(requestHeaderAuthenticationFilter())
             .addFilter(new AnonymousAuthenticationFilter("anonymous"))
             .authorizeRequests()
@@ -68,13 +78,34 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(COMMON_NON_SECURED_PATHS).permitAll()
             .antMatchers(HttpMethod.GET, "/api/v1/credentials/callback").permitAll()
             .antMatchers("/api/v1/**").hasRole("AUTHENTICATED")
-            .anyRequest().permitAll();
+            .anyRequest().permitAll()
 
-        http.csrf()
+            .and()
+
+            .csrf()
             .ignoringAntMatchers(COMMON_NON_SECURED_PATHS)
             .ignoringAntMatchers("/api/v1/credentials/callback")
             .ignoringAntMatchers("/api/v1/atlas/**")
             .csrfTokenRepository(new SyndesisCsrfRepository());
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList(CorsConfiguration.ALL));
+        configuration.setAllowedMethods(Arrays.asList(
+            HttpMethod.HEAD.name(),
+            HttpMethod.GET.name(),
+            HttpMethod.OPTIONS.name(),
+            HttpMethod.POST.name(),
+            HttpMethod.PUT.name(),
+            HttpMethod.DELETE.name(),
+            HttpMethod.PATCH.name()
+        ));
+        configuration = configuration.applyPermitDefaultValues();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
