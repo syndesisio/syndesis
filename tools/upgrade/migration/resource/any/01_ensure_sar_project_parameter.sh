@@ -12,7 +12,7 @@ update_template_params_for_sar_project() {
         cat "${params}" >> ${tmp}
         mv "${tmp}" "${params}"
         set -e
-        oc patch secret syndesis-global-config -p "{\"data\": { \"params\": \"$(cat $params | base64)\" }}"
+        oc patch secret syndesis-global-config -p "{\"data\": { \"params\": \"$(cat $params | base64 | tr -d '\n')\" }}"
     fi
     set -e
     #rm "$params"
