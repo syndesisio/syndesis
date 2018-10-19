@@ -18,9 +18,7 @@ package io.syndesis.server.api.generator.swagger;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,7 +30,6 @@ import io.swagger.models.Response;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.AbstractSerializableParameter;
 import io.swagger.models.parameters.BodyParameter;
-import io.swagger.models.parameters.HeaderParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.MapProperty;
 import io.swagger.models.properties.ObjectProperty;
@@ -55,20 +52,9 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
-    private static final Map<String, String> DEFAULT_PROPERTIES;
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static final Class<AbstractSerializableParameter<?>> PARAM_CLASS = (Class) AbstractSerializableParameter.class;
     private static final List<String> PROPERTIES_TO_REMOVE_ON_MERGE = Arrays.asList("$schema", "title");
-
-    static {
-        final Map<String, String> defaultProperties = new HashMap<>();
-        //https://github.com/syndesisio/syndesis/issues/3807 
-        //let's not add these so the dataShapes are the same
-        //defaultProperties.put("Status", "integer");
-        //defaultProperties.put("Content-Type", "string");
-
-        DEFAULT_PROPERTIES = Collections.unmodifiableMap(defaultProperties);
-    }
 
     @Override
     public DataShape createShapeFromRequest(final ObjectNode json, final Swagger swagger, final Operation operation) {
@@ -93,9 +79,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
         final ObjectNode bodySchema = createSchemaFromModel(json, description, responseSchema);
 
-        final ObjectNode parametersSchema = createJsonSchemaWithProperties(DEFAULT_PROPERTIES);
-
-        return unifiedJsonSchema("Response", "API response payload", bodySchema, parametersSchema);
+        return unifiedJsonSchema("Response", "API response payload", bodySchema, null);
     }
 
     private static void addEnumsTo(final ObjectNode parameterParameter, final AbstractSerializableParameter<?> serializableParameter) {
@@ -158,17 +142,6 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
         }
 
         return createSchemaFor(serializableParameters);
-    }
-
-    private static ObjectNode createJsonSchemaWithProperties(final Map<String, String> defaultProperties) {
-        final List<AbstractSerializableParameter<?>> parameters = defaultProperties.entrySet().stream()//
-            .map(e -> new HeaderParameter().name(e.getKey()).type(e.getValue()))//
-            .collect(Collectors.toList());
-        if (parameters.isEmpty()) {
-            return null;
-        } else {
-            return createSchemaFor(parameters);
-        }
     }
 
     private static ObjectNode createSchemaFor(final List<AbstractSerializableParameter<?>> serializableParameters) {
