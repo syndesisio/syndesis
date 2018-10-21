@@ -1,13 +1,15 @@
 import { editor } from 'monaco-editor';
 import { Button, Col, Row } from 'patternfly-react';
 import * as React from 'react';
-import MonacoEditor  from 'react-monaco-editor';
+import MonacoEditor from 'react-monaco-editor';
 import IEditorOptions = editor.IEditorOptions;
 
 export interface ISpecEditorProps {
   language: string;
   spec: string;
+
   onChange?(spec: string): void;
+
   onSave?(spec: string): void;
 }
 
@@ -77,7 +79,7 @@ export class Editor extends React.Component<ISpecEditorProps, ISpecEditorState> 
             />
           </Col>
         </Row>
-        { this.props.onSave && (
+        {this.props.onSave && (
           <Row>
             <Col sm={12}>
               <Button

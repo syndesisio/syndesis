@@ -7,7 +7,7 @@ export interface IWithRouterProps extends RouteComponentProps {
 
 export class WithRouterBase extends React.Component<IWithRouterProps> {
   public render() {
-    const { children, ...props} = this.props;
+    const {children, ...props} = this.props;
     return children(props);
   }
 }

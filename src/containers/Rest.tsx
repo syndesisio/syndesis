@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export interface IHeader {
   [s: string]: string;
-};
+}
 
 export interface IFetch {
   url: string,
@@ -13,12 +13,12 @@ export interface IFetch {
 }
 
 export function callFetch({
-  url,
-  method,
-  headers = {},
-  body,
-  contentType = 'application/json; charset=utf-8'
-}: IFetch) {
+                            url,
+                            method,
+                            headers = {},
+                            body,
+                            contentType = 'application/json; charset=utf-8'
+                          }: IFetch) {
   return fetch(url, {
     body: body ? JSON.stringify(body) : undefined,
     cache: 'no-cache',
@@ -44,7 +44,9 @@ export interface IRestState {
   error: boolean;
   errorMessage?: string;
   loading: boolean;
+
   read(): Promise<void>;
+
   save(props: ISaveProps): void;
 }
 
@@ -55,6 +57,7 @@ export interface IRestProps {
   url: string;
   headers?: IHeader;
   contentType?: string;
+
   children(props: IRestState): any;
 }
 
@@ -124,19 +127,19 @@ export class Rest extends React.Component<IRestProps, IRestState> {
         data,
         loading: false,
       });
-    } catch(e) {
+    } catch (e) {
       this.setState({
         error: true,
         errorMessage: e.message,
         loading: false,
       });
     }
-  }
+  };
 
   public onSave = async ({url, data}: ISaveProps) => {
     this.setState({
       loading: true
-    })
+    });
     try {
       const response = await callFetch({
         body: data,
@@ -149,20 +152,20 @@ export class Rest extends React.Component<IRestProps, IRestState> {
         throw new Error(response.statusText);
       }
       setTimeout(() => this.read(), 1000); // TODO: figure out why this is needed
-    } catch(e) {
+    } catch (e) {
       this.setState({
         error: true,
         errorMessage: e.message,
         loading: false,
       });
     }
-  }
+  };
 
   public startPolling = () => {
     this.stopPolling();
 
     this.pollingTimer = setInterval(this.read, this.props.poll);
-  }
+  };
 
   public stopPolling = () => {
     if (this.pollingTimer) {

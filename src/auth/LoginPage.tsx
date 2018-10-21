@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AuthContext, IAuthContext } from "./AuthContext";
+import { AuthContext, IAuthContext } from './AuthContext';
 
 class LoginBase extends React.Component<IAuthContext> {
   public componentWillMount() {
@@ -20,4 +20,4 @@ export const LoginPage = () => (
       <LoginBase {...props} />
     )}
   </AuthContext.Consumer>
-)
+);

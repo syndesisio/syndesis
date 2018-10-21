@@ -34,7 +34,7 @@ export class Stream extends Rest {
         .then((body) => {
           this.reader = body!.getReader();
           const textDecoder = new TextDecoder('utf-8');
-          const pushData = ({ done, value}: { done: boolean; value: Uint8Array}) => {
+          const pushData = ({done, value}: { done: boolean; value: Uint8Array }) => {
             if (done) {
               this.setState({
                 loading: false
@@ -54,14 +54,14 @@ export class Stream extends Rest {
             .read()
             .then(pushData)
         });
-    } catch(e) {
+    } catch (e) {
       this.setState({
         error: true,
         errorMessage: e.message,
         loading: false,
       });
     }
-  }
+  };
 
   public onSave = async (props: ISaveProps) => {
     throw new Error(`Can't save from a stream`);

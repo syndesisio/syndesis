@@ -10,22 +10,23 @@ export interface ISynRest {
   poll?: number;
   url: string;
   stream?: boolean;
+
   children(props: IRestState): any;
 }
 
 export class SyndesisRest extends React.Component<ISynRest> {
   public render() {
-    const { url, stream, ...props } = this.props;
+    const {url, stream, ...props} = this.props;
 
     const RestOrStream = stream ? Stream : Rest;
 
     return (
       <AuthContext.Consumer>
-        {({ token }) => (
+        {({token}) => (
           <RestOrStream
             baseUrl={'http://syndesis-server-syndesis.192.168.64.16.nip.io'}
             url={url}
-            { ...props}
+            {...props}
             headers={{
               'SYNDESIS-XSRF-TOKEN': 'awesome',
               'X-Forwarded-Access-Token': `${token}`,

@@ -3,9 +3,9 @@
 @import url('~patternfly-react/dist/css/patternfly-react.css');
 
 .layout-pf.layout-pf-with-secondary-horizontal-nav body {
-  padding-top: 110px;
+    padding-top: 110px;
 }
 
 .navbar-pf .navbar-utility > li > button {
-  padding: 9px 10px;
+    padding: 9px 10px;
 }

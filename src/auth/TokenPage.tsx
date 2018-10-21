@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 
 export interface ITokenPageProps {
   to: string;
+
   onToken(token: string | null): void
 }
 
@@ -18,7 +19,7 @@ export class TokenPage extends React.Component<ITokenPageProps> {
 
   public render() {
     return (
-      <Redirect to={this.props.to} />
+      <Redirect to={this.props.to}/>
     )
   }
 }

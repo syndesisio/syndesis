@@ -1,16 +1,6 @@
-import {
-  Col,
-  Row,
-  Switch
-} from 'patternfly-react';
+import { Col, Row, Switch } from 'patternfly-react';
 import * as React from 'react';
-import {
-  AutoSizer,
-  CellMeasurer,
-  CellMeasurerCache,
-  List,
-  ListRowRenderer
-} from 'react-virtualized';
+import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized';
 import './LogViewer.css';
 
 export interface ILogViewerProps {
@@ -30,7 +20,7 @@ export class LogViewer extends React.Component<ILogViewerProps, ILogViewerState>
     height: 300,
   };
 
-  public static getDerivedStateFromProps({ data }: ILogViewerProps, state: ILogViewerState) {
+  public static getDerivedStateFromProps({data}: ILogViewerProps, state: ILogViewerState) {
     return {
       ...state,
       count: data.length,
@@ -64,7 +54,7 @@ export class LogViewer extends React.Component<ILogViewerProps, ILogViewerState>
               disableHeight={!!this.props.height}
               disableWidth={!!this.props.width}
             >
-              {({ width, height}) => (
+              {({width, height}) => (
                 <List
                   deferredMeasurementCache={this.cellMeasurerCache}
                   height={this.props.height || height}
@@ -93,7 +83,7 @@ export class LogViewer extends React.Component<ILogViewerProps, ILogViewerState>
     )
   }
 
-  public renderRow: ListRowRenderer = ({ index, style, parent }) => (
+  public renderRow: ListRowRenderer = ({index, style, parent}) => (
     <CellMeasurer
       cache={this.cellMeasurerCache}
       columnIndex={0}
@@ -102,7 +92,7 @@ export class LogViewer extends React.Component<ILogViewerProps, ILogViewerState>
       parent={parent}
     >
       <div
-      className={'LogViewerRow'}
+        className={'LogViewerRow'}
         style={style}
       >
         <span className="LogViewerRow_number">{index + 1}</span>

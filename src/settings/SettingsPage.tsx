@@ -1,16 +1,11 @@
-import {
-  Button,
-  Col,
-  Form,
-  Grid,
-  Row,
-} from 'patternfly-react';
+import { Button, Col, Form, Grid, Row, } from 'patternfly-react';
 import * as React from 'react';
 import { AppContext } from '../AppContext';
 
 interface ISettingsPageProps {
   apiUri: string;
   authorizationUri: string;
+
   onSave(settings: ISettingsPageState): void;
 }
 
@@ -67,11 +62,12 @@ class SettingsPageBase extends React.Component<ISettingsPageProps, ISettingsPage
                     value={this.state.authorizationUri}
                     onChange={setState('authorizationUri')}
                   />
-                  <Form.HelpBlock>The address of an OAuth2 server with support for the `implicit` grant flow.</Form.HelpBlock>
+                  <Form.HelpBlock>The address of an OAuth2 server with support for the `implicit` grant
+                    flow.</Form.HelpBlock>
                 </Form.FormGroup>
               </Col>
             </Row>
-            <Row style={{ paddingTop: "10px", paddingBottom: "10px" }}>
+            <Row style={{paddingTop: '10px', paddingBottom: '10px'}}>
               <Col>
                 <span>
                   <Button className={'btn btn-primary'} onClick={this.onSave}>
@@ -93,7 +89,7 @@ class SettingsPageBase extends React.Component<ISettingsPageProps, ISettingsPage
 
 export const SettingsPage = () => (
   <AppContext.Consumer>
-    {({ apiUri, authorizationUri, saveSettings }) => (
+    {({apiUri, authorizationUri, saveSettings}) => (
       <SettingsPageBase
         apiUri={apiUri}
         authorizationUri={authorizationUri}
@@ -101,4 +97,4 @@ export const SettingsPage = () => (
       />
     )}
   </AppContext.Consumer>
-)
+);

@@ -1,9 +1,6 @@
-import {
-  Label,
-  ListView,
-} from 'patternfly-react';
+import { Label, ListView, } from 'patternfly-react';
 import * as React from 'react';
-import {IIntegration} from "../../containers";
+import { IIntegration } from '../containers';
 
 export interface IIntegrationsListItemProps {
   integration: IIntegration;
@@ -22,7 +19,7 @@ export class IntegrationsListItem extends React.Component<IIntegrationsListItemP
         ]}
         heading={this.props.integration.name}
         hideCloseIcon={true}
-        leftContent={<ListView.Icon name={'gear'} />}
+        leftContent={<ListView.Icon name={'gear'}/>}
         stacked={true}
       />
     )

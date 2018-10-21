@@ -17,24 +17,24 @@ interface IPfVerticalNavItem {
 }
 
 function PfVerticalNavItem({
-  className,
-  exact,
-  isActive: isActiveProp,
-  icon,
-  location,
-  strict,
-  to,
-  label,
-  children,
-  ...rest
-}: IPfVerticalNavItem) {
+                             className,
+                             exact,
+                             isActive: isActiveProp,
+                             icon,
+                             location,
+                             strict,
+                             to,
+                             label,
+                             children,
+                             ...rest
+                           }: IPfVerticalNavItem) {
   const path = typeof to === 'object' ? to.pathname : to;
 
   // Regex taken from: https://github.com/pillarjs/path-to-regexp/blob/master/index.js#L202
   const escapedPath = path && path.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1');
 
 
-  const NavLinkChildren = ({ location: childLocation, match }: {location: any, match: any}) => {
+  const NavLinkChildren = ({location: childLocation, match}: { location: any, match: any }) => {
     const isActive = !!(isActiveProp
       ? isActiveProp(match, childLocation)
       : match);
@@ -47,9 +47,9 @@ function PfVerticalNavItem({
           to={to}
           children={
             <React.Fragment>
-              <span className={`fa fa-${icon}`} />
+              <span className={`fa fa-${icon}`}/>
               <span className="list-group-item-value">{label}</span>
-              <div className="badge-container-pf" />
+              <div className="badge-container-pf"/>
             </React.Fragment>
           }
           {...rest}
@@ -68,7 +68,7 @@ function PfVerticalNavItem({
       children={NavLinkChildren}
     />
   )
-};
+}
 
 PfVerticalNavItem.displayName = VerticalNav.Item.displayName;
 

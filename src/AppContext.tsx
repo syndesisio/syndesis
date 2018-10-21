@@ -5,9 +5,11 @@ export interface IAppSettings {
   authorizationUri: string;
 }
 
-export interface IAppContext extends IAppSettings{
+export interface IAppContext extends IAppSettings {
   firstSetup: boolean;
+
   saveSettings(settings: IAppSettings): void;
+
   logout(): void;
 }
 

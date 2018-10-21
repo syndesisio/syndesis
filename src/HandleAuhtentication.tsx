@@ -18,7 +18,7 @@ export class HandleAuhtentication extends React.Component {
 
   public render() {
     return (
-      <Redirect to={'/'} />
+      <Redirect to={'/'}/>
     )
   }
 }

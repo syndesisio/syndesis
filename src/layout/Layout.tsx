@@ -1,7 +1,4 @@
-import {
-  Masthead,
-  VerticalNav
-} from 'patternfly-react';
+import { Masthead, VerticalNav } from 'patternfly-react';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { PfNavLink } from '../ui/patternfly';
@@ -35,8 +32,8 @@ class LayoutBase extends React.Component<ILayoutBase> {
                 </span>
                 ]}
               >
-                <PfNavLink to={'/settings'} label={'Change server'} />
-                <PfNavLink to={'/logout'} label={'Logout'} />
+                <PfNavLink to={'/settings'} label={'Change server'}/>
+                <PfNavLink to={'/logout'} label={'Logout'}/>
               </Masthead.Dropdown>
             </Masthead.Collapse>
           </VerticalNav.Masthead>

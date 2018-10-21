@@ -7,6 +7,7 @@ export interface IAuthContext {
   redirectUri: string;
   responseType: 'token';
   token: string | null;
+
   updateToken(token: string): void;
 }
 

@@ -18,30 +18,30 @@ interface INavLink {
 
 
 function joinClassnames(...classnames: Array<string | undefined>): string {
-  return classnames.filter(i => i).join(" ");
+  return classnames.filter(i => i).join(' ');
 }
 
 export const PfNavLink = ({
-  activeClassName = 'active',
-  activeStyle,
-  className: classNameProp,
-  exact,
-  isActive: isActiveProp,
-  location,
-  strict,
-  style: styleProp,
-  to,
-  label,
-  children,
-  ...rest
-}: INavLink) => {
+                            activeClassName = 'active',
+                            activeStyle,
+                            className: classNameProp,
+                            exact,
+                            isActive: isActiveProp,
+                            location,
+                            strict,
+                            style: styleProp,
+                            to,
+                            label,
+                            children,
+                            ...rest
+                          }: INavLink) => {
   const path = typeof to === 'object' ? to.pathname : to;
 
   // Regex taken from: https://github.com/pillarjs/path-to-regexp/blob/master/index.js#L202
   const escapedPath = path && path.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1');
 
 
-  const NavLinkChildren = ({ location: childLocation, match }: {location: any, match: any}) => {
+  const NavLinkChildren = ({location: childLocation, match}: { location: any, match: any }) => {
     const isActive = !!(isActiveProp
       ? isActiveProp(match, childLocation)
       : match);
@@ -49,7 +49,7 @@ export const PfNavLink = ({
     const className = isActive
       ? joinClassnames(classNameProp, activeClassName)
       : classNameProp;
-    const style = isActive ? { ...styleProp, ...activeStyle } : styleProp;
+    const style = isActive ? {...styleProp, ...activeStyle} : styleProp;
 
     return (
       <li className={className}>
@@ -73,4 +73,4 @@ export const PfNavLink = ({
       children={NavLinkChildren}
     />
   )
-}
+};
