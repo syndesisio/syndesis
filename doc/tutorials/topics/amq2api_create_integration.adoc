@@ -14,6 +14,11 @@ To create and deploy the AMQ to REST API sample integration, the main steps are:
 . <<amq2api-add-mapping-step_{context}>>
 . <<amq2api-name-and-publish_{context}>>
 
+.Prerequisites
+* You created a connection to the provided AMQ broker. 
+* You created an API Client connection to the provided Todo app.
+* You uploaded the extension that provides the Damage Reporter step. 
+
 include::amq2api_choose_start.adoc[leveloffset=+1]
 
 include::amq2api_choose_finish.adoc[leveloffset=+1]
