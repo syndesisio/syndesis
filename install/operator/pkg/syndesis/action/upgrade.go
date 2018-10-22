@@ -172,7 +172,6 @@ func (a *Upgrade) getUpgradeResources(syndesis *v1alpha1.Syndesis) ([]runtime.Ob
 		InstallParams: syndesistemplate.InstallParams{
 			OAuthClientSecret: "-",
 		},
-		SyndesisVersion: a.operatorVersion,
 		UpgradeRegistry: configuration.Registry,
 	})
 

@@ -46,7 +46,6 @@ const (
 	EnvIntegrationStateCheckInterval SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
 	EnvSarNamespace                  SyndesisEnvVar = "SAR_PROJECT"
 
-	EnvSyndesisVersion SyndesisEnvVar = "SYNDESIS_VERSION"
 	EnvUpgradeRegistry SyndesisEnvVar = "UPGRADE_REGISTRY"
     EnvUpgradeVolumeCapacity       SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
 )
