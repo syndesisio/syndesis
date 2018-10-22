@@ -357,19 +357,24 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         if (!rid.isPresent()) {
             return;
         }
-        if (!rid.get().getId().isPresent()) {
+
+        final ResourceIdentifier openApiResource = rid.get();
+        final Optional<String> maybeOpenApiResourceId = openApiResource.getId();
+        if (!maybeOpenApiResourceId.isPresent()) {
             return;
         }
 
-        Optional<OpenApi> res = resourceManager.loadOpenApiDefinition(rid.get().getId().get());
+        final String openApiResourceId = maybeOpenApiResourceId.get();
+        Optional<OpenApi> res = resourceManager.loadOpenApiDefinition(openApiResourceId);
         if (!res.isPresent()) {
             return;
         }
 
         final StringBuilder code = new StringBuilder();
-        final Swagger swagger = new SwaggerParser().parse(new String(res.get().getDocument(), StandardCharsets.UTF_8));
+        final byte[] openApiBytes = res.get().getDocument();
+        final Swagger swagger = new SwaggerParser().parse(new String(openApiBytes, StandardCharsets.UTF_8));
 
-        RestDslGenerator.toAppendable(swagger)
+        RestDslGenerator.toAppendable(ProjectGeneratorHelper.normalizePaths(swagger))
             .withClassName("RestRoute")
             .withPackageName("io.syndesis.example")
             .withoutSourceCodeTimestamps()
@@ -377,6 +382,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
         addTarEntry(tos, "src/main/java/io/syndesis/example/RestRoute.java", code.toString().getBytes(StandardCharsets.UTF_8));
         addTarEntry(tos, "src/main/java/io/syndesis/example/RestRouteConfiguration.java", ProjectGeneratorHelper.generate(integration, restRoutesMustache));
+        addTarEntry(tos, "src/main/resources/openapi.json", openApiBytes);
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod")

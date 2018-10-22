@@ -11,6 +11,10 @@
     {
       "type": "MAVEN",
       "id": "org.apache.camel:camel-swagger-java:@camel.version@"
+    },
+    {
+      "type": "MAVEN",
+      "id": "org.apache.camel:camel-servlet-starter:@camel.version@"
     }
   ],
   "metadata": {

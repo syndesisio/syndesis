@@ -183,7 +183,6 @@ public class OpenShiftServiceImplTest {
     public void shouldExposeDeploymentsVia3ScaleServiceAnnotations() {
         final DeploymentData deploymentData = new DeploymentData.Builder()
             .withExposure(EnumSet.of(Exposure.SERVICE, Exposure._3SCALE))
-            .addProperty("api-basePath", "/base")
             .build();
 
         final String name = "via service and 3scale";
@@ -199,8 +198,7 @@ public class OpenShiftServiceImplTest {
                 .addToLabels("discovery.3scale.net", "true")
                 .addToAnnotations("discovery.3scale.net/scheme", "http")
                 .addToAnnotations("discovery.3scale.net/port", "8080")
-                .addToAnnotations("discovery.3scale.net/path", "/base")
-                .addToAnnotations("discovery.3scale.net/description-path", "/base/.api-doc/swagger.json")
+                .addToAnnotations("discovery.3scale.net/description-path", "/openapi.json")
             .endMetadata()
             .withNewSpec()
                 .addNewPort()
