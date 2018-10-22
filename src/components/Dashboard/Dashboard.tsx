@@ -1,6 +1,6 @@
 import { Button, CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
-import { IConnection, IIntegration, IIntegrationsMetrics } from '../../containers';
+import { IConnection, IIntegration, IIntegrationsMetrics, IMonitoredIntegration } from '../../containers';
 import { AggregatedMetric } from './AggregatedMetric';
 import { Connection } from './Connection';
 import { ConnectionsMetric } from './ConnectionsMetric';
@@ -10,7 +10,7 @@ import { TopIntegrations } from './TopIntegrations';
 import { UptimeMetric } from './UptimeMetric';
 
 export interface IIntegrationsPageProps {
-  integrations: IIntegration[];
+  monitoredIntegrations: IMonitoredIntegration[];
   integrationsCount: number;
   connections: IConnection[];
   connectionsCount: number;
@@ -19,8 +19,7 @@ export interface IIntegrationsPageProps {
 
 export class Dashboard extends React.Component<IIntegrationsPageProps> {
   public render() {
-    const {integrations, integrationsCount, metrics, connections, connectionsCount} = this.props;
-    const integrationsErrorCount = integrations.filter(i => i.currentState === 'Error').length;
+    const {monitoredIntegrations, integrationsCount, metrics, connections, connectionsCount} = this.props;
 
     const getTimestamp = (integration: IIntegration) => {
       return integration.updatedAt !== 0 ? integration.updatedAt : integration.createdAt;
@@ -41,11 +40,19 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
     }).sort((a, b) => {
       return b.count - a.count;
     });
-    const sortedIntegrationsByTimestamp = integrations.sort(byTimestamp).slice(0, 5);
-    const sortedIntegrationsByMessageCount = integrations.sort((a, b) => {
-      const index = topIntegrationsArray.findIndex(i => i.id === b.id);
-      return index === -1 ? topIntegrationsArray.length + 1 : index;
-    }).reverse().slice(0, 5);
+    const integrations = monitoredIntegrations.map(m => m.integration);
+    const integrationsErrorCount = integrations.filter(i => i.currentState === 'Error').length;
+    const sortedIntegrationsByTimestamp = integrations
+      .sort(byTimestamp)
+      .slice(0, 5);
+    const sortedIntegrationsByMessageCount = monitoredIntegrations
+      .sort((miA, miB) => byTimestamp(miA.integration, miB.integration))
+      .sort((a, b) => {
+        const index = topIntegrationsArray.findIndex(i => i.id === b.integration.id);
+        return index === -1 ? topIntegrationsArray.length + 1 : index;
+      })
+      .reverse()
+      .slice(0, 5);
 
     return (
       <div className={'container-fluid'}>

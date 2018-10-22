@@ -1,23 +1,32 @@
-import { Label, ListView, } from 'patternfly-react';
+import { ListView, } from 'patternfly-react';
 import * as React from 'react';
-import { IIntegration } from '../containers';
+import { IMonitoredIntegration } from '../containers';
+import { IntegrationStatus } from './IntegrationStatus';
+import { IntegrationStatusDetail } from './IntegrationStatusDetail';
 
 export interface IIntegrationsListItemProps {
-  integration: IIntegration;
+  monitoredIntegration: IMonitoredIntegration;
 }
 
 
 export class IntegrationsListItem extends React.Component<IIntegrationsListItemProps> {
   public render() {
+    const {integration, monitoring} = this.props.monitoredIntegration;
     return (
       <ListView.Item
         actions={<div/>}
         additionalInfo={[
           <ListView.InfoItem key={1}>
-            <Label>{this.props.integration.currentState}</Label>
+            {integration.currentState === 'Pending'
+              ? <IntegrationStatusDetail
+                targetState={integration.targetState}
+                monitoring={monitoring}
+              />
+              : <IntegrationStatus integration={integration}/>
+            }
           </ListView.InfoItem>,
         ]}
-        heading={this.props.integration.name}
+        heading={integration.name}
         hideCloseIcon={true}
         leftContent={<ListView.Icon name={'gear'}/>}
         stacked={true}

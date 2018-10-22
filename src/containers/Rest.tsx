@@ -156,7 +156,7 @@ export class Rest extends React.Component<IRestProps, IRestState> {
       if (!response.ok) {
         throw new Error(response.statusText);
       }
-      setTimeout(() => this.read(), 1000); // TODO: figure out why this is needed
+      setTimeout(() => this.read(), 5000); // TODO: figure out why this is needed
     } catch (e) {
       this.setState({
         error: true,

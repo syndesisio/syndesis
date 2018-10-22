@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { Dashboard } from '../components';
-import { WithConnections, WithIntegrations, WithIntegrationsMetrics } from '../containers';
+import { WithConnections, WithIntegrationsMetrics, WithMonitoredIntegrations } from '../containers';
 
 export const DashboardPage = () => (
-  <WithIntegrations>
+  <WithMonitoredIntegrations>
     {({integrationsCount, integrations}) =>
       <WithIntegrationsMetrics>
         {metrics =>
           <WithConnections>
             {({connectionsCount, connections}) =>
               <Dashboard
-                integrations={integrations}
+                monitoredIntegrations={integrations}
                 integrationsCount={integrationsCount}
                 connections={connections}
                 connectionsCount={connectionsCount}
@@ -21,5 +21,5 @@ export const DashboardPage = () => (
         }
       </WithIntegrationsMetrics>
     }
-  </WithIntegrations>
+  </WithMonitoredIntegrations>
 );

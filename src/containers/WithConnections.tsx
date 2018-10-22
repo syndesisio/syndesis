@@ -15,7 +15,7 @@ export interface IWithConnectionsProps {
 export class WithConnections extends React.Component<IWithConnectionsProps> {
   public render() {
     return (
-      <SyndesisRest url={'/api/v1/connections'} poll={1000}>
+      <SyndesisRest url={'/api/v1/connections'} poll={5000}>
         {({loading, error, data}) => {
           if (loading) {
             return <Spinner/>;

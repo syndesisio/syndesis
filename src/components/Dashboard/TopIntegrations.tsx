@@ -1,10 +1,10 @@
 import { Card, MenuItem } from 'patternfly-react';
 import * as React from 'react';
-import { IIntegration } from '../../containers';
+import { IMonitoredIntegration } from '../../containers';
 import { IntegrationsList } from '../index';
 
 export interface ITopIntegrationsProps {
-  integrations: IIntegration[]
+  integrations: IMonitoredIntegration[]
 }
 
 export class TopIntegrations extends React.Component<ITopIntegrationsProps> {
@@ -28,7 +28,7 @@ export class TopIntegrations extends React.Component<ITopIntegrationsProps> {
           </Card.Title>
         </Card.Heading>
         <Card.Body>
-          <IntegrationsList integrations={this.props.integrations}/>
+          <IntegrationsList monitoredIntegrations={this.props.integrations}/>
         </Card.Body>
       </Card>
     );

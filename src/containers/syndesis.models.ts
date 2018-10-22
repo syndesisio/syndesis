@@ -244,7 +244,7 @@ export interface IIntegration {
   deploymentVersion: number;
   deployments: any[]
   flows: any[];
-  id: boolean;
+  id: string;
   isDraft: boolean;
   name: string;
   resources: IResource[]
@@ -264,6 +264,26 @@ export interface IIntegrationsMetrics {
   topIntegrations: Array<{
     [id: string]: number;
   }>;
+}
+
+export interface IMonitoredIntegration {
+  integration: IIntegration;
+  monitoring?: IIntegrationMonitoring;
+}
+
+export interface IIntegrationMonitoring {
+  deploymentVersion: number;
+  detailedState: {
+    value: string;
+    currentStep: number;
+    totalSteps: number;
+  }
+  value: string;
+  id: string;
+  integrationId: string;
+  linkType: string;
+  namespace: string;
+  podName: string;
 }
 
 export interface IConnection {

@@ -1,6 +1,7 @@
-import { Card, Grid, Label } from 'patternfly-react';
+import { Card, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { IIntegration } from '../../containers';
+import { IntegrationStatus } from '../IntegrationStatus';
 
 export interface IRecentUpdatesProps {
   integrations: IIntegration[]
@@ -23,7 +24,7 @@ export class RecentUpdates extends React.Component<IRecentUpdatesProps> {
                   {i.name}
                 </Grid.Col>
                 <Grid.Col sm={3}>
-                  <Label>{i.currentState}</Label>
+                  <IntegrationStatus integration={i}/>
                 </Grid.Col>
                 <Grid.Col sm={4}>
                   {new Date(i.updatedAt || i.createdAt).toLocaleString()}

@@ -15,7 +15,7 @@ export interface IWithIntegrationsProps {
 export class WithIntegrations extends React.Component<IWithIntegrationsProps> {
   public render() {
     return (
-      <SyndesisRest url={'/api/v1/integrations'} poll={1000}>
+      <SyndesisRest url={'/api/v1/integrations'} poll={5000}>
         {({loading, error, data}) => {
           if (loading) {
             return <Spinner/>;
