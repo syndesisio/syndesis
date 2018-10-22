@@ -4,7 +4,10 @@ import {
   Input,
   Output,
   ViewEncapsulation,
-  OnInit
+  ViewChild,
+  OnInit,
+  AfterViewInit,
+  HostListener
 } from '@angular/core';
 import {
   I18NService,
@@ -29,7 +32,7 @@ import { MustacheMode } from './mustache-mode';
   styleUrls: ['./templater.component.scss'],
   providers: [MustacheMode]
 })
-export class TemplaterComponent implements OnInit {
+export class TemplaterComponent implements OnInit, AfterViewInit {
 
   @Input() configuredProperties: any;
   @Input() valid: boolean;
@@ -38,14 +41,6 @@ export class TemplaterComponent implements OnInit {
 
   @Output() configuredPropertiesChange = new EventEmitter<String>();
   @Output() validChange = new EventEmitter<boolean>();
-
-  // The instance of the CodeMirror editor when initialised
-  //
-  // TODO
-  // Will be required when the mode needs changing once the
-  // choice of template syntax is required.
-  //
-  // @ViewChild('templateEditor') private templateEditor: any;
 
   /*
    * The template content string
@@ -74,10 +69,23 @@ export class TemplaterComponent implements OnInit {
     lint: true
   };
 
+  //
+  // The instance of the CodeMirror editor when initialised
+  //
+  @ViewChild('templateEditor') private templateEditor: any;
+
   private outShapeSpec: any;
 
   constructor(private i18NService: I18NService, public currentFlowService: CurrentFlowService,
               public integrationSupportService: IntegrationSupportService, private mustacheMode: MustacheMode) {}
+
+  @HostListener('document:dragenter', ['$event'])
+  onDocumentDragEnter(event: Event) {
+    //
+    // Turn off the drag overlay
+    //
+    this.dragEnter = false;
+  }
 
   ngOnInit() {
     //
@@ -102,6 +110,30 @@ export class TemplaterComponent implements OnInit {
     this.initCodeMirror();
   }
 
+  ngAfterViewInit() {
+    if (this.templateEditor && this.templateEditor.instance) {
+      const instance = this.templateEditor.instance;
+
+      //
+      // Enable drag callback on coremirror instance. This
+      // seems to work more effectively than adding it
+      // through the ng2-codemirror directive
+      //
+      instance.on('dragenter', (cm, event) => {
+        this.onEditorDragenter(event);
+      });
+
+      //
+      // Enable drop callback on coremirror instance. This
+      // seems to work more effectively than adding it
+      // through the ng2-codemirror directive
+      //
+      instance.on('drop', (cm, event) => {
+        this.onEditorDrop(event);
+      });
+    }
+  }
+
   onEditorFocus() {
     this.editorFocused = true;
     this.invalidFileMsg = null;
@@ -109,18 +141,6 @@ export class TemplaterComponent implements OnInit {
 
   onEditorBlur() {
     this.editorFocused = false;
-  }
-
-  onEditorDragenter() {
-    this.dragEnter = true;
-  }
-
-  onEditorDragleave() {
-    this.dragEnter = false;
-  }
-
-  onEditorDrop() {
-    this.dragEnter = false;
   }
 
   onChange() {
@@ -243,6 +263,25 @@ export class TemplaterComponent implements OnInit {
       this.invalidFileMsg = this.i18NService.localize('integrations.steps.templater-upload-invalid-file', [file.name]);
       this.uploader.clearQueue();
     };
+  }
+
+  private onEditorDragenter(event) {
+    //
+    // Turn on the drag overlay
+    //
+    this.dragEnter = true;
+    //
+    // Stop the document handler from firing
+    //
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  private onEditorDrop(event) {
+    //
+    // Turn off the drag overlay
+    //
+    this.dragEnter = false;
   }
 
   private initCodeMirror() {

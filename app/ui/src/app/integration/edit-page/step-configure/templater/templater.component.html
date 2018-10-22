@@ -28,13 +28,10 @@
         <codemirror name="templateEditor" #templateEditor [(ngModel)]="templateContent"
                     [config]="editorConfig"
                     (focus)="onEditorFocus()"
-                    (blur)="onEditorBlur()"
-                    (dragenter)="onEditorDragenter()"
-                    (dragleave)="onEditorDragleave()"
-                    (drop)="onEditorDrop()">
+                    (blur)="onEditorBlur()">
         </codemirror>
       </div>
-    
+
       <div class="templater-form-validation">
         <p *ngIf="invalidFileMsg">
           <span class="pficon-error-circle-o"></span>
