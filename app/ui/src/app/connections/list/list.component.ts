@@ -95,4 +95,14 @@ export class ConnectionsListComponent implements OnInit {
     }
     this.onSelected.emit(connection);
   }
+
+  /**
+   * Indicates if the connection is being used in any integrations.
+   *
+   * @param connection the connection being checked
+   * @returns {boolean} `true` if used in an integration
+   */
+  isBeingUsed( connection: any ): boolean {
+    return connection.uses ? connection.uses > 0 : false;
+  }
 }

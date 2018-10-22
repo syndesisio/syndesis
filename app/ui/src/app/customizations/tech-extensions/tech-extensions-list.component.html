@@ -54,7 +54,15 @@
                     [routerLink]="['import', item.id, { 'name': item.name }]">{{ 'shared.update' | synI18n }}</button>
             <button type="button"
                     class="btn btn-default"
-                    (click)="deleteModal.prompt(item)">{{ 'shared.delete' | synI18n }}</button>
+                    [disabled]="isBeingUsed( item )"
+                    (click)="deleteModal.prompt(item)">
+              <span [tooltip]="'customizations.extensions.delete-extension-not-allowed' | synI18n"
+                    [isDisabled]="!isBeingUsed( item )"
+                    placement="auto"
+                    container="body">
+                {{ 'shared.delete' | synI18n }}
+              </span>
+            </button>
         </ng-template>
       </pfng-list>
     </ng-template>

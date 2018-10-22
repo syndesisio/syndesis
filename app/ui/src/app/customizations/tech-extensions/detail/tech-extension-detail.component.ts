@@ -20,10 +20,10 @@ export class TechExtensionDetailComponent implements OnInit {
   loading$: Observable<boolean>;
   @ViewChild(TechExtensionDeleteModalComponent)
   deleteModal: TechExtensionDeleteModalComponent;
-  integrationLengthMapping: { [valueComparator: string]: string } = {
-    '=0': 'No integrations are using this extension.',
-    '=1': 'Currently used by <strong>1</strong> integration.',
-    other: 'Currently used by <strong>#</strong> integrations.'
+  integrationLengthMapping: any = {
+    '=0': 'customizations.extensions.not-used-msg',
+    '=1': 'customizations.extensions.used-once-msg',
+    other: 'customizations.extensions.used-multi-msg'
   };
 
   constructor(
@@ -32,6 +32,16 @@ export class TechExtensionDetailComponent implements OnInit {
   ) {
     this.loading$ = this.extensionStore.loading;
     this.extension$ = this.extensionStore.resource;
+  }
+
+  /**
+   * Indicates if the extension is being used in any integrations.
+   *
+   * @param extension the extension being checked
+   * @returns {boolean} `true` if used in an integration
+   */
+  isBeingUsed( extension: any ): boolean {
+    return extension.uses ? extension.uses > 0 : false;
   }
 
   ngOnInit() {

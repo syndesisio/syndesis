@@ -74,6 +74,16 @@ export class TechExtensionsListComponent implements OnInit {
     this.router.navigate([extension.id], { relativeTo: this.route });
   }
 
+  /**
+   * Indicates if the extension is being used in any integrations.
+   *
+   * @param extension the extension being checked
+   * @returns {boolean} `true` if used in an integration
+   */
+  isBeingUsed( extension: any ): boolean {
+    return extension.uses ? extension.uses > 0 : false;
+  }
+
   ngOnInit() {
     this.store.loadAll();
   }
