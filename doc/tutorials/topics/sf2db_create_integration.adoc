@@ -7,8 +7,7 @@
 
 :context: sf2db-create
 To create and deploy an integration that uses the Salesforce
-connection and the database connection,
- the main steps are:
+connection and the database connection, the main steps are:
 
 * <<sf2db-choose-start-connection_{context}>>
 * <<sf2db-choose-finish-connection_{context}>>
@@ -16,8 +15,8 @@ connection and the database connection,
 * <<sf2db-name-and-publish_{context}>>
 
 .Prerequisites
-* You registered your {prodname} environment as a Salesforce client and
-created a {prodname} Salesforce connection. 
+* You registered your {prodname} environment as a Salesforce client.
+* You created a {prodname} Salesforce connection.
 * {prodname} is open and you are logged in. 
 
 include::sf2db_choose_start.adoc[leveloffset=+1]
