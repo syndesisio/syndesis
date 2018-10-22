@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as equal from 'react-fast-compare';
 
 export interface IHeader {
   [s: string]: string;
@@ -100,6 +101,10 @@ export class Rest extends React.Component<IRestProps, IRestState> {
         this.stopPolling();
       }
     }
+  }
+
+  public shouldComponentUpdate(nextProps: IRestProps, nextState: IRestState): boolean {
+    return !equal(this.props, nextProps) || !equal(this.state, nextState);
   }
 
   public render() {
