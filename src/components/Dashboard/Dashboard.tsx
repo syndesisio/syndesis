@@ -26,7 +26,7 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
             <Grid.Col sm={6}>
               <h1>System metric</h1>
             </Grid.Col>
-            <Grid.Col sm={6}>
+            <Grid.Col sm={6} className={'text-right'}>
               <a>View All Integrations</a>
               <Button bsStyle={'primary'}>Create Integration</Button>
             </Grid.Col>
@@ -69,7 +69,7 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
             <Grid.Col sm={6}>
               <h1>Connections</h1>
             </Grid.Col>
-            <Grid.Col sm={6}>
+            <Grid.Col sm={6} className={'text-right'}>
               <a>View All Connections</a>
               <Button bsStyle={'primary'}>Create Connection</Button>
             </Grid.Col>

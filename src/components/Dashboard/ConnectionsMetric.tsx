@@ -5,7 +5,7 @@ export interface IConnectionsMetricProps {
   count: number;
 }
 
-export class ConnectionsMetric extends React.Component<IConnectionsMetricProps> {
+export class ConnectionsMetric extends React.PureComponent<IConnectionsMetricProps> {
   public render() {
     return (
       <Card accented={true} aggregated={true} matchHeight={true}>
