@@ -1,6 +1,6 @@
-import { Masthead, VerticalNav } from 'patternfly-react';
+import { Icon, Masthead, VerticalNav } from 'patternfly-react';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter, } from 'react-router';
 import { PfNavLink } from '../ui/patternfly';
 
 import pitto from './glasses_logo_square.png';
@@ -28,11 +28,12 @@ class LayoutBase extends React.Component<ILayoutBase> {
                 id="app-user-dropdown"
                 title={[
                   <span className="dropdown-title" key="dropdown-title">
-                  Settings
-                </span>
+                    <Icon type={'fa'} name={'user'}/>
+                    {' '}
+                    developer
+                  </span>
                 ]}
               >
-                <PfNavLink to={'/settings'} label={'Change server'}/>
                 <PfNavLink to={'/logout'} label={'Logout'}/>
               </Masthead.Dropdown>
             </Masthead.Collapse>

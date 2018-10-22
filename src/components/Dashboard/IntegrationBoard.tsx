@@ -15,7 +15,7 @@ export class IntegrationBoard extends React.Component<IIntegrationBoardProps> {
         Stopped: patternfly.pfPaletteColors.black300,
       },
       columns: [
-        ['Published', this.props.integrations.filter(i => i.currentState === 'Published').length],
+        ['Running', this.props.integrations.filter(i => i.currentState === 'Published').length],
         ['Stopped', this.props.integrations.filter(i => i.currentState === 'Unpublished').length],
         ['Pending', this.props.integrations.filter(i => i.currentState === 'Pending').length],
       ],

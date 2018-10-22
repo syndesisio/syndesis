@@ -81,7 +81,7 @@ class App extends React.Component<RouteComponentProps, IAppState> {
   public renderNavbar() {
     return [
       <PfVerticalNavItem
-        icon={'fa fa-home'}
+        icon={'fa fa-tachometer'}
         to={'/'}
         exact={true}
         label={'Home'}
@@ -90,8 +90,26 @@ class App extends React.Component<RouteComponentProps, IAppState> {
       <PfVerticalNavItem
         icon={'pficon pficon-integration'}
         to={'/integrations'}
-        label={'integrations'}
-        key={1}
+        label={'Integrations'}
+        key={2}
+      />,
+      <PfVerticalNavItem
+        icon={'pficon pficon-plugged'}
+        to={'/connections'}
+        label={'Connections'}
+        key={3}
+      />,
+      <PfVerticalNavItem
+        icon={'fa fa-cube'}
+        to={'/customizations'}
+        label={'Customizations'}
+        key={4}
+      />,
+      <PfVerticalNavItem
+        icon={'pficon pficon-settings'}
+        to={'/settings'}
+        label={'Settings'}
+        key={5}
       />,
     ];
   }
