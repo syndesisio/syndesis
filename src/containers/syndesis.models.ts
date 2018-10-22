@@ -238,7 +238,7 @@ export interface IResource {
 }
 
 export interface IIntegration {
-  board: any;
+  board: IIntegrationBoard;
   createdAt: number;
   currentState: 'Published' | 'Unpublished' | 'Pending' | 'Error';
   deploymentVersion: number;
@@ -253,6 +253,17 @@ export interface IIntegration {
   updatedAt: number;
   url: string;
   version: number;
+}
+
+export interface IIntegrationBoard {
+  createdAt: number;
+  errors: number;
+  id: string;
+  metadata: { [id: string]: number; };
+  notices: number;
+  targetResourceId: string;
+  updatedAt: number;
+  warnings: number;
 }
 
 export interface IIntegrationsMetrics {

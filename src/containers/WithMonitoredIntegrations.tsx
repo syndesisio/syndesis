@@ -20,8 +20,8 @@ export class WithMonitoredIntegrations extends React.Component<IWithMonitoredInt
               const integrations = asyncIntegrations.data && asyncIntegrations.data.items
                 ? asyncIntegrations.data.items
                 : [];
-              const integrationsCount = asyncIntegrations.data && asyncIntegrations.data.integrationsCount
-                ? asyncIntegrations.data.integrationsCount
+              const integrationsCount = asyncIntegrations.data && asyncIntegrations.data.totalCount
+                ? asyncIntegrations.data.totalCount
                 : 0;
               const monitorings = asyncMonitoring.data || [];
               return this.props.children({

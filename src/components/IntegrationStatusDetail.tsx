@@ -3,6 +3,7 @@ import * as React from 'react';
 import { IIntegrationMonitoring } from '../containers';
 import { IntegrationProgress } from './IntegrationProgress';
 
+import './IntegrationStatusDetail.css'
 
 export interface IIntegrationStatusDetailProps {
   targetState: string;
@@ -20,12 +21,15 @@ export class IntegrationStatusDetail extends React.Component<IIntegrationStatusD
         fallbackText = 'Stopping...';
         break;
     }
-    return this.props.monitoring ? (
-      <IntegrationProgress monitoring={this.props.monitoring}/>
-    ) : (
-      <div>
-        <Spinner loading={true} inline={true}/>
-        {fallbackText}
+    return (
+      <div className={'integration-status-detail'}>
+        {this.props.monitoring
+          ? <IntegrationProgress monitoring={this.props.monitoring}/>
+          : <>
+            <Spinner loading={true} inline={true}/>
+            {fallbackText}
+          </>
+        }
       </div>
     );
   }

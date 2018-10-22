@@ -1,4 +1,4 @@
-import { ListView, } from 'patternfly-react';
+import { DropdownKebab, Icon, ListView, MenuItem } from 'patternfly-react';
 import * as React from 'react';
 import { IMonitoredIntegration } from '../containers';
 import { IntegrationStatus } from './IntegrationStatus';
@@ -8,28 +8,38 @@ export interface IIntegrationsListItemProps {
   monitoredIntegration: IMonitoredIntegration;
 }
 
-
 export class IntegrationsListItem extends React.Component<IIntegrationsListItemProps> {
   public render() {
     const {integration, monitoring} = this.props.monitoredIntegration;
     return (
       <ListView.Item
-        actions={<div/>}
-        additionalInfo={[
-          <ListView.InfoItem key={1}>
-            {integration.currentState === 'Pending'
-              ? <IntegrationStatusDetail
-                targetState={integration.targetState}
-                monitoring={monitoring}
-              />
-              : <IntegrationStatus integration={integration}/>
-            }
-          </ListView.InfoItem>,
-        ]}
+        actions={<div>
+          {integration.currentState === 'Pending'
+            ? <IntegrationStatusDetail
+              targetState={integration.targetState}
+              monitoring={monitoring}
+            />
+            : <IntegrationStatus integration={integration}/>
+          }
+          <DropdownKebab
+            id={`integration-${integration.id}-action-menu`}
+            pullRight={true}
+          >
+            <MenuItem>Action 2</MenuItem>
+          </DropdownKebab>
+        </div>}
         heading={integration.name}
+        description={
+          integration.board.warnings || integration.board.errors || integration.board.notices
+            ? <>
+              <Icon type={'pf'} name={'warning-triangle-o'}/>
+              Configuration Required
+            </>
+            : ''
+        }
         hideCloseIcon={true}
         leftContent={<ListView.Icon name={'gear'}/>}
-        stacked={true}
+        stacked={false}
       />
     )
   }
