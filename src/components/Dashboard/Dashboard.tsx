@@ -1,5 +1,6 @@
 import { Button, CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { IConnection, IIntegration, IIntegrationsMetrics, IMonitoredIntegration } from '../../containers';
 import { AggregatedMetric } from './AggregatedMetric';
 import { Connection } from './Connection';
@@ -62,7 +63,7 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
               <h1>System metric</h1>
             </Grid.Col>
             <Grid.Col sm={6} className={'text-right'}>
-              <a>View All Integrations</a>
+              <Link to={'/integrations'}>View All Integrations</Link>
               <Button bsStyle={'primary'}>Create Integration</Button>
             </Grid.Col>
           </Grid.Row>

@@ -47,7 +47,7 @@ function PfVerticalNavItem({
           to={to}
           children={
             <React.Fragment>
-              <span className={`fa fa-${icon}`}/>
+              <span className={icon}/>
               <span className="list-group-item-value">{label}</span>
               <div className="badge-container-pf"/>
             </React.Fragment>

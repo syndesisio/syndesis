@@ -4,14 +4,15 @@ import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom
 import './App.css';
 import { AppContext, IAppContext, IAppSettings } from './AppContext';
 import { AuthContext, AuthenticatedRoute, IAuthContext, LoginPage, Logout, TokenPage, } from './auth';
-import { DashboardPage } from './dashboard';
 import { Layout } from './layout';
+import { DashboardPage, IntegrationsPage } from './pages';
 import { SettingsPage } from './settings';
 import { PfVerticalNavItem } from './ui/patternfly';
 
 const PrivateRoutes = () => (
   <Switch>
-    <Route path='/' component={DashboardPage}/>
+    <Route path='/' exact={true} component={DashboardPage}/>
+    <Route path='/integrations' component={IntegrationsPage}/>
   </Switch>
 );
 
@@ -80,9 +81,16 @@ class App extends React.Component<RouteComponentProps, IAppState> {
   public renderNavbar() {
     return [
       <PfVerticalNavItem
-        icon={'home'}
+        icon={'fa fa-home'}
         to={'/'}
+        exact={true}
         label={'Home'}
+        key={1}
+      />,
+      <PfVerticalNavItem
+        icon={'pficon pficon-integration'}
+        to={'/integrations'}
+        label={'integrations'}
         key={1}
       />,
     ];

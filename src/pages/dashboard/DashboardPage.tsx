@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Dashboard } from '../components';
-import { WithConnections, WithIntegrationsMetrics, WithMonitoredIntegrations } from '../containers';
+import { Dashboard } from '../../components/index';
+import { WithConnections, WithIntegrationsMetrics, WithMonitoredIntegrations } from '../../containers/index';
 
 export const DashboardPage = () => (
   <WithMonitoredIntegrations>
