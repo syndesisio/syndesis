@@ -35,6 +35,7 @@
       <i [ngClass]="getIconClass()"
           *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
       <img class="syn-icon-small"
+            [ngClass]="{ 'api-provider' : (step.connection.id == 'api-provider') }"
             *ngIf="step.stepKind === 'endpoint' && step.connection"
             [src]="step.connection | synIconPath">
     </div>

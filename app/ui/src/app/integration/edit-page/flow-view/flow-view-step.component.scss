@@ -125,7 +125,13 @@
         line-height: 1.15;
       }
     }
+
+    .api-provider {
+      max-width: 35px;
+      max-height: 35px;
+    }
   }
+
   .data-mismatch {
     position: absolute;
     background: #ec7a08;
