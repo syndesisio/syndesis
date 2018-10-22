@@ -9,7 +9,7 @@ export interface IConnectionProps {
 export class Connection extends React.Component<IConnectionProps> {
   public render() {
     return (
-      <Card accented={true} aggregated={true} matchHeight={true}>
+      <Card matchHeight={true}>
         <Card.Body>
           <EmptyState>
             <EmptyState.Icon/>

@@ -4,6 +4,8 @@ import { IConnection, IIntegration, IIntegrationsMetrics } from '../../container
 import { AggregatedMetric } from './AggregatedMetric';
 import { Connection } from './Connection';
 import { ConnectionsMetric } from './ConnectionsMetric';
+import { IntegrationBoard } from './IntegrationBoard';
+import { RecentUpdates } from './RecentUpdates';
 import { TopIntegrations } from './TopIntegrations';
 import { UptimeMetric } from './UptimeMetric';
 
@@ -19,6 +21,32 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
   public render() {
     const {integrations, integrationsCount, metrics, connections, connectionsCount} = this.props;
     const integrationsErrorCount = integrations.filter(i => i.currentState === 'Error').length;
+
+    const getTimestamp = (integration: IIntegration) => {
+      return integration.updatedAt !== 0 ? integration.updatedAt : integration.createdAt;
+    };
+
+    const byTimestamp = (a: IIntegration, b: IIntegration) => {
+      const aTimestamp = getTimestamp(a);
+      const bTimestamp = getTimestamp(b);
+      return bTimestamp - aTimestamp;
+    };
+
+    const topIntegrations = metrics.topIntegrations || {};
+    const topIntegrationsArray = Object.keys(topIntegrations).map(key => {
+      return {
+        count: topIntegrations[key],
+        id: key,
+      } as any;
+    }).sort((a, b) => {
+      return b.count - a.count;
+    });
+    const sortedIntegrationsByTimestamp = integrations.sort(byTimestamp).slice(0, 5);
+    const sortedIntegrationsByMessageCount = integrations.sort((a, b) => {
+      const index = topIntegrationsArray.findIndex(i => i.id === b.id);
+      return index === -1 ? topIntegrationsArray.length + 1 : index;
+    }).reverse().slice(0, 5);
+
     return (
       <div className={'container-fluid'}>
         <Grid fluid={true}>
@@ -56,13 +84,25 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
             </CardGrid.Col>
           </CardGrid.Row>
         </CardGrid>
-        <CardGrid fluid={true}>
-          <CardGrid.Row>
-            <CardGrid.Col sm={12} md={6}>
-              <TopIntegrations integrations={integrations}/>
-            </CardGrid.Col>
-          </CardGrid.Row>
-        </CardGrid>
+        <Grid fluid={true}>
+          <Grid.Row>
+            <Grid.Col sm={12} md={6}>
+              <TopIntegrations integrations={sortedIntegrationsByMessageCount}/>
+            </Grid.Col>
+            <Grid.Col sm={12} md={6}>
+              <Grid.Row>
+                <Grid.Col sm={12}>
+                  <IntegrationBoard integrations={integrations}/>
+                </Grid.Col>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Col sm={12}>
+                  <RecentUpdates integrations={sortedIntegrationsByTimestamp}/>
+                </Grid.Col>
+              </Grid.Row>
+            </Grid.Col>
+          </Grid.Row>
+        </Grid>
 
         <Grid fluid={true} style={{marginTop: '20px'}}>
           <Grid.Row>
