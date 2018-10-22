@@ -55,7 +55,8 @@ public class NamesTest {
             pair("twitter-mention-salesforce-upsert-contact-",
                 "??? Twitter Mention <-> Salesforce upsert contact !!!"),
             pair("s-p-a-c-e-the-final-frontier", "    s   p  a  c  e   , the final frontier"),
-            pair("walking-on-sunshine-", "_walking_on_sunshine_"));
+            pair("walking-on-sunshine-", "_walking_on_sunshine_"),
+            pair("dot-", "dot."));
     }
 
     private static Object[] pair(final String projectName, final String integrationName) {
