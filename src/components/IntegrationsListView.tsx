@@ -1,13 +1,14 @@
 import { Filter, FormControl, Sort, Toolbar } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { IIntegrationsMetrics, IMonitoredIntegration } from '../containers';
+import { IConnection, IIntegrationsMetrics, IMonitoredIntegration } from '../containers';
 import { IntegrationsList } from './IntegrationsList';
 
 export interface IIntegrationsListViewProps {
   match: any;
   monitoredIntegrations: IMonitoredIntegration[];
   integrationsCount: number;
+  connections: IConnection[];
   metrics: IIntegrationsMetrics;
 }
 
@@ -19,6 +20,7 @@ export interface IActiveFilter {
 export interface IFilterType {
   id: string;
   filterType: string;
+  filterValues?: string[];
   placeholder: string;
   title: string;
 }
@@ -27,7 +29,7 @@ export interface IIntegrationsListViewState {
   activeFilters: IActiveFilter[];
   currentFilterType: IFilterType;
   currentSortType: string;
-  currentValue: string;
+  currentValue: any;
   filterCategory: any;
   isSortAscending: boolean;
 }
@@ -40,7 +42,7 @@ export class IntegrationsListView extends React.Component<IIntegrationsListViewP
       id: 'name',
       placeholder: 'Filter by Name',
       title: 'Name',
-    },
+    } as IFilterType,
     currentSortType: 'Name',
     currentValue: '',
     filterCategory: null,
@@ -98,7 +100,11 @@ export class IntegrationsListView extends React.Component<IIntegrationsListViewP
                 placeholder: 'Filter by Name',
                 title: 'Name',
               }, {
-                filterType: 'text',
+                filterType: 'select',
+                filterValues: this.props.connections.map(c => ({
+                  id: c.id,
+                  title: c.name,
+                })),
                 id: 'connection',
                 placeholder: 'Filter by Connection',
                 title: 'Connection',
@@ -176,15 +182,25 @@ export class IntegrationsListView extends React.Component<IIntegrationsListViewP
     if (!currentFilterType) {
       return null;
     }
-    return (
-      <FormControl
-        type={currentFilterType.filterType}
-        value={currentValue}
-        placeholder={currentFilterType.placeholder}
-        onChange={this.updateCurrentValue}
-        onKeyPress={this.onValueKeyPress}
-      />
-    );
+    if (currentFilterType.filterType === 'select') {
+      return (
+        <Filter.ValueSelector
+          filterValues={currentFilterType.filterValues}
+          currentValue={currentValue}
+          onFilterValueSelected={this.filterValueSelected}
+        />
+      );
+    } else {
+      return (
+        <FormControl
+          type={currentFilterType.filterType}
+          value={currentValue}
+          placeholder={currentFilterType.placeholder}
+          onChange={this.updateCurrentValue}
+          onKeyPress={this.onValueKeyPress}
+        />
+      );
+    }
   };
 
   public updateCurrentValue = (event: Event) => {
@@ -217,6 +233,15 @@ export class IntegrationsListView extends React.Component<IIntegrationsListViewP
     const {currentFilterType} = this.state;
     if (currentFilterType !== filterType) {
       this.setState({currentValue: '', currentFilterType: filterType});
+    }
+  };
+
+  public filterValueSelected = (filterValue: { id: string, title: string }) => {
+    const {currentFilterType} = this.state;
+
+    this.setState({currentValue: filterValue.title});
+    if (filterValue) {
+      this.filterAdded(currentFilterType.title, filterValue.title);
     }
   };
 
