@@ -13,13 +13,7 @@ export interface IFetch {
   contentType?: string
 }
 
-export function callFetch({
-                            url,
-                            method,
-                            headers = {},
-                            body,
-                            contentType = 'application/json; charset=utf-8'
-                          }: IFetch) {
+export function callFetch({url, method, headers = {}, body, contentType = 'application/json; charset=utf-8'}: IFetch) {
   return fetch(url, {
     body: body ? JSON.stringify(body) : undefined,
     cache: 'no-cache',
@@ -40,8 +34,8 @@ export interface ISaveProps {
   data: any;
 }
 
-export interface IRestState {
-  data: any | null;
+export interface IRestState<T> {
+  data?: T;
   error: boolean;
   errorMessage?: string;
   loading: boolean;
@@ -51,7 +45,7 @@ export interface IRestState {
   save(props: ISaveProps): void;
 }
 
-export interface IRestProps {
+export interface IRestProps<T> {
   autoload?: boolean;
   baseUrl: string;
   poll?: number;
@@ -59,20 +53,20 @@ export interface IRestProps {
   headers?: IHeader;
   contentType?: string;
 
-  children(props: IRestState): any;
+  children(props: IRestState<T>): any;
 }
 
-export class Rest extends React.Component<IRestProps, IRestState> {
+export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
   public static defaultProps = {
     autoload: true
   };
 
   public pollingTimer?: number;
 
-  public constructor(props: IRestProps) {
+  public constructor(props: IRestProps<T>) {
     super(props);
     this.state = {
-      data: null,
+      data: undefined,
       error: false,
       loading: true,
       read: this.read,
@@ -89,7 +83,7 @@ export class Rest extends React.Component<IRestProps, IRestState> {
     }
   }
 
-  public async componentDidUpdate(prevProps: IRestProps) {
+  public async componentDidUpdate(prevProps: IRestProps<T>) {
     if (prevProps.url !== this.props.url) {
       this.read();
     }
@@ -103,7 +97,7 @@ export class Rest extends React.Component<IRestProps, IRestState> {
     }
   }
 
-  public shouldComponentUpdate(nextProps: IRestProps, nextState: IRestState): boolean {
+  public shouldComponentUpdate(nextProps: IRestProps<T>, nextState: IRestState<T>): boolean {
     return !equal(this.props, nextProps) || !equal(this.state, nextState);
   }
 

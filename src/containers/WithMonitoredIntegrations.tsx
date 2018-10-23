@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { IIntegration, IIntegrationMonitoring, IMonitoredIntegration, SyndesisRest } from './index';
+import {
+  IIntegration,
+  IIntegrationMonitoring,
+  IIntegrationsRawResponse,
+  IMonitoredIntegration,
+  SyndesisRest
+} from './index';
 
 export interface IMonitoredIntegrationsResponse {
   integrations: IMonitoredIntegration[];
@@ -13,9 +19,9 @@ export interface IWithMonitoredIntegrationsProps {
 export class WithMonitoredIntegrations extends React.Component<IWithMonitoredIntegrationsProps> {
   public render() {
     return (
-      <SyndesisRest url={'/api/v1/integrations'} poll={5000}>
+      <SyndesisRest<IIntegrationsRawResponse> url={'/api/v1/integrations'} poll={5000}>
         {asyncIntegrations =>
-          <SyndesisRest url={'/api/v1/monitoring/integrations'} poll={5000}>
+          <SyndesisRest<IIntegrationMonitoring[]> url={'/api/v1/monitoring/integrations'} poll={5000}>
             {asyncMonitoring => {
               const integrations = asyncIntegrations.data && asyncIntegrations.data.items
                 ? asyncIntegrations.data.items
@@ -37,4 +43,4 @@ export class WithMonitoredIntegrations extends React.Component<IWithMonitoredInt
       </SyndesisRest>
     )
   }
-};
+}

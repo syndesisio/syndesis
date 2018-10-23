@@ -1,9 +1,9 @@
 import { callFetch, IRestProps, ISaveProps, Rest } from './Rest';
 
-export class Stream extends Rest {
+export class Stream extends Rest<string[]> {
   protected reader: ReadableStreamReader;
 
-  public async componentDidUpdate(prevProps: IRestProps) {
+  public async componentDidUpdate(prevProps: IRestProps<string[]>) {
     if (prevProps.url !== this.props.url) {
       if (this.reader) {
         this.reader.cancel();

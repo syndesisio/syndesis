@@ -4,17 +4,17 @@ import { IRestState, Rest } from './Rest';
 import { Stream } from './Stream';
 
 
-export interface ISynRest {
+export interface ISynRest<T> {
   autoload?: boolean;
   contentType?: string;
   poll?: number;
   url: string;
   stream?: boolean;
 
-  children(props: IRestState): any;
+  children(props: IRestState<T>): any;
 }
 
-export class SyndesisRest extends React.Component<ISynRest> {
+export class SyndesisRest<T> extends React.Component<ISynRest<T>> {
   public render() {
     const {url, stream, ...props} = this.props;
 

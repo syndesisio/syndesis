@@ -10,14 +10,14 @@ export interface IWithIntegrationsMetricsProps {
 export class WithIntegrationsMetrics extends React.Component<IWithIntegrationsMetricsProps> {
   public render() {
     return (
-      <SyndesisRest url={'/api/v1/metrics/integrations'} poll={5000}>
+      <SyndesisRest<IIntegrationsMetrics> url={'/api/v1/metrics/integrations'} poll={5000}>
         {({loading, error, data}) => {
           if (loading) {
             return <Spinner/>;
           } else if (error) {
             return <RestError/>
           } else {
-            return this.props.children(data);
+            return this.props.children(data!);
           }
         }}
       </SyndesisRest>
