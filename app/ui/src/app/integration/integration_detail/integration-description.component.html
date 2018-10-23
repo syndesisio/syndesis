@@ -49,7 +49,10 @@
        title="{{ connectionName }}&nbsp;{{ actionName }}">
     <div [class]="'step-line ' + class"></div>
     <div class="icon">
-      <img class="syn-icon-small" [src]="iconSrc" alt="{{ connectionName }}">
+      <img class="syn-icon-small"
+        [ngClass]="{ 'api-provider' : (id == 'api-provider') }"
+        [src]="iconSrc"
+        alt="{{ connectionName }}">
     </div>
     <div class="syn-truncate__ellipsis">{{ connectionName | capitalize }}</div>
   </div>

@@ -87,7 +87,9 @@
                 <!-- Card Icon -->
                 <div class="card-pf-top-element">
                   <span class="card-pf-icon-large image-icon">
-                    <img class="syn-icon-medium" [src]="connection | synIconPath">
+                    <img class="syn-icon-medium"
+                          [ngClass]="{ 'api-provider' : (connection.id == 'api-provider') }"
+                          [src]="connection | synIconPath">
                   </span>
                 </div>
 
