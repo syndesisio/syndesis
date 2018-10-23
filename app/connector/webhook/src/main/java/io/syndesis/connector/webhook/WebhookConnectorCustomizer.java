@@ -28,9 +28,13 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
 import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.RuntimeCamelException;
+import org.apache.camel.processor.Pipeline;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -76,6 +80,9 @@ public class WebhookConnectorCustomizer implements ComponentProxyCustomizer, Cam
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        final List<Processor> beforeConsumers = new ArrayList<>();
+        beforeConsumers.add(e -> e.getIn().removeHeader(Exchange.HTTP_URI));
+
         if (outputDataShape != null && outputDataShape.getKind() == DataShapeKinds.JSON_SCHEMA && outputDataShape.getSpecification() != null) {
             try {
                 final JsonNode schema = READER.readTree(outputDataShape.getSpecification());
@@ -90,12 +97,14 @@ public class WebhookConnectorCustomizer implements ComponentProxyCustomizer, Cam
                         throw new IllegalArgumentException("JsonSchema does not define body property");
                     }
 
-                    component.setBeforeConsumer(new HttpRequestWrapperProcessor(schema));
+                    beforeConsumers.add(new HttpRequestWrapperProcessor(schema));
                 }
             } catch (IOException e) {
                 throw new RuntimeCamelException(e);
             }
         }
+
+        component.setBeforeConsumer(Pipeline.newInstance(camelContext, beforeConsumers));
 
         // Unconditionally we remove output in 7.1 release
         component.setAfterConsumer(this::removeOutput);
