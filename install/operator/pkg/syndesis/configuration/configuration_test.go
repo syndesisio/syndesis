@@ -21,7 +21,6 @@ func TestStandardConfig(t *testing.T) {
 	assert.Len(t, config, 1)
 }
 
-
 func TestSpecificConfig(t *testing.T) {
 	demodata := true
 	deploy := false
@@ -33,19 +32,19 @@ func TestSpecificConfig(t *testing.T) {
 		},
 		Spec: v1alpha1.SyndesisSpec{
 			ImageStreamNamespace: "is",
-			DemoData: &demodata,
+			DemoData:             &demodata,
 			Integration: v1alpha1.IntegrationSpec{
-				Limit: &limit,
+				Limit:              &limit,
 				StateCheckInterval: &stateCheckInterval,
 			},
-			RouteHostName: "myhost",
-			Registry: "registry",
+			RouteHostName:      "myhost",
+			Registry:           "registry",
 			DeployIntegrations: &deploy,
 			Components: v1alpha1.ComponentsSpec{
 				Db: v1alpha1.DbConfiguration{
 					ImageStreamNamespace: "dbis",
-					Database: "db",
-					User: "user",
+					Database:             "db",
+					User:                 "user",
 					Resources: v1alpha1.ResourcesWithVolume{
 						ResourceRequirements: v12.ResourceRequirements{
 							Limits: v12.ResourceList{

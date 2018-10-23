@@ -11,11 +11,11 @@ func GetServiceAccountToken(serviceAccountName string, namespace string) (string
 
 	sa := corev1.ServiceAccount{
 		TypeMeta: metav1.TypeMeta{
-			Kind: "ServiceAccount",
+			Kind:       "ServiceAccount",
 			APIVersion: "v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name: serviceAccountName,
+			Name:      serviceAccountName,
 			Namespace: namespace,
 		},
 	}
@@ -26,11 +26,11 @@ func GetServiceAccountToken(serviceAccountName string, namespace string) (string
 	for _, reference := range sa.Secrets {
 		secret := corev1.Secret{
 			TypeMeta: metav1.TypeMeta{
-				Kind: "Secret",
+				Kind:       "Secret",
 				APIVersion: "v1",
 			},
 			ObjectMeta: metav1.ObjectMeta{
-				Name: reference.Name,
+				Name:      reference.Name,
 				Namespace: namespace,
 			},
 		}

@@ -9,7 +9,7 @@ import (
 
 // Checks if the syndesis installation should be upgraded and move to the "Upgrading" status.
 type CheckUpdates struct {
-	operatorVersion	string
+	operatorVersion string
 }
 
 func (a *CheckUpdates) CanExecute(syndesis *v1alpha1.Syndesis) bool {

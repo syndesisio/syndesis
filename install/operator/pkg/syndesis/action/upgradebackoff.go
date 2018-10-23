@@ -16,7 +16,7 @@ const (
 
 // After a failure, waits a exponential amount of time, then retries
 type UpgradeBackoff struct {
-	operatorVersion	string
+	operatorVersion string
 }
 
 func (a *UpgradeBackoff) CanExecute(syndesis *v1alpha1.Syndesis) bool {
@@ -45,7 +45,7 @@ func (a *UpgradeBackoff) Execute(syndesis *v1alpha1.Syndesis) error {
 	if lastFailureWrapper != nil {
 		lastFailure = lastFailureWrapper.Time
 	} else {
-		lastFailure = time.Now().Add(- 8 * time.Hour)
+		lastFailure = time.Now().Add(-8 * time.Hour)
 	}
 
 	if lastFailure.After(now) {

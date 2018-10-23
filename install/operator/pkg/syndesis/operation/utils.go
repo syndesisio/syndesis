@@ -19,5 +19,3 @@ func SetNamespaceAndOwnerReference(resource interface{}, syndesis *v1alpha1.Synd
 		})
 	}
 }
-
-

@@ -8,8 +8,7 @@ import (
 )
 
 // Initializes a Syndesis resource with no status and starts the installation process
-type Initialize struct {}
-
+type Initialize struct{}
 
 func (a *Initialize) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
