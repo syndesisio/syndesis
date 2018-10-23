@@ -2,8 +2,8 @@ import { Button, CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { IConnection, IIntegrationsMetrics } from '../../containers';
+import { ConnectionsGrid } from '../ConnectionsGrid';
 import { AggregatedMetric } from './AggregatedMetric';
-import { Connection } from './Connection';
 import { ConnectionsMetric } from './ConnectionsMetric';
 import { IIntegrationBoardProps, IntegrationBoard } from './IntegrationBoard';
 import { IRecentUpdatesProps, RecentUpdates } from './RecentUpdates';
@@ -92,15 +92,7 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
             </Grid.Col>
           </Grid.Row>
         </Grid>
-        <CardGrid fluid={true} matchHeight={true}>
-          <CardGrid.Row>
-            {this.props.connections.map((c, index) =>
-              <CardGrid.Col sm={6} md={3} key={index}>
-                <Connection connection={c}/>
-              </CardGrid.Col>
-            )}
-          </CardGrid.Row>
-        </CardGrid>
+        <ConnectionsGrid connections={this.props.connections}/>
       </div>
     );
   }

@@ -1,6 +1,6 @@
 import { Card, EmptyState } from 'patternfly-react';
 import * as React from 'react';
-import { IConnection } from '../../containers';
+import { IConnection } from '../containers/index';
 
 export interface IConnectionProps {
   connection: IConnection;

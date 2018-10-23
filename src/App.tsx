@@ -5,7 +5,7 @@ import './App.css';
 import { AppContext, IAppContext, IAppSettings } from './AppContext';
 import { AuthContext, AuthenticatedRoute, IAuthContext, LoginPage, Logout, TokenPage, } from './auth';
 import { Layout } from './layout';
-import { DashboardPage, IntegrationsPage } from './pages';
+import { ConnectionsPage, DashboardPage, IntegrationsPage } from './pages';
 import { SettingsPage } from './settings';
 import { PfVerticalNavItem } from './ui/patternfly';
 
@@ -13,6 +13,7 @@ const PrivateRoutes = () => (
   <Switch>
     <Route path='/' exact={true} component={DashboardPage}/>
     <Route path='/integrations' component={IntegrationsPage}/>
+    <Route path='/connections' component={ConnectionsPage}/>
   </Switch>
 );
 
