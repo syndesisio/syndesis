@@ -57,7 +57,6 @@ import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -236,17 +235,6 @@ public class SwaggerAPIGenerator implements APIGenerator {
             .id(apiId)
             .kind(Kind.OpenApi)
             .build());
-
-        final String givenBasePath = swagger.getBasePath();
-        final String basePath;
-        if (StringUtils.isEmpty(givenBasePath)) {
-            basePath = "/api";
-        } else {
-            basePath = givenBasePath.replaceFirst("^(/.*)/$", "$1"); // drop the trailing slash
-        }
-
-        integration.putProperty("api-basePath", new ConfigurationProperty.Builder().type("hidden").build());
-        integration.putConfiguredProperty("api-basePath", basePath);
 
         return new APIIntegration(integration.build(), api);
     }
