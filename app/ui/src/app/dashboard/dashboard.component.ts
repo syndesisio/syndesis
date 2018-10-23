@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit {
     private integrationStore: IntegrationStore,
     private router: Router
   ) {
-    this.connections$ = this.connectionStore.list;
+    this.connections$ = this.connectionStore.listVisible;
     this.integrations$ = this.integrationStore.list;
     this.connectionsLoading$ = this.connectionStore.loading;
     this.integrationsLoading$ = this.integrationStore.loading;
