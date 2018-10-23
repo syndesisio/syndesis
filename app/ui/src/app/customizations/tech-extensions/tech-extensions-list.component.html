@@ -40,9 +40,7 @@
                 <span *ngSwitchCase="'Libraries'">{{ 'customizations.extensions.library-extension' | synI18n }}</span>
                 <span *ngSwitchDefault>{{ 'customizations.extensions.unknown-extension' | synI18n }}</span>
               </ng-container>
-              <span *ngIf="item.uses">
-                {{ 'shared.used-by' | synI18n }} <span [innerHtml]="item.uses | i18nPlural: itemUseMapping"></span>
-              </span>
+              <span *ngIf="item.uses" [innerHtml]="usageText( item.uses )"></span>
             </div>
           </div>
         </ng-template>

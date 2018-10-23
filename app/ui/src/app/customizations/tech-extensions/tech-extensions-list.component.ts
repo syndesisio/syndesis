@@ -9,7 +9,7 @@ import {
 } from 'patternfly-ng';
 import { ConfigService } from '@syndesis/ui/config.service';
 import { TechExtensionDeleteModalComponent } from '@syndesis/ui/customizations/tech-extensions/tech-extension-delete-modal.component';
-import { Extensions } from '@syndesis/ui/platform';
+import { Extensions, I18NService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-tech-extensions-list',
@@ -25,16 +25,13 @@ export class TechExtensionsListComponent implements OnInit {
   listConfig: ListConfig;
   @ViewChild(TechExtensionDeleteModalComponent)
   deleteModal: TechExtensionDeleteModalComponent;
-  itemUseMapping: { [valueComparator: string]: string } = {
-    '=1': '<strong>1</strong> integration',
-    other: '<strong>#</strong> integrations'
-  };
 
   constructor(
     private store: ExtensionStore,
     public config: ConfigService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private i18nService: I18NService
   ) {
     this.extensions$ = this.store.list;
     this.loading$ = this.store.loading;
@@ -45,14 +42,14 @@ export class TechExtensionsListComponent implements OnInit {
       showCheckbox: false,
       emptyStateConfig: {
         iconStyleClass: 'pficon pficon-add-circle-o',
-        title: 'Import Extension',
-        info: 'There are no extensions available.',
+        title: this.i18nService.localize( 'customizations.extensions.import-extension' ),
+        info: this.i18nService.localize( 'customizations.extensions.no-extensions-message' ),
         actions: {
           primaryActions: [
             {
               id: 'importTechnicalExtension',
-              title: 'Import Extension',
-              tooltip: 'Import Extension',
+              title: this.i18nService.localize( 'customizations.extensions.import-extension' ),
+              tooltip: this.i18nService.localize( 'customizations.extensions.import-extension' ),
               visible: true,
               disabled: false
             }
@@ -86,5 +83,17 @@ export class TechExtensionsListComponent implements OnInit {
 
   ngOnInit() {
     this.store.loadAll();
+  }
+
+  usageText( uses: number ): string {
+    if ( uses === 1 ) {
+      return this.i18nService.localize( 'customizations.extensions.used-once-msg' );
+    }
+
+    if ( uses > 1 ) {
+      return this.i18nService.localize( 'customizations.extensions.used-multi-msg', [ uses ] );
+    }
+
+    return this.i18nService.localize( 'customizations.extensions.not-used-msg' );
   }
 }
