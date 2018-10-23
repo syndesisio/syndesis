@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.webhook;
 
+import java.util.Collection;
 import java.util.Collections;
 
 import io.syndesis.common.model.DataShape;
@@ -22,9 +23,11 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.connector.support.processor.HttpRequestWrapperProcessor;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
+import org.apache.camel.processor.Pipeline;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,16 +72,29 @@ public class WebhookConnectorCustomizerTest {
     final ComponentProxyComponent component = new ComponentProxyComponent("test", "test");
 
     @Test
-    public void shouldAddWrapperProcessorIfSyndesisJsonSchemaGiven() {
+    public void shouldAddWrapperProcessorIfSyndesisJsonSchemaGiven() throws Exception {
         final WebhookConnectorCustomizer customizer = new WebhookConnectorCustomizer();
+        customizer.setCamelContext(mock(CamelContext.class));
         customizer.setOutputDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification(SIMPLE_SCHEMA).build());
 
         customizer.customize(component, Collections.emptyMap());
 
         final Processor beforeConsumer = component.getBeforeConsumer();
-        assertThat(beforeConsumer).isInstanceOf(HttpRequestWrapperProcessor.class);
-        final HttpRequestWrapperProcessor wrapper = (HttpRequestWrapperProcessor) beforeConsumer;
+        assertThat(beforeConsumer).isInstanceOf(Pipeline.class);
+        final Pipeline pipeline = (Pipeline) beforeConsumer;
+        final Collection<Processor> processors = pipeline.getProcessors();
+        assertThat(processors).hasSize(2).anySatisfy(p -> assertThat(p).isInstanceOf(HttpRequestWrapperProcessor.class));
+
+        final HttpRequestWrapperProcessor wrapper = (HttpRequestWrapperProcessor) processors.stream().filter(p -> p instanceof HttpRequestWrapperProcessor)
+            .findFirst().get();
         assertThat(wrapper.getParameters()).containsOnly("source", "status");
+
+        final Processor removeHeader = processors.stream().filter(p -> !(p instanceof HttpRequestWrapperProcessor)).findFirst().get();
+        final Exchange exchange = mock(Exchange.class);
+        final Message in = mock(Message.class);
+        when(exchange.getIn()).thenReturn(in);
+        removeHeader.process(exchange);
+        verify(in).removeHeader(Exchange.HTTP_URI);
     }
 
     @Test
