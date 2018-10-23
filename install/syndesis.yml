@@ -537,6 +537,8 @@ objects:
   data:
     syndesis-postgresql.conf: |
       log_autovacuum_min_duration = 0
+      log_line_prefix = '%t %a %i %e %c '
+      logging_collector = off
       autovacuum_max_workers = 6
       autovacuum_naptime = 15s
       autovacuum_vacuum_threshold = 25
