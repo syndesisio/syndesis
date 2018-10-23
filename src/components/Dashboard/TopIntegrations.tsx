@@ -4,7 +4,7 @@ import { IMonitoredIntegration } from '../../containers';
 import { IntegrationsList } from '../index';
 
 export interface ITopIntegrationsProps {
-  integrations: IMonitoredIntegration[]
+  topIntegrations: IMonitoredIntegration[]
 }
 
 export class TopIntegrations extends React.Component<ITopIntegrationsProps> {
@@ -28,7 +28,7 @@ export class TopIntegrations extends React.Component<ITopIntegrationsProps> {
           </Card.Title>
         </Card.Heading>
         <Card.Body>
-          <IntegrationsList monitoredIntegrations={this.props.integrations}/>
+          <IntegrationsList monitoredIntegrations={this.props.topIntegrations}/>
         </Card.Body>
       </Card>
     );

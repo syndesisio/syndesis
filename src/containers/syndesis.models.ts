@@ -53,9 +53,11 @@ export interface IIntegrationsMetrics {
   messages: number;
   metricsProvider: string;
   start: number;
-  topIntegrations: Array<{
-    [id: string]: number;
-  }>;
+  topIntegrations: IIntegrationsMetricsTopIntegration;
+}
+
+export interface IIntegrationsMetricsTopIntegration {
+  [id: string]: number;
 }
 
 export interface IMonitoredIntegration {

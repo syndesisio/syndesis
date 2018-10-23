@@ -1,12 +1,13 @@
 import { Card, DonutChart, patternfly } from 'patternfly-react';
 import * as React from 'react';
-import { IIntegration } from '../../containers';
 
 export interface IIntegrationBoardProps {
-  integrations: IIntegration[];
+  pendingIntegrations: number;
+  runningIntegrations: number;
+  stoppedIntegrations: number;
 }
 
-export class IntegrationBoard extends React.Component<IIntegrationBoardProps> {
+export class IntegrationBoard extends React.PureComponent<IIntegrationBoardProps> {
   public render() {
     const data = {
       colors: {
@@ -15,9 +16,9 @@ export class IntegrationBoard extends React.Component<IIntegrationBoardProps> {
         Stopped: patternfly.pfPaletteColors.black300,
       },
       columns: [
-        ['Running', this.props.integrations.filter(i => i.currentState === 'Published').length],
-        ['Stopped', this.props.integrations.filter(i => i.currentState === 'Unpublished').length],
-        ['Pending', this.props.integrations.filter(i => i.currentState === 'Pending').length],
+        ['Running', this.props.runningIntegrations],
+        ['Stopped', this.props.stoppedIntegrations],
+        ['Pending', this.props.pendingIntegrations],
       ],
       type: 'donut'
     };

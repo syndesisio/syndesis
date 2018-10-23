@@ -16,10 +16,10 @@ export class IntegrationStatus extends React.Component<IIntegrationStatusProps> 
     let label = 'Pending';
     switch (this.props.integration.currentState) {
       case 'Published':
-        label = 'Running';
+        label = 'Published';
         break;
       case 'Unpublished':
-        label = 'Stopped';
+        label = 'Unpublished';
         break;
     }
     return (

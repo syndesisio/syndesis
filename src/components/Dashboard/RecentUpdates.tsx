@@ -4,7 +4,7 @@ import { IIntegration } from '../../containers';
 import { IntegrationStatus } from '../IntegrationStatus';
 
 export interface IRecentUpdatesProps {
-  integrations: IIntegration[]
+  recentlyUpdatedIntegrations: IIntegration[]
 }
 
 export class RecentUpdates extends React.Component<IRecentUpdatesProps> {
@@ -18,7 +18,7 @@ export class RecentUpdates extends React.Component<IRecentUpdatesProps> {
         </Card.Heading>
         <Card.Body>
           <Grid fluid={true}>
-            {this.props.integrations.map(i =>
+            {this.props.recentlyUpdatedIntegrations.map(i =>
               <Grid.Row key={i.id}>
                 <Grid.Col sm={5}>
                   {i.name}
