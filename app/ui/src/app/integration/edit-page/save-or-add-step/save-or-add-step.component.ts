@@ -151,6 +151,18 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
   }
 
   ngOnInit() {
+    const lastStep = this.currentFlowService.getEndStep();
+    if (lastStep && lastStep.action && lastStep.action.id == 'io.syndesis:api-provider-end') {
+      if (lastStep.configuredProperties['httpResponseCode'] == '501') {
+        const returnCode = this.currentFlowService.currentFlow.metadata['default-return-code'];
+        const returnCodeEdited = this.currentFlowService.currentFlow.metadata['return-code-edited'];
+        if (returnCode && !returnCodeEdited) {
+          this.currentFlowService.currentFlow.metadata['return-code-edited'] = 'true';
+          lastStep.configuredProperties['httpResponseCode'] = returnCode;
+        }
+      }
+    }
+
     this.flowPageService.initialize();
     const validate = this.route.queryParams.pipe(
       map(params => params['validate'] || false)
