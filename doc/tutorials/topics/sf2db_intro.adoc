@@ -33,7 +33,8 @@ Salesforce to database sample integration.
 
 ifeval::["{location}" == "downstream"]
 * You must be logged in to your {prodname} environment. 
-If you are not already logged in, see {{LinkFuseOnlineTutorials}logging-in-and-out_tutorials[What to expect the first time you use {prodname}.]
+If you are not already logged in, see 
+link:{LinkFuseOnlineTutorials}#logging-in-and-out_tutorials[What to expect the first time you use {prodname}.]
 endif::[]
 
 To implement, deploy, and test this sample integration, the main steps are:
