@@ -28,7 +28,7 @@ sample integrations:
 See this <<comparison-of-sample-integrations_{context},comparison table>>
 to decide which integration to create first.
 
-See also: {LinkFuseOnlineIntegrationGuide}[{NameOfFuseOnlineIntegrationGuide}]
+See also: link:{LinkFuseOnlineIntegrationGuide}[{NameOfFuseOnlineIntegrationGuide}]
 
 include::topics/comparison_of_sample_integrations.adoc[leveloffset=+1]
 
