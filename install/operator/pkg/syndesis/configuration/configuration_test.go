@@ -62,6 +62,9 @@ func TestSpecificConfig(t *testing.T) {
 							},
 						},
 					},
+					Features: v1alpha1.ServerFeatures{
+						ExposeVia3Scale: false,
+					},
 				},
 				Meta: v1alpha1.MetaConfiguration{
 					Resources: v1alpha1.ResourcesWithVolume{
@@ -104,6 +107,7 @@ func TestSpecificConfig(t *testing.T) {
 	assert.Equal(t, "2Gi", config[string(EnvPostgresqlVolumeCapacity)])
 
 	assert.Equal(t, "3Gi", config[string(EnvServerMemoryLimit)])
+	assert.Equal(t, "false", config[string(EnvExposeVia3Scale)])
 
 	assert.Equal(t, "4Gi", config[string(EnvMetaMemoryLimit)])
 	assert.Equal(t, "5Gi", config[string(EnvMetaVolumeCapacity)])

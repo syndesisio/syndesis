@@ -105,7 +105,8 @@ type PrometheusConfiguration struct {
 }
 
 type ServerConfiguration struct {
-	Resources Resources `json:"resources,omitempty"`
+	Resources Resources      `json:"resources,omitempty"`
+	Features  ServerFeatures `json:"features,omitempty"`
 }
 
 type MetaConfiguration struct {
@@ -127,4 +128,8 @@ type ResourcesWithVolume struct {
 
 type VolumeOnlyResources struct {
 	VolumeCapacity string `json:"volumeCapacity,omitempty"`
+}
+
+type ServerFeatures struct {
+	ExposeVia3Scale bool `json:"exposeVia3Scale,omitempty"`
 }
