@@ -9,20 +9,6 @@ OPERATOR_IMAGE="syndesis/syndesis-operator"
 # globs to test
 TEST_TARGETS="./cmd/... ./pkg/..."
 
-# $GOPATH volume to share between docker runs
-DOCKER_GOPATH_VOLUME=$(mktemp -d ${TMPDIR:-/tmp}/gopath.XXXXX)
-
-# $XDG_CACHE_HOME ($GOCACHE) volume to share between docker runs
-DOCKER_CACHE_VOLUME=$(mktemp -d ${TMPDIR:-/tmp}/gocache.XXXXX)
-
-CLEANUP_DIRS=()
-
-cleanup() {
-  rm -rf ${CLEANUP_DIRS[@]}
-}
-
-trap cleanup EXIT
-
 dep_ensure() {
     local operator_dir=${1}
     local do_local=${2:-}
@@ -37,7 +23,15 @@ dep_ensure() {
         dep ensure -vendor-only -v
     else
         echo "Running 'dep ensure' with $GO_BUILDER_IMAGE"
-        required_dirs
+        local docker_gopath_volume=$(mktemp -d ${TMPDIR:-/tmp}/gopath.XXXXX)
+        local docker_cache_volume=$(mktemp -d ${TMPDIR:-/tmp}/gocache.XXXXX)
+        trap "rm -rf $docker_cache_volume $docker_gopath_volume" EXIT
+
+        mkdir_and_check_owner "$operator_dir/dep-cache"
+        mkdir_and_check_owner "$docker_cache_volume"
+        mkdir_and_check_owner "$docker_gopath_volume/pkg/dep"
+        mkdir_and_check_owner "$docker_gopath_volume/src/github.com/syndesisio/syndesis/install/operator"
+
         local extra_opts=""
         if [ -n "$as_user" ]; then
             extra_opts="$extra_opts -u $as_user"
@@ -45,8 +39,8 @@ dep_ensure() {
         docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
                    -u $(id -u):$(id -g) \
                    $extra_opts \
-                   -v "$DOCKER_GOPATH_VOLUME":/gopath:z \
-                   -v "$DOCKER_CACHE_VOLUME":/.cache:z \
+                   -v "$docker_gopath_volume":/gopath:z \
+                   -v "$docker_cache_volume":/.cache:z \
                    -v $operator_dir/dep-cache:/gopath/pkg/dep:z \
                    -v $operator_dir:/gopath/src/github.com/syndesisio/syndesis/install/operator:z \
                    $GO_BUILDER_IMAGE \
@@ -54,17 +48,7 @@ dep_ensure() {
     fi
 }
 
-required_dirs() {
-    require_dir "$operator_dir/dep-cache"
-    require_dir "$DOCKER_CACHE_VOLUME"
-    require_dir "$DOCKER_GOPATH_VOLUME/pkg/dep"
-    require_dir "$DOCKER_GOPATH_VOLUME/src/github.com/syndesisio/syndesis/install/operator"
-
-    CLEANUP_DIRS+=($DOCKER_GOPATH_VOLUME)
-    CLEANUP_DIRS+=($DOCKER_CACHE_VOLUME)
-}
-
-require_dir() {
+mkdir_and_check_owner() {
     local dir=${1}
     [ -d "$dir" ] || mkdir -p $dir
     if [ "$(stat --format '%u:%g' $dir)" != "$(id -u)":"$(id -g)" ]; then
@@ -90,6 +74,86 @@ gopath_dir() {
     echo $dir
 }
 
+need_to_ensure_dep() {
+    if [ ! -d "$operator_dir/vendor" ] || [ $(ls "$operator_dir/vendor" | wc -l) == 0 ] || [ "$(hasflag -e --ensure)" ]; then
+        echo 1
+    else
+        echo 0
+    fi
+}
+
+build_operator_local() {
+    local do_skip_tests="${1:-}"
+    local do_linux="${2:-}"
+
+    local dir=$(gopath_dir)
+    check_error $dir
+
+    pushd $dir >/dev/null
+
+    if [ $(need_to_ensure_dep) == 1 ]; then
+        echo "Running 'dep ensure'"
+        dep ensure -vendor-only -v
+    fi
+
+    echo "Running local build"
+    if [ ! "$do_skip_tests" ]; then
+        echo "Running tests"
+        go test $TEST_TARGETS
+    fi
+    if [ "$do_linux" ] && [ $(isOSX) ]; then
+        echo "Cross-compiling syndesis-operator for Linux"
+        GOOS="linux" GOARCH="amd64" CGO_ENABLED=0 go build ./cmd/syndesis-operator
+    else
+        echo "Compiling syndesis-operator with local go"
+        go build ./cmd/syndesis-operator
+    fi
+    popd >/dev/null
+}
+
+build_operator_docker() {
+    local operator_dir="${1}"
+    local as_user="${2:-}"
+    local do_skip_tests="${3:-}"
+
+    echo "Creating syndesis-operator with $GO_BUILDER_IMAGE"
+    local extra_opts=""
+    if [ -n "$as_user" ]; then
+        extra_opts="$extra_opts -u $as_user -e XDG_CACHE_HOME=.cache"
+    else
+        extra_opts="$extra_opts -u $(id -u):$(id -g)"
+    fi
+
+    local cmd="(echo Compiling syndesis-operator; go build ./cmd/syndesis-operator)"
+
+    if [ ! "$do_skip_tests" ]; then
+        cmd="(echo Running tests; go test $TEST_TARGETS) && $cmd"
+    fi
+
+    if [ $(need_to_ensure_dep) == 1 ]; then
+        cmd="(echo Running 'dep ensure'; dep ensure -vendor-only -v) && $cmd"
+    fi
+
+    local docker_gopath_volume=$(mktemp -d ${TMPDIR:-/tmp}/gopath.XXXXX)
+    local docker_cache_volume=$(mktemp -d ${TMPDIR:-/tmp}/gocache.XXXXX)
+    trap "rm -rf $docker_cache_volume $docker_gopath_volume" EXIT
+
+    mkdir_and_check_owner "$operator_dir/dep-cache"
+    mkdir_and_check_owner "$docker_cache_volume"
+    mkdir_and_check_owner "$docker_gopath_volume/pkg/dep"
+    mkdir_and_check_owner "$docker_gopath_volume/src/github.com/syndesisio/syndesis/install/operator"
+
+    docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
+               $extra_opts \
+               -v "$docker_gopath_volume":/gopath:z \
+               -v "$docker_cache_volume":/.cache:z \
+               -v $operator_dir/dep-cache:/gopath/pkg/dep:z \
+               -v $operator_dir:/gopath/src/github.com/syndesisio/syndesis/install/operator:z \
+               -e CGO_ENABLED=0 \
+               $GO_BUILDER_IMAGE \
+               sh -c "$cmd"
+}
+
 build_operator() {
     local operator_dir="${1}"
     local do_local="${2:-}"
@@ -97,49 +161,10 @@ build_operator() {
     local as_user="${4:-}"
     local do_skip_tests="${5:-}"
 
-    if [ ! -d "$operator_dir/vendor" ] || [ $(ls "$operator_dir/vendor" | wc -l) == 0 ]; then
-        echo "Running dep ensure implicitely"
-        dep_ensure "$operator_dir" "$do_local" "$as_user"
-    fi
-
     if [ "${do_local}" ]; then
-        echo "Running local build"
-        local dir=$(gopath_dir)
-        check_error $dir
-        pushd $dir >/dev/null
-        if [ ! "$do_skip_tests" ]; then
-            echo "Running tests"
-            go test $TEST_TARGETS
-        fi
-        if [ "$do_linux" ] && [ $(isOSX) ]; then
-            echo "Cross-compiling syndesis-operator for Linux"
-            GOOS="linux" GOARCH="amd64" CGO_ENABLED=0 go build ./cmd/syndesis-operator
-        else
-            echo "Compiling syndesis-operator with local go"
-            go build ./cmd/syndesis-operator
-        fi
-        popd >/dev/null
+        build_operator_local $do_skip_tests $do_linux
     else
-        echo "Creating syndesis-operator with $GO_BUILDER_IMAGE"
-        local extra_opts=""
-        if [ -n "$as_user" ]; then
-            extra_opts="$extra_opts -u $as_user -e XDG_CACHE_HOME=.cache"
-        fi
-        local cmd="(echo Compiling syndesis-operator; go build ./cmd/syndesis-operator)"
-        if [ ! "$do_skip_tests" ]; then
-            cmd="(echo Running tests; go test $TEST_TARGETS) && $cmd"
-        fi
-        required_dirs
-        docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
-                   -u $(id -u):$(id -g) \
-                   $extra_opts \
-                   -v "$DOCKER_GOPATH_VOLUME":/gopath:z \
-                   -v "$DOCKER_CACHE_VOLUME":/.cache:z \
-                   -v $operator_dir/dep-cache:/gopath/pkg/dep:z \
-                   -v $operator_dir:/gopath/src/github.com/syndesisio/syndesis/install/operator:z \
-                   -e CGO_ENABLED=0 \
-                   $GO_BUILDER_IMAGE \
-                   sh -c "$cmd"
+        build_operator_docker $operator_dir $as_user $do_skip_tests
     fi
 }
 
