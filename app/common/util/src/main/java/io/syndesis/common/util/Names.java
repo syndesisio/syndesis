@@ -21,7 +21,7 @@ import static io.syndesis.common.util.Strings.truncate;
 
 public final class Names {
 
-    private static final Pattern VALID_REGEX = Pattern.compile("^[a-z0-9][-A-Za-z0-9\\\\]+$");
+    private static final Pattern VALID_REGEX = Pattern.compile("^[a-z0-9][-A-Za-z0-9\\\\]{0,61}[a-z0-9]$");
     private static final Pattern INVALID_START_REGEX = Pattern.compile("^[^a-z0-9]+");
     private static final Pattern INVALID_CHARACTER_REGEX = Pattern.compile("[^a-zA-Z0-9-\\._]");
     private static final String SPACE = " ";
@@ -60,7 +60,7 @@ public final class Names {
 
         final String thirdPass = INVALID_CHARACTER_REGEX.matcher(secondPass).replaceAll(BLANK);
 
-        return truncate(thirdPass.chars()
+        final String fourthPass = truncate(thirdPass.chars()
              //Handle consecutive dashes
             .collect(StringBuilder::new,
                 (b, chr) -> {
@@ -71,6 +71,19 @@ public final class Names {
                     }
              }, StringBuilder::append)
             .toString(), MAXIMUM_NAME_LENGTH);
+
+        final int fourthPassLength = fourthPass.length();
+        if (Character.isLetterOrDigit(fourthPass.charAt(fourthPassLength - 1))) {
+            // this includes some letters and numbers out of ASCII range,
+            // but those should have been filtered out prior
+            return fourthPass;
+        }
+
+        if (fourthPassLength < MAXIMUM_NAME_LENGTH) {
+            return fourthPass + "0";
+        }
+
+        return fourthPass.substring(0, MAXIMUM_NAME_LENGTH - 1) + "0";
     }
 
 
