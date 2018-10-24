@@ -31,4 +31,4 @@ same way that you view {prodname} information for any other step.
 .Additional resources
 * To add a log step, see <<add-log-step>>.
 * To finish an integration by logging message information, 
-{LinkFuseOnlineConnectorGuide}#connecting-to-log[add a log connection.]
+link:{LinkFuseOnlineConnectorGuide}#connecting-to-log[add a log connection.]
