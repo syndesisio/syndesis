@@ -1,10 +1,12 @@
-import { Button, CardGrid, Grid } from 'patternfly-react';
+import { CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { IConnection, IIntegration, IIntegrationsMetrics, IMonitoredIntegration } from '../../containers';
 import { ConnectionsGrid } from '../ConnectionsGrid';
 import { AggregatedMetric } from './AggregatedMetric';
 import { ConnectionsMetric } from './ConnectionsMetric';
+
+import './Dashboard.css';
 import { IntegrationBoard } from './IntegrationBoard';
 import { RecentUpdates } from './RecentUpdates';
 import { TopIntegrations } from './TopIntegrations';
@@ -32,12 +34,14 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
       <div className={'container-fluid'}>
         <Grid fluid={true}>
           <Grid.Row>
-            <Grid.Col sm={6}>
-              <h1>System metric</h1>
-            </Grid.Col>
-            <Grid.Col sm={6} className={'text-right'}>
-              <Link to={'/integrations'}>View All Integrations</Link>
-              <Button bsStyle={'primary'}>Create Integration</Button>
+            <Grid.Col sm={12}>
+              <div className={'Dashboard-header'}>
+                <h1 className={'Dashboard-header__title'}>System metric</h1>
+                <div className="Dashboard-header__actions">
+                  <Link to={'/integrations'}>View All Integrations</Link>
+                  <Link to={'/integrations/new'} className={'btn btn-primary'}>Create Integration</Link>
+                </div>
+              </div>
             </Grid.Col>
           </Grid.Row>
         </Grid>
@@ -97,12 +101,14 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
 
         <Grid fluid={true} style={{marginTop: '20px'}}>
           <Grid.Row>
-            <Grid.Col sm={6}>
-              <h1>Connections</h1>
-            </Grid.Col>
-            <Grid.Col sm={6} className={'text-right'}>
-              <a>View All Connections</a>
-              <Button bsStyle={'primary'}>Create Connection</Button>
+            <Grid.Col sm={12}>
+              <div className={'Dashboard-header'}>
+                <h1 className={'Dashboard-header__title'}>Connections</h1>
+                <div className="Dashboard-header__actions">
+                  <Link to={'/connections'}>View All Connections</Link>
+                  <Link to={'/connections/new'} className={'btn btn-primary'}>Create Connection</Link>
+                </div>
+              </div>
             </Grid.Col>
           </Grid.Row>
         </Grid>

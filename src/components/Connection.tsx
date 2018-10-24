@@ -10,7 +10,7 @@ export class Connection extends React.Component<IConnectionProps> {
   public render() {
     const iconSrc = this.props.connection.icon.startsWith('data:')
       ? this.props.connection.icon
-      : `${process.env.PUBLIC_URL}icons/${this.props.connection.id}.connection.png`;
+      : `${process.env.PUBLIC_URL}/icons/${this.props.connection.id}.connection.png`;
     return (
       <Card matchHeight={true}>
         <Card.Body>
