@@ -10,7 +10,7 @@ const LoadableConnectionsPage = Loadable({
 });
 
 const LoadableNewConnectionPage = Loadable({
-  loader: () => import('./pages/ConnectionsPage'),
+  loader: () => import('./pages/NewConnectionPage'),
   loading: ModuleLoader
 });
 
