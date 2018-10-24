@@ -6,6 +6,7 @@ import { IListViewToolbarProps, ListViewToolbar } from './ListViewToolbar';
 
 export interface IConnectionsListViewProps extends IListViewToolbarProps {
   match: any;
+  loading: boolean;
   connections: IConnection[];
 }
 
@@ -24,7 +25,10 @@ export class ConnectionsListView extends React.Component<IConnectionsListViewPro
           </div>
         </ListViewToolbar>
         <div className={'container-fluid'}>
-          <ConnectionsGrid connections={this.props.connections}/>
+          <ConnectionsGrid
+            loading={this.props.loading}
+            connections={this.props.connections}
+          />
         </div>
       </>
     );

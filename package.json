@@ -9,6 +9,7 @@
     "classnames": "^2.2.6",
     "patternfly-react": "^2.19.1",
     "react": "^16.5.2",
+    "react-content-loader": "^3.2.0",
     "react-dom": "^16.5.2",
     "react-fast-compare": "^2.0.2",
     "react-router": "^4.3.1",

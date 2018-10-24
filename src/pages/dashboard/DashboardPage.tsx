@@ -72,24 +72,27 @@ export function getTopIntegrations(integrations: IMonitoredIntegration[], topInt
 
 export const DashboardPage = () => (
   <WithMonitoredIntegrations>
-    {({integrationsCount, integrations}) =>
+    {({data: integrationsData, loading: integrationsLoading}) =>
       <WithIntegrationsMetrics>
-        {metrics =>
+        {({data: metricsData, loading: metricsLoading}) =>
           <WithConnections>
-            {({connectionsCount, connections}) => {
-              const integrationStatesCount = getIntegrationsCountsByState(integrations);
+            {({data: connectionsData, loading: connectionsLoading}) => {
+              const integrationStatesCount = getIntegrationsCountsByState(integrationsData.items);
               return (
                 <Dashboard
-                  integrationsCount={integrationsCount}
+                  integrationsLoaded={!integrationsLoading}
+                  connectionsLoaded={!connectionsLoading}
+                  metricsLoaded={!metricsLoading}
+                  integrationsCount={integrationsData.totalCount}
                   integrationsErrorCount={integrationStatesCount.Error}
-                  connections={connections}
-                  connectionsCount={connectionsCount}
-                  metrics={metrics}
+                  connections={connectionsData.items}
+                  connectionsCount={connectionsData.totalCount}
+                  metrics={metricsData}
                   runningIntegrations={integrationStatesCount.Published}
                   stoppedIntegrations={integrationStatesCount.Unpublished}
                   pendingIntegrations={integrationStatesCount.Pending}
-                  recentlyUpdatedIntegrations={getRecentlyUpdatedIntegrations(integrations)}
-                  topIntegrations={getTopIntegrations(integrations, metrics.topIntegrations)}
+                  recentlyUpdatedIntegrations={getRecentlyUpdatedIntegrations(integrationsData.items)}
+                  topIntegrations={getTopIntegrations(integrationsData.items, metricsData.topIntegrations)}
                 />
               );
             }}

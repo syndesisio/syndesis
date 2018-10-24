@@ -2,10 +2,12 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { IMonitoredIntegration } from '../containers';
 import { IntegrationsList } from './IntegrationsList';
+import { IntegrationsListSkeleton } from './IntegrationsListSkeleton';
 import { IListViewToolbarProps, ListViewToolbar } from './ListViewToolbar';
 
 export interface IIntegrationsListViewProps extends IListViewToolbarProps {
   match: any;
+  loading: boolean;
   monitoredIntegrations: IMonitoredIntegration[];
 }
 
@@ -30,7 +32,16 @@ export class IntegrationsListView extends React.Component<IIntegrationsListViewP
           </div>
         </ListViewToolbar>
         <div className={'container-fluid'}>
-          <IntegrationsList monitoredIntegrations={this.props.monitoredIntegrations}/>
+          {this.props.loading
+            ? <IntegrationsListSkeleton
+              width={800}
+              style={{
+                backgroundColor: '#FFF',
+                marginTop: 30
+              }}
+            />
+            : <IntegrationsList monitoredIntegrations={this.props.monitoredIntegrations}/>
+          }
         </div>
       </>
     );

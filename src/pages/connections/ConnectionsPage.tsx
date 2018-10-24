@@ -56,17 +56,18 @@ export class ConnectionsPage extends ListViewToolbarAbstractComponent<{}, IListV
   public render() {
     return (
       <WithConnections>
-        {({connections}) =>
+        {({data, loading}) =>
           <WithRouter>
             {({match}) => {
               const filteredAndSortedConnections = getFilteredAndSortedConnections(
-                connections,
+                data.items,
                 this.state.activeFilters,
                 this.state.currentSortType,
                 this.state.isSortAscending
               );
               return (
                 <ConnectionsListView
+                  loading={loading}
                   match={match}
                   connections={filteredAndSortedConnections}
                   filterTypes={filterTypes}

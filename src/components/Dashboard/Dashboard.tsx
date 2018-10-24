@@ -1,21 +1,29 @@
 import { Button, CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { IConnection, IIntegrationsMetrics } from '../../containers';
+import { IConnection, IIntegration, IIntegrationsMetrics, IMonitoredIntegration } from '../../containers';
 import { ConnectionsGrid } from '../ConnectionsGrid';
 import { AggregatedMetric } from './AggregatedMetric';
 import { ConnectionsMetric } from './ConnectionsMetric';
-import { IIntegrationBoardProps, IntegrationBoard } from './IntegrationBoard';
-import { IRecentUpdatesProps, RecentUpdates } from './RecentUpdates';
-import { ITopIntegrationsProps, TopIntegrations } from './TopIntegrations';
+import { IntegrationBoard } from './IntegrationBoard';
+import { RecentUpdates } from './RecentUpdates';
+import { TopIntegrations } from './TopIntegrations';
 import { UptimeMetric } from './UptimeMetric';
 
-export interface IIntegrationsPageProps extends IIntegrationBoardProps, IRecentUpdatesProps, ITopIntegrationsProps {
+export interface IIntegrationsPageProps {
+  integrationsLoaded: boolean;
+  connectionsLoaded: boolean;
+  metricsLoaded: boolean;
   integrationsCount: number;
   integrationsErrorCount: number;
   connections: IConnection[];
   connectionsCount: number;
   metrics: IIntegrationsMetrics;
+  topIntegrations: IMonitoredIntegration[];
+  recentlyUpdatedIntegrations: IIntegration[];
+  pendingIntegrations: number;
+  runningIntegrations: number;
+  stoppedIntegrations: number;
 }
 
 export class Dashboard extends React.Component<IIntegrationsPageProps> {
@@ -60,7 +68,10 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
         <Grid fluid={true}>
           <Grid.Row>
             <Grid.Col sm={12} md={6}>
-              <TopIntegrations topIntegrations={this.props.topIntegrations}/>
+              <TopIntegrations
+                loading={!this.props.integrationsLoaded}
+                topIntegrations={this.props.topIntegrations}
+              />
             </Grid.Col>
             <Grid.Col sm={12} md={6}>
               <Grid.Row>
@@ -74,7 +85,10 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
               </Grid.Row>
               <Grid.Row>
                 <Grid.Col sm={12}>
-                  <RecentUpdates recentlyUpdatedIntegrations={this.props.recentlyUpdatedIntegrations}/>
+                  <RecentUpdates
+                    loading={!this.props.integrationsLoaded}
+                    recentlyUpdatedIntegrations={this.props.recentlyUpdatedIntegrations}
+                  />
                 </Grid.Col>
               </Grid.Row>
             </Grid.Col>
@@ -92,7 +106,10 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
             </Grid.Col>
           </Grid.Row>
         </Grid>
-        <ConnectionsGrid connections={this.props.connections}/>
+        <ConnectionsGrid
+          loading={!this.props.connectionsLoaded}
+          connections={this.props.connections}
+        />
       </div>
     );
   }

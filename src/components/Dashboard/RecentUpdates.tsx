@@ -2,9 +2,11 @@ import { Card, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { IIntegration } from '../../containers';
 import { IntegrationStatus } from '../IntegrationStatus';
+import { RecentUpdatesSkeleton } from './RecentUpdatsSkeleton';
 
 export interface IRecentUpdatesProps {
-  recentlyUpdatedIntegrations: IIntegration[]
+  loading: boolean;
+  recentlyUpdatedIntegrations: IIntegration[];
 }
 
 export class RecentUpdates extends React.Component<IRecentUpdatesProps> {
@@ -17,21 +19,25 @@ export class RecentUpdates extends React.Component<IRecentUpdatesProps> {
           </Card.Title>
         </Card.Heading>
         <Card.Body>
-          <Grid fluid={true}>
-            {this.props.recentlyUpdatedIntegrations.map(i =>
-              <Grid.Row key={i.id}>
-                <Grid.Col sm={5}>
-                  {i.name}
-                </Grid.Col>
-                <Grid.Col sm={3}>
-                  <IntegrationStatus integration={i}/>
-                </Grid.Col>
-                <Grid.Col sm={4}>
-                  {new Date(i.updatedAt || i.createdAt).toLocaleString()}
-                </Grid.Col>
-              </Grid.Row>
+          {this.props.loading
+            ? <RecentUpdatesSkeleton/>
+            : (
+              <Grid fluid={true}>
+                {this.props.recentlyUpdatedIntegrations.map(i =>
+                  <Grid.Row key={i.id}>
+                    <Grid.Col sm={5}>
+                      {i.name}
+                    </Grid.Col>
+                    <Grid.Col sm={3}>
+                      <IntegrationStatus integration={i}/>
+                    </Grid.Col>
+                    <Grid.Col sm={4}>
+                      {new Date(i.updatedAt || i.createdAt).toLocaleString()}
+                    </Grid.Col>
+                  </Grid.Row>
+                )}
+              </Grid>
             )}
-          </Grid>
         </Card.Body>
       </Card>
     );

@@ -2,15 +2,19 @@ import { Card, MenuItem } from 'patternfly-react';
 import * as React from 'react';
 import { IMonitoredIntegration } from '../../containers';
 import { IntegrationsList } from '../index';
+import { IntegrationsListSkeleton } from '../IntegrationsListSkeleton';
+
+import './TopIntegrations.css';
 
 export interface ITopIntegrationsProps {
+  loading: boolean;
   topIntegrations: IMonitoredIntegration[]
 }
 
 export class TopIntegrations extends React.Component<ITopIntegrationsProps> {
   public render() {
     return (
-      <Card accented={false}>
+      <Card accented={false} className={'TopIntegrations'}>
         <Card.Heading>
           <Card.DropdownButton id='cardDropdownButton1' title='Last 30 Days'>
             <MenuItem eventKey='1' active={true}>
@@ -28,7 +32,10 @@ export class TopIntegrations extends React.Component<ITopIntegrationsProps> {
           </Card.Title>
         </Card.Heading>
         <Card.Body>
-          <IntegrationsList monitoredIntegrations={this.props.topIntegrations}/>
+          {this.props.loading
+            ? <IntegrationsListSkeleton width={500}/>
+            : <IntegrationsList monitoredIntegrations={this.props.topIntegrations}/>
+          }
         </Card.Body>
       </Card>
     );

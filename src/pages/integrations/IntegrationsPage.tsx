@@ -108,22 +108,23 @@ export class IntegrationsPage extends ListViewToolbarAbstractComponent<{}, IList
   public render() {
     return (
       <WithMonitoredIntegrations>
-        {({integrationsCount, integrations}) =>
+        {({data: integrationsData, loading}) =>
           <WithConnections>
-            {({connections}) =>
+            {({data: connectionsData}) =>
               <WithRouter>
                 {({match}) => {
                   const filteredAndSortedIntegrations = getFilteredAndSortedIntegrations(
-                    integrations,
+                    integrationsData.items,
                     this.state.activeFilters,
                     this.state.currentSortType,
                     this.state.isSortAscending
                   );
                   return (
                     <IntegrationsListView
+                      loading={loading}
                       match={match}
                       monitoredIntegrations={filteredAndSortedIntegrations}
-                      filterTypes={getFilterTypes(connections)}
+                      filterTypes={getFilterTypes(connectionsData.items)}
                       sortTypes={sortTypes}
                       resultsCount={filteredAndSortedIntegrations.length}
                       {...this.state}
