@@ -10,7 +10,14 @@ service. This is where {prodname} publishes your REST API service. This
 external URL is the base URL for calls to your REST API service endpoints. 
 {prodname} displays this URL in the integration's summary page.
 
-Since each operation that the OpenAPI specification defines has its own 
-flow, each operation also has its own REST API service endpoint. Each endpoint 
-specifies the base URL and optionally specifies the subpath for triggering
-execution of a particular integration flow.  
+In an integration, each operation that the OpenAPI specification defines has its own 
+integration flow. Consequently, each operation can also have its own 
+REST API service endpoint. Each endpoint is defined by the base URL 
+and optionally by a subpath. REST API calls that trigger execution of a particular 
+integration flow specify that operation's endpoint. 
+
+Your OpenAPI specification determines which HTTP commands (such as 
+`GET`, `POST`, `DELETE` and so on) you can specify
+in calls to your REST API service endpoints. Examples of calls to 
+API Provider endpoints are in the 
+link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_{context}[instructions for trying out the API Provider quickstart].   

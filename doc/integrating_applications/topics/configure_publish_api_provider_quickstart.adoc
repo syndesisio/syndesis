@@ -1,0 +1,95 @@
+// Module included in the following assemblies:
+// trigger_integrations_with_api_calls.adoc
+
+[id='configure-publish-api-provider-quickstart_{context}']
+= Configure and publish the API Provider quickstart integration
+
+{prodname} provides an API Provider quickstart integration that you can 
+import into your {prodname} environment. This quickstart includes 
+an OpenAPI specification for a task management API. After importing
+the quickstart integration, you configure return codes, and then publish
+the integration. After you complete the procedure described below,
+the Task API integration is running and ready
+to be executed.  
+
+.Prerequisites
+* {prodname} is open in a browser.
+
+.Procedure
+
+. To import the Task API quickstart integration:
+.. Go to 
+https://github.com/syndesisio/syndesis-quickstarts/tree/master/api-provider 
+and download `TaskAPI-export.zip`. 
+.. In {prodname}, in the left navigation panel, click *Integrations*. 
+.. In the upper right, click *Import*. 
+.. Drag and drop the zip file that you downloaded. {prodname} indicates
+that it has successfully imported the file. 
+.. In the left navigation panel, click *Integrations* to see
+an entry for the *Task API* integration that you just imported. The entry
+indicates that configuration is required. 
+
+. To configure the Task API integration:
+.. Click the *Task API* entry to display the integration summary. 
+.. In the upper right, click *Edit Integration* to display a list
+of the operations that this API provides. 
+.. To configure the integration flow for the *Create Task* operation: 
+... Click the *Create Task* entry to display a page that prompts you to
+add a connection or add a step. 
++
+Connections and steps have already been
+added to this integration flow. In the integration flow visualization panel
+on the left, move your cursor over the icons to see what they represent. Click a 
+step or connection to view its configuration. When you are done
+examining one, click another one to examine it. When you click 
+a database connection, you can see the SQL statement that it executes. 
+... In the integration flow visualization panel on the left, click the
+last connection. You might have to scroll down to see it. When you hover 
+over the last connection, {prodname} displays *Provided API Return Path*. 
+... Click in the *Return Code* input field and scroll to select 
+*201 Created*. 
+... Click *Done*.
+... In the upper right, click *Save as Draft* and then *Go to Operation List*.
+.. To configure the integration flow for the *Delete Task for ID* operation:
+... Click the *Delete Task for ID* entry to display a page that prompts you to
+add a connection or add a step. 
++
+This integration flow has a data mapper step and a connection to the
+sample database that is provided with {prodname}. 
+In the integration flow visualization panel, 
+click the database connection to view the SQL statement that it executes. 
+... In the integration flow visualization panel, click the
+last connection. When you hover 
+over the last connection, {prodname} displays *Provided API Return Path*. 
+... Click in the *Return Code* input field and scroll to select 
+*200 OK*. 
+... Click *Done*.
+... In the upper right, click *Save as Draft* and then *Go to Operation List*.
+.. To configure the integration flow for the *Get Task by ID* operation:
+... Click the *Get Task by ID* entry to display a page that prompts you to
+add a connection or add a step. 
++
+This integration flow has two data mapper steps, a connection to the
+sample database that is provided with {prodname}, and a log step. 
+In the integration flow visualization panel, click an icon for a step
+or connection to view its configuration. When you are done examining one,
+click another one. 
+... In the integration flow visualization panel, click the
+last connection. When you hover 
+over the last connection, {prodname} displays *Provided API Return Path*. 
+... Click in the *Return Code* input field and scroll to select 
+*200 OK*. 
+... Click *Done*.
+
+. In the upper right, click *Publish*.
++
+{prodname} displays the integration summary page and shows 
+publication progress as it assemblies, builds, deploys, and 
+starts the integration. The integration summary page also provides 
+the external URL for the
+API provider service, which looks something like this: 
++
+`\https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com`
++
+This is where {prodname} makes the Task API service available. REST 
+API calls specify endpoints that define this base URL. 
