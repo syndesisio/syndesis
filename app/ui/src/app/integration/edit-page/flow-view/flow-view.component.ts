@@ -153,6 +153,8 @@ export class FlowViewComponent implements OnDestroy {
   insertConnectionAfter(position: number) {
     this.popovers.forEach(popover => popover.hide());
 
+    this.selectedKind = undefined;
+
     this.currentFlowService.events.emit({
       kind: 'integration-insert-connection',
       position: position,
