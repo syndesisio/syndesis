@@ -19,7 +19,7 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
     private connectorStore: ConnectorStore
   ) {
     this.loading = connectorStore.loading;
-    this.connectors = connectorStore.list;
+    this.connectors = connectorStore.listVisible;
   }
 
   ngOnInit() {

@@ -19,7 +19,7 @@ export class ConnectionsListPage implements OnInit {
 
   constructor(private store: ConnectionStore, private router: Router) {
     this.loading = store.loading;
-    this.connections = store.list;
+    this.connections = store.listVisible;
   }
 
   ngOnInit() {

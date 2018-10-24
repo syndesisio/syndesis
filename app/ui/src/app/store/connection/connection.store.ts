@@ -21,4 +21,10 @@ export class ConnectionStore extends AbstractStore<
   protected get kind() {
     return 'Connection';
   }
+
+  get listVisible() {
+    // Returns the list of visible connections
+    return this.list.map(lst => lst.filter(c => !c.metadata || !c.metadata['hide-from-connection-pages']));
+  }
+
 }

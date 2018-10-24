@@ -18,7 +18,8 @@
     }
   ],
   "metadata": {
-    "tech-preview": true
+    "tech-preview": true,
+    "hide-from-connection-pages": true
   },
   "actions": [
     {

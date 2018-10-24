@@ -73,6 +73,7 @@ export interface Connection extends BaseEntity {
   createdDate: string;
   tags: Array<string>;
   uses?: number;
+  metadata?: StringMap<any>;
 }
 
 export type Environments = Array<BaseEntity>;

@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
 
+import io.syndesis.common.model.WithMetadata;
 import org.immutables.value.Value;
 import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithConfiguredProperties;
@@ -30,7 +31,7 @@ import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.environment.Organization;
 
 public interface ConnectionBase
-    extends WithResourceId, WithTags, WithName, WithConfiguredProperties, ToJson, Serializable {
+    extends WithResourceId, WithTags, WithName, WithConfiguredProperties, WithMetadata, ToJson, Serializable {
 
     Optional<Organization> getOrganization();
 
