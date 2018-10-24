@@ -8,23 +8,23 @@ import {
   EmptyStateConfig
 } from 'patternfly-ng';
 import { ConfigService } from '@syndesis/ui/config.service';
-import { TechExtensionDeleteModalComponent } from '@syndesis/ui/customizations/tech-extensions/tech-extension-delete-modal.component';
+import { ExtensionDeleteModalComponent } from '@syndesis/ui/customizations/extensions/extension-delete-modal.component';
 import { Extensions, I18NService } from '@syndesis/ui/platform';
 
 @Component({
-  selector: 'syndesis-tech-extensions-list',
-  templateUrl: 'tech-extensions-list.component.html',
-  styleUrls: ['./tech-extensions-list.component.scss']
+  selector: 'syndesis-extensions-list',
+  templateUrl: 'extensions-list.component.html',
+  styleUrls: ['./extensions-list.component.scss']
 })
-export class TechExtensionsListComponent implements OnInit {
+export class ExtensionsListComponent implements OnInit {
   extensions$: Observable<Extensions>;
   filteredExtensions$: Subject<Extensions> = new BehaviorSubject(
     <Extensions>{}
   );
   loading$: Observable<boolean>;
   listConfig: ListConfig;
-  @ViewChild(TechExtensionDeleteModalComponent)
-  deleteModal: TechExtensionDeleteModalComponent;
+  @ViewChild(ExtensionDeleteModalComponent)
+  deleteModal: ExtensionDeleteModalComponent;
 
   constructor(
     private store: ExtensionStore,

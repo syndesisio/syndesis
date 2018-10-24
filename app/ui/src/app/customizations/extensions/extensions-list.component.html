@@ -1,6 +1,6 @@
 <h1>{{ 'customizations.extensions.heading' | synI18n }}</h1>
 <p [innerHtml]="'customizations.extensions.description' | synI18n"></p>
-<div class="tech-extensions-list">
+<div class="extensions-list">
   <syndesis-list-toolbar [items]="extensions$"
                           [filterTags]="false"
                           [filteredItems]="filteredExtensions$"
@@ -18,7 +18,7 @@
   </syndesis-list-toolbar>
   <syndesis-loading [loading]="loading$ | async" [content]="content">
     <ng-template #content>
-      <syndesis-tech-extension-delete-modal></syndesis-tech-extension-delete-modal>
+      <syndesis-extension-delete-modal></syndesis-extension-delete-modal>
       <pfng-list [items]="filteredExtensions$ | async"
                 [config]="listConfig"
                 [itemTemplate]="itemTemplate"

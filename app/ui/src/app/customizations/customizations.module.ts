@@ -14,11 +14,11 @@ import { ApiConnectorModule } from '@syndesis/ui/customizations/api-connector/ap
 import { CustomizationsComponent } from '@syndesis/ui/customizations/customizations.component';
 
 import {
-  TechExtensionsListComponent,
-  TechExtensionImportComponent,
-  TechExtensionDetailComponent,
-  TechExtensionDeleteModalComponent
-} from '@syndesis/ui/customizations/tech-extensions';
+  ExtensionsListComponent,
+  ExtensionImportComponent,
+  ExtensionDetailComponent,
+  ExtensionDeleteModalComponent
+} from '@syndesis/ui/customizations/extensions';
 
 const routes: Routes = [
   {
@@ -27,7 +27,7 @@ const routes: Routes = [
     children: [
       {
         path: 'extensions',
-        component: TechExtensionsListComponent
+        component: ExtensionsListComponent
       },
       {
         path: 'api-connector',
@@ -43,15 +43,15 @@ const routes: Routes = [
   },
   {
     path: 'extensions/import/:id',
-    component: TechExtensionImportComponent
+    component: ExtensionImportComponent
   },
   {
     path: 'extensions/import',
-    component: TechExtensionImportComponent
+    component: ExtensionImportComponent
   },
   {
     path: 'extensions/:id',
-    component: TechExtensionDetailComponent
+    component: ExtensionDetailComponent
   }
 ];
 
@@ -69,10 +69,10 @@ const routes: Routes = [
   declarations: [
     CustomizationsComponent,
     // TODO: Move this out into its own NgModule
-    TechExtensionsListComponent,
-    TechExtensionImportComponent,
-    TechExtensionDeleteModalComponent,
-    TechExtensionDetailComponent
+    ExtensionsListComponent,
+    ExtensionImportComponent,
+    ExtensionDeleteModalComponent,
+    ExtensionDetailComponent
   ],
   providers: [WindowRef]
 })

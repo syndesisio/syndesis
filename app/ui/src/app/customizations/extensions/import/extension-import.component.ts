@@ -24,13 +24,13 @@ interface FileError {
 
 @Component({
   selector: 'syndesis-tech-extentions-import',
-  templateUrl: 'tech-extension-import.component.html',
+  templateUrl: 'extension-import.component.html',
   styleUrls: [
-    '../tech-extension-common.scss',
-    'tech-extension-import.component.scss'
+    '../extension-common.scss',
+    'extension-import.component.scss'
   ]
 })
-export class TechExtensionImportComponent implements OnInit {
+export class ExtensionImportComponent implements OnInit {
   uploader: FileUploader;
   response: Extension;
   error: FileError;

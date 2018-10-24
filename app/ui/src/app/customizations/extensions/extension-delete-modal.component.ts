@@ -13,15 +13,15 @@ import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notification-service';
 
 @Component({
-  selector: 'syndesis-tech-extension-delete-modal',
-  templateUrl: 'tech-extension-delete-modal.component.html',
+  selector: 'syndesis-extension-delete-modal',
+  templateUrl: 'extension-delete-modal.component.html',
   styleUrls: [
-    'tech-extension-common.scss',
-    'tech-extension-delete-modal.component.scss'
+    'extension-common.scss',
+    'extension-delete-modal.component.scss'
   ]
 })
-export class TechExtensionDeleteModalComponent implements OnInit, OnDestroy {
-  id = 'tech-extension-delete-modal';
+export class ExtensionDeleteModalComponent implements OnInit, OnDestroy {
+  id = 'extension-delete-modal';
   extension: Extension;
   integrations: Integrations;
   loading = true;

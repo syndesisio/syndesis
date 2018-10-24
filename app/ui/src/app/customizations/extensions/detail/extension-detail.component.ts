@@ -4,22 +4,22 @@ import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { Extension, I18NService, Integrations } from '@syndesis/ui/platform';
 import { ExtensionStore } from '@syndesis/ui/store';
-import { TechExtensionDeleteModalComponent } from '@syndesis/ui/customizations/tech-extensions';
+import { ExtensionDeleteModalComponent } from '@syndesis/ui/customizations/extensions';
 
 @Component({
-  selector: 'syndesis-tech-extension-detail',
-  templateUrl: 'tech-extension-detail.component.html',
+  selector: 'syndesis-extension-detail',
+  templateUrl: 'extension-detail.component.html',
   styleUrls: [
-    '../tech-extension-common.scss',
-    'tech-extension-detail.component.scss'
+    '../extension-common.scss',
+    'extension-detail.component.scss'
   ]
 })
-export class TechExtensionDetailComponent implements OnInit {
+export class ExtensionDetailComponent implements OnInit {
   extension$: Observable<Extension>;
   integrations$: Observable<Integrations>;
   loading$: Observable<boolean>;
-  @ViewChild(TechExtensionDeleteModalComponent)
-  deleteModal: TechExtensionDeleteModalComponent;
+  @ViewChild(ExtensionDeleteModalComponent)
+  deleteModal: ExtensionDeleteModalComponent;
 
   constructor(
     private extensionStore: ExtensionStore,
