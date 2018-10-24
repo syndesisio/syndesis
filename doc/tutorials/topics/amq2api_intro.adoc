@@ -29,7 +29,7 @@ ifeval::["{location}" == "downstream"]
 
 * You must be logged in to {prodname}.
 If you are not already logged in, see 
-link:{LinkFuseOnlineTutorials}logging-in-and-out_tutorials[What to expect the first time you use {prodname}.] 
+link:{LinkFuseOnlineTutorials}#logging-in-and-out_tutorials[What to expect the first time you use {prodname}.] 
 endif::[]
 
 To implement the AMQ to REST API sample integration, the main steps are:
