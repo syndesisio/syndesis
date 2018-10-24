@@ -10,7 +10,7 @@ import {
 } from 'ng2-file-upload';
 import { NotificationType } from 'patternfly-ng';
 
-import { Extension } from '@syndesis/ui/platform';
+import { Extension, I18NService } from '@syndesis/ui/platform';
 import { NotificationService } from '@syndesis/ui/common';
 import { ExtensionStore } from '@syndesis/ui/store/extension/extension.store';
 
@@ -24,13 +24,13 @@ interface FileError {
 
 @Component({
   selector: 'syndesis-tech-extentions-import',
-  templateUrl: 'tech-extension-import.component.html',
+  templateUrl: 'extension-import.component.html',
   styleUrls: [
-    '../tech-extension-common.scss',
-    'tech-extension-import.component.scss'
+    '../extension-common.scss',
+    'extension-import.component.scss'
   ]
 })
-export class TechExtensionImportComponent implements OnInit {
+export class ExtensionImportComponent implements OnInit {
   uploader: FileUploader;
   response: Extension;
   error: FileError;
@@ -49,7 +49,8 @@ export class TechExtensionImportComponent implements OnInit {
     private notificationService: NotificationService,
     private router: Router,
     private route: ActivatedRoute,
-    private tokenExtractor: HttpXsrfTokenExtractor
+    private tokenExtractor: HttpXsrfTokenExtractor,
+    private i18NService: I18NService
   ) {
     this.extension$ = this.extensionStore.resource;
   }
@@ -57,8 +58,7 @@ export class TechExtensionImportComponent implements OnInit {
   getGenericError() {
     return {
       level: 'alert alert-danger',
-      message:
-        '<strong>This is not a valid file type.</strong> Try again and specify a .jar file.'
+      message: this.i18NService.localize( 'customizations.extensions.import-extension-generic-error' )
     };
   }
 
@@ -79,8 +79,8 @@ export class TechExtensionImportComponent implements OnInit {
       .then(value => {
         this.notificationService.popNotification({
           type: NotificationType.SUCCESS,
-          header: 'Imported!',
-          message: 'Your extension has been imported.'
+          header: this.i18NService.localize( 'customizations.extensions.import-extension-success-header' ),
+          message: this.i18NService.localize( 'customizations.extensions.import-extension-success-message' )
         });
         this.router.navigate(['/customizations/extensions'], {
           relativeTo: this.route
@@ -89,7 +89,8 @@ export class TechExtensionImportComponent implements OnInit {
       .catch((reason: any) => {
         this.error = {
           level: 'alert alert-danger',
-          message: reason.userMsg || 'An unknown error has occurred.'
+          message: reason.userMsg
+                   || this.i18NService.localize( 'customizations.extensions.import-extension-unknown-error-message' )
         };
       });
   }
@@ -156,7 +157,8 @@ export class TechExtensionImportComponent implements OnInit {
       }
       this.error = {
         level: 'alert alert-danger',
-        message: resp.userMsg || 'An unknown error has occurred.'
+        message: resp.userMsg
+                 || this.i18NService.localize( 'customizations.extensions.import-extension-unknown-error-message' )
       };
     };
   }

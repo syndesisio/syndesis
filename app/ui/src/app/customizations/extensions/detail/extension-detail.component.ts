@@ -2,33 +2,29 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { Extension, Integrations } from '@syndesis/ui/platform';
+import { Extension, I18NService, Integrations } from '@syndesis/ui/platform';
 import { ExtensionStore } from '@syndesis/ui/store';
-import { TechExtensionDeleteModalComponent } from '@syndesis/ui/customizations/tech-extensions';
+import { ExtensionDeleteModalComponent } from '@syndesis/ui/customizations/extensions';
 
 @Component({
-  selector: 'syndesis-tech-extension-detail',
-  templateUrl: 'tech-extension-detail.component.html',
+  selector: 'syndesis-extension-detail',
+  templateUrl: 'extension-detail.component.html',
   styleUrls: [
-    '../tech-extension-common.scss',
-    'tech-extension-detail.component.scss'
+    '../extension-common.scss',
+    'extension-detail.component.scss'
   ]
 })
-export class TechExtensionDetailComponent implements OnInit {
+export class ExtensionDetailComponent implements OnInit {
   extension$: Observable<Extension>;
   integrations$: Observable<Integrations>;
   loading$: Observable<boolean>;
-  @ViewChild(TechExtensionDeleteModalComponent)
-  deleteModal: TechExtensionDeleteModalComponent;
-  integrationLengthMapping: any = {
-    '=0': 'customizations.extensions.not-used-msg',
-    '=1': 'customizations.extensions.used-once-msg',
-    other: 'customizations.extensions.used-multi-msg'
-  };
+  @ViewChild(ExtensionDeleteModalComponent)
+  deleteModal: ExtensionDeleteModalComponent;
 
   constructor(
     private extensionStore: ExtensionStore,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private i18nService: I18NService
   ) {
     this.loading$ = this.extensionStore.loading;
     this.extension$ = this.extensionStore.resource;
@@ -52,5 +48,17 @@ export class TechExtensionDetailComponent implements OnInit {
         this.extensionStore.load(id);
         this.integrations$ = this.extensionStore.loadIntegrations(id);
       });
+  }
+
+  usageText( uses: number ): string {
+    if ( uses === 1 ) {
+      return this.i18nService.localize( 'customizations.extensions.used-once-msg' );
+    }
+
+    if ( uses > 1 ) {
+      return this.i18nService.localize( 'customizations.extensions.used-multi-msg', [ uses ] );
+    }
+
+    return this.i18nService.localize( 'customizations.extensions.not-used-msg' );
   }
 }
