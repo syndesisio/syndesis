@@ -2,30 +2,18 @@
 // trigger_integrations_with_api_calls.adoc
 
 [id='configure-publish-api-provider-quickstart_{context}']
-= Configure and publish the API provider quickstart integration
+= Configure and publish the API Provider quickstart integration
 
-{prodname} provides an API provider quickstart integration that you can 
+{prodname} provides an API Provider quickstart integration that you can 
 import into your {prodname} environment. This quickstart includes 
-an OpenAPI schema for a task management API. After importing
+an OpenAPI specification for a task management API. After importing
 the quickstart integration, you configure return codes, and then publish
 the integration. After you complete the procedure described below,
 the Task API integration is running and ready
-to be executed. 
-
-The API provider quickstart helps you quickly learn how to configure, publish, and
-test an API provider integration. But it is not a real-world example of 
-how useful an API provider integration can be. For a real-world
-example, suppose that you already
-used {prodname} to publish several integrations. You could define an OpenAPI
-schema for triggering execution of those integrations. To do this, you
-would edit the integration flow for each OpenAPI operation to be almost the
-same as the integrations you already published. 
-
-https://www.youtube.com/watch?v=RAa1qy3WnWQ&feature=youtu.be[A video of configuring and publishing this quickstart is also available.] 
+to be executed.  
 
 .Prerequisites
-
-{prodname} is open in a browser.
+* {prodname} is open in a browser.
 
 .Procedure
 
@@ -55,10 +43,9 @@ on the left, move your cursor over the icons to see what they represent. Click a
 step or connection to view its configuration. When you are done
 examining one, click another one to examine it. When you click 
 a database connection, you can see the SQL statement that it executes. 
-... In the integration flow visualization panel on the left, click the 
-image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
-at the bottom. You might have to scroll down to see it. When you hover 
-over it, {prodname} displays *Provided API Return Path*. 
+... In the integration flow visualization panel on the left, click the
+last connection. You might have to scroll down to see it. When you hover 
+over the last connection, {prodname} displays *Provided API Return Path*. 
 ... Click in the *Return Code* input field and scroll to select 
 *201 Created*. 
 ... Click *Done*.
@@ -71,9 +58,9 @@ This integration flow has a data mapper step and a connection to the
 sample database that is provided with {prodname}. 
 In the integration flow visualization panel, 
 click the database connection to view the SQL statement that it executes. 
-... In the integration flow visualization panel, click the 
-image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
-at the bottom. 
+... In the integration flow visualization panel, click the
+last connection. When you hover 
+over the last connection, {prodname} displays *Provided API Return Path*. 
 ... Click in the *Return Code* input field and scroll to select 
 *200 OK*. 
 ... Click *Done*.
@@ -87,9 +74,9 @@ sample database that is provided with {prodname}, and a log step.
 In the integration flow visualization panel, click an icon for a step
 or connection to view its configuration. When you are done examining one,
 click another one. 
-... In the integration flow visualization panel, click the 
-image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
-at the bottom. 
+... In the integration flow visualization panel, click the
+last connection. When you hover 
+over the last connection, {prodname} displays *Provided API Return Path*. 
 ... Click in the *Return Code* input field and scroll to select 
 *200 OK*. 
 ... Click *Done*.
@@ -102,7 +89,7 @@ starts the integration. The integration summary page also provides
 the external URL for the
 API provider service, which looks something like this: 
 +
-`\https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api/`
+`\https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com`
 +
 This is where {prodname} makes the Task API service available. REST 
-API calls specify URLs that start with this base URL. 
+API calls specify endpoints that define this base URL. 

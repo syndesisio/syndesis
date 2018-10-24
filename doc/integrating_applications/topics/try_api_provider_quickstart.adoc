@@ -1,17 +1,17 @@
 // Module included in the following assemblies:
-// triggaper_integrations_with_api_calls.adoc
+// trigger_integrations_with_api_calls.adoc
 
 [id='try-api-provider-quickstart_{context}']
-= Execute the API provider quickstart integration
+= Try out the Task API quickstart integration
 
 When the {prodname} Task API quickstart integration is running, you can
 invoke `curl` utility commands that send HTTP requests to the Task API service.
 How you specify the HTTP request determines which integration flow the call
 triggers.  
 
-.Prerequisite
+.Prerequisites
 
-{prodname} indicates that the Task API is *Running*. 
+* {prodname} indicates that the Task API is *Running*. 
 
 .Procedure
 
@@ -22,13 +22,13 @@ triggers.
 integration's external URL to the `externalURL` environment variable.
 Be sure to replace the URL in this sample command with the URL you copied: 
 +
-`export externalURL="https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api"`
+`export externalURL="https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com"`
 
 . Invoke a `curl` command that triggers execution of the integration
 flow for the *Create Task* operation: 
 +
 ----
-curl -k --header "Content-Type: application/json" --request POST --data '{ "task":"my new task!"}' $externalURL/todo 
+curl -k --header "Content-Type: application/json" --request POST --data '{ "task":"my new task!"}' $externalURL/api/todo 
 ----
 +
 * `-k` allows `curl` to proceed and operate even for server connections 
@@ -37,7 +37,7 @@ that are otherwise considered insecure.
 * `--request` specifies the HTTP `POST` command, which stores data.
 * `--data` specifies the JSON format content to be stored. In this example the  
 content is `{ "task":"my new task!"}`.
-* `$externalURL/todo` is the URL to invoke. 
+* `$externalURL/api/todo` is the endpoint to invoke. 
 
 +
 This command sends an HTTP `POST` request to the Task API service, which
@@ -54,19 +54,19 @@ such as the following to indicate what it did:
 flow for the *Get Task by ID* operation:
 +
 ----
-curl -k $externalURL/todo/1 
+curl -k $externalURL/api/todo/1 
 ----
 +
-To obtain a task, the `curl` command needs to specify only the URL. The
-HTTP `GET` command is the default request. The last part of the URL
+To obtain a task, the `curl` command needs to specify only the endpoint. The
+HTTP `GET` command is the default request. The last part of the endpoint
 specifies the ID of the task to get. 
 
 . Invoke a `curl` command that triggers execution of the integration
 flow for the *Delete Task for ID* operation:
 +
 ----
-curl -k -X DELETE $externalURL/todo/1
+curl -k -X DELETE $externalURL/api/todo/1
 ----
 +
-This command invokes the HTTP `DELETE` command with the same URL as the
+This command invokes the HTTP `DELETE` command with the same endpoint as the
 command that obtained a task by its ID. 

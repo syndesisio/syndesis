@@ -26,8 +26,8 @@ data fields.
 .. In the visual representation of this integration flow, click the flow's 
 finish connection and specify a return code. When
 {prodname} executes this integration flow and reaches this connection, 
-{prodname} sends the return code to the application that invoked the
-API that triggered the integration. 
+{prodname} sends the return code to your API service, which in turn sends
+a response to the caller that invoked the API that triggered the integration. 
 +
 In this release, because an API Provider connection is a 
 Technology Preview feature, the integration flow always returns the
