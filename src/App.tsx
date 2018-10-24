@@ -1,19 +1,18 @@
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
-
 import './App.css';
 import { AppContext, IAppContext, IAppSettings } from './AppContext';
 import { AuthContext, AuthenticatedRoute, IAuthContext, LoginPage, Logout, TokenPage, } from './auth';
 import { Layout } from './layout';
-import { ConnectionsPage, DashboardPage, IntegrationsPage } from './pages';
+import { ConnectionsModule, DashboardModule, IntegrationsModule } from './modules';
 import { SettingsPage } from './settings';
 import { PfVerticalNavItem } from './ui/patternfly';
 
 const PrivateRoutes = () => (
   <Switch>
-    <Route path='/' exact={true} component={DashboardPage}/>
-    <Route path='/integrations' component={IntegrationsPage}/>
-    <Route path='/connections' component={ConnectionsPage}/>
+    <Route path='/' exact={true} component={DashboardModule}/>
+    <Route path='/integrations' component={IntegrationsModule}/>
+    <Route path='/connections' component={ConnectionsModule}/>
   </Switch>
 );
 

@@ -1,31 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" class="layout-pf layout-pf-fixed transitions">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.13.1/min/vs/loader.js"></script>
-    <script>
-      require.config({
-        paths: {
-          'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.13.1/min/vs'
-        }
-      });
-      window.MonacoEnvironment = {
-        getWorkerUrl: function (workerId, label) {
-          return '/monaco-editor-worker-loader-proxy.js';
-        }
-      };
-      require(["vs/editor/editor.main"], function () {})
-    </script>
-    <title>React App</title>
-  </head>
-  <body class="cards-pf">
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <div id="root"></div>
-  </body>
+    <title>Syndesis</title>
+</head>
+<body class="cards-pf">
+<noscript>
+    You need to enable JavaScript to run this app.
+</noscript>
+<div id="root"></div>
+</body>
 </html>

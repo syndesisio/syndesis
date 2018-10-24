@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { IntegrationsListView } from '../../components';
-import { IActiveFilter, IFilterType, ISortType } from '../../components/ListViewToolbar';
+import { IntegrationsListView } from '../../../components/index';
+import { IActiveFilter, IFilterType, ISortType } from '../../../components/ListViewToolbar';
 import {
   IConnection,
   IMonitoredIntegration,
   WithConnections,
   WithMonitoredIntegrations,
   WithRouter
-} from '../../containers';
+} from '../../../containers/index';
 import {
   IListViewToolbarAbstractComponent,
   ListViewToolbarAbstractComponent
-} from '../../containers/ListViewToolbarAbstractComponent';
+} from '../../../containers/ListViewToolbarAbstractComponent';
 
 function getFilteredAndSortedIntegrations(integrations: IMonitoredIntegration[], activeFilters: IActiveFilter[], currentSortType: string, isSortAscending: boolean) {
   let filteredAndSortedIntegrations = integrations;
@@ -95,7 +95,7 @@ const sortByStatus = {
 
 const sortTypes: ISortType[] = [sortByName, sortByStatus];
 
-export class IntegrationsPage extends ListViewToolbarAbstractComponent<{}, IListViewToolbarAbstractComponent> {
+export default class IntegrationsPage extends ListViewToolbarAbstractComponent<{}, IListViewToolbarAbstractComponent> {
   public state = {
     activeFilters: [] as IActiveFilter[],
     currentFilterType: filterByName,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dashboard } from '../../components';
+import { Dashboard } from '../../../components/index';
 import {
   IIntegration,
   IIntegrationsMetricsTopIntegration,
@@ -7,7 +7,7 @@ import {
   WithConnections,
   WithIntegrationsMetrics,
   WithMonitoredIntegrations
-} from '../../containers';
+} from '../../../containers/index';
 
 
 export interface IIntegrationCountsByState {
@@ -70,7 +70,7 @@ export function getTopIntegrations(integrations: IMonitoredIntegration[], topInt
     .slice(0, 5);
 }
 
-export const DashboardPage = () => (
+export default () => (
   <WithMonitoredIntegrations>
     {({data: integrationsData, loading: integrationsLoading}) =>
       <WithIntegrationsMetrics>

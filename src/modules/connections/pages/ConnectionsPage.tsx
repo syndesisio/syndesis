@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { ConnectionsListView } from '../../components';
-import { IActiveFilter, IFilterType, ISortType } from '../../components/ListViewToolbar';
-import { IConnection, WithConnections, WithRouter } from '../../containers';
+import { ConnectionsListView } from '../../../components/index';
+import { IActiveFilter, IFilterType, ISortType } from '../../../components/ListViewToolbar';
+import { IConnection, WithConnections, WithRouter } from '../../../containers/index';
 import {
   IListViewToolbarAbstractComponent,
   ListViewToolbarAbstractComponent
-} from '../../containers/ListViewToolbarAbstractComponent';
+} from '../../../containers/ListViewToolbarAbstractComponent';
 
 function getFilteredAndSortedConnections(connections: IConnection[], activeFilters: IActiveFilter[], currentSortType: string, isSortAscending: boolean) {
   let filteredAndSortedConnections = connections;
@@ -43,7 +43,7 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export class ConnectionsPage extends ListViewToolbarAbstractComponent<{}, IListViewToolbarAbstractComponent> {
+export default class ConnectionsPage extends ListViewToolbarAbstractComponent<{}, IListViewToolbarAbstractComponent> {
   public state = {
     activeFilters: [] as IActiveFilter[],
     currentFilterType: filterByName,
