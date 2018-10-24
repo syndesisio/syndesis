@@ -205,7 +205,7 @@ build_operator_from_dir() {
     if [ "$(hasflag -e --ensure)" ]; then
         dep_ensure "$operator_dir" "$(hasflag -l --local)" "$as_user"
     fi
-    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$as_user"
+    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$as_user" "$(hasflag -f --flash)"
 }
 
 is_minishift_docker_daemon() {
