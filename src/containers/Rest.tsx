@@ -35,7 +35,7 @@ export interface ISaveProps {
 }
 
 export interface IRestState<T> {
-  data?: T;
+  data: T;
   error: boolean;
   errorMessage?: string;
   loading: boolean;
@@ -52,6 +52,7 @@ export interface IRestProps<T> {
   url: string;
   headers?: IHeader;
   contentType?: string;
+  defaultValue: T;
 
   children(props: IRestState<T>): any;
 }
@@ -66,7 +67,7 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
   public constructor(props: IRestProps<T>) {
     super(props);
     this.state = {
-      data: undefined,
+      data: this.props.defaultValue,
       error: false,
       loading: true,
       read: this.read,
@@ -95,6 +96,10 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
         this.stopPolling();
       }
     }
+  }
+
+  public componentWillUnmount() {
+    this.stopPolling();
   }
 
   public shouldComponentUpdate(nextProps: IRestProps<T>, nextState: IRestState<T>): boolean {
@@ -128,6 +133,7 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
       });
     } catch (e) {
       this.setState({
+        data: this.props.defaultValue,
         error: true,
         errorMessage: e.message,
         loading: false,

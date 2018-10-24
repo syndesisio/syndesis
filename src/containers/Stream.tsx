@@ -1,4 +1,4 @@
-import { callFetch, IRestProps, ISaveProps, Rest } from './Rest';
+import { callFetch, IRestProps, Rest } from './Rest';
 
 export class Stream extends Rest<string[]> {
   protected reader: ReadableStreamReader;
@@ -63,7 +63,7 @@ export class Stream extends Rest<string[]> {
     }
   };
 
-  public onSave = async (props: ISaveProps) => {
+  public onSave = async () => {
     throw new Error(`Can't save from a stream`);
   }
 }
