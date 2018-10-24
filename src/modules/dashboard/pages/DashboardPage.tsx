@@ -72,17 +72,17 @@ export function getTopIntegrations(integrations: IMonitoredIntegration[], topInt
 
 export default () => (
   <WithMonitoredIntegrations>
-    {({data: integrationsData, loading: integrationsLoading}) =>
+    {({data: integrationsData, hasData: hasIntegrations}) =>
       <WithIntegrationsMetrics>
-        {({data: metricsData, loading: metricsLoading}) =>
+        {({data: metricsData, hasData: hasMetrics}) =>
           <WithConnections>
-            {({data: connectionsData, loading: connectionsLoading}) => {
+            {({data: connectionsData, hasData: hasConnections}) => {
               const integrationStatesCount = getIntegrationsCountsByState(integrationsData.items);
               return (
                 <Dashboard
-                  integrationsLoaded={!integrationsLoading}
-                  connectionsLoaded={!connectionsLoading}
-                  metricsLoaded={!metricsLoading}
+                  integrationsLoaded={!hasIntegrations}
+                  connectionsLoaded={!hasConnections}
+                  metricsLoaded={!hasMetrics}
                   integrationsCount={integrationsData.totalCount}
                   integrationsErrorCount={integrationStatesCount.Error}
                   connections={connectionsData.items}

@@ -108,7 +108,7 @@ export default class IntegrationsPage extends ListViewToolbarAbstractComponent<{
   public render() {
     return (
       <WithMonitoredIntegrations>
-        {({data: integrationsData, loading}) =>
+        {({data: integrationsData, loading, hasData}) =>
           <WithConnections>
             {({data: connectionsData}) =>
               <WithRouter>
@@ -121,7 +121,7 @@ export default class IntegrationsPage extends ListViewToolbarAbstractComponent<{
                   );
                   return (
                     <IntegrationsListView
-                      loading={loading}
+                      loading={!hasData && loading}
                       match={match}
                       monitoredIntegrations={filteredAndSortedIntegrations}
                       filterTypes={getFilterTypes(connectionsData.items)}

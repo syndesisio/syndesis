@@ -38,6 +38,7 @@ export interface IRestState<T> {
   data: T;
   error: boolean;
   errorMessage?: string;
+  hasData: boolean;
   loading: boolean;
 
   read(): Promise<void>;
@@ -69,10 +70,12 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
     this.state = {
       data: this.props.defaultValue,
       error: false,
+      hasData: false,
       loading: true,
       read: this.read,
       save: this.onSave
     };
+    this.poller = this.poller.bind(this);
   }
 
   public async componentWillMount() {
@@ -110,8 +113,11 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
     return this.props.children(this.state);
   }
 
-  public read = async () => {
+  public async read() {
     try {
+      this.setState({
+        loading: true,
+      });
       const response = await callFetch({
         contentType: this.props.contentType,
         headers: this.props.headers,
@@ -129,6 +135,7 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
       }
       this.setState({
         data,
+        hasData: true,
         loading: false,
       });
     } catch (e) {
@@ -136,12 +143,13 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
         data: this.props.defaultValue,
         error: true,
         errorMessage: e.message,
+        hasData: false,
         loading: false,
       });
     }
-  };
+  }
 
-  public onSave = async ({url, data}: ISaveProps) => {
+  public async onSave({url, data}: ISaveProps) {
     this.setState({
       loading: true
     });
@@ -164,15 +172,20 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
         loading: false,
       });
     }
-  };
+  }
 
-  public startPolling = () => {
+  public startPolling() {
     this.stopPolling();
+    this.pollingTimer = setInterval(this.poller, this.props.poll);
+  }
 
-    this.pollingTimer = setInterval(this.read, this.props.poll);
-  };
+  public poller() {
+    if (!this.state.loading) {
+      this.read();
+    }
+  }
 
-  public stopPolling = () => {
+  public stopPolling() {
     if (this.pollingTimer) {
       clearInterval(this.pollingTimer);
       this.pollingTimer = undefined;

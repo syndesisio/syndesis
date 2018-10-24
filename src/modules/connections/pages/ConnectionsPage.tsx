@@ -56,7 +56,7 @@ export default class ConnectionsPage extends ListViewToolbarAbstractComponent<{}
   public render() {
     return (
       <WithConnections>
-        {({data, loading}) =>
+        {({data, loading, hasData}) =>
           <WithRouter>
             {({match}) => {
               const filteredAndSortedConnections = getFilteredAndSortedConnections(
@@ -67,7 +67,7 @@ export default class ConnectionsPage extends ListViewToolbarAbstractComponent<{}
               );
               return (
                 <ConnectionsListView
-                  loading={loading}
+                  loading={!hasData && loading}
                   match={match}
                   connections={filteredAndSortedConnections}
                   filterTypes={filterTypes}
