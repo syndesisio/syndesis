@@ -80,9 +80,9 @@ export default () => (
               const integrationStatesCount = getIntegrationsCountsByState(integrationsData.items);
               return (
                 <Dashboard
-                  integrationsLoaded={!hasIntegrations}
-                  connectionsLoaded={!hasConnections}
-                  metricsLoaded={!hasMetrics}
+                  integrationsLoaded={hasIntegrations}
+                  connectionsLoaded={hasConnections}
+                  metricsLoaded={hasMetrics}
                   integrationsCount={integrationsData.totalCount}
                   integrationsErrorCount={integrationStatesCount.Error}
                   connections={connectionsData.items}
