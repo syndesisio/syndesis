@@ -111,7 +111,6 @@
     <div *ngTemplateOutlet="stepConnection;context:{
       id: 'multi-flow',
       connectionName: flowsCount + ' Flow' + (flowsCount === 1 ? '' : 's'),
-      badge: flowsCount,
       actionName: '',
       onClick: onApiProviderFlowsClick.bind(this),
       iconSrc: './../../assets/icons/multi-flow.connection.png',
