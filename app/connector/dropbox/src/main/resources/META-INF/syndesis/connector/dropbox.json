@@ -118,7 +118,8 @@
                     "kind": "any"
                 },
                 "configuredProperties": {
-                    "operation":"get"
+                    "operation":"get",
+                    "bridgeErrorHandler":"true"
                 },
                 "propertyDefinitionSteps": [
                     {
