@@ -30,4 +30,8 @@ export class ConnectorStore extends AbstractStore<
   acquireCredentials(id: string) {
     return this.service.acquireCredentials(id);
   }
+
+  get listVisible() {
+    return this.list.map(lst => lst.filter(c => !c.metadata || !c.metadata['hide-from-connection-pages']));
+  }
 }

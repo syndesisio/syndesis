@@ -21,12 +21,13 @@ import static io.syndesis.common.util.Strings.truncate;
 
 public final class Names {
 
-    private static final Pattern VALID_REGEX = Pattern.compile("^[a-z0-9][-A-Za-z0-9\\\\.]+$");
+    private static final Pattern VALID_REGEX = Pattern.compile("^[a-z0-9][-A-Za-z0-9\\\\]{0,61}[a-z0-9]$");
     private static final Pattern INVALID_START_REGEX = Pattern.compile("^[^a-z0-9]+");
     private static final Pattern INVALID_CHARACTER_REGEX = Pattern.compile("[^a-zA-Z0-9-\\._]");
     private static final String SPACE = " ";
     private static final String BLANK = "";
     private static final String DASH = "-";
+    private static final String DOT = "\\.";
     private static final String UNDERSCORE = "_";
     //The actual limit is 253,
     // but individual resources have other limitations
@@ -41,9 +42,10 @@ public final class Names {
      * Sanitizes the specified name by applying the following rules:
      * 1. Replace spaces with dashes.
      * 2. Replace underscores with dashes.
-     * 3. Ensures that the first character is a alphanumeric
-     * 4. Remove invalid characters.
-     * 5. Keep the first 64 characters.
+     * 3. Replace dots with dashes
+     * 4. Ensures that the first character is a alphanumeric
+     * 5. Remove invalid characters.
+     * 6. Keep the first 64 characters.
      * @param name  The specified name.
      * @return      The sanitized string.
      */
@@ -51,13 +53,14 @@ public final class Names {
         final String firstPass = name
             .replaceAll(SPACE, DASH)
             .replaceAll(UNDERSCORE, DASH)
+            .replaceAll(DOT, DASH)
             .toLowerCase(Locale.US);
 
         final String secondPass = INVALID_START_REGEX.matcher(firstPass).replaceAll(BLANK);
 
         final String thirdPass = INVALID_CHARACTER_REGEX.matcher(secondPass).replaceAll(BLANK);
 
-        return truncate(thirdPass.chars()
+        final String fourthPass = truncate(thirdPass.chars()
              //Handle consecutive dashes
             .collect(StringBuilder::new,
                 (b, chr) -> {
@@ -68,6 +71,19 @@ public final class Names {
                     }
              }, StringBuilder::append)
             .toString(), MAXIMUM_NAME_LENGTH);
+
+        final int fourthPassLength = fourthPass.length();
+        if (Character.isLetterOrDigit(fourthPass.charAt(fourthPassLength - 1))) {
+            // this includes some letters and numbers out of ASCII range,
+            // but those should have been filtered out prior
+            return fourthPass;
+        }
+
+        if (fourthPassLength < MAXIMUM_NAME_LENGTH) {
+            return fourthPass + "0";
+        }
+
+        return fourthPass.substring(0, MAXIMUM_NAME_LENGTH - 1) + "0";
     }
 
 

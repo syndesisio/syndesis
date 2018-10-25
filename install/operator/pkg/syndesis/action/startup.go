@@ -12,8 +12,7 @@ import (
 )
 
 // Waits for all pods to startup, then mark Syndesis as "Running".
-type Startup struct {}
-
+type Startup struct{}
 
 func (a *Startup) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
@@ -28,7 +27,7 @@ func (a *Startup) Execute(syndesis *v1alpha1.Syndesis) error {
 	})
 	list := metav1.List{
 		TypeMeta: metav1.TypeMeta{
-			Kind: "DeploymentConfig",
+			Kind:       "DeploymentConfig",
 			APIVersion: "apps.openshift.io/v1",
 		},
 	}
@@ -89,4 +88,3 @@ func isProcessing(dc *v1.DeploymentConfig) bool {
 	}
 	return true
 }
-

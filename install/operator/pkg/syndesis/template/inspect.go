@@ -2,12 +2,11 @@ package template
 
 import (
 	"github.com/openshift/api/template/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
-
 
 func GetDeclaredResourceTypes() ([]metav1.TypeMeta, error) {
 	types := make(map[metav1.TypeMeta]bool)
@@ -24,7 +23,7 @@ func GetDeclaredResourceTypes() ([]metav1.TypeMeta, error) {
 			}
 			meta := metav1.TypeMeta{
 				APIVersion: u.GetAPIVersion(),
-				Kind: u.GetKind(),
+				Kind:       u.GetKind(),
 			}
 			types[meta] = true
 		}

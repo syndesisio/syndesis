@@ -22,12 +22,11 @@ you would click *SF Connect 1*.
 . In the *Object name* field, select *Lead*.
 . Click *Done* to add the start connection to the integration.
 
-.Results
-When {prodname} executes the integration, after connecting to Salesforce, 
+.Next step
+When the integration is running, after connecting to Salesforce, 
 the integration watches for notifications that a Salesforce *Lead*
 record was created.
 When the integration finds such a notification, it passes the new
 lead's data to the next step in the integration.
-
 However, before you can add the next step, you must choose the
 integration's finish connection.

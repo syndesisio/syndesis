@@ -7,21 +7,21 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationType } from 'patternfly-ng';
-import { Extension, Integrations } from '@syndesis/ui/platform';
+import { Extension, I18NService, Integrations } from '@syndesis/ui/platform';
 import { ExtensionStore } from '@syndesis/ui/store/extension/extension.store';
 import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notification-service';
 
 @Component({
-  selector: 'syndesis-tech-extension-delete-modal',
-  templateUrl: 'tech-extension-delete-modal.component.html',
+  selector: 'syndesis-extension-delete-modal',
+  templateUrl: 'extension-delete-modal.component.html',
   styleUrls: [
-    'tech-extension-common.scss',
-    'tech-extension-delete-modal.component.scss'
+    'extension-common.scss',
+    'extension-delete-modal.component.scss'
   ]
 })
-export class TechExtensionDeleteModalComponent implements OnInit, OnDestroy {
-  id = 'tech-extension-delete-modal';
+export class ExtensionDeleteModalComponent implements OnInit, OnDestroy {
+  id = 'extension-delete-modal';
   extension: Extension;
   integrations: Integrations;
   loading = true;
@@ -32,7 +32,8 @@ export class TechExtensionDeleteModalComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private notificationService: NotificationService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private i18NService: I18NService
   ) {}
 
   public prompt(item: Extension) {
@@ -52,8 +53,9 @@ export class TechExtensionDeleteModalComponent implements OnInit, OnDestroy {
           ext => {
             this.notificationService.popNotification({
               type: NotificationType.SUCCESS,
-              header: 'Deleted!',
-              message: `The extension "${this.extension.name}" has been deleted`
+              header: this.i18NService.localize( 'customizations.extensions.delete-extension-modal-success-header' ),
+              message: this.i18NService.localize( 'customizations.extensions.delete-extension-modal-success-message',
+                                                  [ this.extension.name ] )
             });
             if ('id' in this.route.snapshot.params) {
               this.router.navigate(['..'], { relativeTo: this.route });
@@ -62,10 +64,12 @@ export class TechExtensionDeleteModalComponent implements OnInit, OnDestroy {
           err => {
             this.notificationService.popNotification({
               type: NotificationType.WARNING,
-              header: 'Deleted!',
-              message: `The extension "${
-                this.extension.name
-              }" could not be deleted due to: ${err.userMsg || 'Unknown error'}`
+              header: this.i18NService.localize( 'customizations.extensions.delete-extension-modal-error-header' ),
+              message: this.i18NService.localize(
+                'customizations.extensions.delete-extension-modal-error-message',
+                [ this.extension.name,
+                        err.userMsg
+                        || this.i18NService.localize( 'customizations.extensions.import-extension-unknown-error-message' ) ] )
             });
           }
         );

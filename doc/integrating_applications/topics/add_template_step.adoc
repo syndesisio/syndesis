@@ -1,56 +1,117 @@
-[id='add-template-step']
-= Adding a template step
+[id='add-template-step_{context}']
+= Add a template step
 
-A template step allows data to be reshaped into a single consistent
-format, by providing a pattern of text with substitutable symbols. Specific
-data values are mapped to those symbols and populated at runtime.
+In an integration, a template step takes data from a source and 
+inserts it into the format that is defined in a template that you upload to {prodname}.
+The benefit of a template step is that it provides data output in a 
+consistent format that you specify. 
 
-The template step has specific requirements for both its data input and output:
-* both input and output requires data to be in the form of a JSON object.
-* the symbols specified in the template must have data values mapped to them in
-  order for data to populate them.
-* once the data has been shaped into the template format, the output value is
-  stored in a single 'message' attribute. This attribute must be mapped to the
-  next step or connection.
-* mapping is performed in both cases using the data mapping step (see
-  <<add-data-mapping-step>>).
+In the template, you define placeholders and specify static text. 
+When you create the integration, you add a template step, map source fields 
+to the template placeholders, and then map template content to the next step 
+in the integration. When the integration executes, {prodname}
+inserts the values that are in the mapped source fields into an
+instance of the template and passes the result to the next step in the integration.
 
-The template needs to be specified and the step allows this to either be
-created from scratch or loaded from a file. The currently supported syntax
-for the template is https://mustache.github.io[Mustache], with
+If an integration includes a template step then it is most likely the only 
+template step in the integration. However, more than one template step in an 
+integration is allowed. 
+
+In this release, {prodname} supports only 
+https://mustache.github.io[Mustache] templates. It is expected that 
 https://velocity.apache.org[Velocity] and
-https://freemarker.apache.org[Freemarker] are excepted to be added at a later
-date.
+https://freemarker.apache.org[Freemarker] templates will be supported
+in a future release. 
 
-To add a template step, you must be creating a new integration or
-editing an integration. Due to the input and output specification requirements
-the integration must already have its start and finish connections.
+.Prerequisites
+* You must be creating or editing an integration. 
+* If you are creating an
+integration then it must already have its start and finish connections.
 
-To add a template step:
+.Procedure
 
 . In the integration visualization panel on the left, hover over the
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
-at the location where you want to add a log step.
+at the location where you want to add a template step.
 . In the popup, click *Add a Step*.
-. On the *Choose a Step* page, click *Template*.
-. On the *Upload Template* page, select *Upload a file* or *create*
-  a template. The former displays a button for choosing a
-  local template file (requires a .tmpl extension) while the latter choice
-  displays the template editor.
+. On the *Choose a Step* page, click *Template*. The 
+*Upload Template* page opens and prompts you to choose how you want to define 
+the template. 
+
+. To define the template, do one of the following:
++
+* Drag and drop a template file or a file that contains text that you
+want to modify to create a template, into the template editor. 
+* Click *browse to upload*, navigate to a file, and upload it. 
+* In the template editor, start typing to define a template.
 
 +
-The editor only allows valid syntax so the *Done* button will be disabled
-should the syntax be invalid.
+Note that you might upload a template that is valid in other environments but that 
+has errors in {prodname}. {prodname} requires that you append the `body.`
+prefix to each placeholder inside double curly braces. 
+For example, while `{{text}}` is valid in a typical template, you must 
+specify `{{body.text}}` in a template that you use with {prodname}. 
+Here is an example of a valid template:
 
-. When the template step configuration is complete, click *Done* to add the
-  step to the integration.
-. The connections or steps either side of the template step will require
-data mapping:
-* Insert a data mapping step prior to the template step. This will allow you
-  to map values in the preceding connection data to the symbols entered into
-  the template.
-* Insert a data mapping step after the the template step. The generated
-  template/data combination is placed into a *message* attribute hence this
-  should be mapped to whatever preferred attribute of the target connection.
-. When the integration is complete, it can be published and output data will
-  appear formatted according to the syntax rules stipulated by the template.
++
+----
+At {{body.time}}, {{body.name}} tweeted:
+{{body.text}}
+----
+
+. In the template editor, ensure that the template
+is valid for use with {prodname}. {prodname} displays 
+image:images/RedCircleXError.png[a red error indicator] to the left of
+a line that contains a syntax error. Hovering over a red indicator displays hints
+about how to resolve the error. 
++
+Inside each set of double curly braces, the `body.` prefix is required. 
+Data mapping does not work if the `body.` prefix is missing. 
+For example, if you upload a template that does not have the `body.` prefix 
+on each placeholder, {prodname} displays an error icon on those lines.
+
+. Click *Done* to add the template step to the integration.
++ 
+If the *Done* button is not enabled then there is at least one syntax error 
+that you must correct. 
++
+Input to a template step must be in the form of a JSON object. Consequently, 
+you must add
+a data mapping step before a template step. 
+. To add a data mapper step before the template step:
+.. In the left panel, hover over the  
+image:images/PlusSignToAddStepOrConnection.png[Plus Sign] that is 
+immediately before the template step that you just added and then click *Add a Step*. 
+.. On the *Choose a Step* page, click *Data Mapper*.
+.. In the data mapper, map a source field to each template placeholder field. 
++
+For example, using the template above, map a source field 
+to each of these template fields:
++
+* `body.time`
+* `body.name`
+* `body.text`
+.. In the upper right, click *Done* to add the data mapper step to the 
+integration.
+
++
+Output from a template step is always a JSON object. Consequently, you must
+add a data mapper step after a template step.
+. To add a data mapper step after the template step:
+.. In the left panel, hover over the  
+image:images/PlusSignToAddStepOrConnection.png[Plus Sign] that is 
+immediately after the template step you just added and then click *Add a Step*. 
+.. On the *Choose a Step* page, click *Data Mapper*.
+.. In the data mapper, map the template's *message* field, which 
+always contains the result of inserting source fields into the
+template, to a target field. For example, suppose that a Gmail connection is 
+next in the integration and you want to send the result of the template step
+as the content of a Gmail message. To do this, you would map the *message* 
+source field to the *text* target field.
+.. In the upper right, click *Done*. 
+
+
+.Additional resources
+
+* For details about mapping fields, see <<mapping-data>>. 
+* https://mustache.github.io/mustache.5.html[Mustache Manual]

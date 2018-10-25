@@ -22,8 +22,8 @@ When the integration starts, it uses the credentials defined in
 this connection to connect to Twitter.
 . On the *Choose an Action* page, click *Mention*.
 
-.Results
-After
+.Next step
+When the integration is running, after 
 connecting to Twitter, the integration monitors Twitter for mentions
 that include your Twitter screen name. A match triggers the
 next step in the integration. However, before you add steps that operate

@@ -4,25 +4,26 @@
       <div class="inline-block">
         <ol class="breadcrumb no-bottom-margin">
           <li>
-            <a routerLink="/">Home</a>
+            <a routerLink="/">
+              {{ 'shared.home' | synI18n }}</a>
           </li>
           <li>
             <a [routerLink]="['/customizations']">
-              Customizations
+              {{ 'shared.customizations' | synI18n }}
             </a>
           </li>
           <li>
             <a [routerLink]="['/customizations/extensions']">
-              Extensions
+              {{ 'shared.extensions' | synI18n }}
             </a>
           </li>
           <li class="active">
             <strong>
               <ng-container *ngIf="extensionUpdate && (extension$ | async); let extension; else import">
-                Update {{ extension.name }} <small>(ID: {{ extension.extensionId }})</small>
+                {{ 'shared.update-this' | synI18n: extension.name }} <small>(ID: {{ extension.extensionId }})</small>
               </ng-container>
               <ng-template #import>
-                Import Extension
+                {{ 'customizations.extensions.import-extension' | synI18n }}
               </ng-template>
             </strong>
           </li>
@@ -32,7 +33,7 @@
         <div class="toolbar-pf-action-right-alignment">
           <button class="btn btn-default"
                 [routerLink]="['/customizations/extensions']">
-            Cancel
+            {{ 'shared.cancel' | synI18n }}
           </button>
         </div>
       </div>
@@ -47,11 +48,11 @@
           <div class="card-pf-title">
             <h1 class="extension__title">
               <ng-container *ngIf="extensionUpdate && (extension$ | async); let extension; else import">
-                Update {{ extension.name }}
+                {{ 'shared.update-this' | synI18n: extension.name }}
                 <span class="extension__title__id">(ID: {{ extension.extensionId }})</span>
               </ng-container>
               <ng-template #import>
-                Import Extension
+                {{ 'customizations.extensions.import-extension' | synI18n }}
               </ng-template>
             </h1>
           </div>
@@ -59,10 +60,10 @@
         <div class="card-pf-body">
           <p class="extension__group">
             <ng-container *ngIf="extensionUpdate && (extension$ | async); else importHelp">
-              To update an extension, you must ensure that the new version you are uploading is compatible with the previously uploaded version.
+              {{ 'customizations.extensions.import-extension-update-help' | synI18n }}
             </ng-container>
             <ng-template #importHelp>
-              To update an extension, click Extensions in the breadcrumbs above, and in the list of extensions, click Update for the appropriate extension.
+              {{ 'customizations.extensions.import-extension-help' | synI18n }}
             </ng-template>
           </p>
           <ng-container *ngIf="error">
@@ -77,7 +78,7 @@
             [uploader]="uploader"
             [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
             (fileOver)="onFileOver($event)">
-            <p>Drag and drop your extension file here or</p>
+            <p>{{ 'customizations.extensions.import-extension-dnd-instructions' | synI18n }}</p>
             <div class="row syn-drop-zone__file-select">
               <div class="col-md-4">
                 <p>
@@ -96,27 +97,27 @@
               <div class="col-md-4">
                 <p *ngIf="item.isUploading" class="text-muted">
                   <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
-                  <em>Uploading...</em>
+                  <em>{{ 'customizations.extensions.import-extension-uploading' | synI18n }}</em>
                 </p>
                 <p *ngIf="item.isUploaded">
                   <span *ngIf="item.isSuccess; else isError">
                     <span class="pficon-ok"></span>
-                    Successfully uploaded.
+                    {{ 'customizations.extensions.import-extension-upload-success' | synI18n }}
                   </span>
                   <ng-template #isError>
                     <span class="pficon-error-circle-o"></span>
-                    Unable to upload this file.
+                    {{ 'customizations.extensions.import-extension-upload-error' | synI18n }}
                   </ng-template>
                 </p>
               </div>
             </div>
-            <p class="help-block"><em>Accepted file type: .jar</em></p>
+            <p class="help-block"><em>{{ 'customizations.extensions.import-extension-help-block' | synI18n }}</em></p>
           </div>
           <ng-container *ngIf="response">
-            <h3>Import Review</h3>
+            <h3>{{ 'customizations.extensions.import-extension-review-title' | synI18n }}</h3>
             <dl class="dl-horizontal">
               <dt>
-                ID
+                {{ 'shared.id' | synI18n }}
               </dt>
               <dd>
                 {{ response.extensionId }}
@@ -124,7 +125,7 @@
             </dl>
             <dl class="dl-horizontal">
               <dt>
-                Name
+                {{ 'shared.name' | synI18n }}
               </dt>
               <dd>
                 {{ response.name }}
@@ -132,7 +133,7 @@
             </dl>
             <dl class="dl-horizontal">
               <dt>
-                Description
+                {{ 'shared.description' | synI18n }}
               </dt>
               <dd>
                 {{ response.description }}
@@ -140,22 +141,22 @@
             </dl>
             <dl class="dl-horizontal">
               <dt>
-                Type
+                {{ 'shared.type' | synI18n }}
               </dt>
               <dd>
                 <ng-container [ngSwitch]="response.extensionType">
-                  <span *ngSwitchCase="'Steps'">Step Extension</span>
-                  <span *ngSwitchCase="'Connectors'">Connector Extension</span>
-                  <span *ngSwitchCase="'Libraries'">Library Extension</span>
-                  <span *ngSwitchDefault>Unknown Extension</span>
+                  <span *ngSwitchCase="'Steps'">{{ 'customizations.extensions.step-extension' | synI18n }}</span>
+                  <span *ngSwitchCase="'Connectors'">{{ 'customizations.extensions.connector-extension' | synI18n }}</span>
+                  <span *ngSwitchCase="'Libraries'">{{ 'customizations.extensions.library-extension' | synI18n }}</span>
+                  <span *ngSwitchDefault>{{ 'customizations.extensions.unknown-extension' | synI18n }}</span>
                 </ng-container>
               </dd>
             </dl>
             <dl class="dl-horizontal">
               <dt>
                 <ng-container [ngSwitch]="response.extensionType">
-                  <span *ngSwitchCase="'Steps'">Steps</span>
-                  <span *ngSwitchCase="'Connectors'">Actions</span>
+                  <span *ngSwitchCase="'Steps'">{{ 'shared.steps' | synI18n }}</span>
+                  <span *ngSwitchCase="'Connectors'">{{ 'shared.actions' | synI18n }}</span>
                 </ng-container>
               </dt>
               <dd>
@@ -177,17 +178,17 @@
                   <span *ngIf="importing"
                         class="spinner spinner-sm spinner-inline"></span>
                     <ng-container *ngIf="extensionUpdate; else import">
-                      Update
+                      {{ 'shared.update' | synI18n }}
                     </ng-container>
                     <ng-template #update>
-                      Import
+                      {{ 'shared.import' | synI18n }}
                     </ng-template>
                 </button>
                 <button *ngIf="!importing"
                         type="button"
                         class="btn btn-default"
                         [routerLink]="['/customizations/extensions']">
-                  Cancel
+                  {{ 'shared.cancel' | synI18n }}
                 </button>
               </dd>
             </dl>

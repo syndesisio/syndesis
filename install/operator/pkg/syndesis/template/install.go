@@ -9,9 +9,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
-
 type InstallParams struct {
-	OAuthClientSecret	string
+	OAuthClientSecret string
 }
 
 func GetInstallResourcesAsRuntimeObjects(syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.Object, error) {

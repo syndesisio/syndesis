@@ -16,7 +16,7 @@ const (
 
 type UpgradeParams struct {
 	InstallParams
-	UpgradeRegistry        *string
+	UpgradeRegistry *string
 }
 
 func GetUpgradeResources(syndesis *v1alpha1.Syndesis, params UpgradeParams) ([]runtime.RawExtension, error) {

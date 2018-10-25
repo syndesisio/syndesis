@@ -1,13 +1,14 @@
 package util
 
 import (
-	"testing"
-	"github.com/stretchr/testify/assert"
 	appsv1 "github.com/openshift/api/apps/v1"
+	"github.com/operator-framework/operator-sdk/pkg/util/k8sutil"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
-
 func TestLoadResources(t *testing.T) {
+	k8sutil.AddToSDKScheme(appsv1.AddToScheme)
 
 	object, err := LoadKubernetesResourceFromFile("../../test/resources/dep.json")
 	assert.Nil(t, err)
@@ -19,6 +20,7 @@ func TestLoadResources(t *testing.T) {
 }
 
 func TestLoadYamlResources(t *testing.T) {
+	k8sutil.AddToSDKScheme(appsv1.AddToScheme)
 
 	object, err := LoadKubernetesResourceFromFile("../../test/resources/dep.yml")
 	assert.Nil(t, err)

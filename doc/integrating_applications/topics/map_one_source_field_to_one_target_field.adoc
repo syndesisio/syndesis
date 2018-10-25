@@ -8,8 +8,7 @@ For example, map the `Name` field to the `CustomerName` field.
 
 . In the *Sources* panel, click the data field that you want to map from.
 +
-You
-might need to expand an integration step to see the data fields that it
+You might need to expand an integration step to see the data fields that it
 provides.
 +
 When there are many source fields, you can search for the
@@ -52,6 +51,7 @@ mapping, select it.
 +
 Click image:shared/images/grid.png[Grid] again to display the data field
 panels.
+. In the upper right, click *Done* to add the data mapper step to the integration. 
 
 .Alternative procedure
 Here is another way to map a single source field to a single target

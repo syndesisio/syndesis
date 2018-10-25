@@ -5,9 +5,9 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/sdk"
 	"github.com/sirupsen/logrus"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	syndesistemplate "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -24,7 +24,7 @@ const (
 
 // Upgrades Syndesis to the version supported by this operator using the upgrade template.
 type Upgrade struct {
-	operatorVersion	string
+	operatorVersion string
 }
 
 func (a *Upgrade) CanExecute(syndesis *v1alpha1.Syndesis) bool {
@@ -76,10 +76,9 @@ func (a *Upgrade) Execute(syndesis *v1alpha1.Syndesis) error {
 				}
 			}
 
-
 			var currentAttemptDescr string
 			if syndesis.Status.UpgradeAttempts > 0 {
-				currentAttemptDescr = " (attempt " + strconv.Itoa(int(syndesis.Status.UpgradeAttempts + 1)) + ")"
+				currentAttemptDescr = " (attempt " + strconv.Itoa(int(syndesis.Status.UpgradeAttempts+1)) + ")"
 			}
 
 			target := syndesis.DeepCopy()
@@ -87,7 +86,6 @@ func (a *Upgrade) Execute(syndesis *v1alpha1.Syndesis) error {
 			// Set to avoid stale information in case of operator version change
 			target.Status.TargetVersion = targetVersion
 			target.Status.Description = "Upgrading from " + namespaceVersion + " to " + targetVersion + currentAttemptDescr
-
 
 			return sdk.Update(target)
 		} else {
@@ -114,7 +112,7 @@ func (a *Upgrade) Execute(syndesis *v1alpha1.Syndesis) error {
 
 				var currentAttemptDescr string
 				if syndesis.Status.UpgradeAttempts > 0 {
-					currentAttemptDescr = " (attempt " + strconv.Itoa(int(syndesis.Status.UpgradeAttempts + 1)) + ")"
+					currentAttemptDescr = " (attempt " + strconv.Itoa(int(syndesis.Status.UpgradeAttempts+1)) + ")"
 				}
 
 				target := syndesis.DeepCopy()
@@ -206,11 +204,11 @@ func (a *Upgrade) getUpgradePodFromNamespace(podTemplate *v1.Pod, syndesis *v1al
 	pod := v1.Pod{
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: podTemplate.APIVersion,
-			Kind: podTemplate.Kind,
+			Kind:       podTemplate.Kind,
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: syndesis.Namespace,
-			Name: podTemplate.Name,
+			Name:      podTemplate.Name,
 		},
 	}
 

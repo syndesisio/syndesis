@@ -32,6 +32,7 @@ import com.google.common.base.Strings;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
+import io.swagger.models.Response;
 import io.swagger.models.Swagger;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.Kind;
@@ -56,7 +57,8 @@ import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,6 +67,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(SwaggerAPIGenerator.class);
 
     private static final String EXCERPT_METADATA_KEY = "excerpt";
+    private static final String DEFAULT_RETURN_CODE_METADATA_KEY = "default-return-code";
 
     private final DataShapeGenerator dataShapeGenerator;
 
@@ -196,9 +199,17 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     ).description;
                 }
 
+                String defaultCode = "200";
+                Optional<Pair<String, Response>> defaultResponse = BaseDataShapeGenerator.findResponseCodeValue(operation);
+                if (defaultResponse.isPresent() && NumberUtils.isDigits(defaultResponse.get().getKey())) {
+                    defaultCode = defaultResponse.get().getKey();
+                }
+
+
                 Flow flow = new Flow.Builder()
                     .id(String.format("%s:flows:%s", integrationId, operationId))
                     .putMetadata(EXCERPT_METADATA_KEY, "501 Not Implemented")
+                    .putMetadata(DEFAULT_RETURN_CODE_METADATA_KEY, defaultCode)
                     .addStep(startStep)
                     .addStep(endStep)
                     .name(operationName)
@@ -224,17 +235,6 @@ public class SwaggerAPIGenerator implements APIGenerator {
             .id(apiId)
             .kind(Kind.OpenApi)
             .build());
-
-        final String givenBasePath = swagger.getBasePath();
-        final String basePath;
-        if (StringUtils.isEmpty(givenBasePath)) {
-            basePath = "/api";
-        } else {
-            basePath = givenBasePath.replaceFirst("^(/.*)/$", "$1"); // drop the trailing slash
-        }
-
-        integration.putProperty("api-basePath", new ConfigurationProperty.Builder().type("hidden").build());
-        integration.putConfiguredProperty("api-basePath", basePath);
 
         return new APIIntegration(integration.build(), api);
     }

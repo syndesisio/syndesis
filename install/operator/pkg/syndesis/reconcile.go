@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	actionPool	[]action.InstallationAction
+	actionPool []action.InstallationAction
 )
 
 func init() {

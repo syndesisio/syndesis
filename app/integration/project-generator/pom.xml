@@ -49,6 +49,10 @@
     <!-- camel -->
     <dependency>
       <groupId>org.apache.camel</groupId>
+      <artifactId>camel-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
       <artifactId>camel-swagger-rest-dsl-generator</artifactId>
       <version>${camel.version}</version>
     </dependency>

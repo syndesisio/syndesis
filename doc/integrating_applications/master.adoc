@@ -28,7 +28,7 @@ The content in this guide is organized as follows:
 * <<managing-integrations>>
 
 To learn how to use {prodname} by creating sample integrations, see:
-{LinkFuseOnlineTutorials}[{NameOfFuseOnlineTutorials}].
+link:{LinkFuseOnlineTutorials}[{NameOfFuseOnlineTutorials}].
 
 include::topics/high_level_overview.adoc[leveloffset=+1]
 

@@ -14,11 +14,9 @@ const (
 )
 
 type InstallationAction interface {
-
 	CanExecute(syndesis *v1alpha1.Syndesis) bool
 
 	Execute(syndesis *v1alpha1.Syndesis) error
-
 }
 
 type updateFunction func(runtime.Object)

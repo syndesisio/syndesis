@@ -49,7 +49,10 @@
        title="{{ connectionName }}&nbsp;{{ actionName }}">
     <div [class]="'step-line ' + class"></div>
     <div class="icon">
-      <img class="syn-icon-small" [src]="iconSrc" alt="{{ connectionName }}">
+      <img class="syn-icon-small"
+        [ngClass]="{ 'api-provider' : (id == 'api-provider') }"
+        [src]="iconSrc"
+        alt="{{ connectionName }}">
     </div>
     <div class="syn-truncate__ellipsis">{{ connectionName | capitalize }}</div>
   </div>
@@ -108,7 +111,6 @@
     <div *ngTemplateOutlet="stepConnection;context:{
       id: 'multi-flow',
       connectionName: flowsCount + ' Flow' + (flowsCount === 1 ? '' : 's'),
-      badge: flowsCount,
       actionName: '',
       onClick: onApiProviderFlowsClick.bind(this),
       iconSrc: './../../assets/icons/multi-flow.connection.png',

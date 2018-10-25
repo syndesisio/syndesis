@@ -14,8 +14,8 @@ import (
 	sdkVersion "github.com/operator-framework/operator-sdk/version"
 	"github.com/syndesisio/syndesis/install/operator/pkg/stub"
 
-	"github.com/sirupsen/logrus"
 	"flag"
+	"github.com/sirupsen/logrus"
 	configuration "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 )
 

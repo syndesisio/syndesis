@@ -45,7 +45,7 @@ func AttachSyndesisToResource(syndesis *v1alpha1.Syndesis) error {
 }
 
 func getAllManagerSelectors() []metav1.ListOptions {
-	return []metav1.ListOptions {
+	return []metav1.ListOptions{
 		{
 			LabelSelector: "syndesis.io/app=syndesis,syndesis.io/type=infrastructure",
 		},
@@ -63,16 +63,16 @@ func getAllManagedResourceTypes() ([]metav1.TypeMeta, error) {
 	return appendMissingResourceTypes(metas), nil
 }
 
-func appendMissingResourceTypes(metas []metav1.TypeMeta) ([]metav1.TypeMeta){
+func appendMissingResourceTypes(metas []metav1.TypeMeta) []metav1.TypeMeta {
 	// Add here any resource type that should be attached but may not be present in the template
 	metas = appendTypeMeta(metas, "batch/v1beta1", "CronJob")
 	metas = appendTypeMeta(metas, "v1", "ServiceAccount")
 	return appendTypeMeta(metas, "authorization.openshift.io/v1", "RoleBinding")
 }
 
-func appendTypeMeta(metas []metav1.TypeMeta, apiVersion string, kind string) ([]metav1.TypeMeta) {
-	return append(metas,metav1.TypeMeta{
+func appendTypeMeta(metas []metav1.TypeMeta, apiVersion string, kind string) []metav1.TypeMeta {
+	return append(metas, metav1.TypeMeta{
 		APIVersion: apiVersion,
-		Kind: kind,
+		Kind:       kind,
 	})
 }

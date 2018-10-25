@@ -17,6 +17,9 @@ package io.syndesis.integration.project.generator;
 
 import java.util.Optional;
 
+import io.swagger.models.Operation;
+import io.swagger.models.Path;
+import io.swagger.models.Swagger;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
@@ -115,5 +118,13 @@ public class ProjectGeneratorHelperTest {
         assertThat(sanitizedFlow.getSteps().get(0).getStepKind()).isEqualTo(StepKind.endpoint);
         assertThat(sanitizedFlow.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-type");
         assertThat(sanitizedFlow.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-expression");
+    }
+
+    @Test
+    public void shouldNormalizeSwaggerBasePaths() {
+        final Swagger swagger = new Swagger().path("/path", new Path().get(new Operation()));
+
+        assertThat(ProjectGeneratorHelper.normalizePaths(swagger).getPaths()).containsOnlyKeys("/path");
+        assertThat(ProjectGeneratorHelper.normalizePaths(swagger.basePath("/api")).getPaths()).containsOnlyKeys("/api/path");
     }
 }

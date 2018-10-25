@@ -202,10 +202,7 @@ do_upgrade_pod() {
 build_operator_from_dir() {
     local operator_dir=${1}
     local as_user=${2:-}
-    if [ "$(hasflag -e --ensure)" ]; then
-        dep_ensure "$operator_dir" "$(hasflag -l --local)" "$as_user"
-    fi
-    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$as_user"
+    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$as_user" "$(hasflag -f --flash)"
 }
 
 is_minishift_docker_daemon() {

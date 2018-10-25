@@ -6,7 +6,7 @@ To learn what information is automatically provided,
 see <<viewing-integration-activity-information>>.
 
 To obtain additional information, between any two steps, add a log step or a 
-log connection to the integration. See {LinkFuseOnlineConnectorGuide}connecting-to-log#comparison-log-step-connection_{context}[Comparison of log step and log connection].
+log connection to the integration. See link:{LinkFuseOnlineConnectorGuide}#comparison-log-step-connection_connect-to-log[Comparison of log step and log connection].
 
 For each message that it receives, a log step can provide
 one or more of the following:
@@ -22,7 +22,7 @@ its start and finish connections.
 
 To finish an integration by logging information about the messages that an
 integration processes, or to log message information at a particular log level, 
- {LinkFuseOnlineConnectorGuide}#connecting-to-log[add a log connection]
+link:{LinkFuseOnlineConnectorGuide}#connecting-to-log[add a log connection]
 instead of a log step. 
 
 To add a log step:
@@ -47,8 +47,8 @@ to the integration.
 from the new log step.
 
 .Additional resources
-* {LinkFuseOnlineConnectorGuide}connecting-to-log#comparison-log-step-connection_{context}[Comparison of log step and log connection].
-* {LinkFuseOnlineConnectorGuide}connecting-to-log#add-log-connection_{context}[Add a log connection].
+* link:{LinkFuseOnlineConnectorGuide}#comparison-log-step-connection_connect-to-log[Comparison of log step and log connection].
+* link:{LinkFuseOnlineConnectorGuide}#add-log-connection_connect-to-log[Add a log connection].
 * After an integration that has a log step has been executed, output from
 its log step appears in the integration's *Activity* tab. See
 <<viewing-integration-activity-information>>.

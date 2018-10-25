@@ -4,21 +4,23 @@
       <div class="inline-block">
         <ol class="breadcrumb no-bottom-margin">
           <li>
-            <a routerLink="/">Home</a>
+            <a routerLink="/">
+              {{ 'shared.home' | synI18n }}
+            </a>
           </li>
           <li>
             <a [routerLink]="['/customizations']">
-              Customizations
+              {{ 'shared.customizations' | synI18n }}
             </a>
           </li>
           <li>
             <a [routerLink]="['..']">
-              Extensions
+              {{ 'customizations.extensions.heading' | synI18n }}
             </a>
           </li>
           <li class="active">
             <strong>
-              Extension Details
+              {{ 'customizations.extensions.details-heading' | synI18n }}
             </strong>
           </li>
         </ol>
@@ -30,7 +32,7 @@
   <ng-template #content>
     <div class="row row-cards-pf" *ngIf="extension$ | async; let extension">
       <div class="col-xs-12">
-        <syndesis-tech-extension-delete-modal></syndesis-tech-extension-delete-modal>
+        <syndesis-extension-delete-modal></syndesis-extension-delete-modal>
         <div class="card-pf">
           <div class="card-pf-heading">
             <div class="card-pf-title">
@@ -42,43 +44,63 @@
                 <div class="col-sm-4 text-right">
                   <button type="button"
                           class="btn btn-primary"
-                          [routerLink]="['..', 'import', extension.id, { 'name': extension.name }]">Update</button>
+                          [routerLink]="['..', 'import', extension.id, { 'name': extension.name }]">
+                    {{ 'shared.update' | synI18n }}
+                  </button>
                   <button type="button"
                           class="btn btn-default"
-                          (click)="deleteModal.prompt(extension)">Delete</button>
+                          [disabled]="isBeingUsed( extension )"
+                          (click)="deleteModal.prompt(extension)">
+                    <span [tooltip]="'customizations.extensions.delete-extension-not-allowed' | synI18n"
+                          [isDisabled]="!isBeingUsed( extension )"
+                          placement="auto"
+                          container="body">
+                      {{ 'shared.delete' | synI18n }}
+                    </span>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
           <div class="card-pf-body">
             <div class="extension__group">
-              <h3>Overview</h3>
+              <h3>
+                {{ 'shared.overview' | synI18n }}
+              </h3>
               <dl class="dl-horizontal">
                 <dt>
-                  Name
+                  {{ 'shared.name' | synI18n }}
                 </dt>
                 <dd>
                   {{ extension.name }}
                 </dd>
                 <dt>
-                  Description
+                  {{ 'shared.description' | synI18n }}
                 </dt>
                 <dd>
                   {{ extension.description }}
                 </dd>
                 <dt>
-                  Type
+                  {{ 'shared.type' | synI18n }}
                 </dt>
                 <dd>
                   <ng-container [ngSwitch]="extension.extensionType">
-                    <span *ngSwitchCase="'Steps'">Step Extension</span>
-                    <span *ngSwitchCase="'Connectors'">Connector Extension</span>
-                    <span *ngSwitchCase="'Libraries'">Library Extension</span>
-                    <span *ngSwitchDefault>Unknown Extension</span>
+                    <span *ngSwitchCase="'Steps'">
+                      {{ 'customizations.extensions.step-extension' | synI18n }}
+                    </span>
+                    <span *ngSwitchCase="'Connectors'">
+                      {{ 'customizations.extensions.connector-extension' | synI18n }}
+                    </span>
+                    <span *ngSwitchCase="'Libraries'">
+                      {{ 'customizations.extensions.library-extension' | synI18n }}
+                    </span>
+                    <span *ngSwitchDefault>
+                      {{ 'customizations.extensions.unknown-extension' | synI18n }}
+                    </span>
                   </ng-container>
                 </dd>
                 <dt>
-                  Last Update
+                  {{ 'shared.last-update' | synI18n }}
                 </dt>
                 <dd>
                   {{ extension.lastUpdated | date : 'medium' }}
@@ -87,8 +109,12 @@
             </div>
             <div class="extension__group">
               <ng-container [ngSwitch]="extension.extensionType">
-                <h3 *ngSwitchCase="'Steps'">Supported Steps</h3>
-                <h3 *ngSwitchCase="'Connectors'">Supported Actions</h3>
+                <h3 *ngSwitchCase="'Steps'">
+                  {{ 'customizations.extensions.supported-steps' | synI18n }}
+                </h3>
+                <h3 *ngSwitchCase="'Connectors'">
+                  {{ 'customizations.extensions.supported-actions' | synI18n }}
+                </h3>
               </ng-container>
               <div class="row">
                 <div class="col-xs-offset-1 col-xs-11">
@@ -103,20 +129,22 @@
             </div>
             <ng-container *ngIf="integrations$ | async; let integrations">
               <div class="extension__group">
-                <h3 class="section-heading intermediate">Usage</h3>
+                <h3 class="section-heading intermediate">
+                  {{ 'shared.usage' | synI18n }}
+                </h3>
                 <div class="row">
                   <div class="col-xs-offset-1 col-xs-11">
                     <p *ngIf="integrations"
-                      [innerHtml]="integrations.length | i18nPlural: integrationLengthMapping"></p>
+                      [innerHtml]="usageText( integrations.length )"></p>
                     <table class="table"
                           *ngIf="integrations.length">
                       <thead>
                         <tr>
                           <th>
-                            Integration Name
+                            {{ 'shared.integration-name' | synI18n }}
                           </th>
                           <th>
-                            Integration Description
+                            {{ 'shared.integration-description' | synI18n }}
                           </th>
                         </tr>
                       </thead>

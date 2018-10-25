@@ -28,6 +28,11 @@
           text-align: center;
           padding-top: 35px;
           margin-bottom: 10px;
+
+          .api-provider {
+            max-width: 62px;
+            max-height: 62px;
+          }
         }
 
         .card-pf-title {
@@ -93,4 +98,10 @@
       }
     }
   }
+}
+
+.disabled-menu-item {
+  color: lightgray;
+  cursor: not-allowed;
+  margin-left: 10px;
 }

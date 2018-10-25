@@ -72,6 +72,8 @@ export interface Connection extends BaseEntity {
   lastUpdated: string;
   createdDate: string;
   tags: Array<string>;
+  uses?: number;
+  metadata?: StringMap<any>;
 }
 
 export type Environments = Array<BaseEntity>;

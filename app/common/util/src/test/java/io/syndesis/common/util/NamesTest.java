@@ -52,10 +52,15 @@ public class NamesTest {
             pair("yet-sth-with-spaces", "yet sth  with !#ä spaceS"),
             pair("aaa-big-and-small-zzz", "AaA BIG and Small ZzZ"),
             pair("twitter-mention-salesforce-upsert-contact", "Twitter Mention -> Salesforce upsert contact"),
-            pair("twitter-mention-salesforce-upsert-contact-",
+            pair("twitter-mention-salesforce-upsert-contact-0",
                 "??? Twitter Mention <-> Salesforce upsert contact !!!"),
             pair("s-p-a-c-e-the-final-frontier", "    s   p  a  c  e   , the final frontier"),
-            pair("walking-on-sunshine-", "_walking_on_sunshine_"));
+            pair("walking-on-sunshine-0", "_walking_on_sunshine_"),
+            pair("dot-0", "dot."),
+            pair("01234567890123456789012345678901234567890123456789012345678901x", "01234567890123456789012345678901234567890123456789012345678901X"),
+            pair("0123456789012345678901234567890123456789012345678901234567890x", "0123456789012345678901234567890123456789012345678901234567890X"),
+            pair("012345678901234567890123456789012345678901234567890123456789012", "012345678901234567890123456789012345678901234567890123456789012."),
+            pair("012345678901234567890123456789012345678901234567890123456789010", "01234567890123456789012345678901234567890123456789012345678901."));
     }
 
     private static Object[] pair(final String projectName, final String integrationName) {

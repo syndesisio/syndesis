@@ -17,10 +17,11 @@ func TestStandardConfig(t *testing.T) {
 	}
 
 	config := GetEnvVars(&syndesis)
+	assert.Len(t, config, 3)
 	assert.Contains(t, config, string(EnvOpenshiftProject))
-	assert.Len(t, config, 1)
+	assert.Contains(t, config, string(EnvSarNamespace))
+	assert.Contains(t, config, string(EnvExposeVia3Scale))
 }
-
 
 func TestSpecificConfig(t *testing.T) {
 	demodata := true
@@ -33,19 +34,19 @@ func TestSpecificConfig(t *testing.T) {
 		},
 		Spec: v1alpha1.SyndesisSpec{
 			ImageStreamNamespace: "is",
-			DemoData: &demodata,
+			DemoData:             &demodata,
 			Integration: v1alpha1.IntegrationSpec{
-				Limit: &limit,
+				Limit:              &limit,
 				StateCheckInterval: &stateCheckInterval,
 			},
-			RouteHostName: "myhost",
-			Registry: "registry",
+			RouteHostName:      "myhost",
+			Registry:           "registry",
 			DeployIntegrations: &deploy,
 			Components: v1alpha1.ComponentsSpec{
 				Db: v1alpha1.DbConfiguration{
 					ImageStreamNamespace: "dbis",
-					Database: "db",
-					User: "user",
+					Database:             "db",
+					User:                 "user",
 					Resources: v1alpha1.ResourcesWithVolume{
 						ResourceRequirements: v12.ResourceRequirements{
 							Limits: v12.ResourceList{
@@ -62,6 +63,9 @@ func TestSpecificConfig(t *testing.T) {
 								"memory": resource.MustParse("3Gi"),
 							},
 						},
+					},
+					Features: v1alpha1.ServerFeatures{
+						ExposeVia3Scale: false,
 					},
 				},
 				Meta: v1alpha1.MetaConfiguration{
@@ -105,6 +109,7 @@ func TestSpecificConfig(t *testing.T) {
 	assert.Equal(t, "2Gi", config[string(EnvPostgresqlVolumeCapacity)])
 
 	assert.Equal(t, "3Gi", config[string(EnvServerMemoryLimit)])
+	assert.Equal(t, "false", config[string(EnvExposeVia3Scale)])
 
 	assert.Equal(t, "4Gi", config[string(EnvMetaMemoryLimit)])
 	assert.Equal(t, "5Gi", config[string(EnvMetaVolumeCapacity)])
