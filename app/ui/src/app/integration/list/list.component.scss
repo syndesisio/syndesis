@@ -9,6 +9,11 @@
     display: inline-table;
     min-width: 135px;
 
+    .api-provider {
+      max-width: 35px;
+      max-height: 35px;
+    }
+
     .fa-angle-right {
       margin: 0 10px 0 10px;
       font-size: 18px;
