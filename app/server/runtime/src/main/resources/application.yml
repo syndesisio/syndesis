@@ -24,6 +24,9 @@ features:
     enabled: true
 
 server:
+  compression:
+    enabled: true
+    mime-types: text/html,text/css,application/javascript,application/json
   useForwardHeaders: true
   undertow:
     ioThreads: 2
