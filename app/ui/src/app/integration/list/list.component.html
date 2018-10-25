@@ -29,7 +29,10 @@
         </ng-container>
         <ng-template #multiflowIntegration>
           <span *ngIf="integrationActionsService.getStart(integration).connection; let connection">
-            <img class="syn-icon-small" [src]="connection | synIconPath" aria-hidden="true">
+            <img class="syn-icon-small"
+                [ngClass]="{ 'api-provider' : (connection.id == 'api-provider') }"
+                [src]="connection | synIconPath"
+                aria-hidden="true">
           </span>
           <span class="fa fa-angle-right"></span>
           <span class="icon">
