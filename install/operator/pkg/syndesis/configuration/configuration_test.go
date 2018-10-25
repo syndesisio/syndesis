@@ -17,8 +17,10 @@ func TestStandardConfig(t *testing.T) {
 	}
 
 	config := GetEnvVars(&syndesis)
+	assert.Len(t, config, 3)
 	assert.Contains(t, config, string(EnvOpenshiftProject))
-	assert.Len(t, config, 1)
+	assert.Contains(t, config, string(EnvSarNamespace))
+	assert.Contains(t, config, string(EnvExposeVia3Scale))
 }
 
 func TestSpecificConfig(t *testing.T) {
