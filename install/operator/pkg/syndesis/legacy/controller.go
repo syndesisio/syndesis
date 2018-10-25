@@ -12,14 +12,14 @@ import (
 )
 
 const (
-	retryInterval = 5 * time.Second
+	retryInterval        = 5 * time.Second
 	syndesisResourceName = "syndesis-app"
 )
 
 // Checks for an existing legacy Syndesis installation and creates a Syndesis CR that takes control of it.
 // Verification is done only once at startup. In case of error, the verification will be tried again at periodic intervals.
 type LegacyController struct {
-	namespace	string
+	namespace string
 }
 
 func NewLegacyController(namespace string) *LegacyController {
@@ -62,15 +62,15 @@ func (c *LegacyController) doVerifyAndCreate() error {
 
 		synd := v1alpha1.Syndesis{
 			TypeMeta: metav1.TypeMeta{
-				Kind: "Syndesis",
+				Kind:       "Syndesis",
 				APIVersion: v1alpha1.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: metav1.ObjectMeta{
 				Namespace: c.namespace,
-				Name: syndesisResourceName,
+				Name:      syndesisResourceName,
 			},
 			Status: v1alpha1.SyndesisStatus{
-				Phase: v1alpha1.SyndesisPhaseUpgradingLegacy,
+				Phase:  v1alpha1.SyndesisPhaseUpgradingLegacy,
 				Reason: v1alpha1.SyndesisStatusReasonMissing,
 			},
 		}

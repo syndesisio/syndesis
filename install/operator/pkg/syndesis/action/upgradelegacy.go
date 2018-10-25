@@ -5,13 +5,12 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/sdk"
 	"github.com/sirupsen/logrus"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 )
 
 // Upgrade a legacy Syndesis installation (installed with template) using the operator.
-type UpgradeLegacy struct {}
-
+type UpgradeLegacy struct{}
 
 func (a *UpgradeLegacy) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseUpgradingLegacy)
@@ -58,7 +57,7 @@ func isAnotherActiveInstallationPresent(syndesis *v1alpha1.Syndesis) (bool, erro
 		if that.Name != syndesis.Name &&
 			that.Status.Phase != v1alpha1.SyndesisPhaseNotInstalled &&
 			that.Status.Phase != v1alpha1.SyndesisPhaseMissing {
-				return true, nil
+			return true, nil
 		}
 	}
 

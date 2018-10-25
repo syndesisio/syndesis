@@ -13,8 +13,8 @@ import (
 )
 
 type TemplateProcessor struct {
-	namespace	string
-	restClient	*rest.RESTClient
+	namespace  string
+	restClient *rest.RESTClient
 }
 
 func NewTemplateProcessor(namespace string) (*TemplateProcessor, error) {
@@ -22,7 +22,7 @@ func NewTemplateProcessor(namespace string) (*TemplateProcessor, error) {
 
 	config := rest.CopyConfig(inConfig)
 	config.GroupVersion = &schema.GroupVersion{
-		Group: "template.openshift.io",
+		Group:   "template.openshift.io",
 		Version: "v1",
 	}
 	config.APIPath = "/apis"
@@ -41,11 +41,10 @@ func NewTemplateProcessor(namespace string) (*TemplateProcessor, error) {
 	}
 
 	return &TemplateProcessor{
-		namespace: namespace,
+		namespace:  namespace,
 		restClient: restClient,
 	}, nil
 }
-
 
 func (p *TemplateProcessor) Process(sourceTemplate *v1template.Template, parameters map[string]string) ([]runtime.RawExtension, error) {
 	p.fillInParameters(sourceTemplate, parameters)

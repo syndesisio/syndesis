@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	SyndesisGlobalConfigSecret			= "syndesis-global-config"
-	SyndesisGlobalConfigVersionProperty	= "syndesis"
-	SyndesisGlobalConfigParamsProperty	= "params"
+	SyndesisGlobalConfigSecret          = "syndesis-global-config"
+	SyndesisGlobalConfigVersionProperty = "syndesis"
+	SyndesisGlobalConfigParamsProperty  = "params"
 )
 
 func IsSyndesisConfigurationSecretPresent(namespace string) (bool, error) {
@@ -27,11 +27,11 @@ func GetSyndesisConfigurationSecret(namespace string) (*v1.Secret, error) {
 	secret := v1.Secret{
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: "v1",
-			Kind: "Secret",
+			Kind:       "Secret",
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: namespace,
-			Name: SyndesisGlobalConfigSecret,
+			Name:      SyndesisGlobalConfigSecret,
 		},
 	}
 	if err := sdk.Get(&secret); err != nil {

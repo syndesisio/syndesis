@@ -3,6 +3,10 @@
   hooks:
     - id: end-of-file-fixer
     - id: trailing-whitespace
+- repo: git://github.com/dnephin/pre-commit-golang.git
+  sha: v0.3.2
+  hooks:
+    - id: go-fmt
 - repo: local
   hooks:
   - id: validate-generated-templates

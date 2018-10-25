@@ -1,11 +1,10 @@
 package util
 
 import (
-	"testing"
-	"github.com/stretchr/testify/assert"
 	appsv1 "github.com/openshift/api/apps/v1"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
-
 
 func TestLoadResources(t *testing.T) {
 

@@ -46,9 +46,10 @@ const (
 	EnvIntegrationStateCheckInterval SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
 	EnvSarNamespace                  SyndesisEnvVar = "SAR_PROJECT"
 
-	EnvSyndesisVersion SyndesisEnvVar = "SYNDESIS_VERSION"
-	EnvUpgradeRegistry SyndesisEnvVar = "UPGRADE_REGISTRY"
-    EnvUpgradeVolumeCapacity       SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
+	EnvSyndesisVersion       SyndesisEnvVar = "SYNDESIS_VERSION"
+	EnvUpgradeRegistry       SyndesisEnvVar = "UPGRADE_REGISTRY"
+	EnvUpgradeVolumeCapacity SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
+	EnvExposeVia3Scale       SyndesisEnvVar = "CONTROLLERS_EXPOSE_VIA3SCALE"
 )
 
 type SyndesisEnvVarConfig struct {
@@ -69,6 +70,7 @@ var (
 		envDemoDataEnabled,
 		envMaxIntegrationsPerUser,
 		envIntegrationStateCheckInterval,
+		envExposeVia3Scale,
 
 		envControllersIntegrationsEnabled,
 		envTestSupport,
@@ -98,6 +100,7 @@ var (
 		demoDataEnabledFromEnv,
 		maxIntegrationsPerUserFromEnv,
 		integrationStateCheckInterval,
+		exposeVia3Scale,
 
 		controllersIntegrationsEnabledFromEnv,
 		testSupportFromEnv,
@@ -472,16 +475,31 @@ func metaVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Synd
 }
 
 func envUpgradeVolumeCapacity(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
-    if capacity := syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity; capacity != "" {
-        return &SyndesisEnvVarConfig{
-            Var:   EnvUpgradeVolumeCapacity,
-            Value: capacity,
-        }
-    }
-    return nil
+	if capacity := syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity; capacity != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvUpgradeVolumeCapacity,
+			Value: capacity,
+		}
+	}
+	return nil
 }
 func upgradeVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-    if v, ok := getString(config, EnvUpgradeVolumeCapacity); ok {
-        syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity = v
-    }
+	if v, ok := getString(config, EnvUpgradeVolumeCapacity); ok {
+		syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity = v
+	}
+}
+
+func envExposeVia3Scale(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	return &SyndesisEnvVarConfig{
+		Var:   EnvExposeVia3Scale,
+		Value: strconv.FormatBool(syndesis.Spec.Components.Server.Features.ExposeVia3Scale),
+	}
+}
+
+func exposeVia3Scale(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvExposeVia3Scale); ok {
+		if b, err := strconv.ParseBool(v); err != nil {
+			syndesis.Spec.Components.Server.Features.ExposeVia3Scale = b
+		}
+	}
 }
