@@ -1,114 +1,286 @@
 {
-  "id": "amqp",
-  "name": "AMQP Message Broker",
-  "description": "Subscribe for and publish messages.",
-  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAzMDAgMzAwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzMDAgMzAwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojODMyRUFCO30NCgkuc3Qxe2ZpbGw6I0JBQkFCQTt9DQoJLnN0MntmaWxsOm5vbmU7fQ0KCS5zdDN7ZmlsbDojOERDNjNGO30NCgkuc3Q0e2ZpbGw6IzBGOUJENzt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRkZGRkZGO30NCgkuc3Q3e2ZpbGw6IzFEQTFGMjt9DQoJLnN0OHtmaWxsOiMzRDVBOTg7fQ0KCS5zdDl7ZmlsbDojMjMxRjIwO30NCgkuc3QxMHtmaWxsOiMwMDdCQjU7fQ0KCS5zdDExe2ZpbGw6I0RDNEU0MTt9DQoJLnN0MTJ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojMTgxNjE2O30NCgkuc3QxM3tmaWxsOiMxODE2MTY7fQ0KCS5zdDE0e2ZpbGw6I0YyRjJGMjt9DQoJLnN0MTV7ZmlsbDojRTNFM0UzO30NCgkuc3QxNntmaWxsOiNENTRCM0Q7fQ0KCS5zdDE3e2ZpbGw6I0Q3MkIyNzt9DQoJLnN0MTh7b3BhY2l0eTowLjU2O2ZpbGw6dXJsKCNTVkdJRF8xXyk7fQ0KCS5zdDE5e2ZpbGw6IzkyRDQwMDt9DQoJLnN0MjB7ZmlsbDojMDBCOUU0O30NCgkuc3QyMXtmaWxsOiMyQjM5OTA7fQ0KCS5zdDIye2ZpbGw6IzNGOUMzNTt9DQoJLnN0MjN7ZmlsbDojOEZDRUQ4O30NCgkuc3QyNHtmaWxsOiNEMjFGMjE7fQ0KCS5zdDI1e2ZpbGw6I0Q2RDZENjt9DQoJLnN0MjZ7ZmlsbDojRjFGMUYxO30NCgkuc3QyN3tmaWxsOiNDMzIyNjU7fQ0KCS5zdDI4e2ZpbGw6IzhDMzEyMzt9DQoJLnN0Mjl7ZmlsbDojRTA1MjQzO30NCgkuc3QzMHtmaWxsOiM1RTFGMTg7fQ0KCS5zdDMxe2ZpbGw6I0YyQjBBOTt9DQoJLnN0MzJ7ZmlsbDojQ0FDQ0NFO30NCgkuc3QzM3tmaWxsOiNBMUFGREI7fQ0KCS5zdDM0e2ZpbGw6IzAwMjA4Nzt9DQo8L3N0eWxlPg0KPGc+DQoJPHBvbHlnb24gY2xhc3M9InN0MzIiIHBvaW50cz0iMCwwIDgzLjksODMuOSA4My45LDAgCSIvPg0KCTxwb2x5Z29uIGNsYXNzPSJzdDMzIiBwb2ludHM9IjEwOS4zLDAgMTkzLjksMCAxOTMuOSwxOTIuNSAxMDkuNiwxMDguNSAJIi8+DQoJPHBvbHlnb24gY2xhc3M9InN0MzIiIHBvaW50cz0iMjE3LjMsMCAzMDAsMCAzMDAsMzAwIDIxNy42LDIxNCAJIi8+DQoJPHBvbHlnb24gcG9pbnRzPSIwLDMwMCAwLDIxNC4zIDIxNy42LDIxNC4zIDMwMCwzMDAgCSIvPg0KCTxwb2x5Z29uIGNsYXNzPSJzdDM0IiBwb2ludHM9IjEwOS42LDEwOC41IDAsMTA4LjUgMCwxOTIuNSAxOTMuOSwxOTIuNSAJIi8+DQoJPHBvbHlnb24gcG9pbnRzPSIwLDAgMCw4My45IDgzLjksODMuOSAJIi8+DQo8L2c+DQo8L3N2Zz4NCg==",
-  "dependencies": [
+  "actions": [
     {
-      "type": "MAVEN",
-      "id": "@project.groupId@:@project.artifactId@:@project.version@"
+      "actionType": "connector",
+      "description": "Send data to the destination you specify.",
+      "descriptor": {
+        "configuredProperties": {},
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify AMQP destination properties, including Queue or Topic name",
+            "name": "Select the AMQP Destination",
+            "properties": {
+              "deliveryPersistent": {
+                "componentProperty": false,
+                "defaultValue": true,
+                "deprecated": false,
+                "displayName": "Persistent",
+                "group": "producer",
+                "javaType": "boolean",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Message delivery is guaranteed when Persistent is selected.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
+              "destinationName": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Destination Name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Name of the queue or topic to send data to.",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              },
+              "destinationType": {
+                "componentProperty": false,
+                "defaultValue": "queue",
+                "deprecated": false,
+                "displayName": "Destination Type",
+                "enum": [
+                  {
+                    "label": "Topic",
+                    "value": "topic"
+                  },
+                  {
+                    "label": "Queue",
+                    "value": "queue"
+                  }
+                ],
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "By default, the destination is a Queue.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:amqp-publish-action",
+      "name": "Publish messages",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Receive data from the destination you specify.",
+      "descriptor": {
+        "configuredProperties": {},
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify AMQP destination properties, including Queue or Topic Name",
+            "name": "Select the AMQP Destination",
+            "properties": {
+              "destinationName": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Destination Name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Name of the queue or topic to receive data from.",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              },
+              "destinationType": {
+                "componentProperty": false,
+                "defaultValue": "queue",
+                "deprecated": false,
+                "displayName": "Destination Type",
+                "enum": [
+                  {
+                    "label": "Topic",
+                    "value": "topic"
+                  },
+                  {
+                    "label": "Queue",
+                    "value": "queue"
+                  }
+                ],
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "By default, the destination is a Queue.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "durableSubscriptionId": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Durable Subscription ID",
+                "group": "consumer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "messageSelector": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Message Selector",
+                "group": "consumer (advanced)",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer,advanced",
+                "labelHint": "Specify a filter expression to receive only data that meets certain criteria.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:amqp-subscribe-action",
+      "name": "Subscribe for messages",
+      "pattern": "From"
+    },
+    {
+      "actionType": "connector",
+      "description": "Send data to the destination you specify and receive a response.",
+      "descriptor": {
+        "configuredProperties": {},
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify AMQP destination properties, including Queue or Topic Name",
+            "name": "Select the AMQP Destination",
+            "properties": {
+              "destinationName": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Destination Name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Name of the queue or topic to receive data from.",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              },
+              "destinationType": {
+                "componentProperty": false,
+                "defaultValue": "queue",
+                "deprecated": false,
+                "displayName": "Destination Type",
+                "enum": [
+                  {
+                    "label": "Topic",
+                    "value": "topic"
+                  },
+                  {
+                    "label": "Queue",
+                    "value": "queue"
+                  }
+                ],
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "By default, the destination is a Queue.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "durableSubscriptionId": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Durable Subscription ID",
+                "group": "consumer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "messageSelector": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Message Selector",
+                "group": "consumer (advanced)",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer,advanced",
+                "labelHint": "Specify a filter expression to receive only data that meets certain criteria.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:amqp-request-action",
+      "name": "Request response using messages",
+      "pattern": "To"
     }
   ],
-  "connectorFactory": "io.syndesis.connector.amqp.AMQPConnectorFactory",
   "componentScheme": "amqp",
   "configuredProperties": {},
-  "tags": [
-    "verifier"
+  "connectorFactory": "io.syndesis.connector.amqp.AMQPConnectorFactory",
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
   ],
+  "description": "Subscribe for and publish messages.",
+  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAzMDAgMzAwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzMDAgMzAwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojODMyRUFCO30NCgkuc3Qxe2ZpbGw6I0JBQkFCQTt9DQoJLnN0MntmaWxsOm5vbmU7fQ0KCS5zdDN7ZmlsbDojOERDNjNGO30NCgkuc3Q0e2ZpbGw6IzBGOUJENzt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRkZGRkZGO30NCgkuc3Q3e2ZpbGw6IzFEQTFGMjt9DQoJLnN0OHtmaWxsOiMzRDVBOTg7fQ0KCS5zdDl7ZmlsbDojMjMxRjIwO30NCgkuc3QxMHtmaWxsOiMwMDdCQjU7fQ0KCS5zdDExe2ZpbGw6I0RDNEU0MTt9DQoJLnN0MTJ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojMTgxNjE2O30NCgkuc3QxM3tmaWxsOiMxODE2MTY7fQ0KCS5zdDE0e2ZpbGw6I0YyRjJGMjt9DQoJLnN0MTV7ZmlsbDojRTNFM0UzO30NCgkuc3QxNntmaWxsOiNENTRCM0Q7fQ0KCS5zdDE3e2ZpbGw6I0Q3MkIyNzt9DQoJLnN0MTh7b3BhY2l0eTowLjU2O2ZpbGw6dXJsKCNTVkdJRF8xXyk7fQ0KCS5zdDE5e2ZpbGw6IzkyRDQwMDt9DQoJLnN0MjB7ZmlsbDojMDBCOUU0O30NCgkuc3QyMXtmaWxsOiMyQjM5OTA7fQ0KCS5zdDIye2ZpbGw6IzNGOUMzNTt9DQoJLnN0MjN7ZmlsbDojOEZDRUQ4O30NCgkuc3QyNHtmaWxsOiNEMjFGMjE7fQ0KCS5zdDI1e2ZpbGw6I0Q2RDZENjt9DQoJLnN0MjZ7ZmlsbDojRjFGMUYxO30NCgkuc3QyN3tmaWxsOiNDMzIyNjU7fQ0KCS5zdDI4e2ZpbGw6IzhDMzEyMzt9DQoJLnN0Mjl7ZmlsbDojRTA1MjQzO30NCgkuc3QzMHtmaWxsOiM1RTFGMTg7fQ0KCS5zdDMxe2ZpbGw6I0YyQjBBOTt9DQoJLnN0MzJ7ZmlsbDojQ0FDQ0NFO30NCgkuc3QzM3tmaWxsOiNBMUFGREI7fQ0KCS5zdDM0e2ZpbGw6IzAwMjA4Nzt9DQo8L3N0eWxlPg0KPGc+DQoJPHBvbHlnb24gY2xhc3M9InN0MzIiIHBvaW50cz0iMCwwIDgzLjksODMuOSA4My45LDAgCSIvPg0KCTxwb2x5Z29uIGNsYXNzPSJzdDMzIiBwb2ludHM9IjEwOS4zLDAgMTkzLjksMCAxOTMuOSwxOTIuNSAxMDkuNiwxMDguNSAJIi8+DQoJPHBvbHlnb24gY2xhc3M9InN0MzIiIHBvaW50cz0iMjE3LjMsMCAzMDAsMCAzMDAsMzAwIDIxNy42LDIxNCAJIi8+DQoJPHBvbHlnb24gcG9pbnRzPSIwLDMwMCAwLDIxNC4zIDIxNy42LDIxNC4zIDMwMCwzMDAgCSIvPg0KCTxwb2x5Z29uIGNsYXNzPSJzdDM0IiBwb2ludHM9IjEwOS42LDEwOC41IDAsMTA4LjUgMCwxOTIuNSAxOTMuOSwxOTIuNSAJIi8+DQoJPHBvbHlnb24gcG9pbnRzPSIwLDAgMCw4My45IDgzLjksODMuOSAJIi8+DQo8L2c+DQo8L3N2Zz4NCg==",
+  "id": "amqp",
+  "name": "AMQP Message Broker",
   "properties": {
-    "connectionUri": {
-      "kind": "property",
-      "displayName": "Connection URI",
-      "group": "common",
-      "label": "common",
-      "required": true,
+    "brokerCertificate": {
       "componentProperty": true,
-      "type": "string",
-      "javaType": "java.lang.String",
       "deprecated": false,
-      "secret": false,
-      "labelHint": "Location to send data to or obtain data from.",
-      "order": "1"
-    },
-    "username": {
-      "kind": "property",
-      "displayName": "User Name",
+      "description": "AMQ Broker X.509 PEM Certificate",
+      "displayName": "Broker Certificate",
       "group": "security",
-      "label": "common,security",
-      "required": false,
-      "componentProperty": true,
-      "type": "string",
       "javaType": "java.lang.String",
-      "deprecated": false,
-      "secret": false,
-      "labelHint": "Access the broker with this user’s authorization credentials.",
-      "order": "2"
-    },
-    "password": {
       "kind": "property",
-      "displayName": "Password",
-      "group": "security",
       "label": "common,security",
-      "required": false,
-      "componentProperty": true,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "deprecated": false,
-      "secret": true,
-      "labelHint": "Password for the specified user account.",
-      "order": "3"
-    },
-    "clientID" : {
-      "kind" : "property",
-      "displayName" : "Client ID",
-      "group" : "security",
-      "label" : "common,security",
-      "required" : false,
-      "componentProperty": true,
-      "type" : "string",
-      "javaType" : "java.lang.String",
-      "deprecated" : false,
-      "secret" : false,
-      "labelHint" : "Required for connections to close and reopen without missing messages. Connection destination must be a topic.",
-      "order": "4"
-    },
-    "skipCertificateCheck" : {
-      "kind" : "property",
-      "displayName" : "Check Certificates",
-      "group" : "security",
-      "label" : "common,security",
-      "required" : false,
-      "componentProperty": true,
-      "type" : "string",
-      "javaType" : "java.lang.String",
-      "enum": [
-        {
-          "value": "true",
-          "label": "Disable"
-        },
-        {
-          "value": "false",
-          "label": "Enable"
-        }
-      ],
-      "defaultValue" : "false",
-      "deprecated" : false,
-      "secret" : false,
-      "labelHint" : "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
-      "order": "5"
-    },
-    "brokerCertificate" : {
-      "kind" : "property",
-      "displayName" : "Broker Certificate",
-      "group" : "security",
-      "label" : "common,security",
-      "required" : false,
-      "componentProperty": true,
-      "type" : "textarea",
-      "javaType" : "java.lang.String",
-      "deprecated" : false,
-      "secret" : false,
-      "description" : "AMQ Broker X.509 PEM Certificate",
       "order": "6",
       "relation": [
         {
@@ -120,20 +292,20 @@
             }
           ]
         }
-      ]
+      ],
+      "required": false,
+      "secret": false,
+      "type": "textarea"
     },
-    "clientCertificate" : {
-      "kind" : "property",
-      "displayName" : "Client Certificate",
-      "group" : "security",
-      "label" : "common,security",
-      "required" : false,
+    "clientCertificate": {
       "componentProperty": true,
-      "type" : "textarea",
-      "javaType" : "java.lang.String",
-      "deprecated" : false,
-      "secret" : false,
-      "description" : "AMQ Client X.509 PEM Certificate",
+      "deprecated": false,
+      "description": "AMQ Client X.509 PEM Certificate",
+      "displayName": "Client Certificate",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
       "order": "7",
       "relation": [
         {
@@ -145,266 +317,94 @@
             }
           ]
         }
-      ]
+      ],
+      "required": false,
+      "secret": false,
+      "type": "textarea"
+    },
+    "clientID": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Client ID",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Required for connections to close and reopen without missing messages. Connection destination must be a topic.",
+      "order": "4",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "connectionUri": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Connection URI",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common",
+      "labelHint": "Location to send data to or obtain data from.",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "password": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Password for the specified user account.",
+      "order": "3",
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "skipCertificateCheck": {
+      "componentProperty": true,
+      "defaultValue": "false",
+      "deprecated": false,
+      "displayName": "Check Certificates",
+      "enum": [
+        {
+          "label": "Disable",
+          "value": "true"
+        },
+        {
+          "label": "Enable",
+          "value": "false"
+        }
+      ],
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
+      "order": "5",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "username": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "User Name",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Access the broker with this user’s authorization credentials.",
+      "order": "2",
+      "required": false,
+      "secret": false,
+      "type": "string"
     }
   },
-  "actions": [
-    {
-      "name": "Publish messages",
-      "description": "Send data to the destination you specify.",
-      "id": "io.syndesis:amqp-publish-action",
-      "pattern": "To",
-      "actionType": "connector",
-      "descriptor": {
-        "inputDataShape": {
-          "kind": "any"
-        },
-        "outputDataShape": {
-          "kind": "none"
-        },
-        "configuredProperties": {},
-        "propertyDefinitionSteps": [
-          {
-            "name": "Select the AMQP Destination",
-            "description": "Specify AMQP destination properties, including Queue or Topic name",
-            "properties": {
-              "destinationName": {
-                "kind": "path",
-                "displayName": "Destination Name",
-                "group": "common",
-                "required": true,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "labelHint": "Name of the queue or topic to send data to.",
-                "order": "1"
-              },
-              "destinationType": {
-                "kind": "path",
-                "displayName": "Destination Type",
-                "group": "common",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "enum": [
-                  {
-                    "value": "topic",
-                    "label": "Topic"
-                  },
-                  {
-                    "value": "queue",
-                    "label": "Queue"
-                  }
-                ],
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "defaultValue": "queue",
-                "labelHint": "By default, the destination is a Queue.",
-                "order": "2"
-              },
-              "deliveryPersistent": {
-                "kind": "parameter",
-                "displayName": "Persistent",
-                "group": "producer",
-                "label": "producer",
-                "required": false,
-                "type": "boolean",
-                "javaType": "boolean",
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "defaultValue": true,
-                "labelHint": "Message delivery is guaranteed when Persistent is selected.",
-                "order": "3"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "Subscribe for messages",
-      "description": "Receive data from the destination you specify.",
-      "id": "io.syndesis:amqp-subscribe-action",
-      "pattern": "From",
-      "actionType": "connector",
-      "descriptor": {
-        "inputDataShape": {
-          "kind": "none"
-        },
-        "outputDataShape": {
-          "kind": "any"
-        },
-        "configuredProperties": {},
-        "propertyDefinitionSteps": [
-          {
-            "name": "Select the AMQP Destination",
-            "description": "Specify AMQP destination properties, including Queue or Topic Name",
-            "properties": {
-              "destinationName": {
-                "kind": "path",
-                "displayName": "Destination Name",
-                "group": "common",
-                "required": true,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "labelHint": "Name of the queue or topic to receive data from.",
-                "order": "1"
-              },
-              "destinationType": {
-                "kind": "path",
-                "displayName": "Destination Type",
-                "group": "common",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "enum": [
-                  {
-                    "value": "topic",
-                    "label": "Topic"
-                  },
-                  {
-                    "value": "queue",
-                    "label": "Queue"
-                  }
-                ],
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "defaultValue": "queue",
-                "labelHint": "By default, the destination is a Queue.",
-                "order": "2"
-              },
-              "durableSubscriptionId": {
-                "kind": "parameter",
-                "displayName": "Durable Subscription ID",
-                "group": "consumer",
-                "label": "consumer",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
-                "order": "3"
-              },
-              "messageSelector": {
-                "kind": "parameter",
-                "displayName": "Message Selector",
-                "group": "consumer (advanced)",
-                "label": "consumer,advanced",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "labelHint": "Specify a filter expression to receive only data that meets certain criteria.",
-                "order": "4"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "Request response using messages",
-      "description": "Send data to the destination you specify and receive a response.",
-      "id": "io.syndesis:amqp-request-action",
-      "pattern": "To",
-      "actionType": "connector",
-      "descriptor": {
-        "inputDataShape": {
-          "kind": "any"
-        },
-        "outputDataShape": {
-          "kind": "any"
-        },
-        "configuredProperties": {},
-        "propertyDefinitionSteps": [
-          {
-            "name": "Select the AMQP Destination",
-            "description": "Specify AMQP destination properties, including Queue or Topic Name",
-            "properties": {
-              "destinationName": {
-                "kind": "path",
-                "displayName": "Destination Name",
-                "group": "common",
-                "required": true,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "labelHint": "Name of the queue or topic to receive data from.",
-                "order": "1"
-              },
-              "destinationType": {
-                "kind": "path",
-                "displayName": "Destination Type",
-                "group": "common",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "enum": [
-                  {
-                    "value": "topic",
-                    "label": "Topic"
-                  },
-                  {
-                    "value": "queue",
-                    "label": "Queue"
-                  }
-                ],
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "defaultValue": "queue",
-                "labelHint": "By default, the destination is a Queue.",
-                "order": "2"
-              },
-              "durableSubscriptionId": {
-                "kind": "parameter",
-                "displayName": "Durable Subscription ID",
-                "group": "consumer",
-                "label": "consumer",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
-                "order": "3"
-              },
-              "messageSelector": {
-                "kind": "parameter",
-                "displayName": "Message Selector",
-                "group": "consumer (advanced)",
-                "label": "consumer,advanced",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "labelHint": "Specify a filter expression to receive only data that meets certain criteria.",
-                "order": "4"
-              }
-            }
-          }
-        ]
-      }
-    }
+  "tags": [
+    "verifier"
   ]
 }

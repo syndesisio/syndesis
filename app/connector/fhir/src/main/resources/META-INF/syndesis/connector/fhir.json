@@ -1,177 +1,174 @@
 {
-    "id": "fhir",
-    "name": "FHIR",
-    "description": "Communicate with a FHIR server",
-    "icon": "fhir",
-    "dependencies": [
-        {
-            "type": "MAVEN",
-            "id": "@project.groupId@:@project.artifactId@:@project.version@"
-        }
-    ],
-    "metadata": {
-      "tech-preview": true
-    },
-    "componentScheme": "fhir",
-    "configuredProperties": {
-    },
-    "tags": [
-        "verifier"
-    ],
-    "properties": {
-        "serverUrl": {
-            "kind": "parameter",
-            "displayName": "FHIR server URL",
-            "group": "common",
-            "required": true,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": false,
-            "order": "1",
-            "defaultValue": "http://fhirtest.uhn.ca/baseDstu3",
-            "labelHint": "The base URL of your FHIR server"
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Read a resource from the server",
+      "descriptor": {
+        "connectorCustomizers": [
+          "io.syndesis.connector.fhir.FhirReadCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "type": "io.syndesis.connector.fhir.FhirReadMessageModel"
         },
-        "fhirVersion": {
-          "kind": "parameter",
-          "displayName": "FHIR version",
-          "group": "common",
-          "required": true,
-          "type": "string",
-          "javaType": "java.lang.String",
-          "enum": [
-            {
-            "value": "DSTU3",
-            "label": "DSTU3"
-            }
-          ],
-          "deprecated": false,
-          "secret": false,
-          "order": "2",
-          "defaultValue": "DSTU3",
-          "labelHint": "The FHIR version to use. Only DSTU3 is currently supported."
-        }
-    },
-    "actions": [
-        {
-            "name": "Read",
-            "description": "Read a resource from the server",
-            "id": "io.syndesis:fhir-read-connector",
-            "pattern": "To",
-            "tags": [
-              "dynamic"
-            ],
-            "actionType": "connector",
-            "descriptor": {
-              "inputDataShape": {
-                "kind": "java",
-                "type": "io.syndesis.connector.fhir.FhirReadMessageModel"
-              },
-              "outputDataShape": {
-                "kind": "xml-schema"
-              },
-              "connectorCustomizers": [
-                "io.syndesis.connector.fhir.FhirReadCustomizer"
-              ],
-              "propertyDefinitionSteps": [
-                {
-                  "name": "Read resource from the server",
-                  "description": "Specify the resource id and type to read",
-                  "properties": {
-                    "id": {
-                      "kind": "parameter",
-                      "displayName": "Resource id",
-                      "group": "common",
-                      "required": false,
-                      "type": "String",
-                      "javaType": "java.lang.String",
-                      "deprecated": false,
-                      "secret": false,
-                      "labelHint": "The resource id"
-                    },
-                    "resourceType": {
-                      "kind": "parameter",
-                      "displayName": "Resource Type",
-                      "group": "common",
-                      "required": false,
-                      "type": "String",
-                      "javaType": "java.lang.String",
-                      "defaultValue": "Patient",
-                      "deprecated": false,
-                      "secret": false,
-                      "labelHint": "The resource type e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html"
-                    },
-                    "version": {
-                      "kind": "parameter",
-                      "displayName": "Resource version",
-                      "group": "common",
-                      "required": false,
-                      "type": "String",
-                      "javaType": "java.lang.String",
-                      "deprecated": false,
-                      "secret": false,
-                      "labelHint": "The version e.g \"123\""
-                    }
-                  }
-                }
-              ]
-            }
+        "outputDataShape": {
+          "kind": "xml-schema"
         },
-        {
-          "name": "Update",
-          "description": "Update or create a resource from the server",
-          "id": "io.syndesis:fhir-update-connector",
-          "pattern": "To",
-          "tags": [
-            "dynamic"
-          ],
-          "actionType": "connector",
-          "descriptor": {
-            "inputDataShape": {
-              "kind": "xml-schema"
-
-            },
-            "outputDataShape": {
-              "kind": "java",
-              "type": "ca.uhn.fhir.rest.api.MethodOutcome"
-            },
-            "configuredProperties": {
-            },
-            "connectorCustomizers": [
-              "io.syndesis.connector.fhir.FhirUpdateCustomizer"
-            ],
-            "propertyDefinitionSteps": [
-              {
-                "name": "Update or create a resource from the server",
-                "description": "Specify the resource to update or create",
-                "properties": {
-                  "resource": {
-                    "kind": "parameter",
-                    "displayName": "Resource",
-                    "group": "common",
-                    "required": false,
-                    "type": "String",
-                    "javaType": "java.lang.String",
-                    "deprecated": false,
-                    "secret": false,
-                    "labelHint": "The resource to update"
-                  },
-                  "resourceType": {
-                    "kind": "parameter",
-                    "displayName": "Resource Type",
-                    "group": "common",
-                    "required": false,
-                    "type": "String",
-                    "javaType": "java.lang.String",
-                    "defaultValue": "Patient",
-                    "deprecated": false,
-                    "secret": false,
-                    "labelHint": "The resource type only \"Patient\" is supported."
-                  }
-                }
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the resource id and type to read",
+            "name": "Read resource from the server",
+            "properties": {
+              "id": {
+                "deprecated": false,
+                "displayName": "Resource id",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource id",
+                "required": false,
+                "secret": false,
+                "type": "String"
+              },
+              "resourceType": {
+                "defaultValue": "Patient",
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
+                "required": false,
+                "secret": false,
+                "type": "String"
+              },
+              "version": {
+                "deprecated": false,
+                "displayName": "Resource version",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The version e.g \"123\"",
+                "required": false,
+                "secret": false,
+                "type": "String"
               }
-            ]
+            }
           }
+        ]
+      },
+      "id": "io.syndesis:fhir-read-connector",
+      "name": "Read",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Update or create a resource from the server",
+      "descriptor": {
+        "configuredProperties": {},
+        "connectorCustomizers": [
+          "io.syndesis.connector.fhir.FhirUpdateCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "xml-schema"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "type": "ca.uhn.fhir.rest.api.MethodOutcome"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the resource to update or create",
+            "name": "Update or create a resource from the server",
+            "properties": {
+              "resource": {
+                "deprecated": false,
+                "displayName": "Resource",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource to update",
+                "required": false,
+                "secret": false,
+                "type": "String"
+              },
+              "resourceType": {
+                "defaultValue": "Patient",
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type only \"Patient\" is supported.",
+                "required": false,
+                "secret": false,
+                "type": "String"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:fhir-update-connector",
+      "name": "Update",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    }
+  ],
+  "componentScheme": "fhir",
+  "configuredProperties": {},
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Communicate with a FHIR server",
+  "icon": "fhir",
+  "id": "fhir",
+  "metadata": {
+    "tech-preview": true
+  },
+  "name": "FHIR",
+  "properties": {
+    "fhirVersion": {
+      "defaultValue": "DSTU3",
+      "deprecated": false,
+      "displayName": "FHIR version",
+      "enum": [
+        {
+          "label": "DSTU3",
+          "value": "DSTU3"
         }
-    ]
+      ],
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The FHIR version to use. Only DSTU3 is currently supported.",
+      "order": "2",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "serverUrl": {
+      "defaultValue": "http://fhirtest.uhn.ca/baseDstu3",
+      "deprecated": false,
+      "displayName": "FHIR server URL",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The base URL of your FHIR server",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
 }
