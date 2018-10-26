@@ -1,0 +1,13 @@
+{
+  "name": "syndesis-icons",
+  "version": "1.0.0",
+  "description": "Syndesis icons",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "optimize": "yarn install && mkdir -p optimized && svgo -f . -o optimized"
+  },
+  "dependencies": {
+    "svgo": "^1.1.1"
+  }
+}
