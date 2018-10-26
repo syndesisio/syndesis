@@ -1,221 +1,110 @@
 {
-  "id": "salesforce",
-  "name": "Salesforce",
-  "description": "Manage customer relations in the cloud.",
-  "dependencies": [
-    {
-      "type": "MAVEN",
-      "id": "@project.groupId@:@project.artifactId@:@project.version@"
-    }
-  ],
-  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAzMDAgMjEwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzMDAgMjEwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojODMyRUFCO30NCgkuc3Qxe2ZpbGw6I0JBQkFCQTt9DQoJLnN0MntmaWxsOm5vbmU7fQ0KCS5zdDN7ZmlsbDojOERDNjNGO30NCgkuc3Q0e2ZpbGw6IzBGOUJENzt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRkZGRkZGO30NCgkuc3Q3e2ZpbGw6IzFEQTFGMjt9DQoJLnN0OHtmaWxsOiMzRDVBOTg7fQ0KCS5zdDl7ZmlsbDojMjMxRjIwO30NCgkuc3QxMHtmaWxsOiMwMDdCQjU7fQ0KCS5zdDExe2ZpbGw6I0RDNEU0MTt9DQoJLnN0MTJ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojMTgxNjE2O30NCgkuc3QxM3tmaWxsOiMxODE2MTY7fQ0KCS5zdDE0e2ZpbGw6I0YyRjJGMjt9DQoJLnN0MTV7ZmlsbDojRTNFM0UzO30NCgkuc3QxNntmaWxsOiNENTRCM0Q7fQ0KCS5zdDE3e2ZpbGw6I0Q3MkIyNzt9DQoJLnN0MTh7b3BhY2l0eTowLjU2O2ZpbGw6dXJsKCNTVkdJRF8xXyk7fQ0KCS5zdDE5e2ZpbGw6IzkyRDQwMDt9DQoJLnN0MjB7ZmlsbDojMDBCOUU0O30NCgkuc3QyMXtmaWxsOiMyQjM5OTA7fQ0KCS5zdDIye2ZpbGw6IzNGOUMzNTt9DQoJLnN0MjN7ZmlsbDojOEZDRUQ4O30NCgkuc3QyNHtmaWxsOiNEMjFGMjE7fQ0KCS5zdDI1e2ZpbGw6I0Q2RDZENjt9DQoJLnN0MjZ7ZmlsbDojRjFGMUYxO30NCgkuc3QyN3tmaWxsOiNDMzIyNjU7fQ0KCS5zdDI4e2ZpbGw6IzhDMzEyMzt9DQoJLnN0Mjl7ZmlsbDojRTA1MjQzO30NCgkuc3QzMHtmaWxsOiM1RTFGMTg7fQ0KCS5zdDMxe2ZpbGw6I0YyQjBBOTt9DQoJLnN0MzJ7ZmlsbDojQ0FDQ0NFO30NCgkuc3QzM3tmaWxsOiNBMUFGREI7fQ0KCS5zdDM0e2ZpbGw6IzAwMjA4Nzt9DQo8L3N0eWxlPg0KPGc+DQoJPHBhdGggY2xhc3M9InN0NCIgZD0iTTEyNC44LDIyLjljOS43LTEwLjEsMjMuMS0xNi4zLDM4LTE2LjNjMTkuOCwwLDM3LjEsMTEsNDYuMywyNy40YzgtMy42LDE2LjgtNS42LDI2LjItNS42DQoJCWMzNS43LDAsNjQuNywyOS4yLDY0LjcsNjUuMmMwLDM2LTI5LDY1LjItNjQuNyw2NS4yYy00LjQsMC04LjYtMC40LTEyLjctMS4zYy04LjEsMTQuNC0yMy41LDI0LjItNDEuMywyNC4yDQoJCWMtNy40LDAtMTQuNC0xLjctMjAuNy00LjhjLTguMiwxOS4zLTI3LjMsMzIuOS00OS43LDMyLjljLTIzLjIsMC00My0xNC43LTUwLjYtMzUuM2MtMy4zLDAuNy02LjgsMS4xLTEwLjMsMS4xDQoJCUMyMi40LDE3NS43LDAsMTUzLjEsMCwxMjUuMmMwLTE4LjcsMTAuMS0zNS4xLDI1LTQzLjhjLTMuMS03LjEtNC44LTE0LjktNC44LTIzLjFDMjAuMiwyNi4xLDQ2LjMsMCw3OC41LDANCgkJQzk3LjQsMCwxMTQuMiw5LDEyNC44LDIyLjkiLz4NCgk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNNDMuNCwxMDguOWMtMC4yLDAuNSwwLjEsMC42LDAuMSwwLjdjMC42LDAuNCwxLjEsMC43LDEuNywxYzMuMSwxLjYsNiwyLjEsOSwyLjFjNi4yLDAsMTAtMy4zLDEwLTguNXYtMC4xDQoJCWMwLTQuOS00LjMtNi42LTguNC03LjlMNTUuMyw5NmMtMy4xLTEtNS43LTEuOC01LjctMy45VjkyYzAtMS43LDEuNS0zLDMuOS0zYzIuNiwwLDUuOCwwLjksNy44LDJjMCwwLDAuNiwwLjQsMC44LTAuMg0KCQljMC4xLTAuMywxLjEtMy4xLDEuMy0zLjRjMC4xLTAuMy0wLjEtMC42LTAuMy0wLjdjLTIuMy0xLjQtNS41LTIuNC04LjgtMi40bC0wLjYsMGMtNS42LDAtOS42LDMuNC05LjYsOC4zdjAuMQ0KCQljMCw1LjEsNC4zLDYuOCw4LjQsOGwwLjcsMC4yYzMsMC45LDUuNSwxLjcsNS41LDMuOHYwLjFjMCwxLjktMS43LDMuMy00LjMsMy4zYy0xLDAtNC40LDAtNy45LTIuM2MtMC40LTAuMy0wLjctMC40LTEtMC42DQoJCWMtMC4yLTAuMS0wLjYtMC4zLTAuOCwwLjNMNDMuNCwxMDguOXoiLz4NCgk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMTMzLjUsMTA4LjljLTAuMiwwLjUsMC4xLDAuNiwwLjEsMC43YzAuNiwwLjQsMS4xLDAuNywxLjcsMWMzLjEsMS42LDYsMi4xLDksMi4xYzYuMiwwLDEwLTMuMywxMC04LjV2LTAuMQ0KCQljMC00LjktNC4zLTYuNi04LjQtNy45bC0wLjUtMC4yYy0zLjEtMS01LjctMS44LTUuNy0zLjlWOTJjMC0xLjcsMS41LTMsMy45LTNjMi42LDAsNS44LDAuOSw3LjgsMmMwLDAsMC42LDAuNCwwLjgtMC4yDQoJCWMwLjEtMC4zLDEuMS0zLjEsMS4zLTMuNGMwLjEtMC4zLTAuMS0wLjYtMC4zLTAuN2MtMi4zLTEuNC01LjUtMi40LTguOC0yLjRsLTAuNiwwYy01LjYsMC05LjYsMy40LTkuNiw4LjN2MC4xDQoJCWMwLDUuMSw0LjMsNi44LDguNCw4bDAuNywwLjJjMywwLjksNS41LDEuNyw1LjUsMy44djAuMWMwLDEuOS0xLjcsMy4zLTQuMywzLjNjLTEsMC00LjMsMC03LjktMi4zYy0wLjQtMC4zLTAuNy0wLjQtMS0wLjYNCgkJYy0wLjEtMC4xLTAuNi0wLjMtMC44LDAuM0wxMzMuNSwxMDguOXoiLz4NCgk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMjAwLjIsOTNjLTAuNS0xLjctMS4zLTMuMi0yLjMtNC41Yy0xLTEuMy0yLjQtMi4zLTMuOS0zYy0xLjYtMC43LTMuNC0xLjEtNS41LTEuMWMtMi4xLDAtMy45LDAuNC01LjUsMS4xDQoJCWMtMS42LDAuNy0yLjksMS43LTMuOSwzYy0xLDEuMy0xLjgsMi44LTIuMyw0LjVjLTAuNSwxLjctMC44LDMuNi0wLjgsNS41YzAsMiwwLjMsMy44LDAuOCw1LjVjMC41LDEuNywxLjMsMy4yLDIuMyw0LjUNCgkJYzEsMS4zLDIuNCwyLjMsMy45LDNzMy40LDEuMSw1LjUsMS4xYzIuMSwwLDMuOS0wLjQsNS41LTEuMWMxLjYtMC43LDIuOS0xLjcsMy45LTNjMS0xLjMsMS44LTIuOCwyLjMtNC41YzAuNS0xLjcsMC44LTMuNiwwLjgtNS41DQoJCUMyMDAuOSw5Ni42LDIwMC43LDk0LjcsMjAwLjIsOTMgTTE5NSw5OC42YzAsMy0wLjYsNS4zLTEuNiw3Yy0xLjEsMS42LTIuNywyLjQtNSwyLjRjLTIuMywwLTMuOS0wLjgtNS0yLjRjLTEuMS0xLjctMS42LTQtMS42LTcNCgkJYzAtMywwLjUtNS4zLDEuNi03YzEuMS0xLjYsMi43LTIuNCw1LTIuNGMyLjMsMCwzLjksMC44LDUsMi40QzE5NC41LDkzLjMsMTk1LDk1LjYsMTk1LDk4LjYiLz4NCgk8cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMjQyLjQsMTA3LjJjLTAuMi0wLjUtMC43LTAuMy0wLjctMC4zYy0wLjcsMC4zLTEuNSwwLjUtMi40LDAuN2MtMC45LDAuMS0xLjgsMC4yLTIuOCwwLjINCgkJYy0yLjUsMC00LjUtMC43LTUuOS0yLjJjLTEuNC0xLjUtMi4yLTMuOC0yLjItN2MwLTIuOSwwLjctNS4xLDItNi44YzEuMy0xLjcsMy4yLTIuNSw1LjctMi41YzIuMSwwLDMuNywwLjIsNS40LDAuOA0KCQljMCwwLDAuNCwwLjIsMC42LTAuNGMwLjUtMS4zLDAuOC0yLjEsMS4zLTMuNWMwLjEtMC40LTAuMi0wLjYtMC4zLTAuNmMtMC43LTAuMy0yLjItMC43LTMuNC0wLjljLTEuMS0wLjItMi40LTAuMy0zLjktMC4zDQoJCWMtMi4yLDAtNC4xLDAuNC01LjcsMS4xYy0xLjYsMC43LTMsMS43LTQuMSwzYy0xLjEsMS4zLTEuOSwyLjgtMi41LDQuNWMtMC42LDEuNy0wLjgsMy42LTAuOCw1LjVjMCw0LjMsMS4xLDcuNywzLjQsMTAuMg0KCQljMi4zLDIuNSw1LjcsMy44LDEwLjEsMy44YzIuNiwwLDUuMy0wLjUsNy4zLTEuM2MwLDAsMC40LTAuMiwwLjItMC42TDI0Mi40LDEwNy4yeiIvPg0KCTxwYXRoIGNsYXNzPSJzdDYiIGQ9Ik0yNjguNiw5Mi4xYy0wLjQtMS42LTEuNS0zLjMtMi4yLTQuMWMtMS4xLTEuMi0yLjItMi4xLTMuMy0yLjVjLTEuNC0wLjYtMy4xLTEtNS0xYy0yLjIsMC00LjEsMC40LTUuNywxLjENCgkJYy0xLjYsMC43LTIuOSwxLjgtNCwzLjFjLTEuMSwxLjMtMS44LDIuOC0yLjQsNC41Yy0wLjUsMS43LTAuOCwzLjYtMC44LDUuNWMwLDIsMC4zLDMuOSwwLjgsNS42YzAuNSwxLjcsMS40LDMuMiwyLjUsNC40DQoJCWMxLjEsMS4yLDIuNiwyLjIsNC40LDIuOWMxLjgsMC43LDMuOSwxLDYuMywxYzUsMCw3LjctMS4xLDguOC0xLjdjMC4yLTAuMSwwLjQtMC4zLDAuMS0wLjhsLTEuMS0zLjJjLTAuMi0wLjUtMC43LTAuMy0wLjctMC4zDQoJCWMtMS4yLDAuNS0zLDEuMy03LjEsMS4zYy0yLjcsMC00LjctMC44LTUuOS0yYy0xLjMtMS4zLTEuOS0zLjEtMi01LjhsMTcuNCwwYzAsMCwwLjUsMCwwLjUtMC41QzI2OS4yLDk5LjQsMjY5LjgsOTYsMjY4LjYsOTIuMQ0KCQkgTTI1MS4zLDk1LjdjMC4yLTEuNywwLjctMywxLjQtNC4xYzEuMS0xLjYsMi43LTIuNSw1LTIuNWMyLjMsMCwzLjgsMC45LDQuOSwyLjVjMC43LDEuMSwxLDIuNSwxLjIsNC4xTDI1MS4zLDk1Ljd6Ii8+DQoJPHBhdGggY2xhc3M9InN0NiIgZD0iTTEyOS40LDkyLjFjLTAuNC0xLjYtMS41LTMuMy0yLjItNC4xYy0xLjEtMS4yLTIuMi0yLjEtMy4zLTIuNWMtMS40LTAuNi0zLjEtMS01LTFjLTIuMiwwLTQuMSwwLjQtNS43LDEuMQ0KCQljLTEuNiwwLjctMi45LDEuOC00LDMuMWMtMS4xLDEuMy0xLjgsMi44LTIuNCw0LjVjLTAuNSwxLjctMC44LDMuNi0wLjgsNS41YzAsMiwwLjMsMy45LDAuOCw1LjZjMC41LDEuNywxLjQsMy4yLDIuNSw0LjQNCgkJYzEuMSwxLjIsMi42LDIuMiw0LjQsMi45YzEuOCwwLjcsMy45LDEsNi4zLDFjNSwwLDcuNy0xLjEsOC44LTEuN2MwLjItMC4xLDAuNC0wLjMsMC4xLTAuOGwtMS4xLTMuMmMtMC4yLTAuNS0wLjctMC4zLTAuNy0wLjMNCgkJYy0xLjIsMC41LTMsMS4zLTcuMSwxLjNjLTIuNywwLTQuNy0wLjgtNS45LTJjLTEuMy0xLjMtMS45LTMuMS0yLTUuOGwxNy40LDBjMCwwLDAuNSwwLDAuNS0wLjVDMTI5LjksOTkuNCwxMzAuNSw5NiwxMjkuNCw5Mi4xDQoJCSBNMTEyLjEsOTUuN2MwLjItMS43LDAuNy0zLDEuNC00LjFjMS4xLTEuNiwyLjctMi41LDUtMi41YzIuMywwLDMuOCwwLjksNC45LDIuNWMwLjcsMS4xLDEsMi41LDEuMiw0LjFMMTEyLjEsOTUuN3oiLz4NCgk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNODEuNCw5NC45Yy0wLjctMC4xLTEuNi0wLjEtMi43LTAuMWMtMS41LDAtMi45LDAuMi00LjMsMC42Yy0xLjQsMC40LTIuNiwwLjktMy42LDEuNw0KCQljLTEuMSwwLjgtMS45LDEuNy0yLjUsMi45Yy0wLjYsMS4xLTAuOSwyLjUtMC45LDRjMCwxLjUsMC4zLDIuOSwwLjgsNGMwLjUsMS4xLDEuMywyLDIuMywyLjdjMSwwLjcsMi4yLDEuMiwzLjUsMS41DQoJCWMxLjQsMC4zLDIuOSwwLjUsNC42LDAuNWMxLjgsMCwzLjYtMC4xLDUuMy0wLjRjMS43LTAuMywzLjgtMC43LDQuNC0wLjljMC42LTAuMSwxLjItMC4zLDEuMi0wLjNjMC40LTAuMSwwLjQtMC42LDAuNC0wLjZsMC0xNS45DQoJCWMwLTMuNS0wLjktNi4xLTIuOC03LjdjLTEuOC0xLjYtNC41LTIuNC04LTIuNGMtMS4zLDAtMy40LDAuMi00LjcsMC40YzAsMC0zLjgsMC43LTUuNCwyYzAsMC0wLjMsMC4yLTAuMiwwLjdsMS4yLDMuMw0KCQljMC4yLDAuNCwwLjYsMC4zLDAuNiwwLjNzMC4xLTAuMSwwLjMtMC4xYzMuMy0xLjgsNy42LTEuOCw3LjYtMS44YzEuOSwwLDMuMywwLjQsNC4zLDEuMWMwLjksMC43LDEuNCwxLjgsMS40LDQuMXYwLjcNCgkJQzgyLjgsOTUsODEuNCw5NC45LDgxLjQsOTQuOSBNNzQuNSwxMDcuMWMtMC43LTAuNS0wLjgtMC43LTEtMWMtMC4zLTAuNS0wLjUtMS4zLTAuNS0yLjNjMC0xLjUsMC41LTIuNiwxLjYtMy40YzAsMCwxLjUtMS4zLDUtMS4zDQoJCWMyLjUsMCw0LjcsMC40LDQuNywwLjR2Ny45YzAsMC0yLjIsMC41LTQuNywwLjZDNzYuMSwxMDguMyw3NC41LDEwNy4xLDc0LjUsMTA3LjEiLz4NCgk8cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMjIxLjcsODUuOWMwLjEtMC40LTAuMS0wLjYtMC4zLTAuNmMtMC4zLTAuMS0xLjgtMC40LTIuOS0wLjVjLTIuMi0wLjEtMy40LDAuMi00LjUsMC43DQoJCWMtMS4xLDAuNS0yLjMsMS4zLTIuOSwyLjJsMC0yLjFjMC0wLjMtMC4yLTAuNS0wLjUtMC41aC00LjVjLTAuMywwLTAuNSwwLjItMC41LDAuNXYyNS45YzAsMC4zLDAuMiwwLjUsMC41LDAuNWg0LjYNCgkJYzAuMywwLDAuNS0wLjIsMC41LTAuNXYtMTNjMC0xLjcsMC4yLTMuNSwwLjYtNC42YzAuNC0xLjEsMC45LTEuOSwxLjUtMi42YzAuNi0wLjYsMS40LTEsMi4yLTEuM2MwLjgtMC4yLDEuNy0wLjMsMi4zLTAuMw0KCQljMC45LDAsMS45LDAuMiwxLjksMC4yYzAuMywwLDAuNS0wLjIsMC42LTAuNUMyMjAuNyw4OC44LDIyMS41LDg2LjQsMjIxLjcsODUuOSIvPg0KCTxwYXRoIGNsYXNzPSJzdDYiIGQ9Ik0xNzguOCw3My45Yy0wLjYtMC4yLTEuMS0wLjMtMS43LTAuNGMtMC43LTAuMS0xLjUtMC4yLTIuNC0wLjJjLTMuMSwwLTUuNiwwLjktNy40LDIuNg0KCQljLTEuNywxLjctMi45LDQuNC0zLjUsNy45bC0wLjIsMS4yaC0zLjljMCwwLTAuNSwwLTAuNiwwLjVsLTAuNiwzLjZjMCwwLjMsMC4xLDAuNiwwLjYsMC42aDMuOGwtMy45LDIxLjhjLTAuMywxLjgtMC43LDMuMi0xLDQuMw0KCQljLTAuNCwxLjEtMC44LDEuOS0xLjIsMi41Yy0wLjQsMC42LTAuOSwxLTEuNiwxLjJjLTAuNiwwLjItMS4zLDAuMy0yLDAuM2MtMC40LDAtMS0wLjEtMS40LTAuMmMtMC40LTAuMS0wLjYtMC4yLTAuOS0wLjMNCgkJYzAsMC0wLjQtMC4yLTAuNiwwLjNjLTAuMSwwLjQtMS4yLDMuMi0xLjMsMy41Yy0wLjEsMC4zLDAsMC42LDAuMywwLjdjMC41LDAuMiwwLjksMC4zLDEuNiwwLjVjMSwwLjIsMS44LDAuMiwyLjUsMC4yDQoJCWMxLjYsMCwzLjEtMC4yLDQuMy0wLjdjMS4yLTAuNCwyLjMtMS4yLDMuMi0yLjJjMS0xLjEsMS42LTIuMywyLjMtMy45YzAuNi0xLjYsMS4xLTMuNSwxLjUtNS44bDMuOS0yMi4yaDUuN2MwLDAsMC41LDAsMC42LTAuNQ0KCQlsMC42LTMuNmMwLTAuMy0wLjEtMC42LTAuNi0wLjZoLTUuNmMwLTAuMSwwLjMtMi4xLDAuOS0zLjljMC4zLTAuOCwwLjgtMS40LDEuMi0xLjljMC40LTAuNCwwLjktMC43LDEuNS0wLjkNCgkJYzAuNi0wLjIsMS4yLTAuMywxLjktMC4zYzAuNSwwLDEsMC4xLDEuNCwwLjFjMC41LDAuMSwwLjcsMC4yLDAuOSwwLjJjMC42LDAuMiwwLjYsMCwwLjgtMC4zbDEuMy0zLjcNCgkJQzE3OS4yLDc0LjEsMTc4LjksNzQsMTc4LjgsNzMuOSIvPg0KCTxwYXRoIGNsYXNzPSJzdDYiIGQ9Ik0xMDEuMSwxMTEuNWMwLDAuMy0wLjIsMC41LTAuNSwwLjVIOTZjLTAuMywwLTAuNS0wLjItMC41LTAuNVY3NC40YzAtMC4zLDAuMi0wLjUsMC41LTAuNWg0LjYNCgkJYzAuMywwLDAuNSwwLjIsMC41LDAuNVYxMTEuNXoiLz4NCjwvZz4NCjwvc3ZnPg0K",
-  "tags": [
-    "verifier"
-  ],
-  "properties": {
-    "loginUrl": {
-      "kind": "property",
-      "displayName": "Login URL",
-      "group": "security",
-      "label": "common,security",
-      "required": true,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "tags": [],
-      "deprecated": false,
-      "secret": false,
-      "componentProperty": true,
-      "defaultValue": "https://login.salesforce.com",
-      "description": "URL of the Salesforce instance used for authentication by default set to https://login.salesforce.com",
-      "order": 5
-    },
-    "clientId": {
-      "kind": "property",
-      "displayName": "Client ID",
-      "group": "security",
-      "label": "common,security",
-      "required": true,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "tags": [
-        "oauth-client-id"
-      ],
-      "deprecated": false,
-      "secret": false,
-      "componentProperty": true,
-      "description": "OAuth Consumer Key of the connected app configured in the Salesforce instance setup. Typically a connected app needs to be configured but one can be provided by installing a package.",
-      "order": 3
-    },
-    "clientSecret": {
-      "kind": "property",
-      "displayName": "Client Secret",
-      "group": "security",
-      "label": "common,security",
-      "required": true,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "tags": [
-        "oauth-client-secret"
-      ],
-      "deprecated": false,
-      "secret": true,
-      "componentProperty": true,
-      "description": "OAuth Consumer Secret of the connected app configured in the Salesforce instance setup.",
-      "order": 4
-    },
-    "refreshToken": {
-      "kind": "property",
-      "displayName": "Refresh Token",
-      "group": "security",
-      "label": "common,security",
-      "required": false,
-      "type": "hidden",
-      "javaType": "java.lang.String",
-      "tags": [],
-      "deprecated": false,
-      "secret": true,
-      "componentProperty": true,
-      "description": "Refresh token already obtained in the refresh token OAuth flow. One needs to setup a web application and configure a callback URL to receive the refresh token or configure using the builtin callback at https://login.salesforce.com/services/oauth2/success or https://test.salesforce.com/services/oauth2/success and then retrive the refresh_token from the URL at the end of the flow. Note that in development organizations Salesforce allows hosting the callback web application at localhost."
-    },
-    "userName": {
-      "kind": "property",
-      "displayName": "Username",
-      "group": "security",
-      "label": "common,security",
-      "required": true,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "tags": [],
-      "deprecated": false,
-      "secret": false,
-      "componentProperty": true,
-      "description": "Username used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows.",
-      "order": 1
-    },
-    "password": {
-      "kind": "property",
-      "displayName": "Password",
-      "group": "security",
-      "label": "common,security",
-      "required": true,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "tags": [],
-      "deprecated": false,
-      "secret": true,
-      "componentProperty": true,
-      "description": "Password used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows. Make sure that you append security token to the end of the password if using one.",
-      "order": 2
-    }
-  },
   "actions": [
     {
-      "id": "@project.groupId@:@project.artifactId@:salesforce-create-sobject",
-      "name": "New record",
-      "description": "Create a new Salesforce record, such as an Account, Contact, or Order.",
-      "tags": [
-        "dynamic"
-      ],
-      "pattern": "To",
       "actionType": "connector",
+      "description": "Create a new Salesforce record, such as an Account, Contact, or Order.",
       "descriptor": {
         "componentScheme": "salesforce",
-        "connectorCustomizers": [
-          "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
-        ],
-        "inputDataShape": {
-          "kind": "json-schema"
-        },
-        "outputDataShape": {
-          "kind": "java",
-          "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
-        },
         "configuredProperties": {
           "operationName": "createSObject",
           "rawPayload": "true"
         },
-        "propertyDefinitionSteps": [
-          {
-            "name": "Name of the object",
-            "description": "Specify the Salesforce object name of the record to create.",
-            "properties": {
-              "sObjectName": {
-                "kind": "parameter",
-                "displayName": "Object name",
-                "group": "common",
-                "required": true,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "description": "Name of the Salesforce object"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "id": "@project.groupId@:@project.artifactId@:salesforce-delete-sobject",
-      "name": "Delete record",
-      "description": "Delete a record from Salesforce.",
-      "tags": [
-        "dynamic"
-      ],
-      "pattern": "To",
-      "actionType": "connector",
-      "descriptor": {
-        "componentScheme": "salesforce",
         "connectorCustomizers": [
           "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
         ],
         "inputDataShape": {
-          "kind": "java",
-          "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+          "kind": "json-schema"
         },
         "outputDataShape": {
-          "kind": "none"
+          "kind": "java",
+          "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
         },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the Salesforce object name of the record to create.",
+            "name": "Name of the object",
+            "properties": {
+              "sObjectName": {
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the Salesforce object",
+                "displayName": "Object name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "@project.groupId@:@project.artifactId@:salesforce-create-sobject",
+      "name": "New record",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Delete a record from Salesforce.",
+      "descriptor": {
+        "componentScheme": "salesforce",
         "configuredProperties": {
           "operationName": "deleteSObject",
           "rawPayload": "true"
         },
+        "connectorCustomizers": [
+          "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
         "propertyDefinitionSteps": [
           {
-            "name": "Name of the object",
             "description": "Specify the Salesforce object name of the record to delete.",
+            "name": "Name of the object",
             "properties": {
               "sObjectName": {
-                "kind": "parameter",
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the Salesforce object",
                 "displayName": "Object name",
                 "group": "common",
-                "required": true,
-                "type": "string",
                 "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
+                "kind": "parameter",
+                "required": true,
                 "secret": false,
-                "componentProperty": false,
-                "description": "Name of the Salesforce object"
+                "tags": [],
+                "type": "string"
               }
             }
           }
         ]
-      }
-    },
-    {
-      "id": "@project.groupId@:@project.artifactId@:salesforce-delete-sobject-with-id",
-      "name": "Delete record by external identifier",
-      "description": "Delete a record from Salesforce based on the value of an external identifier.",
+      },
+      "id": "@project.groupId@:@project.artifactId@:salesforce-delete-sobject",
+      "name": "Delete record",
+      "pattern": "To",
       "tags": [
         "dynamic"
-      ],
-      "pattern": "To",
+      ]
+    },
+    {
       "actionType": "connector",
+      "description": "Delete a record from Salesforce based on the value of an external identifier.",
       "descriptor": {
         "componentScheme": "salesforce",
+        "configuredProperties": {
+          "operationName": "deleteSObjectWithId",
+          "rawPayload": "true"
+        },
         "connectorCustomizers": [
           "io.syndesis.connector.salesforce.customizer.ExpectingIdCustomizer",
           "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
@@ -227,113 +116,64 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "configuredProperties": {
-          "operationName": "deleteSObjectWithId",
-          "rawPayload": "true"
-        },
         "propertyDefinitionSteps": [
           {
-            "name": "Name of the object",
             "description": "Specify the Salesforce object name of the record to delete.",
+            "name": "Name of the object",
             "properties": {
               "sObjectName": {
-                "kind": "parameter",
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the Salesforce object",
                 "displayName": "Object name",
                 "group": "common",
-                "required": true,
-                "type": "string",
                 "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
+                "kind": "parameter",
+                "required": true,
                 "secret": false,
-                "componentProperty": false,
-                "description": "Name of the Salesforce object"
+                "tags": [],
+                "type": "string"
               }
             }
           },
           {
-            "name": "External identifier field name",
             "description": "Specify the field name of the external identifier.",
+            "name": "External identifier field name",
             "properties": {
               "sObjectIdName": {
-                "kind": "parameter",
+                "componentProperty": false,
+                "defaultValue": "Id",
+                "deprecated": false,
+                "description": "Field name of the external identifier",
                 "displayName": "External identifier field",
                 "group": "common",
-                "required": true,
-                "type": "string",
                 "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
+                "kind": "parameter",
+                "required": true,
                 "secret": false,
-                "componentProperty": false,
-                "description": "Field name of the external identifier",
-                "defaultValue": "Id"
+                "tags": [],
+                "type": "string"
               }
             }
           }
         ]
-      }
-    },
-    {
-      "id": "@project.groupId@:@project.artifactId@:salesforce-get-sobject",
-      "name": "Fetch record",
-      "description": "Fetches a record from Salesforce by its identifier value.",
+      },
+      "id": "@project.groupId@:@project.artifactId@:salesforce-delete-sobject-with-id",
+      "name": "Delete record by external identifier",
+      "pattern": "To",
       "tags": [
         "dynamic"
-      ],
-      "pattern": "To",
+      ]
+    },
+    {
       "actionType": "connector",
+      "description": "Fetches a record from Salesforce by its identifier value.",
       "descriptor": {
         "componentScheme": "salesforce",
-        "connectorCustomizers": [
-          "io.syndesis.connector.salesforce.customizer.ExpectingIdCustomizer",
-          "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
-        ],
-        "inputDataShape": {
-          "kind": "java",
-          "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
-        },
-        "outputDataShape": {
-          "kind": "json-schema"
-        },
         "configuredProperties": {
           "operationName": "getSObject",
           "rawPayload": "true"
         },
-        "propertyDefinitionSteps": [
-          {
-            "name": "Name of the object",
-            "description": "Specify the Salesforce object name of the record to fetch.",
-            "properties": {
-              "sObjectName": {
-                "kind": "parameter",
-                "displayName": "Object name",
-                "group": "common",
-                "required": true,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "description": "Name of the Salesforce object"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "id": "@project.groupId@:@project.artifactId@:salesforce-get-sobject-with-id",
-      "name": "Fetch record by external identifier",
-      "description": "Fetches a record from Salesforce by the value of an external identifier.",
-      "tags": [
-        "dynamic"
-      ],
-      "pattern": "To",
-      "actionType": "connector",
-      "descriptor": {
-        "componentScheme": "salesforce",
         "connectorCustomizers": [
           "io.syndesis.connector.salesforce.customizer.ExpectingIdCustomizer",
           "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
@@ -345,64 +185,113 @@
         "outputDataShape": {
           "kind": "json-schema"
         },
-        "configuredProperties": {
-          "operationName": "getSObjectWithId",
-          "rawPayload": "true"
-        },
         "propertyDefinitionSteps": [
           {
-            "name": "Name of the object",
             "description": "Specify the Salesforce object name of the record to fetch.",
+            "name": "Name of the object",
             "properties": {
               "sObjectName": {
-                "kind": "parameter",
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the Salesforce object",
                 "displayName": "Object name",
                 "group": "common",
-                "required": true,
-                "type": "string",
                 "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "description": "Name of the Salesforce object"
-              }
-            }
-          },
-          {
-            "name": "External identifier field name",
-            "description": "Specify the field name of the external identifier.",
-            "properties": {
-              "sObjectIdName": {
                 "kind": "parameter",
-                "displayName": "External identifier field",
-                "group": "common",
                 "required": true,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
                 "secret": false,
-                "componentProperty": false,
-                "description": "Field name of the external identifier",
-                "defaultValue": "Id"
+                "tags": [],
+                "type": "string"
               }
             }
           }
         ]
-      }
-    },
-    {
-      "id": "@project.groupId@:@project.artifactId@:salesforce-update-sobject",
-      "name": "Update record",
-      "description": "Update a record on Salesforce.",
+      },
+      "id": "@project.groupId@:@project.artifactId@:salesforce-get-sobject",
+      "name": "Fetch record",
+      "pattern": "To",
       "tags": [
         "dynamic"
-      ],
-      "pattern": "To",
+      ]
+    },
+    {
       "actionType": "connector",
+      "description": "Fetches a record from Salesforce by the value of an external identifier.",
       "descriptor": {
         "componentScheme": "salesforce",
+        "configuredProperties": {
+          "operationName": "getSObjectWithId",
+          "rawPayload": "true"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.salesforce.customizer.ExpectingIdCustomizer",
+          "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the Salesforce object name of the record to fetch.",
+            "name": "Name of the object",
+            "properties": {
+              "sObjectName": {
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the Salesforce object",
+                "displayName": "Object name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              }
+            }
+          },
+          {
+            "description": "Specify the field name of the external identifier.",
+            "name": "External identifier field name",
+            "properties": {
+              "sObjectIdName": {
+                "componentProperty": false,
+                "defaultValue": "Id",
+                "deprecated": false,
+                "description": "Field name of the external identifier",
+                "displayName": "External identifier field",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "@project.groupId@:@project.artifactId@:salesforce-get-sobject-with-id",
+      "name": "Fetch record by external identifier",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Update a record on Salesforce.",
+      "descriptor": {
+        "componentScheme": "salesforce",
+        "configuredProperties": {
+          "operationName": "updateSObject",
+          "rawPayload": "true"
+        },
         "connectorCustomizers": [
           "io.syndesis.connector.salesforce.customizer.ForUpdateCustomizer",
           "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
@@ -413,44 +302,44 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "configuredProperties": {
-          "operationName": "updateSObject",
-          "rawPayload": "true"
-        },
         "propertyDefinitionSteps": [
           {
-            "name": "Name of the object",
             "description": "Specify the Salesforce object name of the record to update.",
+            "name": "Name of the object",
             "properties": {
               "sObjectName": {
-                "kind": "parameter",
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the Salesforce object",
                 "displayName": "Object name",
                 "group": "common",
-                "required": true,
-                "type": "string",
                 "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
+                "kind": "parameter",
+                "required": true,
                 "secret": false,
-                "componentProperty": false,
-                "description": "Name of the Salesforce object"
+                "tags": [],
+                "type": "string"
               }
             }
           }
         ]
-      }
-    },
-    {
-      "id": "@project.groupId@:@project.artifactId@:salesforce-upsert-sobject",
-      "name": "Create or update record",
-      "description": "Create or update a record on Salesforce.",
+      },
+      "id": "@project.groupId@:@project.artifactId@:salesforce-update-sobject",
+      "name": "Update record",
+      "pattern": "To",
       "tags": [
         "dynamic"
-      ],
-      "pattern": "To",
+      ]
+    },
+    {
       "actionType": "connector",
+      "description": "Create or update a record on Salesforce.",
       "descriptor": {
         "componentScheme": "salesforce",
+        "configuredProperties": {
+          "operationName": "upsertSObject",
+          "rawPayload": "true"
+        },
         "connectorCustomizers": [
           "io.syndesis.connector.salesforce.customizer.ForUpdateCustomizer",
           "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
@@ -462,114 +351,69 @@
           "kind": "java",
           "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
         },
-        "configuredProperties": {
-          "operationName": "upsertSObject",
-          "rawPayload": "true"
-        },
         "propertyDefinitionSteps": [
           {
-            "name": "Name of the object",
             "description": "Specify the Salesforce object name of the record to create or update.",
+            "name": "Name of the object",
             "properties": {
               "sObjectName": {
-                "kind": "parameter",
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the Salesforce object",
                 "displayName": "Object name",
                 "group": "common",
-                "required": true,
-                "type": "string",
                 "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
+                "kind": "parameter",
+                "required": true,
                 "secret": false,
-                "componentProperty": false,
-                "description": "Name of the Salesforce object"
+                "tags": [],
+                "type": "string"
               }
             }
           },
           {
-            "name": "Identifier field name",
             "description": "Specify the field name that holds the identifying value.",
+            "name": "Identifier field name",
             "properties": {
               "sObjectIdName": {
-                "kind": "parameter",
+                "componentProperty": false,
+                "defaultValue": "Id",
+                "deprecated": false,
+                "description": "Field name of the identifier",
                 "displayName": "Identifier field",
                 "group": "common",
-                "required": true,
-                "type": "string",
                 "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
+                "kind": "parameter",
+                "required": true,
                 "secret": false,
-                "componentProperty": false,
-                "description": "Field name of the identifier",
-                "defaultValue": "Id"
+                "tags": [],
+                "type": "string"
               }
             }
           }
         ]
-      }
-    },
-    {
-      "id": "@project.groupId@:@project.artifactId@:salesforce-on-create",
-      "name": "On create",
-      "description": "Get notified when a Salesforce record is created.",
+      },
+      "id": "@project.groupId@:@project.artifactId@:salesforce-upsert-sobject",
+      "name": "Create or update record",
+      "pattern": "To",
       "tags": [
         "dynamic"
-      ],
-      "pattern": "From",
+      ]
+    },
+    {
       "actionType": "connector",
+      "description": "Get notified when a Salesforce record is created.",
       "descriptor": {
         "componentScheme": "salesforce",
-        "connectorFactory": "io.syndesis.connector.salesforce.SalesforceStreamingConnectorFactory",
-        "inputDataShape": {
-          "kind": "none"
-        },
-        "outputDataShape": {
-          "kind": "json-schema"
-        },
         "configuredProperties": {
-          "updateTopic": "true",
           "notifyForFields": "ALL",
           "notifyForOperationCreate": "true",
-          "notifyForOperationUpdate": "false",
           "notifyForOperationDelete": "false",
           "notifyForOperationUndelete": "false",
-          "sObjectClass": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+          "notifyForOperationUpdate": "false",
+          "sObjectClass": "io.syndesis.connector.salesforce.SalesforceIdentifier",
+          "updateTopic": "true"
         },
-        "propertyDefinitionSteps": [
-          {
-            "name": "Name of the object",
-            "description": "Specify the Salesforce object name for which to receive notification when records are created.",
-            "properties": {
-              "sObjectName": {
-                "kind": "parameter",
-                "displayName": "Object name",
-                "group": "common",
-                "required": true,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "description": "Name of the Salesforce object"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "id": "@project.groupId@:@project.artifactId@:salesforce-on-update",
-      "name": "On update",
-      "description": "Get notified when a Salesforce record is updated.",
-      "tags": [
-        "dynamic"
-      ],
-      "pattern": "From",
-      "actionType": "connector",
-      "descriptor": {
-        "componentScheme": "salesforce",
         "connectorFactory": "io.syndesis.connector.salesforce.SalesforceStreamingConnectorFactory",
         "inputDataShape": {
           "kind": "none"
@@ -577,49 +421,99 @@
         "outputDataShape": {
           "kind": "json-schema"
         },
-        "configuredProperties": {
-          "updateTopic": "true",
-          "notifyForFields": "ALL",
-          "notifyForOperationCreate": "false",
-          "notifyForOperationUpdate": "true",
-          "notifyForOperationDelete": "false",
-          "notifyForOperationUndelete": "false",
-          "sObjectClass": "io.syndesis.connector.salesforce.SalesforceIdentifier"
-        },
         "propertyDefinitionSteps": [
           {
+            "description": "Specify the Salesforce object name for which to receive notification when records are created.",
             "name": "Name of the object",
-            "description": "Specify the Salesforce object name for which to receive notification when records are updated.",
             "properties": {
               "sObjectName": {
-                "kind": "parameter",
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the Salesforce object",
                 "displayName": "Object name",
                 "group": "common",
-                "required": true,
-                "type": "string",
                 "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
+                "kind": "parameter",
+                "required": true,
                 "secret": false,
-                "componentProperty": false,
-                "description": "Name of the Salesforce object"
+                "tags": [],
+                "type": "string"
               }
             }
           }
         ]
-      }
-    },
-    {
-      "id": "@project.groupId@:@project.artifactId@:salesforce-on-delete",
-      "name": "On delete",
-      "description": "Get notified when a Salesforce record is deleted.",
+      },
+      "id": "@project.groupId@:@project.artifactId@:salesforce-on-create",
+      "name": "On create",
+      "pattern": "From",
       "tags": [
         "dynamic"
-      ],
-      "pattern": "From",
+      ]
+    },
+    {
       "actionType": "connector",
+      "description": "Get notified when a Salesforce record is updated.",
       "descriptor": {
         "componentScheme": "salesforce",
+        "configuredProperties": {
+          "notifyForFields": "ALL",
+          "notifyForOperationCreate": "false",
+          "notifyForOperationDelete": "false",
+          "notifyForOperationUndelete": "false",
+          "notifyForOperationUpdate": "true",
+          "sObjectClass": "io.syndesis.connector.salesforce.SalesforceIdentifier",
+          "updateTopic": "true"
+        },
+        "connectorFactory": "io.syndesis.connector.salesforce.SalesforceStreamingConnectorFactory",
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the Salesforce object name for which to receive notification when records are updated.",
+            "name": "Name of the object",
+            "properties": {
+              "sObjectName": {
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the Salesforce object",
+                "displayName": "Object name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "@project.groupId@:@project.artifactId@:salesforce-on-update",
+      "name": "On update",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Get notified when a Salesforce record is deleted.",
+      "descriptor": {
+        "componentScheme": "salesforce",
+        "configuredProperties": {
+          "notifyForFields": "ALL",
+          "notifyForOperationCreate": "false",
+          "notifyForOperationDelete": "true",
+          "notifyForOperationUndelete": "false",
+          "notifyForOperationUpdate": "false",
+          "sObjectClass": "io.syndesis.connector.salesforce.SalesforceIdentifier",
+          "updateTopic": "true"
+        },
         "connectorFactory": "io.syndesis.connector.salesforce.SalesforceStreamingConnectorFactory",
         "inputDataShape": {
           "kind": "none"
@@ -628,37 +522,143 @@
           "kind": "java",
           "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
         },
-        "configuredProperties": {
-          "updateTopic": "true",
-          "notifyForFields": "ALL",
-          "notifyForOperationCreate": "false",
-          "notifyForOperationUpdate": "false",
-          "notifyForOperationDelete": "true",
-          "notifyForOperationUndelete": "false",
-          "sObjectClass": "io.syndesis.connector.salesforce.SalesforceIdentifier"
-        },
         "propertyDefinitionSteps": [
           {
-            "name": "Name of the object",
             "description": "Specify the Salesforce object name for which to receive notification when records are deleted.",
+            "name": "Name of the object",
             "properties": {
               "sObjectName": {
-                "kind": "parameter",
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the Salesforce object",
                 "displayName": "Object name",
                 "group": "common",
-                "required": true,
-                "type": "string",
                 "javaType": "java.lang.String",
-                "tags": [],
-                "deprecated": false,
+                "kind": "parameter",
+                "required": true,
                 "secret": false,
-                "componentProperty": false,
-                "description": "Name of the Salesforce object"
+                "tags": [],
+                "type": "string"
               }
             }
           }
         ]
-      }
+      },
+      "id": "@project.groupId@:@project.artifactId@:salesforce-on-delete",
+      "name": "On delete",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
     }
+  ],
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Manage customer relations in the cloud.",
+  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAzMDAgMjEwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzMDAgMjEwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojODMyRUFCO30NCgkuc3Qxe2ZpbGw6I0JBQkFCQTt9DQoJLnN0MntmaWxsOm5vbmU7fQ0KCS5zdDN7ZmlsbDojOERDNjNGO30NCgkuc3Q0e2ZpbGw6IzBGOUJENzt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRkZGRkZGO30NCgkuc3Q3e2ZpbGw6IzFEQTFGMjt9DQoJLnN0OHtmaWxsOiMzRDVBOTg7fQ0KCS5zdDl7ZmlsbDojMjMxRjIwO30NCgkuc3QxMHtmaWxsOiMwMDdCQjU7fQ0KCS5zdDExe2ZpbGw6I0RDNEU0MTt9DQoJLnN0MTJ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojMTgxNjE2O30NCgkuc3QxM3tmaWxsOiMxODE2MTY7fQ0KCS5zdDE0e2ZpbGw6I0YyRjJGMjt9DQoJLnN0MTV7ZmlsbDojRTNFM0UzO30NCgkuc3QxNntmaWxsOiNENTRCM0Q7fQ0KCS5zdDE3e2ZpbGw6I0Q3MkIyNzt9DQoJLnN0MTh7b3BhY2l0eTowLjU2O2ZpbGw6dXJsKCNTVkdJRF8xXyk7fQ0KCS5zdDE5e2ZpbGw6IzkyRDQwMDt9DQoJLnN0MjB7ZmlsbDojMDBCOUU0O30NCgkuc3QyMXtmaWxsOiMyQjM5OTA7fQ0KCS5zdDIye2ZpbGw6IzNGOUMzNTt9DQoJLnN0MjN7ZmlsbDojOEZDRUQ4O30NCgkuc3QyNHtmaWxsOiNEMjFGMjE7fQ0KCS5zdDI1e2ZpbGw6I0Q2RDZENjt9DQoJLnN0MjZ7ZmlsbDojRjFGMUYxO30NCgkuc3QyN3tmaWxsOiNDMzIyNjU7fQ0KCS5zdDI4e2ZpbGw6IzhDMzEyMzt9DQoJLnN0Mjl7ZmlsbDojRTA1MjQzO30NCgkuc3QzMHtmaWxsOiM1RTFGMTg7fQ0KCS5zdDMxe2ZpbGw6I0YyQjBBOTt9DQoJLnN0MzJ7ZmlsbDojQ0FDQ0NFO30NCgkuc3QzM3tmaWxsOiNBMUFGREI7fQ0KCS5zdDM0e2ZpbGw6IzAwMjA4Nzt9DQo8L3N0eWxlPg0KPGc+DQoJPHBhdGggY2xhc3M9InN0NCIgZD0iTTEyNC44LDIyLjljOS43LTEwLjEsMjMuMS0xNi4zLDM4LTE2LjNjMTkuOCwwLDM3LjEsMTEsNDYuMywyNy40YzgtMy42LDE2LjgtNS42LDI2LjItNS42DQoJCWMzNS43LDAsNjQuNywyOS4yLDY0LjcsNjUuMmMwLDM2LTI5LDY1LjItNjQuNyw2NS4yYy00LjQsMC04LjYtMC40LTEyLjctMS4zYy04LjEsMTQuNC0yMy41LDI0LjItNDEuMywyNC4yDQoJCWMtNy40LDAtMTQuNC0xLjctMjAuNy00LjhjLTguMiwxOS4zLTI3LjMsMzIuOS00OS43LDMyLjljLTIzLjIsMC00My0xNC43LTUwLjYtMzUuM2MtMy4zLDAuNy02LjgsMS4xLTEwLjMsMS4xDQoJCUMyMi40LDE3NS43LDAsMTUzLjEsMCwxMjUuMmMwLTE4LjcsMTAuMS0zNS4xLDI1LTQzLjhjLTMuMS03LjEtNC44LTE0LjktNC44LTIzLjFDMjAuMiwyNi4xLDQ2LjMsMCw3OC41LDANCgkJQzk3LjQsMCwxMTQuMiw5LDEyNC44LDIyLjkiLz4NCgk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNNDMuNCwxMDguOWMtMC4yLDAuNSwwLjEsMC42LDAuMSwwLjdjMC42LDAuNCwxLjEsMC43LDEuNywxYzMuMSwxLjYsNiwyLjEsOSwyLjFjNi4yLDAsMTAtMy4zLDEwLTguNXYtMC4xDQoJCWMwLTQuOS00LjMtNi42LTguNC03LjlMNTUuMyw5NmMtMy4xLTEtNS43LTEuOC01LjctMy45VjkyYzAtMS43LDEuNS0zLDMuOS0zYzIuNiwwLDUuOCwwLjksNy44LDJjMCwwLDAuNiwwLjQsMC44LTAuMg0KCQljMC4xLTAuMywxLjEtMy4xLDEuMy0zLjRjMC4xLTAuMy0wLjEtMC42LTAuMy0wLjdjLTIuMy0xLjQtNS41LTIuNC04LjgtMi40bC0wLjYsMGMtNS42LDAtOS42LDMuNC05LjYsOC4zdjAuMQ0KCQljMCw1LjEsNC4zLDYuOCw4LjQsOGwwLjcsMC4yYzMsMC45LDUuNSwxLjcsNS41LDMuOHYwLjFjMCwxLjktMS43LDMuMy00LjMsMy4zYy0xLDAtNC40LDAtNy45LTIuM2MtMC40LTAuMy0wLjctMC40LTEtMC42DQoJCWMtMC4yLTAuMS0wLjYtMC4zLTAuOCwwLjNMNDMuNCwxMDguOXoiLz4NCgk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMTMzLjUsMTA4LjljLTAuMiwwLjUsMC4xLDAuNiwwLjEsMC43YzAuNiwwLjQsMS4xLDAuNywxLjcsMWMzLjEsMS42LDYsMi4xLDksMi4xYzYuMiwwLDEwLTMuMywxMC04LjV2LTAuMQ0KCQljMC00LjktNC4zLTYuNi04LjQtNy45bC0wLjUtMC4yYy0zLjEtMS01LjctMS44LTUuNy0zLjlWOTJjMC0xLjcsMS41LTMsMy45LTNjMi42LDAsNS44LDAuOSw3LjgsMmMwLDAsMC42LDAuNCwwLjgtMC4yDQoJCWMwLjEtMC4zLDEuMS0zLjEsMS4zLTMuNGMwLjEtMC4zLTAuMS0wLjYtMC4zLTAuN2MtMi4zLTEuNC01LjUtMi40LTguOC0yLjRsLTAuNiwwYy01LjYsMC05LjYsMy40LTkuNiw4LjN2MC4xDQoJCWMwLDUuMSw0LjMsNi44LDguNCw4bDAuNywwLjJjMywwLjksNS41LDEuNyw1LjUsMy44djAuMWMwLDEuOS0xLjcsMy4zLTQuMywzLjNjLTEsMC00LjMsMC03LjktMi4zYy0wLjQtMC4zLTAuNy0wLjQtMS0wLjYNCgkJYy0wLjEtMC4xLTAuNi0wLjMtMC44LDAuM0wxMzMuNSwxMDguOXoiLz4NCgk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMjAwLjIsOTNjLTAuNS0xLjctMS4zLTMuMi0yLjMtNC41Yy0xLTEuMy0yLjQtMi4zLTMuOS0zYy0xLjYtMC43LTMuNC0xLjEtNS41LTEuMWMtMi4xLDAtMy45LDAuNC01LjUsMS4xDQoJCWMtMS42LDAuNy0yLjksMS43LTMuOSwzYy0xLDEuMy0xLjgsMi44LTIuMyw0LjVjLTAuNSwxLjctMC44LDMuNi0wLjgsNS41YzAsMiwwLjMsMy44LDAuOCw1LjVjMC41LDEuNywxLjMsMy4yLDIuMyw0LjUNCgkJYzEsMS4zLDIuNCwyLjMsMy45LDNzMy40LDEuMSw1LjUsMS4xYzIuMSwwLDMuOS0wLjQsNS41LTEuMWMxLjYtMC43LDIuOS0xLjcsMy45LTNjMS0xLjMsMS44LTIuOCwyLjMtNC41YzAuNS0xLjcsMC44LTMuNiwwLjgtNS41DQoJCUMyMDAuOSw5Ni42LDIwMC43LDk0LjcsMjAwLjIsOTMgTTE5NSw5OC42YzAsMy0wLjYsNS4zLTEuNiw3Yy0xLjEsMS42LTIuNywyLjQtNSwyLjRjLTIuMywwLTMuOS0wLjgtNS0yLjRjLTEuMS0xLjctMS42LTQtMS42LTcNCgkJYzAtMywwLjUtNS4zLDEuNi03YzEuMS0xLjYsMi43LTIuNCw1LTIuNGMyLjMsMCwzLjksMC44LDUsMi40QzE5NC41LDkzLjMsMTk1LDk1LjYsMTk1LDk4LjYiLz4NCgk8cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMjQyLjQsMTA3LjJjLTAuMi0wLjUtMC43LTAuMy0wLjctMC4zYy0wLjcsMC4zLTEuNSwwLjUtMi40LDAuN2MtMC45LDAuMS0xLjgsMC4yLTIuOCwwLjINCgkJYy0yLjUsMC00LjUtMC43LTUuOS0yLjJjLTEuNC0xLjUtMi4yLTMuOC0yLjItN2MwLTIuOSwwLjctNS4xLDItNi44YzEuMy0xLjcsMy4yLTIuNSw1LjctMi41YzIuMSwwLDMuNywwLjIsNS40LDAuOA0KCQljMCwwLDAuNCwwLjIsMC42LTAuNGMwLjUtMS4zLDAuOC0yLjEsMS4zLTMuNWMwLjEtMC40LTAuMi0wLjYtMC4zLTAuNmMtMC43LTAuMy0yLjItMC43LTMuNC0wLjljLTEuMS0wLjItMi40LTAuMy0zLjktMC4zDQoJCWMtMi4yLDAtNC4xLDAuNC01LjcsMS4xYy0xLjYsMC43LTMsMS43LTQuMSwzYy0xLjEsMS4zLTEuOSwyLjgtMi41LDQuNWMtMC42LDEuNy0wLjgsMy42LTAuOCw1LjVjMCw0LjMsMS4xLDcuNywzLjQsMTAuMg0KCQljMi4zLDIuNSw1LjcsMy44LDEwLjEsMy44YzIuNiwwLDUuMy0wLjUsNy4zLTEuM2MwLDAsMC40LTAuMiwwLjItMC42TDI0Mi40LDEwNy4yeiIvPg0KCTxwYXRoIGNsYXNzPSJzdDYiIGQ9Ik0yNjguNiw5Mi4xYy0wLjQtMS42LTEuNS0zLjMtMi4yLTQuMWMtMS4xLTEuMi0yLjItMi4xLTMuMy0yLjVjLTEuNC0wLjYtMy4xLTEtNS0xYy0yLjIsMC00LjEsMC40LTUuNywxLjENCgkJYy0xLjYsMC43LTIuOSwxLjgtNCwzLjFjLTEuMSwxLjMtMS44LDIuOC0yLjQsNC41Yy0wLjUsMS43LTAuOCwzLjYtMC44LDUuNWMwLDIsMC4zLDMuOSwwLjgsNS42YzAuNSwxLjcsMS40LDMuMiwyLjUsNC40DQoJCWMxLjEsMS4yLDIuNiwyLjIsNC40LDIuOWMxLjgsMC43LDMuOSwxLDYuMywxYzUsMCw3LjctMS4xLDguOC0xLjdjMC4yLTAuMSwwLjQtMC4zLDAuMS0wLjhsLTEuMS0zLjJjLTAuMi0wLjUtMC43LTAuMy0wLjctMC4zDQoJCWMtMS4yLDAuNS0zLDEuMy03LjEsMS4zYy0yLjcsMC00LjctMC44LTUuOS0yYy0xLjMtMS4zLTEuOS0zLjEtMi01LjhsMTcuNCwwYzAsMCwwLjUsMCwwLjUtMC41QzI2OS4yLDk5LjQsMjY5LjgsOTYsMjY4LjYsOTIuMQ0KCQkgTTI1MS4zLDk1LjdjMC4yLTEuNywwLjctMywxLjQtNC4xYzEuMS0xLjYsMi43LTIuNSw1LTIuNWMyLjMsMCwzLjgsMC45LDQuOSwyLjVjMC43LDEuMSwxLDIuNSwxLjIsNC4xTDI1MS4zLDk1Ljd6Ii8+DQoJPHBhdGggY2xhc3M9InN0NiIgZD0iTTEyOS40LDkyLjFjLTAuNC0xLjYtMS41LTMuMy0yLjItNC4xYy0xLjEtMS4yLTIuMi0yLjEtMy4zLTIuNWMtMS40LTAuNi0zLjEtMS01LTFjLTIuMiwwLTQuMSwwLjQtNS43LDEuMQ0KCQljLTEuNiwwLjctMi45LDEuOC00LDMuMWMtMS4xLDEuMy0xLjgsMi44LTIuNCw0LjVjLTAuNSwxLjctMC44LDMuNi0wLjgsNS41YzAsMiwwLjMsMy45LDAuOCw1LjZjMC41LDEuNywxLjQsMy4yLDIuNSw0LjQNCgkJYzEuMSwxLjIsMi42LDIuMiw0LjQsMi45YzEuOCwwLjcsMy45LDEsNi4zLDFjNSwwLDcuNy0xLjEsOC44LTEuN2MwLjItMC4xLDAuNC0wLjMsMC4xLTAuOGwtMS4xLTMuMmMtMC4yLTAuNS0wLjctMC4zLTAuNy0wLjMNCgkJYy0xLjIsMC41LTMsMS4zLTcuMSwxLjNjLTIuNywwLTQuNy0wLjgtNS45LTJjLTEuMy0xLjMtMS45LTMuMS0yLTUuOGwxNy40LDBjMCwwLDAuNSwwLDAuNS0wLjVDMTI5LjksOTkuNCwxMzAuNSw5NiwxMjkuNCw5Mi4xDQoJCSBNMTEyLjEsOTUuN2MwLjItMS43LDAuNy0zLDEuNC00LjFjMS4xLTEuNiwyLjctMi41LDUtMi41YzIuMywwLDMuOCwwLjksNC45LDIuNWMwLjcsMS4xLDEsMi41LDEuMiw0LjFMMTEyLjEsOTUuN3oiLz4NCgk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNODEuNCw5NC45Yy0wLjctMC4xLTEuNi0wLjEtMi43LTAuMWMtMS41LDAtMi45LDAuMi00LjMsMC42Yy0xLjQsMC40LTIuNiwwLjktMy42LDEuNw0KCQljLTEuMSwwLjgtMS45LDEuNy0yLjUsMi45Yy0wLjYsMS4xLTAuOSwyLjUtMC45LDRjMCwxLjUsMC4zLDIuOSwwLjgsNGMwLjUsMS4xLDEuMywyLDIuMywyLjdjMSwwLjcsMi4yLDEuMiwzLjUsMS41DQoJCWMxLjQsMC4zLDIuOSwwLjUsNC42LDAuNWMxLjgsMCwzLjYtMC4xLDUuMy0wLjRjMS43LTAuMywzLjgtMC43LDQuNC0wLjljMC42LTAuMSwxLjItMC4zLDEuMi0wLjNjMC40LTAuMSwwLjQtMC42LDAuNC0wLjZsMC0xNS45DQoJCWMwLTMuNS0wLjktNi4xLTIuOC03LjdjLTEuOC0xLjYtNC41LTIuNC04LTIuNGMtMS4zLDAtMy40LDAuMi00LjcsMC40YzAsMC0zLjgsMC43LTUuNCwyYzAsMC0wLjMsMC4yLTAuMiwwLjdsMS4yLDMuMw0KCQljMC4yLDAuNCwwLjYsMC4zLDAuNiwwLjNzMC4xLTAuMSwwLjMtMC4xYzMuMy0xLjgsNy42LTEuOCw3LjYtMS44YzEuOSwwLDMuMywwLjQsNC4zLDEuMWMwLjksMC43LDEuNCwxLjgsMS40LDQuMXYwLjcNCgkJQzgyLjgsOTUsODEuNCw5NC45LDgxLjQsOTQuOSBNNzQuNSwxMDcuMWMtMC43LTAuNS0wLjgtMC43LTEtMWMtMC4zLTAuNS0wLjUtMS4zLTAuNS0yLjNjMC0xLjUsMC41LTIuNiwxLjYtMy40YzAsMCwxLjUtMS4zLDUtMS4zDQoJCWMyLjUsMCw0LjcsMC40LDQuNywwLjR2Ny45YzAsMC0yLjIsMC41LTQuNywwLjZDNzYuMSwxMDguMyw3NC41LDEwNy4xLDc0LjUsMTA3LjEiLz4NCgk8cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMjIxLjcsODUuOWMwLjEtMC40LTAuMS0wLjYtMC4zLTAuNmMtMC4zLTAuMS0xLjgtMC40LTIuOS0wLjVjLTIuMi0wLjEtMy40LDAuMi00LjUsMC43DQoJCWMtMS4xLDAuNS0yLjMsMS4zLTIuOSwyLjJsMC0yLjFjMC0wLjMtMC4yLTAuNS0wLjUtMC41aC00LjVjLTAuMywwLTAuNSwwLjItMC41LDAuNXYyNS45YzAsMC4zLDAuMiwwLjUsMC41LDAuNWg0LjYNCgkJYzAuMywwLDAuNS0wLjIsMC41LTAuNXYtMTNjMC0xLjcsMC4yLTMuNSwwLjYtNC42YzAuNC0xLjEsMC45LTEuOSwxLjUtMi42YzAuNi0wLjYsMS40LTEsMi4yLTEuM2MwLjgtMC4yLDEuNy0wLjMsMi4zLTAuMw0KCQljMC45LDAsMS45LDAuMiwxLjksMC4yYzAuMywwLDAuNS0wLjIsMC42LTAuNUMyMjAuNyw4OC44LDIyMS41LDg2LjQsMjIxLjcsODUuOSIvPg0KCTxwYXRoIGNsYXNzPSJzdDYiIGQ9Ik0xNzguOCw3My45Yy0wLjYtMC4yLTEuMS0wLjMtMS43LTAuNGMtMC43LTAuMS0xLjUtMC4yLTIuNC0wLjJjLTMuMSwwLTUuNiwwLjktNy40LDIuNg0KCQljLTEuNywxLjctMi45LDQuNC0zLjUsNy45bC0wLjIsMS4yaC0zLjljMCwwLTAuNSwwLTAuNiwwLjVsLTAuNiwzLjZjMCwwLjMsMC4xLDAuNiwwLjYsMC42aDMuOGwtMy45LDIxLjhjLTAuMywxLjgtMC43LDMuMi0xLDQuMw0KCQljLTAuNCwxLjEtMC44LDEuOS0xLjIsMi41Yy0wLjQsMC42LTAuOSwxLTEuNiwxLjJjLTAuNiwwLjItMS4zLDAuMy0yLDAuM2MtMC40LDAtMS0wLjEtMS40LTAuMmMtMC40LTAuMS0wLjYtMC4yLTAuOS0wLjMNCgkJYzAsMC0wLjQtMC4yLTAuNiwwLjNjLTAuMSwwLjQtMS4yLDMuMi0xLjMsMy41Yy0wLjEsMC4zLDAsMC42LDAuMywwLjdjMC41LDAuMiwwLjksMC4zLDEuNiwwLjVjMSwwLjIsMS44LDAuMiwyLjUsMC4yDQoJCWMxLjYsMCwzLjEtMC4yLDQuMy0wLjdjMS4yLTAuNCwyLjMtMS4yLDMuMi0yLjJjMS0xLjEsMS42LTIuMywyLjMtMy45YzAuNi0xLjYsMS4xLTMuNSwxLjUtNS44bDMuOS0yMi4yaDUuN2MwLDAsMC41LDAsMC42LTAuNQ0KCQlsMC42LTMuNmMwLTAuMy0wLjEtMC42LTAuNi0wLjZoLTUuNmMwLTAuMSwwLjMtMi4xLDAuOS0zLjljMC4zLTAuOCwwLjgtMS40LDEuMi0xLjljMC40LTAuNCwwLjktMC43LDEuNS0wLjkNCgkJYzAuNi0wLjIsMS4yLTAuMywxLjktMC4zYzAuNSwwLDEsMC4xLDEuNCwwLjFjMC41LDAuMSwwLjcsMC4yLDAuOSwwLjJjMC42LDAuMiwwLjYsMCwwLjgtMC4zbDEuMy0zLjcNCgkJQzE3OS4yLDc0LjEsMTc4LjksNzQsMTc4LjgsNzMuOSIvPg0KCTxwYXRoIGNsYXNzPSJzdDYiIGQ9Ik0xMDEuMSwxMTEuNWMwLDAuMy0wLjIsMC41LTAuNSwwLjVIOTZjLTAuMywwLTAuNS0wLjItMC41LTAuNVY3NC40YzAtMC4zLDAuMi0wLjUsMC41LTAuNWg0LjYNCgkJYzAuMywwLDAuNSwwLjIsMC41LDAuNVYxMTEuNXoiLz4NCjwvZz4NCjwvc3ZnPg0K",
+  "id": "salesforce",
+  "name": "Salesforce",
+  "properties": {
+    "clientId": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "OAuth Consumer Key of the connected app configured in the Salesforce instance setup. Typically a connected app needs to be configured but one can be provided by installing a package.",
+      "displayName": "Client ID",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": 3,
+      "required": true,
+      "secret": false,
+      "tags": [
+        "oauth-client-id"
+      ],
+      "type": "string"
+    },
+    "clientSecret": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "OAuth Consumer Secret of the connected app configured in the Salesforce instance setup.",
+      "displayName": "Client Secret",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": 4,
+      "required": true,
+      "secret": true,
+      "tags": [
+        "oauth-client-secret"
+      ],
+      "type": "string"
+    },
+    "loginUrl": {
+      "componentProperty": true,
+      "defaultValue": "https://login.salesforce.com",
+      "deprecated": false,
+      "description": "URL of the Salesforce instance used for authentication by default set to https://login.salesforce.com",
+      "displayName": "Login URL",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": 5,
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "password": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Password used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows. Make sure that you append security token to the end of the password if using one.",
+      "displayName": "Password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": 2,
+      "required": true,
+      "secret": true,
+      "tags": [],
+      "type": "string"
+    },
+    "refreshToken": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Refresh token already obtained in the refresh token OAuth flow. One needs to setup a web application and configure a callback URL to receive the refresh token or configure using the builtin callback at https://login.salesforce.com/services/oauth2/success or https://test.salesforce.com/services/oauth2/success and then retrive the refresh_token from the URL at the end of the flow. Note that in development organizations Salesforce allows hosting the callback web application at localhost.",
+      "displayName": "Refresh Token",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "required": false,
+      "secret": true,
+      "tags": [],
+      "type": "hidden"
+    },
+    "userName": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Username used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows.",
+      "displayName": "Username",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": 1,
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
   ]
 }

@@ -1,39 +1,8 @@
 {
-  "id": "http4",
-  "name": "HTTP",
-  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDMwMCAyODQuMyIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzAwIDI4NC4zOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojODMyRUFCO30NCgkuc3Qxe2ZpbGw6I0ZFQ0QwMDt9DQoJLnN0MntmaWxsOiMwMEFFRUY7fQ0KCS5zdDN7ZmlsbDpub25lO30NCgkuc3Q0e2ZpbGw6IzhEQzYzRjt9DQoJLnN0NXtmaWxsOiMwRjlCRDc7fQ0KCS5zdDZ7ZmlsbDojRkZGRkZGO30NCgkuc3Q3e2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6I0ZGRkZGRjt9DQoJLnN0OHtmaWxsOiMxREExRjI7fQ0KCS5zdDl7ZmlsbDojM0Q1QTk4O30NCgkuc3QxMHtmaWxsOiMyMzFGMjA7fQ0KCS5zdDExe2ZpbGw6IzAwN0JCNTt9DQoJLnN0MTJ7ZmlsbDojREM0RTQxO30NCgkuc3QxM3tmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiMxODE2MTY7fQ0KCS5zdDE0e2ZpbGw6IzE4MTYxNjt9DQoJLnN0MTV7ZmlsbDojRjJGMkYyO30NCgkuc3QxNntmaWxsOiNFM0UzRTM7fQ0KCS5zdDE3e2ZpbGw6I0Q1NEIzRDt9DQoJLnN0MTh7ZmlsbDojRDcyQjI3O30NCgkuc3QxOXtvcGFjaXR5OjAuNTY7ZmlsbDp1cmwoI1NWR0lEXzFfKTt9DQoJLnN0MjB7ZmlsbDojQkFCQUJBO30NCgkuc3QyMXtmaWxsOiM5MkQ0MDA7fQ0KCS5zdDIye2ZpbGw6IzAwQjlFNDt9DQoJLnN0MjN7ZmlsbDojMkIzOTkwO30NCgkuc3QyNHtmaWxsOiMzRjlDMzU7fQ0KCS5zdDI1e2ZpbGw6IzhGQ0VEODt9DQoJLnN0MjZ7ZmlsbDojRDIxRjIxO30NCgkuc3QyN3tmaWxsOiNGRkY4REE7fQ0KCS5zdDI4e2ZpbGw6I0MzMjI2NTt9DQoJLnN0Mjl7ZmlsbDojRDZENkQ2O30NCgkuc3QzMHtmaWxsOiNGMUYxRjE7fQ0KCS5zdDMxe2ZpbGw6IzhDMzEyMzt9DQoJLnN0MzJ7ZmlsbDojRTA1MjQzO30NCgkuc3QzM3tmaWxsOiM1RTFGMTg7fQ0KCS5zdDM0e2ZpbGw6I0YyQjBBOTt9DQoJLnN0MzV7ZmlsbDojQ0FDQ0NFO30NCgkuc3QzNntmaWxsOiNBMUFGREI7fQ0KCS5zdDM3e2ZpbGw6IzAwMjA4Nzt9DQoJLnN0Mzh7ZmlsbDojNkM0MTk5O30NCgkuc3QzOXtmaWxsOiNDN0M3Qzc7fQ0KCS5zdDQwe2ZpbGw6IzE5NzZEMjt9DQoJLnN0NDF7ZmlsbDojMUU4OEU1O30NCgkuc3Q0MntmaWxsOiNGQUZBRkE7fQ0KCS5zdDQze2ZpbGw6I0UwRTBFMDt9DQoJLnN0NDR7ZmlsbDojRjZBMTFGO30NCgkuc3Q0NXtmaWxsOiMwQTZEQUU7fQ0KCS5zdDQ2e2ZpbGw6IzBCQTI1RTt9DQoJLnN0NDd7ZmlsbDojMDg5MTU2O30NCgkuc3Q0OHtmaWxsOiMxMDk4NUI7fQ0KCS5zdDQ5e2ZpbGw6I0Y5Qzk0MTt9DQoJLnN0NTB7ZmlsbDojRThCODM1O30NCgkuc3Q1MXtmaWxsOiMyOTZBRDk7fQ0KCS5zdDUye2ZpbGw6IzJBNzFFOTt9DQoJLnN0NTN7ZmlsbDojMjg2RUU2O30NCgkuc3Q1NHtmaWxsOiMwMDk0NDQ7fQ0KCS5zdDU1e2ZpbGw6IzAwNjgzODt9DQoJLnN0NTZ7ZmlsbDojQkNCRUMwO30NCgkuc3Q1N3tmaWxsOiMyQkI2NzM7fQ0KCS5zdDU4e2ZpbGw6I0Y3OTQxRTt9DQoJLnN0NTl7ZmlsbDojRUY0MTM2O30NCgkuc3Q2MHtmaWxsOiNGRkZGRkY7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjEwO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjF7ZmlsbDojRDFEM0Q0O3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDoxMDtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDYye2ZpbGw6IzIzMUYyMDtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6MTA7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2M3tmaWxsOm5vbmU7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjEwO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2NHtmaWxsOm5vbmU7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjEwO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjV7ZmlsbDojRTFERkU0O30NCgkuc3Q2NntmaWxsOiMzNTQ3NEY7fQ0KCS5zdDY3e2ZpbGw6I0ZDMDAyRjt9DQoJLnN0Njh7ZmlsbDojRkRENTE4O30NCgkuc3Q2OXtmaWxsOiMwMEU3Njk7fQ0KCS5zdDcwe2ZpbGw6I0QxRDNENDt9DQoJLnN0NzF7ZmlsbDojMjdBQUUxO30NCgkuc3Q3MntmaWxsOiMyMzFGMjA7c3Ryb2tlOiMyN0FBRTE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDcze2ZpbGw6dXJsKCNTVkdJRF8yXyk7fQ0KCS5zdDc0e2ZpbGw6dXJsKCNTVkdJRF8zXyk7fQ0KCS5zdDc1e2ZpbGw6dXJsKCNTVkdJRF80Xyk7fQ0KCS5zdDc2e2ZpbGw6dXJsKCNTVkdJRF81Xyk7fQ0KCS5zdDc3e2ZpbGw6dXJsKCNTVkdJRF82Xyk7fQ0KCS5zdDc4e2ZpbGw6dXJsKCNTVkdJRF83Xyk7fQ0KPC9zdHlsZT4NCjxnIGlkPSJMYXllcl8xIj4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTExNS43LDI1LjFjMCwwLTIxLjcsMjEtMjguOSwzMnMtMTAuMyw5LjQtMTQuMiw3Yy0zLjktMi40LTEwLjEtNi42LTEwLjEtNi42cy02LjktMy43LDMuMi0xMS4xDQoJCQlDNzYuMSwzOC44LDExMS45LDE5LDExNS43LDI1LjF6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xMzYuMywyMy45djUyLjNjMCwwLDAuNyw2LjgtNi40LDUuN3MtMjguMy01LjEtMzQuNi03LjdjLTYuMy0yLjctMy40LTUuNy0yLjEtNy43DQoJCQlDOTQuNCw2NC41LDExMy41LDM1LjgsMTM2LjMsMjMuOXoiLz4NCgkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTQ2LjMsNjcuMWMwLDAsMi44LTQuNSw3LjMtMi4yczE2LjcsOS4yLDE2LjcsOS4yczUuNCwyLjMsMi41LDhjLTIuOCw1LjctMTAuNiwzMS4zLTExLDQxLjINCgkJCXMtNi43LDExLjItMTAuNCwxMS4yYy0zLjcsMC0yMS4zLDAtMjEuMywwcy05LjcsMS4yLTcuNy03LjlTMjguMiw5MS4yLDQ2LjMsNjcuMXoiLz4NCgkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTgyLjIsODYuN2MwLDAsMS4zLTUuOCw3LjQtMy42YzYsMi4yLDI0LjYsOC4yLDM4LDguOWMxMC45LDAuNiw4LjcsMTAsOC43LDEwdjI0LjRjMCwwLDEuNiw4LTYuNiw3LjkNCgkJCXMtNDcuNSwwLTQ3LjUsMHMtMTIuMiwyLjItOS44LTkuMVM3OC40LDk1LjQsODIuMiw4Ni43eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTY1LjUsMjUuMWMwLDAsMjEuNywyMSwyOC45LDMyczEwLjMsOS40LDE0LjIsN2MzLjktMi40LDEwLjEtNi42LDEwLjEtNi42czYuOS0zLjctMy4yLTExLjENCgkJCUMyMDUuMSwzOC44LDE2OS40LDE5LDE2NS41LDI1LjF6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xNDQuOSwyMy45djUyLjNjMCwwLTAuNyw2LjgsNi40LDUuN2M3LjEtMSwyOC4zLTUuMSwzNC42LTcuN2M2LjMtMi43LDMuNC01LjcsMi4xLTcuNw0KCQkJQzE4Ni44LDY0LjUsMTY3LjcsMzUuOCwxNDQuOSwyMy45eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QyIiBkPSJNMjM0LjksNjcuMWMwLDAtMi44LTQuNS03LjMtMi4ycy0xNi43LDkuMi0xNi43LDkuMnMtNS40LDIuMy0yLjUsOGMyLjgsNS43LDEwLjYsMzEuMywxMSw0MS4yDQoJCQlzNi43LDExLjIsMTAuNCwxMS4yYzMuNywwLDIxLjMsMCwyMS4zLDBzOS43LDEuMiw3LjctNy45QzI1NywxMTcuNCwyNTMuMSw5MS4yLDIzNC45LDY3LjF6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xOTksODYuN2MwLDAtMS4zLTUuOC03LjQtMy42cy0yNC42LDguMi0zOCw4LjljLTEwLjksMC42LTguNywxMC04LjcsMTB2MjQuNGMwLDAtMS42LDgsNi42LDcuOQ0KCQkJYzguMi0wLjEsNDcuNSwwLDQ3LjUsMHMxMi4yLDIuMiw5LjgtOS4xQzIwNi41LDExNCwyMDIuOSw5NS40LDE5OSw4Ni43eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTE1LjgsMjU1LjhjMCwwLTIxLjctMjEtMjguOS0zMnMtMTAuMy05LjQtMTQuMi03Yy0zLjksMi40LTEwLjEsNi42LTEwLjEsNi42cy02LjksMy43LDMuMiwxMS4xDQoJCQlDNzYuMiwyNDIuMSwxMTEuOSwyNjIsMTE1LjgsMjU1Ljh6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xMzYuMywyNTd2LTUyLjNjMCwwLDAuNy02LjgtNi40LTUuN2MtNy4xLDEtMjguMyw1LjEtMzQuNiw3LjdjLTYuMywyLjctMy40LDUuNy0yLjEsNy43DQoJCQlTMTEzLjUsMjQ1LjEsMTM2LjMsMjU3eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QyIiBkPSJNNDYuNCwyMTMuOGMwLDAsMi44LDQuNSw3LjMsMi4yczE2LjctOS4yLDE2LjctOS4yczUuNC0yLjMsMi41LThjLTIuOC01LjctMTAuNi0zMS4zLTExLTQxLjINCgkJCWMtMC40LTkuOC02LjctMTEuMi0xMC40LTExLjJjLTMuNywwLTIxLjMsMC0yMS4zLDBzLTkuNy0xLjItNy43LDcuOVMyOC4yLDE4OS43LDQ2LjQsMjEzLjh6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik04Mi4zLDE5NC4yYzAsMCwxLjMsNS44LDcuNCwzLjZjNi0yLjIsMjQuNi04LjIsMzgtOC45YzEwLjktMC42LDguNy0xMCw4LjctMTB2LTI0LjRjMCwwLDEuNi04LTYuNi03LjkNCgkJCXMtNDcuNSwwLTQ3LjUsMHMtMTIuMi0yLjItOS44LDkuMVM3OC40LDE4NS41LDgyLjMsMTk0LjJ6Ii8+DQoJCTxwb2x5Z29uIHBvaW50cz0iMjk2LjcsMjE2LjMgMTc0LjUsMTY4LjcgMjM1LjIsMjg0LjMgMjUwLjIsMjQ4LjUgMjg4LjQsMjgxLjYgMzAwLDI2OC41IDI2Mi4yLDIzNC44IAkJIi8+DQoJCTxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0xNjUuNSwyNTUuOGMwLDAsMjAuNi0xOS45LDI4LjMtMzEuMWwtNS41LTEwLjZjLTAuMSwwLjEtMC4xLDAuMi0wLjIsMC4zYy0xLjMsMi0yMC4zLDMwLjctNDMuMSw0Mi42di01Mi4zDQoJCQljMCwwLTAuNy02LjgsNi40LTUuN2M2LjUsMSwyNC43LDQuNCwzMi42LDdsLTYuNy0xMi43Yy03LjUtMi4xLTE2LjMtNC0yMy42LTQuNGMtMTAuOS0wLjYtOC43LTEwLTguNy0xMHYtMjQuNGMwLDAtMS42LTgsNi42LTcuOQ0KCQkJYzguMiwwLjEsNDcuNSwwLDQ3LjUsMHMxMi4yLTIuMiw5LjgsOS4xYy0wLjksNC40LTIsMTAtMy4zLDE1LjZsMTAuNSw0LjFjMS44LTYuOSwzLjItMTMuNiwzLjQtMTcuNmMwLjQtOS44LDYuNy0xMS4yLDEwLjQtMTEuMg0KCQkJczIxLjMsMCwyMS4zLDBzOS43LTEuMiw3LjcsNy45Yy0xLjMsNS45LTMuMywxOC45LTkuNSwzMy45bDEyLjEsNC43YzctMTYuMSwxMC45LTMzLjgsMTAuOS01Mi4zQzI3Mi40LDY4LDIxMy4zLDguOSwxNDAuNyw4LjkNCgkJCUM2OCw4LjksOC45LDY4LDguOSwxNDAuN2MwLDcyLjYsNTkuMSwxMzEuNywxMzEuNywxMzEuN2MyNC45LDAsNDguMy03LDY4LjItMTkuMWwtNS44LTExQzE4OC41LDI1MC43LDE2OC40LDI2MC4zLDE2NS41LDI1NS44eiINCgkJCS8+DQoJCTxwYXRoIGQ9Ik0xNDAuNywyNzIuNEM2OCwyNzIuNCw4LjksMjEzLjMsOC45LDE0MC43QzguOSw2OCw2OCw4LjksMTQwLjcsOC45YzcyLjYsMCwxMzEuNyw1OS4xLDEzMS43LDEzMS43DQoJCQljMCwxOC42LTMuOSwzNi4zLTEwLjksNTIuM2w4LjMsMy4zYzcuNC0xNy4xLDExLjUtMzUuOSwxMS41LTU1LjZDMjgxLjMsNjMuMSwyMTguMiwwLDE0MC43LDBDNjMuMSwwLDAsNjMuMSwwLDE0MC43DQoJCQljMCw3Ny42LDYzLjEsMTQwLjcsMTQwLjcsMTQwLjdjMjYuNCwwLDUxLjItNy4zLDcyLjMtMjAuMWwtNC4yLTcuOUMxODguOSwyNjUuNCwxNjUuNiwyNzIuNCwxNDAuNywyNzIuNHoiLz4NCgkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTE2NS41LDI1NS44YzIuOSw0LjUsMjMtNS4xLDM3LjUtMTMuNWwtOS4yLTE3LjZDMTg2LjIsMjM1LjksMTY1LjUsMjU1LjgsMTY1LjUsMjU1Ljh6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xNTEuNCwxOTguOWMtNy4xLTEtNi40LDUuNy02LjQsNS43VjI1N2MyMi44LTExLjksNDEuOS00MC41LDQzLjEtNDIuNmMwLjEtMC4xLDAuMS0wLjIsMC4yLTAuM2wtNC4zLTguMg0KCQkJQzE3NiwyMDMuMywxNTcuOSwxOTkuOSwxNTEuNCwxOTguOXoiLz4NCgkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTI1OC45LDE1NC40YzEuOS05LjEtNy43LTcuOS03LjctNy45cy0xNy42LDAtMjEuMywwcy0xMCwxLjMtMTAuNCwxMS4yYy0wLjIsNC0xLjYsMTAuNy0zLjQsMTcuNmwzMy4zLDEzDQoJCQlDMjU1LjYsMTczLjMsMjU3LjcsMTYwLjMsMjU4LjksMTU0LjR6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xNjcuOSwxNjIuN2MxLjctMS45LDQuMi0zLDYuNy0zYzEuMSwwLDIuMiwwLjIsMy4yLDAuNmwyNy44LDEwLjljMS4yLTUuNiwyLjQtMTEuMiwzLjMtMTUuNg0KCQkJYzIuNC0xMS4zLTkuOC05LjEtOS44LTkuMXMtMzkuMywwLjEtNDcuNSwwYy04LjItMC4xLTYuNiw3LjktNi42LDcuOXYyNC40YzAsMC0yLjIsOS40LDguNywxMGM3LjMsMC40LDE2LjEsMi40LDIzLjYsNC40DQoJCQlsLTEwLjctMjAuNEMxNjQuOSwxNjkuNSwxNjUuNCwxNjUuNSwxNjcuOSwxNjIuN3oiLz4NCgk8L2c+DQo8L2c+DQo8ZyBpZD0iTGF5ZXJfMiI+DQo8L2c+DQo8L3N2Zz4NCg==",
-  "description": "Invoke various HTTP methods.",
-  "dependencies": [
-    {
-      "type": "MAVEN",
-      "id": "@project.groupId@:@project.artifactId@:@project.version@"
-    }
-  ],
-  "tags": [
-    "verifier"
-  ],
-  "properties": {
-    "baseUrl": {
-      "kind": "parameter",
-      "displayName": "Base URL",
-      "group": "common",
-      "required": true,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "deprecated": false,
-      "secret": false,
-      "labelHint": "Base Http Endpoint URL",
-      "placeholder": "eg 'www.redhat.com'"
-    }
-  },
-  "componentScheme": "http4",
   "actions": [
     {
-      "name": "Invoke URL",
-      "description": "Invoke an http endpoint URL",
-      "id": "@project.groupId@:@project.artifactId@:http4-invoke-url",
-      "pattern": "To",
       "actionType": "connector",
+      "description": "Invoke an http endpoint URL",
       "descriptor": {
         "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
         "inputDataShape": {
@@ -44,77 +13,77 @@
         },
         "propertyDefinitionSteps": [
           {
-            "name": "properties",
             "description": "properties",
+            "name": "properties",
             "properties": {
-              "path": {
-                "kind": "parameter",
-                "displayName": "URL Path",
-                "group": "common",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": false,
-                "labelHint": "Endpoint Path (eg '/path/to/endpoint')"
-              },
               "httpMethod": {
-                "kind": "parameter",
+                "defaultValue": "GET",
+                "deprecated": false,
                 "displayName": "Http Method",
-                "group": "common",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
                 "enum": [
                   {
-                    "value": "GET",
-                    "label": "GET"
+                    "label": "GET",
+                    "value": "GET"
                   },
                   {
-                    "value": "PUT",
-                    "label": "PUT"
+                    "label": "PUT",
+                    "value": "PUT"
                   },
                   {
-                    "value": "POST",
-                    "label": "POST"
+                    "label": "POST",
+                    "value": "POST"
                   },
                   {
-                    "value": "DELETE",
-                    "label": "DELETE"
+                    "label": "DELETE",
+                    "value": "DELETE"
                   },
                   {
-                    "value": "HEAD",
-                    "label": "HEAD"
+                    "label": "HEAD",
+                    "value": "HEAD"
                   },
                   {
-                    "value": "OPTIONS",
-                    "label": "OPTIONS"
+                    "label": "OPTIONS",
+                    "value": "OPTIONS"
                   },
                   {
-                    "value": "TRACE",
-                    "label": "TRACE"
+                    "label": "TRACE",
+                    "value": "TRACE"
                   },
                   {
-                    "value": "PATCH",
-                    "label": "PATCH"
+                    "label": "PATCH",
+                    "value": "PATCH"
                   }
                 ],
-                "deprecated": false,
-                "defaultValue": "GET",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The specific http method to execute.",
+                "required": false,
                 "secret": false,
-                "labelHint": "The specific http method to execute."
+                "type": "string"
+              },
+              "path": {
+                "deprecated": false,
+                "displayName": "URL Path",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Endpoint Path (eg '/path/to/endpoint')",
+                "required": false,
+                "secret": false,
+                "type": "string"
               }
             }
           }
         ]
-      }
+      },
+      "id": "@project.groupId@:@project.artifactId@:http4-invoke-url",
+      "name": "Invoke URL",
+      "pattern": "To"
     },
     {
-      "name": "Periodic invoke URL",
-      "description": "Periodically invoke an http endpoint URL",
-      "id": "@project.groupId@:@project.artifactId@:http4-periodic-invoke-url",
-      "pattern": "From",
       "actionType": "connector",
+      "description": "Periodically invoke an http endpoint URL",
       "descriptor": {
         "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
         "inputDataShape": {
@@ -125,83 +94,114 @@
         },
         "propertyDefinitionSteps": [
           {
-            "name": "properties",
             "description": "properties",
+            "name": "properties",
             "properties": {
-              "path": {
-                "kind": "parameter",
-                "displayName": "URL Path",
-                "group": "common",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": false,
-                "labelHint": "Endpoint Path",
-                "placeholder": "eg '/path/to/endpoint'"
-              },
               "httpMethod": {
-                "kind": "parameter",
+                "defaultValue": "GET",
+                "deprecated": false,
                 "displayName": "Http Method",
-                "group": "common",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
                 "enum": [
                   {
-                    "value": "GET",
-                    "label": "GET"
+                    "label": "GET",
+                    "value": "GET"
                   },
                   {
-                    "value": "PUT",
-                    "label": "PUT"
+                    "label": "PUT",
+                    "value": "PUT"
                   },
                   {
-                    "value": "POST",
-                    "label": "POST"
+                    "label": "POST",
+                    "value": "POST"
                   },
                   {
-                    "value": "DELETE",
-                    "label": "DELETE"
+                    "label": "DELETE",
+                    "value": "DELETE"
                   },
                   {
-                    "value": "HEAD",
-                    "label": "HEAD"
+                    "label": "HEAD",
+                    "value": "HEAD"
                   },
                   {
-                    "value": "OPTIONS",
-                    "label": "OPTIONS"
+                    "label": "OPTIONS",
+                    "value": "OPTIONS"
                   },
                   {
-                    "value": "TRACE",
-                    "label": "TRACE"
+                    "label": "TRACE",
+                    "value": "TRACE"
                   },
                   {
-                    "value": "PATCH",
-                    "label": "PATCH"
+                    "label": "PATCH",
+                    "value": "PATCH"
                   }
                 ],
-                "deprecated": false,
-                "defaultValue": "GET",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The specific http method to execute.",
+                "required": false,
                 "secret": false,
-                "labelHint": "The specific http method to execute."
+                "type": "string"
+              },
+              "path": {
+                "deprecated": false,
+                "displayName": "URL Path",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Endpoint Path",
+                "placeholder": "eg '/path/to/endpoint'",
+                "required": false,
+                "secret": false,
+                "type": "string"
               },
               "schedulerExpression": {
-                "kind": "parameter",
+                "defaultValue": 1000,
+                "deprecated": false,
                 "displayName": "Period",
                 "group": "consumer",
-                "required": false,
-                "type": "duration",
                 "javaType": "long",
-                "deprecated": false,
+                "kind": "parameter",
+                "labelHint": "Delay in milliseconds between scheduling (executing).",
+                "required": false,
                 "secret": false,
-                "defaultValue": 1000,
-                "labelHint": "Delay in milliseconds between scheduling (executing)."
+                "type": "duration"
               }
             }
           }
         ]
-      }
+      },
+      "id": "@project.groupId@:@project.artifactId@:http4-periodic-invoke-url",
+      "name": "Periodic invoke URL",
+      "pattern": "From"
     }
+  ],
+  "componentScheme": "http4",
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Invoke various HTTP methods.",
+  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDMwMCAyODQuMyIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzAwIDI4NC4zOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojODMyRUFCO30NCgkuc3Qxe2ZpbGw6I0ZFQ0QwMDt9DQoJLnN0MntmaWxsOiMwMEFFRUY7fQ0KCS5zdDN7ZmlsbDpub25lO30NCgkuc3Q0e2ZpbGw6IzhEQzYzRjt9DQoJLnN0NXtmaWxsOiMwRjlCRDc7fQ0KCS5zdDZ7ZmlsbDojRkZGRkZGO30NCgkuc3Q3e2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6I0ZGRkZGRjt9DQoJLnN0OHtmaWxsOiMxREExRjI7fQ0KCS5zdDl7ZmlsbDojM0Q1QTk4O30NCgkuc3QxMHtmaWxsOiMyMzFGMjA7fQ0KCS5zdDExe2ZpbGw6IzAwN0JCNTt9DQoJLnN0MTJ7ZmlsbDojREM0RTQxO30NCgkuc3QxM3tmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiMxODE2MTY7fQ0KCS5zdDE0e2ZpbGw6IzE4MTYxNjt9DQoJLnN0MTV7ZmlsbDojRjJGMkYyO30NCgkuc3QxNntmaWxsOiNFM0UzRTM7fQ0KCS5zdDE3e2ZpbGw6I0Q1NEIzRDt9DQoJLnN0MTh7ZmlsbDojRDcyQjI3O30NCgkuc3QxOXtvcGFjaXR5OjAuNTY7ZmlsbDp1cmwoI1NWR0lEXzFfKTt9DQoJLnN0MjB7ZmlsbDojQkFCQUJBO30NCgkuc3QyMXtmaWxsOiM5MkQ0MDA7fQ0KCS5zdDIye2ZpbGw6IzAwQjlFNDt9DQoJLnN0MjN7ZmlsbDojMkIzOTkwO30NCgkuc3QyNHtmaWxsOiMzRjlDMzU7fQ0KCS5zdDI1e2ZpbGw6IzhGQ0VEODt9DQoJLnN0MjZ7ZmlsbDojRDIxRjIxO30NCgkuc3QyN3tmaWxsOiNGRkY4REE7fQ0KCS5zdDI4e2ZpbGw6I0MzMjI2NTt9DQoJLnN0Mjl7ZmlsbDojRDZENkQ2O30NCgkuc3QzMHtmaWxsOiNGMUYxRjE7fQ0KCS5zdDMxe2ZpbGw6IzhDMzEyMzt9DQoJLnN0MzJ7ZmlsbDojRTA1MjQzO30NCgkuc3QzM3tmaWxsOiM1RTFGMTg7fQ0KCS5zdDM0e2ZpbGw6I0YyQjBBOTt9DQoJLnN0MzV7ZmlsbDojQ0FDQ0NFO30NCgkuc3QzNntmaWxsOiNBMUFGREI7fQ0KCS5zdDM3e2ZpbGw6IzAwMjA4Nzt9DQoJLnN0Mzh7ZmlsbDojNkM0MTk5O30NCgkuc3QzOXtmaWxsOiNDN0M3Qzc7fQ0KCS5zdDQwe2ZpbGw6IzE5NzZEMjt9DQoJLnN0NDF7ZmlsbDojMUU4OEU1O30NCgkuc3Q0MntmaWxsOiNGQUZBRkE7fQ0KCS5zdDQze2ZpbGw6I0UwRTBFMDt9DQoJLnN0NDR7ZmlsbDojRjZBMTFGO30NCgkuc3Q0NXtmaWxsOiMwQTZEQUU7fQ0KCS5zdDQ2e2ZpbGw6IzBCQTI1RTt9DQoJLnN0NDd7ZmlsbDojMDg5MTU2O30NCgkuc3Q0OHtmaWxsOiMxMDk4NUI7fQ0KCS5zdDQ5e2ZpbGw6I0Y5Qzk0MTt9DQoJLnN0NTB7ZmlsbDojRThCODM1O30NCgkuc3Q1MXtmaWxsOiMyOTZBRDk7fQ0KCS5zdDUye2ZpbGw6IzJBNzFFOTt9DQoJLnN0NTN7ZmlsbDojMjg2RUU2O30NCgkuc3Q1NHtmaWxsOiMwMDk0NDQ7fQ0KCS5zdDU1e2ZpbGw6IzAwNjgzODt9DQoJLnN0NTZ7ZmlsbDojQkNCRUMwO30NCgkuc3Q1N3tmaWxsOiMyQkI2NzM7fQ0KCS5zdDU4e2ZpbGw6I0Y3OTQxRTt9DQoJLnN0NTl7ZmlsbDojRUY0MTM2O30NCgkuc3Q2MHtmaWxsOiNGRkZGRkY7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjEwO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjF7ZmlsbDojRDFEM0Q0O3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDoxMDtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDYye2ZpbGw6IzIzMUYyMDtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6MTA7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2M3tmaWxsOm5vbmU7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjEwO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2NHtmaWxsOm5vbmU7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjEwO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjV7ZmlsbDojRTFERkU0O30NCgkuc3Q2NntmaWxsOiMzNTQ3NEY7fQ0KCS5zdDY3e2ZpbGw6I0ZDMDAyRjt9DQoJLnN0Njh7ZmlsbDojRkRENTE4O30NCgkuc3Q2OXtmaWxsOiMwMEU3Njk7fQ0KCS5zdDcwe2ZpbGw6I0QxRDNENDt9DQoJLnN0NzF7ZmlsbDojMjdBQUUxO30NCgkuc3Q3MntmaWxsOiMyMzFGMjA7c3Ryb2tlOiMyN0FBRTE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDcze2ZpbGw6dXJsKCNTVkdJRF8yXyk7fQ0KCS5zdDc0e2ZpbGw6dXJsKCNTVkdJRF8zXyk7fQ0KCS5zdDc1e2ZpbGw6dXJsKCNTVkdJRF80Xyk7fQ0KCS5zdDc2e2ZpbGw6dXJsKCNTVkdJRF81Xyk7fQ0KCS5zdDc3e2ZpbGw6dXJsKCNTVkdJRF82Xyk7fQ0KCS5zdDc4e2ZpbGw6dXJsKCNTVkdJRF83Xyk7fQ0KPC9zdHlsZT4NCjxnIGlkPSJMYXllcl8xIj4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTExNS43LDI1LjFjMCwwLTIxLjcsMjEtMjguOSwzMnMtMTAuMyw5LjQtMTQuMiw3Yy0zLjktMi40LTEwLjEtNi42LTEwLjEtNi42cy02LjktMy43LDMuMi0xMS4xDQoJCQlDNzYuMSwzOC44LDExMS45LDE5LDExNS43LDI1LjF6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xMzYuMywyMy45djUyLjNjMCwwLDAuNyw2LjgtNi40LDUuN3MtMjguMy01LjEtMzQuNi03LjdjLTYuMy0yLjctMy40LTUuNy0yLjEtNy43DQoJCQlDOTQuNCw2NC41LDExMy41LDM1LjgsMTM2LjMsMjMuOXoiLz4NCgkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTQ2LjMsNjcuMWMwLDAsMi44LTQuNSw3LjMtMi4yczE2LjcsOS4yLDE2LjcsOS4yczUuNCwyLjMsMi41LDhjLTIuOCw1LjctMTAuNiwzMS4zLTExLDQxLjINCgkJCXMtNi43LDExLjItMTAuNCwxMS4yYy0zLjcsMC0yMS4zLDAtMjEuMywwcy05LjcsMS4yLTcuNy03LjlTMjguMiw5MS4yLDQ2LjMsNjcuMXoiLz4NCgkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTgyLjIsODYuN2MwLDAsMS4zLTUuOCw3LjQtMy42YzYsMi4yLDI0LjYsOC4yLDM4LDguOWMxMC45LDAuNiw4LjcsMTAsOC43LDEwdjI0LjRjMCwwLDEuNiw4LTYuNiw3LjkNCgkJCXMtNDcuNSwwLTQ3LjUsMHMtMTIuMiwyLjItOS44LTkuMVM3OC40LDk1LjQsODIuMiw4Ni43eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTY1LjUsMjUuMWMwLDAsMjEuNywyMSwyOC45LDMyczEwLjMsOS40LDE0LjIsN2MzLjktMi40LDEwLjEtNi42LDEwLjEtNi42czYuOS0zLjctMy4yLTExLjENCgkJCUMyMDUuMSwzOC44LDE2OS40LDE5LDE2NS41LDI1LjF6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xNDQuOSwyMy45djUyLjNjMCwwLTAuNyw2LjgsNi40LDUuN2M3LjEtMSwyOC4zLTUuMSwzNC42LTcuN2M2LjMtMi43LDMuNC01LjcsMi4xLTcuNw0KCQkJQzE4Ni44LDY0LjUsMTY3LjcsMzUuOCwxNDQuOSwyMy45eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QyIiBkPSJNMjM0LjksNjcuMWMwLDAtMi44LTQuNS03LjMtMi4ycy0xNi43LDkuMi0xNi43LDkuMnMtNS40LDIuMy0yLjUsOGMyLjgsNS43LDEwLjYsMzEuMywxMSw0MS4yDQoJCQlzNi43LDExLjIsMTAuNCwxMS4yYzMuNywwLDIxLjMsMCwyMS4zLDBzOS43LDEuMiw3LjctNy45QzI1NywxMTcuNCwyNTMuMSw5MS4yLDIzNC45LDY3LjF6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xOTksODYuN2MwLDAtMS4zLTUuOC03LjQtMy42cy0yNC42LDguMi0zOCw4LjljLTEwLjksMC42LTguNywxMC04LjcsMTB2MjQuNGMwLDAtMS42LDgsNi42LDcuOQ0KCQkJYzguMi0wLjEsNDcuNSwwLDQ3LjUsMHMxMi4yLDIuMiw5LjgtOS4xQzIwNi41LDExNCwyMDIuOSw5NS40LDE5OSw4Ni43eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTE1LjgsMjU1LjhjMCwwLTIxLjctMjEtMjguOS0zMnMtMTAuMy05LjQtMTQuMi03Yy0zLjksMi40LTEwLjEsNi42LTEwLjEsNi42cy02LjksMy43LDMuMiwxMS4xDQoJCQlDNzYuMiwyNDIuMSwxMTEuOSwyNjIsMTE1LjgsMjU1Ljh6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xMzYuMywyNTd2LTUyLjNjMCwwLDAuNy02LjgtNi40LTUuN2MtNy4xLDEtMjguMyw1LjEtMzQuNiw3LjdjLTYuMywyLjctMy40LDUuNy0yLjEsNy43DQoJCQlTMTEzLjUsMjQ1LjEsMTM2LjMsMjU3eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QyIiBkPSJNNDYuNCwyMTMuOGMwLDAsMi44LDQuNSw3LjMsMi4yczE2LjctOS4yLDE2LjctOS4yczUuNC0yLjMsMi41LThjLTIuOC01LjctMTAuNi0zMS4zLTExLTQxLjINCgkJCWMtMC40LTkuOC02LjctMTEuMi0xMC40LTExLjJjLTMuNywwLTIxLjMsMC0yMS4zLDBzLTkuNy0xLjItNy43LDcuOVMyOC4yLDE4OS43LDQ2LjQsMjEzLjh6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik04Mi4zLDE5NC4yYzAsMCwxLjMsNS44LDcuNCwzLjZjNi0yLjIsMjQuNi04LjIsMzgtOC45YzEwLjktMC42LDguNy0xMCw4LjctMTB2LTI0LjRjMCwwLDEuNi04LTYuNi03LjkNCgkJCXMtNDcuNSwwLTQ3LjUsMHMtMTIuMi0yLjItOS44LDkuMVM3OC40LDE4NS41LDgyLjMsMTk0LjJ6Ii8+DQoJCTxwb2x5Z29uIHBvaW50cz0iMjk2LjcsMjE2LjMgMTc0LjUsMTY4LjcgMjM1LjIsMjg0LjMgMjUwLjIsMjQ4LjUgMjg4LjQsMjgxLjYgMzAwLDI2OC41IDI2Mi4yLDIzNC44IAkJIi8+DQoJCTxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0xNjUuNSwyNTUuOGMwLDAsMjAuNi0xOS45LDI4LjMtMzEuMWwtNS41LTEwLjZjLTAuMSwwLjEtMC4xLDAuMi0wLjIsMC4zYy0xLjMsMi0yMC4zLDMwLjctNDMuMSw0Mi42di01Mi4zDQoJCQljMCwwLTAuNy02LjgsNi40LTUuN2M2LjUsMSwyNC43LDQuNCwzMi42LDdsLTYuNy0xMi43Yy03LjUtMi4xLTE2LjMtNC0yMy42LTQuNGMtMTAuOS0wLjYtOC43LTEwLTguNy0xMHYtMjQuNGMwLDAtMS42LTgsNi42LTcuOQ0KCQkJYzguMiwwLjEsNDcuNSwwLDQ3LjUsMHMxMi4yLTIuMiw5LjgsOS4xYy0wLjksNC40LTIsMTAtMy4zLDE1LjZsMTAuNSw0LjFjMS44LTYuOSwzLjItMTMuNiwzLjQtMTcuNmMwLjQtOS44LDYuNy0xMS4yLDEwLjQtMTEuMg0KCQkJczIxLjMsMCwyMS4zLDBzOS43LTEuMiw3LjcsNy45Yy0xLjMsNS45LTMuMywxOC45LTkuNSwzMy45bDEyLjEsNC43YzctMTYuMSwxMC45LTMzLjgsMTAuOS01Mi4zQzI3Mi40LDY4LDIxMy4zLDguOSwxNDAuNyw4LjkNCgkJCUM2OCw4LjksOC45LDY4LDguOSwxNDAuN2MwLDcyLjYsNTkuMSwxMzEuNywxMzEuNywxMzEuN2MyNC45LDAsNDguMy03LDY4LjItMTkuMWwtNS44LTExQzE4OC41LDI1MC43LDE2OC40LDI2MC4zLDE2NS41LDI1NS44eiINCgkJCS8+DQoJCTxwYXRoIGQ9Ik0xNDAuNywyNzIuNEM2OCwyNzIuNCw4LjksMjEzLjMsOC45LDE0MC43QzguOSw2OCw2OCw4LjksMTQwLjcsOC45YzcyLjYsMCwxMzEuNyw1OS4xLDEzMS43LDEzMS43DQoJCQljMCwxOC42LTMuOSwzNi4zLTEwLjksNTIuM2w4LjMsMy4zYzcuNC0xNy4xLDExLjUtMzUuOSwxMS41LTU1LjZDMjgxLjMsNjMuMSwyMTguMiwwLDE0MC43LDBDNjMuMSwwLDAsNjMuMSwwLDE0MC43DQoJCQljMCw3Ny42LDYzLjEsMTQwLjcsMTQwLjcsMTQwLjdjMjYuNCwwLDUxLjItNy4zLDcyLjMtMjAuMWwtNC4yLTcuOUMxODguOSwyNjUuNCwxNjUuNiwyNzIuNCwxNDAuNywyNzIuNHoiLz4NCgkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTE2NS41LDI1NS44YzIuOSw0LjUsMjMtNS4xLDM3LjUtMTMuNWwtOS4yLTE3LjZDMTg2LjIsMjM1LjksMTY1LjUsMjU1LjgsMTY1LjUsMjU1Ljh6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xNTEuNCwxOTguOWMtNy4xLTEtNi40LDUuNy02LjQsNS43VjI1N2MyMi44LTExLjksNDEuOS00MC41LDQzLjEtNDIuNmMwLjEtMC4xLDAuMS0wLjIsMC4yLTAuM2wtNC4zLTguMg0KCQkJQzE3NiwyMDMuMywxNTcuOSwxOTkuOSwxNTEuNCwxOTguOXoiLz4NCgkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTI1OC45LDE1NC40YzEuOS05LjEtNy43LTcuOS03LjctNy45cy0xNy42LDAtMjEuMywwcy0xMCwxLjMtMTAuNCwxMS4yYy0wLjIsNC0xLjYsMTAuNy0zLjQsMTcuNmwzMy4zLDEzDQoJCQlDMjU1LjYsMTczLjMsMjU3LjcsMTYwLjMsMjU4LjksMTU0LjR6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xNjcuOSwxNjIuN2MxLjctMS45LDQuMi0zLDYuNy0zYzEuMSwwLDIuMiwwLjIsMy4yLDAuNmwyNy44LDEwLjljMS4yLTUuNiwyLjQtMTEuMiwzLjMtMTUuNg0KCQkJYzIuNC0xMS4zLTkuOC05LjEtOS44LTkuMXMtMzkuMywwLjEtNDcuNSwwYy04LjItMC4xLTYuNiw3LjktNi42LDcuOXYyNC40YzAsMC0yLjIsOS40LDguNywxMGM3LjMsMC40LDE2LjEsMi40LDIzLjYsNC40DQoJCQlsLTEwLjctMjAuNEMxNjQuOSwxNjkuNSwxNjUuNCwxNjUuNSwxNjcuOSwxNjIuN3oiLz4NCgk8L2c+DQo8L2c+DQo8ZyBpZD0iTGF5ZXJfMiI+DQo8L2c+DQo8L3N2Zz4NCg==",
+  "id": "http4",
+  "name": "HTTP",
+  "properties": {
+    "baseUrl": {
+      "deprecated": false,
+      "displayName": "Base URL",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Base Http Endpoint URL",
+      "placeholder": "eg 'www.redhat.com'",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
   ]
 }

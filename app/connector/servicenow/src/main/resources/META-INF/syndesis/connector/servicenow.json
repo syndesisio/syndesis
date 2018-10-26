@@ -1,226 +1,225 @@
 {
-    "id": "servicenow",
-    "name": "ServiceNow",
-    "description": "ServiceNow",
-    "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAzMDAgMzAwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzMDAgMzAwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojODMyRUFCO30NCgkuc3Qxe2ZpbGw6I0JBQkFCQTt9DQoJLnN0MntmaWxsOm5vbmU7fQ0KCS5zdDN7ZmlsbDojOERDNjNGO30NCgkuc3Q0e2ZpbGw6IzBGOUJENzt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRkZGRkZGO30NCgkuc3Q3e2ZpbGw6IzFEQTFGMjt9DQoJLnN0OHtmaWxsOiMzRDVBOTg7fQ0KCS5zdDl7ZmlsbDojMjMxRjIwO30NCgkuc3QxMHtmaWxsOiMwMDdCQjU7fQ0KCS5zdDExe2ZpbGw6I0RDNEU0MTt9DQoJLnN0MTJ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojMTgxNjE2O30NCgkuc3QxM3tmaWxsOiMxODE2MTY7fQ0KCS5zdDE0e2ZpbGw6I0YyRjJGMjt9DQoJLnN0MTV7ZmlsbDojRTNFM0UzO30NCgkuc3QxNntmaWxsOiNENTRCM0Q7fQ0KCS5zdDE3e2ZpbGw6I0Q3MkIyNzt9DQoJLnN0MTh7b3BhY2l0eTowLjU2O2ZpbGw6dXJsKCNTVkdJRF8xXyk7fQ0KCS5zdDE5e2ZpbGw6IzkyRDQwMDt9DQoJLnN0MjB7ZmlsbDojMDBCOUU0O30NCgkuc3QyMXtmaWxsOiMyQjM5OTA7fQ0KCS5zdDIye2ZpbGw6IzNGOUMzNTt9DQoJLnN0MjN7ZmlsbDojOEZDRUQ4O30NCgkuc3QyNHtmaWxsOiNEMjFGMjE7fQ0KCS5zdDI1e2ZpbGw6I0Q2RDZENjt9DQoJLnN0MjZ7ZmlsbDojRjFGMUYxO30NCgkuc3QyN3tmaWxsOiNDMzIyNjU7fQ0KCS5zdDI4e2ZpbGw6IzhDMzEyMzt9DQoJLnN0Mjl7ZmlsbDojRTA1MjQzO30NCgkuc3QzMHtmaWxsOiM1RTFGMTg7fQ0KCS5zdDMxe2ZpbGw6I0YyQjBBOTt9DQoJLnN0MzJ7ZmlsbDojQ0FDQ0NFO30NCgkuc3QzM3tmaWxsOiNBMUFGREI7fQ0KCS5zdDM0e2ZpbGw6IzAwMjA4Nzt9DQo8L3N0eWxlPg0KPHBhdGggZD0iTTE5My42LDE2MS4yYy0wLjQsMC0wLjgsMC4xLTEuMSwwLjFjLTAuNS0xLjktMS0zLjgtMS40LTUuNmMtMi4yLTkuMy00LjMtMTguNi02LjctMjcuOGMtMS4yLTQuOS00LjUtNi41LTkuNC01LjENCgljLTUuMSwxLjQtNC42LDUtMy42LDguOWMzLjksMTQuMSw3LjksMjguMSwxMS42LDQyLjNjMS4yLDQuNSwzLjUsNyw4LjUsNy4xYzUuMiwwLjEsNy43LTIuMyw5LjEtNy4xYzIuNC04LDUuMy0xNS44LDgtMjMuNw0KCWM0LjEsOC40LDcsMTYuNiw5LjYsMjQuOWMxLjQsNC41LDQuNCw1LjksOC45LDUuOGM0LjQsMCw3LTEuOSw4LjEtNi4xYzQtMTQuOCw4LjEtMjkuNywxMi4yLTQ0LjVjMS0zLjUsMC41LTYuMS0zLjMtNy41DQoJYy0zLjgtMS40LTcuMS0wLjgtOC45LDNjLTEuMSwyLjItMS43LDQuOC0yLjIsNy4yYy0yLjEsOS4yLTQuMSwxOC4zLTYuMiwyNy41Yy0zLjUtNy4xLTUuOC0xNC4zLTcuOS0yMS41Yy0xLjQtNC42LTMuMy04LjUtOC45LTguNg0KCWMtNS44LTAuMS04LjEsMy42LTkuNiw4LjVDMTk4LjMsMTQ2LjQsMTk1LjksMTUzLjgsMTkzLjYsMTYxLjJ6IE02Ny45LDEyNy43Yy0xLjktMS4xLTMuOS0yLjctNi4xLTMuNGMtNS40LTEuNy03LjQtMC4zLTcuNSw1LjINCgljLTAuMiwxNC42LTAuMSwyOS4yLTAuMSw0My45YzAsNC44LDEuOCw3LjcsNy4zLDcuNWM1LjUtMC4yLDYuMy0zLjcsNi4zLTcuOWMwLjEtOC44LTAuMy0xNy42LDAuNC0yNi4zYzAuMy0zLjQsMi40LTcuNyw1LTkuOA0KCWM4LjMtNi42LDE4LjYtMiwxOS41LDguNmMwLjgsOS4zLDAuNSwxOC43LDAuNSwyOGMwLDQuNiwxLjUsNy40LDYuNyw3LjNjNS4zLDAsNi43LTMuMSw2LjYtNy42Yy0wLjItMTAuNS0wLjItMjEuMS0wLjgtMzEuNg0KCWMtMC44LTE0LjItMTIuNi0yMi43LTI2LjUtMTkuMUM3NS41LDEyMy43LDcxLjksMTI1LjksNjcuOSwxMjcuN3ogTTE0MS45LDE4MC45YzAuMywwLDEuMywwLDIuMy0wLjFjMTEuMy0xLjEsMTkuNC02LjgsMjMuOS0xNy4yDQoJYzQuNi0xMC44LDIuOS0yMS0zLjktMzAuNGMtMi40LTMuMy01LjUtMy4zLTguOC0xLjNjLTMuNSwyLjEtMy4xLDQuNy0xLjMsOGMxLjYsMi44LDIuOSw2LDMuNCw5LjJjMS43LDEwLjctNS41LDE5LjgtMTUuOSwyMC41DQoJYy05LjUsMC43LTE3LjktOC0xNy4yLTE4LjdjMC4zLTMuOSwyLjUtNy43LDMuMy0xMS42YzAuNC0yLjEsMC40LTYuMS0wLjUtNi41Yy0yLjUtMS02LTEuNS04LjQtMC41Yy0yLjEsMC45LTMuOSwzLjktNC44LDYuMw0KCUMxMDUuNiwxNjEsMTE4LjksMTgxLjEsMTQxLjksMTgwLjl6IE0xNDYuNywxMzkuOGMwLTQuMywwLjUtOC43LTAuMi0xMi44Yy0wLjQtMi0zLjEtNS4xLTQuNy01Yy0yLjIsMC02LDIuNS02LjEsNC4xDQoJYy0wLjYsOS4xLTAuNywxOC4yLTAuMSwyNy4zYzAuMSwxLjgsMy45LDQuNiw1LjksNC41YzEuOC0wLjEsNC43LTMuMiw1LjEtNS40QzE0Ny4yLDE0OC41LDE0Ni43LDE0NC4xLDE0Ni43LDEzOS44eiIvPg0KPHBhdGggY2xhc3M9InN0NSIgZD0iTTczLjgsMS4yYy03LjIsMS4xLTE0LjYsMS45LTIxLjcsMy41QzI2LjMsMTAuMiw3LjYsMzAuNCwzLjYsNTYuNkMyLjgsNjIuMywyLDY4LjEsMS4yLDczLjgNCgljMC0yNC4yLDAtNDguNCwwLTcyLjdDMjUuNCwxLjIsNDkuNiwxLjIsNzMuOCwxLjJ6Ii8+DQo8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMTkzLjYsMTYxLjJjMi4zLTcuNCw0LjctMTQuOCw2LjktMjIuMmMxLjUtNC45LDMuOC04LjYsOS42LTguNWM1LjYsMC4xLDcuNSw0LDguOSw4LjYNCgljMi4xLDcuMiw0LjQsMTQuNCw3LjksMjEuNWMyLjEtOS4yLDQuMS0xOC40LDYuMi0yNy41YzAuNi0yLjUsMS4xLTUsMi4yLTcuMmMxLjktMy44LDUuMS00LjQsOC45LTNjMy44LDEuNCw0LjMsMy45LDMuMyw3LjUNCgljLTQuMSwxNC44LTguMSwyOS43LTEyLjIsNDQuNWMtMS4xLDQuMi0zLjcsNi04LjEsNi4xYy00LjUsMC03LjQtMS40LTguOS01LjhjLTIuNy04LjMtNS42LTE2LjYtOS42LTI0LjljLTIuNyw3LjktNS42LDE1LjctOCwyMy43DQoJYy0xLjQsNC44LTMuOSw3LjItOS4xLDcuMWMtNS4xLTAuMS03LjMtMi42LTguNS03LjFjLTMuOC0xNC4xLTcuOC0yOC4yLTExLjYtNDIuM2MtMS4xLTMuOS0xLjUtNy40LDMuNi04LjkNCgljNC45LTEuNCw4LjEsMC4zLDkuNCw1LjFjMi4zLDkuMyw0LjQsMTguNiw2LjcsMjcuOGMwLjQsMS45LDAuOSwzLjgsMS40LDUuNkMxOTIuOSwxNjEuMywxOTMuMiwxNjEuMiwxOTMuNiwxNjEuMnoiLz4NCjxwYXRoIGNsYXNzPSJzdDUiIGQ9Ik02Ny45LDEyNy43YzQtMS44LDcuNi00LDExLjQtNWMxMy45LTMuNiwyNS43LDQuOSwyNi41LDE5LjFjMC42LDEwLjUsMC42LDIxLDAuOCwzMS42YzAuMSw0LjQtMS4zLDcuNS02LjYsNy42DQoJYy01LjMsMC02LjctMi43LTYuNy03LjNjMC05LjQsMC4zLTE4LjctMC41LTI4Yy0wLjktMTAuNi0xMS4yLTE1LjItMTkuNS04LjZjLTIuNywyLjEtNC43LDYuMy01LDkuOGMtMC44LDguNy0wLjMsMTcuNS0wLjQsMjYuMw0KCWMtMC4xLDQuMi0wLjgsNy43LTYuMyw3LjljLTUuNSwwLjItNy4zLTIuOC03LjMtNy41YzAtMTQuNi0wLjEtMjkuMiwwLjEtNDMuOWMwLjEtNS41LDIuMS02LjksNy41LTUuMg0KCUM2NCwxMjQuOSw2NiwxMjYuNSw2Ny45LDEyNy43eiIvPg0KPHBhdGggY2xhc3M9InN0NSIgZD0iTTE0MS45LDE4MC45Yy0yMywwLjMtMzYuMy0xOS45LTI3LjktNDIuM2MwLjktMi40LDIuNy01LjQsNC44LTYuM2MyLjQtMSw1LjktMC42LDguNCwwLjUNCgljMC45LDAuNCwwLjksNC4zLDAuNSw2LjVjLTAuOCwzLjktMy4xLDcuNy0zLjMsMTEuNmMtMC43LDEwLjcsNy42LDE5LjQsMTcuMiwxOC43YzEwLjQtMC43LDE3LjYtOS44LDE1LjktMjAuNQ0KCWMtMC41LTMuMi0xLjgtNi40LTMuNC05LjJjLTEuOC0zLjMtMi4yLTUuOCwxLjMtOGMzLjMtMiw2LjQtMiw4LjgsMS4zYzYuNyw5LjQsOC41LDE5LjYsMy45LDMwLjRjLTQuNCwxMC40LTEyLjYsMTYuMS0yMy45LDE3LjINCglDMTQzLjIsMTgwLjgsMTQyLjIsMTgwLjgsMTQxLjksMTgwLjl6Ii8+DQo8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMTQ2LjcsMTM5LjhjMCw0LjMsMC42LDguNy0wLjIsMTIuOGMtMC40LDIuMi0zLjIsNS4zLTUuMSw1LjRjLTIsMC4xLTUuOC0yLjgtNS45LTQuNQ0KCWMtMC42LTkuMS0wLjUtMTguMiwwLjEtMjcuM2MwLjEtMS42LDQtNC4xLDYuMS00LjFjMS42LDAsNC40LDMsNC43LDVDMTQ3LjIsMTMxLjIsMTQ2LjcsMTM1LjYsMTQ2LjcsMTM5Ljh6Ii8+DQo8cGF0aCBjbGFzcz0ic3QyNCIgZD0iTTAsMjI3LjRjMC01MS42LDAtMTAzLjEsMC0xNTQuN0MwLjksNjcsMS43LDYxLjIsMi41LDU1LjVDNi41LDI5LjMsMjUuMSw5LjEsNTEsMy42QzU4LjEsMiw2NS41LDEuMiw3Mi43LDAuMQ0KCWM1MS42LDAsMTAzLjEsMCwxNTQuNywwYzUuNiwwLjgsMTEuMSwxLjYsMTYuNywyLjRjMjYuOCw0LDQ3LjIsMjIuMyw1Mi40LDQ4LjljMi40LDEyLjUsMy4xLDI1LjYsMy4yLDM4LjQNCgljMC40LDQwLjIsMC4zLDgwLjQsMCwxMjAuNmMtMC4xLDExLjMtMC43LDIyLjYtMi4yLDMzLjhjLTMuNiwyNi45LTIyLjMsNDcuMS00OC44LDUyLjRjLTEwLjgsMi4yLTIyLDMtMzMuMSwzLjENCgljLTQxLjgsMC40LTgzLjUsMC4zLTEyNS4zLDAuMWMtMTEuNy0wLjEtMjMuNC0wLjctMzUtMi4zYy0yNi4xLTMuNi00Ni4yLTIyLjYtNTEuOC00OC4yQzIsMjQyLDEuMiwyMzQuNywwLDIyNy40eiIvPg0KPGc+DQoJPHBhdGggY2xhc3M9InN0NiIgZD0iTTgzLjIsMTIxYy02LjksMC0xMywyLjctMTcuMiw3LjhjLTEuMS01LjctNC43LTctNy43LTdjLTEuNywwLTUuMSwwLjctNS4xLDIuM3Y0OS40YzAsNC4yLDIuMSw2LjMsNiw2LjNoMS4yDQoJCWMzLjksMCw2LTIuMiw2LTYuM2wwLTMxLjljMi43LTUuNSw3LjgtOC42LDE0LjEtOC42YzcuMSwwLDExLjQsNS4xLDExLjQsMTMuNnYyNi45YzAsNC4yLDIuMSw2LjMsNiw2LjNsMS4yLDBjMy45LDAsNi0yLjIsNi02LjMNCgkJdi0yOC4zQzEwNS4xLDEzMCw5Ni45LDEyMSw4My4yLDEyMXoiLz4NCgk8cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMjQ2LjQsMTI0LjNjLTAuOS0xLjEtMy45LTMuMi03LTMuMmMtMS4zLDAtNS43LDAuNS02LjgsNi44bC03LjgsMzVsLTguOC0yOC41Yy0wLjktMy4yLTMuMy00LjctNy44LTQuNw0KCQljLTQuNSwwLTYuOSwxLjQtNy45LDQuN2wtOS4xLDI4LjhsLTcuOS0zNS4yYy0xLjItNi4yLTUuMi02LjgtNi45LTYuOGMtMywwLTYuNCwxLjktNy4zLDMuM2MtMC40LDAuNi0wLjQsMS4xLTAuMywxLjNsMTMuOCw0OS43DQoJCWMxLjEsMy44LDQuNCw0LjQsNy45LDQuNGM0LjYsMCw2LjUtMS4xLDcuOC00LjdsOS43LTI5LjVsOS40LDI5LjVjMS4yLDMuNiwzLDQuNyw3LjksNC43YzMuNSwwLDYuOC0wLjUsNy44LTQuNGwxMy43LTQ5LjgNCgkJQzI0Ni45LDEyNSwyNDYuNSwxMjQuNCwyNDYuNCwxMjQuM3oiLz4NCgk8cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMTY2LDEzNi45Yy0wLjUtMS4yLTIuNy01LjItNS4yLTYuNWMtNC0yLjQtOC4yLDAuOS05LjYsMy4yYy0wLjUsMC45LTAuNiwxLjYtMC4xLDIuMw0KCQljMS4yLDEuNiwyLjgsNC4zLDMuMyw1LjNjMS4yLDIuNywyLjEsNS44LDIuMSw5LjJjMCwxMC41LTcuMSwxOC4xLTE2LjksMTguMWMtOS43LDAtMTctNy45LTE3LTE4LjNjMC0zLjMsMC43LTYuNCwyLTkNCgkJYzAuOC0xLjYsMS44LTMuMiwzLjQtNS4yYzAuNC0wLjcsMC40LTEuNC0wLjEtMi4zYy0xLjQtMi4zLTUuNS01LjYtOS42LTMuMmMtMi40LDEuNC00LjQsNC41LTUuMyw2LjRjLTEuOCwzLjktMi44LDguNC0yLjgsMTMuMw0KCQljMCwxNy40LDEyLjEsMjkuNiwyOS40LDI5LjZjMTcsMCwyOS40LTEyLjMsMjkuNC0yOS40QzE2OC45LDE0NS40LDE2Ny45LDE0MC45LDE2NiwxMzYuOXoiLz4NCgk8cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMTQwLDEyMC41aC0wLjljLTMuNSwwLTUuNSwyLjUtNS41LDYuOXYyMy4xYzAsNC4zLDIsNi44LDUuNSw2LjhsMC45LDBjMy41LDAsNS40LTIuNCw1LjQtNi44di0yMy4xDQoJCUMxNDUuNCwxMjIuOSwxNDMuNSwxMjAuNSwxNDAsMTIwLjV6Ii8+DQo8L2c+DQo8L3N2Zz4NCg==",
-    "dependencies": [
-        {
-            "type": "MAVEN",
-            "id": "@project.groupId@:@project.artifactId@:@project.version@"
-        }
-    ],
-    "componentScheme": "servicenow",
-    "tags": [
-        "verifier"
-    ],
-    "properties": {
-        "instanceName": {
-            "kind": "property",
-            "displayName": "Instance Name",
-            "group": "security",
-            "label": "security",
-            "required": true,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "tags": [],
-            "deprecated": false,
-            "secret": false,
-            "componentProperty": true,
-            "labelHint": "Instance Name",
-            "order": 1
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Retrieves multiple records for the specified table.",
+      "descriptor": {
+        "connectorCustomizers": [
+          "io.syndesis.connector.servicenow.customizers.ServiceNowTableGetCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
         },
-        "userName": {
-            "kind": "property",
-            "displayName": "User Name",
-            "group": "security",
-            "label": "security",
-            "required": true,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "tags": [],
-            "deprecated": false,
-            "secret": false,
-            "componentProperty": true,
-            "labelHint": "The User Name",
-            "order": 3
+        "outputDataShape": {
+          "kind": "json-schema"
         },
-        "password": {
-            "kind": "property",
-            "displayName": "User Password",
-            "group": "security",
-            "label": "security",
-            "required": true,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "tags": [],
-            "deprecated": false,
-            "secret": true,
-            "componentProperty": true,
-            "labelHint": "The User Password",
-            "order": 4
-        },
-        "oauthClientId": {
-            "kind": "property",
-            "displayName": "Client ID",
-            "group": "security",
-            "label": "security",
-            "required": false,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": true,
-            "componentProperty": true,
-            "labelHint": "OAuth Client ID",
-            "order": 5
-        },
-        "oauthClientSecret": {
-            "kind": "property",
-            "displayName": "Client Secret",
-            "group": "security",
-            "label": "security",
-            "required": false,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": true,
-            "componentProperty": true,
-            "labelHint": "OAuth Client Secret",
-            "order": 6
-        }
+        "propertyDefinitionSteps": [
+          {
+            "description": "",
+            "name": "properties",
+            "properties": {
+              "limit": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Limit of elements per page",
+                "group": "common",
+                "javaType": "java.lang.Integer",
+                "kind": "parameter",
+                "label": "",
+                "labelHint": "Limit of elements per page",
+                "order": 3,
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "integer"
+              },
+              "query": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "The query used to filter the result set",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "",
+                "labelHint": "The query used to filter the result set",
+                "order": 2,
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              },
+              "schedulerExpression": {
+                "defaultValue": 60000,
+                "deprecated": false,
+                "displayName": "Period",
+                "group": "consumer",
+                "javaType": "long",
+                "kind": "parameter",
+                "labelHint": "Delay between scheduling (executing).",
+                "order": 4,
+                "required": false,
+                "secret": false,
+                "type": "duration"
+              },
+              "table": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "The table name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "",
+                "labelHint": "The Table name",
+                "order": 1,
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "split": {}
+      },
+      "id": "io.syndesis:servicenow-action-retrieve-record",
+      "name": "Retrieve Record",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
     },
-    "actions": [
-        {
-            "name": "Retrieve Record",
-            "description": "Retrieves multiple records for the specified table.",
-            "id": "io.syndesis:servicenow-action-retrieve-record",
-            "pattern": "From",
-            "actionType": "connector",
-            "tags": [
-                "dynamic"
-            ],
-            "descriptor": {
-                "inputDataShape": {
-                    "kind": "none"
-                },
-                "outputDataShape": {
-                    "kind": "json-schema"
-                },
-                "split": {
-                },
-                "connectorCustomizers": [
-                    "io.syndesis.connector.servicenow.customizers.ServiceNowTableGetCustomizer"
-                ],
-                "propertyDefinitionSteps": [
-                    {
-                        "name": "properties",
-                        "description": "",
-                        "properties": {
-                            "table": {
-                                "kind": "parameter",
-                                "displayName": "The table name",
-                                "group": "common",
-                                "label": "",
-                                "required": true,
-                                "type": "string",
-                                "javaType": "java.lang.String",
-                                "tags": [],
-                                "deprecated": false,
-                                "secret": false,
-                                "componentProperty": false,
-                                "labelHint": "The Table name",
-                                "order": 1
-                            },
-                            "query": {
-                                "kind": "parameter",
-                                "displayName": "The query used to filter the result set",
-                                "group": "common",
-                                "label": "",
-                                "required": false,
-                                "type": "string",
-                                "javaType": "java.lang.String",
-                                "tags": [],
-                                "deprecated": false,
-                                "secret": false,
-                                "componentProperty": false,
-                                "labelHint": "The query used to filter the result set",
-                                "order": 2
-                            },
-                            "limit": {
-                                "kind": "parameter",
-                                "displayName": "Limit of elements per page",
-                                "group": "common",
-                                "label": "",
-                                "required": false,
-                                "type": "integer",
-                                "javaType": "java.lang.Integer",
-                                "tags": [],
-                                "deprecated": false,
-                                "secret": false,
-                                "componentProperty": false,
-                                "labelHint": "Limit of elements per page",
-                                "order": 3
-                            },
-                            "schedulerExpression": {
-                              "kind": "parameter",
-                              "displayName": "Period",
-                              "group": "consumer",
-                              "required": false,
-                              "type": "duration",
-                              "javaType": "long",
-                              "deprecated": false,
-                              "secret": false,
-                              "defaultValue": 60000,
-                              "labelHint": "Delay between scheduling (executing).",
-                              "order": 4
-                            }
-                        }
-                    }
-                ]
-            }
+    {
+      "actionType": "connector",
+      "description": "Create a record into a specified staging table and triggers transformation based on predefined transform maps in the import set table.",
+      "descriptor": {
+        "connectorCustomizers": [
+          "io.syndesis.connector.servicenow.customizers.ServiceNowImportSetCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "any"
         },
-        {
-            "name": "Create Record",
-            "description": "Create a record into a specified staging table and triggers transformation based on predefined transform maps in the import set table.",
-            "id": "io.syndesis:servicenow-action-create-record",
-            "pattern": "To",
-            "actionType": "connector",
-            "tags": [
-                "dynamic"
-            ],
-            "descriptor": {
-                "inputDataShape": {
-                    "kind": "any"
-                },
-                "outputDataShape": {
-                    "kind": "java",
-                    "type": "org.apache.camel.component.servicenow.model.ImportSetResult"
-                },
-                "connectorCustomizers": [
-                    "io.syndesis.connector.servicenow.customizers.ServiceNowImportSetCustomizer"
-                ],
-                "propertyDefinitionSteps": [
-                    {
-                        "name": "properties",
-                        "description": "",
-                        "properties": {
-                            "table": {
-                                "kind": "parameter",
-                                "displayName": "The Import Set name",
-                                "group": "common",
-                                "label": "",
-                                "required": true,
-                                "type": "string",
-                                "javaType": "java.lang.String",
-                                "tags": [],
-                                "deprecated": false,
-                                "secret": false,
-                                "componentProperty": false,
-                                "labelHint": "The Import Set name"
-                            }
-                        }
-                    }
-                ]
+        "outputDataShape": {
+          "kind": "java",
+          "type": "org.apache.camel.component.servicenow.model.ImportSetResult"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "",
+            "name": "properties",
+            "properties": {
+              "table": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "The Import Set name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "",
+                "labelHint": "The Import Set name",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              }
             }
-        }
-    ]
+          }
+        ]
+      },
+      "id": "io.syndesis:servicenow-action-create-record",
+      "name": "Create Record",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    }
+  ],
+  "componentScheme": "servicenow",
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "ServiceNow",
+  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAzMDAgMzAwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzMDAgMzAwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojODMyRUFCO30NCgkuc3Qxe2ZpbGw6I0JBQkFCQTt9DQoJLnN0MntmaWxsOm5vbmU7fQ0KCS5zdDN7ZmlsbDojOERDNjNGO30NCgkuc3Q0e2ZpbGw6IzBGOUJENzt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRkZGRkZGO30NCgkuc3Q3e2ZpbGw6IzFEQTFGMjt9DQoJLnN0OHtmaWxsOiMzRDVBOTg7fQ0KCS5zdDl7ZmlsbDojMjMxRjIwO30NCgkuc3QxMHtmaWxsOiMwMDdCQjU7fQ0KCS5zdDExe2ZpbGw6I0RDNEU0MTt9DQoJLnN0MTJ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojMTgxNjE2O30NCgkuc3QxM3tmaWxsOiMxODE2MTY7fQ0KCS5zdDE0e2ZpbGw6I0YyRjJGMjt9DQoJLnN0MTV7ZmlsbDojRTNFM0UzO30NCgkuc3QxNntmaWxsOiNENTRCM0Q7fQ0KCS5zdDE3e2ZpbGw6I0Q3MkIyNzt9DQoJLnN0MTh7b3BhY2l0eTowLjU2O2ZpbGw6dXJsKCNTVkdJRF8xXyk7fQ0KCS5zdDE5e2ZpbGw6IzkyRDQwMDt9DQoJLnN0MjB7ZmlsbDojMDBCOUU0O30NCgkuc3QyMXtmaWxsOiMyQjM5OTA7fQ0KCS5zdDIye2ZpbGw6IzNGOUMzNTt9DQoJLnN0MjN7ZmlsbDojOEZDRUQ4O30NCgkuc3QyNHtmaWxsOiNEMjFGMjE7fQ0KCS5zdDI1e2ZpbGw6I0Q2RDZENjt9DQoJLnN0MjZ7ZmlsbDojRjFGMUYxO30NCgkuc3QyN3tmaWxsOiNDMzIyNjU7fQ0KCS5zdDI4e2ZpbGw6IzhDMzEyMzt9DQoJLnN0Mjl7ZmlsbDojRTA1MjQzO30NCgkuc3QzMHtmaWxsOiM1RTFGMTg7fQ0KCS5zdDMxe2ZpbGw6I0YyQjBBOTt9DQoJLnN0MzJ7ZmlsbDojQ0FDQ0NFO30NCgkuc3QzM3tmaWxsOiNBMUFGREI7fQ0KCS5zdDM0e2ZpbGw6IzAwMjA4Nzt9DQo8L3N0eWxlPg0KPHBhdGggZD0iTTE5My42LDE2MS4yYy0wLjQsMC0wLjgsMC4xLTEuMSwwLjFjLTAuNS0xLjktMS0zLjgtMS40LTUuNmMtMi4yLTkuMy00LjMtMTguNi02LjctMjcuOGMtMS4yLTQuOS00LjUtNi41LTkuNC01LjENCgljLTUuMSwxLjQtNC42LDUtMy42LDguOWMzLjksMTQuMSw3LjksMjguMSwxMS42LDQyLjNjMS4yLDQuNSwzLjUsNyw4LjUsNy4xYzUuMiwwLjEsNy43LTIuMyw5LjEtNy4xYzIuNC04LDUuMy0xNS44LDgtMjMuNw0KCWM0LjEsOC40LDcsMTYuNiw5LjYsMjQuOWMxLjQsNC41LDQuNCw1LjksOC45LDUuOGM0LjQsMCw3LTEuOSw4LjEtNi4xYzQtMTQuOCw4LjEtMjkuNywxMi4yLTQ0LjVjMS0zLjUsMC41LTYuMS0zLjMtNy41DQoJYy0zLjgtMS40LTcuMS0wLjgtOC45LDNjLTEuMSwyLjItMS43LDQuOC0yLjIsNy4yYy0yLjEsOS4yLTQuMSwxOC4zLTYuMiwyNy41Yy0zLjUtNy4xLTUuOC0xNC4zLTcuOS0yMS41Yy0xLjQtNC42LTMuMy04LjUtOC45LTguNg0KCWMtNS44LTAuMS04LjEsMy42LTkuNiw4LjVDMTk4LjMsMTQ2LjQsMTk1LjksMTUzLjgsMTkzLjYsMTYxLjJ6IE02Ny45LDEyNy43Yy0xLjktMS4xLTMuOS0yLjctNi4xLTMuNGMtNS40LTEuNy03LjQtMC4zLTcuNSw1LjINCgljLTAuMiwxNC42LTAuMSwyOS4yLTAuMSw0My45YzAsNC44LDEuOCw3LjcsNy4zLDcuNWM1LjUtMC4yLDYuMy0zLjcsNi4zLTcuOWMwLjEtOC44LTAuMy0xNy42LDAuNC0yNi4zYzAuMy0zLjQsMi40LTcuNyw1LTkuOA0KCWM4LjMtNi42LDE4LjYtMiwxOS41LDguNmMwLjgsOS4zLDAuNSwxOC43LDAuNSwyOGMwLDQuNiwxLjUsNy40LDYuNyw3LjNjNS4zLDAsNi43LTMuMSw2LjYtNy42Yy0wLjItMTAuNS0wLjItMjEuMS0wLjgtMzEuNg0KCWMtMC44LTE0LjItMTIuNi0yMi43LTI2LjUtMTkuMUM3NS41LDEyMy43LDcxLjksMTI1LjksNjcuOSwxMjcuN3ogTTE0MS45LDE4MC45YzAuMywwLDEuMywwLDIuMy0wLjFjMTEuMy0xLjEsMTkuNC02LjgsMjMuOS0xNy4yDQoJYzQuNi0xMC44LDIuOS0yMS0zLjktMzAuNGMtMi40LTMuMy01LjUtMy4zLTguOC0xLjNjLTMuNSwyLjEtMy4xLDQuNy0xLjMsOGMxLjYsMi44LDIuOSw2LDMuNCw5LjJjMS43LDEwLjctNS41LDE5LjgtMTUuOSwyMC41DQoJYy05LjUsMC43LTE3LjktOC0xNy4yLTE4LjdjMC4zLTMuOSwyLjUtNy43LDMuMy0xMS42YzAuNC0yLjEsMC40LTYuMS0wLjUtNi41Yy0yLjUtMS02LTEuNS04LjQtMC41Yy0yLjEsMC45LTMuOSwzLjktNC44LDYuMw0KCUMxMDUuNiwxNjEsMTE4LjksMTgxLjEsMTQxLjksMTgwLjl6IE0xNDYuNywxMzkuOGMwLTQuMywwLjUtOC43LTAuMi0xMi44Yy0wLjQtMi0zLjEtNS4xLTQuNy01Yy0yLjIsMC02LDIuNS02LjEsNC4xDQoJYy0wLjYsOS4xLTAuNywxOC4yLTAuMSwyNy4zYzAuMSwxLjgsMy45LDQuNiw1LjksNC41YzEuOC0wLjEsNC43LTMuMiw1LjEtNS40QzE0Ny4yLDE0OC41LDE0Ni43LDE0NC4xLDE0Ni43LDEzOS44eiIvPg0KPHBhdGggY2xhc3M9InN0NSIgZD0iTTczLjgsMS4yYy03LjIsMS4xLTE0LjYsMS45LTIxLjcsMy41QzI2LjMsMTAuMiw3LjYsMzAuNCwzLjYsNTYuNkMyLjgsNjIuMywyLDY4LjEsMS4yLDczLjgNCgljMC0yNC4yLDAtNDguNCwwLTcyLjdDMjUuNCwxLjIsNDkuNiwxLjIsNzMuOCwxLjJ6Ii8+DQo8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMTkzLjYsMTYxLjJjMi4zLTcuNCw0LjctMTQuOCw2LjktMjIuMmMxLjUtNC45LDMuOC04LjYsOS42LTguNWM1LjYsMC4xLDcuNSw0LDguOSw4LjYNCgljMi4xLDcuMiw0LjQsMTQuNCw3LjksMjEuNWMyLjEtOS4yLDQuMS0xOC40LDYuMi0yNy41YzAuNi0yLjUsMS4xLTUsMi4yLTcuMmMxLjktMy44LDUuMS00LjQsOC45LTNjMy44LDEuNCw0LjMsMy45LDMuMyw3LjUNCgljLTQuMSwxNC44LTguMSwyOS43LTEyLjIsNDQuNWMtMS4xLDQuMi0zLjcsNi04LjEsNi4xYy00LjUsMC03LjQtMS40LTguOS01LjhjLTIuNy04LjMtNS42LTE2LjYtOS42LTI0LjljLTIuNyw3LjktNS42LDE1LjctOCwyMy43DQoJYy0xLjQsNC44LTMuOSw3LjItOS4xLDcuMWMtNS4xLTAuMS03LjMtMi42LTguNS03LjFjLTMuOC0xNC4xLTcuOC0yOC4yLTExLjYtNDIuM2MtMS4xLTMuOS0xLjUtNy40LDMuNi04LjkNCgljNC45LTEuNCw4LjEsMC4zLDkuNCw1LjFjMi4zLDkuMyw0LjQsMTguNiw2LjcsMjcuOGMwLjQsMS45LDAuOSwzLjgsMS40LDUuNkMxOTIuOSwxNjEuMywxOTMuMiwxNjEuMiwxOTMuNiwxNjEuMnoiLz4NCjxwYXRoIGNsYXNzPSJzdDUiIGQ9Ik02Ny45LDEyNy43YzQtMS44LDcuNi00LDExLjQtNWMxMy45LTMuNiwyNS43LDQuOSwyNi41LDE5LjFjMC42LDEwLjUsMC42LDIxLDAuOCwzMS42YzAuMSw0LjQtMS4zLDcuNS02LjYsNy42DQoJYy01LjMsMC02LjctMi43LTYuNy03LjNjMC05LjQsMC4zLTE4LjctMC41LTI4Yy0wLjktMTAuNi0xMS4yLTE1LjItMTkuNS04LjZjLTIuNywyLjEtNC43LDYuMy01LDkuOGMtMC44LDguNy0wLjMsMTcuNS0wLjQsMjYuMw0KCWMtMC4xLDQuMi0wLjgsNy43LTYuMyw3LjljLTUuNSwwLjItNy4zLTIuOC03LjMtNy41YzAtMTQuNi0wLjEtMjkuMiwwLjEtNDMuOWMwLjEtNS41LDIuMS02LjksNy41LTUuMg0KCUM2NCwxMjQuOSw2NiwxMjYuNSw2Ny45LDEyNy43eiIvPg0KPHBhdGggY2xhc3M9InN0NSIgZD0iTTE0MS45LDE4MC45Yy0yMywwLjMtMzYuMy0xOS45LTI3LjktNDIuM2MwLjktMi40LDIuNy01LjQsNC44LTYuM2MyLjQtMSw1LjktMC42LDguNCwwLjUNCgljMC45LDAuNCwwLjksNC4zLDAuNSw2LjVjLTAuOCwzLjktMy4xLDcuNy0zLjMsMTEuNmMtMC43LDEwLjcsNy42LDE5LjQsMTcuMiwxOC43YzEwLjQtMC43LDE3LjYtOS44LDE1LjktMjAuNQ0KCWMtMC41LTMuMi0xLjgtNi40LTMuNC05LjJjLTEuOC0zLjMtMi4yLTUuOCwxLjMtOGMzLjMtMiw2LjQtMiw4LjgsMS4zYzYuNyw5LjQsOC41LDE5LjYsMy45LDMwLjRjLTQuNCwxMC40LTEyLjYsMTYuMS0yMy45LDE3LjINCglDMTQzLjIsMTgwLjgsMTQyLjIsMTgwLjgsMTQxLjksMTgwLjl6Ii8+DQo8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMTQ2LjcsMTM5LjhjMCw0LjMsMC42LDguNy0wLjIsMTIuOGMtMC40LDIuMi0zLjIsNS4zLTUuMSw1LjRjLTIsMC4xLTUuOC0yLjgtNS45LTQuNQ0KCWMtMC42LTkuMS0wLjUtMTguMiwwLjEtMjcuM2MwLjEtMS42LDQtNC4xLDYuMS00LjFjMS42LDAsNC40LDMsNC43LDVDMTQ3LjIsMTMxLjIsMTQ2LjcsMTM1LjYsMTQ2LjcsMTM5Ljh6Ii8+DQo8cGF0aCBjbGFzcz0ic3QyNCIgZD0iTTAsMjI3LjRjMC01MS42LDAtMTAzLjEsMC0xNTQuN0MwLjksNjcsMS43LDYxLjIsMi41LDU1LjVDNi41LDI5LjMsMjUuMSw5LjEsNTEsMy42QzU4LjEsMiw2NS41LDEuMiw3Mi43LDAuMQ0KCWM1MS42LDAsMTAzLjEsMCwxNTQuNywwYzUuNiwwLjgsMTEuMSwxLjYsMTYuNywyLjRjMjYuOCw0LDQ3LjIsMjIuMyw1Mi40LDQ4LjljMi40LDEyLjUsMy4xLDI1LjYsMy4yLDM4LjQNCgljMC40LDQwLjIsMC4zLDgwLjQsMCwxMjAuNmMtMC4xLDExLjMtMC43LDIyLjYtMi4yLDMzLjhjLTMuNiwyNi45LTIyLjMsNDcuMS00OC44LDUyLjRjLTEwLjgsMi4yLTIyLDMtMzMuMSwzLjENCgljLTQxLjgsMC40LTgzLjUsMC4zLTEyNS4zLDAuMWMtMTEuNy0wLjEtMjMuNC0wLjctMzUtMi4zYy0yNi4xLTMuNi00Ni4yLTIyLjYtNTEuOC00OC4yQzIsMjQyLDEuMiwyMzQuNywwLDIyNy40eiIvPg0KPGc+DQoJPHBhdGggY2xhc3M9InN0NiIgZD0iTTgzLjIsMTIxYy02LjksMC0xMywyLjctMTcuMiw3LjhjLTEuMS01LjctNC43LTctNy43LTdjLTEuNywwLTUuMSwwLjctNS4xLDIuM3Y0OS40YzAsNC4yLDIuMSw2LjMsNiw2LjNoMS4yDQoJCWMzLjksMCw2LTIuMiw2LTYuM2wwLTMxLjljMi43LTUuNSw3LjgtOC42LDE0LjEtOC42YzcuMSwwLDExLjQsNS4xLDExLjQsMTMuNnYyNi45YzAsNC4yLDIuMSw2LjMsNiw2LjNsMS4yLDBjMy45LDAsNi0yLjIsNi02LjMNCgkJdi0yOC4zQzEwNS4xLDEzMCw5Ni45LDEyMSw4My4yLDEyMXoiLz4NCgk8cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMjQ2LjQsMTI0LjNjLTAuOS0xLjEtMy45LTMuMi03LTMuMmMtMS4zLDAtNS43LDAuNS02LjgsNi44bC03LjgsMzVsLTguOC0yOC41Yy0wLjktMy4yLTMuMy00LjctNy44LTQuNw0KCQljLTQuNSwwLTYuOSwxLjQtNy45LDQuN2wtOS4xLDI4LjhsLTcuOS0zNS4yYy0xLjItNi4yLTUuMi02LjgtNi45LTYuOGMtMywwLTYuNCwxLjktNy4zLDMuM2MtMC40LDAuNi0wLjQsMS4xLTAuMywxLjNsMTMuOCw0OS43DQoJCWMxLjEsMy44LDQuNCw0LjQsNy45LDQuNGM0LjYsMCw2LjUtMS4xLDcuOC00LjdsOS43LTI5LjVsOS40LDI5LjVjMS4yLDMuNiwzLDQuNyw3LjksNC43YzMuNSwwLDYuOC0wLjUsNy44LTQuNGwxMy43LTQ5LjgNCgkJQzI0Ni45LDEyNSwyNDYuNSwxMjQuNCwyNDYuNCwxMjQuM3oiLz4NCgk8cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMTY2LDEzNi45Yy0wLjUtMS4yLTIuNy01LjItNS4yLTYuNWMtNC0yLjQtOC4yLDAuOS05LjYsMy4yYy0wLjUsMC45LTAuNiwxLjYtMC4xLDIuMw0KCQljMS4yLDEuNiwyLjgsNC4zLDMuMyw1LjNjMS4yLDIuNywyLjEsNS44LDIuMSw5LjJjMCwxMC41LTcuMSwxOC4xLTE2LjksMTguMWMtOS43LDAtMTctNy45LTE3LTE4LjNjMC0zLjMsMC43LTYuNCwyLTkNCgkJYzAuOC0xLjYsMS44LTMuMiwzLjQtNS4yYzAuNC0wLjcsMC40LTEuNC0wLjEtMi4zYy0xLjQtMi4zLTUuNS01LjYtOS42LTMuMmMtMi40LDEuNC00LjQsNC41LTUuMyw2LjRjLTEuOCwzLjktMi44LDguNC0yLjgsMTMuMw0KCQljMCwxNy40LDEyLjEsMjkuNiwyOS40LDI5LjZjMTcsMCwyOS40LTEyLjMsMjkuNC0yOS40QzE2OC45LDE0NS40LDE2Ny45LDE0MC45LDE2NiwxMzYuOXoiLz4NCgk8cGF0aCBjbGFzcz0ic3Q2IiBkPSJNMTQwLDEyMC41aC0wLjljLTMuNSwwLTUuNSwyLjUtNS41LDYuOXYyMy4xYzAsNC4zLDIsNi44LDUuNSw2LjhsMC45LDBjMy41LDAsNS40LTIuNCw1LjQtNi44di0yMy4xDQoJCUMxNDUuNCwxMjIuOSwxNDMuNSwxMjAuNSwxNDAsMTIwLjV6Ii8+DQo8L2c+DQo8L3N2Zz4NCg==",
+  "id": "servicenow",
+  "name": "ServiceNow",
+  "properties": {
+    "instanceName": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Instance Name",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "Instance Name",
+      "order": 1,
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "oauthClientId": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Client ID",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "OAuth Client ID",
+      "order": 5,
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "oauthClientSecret": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Client Secret",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "OAuth Client Secret",
+      "order": 6,
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "password": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "User Password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "The User Password",
+      "order": 4,
+      "required": true,
+      "secret": true,
+      "tags": [],
+      "type": "string"
+    },
+    "userName": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "User Name",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "The User Name",
+      "order": 3,
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
 }
