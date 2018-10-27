@@ -1,0 +1,158 @@
+[
+  {
+    "connectorId": "activemq",
+    "icon": "connectionicons_activeMQ.svg"
+  },
+  {
+    "connectorId": "amqp",
+    "icon": "connectionicons_AMQP.svg"
+  },
+  {
+    "connectorId": "api-provider",
+    "icon": "connectionicons_apiProvider.svg"
+  },
+  {
+    "connectorId": "aws-s3",
+    "icon": "connectionicons_AWS-S3.svg"
+  },
+  {
+    "connectorId": "fhir",
+    "icon": "connectionicons_fhir.svg"
+  },
+  {
+    "connectorId": "ftp",
+    "icon": "connectionicons_ftp.svg"
+  },
+  {
+    "connectorId": "gmail",
+    "icon": "connectionicons_gmail.svg"
+  },
+  {
+    "connectorId": "google-calendar",
+    "icon": "connectionicons_googlecalendar.svg"
+  },
+  {
+    "connectorId": "https4",
+    "icon": "connectionicons_https.svg"
+  },
+  {
+    "connectorId": "http4",
+    "icon": "connectionicons_http.svg"
+  },
+  {
+    "connectorId": "kafka",
+    "icon": "connectionicons_kafka.svg"
+  },
+  {
+    "connectorId": "mqtt",
+    "icon": "connectionicons_mqtt.svg"
+  },
+  {
+    "connectorId": "salesforce",
+    "icon": "connectionicons_salesforce.svg"
+  },
+  {
+    "connectorId": "servicenow",
+    "icon": "connectionicons_servicenow.svg"
+  },
+  {
+    "connectorId": "sftp",
+    "icon": "connectionicons_sftp.svg"
+  },
+  {
+    "connectorId": "sql",
+    "icon": "connectionicons_SQL.svg"
+  },
+  {
+    "connectorId": "timer",
+    "icon": "connectionicons_timer.svg"
+  },
+  {
+    "connectorId": "twitter",
+    "icon": "connectionicons_twitter.svg"
+  },
+  {
+    "connectorId": "webhook",
+    "icon": "connectionicons_webhooks.svg"
+  },
+  {
+    "connectorId": "irc",
+    "icon": "connectionicons_IRC.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_advancedfilter.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_basicfilter.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_datamapper.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_day_trade.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_facebook.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_github.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_google.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_googledrive.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_linkedin.svg"
+  },
+  {
+    "connectorId": "log",
+    "icon": "connectionicons_logstep.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_messaging.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_returnpath.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_templatestep.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_trade_insight.svg"
+  },
+  {
+    "ignore": true,
+    "icon": "connectionicons_workday.svg"
+  },
+  {
+    "connectorId": "dropbox",
+    "icon": "connectionicons_Dropbox.svg"
+  },
+  {
+    "connectorId": "concur",
+    "icon": "connectionicons_Concur.svg"
+  },
+  {
+    "connectorId": "slack",
+    "icon": "connectionicons_Slack.svg"
+  },
+  {
+    "connectorId": "telegram",
+    "icon": "connectionicons_Telegram.svg"
+  }
+]
