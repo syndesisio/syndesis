@@ -1,239 +1,233 @@
 {
-    "id": "slack",
-    "name": "Slack",
-    "description": "Obtain and send messages.",
-    "icon": "slack",
-    "dependencies": [
-        {
-            "type": "MAVEN",
-            "id": "@project.groupId@:@project.artifactId@:@project.version@"
-        }
-    ],
-    "componentScheme": "slack",
-    "configuredProperties": {
-    },
-    "tags": [
-        "verifier"
-    ],
-    "properties": {
-        "webhookUrl": {
-            "kind": "parameter",
-            "displayName": "Slack Webhook URL",
-            "group": "common",
-            "required": true,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": false,
-            "order": "1",
-            "raw": true,
-            "secret": true,
-            "labelHint": "The webhook URL to send messages to."
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Send a message to specific Slack user.",
+      "descriptor": {
+        "configuredProperties": {},
+        "connectorCustomizers": [
+          "io.syndesis.connector.slack.SlackChannelCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "type": "io.syndesis.connector.slack.SlackPlainMessage"
         },
-        "username": {
-            "kind": "parameter",
-            "displayName": "Sending User Name for Messages",
-            "group": "common",
-            "required": false,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": false,
-            "order": "3",
-            "labelHint": "The user name that the bot will have when sending messages to a channel or user."
+        "outputDataShape": {
+          "kind": "none"
         },
-        "iconUrl": {
-            "kind": "parameter",
-            "displayName": "Message Avatar Icon URL",
-            "group": "common",
-            "required": false,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": false,
-            "order": "5",
-            "labelHint": "The avatar that the connection will use when sending messages to a channel or user."
-        },
-        "iconEmoji": {
-            "kind": "parameter",
-            "displayName": "Message Avatar Emoji",
-            "group": "common",
-            "required": false,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": false,
-            "order": "4",
-            "labelHint": "The Slack emoji that will be used for the message avatar."
-        },
-        "token": {
-            "kind": "parameter",
-            "displayName": "Token for Accessing Slack API",
-            "group": "consumer",
-            "required": true,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": false,
-            "order": "2",
-            "raw": true,
-            "secret": true,
-            "labelHint": "The token to use for obtaining messages from a Slack channel."
-        }
-    },
-    "actions": [
-        {
+        "propertyDefinitionSteps": [
+          {
+            "description": "Send a message to a specific Slack user.",
             "name": "User Name",
-            "description": "Send a message to specific Slack user.",
-            "id": "io.syndesis:slack-username-connector",
-            "pattern": "To",
-            "actionType": "connector",
-            "descriptor": {
-                "connectorCustomizers": [
-                    "io.syndesis.connector.slack.SlackChannelCustomizer"
-                ],
-                "inputDataShape": {
-                    "kind": "java",
-                    "type": "io.syndesis.connector.slack.SlackPlainMessage"
-                },
-                "outputDataShape": {
-                    "kind": "none"
-                },
-                "configuredProperties": {
-                },
-                "propertyDefinitionSteps": [
-                   {
-                        "name":"User Name",
-                        "description":"Send a message to a specific Slack user.",
-                        "properties":{
-                            "receiver": {
-                                "kind": "parameter",
-                                "displayName": "Username",
-                                "group": "common",
-                                "required": true,
-                                "type": "string",
-                                "javaType": "java.lang.String",
-                                "deprecated": false,
-                                "secret": false,
-                                "labelHint": "The name of the Slack user to send the message to."
-                            }
-                        }
-                    }
-                ]
+            "properties": {
+              "receiver": {
+                "deprecated": false,
+                "displayName": "Username",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The name of the Slack user to send the message to.",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
             }
+          }
+        ]
+      },
+      "id": "io.syndesis:slack-username-connector",
+      "name": "User Name",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Send a message to a specific Slack channel.",
+      "descriptor": {
+        "configuredProperties": {},
+        "connectorCustomizers": [
+          "io.syndesis.connector.slack.SlackChannelCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "type": "io.syndesis.connector.slack.SlackPlainMessage"
         },
-        {
-            "name": "Channel",
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
             "description": "Send a message to a specific Slack channel.",
-            "id": "io.syndesis:slack-channel-connector",
-            "pattern": "To",
-            "tags": [
-                "dynamic"
-            ],
-            "actionType": "connector",
-            "descriptor": {
-                "connectorCustomizers": [
-                    "io.syndesis.connector.slack.SlackChannelCustomizer"
-                ],
-                "inputDataShape": {
-                    "kind": "java",
-                    "type": "io.syndesis.connector.slack.SlackPlainMessage"
-                },
-                "outputDataShape": {
-                     "kind": "none"
-                },
-                "configuredProperties": {
-                },
-                "propertyDefinitionSteps": [
-                    {
-                        "name":"Channel",
-                        "description":"Send a message to a specific Slack channel.",
-                        "properties":{
-                            "channel": {
-                                "kind": "parameter",
-                                "displayName": "Channel",
-                                "group": "common",
-                                "required": true,
-                                "type": "string",
-                                "javaType": "java.lang.String",
-                                "deprecated": false,
-                                "secret": false,
-                                "labelHint": "The name of the Slack channel to send the message to."
-                            }
-                        }
-                    }
-                ]
+            "name": "Channel",
+            "properties": {
+              "channel": {
+                "deprecated": false,
+                "displayName": "Channel",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The name of the Slack channel to send the message to.",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
             }
+          }
+        ]
+      },
+      "id": "io.syndesis:slack-channel-connector",
+      "name": "Channel",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Read Messages from a specific channel",
+      "descriptor": {
+        "configuredProperties": {},
+        "inputDataShape": {
+          "kind": "none"
         },
-        {
-            "name": "Read Messages",
-            "description": "Read Messages from a specific channel",
-            "id": "io.syndesis:slack-channel-consumer-connector",
-            "pattern": "From",
-            "tags": [
-                "dynamic"
-            ],
-            "actionType": "connector",
-            "descriptor": {
-                "inputDataShape": {
-                    "kind": "none"
-                },
-                "outputDataShape": {
-                     "kind": "java",
-                     "type": "org.apache.camel.component.slack.helper.SlackMessage"
-                },
-                "configuredProperties": {
-                },
-                "propertyDefinitionSteps": [
-                    {
-                        "name":"Channel",
-                        "description":"Consume messages from a specific channel",
-                        "properties":{
-                            "channel": {
-                                "kind": "parameter",
-                                "displayName": "Channel",
-                                "group": "common",
-                                "required": true,
-                                "type": "string",
-                                "javaType": "java.lang.String",
-                                "deprecated": false,
-                                "secret": false,
-                                "labelHint": "The channel from where you want to consume",
-                                "order": "1"
-                            },
-                            "delay": {
-                                "kind": "parameter",
-                                "displayName": "Delay",
-                                "group": "scheduler",
-                                "label": "consumer,scheduler",
-                                "required": false,
-                                "type": "duration",
-                                "javaType": "long",
-                                "optionalPrefix": "consumer.",
-                                "deprecated": false,
-                                "secret": false,
-                                "defaultValue": 500,
-                                "labelHint": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
-                                "order": "2"
-                            },
-                            "maxResults": {
-                                "kind": "parameter",
-                                "displayName": "Maximum Messages to Retrieve",
-                                "group": "consumer",
-                                "label": "consumer",
-                                "required": false,
-                                "type": "string",
-                                "javaType": "java.lang.String",
-                                "deprecated": false,
-                                "secret": false,
-                                "defaultValue": "10",
-                                "labelHint": "Gets the maximum number of messages as a limit to poll at each polling. Is default unlimited but use 0 or negative number to disable it as unlimited.",
-                                "order": "3"
-                            }
-                        }
-                    }
-                ]
+        "outputDataShape": {
+          "kind": "java",
+          "type": "org.apache.camel.component.slack.helper.SlackMessage"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Consume messages from a specific channel",
+            "name": "Channel",
+            "properties": {
+              "channel": {
+                "deprecated": false,
+                "displayName": "Channel",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The channel from where you want to consume",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "delay": {
+                "defaultValue": 500,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
+                "optionalPrefix": "consumer.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "duration"
+              },
+              "maxResults": {
+                "defaultValue": "10",
+                "deprecated": false,
+                "displayName": "Maximum Messages to Retrieve",
+                "group": "consumer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Gets the maximum number of messages as a limit to poll at each polling. Is default unlimited but use 0 or negative number to disable it as unlimited.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
             }
-        }
-    ]
+          }
+        ]
+      },
+      "id": "io.syndesis:slack-channel-consumer-connector",
+      "name": "Read Messages",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    }
+  ],
+  "componentScheme": "slack",
+  "configuredProperties": {},
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Obtain and send messages.",
+  "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjEuOTQyIiBoZWlnaHQ9IjEyMS44NDIiPjxwYXRoIGQ9Ik03OS4wMyA3LjUxMWMtMS45LTUuNy04LTguOC0xMy43LTctNS43IDEuOS04LjggOC03IDEzLjdsMjguMSA4Ni40YzEuOSA1LjMgNy43IDguMyAxMy4yIDYuNyA1LjgtMS43IDkuMy03LjggNy40LTEzLjQgMC0uMi0yOC04Ni40LTI4LTg2LjR6IiBmaWxsPSIjZWNiMzJkIi8+PHBhdGggZD0iTTM1LjUzIDIxLjYxMWMtMS45LTUuNy04LTguOC0xMy43LTctNS43IDEuOS04LjggOC03IDEzLjdsMjguMSA4Ni40YzEuOSA1LjMgNy43IDguMyAxMy4yIDYuNyA1LjgtMS43IDkuMy03LjggNy40LTEzLjQgMC0uMi0yOC04Ni40LTI4LTg2LjR6IiBmaWxsPSIjNjNjMWEwIi8+PHBhdGggZD0iTTExNC40MyA3OS4wMTFjNS43LTEuOSA4LjgtOCA3LTEzLjctMS45LTUuNy04LTguOC0xMy43LTdsLTg2LjUgMjguMmMtNS4zIDEuOS04LjMgNy43LTYuNyAxMy4yIDEuNyA1LjggNy44IDkuMyAxMy40IDcuNC4yIDAgODYuNS0yOC4xIDg2LjUtMjguMXoiIGZpbGw9IiNlMDFhNTkiLz48cGF0aCBkPSJNMzkuMjMgMTAzLjUxMWM1LjYtMS44IDEyLjktNC4yIDIwLjctNi43LTEuOC01LjYtNC4yLTEyLjktNi43LTIwLjdsLTIwLjcgNi43eiIgZmlsbD0iIzMzMTQzMyIvPjxwYXRoIGQ9Ik04Mi44MyA4OS4zMTFjNy44LTIuNSAxNS4xLTQuOSAyMC43LTYuNy0xLjgtNS42LTQuMi0xMi45LTYuNy0yMC43bC0yMC43IDYuN3oiIGZpbGw9IiNkNjIwMjciLz48cGF0aCBkPSJNMTAwLjIzIDM1LjUxMWM1LjctMS45IDguOC04IDctMTMuNy0xLjktNS43LTgtOC44LTEzLjctN2wtODYuNCAyOC4xYy01LjMgMS45LTguMyA3LjctNi43IDEzLjIgMS43IDUuOCA3LjggOS4zIDEzLjQgNy40LjIgMCA4Ni40LTI4IDg2LjQtMjh6IiBmaWxsPSIjODlkM2RmIi8+PHBhdGggZD0iTTI1LjEzIDU5LjkxMWM1LjYtMS44IDEyLjktNC4yIDIwLjctNi43LTIuNS03LjgtNC45LTE1LjEtNi43LTIwLjdsLTIwLjcgNi43eiIgZmlsbD0iIzI1OGI3NCIvPjxwYXRoIGQ9Ik02OC42MyA0NS44MTFjNy44LTIuNSAxNS4xLTQuOSAyMC43LTYuNy0yLjUtNy44LTQuOS0xNS4xLTYuNy0yMC43bC0yMC43IDYuN3oiIGZpbGw9IiM4MTljM2MiLz48L3N2Zz4=",
+  "id": "slack",
+  "name": "Slack",
+  "properties": {
+    "iconEmoji": {
+      "deprecated": false,
+      "displayName": "Message Avatar Emoji",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The Slack emoji that will be used for the message avatar.",
+      "order": "4",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "iconUrl": {
+      "deprecated": false,
+      "displayName": "Message Avatar Icon URL",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The avatar that the connection will use when sending messages to a channel or user.",
+      "order": "5",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "token": {
+      "deprecated": false,
+      "displayName": "Token for Accessing Slack API",
+      "group": "consumer",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The token to use for obtaining messages from a Slack channel.",
+      "order": "2",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
+    "username": {
+      "deprecated": false,
+      "displayName": "Sending User Name for Messages",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The user name that the bot will have when sending messages to a channel or user.",
+      "order": "3",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "webhookUrl": {
+      "deprecated": false,
+      "displayName": "Slack Webhook URL",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The webhook URL to send messages to.",
+      "order": "1",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
 }

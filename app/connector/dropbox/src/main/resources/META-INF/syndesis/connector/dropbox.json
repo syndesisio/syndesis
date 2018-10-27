@@ -1,146 +1,146 @@
 {
-    "id": "dropbox",
-    "name": "Dropbox",
-    "description": "Download and upload files.",
-    "icon": "fa-dropbox",
-    "dependencies": [
-        {
-            "type": "MAVEN",
-            "id": "@project.groupId@:@project.artifactId@:@project.version@"
-        }
-    ],
-    "componentScheme": "dropbox",
-    "tags": [
-        "verifier"
-    ],
-    "properties": {
-        "accessToken": {
-            "kind": "parameter",
-            "displayName": "Access Token",
-            "group": "common,security",
-            "required": true,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": true,
-            "componentProperty": true,
-            "order": "1",
-            "labelHint": "The access token to make API requests for a specific Dropbox user"
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Upload a file to Dropbox",
+      "descriptor": {
+        "componentScheme": "dropbox",
+        "configuredProperties": {
+          "operation": "put"
         },
-        "clientIdentifier": {
-            "kind": "parameter",
-            "displayName": "Client identifier",
-            "group": "common,security",
-            "required": true,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": false,
-            "componentProperty": true,
-            "order": "2",
-            "labelHint": "Name of the app registered to make API requests"
-        }
-    },
-    "actions": [
-        {
-            "name": "Upload",
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
             "description": "Upload a file to Dropbox",
-            "id": "io.syndesis:dropbox-upload-connector",
-            "pattern": "To",
-            "actionType": "connector",
-            "descriptor": {
-                "componentScheme": "dropbox",
-                "inputDataShape": {
-                    "kind": "any"
-                },
-                "outputDataShape":{
-                    "kind":"none"
-                },
-                "configuredProperties": {
-                    "operation": "put"
-                },
-                "propertyDefinitionSteps": [
-                    {
-                        "name": "Upload a file to Dropbox",
-                        "description": "Upload a file to Dropbox",
-                        "properties": {
-                            "uploadMode": {
-                                "kind": "parameter",
-                                "displayName": "Upload mode",
-                                "group": "producer",
-                                "required": true,
-                                "type": "string",
-                                "javaType": "java.lang.String",
-                                "enum": [
-                                    {
-                                        "value": "add",
-                                        "label": "Add"
-                                    },
-                                    {
-                                        "value": "force",
-                                        "label": "Force"
-                                    }
-                                ],
-                                "deprecated": false,
-                                "secret": false,
-                                "order": "2",
-                                "labelHint": "File upload mode"
-                            },
-                            "remotePath": {
-                                "kind": "parameter",
-                                "displayName": "Remote path",
-                                "group": "producer",
-                                "required": true,
-                                "type": "string",
-                                "javaType": "java.lang.String",
-                                "deprecated": false,
-                                "secret": false,
-                                "order": "1",
-                                "labelHint": "Remote path to upload the file to"
-                            }
-                        }
-                    }
-                ]
+            "name": "Upload a file to Dropbox",
+            "properties": {
+              "remotePath": {
+                "deprecated": false,
+                "displayName": "Remote path",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Remote path to upload the file to",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "uploadMode": {
+                "deprecated": false,
+                "displayName": "Upload mode",
+                "enum": [
+                  {
+                    "label": "Add",
+                    "value": "add"
+                  },
+                  {
+                    "label": "Force",
+                    "value": "force"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "File upload mode",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
             }
+          }
+        ]
+      },
+      "id": "io.syndesis:dropbox-upload-connector",
+      "name": "Upload",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Download from Dropbox",
+      "descriptor": {
+        "component-scheme": "dropbox",
+        "configuredProperties": {
+          "bridgeErrorHandler": "true",
+          "operation": "get"
         },
-        {
-            "name": "Download",
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
             "description": "Download from Dropbox",
-            "id": "io.syndesis:dropbox-download-connector",
-            "pattern": "From",
-            "actionType": "connector",
-            "descriptor": {
-                "component-scheme": "dropbox",
-                "inputDataShape": {
-                    "kind": "none"
-                },
-                "outputDataShape": {
-                    "kind": "any"
-                },
-                "configuredProperties": {
-                    "operation":"get",
-                    "bridgeErrorHandler":"true"
-                },
-                "propertyDefinitionSteps": [
-                    {
-                        "name": "Download from Dropbox",
-                        "description": "Download from Dropbox",
-                        "properties": {
-                            "remotePath": {
-                                "kind": "parameter",
-                                "displayName": "Folder or file name path to download",
-                                "group": "consumer",
-                                "required": true,
-                                "type": "string",
-                                "javaType": "java.lang.String",
-                                "deprecated": false,
-                                "secret": false,
-                                "labelHint": "Folder or file name path to download"
-                            }
-                        }
-                    }
-                ]
+            "name": "Download from Dropbox",
+            "properties": {
+              "remotePath": {
+                "deprecated": false,
+                "displayName": "Folder or file name path to download",
+                "group": "consumer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Folder or file name path to download",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
             }
-        }
-    ]
+          }
+        ]
+      },
+      "id": "io.syndesis:dropbox-download-connector",
+      "name": "Download",
+      "pattern": "From"
+    }
+  ],
+  "componentScheme": "dropbox",
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Download and upload files.",
+  "icon": "data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMzUuNDUgMjAwIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6IzAwNjFmZn08L3N0eWxlPjwvZGVmcz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik01OC44NiAwTDAgMzcuNSA1OC44NiA3NWw1OC44Ny0zNy41TDU4Ljg2IDB6TTE3Ni41OSAwbC01OC44NiAzNy41TDE3Ni41OSA3NWw1OC44Ni0zNy41TDE3Ni41OSAwek0wIDExMi41TDU4Ljg2IDE1MGw1OC44Ny0zNy41TDU4Ljg2IDc1IDAgMTEyLjV6TTE3Ni41OSA3NWwtNTguODYgMzcuNSA1OC44NiAzNy41IDU4Ljg2LTM3LjVMMTc2LjU5IDc1ek01OC44NiAxNjIuNWw1OC44NyAzNy41IDU4Ljg2LTM3LjUtNTguODYtMzcuNS01OC44NyAzNy41eiIvPjwvc3ZnPg==",
+  "id": "dropbox",
+  "name": "Dropbox",
+  "properties": {
+    "accessToken": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Access Token",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The access token to make API requests for a specific Dropbox user",
+      "order": "1",
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
+    "clientIdentifier": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Client identifier",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Name of the app registered to make API requests",
+      "order": "2",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
 }
