@@ -1,39 +1,13 @@
 {
-  "id": "telegram",
-  "name": "Telegram",
-  "description": "Send and receive messages to/from a Telegram chat",
-  "icon": "data:img/svg;base64,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",
-  "dependencies": [
-      {
-           "type": "MAVEN",
-           "id": "@project.groupId@:@project.artifactId@:@project.version@"
-      }
-  ],
-  "properties": {
-    "authorizationToken": {
-      "kind": "property",
-      "displayName": "Authorization Token",
-      "group": "security",
-      "label": "security",
-      "required": true,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "tags": [],
-      "deprecated": false,
-      "secret": true,
-      "componentProperty": false,
-      "description": "Telegram Bot Authorization Token that can be obtained from the Telegram BotFather"
-    }
-  },
   "actions": [
     {
-      "name": "Receive Messages",
-      "description": "Receive all messages sent to the chat bot",
-      "id": "io.syndesis:telegram-chat-from-action",
-      "pattern": "From",
       "actionType": "connector",
+      "description": "Receive all messages sent to the chat bot",
       "descriptor": {
         "componentScheme": "telegram",
+        "configuredProperties": {
+          "type": "bots"
+        },
         "inputDataShape": {
           "kind": "none"
         },
@@ -41,20 +15,23 @@
           "kind": "java",
           "type": "org.apache.camel.component.telegram.model.IncomingMessage"
         },
+        "propertyDefinitionSteps": []
+      },
+      "id": "io.syndesis:telegram-chat-from-action",
+      "name": "Receive Messages",
+      "pattern": "From"
+    },
+    {
+      "actionType": "connector",
+      "description": "Send a messages to the chat (through the bot).",
+      "descriptor": {
+        "componentScheme": "telegram",
         "configuredProperties": {
           "type": "bots"
         },
-        "propertyDefinitionSteps": []
-      }
-    },
-    {
-      "name": "Send a Text Message",
-      "description": "Send a messages to the chat (through the bot).",
-      "id": "io.syndesis:telegram-chat-to-action",
-      "pattern": "To",
-      "actionType": "connector",
-      "descriptor": {
-        "componentScheme": "telegram",
+        "connectorCustomizers": [
+          "io.syndesis.connector.telegram.TelegramSendMessageCustomizer"
+        ],
         "inputDataShape": {
           "kind": "java",
           "type": "org.apache.camel.component.telegram.model.OutgoingTextMessage"
@@ -62,34 +39,57 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "connectorCustomizers": [
-          "io.syndesis.connector.telegram.TelegramSendMessageCustomizer"
-        ],
-        "configuredProperties": {
-          "type": "bots"
-        },
         "propertyDefinitionSteps": [
-            {
-                "description": "Chat id",
-                "name": "chatId",
-                "properties": {
-                    "chatId": {
-                        "componentProperty": false,
-                        "deprecated": false,
-                        "description": "The telegram's Chat Id, if not set will use CamelTelegramChatId from the incoming exchange.",
-                        "displayName": "Chat Id",
-                        "javaType": "String",
-                        "kind": "parameter",
-                        "required": false,
-                        "secret": false,
-                        "type": "string",
-                        "tags": [],
-                        "enum": []
-                    }
-                }
+          {
+            "description": "Chat id",
+            "name": "chatId",
+            "properties": {
+              "chatId": {
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "The telegram's Chat Id, if not set will use CamelTelegramChatId from the incoming exchange.",
+                "displayName": "Chat Id",
+                "enum": [],
+                "javaType": "String",
+                "kind": "parameter",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              }
             }
+          }
         ]
-      }
+      },
+      "id": "io.syndesis:telegram-chat-to-action",
+      "name": "Send a Text Message",
+      "pattern": "To"
     }
-  ]
+  ],
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Send and receive messages to/from a Telegram chat",
+  "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgMjQwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIuNjY3IiB5MT0iLjE2NyIgeDI9Ii40MTciIHkyPSIuNzUiPjxzdG9wIHN0b3AtY29sb3I9IiMzN2FlZTIiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiMxZTk2YzgiIG9mZnNldD0iMSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iLjY2IiB5MT0iLjQzNyIgeDI9Ii44NTEiIHkyPSIuODAyIj48c3RvcCBzdG9wLWNvbG9yPSIjZWZmN2ZjIiBvZmZzZXQ9IjAiLz48c3RvcCBzdG9wLWNvbG9yPSIjZmZmIiBvZmZzZXQ9IjEiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48Y2lyY2xlIGN4PSIxMjAiIGN5PSIxMjAiIHI9IjEyMCIgZmlsbD0idXJsKCNhKSIvPjxwYXRoIGZpbGw9IiNjOGRhZWEiIGQ9Ik05OCAxNzVjLTMuODg4IDAtMy4yMjctMS40NjgtNC41NjgtNS4xN0w4MiAxMzIuMjA3IDE3MCA4MCIvPjxwYXRoIGZpbGw9IiNhOWM5ZGQiIGQ9Ik05OCAxNzVjMyAwIDQuMzI1LTEuMzcyIDYtM2wxNi0xNS41NTgtMTkuOTU4LTEyLjAzNSIvPjxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0xMDAuMDQgMTQ0LjQxbDQ4LjM2IDM1LjcyOWM1LjUxOSAzLjA0NSA5LjUwMSAxLjQ2OCAxMC44NzYtNS4xMjNsMTkuNjg1LTkyLjc2M2MyLjAxNS04LjA4LTMuMDgtMTEuNzQ2LTguMzYtOS4zNDlsLTExNS41OSA0NC41NzFjLTcuODkgMy4xNjUtNy44NDMgNy41NjctMS40MzggOS41MjhsMjkuNjYzIDkuMjU5IDY4LjY3My00My4zMjVjMy4yNDItMS45NjYgNi4yMTgtLjkxIDMuNzc2IDEuMjU4Ii8+PC9zdmc+",
+  "id": "telegram",
+  "name": "Telegram",
+  "properties": {
+    "authorizationToken": {
+      "componentProperty": false,
+      "deprecated": false,
+      "description": "Telegram Bot Authorization Token that can be obtained from the Telegram BotFather",
+      "displayName": "Authorization Token",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "required": true,
+      "secret": true,
+      "tags": [],
+      "type": "string"
+    }
+  }
 }

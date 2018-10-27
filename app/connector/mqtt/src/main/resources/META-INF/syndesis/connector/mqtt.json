@@ -1,150 +1,146 @@
 {
-    "id": "mqtt",
-    "name": "MQTT Message Broker",
-    "description": "Subscribe for and publish messages.",
-    "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAzMDAgMzAwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzMDAgMzAwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojODMyRUFCO30NCgkuc3Qxe2ZpbGw6I0JBQkFCQTt9DQoJLnN0MntmaWxsOm5vbmU7fQ0KCS5zdDN7ZmlsbDojOERDNjNGO30NCgkuc3Q0e2ZpbGw6IzBGOUJENzt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRkZGRkZGO30NCgkuc3Q3e2ZpbGw6IzFEQTFGMjt9DQoJLnN0OHtmaWxsOiMzRDVBOTg7fQ0KCS5zdDl7ZmlsbDojMjMxRjIwO30NCgkuc3QxMHtmaWxsOiMwMDdCQjU7fQ0KCS5zdDExe2ZpbGw6I0RDNEU0MTt9DQoJLnN0MTJ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojMTgxNjE2O30NCgkuc3QxM3tmaWxsOiMxODE2MTY7fQ0KCS5zdDE0e2ZpbGw6I0YyRjJGMjt9DQoJLnN0MTV7ZmlsbDojRTNFM0UzO30NCgkuc3QxNntmaWxsOiNENTRCM0Q7fQ0KCS5zdDE3e2ZpbGw6I0Q3MkIyNzt9DQoJLnN0MTh7b3BhY2l0eTowLjU2O2ZpbGw6dXJsKCNTVkdJRF8xXyk7fQ0KCS5zdDE5e2ZpbGw6IzkyRDQwMDt9DQoJLnN0MjB7ZmlsbDojMDBCOUU0O30NCgkuc3QyMXtmaWxsOiMyQjM5OTA7fQ0KCS5zdDIye2ZpbGw6IzNGOUMzNTt9DQoJLnN0MjN7ZmlsbDojOEZDRUQ4O30NCgkuc3QyNHtmaWxsOiNEMjFGMjE7fQ0KCS5zdDI1e2ZpbGw6I0Q2RDZENjt9DQoJLnN0MjZ7ZmlsbDojRjFGMUYxO30NCgkuc3QyN3tmaWxsOiNDMzIyNjU7fQ0KCS5zdDI4e2ZpbGw6IzhDMzEyMzt9DQoJLnN0Mjl7ZmlsbDojRTA1MjQzO30NCgkuc3QzMHtmaWxsOiM1RTFGMTg7fQ0KCS5zdDMxe2ZpbGw6I0YyQjBBOTt9DQoJLnN0MzJ7ZmlsbDojQ0FDQ0NFO30NCgkuc3QzM3tmaWxsOiNBMUFGREI7fQ0KCS5zdDM0e2ZpbGw6IzAwMjA4Nzt9DQo8L3N0eWxlPg0KPGc+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTI3NS4xLDMwMEgyNC45QzExLjEsMzAwLDAsMjg4LjksMCwyNzUuMVYyNC45QzAsMTEuMSwxMS4xLDAsMjQuOSwwaDI1MC4yQzI4OC45LDAsMzAwLDExLjEsMzAwLDI0Ljl2MjUwLjINCgkJQzMwMCwyODguOSwyODguOSwzMDAsMjc1LjEsMzAweiIvPg0KPC9nPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNzU7IiB3aWR0aD0iOTUzIiBoZWlnaHQ9Ijk1MyIgeGxpbms6aHJlZj0iQUI5NEVBNTAyMDcxN0ExQS5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgwLjI0IDAgMCAwLjI0IDQyLjcxNSA0Mi43MTUpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8Zz4NCgkJCTxnPg0KCQkJCTxwYXRoIGNsYXNzPSJzdDUiIGQ9Ik0xMzkuNCwxODUuNWMxMi45LDE4LjcsMjAuOSw0Mi4yLDIzLjgsNjkuN2gzMi45Yy0yLjQtMzQuNi0xMS44LTY0LjQtMjcuOC04OC43Yy0xMy0xOS43LTMwLjUtMzUuOS01Mi00OA0KCQkJCQljLTMxLjktMTgtNjMuNC0yMS44LTcxLjYtMjIuNXYzOS4zYzYuNywwLjEsMjkuNSwxLjUsNTMuNywxNC4xQzExNS4xLDE1OC4xLDEyOC44LDE3MC4yLDEzOS40LDE4NS41eiIvPg0KCQkJPC9nPg0KCQkJPGc+DQoJCQkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTI1NS4zLDkxLjV2LTI5YzAtOS44LTgtMTcuOC0xNy44LTE3LjhIMjA3QzIyMS40LDU0LjQsMjQxLjMsNzAuMywyNTUuMyw5MS41eiIvPg0KCQkJPC9nPg0KCQkJPGc+DQoJCQkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTE4Ni41LDQ0LjdoLTc1LjdjMTEuOSw0LjYsMjUuNSwxMSwzOS43LDE5LjhjMjUuNCwxNS44LDQ3LjYsMzYuMSw2Niw2MC41YzE1LjksMjEuMiwyOC45LDQ1LjQsMzguOSw3Mi40DQoJCQkJCXYtODMuM0MyMzkuNyw3Ni4xLDE5Ny4yLDUwLjYsMTg2LjUsNDQuN3oiLz4NCgkJCTwvZz4NCgkJCTxnPg0KCQkJCTxwYXRoIGNsYXNzPSJzdDUiIGQ9Ik0xMzAuNywxOTEuOWMtOS41LTEzLjktMjEuOS0yNC45LTM2LjgtMzIuN2MtMjItMTEuNS00My4yLTEyLjktNDkuMi0xMy4xdjkxLjRjMCw5LjgsOCwxNy44LDE3LjgsMTcuOA0KCQkJCQloODkuOUMxNDkuNiwyMzAuMSwxNDIuMywyMDguOCwxMzAuNywxOTEuOXoiLz4NCgkJCTwvZz4NCgkJCTxnPg0KCQkJCTxwYXRoIGNsYXNzPSJzdDUiIGQ9Ik0yMDguMSwxMzEuOGMtMTcuNS0yMy4zLTM4LjYtNDIuOC02Mi44LTU3LjljLTMyLjMtMjAuMS02MS43LTI3LjEtNzMuMi0yOS4yaC05LjZjLTkuOCwwLTE3LjgsOC0xNy44LDE3LjgNCgkJCQkJdjIyLjhjNy42LDAuNSw0MS4zLDQsNzYuNCwyMy43YzIzLjEsMTMsNDEuOSwzMC4zLDU1LjksNTEuNGMxNy4zLDI2LDI3LjMsNTcuOSwyOS43LDk0LjhoMzAuN2M5LjgsMCwxNy44LTgsMTcuOC0xNy44di00DQoJCQkJCUMyNDUuMiwxOTQuNCwyMjkuMywxNjAuMSwyMDguMSwxMzEuOHoiLz4NCgkJCTwvZz4NCgkJPC9nPg0KCTwvZz4NCjwvZz4NCjwvc3ZnPg0K",
-    "dependencies": [
-        {
-            "type": "MAVEN",
-            "id": "@project.groupId@:@project.artifactId@:@project.version@"
-        }
-    ],
-    "componentScheme": "paho",
-    "configuredProperties": {
-
-    },
-    "tags": [
-        "verifier"
-    ],
-    "properties": {
-        "brokerUrl": {
-            "kind": "parameter",
-            "displayName": "MQTT broker URL",
-            "group": "common",
-            "required": true,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": false,
-            "labelHint": "MQTT broker URL",
-            "placeholder": "eg 'tcp://localhost:1833'",
-            "order": "1"
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Publish a message to a MQTT Broker",
+      "descriptor": {
+        "configuredProperties": {},
+        "inputDataShape": {
+          "kind": "any"
         },
-        "userName": {
-            "kind": "property",
-            "displayName": "User Name",
-            "group": "security",
-            "label": "common,security",
-            "required": false,
-            "componentProperty": true,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": false,
-            "labelHint": "Access the broker with this user’s authorization credentials.",
-            "order": "2"
+        "outputDataShape": {
+          "kind": "none"
         },
-        "password": {
-            "kind": "property",
-            "displayName": "Password",
-            "group": "security",
-            "label": "common,security",
-            "required": false,
-            "componentProperty": true,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": true,
-            "labelHint": "Password for the specified user account.",
-            "order": "3"
-        },
-        "clientId": {
-            "kind": "property",
-            "displayName": "Client ID",
-            "group": "security",
-            "label": "common,security",
-            "required": false,
-            "componentProperty": true,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "deprecated": false,
-            "secret": false,
-            "labelHint": "MQTT client Identifier",
-            "order": "4"
-       }
-    },
-    "actions": [
-        {
+        "propertyDefinitionSteps": [
+          {
+            "description": "Publish a message from MQTT Broker",
             "name": "Publish",
-            "description": "Publish a message to a MQTT Broker",
-            "id": "io.syndesis:paho-publish-connector",
-            "pattern": "To",
-            "actionType": "connector",
-            "descriptor": {
-                "inputDataShape": {
-                    "kind": "any"
-                },
-                "outputDataShape": {
-                    "kind": "none"
-                },
-                "configuredProperties": {
-                },
-                "propertyDefinitionSteps": [
-                   {
-                        "name":"Publish",
-                        "description":"Publish a message from MQTT Broker",
-                        "properties":{
-                            "topic": {
-                                "kind": "path",
-                                "displayName": "MQTT queue/topic name",
-                                "group": "common",
-                                "required": true,
-                                "type": "string",
-                                "javaType": "java.lang.String",
-                                "deprecated": false,
-                                "secret": false,
-                                "labelHint": "MQTT queue/topic name"
-                            }
-                        }
-                    }
-                ]
+            "properties": {
+              "topic": {
+                "deprecated": false,
+                "displayName": "MQTT queue/topic name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "MQTT queue/topic name",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
             }
+          }
+        ]
+      },
+      "id": "io.syndesis:paho-publish-connector",
+      "name": "Publish",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Receive a message from MQTT Broker",
+      "descriptor": {
+        "configuredProperties": {},
+        "inputDataShape": {
+          "kind": "none"
         },
-        {
-            "name": "Subscribe",
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
             "description": "Receive a message from MQTT Broker",
-            "id": "io.syndesis:mqtt-subscribe-connector",
-            "pattern": "From",
-            "actionType": "connector",
-            "descriptor": {
-                "inputDataShape": {
-                    "kind": "none"
-                },
-                "outputDataShape": {
-                    "kind": "any"
-                },
-                "configuredProperties": {
-                },
-                "propertyDefinitionSteps": [
-                    {
-                        "name":"Subscribe",
-                        "description":"Receive a message from MQTT Broker",
-                        "properties":{
-                            "topic": {
-                                "kind": "path",
-                                "displayName": "MQTT queue/topic name",
-                                "group": "common",
-                                "required": true,
-                                "type": "string",
-                                "javaType": "java.lang.String",
-                                "deprecated": false,
-                                "secret": false,
-                                "labelHint": "MQTT queue/topic name"
-                            }
-                        }
-                    }
-                ]
+            "name": "Subscribe",
+            "properties": {
+              "topic": {
+                "deprecated": false,
+                "displayName": "MQTT queue/topic name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "MQTT queue/topic name",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
             }
-        }
-    ]
+          }
+        ]
+      },
+      "id": "io.syndesis:mqtt-subscribe-connector",
+      "name": "Subscribe",
+      "pattern": "From"
+    }
+  ],
+  "componentScheme": "paho",
+  "configuredProperties": {},
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Subscribe for and publish messages.",
+  "icon": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwIiB5PSIwIiB2aWV3Qm94PSIwIDAgMzAwIDMwMCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHN0eWxlPi5zdDV7ZmlsbDojZmZmfTwvc3R5bGU+PHBhdGggZD0iTTI3NS4xIDMwMEgyNC45QzExLjEgMzAwIDAgMjg4LjkgMCAyNzUuMVYyNC45QzAgMTEuMSAxMS4xIDAgMjQuOSAwaDI1MC4yQzI4OC45IDAgMzAwIDExLjEgMzAwIDI0Ljl2MjUwLjJjMCAxMy44LTExLjEgMjQuOS0yNC45IDI0Ljl6IiBmaWxsPSIjODMyZWFiIi8+PGltYWdlIHdpZHRoPSI5NTMiIGhlaWdodD0iOTUzIiB4bGluazpocmVmPSJBQjk0RUE1MDIwNzE3QTFBLnBuZyIgdHJhbnNmb3JtPSJtYXRyaXgoLjI0IDAgMCAuMjQgNDIuNzE1IDQyLjcxNSkiIG92ZXJmbG93PSJ2aXNpYmxlIiBvcGFjaXR5PSIuNzUiLz48cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMTM5LjQgMTg1LjVjMTIuOSAxOC43IDIwLjkgNDIuMiAyMy44IDY5LjdoMzIuOWMtMi40LTM0LjYtMTEuOC02NC40LTI3LjgtODguNy0xMy0xOS43LTMwLjUtMzUuOS01Mi00OC0zMS45LTE4LTYzLjQtMjEuOC03MS42LTIyLjV2MzkuM2M2LjcuMSAyOS41IDEuNSA1My43IDE0LjEgMTYuNyA4LjcgMzAuNCAyMC44IDQxIDM2LjF6TTI1NS4zIDkxLjV2LTI5YzAtOS44LTgtMTcuOC0xNy44LTE3LjhIMjA3YzE0LjQgOS43IDM0LjMgMjUuNiA0OC4zIDQ2Ljh6TTE4Ni41IDQ0LjdoLTc1LjdjMTEuOSA0LjYgMjUuNSAxMSAzOS43IDE5LjggMjUuNCAxNS44IDQ3LjYgMzYuMSA2NiA2MC41IDE1LjkgMjEuMiAyOC45IDQ1LjQgMzguOSA3Mi40di04My4zYy0xNS43LTM4LTU4LjItNjMuNS02OC45LTY5LjR6Ii8+PHBhdGggY2xhc3M9InN0NSIgZD0iTTEzMC43IDE5MS45Yy05LjUtMTMuOS0yMS45LTI0LjktMzYuOC0zMi43LTIyLTExLjUtNDMuMi0xMi45LTQ5LjItMTMuMXY5MS40YzAgOS44IDggMTcuOCAxNy44IDE3LjhoODkuOWMtMi44LTI1LjItMTAuMS00Ni41LTIxLjctNjMuNHpNMjA4LjEgMTMxLjhjLTE3LjUtMjMuMy0zOC42LTQyLjgtNjIuOC01Ny45QzExMyA1My44IDgzLjYgNDYuOCA3Mi4xIDQ0LjdoLTkuNmMtOS44IDAtMTcuOCA4LTE3LjggMTcuOHYyMi44YzcuNi41IDQxLjMgNCA3Ni40IDIzLjcgMjMuMSAxMyA0MS45IDMwLjMgNTUuOSA1MS40IDE3LjMgMjYgMjcuMyA1Ny45IDI5LjcgOTQuOGgzMC43YzkuOCAwIDE3LjgtOCAxNy44LTE3Ljh2LTRjLTEwLTM5LTI1LjktNzMuMy00Ny4xLTEwMS42eiIvPjwvc3ZnPg==",
+  "id": "mqtt",
+  "name": "MQTT Message Broker",
+  "properties": {
+    "brokerUrl": {
+      "deprecated": false,
+      "displayName": "MQTT broker URL",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "MQTT broker URL",
+      "order": "1",
+      "placeholder": "eg 'tcp://localhost:1833'",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "clientId": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Client ID",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "MQTT client Identifier",
+      "order": "4",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "password": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Password for the specified user account.",
+      "order": "3",
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "userName": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "User Name",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Access the broker with this user’s authorization credentials.",
+      "order": "2",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
 }

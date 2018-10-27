@@ -1,140 +1,140 @@
 {
-      "id": "log",
-      "name": "Log",
-      "description": "Log the exchange with different options",
-      "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDI0NiAzMDAiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDI0NiAzMDA7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiM4MzJFQUI7fQ0KCS5zdDF7ZmlsbDojRkVDRDAwO30NCgkuc3Qye2ZpbGw6IzAwQUVFRjt9DQoJLnN0M3tmaWxsOm5vbmU7fQ0KCS5zdDR7ZmlsbDojOERDNjNGO30NCgkuc3Q1e2ZpbGw6IzBGOUJENzt9DQoJLnN0NntmaWxsOiNGRkZGRkY7fQ0KCS5zdDd7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRkZGRkZGO30NCgkuc3Q4e2ZpbGw6IzFEQTFGMjt9DQoJLnN0OXtmaWxsOiMzRDVBOTg7fQ0KCS5zdDEwe2ZpbGw6IzIzMUYyMDt9DQoJLnN0MTF7ZmlsbDojMDA3QkI1O30NCgkuc3QxMntmaWxsOiNEQzRFNDE7fQ0KCS5zdDEze2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzE4MTYxNjt9DQoJLnN0MTR7ZmlsbDojMTgxNjE2O30NCgkuc3QxNXtmaWxsOiNGMkYyRjI7fQ0KCS5zdDE2e2ZpbGw6I0UzRTNFMzt9DQoJLnN0MTd7ZmlsbDojRDU0QjNEO30NCgkuc3QxOHtmaWxsOiNENzJCMjc7fQ0KCS5zdDE5e29wYWNpdHk6MC41NjtmaWxsOnVybCgjU1ZHSURfMV8pO30NCgkuc3QyMHtmaWxsOiNCQUJBQkE7fQ0KCS5zdDIxe2ZpbGw6IzkyRDQwMDt9DQoJLnN0MjJ7ZmlsbDojMDBCOUU0O30NCgkuc3QyM3tmaWxsOiMyQjM5OTA7fQ0KCS5zdDI0e2ZpbGw6IzNGOUMzNTt9DQoJLnN0MjV7ZmlsbDojOEZDRUQ4O30NCgkuc3QyNntmaWxsOiNEMjFGMjE7fQ0KCS5zdDI3e2ZpbGw6I0ZGRjhEQTt9DQoJLnN0Mjh7ZmlsbDojQzMyMjY1O30NCgkuc3QyOXtmaWxsOiNENkQ2RDY7fQ0KCS5zdDMwe2ZpbGw6I0YxRjFGMTt9DQoJLnN0MzF7ZmlsbDojOEMzMTIzO30NCgkuc3QzMntmaWxsOiNFMDUyNDM7fQ0KCS5zdDMze2ZpbGw6IzVFMUYxODt9DQoJLnN0MzR7ZmlsbDojRjJCMEE5O30NCgkuc3QzNXtmaWxsOiNDQUNDQ0U7fQ0KCS5zdDM2e2ZpbGw6I0ExQUZEQjt9DQoJLnN0Mzd7ZmlsbDojMDAyMDg3O30NCgkuc3QzOHtmaWxsOiM2QzQxOTk7fQ0KCS5zdDM5e2ZpbGw6I0M3QzdDNzt9DQoJLnN0NDB7ZmlsbDojMTk3NkQyO30NCgkuc3Q0MXtmaWxsOiMxRTg4RTU7fQ0KCS5zdDQye2ZpbGw6I0ZBRkFGQTt9DQoJLnN0NDN7ZmlsbDojRTBFMEUwO30NCgkuc3Q0NHtmaWxsOiNGNkExMUY7fQ0KCS5zdDQ1e2ZpbGw6IzBBNkRBRTt9DQoJLnN0NDZ7ZmlsbDojMEJBMjVFO30NCgkuc3Q0N3tmaWxsOiMwODkxNTY7fQ0KCS5zdDQ4e2ZpbGw6IzEwOTg1Qjt9DQoJLnN0NDl7ZmlsbDojRjlDOTQxO30NCgkuc3Q1MHtmaWxsOiNFOEI4MzU7fQ0KCS5zdDUxe2ZpbGw6IzI5NkFEOTt9DQoJLnN0NTJ7ZmlsbDojMkE3MUU5O30NCgkuc3Q1M3tmaWxsOiMyODZFRTY7fQ0KCS5zdDU0e2ZpbGw6IzAwOTQ0NDt9DQoJLnN0NTV7ZmlsbDojMDA2ODM4O30NCgkuc3Q1NntmaWxsOiNCQ0JFQzA7fQ0KCS5zdDU3e2ZpbGw6IzJCQjY3Mzt9DQoJLnN0NTh7ZmlsbDojRjc5NDFFO30NCgkuc3Q1OXtmaWxsOiNFRjQxMzY7fQ0KCS5zdDYwe2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6MTA7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2MXtmaWxsOiNEMUQzRDQ7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjEwO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjJ7ZmlsbDojMjMxRjIwO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDoxMDtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDYze2ZpbGw6bm9uZTtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6MTA7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDY0e2ZpbGw6bm9uZTtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6MTA7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2NXtmaWxsOiNFMURGRTQ7fQ0KCS5zdDY2e2ZpbGw6IzM1NDc0Rjt9DQoJLnN0Njd7ZmlsbDojRkMwMDJGO30NCgkuc3Q2OHtmaWxsOiNGREQ1MTg7fQ0KCS5zdDY5e2ZpbGw6IzAwRTc2OTt9DQoJLnN0NzB7ZmlsbDojRDFEM0Q0O30NCgkuc3Q3MXtmaWxsOiMyN0FBRTE7fQ0KCS5zdDcye2ZpbGw6IzIzMUYyMDtzdHJva2U6IzI3QUFFMTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NzN7ZmlsbDp1cmwoI1NWR0lEXzJfKTt9DQoJLnN0NzR7ZmlsbDp1cmwoI1NWR0lEXzNfKTt9DQoJLnN0NzV7ZmlsbDp1cmwoI1NWR0lEXzRfKTt9DQoJLnN0NzZ7ZmlsbDp1cmwoI1NWR0lEXzVfKTt9DQoJLnN0Nzd7ZmlsbDp1cmwoI1NWR0lEXzZfKTt9DQoJLnN0Nzh7ZmlsbDp1cmwoI1NWR0lEXzdfKTt9DQo8L3N0eWxlPg0KPGcgaWQ9IkxheWVyXzEiPg0KCTxnPg0KCQk8cGF0aCBjbGFzcz0ic3QxMCIgZD0iTTE1Mi4xLDE2Ni4ySDI0LjdjLTIuMSwwLTMuNy0xLjctMy43LTMuN2MwLTIuMSwxLjctMy43LDMuNy0zLjdoMTI3LjRjMi4xLDAsMy43LDEuNywzLjcsMy43DQoJCQlDMTU1LjgsMTY0LjUsMTU0LjEsMTY2LjIsMTUyLjEsMTY2LjJ6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDEwIiBkPSJNMTUyLjcsMTk0LjFoLTEyOGMtMi4xLDAtMy43LTEuNy0zLjctMy43YzAtMi4xLDEuNy0zLjcsMy43LTMuN2gxMjhjMi4xLDAsMy43LDEuNywzLjcsMy43DQoJCQlDMTU2LjQsMTkyLjQsMTU0LjgsMTk0LjEsMTUyLjcsMTk0LjF6Ii8+DQoJCTxnPg0KCQkJPHBhdGggY2xhc3M9InN0NTgiIGQ9Ik0zMS4xLDE2LjJjMC45LDcuMSw0LjYsMTQsNS42LDE1LjhjMC45LDEuNiwyLjYsMi41LDQuMywyLjVjMC44LDAsMS43LTAuMiwyLjQtMC43DQoJCQkJYzIuNC0xLjQsMy4yLTQuNCwxLjktNi44Yy0xLjYtMi44LTMuNC03LjItNC4yLTEwLjhoMTEzYzAuOSw3LjEsNC42LDE0LDUuNiwxNS44YzAuOSwxLjYsMi42LDIuNSw0LjMsMi41YzAuOCwwLDEuNy0wLjIsMi40LTAuNw0KCQkJCWMyLjQtMS40LDMuMi00LjQsMS45LTYuOGMtMS42LTIuOC0zLjQtNy4yLTQuMi0xMC44aDMzLjVWNDRINy40VjE2LjJIMzEuMXoiLz4NCgkJCTxwYXRoIGNsYXNzPSJzdDEwIiBkPSJNMzYuOCw0MC42YzEuNCwwLjUsMi44LDAuOCw0LjIsMC44YzEuNywwLDMuMy0wLjQsNC45LTEuMWMyLjktMS4zLDUuMS0zLjcsNi4yLTYuN2MxLjEtMywxLTYuMi0wLjMtOS4xDQoJCQkJYy0wLjgtMS43LTItMy4yLTMuNi00LjVjLTEuMS0wLjgtMi42LTAuNy0zLjUsMC40Yy0wLjgsMS4xLTAuNywyLjYsMC40LDMuNWMxLDAuOCwxLjcsMS42LDIuMSwyLjZjMC44LDEuNywwLjgsMy42LDAuMiw1LjMNCgkJCQljLTAuNywxLjctMiwzLjEtMy42LDMuOWMtMS43LDAuOC0zLjYsMC44LTUuMywwLjJjLTEuNy0wLjctMy4xLTItMy45LTMuN2MtMC41LTEtMC42LTIuMS0wLjYtMy4zYzAuMS0xLjQtMS0yLjUtMi4zLTIuNg0KCQkJCWMtMS40LTAuMS0yLjUsMS0yLjYsMi4zYy0wLjEsMiwwLjIsMy45LDEsNS42QzMxLjQsMzcuMywzMy44LDM5LjUsMzYuOCw0MC42eiIvPg0KCQkJPHBhdGggY2xhc3M9InN0MTAiIGQ9Ik0xNTkuOCw0MC42YzEuNCwwLjUsMi44LDAuOCw0LjIsMC44YzEuNywwLDMuMy0wLjQsNC45LTEuMWMyLjktMS4zLDUuMS0zLjcsNi4yLTYuN2MxLjEtMywxLTYuMi0wLjMtOS4xDQoJCQkJYy0wLjgtMS43LTItMy4yLTMuNi00LjVjLTEuMS0wLjgtMi42LTAuNy0zLjUsMC40Yy0wLjgsMS4xLTAuNiwyLjYsMC40LDMuNWMxLDAuNywxLjcsMS42LDIuMSwyLjZjMC44LDEuNywwLjgsMy42LDAuMiw1LjMNCgkJCQljLTAuNywxLjctMiwzLjEtMy42LDMuOWMtMS43LDAuOC0zLjYsMC44LTUuMywwLjJjLTEuNy0wLjctMy4xLTItMy45LTMuN2MtMC41LTEtMC42LTIuMS0wLjYtMy4zYzAuMS0xLjQtMS0yLjUtMi4zLTIuNg0KCQkJCWMtMS40LTAuMS0yLjUsMS0yLjYsMi4zYy0wLjEsMiwwLjIsMy45LDEsNS43QzE1NC41LDM3LjMsMTU2LjksMzkuNSwxNTkuOCw0MC42eiIvPg0KCQkJPHBhdGggY2xhc3M9InN0MTAiIGQ9Ik0yNDQuNSwxOC4xTDIxOC4zLDYuOGMtMC42LTAuMy0xLjMtMC4zLTEuOSwwYy0wLjYsMC4yLTEuMSwwLjctMS40LDEuM2wtMy45LDlMMjA0LDkuOA0KCQkJCWMtMC4zLTAuMy0wLjgtMC42LTEuMi0wLjhjLTAuNS0wLjItMC45LTAuMy0xLjQtMC4zaC0yNi45Yy0wLjYtMi4yLTItNS44LTUuMS03LjZjLTIuMS0xLjItNC41LTEuNC02LjktMC43DQoJCQkJYy0zLjYsMS4yLTYuMywzLjctNy42LDcuMmMtMC4xLDAuNC0wLjIsMC43LTAuMywxLjFINTEuNGMtMC42LTIuMi0yLTUuOC01LjEtNy42Yy0yLjEtMS4yLTQuNS0xLjQtNi45LTAuNw0KCQkJCWMtMy42LDEuMi02LjMsMy43LTcuNiw3LjJjLTAuMSwwLjQtMC4yLDAuNy0wLjMsMS4xSDMuN0MxLjcsOC43LDAsMTAuNCwwLDEyLjR2MjcyLjhjMCwwLDAsMCwwLDBjMCwwLjUsMC4xLDAuOSwwLjMsMS40DQoJCQkJYzAuMiwwLjUsMC41LDAuOSwwLjgsMS4ybDExLDExYzAuNywwLjcsMS42LDEuMSwyLjYsMS4xaDE5Ny42YzAuNSwwLDEtMC4xLDEuNC0wLjNjMC40LTAuMiwwLjctMC40LDEtMC43YzAuMSwwLDAuMS0wLjEsMC4yLTAuMQ0KCQkJCWMwLDAsMC4xLTAuMSwwLjEtMC4yYzAuMy0wLjMsMC41LTAuNywwLjctMS4xYzAuMi0wLjUsMC4zLTAuOSwwLjMtMS40bDAsMFY5MC40bDI5LjctNjkuMUMyNDYuMywyMC4xLDI0NS44LDE4LjYsMjQ0LjUsMTguMXoNCgkJCQkgTTE3Mi4xLDEwNy45SDI0LjdjLTIuMSwwLTMuNywxLjctMy43LDMuN2MwLDIuMSwxLjcsMy43LDMuNywzLjdoMTQ0LjJsLTcuNiwxNy42Yy0wLjMtMC4xLTAuNy0wLjItMS0wLjJIMjQuNw0KCQkJCWMtMi4xLDAtMy43LDEuNy0zLjcsMy43YzAsMi4xLDEuNywzLjcsMy43LDMuN2gxMzMuNmwtOC44LDIwLjVjLTAuMiwwLjMtMC4yLDAuNy0wLjIsMS4xYzAsMCwwLDAsMCwwLjFsMS44LDMwDQoJCQkJYzAuMSwwLjksMC42LDEuNywxLjQsMi4xYzAuMywwLjIsMC43LDAuMiwxLDAuMmMwLjUsMCwxLjEtMC4yLDEuNS0wLjVsMjQuNC0xOC44YzAsMCwwLTAuMSwwLjEtMC4xYzAuMy0wLjIsMC41LTAuNSwwLjctMC45bDAsMA0KCQkJCWMwLDAsMCwwLDAsMGwxNy40LTQwLjVWMjUzYy0wLjUsMC42LTEsMS4yLTEuNywxLjdjLTQuNiwzLjItMTQuMywzLjMtMjIuOSwwLjJjLTAuOC0wLjMtMS42LTAuMi0yLjMsMC4zYy0wLjcsMC41LTEuMSwxLjItMS4xLDINCgkJCQljMCwxMC03LjgsMjEuNC0xOC41LDI0LjNINy40VjUxLjVoMTg5TDE3Mi4xLDEwNy45eiBNMTU0LjQsMTY1LjVsMTcuMSw3LjRsMS41LDAuNmwtNyw1LjRsLTEwLjgsMC45TDE1NC40LDE2NS41eiBNMTk3LjYsMjY0LjQNCgkJCQl2MTcuMkgxNzBMMTk3LjYsMjY0LjR6IE0xNjUuNiwyNzguNWM0LjgtNSw4LTExLjUsOC45LTE3LjljNiwxLjcsMTMsMi4zLDE4LjcsMC44TDE2NS42LDI3OC41eiBNMjA1LjEsMjEuNGwzLDNsLTMsNi45VjIxLjR6DQoJCQkJIE0zMS4xLDE2LjJjMC45LDcuMSw0LjYsMTQsNS42LDE1LjhjMC45LDEuNiwyLjYsMi41LDQuMywyLjVjMC44LDAsMS43LTAuMiwyLjQtMC43YzIuNC0xLjQsMy4yLTQuNCwxLjktNi44DQoJCQkJYy0xLjYtMi44LTMuNC03LjItNC4yLTEwLjhoMTEzYzAuOSw3LjEsNC42LDE0LDUuNiwxNS44YzAuOSwxLjYsMi42LDIuNSw0LjMsMi41YzAuOCwwLDEuNy0wLjIsMi40LTAuN2MyLjQtMS40LDMuMi00LjQsMS45LTYuOA0KCQkJCWMtMS42LTIuOC0zLjQtNy4yLTQuMi0xMC44aDMzLjVWNDRINy40VjE2LjJIMzEuMXogTTEyLjcsMjg5aDE4Ny4xbDMuNiwzLjZIMTYuM0wxMi43LDI4OXogTTIwOC43LDI4Ny4zbC0zLjYtMy42VjExNmwzLjYtOC4zDQoJCQkJVjI4Ny4zeiBNMTc2LjYsMTY5LjZsLTEzLjEtNS42bC04LjUtMy43bDE5LjgtNDZjMC42LTAuNiwxLTEuNSwxLjEtMi41TDIxNSwyMC45bDAsMGwwLDBsMy43LTguNWwyMS42LDkuM0wxNzYuNiwxNjkuNnoiLz4NCgkJPC9nPg0KCTwvZz4NCgk8cGF0aCBjbGFzcz0ic3QxIiBkPSJNMTc2LjYsMTY5LjZsLTEzLjEtNS42bC04LjUtMy43bDE5LjgtNDZjMC42LTAuNiwxLTEuNSwxLjEtMi41TDIxNSwyMC45bDAsMGwwLDBsMy43LTguNWwyMS42LDkuMw0KCQlMMTc2LjYsMTY5LjZ6Ii8+DQoJPHBvbHlnb24gY2xhc3M9InN0NzAiIHBvaW50cz0iMTIuNywyODkgMTk5LjgsMjg5IDIwMy40LDI5Mi42IDE2LjMsMjkyLjYgCSIvPg0KCTxwb2x5Z29uIGNsYXNzPSJzdDcwIiBwb2ludHM9IjIwOC43LDI4Ny4zIDIwNS4xLDI4My43IDIwNS4xLDExNiAyMDguNywxMDcuNyAJIi8+DQo8L2c+DQo8ZyBpZD0iTGF5ZXJfMiI+DQo8L2c+DQo8L3N2Zz4NCg==",
-      "dependencies": [
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Simple Logger",
+      "descriptor": {
+        "componentScheme": "log",
+        "configuredProperties": {
+          "loggerName": "syndesis-log"
+        },
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
           {
-              "type": "MAVEN",
-              "id": "@project.groupId@:@project.artifactId@:@project.version@"
-          }
-      ],
-      "metadata": {
-        "hide-from-connection-pages": true
-      },
-      "configuredProperties": {},
-      "actions": [
-        {
-            "name": "Simple Logger",
-            "description": "Simple Logger",
-            "id": "io.syndesis:log-action",
-            "pattern": "To",
-            "actionType": "connector",
-            "descriptor": {
-                "componentScheme": "log",
-                "inputDataShape": {
-                    "kind": "none"
-                },
-                "outputDataShape": {
-                    "kind": "none"
-                },
-                "configuredProperties": {
-                    "loggerName": "syndesis-log"
-                },
-                "propertyDefinitionSteps": [
-                    {
-                        "description": "Log Level",
-                        "name": "level",
-                        "properties": {
-                            "level": {
-                                "componentProperty": false,
-                                "deprecated": false,
-                                "description": "Log Level.",
-                                "displayName": "log level",
-                                "javaType": "java.lang.String",
-                                "enum":[
-                                    {
-                                        "value":"ERROR",
-                                        "label":"ERROR"
-                                    },
-                                    {
-                                        "value":"WARN",
-                                        "label":"WARN"
-                                    },
-                                    {
-                                        "value":"INFO",
-                                        "label":"INFO"
-                                    },
-                                    {
-                                        "value":"DEBUG",
-                                        "label":"DEBUG"
-                                    },
-                                    {
-                                        "value":"TRACE",
-                                        "label":"TRACE"
-                                    },
-                                    {
-                                        "value":"OFF",
-                                        "label":"OFF"
-                                    }
-                                ],
-                                "kind": "parameter",
-                                "required": true,
-                                "secret": false,
-                                "type": "string",
-                                "tags": [],
-                                "defaultValue" : "INFO"
-                            },
-                            "showExchangeId": {
-                                "componentProperty": false,
-                                "deprecated": false,
-                                "description": "whether or not to show Exchange Id in the Log.",
-                                "displayName": "Log message Id",
-                                "javaType": "boolean",
-                                "kind": "parameter",
-                                "required": true,
-                                "secret": false,
-                                "type": "boolean",
-                                "tags": [],
-                                "enum": [],
-                                "defaultValue" : true
-                            },
-                            "showBody": {
-                                "componentProperty": false,
-                                "deprecated": false,
-                                "description": "whether or not to show Body content in the Log.",
-                                "displayName": "Log Body",
-                                "javaType": "boolean",
-                                "kind": "parameter",
-                                "required": true,
-                                "secret": false,
-                                "type": "boolean",
-                                "tags": [],
-                                "enum": [],
-                                "defaultValue" : true
-                            },
-                            "showHeaders": {
-                                "componentProperty": false,
-                                "deprecated": false,
-                                "description": "whether or not to show Headers in the Log.",
-                                "displayName": "Log Headers",
-                                "javaType": "boolean",
-                                "kind": "parameter",
-                                "required": true,
-                                "secret": false,
-                                "type": "boolean",
-                                "tags": [],
-                                "enum": [],
-                                "defaultValue" : false
-                            },
-                            "showAll": {
-                                "componentProperty": false,
-                                "deprecated": false,
-                                "description": "whether or not to log everything (very verbose).",
-                                "displayName": "Log everything",
-                                "javaType": "boolean",
-                                "kind": "parameter",
-                                "required": true,
-                                "secret": false,
-                                "type": "boolean",
-                                "tags": [],
-                                "enum": [],
-                                "defaultValue" : false
-                            }
-                        }
-                    }
-                ]
+            "description": "Log Level",
+            "name": "level",
+            "properties": {
+              "level": {
+                "componentProperty": false,
+                "defaultValue": "INFO",
+                "deprecated": false,
+                "description": "Log Level.",
+                "displayName": "log level",
+                "enum": [
+                  {
+                    "label": "ERROR",
+                    "value": "ERROR"
+                  },
+                  {
+                    "label": "WARN",
+                    "value": "WARN"
+                  },
+                  {
+                    "label": "INFO",
+                    "value": "INFO"
+                  },
+                  {
+                    "label": "DEBUG",
+                    "value": "DEBUG"
+                  },
+                  {
+                    "label": "TRACE",
+                    "value": "TRACE"
+                  },
+                  {
+                    "label": "OFF",
+                    "value": "OFF"
+                  }
+                ],
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              },
+              "showAll": {
+                "componentProperty": false,
+                "defaultValue": false,
+                "deprecated": false,
+                "description": "whether or not to log everything (very verbose).",
+                "displayName": "Log everything",
+                "enum": [],
+                "javaType": "boolean",
+                "kind": "parameter",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "boolean"
+              },
+              "showBody": {
+                "componentProperty": false,
+                "defaultValue": true,
+                "deprecated": false,
+                "description": "whether or not to show Body content in the Log.",
+                "displayName": "Log Body",
+                "enum": [],
+                "javaType": "boolean",
+                "kind": "parameter",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "boolean"
+              },
+              "showExchangeId": {
+                "componentProperty": false,
+                "defaultValue": true,
+                "deprecated": false,
+                "description": "whether or not to show Exchange Id in the Log.",
+                "displayName": "Log message Id",
+                "enum": [],
+                "javaType": "boolean",
+                "kind": "parameter",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "boolean"
+              },
+              "showHeaders": {
+                "componentProperty": false,
+                "defaultValue": false,
+                "deprecated": false,
+                "description": "whether or not to show Headers in the Log.",
+                "displayName": "Log Headers",
+                "enum": [],
+                "javaType": "boolean",
+                "kind": "parameter",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "boolean"
+              }
             }
-        }
-    ]
+          }
+        ]
+      },
+      "id": "io.syndesis:log-action",
+      "name": "Simple Logger",
+      "pattern": "To"
+    }
+  ],
+  "configuredProperties": {},
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Log the exchange with different options",
+  "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDYgMzAwIj48c3R5bGU+LnN0MTB7ZmlsbDojMjMxZjIwfS5zdDYye2ZpbGw6I2QxZDNkNH08L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBjbGFzcz0ic3QxMCIgZD0iTTE1Mi4xIDE2Ni4ySDI0LjdjLTIuMSAwLTMuNy0xLjctMy43LTMuNyAwLTIuMSAxLjctMy43IDMuNy0zLjdoMTI3LjRjMi4xIDAgMy43IDEuNyAzLjcgMy43cy0xLjcgMy43LTMuNyAzLjd6TTE1Mi43IDE5NC4xaC0xMjhjLTIuMSAwLTMuNy0xLjctMy43LTMuNyAwLTIuMSAxLjctMy43IDMuNy0zLjdoMTI4YzIuMSAwIDMuNyAxLjcgMy43IDMuN3MtMS42IDMuNy0zLjcgMy43eiIvPjxwYXRoIGQ9Ik0zMS4xIDE2LjJjLjkgNy4xIDQuNiAxNCA1LjYgMTUuOC45IDEuNiAyLjYgMi41IDQuMyAyLjUuOCAwIDEuNy0uMiAyLjQtLjcgMi40LTEuNCAzLjItNC40IDEuOS02LjgtMS42LTIuOC0zLjQtNy4yLTQuMi0xMC44aDExM2MuOSA3LjEgNC42IDE0IDUuNiAxNS44LjkgMS42IDIuNiAyLjUgNC4zIDIuNS44IDAgMS43LS4yIDIuNC0uNyAyLjQtMS40IDMuMi00LjQgMS45LTYuOC0xLjYtMi44LTMuNC03LjItNC4yLTEwLjhoMzMuNVY0NEg3LjRWMTYuMmgyMy43eiIgZmlsbD0iIzAwYWVlZiIvPjxwYXRoIGNsYXNzPSJzdDEwIiBkPSJNMzYuOCA0MC42YzEuNC41IDIuOC44IDQuMi44IDEuNyAwIDMuMy0uNCA0LjktMS4xIDIuOS0xLjMgNS4xLTMuNyA2LjItNi43IDEuMS0zIDEtNi4yLS4zLTkuMS0uOC0xLjctMi0zLjItMy42LTQuNS0xLjEtLjgtMi42LS43LTMuNS40LS44IDEuMS0uNyAyLjYuNCAzLjUgMSAuOCAxLjcgMS42IDIuMSAyLjYuOCAxLjcuOCAzLjYuMiA1LjMtLjcgMS43LTIgMy4xLTMuNiAzLjktMS43LjgtMy42LjgtNS4zLjItMS43LS43LTMuMS0yLTMuOS0zLjctLjUtMS0uNi0yLjEtLjYtMy4zLjEtMS40LTEtMi41LTIuMy0yLjYtMS40LS4xLTIuNSAxLTIuNiAyLjMtLjEgMiAuMiAzLjkgMSA1LjYgMS4zIDMuMSAzLjcgNS4zIDYuNyA2LjR6TTE1OS44IDQwLjZjMS40LjUgMi44LjggNC4yLjggMS43IDAgMy4zLS40IDQuOS0xLjEgMi45LTEuMyA1LjEtMy43IDYuMi02LjcgMS4xLTMgMS02LjItLjMtOS4xLS44LTEuNy0yLTMuMi0zLjYtNC41LTEuMS0uOC0yLjYtLjctMy41LjQtLjggMS4xLS42IDIuNi40IDMuNSAxIC43IDEuNyAxLjYgMi4xIDIuNi44IDEuNy44IDMuNi4yIDUuMy0uNyAxLjctMiAzLjEtMy42IDMuOS0xLjcuOC0zLjYuOC01LjMuMi0xLjctLjctMy4xLTItMy45LTMuNy0uNS0xLS42LTIuMS0uNi0zLjMuMS0xLjQtMS0yLjUtMi4zLTIuNi0xLjQtLjEtMi41IDEtMi42IDIuMy0uMSAyIC4yIDMuOSAxIDUuNyAxLjQgMyAzLjggNS4yIDYuNyA2LjN6Ii8+PHBhdGggY2xhc3M9InN0MTAiIGQ9Ik0yNDQuNSAxOC4xTDIxOC4zIDYuOGMtLjYtLjMtMS4zLS4zLTEuOSAwLS42LjItMS4xLjctMS40IDEuM2wtMy45IDktNy4xLTcuM2MtLjMtLjMtLjgtLjYtMS4yLS44LS41LS4yLS45LS4zLTEuNC0uM2gtMjYuOWMtLjYtMi4yLTItNS44LTUuMS03LjYtMi4xLTEuMi00LjUtMS40LTYuOS0uNy0zLjYgMS4yLTYuMyAzLjctNy42IDcuMi0uMS40LS4yLjctLjMgMS4xSDUxLjRjLS42LTIuMi0yLTUuOC01LjEtNy42LTIuMS0xLjItNC41LTEuNC02LjktLjctMy42IDEuMi02LjMgMy43LTcuNiA3LjItLjEuNC0uMi43LS4zIDEuMUgzLjdjLTIgMC0zLjcgMS43LTMuNyAzLjd2MjcyLjhjMCAuNS4xLjkuMyAxLjQuMi41LjUuOS44IDEuMmwxMSAxMWMuNy43IDEuNiAxLjEgMi42IDEuMWgxOTcuNmMuNSAwIDEtLjEgMS40LS4zLjQtLjIuNy0uNCAxLS43LjEgMCAuMS0uMS4yLS4xIDAgMCAuMS0uMS4xLS4yLjMtLjMuNS0uNy43LTEuMS4yLS41LjMtLjkuMy0xLjRWOTAuNGwyOS43LTY5LjFjLjYtMS4yLjEtMi43LTEuMi0zLjJ6bS03Mi40IDg5LjhIMjQuN2MtMi4xIDAtMy43IDEuNy0zLjcgMy43IDAgMi4xIDEuNyAzLjcgMy43IDMuN2gxNDQuMmwtNy42IDE3LjZjLS4zLS4xLS43LS4yLTEtLjJIMjQuN2MtMi4xIDAtMy43IDEuNy0zLjcgMy43IDAgMi4xIDEuNyAzLjcgMy43IDMuN2gxMzMuNmwtOC44IDIwLjVjLS4yLjMtLjIuNy0uMiAxLjF2LjFsMS44IDMwYy4xLjkuNiAxLjcgMS40IDIuMS4zLjIuNy4yIDEgLjIuNSAwIDEuMS0uMiAxLjUtLjVsMjQuNC0xOC44czAtLjEuMS0uMWMuMy0uMi41LS41LjctLjlsMTcuNC00MC41VjI1M2MtLjUuNi0xIDEuMi0xLjcgMS43LTQuNiAzLjItMTQuMyAzLjMtMjIuOS4yLS44LS4zLTEuNi0uMi0yLjMuMy0uNy41LTEuMSAxLjItMS4xIDIgMCAxMC03LjggMjEuNC0xOC41IDI0LjNINy40di0yMzBoMTg5bC0yNC4zIDU2LjR6bS0xNy43IDU3LjZsMTcuMSA3LjQgMS41LjYtNyA1LjQtMTAuOC45LS44LTE0LjN6bTQzLjIgOTguOXYxNy4ySDE3MGwyNy42LTE3LjJ6bS0zMiAxNC4xYzQuOC01IDgtMTEuNSA4LjktMTcuOSA2IDEuNyAxMyAyLjMgMTguNy44bC0yNy42IDE3LjF6bTM5LjUtMjU3LjFsMyAzLTMgNi45di05Ljl6bS0xNzQtNS4yYy45IDcuMSA0LjYgMTQgNS42IDE1LjguOSAxLjYgMi42IDIuNSA0LjMgMi41LjggMCAxLjctLjIgMi40LS43IDIuNC0xLjQgMy4yLTQuNCAxLjktNi44LTEuNi0yLjgtMy40LTcuMi00LjItMTAuOGgxMTNjLjkgNy4xIDQuNiAxNCA1LjYgMTUuOC45IDEuNiAyLjYgMi41IDQuMyAyLjUuOCAwIDEuNy0uMiAyLjQtLjcgMi40LTEuNCAzLjItNC40IDEuOS02LjgtMS42LTIuOC0zLjQtNy4yLTQuMi0xMC44aDMzLjVWNDRINy40VjE2LjJoMjMuN3pNMTIuNyAyODloMTg3LjFsMy42IDMuNkgxNi4zbC0zLjYtMy42em0xOTYtMS43bC0zLjYtMy42VjExNmwzLjYtOC4zdjE3OS42em0tMzIuMS0xMTcuN2wtMTMuMS01LjYtOC41LTMuNyAxOS44LTQ2Yy42LS42IDEtMS41IDEuMS0yLjVMMjE1IDIwLjlsMy43LTguNSAyMS42IDkuMy02My43IDE0Ny45eiIvPjxwYXRoIGNsYXNzPSJzdDEwIiBkPSJNMTc2LjYgMTY5LjZsLTEzLjEtNS42LTguNS0zLjcgMTkuOC00NmMuNi0uNiAxLTEuNSAxLjEtMi41TDIxNSAyMC45bDMuNy04LjUgMjEuNiA5LjMtNjMuNyAxNDcuOXoiLz48cGF0aCBjbGFzcz0ic3Q2MiIgZD0iTTEyLjcgMjg5aDE4Ny4xbDMuNiAzLjZIMTYuM3pNMjA4LjcgMjg3LjNsLTMuNi0zLjZWMTE2bDMuNi04LjN6Ii8+PC9nPjwvc3ZnPg==",
+  "id": "log",
+  "metadata": {
+    "hide-from-connection-pages": true
+  },
+  "name": "Log"
 }
