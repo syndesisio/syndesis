@@ -1,39 +1,32 @@
-<div class="row row-cards-pf">
-  <div class="card-pf">
-    <div class="card-pf-body">
-      <syndesis-loading
-        [loading]="loading"
-        [content]="validationContent">
-      </syndesis-loading>
+<syndesis-loading
+  [loading]="loading"
+  [content]="validationContent">
+</syndesis-loading>
 
-      <ng-template #validationContent>
-        <openapi-review
-          [name]="validation.name"
-          [description]="validation.description || 'No description provided'"
-          [warnings]="validation.warnings"
-          [errors]="validation.errors"
-          [actionsSummary]="validation.actionsSummary">
-        </openapi-review>
+<ng-template #validationContent>
+  <openapi-review
+    [name]="validation.name"
+    [description]="validation.description || 'No description provided'"
+    [warnings]="validation.warnings"
+    [errors]="validation.errors"
+    [actionsSummary]="validation.actionsSummary">
+  </openapi-review>
+  <fieldset>
+    <syndesis-button *ngIf="showNextButton"
+                      [disabled]="!enableEditButton"
+                      (click)="onEdit.emit()"
+                      type="button"
+                      theme="default">
+      {{ 'customizations.api-client-connectors.api-review-edit-button' | synI18n }}
+    </syndesis-button>
+  </fieldset>
+  <fieldset class="api-connector-review__actions">
+    <syndesis-button *ngIf="showNextButton" type="button" theme="default" (click)="onBack.emit()">
+      {{ 'shared.back-button' | synI18n }}
+    </syndesis-button>
 
-        <fieldset>
-          <syndesis-button *ngIf="showNextButton"
-                           [disabled]="!enableEditButton"
-                           (click)="onEdit.emit()"
-                           type="button"
-                           theme="default">
-            {{ 'customizations.api-client-connectors.api-review-edit-button' | synI18n }}
-          </syndesis-button>
-        </fieldset>
-        <fieldset>
-          <syndesis-button *ngIf="showNextButton" type="button" theme="default" (click)="onBack.emit()">
-            {{ 'shared.back-button' | synI18n }}
-          </syndesis-button>
-
-          <syndesis-button *ngIf="showNextButton" (click)="onDone.emit()" type="button" theme="primary">
-            {{ 'shared.next-button' | synI18n }}
-          </syndesis-button>
-        </fieldset>
-      </ng-template>
-    </div>
-  </div>
-</div>
+    <syndesis-button *ngIf="showNextButton" (click)="onDone.emit()" type="button" theme="primary">
+      {{ 'shared.next-button' | synI18n }}
+    </syndesis-button>
+  </fieldset>
+</ng-template>
