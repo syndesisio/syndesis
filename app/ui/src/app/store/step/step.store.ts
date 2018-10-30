@@ -304,19 +304,31 @@ $\{in.body.title\} // Evaluates true when body contains title.
     ) => {
       if (!anyPrevious) {
         // only test the first previous step that has some kind of data shape
-        previousSteps = [[].concat(previousSteps).reverse()
-          .find(s => 'action' in s && 'descriptor' in s.action && 'outputDataShape' in s.action.descriptor)];
+        previousSteps = [
+          [].concat(previousSteps)
+            .reverse()
+            .find(s => StepStore.dataShapeExists(s))
+        ];
       }
       if (!anySubsequent) {
         // only test the next subsequent step that has a data shape
-        subsequentSteps = [subsequentSteps
-          .find(s => 'action' in s && 'descriptor' in s.action && 'inputDataShape' in s.action.descriptor)];
+        subsequentSteps = [ subsequentSteps
+          .find(s => StepStore.dataShapeExists(s, true))
+        ];
 
       }
       return StepStore.stepsHaveOutputDataShape(previousSteps)
          && StepStore.stepsHaveInputDataShape(subsequentSteps);
     };
     return obj;
+  }
+
+  static dataShapeExists(step: Step, input = false): boolean {
+    if (input) {
+      return step && step.action && step.action.descriptor && step.action.descriptor.inputDataShape !== undefined;
+    } else {
+      return step && step.action && step.action.descriptor && step.action.descriptor.outputDataShape !== undefined;
+    }
   }
 
   static requiresOutputDataShape(obj: StepKind): StepKind {
