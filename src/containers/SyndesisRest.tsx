@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { AppContext } from '../AppContext';
 import { AuthContext } from '../auth';
 import { IRestState, Rest } from './Rest';
 import { Stream } from './Stream';
@@ -22,20 +23,24 @@ export class SyndesisRest<T> extends React.Component<ISyndesisRestProps<T>> {
     const RestOrStream = stream ? Stream : Rest;
 
     return (
-      <AuthContext.Consumer>
-        {({token}) => (
-          <RestOrStream
-            baseUrl={'http://syndesis-server-syndesis.192.168.64.16.nip.io'}
-            url={url}
-            {...props}
-            headers={{
-              'SYNDESIS-XSRF-TOKEN': 'awesome',
-              'X-Forwarded-Access-Token': `${token}`,
-              'X-Forwarded-User': 'admin'
-            }}
-          />
-        )}
-      </AuthContext.Consumer>
+      <AppContext.Consumer>
+        {({apiUri}) =>
+          <AuthContext.Consumer>
+            {({token}) => (
+              <RestOrStream
+                baseUrl={apiUri}
+                url={url}
+                {...props}
+                headers={{
+                  'SYNDESIS-XSRF-TOKEN': 'awesome',
+                  'X-Forwarded-Access-Token': `${token}`,
+                  'X-Forwarded-User': 'admin'
+                }}
+              />
+            )}
+          </AuthContext.Consumer>
+        }
+      </AppContext.Consumer>
     )
   }
 }
