@@ -37,7 +37,7 @@
       <img class="syn-icon-small"
             [ngClass]="{ 'api-provider' : (step.connection.id == 'api-provider') }"
             *ngIf="step.stepKind === 'endpoint' && step.connection"
-            [src]="(step.action.id == 'io.syndesis:api-provider-end') ? './../../assets/icons/multi-flow.connection.png' : (step.connection | synIconPath)">
+            [src]="(step.action?.id == 'io.syndesis:api-provider-end') ? './../../assets/icons/multi-flow.connection.png' : (step.connection | synIconPath)">
     </div>
     <span class="pficon pficon-warning-triangle-o data-mismatch"
         *ngIf="shouldAddDatamapper || previousStepShouldDefineDataShape"
