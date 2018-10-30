@@ -15,6 +15,8 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -158,7 +160,7 @@ public class TemplateStepHandlerTest extends IntegrationTestSupport {
     }
 
     @Test
-    public void testTemplateStepBasic() throws Exception {
+    public void testTemplateStepBasicWithPrefix() throws Exception {
         CamelContext context = new SpringCamelContext(applicationContext);
 
         List<String> testMessages = new ArrayList<>();
@@ -178,14 +180,14 @@ public class TemplateStepHandlerTest extends IntegrationTestSupport {
         );
 
         Symbol[] symbols = {
-            new Symbol("body.time", "string"),
-            new Symbol("body.name", "string"),
-            new Symbol("body.text", "string")
+            new Symbol("time", "string"),
+            new Symbol("name", "string"),
+            new Symbol("text", "string")
         };
 
         String template = EMPTY_STRING +
                 "At {{" + symbols[0].id + "}}, {{" + symbols[1].id + "}}" + NEW_LINE +
-                "stated submitted the following message: " + NEW_LINE +
+                "stated submitted the following message:" + NEW_LINE +
                 "{{" + symbols[2].id + "}}";
 
 
@@ -228,6 +230,133 @@ public class TemplateStepHandlerTest extends IntegrationTestSupport {
      }
 
     @Test
+    public void testTemplateStepBasicWithoutPrefix() throws Exception {
+        CamelContext context = new SpringCamelContext(applicationContext);
+
+        List<String> testMessages = new ArrayList<>();
+        testMessages.add(
+            data(
+                dataPair("time", "10:00"),
+                dataPair("name", "Bob"),
+                dataPair("text", "Greetings, How are you?")
+            )
+        );
+        testMessages.add(
+            data(
+                 dataPair("time", "10:15"),
+                 dataPair("name", "Susan"),
+                 dataPair("text", "Hello, Pleased to meet you!")
+            )
+        );
+
+        Symbol[] symbols = {
+            new Symbol("body.time", "string"),
+            new Symbol("body.name", "string"),
+            new Symbol("body.text", "string")
+        };
+
+        String template = EMPTY_STRING +
+                "At {{" + symbols[0].id + "}}, {{" + symbols[1].id + "}}" + NEW_LINE +
+                "stated submitted the following message:" + NEW_LINE +
+                "{{" + symbols[2].id + "}}";
+
+
+        List<String> expectedMessages = new ArrayList<>();
+        String expectedMessage = template.replaceAll("\\{\\{|\\}\\}", EMPTY_STRING)
+                                                        .replace(symbols[0].id, "10:00")
+                                                        .replace(symbols[1].id, "Bob")
+                                                        .replace(symbols[2].id, "Greetings, How are you?");
+        expectedMessages.add(toJson(expectedMessage));
+
+        expectedMessage = template.replaceAll("\\{\\{|\\}\\}", EMPTY_STRING)
+                                                         .replace(symbols[0].id, "10:15")
+                                                         .replace(symbols[1].id, "Susan")
+                                                         .replace(symbols[2].id, "Hello, Pleased to meet you!");
+        expectedMessages.add(toJson(expectedMessage));
+
+        try {
+            final RouteBuilder routes = generateRoute(template, Arrays.asList(symbols));
+
+            // Set up the camel context
+            context.addRoutes(routes);
+            dumpRoutes(context);
+
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
+            result.setExpectedMessageCount(2);
+            result.expectedBodiesReceived(expectedMessages);
+
+            sendData(context, testMessages);
+
+            result.assertIsSatisfied();
+
+        } finally {
+            context.stop();
+        }
+     }
+
+    @Test
+    public void testTemplateStepNoSpacesInSymbolAllowed() throws Exception {
+        CamelContext context = new SpringCamelContext(applicationContext);
+
+        Symbol[] symbols = {
+            new Symbol("the time", "string"),
+            new Symbol("the name", "string"),
+            new Symbol("text content", "string")
+        };
+
+        String template = EMPTY_STRING +
+            "At {{" + symbols[0].id + "}}, {{" + symbols[1].id + "}}" + NEW_LINE +
+            "stated submitted the following message:" + NEW_LINE +
+            "{{" + symbols[2].id + "}}";
+
+        try {
+            final RouteBuilder routes = generateRoute(template, Arrays.asList(symbols));
+
+            // Set up the camel context
+            context.addRoutes(routes);
+            fail("Should not allow spaces in symbols");
+        } catch (Exception ex) {
+            assertTrue(ex.getMessage().contains("invalid"));
+        } finally {
+            context.stop();
+        }
+     }
+
+    @Test
+    public void testTemplateStepDanglingSection() throws Exception {
+        CamelContext context = new SpringCamelContext(applicationContext);
+
+        Symbol[] symbols = {
+            new Symbol("id", "string"),
+            new Symbol("course", "array"),
+            new Symbol("text", "string")
+        };
+
+        String template = EMPTY_STRING +
+            "{{id}} passed the following courses:" + NEW_LINE +
+            "{{#course}}" + NEW_LINE +
+            "\t* {{name}}" + NEW_LINE +
+            "{{text}}";
+
+        try {
+            final RouteBuilder routes = generateRoute(template, Arrays.asList(symbols));
+
+            // Set up the camel context
+            context.addRoutes(routes);
+            fail("Should not allow dangling section");
+        } catch (Exception ex) {
+            assertTrue(ex.getMessage().contains("invalid"));
+        } finally {
+            context.stop();
+        }
+     }
+
+    @Test
     public void testTemplateStepIterate() throws Exception {
         CamelContext context = new SpringCamelContext(applicationContext);
 
@@ -257,15 +386,15 @@ public class TemplateStepHandlerTest extends IntegrationTestSupport {
         );
 
         Symbol[] symbols = {
-            new Symbol("body.name", "string"),
-            new Symbol("body.course", "array"),
+            new Symbol("name", "string"),
+            new Symbol("course", "array"),
             new Symbol("body.text", "string")
         };
 
         String mustacheTemplate = EMPTY_STRING +
-                "{{" + symbols[0].id + "}} passed the following courses: " + NEW_LINE +
+                "{{" + symbols[0].id + "}} passed the following courses:" + NEW_LINE +
                 "{{#" + symbols[1].id + "}}" + NEW_LINE +
-                "* {{name}}" + NEW_LINE +
+                "\t* {{name}}" + NEW_LINE +
                 "{{/" + symbols[1].id + "}}" +
                 "{{" + symbols[2].id + "}}";
 
@@ -286,16 +415,16 @@ public class TemplateStepHandlerTest extends IntegrationTestSupport {
 
             List<String> expectedMessages = new ArrayList<>();
             expectedMessages.add(toJson(
-                                 "Bob passed the following courses: " + NEW_LINE +
-                                 "* Mathematics" + NEW_LINE +
-                                 "* English" + NEW_LINE +
-                                 "* Chemistry" + NEW_LINE +
+                                 "Bob passed the following courses:" + NEW_LINE +
+                                 "\t* Mathematics" + NEW_LINE +
+                                 "\t* English" + NEW_LINE +
+                                 "\t* Chemistry" + NEW_LINE +
                                  "Will be going to the University of Southampton."));
             expectedMessages.add(toJson(
-                                 "Susan passed the following courses: " + NEW_LINE +
-                                 "* Physics" + NEW_LINE +
-                                 "* German" + NEW_LINE +
-                                 "* Art" + NEW_LINE +
+                                 "Susan passed the following courses:" + NEW_LINE +
+                                 "\t* Physics" + NEW_LINE +
+                                 "\t* German" + NEW_LINE +
+                                 "\t* Art" + NEW_LINE +
                                  "Will be joining Evans, Richards and Dean."));
             result.expectedBodiesReceived(expectedMessages);
 

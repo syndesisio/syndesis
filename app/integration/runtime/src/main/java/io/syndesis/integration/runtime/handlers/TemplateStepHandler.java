@@ -36,21 +36,18 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.StringConstants;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
+import io.syndesis.integration.runtime.templater.MustacheTemplatePreProcessor;
+import io.syndesis.integration.runtime.templater.TemplateMustacheConstants;
 
 /**
  * Handler for processing JSON messages and using their properties to populate a
  * template written in recognised template languages.
  */
-public class TemplateStepHandler implements IntegrationStepHandler, StringConstants {
+public class TemplateStepHandler implements IntegrationStepHandler, TemplateMustacheConstants {
 
     private static final String TEMPLATE_PROPERTY = "template";
-
-    private static final String DOUBLE_OPEN_BRACE_PATTERN = "\\{\\{";
-
-    private static final String DOUBLE_CLOSE_BRACE_PATTERN = "\\}\\}";
 
     private static final String MUSTACHE_OPEN_DELIMITER = "[[";
 
@@ -86,6 +83,16 @@ public class TemplateStepHandler implements IntegrationStepHandler, StringConsta
 
         Map<String, String> properties = step.getConfiguredProperties();
         String template = properties.get(TEMPLATE_PROPERTY);
+
+        try {
+            /*
+             * Pre-process the template to ensure it conforms to the standard.
+             */
+            MustacheTemplatePreProcessor parser = new MustacheTemplatePreProcessor();
+            template = parser.preProcess(template);
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex);
+        }
 
         /*
          * To avoid creating a temporary file, we use the mustache template header
@@ -148,19 +155,16 @@ public class TemplateStepHandler implements IntegrationStepHandler, StringConsta
      * all properties to be available in a {@link Map}. Thus, this parses the JSON
      * and converts it to the appropriate {@link Map}.
      */
-    public static class JsonToMapProcessor implements Processor {
+    public static class JsonToMapProcessor implements Processor, TemplateMustacheConstants {
 
         private static final Logger LOGGER = LoggerFactory.getLogger(JsonToMapProcessor.class);
-
-        private static final String BODY_PREFIX = "body.";
 
         private static final ObjectMapper MAPPER = new ObjectMapper();
 
         /*
-         * If the key starts with the word "body" which it will if data-mapped
-         * via the template then remove it since the map will be stored AS the
-         * body of the exchange which is then inserted into a mustache map
-         * keyed with "body".
+         * If the key is prefixed with the "body" then remove it since the map
+         * will be stored AS the body of the exchange which is then inserted
+         * into a mustache map keyed with "body".
          */
         private void refactorKeys(Map<String, Object> map) {
             ArrayList<String> keys = new ArrayList<String>(map.keySet());
