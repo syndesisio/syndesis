@@ -353,11 +353,13 @@ export class FlowViewStepComponent implements OnChanges {
         const prev = this.currentFlowService.getPreviousStepWithDataShape(
           this.position
         );
-        const prevOutDataShape = prev.action.descriptor.outputDataShape;
-        if (DataShapeKinds.ANY === prevOutDataShape.kind) {
-          this.previousStepShouldDefineDataShape = true;
-        } else if (!this.isSameDataShape(inDataShape, prevOutDataShape)) {
-          this.shouldAddDatamapper = true;
+        if (prev && prev.action && prev.action.descriptor) {
+          const prevOutDataShape = prev.action.descriptor.outputDataShape;
+          if (DataShapeKinds.ANY === prevOutDataShape.kind) {
+            this.previousStepShouldDefineDataShape = true;
+          } else if (!this.isSameDataShape(inDataShape, prevOutDataShape)) {
+            this.shouldAddDatamapper = true;
+          }
         }
       }
     }
