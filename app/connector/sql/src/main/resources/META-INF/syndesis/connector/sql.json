@@ -250,7 +250,7 @@
       "label": "common,security",
       "labelHint": "Password for the database connection.",
       "order": "3",
-      "required": false,
+      "required": true,
       "secret": true,
       "tags": [],
       "type": "string"
