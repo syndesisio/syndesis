@@ -2,15 +2,26 @@
 // trigger_integrations_with_api_calls.adoc
 
 [id='configure-publish-api-provider-quickstart_{context}']
-= Configure and publish the API Provider quickstart integration
+= Configure and publish the API provider quickstart integration
 
-{prodname} provides an API Provider quickstart integration that you can 
+{prodname} provides an API provider quickstart integration that you can 
 import into your {prodname} environment. This quickstart includes 
 an OpenAPI specification for a task management API. After importing
 the quickstart integration, you configure return codes, and then publish
 the integration. After you complete the procedure described below,
 the Task API integration is running and ready
-to be executed.  
+to be executed. 
+
+The API provider quickstart helps you quickly learn how to configure, publish, and
+test an API provider integration. But it is not a real-world example of 
+how useful an API provider integration can be. For a real-world
+example, suppose that you already
+used {prodname} to publish several integrations. You could define an OpenAPI
+specification for triggering execution of those integrations. To do this, you
+would edit the integration flow for each OpenAPI operation to be almost the
+same as the integrations you already published. 
+
+https://www.youtube.com/watch?v=RAa1qy3WnWQ&feature=youtu.be[A video of configuring and publishing this quickstart is also available.] 
 
 .Prerequisites
 * {prodname} is open in a browser.
@@ -89,7 +100,7 @@ starts the integration. The integration summary page also provides
 the external URL for the
 API provider service, which looks something like this: 
 +
-`\https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com`
+`\https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api/`
 +
 This is where {prodname} makes the Task API service available. REST 
 API calls specify endpoints that define this base URL. 

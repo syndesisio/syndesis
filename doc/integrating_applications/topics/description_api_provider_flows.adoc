@@ -2,24 +2,20 @@
 // trigger_integrations_with_api_calls.adoc
 
 [id='description-api-provider-flows_{context}']
-= Description of API Provider flows
+= Description of API provider flows
 
-A {prodname} integration that does not start with an API Provider 
-connection has one integration flow. That is, each time {prodname} executes
-the integration, {prodname} connects to the same applications, applies the
-same steps between integrations, and finishes integration execution in 
-the same way. The order of the steps never varies.
+A {prodname} integration that does not start with a REST API service has one 
+flow. That is, each time {prodname} executes the integration, {prodname} 
+connects to the same applications, applies the same steps between connections, 
+and finishes integration execution in the same way. The order of the steps 
+never varies.
  
-An integration that starts with an API Provider connection has multiple
-flows. Each operation that the OpenAPI specification defines can have
-its own flow. For each operation, you define its flow by:   
-
-. Adding connections to the applications that need to process the data.
-. Adding steps between connections, including data mapping steps.
-. Specifying the return code for the finish connection, which sends a 
+An API provider integration has multiple flows. Each operation that the 
+OpenAPI specification defines has its own flow, which {prodname} automatically 
+creates. For each operation, you can edit its flow by:
+   
+* Adding connections to the applications that need to process the data.
+* Adding steps between connections, including data mapping steps.
+* Altering the return code for the finish connection, which sends a 
 response to the application that invoked the call that triggered
-integration execution. 
-
-Each operation can have exactly one flow. To support a call that
-invokes an operation that your OpenAPI specification defines, you
-must explicitly define the flow for that operation. 
+execution of the integration. 

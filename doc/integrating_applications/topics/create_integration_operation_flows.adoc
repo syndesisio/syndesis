@@ -5,20 +5,18 @@
 = Create the integration's operation flows
 
 The OpenAPI specification that defines your REST API service defines
-the operations that the service can perform. After you create an integration
-that starts with a connection to your API Provider service, you can define an 
+the operations that the service can perform. After you create an API
+provider integration, you can edit the
 integration flow for each operation. 
 
-Each operation can have exactly one integration flow. 
+Each operation has exactly one integration flow. 
 In an integration flow, you can add connections
 to other applications and services, as well as steps that operate on data
 between connections. 
 
 .Prerequisites
 
-* You created a new integration that starts with a connection to a REST API
-service for which you provided an OpenAPI specification.
-* You gave the integration a name and saved it.
+* You created an API provider integration, gave it a name, and saved it.
 * You created a connection to each application or service that you want
 an integration flow to connect to. For details, see the
 link:{LinkFuseOnlineIntegrationGuide}connecting-to-applications#about-creating-connections[information about creating connections].
@@ -27,19 +25,17 @@ link:{LinkFuseOnlineIntegrationGuide}connecting-to-applications#about-creating-c
 .Procedure
 
 . In the *Choose operation* page, click the entry for an operation
-that you want to implement. This opens the *Add to Integration* page.
-. In the integration visualization panel on the left, click the API
-connection on the bottom. When you hover over this connection, 
-*Provided API Return Path* appears. 
-+
-Every integration that starts with a connection to an API Provider 
-service, ends each integration flow with a connection to the 
-same service. This is the integration flow's finish connection and
-it returns a response to the service. The service then 
-sends a response to the caller that triggered execution of the 
-integration flow. 
+whose flow you want to edit. This opens the *Add to Integration* page.
 
-. To implement an operation, you must specify a return code as follows: 
+. In the integration visualization panel on the left, click the *\{api\}* 
+entry at the bottom. When you hover over this icon, *Provided API Return Path* 
+appears.
++
+Every API provider integration ends each integration flow by 
+sending a response to the REST API service. The service then sends a 
+response to the REST API caller that triggered execution of the integration flow.
+
+. Specify the operation's return code as follows: 
 .. In the *Provided API Return Path* page, click in the *Return Code*
 input field, which displays a list of possible return codes. 
 .. Scroll to *200 OK* and click it. 
@@ -85,7 +81,7 @@ popup that appears, click *Add a step*.
 
 +
 For help, see
-link:{LinkFuseOnlineIntegrationGuide}creating-integrations#add-steps[Adding steps between connections].
+link:{LinkFuseOnlineIntegrationGuide}#add-steps[Adding steps between connections].
 
 +
 Repeat this subset of instructions to add another step that processes
@@ -108,9 +104,11 @@ This builds the integration and makes it available to be executed.
 You can publish the integration each time that you
 complete the creation of an operation's integration flow or each
 time that you edit an operation's integration flow.
-* To create an integration flow for another operation, 
+* To edit the integration flow for another operation, 
 in the upper right, click 
-*Go to Operations List*. Repeat this procedure to create another operation's 
+*Go to Operations List*. 
+
+Repeat this procedure to create another operation's 
 integration flow.
 
 ifeval::["{location}" == "upstream"]
@@ -133,7 +131,7 @@ the result set.
 endif::[]
 
 .Next steps
-When an integration that starts with a connection to an API Provider
+When an API provider integration 
 is running, you can use the `curl` utility to confirm that it is
 working as expected. For examples of doing this, see 
-link:{LinkFuseOnlineIntegrationGuide}trigger-integrations-with-api-calls_{context}#view-try-api-provider-quickstart_{context}[the description of the API Provider quickstart].
+link:{LinkFuseOnlineIntegrationGuide}trigger-integrations-with-api-calls_{context}#view-try-api-provider-quickstart_{context}[the description of the API provider quickstart].
