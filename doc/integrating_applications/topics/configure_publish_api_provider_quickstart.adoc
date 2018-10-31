@@ -54,9 +54,10 @@ on the left, move your cursor over the icons to see what they represent. Click a
 step or connection to view its configuration. When you are done
 examining one, click another one to examine it. When you click 
 a database connection, you can see the SQL statement that it executes. 
-... In the integration flow visualization panel on the left, click the
-last connection. You might have to scroll down to see it. When you hover 
-over the last connection, {prodname} displays *Provided API Return Path*. 
+... In the integration flow visualization panel on the left, click the 
+image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
+at the bottom. You might have to scroll down to see it. When you hover 
+over it, {prodname} displays *Provided API Return Path*. 
 ... Click in the *Return Code* input field and scroll to select 
 *201 Created*. 
 ... Click *Done*.
@@ -69,9 +70,9 @@ This integration flow has a data mapper step and a connection to the
 sample database that is provided with {prodname}. 
 In the integration flow visualization panel, 
 click the database connection to view the SQL statement that it executes. 
-... In the integration flow visualization panel, click the
-last connection. When you hover 
-over the last connection, {prodname} displays *Provided API Return Path*. 
+... In the integration flow visualization panel, click the 
+image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
+at the bottom. 
 ... Click in the *Return Code* input field and scroll to select 
 *200 OK*. 
 ... Click *Done*.
@@ -85,9 +86,9 @@ sample database that is provided with {prodname}, and a log step.
 In the integration flow visualization panel, click an icon for a step
 or connection to view its configuration. When you are done examining one,
 click another one. 
-... In the integration flow visualization panel, click the
-last connection. When you hover 
-over the last connection, {prodname} displays *Provided API Return Path*. 
+... In the integration flow visualization panel, click the 
+image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
+at the bottom. 
 ... Click in the *Return Code* input field and scroll to select 
 *200 OK*. 
 ... Click *Done*.
