@@ -52,6 +52,17 @@ public class HttpRequestUnwrapperProcessorTest {
     }
 
     @Test
+    public void shouldUnwrapArrayResponses() throws Exception {
+        final Message in = new DefaultMessage(camelContext);
+        exchange.setIn(in);
+        in.setBody("{\"body\":[{\"b1\":\"c1\"},{\"b2\":\"c2\"}]}");
+
+        processor.process(exchange);
+
+        assertThat(in.getBody()).isEqualTo("[{\"b1\":\"c1\"},{\"b2\":\"c2\"}]");
+    }
+
+    @Test
     public void shouldUnwrapResponses() throws Exception {
         final Message in = new DefaultMessage(camelContext);
         exchange.setIn(in);
