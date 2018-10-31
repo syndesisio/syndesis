@@ -60,21 +60,23 @@ class App extends React.Component<RouteComponentProps, IAppState> {
 
   public render() {
     return (
-      <AppContext.Provider value={this.state}>
-        <AuthContext.Provider value={this.state}>
-          <Layout navbar={this.renderNavbar()}>
-            <React.Fragment>
-              <Switch>
-                <Route path='/token' render={this.TokenWithState}/>
-                <Route path='/login' component={LoginPage}/>
-                <Route path='/logout' component={WiredLogout}/>
-                <Route path='/settings' component={SettingsPage}/>
-                <AuthenticatedRoute path='/' component={PrivateRoutes}/>
-              </Switch>
-            </React.Fragment>
-          </Layout>
-        </AuthContext.Provider>
-      </AppContext.Provider>
+      <React.StrictMode>
+        <AppContext.Provider value={this.state}>
+          <AuthContext.Provider value={this.state}>
+            <Layout navbar={this.renderNavbar()}>
+              <React.Fragment>
+                <Switch>
+                  <Route path='/token' render={this.TokenWithState}/>
+                  <Route path='/login' component={LoginPage}/>
+                  <Route path='/logout' component={WiredLogout}/>
+                  <Route path='/settings' component={SettingsPage}/>
+                  <AuthenticatedRoute path='/' component={PrivateRoutes}/>
+                </Switch>
+              </React.Fragment>
+            </Layout>
+          </AuthContext.Provider>
+        </AppContext.Provider>
+      </React.StrictMode>
     );
   }
 

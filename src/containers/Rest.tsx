@@ -78,7 +78,7 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
     this.poller = this.poller.bind(this);
   }
 
-  public async componentWillMount() {
+  public async componentDidMount() {
     if (this.props.autoload) {
       this.read();
       if (this.props.poll) {

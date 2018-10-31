@@ -5,7 +5,7 @@ import { WithRouter } from '../../containers';
 import { ModuleLoader } from '../../ui';
 
 const LoadableDashboardPage = Loadable({
-  loader: () => import('./pages/DashboardPage'),
+  loader: () => import(/* webpackChunkName: "DashboardPageChunk" */'./pages/DashboardPage'),
   loading: ModuleLoader
 });
 

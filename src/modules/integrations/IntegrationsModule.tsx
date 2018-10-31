@@ -5,7 +5,7 @@ import { WithRouter } from '../../containers';
 import { ModuleLoader } from '../../ui';
 
 const LoadableIntegrationsPage = Loadable({
-  loader: () => import('./pages/IntegrationsPage'),
+  loader: () => import(/* webpackChunkName: "IntegrationsPageChunk" */ './pages/IntegrationsPage'),
   loading: ModuleLoader
 });
 

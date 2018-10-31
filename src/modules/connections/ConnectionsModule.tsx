@@ -5,12 +5,12 @@ import { WithRouter } from '../../containers';
 import { ModuleLoader } from '../../ui';
 
 const LoadableConnectionsPage = Loadable({
-  loader: () => import('./pages/ConnectionsPage'),
+  loader: () => import(/* webpackChunkName: "ConnectionsPageChunk" */ './pages/ConnectionsPage'),
   loading: ModuleLoader
 });
 
 const LoadableNewConnectionPage = Loadable({
-  loader: () => import('./pages/NewConnectionPage'),
+  loader: () => import(/* webpackChunkName: "NewConnectionPageChunk" */ './pages/NewConnectionPage'),
   loading: ModuleLoader
 });
 
