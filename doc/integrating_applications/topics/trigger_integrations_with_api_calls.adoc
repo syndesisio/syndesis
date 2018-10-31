@@ -1,20 +1,29 @@
 // This assembly is included in the following assemblies:
 // master.adoc
 
+:context: ug
 [id='trigger-integrations-with-api-calls_{context}']
 = Trigger integration execution with an API call
 
 :context: api-provider
 
 To trigger execution of an integration on demand, start the integration
-with a connection to a REST API service that you provide. {prodname} refers
-to these kinds of connections as API Provider connections. API Provider 
-connections allow a REST API client to invoke a command that triggers 
-integration execution. The following topics provide information and 
-instructions for creating integrations that start with API Provider 
-connections. 
+with a REST API service that you provide. 
+Integrations that start this way are referred to as API provider 
+integrations. An API provider integration allows REST API clients to invoke 
+commands that trigger execution of the integration. 
 
-* <<overview-benefit-api-provider-connections_{context}>>
+When {prodname} publishes an API provider integration, it annotates the API 
+service definition for use with Red Hat 3scale. 3scale is Red Hat's API
+management solution. 3scale enforces API access policies, centralizes 
+API control, provides high availability for your API, and integrates with 
+Red Hat Fuse. For more information, see 
+https://access.redhat.com/documentation/en-us/red_hat_3scale/2.3/[the Red Hat 3scale documentation page.]
+
+The following topics provide information and 
+instructions for creating API provider integrations: 
+
+* <<overview-benefit-api-provider-integrations_{context}>>
 * <<description-api-provider-flows_{context}>>
 * <<about-api-provider-endpoints_{context}>>
 * <<workflow-api-providers_{context}>>
@@ -26,12 +35,12 @@ connections.
 ifeval::["{location}" == "downstream"]
 [IMPORTANT]
 ==== 
-In this release, an API Provider connection is a 
+In this release, an API provider integration is a 
 https://access.redhat.com/support/offerings/techpreview/[Technology Preview feature].
 ====
 endif::[]
 
-include::overview_benefit_api_provider_connections.adoc[leveloffset=+1]
+include::overview_benefit_api_provider_integrations.adoc[leveloffset=+1]
 
 include::description_api_provider_flows.adoc[leveloffset=+1]
 

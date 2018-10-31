@@ -1,8 +1,8 @@
 // Module included in the following assemblies:
-// trigger_integrations_with_api_calls.adoc
+// triggaper_integrations_with_api_calls.adoc
 
 [id='try-api-provider-quickstart_{context}']
-= Try out the Task API quickstart integration
+= Execute the API provider quickstart integration
 
 When the {prodname} Task API quickstart integration is running, you can
 invoke `curl` utility commands that send HTTP requests to the Task API service.
@@ -22,13 +22,13 @@ triggers.
 integration's external URL to the `externalURL` environment variable.
 Be sure to replace the URL in this sample command with the URL you copied: 
 +
-`export externalURL="https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com"`
+`export externalURL="https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api"`
 
 . Invoke a `curl` command that triggers execution of the integration
 flow for the *Create Task* operation: 
 +
 ----
-curl -k --header "Content-Type: application/json" --request POST --data '{ "task":"my new task!"}' $externalURL/api/todo 
+curl -k --header "Content-Type: application/json" --request POST --data '{ "task":"my new task!"}' $externalURL/todo 
 ----
 +
 * `-k` allows `curl` to proceed and operate even for server connections 
@@ -37,7 +37,7 @@ that are otherwise considered insecure.
 * `--request` specifies the HTTP `POST` command, which stores data.
 * `--data` specifies the JSON format content to be stored. In this example the  
 content is `{ "task":"my new task!"}`.
-* `$externalURL/api/todo` is the endpoint to invoke. 
+* `$externalURL/todo` is the endpoint to invoke. 
 
 +
 This command sends an HTTP `POST` request to the Task API service, which
@@ -54,7 +54,7 @@ such as the following to indicate what it did:
 flow for the *Get Task by ID* operation:
 +
 ----
-curl -k $externalURL/api/todo/1 
+curl -k $externalURL/todo/1 
 ----
 +
 To obtain a task, the `curl` command needs to specify only the endpoint. The
@@ -65,7 +65,7 @@ specifies the ID of the task to get.
 flow for the *Delete Task for ID* operation:
 +
 ----
-curl -k -X DELETE $externalURL/api/todo/1
+curl -k -X DELETE $externalURL/todo/1
 ----
 +
 This command invokes the HTTP `DELETE` command with the same endpoint as the

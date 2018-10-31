@@ -13,6 +13,12 @@ requirements for that operation.
 .Prerequisites
 * You can provide an OpenAPI specification for the REST API
 operations that you want the integration to perform. 
++
+To experiment,
+https://github.com/syndesisio/syndesis-quickstarts/blob/master/api-provider/task-api.json[download the `task-api.json` file], 
+which is an OpenAPI specification for an API provider quickstart. You can
+then drag this file in when {prodname} prompts you to provide an OpenAPI
+specification. 
 * You have a plan for the integration flow for each OpenAPI operation. 
 * You created a connection for each application or service that you want
 to add to an integration flow. 
@@ -42,6 +48,10 @@ editor, then when you are done, save if necessary, then click *Next*.
 If you are defining an OpenAPI specification, then {prodname} opens
 the Apicurio editor. Define and save your OpenAPI specification. Then
 click *Next*. 
++
+In this Technology Preview release, you cannot edit the operation 
+description that will appear in the operations list in {prodname}. 
+
 
 . On the *Give this integration a name* page, enter a name for your integration.
 . Optionally, enter a description that helps you distinguish this integration
