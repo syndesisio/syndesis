@@ -17,10 +17,5 @@ Applications that you must register with include:
 * SAP Concur
 * Twitter
 
-With registration in place for those applications, the workflow for
-creating an integration looks like this:
-
-image:images/general-workflow.png[general workflow]
-
 .Additional resource
-link:{LinkFuseOnlineIntegrationGuide}#workflow-api-providers_api-provider[Workflow for creating API provider integrations].
+See also: link:{LinkFuseOnlineIntegrationGuide}#workflow-api-providers_api-provider[Workflow for creating API provider integrations].
