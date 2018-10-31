@@ -27,8 +27,9 @@ link:{LinkFuseOnlineIntegrationGuide}connecting-to-applications#about-creating-c
 . In the *Choose operation* page, click the entry for an operation
 whose flow you want to edit. This opens the *Add to Integration* page.
 
-. In the integration visualization panel on the left, click the *\{api\}* 
-entry at the bottom. When you hover over this icon, *Provided API Return Path* 
+. In the integration visualization panel on the left, click the 
+image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
+at the bottom. When you hover over this icon, *Provided API Return Path* 
 appears.
 +
 Every API provider integration ends each integration flow by 
@@ -108,7 +109,7 @@ time that you edit an operation's integration flow.
 in the upper right, click 
 *Go to Operations List*. 
 
-Repeat this procedure to create another operation's 
+Repeat this procedure to edit another operation's 
 integration flow.
 
 ifeval::["{location}" == "upstream"]
