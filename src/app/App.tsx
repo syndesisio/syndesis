@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import { PfVerticalNavItem } from '../components/ui/patternfly';
+import { ConnectionsModule } from '../modules/connections';
+import { DashboardModule } from '../modules/dashboard';
+import { IntegrationsModule } from '../modules/integrations';
+import { SettingsPage } from '../settings';
 import './App.css';
 import { AppContext, IAppContext, IAppSettings } from './AppContext';
-import { AuthContext, AuthenticatedRoute, IAuthContext, LoginPage, Logout, TokenPage, } from './auth';
+import { AuthContext, AuthenticatedRoute, IAuthContext, LoginPage, Logout, TokenPage } from './auth';
 import { Layout } from './layout';
-import { ConnectionsModule, DashboardModule, IntegrationsModule } from './modules';
-import { SettingsPage } from './settings';
-import { PfVerticalNavItem } from './ui/patternfly';
 
 const PrivateRoutes = () => (
   <Switch>
@@ -29,7 +31,7 @@ interface IAppState extends IAuthContext, IAppContext {
   lastUsedProject?: string;
 }
 
-class App extends React.Component<RouteComponentProps, IAppState> {
+class AppBase extends React.Component<RouteComponentProps, IAppState> {
   private TokenWithState: any;
 
   public constructor(props: any) {
@@ -155,4 +157,4 @@ class App extends React.Component<RouteComponentProps, IAppState> {
   }
 }
 
-export default withRouter(App);
+export const App = withRouter(AppBase);

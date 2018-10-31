@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { AppContext } from '../AppContext';
-import { AuthContext } from '../auth';
+import { AppContext } from '../app/AppContext';
+import { AuthContext } from '../app/auth';
 import { IRestState, Rest } from './Rest';
 import { Stream } from './Stream';
 
