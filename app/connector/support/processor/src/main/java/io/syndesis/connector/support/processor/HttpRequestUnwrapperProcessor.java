@@ -69,7 +69,7 @@ public final class HttpRequestUnwrapperProcessor implements Processor {
                     return;
                 }
 
-                if (bodyData.isObject()) {
+                if (bodyData.isContainerNode()) {
                     message.setBody(Json.toString(bodyData));
                     return;
                 }
