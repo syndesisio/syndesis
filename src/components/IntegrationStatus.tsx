@@ -1,6 +1,6 @@
+import { IIntegration } from '@syndesis/ui/containers';
 import { Label } from 'patternfly-react';
 import * as React from 'react';
-import { IIntegration } from '../containers';
 
 export interface IIntegrationStatusProps {
   integration: IIntegration;

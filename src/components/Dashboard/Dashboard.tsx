@@ -1,8 +1,8 @@
+import { ConnectionsGrid } from '@syndesis/ui/components';
+import { IConnection, IIntegration, IIntegrationsMetrics, IMonitoredIntegration } from '@syndesis/ui/containers';
 import { CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { IConnection, IIntegration, IIntegrationsMetrics, IMonitoredIntegration } from '../../containers';
-import { ConnectionsGrid } from '../ConnectionsGrid';
 import { AggregatedMetric } from './AggregatedMetric';
 import { ConnectionsMetric } from './ConnectionsMetric';
 

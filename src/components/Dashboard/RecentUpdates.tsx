@@ -1,7 +1,7 @@
+import { IntegrationStatus } from '@syndesis/ui/components';
+import { IIntegration } from '@syndesis/ui/containers';
 import { Card, Grid } from 'patternfly-react';
 import * as React from 'react';
-import { IIntegration } from '../../containers';
-import { IntegrationStatus } from '../IntegrationStatus';
 import { RecentUpdatesSkeleton } from './RecentUpdatsSkeleton';
 
 export interface IRecentUpdatesProps {

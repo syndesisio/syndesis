@@ -1,14 +1,16 @@
+import { AppContext, IAppContext, IAppSettings } from '@syndesis/ui/app/AppContext';
+import { AuthContext, IAuthContext } from '@syndesis/ui/app/AuthContext';
+import { AuthenticatedRoute } from '@syndesis/ui/app/AuthenticatedRoute';
+import { LoginPage } from '@syndesis/ui/app/LoginPage';
+import { Logout } from '@syndesis/ui/app/LogoutPage';
+import { TokenPage } from '@syndesis/ui/app/TokenPage';
+import { PfVerticalNavItem } from '@syndesis/ui/components';
+import { ConnectionsModule, DashboardModule, IntegrationsModule } from '@syndesis/ui/modules';
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
-import { PfVerticalNavItem } from '../components/ui/patternfly';
-import { ConnectionsModule } from '../modules/connections';
-import { DashboardModule } from '../modules/dashboard';
-import { IntegrationsModule } from '../modules/integrations';
-import { SettingsPage } from '../settings';
 import './App.css';
-import { AppContext, IAppContext, IAppSettings } from './AppContext';
-import { AuthContext, AuthenticatedRoute, IAuthContext, LoginPage, Logout, TokenPage } from './auth';
-import { Layout } from './layout';
+import { Layout } from './Layout';
+import { SettingsPage } from './SettingsPage';
 
 const PrivateRoutes = () => (
   <Switch>

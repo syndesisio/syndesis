@@ -1,6 +1,6 @@
+import { IIntegrationMonitoring } from '@syndesis/ui/containers';
 import { ProgressBar } from 'patternfly-react';
 import * as React from 'react';
-import { IIntegrationMonitoring } from '../containers';
 
 export interface IIntegrationProgressProps {
   monitoring: IIntegrationMonitoring

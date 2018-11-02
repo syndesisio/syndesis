@@ -1,6 +1,6 @@
+import { IConnection } from '@syndesis/ui/containers';
 import { Card, EmptyState } from 'patternfly-react';
 import * as React from 'react';
-import { IConnection } from '../containers';
 
 export interface IConnectionProps {
   connection: IConnection;

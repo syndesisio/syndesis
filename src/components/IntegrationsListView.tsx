@@ -1,6 +1,6 @@
+import { IMonitoredIntegration } from '@syndesis/ui/containers';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { IMonitoredIntegration } from '../containers';
 import { IntegrationsList } from './IntegrationsList';
 import { IntegrationsListSkeleton } from './IntegrationsListSkeleton';
 import { IListViewToolbarProps, ListViewToolbar } from './ListViewToolbar';
