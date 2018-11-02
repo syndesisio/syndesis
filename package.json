@@ -22,6 +22,7 @@
     "react-virtualized": "^9.20.1"
   },
   "scripts": {
+    "analyze": "find build/static/js -type f -maxdepth 1 -name '*.js' -exec bash -c 'npx source-map-explorer {} &' \\;",
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
