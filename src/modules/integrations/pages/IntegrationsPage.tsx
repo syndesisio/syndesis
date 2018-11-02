@@ -1,17 +1,17 @@
-import * as React from 'react';
-import { IntegrationsListView } from '../../../components/index';
-import { IActiveFilter, IFilterType, ISortType } from '../../../components/ListViewToolbar';
+import { IntegrationsListView } from '@syndesis/ui/components/index';
+import { IActiveFilter, IFilterType, ISortType } from '@syndesis/ui/components/ListViewToolbar';
 import {
   IConnection,
   IMonitoredIntegration,
   WithConnections,
   WithMonitoredIntegrations,
   WithRouter
-} from '../../../containers/index';
+} from '@syndesis/ui/containers/index';
 import {
   IListViewToolbarAbstractComponent,
   ListViewToolbarAbstractComponent
-} from '../../../containers/ListViewToolbarAbstractComponent';
+} from '@syndesis/ui/containers/ListViewToolbarAbstractComponent';
+import * as React from 'react';
 
 function getFilteredAndSortedIntegrations(integrations: IMonitoredIntegration[], activeFilters: IActiveFilter[], currentSortType: string, isSortAscending: boolean) {
   let filteredAndSortedIntegrations = integrations;

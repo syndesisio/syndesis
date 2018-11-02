@@ -1,6 +1,6 @@
+import { IMonitoredIntegration } from '@syndesis/ui/containers';
 import { DropdownKebab, Icon, ListView, MenuItem } from 'patternfly-react';
 import * as React from 'react';
-import { IMonitoredIntegration } from '../containers';
 import { IntegrationStatus } from './IntegrationStatus';
 import { IntegrationStatusDetail } from './IntegrationStatusDetail';
 

@@ -1,6 +1,6 @@
 import { Button, Col, Form, Grid, Row, } from 'patternfly-react';
 import * as React from 'react';
-import { AppContext } from '../app/AppContext';
+import { AppContext } from './';
 
 interface ISettingsPageProps {
   apiUri: string;

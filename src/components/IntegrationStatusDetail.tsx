@@ -1,6 +1,6 @@
+import { IIntegrationMonitoring } from '@syndesis/ui/containers';
 import { Spinner } from 'patternfly-react';
 import * as React from 'react';
-import { IIntegrationMonitoring } from '../containers';
 import { IntegrationProgress } from './IntegrationProgress';
 
 import './IntegrationStatusDetail.css'

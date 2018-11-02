@@ -20,7 +20,12 @@
     "importHelpers": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "paths": {
+      "@syndesis/ui/*": [
+        "src/*"
+      ]
+    }
   },
   "include": [
     "src/**/*"

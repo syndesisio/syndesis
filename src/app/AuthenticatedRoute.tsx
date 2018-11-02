@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Redirect, Route, } from 'react-router-dom';
-import { AuthContext, } from '.';
-import { AppContext } from '../AppContext';
+import { AppContext } from './AppContext';
+import { AuthContext } from './AuthContext';
 
 export class AuthenticatedRoute extends React.Component<any> {
   private Component: any;

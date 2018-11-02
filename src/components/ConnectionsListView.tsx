@@ -1,6 +1,6 @@
+import { IConnection } from '@syndesis/ui/containers';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { IConnection } from '../containers';
 import { ConnectionsGrid } from './ConnectionsGrid';
 import { IListViewToolbarProps, ListViewToolbar } from './ListViewToolbar';
 

@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { Dashboard } from '../../../components/index';
+import { Dashboard } from '@syndesis/ui/components/index';
 import {
   IIntegration,
   IIntegrationsMetricsTopIntegration,
@@ -7,7 +6,8 @@ import {
   WithConnections,
   WithIntegrationsMetrics,
   WithMonitoredIntegrations
-} from '../../../containers/index';
+} from '@syndesis/ui/containers/index';
+import * as React from 'react';
 
 
 export interface IIntegrationCountsByState {
