@@ -3,7 +3,7 @@
 
 A connection to Gmail requires registration of
 {prodname} as an application that can access Gmail.
-If you did not already register {prodname}, see <<register-with-gmail>>.
+If you did not already register {prodname}, see <<register-with-gmail_{context}>>.
 
 When you create a Gmail connection, you authorize the connection to access one
 particular Gmail account. After you create a Gmail connection, you can 
@@ -22,7 +22,7 @@ which takes you to a *Sign in with Gmail* page.
 +
 If *Connect Gmail* does not appear, then your {prodname} installation
 is not registered as a Gmail client application. See
-<<register-with-gmail>>. When your installation is not registered with
+<<register-with-gmail_{context}>>. When your installation is not registered with
 Gmail, then when you try to create a Gmail connection, {prodname} displays
 multiple fields that prompt for authorization information. While you can
 create a Gmail connection by entering values in these fields, 

@@ -27,9 +27,13 @@ publish messages to an AMQP broker.
 |Download files from an FTP or SFTP server or upload files to an
 FTP or SFTP server.
 
-|<<connecting-to-gmail,Gmail>>
+|<<connecting-to-gmail_{context},Gmail>>
 |Obtain messages sent to a particular Gmail account and send messages
 from a particular Gmail account. 
+
+|<<connecting-to-google-calendar_{context},Google Calendar>>
+|Obtain calendar entries from a particular Google Calendar account or add/update
+entries in that account's Google Calendar.  
 
 |<<connecting-to-http,HTTP/HTTPS>>
 |Connect to an HTTP or HTTPS endpoint and execute the
