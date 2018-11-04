@@ -35,8 +35,8 @@ FTP or SFTP server.
 from a particular Gmail account. 
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-google-calendar_connectors[Google Calendar]
-|Obtain events from a Google Calendar that you specify or add/update
-events in a Google Calendar that you specify.  
+|Obtain calendar entries from a particular Google Calendar account or add/update
+entries in that account's Google Calendar.  
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-http_connectors[HTTP/HTTPS]
 |Connect to an HTTP or HTTPS endpoint and execute the
