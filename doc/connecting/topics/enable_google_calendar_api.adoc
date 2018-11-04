@@ -1,0 +1,47 @@
+[id='enable-google-calendar-api_{context}']
+= Enable access to the Google Calendar API
+
+To be able to connect to Google Calendar in an integration, 
+you must register your {prodname} environment as a Google client application. 
+During registration, you enable the Google Calendar API and create credentials that
+{prodname} uses to access Google APIs that you have enabled.  
+
+If you already created a connection to Gmail, then 
+{prodname} has the credentials for access to enabled Google
+APIs. To be able to create a Google Calendar connection, you just need to
+enable the Google Calendar API. 
+
+If you already registered your {prodname} environment as a Google client 
+application and during registration you enabled the Google Calendar API, then you do
+not need to follow the procedure provided here. You are ready to
+create a Google Calendar connection. 
+
+.Prerequisite
+In the *Settings* page in your {prodname} environment, the Gmail
+entry displays *Edit* and *Remove*, which
+indicate that {prodname} has the credentials to access 
+enabled Google APIs. If *Register* appears in the Gmail
+entry, then you must 
+<<register-with-google-calendar_{context},register your {prodname} environment as a Google client application>>. 
+
+.Procedure
+
+. In a browser, go to `https://console.developers.google.com`.
+. Confirm that you are signed in to the Google account that you used
+to register your {prodname} environment as a Google client. If you 
+are not, sign in to that account.  
+. Ensure that the current Google project is the one you used for
+registration. If it is not, change to that project. 
+. You should see the *APIs and Services* dashboard. If you do not, then
+in the upper left, click 
+image:images/Hamburger.png[Navigation menu icon] and select
+*APIs and Services* > *Dashboard*. 
+. At the top of the page, click *ENABLE APIS AND SERVICES*. 
+. In the page that appears, in the search field, enter `*Google Calendar*`. 
+. In the search results, click the *Google Calendar* card. 
+. In the *Google Calendar API* page, click *ENABLE*.
+{prodname} copies the Google consumer client ID and client secret
+from the {prodname} Gmail settings to the {prodname} Google Calendar settings. 
+. In the {prodname} *Settings* page, in the Google Calendar entry, click *Save*,
+and then click *Ok*.
+You can now create a Google Calendar connection.

@@ -1,25 +1,26 @@
-[id='register-with-gmail']
-= Register {prodname} as a Gmail client application
+[id='register-with-google-calendar_{context}']
+= Register {prodname} as a Google Calendar client application
 
-To be able to connect to Gmail in an integration, 
-you must register your {prodname} environment as a Google client application. 
-During registration, you enable the Gmail API and create credentials that
-{prodname} uses to access Google APIs that you have enabled. 
+To be able to connect to Google Calendar in an integration, 
+you must register your {prodname} environment as a  Google client application. 
+During registration, you enable the Google
+Calendar API and create credentials that {prodname} uses to access
+Google APIs that you have enabled. 
 
-With registration in place, you can create any number of Gmail
-connections and any number of integrations that connect
-to Gmail. While each Gmail connection uses the 
+With registration in place, you can create any number of Google
+Calendar connections and any number of integrations that connect
+to Google Calendar. While each Google Calendar connection uses the 
 same registration, each connection can 
-access the mail for a different Google account. 
+access the calendars that belong to a different Google account. 
 
 [NOTE]
-If you already created a Google Calendar connection, then you already 
+If you already created a Gmail connection, then you already 
 created the credentials that your {prodname} environment needs to access
 enabled Google APIs. You do not need to follow the procedure documented here.
-To be able to create a Gmail connection, you
-just need to <<enable-gmail-api_{context},enable the Gmail API>>. 
+To be able to create a Google Calendar connection, you
+just need to <<enable-google-calendar-api_{context},enable the Google Calendar API>>. 
 
-To authorize your {prodname} environment to access Gmail:
+.Procedure
 
 . In {prodname}, in the left navigation panel, click *Settings*. 
 . On the *Settings* page, near the top, to the right of the callback URL, 
@@ -38,22 +39,25 @@ If this Google account does not already
 have a project, you must create one. For information about Google projects
 and how you might want to organize your use of projects, click the Google help
 icon in the upper right. 
-.. Enable the Gmail API as follows: 
-... You should see the *APIs and Services* dashboard. If you do not, then
+.. You should see the *APIs and Services* dashboard. If you do not, then
 in the upper left corner, click the
 image:images/Hamburger.png[Navigation menu icon] and select
 *APIs and Services* > *Dashboard*. 
-... Click the *Gmail API* card.
-... In the *Gmail API* page, click *ENABLE*. 
-.. Give your client application a name as follows: 
+.. Enable the Google Calendar API as follows:
+... At the top of the page, click *ENABLE APIS AND SERVICES*. 
+... In the page that appears, in the search field, enter `*Google Calendar*`. 
+... In the search results, click the *Google Calendar* card. 
+... In the *Google Calendar API* page, click *ENABLE*.
+.. Give your client application a name as follows:
 ... In the page that appears, in the left navigation panel, click 
 *Credentials* and then on the right, click *Credentials in APIs & Services*.
 ... Click the *OAuth consent screen* tab. 
-... In the page that appears, in the *Application Name* field, enter a name for the {prodname}
+... In the page that appears, in the *Application Name* field, enter a 
+name for the {prodname}
 client application. For example, enter `*{prodname} client application*`. 
 ... Skip the other fields. 
 ... Click *Save*. 
-.. Obtain client application credentials as follows:
+.. Obtain client application credentials as follows: 
 ... To the right of *Create Credentials*, click the down arrow to 
 display a menu and select *OAuth client ID*. 
 ... In the page that appears, select *Web application* to display more content.
@@ -71,8 +75,8 @@ this procedure.
 image:images/copy_icon.png[the Copy icon] to copy the client ID
 to your clipboard.
 
-. Return to the {prodname} *Settings* page, expand the Gmail entry, and 
-in the Gmail *Client ID* field, 
+. Return to the {prodname} *Settings* page, expand the Google Calendar entry, 
+and in the Google Calendar *Client ID* field, 
 paste the consumer client ID that you just copied. 
 
 . Return to the Google developers site and to the right of the 
@@ -81,8 +85,8 @@ image:images/copy_icon.png[the Copy icon] to copy the client secret to
 your clipboard.
 
 . Return to the {prodname} *Settings* page and in the 
-Gmail *Client Secret* field, paste the Gmail client secret that you 
+Google Calendar *Client Secret* field, paste the Google Calendar client secret that you 
 just copied. 
 . Click *Save*. You should get a *Registration Successful!* notification. 	
 . Click *Ok* to collapse the fields. With registration in place, you can
-create a Gmail connection. 
+create a Google Calendar connection. 

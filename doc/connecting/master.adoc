@@ -8,11 +8,10 @@ include::topics/shared/attributes.adoc[]
 :productpkg: red_hat_fuse
 :version: 7.2
 :location: upstream
-:context: top
+:context: connectors
 
 [id='connecting-to-applications-and-services']
 = Connecting {prodname} to Applications and Services 
-:context: connectors
 
 To integrate applications, you create a connection to each application
 or service that you want to integrate. You then create an integration and
@@ -56,6 +55,8 @@ include::topics/connecting_to_dropbox.adoc[leveloffset=+1]
 include::topics/connecting_to_ftp.adoc[leveloffset=+1]
 
 include::topics/connecting_to_gmail.adoc[leveloffset=+1]
+
+include::topics/connecting_to_google_calendar.adoc[leveloffset=+1]
 
 include::topics/connecting_to_http.adoc[leveloffset=+1]
 
