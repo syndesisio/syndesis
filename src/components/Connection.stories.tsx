@@ -30,6 +30,6 @@ const sampleConnection = {
 
 storiesOf('Connection', module)
   .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
-  .add('a Connection', function() {
+  .add('a Connection', () => {
     return <Connection connection={sampleConnection} />;
   });

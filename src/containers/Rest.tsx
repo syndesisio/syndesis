@@ -1,19 +1,25 @@
 import * as React from 'react';
-import * as equal from 'react-fast-compare';
+import equal from 'react-fast-compare';
 
 export interface IHeader {
   [s: string]: string;
 }
 
 export interface IFetch {
-  url: string,
-  method: 'GET' | 'PUT',
-  headers?: IHeader,
-  body?: any,
-  contentType?: string
+  url: string;
+  method: 'GET' | 'PUT';
+  headers?: IHeader;
+  body?: any;
+  contentType?: string;
 }
 
-export function callFetch({url, method, headers = {}, body, contentType = 'application/json; charset=utf-8'}: IFetch) {
+export function callFetch({
+  url,
+  method,
+  headers = {},
+  body,
+  contentType = 'application/json; charset=utf-8'
+}: IFetch) {
   return fetch(url, {
     body: body ? JSON.stringify(body) : undefined,
     cache: 'no-cache',
@@ -25,7 +31,7 @@ export function callFetch({url, method, headers = {}, body, contentType = 'appli
     method,
     mode: 'cors',
     redirect: 'follow',
-    referrer: 'no-referrer',
+    referrer: 'no-referrer'
   });
 }
 
@@ -105,7 +111,10 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
     this.stopPolling();
   }
 
-  public shouldComponentUpdate(nextProps: IRestProps<T>, nextState: IRestState<T>): boolean {
+  public shouldComponentUpdate(
+    nextProps: IRestProps<T>,
+    nextState: IRestState<T>
+  ): boolean {
     return !equal(this.props, nextProps) || !equal(this.state, nextState);
   }
 
@@ -116,19 +125,22 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
   public async read() {
     try {
       this.setState({
-        loading: true,
+        loading: true
       });
       const response = await callFetch({
         contentType: this.props.contentType,
         headers: this.props.headers,
         method: 'GET',
-        url: `${this.props.baseUrl}${this.props.url}`,
+        url: `${this.props.baseUrl}${this.props.url}`
       });
       if (!response.ok) {
         throw new Error(response.statusText);
       }
       let data;
-      if (!this.props.contentType || this.props.contentType.indexOf('application/json') === 0) {
+      if (
+        !this.props.contentType ||
+        this.props.contentType.indexOf('application/json') === 0
+      ) {
         data = await response.json();
       } else {
         data = await response.text();
@@ -136,7 +148,7 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
       this.setState({
         data,
         hasData: true,
-        loading: false,
+        loading: false
       });
     } catch (e) {
       this.setState({
@@ -144,12 +156,12 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
         error: true,
         errorMessage: e.message,
         hasData: false,
-        loading: false,
+        loading: false
       });
     }
   }
 
-  public async onSave({url, data}: ISaveProps) {
+  public async onSave({ url, data }: ISaveProps) {
     this.setState({
       loading: true
     });
@@ -159,7 +171,7 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
         contentType: this.props.contentType,
         headers: this.props.headers,
         method: 'PUT',
-        url: `${this.props.baseUrl}${url || this.props.url}`,
+        url: `${this.props.baseUrl}${url || this.props.url}`
       });
       if (!response.ok) {
         throw new Error(response.statusText);
@@ -169,7 +181,7 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
       this.setState({
         error: true,
         errorMessage: e.message,
-        loading: false,
+        loading: false
       });
     }
   }

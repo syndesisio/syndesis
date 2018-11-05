@@ -1,5 +1,9 @@
-import { IntegrationsListView } from '@syndesis/ui/components/index';
-import { IActiveFilter, IFilterType, ISortType } from '@syndesis/ui/components/ListViewToolbar';
+import {
+  IActiveFilter,
+  IFilterType,
+  IntegrationsListView,
+  ISortType
+} from '@syndesis/ui/components';
 import {
   IConnection,
   IMonitoredIntegration,
@@ -13,7 +17,12 @@ import {
 } from '@syndesis/ui/containers/ListViewToolbarAbstractComponent';
 import * as React from 'react';
 
-function getFilteredAndSortedIntegrations(integrations: IMonitoredIntegration[], activeFilters: IActiveFilter[], currentSortType: string, isSortAscending: boolean) {
+function getFilteredAndSortedIntegrations(
+  integrations: IMonitoredIntegration[],
+  activeFilters: IActiveFilter[],
+  currentSortType: string,
+  isSortAscending: boolean
+) {
   let filteredAndSortedIntegrations = integrations;
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
@@ -23,17 +32,19 @@ function getFilteredAndSortedIntegrations(integrations: IMonitoredIntegration[],
           return mi.integration.name.toLowerCase().includes(valueToLower);
         }
         if (filter.title === 'Connection') {
-          const connectionNames = mi.integration.flows
-            .reduce((acc, flow) =>
-                [
-                  ...acc,
-                  ...flow.steps
-                    .filter(s => s.connection)
-                    .map(s => s.connection.name.toLowerCase())
-                ],
-              []
-            );
-          return connectionNames.reduce((found, n) => found || n.includes(valueToLower), false);
+          const connectionNames = mi.integration.flows.reduce(
+            (acc, flow) => [
+              ...acc,
+              ...flow.steps
+                .filter(s => s.connection)
+                .map(s => s.connection.name.toLowerCase())
+            ],
+            [] as string[]
+          );
+          return connectionNames.reduce(
+            (found, n) => found || n.includes(valueToLower),
+            false
+          );
         }
         return false;
       }
@@ -47,8 +58,11 @@ function getFilteredAndSortedIntegrations(integrations: IMonitoredIntegration[],
       if (currentSortType === 'Name') {
         return left.integration.name.localeCompare(right.integration.name);
       }
-      return left.integration.currentState.localeCompare(right.integration.currentState);
-    });
+      return left.integration.currentState.localeCompare(
+        right.integration.currentState
+      );
+    }
+  );
 
   return filteredAndSortedIntegrations;
 }
@@ -57,7 +71,7 @@ const filterByName = {
   filterType: 'text',
   id: 'name',
   placeholder: 'Filter by Name',
-  title: 'Name',
+  title: 'Name'
 } as IFilterType;
 
 const filterByConnection = {
@@ -65,7 +79,7 @@ const filterByConnection = {
   filterValues: [],
   id: 'connection',
   placeholder: 'Filter by Connection',
-  title: 'Connection',
+  title: 'Connection'
 };
 
 function getFilterTypes(connections: IConnection[]): IFilterType[] {
@@ -75,7 +89,7 @@ function getFilterTypes(connections: IConnection[]): IFilterType[] {
       ...filterByConnection,
       filterValues: connections.map(c => ({
         id: c.id,
-        title: c.name,
+        title: c.name
       }))
     } as IFilterType
   ];
@@ -84,35 +98,38 @@ function getFilterTypes(connections: IConnection[]): IFilterType[] {
 const sortByName = {
   id: 'name',
   isNumeric: false,
-  title: 'Name',
+  title: 'Name'
 } as ISortType;
 
 const sortByStatus = {
   id: 'status',
   isNumeric: false,
-  title: 'Status',
+  title: 'Status'
 } as ISortType;
 
 const sortTypes: ISortType[] = [sortByName, sortByStatus];
 
-export default class IntegrationsPage extends ListViewToolbarAbstractComponent<{}, IListViewToolbarAbstractComponent> {
+export default class IntegrationsPage extends ListViewToolbarAbstractComponent<
+  {},
+  IListViewToolbarAbstractComponent
+> {
   public state = {
     activeFilters: [] as IActiveFilter[],
     currentFilterType: filterByName,
     currentSortType: sortByName.title,
     currentValue: '',
     filterCategory: null,
-    isSortAscending: true,
+    isSortAscending: true
   };
 
   public render() {
     return (
       <WithMonitoredIntegrations>
-        {({data: integrationsData, loading, hasData}) =>
+        {({ data: integrationsData, loading, hasData }) => (
           <WithConnections>
-            {({data: connectionsData}) =>
+            {({ data: connectionsData }) => (
               <WithRouter>
-                {({match}) => {
+                {({ match }) => {
                   const filteredAndSortedIntegrations = getFilteredAndSortedIntegrations(
                     integrationsData.items,
                     this.state.activeFilters,
@@ -135,15 +152,17 @@ export default class IntegrationsPage extends ListViewToolbarAbstractComponent<{
                       onFilterValueSelected={this.onFilterValueSelected}
                       onRemoveFilter={this.onRemoveFilter}
                       onClearFilters={this.onClearFilters}
-                      onToggleCurrentSortDirection={this.onToggleCurrentSortDirection}
+                      onToggleCurrentSortDirection={
+                        this.onToggleCurrentSortDirection
+                      }
                       onUpdateCurrentSortType={this.onUpdateCurrentSortType}
                     />
                   );
                 }}
               </WithRouter>
-            }
+            )}
           </WithConnections>
-        }
+        )}
       </WithMonitoredIntegrations>
     );
   }

@@ -5,6 +5,6 @@ import { StoryHelper } from './StoryHelper';
 
 storiesOf('ConnectionGrid', module)
   .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
-  .add('a loading list of connections', function() {
+  .add('a loading list of connections', () => {
     return <ConnectionsGrid loading={true} connections={[]} />;
   });
