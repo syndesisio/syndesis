@@ -50,7 +50,7 @@ Please note that you need to have the `oc` binary available in your `PATH`. To d
 The goal here is to download the project to your laptop/PC, and to install Minishift, the VM that contains OpenShift.
 
 ```
-$ git pull https://github.com/syndesisio/syndesis.git # or own fork
+$ git clone https://github.com/syndesisio/syndesis.git # or own fork
 $ cd syndesis
 $ syndesis minishift --full-reset
 ```

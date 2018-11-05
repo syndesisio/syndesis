@@ -183,7 +183,7 @@ as part of a module collection like `--all-images` or `--infra-images`
 
 There are three modes, how the operator can be created:
 
-* Running you go compiler locally
+* Running your go compiler locally
 * Compiling in a local Docker daemon which allows volume mounts with the localhost
 * Compiling in Minishift Docker daemon, which was made accessible via `eval $(minishift docker-env)`
 

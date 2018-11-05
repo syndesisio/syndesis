@@ -123,7 +123,7 @@ E.g. a route `--route proj186023.6a63.fuse-ignite.openshiftapps.com` is specific
 However, you don't have to provide the route name.
 
 If you want to have a link to the OpenShift console to read the Pod logs, you have to add the `--console` option with the full URL to the console.
-Unfortunately, this cannot be autodetected.
+Unfortunately, this cannot be auto detected.
 If not given, no link appears.
 
 By default, this commands installs Syndesis in the currently connected project, but you can specify an alternative project with `--project <project>`.
