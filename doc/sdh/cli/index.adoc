@@ -1,5 +1,5 @@
 [[syndesis]]
-# Buildtool "syndesis"
+= Buildtool "syndesis"
 
 Syndesis uses a single tool for controlling various aspects of the build and developer related tasks.
 This script can be found in `$SYNDESIS_DIR/tools/bin` and is called `syndesis`.

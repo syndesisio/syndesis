@@ -1,5 +1,5 @@
 [[dev-local]]
-## Local Development
+== Local Development
 
 If you'd like to get a local development environment up and running, for both the UI and REST API, this is how you'd do it.
 
@@ -10,7 +10,7 @@ If you'd like to get a local development environment up and running, for both th
 
 ---
 
-### Requirements
+=== Requirements
 
 You can follow these steps if it's your first time setting up Syndesis, or if you want a fresh local installation to replace an existing one. Some environment-specific instructions may be available below as well.
 
@@ -45,7 +45,7 @@ Please note that you need to have the `oc` binary available in your `PATH`. To d
 
 ---
 
-### First-Time Setup
+=== First-Time Setup
 
 The goal here is to download the project to your laptop/PC, and to install Minishift, the VM that contains OpenShift.
 
@@ -59,7 +59,8 @@ $ syndesis minishift --full-reset
 ---
 
 
-### Day-to-Day
+=== Day-to-Day
+
 This uses an existing Minishift instance.
 
 *NOTE:* If you already followed the First-Time Setup above, you do not need to follow this. The Minishift VM will already have been started. Simply skip to the

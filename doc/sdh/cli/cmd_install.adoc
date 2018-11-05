@@ -1,12 +1,12 @@
 
 [[syndesis-install]]
-## syndesis install
+== syndesis install
 
 With `syndesis install` you can install Syndesis to an arbitrary OpenShift cluster.
 If you want to install to https://www.openshift.org/minishift/[Minishift] the <<syndesis-minishift,syndesis minishift>> command is recommended as it supports some additional features specific to Minishift.
 
 [[syndesis-install-usage]]
-### Usage
+=== Usage
 
 [source,indent=0,subs="verbatim,quotes"]
 ----
@@ -54,7 +54,7 @@ The installation process consists of two steps:
 * An initial setup which has to be performed as _cluster admin_ which is a one-off action which needs to be done only once.
 * Installation of Syndesis into a specific project by the _app admin_, a regular user of OpenShiftm which can be performed as many times as required.
 
-### Initial Setup
+=== Initial Setup
 
 In the initial setup, you have to register the custom resource definition (CRD) to allow to deploy `Syndesis` resources.
 This step has to be performed by the admin.
@@ -81,7 +81,7 @@ If you would instead want to allow the user managing `Syndesis` resources in the
 `--cluster`.
 This cluster-wide access is especially required when you plan to use the `--project` option to use a new project or recreate the existing one, as in this case the role association to this project gets lost.
 
-### Installing Syndesis
+=== Installing Syndesis
 
 After the CRDs a registered, you can easily install Syndesis directly with
 
@@ -137,7 +137,7 @@ If you want to wait until everything is running (including fetching of the Docke
 
 You can also automatically open Syndesis in the browser after the installation with `--open` (short: `-o`)
 
-### Development mode
+=== Development mode
 
 As with <<syndesis-minishift,syndesis minishift>> you can also use this command to set up a development platform for Syndesis.
 _Development platform_ here means that you can create Docker images on your own with <<syndesis-build,syndesis build>> and can use them with an automatic redeployment after the build.
@@ -147,7 +147,7 @@ When the operator has deployed the application, the application imagestreams ref
 To change the imagestream references to the images built with `syndesis build --all-images`, these imagestreams needs to be patched after the initial images have been fetched from Docker Hub.
 If you use the `--dev` option, then this update is done automatically.
 
-### Selecting the version
+=== Selecting the version
 
 With the option `--tag` you can select a specific version of Syndesis to install.
 By default, the currently checked out checked out branch is used.
@@ -163,7 +163,7 @@ This example installs the latest Syndesis version of the 1.4 branch to the local
 You can see a list of available tags with `git tag`.
 Tags prefixed with `fuse-ignite` are suited for the Fuse Online cluster as those templates do not contain images streams themselves but refer to the image streams installed on this cluster.
 
-### Quick installation
+=== Quick installation
 
 WARNING: The following scripts are not yet updated and probably don't work as expected. Please stay tuned.
 
