@@ -1,41 +1,15 @@
 [id='connecting-to-concur']
 = Connecting to SAP Concur
 
-ifeval::["{location}" == "upstream"]
-
 SAP Concur manages business expenses, travel, and invoices. 
 In an integration, you can connect to SAP Concur and perform
-any one of 85 actions.  
+any one of a large number of actions.  
 For example, suppose that you store project codes in a SQL database and
 you need the same project codes in SAP Concur so that expenses can be
 associated with projects. You can create an integration that 
 connects to your SQL database and runs a stored procedure that obtains
 any new project codes. The integration can then connect to SAP Concur and
 upload the new project codes to the appropriate list. 
-
-endif::[]
-
-ifeval::["{location}" == "downstream"]
-
-SAP Concur manages business expenses, travel, and invoices. 
-In an integration, you can connect to SAP Concur to obtain all 
-lists, obtain a particular list, create a list, or update a list. 
-There are additional, unsupported actions that a SAP Concur connection
-can perform. See the note below. 
-
-For example, suppose that you store project codes in a SQL database and
-you need the same project codes in SAP Concur so that expenses can be
-associated with projects. You can create an integration that 
-connects to your SQL database and runs a stored procedure that obtains
-any new project codes. The integration can then connect to SAP Concur and
-upload the new project codes to the appropriate list. 
-
-[IMPORTANT]
-==== 
-In this release, the SAP Concur connector is a 
-https://access.redhat.com/support/offerings/techpreview/[Technology Preview feature].
-====
-endif::[]
 
 See the following topics: 
 
