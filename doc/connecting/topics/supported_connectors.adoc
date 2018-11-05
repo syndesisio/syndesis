@@ -35,12 +35,12 @@ from a particular Gmail account.
 |Connect to an HTTP or HTTPS endpoint and execute the
 `GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, OR `PATCH` method.
 
-|<<connecting-to-log,Log>>
-|Send information about messages that an integration processes to the integration's log. 
-
 |<<connecting-to-kafka,Kafka>>
 |Obtain streams of records from
-or publish streams of records to a Kafka topic that you specify 
+or publish streams of records to a Kafka topic that you specify.
+
+|<<connecting-to-log,Log>>
+|Send information about messages that an integration processes to the integration's log. 
 
 |<<connecting-to-mqtt,MQTT>>
 |Obtain messages from an MQ Telemetry Transport broker or publish messages

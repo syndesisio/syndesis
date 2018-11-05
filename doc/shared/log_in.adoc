@@ -9,7 +9,7 @@ To enable access to {prodname} on OpenShift Online, Red Hat provides a link.
 Clicking this link displays the
 *Red Hat OpenShift Online Log In* page, which prompts you to log in by
 using your Red Hat account. Logging in prompts you to authorize
-{prodname} to access to your OpenShift Online account:
+access from {prodname} to your OpenShift Online account:
 
 image:images/AuthorizeAccessOnLogin.png[title='Authorize Access']
 
