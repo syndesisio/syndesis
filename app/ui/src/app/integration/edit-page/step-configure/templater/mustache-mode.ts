@@ -59,8 +59,8 @@ export class MustacheMode {
   private validator(text: string, options: any): any[] {
     this._errors = [];
 
-    const symRegex = /^body\.[A-Za-z_]+$/g;
-    const format = '{{body.xyz}}';
+    const symRegex = /^[A-Za-z_]+$/g;
+    const format = '{{xyz}}';
 
     let line = 0;
     let startCol = 0;
@@ -90,16 +90,6 @@ export class MustacheMode {
       startCol = endCol - 1;
 
       if (reset) {
-
-        // Check the symbol has a body prefix
-        if (theSymbol.length > 0 && ! theSymbol.match(symRegex)) {
-          const msg = this.i18NService.localize(
-            'integrations.steps.templater-wrong-symbol-format',
-            ['{{' + theSymbol + '}}', format, line, endCol]
-          );
-          this._errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
-        }
-
         // Successfully parsed a symbol so reset for next
         openSymbol = 0;
         closeSymbol = 0;
@@ -189,6 +179,15 @@ export class MustacheMode {
       if (reset) {
         // Text contains at least 1 parseable symbol so at least the text is not just constants
         haveSymbol = true;
+
+        // Check the symbol conforms to the expected format
+        if (theSymbol.length > 0 && ! theSymbol.match(symRegex)) {
+          const msg = this.i18NService.localize(
+            'integrations.steps.templater-wrong-symbol-format',
+            ['{{' + theSymbol + '}}', format, line, endCol]
+          );
+          this._errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
+        }
       }
     }
 
