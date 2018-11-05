@@ -58,8 +58,7 @@ in the {NameOfFuseOnlineIntegrationGuide}.
 |Create, update, fetch, or delete a Salesforce record. 
 
 |<<connecting-to-concur,SAP Concur>>
-|Obtain all SAP Concur lists, obtain a particular list, create
-a new list, or update a list. Other SAP Concur actions are Technology Preview features. 
+|Perform any one of a large variety of SAP Concur actions. 
 
 |<<connecting-to-servicenow,ServiceNow>>
 |Obtain records from or copy records to your ServiceNow instance. 
