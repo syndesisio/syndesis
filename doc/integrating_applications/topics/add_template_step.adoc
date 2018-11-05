@@ -46,29 +46,21 @@ want to modify to create a template, into the template editor.
 * In the template editor, start typing to define a template.
 
 +
-Note that you might upload a template that is valid in other environments but that 
-has errors in {prodname}. {prodname} requires that you append the `body.`
-prefix to each placeholder inside double curly braces. 
-For example, while `{{text}}` is valid in a typical template, you must 
-specify `{{body.text}}` in a template that you use with {prodname}. 
-Here is an example of a valid template:
+Note: In the previous release, you would have been required to have prefixed each
+placeholder with 'body.'. This is no longer necessary, and in fact the editor will
+display an error since '.'s are not legal syntax.
 
-+
+Here is an example of a valid template:
 ----
-At {{body.time}}, {{body.name}} tweeted:
-{{body.text}}
+At {{time}}, {{name}} tweeted:
+{{text}}
 ----
 
 . In the template editor, ensure that the template
 is valid for use with {prodname}. {prodname} displays 
 image:images/RedCircleXError.png[a red error indicator] to the left of
 a line that contains a syntax error. Hovering over a red indicator displays hints
-about how to resolve the error. 
-+
-Inside each set of double curly braces, the `body.` prefix is required. 
-Data mapping does not work if the `body.` prefix is missing. 
-For example, if you upload a template that does not have the `body.` prefix 
-on each placeholder, {prodname} displays an error icon on those lines.
+about how to resolve the error.
 
 . Click *Done* to add the template step to the integration.
 + 
@@ -88,10 +80,10 @@ immediately before the template step that you just added and then click *Add a S
 For example, using the template above, map a source field 
 to each of these template fields:
 +
-* `body.time`
-* `body.name`
-* `body.text`
-.. In the upper right, click *Done* to add the data mapper step to the 
+* `time`
+* `name`
+* `text`
+.. In the upper right, click *Done* to add the data mapper step to the
 integration.
 
 +
