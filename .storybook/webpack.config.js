@@ -5,7 +5,7 @@ module.exports = (baseConfig, env, defaultConfig) => {
 
   // For example, add typescript loader:
   defaultConfig.module.rules.push({
-    test: /\.(js|mjs|jsx|ts|tsx)$/,
+    test: /\.(ts|tsx)$/,
     include: path.resolve(__dirname, '../src'),
     loader: require.resolve('babel-loader'),
     options: {
