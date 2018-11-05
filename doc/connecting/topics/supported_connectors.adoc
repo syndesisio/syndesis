@@ -64,7 +64,7 @@ in the {NameOfFuseOnlineIntegrationGuide}.
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-sf_connectors[Salesforce]
 |Create, update, fetch, or delete a Salesforce record. 
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-concur_connectors[SAP Concur]
+|<<connecting-to-concur,SAP Concur>>
 |Perform any one of a large variety of SAP Concur actions. 
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-servicenow_connectors[ServiceNow]

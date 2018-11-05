@@ -2,13 +2,9 @@
 // Upstream: connecting/master.adoc  
 // Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
-[id='connecting-to-concur_{context}']
-= Connect to SAP Concur
-:context: concur
-
 SAP Concur manages business expenses, travel, and invoices. 
 In an integration, you can connect to SAP Concur and perform
-any one of a large variety of SAP Concur actions.  
+any one of a large number of actions.  
 For example, suppose that you store project codes in a SQL database and
 you need the same project codes in SAP Concur so that expenses can be
 associated with projects. You can create an integration that 
