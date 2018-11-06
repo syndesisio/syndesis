@@ -1,4 +1,4 @@
-import { IMonitoredIntegration } from '@syndesis/ui/containers';
+import { IMonitoredIntegration } from '@syndesis/app/containers';
 import { ListView, } from 'patternfly-react';
 import * as React from 'react';
 import { IntegrationsListItem } from './IntegrationsListItem';

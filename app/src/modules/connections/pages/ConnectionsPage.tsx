@@ -1,10 +1,10 @@
-import { ConnectionsListView } from '@syndesis/ui/components/index';
-import { IActiveFilter, IFilterType, ISortType } from '@syndesis/ui/components/ListViewToolbar';
-import { IConnection, WithConnections, WithRouter } from '@syndesis/ui/containers/index';
+import { ConnectionsListView } from '@syndesis/app/components/index';
+import { IActiveFilter, IFilterType, ISortType } from '@syndesis/app/components/ListViewToolbar';
+import { IConnection, WithConnections, WithRouter } from '@syndesis/app/containers/index';
 import {
   IListViewToolbarAbstractComponent,
   ListViewToolbarAbstractComponent
-} from '@syndesis/ui/containers/ListViewToolbarAbstractComponent';
+} from '@syndesis/app/containers/ListViewToolbarAbstractComponent';
 import * as React from 'react';
 
 function getFilteredAndSortedConnections(connections: IConnection[], activeFilters: IActiveFilter[], currentSortType: string, isSortAscending: boolean) {

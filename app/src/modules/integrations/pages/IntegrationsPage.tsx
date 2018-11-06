@@ -1,20 +1,15 @@
-import {
-  IActiveFilter,
-  IFilterType,
-  IntegrationsListView,
-  ISortType
-} from '@syndesis/ui/components';
+import { IActiveFilter, IFilterType, IntegrationsListView, ISortType } from '@syndesis/app/components';
 import {
   IConnection,
   IMonitoredIntegration,
   WithConnections,
   WithMonitoredIntegrations,
   WithRouter
-} from '@syndesis/ui/containers/index';
+} from '@syndesis/app/containers/index';
 import {
   IListViewToolbarAbstractComponent,
   ListViewToolbarAbstractComponent
-} from '@syndesis/ui/containers/ListViewToolbarAbstractComponent';
+} from '@syndesis/app/containers/ListViewToolbarAbstractComponent';
 import * as React from 'react';
 
 function getFilteredAndSortedIntegrations(
@@ -109,10 +104,8 @@ const sortByStatus = {
 
 const sortTypes: ISortType[] = [sortByName, sortByStatus];
 
-export default class IntegrationsPage extends ListViewToolbarAbstractComponent<
-  {},
-  IListViewToolbarAbstractComponent
-> {
+export default class IntegrationsPage extends ListViewToolbarAbstractComponent<{},
+  IListViewToolbarAbstractComponent> {
   public state = {
     activeFilters: [] as IActiveFilter[],
     currentFilterType: filterByName,
@@ -125,11 +118,11 @@ export default class IntegrationsPage extends ListViewToolbarAbstractComponent<
   public render() {
     return (
       <WithMonitoredIntegrations>
-        {({ data: integrationsData, loading, hasData }) => (
+        {({data: integrationsData, loading, hasData}) => (
           <WithConnections>
-            {({ data: connectionsData }) => (
+            {({data: connectionsData}) => (
               <WithRouter>
-                {({ match }) => {
+                {({match}) => {
                   const filteredAndSortedIntegrations = getFilteredAndSortedIntegrations(
                     integrationsData.items,
                     this.state.activeFilters,

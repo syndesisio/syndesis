@@ -1,4 +1,4 @@
-import { PfNavLink } from '@syndesis/ui/components';
+import { PfNavLink } from '@syndesis/app/components';
 import { Icon, Masthead, VerticalNav } from 'patternfly-react';
 import * as React from 'react';
 import { RouteComponentProps, withRouter, } from 'react-router';

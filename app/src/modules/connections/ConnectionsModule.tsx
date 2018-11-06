@@ -1,5 +1,5 @@
-import { ModuleLoader } from '@syndesis/ui/components';
-import { WithRouter } from '@syndesis/ui/containers';
+import { ModuleLoader } from '@syndesis/app/components';
+import { WithRouter } from '@syndesis/app/containers';
 import * as React from 'react';
 import Loadable from 'react-loadable';
 import { Route, Switch } from 'react-router';
@@ -20,7 +20,7 @@ export class ConnectionsModule extends React.Component {
   public render() {
     return (
       <WithRouter>
-        {({ match }) => (
+        {({match}) => (
           <Switch>
             <Route
               path={match.url}

@@ -1,5 +1,5 @@
-import { IntegrationsList, IntegrationsListSkeleton } from '@syndesis/ui/components';
-import { IMonitoredIntegration } from '@syndesis/ui/containers';
+import { IntegrationsList, IntegrationsListSkeleton } from '@syndesis/app/components';
+import { IMonitoredIntegration } from '@syndesis/app/containers';
 import { Card, MenuItem } from 'patternfly-react';
 import * as React from 'react';
 

@@ -1,4 +1,4 @@
-import { IIntegration } from '@syndesis/ui/containers';
+import { IIntegration } from '@syndesis/app/containers';
 import { Label } from 'patternfly-react';
 import * as React from 'react';
 

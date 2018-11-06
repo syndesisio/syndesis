@@ -1,4 +1,4 @@
-import { IConnection } from '@syndesis/ui/containers';
+import { IConnection } from '@syndesis/app/containers';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ConnectionsGrid } from './ConnectionsGrid';

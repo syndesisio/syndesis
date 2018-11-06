@@ -1,0 +1,9 @@
+{
+  "name": "@syndesis/syndesis",
+  "version": "0.1.0",
+  "repository": "git@github.com:syndesisio/syndesis-react-poc.git",
+  "private": true,
+  "workspaces": [
+    "app"
+  ]
+}

@@ -1,4 +1,4 @@
-import { IActiveFilter, IFilterType } from '@syndesis/ui/components/ListViewToolbar';
+import { IActiveFilter, IFilterType } from '@syndesis/app/components/ListViewToolbar';
 import * as React from 'react';
 
 export interface IListViewToolbarAbstractComponent {

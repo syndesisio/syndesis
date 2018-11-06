@@ -1,4 +1,4 @@
-import { IConnection } from '@syndesis/ui/containers';
+import { IConnection } from '@syndesis/app/containers';
 import { CardGrid } from 'patternfly-react';
 import * as React from 'react';
 import { Connection } from './Connection';

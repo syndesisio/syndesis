@@ -29,7 +29,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "paths": {
-      "@syndesis/ui/*": [
+      "@syndesis/app/*": [
         "src/*"
       ]
     }

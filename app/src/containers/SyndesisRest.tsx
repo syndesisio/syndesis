@@ -1,4 +1,4 @@
-import { AppContext, AuthContext } from '@syndesis/ui/app/';
+import { AppContext, AuthContext } from '@syndesis/app/app/';
 import * as React from 'react';
 import { IRestState, Rest } from './Rest';
 import { Stream } from './Stream';

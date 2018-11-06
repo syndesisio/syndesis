@@ -1,4 +1,4 @@
-import { Dashboard } from '@syndesis/ui/components/index';
+import { Dashboard } from '@syndesis/app/components/index';
 import {
   IIntegration,
   IIntegrationsMetricsTopIntegration,
@@ -6,7 +6,7 @@ import {
   WithConnections,
   WithIntegrationsMetrics,
   WithMonitoredIntegrations
-} from '@syndesis/ui/containers/index';
+} from '@syndesis/app/containers/index';
 import * as React from 'react';
 
 

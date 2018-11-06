@@ -1,5 +1,5 @@
-import { IntegrationStatus } from '@syndesis/ui/components';
-import { IIntegration } from '@syndesis/ui/containers';
+import { IntegrationStatus } from '@syndesis/app/components';
+import { IIntegration } from '@syndesis/app/containers';
 import { Card, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { RecentUpdatesSkeleton } from './RecentUpdatsSkeleton';

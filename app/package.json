@@ -1,5 +1,5 @@
 {
-  "name": "@syndesis/app",
+  "name": "@syndesis/syndesis-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
