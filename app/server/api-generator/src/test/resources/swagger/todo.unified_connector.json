@@ -16,7 +16,7 @@
           "description": "API response payload",
           "kind": "json-schema",
           "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"properties\":{\"body\":{\"items\":{\"properties\":{\"completed\":{\"description\":\"0 - ongoing, 1 - completed\",\"maximum\":1,\"minimum\":0,\"title\":\"Task completition status\",\"type\":\"integer\"},\"id\":{\"description\":\"Unique task identifier\",\"format\":\"int64\",\"title\":\"Task ID\",\"type\":\"integer\"},\"task\":{\"description\":\"Task line\",\"title\":\"The task\",\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\",\"id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"items\":{\"properties\":{\"completed\":{\"description\":\"0 - ongoing, 1 - completed\",\"maximum\":1,\"minimum\":0,\"title\":\"Task completition status\",\"type\":\"integer\"},\"id\":{\"description\":\"Unique task identifier\",\"format\":\"int64\",\"title\":\"Task ID\",\"type\":\"integer\"},\"task\":{\"description\":\"Task line\",\"title\":\"The task\",\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-0",
@@ -40,13 +40,13 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
-          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\",\"id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
           "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\",\"id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-1",
@@ -70,13 +70,13 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
-          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"id\",\"description\":\"Task identifier\"}}}}}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\",\"id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"id\",\"description\":\"Task identifier\"}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
           "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\",\"id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-2",
@@ -100,13 +100,13 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
-          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"id\",\"description\":\"Task identifier\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\",\"id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"id\",\"description\":\"Task identifier\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
           "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\",\"id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-3",
@@ -130,7 +130,7 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
-          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"id\",\"description\":\"Task identifier to delete\"}}}}}"
+          "specification": "{\"$schema\": \"http://json-schema.org/draft-04/schema#\",\"id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"id\",\"description\":\"Task identifier to delete\"}}}}}"
         },
         "outputDataShape": {
           "kind": "none"
