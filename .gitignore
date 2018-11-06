@@ -22,3 +22,4 @@ yarn-error.log*
 
 .idea
 .cache
+.rts2_cache*

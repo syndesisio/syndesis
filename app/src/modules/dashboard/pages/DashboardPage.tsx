@@ -1,4 +1,4 @@
-import { Dashboard } from '@syndesis/app/components/index';
+import { Dashboard } from "@syndesis/app/components";
 import {
   IIntegration,
   IIntegrationsMetricsTopIntegration,
@@ -6,8 +6,8 @@ import {
   WithConnections,
   WithIntegrationsMetrics,
   WithMonitoredIntegrations
-} from '@syndesis/app/containers/index';
-import * as React from 'react';
+} from "@syndesis/app/containers/index";
+import * as React from "react";
 
 
 export interface IIntegrationCountsByState {
@@ -28,7 +28,7 @@ export function getIntegrationsCountsByState(integrations: IMonitoredIntegration
       Error: 0,
       Pending: 0,
       Published: 0,
-      Unpublished: 0,
+      Unpublished: 0
     } as IIntegrationCountsByState
   );
 }
@@ -54,7 +54,7 @@ export function getTopIntegrations(integrations: IMonitoredIntegration[], topInt
   const topIntegrationsArray = Object.keys(topIntegrations).map(key => {
     return {
       count: topIntegrations[key],
-      id: key,
+      id: key
     } as any;
   }).sort((a, b) => {
     return b.count - a.count;
@@ -72,11 +72,11 @@ export function getTopIntegrations(integrations: IMonitoredIntegration[], topInt
 
 export default () => (
   <WithMonitoredIntegrations>
-    {({data: integrationsData, hasData: hasIntegrations}) =>
+    {({ data: integrationsData, hasData: hasIntegrations }) =>
       <WithIntegrationsMetrics>
-        {({data: metricsData, hasData: hasMetrics}) =>
+        {({ data: metricsData, hasData: hasMetrics }) =>
           <WithConnections>
-            {({data: connectionsData, hasData: hasConnections}) => {
+            {({ data: connectionsData, hasData: hasConnections }) => {
               const integrationStatesCount = getIntegrationsCountsByState(integrationsData.items);
               return (
                 <Dashboard

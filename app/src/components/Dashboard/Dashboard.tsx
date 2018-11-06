@@ -1,16 +1,16 @@
-import { ConnectionsGrid } from '@syndesis/app/components';
-import { IConnection, IIntegration, IIntegrationsMetrics, IMonitoredIntegration } from '@syndesis/app/containers';
-import { CardGrid, Grid } from 'patternfly-react';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { AggregatedMetric } from './AggregatedMetric';
-import { ConnectionsMetric } from './ConnectionsMetric';
+import { getConnectionIcon } from "@syndesis/app/components";
+import { IConnection, IIntegration, IIntegrationsMetrics, IMonitoredIntegration } from "@syndesis/app/containers";
+import { AggregatedMetricCard, ConnectionCard, ConnectionsGrid } from "@syndesis/ui";
+import { CardGrid, Grid } from "patternfly-react";
+import * as React from "react";
+import { Link } from "react-router-dom";
+import { ConnectionsMetric } from "./ConnectionsMetric";
 
-import './Dashboard.css';
-import { IntegrationBoard } from './IntegrationBoard';
-import { RecentUpdates } from './RecentUpdates';
-import { TopIntegrations } from './TopIntegrations';
-import { UptimeMetric } from './UptimeMetric';
+import "./Dashboard.css";
+import { IntegrationBoard } from "./IntegrationBoard";
+import { RecentUpdates } from "./RecentUpdates";
+import { TopIntegrations } from "./TopIntegrations";
+import { UptimeMetric } from "./UptimeMetric";
 
 export interface IIntegrationsPageProps {
   integrationsLoaded: boolean;
@@ -31,15 +31,15 @@ export interface IIntegrationsPageProps {
 export class Dashboard extends React.Component<IIntegrationsPageProps> {
   public render() {
     return (
-      <div className={'container-fluid'}>
+      <div className={"container-fluid"}>
         <Grid fluid={true}>
           <Grid.Row>
             <Grid.Col sm={12}>
-              <div className={'Dashboard-header'}>
-                <h1 className={'Dashboard-header__title'}>System metric</h1>
+              <div className={"Dashboard-header"}>
+                <h1 className={"Dashboard-header__title"}>System metric</h1>
                 <div className="Dashboard-header__actions">
-                  <Link to={'/integrations'}>View All Integrations</Link>
-                  <Link to={'/integrations/new'} className={'btn btn-primary'}>Create Integration</Link>
+                  <Link to={"/integrations"}>View All Integrations</Link>
+                  <Link to={"/integrations/new"} className={"btn btn-primary"}>Create Integration</Link>
                 </div>
               </div>
             </Grid.Col>
@@ -48,7 +48,7 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
         <CardGrid fluid={true} matchHeight={true}>
           <CardGrid.Row>
             <CardGrid.Col sm={6} md={3}>
-              <AggregatedMetric
+              <AggregatedMetricCard
                 title={`${this.props.integrationsCount} Integrations`}
                 ok={this.props.integrationsCount - this.props.integrationsErrorCount}
                 error={this.props.integrationsErrorCount}
@@ -58,7 +58,7 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
               <ConnectionsMetric count={this.props.connectionsCount}/>
             </CardGrid.Col>
             <CardGrid.Col sm={6} md={3}>
-              <AggregatedMetric
+              <AggregatedMetricCard
                 title={`${this.props.metrics.messages} Total Messages`}
                 ok={this.props.metrics.messages - this.props.metrics.errors}
                 error={this.props.metrics.errors}
@@ -99,23 +99,29 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
           </Grid.Row>
         </Grid>
 
-        <Grid fluid={true} style={{marginTop: '20px'}}>
+        <Grid fluid={true} style={{ marginTop: "20px" }}>
           <Grid.Row>
             <Grid.Col sm={12}>
-              <div className={'Dashboard-header'}>
-                <h1 className={'Dashboard-header__title'}>Connections</h1>
+              <div className={"Dashboard-header"}>
+                <h1 className={"Dashboard-header__title"}>Connections</h1>
                 <div className="Dashboard-header__actions">
-                  <Link to={'/connections'}>View All Connections</Link>
-                  <Link to={'/connections/new'} className={'btn btn-primary'}>Create Connection</Link>
+                  <Link to={"/connections"}>View All Connections</Link>
+                  <Link to={"/connections/new"} className={"btn btn-primary"}>Create Connection</Link>
                 </div>
               </div>
             </Grid.Col>
           </Grid.Row>
         </Grid>
-        <ConnectionsGrid
-          loading={!this.props.connectionsLoaded}
-          connections={this.props.connections}
-        />
+        <ConnectionsGrid loading={!this.props.connectionsLoaded}>
+          {this.props.connections.map((c, index) =>
+            <ConnectionCard
+              name={c.name}
+              description={c.description || ""}
+              icon={getConnectionIcon(c)}
+              key={index}
+            />
+          )}
+        </ConnectionsGrid>
       </div>
     );
   }

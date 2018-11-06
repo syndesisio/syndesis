@@ -1,6 +1,6 @@
 import { Card, EmptyState } from 'patternfly-react';
 import * as React from 'react';
-import ContentLoader from 'react-content-loader'
+import ContentLoader from 'react-content-loader';
 
 export const ConnectionSkeleton = (props: any) => (
   <Card matchHeight={true}>

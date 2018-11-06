@@ -1,12 +1,12 @@
-import { ModuleLoader } from '@syndesis/app/components';
-import { WithRouter } from '@syndesis/app/containers';
-import * as React from 'react';
-import Loadable from 'react-loadable';
-import { Route, Switch } from 'react-router';
+import { WithRouter } from "@syndesis/app/containers";
+import { ModuleLoader } from "@syndesis/ui";
+import * as React from "react";
+import Loadable from "react-loadable";
+import { Route, Switch } from "react-router";
 
 const LoadableIntegrationsPage = Loadable({
   loader: () =>
-    import(/* webpackChunkName: "IntegrationsPageChunk" */ './pages/IntegrationsPage'),
+    import(/* webpackChunkName: "IntegrationsPageChunk" */ "./pages/IntegrationsPage"),
   loading: ModuleLoader
 });
 
@@ -14,7 +14,7 @@ export class IntegrationsModule extends React.Component {
   public render() {
     return (
       <WithRouter>
-        {({match}) => (
+        {({ match }) => (
           <Switch>
             <Route
               path={match.url}

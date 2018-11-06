@@ -1,12 +1,10 @@
-import { IConnection } from '@syndesis/app/containers';
 import { CardGrid } from 'patternfly-react';
 import * as React from 'react';
-import { Connection } from './Connection';
 import { ConnectionSkeleton } from './ConnectionSkeleton';
 
 export interface IConnectionsGridProps {
   loading: boolean;
-  connections: IConnection[];
+  children: JSX.Element[]
 }
 
 export class ConnectionsGrid extends React.Component<IConnectionsGridProps> {
@@ -20,9 +18,9 @@ export class ConnectionsGrid extends React.Component<IConnectionsGridProps> {
                 <ConnectionSkeleton key={index}/>
               </CardGrid.Col>
             )
-            : this.props.connections.map((c, index) =>
+            : this.props.children.map((c: any, index: number) =>
               <CardGrid.Col sm={6} md={3} key={index}>
-                <Connection connection={c}/>
+                {c}
               </CardGrid.Col>
             )
           }

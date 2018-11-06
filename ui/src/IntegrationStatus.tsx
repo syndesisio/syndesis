@@ -1,20 +1,18 @@
-import { IIntegration } from '@syndesis/app/containers';
 import { Label } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationStatusProps {
-  integration: IIntegration;
+  currentState: string;
 }
-
 
 export class IntegrationStatus extends React.Component<IIntegrationStatusProps> {
   public render() {
     const labelType =
-      this.props.integration.currentState === 'Published' || this.props.integration.currentState === 'Pending'
+      this.props.currentState === 'Published' || this.props.currentState === 'Pending'
         ? 'primary'
         : 'default';
     let label = 'Pending';
-    switch (this.props.integration.currentState) {
+    switch (this.props.currentState) {
       case 'Published':
         label = 'Published';
         break;

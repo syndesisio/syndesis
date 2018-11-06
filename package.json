@@ -4,6 +4,7 @@
   "repository": "git@github.com:syndesisio/syndesis-react-poc.git",
   "private": true,
   "workspaces": [
-    "app"
+    "app",
+    "ui"
   ]
 }

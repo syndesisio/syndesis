@@ -13,7 +13,7 @@ export interface IAggregatedMetricProps {
   error: number;
 }
 
-export class AggregatedMetric extends React.PureComponent<IAggregatedMetricProps> {
+export class AggregatedMetricCard extends React.PureComponent<IAggregatedMetricProps> {
   public render() {
     return (
       <Card accented={true} aggregated={true} matchHeight={true}>
