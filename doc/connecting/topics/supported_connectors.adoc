@@ -32,8 +32,8 @@ FTP or SFTP server.
 from a particular Gmail account. 
 
 |<<connecting-to-google-calendar_{context},Google Calendar>>
-|Obtain calendar entries from a particular Google Calendar account or add/update
-entries in that account's Google Calendar.  
+|Obtain events from a Google Calendar that you specify or add/update
+events in a Google Calendar that you specify.  
 
 |<<connecting-to-http,HTTP/HTTPS>>
 |Connect to an HTTP or HTTPS endpoint and execute the
