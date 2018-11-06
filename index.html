@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-8246-g9933db8ab,</span>
+<span id="revnumber">version 1.1.3-8249-g165c17728,</span>
 <span id="revdate">2018-11-06</span>
 </div>
 <div id="toc" class="toc2">
@@ -653,7 +653,7 @@ table.CodeRay td.code>pre{padding:0}
 <h2 id="_introduction">1. Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This handbook contain all information required for installing, running and developing Syndesis from a developer&#8217;s point of view.</p>
+<p>This handbook contains all information required for installing, running and developing Syndesis from a developer&#8217;s point of view.</p>
 </div>
 </div>
 </div>
@@ -668,8 +668,20 @@ It requires bash and can be used on any Unix or macOS.</p>
 <div class="paragraph">
 <p>To have this script handy all the time it is recommended to either put this <code>bin/</code> directory into the path or add a symlink from <code>syndesis</code> into a directory which is already on your execution path.</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># Navigate to syndesis project directory
+cd $SYNDESIS_DIR
+
+# Set path to include Syndesis' tool directory
+$ export PATH=${PATH}:$(pwd)/tools/bin
+
+# Alternatively, set a symbolic link to &quot;syndesis&quot;
+$ ln -s $(pwd)/tools/bin/syndesis /usr/local/bin</code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p>The script can be used for various tasks which are selected by a so-called command_ which is the first argument to the script.</p>
+<p>The script can be used for various tasks which are selected by a so-called command which is the first argument to the script.</p>
 </div>
 <div class="paragraph">
 <p>Just type <code>syndesis -h</code> to get an overview of the commands available:</p>
@@ -677,16 +689,17 @@ It requires bash and can be used on any Unix or macOS.</p>
 <div class="listingblock">
 <div class="title">Usage message</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>Syndesis Developer Tool
-
-Usage: syndesis &lt;command&gt; [... options ...]
+<pre class="CodeRay highlight"><code>Usage: syndesis &lt;command&gt; [... options ...]
 
 with the following commands
 
    build            Build Syndesis
-   dev              Developer tools
+   completion       Shell completion
+   dev              Syndesis developer tools
    doc              Generate Syndesis Developer Handbook (SDH)
+   install          Install Syndesis to a connected OpenShift cluster
    minishift        Initialize and manage a Minishift developer environment
+   release          Perform a release
    system-test      Run system tests
 
 "build" is the default command if no command is specified.</code></pre>
@@ -1104,7 +1117,7 @@ as part of a module collection like <code>--all-images</code> or <code>--infra-i
 <div class="ulist">
 <ul>
 <li>
-<p>Running you go compiler locally</p>
+<p>Running your go compiler locally</p>
 </li>
 <li>
 <p>Compiling in a local Docker daemon which allows volume mounts with the localhost</p>
@@ -2123,7 +2136,7 @@ However, you don&#8217;t have to provide the route name.</p>
 </div>
 <div class="paragraph">
 <p>If you want to have a link to the OpenShift console to read the Pod logs, you have to add the <code>--console</code> option with the full URL to the console.
-Unfortunately, this cannot be autodetected.
+Unfortunately, this cannot be auto detected.
 If not given, no link appears.</p>
 </div>
 <div class="paragraph">
@@ -2952,7 +2965,7 @@ $ brew cask install minishift</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>$ git pull https://github.com/syndesisio/syndesis.git # or own fork
+<pre class="CodeRay highlight"><code>$ git clone https://github.com/syndesisio/syndesis.git # or own fork
 $ cd syndesis
 $ syndesis minishift --full-reset</code></pre>
 </div>
@@ -3291,8 +3304,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-8246-g9933db8ab<br>
-Last updated 2018-11-06 10:16:39 UTC
+Version 1.1.3-8249-g165c17728<br>
+Last updated 2018-11-06 14:05:03 UTC
 </div>
 </div>
 </body>
