@@ -51,7 +51,7 @@ The data shape's `specification` property must contain a JSON schema document.
 The data shape's `specification` property must contain a JSON instance document.
 
 * `xml-schema` indicates that the data type is represented by an XML schema. 
-The data shape's `specification` property must contain an XML schema document.
+The data type's `specification` property must contain an XML schema document.
 
 * `xml-instance` indicates that the data type is represented by an XML instance. 
 The data shape's `specification` property must contain an XML instance document.
