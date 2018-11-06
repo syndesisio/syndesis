@@ -19,22 +19,31 @@ import ca.uhn.fhir.model.primitive.IdDt;
 
 public class FhirReadMessageModel {
 
-    private IdDt id;
-    private Boolean summary;
+    private IdDt complexId;
+    private String id;
+    private String version;
 
-    public IdDt getId() {
+    public IdDt getComplexId() {
+        return complexId;
+    }
+
+    public void setComplexId(IdDt complexId) {
+        this.complexId = complexId;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(IdDt id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Boolean getSummary() {
-        return summary;
+    public String getVersion() {
+        return version;
     }
 
-    public void setSummary(Boolean summary) {
-        this.summary = summary;
+    public void setVersion(String version) {
+        this.version = version;
     }
 }
