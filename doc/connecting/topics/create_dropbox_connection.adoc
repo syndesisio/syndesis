@@ -13,7 +13,7 @@ To create a Dropbox connection:
 . In a new browser tab, go  to `https://www.dropbox.com` 
 and do the following:
 .. Sign in to the Dropbox account in which you created the app that
-registers access from your {prodname} installation. 
+registers access from your {prodname} environment. 
 .. Go to https://www.dropbox.com/developers/apps.
 .. Click the {prodname} app to display its settings.
 

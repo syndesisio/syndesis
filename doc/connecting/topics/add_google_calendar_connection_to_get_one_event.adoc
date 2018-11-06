@@ -1,14 +1,15 @@
 [id='add-google-calendar-connection-to-get-one-event_{context}']
 = Obtain a particular Google Calendar event
 
-In an integration, you can obtain a particular Google Calendar event
-in the middle of the integration or to finish the integration.  
-To do this, add a Google Calendar connection to the middle of an integration 
+In an integration, you can obtain a particular Google Calendar event.
+In the middle of an integration, you might obtain an event that you want to 
+update, and then update it in a subsequent Google Calendar connection.
+To obtain one event, add a Google Calendar connection to the middle of an integration 
 or as the integration's finish connection. 
 
 .Prerequisites
 * A Google Calendar connection is available and this connection
-is authorized to access the Google calendar that as the 
+is authorized to access the Google calendar that has the 
 event that you want to get.
 
 * You are creating or editing an integration and {prodname} is prompting you 
