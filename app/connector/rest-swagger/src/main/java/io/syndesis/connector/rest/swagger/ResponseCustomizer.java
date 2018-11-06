@@ -57,6 +57,37 @@ public final class ResponseCustomizer implements ConnectorComponentCustomizer, O
         isUnifiedDataShape = isUnifiedDataShape(dataShape);
     }
 
+    static boolean isLegacyUnifiedDataShape(final JsonNode jsonSchema) {
+        // for backward compatibility we need to look if there are
+        // `parameters or `body` properties as the early version did not
+        // identify the schema via `id` (`$id`) property
+        final JsonNode properties = jsonSchema.get("properties");
+        if (isNullNode(properties)) {
+            return false;
+        }
+
+        final JsonNode parameters = properties.get("parameters");
+        final JsonNode body = properties.get("body");
+        if (isNullNode(parameters) && isNullNode(body)) {
+            return false;
+        }
+
+        if (isNullNode(parameters)) {
+            // body != null, so we consider anything that contains `body` as
+            // wrapped
+            return true;
+        }
+
+        // for parameters we can look and see if `Status` and `Content-Type` are
+        // present
+        final JsonNode propertiesOfParameters = parameters.get("properties");
+
+        final JsonNode status = propertiesOfParameters.get("Status");
+        final JsonNode contentType = propertiesOfParameters.get("Content-Type");
+
+        return !isNullNode(status) && !isNullNode(contentType);
+    }
+
     static boolean isNullNode(final JsonNode node) {
         return node == null || node.isNull();
     }
@@ -80,21 +111,12 @@ public final class ResponseCustomizer implements ConnectorComponentCustomizer, O
             return false;
         }
 
-        final JsonNode properties = jsonSchema.get("properties");
-        if (isNullNode(properties)) {
-            return false;
+        // we're using Draft 4, in Draft 6+ this should be `$id`
+        final JsonNode id = jsonSchema.get("id");
+        if (!isNullNode(id) && "io:syndesis:wrapped".equals(id.asText())) {
+            return true;
         }
 
-        final JsonNode parameters = properties.get("parameters");
-        if (isNullNode(parameters)) {
-            return false;
-        }
-
-        final JsonNode propertiesOfParameters = parameters.get("properties");
-
-        final JsonNode status = propertiesOfParameters.get("Status");
-        final JsonNode contentType = propertiesOfParameters.get("Content-Type");
-
-        return !isNullNode(status) && !isNullNode(contentType);
+        return isLegacyUnifiedDataShape(jsonSchema);
     }
 }
