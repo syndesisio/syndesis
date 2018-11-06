@@ -76,6 +76,10 @@ MySQL, or PostgreSQL database. To connect to other types of SQL databases,
 you upload a {prodname} library extension that contains a 
 JDBC driver for that database. 
 
+|link:{LinkFuseOnlineConnectorGuide}#connecting_to_telegram_connectors[Telegram]
+|Obtain messages from a chat or send messages to a chat by using 
+a Telegram chat bot. 
+
 |link:{LinkFuseOnlineConnectorGuide}#triggering-integrations-with-timers_connectors[Timer]
 | Set a simple timer or a `cron` timer to trigger integration execution.
 
