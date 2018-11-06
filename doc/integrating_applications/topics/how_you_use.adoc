@@ -10,7 +10,7 @@ The following abbreviated description of one of the samples provides
 an example workflow for using {prodname}. These steps omit details, so
 you should not try to follow them.
 
-. Register your installation of {prodname} as an application that can access
+. Register your {prodname} environment as an application that can access
 Salesforce. You need to do this only once to be able to create any number of
 integrations that connect to Salesforce.
 
@@ -55,5 +55,5 @@ integration is designated as *Running*, which means that it is running.
 lead in Salesforce.
 
 . For this sample integration, in a browser, insert `todo-` in
-front of the URL for your {prodname} installation. This displays the
+front of the URL for your {prodname} environment. This displays the
 notification that a new lead was created in the database.

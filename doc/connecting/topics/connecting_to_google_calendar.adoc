@@ -1,6 +1,7 @@
 :context: connectors
 [id='connecting-to-google-calendar_{context}']
 = Connecting to Google Calendar
+:context: calendar
 
 To trigger execution of an integration by getting events from a 
 particular Google Calendar, add a Google Calendar connection to an integration as its

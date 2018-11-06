@@ -14,7 +14,7 @@ previous step(s).
 
 When you click *Add a Step*, the list of available steps includes any
 custom steps that are defined in extensions that were uploaded to
-your installation of {prodname}.
+your {prodname} environment.
 
 At the top of the list of steps, in the *Name* field, you can select
 *Custom Steps* to display only custom steps.

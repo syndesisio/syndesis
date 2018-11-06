@@ -1,6 +1,7 @@
 :context: connectors
 [id='connecting-to-gmail_{context}']
 = Connecting to Gmail
+:context: gmail
 
 To trigger execution of an integration when a particular Gmail
 account receives an email, add a Gmail connection to an integration as its

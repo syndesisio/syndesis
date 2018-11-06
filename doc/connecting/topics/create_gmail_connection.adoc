@@ -20,9 +20,9 @@ you use to create one or more connections.
 . In the *Configure Connection* page, click *Connect Gmail*, 
 which takes you to a *Sign in with Gmail* page.
 +
-If *Connect Gmail* does not appear, then your {prodname} installation
+If *Connect Gmail* does not appear, then your {prodname} environment
 is not registered as a Gmail client application. See
-<<register-with-gmail_{context}>>. When your installation is not registered with
+<<register-with-gmail_{context}>>. When your environment is not registered with
 Gmail, then when you try to create a Gmail connection, {prodname} displays
 multiple fields that prompt for authorization information. While you can
 create a Gmail connection by entering values in these fields, 

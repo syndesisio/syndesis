@@ -35,15 +35,16 @@ The *Settings* page displays entries for applications that use the OAuth
 protocol. 
 
 . For each connection that requires configuration and that accesses an
-application that uses the OAuth protocol, register this installation of
-{prodname} with the application. The steps vary for each application.
+application that uses the OAuth protocol, register your {prodname}
+environment with the application. The steps vary for each application.
 See the appropriate topic:
 
-* {LinkFuseOnlineConnectorGuide}#register-with-dropbox[Register with Dropbox]
-* {LinkFuseOnlineConnectorGuide}#register-with-gmail[Register with Gmail]
-* {LinkFuseOnlineConnectorGuide}#register-with-rest-api[Register with a REST API]
-* {LinkFuseOnlineConnectorGuide}#register-with-salesforce_{context}[Register with Salesforce]
-* {LinkFuseOnlineConnectorGuide}#register-with-twitter[Register with Twitter]
+* {LinkFuseOnlineConnectorGuide}#register-with-dropbox[Register as a Dropbox client]
+* {LinkFuseOnlineConnectorGuide}#register-with-gmail_gmail[Register as a Gmail client]
+* {LinkFuseOnlineConnectorGuide}#register-with-google-calendar_calendar[Register as a Google Calendar client] 
+* {LinkFuseOnlineConnectorGuide}#register-with-rest-api[Register as a REST API client]
+* {LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce[Register as a Salesforce client]
+* {LinkFuseOnlineConnectorGuide}#register-with-twitter[Register as a Twitter client]
 
 . In the left panel, click *Connections* and confirm that there are no
 longer any connections that require configuration.

@@ -4,12 +4,11 @@
 To integrate applications that use OAuth, you must register with that
 application before
 you can create a connection to the application. For example, after you register
-your installation of
-{prodname} as an application that can access Salesforce, then you can
+your of {prodname} environment as an application that can access Salesforce, then you can
 create a Salesforce connection.
 
 While the specific steps vary for each OAuth application that you want to connect to,
-registration always provides your installation of {prodname} with a client ID and
+registration always provides your {prodname} environment with a client ID and
 a client secret. Some applications use other labels for the client ID
 and client secret. For example, Salesforce generates a consumer key and
 a consumer secret.
@@ -31,16 +30,16 @@ clipboard.
 . In another browser tab, go to the web site for the application that you
 want to register with and perform the steps required to obtain
 a client ID and secret. One of these steps requires you to enter
-the callback URL for your installation of {prodname}. Paste the
+the callback URL for your {prodname} environment. Paste the
 URL that you copied to the clipboard in the second step. 
-. On your {prodname} installation *Settings* page, paste the
+. In {prodname}, on the *Settings* page, paste the
 client ID and client secret and save the settings.
 
 For examples, see
 
-* {LinkFuseOnlineConnectorGuide}#register-with-salesforce_{context}[Registering Fuse Online as a Salesforce client]
-* {LinkFuseOnlineConnectorGuide}#register-with-twitter[Registering Fuse Online as a Twitter client]
+* {LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce[Registering {prodname} as a Salesforce client]
+* {LinkFuseOnlineConnectorGuide}#register-with-twitter[Registering {prodname} as a Twitter client]
 
 For an example of registering with an application that does not have 
 an entry in the {prodname} *Settings* page, see: 
-{LinkFuseOnlineConnectorGuide}#register-with-dropbox[Registering Fuse Online as a Dropbox client].
+{LinkFuseOnlineConnectorGuide}#register-with-dropbox[Registering {prodname} as a Dropbox client].
