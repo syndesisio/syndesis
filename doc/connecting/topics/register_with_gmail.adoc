@@ -91,5 +91,13 @@ your clipboard.
 Gmail *Client Secret* field, paste the Gmail client secret that you 
 just copied. 
 . Click *Save*. You should get a *Registration Successful!* notification. 	
-. Click *Ok* to collapse the fields. With registration in place, you can
-create a Gmail connection. 
+. Click *Ok* to collapse the fields. 
+
+.Results
+You can now create a Gmail connection. 
+
+The Google client ID and Google client secret indicate internal refresh
+information that keeps your connections and integrations working correctly. 
+Consequently, you should not obtain new credentials. If you do, then you
+would need to recreate each Gmail connection and re-publish each
+integration that uses a Gmail connection. 

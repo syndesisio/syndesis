@@ -1,45 +1,50 @@
 [id='add-google-calendar-connection-finish-middle_{context}']
-= Add, update, or obtain a Google Calendar event
+= Add or update a Google Calendar event
 
-In an integration, you can add, update, or obtain a Google Calendar event
+In an integration, you can add or update a Google Calendar event
 in the middle of the integration or to finish the integration.  
 To do this, add a Google Calendar connection to the middle of an integration 
 or as the integration's finish connection. 
 
 .Prerequisites
 * A Google Calendar connection is available and this connection
-is authorized to access the Google calendar that you want to check. 
-
+is authorized to access the Google calendar in which you want to add an 
+event or update an event.
 * You are creating or editing an integration and {prodname} is prompting you 
 to add a finish connection or select the connection that you want to add
 in the middle of an integration. 
 
 .Procedure
-* Click a Google Calendar connection that is authorized to access
+. Click a Google Calendar connection that is authorized to access
 the calendar that you want to connect to.   
-. On the *Choose an Action* page, click the action that you want the
-connection to perform. The choices are:  
+. On the *Choose an Action* page, click one of the following actions
+for the connection to perform:    
 +
-* *Create Event* to add a new event to the calendar.
-* *Get a Specific Event* to obtain an event that you identify from the calendar.
-This is useful when you want to update an event. You can obtain the event that
-you want to change, and then add another Google Calendar connection that 
-updates the event. 
-* *Update Event* to change a particular event. 
+* *Create Event* adds a new event to the calendar.
+* *Update Event* changes a particular event. 
+
++
+To obtain an event that you identify, see <<add-google-calendar-connection-to-get-one-event_{context},obtain a particular event>>.
 
 . Configure the action you chose: 
 +
-* To configure the *Create Event* action
-
-* To configure the *Get a Specific Event* action: 
+* To configure the *Create Event* action: 
 +
-. Specify the name of the calendar that has the event that you want.
-. Specify the ID of the event to get. To obtain the event ID: 
-.. In a browser, display the calendar that contains the event you want to get. 
-.. Append `?gsessionid=OK&eventdeb=1`to the URL and redisplay the calendar.
-.. In the calendar, click the event you want to get
-* To configure the *Update Event* action
+.. Enter a title for the new event.
+.. Enter the name of the Google Calendar to add the event to. 
+.. For the other input parameters, you can enter data or you 
+might want to map values from a previous Google Calendar connection. 
 
+* To configure the *Update Event* action: 
++
+.. Enter the title of the event that you want to update.
+.. Enter content in the event fields that you want to update.
+.. Enter additional values if you want to or map values from a previous 
+Google Calendar connection. 
 
 . Click *Done* to add the connection to the integration. 
 The connection appears in the integration flow in the location where you added it. 
+
+. In the integration visualization flow, check for 
+image:images/DataTypeMismatchWarning.png[data type mismatch] warnings and
+add a data mapper step before each connection that displays this warning. 

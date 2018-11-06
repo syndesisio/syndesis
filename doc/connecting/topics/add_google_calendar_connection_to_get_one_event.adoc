@@ -1,0 +1,47 @@
+[id='add-google-calendar-connection-to-get-one-event_{context}']
+= Obtain a particular Google Calendar event
+
+In an integration, you can obtain a particular Google Calendar event
+in the middle of the integration or to finish the integration.  
+To do this, add a Google Calendar connection to the middle of an integration 
+or as the integration's finish connection. 
+
+.Prerequisites
+* A Google Calendar connection is available and this connection
+is authorized to access the Google calendar that as the 
+event that you want to get.
+
+* You are creating or editing an integration and {prodname} is prompting you 
+to add a finish connection or select the connection that you want to add
+in the middle of an integration. 
+
+.Procedure
+
+. Click a Google Calendar connection that is authorized to access
+the calendar that you want to connect to.   
+. On the *Choose an Action* page, click *Get a Specific Event*. 
++
+This action is useful when you want to update an event. You can obtain the event that
+you want to change, and then add another Google Calendar connection that 
+updates the event. 
+
+. Specify the name of the calendar that has the event that you want.
+. Specify the ID of the event to get. To obtain the event ID, do one of the 
+following:
++
+* Map it from the previous Google Calendar connection. 
+* Manually obtain it from the calendar as follows: 
++
+.. In a browser, display the calendar that contains the event you want to get. 
+.. Append `?gsessionid=OK&eventdeb=1`to the URL and redisplay the calendar.
+.. In the calendar, click the event that you want to get. 
+.. In the event popup, click 
+image:shared/images/ThreeVerticalDotsKebab.png[Options] and select 
+*Troubleshooting info*. 
+.. In the popup that Google Calendar displays, copy the string that
+follows *`eid=`*. For example, an event ID looks something like this: 
+`p1pva2a4t504gbsha12di9ch6k_20181107T150000Z*`.
+
+. Click *Done* to add the connection to the integration. 
+The connection appears in the integration flow in the location 
+where you added it. 
