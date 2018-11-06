@@ -15,6 +15,9 @@
  */
 package io.syndesis.integration.project.generator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+import static org.junit.Assert.assertEquals;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,7 +34,21 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.rules.TestName;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ResourceIdentifier;
@@ -47,25 +64,10 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
 
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.ExcessiveMethodLength" })
 @RunWith(Parameterized.class)
@@ -409,6 +411,109 @@ public class ProjectGeneratorTest {
     // Helpers
     // *****************************
 
+    // ***************************
+    // Tests
+    // ***************************
+
+    @Test
+    public void testDependencyCollection() throws Exception {
+        TestResourceManager resourceManager = new TestResourceManager();
+
+        Integration integration = resourceManager.newIntegration(
+            new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .connection(new Connection.Builder()
+                    .id("timer-connection")
+                    .connector(TestConstants.TIMER_CONNECTOR)
+                    .build())
+                .putConfiguredProperty("period", "5000")
+                .action(TestConstants.PERIODIC_TIMER_ACTION)
+                .build(),
+            new Step.Builder()
+                .stepKind(StepKind.mapper)
+                .putConfiguredProperty("atlasmapping", "{}")
+                .build(),
+            new Step.Builder()
+                .stepKind(StepKind.ruleFilter)
+                .putConfiguredProperty("predicate", "AND")
+                .putConfiguredProperty("rules", "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]")
+                .addDependency(Dependency.maven("org.myStep:someLib1:1.0"))
+                .addDependency(Dependency.maven("org.myStep:someLib2:1.0"))
+                .addDependency(Dependency.maven("org.myStep:someLib3:1.0"))
+                .build(),
+            new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .connection(new Connection.Builder()
+                    .id("http-connection")
+                    .connector(TestConstants.HTTP_CONNECTOR)
+                    .build())
+                .putConfiguredProperty("httpUri", "http://localhost:8080/hello")
+                .putConfiguredProperty("username", "admin")
+                .putConfiguredProperty("password", "admin")
+                .putConfiguredProperty("token", "mytoken")
+                .action(TestConstants.HTTP_GET_ACTION)
+                .build()
+        );
+
+        Collection<Dependency> dependencies = resourceManager.collectDependencies(integration);
+        /*
+         * Should return
+         * - 2 connector dependencies from the connectorAction in the first endpoint
+         * - 3 step dependencies from the rule filter step
+         */
+        assertEquals(5, dependencies.size());
+    }
+
+    @Test
+    public void testGenerateTemplateStepProjectDependencies() throws Exception {
+        TestResourceManager resourceManager = new TestResourceManager();
+
+        Integration integration = resourceManager.newIntegration(
+            new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                                    .putConfiguredProperty("name", "Test-Connector")
+                                    .build())
+                        .build())
+                .build(),
+            new Step.Builder()
+                .id("templating")
+                .stepKind(StepKind.template)
+                .action(new StepAction.Builder()
+                        .descriptor(new StepDescriptor.Builder()
+                                    .kind(StepAction.Kind.STEP)
+                                    .inputDataShape(new DataShape.Builder()
+                                                    .kind(DataShapeKinds.JSON_SCHEMA)
+                                                    .build())
+                                    .outputDataShape(new DataShape.Builder()
+                                                     .kind(DataShapeKinds.JSON_SCHEMA)
+                                                     .build())
+                                    .build())
+                        .build())
+                .putConfiguredProperty("template", "{{text}}")
+                .putConfiguredProperty("language", TemplateStepLanguage.MUSTACHE.toString())
+                .build(),
+            new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                                    .putConfiguredProperty("name", "result")
+                                    .build())
+                        .build())
+                .build()
+        );
+
+        ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
+        configuration.getTemplates().setOverridePath(this.basePath);
+        configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+        configuration.setSecretMaskingEnabled(true);
+
+        Path runtimeDir = generate(integration, configuration, resourceManager);
+
+        assertFileContents(configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
+    }
+
     private Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
         Path destination = testFolder.newFolder("integration-project").toPath();
 
@@ -434,7 +539,7 @@ public class ProjectGeneratorTest {
             resource = ProjectGeneratorTest.class.getResource(methodName + "/" + expectedFileName);
         }
         if (resource == null) {
-            throw new IllegalArgumentException("Unable to find te required resource (" + expectedFileName + ")");
+            throw new IllegalArgumentException("Unable to find the required resource (" + expectedFileName + ")");
         }
 
         final String actual = new String(Files.readAllBytes(actualFilePath), StandardCharsets.UTF_8).trim();
@@ -442,8 +547,6 @@ public class ProjectGeneratorTest {
 
         assertThat(actual).isEqualTo(expected);
     }
-
-
 
     private void assertFileContentsJson(ProjectGeneratorConfiguration generatorConfiguration, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException, JSONException {
         URL resource = null;
@@ -470,6 +573,10 @@ public class ProjectGeneratorTest {
 
         JSONAssert.assertEquals(expected, actual, JSONCompareMode.STRICT);
     }
+
+    // ***************************
+    // Tests
+    // ***************************
 
     protected static void generate(Path destination, Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
         final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager,TestConstants.MAVEN_PROPERTIES);

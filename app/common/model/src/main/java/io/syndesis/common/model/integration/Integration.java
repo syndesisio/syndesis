@@ -19,6 +19,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.connection.Connector.Builder;
 import io.syndesis.common.model.validation.UniquenessRequired;
 import io.syndesis.common.model.validation.integration.NoDuplicateIntegration;
 
@@ -35,5 +36,9 @@ public interface Integration extends WithId<Integration>, IntegrationBase {
 
     class Builder extends ImmutableIntegration.Builder {
         // allow access to ImmutableIntegration.Builder
+    }
+
+    default Builder builder() {
+        return new Builder().createFrom(this);
     }
 }
