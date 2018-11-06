@@ -1,5 +1,5 @@
 {
-  "name": "syndesis-react",
+  "name": "@syndesis/app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
