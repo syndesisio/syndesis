@@ -1,0 +1,29 @@
+// This module is included in these assemblies:
+// connecting_to_telegram.adoc
+
+[id='add-telegram-connection-middle-finish_{context}']
+= Add a Telegram connection to send a message to a Telegram chat
+
+In an integration, you can send a message to a Telegram chat to
+finish an integration or in the middle of an integration. 
+
+.Prerequisites
+
+* You created a <<creating-telegram-connections_{context},Telegram connection>>. 
+* You are creating or editing an integration. If you are creating an integration, then
+{prodname} might be prompting you to choose a finish connection. 
+To add a middle connection, hover over the plus
+sign in the left panel in the location where you want to add the
+connection and select *Add a connection*. 
+
+.Procedure
+
+. Click the Telegram connection that you want to add to the integration. 
+. Click the *Send a Text Message* action. 
+. In the *Chat Id* field, enter the ID for the Telegram chat that you are sending
+a message to. 
++
+If you leave this field blank, and if there is an earlier 
+Telegram connection that receives messages, then {prodname} uses the
+chat ID that is in an incoming message. 
+. Click *Done* to add the connection to the integration. 

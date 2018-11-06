@@ -37,3 +37,5 @@ poll are never returned.
 When a Slack connection returns more than one message, the integration 
 processes the messages as a batch. In other words, {prodname} executes 
 the integration once for the batch.
+
+. Click *Done* to add the connection to the integration. 
