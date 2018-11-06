@@ -3,7 +3,7 @@
 :context: connectors
 
 [id='connecting-to-telegram_{context}']
-= Connect to Telegram
+= Connecting to Telegram
 
 As a business user, you can create an integration that connects to Telegram. A 
 connection to Telegram can do either one of the following:

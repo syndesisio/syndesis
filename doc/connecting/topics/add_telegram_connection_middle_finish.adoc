@@ -26,20 +26,4 @@ a message to.
 If you leave this field blank, and if there is an earlier 
 Telegram connection that receives messages, then {prodname} uses the
 chat ID that is in an incoming message. 
-+
-To obtain the ID for a chat:  
-
-.. In Telegram, add a bot to the chat that you want to send a message to. 
-The BotFather response includes a bot access token.
-.. Copy the access token to the clipboard.
-.. In Telegram, send a message directly to that chat. 
-Do not use the bot to send the message.  
-.. Read messages that are sent to that chat by invoking a `curl` command 
-in the following format. Replace `_bot-access-token_` with the access 
-token in the clipboard. 
-+
-`curl \https://api.telegram.org/_bot-access-token_/getUpdates\?offset\=0`
-+
-The response is in JSON format. The JSON `chat` object contains the chat ID. 
-
 . Click *Done* to add the connection to the integration. 
