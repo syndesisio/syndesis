@@ -1689,7 +1689,6 @@ objects:
           - "/opt/backup"
         volumeMounts:
         - mountPath: /opt/backup
-          subPath: backup
           name: backup-dir
       volumes:
       - name: backup-dir
