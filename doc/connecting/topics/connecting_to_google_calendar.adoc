@@ -2,8 +2,8 @@
 [id='connecting-to-google-calendar_{context}']
 = Connecting to Google Calendar
 
-To trigger execution of an integration when a particular Google Calendar has a new
-event, add a Google Calendar connection to an integration as its
+To trigger execution of an integration by getting events from a 
+particular Google Calendar, add a Google Calendar connection to an integration as its
 start connection. In an integration, to obtain, update, or create a Google
 Calendar event, add a Google Calendar connection as the integration's
 finish connection, or as a middle connection. 
@@ -15,6 +15,7 @@ Details for connecting to Google Calendar are in the following topics:
 * <<create-google-calendar-connection_{context}>>
 * <<add-google-calendar-connection-start_{context}>>
 * <<add-google-calendar-connection-finish-middle_{context}>>
+* <<add-google-calendar-connection-to-get-one-event_{context}>>
 
 include::register_with_google_calendar.adoc[leveloffset=+1]
 
@@ -25,3 +26,5 @@ include::create_google_calendar_connection.adoc[leveloffset=+1]
 include::add_google_calendar_connection_start.adoc[leveloffset=+1]
 
 include::add_google_calendar_connection_finish_middle.adoc[leveloffset=+1]
+
+include::add_google_calendar_connection_to_get_one_event.adoc[leveloffset=+1]

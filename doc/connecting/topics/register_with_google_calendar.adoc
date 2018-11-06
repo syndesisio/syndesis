@@ -18,7 +18,8 @@ If you already created a Gmail connection, then you already
 created the credentials that your {prodname} environment needs to access
 enabled Google APIs. You do not need to follow the procedure documented here.
 To be able to create a Google Calendar connection, you
-just need to <<enable-google-calendar-api_{context},enable the Google Calendar API>>. 
+just need to <<enable-google-calendar-api_{context},enable the Google Calendar API>>
+and then copy {prodname} settings from Gmail to Google Calendar.
 
 .Procedure
 
@@ -88,5 +89,13 @@ your clipboard.
 Google Calendar *Client Secret* field, paste the Google Calendar client secret that you 
 just copied. 
 . Click *Save*. You should get a *Registration Successful!* notification. 	
-. Click *Ok* to collapse the fields. With registration in place, you can
-create a Google Calendar connection. 
+. Click *Ok* to collapse the fields. 
+
+.Results
+You can now create a Google Calendar connection. 
+
+The Google client ID and Google client secret indicate internal refresh
+information that keeps your connections and integrations working correctly. 
+Consequently, you should not obtain new credentials. If you do, then you
+would need to recreate each Google Calendar connection and re-publish each
+integration that uses a Google Calendar connection. 

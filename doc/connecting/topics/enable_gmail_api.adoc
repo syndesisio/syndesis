@@ -9,7 +9,9 @@ During registration, you enable the Gmail API and create credentials that
 If you already created a connection to Google Calendar, then 
 {prodname} has the credentials for access to enabled Google
 APIs. To be able to create a Gmail connection, you just need to
-enable the Gmail API. 
+enable the Gmail API and then in the {prodname} *Settings* page,
+copy the Google Calendar client ID and client secret to the Gmail
+settings for client ID and client secret.
 
 If you already registered your {prodname} environment as a Google client 
 application and during registration you enabled the Gmail API, then you do
@@ -37,9 +39,15 @@ in the upper left, click
 image:images/Hamburger.png[Navigation menu icon] and select
 *APIs and Services* > *Dashboard*. 
 . Click the *Gmail API* card.
-. In the *Gmail API* page, click *ENABLE*. 
-{prodname} copies the Google consumer client ID and client secret
-from the {prodname} Google Calendar settings to the {prodname} Gmail settings. 
-. In the {prodname} *Settings* page, in the Gmail entry, click *Save*,
-and then click *Ok*.
+. In the *Gmail API* page, click *ENABLE*.  
+. In the {prodname} *Settings* page: 
+.. Expand the Google Calendar entry
+.. Expand the Gmail entry. 
+.. Copy the Google Calendar client ID to the input field for the Gmail 
+client ID. 
+.. Copy the Google Calendar client secret to the input field for the Gmail
+client secret.
+.. Click *Save*,and then click *Ok*.
+
+.Result
 You can now create a Gmail connection.
