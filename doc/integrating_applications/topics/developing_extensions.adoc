@@ -43,6 +43,8 @@ include::con_about_extension_definitions.adoc[leveloffset=+1]
 
 include::proc_using_maven_to_generate_extension_definitions.adoc[leveloffset=+1]
 
+include::how_to_specify_data_shapes.adoc[leveloffset=+1]
+
 include::develop_step_extensions.adoc[leveloffset=+1]
 
 include::develop_connector_extensions.adoc[leveloffset=+1]
