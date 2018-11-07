@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "composite": true,
     "baseUrl": "./",
     "module": "esnext",
     "target": "es5",
@@ -31,6 +30,7 @@
     "src/**/*"
   ],
   "exclude": [
+    ".storybook",
     "node_modules",
     "dist",
     "scripts",
