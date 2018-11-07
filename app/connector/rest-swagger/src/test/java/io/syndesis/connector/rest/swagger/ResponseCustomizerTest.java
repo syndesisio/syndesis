@@ -35,25 +35,6 @@ public class ResponseCustomizerTest {
     }
 
     @Test
-    public void shouldDetermineAddingResponseConverterWithBody() {
-        assertThat(ResponseCustomizer
-            .isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification("{\"properties\":{\"body\":{}}}").build())).isTrue();
-    }
-
-    @Test
-    public void shouldDetermineAddingResponseConverterWithBodyAndParameters() {
-        assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)
-            .specification("{\"properties\":{\"body\":{},\"parameters\":{\"type\":\"object\",\"properties\":{\"Status\":{},\"Content-Type\":{}}}}}").build()))
-                .isTrue();
-    }
-
-    @Test
-    public void shouldDetermineAddingResponseConverterWithParameters() {
-        assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)
-            .specification("{\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Status\":{},\"Content-Type\":{}}}}}").build())).isTrue();
-    }
-
-    @Test
     public void shouldDetermineAddingResponseConverterWithWrappedSchema() {
         assertThat(ResponseCustomizer
             .isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification("{\"id\":\"io:syndesis:wrapped\"}").build())).isTrue();
