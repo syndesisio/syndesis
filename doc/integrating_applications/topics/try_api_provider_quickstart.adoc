@@ -37,7 +37,7 @@ that are otherwise considered insecure.
 * `--request` specifies the HTTP `POST` command, which stores data.
 * `--data` specifies the JSON format content to be stored. In this example the  
 content is `{ "task":"my new task!"}`.
-* `$externalURL/todo` is the endpoint to invoke. 
+* `$externalURL/todo` is the URL to invoke. 
 
 +
 This command sends an HTTP `POST` request to the Task API service, which
@@ -57,8 +57,8 @@ flow for the *Get Task by ID* operation:
 curl -k $externalURL/todo/1 
 ----
 +
-To obtain a task, the `curl` command needs to specify only the endpoint. The
-HTTP `GET` command is the default request. The last part of the endpoint
+To obtain a task, the `curl` command needs to specify only the URL. The
+HTTP `GET` command is the default request. The last part of the URL
 specifies the ID of the task to get. 
 
 . Invoke a `curl` command that triggers execution of the integration
@@ -68,5 +68,5 @@ flow for the *Delete Task for ID* operation:
 curl -k -X DELETE $externalURL/todo/1
 ----
 +
-This command invokes the HTTP `DELETE` command with the same endpoint as the
+This command invokes the HTTP `DELETE` command with the same URL as the
 command that obtained a task by its ID. 
