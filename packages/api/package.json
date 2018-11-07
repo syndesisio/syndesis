@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "main": "dist/api.js",
   "umd:main": "dist/api.umd.js",
-  "module": "dist/api.mjs",
   "source": "src/index.ts",
   "typings": "dist/index.d.ts",
   "files": [

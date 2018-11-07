@@ -1,7 +1,7 @@
-import { PfNavLink } from '@syndesis/app/components';
 import { Icon, Masthead, VerticalNav } from 'patternfly-react';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { PfNavLink } from "../components";
 
 import pitto from './glasses_logo_square.png';
 import typo from './syndesis-logo-svg-white.svg';

@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "main": "dist/integrations.js",
   "umd:main": "dist/integrations.umd.js",
-  "module": "dist/integrations.mjs",
   "source": "src/index.ts",
   "typings": "dist/index.d.ts",
   "files": [

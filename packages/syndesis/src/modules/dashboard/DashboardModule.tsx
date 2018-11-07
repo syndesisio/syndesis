@@ -1,4 +1,3 @@
-import { WithRouter } from "@syndesis/app/containers";
 import { ModuleLoader } from "@syndesis/ui";
 import * as React from "react";
 import Loadable from 'react-loadable';
@@ -6,6 +5,7 @@ import Loadable from 'react-loadable';
 // this will be part of the main bundle, which sux but I have no idea how
 // to avoid it right now
 import "@syndesis/dashboard/dist/dashboard.css";
+import { WithRouter } from "../../containers";
 
 const LoadableDashboardPage = Loadable({
   loader: () =>

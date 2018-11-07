@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
@@ -10,7 +9,7 @@
     ],
     "sourceMap": true,
     "allowJs": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "moduleResolution": "node",
     "rootDir": "src",
     "forceConsistentCasingInFileNames": true,
@@ -27,12 +26,7 @@
     "strict": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "paths": {
-      "@syndesis/app/*": [
-        "src/*"
-      ]
-    }
+    "noEmit": true
   },
   "references": [
     {

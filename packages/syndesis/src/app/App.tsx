@@ -1,20 +1,4 @@
 import { ApiContext } from "@syndesis/api";
-import {
-  AppContext,
-  IAppContext,
-  IAppSettings
-} from '@syndesis/app/app/AppContext';
-import { AuthContext, IAuthContext } from '@syndesis/app/app/AuthContext';
-import { AuthenticatedRoute } from '@syndesis/app/app/AuthenticatedRoute';
-import { LoginPage } from '@syndesis/app/app/LoginPage';
-import { Logout } from '@syndesis/app/app/LogoutPage';
-import { TokenPage } from '@syndesis/app/app/TokenPage';
-import { PfVerticalNavItem } from '@syndesis/app/components';
-import {
-  ConnectionsModule,
-  DashboardModule,
-  IntegrationsModule
-} from '@syndesis/app/modules';
 import * as React from 'react';
 import {
   Route,
@@ -23,14 +7,24 @@ import {
   withRouter
 } from 'react-router-dom';
 import './App.css';
+import { PfVerticalNavItem } from "../components";
+import { ConnectionsModule } from "../modules/connections";
+import { DashboardModule } from "../modules/dashboard";
+import { IntegrationsModule } from "../modules/integrations";
+import { AppContext, IAppContext, IAppSettings } from "./AppContext";
+import { AuthContext, IAuthContext } from "./AuthContext";
+import { AuthenticatedRoute } from "./AuthenticatedRoute";
 import { Layout } from './Layout';
+import { LoginPage } from "./LoginPage";
+import { Logout } from "./LogoutPage";
 import { SettingsPage } from './SettingsPage';
+import { TokenPage } from "./TokenPage";
 
 const PrivateRoutes = () => (
   <Switch>
-    <Route path="/" exact={true} component={DashboardModule} />
-    <Route path="/integrations" component={IntegrationsModule} />
-    <Route path="/connections" component={ConnectionsModule} />
+    <Route path="/" exact={true} component={DashboardModule}/>
+    <Route path="/integrations" component={IntegrationsModule}/>
+    <Route path="/connections" component={ConnectionsModule}/>
   </Switch>
 );
 

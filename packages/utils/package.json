@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "main": "dist/utils.js",
   "umd:main": "dist/utils.umd.js",
-  "module": "dist/utils.mjs",
   "source": "src/index.ts",
   "typings": "dist/index.d.ts",
   "files": [

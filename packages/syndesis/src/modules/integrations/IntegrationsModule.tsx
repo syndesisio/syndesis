@@ -2,7 +2,7 @@ import { ModuleLoader } from "@syndesis/ui";
 import * as React from "react";
 import Loadable from "react-loadable";
 import { Route, Switch } from "react-router";
-import { WithRouter } from "src/containers/index";
+import { WithRouter } from "../../containers";
 
 // this will be part of the main bundle, which sux but I have no idea how
 // to avoid it right now

@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "main": "dist/connections.js",
   "umd:main": "dist/connections.umd.js",
-  "module": "dist/connections.mjs",
   "source": "src/index.ts",
   "typings": "dist/index.d.ts",
   "files": [
