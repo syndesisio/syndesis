@@ -9,10 +9,10 @@ creating an API provider integration is as follows.
 
 . On the *Choose a Start Connection* page, click the *API Provider* card.
 . On the *Start integration with an API call* page, upload a file that
-contains an OpenAPI 2.0 specification or indicate that you want to 
-create the specification now. If you upload a file, you can review and
-edit it. If you choose to create it now, {prodname} opens an editor
-that supports creation of OpenAPI specifications. 
+contains an OpenAPI 2.0 schema or indicate that you want to 
+create the schema now. If you upload a file, you can review and
+edit it. If you select *Create from scratch*, {prodname} opens an editor
+that supports creation of OpenAPI schemas. 
 +
 [CAUTION]
 After you save or publish an API provider integration, you cannot update 
@@ -21,7 +21,7 @@ definition then you must start over and create a new API provider integration.
 
 . Give the integration a name and save it. 
 . On the *Choose operation* page, for each operation that the OpenAPI 
-specification defines, create the integration flow for that operation:
+schema defines, create the integration flow for that operation:
 .. Click an operation to display the *Add to Integration* page. 
 .. Add the connections that are required to implement the selected operation. 
 .. Add additional steps that process data between connections. For example, 
@@ -47,7 +47,7 @@ code that you select. Error handling is not yet supported.
 For example, suppose that the following `curl` command triggers execution of an integration
 flow for the *Get Task by ID* operation. The HTTP `GET` command is the
 default request so there is no requirement to specify `GET`. 
-The last part of the endpoint specifies the ID of the task to get:
+The last part of the URL specifies the ID of the task to get:
 +
 ----
 curl -k https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api/todo/1 
