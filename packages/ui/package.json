@@ -4,11 +4,18 @@
   "main": "dist/ui.js",
   "umd:main": "dist/ui.umd.js",
   "module": "dist/ui.mjs",
-  "source": "index.ts",
+  "source": "src/index.ts",
+  "typings": "dist/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@types/react": "^16.4.18",
     "@types/react-dom": "^16.0.9",
+    "@types/patternfly-react": "*",
+    "@types/react-content-loader": "*",
+    "@types/react-loadable": "*",
     "microbundle": "^0.7.0",
     "patternfly-react": "^2.22.3",
     "react": "^16.6.0",

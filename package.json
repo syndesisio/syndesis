@@ -5,6 +5,7 @@
   "private": true,
   "workspaces": [
     "app",
-    "packages/*"
+    "packages/*",
+    "typings/*"
   ]
 }

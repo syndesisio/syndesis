@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "composite": true,
     "baseUrl": "./",
+    "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
     "lib": [
@@ -9,9 +9,10 @@
       "dom"
     ],
     "sourceMap": true,
-    "allowJs": false,
+    "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
+    "rootDir": "src",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -25,14 +26,25 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "resolveJsonModule": true,
-    "noEmit": true
+    "isolatedModules": true,
+    "noEmit": true,
+    "paths": {
+      "@syndesis/app/*": [
+        "src/*"
+      ]
+    }
   },
+  "references": [
+    {
+      "path": "../ui"
+    }
+  ],
   "include": [
     "src/**/*"
   ],
   "exclude": [
     "node_modules",
-    "dist",
+    "build",
     "scripts",
     "acceptance-tests",
     "webpack",
