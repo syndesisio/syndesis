@@ -80,21 +80,8 @@ public final class ResponseCustomizer implements ConnectorComponentCustomizer, O
             return false;
         }
 
-        final JsonNode properties = jsonSchema.get("properties");
-        if (isNullNode(properties)) {
-            return false;
-        }
+        final JsonNode id = jsonSchema.get("$id");
 
-        final JsonNode parameters = properties.get("parameters");
-        if (isNullNode(parameters)) {
-            return false;
-        }
-
-        final JsonNode propertiesOfParameters = parameters.get("properties");
-
-        final JsonNode status = propertiesOfParameters.get("Status");
-        final JsonNode contentType = propertiesOfParameters.get("Content-Type");
-
-        return !isNullNode(status) && !isNullNode(contentType);
+        return !isNullNode(id) && "io:syndesis:wrapped".equals(id.asText());
     }
 }

@@ -288,6 +288,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
         }
 
         final ObjectNode unifiedSchema = JsonSchemaHelper.newJsonObjectSchema();
+        unifiedSchema.put("$id", "io:syndesis:wrapped");
         final ObjectNode properties = unifiedSchema.putObject("properties");
 
         if (parametersSchema != null) {
