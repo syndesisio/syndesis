@@ -33,8 +33,8 @@ at the bottom. When you hover over this icon, *Provided API Return Path*
 appears.
 +
 Every API provider integration ends each integration flow by 
-sending a response to the REST API service. The service then sends a 
-response to the REST API caller that triggered execution of the integration flow.
+sending a response to the REST API caller that triggered execution of the 
+integration flow.
 
 . Specify the operation's return code as follows: 
 .. In the *Provided API Return Path* page, click in the *Return Code*
