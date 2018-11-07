@@ -4,9 +4,19 @@
 [id='creating-telegram-connections_{context}']
 = Create a Telegram connection
 
-In an integration, a Telegram connection can receive messages from a 
-chat bot that you specify or send a message to the same chat by using the bot. 
-You can use the same Telegram connection in any number of integrations. 
+In an integration, a Telegram connection can receive messages from a chat bot 
+that you specify or send a message to the same chat by using the bot. 
+You can use the same Telegram connection:
+
+* In any number of integrations that use the connection to send messages 
+to a chat.
+* And in one integration that uses the connection to receive messages 
+from a Telegram chat bot.
+
+In other words, you cannot use the same Telegram connection in more than one 
+integration if you want that connection to receive Telegram chat messages 
+in both integrations. This is a Telegram limitation.
+
 
 .Prerequisites
 
