@@ -32,7 +32,9 @@
   "scripts": {
     "build": "microbundle",
     "dev": "microbundle watch",
-    "format": "prettier --single-quote --write 'src/**/*'"
+    "format": "prettier --single-quote --write 'src/**/*'",
+    "prepublish": "npm run build",
+    "precommit": "lint-staged"
   },
   "peerDependencies": {
     "patternfly-react": "^2.22.3",

@@ -1,5 +1,5 @@
-import * as React from "react";
-import "./IntegrationStatusDetail.css";
+import * as React from 'react';
+import './IntegrationStatusDetail.css';
 export interface IIntegrationStatusDetailProps {
     targetState: string;
     value?: string;
