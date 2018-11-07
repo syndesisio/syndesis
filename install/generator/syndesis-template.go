@@ -64,7 +64,7 @@ type tags struct {
 	Postgresql string
 	OAuthProxy string
 	Prometheus string
-	Upgrade string
+	Upgrade    string
 }
 
 type Context struct {
@@ -80,6 +80,7 @@ type Context struct {
 	Images           images
 	Tags             tags
 	Debug            bool
+	WithOAuthClient  bool
 }
 
 // TODO: Could be added from a local configuration file
@@ -151,6 +152,7 @@ func init() {
 	flags.BoolVar(&context.EarlyAccess, "early-access", false, "Point repositories to early-access repos")
 	flags.StringVar(&context.Registry, "registry", "docker.io", "Registry to use for imagestreams")
 	flags.BoolVar(&context.Debug, "debug", false, "Enable debug support")
+	flags.BoolVar(&context.WithOAuthClient, "with-oauth-client", false, "With OAuthClient")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 }
 
