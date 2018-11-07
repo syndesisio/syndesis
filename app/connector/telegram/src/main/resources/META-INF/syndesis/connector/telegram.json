@@ -2,7 +2,7 @@
   "actions": [
     {
       "actionType": "connector",
-      "description": "Receive all messages sent to the chat bot",
+      "description": "Receive all messages sent to the chat bot.",
       "descriptor": {
         "componentScheme": "telegram",
         "configuredProperties": {
@@ -23,7 +23,7 @@
     },
     {
       "actionType": "connector",
-      "description": "Send a messages to the chat (through the bot).",
+      "description": "Send a message to the chat (through the bot).",
       "descriptor": {
         "componentScheme": "telegram",
         "configuredProperties": {
@@ -41,13 +41,13 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Chat id",
+            "description": "Chat Id",
             "name": "chatId",
             "properties": {
               "chatId": {
                 "componentProperty": false,
                 "deprecated": false,
-                "description": "The telegram's Chat Id, if not set will use CamelTelegramChatId from the incoming exchange.",
+                "description": "Telegram's Id for the chat. If not set then the CamelTelegramChatId from the incoming message is used.",
                 "displayName": "Chat Id",
                 "enum": [],
                 "javaType": "String",
@@ -72,7 +72,7 @@
       "type": "MAVEN"
     }
   ],
-  "description": "Send and receive messages to/from a Telegram chat",
+  "description": "Receive and send messages.",
   "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgMjQwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIuNjY3IiB5MT0iLjE2NyIgeDI9Ii40MTciIHkyPSIuNzUiPjxzdG9wIHN0b3AtY29sb3I9IiMzN2FlZTIiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiMxZTk2YzgiIG9mZnNldD0iMSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iLjY2IiB5MT0iLjQzNyIgeDI9Ii44NTEiIHkyPSIuODAyIj48c3RvcCBzdG9wLWNvbG9yPSIjZWZmN2ZjIiBvZmZzZXQ9IjAiLz48c3RvcCBzdG9wLWNvbG9yPSIjZmZmIiBvZmZzZXQ9IjEiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48Y2lyY2xlIGN4PSIxMjAiIGN5PSIxMjAiIHI9IjEyMCIgZmlsbD0idXJsKCNhKSIvPjxwYXRoIGZpbGw9IiNjOGRhZWEiIGQ9Ik05OCAxNzVjLTMuODg4IDAtMy4yMjctMS40NjgtNC41NjgtNS4xN0w4MiAxMzIuMjA3IDE3MCA4MCIvPjxwYXRoIGZpbGw9IiNhOWM5ZGQiIGQ9Ik05OCAxNzVjMyAwIDQuMzI1LTEuMzcyIDYtM2wxNi0xNS41NTgtMTkuOTU4LTEyLjAzNSIvPjxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0xMDAuMDQgMTQ0LjQxbDQ4LjM2IDM1LjcyOWM1LjUxOSAzLjA0NSA5LjUwMSAxLjQ2OCAxMC44NzYtNS4xMjNsMTkuNjg1LTkyLjc2M2MyLjAxNS04LjA4LTMuMDgtMTEuNzQ2LTguMzYtOS4zNDlsLTExNS41OSA0NC41NzFjLTcuODkgMy4xNjUtNy44NDMgNy41NjctMS40MzggOS41MjhsMjkuNjYzIDkuMjU5IDY4LjY3My00My4zMjVjMy4yNDItMS45NjYgNi4yMTgtLjkxIDMuNzc2IDEuMjU4Ii8+PC9zdmc+",
   "id": "telegram",
   "name": "Telegram",
@@ -80,7 +80,7 @@
     "authorizationToken": {
       "componentProperty": false,
       "deprecated": false,
-      "description": "Telegram Bot Authorization Token that can be obtained from the Telegram BotFather",
+      "description": "Telegram bot authorization token that can be obtained from the Telegram BotFather.",
       "displayName": "Authorization Token",
       "group": "security",
       "javaType": "java.lang.String",
