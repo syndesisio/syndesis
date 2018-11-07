@@ -25,13 +25,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ResponseCustomizerTest {
 
     @Test
-    public void shouldDetermineAddingResponseConverter() {
-        assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)
-            .specification("{\"properties\":{\"body\":{},\"parameters\":{\"type\":\"object\",\"properties\":{\"Status\":{},\"Content-Type\":{}}}}}").build()))
-                .isTrue();
-    }
-
-    @Test
     public void shouldDetermineAddingResponseConverterRobustly() {
         assertThat(ResponseCustomizer.isUnifiedDataShape(null)).isFalse();
         assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().build())).isFalse();
@@ -39,5 +32,11 @@ public class ResponseCustomizerTest {
         assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).build())).isFalse();
         assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification("xyz").build())).isFalse();
         assertThat(ResponseCustomizer.isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification("{}").build())).isFalse();
+    }
+
+    @Test
+    public void shouldDetermineAddingResponseConverterWithWrappedSchema() {
+        assertThat(ResponseCustomizer
+            .isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification("{\"$id\":\"io:syndesis:wrapped\"}").build())).isTrue();
     }
 }

@@ -37,7 +37,7 @@ import me.andrz.jackson.JsonReferenceProcessor;
 
 public final class JsonSchemaHelper {
 
-    private static final String JSON_SCHEMA_URI = "http://json-schema.org/draft-04/schema#";
+    private static final String JSON_SCHEMA_URI = "http://json-schema.org/schema#";
 
     private JsonSchemaHelper() {
         // utility class
