@@ -8,6 +8,7 @@ import { UnrecoverableError } from './UnrecoverableError';
 export class ModuleLoader extends React.Component<LoadingComponentProps> {
   public render() {
     if (this.props.error || this.props.timedOut) {
+      console.error(this.props.error); // tslint:disable-line
       return <UnrecoverableError />;
     } else if (this.props.pastDelay) {
       return (

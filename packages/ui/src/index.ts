@@ -8,5 +8,6 @@ export * from './IntegrationsListItem';
 export * from './IntegrationsListSkeleton';
 export * from './IntegrationStatus';
 export * from './IntegrationStatusDetail';
+export * from './ListViewToolbar';
 export * from './ModuleLoader';
 export * from './UnrecoverableError';

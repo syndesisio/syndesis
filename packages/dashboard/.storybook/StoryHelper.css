@@ -1,0 +1,19 @@
+@import url('~patternfly/dist/css/patternfly.css');
+@import url('~patternfly/dist/css/patternfly-additions.css');
+@import url('~patternfly-react/dist/css/patternfly-react.css');
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+#root {
+  padding: 2em;
+}
+
+.test-area {
+  align-items: center;
+  display: flex;
+  height: 100%;
+}
