@@ -37,6 +37,6 @@ public class ResponseCustomizerTest {
     @Test
     public void shouldDetermineAddingResponseConverterWithWrappedSchema() {
         assertThat(ResponseCustomizer
-            .isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification("{\"id\":\"io:syndesis:wrapped\"}").build())).isTrue();
+            .isUnifiedDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification("{\"$id\":\"io:syndesis:wrapped\"}").build())).isTrue();
     }
 }
