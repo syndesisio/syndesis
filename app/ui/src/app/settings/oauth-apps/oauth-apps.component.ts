@@ -15,6 +15,8 @@ export interface OAuthAppListItem {
   name: string;
   expanded: boolean;
   client: OAuthApp;
+  message?: string;
+  error?: any;
 }
 
 @Component({
@@ -81,14 +83,16 @@ export class OAuthAppsComponent implements OnInit, OnDestroy {
     if (!configuredProperties) {
       return false;
     }
-    return Object.keys(properties).find(key => {
-      const property = properties[key];
-      if (!property.required || property.type === 'hidden') {
-        return false;
-      }
-      const value = configuredProperties[key];
-      return value === null || value === undefined || value === '';
-    }) === undefined;
+    return (
+      Object.keys(properties).find(key => {
+        const property = properties[key];
+        if (!property.required || property.type === 'hidden') {
+          return false;
+        }
+        const value = configuredProperties[key];
+        return value === null || value === undefined || value === '';
+      }) === undefined
+    );
   }
 
   handleLinks(event: any): void {
@@ -104,6 +108,10 @@ export class OAuthAppsComponent implements OnInit, OnDestroy {
     }
   }
 
+  onSave() {
+    this.oauthAppStore.loadAll();
+  }
+
   // view initialization
   ngOnInit() {
     this.subscription = this.oauthAppStore.list.subscribe((apps: OAuthApps) => {
@@ -115,6 +123,8 @@ export class OAuthAppsComponent implements OnInit, OnDestroy {
         });
         this.items.push({
           name: app.name,
+          message: oldApp ? oldApp.message : undefined,
+          error: oldApp ? oldApp.error : undefined,
           expanded: oldApp ? oldApp.expanded : false,
           client: app
         });
@@ -134,5 +144,4 @@ export class OAuthAppsComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
     }
   }
-
 }

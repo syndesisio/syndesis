@@ -1,6 +1,12 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  EventEmitter,
+  Output,
+  OnDestroy
+} from '@angular/core';
 import { Router } from '@angular/router';
-import { OAuthApp } from '@syndesis/ui/settings';
 import { FormFactoryService } from '@syndesis/ui/platform';
 import { OAuthAppStore } from '@syndesis/ui/store/oauthApp/oauth-app.store';
 import { FormGroup } from '@angular/forms';
@@ -8,7 +14,6 @@ import {
   DynamicFormControlModel,
   DynamicFormService
 } from '@ng-dynamic-forms/core';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'syndesis-oauth-app-form',
@@ -16,14 +21,12 @@ import { Subscription } from 'rxjs';
 })
 export class OAuthAppFormComponent implements OnInit, OnDestroy {
   formConfig: any;
-  @Input() item: any = {};
+  @Input() item = <any>{};
+  @Output() onSave = new EventEmitter<void>();
 
   loading = false;
-  error: any = null;
-  message: any = null;
   formGroup: FormGroup;
   formModel: DynamicFormControlModel[];
-  appsSubscription: Subscription;
 
   constructor(
     private formFactory: FormFactoryService,
@@ -35,28 +38,39 @@ export class OAuthAppFormComponent implements OnInit, OnDestroy {
   save() {
     const app = {
       ...this.item.client,
-      configuredProperties: this.formFactory.sanitizeValues(this.formGroup.value, this.formConfig)
+      configuredProperties: this.formFactory.sanitizeValues(
+        this.formGroup.value,
+        this.formConfig
+      )
     };
 
     this.formGroup.disable();
     this.loading = true;
-    this.error = null;
-    this.message = null;
+    this.resetItemState();
     const sub = this.store.update(app).subscribe(
       () => {
         this.loading = false;
-        this.message = 'success';
+        this.item.message = 'success';
         sub.unsubscribe();
-        this.item.client = app;
+        this.onSave.emit();
       },
       (error: any) => {
         this.loading = false;
         this.formGroup.enable();
-        this.message = null;
-        this.error = error;
+        this.item.message = null;
+        this.item.error = error;
         sub.unsubscribe();
       }
     );
+  }
+
+  resetItemState() {
+    delete this.item.message;
+    delete this.item.error;
+  }
+
+  exit() {
+    this.item.expanded = false;
   }
 
   handleLinks(event: any): void {
@@ -73,17 +87,15 @@ export class OAuthAppFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.appsSubscription = this.store.list.subscribe(oauthApps => {
-      const oauthApp = <OAuthApp> oauthApps.find(it => it.id == this.item.client.id);
-      this.formModel = this.formFactory.createFormModel(
-        oauthApp.properties,
-        oauthApp.configuredProperties,
-        ['*']);
-      });
+    this.formModel = this.formFactory.createFormModel(
+      this.item.client.properties,
+      this.item.client.configuredProperties,
+      ['*']
+    );
     this.formGroup = this.formService.createFormGroup(this.formModel);
   }
 
-  ngOnDestroy() {
-    this.appsSubscription.unsubscribe();
+  ngOnDestroy(): void {
+    this.resetItemState();
   }
 }
