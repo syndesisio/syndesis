@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter, OnDestroy } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import {
@@ -22,20 +22,18 @@ import {
   IntegrationStore,
   DATA_MAPPER,
   ENDPOINT,
-  StepStore,
+  StepStore
 } from '@syndesis/ui/store';
 import { FlowEvent } from '@syndesis/ui/integration/edit-page';
 
 const category = getCategory('CurrentFlow');
 
 @Injectable()
-export class CurrentFlowService implements OnDestroy {
-
+export class CurrentFlowService {
   events = new EventEmitter<FlowEvent>();
 
   public flowId?: string;
 
-  private subscription: Subscription;
   private _integration: Integration;
   private _loaded = false;
 
@@ -44,12 +42,13 @@ export class CurrentFlowService implements OnDestroy {
     private stepStore: StepStore,
     private integrationSupportService: IntegrationSupportService
   ) {
-    this.subscription = this.events.subscribe((event: FlowEvent) =>
-      this.handleEvent(event));
+    this.events.subscribe((event: FlowEvent) => this.handleEvent(event));
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  cleanup(): void {
+    this.flowId = undefined;
+    this._integration = undefined;
+    this._loaded = false;
   }
 
   isValid(): boolean {
@@ -682,7 +681,7 @@ export class CurrentFlowService implements OnDestroy {
   }
 
   get steps(): Array<Step> {
-    if (!this._integration || !this.flowId)  {
+    if (!this._integration || !this.flowId) {
       return undefined;
     }
 

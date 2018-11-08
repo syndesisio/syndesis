@@ -61,8 +61,13 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
     const integrationId = this.route.snapshot.params.integrationId;
     const flowId = this.route.snapshot.params.flowId;
     if (!flowId && integrationId) {
-        this.router.navigate(['integrations', integrationId,  this.currentFlowService.flowId, 'edit']);
-        return;
+      this.router.navigate([
+        'integrations',
+        integrationId,
+        this.currentFlowService.flowId,
+        'edit'
+      ]);
+      return;
     }
     let validate = false;
     switch (event.kind) {
@@ -88,7 +93,7 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
     if (validate) {
       this.router.navigate(['save-or-add-step'], {
         queryParams: { validate: true },
-        relativeTo: this.route,
+        relativeTo: this.route
       });
     }
   }
@@ -103,12 +108,14 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
     );
 
     this.routeSubscription = this.route.paramMap
-      .pipe(map(params => {
-        return {
-          integrationId: params.get('integrationId'),
-          flowId: params.get('flowId')
-        };
-      }))
+      .pipe(
+        map(params => {
+          return {
+            integrationId: params.get('integrationId'),
+            flowId: params.get('flowId')
+          };
+        })
+      )
       .subscribe(params => {
         this.currentFlowService.flowId = params.flowId;
         this.integrationStore.loadOrCreate(params.integrationId);
@@ -117,7 +124,7 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.currentFlowService.flowId = undefined;
+    this.currentFlowService.cleanup();
     this.navigationService.show();
     if (this.integrationSubscription) {
       this.integrationSubscription.unsubscribe();

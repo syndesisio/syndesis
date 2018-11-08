@@ -15,25 +15,19 @@
                   <a [routerLink]="['/integrations']">Integrations</a>
                 </li>
                 <li>
-                  <a *ngIf="name"
-                    [routerLink]="['/integrations', currentFlowService.integration.id]">{{ flowPageService.integrationName }}</a>
-                  <ng-container *ngIf="!name">New Integration</ng-container>
+                  <a *ngIf="currentFlowService.integration.id" [routerLink]="['/integrations', currentFlowService.integration.id]">
+                    {{ flowPageService.integrationName }}</a>
+                  <ng-container *ngIf="!currentFlowService.integration.id">New Integration</ng-container>
                 </li>
               </ol>
             </div>
             <div class="toolbar-pf-action-right">
-              <button class="btn btn-default"
-                      (click)="cancel()">Cancel
+              <button class="btn btn-default" (click)="cancel()">Cancel
               </button> &nbsp;
-              <button class="btn btn-default"
-                      (click)="save()"
-                      [disabled]="!canContinue() || saveInProgress || publishInProgress">
+              <button class="btn btn-default" (click)="save()" [disabled]="!canContinue() || saveInProgress || publishInProgress">
                 <span *ngIf="saveInProgress" class="spinner spinner-sm spinner-inline"></span>Save as Draft
               </button>
-              <button type="button"
-                      class="btn btn-primary"
-                      (click)="publish()"
-                      [disabled]="!canContinue() || saveInProgress || publishInProgress">
+              <button type="button" class="btn btn-primary" (click)="publish()" [disabled]="!canContinue() || saveInProgress || publishInProgress">
                 <span *ngIf="publishInProgress" class="spinner spinner-sm spinner-inline"></span>Publish</button>
             </div>
           </div>
@@ -45,11 +39,9 @@
     <div class="container-fluid">
       <div *ngIf="errorMessage">
         <div class="alert alert-danger">
-          <button type="button"
-                  class="close"
-                  (click)="errorMessage = undefined">
-                  <span class="pficon pficon-close"></span>
-                </button>
+          <button type="button" class="close" (click)="errorMessage = undefined">
+            <span class="pficon pficon-close"></span>
+          </button>
           <span class="pficon pficon-error-circle-o"></span>
           <p>Error saving integration: </p>
           <pre>{{ errorMessage }}</pre>
@@ -69,22 +61,15 @@
                   Integration Name
                 </label>
                 <div class="col-sm-9">
-                  <input type="text"
-                        name="nameInput"
-                        data-id="nameInput"
-                        placeholder="{{ name }}"
-                        [(ngModel)]="name"
-                        class="form-control">
+                  <input type="text" name="nameInput" data-id="nameInput" placeholder="{{ name }}" [(ngModel)]="name"
+                    class="form-control">
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-3 control-label">Description</label>
                 <div class="col-sm-9">
-                  <textarea data-id="descriptionInput"
-                            name="descriptionInput"
-                            class="form-control"
-                            [(ngModel)]="description"
-                            rows="2"></textarea>
+                  <textarea data-id="descriptionInput" name="descriptionInput" class="form-control" [(ngModel)]="description"
+                    rows="2"></textarea>
                 </div>
               </div>
               <!--
