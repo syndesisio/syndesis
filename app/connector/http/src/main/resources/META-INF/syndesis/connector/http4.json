@@ -201,6 +201,9 @@
       "type": "string"
     }
   },
+  "configuredProperties": {
+    "headerFilterStrategy": "syndesisHeaderStrategy"
+  },
   "tags": [
     "verifier"
   ]
