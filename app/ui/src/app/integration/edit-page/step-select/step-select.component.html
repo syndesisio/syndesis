@@ -17,9 +17,9 @@
                       <a [routerLink]="['/integrations']">Integrations</a>
                     </li>
                     <li>
-                      <a *ngIf="flowPageService.integrationName"
-                        [routerLink]="['/integrations', currentFlowService.integration.id]">{{ flowPageService.integrationName }}</a>
-                      <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
+                      <a *ngIf="currentFlowService.integration.id" [routerLink]="['/integrations', currentFlowService.integration.id]">
+                        {{ flowPageService.integrationName }}</a>
+                      <ng-container *ngIf="!currentFlowService.integration.id">New Integration</ng-container>
                     </li>
                     <li class="active">Choose a Step</li>
                   </ol>
@@ -37,21 +37,15 @@
           <div class="title">
             <h1>Choose a Step</h1>
           </div>
-          <p>A step specifies an operation on the data in the integration.  Click one to add it.</p>
+          <p>A step specifies an operation on the data in the integration. Click one to add it.</p>
           <syndesis-loading [loading]="loading$ | async" [content]="content">
             <ng-template #content>
-              <pfng-toolbar [config]="toolbarConfig"
-                            (onFilterChange)="onFilterChange($event)"
-                            (onFilterFieldSelect)="onFilterFieldSelect($event)"
-                            (onSortChange)="onSortChange($event)">
+              <pfng-toolbar [config]="toolbarConfig" (onFilterChange)="onFilterChange($event)" (onFilterFieldSelect)="onFilterFieldSelect($event)"
+                (onSortChange)="onSortChange($event)">
               </pfng-toolbar>
-              <div *ngIf="steps"
-                  class="list-group list-view-pf list-view-pf-view">
-                <div class="step list-group-item"
-                    *ngFor="let step of filteredSteps | stepVisible:{position: position}"
-                    title="{{step.name}}"
-                    (click)="onSelect(step)"
-                    [class.active]="isSelected(step)">
+              <div *ngIf="steps" class="list-group list-view-pf list-view-pf-view">
+                <div class="step list-group-item" *ngFor="let step of filteredSteps | stepVisible:{position: position}"
+                  title="{{step.name}}" (click)="onSelect(step)" [class.active]="isSelected(step)">
                   <div class="list-view-pf-main-info">
                     <div class="list-view-pf-body">
                       <div class="list-group-item-heading">{{ getName(step) }}</div>

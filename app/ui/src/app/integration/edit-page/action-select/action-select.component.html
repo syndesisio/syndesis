@@ -17,9 +17,9 @@
                       <a [routerLink]="['/integrations']">Integrations</a>
                     </li>
                     <li>
-                      <a *ngIf="flowPageService.integrationName"
-                        [routerLink]="['/integrations', currentFlowService.integration.id]">{{ integrationName }}</a>
-                      <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
+                      <a *ngIf="currentFlowService.integration.id" [routerLink]="['/integrations', currentFlowService.integration.id]">
+                        {{ flowPageService.integrationName }}</a>
+                      <ng-container *ngIf="!currentFlowService.integration.id">New Integration</ng-container>
                     </li>
                     <li class="active">Choose Action</li>
                   </ol>
@@ -41,12 +41,9 @@
           <div>
             <p>Choose an action for the selected connection.</p>
             <!-- Toolbar -->
-            <syndesis-list-toolbar [items]="actions$"
-              [filteredItems]="filteredActions$"></syndesis-list-toolbar>
+            <syndesis-list-toolbar [items]="actions$" [filteredItems]="filteredActions$"></syndesis-list-toolbar>
             <!-- Action List -->
-            <syndesis-list-actions [actions]="filteredActions$ | async"
-              [loading]="loading$ | async"
-              (onSelected)="onSelected($event)"></syndesis-list-actions>
+            <syndesis-list-actions [actions]="filteredActions$ | async" [loading]="loading$ | async" (onSelected)="onSelected($event)"></syndesis-list-actions>
           </div>
         </div>
       </div>

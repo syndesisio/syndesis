@@ -17,9 +17,9 @@
                       <a [routerLink]="['/integrations']">Integrations</a>
                     </li>
                     <li>
-                      <a *ngIf="flowPageService.integrationName"
-                        [routerLink]="['/integrations', currentFlowService.integration.id]">{{ flowPageService.integrationName }}</a>
-                      <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
+                      <a *ngIf="currentFlowService.integration.id" [routerLink]="['/integrations', currentFlowService.integration.id]">
+                        {{ flowPageService.integrationName }}</a>
+                      <ng-container *ngIf="!currentFlowService.integration.id">New Integration</ng-container>
                     </li>
                     <li class="active">Choose a {{ positionText | capitalize }} Connection</li>
                   </ol>
@@ -38,29 +38,24 @@
             <h1>{{ 'Choose a ' + positionText + ' Connection' | titleize }} </h1>
           </div>
           <p *ngIf="positionText == 'start'; else finishDesc">
-            Click the connection that starts the integration. If the connection you need is not available, click Create Connection.
+            Click the connection that starts the integration. If the connection you need is not available, click Create
+            Connection.
           </p>
           <ng-template #finishDesc>
             <p>
-              Click the connection that completes the integration. If the connection you need is not available, click Create Connection.
+              Click the connection that completes the integration. If the connection you need is not available, click
+              Create Connection.
             </p>
           </ng-template>
-          <syndesis-list-toolbar [items]="connections$"
-                                [filteredItems]="filteredConnections$"
-                                [viewTemplate]="viewTemplate">
+          <syndesis-list-toolbar [items]="connections$" [filteredItems]="filteredConnections$" [viewTemplate]="viewTemplate">
             <ng-template #viewTemplate>
-              <button type="button"
-                      class="btn btn-default toolbar-pf-action-right"
-                      [routerLink]="['/connections/create']">
+              <button type="button" class="btn btn-default toolbar-pf-action-right" [routerLink]="['/connections/create']">
                 Create Connection
               </button>
             </ng-template>
           </syndesis-list-toolbar>
-          <syndesis-connections-list [connections]="filteredConnections$ | async"
-                                    [loading]="loading$ | async"
-                                    (onSelected)="onSelected($event)"
-                                    [showKebab]="false"
-                                    [showNewConnection]="true"></syndesis-connections-list>
+          <syndesis-connections-list [connections]="filteredConnections$ | async" [loading]="loading$ | async"
+            (onSelected)="onSelected($event)" [showKebab]="false" [showNewConnection]="true"></syndesis-connections-list>
         </div>
       </div>
     </div>
