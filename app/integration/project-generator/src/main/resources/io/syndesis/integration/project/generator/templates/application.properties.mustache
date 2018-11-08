@@ -23,6 +23,7 @@ camel.health.indicator.enabled=true
 
 # Map Camel servlet to /*
 camel.component.servlet.mapping.contextPath=/*
+camel.component.servlet.headerFilterStrategy-class-name=io.syndesis.connector.support.processor.SyndesisHeaderStrategy
 
 # disable spring boot auto configurations
 spring.autoconfigure.exclude[0] = org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
