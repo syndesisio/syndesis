@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router";
 import IntegrationsPage from "../pages/IntegrationsPage";
 
 export interface IIntegrationsAppProps {
-  mountpoint: string;
+  baseurl: string;
 }
 
 export class IntegrationsApp extends React.Component<IIntegrationsAppProps> {
@@ -11,7 +11,7 @@ export class IntegrationsApp extends React.Component<IIntegrationsAppProps> {
     return (
       <Switch>
         <Route
-          path={this.props.mountpoint}
+          path={this.props.baseurl}
           exact={true}
           component={IntegrationsPage}
         />

@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router";
 import DashboardPage from "../pages/DashboardPage";
 
 export interface IDashboardAppProps {
-  mountpoint: string;
+  baseurl: string;
 }
 
 export class DashboardApp extends React.Component<IDashboardAppProps> {
@@ -11,7 +11,7 @@ export class DashboardApp extends React.Component<IDashboardAppProps> {
     return (
       <Switch>
         <Route
-          path={this.props.mountpoint}
+          path={this.props.baseurl}
           exact={true}
           component={DashboardPage}
         />

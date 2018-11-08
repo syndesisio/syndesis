@@ -1,6 +1,5 @@
 import { IConnection, IIntegration, IIntegrationsMetrics, IMonitoredIntegration } from "@syndesis/models";
 import * as React from 'react';
-import './Dashboard.css';
 export interface IIntegrationsPageProps {
     integrationsLoaded: boolean;
     connectionsLoaded: boolean;

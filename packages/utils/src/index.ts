@@ -1,2 +1,2 @@
 export * from './getConnectionIcon';
-export * from './ListViewToolbarAbstractComponent';
+export * from './WithRouter';

@@ -1,6 +1,6 @@
 import * as React from "react";
 export interface IDashboardAppProps {
-    mountpoint: string;
+    baseurl: string;
 }
 export declare class DashboardApp extends React.Component<IDashboardAppProps> {
     render(): JSX.Element;

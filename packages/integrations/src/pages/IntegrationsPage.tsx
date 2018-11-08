@@ -1,7 +1,6 @@
 import { WithConnections, WithMonitoredIntegrations } from "@syndesis/api";
 import { IConnection, IMonitoredIntegration } from "@syndesis/models";
-import { IActiveFilter, IFilterType, ISortType } from "@syndesis/ui";
-import { IListViewToolbarAbstractComponent, ListViewToolbarAbstractComponent } from "@syndesis/utils";
+import { IActiveFilter, IFilterType, ISortType, IListViewToolbarAbstractComponent, ListViewToolbarAbstractComponent } from "@syndesis/ui";
 import * as React from 'react';
 import { IntegrationsListView } from "../components/IntegrationsListView";
 

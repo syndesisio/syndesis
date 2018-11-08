@@ -1,6 +1,5 @@
 /// <reference types="react" />
-import { IActiveFilter, IFilterType } from "@syndesis/ui";
-import { IListViewToolbarAbstractComponent, ListViewToolbarAbstractComponent } from "@syndesis/utils";
+import { IActiveFilter, IFilterType, IListViewToolbarAbstractComponent, ListViewToolbarAbstractComponent } from "@syndesis/ui";
 export default class IntegrationsPage extends ListViewToolbarAbstractComponent<{}, IListViewToolbarAbstractComponent> {
     state: {
         activeFilters: IActiveFilter[];

@@ -1,8 +1,14 @@
 import { WithConnections } from "@syndesis/api";
 import { IConnection } from "@syndesis/models";
-import { IActiveFilter, IFilterType, ISortType } from "@syndesis/ui";
-import { IListViewToolbarAbstractComponent, ListViewToolbarAbstractComponent } from "@syndesis/utils";
+import {
+  IActiveFilter,
+  IFilterType,
+  IListViewToolbarAbstractComponent,
+  ISortType,
+  ListViewToolbarAbstractComponent
+} from "@syndesis/ui";
 import * as React from 'react';
+import { ConnectionsAppContext } from "../app/ConnectionsAppContext";
 import { ConnectionsListView } from "../components/ConnectionsListView";
 
 function getFilteredAndSortedConnections(
@@ -62,38 +68,42 @@ export default class ConnectionsPage extends ListViewToolbarAbstractComponent<
 
   public render() {
     return (
-      <WithConnections>
-        {({ data, loading, hasData }) => {
-          const filteredAndSortedConnections = getFilteredAndSortedConnections(
-            data.items,
-            this.state.activeFilters,
-            this.state.currentSortType,
-            this.state.isSortAscending
-          );
-          return (
-            <ConnectionsListView
-              loading={!hasData && loading}
-              match={'TODO'}
-              connections={filteredAndSortedConnections}
-              filterTypes={filterTypes}
-              sortTypes={sortTypes}
-              resultsCount={filteredAndSortedConnections.length}
-              {...this.state}
-              onUpdateCurrentValue={this.onUpdateCurrentValue}
-              onValueKeyPress={this.onValueKeyPress}
-              onFilterAdded={this.onFilterAdded}
-              onSelectFilterType={this.onSelectFilterType}
-              onFilterValueSelected={this.onFilterValueSelected}
-              onRemoveFilter={this.onRemoveFilter}
-              onClearFilters={this.onClearFilters}
-              onToggleCurrentSortDirection={
-                this.onToggleCurrentSortDirection
-              }
-              onUpdateCurrentSortType={this.onUpdateCurrentSortType}
-            />
-          );
-        }}
-      </WithConnections>
+      <ConnectionsAppContext.Consumer>
+        {({ baseurl }) =>
+          <WithConnections>
+            {({ data, loading, hasData }) => {
+              const filteredAndSortedConnections = getFilteredAndSortedConnections(
+                data.items,
+                this.state.activeFilters,
+                this.state.currentSortType,
+                this.state.isSortAscending
+              );
+              return (
+                <ConnectionsListView
+                  loading={!hasData && loading}
+                  baseurl={baseurl}
+                  connections={filteredAndSortedConnections}
+                  filterTypes={filterTypes}
+                  sortTypes={sortTypes}
+                  resultsCount={filteredAndSortedConnections.length}
+                  {...this.state}
+                  onUpdateCurrentValue={this.onUpdateCurrentValue}
+                  onValueKeyPress={this.onValueKeyPress}
+                  onFilterAdded={this.onFilterAdded}
+                  onSelectFilterType={this.onSelectFilterType}
+                  onFilterValueSelected={this.onFilterValueSelected}
+                  onRemoveFilter={this.onRemoveFilter}
+                  onClearFilters={this.onClearFilters}
+                  onToggleCurrentSortDirection={
+                    this.onToggleCurrentSortDirection
+                  }
+                  onUpdateCurrentSortType={this.onUpdateCurrentSortType}
+                />
+              );
+            }}
+          </WithConnections>
+        }
+      </ConnectionsAppContext.Consumer>
     );
   }
 }

@@ -6,7 +6,7 @@ import Adapter from "enzyme-adapter-react-16";
 
 import * as React from "react";
 
-const req = require.context("../src", true, /\.stories\.tsx$/);
+const req = require.context("../stories", true, /\.stories\.tsx$/);
 
 function loadStories() {
   req.keys().forEach(filename => req(filename));

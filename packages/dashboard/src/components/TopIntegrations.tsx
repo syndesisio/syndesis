@@ -7,7 +7,7 @@ import {
 import { Card, MenuItem } from 'patternfly-react';
 import * as React from 'react';
 
-import './TopIntegrations.css';
+// import './TopIntegrations.css';
 
 export interface ITopIntegrationsProps {
   loading: boolean;

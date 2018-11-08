@@ -2,7 +2,7 @@ import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { IntegrationProgress } from './IntegrationProgress';
 
-import './IntegrationStatusDetail.css';
+// import './IntegrationStatusDetail.css';
 
 export interface IIntegrationStatusDetailProps {
   targetState: string;

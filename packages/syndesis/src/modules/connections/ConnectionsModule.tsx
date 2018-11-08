@@ -1,7 +1,7 @@
 import { ModuleLoader } from "@syndesis/ui";
+import { WithRouter } from "@syndesis/utils";
 import * as React from "react";
 import Loadable from 'react-loadable';
-import { WithRouter } from "../../containers";
 
 // this will be part of the main bundle, which sux but I have no idea how
 // to avoid it right now
@@ -18,7 +18,7 @@ export class ConnectionsModule extends React.Component {
     return (
       <WithRouter>
         {({ match }) => (
-          <LoadableConnectionsPage mountpoint={match.url}/>
+          <LoadableConnectionsPage baseurl={match.url}/>
         )}
       </WithRouter>
     );

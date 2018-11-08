@@ -1,12 +1,11 @@
 import { IConnection } from "@syndesis/models";
-import { ConnectionCard, ConnectionsGrid } from '@syndesis/ui';
-import { IListViewToolbarProps, ListViewToolbar } from "@syndesis/ui";
+import { ConnectionCard, ConnectionsGrid, IListViewToolbarProps, ListViewToolbar } from "@syndesis/ui";
 import { getConnectionIcon } from "@syndesis/utils";
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 export interface IConnectionsListViewProps extends IListViewToolbarProps {
-  match: any;
+  baseurl: string;
   loading: boolean;
   connections: IConnection[];
 }
@@ -20,7 +19,7 @@ export class ConnectionsListView extends React.Component<
         <ListViewToolbar {...this.props}>
           <div className="form-group">
             <Link
-              to={`${this.props.match}/new`}
+              to={`${this.props.baseurl}/new`}
               className={'btn btn-primary'}
             >
               Create Connection

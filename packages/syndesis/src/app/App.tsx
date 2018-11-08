@@ -1,4 +1,5 @@
 import { ApiContext } from "@syndesis/api";
+import { PfVerticalNavItem } from "@syndesis/ui";
 import * as React from 'react';
 import {
   Route,
@@ -7,7 +8,6 @@ import {
   withRouter
 } from 'react-router-dom';
 import './App.css';
-import { PfVerticalNavItem } from "../components";
 import { ConnectionsModule } from "../modules/connections";
 import { DashboardModule } from "../modules/dashboard";
 import { IntegrationsModule } from "../modules/integrations";
