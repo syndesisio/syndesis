@@ -15,7 +15,8 @@ public class RestRouteConfiguration {
             public void configure() throws Exception {
                 restConfiguration()
                 .contextPath("/")
-                .component("servlet");
+                .component("servlet")
+                .endpointProperty("headerFilterStrategy", "syndesisHeaderStrategy");
 
                 rest()
                     .get("/openapi.json")
