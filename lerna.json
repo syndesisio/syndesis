@@ -1,0 +1,10 @@
+{
+  "lerna": "3.4.3",
+  "packages": [
+    "syndesis",
+    "packages/*"
+  ],
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "version": "0.1.0"
+}
