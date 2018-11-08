@@ -16,7 +16,7 @@
   "outputDataType" : "json",
   "componentOptions" : [ "host", "basePath" ],
   "endpointValues" : {
-    "componentName" : "http4"
+    "componentName" : "connector-rest-swagger-http4"
   },
   "endpointOptions" : [ "operationId" ],
   "connectorProperties" : {
