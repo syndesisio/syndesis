@@ -6,15 +6,16 @@ Syndesis is a single page application built with React.
 
 * [Architecture](#architecture)
   * [syndesis](#syndesis-1)
-    * [syndesis-context](#syndesis-context)
-  * [packages](#packages)
-    * [api](#packagesapi)
-    * [models](#packagesmodels)
-    * [ui](#packagesui)
-    * [utils](#packagesutils)
-    * [dashboard](#packagesdashboard)
-    * [connections](#packagesconnections)
-    * [integrations](#packagesintegrations)
+  * [apps](#apps)
+    * [dashboard](#appsdashboard)
+    * [connections](#appsconnections)
+    * [integrations](#appsintegrations)
+  * [shared](#shared)
+      * [api](#sharedapi)
+      * [models](#sharedmodels)
+      * [ui](#sharedui)
+      * [utils](#sharedutils)
+      * [syndesis-context](#sharedsyndesis-context)
   * [typings](#typings)
 * [First time setup](#first-time-setup)
 * [Building the project](#building-the-project)
@@ -30,7 +31,8 @@ The workspace is configured like this:
 
 ```
 "syndesis",
-"packages/*"
+"apps/*"
+"shared/*"
 "typings/*"
 ```
 
@@ -41,27 +43,37 @@ The workspace is configured like this:
 
 ![](doc/assets/syndesis-chrome.png)
 
-It also provides an [API for sub-apps](#syndesis-context) - in the form of a [React's Context](https://reactjs.org/docs/context.html) - for 
+It also provides an [API for sub-apps](#sharedsyndesis-context) - in the form of a [React's Context](https://reactjs.org/docs/context.html) - for 
 interact with it, eg. closing the navigation bar, or redirecting to another sub-app.
 
 It's built with [create-react-app](https://github.com/facebook/create-react-app).
 
-### syndesis-context
+## apps
 
-TBD. 
+#### apps/dashboard
 
-###  packages/*
+This is the sub-app that implements the Dashboard section.
 
-#### packages/api
+#### apps/connections
+
+This is the sub-app that implements the Connections section.
+
+#### apps/integrations
+
+This is the sub-app that implements the Integrations section.
+
+###  shared
+
+#### shared/api
 
 This package contains a collection of React Components implementing the [render props pattern](https://reactjs.org/docs/render-props.html)
 to ease interacting with Syndesis's Backend. 
 
-#### packages/models
+#### shared/models
 
 This package contains the Typescript definitions of the models as read from the backend.
 
-#### packages/ui
+#### shared/ui
 
 This package contains a collection UI elements that are common across the application. 
 
@@ -69,21 +81,13 @@ All the elements are written as React PureComponents or Stateless Functional Com
 presentation from the model that holds the data that needs to be presented to promote code reuse and easing the testing
 efforts. 
 
-#### packages/utils
+#### shared/utils
 
 This package contains commonly used components of function that don't fit any of the above packages.
 
-#### packages/dashboard
+### shared/syndesis-context
 
-This is the sub-app that implements the Dashboard section.
-
-#### packages/connections
-
-This is the sub-app that implements the Connections section.
-
-#### packages/integrations
-
-This is the sub-app that implements the Integrations section.
+TBD. 
 
 ### typings
 
@@ -140,7 +144,7 @@ _Where `@syndesis/package-name` is the name in the `package.json`_
 
 - [ ] Extend the build system for the packages to extract any CSS file referenced in the project and make it available 
 in the dist folder.
-- [ ] Implement [syndesis-context](#syndesis-context)
+- [ ] Implement [syndesis-context](#sharedsyndesis-context)
 - [ ] ...so many things!
 
 ## License

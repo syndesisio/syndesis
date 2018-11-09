@@ -5,7 +5,8 @@
   "private": true,
   "workspaces": [
     "syndesis",
-    "packages/*",
+    "apps/*",
+    "shared/*",
     "typings/*"
   ],
   "scripts": {
