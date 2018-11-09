@@ -68,7 +68,9 @@ public class UserHandlerTest {
 
         SecurityContextHolder.getContext().setAuthentication(new PreAuthenticatedAuthenticationToken("testuser", "doesn'tmatter"));
 
-        UserHandler userHandler = new UserHandler(null, new OpenShiftServiceImpl(client, null));
+        UserConfigurationProperties properties = new UserConfigurationProperties();
+        properties.setMaxDeploymentsPerUser(1);
+        UserHandler userHandler = new UserHandler(null, new OpenShiftServiceImpl(client, null), properties);
         io.syndesis.common.model.user.User whoAmI = userHandler.whoAmI(sec);
         Assertions.assertThat(whoAmI).isNotNull();
         Assertions.assertThat(whoAmI.getUsername()).isEqualTo("testuser");
