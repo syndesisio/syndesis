@@ -9,7 +9,7 @@
           "kind": "any"
         },
         "outputDataShape": {
-          "kind": "none"
+          "kind": "any"
         },
         "propertyDefinitionSteps": [
           {
