@@ -75,7 +75,6 @@ body.cards-pf {
 
 // Override the background that seems off with patternfly-ng's list
 .list-pf {
-  cursor: pointer;
   .list-pf-item {
     background: $color-pf-white;
     //cursor: pointer;
