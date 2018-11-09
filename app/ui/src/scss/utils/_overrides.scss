@@ -77,9 +77,17 @@ body.cards-pf {
 .list-pf {
   .list-pf-item {
     background: $color-pf-white;
-    cursor: pointer;
+    //cursor: pointer;
     &:hover {
       background: $color-pf-blue-50;
+    }
+    .list-pf-container {
+      .list-pf-content {
+        // added cursor area minus the kebab to the right of the list item
+        .list-pf-content {
+          cursor: pointer;
+        }
+      }
     }
   }
 }
