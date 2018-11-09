@@ -72,6 +72,7 @@
     <maven.version>3.5.4</maven.version>
 
     <errorprone.version>2.3.1</errorprone.version>
+    <commons.compress.version>1.18</commons.compress.version>
 
     <!-- Global camel version used everywhere -->
     <camel.version>2.21.0.fuse-720029</camel.version>
