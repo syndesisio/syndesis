@@ -8,7 +8,7 @@ import {
   ListViewToolbarAbstractComponent
 } from "@syndesis/ui";
 import * as React from 'react';
-import { ConnectionsAppContext } from "../app/ConnectionsAppContext";
+import { ConnectionsAppContext } from "../ConnectionsAppContext";
 import { ConnectionsListView } from "../components/ConnectionsListView";
 
 function getFilteredAndSortedConnections(

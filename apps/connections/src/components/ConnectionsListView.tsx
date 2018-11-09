@@ -19,7 +19,7 @@ export class ConnectionsListView extends React.Component<
         <ListViewToolbar {...this.props}>
           <div className="form-group">
             <Link
-              to={`${this.props.baseurl}/new`}
+              to={`${this.props.baseurl}/create`}
               className={'btn btn-primary'}
             >
               Create Connection

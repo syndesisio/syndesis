@@ -61,7 +61,8 @@
     "@syndesis/api": "*",
     "@syndesis/models": "*",
     "@syndesis/utils": "*",
-    "@syndesis/ui": "*"
+    "@syndesis/ui": "*",
+    "@syndesis/connector-ftp": "*"
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [
