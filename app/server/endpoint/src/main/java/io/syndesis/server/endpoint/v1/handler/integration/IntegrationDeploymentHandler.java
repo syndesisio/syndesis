@@ -15,6 +15,8 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -36,13 +38,17 @@ import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.util.Labels;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.util.PaginationFilter;
 import io.syndesis.server.endpoint.util.ReflectiveSorter;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
+import io.syndesis.server.endpoint.v1.handler.user.UserConfigurationProperties;
 import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
+import io.syndesis.server.openshift.OpenShiftService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Path("/integrations/{id}/deployments")
@@ -50,12 +56,19 @@ import org.springframework.stereotype.Component;
 @Component
 public final class IntegrationDeploymentHandler extends BaseHandler {
 
+    private final OpenShiftService openShiftService;
+    private final UserConfigurationProperties properties;
+
     public static class TargetStateRequest {
         public IntegrationDeploymentState targetState;
     }
 
-    public IntegrationDeploymentHandler(final DataManager dataMgr) {
+    @Autowired
+    public IntegrationDeploymentHandler(final DataManager dataMgr, OpenShiftService openShiftService,
+            UserConfigurationProperties properties) {
         super(dataMgr);
+        this.openShiftService = openShiftService;
+        this.properties = properties;
     }
 
     @GET
@@ -99,9 +112,11 @@ public final class IntegrationDeploymentHandler extends BaseHandler {
             }).max(Integer::compareTo);
 
         final int version = maybeLatestVersion.map(v -> v + 1).orElse(1);
+        final Optional<String> validationStatus = validateQuotas(id, sec.getUserPrincipal().getName());
         final IntegrationDeployment deployment = new IntegrationDeployment.Builder()
             .id(IntegrationDeployment.compositeId(id, version)).spec(integration).version(version)
-            .userId(sec.getUserPrincipal().getName()).build();
+            .userId(sec.getUserPrincipal().getName())
+            .statusMessage(validationStatus).build();
 
         return getDataManager().create(deployment);
     }
@@ -120,6 +135,38 @@ public final class IntegrationDeploymentHandler extends BaseHandler {
         final IntegrationDeployment updated = new IntegrationDeployment.Builder().createFrom(current)
             .targetState(request.targetState).build();
         dataManager.update(updated);
+    }
+
+    private Optional<String> validateQuotas(String integrationId, String username) {
+        Optional<String> validationStatus = Optional.empty();
+        final int maxDeploymentsPerUser = properties.getMaxDeploymentsPerUser();
+        if (maxDeploymentsPerUser != UserConfigurationProperties.UNLIMITED) {
+            int userDeployments = countDeployments(integrationId, username);
+            if (userDeployments >= maxDeploymentsPerUser) {
+                validationStatus = Optional.of(
+                   "WARNING: User has currently " + userDeployments +
+                   " deployments, while the maximum allowed number is "
+                   + maxDeploymentsPerUser + ".");
+            }
+        }
+        return validationStatus;
+    }
+    /**
+     * Count the deployments of the owner of the specified integration.
+     *
+     * @param deployment The specified IntegrationDeployment.
+     * @return The number of deployed integrations (excluding the current).
+     */
+    private int countDeployments(String integrationId, String username) {
+
+        Map<String, String> labels = new HashMap<>();
+        labels.put(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username));
+
+        return (int) openShiftService.getDeploymentsByLabel(labels)
+            .stream()
+            .filter(d -> !integrationId.equals(d.getMetadata().getLabels().get(OpenShiftService.INTEGRATION_ID_LABEL)))
+            .filter(d -> d.getSpec().getReplicas() > 0)
+            .count();
     }
 
 }

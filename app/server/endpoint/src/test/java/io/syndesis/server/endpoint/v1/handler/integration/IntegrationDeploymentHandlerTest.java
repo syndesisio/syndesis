@@ -16,7 +16,10 @@
 package io.syndesis.server.endpoint.v1.handler.integration;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -24,6 +27,7 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
@@ -32,6 +36,8 @@ import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.util.PaginationFilter;
 import io.syndesis.server.endpoint.util.ReflectiveSorter;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationDeploymentHandler.TargetStateRequest;
+import io.syndesis.server.endpoint.v1.handler.user.UserConfigurationProperties;
+import io.syndesis.server.openshift.OpenShiftService;
 
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -49,8 +55,11 @@ public class IntegrationDeploymentHandlerTest {
     private static final String INTEGRATION_ID = "integration-id";
 
     final DataManager dataManager = mock(DataManager.class);
+    UserConfigurationProperties properties = new UserConfigurationProperties(0, 1);
+    OpenShiftService openShiftService = mock(OpenShiftService.class);
 
-    final IntegrationDeploymentHandler handler = new IntegrationDeploymentHandler(dataManager);
+    final IntegrationDeploymentHandler handler = new IntegrationDeploymentHandler(
+            dataManager, openShiftService, properties);
 
     @Test
     public void shouldFetchIntegrationDeployments() {
@@ -102,7 +111,9 @@ public class IntegrationDeploymentHandlerTest {
 
         final Integration integration = new Integration.Builder().build();
         when(dataManager.fetch(Integration.class, INTEGRATION_ID)).thenReturn(integration);
-
+        Map<String, String> labels = new HashMap<>();
+        List<DeploymentConfig> emptyList = new ArrayList<>();
+        when(openShiftService.getDeploymentsByLabel(labels)).thenReturn(emptyList);
         when(dataManager.fetchAllByPropertyValue(IntegrationDeployment.class, "integrationId", INTEGRATION_ID))
             .thenReturn(Stream.empty());
 

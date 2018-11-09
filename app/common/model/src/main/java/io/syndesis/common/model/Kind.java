@@ -56,6 +56,7 @@ public enum Kind {
     Permission(io.syndesis.common.model.user.Permission.class),
     Role(io.syndesis.common.model.user.Role.class),
     User(io.syndesis.common.model.user.User.class),
+    //Quota(io.syndesis.common.model.user.Quota.class),
 
     ConnectionBulletinBoard(io.syndesis.common.model.bulletin.ConnectionBulletinBoard.class),
     IntegrationBulletinBoard(io.syndesis.common.model.bulletin.IntegrationBulletinBoard.class),
