@@ -1,11 +1,11 @@
 import { WithConnections, WithMonitoredIntegrations } from "@syndesis/api";
-import { IConnection, IMonitoredIntegration } from "@syndesis/models";
+import { Connection, IntegrationWithOverview } from "@syndesis/models";
 import { IActiveFilter, IFilterType, ISortType, IListViewToolbarAbstractComponent, ListViewToolbarAbstractComponent } from "@syndesis/ui";
 import * as React from 'react';
 import { IntegrationsListView } from "../components/IntegrationsListView";
 
 function getFilteredAndSortedIntegrations(
-  integrations: IMonitoredIntegration[],
+  integrations: IntegrationWithOverview[],
   activeFilters: IActiveFilter[],
   currentSortType: string,
   isSortAscending: boolean
@@ -14,17 +14,17 @@ function getFilteredAndSortedIntegrations(
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
     filteredAndSortedIntegrations = filteredAndSortedIntegrations.filter(
-      (mi: IMonitoredIntegration) => {
+      (mi: IntegrationWithOverview) => {
         if (filter.title === 'Name') {
           return mi.integration.name.toLowerCase().includes(valueToLower);
         }
         if (filter.title === 'Connection') {
-          const connectionNames = mi.integration.flows.reduce(
+          const connectionNames = mi.integration!.flows!.reduce(
             (acc, flow) => [
               ...acc,
-              ...flow.steps
+              ...flow.steps!
                 .filter(s => s.connection)
-                .map(s => s.connection.name.toLowerCase())
+                .map(s => s.connection!.name.toLowerCase())
             ],
             [] as string[]
           );
@@ -45,8 +45,8 @@ function getFilteredAndSortedIntegrations(
       if (currentSortType === 'Name') {
         return left.integration.name.localeCompare(right.integration.name);
       }
-      return left.integration.currentState.localeCompare(
-        right.integration.currentState
+      return left.integration!.currentState!.localeCompare(
+        right.integration!.currentState!
       );
     }
   );
@@ -69,7 +69,7 @@ const filterByConnection = {
   title: 'Connection'
 };
 
-function getFilterTypes(connections: IConnection[]): IFilterType[] {
+function getFilterTypes(connections: Connection[]): IFilterType[] {
   return [
     filterByName,
     {

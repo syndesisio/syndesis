@@ -1,8 +1,8 @@
-import { IConnector } from "@syndesis/models";
+import { Connector } from "@syndesis/models";
 import * as React from 'react';
 import { IRestState } from "./Rest";
 export interface IConnectorsResponse {
-    items: IConnector[];
+    items: Connector[];
     totalCount: number;
 }
 export interface IWithConnectorsProps {

@@ -1,7 +1,7 @@
-import { IConnection, IConnector } from "@syndesis/models";
+import { ConnectionOverview, Connector } from "@syndesis/models";
 
-export function getConnectionIcon(connection: IConnection | IConnector, publicUrl: string | undefined) {
-  return connection.icon.startsWith('data:')
-    ? connection.icon
+export function getConnectionIcon(connection: ConnectionOverview | Connector, publicUrl: string | undefined): string {
+  return (connection.icon || '').startsWith('data:')
+    ? connection.icon!
     : `${publicUrl}/icons/${connection.id}.connection.png`;
 }

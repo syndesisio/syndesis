@@ -1,4 +1,4 @@
-import { IConnection } from "@syndesis/models";
+import { Connection } from "@syndesis/models";
 import { ConnectionCard, ConnectionsGrid, IListViewToolbarProps, ListViewToolbar } from "@syndesis/ui";
 import { getConnectionIcon } from "@syndesis/utils";
 import * as React from 'react';
@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 export interface IConnectionsListViewProps extends IListViewToolbarProps {
   baseurl: string;
   loading: boolean;
-  connections: IConnection[];
+  connections: Connection[];
 }
 
 export class ConnectionsListView extends React.Component<

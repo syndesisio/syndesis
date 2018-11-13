@@ -1,4 +1,4 @@
-import { IIntegration } from "@syndesis/models";
+import { IntegrationOverview } from "@syndesis/models";
 import { IntegrationStatus } from '@syndesis/ui';
 import { Card, Grid } from 'patternfly-react';
 import * as React from 'react';
@@ -6,7 +6,7 @@ import { RecentUpdatesSkeleton } from './RecentUpdatesSkeleton';
 
 export interface IRecentUpdatesProps {
   loading: boolean;
-  recentlyUpdatedIntegrations: IIntegration[];
+  recentlyUpdatedIntegrations: IntegrationOverview[];
 }
 
 export class RecentUpdates extends React.Component<IRecentUpdatesProps> {
@@ -28,7 +28,7 @@ export class RecentUpdates extends React.Component<IRecentUpdatesProps> {
                     <IntegrationStatus currentState={i.currentState} />
                   </Grid.Col>
                   <Grid.Col sm={4}>
-                    {new Date(i.updatedAt || i.createdAt).toLocaleString()}
+                    {new Date(i.updatedAt! || i.createdAt!).toLocaleString()}
                   </Grid.Col>
                 </Grid.Row>
               ))}

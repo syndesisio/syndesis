@@ -1,10 +1,10 @@
-import { IConnection } from "@syndesis/models";
+import { ConnectionOverview } from "@syndesis/models";
 import * as React from 'react';
 import { IRestState } from "./Rest";
 import { SyndesisRest } from "./SyndesisRest";
 
 export interface IConnectionsResponse {
-  items: IConnection[];
+  items: ConnectionOverview[];
   totalCount: number;
 }
 

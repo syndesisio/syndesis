@@ -1,2 +1,2 @@
-import { IConnection, IConnector } from "@syndesis/models";
-export declare function getConnectionIcon(connection: IConnection | IConnector, publicUrl: string | undefined): string;
+import { ConnectionOverview, Connector } from "@syndesis/models";
+export declare function getConnectionIcon(connection: ConnectionOverview | Connector, publicUrl: string | undefined): string;

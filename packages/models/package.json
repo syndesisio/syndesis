@@ -1,6 +1,7 @@
 {
   "name": "@syndesis/models",
   "version": "1.0.0",
+  "license": "MIT",
   "devDependencies": {
     "fs-extra": "^7.0.1",
     "sw2dts": "^2.6.1"

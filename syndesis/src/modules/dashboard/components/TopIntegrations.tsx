@@ -1,4 +1,4 @@
-import { IMonitoredIntegration } from "@syndesis/models";
+import { IntegrationWithMonitoring } from "@syndesis/models";
 import {
   IntegrationsList,
   IntegrationsListItem,
@@ -11,7 +11,7 @@ import './TopIntegrations.css';
 
 export interface ITopIntegrationsProps {
   loading: boolean;
-  topIntegrations: IMonitoredIntegration[];
+  topIntegrations: IntegrationWithMonitoring[];
 }
 
 export class TopIntegrations extends React.Component<ITopIntegrationsProps> {
@@ -34,17 +34,17 @@ export class TopIntegrations extends React.Component<ITopIntegrationsProps> {
           ) : (
             <IntegrationsList>
               {this.props.topIntegrations.map(
-                (mi: IMonitoredIntegration, index) => (
+                (mi: IntegrationWithMonitoring, index) => (
                   <IntegrationsListItem
-                    integrationId={mi.integration.id}
+                    integrationId={mi.integration.id!}
                     integrationName={mi.integration.name}
-                    currentState={mi.integration.currentState}
-                    targetState={mi.integration.targetState}
+                    currentState={mi.integration!.currentState!}
+                    targetState={mi.integration!.targetState!}
                     isConfigurationRequired={
                       !!(
-                        mi.integration.board.warnings ||
-                        mi.integration.board.errors ||
-                        mi.integration.board.notices
+                        mi.integration!.board!.warnings ||
+                        mi.integration!.board!.errors ||
+                        mi.integration!.board!.notices
                       )
                     }
                     monitoringValue={

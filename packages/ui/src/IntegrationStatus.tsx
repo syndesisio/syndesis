@@ -2,7 +2,7 @@ import { Label } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationStatusProps {
-  currentState: string;
+  currentState?: string;
 }
 
 export class IntegrationStatus extends React.Component<

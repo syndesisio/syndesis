@@ -1,5 +1,5 @@
 import { WithConnections } from "@syndesis/api";
-import { IConnection } from "@syndesis/models";
+import { Connection } from "@syndesis/models";
 import {
   IActiveFilter,
   IFilterType,
@@ -12,7 +12,7 @@ import { ConnectionsAppContext } from "../ConnectionsAppContext";
 import { ConnectionsListView } from "../components/ConnectionsListView";
 
 function getFilteredAndSortedConnections(
-  connections: IConnection[],
+  connections: Connection[],
   activeFilters: IActiveFilter[],
   currentSortType: string,
   isSortAscending: boolean
@@ -21,7 +21,7 @@ function getFilteredAndSortedConnections(
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
     filteredAndSortedConnections = filteredAndSortedConnections.filter(
-      (c: IConnection) => c.name.toLowerCase().includes(valueToLower)
+      (c: Connection) => c.name.toLowerCase().includes(valueToLower)
     );
   });
 

@@ -1,4 +1,4 @@
-import { IMonitoredIntegration } from "@syndesis/models";
+import { IntegrationWithMonitoring } from "@syndesis/models";
 import {
   IntegrationsList,
   IntegrationsListItem,
@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 export interface IIntegrationsListViewProps extends IListViewToolbarProps {
   match: any;
   loading: boolean;
-  monitoredIntegrations: IMonitoredIntegration[];
+  monitoredIntegrations: IntegrationWithMonitoring[];
 }
 
 export class IntegrationsListView extends React.Component<
@@ -49,17 +49,17 @@ export class IntegrationsListView extends React.Component<
           ) : (
             <IntegrationsList>
               {this.props.monitoredIntegrations.map(
-                (mi: IMonitoredIntegration, index) => (
+                (mi: IntegrationWithMonitoring, index) => (
                   <IntegrationsListItem
-                    integrationId={mi.integration.id}
-                    integrationName={mi.integration.name}
-                    currentState={mi.integration.currentState}
-                    targetState={mi.integration.targetState}
+                    integrationId={mi.integration.id!}
+                    integrationName={mi.integration.name!}
+                    currentState={mi.integration.currentState!}
+                    targetState={mi.integration.targetState!}
                     isConfigurationRequired={
                       !!(
-                        mi.integration.board.warnings ||
-                        mi.integration.board.errors ||
-                        mi.integration.board.notices
+                        mi.integration!.board!.warnings ||
+                        mi.integration!.board!.errors ||
+                        mi.integration!.board!.notices
                       )
                     }
                     monitoringValue={

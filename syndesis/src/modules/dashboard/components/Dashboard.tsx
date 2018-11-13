@@ -1,4 +1,9 @@
-import { IConnection, IIntegration, IIntegrationsMetrics, IMonitoredIntegration } from "@syndesis/models";
+import {
+  Connection,
+  Integration,
+  IntegrationMetricsSummary,
+  IntegrationWithOverview
+} from "@syndesis/models";
 import { AggregatedMetricCard, ConnectionCard, ConnectionsGrid } from "@syndesis/ui";
 import { getConnectionIcon } from "@syndesis/utils";
 import { CardGrid, Grid } from 'patternfly-react';
@@ -18,11 +23,11 @@ export interface IIntegrationsPageProps {
   metricsLoaded: boolean;
   integrationsCount: number;
   integrationsErrorCount: number;
-  connections: IConnection[];
+  connections: Connection[];
   connectionsCount: number;
-  metrics: IIntegrationsMetrics;
-  topIntegrations: IMonitoredIntegration[];
-  recentlyUpdatedIntegrations: IIntegration[];
+  metrics: IntegrationMetricsSummary;
+  topIntegrations: IntegrationWithOverview[];
+  recentlyUpdatedIntegrations: Integration[];
   pendingIntegrations: number;
   runningIntegrations: number;
   stoppedIntegrations: number;
@@ -65,12 +70,12 @@ export class Dashboard extends React.Component<IIntegrationsPageProps> {
             <CardGrid.Col sm={6} md={3}>
               <AggregatedMetricCard
                 title={`${this.props.metrics.messages} Total Messages`}
-                ok={this.props.metrics.messages - this.props.metrics.errors}
-                error={this.props.metrics.errors}
+                ok={this.props.metrics.messages! - this.props.metrics.errors!}
+                error={this.props.metrics.errors!}
               />
             </CardGrid.Col>
             <CardGrid.Col sm={6} md={3}>
-              <UptimeMetric start={this.props.metrics.start} />
+              <UptimeMetric start={parseInt(this.props.metrics.start!, 10)} />
             </CardGrid.Col>
           </CardGrid.Row>
         </CardGrid>

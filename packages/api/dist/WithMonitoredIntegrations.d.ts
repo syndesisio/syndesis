@@ -1,8 +1,8 @@
-import { IMonitoredIntegration } from "@syndesis/models";
+import { IntegrationWithMonitoring } from "@syndesis/models";
 import * as React from 'react';
 import { IRestState } from "./Rest";
 export interface IMonitoredIntegrationsResponse {
-    items: IMonitoredIntegration[];
+    items: IntegrationWithMonitoring[];
     totalCount: number;
 }
 export interface IWithMonitoredIntegrationsProps {

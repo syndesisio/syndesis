@@ -1,5 +1,5 @@
 import { WithConnections, WithIntegrationsMetrics, WithMonitoredIntegrations } from "@syndesis/api";
-import { IIntegration, IIntegrationsMetricsTopIntegration, IMonitoredIntegration } from "@syndesis/models";
+import { Integration, IntegrationOverview, IntegrationWithOverview } from "@syndesis/models";
 import * as React from 'react';
 import { Dashboard } from "../components";
 
@@ -11,14 +11,14 @@ export interface IIntegrationCountsByState {
 }
 
 export function getIntegrationsCountsByState(
-  integrations: IMonitoredIntegration[]
+  integrations: IntegrationWithOverview[]
 ): IIntegrationCountsByState {
   return integrations.reduce(
     (counts, mi) => {
-      const stateCount = counts[mi.integration.currentState] || 0;
+      const stateCount = counts[mi.integration.currentState!] || 0;
       return {
         ...counts,
-        [mi.integration.currentState]: stateCount + 1
+        [mi.integration.currentState!]: stateCount + 1
       };
     },
     {
@@ -30,21 +30,21 @@ export function getIntegrationsCountsByState(
   );
 }
 
-export function getTimestamp(integration: IIntegration) {
+export function getTimestamp(integration: IntegrationOverview) {
   return integration.updatedAt !== 0
     ? integration.updatedAt
     : integration.createdAt;
 }
 
-export function byTimestamp(a: IIntegration, b: IIntegration) {
-  const aTimestamp = getTimestamp(a);
-  const bTimestamp = getTimestamp(b);
+export function byTimestamp(a: IntegrationOverview, b: IntegrationOverview) {
+  const aTimestamp = getTimestamp(a) || 0;
+  const bTimestamp = getTimestamp(b) || 0;
   return bTimestamp - aTimestamp;
 }
 
 export function getRecentlyUpdatedIntegrations(
-  integrations: IMonitoredIntegration[]
-): IIntegration[] {
+  integrations: IntegrationWithOverview[]
+): Integration[] {
   return integrations
     .map(mi => mi.integration)
     .sort(byTimestamp)
@@ -52,9 +52,9 @@ export function getRecentlyUpdatedIntegrations(
 }
 
 export function getTopIntegrations(
-  integrations: IMonitoredIntegration[],
-  topIntegrations: IIntegrationsMetricsTopIntegration = {}
-): IMonitoredIntegration[] {
+  integrations: IntegrationWithOverview[],
+  topIntegrations: {[name: string]: number;} = {}
+): IntegrationWithOverview[] {
   const topIntegrationsArray = Object.keys(topIntegrations)
     .map(key => {
       return {

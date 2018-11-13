@@ -1,8 +1,8 @@
-import { IIntegration } from "@syndesis/models";
+import { IntegrationOverview } from "@syndesis/models";
 import * as React from 'react';
 import { IRestState } from "./Rest";
 export interface IIntegrationsResponse {
-    items: IIntegration[];
+    items: IntegrationOverview[];
     totalCount: number;
 }
 export interface IWithIntegrationsProps {

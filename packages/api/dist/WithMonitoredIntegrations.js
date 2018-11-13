@@ -9,7 +9,7 @@ export class WithMonitoredIntegrations extends React.Component {
                 data: {
                     items: integrations.items.map((i) => ({
                         integration: i,
-                        monitoring: monitorings.find((m) => m.integrationId === i.id)
+                        overview: monitorings.find((o) => o.id === i.id)
                     })),
                     totalCount: integrations.totalCount
                 }

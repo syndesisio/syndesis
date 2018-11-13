@@ -1,10 +1,10 @@
-import { IIntegrationsMetrics } from "@syndesis/models";
+import { IntegrationMetricsSummary } from "@syndesis/models";
 import * as React from 'react';
 import { IRestState } from "./Rest";
 import { SyndesisRest } from "./SyndesisRest";
 
 export interface IWithIntegrationsMetricsProps {
-  children(props: IRestState<IIntegrationsMetrics>): any;
+  children(props: IRestState<IntegrationMetricsSummary>): any;
 }
 
 export class WithIntegrationsMetrics extends React.Component<
@@ -12,16 +12,18 @@ export class WithIntegrationsMetrics extends React.Component<
 > {
   public render() {
     return (
-      <SyndesisRest<IIntegrationsMetrics>
+      <SyndesisRest<IntegrationMetricsSummary>
         url={'/api/v1/metrics/integrations'}
         poll={5000}
         defaultValue={{
-          errors: 0,
-          lastProcessed: 0,
-          messages: 0,
-          metricsProvider: '',
-          start: 0,
-          topIntegrations: {}
+          start: `${Date.now()}`, // date-time
+          errors: 0, // int64
+          messages: 0, // int64
+          lastProcessed: `${Date.now()}`, // date-time
+          metricsProvider: 'null',
+          integrationDeploymentMetrics: [],
+          topIntegrations: {},
+          id: '-1',
         }}
       >
         {response => this.props.children(response)}
