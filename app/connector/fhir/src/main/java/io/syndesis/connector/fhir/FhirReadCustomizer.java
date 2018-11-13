@@ -18,15 +18,12 @@ package io.syndesis.connector.fhir;
 import java.util.Map;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
-import ca.uhn.fhir.rest.api.SummaryEnum;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.component.fhir.api.ExtraParameters;
 import org.apache.camel.component.fhir.internal.FhirApiCollection;
 import org.apache.camel.component.fhir.internal.FhirReadApiMethod;
-import org.apache.camel.util.ObjectHelper;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
 public class FhirReadCustomizer implements ComponentProxyCustomizer {
@@ -34,14 +31,12 @@ public class FhirReadCustomizer implements ComponentProxyCustomizer {
     private String id;
     private String resourceType;
     private String version;
-    private Boolean summary;
     private FhirContext fhirContext;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         String fhirVersion = (String) options.get("fhirVersion");
-        // checkout https://github.com/syndesisio/syndesis/issues/3719
-        FhirVersionEnum fhirVersionEnum = fhirVersion == null ? FhirVersionEnum.DSTU3 : FhirVersionEnum.valueOf(fhirVersion);
+        FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
         this.fhirContext = new FhirContext(fhirVersionEnum);
         setApiMethod(options);
         component.setBeforeProducer(this::beforeProducer);
@@ -51,7 +46,6 @@ public class FhirReadCustomizer implements ComponentProxyCustomizer {
     private void setApiMethod(Map<String, Object> options) {
         id = (String) options.get("id");
         resourceType = (String) options.get("resourceType");
-//        summary = Boolean.valueOf((String) options.get("summary"));
         version = (String) options.get("version");
         options.put("apiName", FhirApiCollection.getCollection().getApiName(FhirReadApiMethod.class).getName());
         options.put("methodName", "resourceById");
@@ -69,20 +63,19 @@ public class FhirReadCustomizer implements ComponentProxyCustomizer {
 
     private void beforeProducer(Exchange exchange) {
         final Message in = exchange.getIn();
-        final FhirReadMessageModel read = exchange.getIn().getBody(FhirReadMessageModel.class);
+        in.setHeader("CamelFhir.resourceClass", resourceType);
 
+        final FhirReadMessageModel read = exchange.getIn().getBody(FhirReadMessageModel.class);
         if (read != null) {
-            in.setHeader("CamelFhir.id", read.getId());
-            if (ObjectHelper.isNotEmpty(read.getSummary())) {
-                summary = read.getSummary();
+            if (read.getComplexId() != null) {
+                in.setHeader("CamelFhir.id", read.getComplexId());
+            } else {
+                in.setHeader("CamelFhir.stringId", read.getId());
+                in.setHeader("CamelFhir.version", read.getVersion());
             }
         } else {
-            in.setHeader("CamelFhir.resourceClass", resourceType);
             in.setHeader("CamelFhir.stringId", id);
             in.setHeader("CamelFhir.version", version);
-        }
-        if(ObjectHelper.isNotEmpty(summary) && Boolean.valueOf(summary)) {
-            in.setHeader(ExtraParameters.PRETTY_PRINT.getHeaderName(), SummaryEnum.TRUE);
         }
     }
 }
