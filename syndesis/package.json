@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@syndesis/ui": "*",
     "@syndesis/models": "*",
+    "@syndesis/ui": "*",
     "@syndesis/api": "*",
     "patternfly-react": "^2.19.1",
     "prettier": "^1.14.3",

@@ -61,6 +61,7 @@
     "semi": true
   },
   "dependencies": {
+    "@syndesis/models": "*",
     "react-fast-compare": "^2.0.2"
   }
 }
