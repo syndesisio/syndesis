@@ -1,5 +1,8 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+# @syndesis/models
+packages/models/src/models.d.ts
+
 # dependencies
 node_modules
 
