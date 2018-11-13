@@ -1,4 +1,11 @@
 {
   "name": "@syndesis/models",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "devDependencies": {
+    "fs-extra": "^7.0.1",
+    "sw2dts": "^2.6.1"
+  },
+  "scripts": {
+    "build": "sw2dts swagger.json > models.d.ts"
+  }
 }
