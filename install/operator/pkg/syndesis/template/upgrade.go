@@ -16,7 +16,6 @@ const (
 
 type UpgradeParams struct {
 	InstallParams
-	SyndesisVersion string
 	UpgradeRegistry *string
 }
 
@@ -37,7 +36,6 @@ func GetUpgradeResources(syndesis *v1alpha1.Syndesis, params UpgradeParams) ([]r
 
 	paramMap := configuration.GetEnvVars(syndesis)
 	paramMap[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
-	paramMap[string(configuration.EnvSyndesisVersion)] = params.SyndesisVersion
 	paramMap[string(configuration.EnvUpgradeRegistry)] = *params.UpgradeRegistry
 
 	return processor.Process(upgrateTempl, paramMap)
