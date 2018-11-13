@@ -2,8 +2,7 @@
   "lerna": "3.4.3",
   "packages": [
     "syndesis",
-    "apps/*",
-    "shared/*"
+    "packages/*"
   ],
   "npmClient": "yarn",
   "useWorkspaces": true,

@@ -1,1 +1,0 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAE,MAAM,oBAAoB,CAAC;AAElD,eAAe,YAAY,CAAC","sourcesContent":["import { DashboardApp } from \"./app/DashboardApp\";\n\nexport default DashboardApp;"]}
