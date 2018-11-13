@@ -62,7 +62,7 @@ export class StepStore {
       action: undefined,
       name: 'Template',
       stepKind: TEMPLATE,
-      description: 'Upload or create a Mustache template to define consistent output data.',
+      description: 'Upload or create a Freemarker, Mustache or Velocity template to define consistent output data.',
       configuredProperties: undefined,
       properties: undefined
     }),

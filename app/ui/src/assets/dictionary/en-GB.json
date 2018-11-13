@@ -119,6 +119,7 @@
         "delete-step-modal-title": "Confirm Delete?"
       },
       "steps": {
+        "templater-specify-type": "Specify template type:",
         "templater-instruct-text1": "Drag and drop a file, paste in text, or start typing in the text editor below to add a template. If you already have a template file, ",
         "templater-instruct-text2": "browse to upload",
         "templater-instruct-text3": "the file.",

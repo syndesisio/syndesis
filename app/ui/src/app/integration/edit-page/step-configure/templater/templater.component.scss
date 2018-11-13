@@ -3,6 +3,10 @@
 .templater-form {
   margin-bottom: 2em;
 
+  .template-language-choices {
+    margin-bottom: 2em;
+  }
+
   .template-editor {
     margin-bottom: 10px;
     position: relative;
@@ -52,6 +56,11 @@
 
     .cm-mustache {
       color: #b21eab;
+      font-weight: bold;
+    }
+
+    .cm-freemarker {
+      color: #36832e;
       font-weight: bold;
     }
   }
