@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.WithDependencies;
+import io.syndesis.common.model.Dependency.Type;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
@@ -107,16 +108,26 @@ public interface IntegrationResourceManager {
                 .orElse(Collections.emptyList());
             dependencies.addAll(connectorDependencies);
 
-            List<Dependency> lookedUpConnectorDependecies = step.getConnection()
+            List<Dependency> lookedUpConnectorDependencies = step.getConnection()
                 .filter(c -> !c.getConnector().isPresent())
                 .map(Connection::getConnectorId)
                 .flatMap(this::loadConnector)
                 .map(WithDependencies::getDependencies)
                 .orElse(Collections.emptyList());
-            dependencies.addAll(lookedUpConnectorDependecies);
+            dependencies.addAll(lookedUpConnectorDependencies);
+
+            // Custom Icon
+            if (step.getConnection().isPresent() &&
+                step.getConnection().get().getConnector().isPresent() &&
+                step.getConnection().get().getConnector().get().getIcon() != null) {
+                String iconId = step.getConnection().get().getConnector().get().getIcon();
+                if (iconId.startsWith("db:")) {
+                    dependencies.add(Dependency.from(Type.ICON, iconId));
+                }
+            }
 
             // Connector extension
-            Stream.concat(connectorDependencies.stream(), lookedUpConnectorDependecies.stream())
+            Stream.concat(connectorDependencies.stream(), lookedUpConnectorDependencies.stream())
                 .filter(Dependency::isExtension)
                 .map(Dependency::getId)
                 .map(this::loadExtension)

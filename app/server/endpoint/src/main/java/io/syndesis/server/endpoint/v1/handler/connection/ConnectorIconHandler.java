@@ -115,7 +115,7 @@ public final class ConnectorIconHandler extends BaseHandler {
                 } else {
                     icon = getDataManager().create(iconBuilder.build());
                 }
-
+                //write icon to (Sql)FileStore
                 iconDao.write(icon.getId().get(), iconStream);
 
                 Connector updatedConnector = new Connector.Builder().createFrom(connector).icon("db:" + icon.getId().get()).build();
@@ -141,7 +141,7 @@ public final class ConnectorIconHandler extends BaseHandler {
             if (icon == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
-
+            //grab icon file from the (Sql)FileStore
             final StreamingOutput streamingOutput = (out) -> {
                 try (BufferedSink sink = Okio.buffer(Okio.sink(out));
                     Source source = Okio.source(iconDao.read(connectorIconId))) {
