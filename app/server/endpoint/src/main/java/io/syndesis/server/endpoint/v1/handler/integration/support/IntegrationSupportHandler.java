@@ -188,7 +188,7 @@ public class IntegrationSupportHandler {
         }
         LOG.debug("Extensions: {}", extensions);
         LOG.debug("Icons: {}", icons);
-        
+
         return out -> {
             try (ZipOutputStream tos = new ZipOutputStream(out) ) {
                 ModelExport exportObject = ModelExport.of(Schema.VERSION);
@@ -285,33 +285,9 @@ public class IntegrationSupportHandler {
                 }
 
                 // import missing extensions that were in the model.
-                if( entry.getName().startsWith("extensions/") ) {
-                    for (WithResourceId extension : imported.getOrDefault("extensions", Collections.emptyList())) {
-                        final String extensionId = extension.getId().get();
-                        if( entry.getName().equals("extensions/" + Names.sanitize(extensionId) + ".jar") ) {
-                            String path = "/extensions/" + extensionId;
-                            InputStream existing = extensionDataManager.getExtensionDataAccess().read(path);
-                            if( existing == null ) {
-                                extensionDataManager.getExtensionDataAccess().write(path, zis);
-                            } else {
-                                existing.close();
-                            }
-                        }
-                    }
-                }
+                importMissingExtensions(zis, entry, imported);
 
-                // import custom icons
-                if( entry.getName().startsWith("icons/") ) {
-                    String fileName = entry.getName().substring(6);
-                    String id = fileName.substring(0, fileName.indexOf('.'));
-                    InputStream existing = iconDao.read(id);
-                    if( existing == null) {
-                        // write the icon to the (Sql)FileStore
-                        iconDao.write(id, zis);
-                    } else {
-                        existing.close();
-                    }
-                }
+                importMissingCustomIcons(zis, entry);
 
                 zis.closeEntry();
             }
@@ -325,6 +301,40 @@ public class IntegrationSupportHandler {
                 LOG.info("Could not import integration: " + e, e);
             }
             throw new ClientErrorException("Could not import integration: " + e, Response.Status.BAD_REQUEST, e);
+        }
+    }
+
+    private void importMissingExtensions(ZipInputStream zis, ZipEntry entry,
+            Map<String, List<WithResourceId>> imported) throws IOException {
+
+        if( entry.getName().startsWith("extensions/") ) {
+            for (WithResourceId extension : imported.getOrDefault("extensions", Collections.emptyList())) {
+                final String extensionId = extension.getId().get();
+                if( entry.getName().equals("extensions/" + Names.sanitize(extensionId) + ".jar") ) {
+                    String path = "/extensions/" + extensionId;
+                    InputStream existing = extensionDataManager.getExtensionDataAccess().read(path);
+                    if( existing == null ) {
+                        extensionDataManager.getExtensionDataAccess().write(path, zis);
+                    } else {
+                        existing.close();
+                    }
+                }
+            }
+        }
+    }
+
+    private void importMissingCustomIcons(ZipInputStream zis, ZipEntry entry) throws IOException {
+
+        if( entry.getName().startsWith("icons/") ) {
+            String fileName = entry.getName().substring(6);
+            String id = fileName.substring(0, fileName.indexOf('.'));
+            InputStream existing = iconDao.read(id);
+            if( existing == null) {
+                // write the icon to the (Sql)FileStore
+                iconDao.write(id, zis);
+            } else {
+                existing.close();
+            }
         }
     }
 
@@ -391,7 +401,7 @@ public class IntegrationSupportHandler {
                 return Icon.class;
             }
         }, result);
-        
+
         return result;
     }
 
