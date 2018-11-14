@@ -6,20 +6,17 @@ Syndesis is a single page application built with React.
 
 * [Architecture](#architecture)
   * [syndesis](#syndesis-1)
-  * [apps](#apps)
-    * [dashboard](#appsdashboard)
-    * [connections](#appsconnections)
-    * [integrations](#appsintegrations)
-  * [shared](#shared)
-      * [api](#sharedapi)
-      * [models](#sharedmodels)
-      * [ui](#sharedui)
-      * [utils](#sharedutils)
-      * [syndesis-context](#sharedsyndesis-context)
+  * [packages](#packages)
+      * [api](#packagesapi)
+      * [models](#packagesmodels)
+      * [ui](#packagesui)
+      * [utils](#packagesutils)
+      * [syndesis-context](#packagessyndesis-context)
   * [typings](#typings)
-* [First time setup](#first-time-setup)
-* [Building the project](#building-the-project)
-* [Development mode](#development-mode)
+* [Installation](#installation)
+* [Building](#building)
+* [Scripts](#scripts)
+* [Roadmap](#roadmap)
 
 ## Architecture 
 
@@ -31,8 +28,7 @@ The workspace is configured like this:
 
 ```
 "syndesis",
-"apps/*"
-"shared/*"
+"packages/*"
 "typings/*"
 ```
 
@@ -43,37 +39,122 @@ The workspace is configured like this:
 
 ![](doc/assets/syndesis-chrome.png)
 
-It also provides an [API for sub-apps](#sharedsyndesis-context) - in the form of a [React's Context](https://reactjs.org/docs/context.html) - for 
+It also provides an [API for sub-apps](#packagessyndesis-context) - in the form of a [React's Context](https://reactjs.org/docs/context.html) - for 
 interact with it, eg. closing the navigation bar, or redirecting to another sub-app.
 
 It's built with [create-react-app](https://github.com/facebook/create-react-app).
 
-## apps
+#### Development server
 
-#### apps/dashboard
+```bash
+# From the repository root
+$ yarn watch:app
+```
 
-This is the sub-app that implements the Dashboard section.
+Or
 
-#### apps/connections
+```bash
+# From the syndesis folder
+$ yarn start
+```
 
-This is the sub-app that implements the Connections section.
 
-#### apps/integrations
+#### First time setup
 
-This is the sub-app that implements the Integrations section.
+The app requires some extra configuration on your Syndesis installation in order to work.
 
-###  shared
+We need to create an OAuth Client to allow the UI to login against Syndesis OAuth Server, and then expose the 
+server with a direct route.
 
-#### shared/api
+First, login as an "admin" user of your cluster:    
+```bash
+$ oc login -u admin
+```
+
+Then, create a new OAuth Client:
+```bash
+oc create -f <(echo '
+kind: OAuthClient
+apiVersion: oauth.openshift.io/v1
+metadata:
+ name: camel-k-ui
+secret: "..."
+redirectURIs:
+ - "http://localhost:5000/"
+grantMethod: prompt
+')
+```
+
+Finally, expose the server with a direct route.   
+**Replace the `CLUSTER_ADDRESS` placeholder with the right address of your cluster.**
+For a local development environment running on Minishift, it will look like this: `192.168.64.1.nip.io` 
+
+```bash
+oc create -f <(echo 'apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-server
+    syndesis.io/type: infrastructure
+  name: syndesis-server
+  namespace: syndesis
+spec:
+  host: syndesis-server.CLUSTER_ADDRESS
+  to:
+    kind: Service
+    name: syndesis-server
+    weight: 100
+  wildcardPolicy: None
+')
+```
+
+Now we can setup the app. Run the [syndesis development server](#development-server) and open the address in a browser.  
+You will be asked to provide two information:
+
+* Api URI: write the value you specified in the host property when creating the server route. Eg. `http://syndesis-server.CLUSTER_ADDRESS`  
+* Authorization URI: write the address to the authorize endpoint of your OAuth Server. When developing locally against 
+Minishift, it will look like this: `https://CLUSTER_ADDRESS:8443/oauth/authorize`.  
+**Replace the `CLUSTER_ADDRESS` placeholder with the right address of your cluster.**   
+
+Click the Save button to persist the changes. If the value provided are correct, you should be redirected to Openshift Login page.
+
+##### Resetting the configuration
+
+Just clear the local storage for the localhost:3000 origin. You can do it with Chrome Dev Tools opened on the running app,
+or you can do it from Chrome's special url chrome://settings/siteData  
+
+###  packages
+
+#### packages/api
 
 This package contains a collection of React Components implementing the [render props pattern](https://reactjs.org/docs/render-props.html)
-to ease interacting with Syndesis's Backend. 
+to ease interacting with Syndesis's Backend.
 
-#### shared/models
+##### Development server
+
+```bash
+# From the repository root
+$ yarn watch:packages --scope @syndesis/api
+```
+
+Or
+
+```bash
+# From the package folder
+$ yarn dev
+```
+ 
+
+#### packages/models
 
 This package contains the Typescript definitions of the models as read from the backend.
 
-#### shared/ui
+
+#### packages/ui
 
 This package contains a collection UI elements that are common across the application. 
 
@@ -81,11 +162,40 @@ All the elements are written as React PureComponents or Stateless Functional Com
 presentation from the model that holds the data that needs to be presented to promote code reuse and easing the testing
 efforts. 
 
-#### shared/utils
+##### Development server
+
+```bash
+# From the repository root
+$ yarn watch:packages --scope @syndesis/ui
+```
+
+Or
+
+```bash
+# From the package folder
+$ yarn dev
+```
+
+#### packages/utils
 
 This package contains commonly used components of function that don't fit any of the above packages.
 
-### shared/syndesis-context
+##### Development server
+
+```bash
+# From the repository root
+$ yarn watch:packages --scope @syndesis/utils
+```
+
+Or
+
+```bash
+# From the package folder
+$ yarn dev
+```
+
+
+### packages/syndesis-context
 
 TBD. 
 
@@ -93,58 +203,63 @@ TBD.
 
 Extra typings for pure Javascript dependencies that should eventually be pushed on [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/).
 
-## First time setup 
+## Installation 
 
 [Yarn](https://yarnpkg.com) is the package manager required to work on the project.
 
 To install all the dependencies: 
 
+##### Development server
+
 ```
 yarn install
 ```
 
-## Building the project
+## Building
 
 To build syndesis and all the packages:
 
-```
+```bash
 yarn build
 ```
 
-## Development mode
+## Scripts
 
 To start the development server for `syndesis` and watch for changes in any of the packages:
 
-```
-yarn watch
+```bash
+# From the repository root
+$ yarn watch
 ```
 
 To start the development server only for `syndesis`:
 
+```bash
+# From the repository root
+$ yarn watch:app
 ```
-yarn watch:app
-```
+_The development server for the app will not be available at http://localhost:3000_
 
 To start the development server only for the packages:
 
-```
-yarn watch:packages
+```bash
+# From the repository root
+$ yarn watch:packages
 ```
 
-To start the development server for a specific package:
+To start the development server for a specific package you can pass the package name to the previous command:
 
+```bash
+# From the repository root
+$ yarn watch:packages --scope @syndesis/package-name
 ```
-yarn watch:packages --scope @syndesis/package-name
-```
-_Where `@syndesis/package-name` is the name in the `package.json`_
-
 
 
 ## Roadmap
 
 - [ ] Extend the build system for the packages to extract any CSS file referenced in the project and make it available 
 in the dist folder.
-- [ ] Implement [syndesis-context](#sharedsyndesis-context)
+- [ ] Implement [syndesis-context](#packagessyndesis-context)
 - [ ] ...so many things!
 
 ## License
