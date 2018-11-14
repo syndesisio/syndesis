@@ -4,7 +4,6 @@
     "declaration": false,
     "allowJs": true,
     "noImplicitAny": false,
-    "skipLibCheck": false,
-    "emit": false
+    "skipLibCheck": false
   }
 }

@@ -17,7 +17,9 @@
     "@storybook/react": "^4.0.4",
     "@types/classnames": "^2.2.6",
     "@types/enzyme": "^3.1.15",
+    "@types/enzyme-adapter-react-16": "^1.0.3",
     "@types/expect": "^1.20.3",
+    "@types/jest": "^23.3.9",
     "@types/patternfly-react": "*",
     "@types/react": "^16.4.18",
     "@types/react-content-loader": "*",
@@ -27,6 +29,8 @@
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
     "expect": "^23.6.0",
+    "jest": "^23.6.0",
+    "jest-cli": "^23.6.0",
     "microbundle": "^0.7.0",
     "patternfly-react": "^2.22.3",
     "react": "^16.6.0",
@@ -37,6 +41,7 @@
     "react-router-dom": "^4.3.1",
     "rimraf": "^2.6.2",
     "storybook-addon-specifications": "^2.1.2",
+    "ts-jest": "^23.10.4",
     "tslib": "^1.9.3",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
@@ -44,8 +49,11 @@
     "typescript": "^3.1.6"
   },
   "scripts": {
+    "test": "jest",
+    "test:watch": "yarn run test -- --watch",
     "prebuild": "rimraf dist",
     "build": "microbundle",
+    "postbuild": "yarn test",
     "dev": "yarn build watch",
     "storybook": "start-storybook -p 9001"
   },
@@ -59,5 +67,38 @@
   },
   "dependencies": {
     "classnames": "^2.2.6"
+  },
+  "jest": {
+    "setupFiles": [
+      "./tests/__conf__/enzymeConfig.ts"
+    ],
+    "automock": false,
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}"
+    ],
+    "preset": "ts-jest",
+    "testMatch": [
+      "<rootDir>/tests/**/?(*.)spec.ts?(x)"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.storybook/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/.storybook//__mocks__/styleMock.js"
+    },
+    "unmockedModulePathPatterns": [
+      "<rootDir>/../../node_modules/react/",
+      "<rootDir>/../../node_modules/react-dom/",
+      "<rootDir>/../../node_modules/enzyme/"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.storybook.json"
+      }
+    }
   }
 }

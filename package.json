@@ -9,7 +9,9 @@
     "typings/*"
   ],
   "scripts": {
+    "test": "CI=true lerna run --stream test",
     "build": "lerna run --stream build",
+    "postbuild": "yarn run test",
     "watch:app": "lerna run --stream --scope @syndesis/syndesis start",
     "watch:packages": "lerna run --stream --parallel dev",
     "watch": "npm-run-all --parallel watch:*",
