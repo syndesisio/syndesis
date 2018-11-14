@@ -7,7 +7,7 @@ export interface IApiContext {
 
 export const ApiContextDefaultValue = {
   apiUri: 'http://example.com',
-  token: null
+  token: null,
 } as IApiContext;
 
 export const ApiContext = React.createContext<IApiContext>(

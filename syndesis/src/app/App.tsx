@@ -1,30 +1,30 @@
-import { ApiContext } from "@syndesis/api";
-import { PfVerticalNavItem } from "@syndesis/ui";
+import { ApiContext } from '@syndesis/api';
+import { PfVerticalNavItem } from '@syndesis/ui';
 import * as React from 'react';
 import {
   Route,
   RouteComponentProps,
   Switch,
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 import './App.css';
-import { ConnectionsModule } from "../modules/connections";
-import { DashboardModule } from "../modules/dashboard";
-import { IntegrationsModule } from "../modules/integrations";
-import { AppContext, IAppContext, IAppSettings } from "./AppContext";
-import { AuthContext, IAuthContext } from "./AuthContext";
-import { AuthenticatedRoute } from "./AuthenticatedRoute";
+import { ConnectionsModule } from '../modules/connections';
+import { DashboardModule } from '../modules/dashboard';
+import { IntegrationsModule } from '../modules/integrations';
+import { AppContext, IAppContext, IAppSettings } from './AppContext';
+import { AuthContext, IAuthContext } from './AuthContext';
+import { AuthenticatedRoute } from './AuthenticatedRoute';
 import { Layout } from './Layout';
-import { LoginPage } from "./LoginPage";
-import { Logout } from "./LogoutPage";
+import { LoginPage } from './LoginPage';
+import { Logout } from './LogoutPage';
 import { SettingsPage } from './SettingsPage';
-import { TokenPage } from "./TokenPage";
+import { TokenPage } from './TokenPage';
 
 const PrivateRoutes = () => (
   <Switch>
-    <Route path="/" exact={true} component={DashboardModule}/>
-    <Route path="/integrations" component={IntegrationsModule}/>
-    <Route path="/connections" component={ConnectionsModule}/>
+    <Route path="/" exact={true} component={DashboardModule} />
+    <Route path="/integrations" component={IntegrationsModule} />
+    <Route path="/connections" component={ConnectionsModule} />
   </Switch>
 );
 
@@ -56,7 +56,7 @@ class AppBase extends React.Component<RouteComponentProps, IAppState> {
       redirectUri: document.location!.origin + '/token',
       responseType: 'token',
       saveSettings: this.saveSettings,
-      token
+      token,
     } as IAppState;
 
     this.TokenWithState = () => <TokenPage to="/" onToken={this.updateToken} />;
@@ -71,10 +71,12 @@ class AppBase extends React.Component<RouteComponentProps, IAppState> {
       <>
         <AppContext.Provider value={this.state}>
           <AuthContext.Provider value={this.state}>
-            <ApiContext.Provider value={{
-              apiUri: this.state.apiUri,
-              token: this.state.token
-            }}>
+            <ApiContext.Provider
+              value={{
+                apiUri: this.state.apiUri,
+                token: this.state.token,
+              }}
+            >
               <Layout navbar={this.renderNavbar()}>
                 <React.Fragment>
                   <Switch>
@@ -125,7 +127,7 @@ class AppBase extends React.Component<RouteComponentProps, IAppState> {
         to={'/settings'}
         label={'Settings'}
         key={5}
-      />
+      />,
     ];
   }
 
@@ -133,7 +135,7 @@ class AppBase extends React.Component<RouteComponentProps, IAppState> {
     this.storeToken(token);
     this.setState({
       logged: !!token,
-      token
+      token,
     });
   };
 
@@ -146,7 +148,7 @@ class AppBase extends React.Component<RouteComponentProps, IAppState> {
       ...settings,
       firstSetup: false,
       logged: false,
-      token: null
+      token: null,
     };
     this.setState(state);
     localStorage.setItem('apiUri', state.apiUri);
@@ -162,7 +164,7 @@ class AppBase extends React.Component<RouteComponentProps, IAppState> {
   private logout = (): void => {
     this.setState({
       logged: false,
-      token: null
+      token: null,
     });
     this.props.history.replace('/');
   };

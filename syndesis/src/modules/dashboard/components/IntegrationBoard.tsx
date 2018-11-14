@@ -1,5 +1,5 @@
-import { Card, DonutChart, patternfly } from "patternfly-react";
-import * as React from "react";
+import { Card, DonutChart, patternfly } from 'patternfly-react';
+import * as React from 'react';
 
 export interface IIntegrationBoardProps {
   pendingIntegrations: number;
@@ -7,20 +7,22 @@ export interface IIntegrationBoardProps {
   stoppedIntegrations: number;
 }
 
-export class IntegrationBoard extends React.PureComponent<IIntegrationBoardProps> {
+export class IntegrationBoard extends React.PureComponent<
+  IIntegrationBoardProps
+> {
   public render() {
     const data = {
       colors: {
         Pending: patternfly.pfPaletteColors.black200,
         Published: patternfly.pfPaletteColors.blue400,
-        Stopped: patternfly.pfPaletteColors.black300
+        Stopped: patternfly.pfPaletteColors.black300,
       },
       columns: [
-        ["Running", this.props.runningIntegrations],
-        ["Stopped", this.props.stoppedIntegrations],
-        ["Pending", this.props.pendingIntegrations]
+        ['Running', this.props.runningIntegrations],
+        ['Stopped', this.props.stoppedIntegrations],
+        ['Pending', this.props.pendingIntegrations],
       ],
-      type: "donut"
+      type: 'donut',
     };
 
     return (
@@ -35,10 +37,10 @@ export class IntegrationBoard extends React.PureComponent<IIntegrationBoardProps
             data={data}
             tooltip={{
               contents: patternfly.pfDonutTooltipContents,
-              show: true
+              show: true,
             }}
-            title={{ type: "total", secondary: "Integrations" }}
-            legend={{ show: true, position: "right" }}
+            title={{ type: 'total', secondary: 'Integrations' }}
+            legend={{ show: true, position: 'right' }}
           />
         </Card.Body>
       </Card>

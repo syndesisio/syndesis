@@ -35,7 +35,7 @@ function PfVerticalNavItem({
 
   const NavLinkChildren = ({
     location: childLocation,
-    match
+    match,
   }: {
     location: any;
     match: any;
@@ -47,7 +47,7 @@ function PfVerticalNavItem({
     return (
       <li
         className={classNames('list-group-item', {
-          active: isActive
+          active: isActive,
         })}
       >
         <Link

@@ -16,7 +16,7 @@ export interface IAppContext extends IAppSettings {
 export const AppContextDefaultValue = {
   apiUri: 'http://example.com',
   authorizationUri: 'http://example.com/oauth/authorize',
-  firstSetup: true
+  firstSetup: true,
 } as IAppContext;
 
 export const AppContext = React.createContext<IAppContext>(

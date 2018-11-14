@@ -1,4 +1,4 @@
-import { IntegrationMetricsSummary, IntegrationOverview } from "./models";
+import { IntegrationMetricsSummary, IntegrationOverview } from './models';
 
 export interface IntegrationWithOverview {
   integration: IntegrationOverview;

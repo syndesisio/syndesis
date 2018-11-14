@@ -41,7 +41,7 @@ export const PfNavLink = ({
 
   const NavLinkChildren = ({
     location: childLocation,
-    match
+    match,
   }: {
     location: any;
     match: any;

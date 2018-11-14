@@ -1,11 +1,11 @@
-import { IntegrationWithMonitoring } from "@syndesis/models";
+import { IntegrationWithMonitoring } from '@syndesis/models';
 import {
   IntegrationsList,
   IntegrationsListItem,
   IntegrationsListSkeleton,
   IListViewToolbarProps,
-  ListViewToolbar
-} from "@syndesis/ui";
+  ListViewToolbar,
+} from '@syndesis/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -29,10 +29,7 @@ export class IntegrationsListView extends React.Component<
             >
               Import
             </Link>
-            <Link
-              to={`${this.props.match}/new`}
-              className={'btn btn-primary'}
-            >
+            <Link to={`${this.props.match}/new`} className={'btn btn-primary'}>
               Create Integration
             </Link>
           </div>
@@ -43,7 +40,7 @@ export class IntegrationsListView extends React.Component<
               width={800}
               style={{
                 backgroundColor: '#FFF',
-                marginTop: 30
+                marginTop: 30,
               }}
             />
           ) : (

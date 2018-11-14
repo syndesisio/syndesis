@@ -81,26 +81,23 @@ export class ListViewToolbar extends React.Component<IListViewToolbarProps> {
         <Toolbar.RightContent>{this.props.children}</Toolbar.RightContent>
         <Toolbar.Results>
           <h5>{this.props.resultsCount} Results</h5>
-          {this.props.activeFilters &&
-            this.props.activeFilters.length > 0 && (
-              <>
-                <Filter.ActiveLabel>Active Filters:</Filter.ActiveLabel>
-                <Filter.List>
-                  {this.props.activeFilters.map(
-                    (item: IActiveFilter, index) => (
-                      <Filter.Item
-                        key={index}
-                        onRemove={this.props.onRemoveFilter}
-                        filterData={item}
-                      >
-                        {item.title}={item.value}
-                      </Filter.Item>
-                    )
-                  )}
-                </Filter.List>
-                <a onClick={this.props.onClearFilters}>Clear All Filters</a>
-              </>
-            )}
+          {this.props.activeFilters && this.props.activeFilters.length > 0 && (
+            <>
+              <Filter.ActiveLabel>Active Filters:</Filter.ActiveLabel>
+              <Filter.List>
+                {this.props.activeFilters.map((item: IActiveFilter, index) => (
+                  <Filter.Item
+                    key={index}
+                    onRemove={this.props.onRemoveFilter}
+                    filterData={item}
+                  >
+                    {item.title}={item.value}
+                  </Filter.Item>
+                ))}
+              </Filter.List>
+              <a onClick={this.props.onClearFilters}>Clear All Filters</a>
+            </>
+          )}
         </Toolbar.Results>
       </Toolbar>
     );

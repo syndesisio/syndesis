@@ -5,9 +5,9 @@ export interface IConnectionsAppContext {
 }
 
 export const ConnectionsAppContextDefaultValue = {
-  baseurl: ''
+  baseurl: '',
 } as IConnectionsAppContext;
 
-export const ConnectionsAppContext = React.createContext<IConnectionsAppContext>(
-  ConnectionsAppContextDefaultValue
-);
+export const ConnectionsAppContext = React.createContext<
+  IConnectionsAppContext
+>(ConnectionsAppContextDefaultValue);

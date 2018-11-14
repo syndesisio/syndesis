@@ -1,8 +1,8 @@
-import { IntegrationWithMonitoring } from "@syndesis/models";
+import { IntegrationWithMonitoring } from '@syndesis/models';
 import {
   IntegrationsList,
   IntegrationsListItem,
-  IntegrationsListSkeleton
+  IntegrationsListSkeleton,
 } from '@syndesis/ui';
 import { Card, MenuItem } from 'patternfly-react';
 import * as React from 'react';

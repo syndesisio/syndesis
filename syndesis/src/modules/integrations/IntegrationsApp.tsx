@@ -1,12 +1,14 @@
-import * as React from "react";
-import { Route, Switch } from "react-router";
-import IntegrationsPage from "./pages/IntegrationsPage";
+import * as React from 'react';
+import { Route, Switch } from 'react-router';
+import IntegrationsPage from './pages/IntegrationsPage';
 
 export interface IIntegrationsAppProps {
   baseurl: string;
 }
 
-export default class IntegrationsApp extends React.Component<IIntegrationsAppProps> {
+export default class IntegrationsApp extends React.Component<
+  IIntegrationsAppProps
+> {
   public render() {
     return (
       <Switch>

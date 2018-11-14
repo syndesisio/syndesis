@@ -1,7 +1,7 @@
-import { Connector } from "@syndesis/models";
+import { Connector } from '@syndesis/models';
 import * as React from 'react';
-import { IRestState } from "./Rest";
-import { SyndesisRest } from "./SyndesisRest";
+import { IRestState } from './Rest';
+import { SyndesisRest } from './SyndesisRest';
 
 export interface IConnectorsResponse {
   items: Connector[];
@@ -19,7 +19,7 @@ export class WithConnectors extends React.Component<IWithConnectorsProps> {
         url={'/api/v1/connectors'}
         defaultValue={{
           items: [],
-          totalCount: 0
+          totalCount: 0,
         }}
       >
         {response => this.props.children(response)}

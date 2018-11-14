@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IActiveFilter, IFilterType } from "./ListViewToolbar";
+import { IActiveFilter, IFilterType } from './ListViewToolbar';
 
 export interface IListViewToolbarAbstractComponent {
   activeFilters: IActiveFilter[];
@@ -36,9 +36,9 @@ export abstract class ListViewToolbarAbstractComponent<
         ...activeFilters,
         {
           title,
-          value
-        } as IActiveFilter
-      ]
+          value,
+        } as IActiveFilter,
+      ],
     });
   };
 
@@ -68,7 +68,7 @@ export abstract class ListViewToolbarAbstractComponent<
     if (index > -1) {
       const updated = [
         ...activeFilters.slice(0, index),
-        ...activeFilters.slice(index + 1)
+        ...activeFilters.slice(index + 1),
       ];
       this.setState({ activeFilters: updated });
     }
@@ -91,7 +91,7 @@ export abstract class ListViewToolbarAbstractComponent<
     if (currentSortType !== sortType) {
       this.setState({
         currentSortType: sortType,
-        isSortAscending: true
+        isSortAscending: true,
       });
     }
   };

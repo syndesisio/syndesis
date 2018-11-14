@@ -1,15 +1,15 @@
-import { WithConnections } from "@syndesis/api";
-import { Connection } from "@syndesis/models";
+import { WithConnections } from '@syndesis/api';
+import { Connection } from '@syndesis/models';
 import {
   IActiveFilter,
   IFilterType,
   IListViewToolbarAbstractComponent,
   ISortType,
-  ListViewToolbarAbstractComponent
-} from "@syndesis/ui";
+  ListViewToolbarAbstractComponent,
+} from '@syndesis/ui';
 import * as React from 'react';
-import { ConnectionsAppContext } from "../ConnectionsAppContext";
-import { ConnectionsListView } from "../components/ConnectionsListView";
+import { ConnectionsAppContext } from '../ConnectionsAppContext';
+import { ConnectionsListView } from '../components/ConnectionsListView';
 
 function getFilteredAndSortedConnections(
   connections: Connection[],
@@ -40,7 +40,7 @@ const filterByName = {
   filterType: 'text',
   id: 'name',
   placeholder: 'Filter by Name',
-  title: 'Name'
+  title: 'Name',
 } as IFilterType;
 
 const filterTypes = [filterByName];
@@ -48,7 +48,7 @@ const filterTypes = [filterByName];
 const sortByName = {
   id: 'name',
   isNumeric: false,
-  title: 'Name'
+  title: 'Name',
 } as ISortType;
 
 const sortTypes: ISortType[] = [sortByName];
@@ -63,13 +63,13 @@ export default class ConnectionsPage extends ListViewToolbarAbstractComponent<
     currentSortType: sortByName.title,
     currentValue: '',
     filterCategory: null,
-    isSortAscending: true
+    isSortAscending: true,
   };
 
   public render() {
     return (
       <ConnectionsAppContext.Consumer>
-        {({ baseurl }) =>
+        {({ baseurl }) => (
           <WithConnections>
             {({ data, loading, hasData }) => {
               const filteredAndSortedConnections = getFilteredAndSortedConnections(
@@ -102,7 +102,7 @@ export default class ConnectionsPage extends ListViewToolbarAbstractComponent<
               );
             }}
           </WithConnections>
-        }
+        )}
       </ConnectionsAppContext.Consumer>
     );
   }

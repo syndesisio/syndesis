@@ -1,7 +1,15 @@
-import { WithConnections, WithIntegrationsMetrics, WithMonitoredIntegrations } from "@syndesis/api";
-import { Integration, IntegrationOverview, IntegrationWithOverview } from "@syndesis/models";
+import {
+  WithConnections,
+  WithIntegrationsMetrics,
+  WithMonitoredIntegrations,
+} from '@syndesis/api';
+import {
+  Integration,
+  IntegrationOverview,
+  IntegrationWithOverview,
+} from '@syndesis/models';
 import * as React from 'react';
-import { Dashboard } from "../components";
+import { Dashboard } from '../components';
 
 export interface IIntegrationCountsByState {
   Error: number;
@@ -18,14 +26,14 @@ export function getIntegrationsCountsByState(
       const stateCount = counts[mi.integration.currentState!] || 0;
       return {
         ...counts,
-        [mi.integration.currentState!]: stateCount + 1
+        [mi.integration.currentState!]: stateCount + 1,
       };
     },
     {
       Error: 0,
       Pending: 0,
       Published: 0,
-      Unpublished: 0
+      Unpublished: 0,
     } as IIntegrationCountsByState
   );
 }
@@ -53,13 +61,13 @@ export function getRecentlyUpdatedIntegrations(
 
 export function getTopIntegrations(
   integrations: IntegrationWithOverview[],
-  topIntegrations: {[name: string]: number;} = {}
+  topIntegrations: { [name: string]: number } = {}
 ): IntegrationWithOverview[] {
   const topIntegrationsArray = Object.keys(topIntegrations)
     .map(key => {
       return {
         count: topIntegrations[key],
-        id: key
+        id: key,
       } as any;
     })
     .sort((a, b) => {

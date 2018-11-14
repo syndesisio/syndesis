@@ -1,4 +1,4 @@
-import { PfNavLink } from "@syndesis/ui";
+import { PfNavLink } from '@syndesis/ui';
 import { Icon, Masthead, VerticalNav } from 'patternfly-react';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -28,7 +28,7 @@ class LayoutBase extends React.Component<ILayoutBase> {
                 title={[
                   <span className="dropdown-title" key="dropdown-title">
                     <Icon type={'fa'} name={'user'} /> developer
-                  </span>
+                  </span>,
                 ]}
               >
                 <PfNavLink to={'/logout'} label={'Logout'} />

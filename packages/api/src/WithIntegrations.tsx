@@ -1,7 +1,7 @@
-import { IntegrationOverview } from "@syndesis/models";
+import { IntegrationOverview } from '@syndesis/models';
 import * as React from 'react';
-import { IRestState } from "./Rest";
-import { SyndesisRest } from "./SyndesisRest";
+import { IRestState } from './Rest';
+import { SyndesisRest } from './SyndesisRest';
 
 export interface IIntegrationsResponse {
   items: IntegrationOverview[];
@@ -20,7 +20,7 @@ export class WithIntegrations extends React.Component<IWithIntegrationsProps> {
         poll={5000}
         defaultValue={{
           items: [],
-          totalCount: 0
+          totalCount: 0,
         }}
       >
         {response => this.props.children(response)}

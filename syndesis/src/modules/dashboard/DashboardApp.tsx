@@ -1,6 +1,6 @@
-import * as React from "react";
-import { Route, Switch } from "react-router";
-import DashboardPage from "./pages/DashboardPage";
+import * as React from 'react';
+import { Route, Switch } from 'react-router';
+import DashboardPage from './pages/DashboardPage';
 
 export interface IDashboardAppProps {
   baseurl: string;

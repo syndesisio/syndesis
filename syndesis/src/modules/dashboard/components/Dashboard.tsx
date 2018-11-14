@@ -2,20 +2,24 @@ import {
   Connection,
   Integration,
   IntegrationMetricsSummary,
-  IntegrationWithOverview
-} from "@syndesis/models";
-import { AggregatedMetricCard, ConnectionCard, ConnectionsGrid } from "@syndesis/ui";
-import { getConnectionIcon } from "@syndesis/utils";
+  IntegrationWithOverview,
+} from '@syndesis/models';
+import {
+  AggregatedMetricCard,
+  ConnectionCard,
+  ConnectionsGrid,
+} from '@syndesis/ui';
+import { getConnectionIcon } from '@syndesis/utils';
 import { CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import './Dashboard.css';
-import { ConnectionsMetric } from "./ConnectionsMetric";
-import { IntegrationBoard } from "./IntegrationBoard";
-import { RecentUpdates } from "./RecentUpdates";
-import { TopIntegrations } from "./TopIntegrations";
-import { UptimeMetric } from "./UptimeMetric";
+import { ConnectionsMetric } from './ConnectionsMetric';
+import { IntegrationBoard } from './IntegrationBoard';
+import { RecentUpdates } from './RecentUpdates';
+import { TopIntegrations } from './TopIntegrations';
+import { UptimeMetric } from './UptimeMetric';
 
 export interface IIntegrationsPageProps {
   integrationsLoaded: boolean;

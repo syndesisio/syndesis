@@ -1,4 +1,4 @@
-import { IntegrationOverview } from "@syndesis/models";
+import { IntegrationOverview } from '@syndesis/models';
 import { IntegrationStatus } from '@syndesis/ui';
 import { Card, Grid } from 'patternfly-react';
 import * as React from 'react';

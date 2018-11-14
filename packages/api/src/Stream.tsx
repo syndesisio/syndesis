@@ -21,14 +21,14 @@ export class Stream extends Rest<string[]> {
   public read = async () => {
     try {
       this.setState({
-        loading: true
+        loading: true,
       });
 
       callFetch({
         contentType: this.props.contentType,
         headers: this.props.headers,
         method: 'GET',
-        url: `${this.props.baseUrl}${this.props.url}`
+        url: `${this.props.baseUrl}${this.props.url}`,
       })
         .then(response => response.body)
         .then(body => {
@@ -36,18 +36,18 @@ export class Stream extends Rest<string[]> {
           const textDecoder = new TextDecoder('utf-8');
           const pushData = ({
             done,
-            value
+            value,
           }: {
             done: boolean;
             value: Uint8Array;
           }) => {
             if (done) {
               this.setState({
-                loading: false
+                loading: false,
               });
             } else {
               this.setState({
-                data: [...(this.state.data || []), textDecoder.decode(value)]
+                data: [...(this.state.data || []), textDecoder.decode(value)],
               });
 
               this.reader!.read().then(pushData);
@@ -60,7 +60,7 @@ export class Stream extends Rest<string[]> {
       this.setState({
         error: true,
         errorMessage: e.message,
-        loading: false
+        loading: false,
       });
     }
   };

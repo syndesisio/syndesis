@@ -1,6 +1,11 @@
-import { Connection } from "@syndesis/models";
-import { ConnectionCard, ConnectionsGrid, IListViewToolbarProps, ListViewToolbar } from "@syndesis/ui";
-import { getConnectionIcon } from "@syndesis/utils";
+import { Connection } from '@syndesis/models';
+import {
+  ConnectionCard,
+  ConnectionsGrid,
+  IListViewToolbarProps,
+  ListViewToolbar,
+} from '@syndesis/ui';
+import { getConnectionIcon } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 

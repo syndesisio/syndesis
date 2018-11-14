@@ -22,7 +22,7 @@ class SettingsPageBase extends React.Component<
     super(props);
     this.state = {
       apiUri: this.props.apiUri,
-      authorizationUri: this.props.authorizationUri
+      authorizationUri: this.props.authorizationUri,
     };
   }
 
@@ -30,7 +30,7 @@ class SettingsPageBase extends React.Component<
     const setState = (property: string) => {
       return (event: { target: HTMLInputElement }) => {
         const state = {
-          ...this.state
+          ...this.state,
         };
         state[property] = event.target.value;
         this.setState(state);

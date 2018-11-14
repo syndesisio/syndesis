@@ -17,7 +17,7 @@ export const AuthContextDefaultValue = {
   logged: false,
   redirectUri: 'http://localhost/login',
   responseType: 'token',
-  token: null
+  token: null,
 } as IAuthContext;
 
 export const AuthContext = React.createContext<IAuthContext>(

@@ -2,12 +2,12 @@ import {
   Integration,
   IntegrationMonitoring,
   IntegrationWithMonitoring,
-  IntegrationWithOverview
-} from "@syndesis/models";
+  IntegrationWithOverview,
+} from '@syndesis/models';
 import * as React from 'react';
-import { IRestState } from "./Rest";
-import { SyndesisRest } from "./SyndesisRest";
-import { WithIntegrations } from "./WithIntegrations";
+import { IRestState } from './Rest';
+import { SyndesisRest } from './SyndesisRest';
+import { WithIntegrations } from './WithIntegrations';
 
 export interface IMonitoredIntegrationsResponse {
   items: IntegrationWithMonitoring[];
@@ -39,11 +39,11 @@ export class WithMonitoredIntegrations extends React.Component<
                       integration: i,
                       overview: monitorings.find(
                         (o: IntegrationMonitoring) => o.id === i.id
-                      )
+                      ),
                     })
                   ),
-                  totalCount: integrations.totalCount
-                }
+                  totalCount: integrations.totalCount,
+                },
               });
             }}
           </SyndesisRest>

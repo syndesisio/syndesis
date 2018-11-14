@@ -1,15 +1,17 @@
-import * as React from "react";
-import { Route, Switch } from "react-router";
-import ConnectionsPage from "./pages/ConnectionsPage";
-import ConnectorFormPage from "./pages/ConnectorFormPage";
-import ConnectorsPage from "./pages/ConnectorsPage";
-import { ConnectionsAppContext } from "./ConnectionsAppContext";
+import * as React from 'react';
+import { Route, Switch } from 'react-router';
+import ConnectionsPage from './pages/ConnectionsPage';
+import ConnectorFormPage from './pages/ConnectorFormPage';
+import ConnectorsPage from './pages/ConnectorsPage';
+import { ConnectionsAppContext } from './ConnectionsAppContext';
 
 export interface IConnectionsAppProps {
   baseurl: string;
 }
 
-export default class ConnectionsApp extends React.Component<IConnectionsAppProps> {
+export default class ConnectionsApp extends React.Component<
+  IConnectionsAppProps
+> {
   public render() {
     return (
       <ConnectionsAppContext.Provider value={this.props}>

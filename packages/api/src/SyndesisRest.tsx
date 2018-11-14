@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiContext } from "./ApiContext";
+import { ApiContext } from './ApiContext';
 import { IRestState, Rest } from './Rest';
 import { Stream } from './Stream';
 
@@ -30,7 +30,7 @@ export class SyndesisRest<T> extends React.Component<ISyndesisRestProps<T>> {
             headers={{
               'SYNDESIS-XSRF-TOKEN': 'awesome',
               'X-Forwarded-Access-Token': `${token}`,
-              'X-Forwarded-User': 'admin'
+              'X-Forwarded-User': 'admin',
             }}
           />
         )}

@@ -1,7 +1,7 @@
-import { ConnectionOverview } from "@syndesis/models";
+import { ConnectionOverview } from '@syndesis/models';
 import * as React from 'react';
-import { IRestState } from "./Rest";
-import { SyndesisRest } from "./SyndesisRest";
+import { IRestState } from './Rest';
+import { SyndesisRest } from './SyndesisRest';
 
 export interface IConnectionsResponse {
   items: ConnectionOverview[];
@@ -20,7 +20,7 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
         poll={5000}
         defaultValue={{
           items: [],
-          totalCount: 0
+          totalCount: 0,
         }}
       >
         {response => this.props.children(response)}

@@ -5,7 +5,7 @@ import {
   CellMeasurer,
   CellMeasurerCache,
   List,
-  ListRowRenderer
+  ListRowRenderer,
 } from 'react-virtualized';
 import './LogViewer.css';
 
@@ -26,7 +26,7 @@ export class LogViewer extends React.Component<
   ILogViewerState
 > {
   public static defaultProps = {
-    height: 300
+    height: 300,
   };
 
   public static getDerivedStateFromProps(
@@ -36,14 +36,14 @@ export class LogViewer extends React.Component<
     return {
       ...state,
       count: data.length,
-      previousCount: state.followScroll ? state.count : state.previousCount
+      previousCount: state.followScroll ? state.count : state.previousCount,
     };
   }
 
   public state = {
     count: 0,
     followScroll: true,
-    previousCount: 0
+    previousCount: 0,
   };
 
   public cellMeasurerCache: CellMeasurerCache;
@@ -52,7 +52,7 @@ export class LogViewer extends React.Component<
     super(props);
     this.cellMeasurerCache = new CellMeasurerCache({
       fixedWidth: true,
-      minHeight: 20
+      minHeight: 20,
     });
   }
 
@@ -113,7 +113,7 @@ export class LogViewer extends React.Component<
 
   public toggleFollow = () => {
     this.setState({
-      followScroll: !this.state.followScroll
+      followScroll: !this.state.followScroll,
     });
   };
 }

@@ -24,26 +24,29 @@ export interface IWithConnectorForm {
   children(props: IWithConnectorState): any;
 }
 
-export class WithConnectorCreationForm extends React.Component<IWithConnectorForm, IWithConnectorState> {
+export class WithConnectorCreationForm extends React.Component<
+  IWithConnectorForm,
+  IWithConnectorState
+> {
   public state = {
     loading: true,
-    error: false
+    error: false,
   };
 
   public async componentDidMount() {
     try {
       this.setState({
-        loading: true
+        loading: true,
       });
       const { CreationForm } = await loadModule(this.props.connectorId);
       this.setState({
         CreationForm,
-        loading: false
-      })
-    } catch(e) {
+        loading: false,
+      });
+    } catch (e) {
       this.setState({
         error: true,
-        loading: false
+        loading: false,
       });
     }
   }

@@ -1,9 +1,9 @@
-import * as React from "react";
-import { shallow } from "enzyme";
+import * as React from 'react';
+import { shallow } from 'enzyme';
 
-import { ConnectionsListView } from "./ConnectionsListView";
+import { ConnectionsListView } from './ConnectionsListView';
 
-it("renders the heading", () => {
+it('renders the heading', () => {
   const result = shallow(
     <ConnectionsListView
       baseurl={'/'}

@@ -18,7 +18,7 @@ export function callFetch({
   method,
   headers = {},
   body,
-  contentType = 'application/json; charset=utf-8'
+  contentType = 'application/json; charset=utf-8',
 }: IFetch) {
   return fetch(url, {
     body: body ? JSON.stringify(body) : undefined,
@@ -26,12 +26,12 @@ export function callFetch({
     credentials: 'include',
     headers: {
       'Content-Type': contentType,
-      ...headers
+      ...headers,
     },
     method,
     mode: 'cors',
     redirect: 'follow',
-    referrer: 'no-referrer'
+    referrer: 'no-referrer',
   });
 }
 
@@ -66,7 +66,7 @@ export interface IRestProps<T> {
 
 export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
   public static defaultProps = {
-    autoload: true
+    autoload: true,
   };
 
   public pollingTimer?: number;
@@ -79,7 +79,7 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
       hasData: false,
       loading: true,
       read: this.read,
-      save: this.onSave
+      save: this.onSave,
     };
     this.poller = this.poller.bind(this);
   }
@@ -125,13 +125,13 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
   public async read() {
     try {
       this.setState({
-        loading: true
+        loading: true,
       });
       const response = await callFetch({
         contentType: this.props.contentType,
         headers: this.props.headers,
         method: 'GET',
-        url: `${this.props.baseUrl}${this.props.url}`
+        url: `${this.props.baseUrl}${this.props.url}`,
       });
       if (!response.ok) {
         throw new Error(response.statusText);
@@ -148,7 +148,7 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
       this.setState({
         data,
         hasData: true,
-        loading: false
+        loading: false,
       });
     } catch (e) {
       this.setState({
@@ -156,14 +156,14 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
         error: true,
         errorMessage: e.message,
         hasData: false,
-        loading: false
+        loading: false,
       });
     }
   }
 
   public async onSave({ url, data }: ISaveProps) {
     this.setState({
-      loading: true
+      loading: true,
     });
     try {
       const response = await callFetch({
@@ -171,7 +171,7 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
         contentType: this.props.contentType,
         headers: this.props.headers,
         method: 'PUT',
-        url: `${this.props.baseUrl}${url || this.props.url}`
+        url: `${this.props.baseUrl}${url || this.props.url}`,
       });
       if (!response.ok) {
         throw new Error(response.statusText);
@@ -181,7 +181,7 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
       this.setState({
         error: true,
         errorMessage: e.message,
-        loading: false
+        loading: false,
       });
     }
   }

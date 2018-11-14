@@ -1,8 +1,14 @@
-import { WithConnections, WithMonitoredIntegrations } from "@syndesis/api";
-import { Connection, IntegrationWithOverview } from "@syndesis/models";
-import { IActiveFilter, IFilterType, ISortType, IListViewToolbarAbstractComponent, ListViewToolbarAbstractComponent } from "@syndesis/ui";
+import { WithConnections, WithMonitoredIntegrations } from '@syndesis/api';
+import { Connection, IntegrationWithOverview } from '@syndesis/models';
+import {
+  IActiveFilter,
+  IFilterType,
+  ISortType,
+  IListViewToolbarAbstractComponent,
+  ListViewToolbarAbstractComponent,
+} from '@syndesis/ui';
 import * as React from 'react';
-import { IntegrationsListView } from "../components/IntegrationsListView";
+import { IntegrationsListView } from '../components/IntegrationsListView';
 
 function getFilteredAndSortedIntegrations(
   integrations: IntegrationWithOverview[],
@@ -22,9 +28,9 @@ function getFilteredAndSortedIntegrations(
           const connectionNames = mi.integration!.flows!.reduce(
             (acc, flow) => [
               ...acc,
-              ...flow.steps!
-                .filter(s => s.connection)
-                .map(s => s.connection!.name.toLowerCase())
+              ...flow
+                .steps!.filter(s => s.connection)
+                .map(s => s.connection!.name.toLowerCase()),
             ],
             [] as string[]
           );
@@ -58,7 +64,7 @@ const filterByName = {
   filterType: 'text',
   id: 'name',
   placeholder: 'Filter by Name',
-  title: 'Name'
+  title: 'Name',
 } as IFilterType;
 
 const filterByConnection = {
@@ -66,7 +72,7 @@ const filterByConnection = {
   filterValues: [],
   id: 'connection',
   placeholder: 'Filter by Connection',
-  title: 'Connection'
+  title: 'Connection',
 };
 
 function getFilterTypes(connections: Connection[]): IFilterType[] {
@@ -76,22 +82,22 @@ function getFilterTypes(connections: Connection[]): IFilterType[] {
       ...filterByConnection,
       filterValues: connections.map(c => ({
         id: c.id,
-        title: c.name
-      }))
-    } as IFilterType
+        title: c.name,
+      })),
+    } as IFilterType,
   ];
 }
 
 const sortByName = {
   id: 'name',
   isNumeric: false,
-  title: 'Name'
+  title: 'Name',
 } as ISortType;
 
 const sortByStatus = {
   id: 'status',
   isNumeric: false,
-  title: 'Status'
+  title: 'Status',
 } as ISortType;
 
 const sortTypes: ISortType[] = [sortByName, sortByStatus];
@@ -106,7 +112,7 @@ export default class IntegrationsPage extends ListViewToolbarAbstractComponent<
     currentSortType: sortByName.title,
     currentValue: '',
     filterCategory: null,
-    isSortAscending: true
+    isSortAscending: true,
   };
 
   public render() {
