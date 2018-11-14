@@ -35,6 +35,7 @@
     "react-dom": "^16.6.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
+    "rimraf": "^2.6.2",
     "storybook-addon-specifications": "^2.1.2",
     "tslib": "^1.9.3",
     "tslint": "^5.11.0",
@@ -43,8 +44,9 @@
     "typescript": "^3.1.6"
   },
   "scripts": {
+    "prebuild": "rimraf dist",
     "build": "microbundle",
-    "dev": "microbundle watch",
+    "dev": "yarn build watch",
     "storybook": "start-storybook -p 9001"
   },
   "peerDependencies": {
