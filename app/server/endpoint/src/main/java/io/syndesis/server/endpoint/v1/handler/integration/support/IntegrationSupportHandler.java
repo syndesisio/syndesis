@@ -18,6 +18,7 @@ package io.syndesis.server.endpoint.v1.handler.integration.support;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -65,6 +66,7 @@ import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.icon.Icon;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationOverview;
@@ -75,6 +77,7 @@ import io.syndesis.common.util.Names;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.dao.file.FileDataManager;
+import io.syndesis.server.dao.file.IconDao;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.jsondb.CloseableJsonDB;
@@ -108,6 +111,7 @@ public class IntegrationSupportHandler {
     private final IntegrationResourceManager resourceManager;
     private final IntegrationHandler integrationHandler;
     private final FileDataManager extensionDataManager;
+    private final IconDao iconDao;
 
     public IntegrationSupportHandler(
         final Migrator migrator,
@@ -116,7 +120,8 @@ public class IntegrationSupportHandler {
         final DataManager dataManager,
         final IntegrationResourceManager resourceManager,
         final IntegrationHandler integrationHandler,
-        final FileDataManager extensionDataManager) {
+        final FileDataManager extensionDataManager,
+        final IconDao iconDao) {
         this.migrator = migrator;
         this.jsondb = jsondb;
 
@@ -125,6 +130,7 @@ public class IntegrationSupportHandler {
         this.resourceManager = resourceManager;
         this.integrationHandler = integrationHandler;
         this.extensionDataManager = extensionDataManager;
+        this.iconDao = iconDao;
     }
 
     public DataManager getDataManager() {
@@ -156,7 +162,6 @@ public class IntegrationSupportHandler {
             throw new ClientErrorException("No 'integration' query parameter specified.", Response.Status.BAD_REQUEST);
         }
 
-        LinkedHashSet<String> extensions = new LinkedHashSet<>();
         CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsondb.getIndexes());
         if( ids.contains("all") ) {
             ids = new ArrayList<>();
@@ -164,18 +169,21 @@ public class IntegrationSupportHandler {
                 ids.add(integration.getId().get());
             }
         }
+        LinkedHashSet<String> extensions = new LinkedHashSet<>();
+        LinkedHashSet<String> icons = new LinkedHashSet<>();
         for (String id : ids) {
             Integration integration = integrationHandler.getIntegration(id);
             addToExport(memJsonDB, integration);
-            resourceManager.collectDependencies(integration.getFlows().stream()
+            Collection<Dependency> dependencies = resourceManager.collectDependencies(integration.getFlows().stream()
                     .flatMap(flow -> flow.getSteps().stream())
-                    .collect(Collectors.toList()), true)
-                .stream()
-                .filter(Dependency::isExtension)
+                    .collect(Collectors.toList()), true);
+            dependencies.stream()
+                .filter(d -> d.isExtension() || d.isIcon() )
                 .map(Dependency::getId)
                 .forEach(extensions::add);
         }
         LOG.debug("Extensions: {}", extensions);
+        LOG.debug("Icons: {}", icons);
 
         return out -> {
             try (ZipOutputStream tos = new ZipOutputStream(out) ) {
@@ -187,6 +195,13 @@ public class IntegrationSupportHandler {
                     addEntry(tos, "extensions/" + Names.sanitize(extensionId) + ".jar", IOUtils.toByteArray(
                         extensionDataManager.getExtensionBinaryFile(extensionId)
                     ));
+                }
+                for (String iconId : icons) {
+                    Icon icon = getDataManager().fetch(Icon.class, iconId);
+                    String ext = MediaType.valueOf(icon.getMediaType()).getSubtype();
+                    String name = iconId.substring(3);
+                    byte[] bytes = IOUtils.toByteArray(iconDao.read(name));
+                    addEntry(tos, "icons/" + name + "." + ext, bytes);
                 }
             }
         };
@@ -203,6 +218,10 @@ public class IntegrationSupportHandler {
                 Connector connector = integrationHandler.getDataManager().fetch(Connector.class, connection.getConnectorId());
                 if (connector != null) {
                     addModelToExport(export, connector);
+                    if (connector.getIcon() != null && connector.getIcon().startsWith("db:")) {
+                        Icon icon = integrationHandler.getDataManager().fetch(Icon.class, connector.getIcon().substring(3));
+                        addModelToExport(export, icon);
+                    }
                 }
             }
             Optional<Extension> e = step.getExtension();
@@ -262,20 +281,9 @@ public class IntegrationSupportHandler {
                 }
 
                 // import missing extensions that were in the model.
-                if( entry.getName().startsWith("extensions/") ) {
-                    for (WithResourceId extension : imported.getOrDefault("extensions", Collections.emptyList())) {
-                        final String extensionId = extension.getId().get();
-                        if( entry.getName().equals("extensions/" + Names.sanitize(extensionId) + ".jar") ) {
-                            String path = "/extensions/" + extensionId;
-                            InputStream existing = extensionDataManager.getExtensionDataAccess().read(path);
-                            if( existing == null ) {
-                                extensionDataManager.getExtensionDataAccess().write(path, zis);
-                            } else {
-                                existing.close();
-                            }
-                        }
-                    }
-                }
+                importMissingExtensions(zis, entry, imported);
+
+                importMissingCustomIcons(zis, entry);
 
                 zis.closeEntry();
             }
@@ -289,6 +297,40 @@ public class IntegrationSupportHandler {
                 LOG.info("Could not import integration: " + e, e);
             }
             throw new ClientErrorException("Could not import integration: " + e, Response.Status.BAD_REQUEST, e);
+        }
+    }
+
+    private void importMissingExtensions(ZipInputStream zis, ZipEntry entry,
+            Map<String, List<WithResourceId>> imported) throws IOException {
+
+        if( entry.getName().startsWith("extensions/") ) {
+            for (WithResourceId extension : imported.getOrDefault("extensions", Collections.emptyList())) {
+                final String extensionId = extension.getId().get();
+                if( entry.getName().equals("extensions/" + Names.sanitize(extensionId) + ".jar") ) {
+                    String path = "/extensions/" + extensionId;
+                    InputStream existing = extensionDataManager.getExtensionDataAccess().read(path);
+                    if( existing == null ) {
+                        extensionDataManager.getExtensionDataAccess().write(path, zis);
+                    } else {
+                        existing.close();
+                    }
+                }
+            }
+        }
+    }
+
+    private void importMissingCustomIcons(ZipInputStream zis, ZipEntry entry) throws IOException {
+
+        if( entry.getName().startsWith("icons/") ) {
+            String fileName = entry.getName().substring(6);
+            String id = fileName.substring(0, fileName.indexOf('.'));
+            InputStream existing = iconDao.read(id);
+            if( existing == null) {
+                // write the icon to the (Sql)FileStore
+                iconDao.write(id, zis);
+            } else {
+                existing.close();
+            }
         }
     }
 
@@ -348,6 +390,13 @@ public class IntegrationSupportHandler {
                 return OpenApi.class;
             }
         }, (a, n) -> new OpenApi.Builder().createFrom(a).name(n).build(), new HashMap<>(), result);
+
+        importModels(new JsonDbDao<Icon>(given) {
+            @Override
+            public Class<Icon> getType() {
+                return Icon.class;
+            }
+        }, result);
 
         return result;
     }
@@ -433,6 +482,17 @@ public class IntegrationSupportHandler {
         return newName;
     }
 
+    private <T extends WithId<T>> void importModels(JsonDbDao<T> export, Map<String, List<WithResourceId>> result) {
+        for (T item : export.fetchAll().getItems()) {
+            String id = item.getId().get();
+            if (dataManager.fetch(export.getType(), id) == null) {
+                // create new item
+                dataManager.create(item);
+
+                addImportedItemResult(result, item);
+            }
+        }
+    }
     private <T extends WithId<T> & WithName> void importModels(JsonDbDao<T> export, BiFunction<T, String, T> renameFunc,
                                                                Map<String, String> renames, Map<String, List<WithResourceId>> result) {
         final Set<String> names = getAllPropertyValues(export.getType(), o -> o.getName());
@@ -460,7 +520,7 @@ public class IntegrationSupportHandler {
         }
     }
 
-    private static <T extends WithId<T> & WithName> void addImportedItemResult(Map<String, List<WithResourceId>> result,
+    private static <T extends WithId<T>> void addImportedItemResult(Map<String, List<WithResourceId>> result,
         T item) {
         final Kind kind = item.getKind();
         final List<WithResourceId> imported = result.computeIfAbsent(kind.getPluralModelName(), (key) -> new ArrayList<>());
