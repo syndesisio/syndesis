@@ -31,7 +31,6 @@ export interface IListViewToolbarProps {
   currentFilterType: IFilterType;
   currentSortType: string;
   currentValue: any;
-  filterCategory: any;
   isSortAscending: boolean;
   resultsCount: number;
   sortTypes: ISortType[];

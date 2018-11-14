@@ -13,5 +13,4 @@ export * from './ListViewToolbarAbstractComponent';
 export * from './ModuleLoader';
 export * from './PfNavLink';
 export * from './PfVerticalNavItem';
-export * from './PfVerticalNavItem';
 export * from './UnrecoverableError';
