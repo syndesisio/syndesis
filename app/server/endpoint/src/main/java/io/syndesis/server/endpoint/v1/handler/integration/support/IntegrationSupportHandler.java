@@ -178,13 +178,9 @@ public class IntegrationSupportHandler {
                     .flatMap(flow -> flow.getSteps().stream())
                     .collect(Collectors.toList()), true);
             dependencies.stream()
-                .filter(Dependency::isExtension)
+                .filter(d -> d.isExtension() || d.isIcon() )
                 .map(Dependency::getId)
                 .forEach(extensions::add);
-            dependencies.stream()
-            .filter(Dependency::isIcon)
-            .map(Dependency::getId)
-            .forEach(icons::add);
         }
         LOG.debug("Extensions: {}", extensions);
         LOG.debug("Icons: {}", icons);
