@@ -9,12 +9,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
-type InstallParams struct {
-	OAuthClientSecret string
-}
-
-func GetInstallResourcesAsRuntimeObjects(syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.Object, error) {
-	rawExtensions, err := GetInstallResources(syndesis, params)
+func GetInstallResourcesAsRuntimeObjects(syndesis *v1alpha1.Syndesis) ([]runtime.Object, error) {
+	rawExtensions, err := GetInstallResources(syndesis)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +28,7 @@ func GetInstallResourcesAsRuntimeObjects(syndesis *v1alpha1.Syndesis, params Ins
 	return objects, nil
 }
 
-func GetInstallResources(syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.RawExtension, error) {
+func GetInstallResources(syndesis *v1alpha1.Syndesis) ([]runtime.RawExtension, error) {
 	res, err := util.LoadKubernetesResourceFromFile(*configuration.TemplateLocation)
 	if err != nil {
 		return nil, err
@@ -45,7 +41,6 @@ func GetInstallResources(syndesis *v1alpha1.Syndesis, params InstallParams) ([]r
 	}
 
 	config := configuration.GetEnvVars(syndesis)
-	config[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
 
 	return processor.Process(templ, config)
 }

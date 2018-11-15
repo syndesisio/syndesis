@@ -20,7 +20,6 @@ const (
 	//EnvOpenshiftMaster 					SyndesisEnvVar = "OPENSHIFT_MASTER"
 	EnvOpenshiftConsoleUrl            SyndesisEnvVar = "OPENSHIFT_CONSOLE_URL"
 	EnvOpenshiftProject               SyndesisEnvVar = "OPENSHIFT_PROJECT"
-	EnvOpenshiftOauthClientSecret     SyndesisEnvVar = "OPENSHIFT_OAUTH_CLIENT_SECRET"
 	EnvPostgresqlMemoryLimit          SyndesisEnvVar = "POSTGRESQL_MEMORY_LIMIT"
 	EnvPostgresqlImageStreamNamespace SyndesisEnvVar = "POSTGRESQL_IMAGE_STREAM_NAMESPACE"
 	EnvPostgresqlUser                 SyndesisEnvVar = "POSTGRESQL_USER"

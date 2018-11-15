@@ -78,6 +78,27 @@ rules:
   - routes/custom-host
   verbs: [ get, list, create, update, delete, deletecollection, watch]
 ---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: syndesis-operator
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: operator
+    syndesis.io/component: syndesis-operator
+rules:
+- apiGroups:
+  - syndesis.io
+  resources:
+  - syndesises/finalizers
+  verbs: [ update ]
+- apiGroups:
+  - oauth.openshift.io
+  resources:
+  - oauthclients
+  verbs: [ get, list, create, update, delete ]
+---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
@@ -124,6 +145,23 @@ subjects:
   name: syndesis-operator
 roleRef:
   name: edit
+---
+kind: ClusterRoleBinding
+apiVersion: authorization.openshift.io/v1
+metadata:
+  name: syndesis-operator:oauth
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: operator
+    syndesis.io/component: syndesis-operator
+subjects:
+- kind: ServiceAccount
+  name: syndesis-operator
+roleRef:
+  kind: Role
+  name: syndesis-operator
+  apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: image.openshift.io/v1
 kind: ImageStream
