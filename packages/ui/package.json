@@ -71,29 +71,16 @@
     "classnames": "^2.2.6"
   },
   "jest": {
-    "setupTestFrameworkScriptFile": "<rootDir>/.jest/setup.ts",
-    "collectCoverageFrom": [
-      "src/**/*.{ts,tsx}"
-    ],
+    "setupTestFrameworkScriptFile": "<rootDir>/../.jest/setup.ts",
     "preset": "ts-jest",
-    "testMatch": [
-      "<rootDir>/tests/**/?(*.)spec.ts?(x)"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json"
-    ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.jest/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/.jest/styleMock.js"
+      "\\.(css|less)$": "<rootDir>/..//.jest/styleMock.js"
     },
     "globals": {
       "ts-jest": {
         "tsConfig": "tsconfig.storybook.json"
       }
-    },
-    "testEnvironment": "jsdom"
+    }
   }
 }

@@ -16,6 +16,7 @@
     "@storybook/react": "^4.0.4",
     "@types/enzyme": "^3.1.15",
     "@types/expect": "^1.20.3",
+    "@types/jest": "^23.3.9",
     "@types/patternfly-react": "*",
     "@types/react": "^16.4.18",
     "@types/react-dom": "^16.0.9",
@@ -23,12 +24,15 @@
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
     "expect": "^23.6.0",
+    "jest": "^23.6.0",
+    "jest-cli": "^23.6.0",
     "microbundle": "^0.7.0",
     "react": "^16.6.0",
     "react-docgen-typescript-loader": "^3.0.0",
     "react-dom": "^16.6.0",
     "rimraf": "^2.6.2",
     "storybook-addon-specifications": "^2.1.2",
+    "ts-jest": "^23.10.4",
     "tslib": "^1.9.3",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
@@ -36,6 +40,8 @@
     "typescript": "^3.1.6"
   },
   "scripts": {
+    "test": "jest",
+    "test:watch": "yarn run test --watch",
     "prebuild": "rimraf dist",
     "build": "microbundle",
     "dev": "yarn build watch",
@@ -47,5 +53,18 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "typescript": "^3.1.6"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "<rootDir>/../.jest/setup.ts",
+    "preset": "ts-jest",
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.jest/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/..//.jest/styleMock.js"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.storybook.json"
+      }
+    }
   }
 }
