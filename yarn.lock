@@ -1626,6 +1626,14 @@
     "@storybook/addons" "4.0.4"
     util-deprecate "^1.0.2"
 
+"@storybook/addon-options@^4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-options/-/addon-options-4.0.6.tgz#9a0ed45f7162215208b8b351c23107df9e78ee04"
+  integrity sha512-5TFYD1NE1eGPGcsWRvx08dfVIBwODgfdNCNBb33VnSLrEMqTu62UY2Na57hGqWjb9fSDFK4EgvXbzWM/it+ZZg==
+  dependencies:
+    "@storybook/addons" "4.0.6"
+    util-deprecate "^1.0.2"
+
 "@storybook/addons@4.0.4", "@storybook/addons@^4.0.2":
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-4.0.4.tgz#133609c527435aba1149ead53ca91f694db1a490"
