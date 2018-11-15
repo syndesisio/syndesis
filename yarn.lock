@@ -1537,6 +1537,20 @@
   resolved "https://registry.yarnpkg.com/@sheerun/mutationobserver-shim/-/mutationobserver-shim-0.3.2.tgz#8013f2af54a2b7d735f71560ff360d3a8176a87b"
   integrity sha512-vTCdPp/T/Q3oSqwHmZ5Kpa9oI7iLtGl3RQaA/NyLHikvcrPxACkkKVr/XzkSPJWXHRhKGzVvb0urJsbMlRxi1Q==
 
+"@storybook/addon-a11y@^4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-a11y/-/addon-a11y-4.0.6.tgz#baaabfe514bde1bce881f2e496b6b9ea6e0c4dfe"
+  integrity sha512-Lcs62kpoa+rCngLsqMPVhYFDpBIGwPgARXXW9q5cW+ZDkqfNuW0mqlYMKKl8QrAAqQRymZHTEYMsPHfwIj0lrg==
+  dependencies:
+    "@emotion/styled" "^0.10.6"
+    "@storybook/addons" "4.0.6"
+    "@storybook/client-logger" "4.0.6"
+    "@storybook/components" "4.0.6"
+    "@storybook/core-events" "4.0.6"
+    axe-core "^3.1.2"
+    global "^4.3.2"
+    prop-types "^15.6.2"
+
 "@storybook/addon-actions@^4.0.2":
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/@storybook/addon-actions/-/addon-actions-4.0.4.tgz#134b83f287ab43ea59e55ce3b22126ebfd541f80"
@@ -1603,6 +1617,16 @@
     global "^4.3.2"
     util-deprecate "^1.0.2"
 
+"@storybook/addons@4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-4.0.6.tgz#4af486c113145c46bbe0d8b5cf6efa04d005a00a"
+  integrity sha512-OTxuUfDxLzXFltUfsHl7XlKdUB6bqsnH9P0QUwa5j57Zfy5v4r24D/C5iUzKQBAtIDFhLl55pwcTeb3x+OOnlA==
+  dependencies:
+    "@storybook/channels" "4.0.6"
+    "@storybook/components" "4.0.6"
+    global "^4.3.2"
+    util-deprecate "^1.0.2"
+
 "@storybook/channel-postmessage@4.0.4":
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/@storybook/channel-postmessage/-/channel-postmessage-4.0.4.tgz#5c8d0c8ac49b92fa95abcf23d1d80d043a8558b0"
@@ -1617,10 +1641,20 @@
   resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-4.0.4.tgz#fdf717cd726d15508ac80ff93a3893b75d3ab8b8"
   integrity sha512-EeRby5oCyyYBkBrxI7Cg8F65FkYJjVK0jbGWpIugcjtnfOeP57xLcZuukcjhLjl/oaC/RYw7A/6c0nFW4kV0GQ==
 
+"@storybook/channels@4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-4.0.6.tgz#479211c776fae9837d1537dd5468cfdf405ed49f"
+  integrity sha512-UxGOs3XuO2S8K9KTLwOLiX6bUYDtp3fGa/mb9wIL/S+tERrLcSRv+CaaNneAgEVuudaiOHjCso7W6cmZIKzrHQ==
+
 "@storybook/client-logger@4.0.4":
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/@storybook/client-logger/-/client-logger-4.0.4.tgz#b3570c8d39b051261fe1cda992f13208338cff8c"
   integrity sha512-T9Na9yWwH+1qfQ2izB0ul7QvtKE9C8nQCz8bTYzgBq84MD7kgowKRC/rhdz/EqNGvkZQcl9OOPRptWGt5eamuw==
+
+"@storybook/client-logger@4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@storybook/client-logger/-/client-logger-4.0.6.tgz#4c75fb555ac0c8ca6b543c9e0b6ee067d64c7d6f"
+  integrity sha512-Gak7O2um5nuKrUmlVse5OAOnQ/xHUoELmL8oWSt3y8WtKGh7PMPggaRg8xj7xNIN+AvxoVQb2KyrEmsV5/3QLg==
 
 "@storybook/components@4.0.4":
   version "4.0.4"
@@ -1638,10 +1672,31 @@
     react-textarea-autosize "^7.0.4"
     render-fragment "^0.1.1"
 
+"@storybook/components@4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@storybook/components/-/components-4.0.6.tgz#9ff82a5b280295203f5ebabe1fb9668d7cf0e1b6"
+  integrity sha512-9xa+eIcb8OwlckwQwaPtwkfZXWLtmNz9yEHYf6mGjf7VOvS5oepxPsyk+a4/0EdDO9In6u1zX5DUdIYSL2vGRA==
+  dependencies:
+    "@emotion/core" "^0.13.1"
+    "@emotion/provider" "^0.11.2"
+    "@emotion/styled" "^0.10.6"
+    global "^4.3.2"
+    lodash "^4.17.11"
+    prop-types "^15.6.2"
+    react-inspector "^2.3.0"
+    react-split-pane "^0.1.84"
+    react-textarea-autosize "^7.0.4"
+    render-fragment "^0.1.1"
+
 "@storybook/core-events@4.0.4":
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/@storybook/core-events/-/core-events-4.0.4.tgz#bf457afe9aec3fb2cd66d7cad3fa5e5821e01503"
   integrity sha512-+OFFYTVSZd6zjZQMCUF2HQ0hIPfel9NyBBABbPxEtbvWEx/cp4RMfk5VFVISpwYJQMhnqCUU0/t3VoLTKFtm1g==
+
+"@storybook/core-events@4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@storybook/core-events/-/core-events-4.0.6.tgz#4023ac7caba3f087ff5572b807aa6d6cd102f560"
+  integrity sha512-lExbWR55RLSi4erhRrBtBAgMdHu0xqnnxavkkaLZM9VaP331GVAWAtdS20H3QHdLrU56NZFX4sIPYlUeQDmfaA==
 
 "@storybook/core@4.0.4":
   version "4.0.4"
@@ -2999,6 +3054,11 @@ aws4@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
   integrity sha512-ReZxvNHIOv88FlT7rxcXIIC0fPt4KZqZbOlivyWtXLt8ESx84zd3kMC6iK5jVeS2qt+g7ftS7ye4fi06X5rtRQ==
+
+axe-core@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-3.1.2.tgz#ca0aff897ebefca7552f97859dc1217c06c4f9e6"
+  integrity sha512-e1WVs0SQu3tM29J9a/mISGvlo2kdCStE+yffIAJF6eb42FS+eUFEVz9j4rgDeV2TAfPJmuOZdRetWYycIbK7Vg==
 
 axobject-query@^2.0.1:
   version "2.0.2"
