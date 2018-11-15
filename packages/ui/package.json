@@ -14,6 +14,7 @@
     "@babel/core": "^7.1.5",
     "@storybook/addon-a11y": "^4.0.6",
     "@storybook/addon-info": "^4.0.4",
+    "@storybook/addon-knobs": "^4.0.6",
     "@storybook/addon-options": "^4.0.4",
     "@storybook/react": "^4.0.4",
     "@types/classnames": "^2.2.6",
