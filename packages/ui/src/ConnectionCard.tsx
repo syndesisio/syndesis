@@ -17,9 +17,7 @@ export class ConnectionCard extends React.PureComponent<IConnectionProps> {
               <img src={this.props.icon} alt={this.props.name} width={46} />
             </div>
             <EmptyState.Title>
-              <span data-test-connection-card-title={true}>
-                {this.props.name}
-              </span>
+              <span data-testid="connection-card-title">{this.props.name}</span>
             </EmptyState.Title>
             <EmptyState.Info>{this.props.description}</EmptyState.Info>
           </EmptyState>

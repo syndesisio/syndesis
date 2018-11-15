@@ -1,10 +1,9 @@
-import { shallow } from 'enzyme';
-import expect from 'expect';
+import { render } from 'react-testing-library';
 import * as React from 'react';
 import { ConnectionCard } from '../src';
 
 export default describe('ConnectionCard', function() {
-  const story = (
+  const testComponent = (
     <ConnectionCard
       name={'Sample connection'}
       description={'Sample connection description'}
@@ -15,8 +14,9 @@ export default describe('ConnectionCard', function() {
   );
 
   it('Should have the Sample connection title', function() {
-    const wrapper = shallow(story);
-    const title = wrapper.find('[data-test-connection-card-title]');
-    expect(title.text()).toEqual('Sample connection');
+    const { getByTestId } = render(testComponent);
+    expect(getByTestId('connection-card-title')).toHaveTextContent(
+      'Sample connection'
+    );
   });
 });

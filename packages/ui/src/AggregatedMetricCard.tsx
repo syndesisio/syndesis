@@ -21,20 +21,18 @@ export class AggregatedMetricCard extends React.PureComponent<
       <Card accented={true} aggregated={true} matchHeight={true}>
         <Card.Title>
           <AggregateStatusCount>
-            <span data-test-aggregate-title={true}>{this.props.title}</span>
+            <span data-testid="aggregate-title">{this.props.title}</span>
           </AggregateStatusCount>
         </Card.Title>
         <Card.Body>
           <AggregateStatusNotifications>
             <AggregateStatusNotification>
               <Icon type="pf" name="ok" />
-              <span data-test-aggregate-ok-count={true}>
-                {this.props.ok}
-              </span>{' '}
+              <span data-testid="aggregate-ok-count">{this.props.ok}</span>{' '}
             </AggregateStatusNotification>
             <AggregateStatusNotification>
               <Icon type="pf" name="error-circle-o" />
-              <span data-test-aggregate-error-count={true}>
+              <span data-testid="aggregate-error-count">
                 {this.props.error}
               </span>
             </AggregateStatusNotification>

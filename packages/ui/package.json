@@ -26,11 +26,11 @@
     "@types/react-dom": "^16.0.9",
     "@types/react-loadable": "*",
     "awesome-typescript-loader": "^5.2.1",
-    "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
     "expect": "^23.6.0",
     "jest": "^23.6.0",
     "jest-cli": "^23.6.0",
+    "jest-dom": "^2.1.1",
     "microbundle": "^0.7.0",
     "patternfly-react": "^2.22.3",
     "react": "^16.6.0",
@@ -39,8 +39,8 @@
     "react-dom": "^16.6.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
+    "react-testing-library": "^5.2.3",
     "rimraf": "^2.6.2",
-    "storybook-addon-specifications": "^2.1.2",
     "ts-jest": "^23.10.4",
     "tslib": "^1.9.3",
     "tslint": "^5.11.0",
@@ -50,7 +50,7 @@
   },
   "scripts": {
     "test": "jest",
-    "test:watch": "yarn run test -- --watch",
+    "test:watch": "yarn run test --watch",
     "prebuild": "rimraf dist",
     "build": "microbundle",
     "postbuild": "yarn test",
@@ -69,10 +69,7 @@
     "classnames": "^2.2.6"
   },
   "jest": {
-    "setupFiles": [
-      "./tests/__conf__/enzymeConfig.ts"
-    ],
-    "automock": false,
+    "setupTestFrameworkScriptFile": "<rootDir>/.jest/setup.ts",
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}"
     ],
@@ -87,18 +84,14 @@
       "json"
     ],
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.storybook/__mocks__/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/.storybook//__mocks__/styleMock.js"
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.jest/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/.jest/styleMock.js"
     },
-    "unmockedModulePathPatterns": [
-      "<rootDir>/../../node_modules/react/",
-      "<rootDir>/../../node_modules/react-dom/",
-      "<rootDir>/../../node_modules/enzyme/"
-    ],
     "globals": {
       "ts-jest": {
         "tsConfig": "tsconfig.storybook.json"
       }
-    }
+    },
+    "testEnvironment": "jsdom"
   }
 }
