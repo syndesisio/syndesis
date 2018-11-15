@@ -44,31 +44,21 @@ interact with it, eg. closing the navigation bar, or redirecting to another sub-
 
 It's built with [create-react-app](https://github.com/facebook/create-react-app).
 
-#### Development server
-
-```bash
-# From the repository root
-$ yarn watch:app
-```
-
-Or
-
-```bash
-# From the syndesis folder
-$ yarn start
-```
-
-
 #### First time setup
+
+Be sure to have read the [Syndesis Developer Handbook](https://doc.syndesis.io) and you have Syndesis [installed](https://doc.syndesis.io/#syndesis-install) locally.  
+Also, double-check that you are logged in as 
 
 The app requires some extra configuration on your Syndesis installation in order to work.
 
 We need to create an OAuth Client to allow the UI to login against Syndesis OAuth Server, and then expose the 
 server with a direct route.
 
-First, login as an "admin" user of your cluster:    
+
+First, be sure to be logged in as an "admin" user of your cluster, and to be working on the `syndesis` project:    
 ```bash
 $ oc login -u admin
+$ oc project syndesis
 ```
 
 Then, create a new OAuth Client:
@@ -77,10 +67,10 @@ oc create -f <(echo '
 kind: OAuthClient
 apiVersion: oauth.openshift.io/v1
 metadata:
- name: camel-k-ui
+ name: syndesis-ui-react
 secret: "..."
 redirectURIs:
- - "http://localhost:5000/"
+ - "http://localhost:3000/"
 grantMethod: prompt
 ')
 ```
@@ -122,6 +112,20 @@ Minishift, it will look like this: `https://CLUSTER_ADDRESS:8443/oauth/authorize
 
 Click the Save button to persist the changes. If the value provided are correct, you should be redirected to Openshift Login page.
 
+#### Development server
+
+```bash
+# From anywhere in the repository
+$ yarn watch:app
+```
+
+Or
+
+```bash
+# From the syndesis folder
+$ yarn start
+```
+
 ##### Resetting the configuration
 
 Just clear the local storage for the localhost:3000 origin. You can do it with Chrome Dev Tools opened on the running app,
@@ -137,7 +141,7 @@ to ease interacting with Syndesis's Backend.
 ##### Development server
 
 ```bash
-# From the repository root
+# From anywhere in the repository
 $ yarn watch:packages --scope @syndesis/api
 ```
 
@@ -165,7 +169,7 @@ efforts.
 ##### Development server
 
 ```bash
-# From the repository root
+# From anywhere in the repository
 $ yarn watch:packages --scope @syndesis/ui
 ```
 
@@ -176,6 +180,18 @@ Or
 $ yarn dev
 ```
 
+##### Storybook
+
+This package provides a [Storybook](https://storybook.js.org) to develop and document the components in isolation.  
+Storybook can be launched like this:
+
+```bash
+# From the package folder
+$ yarn storybook
+```
+  
+A browser tab should eventually be opened pointing on [http://localhost:90001](http://localhost:90001).
+
 #### packages/utils
 
 This package contains commonly used components of function that don't fit any of the above packages.
@@ -183,7 +199,7 @@ This package contains commonly used components of function that don't fit any of
 ##### Development server
 
 ```bash
-# From the repository root
+# From anywhere in the repository
 $ yarn watch:packages --scope @syndesis/utils
 ```
 
@@ -228,14 +244,16 @@ yarn build
 To start the development server for `syndesis` and watch for changes in any of the packages:
 
 ```bash
-# From the repository root
+# From anywhere in the repository
 $ yarn watch
 ```
+_**Please note:** you must have successfully built all the packages _before_ running the watch command to successfully 
+run this command._
 
 To start the development server only for `syndesis`:
 
 ```bash
-# From the repository root
+# From anywhere in the repository
 $ yarn watch:app
 ```
 _The development server for the app will not be available at http://localhost:3000_
@@ -243,17 +261,30 @@ _The development server for the app will not be available at http://localhost:30
 To start the development server only for the packages:
 
 ```bash
-# From the repository root
+# From anywhere in the repository
 $ yarn watch:packages
 ```
 
 To start the development server for a specific package you can pass the package name to the previous command:
 
 ```bash
-# From the repository root
+# From anywhere in the repository
 $ yarn watch:packages --scope @syndesis/package-name
 ```
 
+To run the test suite:
+
+```bash
+# From anywhere in the repository
+$ yarn test
+```
+
+To run the test suite for a specific package you can pass the package name to the previous command:
+
+```bash
+# From anywhere in the repository
+$ yarn test --scope @syndesis/package-name
+```
 
 ## Roadmap
 
