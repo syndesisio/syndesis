@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "dist/ui.js",
   "umd:main": "dist/ui.umd.js",
-  "typings": "dist/index.d.ts",
+  "typings": "dist/ui/src/index.d.ts",
   "source": "src/index.ts",
   "style": "dist/ui.css",
   "files": [

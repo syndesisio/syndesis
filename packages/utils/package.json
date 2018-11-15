@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "dist/utils.js",
   "umd:main": "dist/utils.umd.js",
-  "typings": "dist/index.d.ts",
+  "typings": "dist/utils/src/index.d.ts",
   "source": "src/index.ts",
   "files": [
     "dist"

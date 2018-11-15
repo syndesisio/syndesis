@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "dist/connector-ftp.js",
   "umd:main": "dist/connector-ftp.umd.js",
-  "typings": "dist/index.d.ts",
+  "typings": "dist/connector-ftp/src/index.d.ts",
   "source": "src/index.ts",
   "files": [
     "dist"
