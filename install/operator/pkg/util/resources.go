@@ -1,6 +1,8 @@
 package util
 
 import (
+	appsv1 "github.com/openshift/api/apps/v1"
+	oauthv1 "github.com/openshift/api/oauth/v1"
 	"github.com/operator-framework/operator-sdk/pkg/util/k8sutil"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -31,6 +33,8 @@ func LoadKubernetesResource(jsonData []byte) (runtime.Object, error) {
 		return nil, err
 	}
 
+	k8sutil.AddToSDKScheme(appsv1.AddToScheme)
+	k8sutil.AddToSDKScheme(oauthv1.AddToScheme)
 	obj := k8sutil.RuntimeObjectFromUnstructured(&u)
 	return obj, nil
 }

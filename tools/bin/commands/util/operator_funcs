@@ -226,7 +226,7 @@ prepare_multistage_docker_context() {
     for i in "cmd" "pkg" "test" "tmp"; do
         rsync -a $operator_dir/${i} ${dir}/ 2>&1 >/dev/null
     done
-    cp $operator_dir/../syndesis.yml ${dir}/syndesis-template.yml
+    cp $operator_dir/../syndesis-privileged.yml ${dir}/syndesis-template.yml
 
     echo $dir
 }
@@ -236,7 +236,7 @@ prepare_docker_context() {
     local dir=$(mktemp -d)
 
     cp $operator_dir/Dockerfile $operator_dir/syndesis-operator ${dir}/
-    cp $operator_dir/../syndesis.yml ${dir}/syndesis-template.yml
+    cp $operator_dir/../syndesis-privileged.yml ${dir}/syndesis-template.yml
 
     echo $dir
 }

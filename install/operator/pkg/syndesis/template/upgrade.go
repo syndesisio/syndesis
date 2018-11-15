@@ -15,12 +15,11 @@ const (
 )
 
 type UpgradeParams struct {
-	InstallParams
 	UpgradeRegistry *string
 }
 
 func GetUpgradeResources(syndesis *v1alpha1.Syndesis, params UpgradeParams) ([]runtime.RawExtension, error) {
-	resources, err := GetInstallResources(syndesis, params.InstallParams)
+	resources, err := GetInstallResources(syndesis)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +34,6 @@ func GetUpgradeResources(syndesis *v1alpha1.Syndesis, params UpgradeParams) ([]r
 	}
 
 	paramMap := configuration.GetEnvVars(syndesis)
-	paramMap[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
 	paramMap[string(configuration.EnvUpgradeRegistry)] = *params.UpgradeRegistry
 
 	return processor.Process(upgrateTempl, paramMap)

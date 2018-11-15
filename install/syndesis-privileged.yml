@@ -4,11 +4,11 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: syndesis-dev
+  name: syndesis
 #
 # Template flavor:
 #
-# Allow localhost refs: true
+# Allow localhost refs: false
 # Use docker images: false
 # Syndesis Tag: latest
 # Prometheus Tag: v2.1.0
@@ -767,8 +767,6 @@ objects:
             value: /deployments/ext
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
-          - name: JAVA_DEBUG
-            value: "true"
           image: ' '
 
           imagePullPolicy: IfNotPresent
@@ -926,7 +924,7 @@ objects:
           image: ' '
           args:
             - --provider=openshift
-            - --client-id=system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
+            - --client-id=syndesis-${OPENSHIFT_PROJECT}
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
             - --upstream=http://syndesis-server/api/
             - --upstream=http://syndesis-server/mapper/
@@ -980,7 +978,7 @@ objects:
               memory: 200Mi
             requests:
               memory: 20Mi
-        serviceAccountName: syndesis-oauth-client
+
         volumes:
         - name: syndesis-oauthproxy-tls
           secret:
@@ -997,6 +995,14 @@ objects:
       type: ImageChange
 
     - type: ConfigChange
+- apiVersion: oauth.openshift.io/v1
+  grantMethod: auto
+  kind: OAuthClient
+  metadata:
+    name: syndesis-${OPENSHIFT_PROJECT}
+  redirectURIs:
+  - https://${ROUTE_HOSTNAME}/oauth/callback
+  secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
@@ -1101,8 +1107,6 @@ objects:
             value: ${INTEGRATION_STATE_CHECK_INTERVAL}
           - name: CONTROLLERS_EXPOSE_VIA3SCALE
             value: ${CONTROLLERS_EXPOSE_VIA3SCALE}
-          - name: JAVA_DEBUG
-            value: "true"
           image: ' '
 
           imagePullPolicy: IfNotPresent
@@ -1175,7 +1179,7 @@ objects:
       deployment:
         load-demo-data: ${DEMO_DATA_ENABLED}
       cors:
-        allowedOrigins: http://localhost:4200, https://localhost:4200, https://${ROUTE_HOSTNAME}
+        allowedOrigins: https://${ROUTE_HOSTNAME}
 
       cache:
         cluster:
