@@ -48,6 +48,7 @@
     <module>fhir</module>
     <module>gmail</module>
     <module>google-calendar</module>
+    <module>google-sheets</module>
     <module>http</module>
     <module>irc</module>
     <module>kafka</module>
