@@ -94,12 +94,12 @@ minishift::run() {
         # Adapt
         add_user_permissions_for_operator "$user" "true"
 
+        # Deploy operator and wait until its up
+        result=$(deploy_syndesis_operator "$(oc project -q)")
+        check_error "$result"
+
         # Relogin with original user
         $revert_login
-
-        # Deploy operator and wait until its up
-        result=$(deploy_syndesis_operator)
-        check_error "$result"
 
         if [ $(hasflag --operator-only) ]; then
             echo "Deployed operator."
