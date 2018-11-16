@@ -451,11 +451,11 @@ compare_oc_version() {
 
 
 patch_for_using_template_from_configmap() {
-  # we need to include the `syndesis-template.yml` akka `syndesis.yml` in
+  # we need to include the `syndesis-template.yml` akka `syndesis-privileged.yml` in
   # the operator image, this adds a ConfigMap that we mount into the
   # operator container
   oc delete configmap syndesis-template >/dev/null 2>&1
-  oc create configmap syndesis-template --from-file=template=$(appdir "install")/syndesis.yml
+  oc create configmap syndesis-template --from-file=template=$(appdir "install")/syndesis-privileged.yml
   local patch=$(cat <<EOT
   {
     "spec": {
