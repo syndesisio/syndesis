@@ -2,6 +2,7 @@
 
 # @syndesis/syndesis
 syndesis/public/config.json
+syndesis/public/config.json.bak
 
 # @syndesis/models
 packages/models/src/models.d.ts
