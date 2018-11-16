@@ -15,13 +15,15 @@
  */
 package io.syndesis.connector.fhir;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
+import org.apache.camel.CamelContext;
+import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
+import org.apache.camel.component.extension.metadata.MetaDataBuilder;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
-import org.apache.camel.component.extension.metadata.MetaDataBuilder;
 
 public class FhirMetaDataExtension extends AbstractMetaDataExtension {
 
@@ -32,38 +34,31 @@ public class FhirMetaDataExtension extends AbstractMetaDataExtension {
     @SuppressWarnings("unchecked")
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
+        String fhirVersion = (String) parameters.get("fhirVersion");
+        FhirVersionEnum fhirVersionEnum = fhirVersion == null ? FhirVersionEnum.DSTU3 : FhirVersionEnum.valueOf(fhirVersion);
 
-        Set<String> resources = new HashSet<>();
-        resources.add("Patient");
-//        https://github.com/atlasmap/atlasmap/issues/577
-//        String fhirVersion = (String) parameters.get("fhirVersion");
-//        FhirVersionEnum fhirVersionEnum = fhirVersion == null ? FhirVersionEnum.DSTU3 : FhirVersionEnum.valueOf(fhirVersion);
-//        switch (fhirVersionEnum) {
-//            case DSTU2:
-//                addResources(ca.uhn.fhir.model.dstu2.valueset.ResourceTypeEnum.values(),resources);
-//                break;
-//            case DSTU2_1:
-//                addResources(org.hl7.fhir.dstu2016may.model.ResourceType.values(),resources);
-//                break;
-//            case DSTU3:
-//                addResources(org.hl7.fhir.dstu3.model.ResourceType.values(),resources);
-//                break;
-//            case R4:
-//                addResources(org.hl7.fhir.r4.model.ResourceType.values(),resources);
-//                break;
-//             default:
-//                 addResources(org.hl7.fhir.dstu3.model.ResourceType.values(),resources);
-//                 break;
-//        }
+        Set<String> resources = getResources(fhirVersionEnum);
 
         return Optional
                     .of(MetaDataBuilder.on(getCamelContext()).withAttribute(MetaData.CONTENT_TYPE, "text/plain")
                         .withAttribute(MetaData.JAVA_TYPE, String.class).withPayload(resources).build());
     }
 
-//    private void addResources(Object[] resourceTypes, Set<String> resources) {
-//        for (Object resourceType : resourceTypes) {
-//            resources.add(resourceType.toString());
-//        }
-//    }
+    static Set<String> getResources(FhirVersionEnum fhirVersion) {
+        if (FhirVersionEnum.DSTU3.equals(fhirVersion)) {
+            return toSet(org.hl7.fhir.dstu3.model.ResourceType.values());
+        } else {
+            throw new IllegalArgumentException(fhirVersion + " is not among supported FHIR versions: DSTU3");
+        }
+    }
+
+    @SuppressWarnings({"PMD.UseVarargs"})
+    private static Set<String> toSet(Object[] values) {
+        Set<String> result = new HashSet<>();
+        for (Object value: values) {
+            result.add(String.valueOf(value));
+        }
+
+        return result;
+    }
 }
