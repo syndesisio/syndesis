@@ -1,5 +1,5 @@
 import { ApiContext } from '@syndesis/api';
-import { Loader, PfVerticalNavItem } from '@syndesis/ui';
+import { Loader, PfVerticalNavItem, UnrecoverableError } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
@@ -19,10 +19,13 @@ export class App extends React.Component<IAppProps, IAppState> {
   public render() {
     return (
       <WithConfig>
-        {({ config, loading }) => (
+        {({ config, loading, error }) => (
           <WithLoader
             loading={loading}
-            loader={() => <Loader />}
+            error={error}
+            loader={(loading, error) =>
+              error ? <UnrecoverableError /> : <Loader />
+            }
             minWait={1000}
           >
             {() => (

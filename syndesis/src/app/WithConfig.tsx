@@ -1,5 +1,33 @@
 import * as React from 'react';
-import { IConfigFile } from './config';
+
+export interface IConfigFile {
+  apiBase: string;
+  apiEndpoint: string;
+  title: string;
+  consoleUrl: string;
+  project: string;
+  datamapper: {
+    baseMappingServiceUrl: string;
+    baseJavaInspectionServiceUrl: string;
+    baseXMLInspectionServiceUrl: string;
+    baseJSONInspectionServiceUrl: string;
+    disableMappingPreviewMode: boolean;
+  };
+  features: {
+    logging: boolean;
+  };
+  branding: {
+    logoWhiteBg: string;
+    logoDarkBg: string;
+    iconWhiteBg: string;
+    iconDarkBg: string;
+    appName: string;
+    favicon32: string;
+    favicon16: string;
+    touchIcon: string;
+    productBuild: boolean;
+  };
+}
 
 export interface IWithConfigProps {
   children(props: IWithConfigState): any;
@@ -7,6 +35,7 @@ export interface IWithConfigProps {
 
 export interface IWithConfigState {
   loading: boolean;
+  error: boolean;
   config?: IConfigFile;
 }
 
@@ -16,20 +45,22 @@ export class WithConfig extends React.Component<
 > {
   public state = {
     loading: true,
+    error: false,
   };
 
   public async componentDidMount() {
     try {
-      const configResponse = await fetch('/config.json');
+      const configResponse = await fetch(
+        `${process.env.PUBLIC_URL}/config.json`
+      );
       const config = await configResponse.json();
       this.setState({
         config,
         loading: false,
       });
     } catch (e) {
-      const { default: config } = await import('./config');
       this.setState({
-        config,
+        error: true,
         loading: false,
       });
     }

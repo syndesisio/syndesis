@@ -12,15 +12,15 @@ LOCAL_IP="${SYNDESIS_DEV_LOCAL_IP:=$(./node_modules/.bin/my-local-ip)}"
 echo "Local IP is: ${LOCAL_IP}"
 
 # Let's also just back this up in case.
-# mv -f src/config.json src/config.json.bak || true
-# cp src/config.json.minishift src/config.json
+mv -f public/config.json public/config.json.bak || true
+cp config.json.minishift public/config.json
 
 OS_HOST=$(oc status | head -n 1 | sed s/.*https/https/)
 
-# sed -i.bu "s#syndesis.192.168.64.2.nip.io#$(oc get route syndesis  --template={{.spec.host}})#" src/config.json
-# sed -i.bu "s#https://192\.168\.64\.2:8443#${OS_HOST}#" src/config.json
-# sed -i.bu "s/Syndesis/Syndesis - DEVELOPMENT/" src/config.json
-# rm src/config.json.bu
+sed -i.bu "s#syndesis.192.168.64.2.nip.io#$(oc get route syndesis  --template={{.spec.host}})#" public/config.json
+sed -i.bu "s#https://192\.168\.64\.2:8443#${OS_HOST}#" public/config.json
+sed -i.bu "s/Syndesis/Syndesis - DEVELOPMENT/" public/config.json
+rm public/config.json.bu
 
 oc replace --force -f - <<EOF
 {

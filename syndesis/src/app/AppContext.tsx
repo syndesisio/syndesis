@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IConfigFile } from './config';
+import { IConfigFile } from './WithConfig';
 
 export interface IAppContext {
   config: IConfigFile;
