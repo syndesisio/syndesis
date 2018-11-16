@@ -2,7 +2,6 @@ import * as React from 'react';
 
 export interface IApiContext {
   apiUri: string;
-  token?: string;
 }
 
 export const ApiContextDefaultValue = {
