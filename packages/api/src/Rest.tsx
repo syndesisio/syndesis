@@ -1,5 +1,6 @@
 import * as React from 'react';
 import equal from 'react-fast-compare';
+import deepmerge from 'deepmerge';
 
 export interface IHeader {
   [s: string]: string;
@@ -142,6 +143,7 @@ export class Rest<T> extends React.Component<IRestProps<T>, IRestState<T>> {
         this.props.contentType.indexOf('application/json') === 0
       ) {
         data = await response.json();
+        data = deepmerge(this.props.defaultValue, data);
       } else {
         data = await response.text();
       }
