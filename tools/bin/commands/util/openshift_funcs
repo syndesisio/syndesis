@@ -99,6 +99,7 @@ install_syndesis_crd() {
 
 # Deploy operator
 deploy_syndesis_operator() {
+    local project="${1}"
     local operator_installed=$(oc get dc -o name | grep syndesis-operator)
     if [ -n "$operator_installed" ]; then
         local result=$(delete_openshift_resource "install/operator/deploy/syndesis-operator.yml")
@@ -106,7 +107,7 @@ deploy_syndesis_operator() {
         wait_for_deployments 0 syndesis-operator >/dev/null 2>&1
     fi
 
-    local result=$(create_openshift_resource "install/operator/deploy/syndesis-operator.yml")
+    local result=$(create_openshift_resource "install/operator/deploy/syndesis-operator.yml" "NAMESPACE=$project")
     check_error $result
     if [ $(hasflag --local) ]; then
         patch_for_using_template_from_configmap
@@ -264,7 +265,7 @@ EOT
 }
 
 create_openshift_resource() {
-    create_or_delete_openshift_resource "create" "${1:-}"
+    create_or_delete_openshift_resource "create" "${1:-}" "${2:-}"
 }
 
 delete_openshift_resource() {
@@ -274,6 +275,7 @@ delete_openshift_resource() {
 create_or_delete_openshift_resource() {
     local what=${1}
     local resource=${2:-}
+    local parameters=${3:-}
     local tag="$(readopt --tag)"
     local use_local_resource="$(hasflag --local)"
 
@@ -281,23 +283,32 @@ create_or_delete_openshift_resource() {
 
     set +e
     if [ -n "$use_local_resource" ]; then
+        local template="tee"
+        if [ -n "$parameters" ]; then
+          template="oc process -f - -p $parameters"
+        fi
+
         if [ -n "$tag" ]; then
             pushd $(appdir) >/dev/null
             git fetch --tags
-            result=$(git show $tag:${resource} | oc $what -f - >$ERROR_FILE 2>&1)
+            result=$(git show $tag:${resource} | $template | oc $what -f - >$ERROR_FILE 2>&1)
             if [ $? -ne 0 ]; then
                 echo "ERROR: Cannot create $resource (tag: $tag)"
             fi
             popd >/dev/null
         else
-            result=$(oc $what -f $(appdir)/../$resource >$ERROR_FILE 2>&1)
+            result=$(cat $(appdir)/../$resource | $template | oc $what -f - >$ERROR_FILE 2>&1)
             if [ $? -ne 0 ]; then
                 echo "ERROR: Cannot create local $(appdir)/../$resource"
             fi
         fi
     else
         local url="https://raw.githubusercontent.com/syndesisio/syndesis/${tag:-master}/${resource}"
-        result=$(oc $what -f $url >$ERROR_FILE 2>&1)
+        if [ -z "$parameters" ]; then
+            result=$(oc $what -f $url >$ERROR_FILE 2>&1)
+        else
+            result=$(oc process -f url -p $parameters | oc $what -f - >$ERROR_FILE 2>&1)
+        fi
         if [ $? -ne 0 ]; then
             echo "ERROR: Cannot create remote resource $url"
         fi

@@ -1,232 +1,233 @@
----
-apiVersion: v1
-kind: ServiceAccount
+apiVersion: template.openshift.io/v1
+kind: Template
 metadata:
   name: syndesis-operator
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/type: operator
-    syndesis.io/component: syndesis-operator
----
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: syndesis-operator
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/type: operator
-    syndesis.io/component: syndesis-operator
-rules:
-- apiGroups:
-  - syndesis.io
-  resources:
-  - syndesises
-  - syndesises/finalizers
-  verbs: [ get, list, create, update, delete, deletecollection, watch ]
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  - services
-  - endpoints
-  - persistentvolumeclaims
-  - configmaps
-  - secrets
-  - serviceaccounts
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs: [ get, list ]
-- apiGroups:
-  - rbac.authorization.k8s.io
-  resources:
-  - rolebindings
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
-- apiGroups:
-  - template.openshift.io
-  resources:
-  - processedtemplates
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
-- apiGroups:
-  - image.openshift.io
-  resources:
-  - imagestreams
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
-- apiGroups:
-  - apps.openshift.io
-  resources:
-  - deploymentconfigs
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
-- apiGroups:
-  - build.openshift.io
-  resources:
-  - buildconfigs
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
-- apiGroups:
-  - authorization.openshift.io
-  resources:
-  - rolebindings
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
-- apiGroups:
-  - route.openshift.io
-  resources:
-  - routes
-  - routes/custom-host
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
----
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: syndesis-operator
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/type: operator
-    syndesis.io/component: syndesis-operator
-rules:
-- apiGroups:
-  - syndesis.io
-  resources:
-  - syndesises/finalizers
-  verbs: [ update ]
-- apiGroups:
-  - oauth.openshift.io
-  resources:
-  - oauthclients
-  verbs: [ get, list, create, update, delete ]
----
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: syndesis-operator:install
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/type: operator
-    syndesis.io/component: syndesis-operator
-subjects:
-- kind: ServiceAccount
-  name: syndesis-operator
-roleRef:
-  kind: Role
-  name: syndesis-operator
-  apiGroup: rbac.authorization.k8s.io
----
-kind: RoleBinding
-apiVersion: authorization.openshift.io/v1
-metadata:
-  name: syndesis-operator:view
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/type: operator
-    syndesis.io/component: syndesis-operator
-subjects:
-- kind: ServiceAccount
-  name: syndesis-operator
-roleRef:
-  name: view
----
-kind: RoleBinding
-apiVersion: authorization.openshift.io/v1
-metadata:
-  name: syndesis-operator:edit
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/type: operator
-    syndesis.io/component: syndesis-operator
-subjects:
-- kind: ServiceAccount
-  name: syndesis-operator
-roleRef:
-  name: edit
----
-kind: ClusterRoleBinding
-apiVersion: authorization.openshift.io/v1
-metadata:
-  name: syndesis-operator:oauth
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/type: operator
-    syndesis.io/component: syndesis-operator
-subjects:
-- kind: ServiceAccount
-  name: syndesis-operator
-roleRef:
-  kind: Role
-  name: syndesis-operator
-  apiGroup: rbac.authorization.k8s.io
----
-apiVersion: image.openshift.io/v1
-kind: ImageStream
-metadata:
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/type: operator
-    syndesis.io/component: syndesis-operator
-  name: syndesis-operator
-spec:
-  lookupPolicy:
-    local: false
-  tags:
-  - from:
-      kind: DockerImage
-      # Keep tag 'latest' here, its used as an anchor in the release script
-      name: docker.io/syndesis/syndesis-operator:latest
-    importPolicy:
-      scheduled: true
-    # Keep 'latest' here (including single quotes), its used as a pattern anchor in the release script
-    name: 'latest'
----
-apiVersion: v1
-kind: DeploymentConfig
-metadata:
-  name: syndesis-operator
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/type: operator
-    syndesis.io/component: syndesis-operator
-spec:
-  strategy:
-    type: Recreate
-  replicas: 1
-  selector:
+parameters:
+- name: NAMESPACE
+  description: Namespace to install the operator into
+  required: true
+objects:
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: syndesis-operator
+    labels:
+      app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: operator
       syndesis.io/component: syndesis-operator
-  template:
-    metadata:
-      labels:
+- apiVersion: rbac.authorization.k8s.io/v1beta1
+  kind: Role
+  metadata:
+    name: syndesis-operator
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: operator
+      syndesis.io/component: syndesis-operator
+  rules:
+  - apiGroups:
+    - syndesis.io
+    resources:
+    - syndesises
+    - syndesises/finalizers
+    verbs: [ get, list, create, update, delete, deletecollection, watch ]
+  - apiGroups:
+    - ""
+    resources:
+    - pods
+    - services
+    - endpoints
+    - persistentvolumeclaims
+    - configmaps
+    - secrets
+    - serviceaccounts
+    verbs: [ get, list, create, update, delete, deletecollection, watch]
+  - apiGroups:
+    - ""
+    resources:
+    - events
+    verbs: [ get, list ]
+  - apiGroups:
+    - rbac.authorization.k8s.io
+    resources:
+    - rolebindings
+    verbs: [ get, list, create, update, delete, deletecollection, watch]
+  - apiGroups:
+    - template.openshift.io
+    resources:
+    - processedtemplates
+    verbs: [ get, list, create, update, delete, deletecollection, watch]
+  - apiGroups:
+    - image.openshift.io
+    resources:
+    - imagestreams
+    verbs: [ get, list, create, update, delete, deletecollection, watch]
+  - apiGroups:
+    - apps.openshift.io
+    resources:
+    - deploymentconfigs
+    verbs: [ get, list, create, update, delete, deletecollection, watch]
+  - apiGroups:
+    - build.openshift.io
+    resources:
+    - buildconfigs
+    verbs: [ get, list, create, update, delete, deletecollection, watch]
+  - apiGroups:
+    - authorization.openshift.io
+    resources:
+    - rolebindings
+    verbs: [ get, list, create, update, delete, deletecollection, watch]
+  - apiGroups:
+    - route.openshift.io
+    resources:
+    - routes
+    - routes/custom-host
+    verbs: [ get, list, create, update, delete, deletecollection, watch]
+- apiVersion: rbac.authorization.k8s.io/v1beta1
+  kind: ClusterRole
+  metadata:
+    name: syndesis-operator
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: operator
+      syndesis.io/component: syndesis-operator
+  rules:
+  - apiGroups:
+    - syndesis.io
+    resources:
+    - syndesises/finalizers
+    verbs: [ update ]
+  - apiGroups:
+    - oauth.openshift.io
+    resources:
+    - oauthclients
+    verbs: [ get, list, create, update, delete ]
+- apiVersion: rbac.authorization.k8s.io/v1beta1
+  kind: RoleBinding
+  metadata:
+    name: syndesis-operator:install
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: operator
+      syndesis.io/component: syndesis-operator
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-operator
+  roleRef:
+    kind: Role
+    name: syndesis-operator
+    apiGroup: rbac.authorization.k8s.io
+- apiVersion: authorization.openshift.io/v1
+  kind: RoleBinding
+  metadata:
+    name: syndesis-operator:view
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: operator
+      syndesis.io/component: syndesis-operator
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-operator
+  roleRef:
+    name: view
+- apiVersion: authorization.openshift.io/v1
+  kind: RoleBinding
+  metadata:
+    name: syndesis-operator:edit
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: operator
+      syndesis.io/component: syndesis-operator
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-operator
+  roleRef:
+    name: edit
+- apiVersion: authorization.openshift.io/v1
+  kind: ClusterRoleBinding
+  metadata:
+    name: syndesis-operator:oauth
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: operator
+      syndesis.io/component: syndesis-operator
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-operator
+    namespace: ${NAMESPACE}
+  roleRef:
+    kind: Role
+    name: syndesis-operator
+    apiGroup: rbac.authorization.k8s.io
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: operator
+      syndesis.io/component: syndesis-operator
+    name: syndesis-operator
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - from:
+        kind: DockerImage
+        # Keep tag 'latest' here, its used as an anchor in the release script
+        name: docker.io/syndesis/syndesis-operator:latest
+      importPolicy:
+        scheduled: true
+      # Keep 'latest' here (including single quotes), its used as a pattern anchor in the release script
+      name: 'latest'
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: syndesis-operator
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: operator
+      syndesis.io/component: syndesis-operator
+  spec:
+    strategy:
+      type: Recreate
+    replicas: 1
+    selector:
         syndesis.io/app: syndesis
         syndesis.io/type: operator
         syndesis.io/component: syndesis-operator
-    spec:
-      serviceAccountName: syndesis-operator
-      containers:
-        - name: syndesis-operator
-          image: ' '
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: WATCH_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-  triggers:
-  - imageChangeParams:
-      automatic: true
-      containerNames:
-      - syndesis-operator
-      from:
-        kind: ImageStreamTag
-        # Keep tag 'latest' here, its used as an anchor in the release script
-        name: syndesis-operator:latest
-    type: ImageChange
-  - type: ConfigChange
+    template:
+      metadata:
+        labels:
+          syndesis.io/app: syndesis
+          syndesis.io/type: operator
+          syndesis.io/component: syndesis-operator
+      spec:
+        serviceAccountName: syndesis-operator
+        containers:
+          - name: syndesis-operator
+            image: ' '
+            imagePullPolicy: IfNotPresent
+            env:
+              - name: WATCH_NAMESPACE
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.namespace
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-operator
+        from:
+          kind: ImageStreamTag
+          # Keep tag 'latest' here, its used as an anchor in the release script
+          name: syndesis-operator:latest
+      type: ImageChange
+    - type: ConfigChange

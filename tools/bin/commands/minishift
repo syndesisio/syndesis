@@ -95,7 +95,7 @@ minishift::run() {
         add_user_permissions_for_operator "$user" "true"
 
         # Deploy operator and wait until its up
-        result=$(deploy_syndesis_operator)
+        result=$(deploy_syndesis_operator "$(oc project -q)")
         check_error "$result"
 
         # Relogin with original user
