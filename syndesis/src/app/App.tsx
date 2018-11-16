@@ -1,5 +1,6 @@
 import { ApiContext } from '@syndesis/api';
-import { PfVerticalNavItem } from '@syndesis/ui';
+import { Loader, PfVerticalNavItem } from '@syndesis/ui';
+import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import './App.css';
@@ -18,32 +19,47 @@ export class App extends React.Component<IAppProps, IAppState> {
   public render() {
     return (
       <WithConfig>
-        {config => (
-          <AppContext.Provider
-            value={{
-              config: config,
-              logout: this.logout,
-            }}
+        {({ config, loading }) => (
+          <WithLoader
+            loading={loading}
+            loader={() => <Loader />}
+            minWait={1000}
           >
-            <ApiContext.Provider
-              value={{
-                apiUri: `${config.apiBase}${config.apiEndpoint}`,
-              }}
-            >
-              <Layout navbar={this.renderNavbar()}>
-                <React.Fragment>
-                  <Switch>
-                    <Route path="/" exact={true} component={DashboardModule} />
-                    <Route
-                      path="/integrations"
-                      component={IntegrationsModule}
-                    />
-                    <Route path="/connections" component={ConnectionsModule} />
-                  </Switch>
-                </React.Fragment>
-              </Layout>
-            </ApiContext.Provider>
-          </AppContext.Provider>
+            {() => (
+              <AppContext.Provider
+                value={{
+                  config: config!,
+                  logout: this.logout,
+                }}
+              >
+                <ApiContext.Provider
+                  value={{
+                    apiUri: `${config!.apiBase}${config!.apiEndpoint}`,
+                  }}
+                >
+                  <Layout navbar={this.renderNavbar()}>
+                    <React.Fragment>
+                      <Switch>
+                        <Route
+                          path="/"
+                          exact={true}
+                          component={DashboardModule}
+                        />
+                        <Route
+                          path="/integrations"
+                          component={IntegrationsModule}
+                        />
+                        <Route
+                          path="/connections"
+                          component={ConnectionsModule}
+                        />
+                      </Switch>
+                    </React.Fragment>
+                  </Layout>
+                </ApiContext.Provider>
+              </AppContext.Provider>
+            )}
+          </WithLoader>
         )}
       </WithConfig>
     );

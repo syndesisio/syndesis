@@ -1,6 +1,7 @@
 @import url('~patternfly/dist/css/patternfly.css');
 @import url('~patternfly/dist/css/patternfly-additions.css');
 @import url('~patternfly-react/dist/css/patternfly-react.css');
+@import url('~@syndesis/ui/dist/ui.css');
 
 .layout-pf body {
   min-height: 100vh;
