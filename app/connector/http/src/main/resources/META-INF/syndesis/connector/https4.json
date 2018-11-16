@@ -156,13 +156,13 @@
                 "type": "string"
               },
               "schedulerExpression": {
-                "defaultValue": 1000,
+                "defaultValue": 1800000,
                 "deprecated": false,
                 "displayName": "Period",
                 "group": "consumer",
                 "javaType": "long",
                 "kind": "parameter",
-                "labelHint": "Delay in milliseconds between scheduling (executing).",
+                "labelHint": "Delay between scheduling (executing).",
                 "required": false,
                 "secret": false,
                 "type": "duration"
