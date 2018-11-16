@@ -26,7 +26,7 @@ export class WithMonitoredIntegrations extends React.Component<
       <WithIntegrations>
         {({ data: integrations, ...props }) => (
           <SyndesisRest<IntegrationMonitoring[]>
-            url={'/api/v1/monitoring/integrations'}
+            url={'/monitoring/integrations'}
             poll={5000}
             defaultValue={[]}
           >

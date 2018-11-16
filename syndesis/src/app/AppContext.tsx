@@ -1,23 +1,12 @@
 import * as React from 'react';
+import { IConfigFile } from './config';
 
-export interface IAppSettings {
-  apiUri: string;
-  authorizationUri: string;
-}
-
-export interface IAppContext extends IAppSettings {
-  firstSetup: boolean;
-
-  saveSettings(settings: IAppSettings): void;
-
+export interface IAppContext {
+  config: IConfigFile;
   logout(): void;
 }
 
-export const AppContextDefaultValue = {
-  apiUri: 'http://example.com',
-  authorizationUri: 'http://example.com/oauth/authorize',
-  firstSetup: true,
-} as IAppContext;
+export const AppContextDefaultValue = {} as IAppContext;
 
 export const AppContext = React.createContext<IAppContext>(
   AppContextDefaultValue

@@ -22,15 +22,13 @@ export class SyndesisRest<T> extends React.Component<ISyndesisRestProps<T>> {
 
     return (
       <ApiContext.Consumer>
-        {({ apiUri, token }) => (
+        {({ apiUri }) => (
           <RestOrStream
             baseUrl={apiUri}
             url={url}
             {...props}
             headers={{
               'SYNDESIS-XSRF-TOKEN': 'awesome',
-              'X-Forwarded-Access-Token': `${token}`,
-              'X-Forwarded-User': 'admin',
             }}
           />
         )}

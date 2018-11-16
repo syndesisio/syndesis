@@ -16,7 +16,7 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
   public render() {
     return (
       <SyndesisRest<IConnectionsResponse>
-        url={'/api/v1/connections'}
+        url={'/connections'}
         poll={5000}
         defaultValue={{
           items: [],
