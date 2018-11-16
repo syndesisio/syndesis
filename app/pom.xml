@@ -54,7 +54,7 @@
 
     <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
 
-    <jackson.version>2.8.11</jackson.version>
+    <jackson.version>2.9.7</jackson.version>
     <json-patch.version>1.9</json-patch.version>
     <kubernetes.client.version>3.1.4.fuse-710001</kubernetes.client.version>
 
@@ -974,6 +974,14 @@
       </dependency>
 
       <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <version>${spring-boot.version}</version>
@@ -987,14 +995,6 @@
         <version>${spring-cloud.version}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>com.fasterxml.jackson</groupId>
-        <artifactId>jackson-bom</artifactId>
-        <version>2.8.11.20180608</version>
-        <scope>import</scope>
-        <type>pom</type>
       </dependency>
 
       <dependency>
@@ -1564,7 +1564,7 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>2.8.11.2</version>
+        <version>${jackson.version}</version>
       </dependency>
 
       <dependency>
