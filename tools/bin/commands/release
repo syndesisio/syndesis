@@ -350,7 +350,6 @@ git_commit_files() {
     echo "==== Committing files to local git"
     cd $dir
     git_commit pom.xml "Update pom.xmls to $version"
-    git_commit ^app/connector/ "Update generated connector files"
     git_commit ^install/ "Update OpenShift templates for Syndesis $version"
 }
 
