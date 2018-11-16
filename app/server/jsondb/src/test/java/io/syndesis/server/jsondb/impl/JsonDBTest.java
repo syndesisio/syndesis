@@ -49,7 +49,7 @@ public class JsonDBTest {
 
     private SqlJsonDB jsondb;
     private ObjectMapper mapper = new ObjectMapper()
-        .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
+        .setSerializationInclusion(JsonInclude.Include.ALWAYS);
 
     private GetOptions prettyPrint = new GetOptions().prettyPrint(true);
 
