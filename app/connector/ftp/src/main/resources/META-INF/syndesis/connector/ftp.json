@@ -125,16 +125,16 @@
             "name": "Download from FTP server",
             "properties": {
               "delay": {
-                "defaultValue": "500",
+                "defaultValue": "5000",
                 "deprecated": false,
-                "displayName": "Milliseconds before the next poll",
+                "displayName": "Time interval before the next poll",
                 "group": "consumer",
                 "javaType": "java.lang.Integer",
                 "kind": "parameter",
-                "labelHint": "Wait this number of milliseconds between polls",
+                "labelHint": "Wait this amount of time between polls",
                 "required": false,
                 "secret": false,
-                "type": "integer"
+                "type": "duration"
               },
               "delete": {
                 "defaultValue": "false",
@@ -183,14 +183,14 @@
               "initialDelay": {
                 "defaultValue": "1000",
                 "deprecated": false,
-                "displayName": "Milliseconds before polling starts",
+                "displayName": "Interval before polling starts",
                 "group": "consumer",
                 "javaType": "java.lang.Integer",
                 "kind": "parameter",
-                "labelHint": "Wait this number of milliseconds before starting to poll",
+                "labelHint": "Wait amount of time before starting to poll",
                 "required": false,
                 "secret": false,
-                "type": "integer"
+                "type": "duration"
               }
             }
           }
