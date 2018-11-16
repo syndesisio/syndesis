@@ -26,7 +26,6 @@
     "@types/react": "^16.4.18",
     "@types/react-content-loader": "*",
     "@types/react-dom": "^16.0.9",
-    "@types/react-loadable": "*",
     "awesome-typescript-loader": "^5.2.1",
     "enzyme-adapter-react-16": "^1.6.0",
     "expect": "^23.6.0",

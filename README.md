@@ -44,86 +44,10 @@ interact with it, eg. closing the navigation bar, or redirecting to another sub-
 
 It's built with [create-react-app](https://github.com/facebook/create-react-app).
 
-#### First time setup
-
-Be sure to have read the [Syndesis Developer Handbook](https://doc.syndesis.io) and you have Syndesis [installed](https://doc.syndesis.io/#syndesis-install) locally.  
-Also, double-check that you are logged in as 
-
-The app requires some extra configuration on your Syndesis installation in order to work.
-
-We need to create an OAuth Client to allow the UI to login against Syndesis OAuth Server, and then expose the 
-server with a direct route.
-
-
-First, be sure to be logged in as an "admin" user of your cluster, and to be working on the `syndesis` project:    
-```bash
-$ oc login -u admin
-$ oc project syndesis
-```
-
-Then, create a new OAuth Client:
-```bash
-oc create -f <(echo '
-kind: OAuthClient
-apiVersion: oauth.openshift.io/v1
-metadata:
- name: syndesis-ui-react
-secret: "..."
-redirectURIs:
- - "http://localhost:3000/"
-grantMethod: prompt
-')
-```
-
-Finally, expose the server with a direct route.   
-**Replace the `CLUSTER_ADDRESS` placeholder with the right address of your cluster.**
-For a local development environment running on Minishift, it will look like this: `192.168.64.1.nip.io` 
-
-```bash
-oc create -f <(echo 'apiVersion: route.openshift.io/v1
-kind: Route
-metadata:
-  annotations:
-    openshift.io/host.generated: "true"
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/component: syndesis-server
-    syndesis.io/type: infrastructure
-  name: syndesis-server
-  namespace: syndesis
-spec:
-  host: syndesis-server.CLUSTER_ADDRESS
-  to:
-    kind: Service
-    name: syndesis-server
-    weight: 100
-  wildcardPolicy: None
-')
-```
-
-Now we can setup the app. Run the [syndesis development server](#development-server) and open the address in a browser.  
-You will be asked to provide two information:
-
-* Api URI: write the value you specified in the host property when creating the server route. Eg. `http://syndesis-server.CLUSTER_ADDRESS`  
-* Authorization URI: write the address to the authorize endpoint of your OAuth Server. When developing locally against 
-Minishift, it will look like this: `https://CLUSTER_ADDRESS:8443/oauth/authorize`.  
-**Replace the `CLUSTER_ADDRESS` placeholder with the right address of your cluster.**   
-
-Click the Save button to persist the changes. If the value provided are correct, you should be redirected to Openshift Login page.
-
 #### Development server
 
 ```bash
-# From anywhere in the repository
 $ yarn watch:app
-```
-
-Or
-
-```bash
-# From the syndesis folder
-$ yarn start
 ```
 
 ##### Resetting the configuration
@@ -141,15 +65,7 @@ to ease interacting with Syndesis's Backend.
 ##### Development server
 
 ```bash
-# From anywhere in the repository
 $ yarn watch:packages --scope @syndesis/api
-```
-
-Or
-
-```bash
-# From the package folder
-$ yarn dev
 ```
  
 
@@ -169,15 +85,7 @@ efforts.
 ##### Development server
 
 ```bash
-# From anywhere in the repository
 $ yarn watch:packages --scope @syndesis/ui
-```
-
-Or
-
-```bash
-# From the package folder
-$ yarn dev
 ```
 
 ##### Storybook
@@ -199,15 +107,7 @@ This package contains commonly used components of function that don't fit any of
 ##### Development server
 
 ```bash
-# From anywhere in the repository
 $ yarn watch:packages --scope @syndesis/utils
-```
-
-Or
-
-```bash
-# From the package folder
-$ yarn dev
 ```
 
 
@@ -244,45 +144,45 @@ yarn build
 To start the development server for `syndesis` and watch for changes in any of the packages:
 
 ```bash
-# From anywhere in the repository
 $ yarn watch
 ```
-_**Please note:** you must have successfully built all the packages _before_ running the watch command to successfully 
-run this command._
+_**IMPORTANT:** you must have successfully built all the packages _before_ running the watch command to successfully 
+run this command._    
+_**IMPORTANT:** this will change the `syndesis-ui` POD to point to your development server. To 
+restore the POD to the original state, you will have to manually run `yarn minishift:restore`_
 
 To start the development server only for `syndesis`:
 
 ```bash
-# From anywhere in the repository
 $ yarn watch:app
 ```
-_The development server for the app will not be available at http://localhost:3000_
+_The development server for the app will not be available at [http://localhost:3000](http://localhost:3000)_  
+_**IMPORTANT:** you must have successfully built all the packages _before_ running the watch command to successfully 
+run this command._    
+_**IMPORTANT:** this will change the `syndesis-ui` POD to point to your development server. To 
+restore the POD to the original state, you will have to manually run `yarn minishift:restore`_
 
 To start the development server only for the packages:
 
 ```bash
-# From anywhere in the repository
 $ yarn watch:packages
 ```
 
 To start the development server for a specific package you can pass the package name to the previous command:
 
 ```bash
-# From anywhere in the repository
 $ yarn watch:packages --scope @syndesis/package-name
 ```
 
 To run the test suite:
 
 ```bash
-# From anywhere in the repository
 $ yarn test
 ```
 
 To run the test suite for a specific package you can pass the package name to the previous command:
 
 ```bash
-# From anywhere in the repository
 $ yarn test --scope @syndesis/package-name
 ```
 

@@ -13,7 +13,7 @@ export class WithIntegrationsMetrics extends React.Component<
   public render() {
     return (
       <SyndesisRest<IntegrationMetricsSummary>
-        url={'/api/v1/metrics/integrations'}
+        url={'/metrics/integrations'}
         poll={5000}
         defaultValue={{
           start: `${Date.now()}`, // date-time

@@ -16,7 +16,7 @@ export class WithConnectors extends React.Component<IWithConnectorsProps> {
   public render() {
     return (
       <SyndesisRest<IConnectorsResponse>
-        url={'/api/v1/connectors'}
+        url={'/connectors'}
         defaultValue={{
           items: [],
           totalCount: 0,

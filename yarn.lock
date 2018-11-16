@@ -10090,6 +10090,11 @@ mute-stream@0.0.7, mute-stream@~0.0.4:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
+my-local-ip@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/my-local-ip/-/my-local-ip-1.0.0.tgz#37585555a4ff1985309edac7c2a045a466be6c32"
+  integrity sha1-N1hVVaT/GYUwntrHwqBFpGa+bDI=
+
 nan@^2.9.2:
   version "2.11.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.1.tgz#90e22bccb8ca57ea4cd37cc83d3819b52eea6766"

@@ -10,7 +10,7 @@ export * from './IntegrationStatus';
 export * from './IntegrationStatusDetail';
 export * from './ListViewToolbar';
 export * from './ListViewToolbarAbstractComponent';
-export * from './ModuleLoader';
+export * from './Loader';
 export * from './PfNavLink';
 export * from './PfVerticalNavItem';
 export * from './UnrecoverableError';

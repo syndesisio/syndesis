@@ -16,7 +16,7 @@ export class WithIntegrations extends React.Component<IWithIntegrationsProps> {
   public render() {
     return (
       <SyndesisRest<IIntegrationsResponse>
-        url={'/api/v1/integrations'}
+        url={'/integrations'}
         poll={5000}
         defaultValue={{
           items: [],

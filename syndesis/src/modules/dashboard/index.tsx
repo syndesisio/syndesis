@@ -1,7 +1,7 @@
-import { ModuleLoader } from '@syndesis/ui';
 import { WithRouter } from '@syndesis/utils';
 import * as React from 'react';
 import Loadable from 'react-loadable';
+import { ModuleLoader } from '../../containers';
 
 const LoadableDashboardPage = Loadable({
   loader: () => import(/* webpackChunkName: "Dashboard" */ './DashboardApp'),
