@@ -9,7 +9,7 @@
     "typings/*"
   ],
   "scripts": {
-    "test": "CI=true lerna run --stream test",
+    "test": "CI=true lerna run --parallel test -- --coverage --color",
     "build": "lerna run --stream build",
     "watch:app": "lerna run --stream --scope @syndesis/syndesis start",
     "watch:packages": "lerna run --stream --parallel dev",

@@ -54,7 +54,6 @@
     "test:watch": "yarn run test --watch",
     "prebuild": "rimraf dist",
     "build": "microbundle",
-    "postbuild": "yarn test",
     "dev": "yarn build watch",
     "storybook": "start-storybook -p 9001"
   },
