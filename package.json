@@ -19,7 +19,6 @@
     "format:app": "prettier --single-quote --write 'syndesis/src/**/*.{js,ts,tsx,json}'",
     "format:packages": "prettier --single-quote --write 'packages/*/src/**/*.{js,ts,tsx,json}'",
     "format": "npm-run-all format:*",
-    "prepublish": "npm run build",
     "precommit": "lint-staged"
   },
   "devDependencies": {
