@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
+import { ConnectionsAppContext } from './ConnectionsAppContext';
 import ConnectionsPage from './pages/ConnectionsPage';
 import ConnectorFormPage from './pages/ConnectorFormPage';
 import ConnectorsPage from './pages/ConnectorsPage';
-import { ConnectionsAppContext } from './ConnectionsAppContext';
 
 export interface IConnectionsAppProps {
   baseurl: string;

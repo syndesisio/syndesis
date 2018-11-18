@@ -29,8 +29,8 @@ export class WithConnectorCreationForm extends React.Component<
   IWithConnectorState
 > {
   public state = {
-    loading: true,
     error: false,
+    loading: true,
   };
 
   public async componentDidMount() {

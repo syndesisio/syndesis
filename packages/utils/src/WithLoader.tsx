@@ -3,8 +3,8 @@ import * as React from 'react';
 export interface IWithLoaderProps {
   error: boolean;
   loading: boolean;
-  loader(loading: boolean, error: boolean): JSX.Element;
   minWait?: number;
+  loader(loading: boolean, error: boolean): JSX.Element;
   children(): any;
 }
 
@@ -39,7 +39,7 @@ export class WithLoader extends React.Component<
     }
   }
 
-  render() {
+  public render() {
     return this.state.loaded && !this.props.error
       ? this.props.children()
       : this.props.loader(this.props.loading, this.props.error);

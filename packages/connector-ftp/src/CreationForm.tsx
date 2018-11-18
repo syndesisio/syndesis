@@ -18,7 +18,7 @@ export class CreationForm extends React.Component<{}> {
                         <button
                           _ngcontent-c15=""
                           className="btn btn-primary"
-                          disabled
+                          disabled={true}
                         >
                           Validate
                         </button>
@@ -59,7 +59,7 @@ export class CreationForm extends React.Component<{}> {
                           name="host"
                           placeholder=""
                           type="text"
-                          required
+                          required={true}
                           id="host"
                         />
                       </div>
@@ -162,7 +162,7 @@ export class CreationForm extends React.Component<{}> {
                           name="port"
                           placeholder=""
                           type="number"
-                          required
+                          required={true}
                           id="port"
                         />
                       </div>
