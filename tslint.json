@@ -1,0 +1,16 @@
+{
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+  "linterOptions": {
+    "exclude": [
+      "**/config/**/*.js",
+      "**/node_modules/**/*.ts",
+      "**/coverage/lcov-report/*.js",
+      "**/.jest/**/*",
+      "**/.storybook/**/*",
+      "**/*.test.tsx"
+    ]
+  },
+  "rules": {
+    "no-implicit-dependencies": true
+  }
+}

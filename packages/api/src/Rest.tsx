@@ -1,6 +1,6 @@
+import deepmerge from 'deepmerge';
 import * as React from 'react';
 import equal from 'react-fast-compare';
-import deepmerge from 'deepmerge';
 
 export interface IHeader {
   [s: string]: string;

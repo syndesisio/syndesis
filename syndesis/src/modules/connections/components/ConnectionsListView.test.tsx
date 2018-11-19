@@ -1,9 +1,10 @@
-import * as React from 'react';
 import { shallow } from 'enzyme';
+import * as React from 'react';
 
 import { ConnectionsListView } from './ConnectionsListView';
 
 it('renders the heading', () => {
+  const noop = () => false;
   const result = shallow(
     <ConnectionsListView
       baseurl={'/'}
@@ -12,8 +13,8 @@ it('renders the heading', () => {
       activeFilters={[]}
       filterTypes={[]}
       currentFilterType={{
-        id: 'foo',
         filterType: 'text',
+        id: 'foo',
         placeholder: 'foo placeholder',
         title: 'Foo',
       }}
@@ -22,15 +23,15 @@ it('renders the heading', () => {
       isSortAscending={true}
       resultsCount={0}
       sortTypes={[]}
-      onUpdateCurrentValue={() => false}
-      onValueKeyPress={() => false}
-      onFilterAdded={() => false}
-      onSelectFilterType={() => false}
-      onFilterValueSelected={() => false}
-      onRemoveFilter={() => false}
-      onClearFilters={() => false}
-      onToggleCurrentSortDirection={() => false}
-      onUpdateCurrentSortType={() => false}
+      onUpdateCurrentValue={noop}
+      onValueKeyPress={noop}
+      onFilterAdded={noop}
+      onSelectFilterType={noop}
+      onFilterValueSelected={noop}
+      onRemoveFilter={noop}
+      onClearFilters={noop}
+      onToggleCurrentSortDirection={noop}
+      onUpdateCurrentSortType={noop}
     />
   );
   expect(result).toBeTruthy();

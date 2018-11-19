@@ -3,19 +3,18 @@ import { Loader, PfVerticalNavItem, UnrecoverableError } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import './App.css';
 import { ConnectionsModule } from '../modules/connections';
 import { DashboardModule } from '../modules/dashboard';
 import { IntegrationsModule } from '../modules/integrations';
+import './App.css';
 import { AppContext } from './AppContext';
 import { Layout } from './Layout';
 import { WithConfig } from './WithConfig';
 
-interface IAppProps {}
+const AppLoader = (isLoading: boolean, isError: boolean) =>
+  isError ? <UnrecoverableError /> : <Loader />;
 
-interface IAppState {}
-
-export class App extends React.Component<IAppProps, IAppState> {
+export class App extends React.Component {
   public render() {
     return (
       <WithConfig>
@@ -23,9 +22,7 @@ export class App extends React.Component<IAppProps, IAppState> {
           <WithLoader
             loading={loading}
             error={error}
-            loader={(loading, error) =>
-              error ? <UnrecoverableError /> : <Loader />
-            }
+            loader={AppLoader}
             minWait={1000}
           >
             {() => (

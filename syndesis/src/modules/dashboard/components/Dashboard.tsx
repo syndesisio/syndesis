@@ -14,8 +14,8 @@ import { CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import './Dashboard.css';
 import { ConnectionsMetric } from './ConnectionsMetric';
+import './Dashboard.css';
 import { IntegrationBoard } from './IntegrationBoard';
 import { RecentUpdates } from './RecentUpdates';
 import { TopIntegrations } from './TopIntegrations';

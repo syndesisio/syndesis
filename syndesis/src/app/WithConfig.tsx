@@ -44,8 +44,8 @@ export class WithConfig extends React.Component<
   IWithConfigState
 > {
   public state = {
-    loading: true,
     error: false,
+    loading: true,
   };
 
   public async componentDidMount() {

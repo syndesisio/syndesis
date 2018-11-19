@@ -1,9 +1,9 @@
 import { IntegrationWithMonitoring } from '@syndesis/models';
 import {
+  IListViewToolbarProps,
   IntegrationsList,
   IntegrationsListItem,
   IntegrationsListSkeleton,
-  IListViewToolbarProps,
   ListViewToolbar,
 } from '@syndesis/ui';
 import * as React from 'react';

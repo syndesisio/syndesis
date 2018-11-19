@@ -16,14 +16,14 @@ export class WithIntegrationsMetrics extends React.Component<
         url={'/metrics/integrations'}
         poll={5000}
         defaultValue={{
-          start: `${Date.now()}`, // date-time
           errors: 0, // int64
-          messages: 0, // int64
-          lastProcessed: `${Date.now()}`, // date-time
-          metricsProvider: 'null',
-          integrationDeploymentMetrics: [],
-          topIntegrations: {},
           id: '-1',
+          integrationDeploymentMetrics: [],
+          lastProcessed: `${Date.now()}`, // date-time
+          messages: 0, // int64
+          metricsProvider: 'null',
+          start: `${Date.now()}`, // date-time
+          topIntegrations: {},
         }}
       >
         {response => this.props.children(response)}

@@ -9,6 +9,8 @@
     "typings/*"
   ],
   "scripts": {
+    "lint:staged": "lint-staged",
+    "lint": "lerna run --parallel --no-bail lint",
     "test": "CI=true lerna run --parallel test -- --coverage --color",
     "build": "lerna run --stream build",
     "watch:app": "lerna run --stream --scope @syndesis/syndesis start",
@@ -19,17 +21,23 @@
     "format:app": "prettier --single-quote --write 'syndesis/src/**/*.{js,ts,tsx,json}'",
     "format:packages": "prettier --single-quote --write 'packages/*/src/**/*.{js,ts,tsx,json}'",
     "format": "npm-run-all format:*",
-    "precommit": "lint-staged"
+    "precommit": "npm-run-all -s lint:staged",
+    "prepush": "npm-run-all -p lint test"
   },
   "devDependencies": {
     "husky": "^1.1.4",
     "lerna": "^3.4.3",
     "npm-run-all": "^4.1.3",
-    "prettier": "^1.15.2"
+    "prettier": "^1.15.2",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.16.0",
+    "tslint-react": "^3.6.0",
+    "typescript": "^3.1.6"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "yarn precommit",
+      "pre-push": "yarn prepush"
     }
   },
   "lint-staged": {

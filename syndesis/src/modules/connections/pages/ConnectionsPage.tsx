@@ -8,8 +8,8 @@ import {
   ListViewToolbarAbstractComponent,
 } from '@syndesis/ui';
 import * as React from 'react';
-import { ConnectionsAppContext } from '../ConnectionsAppContext';
 import { ConnectionsListView } from '../components/ConnectionsListView';
+import { ConnectionsAppContext } from '../ConnectionsAppContext';
 
 function getFilteredAndSortedConnections(
   connections: Connection[],

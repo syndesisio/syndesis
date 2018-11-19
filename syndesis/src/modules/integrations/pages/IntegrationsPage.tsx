@@ -3,8 +3,8 @@ import { Connection, IntegrationWithOverview } from '@syndesis/models';
 import {
   IActiveFilter,
   IFilterType,
-  ISortType,
   IListViewToolbarAbstractComponent,
+  ISortType,
   ListViewToolbarAbstractComponent,
 } from '@syndesis/ui';
 import * as React from 'react';
