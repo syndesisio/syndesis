@@ -1,15 +1,19 @@
 import { WithConnections } from '@syndesis/api';
 import { Connection } from '@syndesis/models';
 import {
+  ConnectionCard,
+  ConnectionsGrid,
+  ConnectionsGridCell,
+  ConnectionSkeleton,
+  ConnectionsListView,
   IActiveFilter,
   IFilterType,
   IListViewToolbarAbstractComponent,
   ISortType,
   ListViewToolbarAbstractComponent,
 } from '@syndesis/ui';
+import { getConnectionIcon, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { ConnectionsListView } from '../components/ConnectionsListView';
-import { ConnectionsAppContext } from '../ConnectionsAppContext';
 
 function getFilteredAndSortedConnections(
   connections: Connection[],
@@ -68,42 +72,61 @@ export default class ConnectionsPage extends ListViewToolbarAbstractComponent<
 
   public render() {
     return (
-      <ConnectionsAppContext.Consumer>
-        {({ baseurl }) => (
-          <WithConnections>
-            {({ data, loading, hasData }) => {
-              const filteredAndSortedConnections = getFilteredAndSortedConnections(
-                data.items,
-                this.state.activeFilters,
-                this.state.currentSortType,
-                this.state.isSortAscending
-              );
-              return (
-                <ConnectionsListView
-                  loading={!hasData && loading}
-                  baseurl={baseurl}
-                  connections={filteredAndSortedConnections}
-                  filterTypes={filterTypes}
-                  sortTypes={sortTypes}
-                  resultsCount={filteredAndSortedConnections.length}
-                  {...this.state}
-                  onUpdateCurrentValue={this.onUpdateCurrentValue}
-                  onValueKeyPress={this.onValueKeyPress}
-                  onFilterAdded={this.onFilterAdded}
-                  onSelectFilterType={this.onSelectFilterType}
-                  onFilterValueSelected={this.onFilterValueSelected}
-                  onRemoveFilter={this.onRemoveFilter}
-                  onClearFilters={this.onClearFilters}
-                  onToggleCurrentSortDirection={
-                    this.onToggleCurrentSortDirection
+      <WithConnections>
+        {({ data, loading, error }) => {
+          const filteredAndSortedConnections = getFilteredAndSortedConnections(
+            data.items,
+            this.state.activeFilters,
+            this.state.currentSortType,
+            this.state.isSortAscending
+          );
+          return (
+            <ConnectionsListView
+              linkToConnectionCreate={'/connections/create'}
+              filterTypes={filterTypes}
+              sortTypes={sortTypes}
+              resultsCount={filteredAndSortedConnections.length}
+              {...this.state}
+              onUpdateCurrentValue={this.onUpdateCurrentValue}
+              onValueKeyPress={this.onValueKeyPress}
+              onFilterAdded={this.onFilterAdded}
+              onSelectFilterType={this.onSelectFilterType}
+              onFilterValueSelected={this.onFilterValueSelected}
+              onRemoveFilter={this.onRemoveFilter}
+              onClearFilters={this.onClearFilters}
+              onToggleCurrentSortDirection={this.onToggleCurrentSortDirection}
+              onUpdateCurrentSortType={this.onUpdateCurrentSortType}
+            >
+              <ConnectionsGrid>
+                <WithLoader
+                  error={error}
+                  loading={loading}
+                  loaderChildren={
+                    <ConnectionsGridCell>
+                      {new Array(5).fill(0).map((_, index) => (
+                        <ConnectionSkeleton key={index} />
+                      ))}
+                    </ConnectionsGridCell>
                   }
-                  onUpdateCurrentSortType={this.onUpdateCurrentSortType}
-                />
-              );
-            }}
-          </WithConnections>
-        )}
-      </ConnectionsAppContext.Consumer>
+                  errorChildren={<div>TODO</div>}
+                >
+                  {() =>
+                    data.items.map((c, index) => (
+                      <ConnectionsGridCell key={index}>
+                        <ConnectionCard
+                          name={c.name}
+                          description={c.description || ''}
+                          icon={getConnectionIcon(c, process.env.PUBLIC_URL)}
+                        />
+                      </ConnectionsGridCell>
+                    ))
+                  }
+                </WithLoader>
+              </ConnectionsGrid>
+            </ConnectionsListView>
+          );
+        }}
+      </WithConnections>
     );
   }
 }

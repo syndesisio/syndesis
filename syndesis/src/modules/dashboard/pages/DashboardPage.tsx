@@ -11,6 +11,8 @@ import {
 import {
   AggregatedMetricCard,
   ConnectionCard,
+  ConnectionsGrid,
+  ConnectionsGridCell,
   ConnectionSkeleton,
   ConnectionsMetric,
   Dashboard,
@@ -232,29 +234,35 @@ export default () => (
                     </RecentUpdatesCard>
                   }
                   connections={
-                    <WithLoader
-                      error={false}
-                      loading={!hasConnections}
-                      loaderChildren={
-                        <>
-                          {new Array(5).fill(0).map((_, index) => (
-                            <ConnectionSkeleton key={index} />
-                          ))}
-                        </>
-                      }
-                      errorChildren={<div>TODO</div>}
-                    >
-                      {() =>
-                        connectionsData.items.map((c, index) => (
-                          <ConnectionCard
-                            name={c.name}
-                            description={c.description || ''}
-                            icon={getConnectionIcon(c, process.env.PUBLIC_URL)}
-                            key={index}
-                          />
-                        ))
-                      }
-                    </WithLoader>
+                    <ConnectionsGrid>
+                      <WithLoader
+                        error={false}
+                        loading={!hasConnections}
+                        loaderChildren={
+                          <ConnectionsGridCell>
+                            {new Array(5).fill(0).map((_, index) => (
+                              <ConnectionSkeleton key={index} />
+                            ))}
+                          </ConnectionsGridCell>
+                        }
+                        errorChildren={<div>TODO</div>}
+                      >
+                        {() =>
+                          connectionsData.items.map((c, index) => (
+                            <ConnectionsGridCell key={index}>
+                              <ConnectionCard
+                                name={c.name}
+                                description={c.description || ''}
+                                icon={getConnectionIcon(
+                                  c,
+                                  process.env.PUBLIC_URL
+                                )}
+                              />
+                            </ConnectionsGridCell>
+                          ))
+                        }
+                      </WithLoader>
+                    </ConnectionsGrid>
                   }
                 />
               );

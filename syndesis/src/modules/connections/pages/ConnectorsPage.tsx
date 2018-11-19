@@ -1,6 +1,11 @@
 import { WithConnectors } from '@syndesis/api';
-import { ConnectionCard, ConnectionsGrid } from '@syndesis/ui';
-import { getConnectionIcon, WithRouter } from '@syndesis/utils';
+import {
+  ConnectionCard,
+  ConnectionsGrid,
+  ConnectionsGridCell,
+  ConnectionSkeleton,
+} from '@syndesis/ui';
+import { getConnectionIcon, WithLoader, WithRouter } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,24 +15,38 @@ export default class ConnectorsPage extends React.Component {
       <WithRouter>
         {({ match }) => (
           <WithConnectors>
-            {({ data, hasData, loading }) => (
-              <div className={'container-fluid'}>
-                <ConnectionsGrid loading={loading}>
-                  {data.items.map((c, index) => (
-                    <Link
-                      to={`${match.url}/${c.id}`}
-                      style={{ color: 'inherit', textDecoration: 'none' }}
-                      key={index}
-                    >
-                      <ConnectionCard
-                        name={c.name}
-                        description={c.description || ''}
-                        icon={getConnectionIcon(c, process.env.PUBLIC_URL)}
-                      />
-                    </Link>
-                  ))}
-                </ConnectionsGrid>
-              </div>
+            {({ data, loading, error }) => (
+              <ConnectionsGrid>
+                <WithLoader
+                  error={error}
+                  loading={loading}
+                  loaderChildren={
+                    <ConnectionsGridCell>
+                      {new Array(5).fill(0).map((_, index) => (
+                        <ConnectionSkeleton key={index} />
+                      ))}
+                    </ConnectionsGridCell>
+                  }
+                  errorChildren={<div>TODO</div>}
+                >
+                  {() =>
+                    data.items.map((c, index) => (
+                      <ConnectionsGridCell key={index}>
+                        <Link
+                          to={`${match.url}/${c.id}`}
+                          style={{ color: 'inherit', textDecoration: 'none' }}
+                        >
+                          <ConnectionCard
+                            name={c.name}
+                            description={c.description || ''}
+                            icon={getConnectionIcon(c, process.env.PUBLIC_URL)}
+                          />
+                        </Link>
+                      </ConnectionsGridCell>
+                    ))
+                  }
+                </WithLoader>
+              </ConnectionsGrid>
             )}
           </WithConnectors>
         )}

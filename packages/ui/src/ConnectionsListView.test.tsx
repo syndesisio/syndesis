@@ -7,9 +7,7 @@ it('renders the heading', () => {
   const noop = () => false;
   const result = shallow(
     <ConnectionsListView
-      baseurl={'/'}
-      loading={true}
-      connections={[]}
+      linkToConnectionCreate={'/create'}
       activeFilters={[]}
       filterTypes={[]}
       currentFilterType={{
