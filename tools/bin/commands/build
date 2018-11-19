@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -eu
 
 build::description() {
     echo "Build Syndesis builds"
@@ -32,6 +32,11 @@ build::usage() {
         --batch-mode               Run mvn in batch mode
         --camel-snapshot <version> Run a build with a specific Camel snapshot. If no argument is given the
                                    environment variable CAMEL_SNAPSHOT_VERSION is used or an error thrown.
+        --maven-mirror <url>       Use the maven mirror for the build, e.g. a maven repo proxy in OpenShift. If no
+                                   argument is given, the MAVEN_MIRROR_URL environment variable is used or
+                                   'http://nexus.myproject:8081/nexus/content/groups/public', if none is set.
+                                   See also https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html
+
 EOT
 
 }
@@ -107,6 +112,15 @@ maven_args() {
           exit 1
        fi
        args="$args -Dcamel.version=$version"
+    fi
+
+    if [ $(hasflag --maven-mirror) ]; then
+        local maven_mirror=$(readopt --maven-mirror)
+        if [ -z "$maven_mirror" ]; then
+            args="$args -DmavenMirror=${MAVEN_MIRROR_URL:-http://nexus.myproject:8081/nexus/content/groups/public}"
+        else
+            args="$args -DmavenMirror=$maven_mirror"
+        fi
     fi
 
     if [ -z "$project" ]; then

@@ -99,6 +99,14 @@
     </profile>
   </profiles>
 
+  <mirrors>
+    <mirror>
+      <id>internal.mirror</id>
+      <url>${mavenMirror}</url>
+      <mirrorOf>${mavenMirrorOf}</mirrorOf>
+    </mirror>
+  </mirrors>
+
   <activeProfiles>
     <activeProfile>fusesource.repo</activeProfile>
   </activeProfiles>
