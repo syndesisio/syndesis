@@ -1,6 +1,9 @@
 // This module is included in the following assemblies:
 // how_to_get_ready.adoc
 
+[id='workflow-overview_{context}']
+= General workflow for creating an integration
+
 After you log in to the {prodname} console, you can start creating
 connections to the applications you want to integrate. For each 
 application that you want to integrate and that uses the

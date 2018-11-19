@@ -28,7 +28,6 @@ The content in this guide is organized as follows:
 * <<mapping-data_{context}>>
 * <<customizing_{context}>>
 * <<managing-integrations_{context}>>
-* <<trigger-integrations-with-api-calls_{context}>>
 
 To learn how to use {prodname} by creating sample integrations, see:
 link:{LinkFuseOnlineTutorials}[{NameOfFuseOnlineTutorials}].

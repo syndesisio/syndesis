@@ -1,8 +1,5 @@
-// This assembly is included in the following assemblies:
-// connecting/master.adoc
-
-[id='connecting-to-amq_{context}']
-= Connect to AMQ
+[id='connecting-to-amq']
+= Connecting to AMQ
 :context: amq
 
 In an integration, you can obtain messages from an 
@@ -26,17 +23,12 @@ to create a connection to the broker of interest:
 
 To use the AMQ connector, see:
 
-* <<create-amq-connection_{context}>>
-* <<adding-amq-connection-start_{context}>>
-* <<adding-amq-connection-finish_{context}>>
-* <<adding-amq-connection-middle_{context}>>
+* <<create-amq-connection>>
+* <<adding-amq-connections>>
+* <<specifying-connection-input-output-types_{context}>>
 
 include::create_amq_connection.adoc[leveloffset=+1]
 
-include::adding_amq_connection_start.adoc[leveloffset=+1]
+include::adding_amq_connections.adoc[leveloffset=+1]
 
-include::adding_amq_connection_finish.adoc[leveloffset=+1]
-
-include::adding_amq_connection_middle.adoc[leveloffset=+1]
-
-:context: connectors
+include::specifying_connection_input_output_types.adoc[leveloffset=+1]

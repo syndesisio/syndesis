@@ -1,7 +1,4 @@
-// This assembly is included in the following assemblies:
-// connecting/master.adoc
-
-[id='connecting-to-s3_{context}']
+[id='connecting-to-s3']
 = Connect to Amazon S3
 :context: s3
 
@@ -10,20 +7,16 @@ an Amazon S3 bucket. To do this, you create an Amazon S3
 connection and then add that Amazon S3 connection to an integration.
 For details, see:
 
-* <<prerequisites-for-creating-s3-connection_{context}>>
-* <<create-s3-connection_{context}>>
-* <<adding-s3-connection-start_{context}>>
-* <<adding-s3-connection-finish_{context}>>
-* <<adding-s3-connection-middle_{context}>>
+* <<prerequisites-for-creating-s3-connection>>
+* <<create-s3-connection>>
+* <<adding-s3-connections>>
+* <<specifying-connection-input-output-types_{context}>>
 
 include::prerequisites_for_creating_s3_connection.adoc[leveloffset=+1]
 
 include::create_s3_connection.adoc[leveloffset=+1]
 
-include::adding_s3_connection_start.adoc[leveloffset=+1]
+include::adding_s3_connections.adoc[leveloffset=+1]
 
-include::adding_s3_connection_finish.adoc[leveloffset=+1]
-
-include::adding_s3_connection_middle.adoc[leveloffset=+1]
-
-:context: connectors
+include::specifying_connection_input_output_types.adoc[leveloffset=+1]
+* <<specifying-connection-input-output-types_{context}>>

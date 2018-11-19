@@ -1,9 +1,5 @@
-// This assembly is included in the following assemblies:
-// Upstream: connecting/master.adoc  
-// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
-
-[id='connecting-to-databases_{context}']
-= Connect to SQL databases
+[id='connecting-to-databases']
+= Connecting to SQL databases
 :context: db
 
 In an integration, you can connect to any of the following types of SQL

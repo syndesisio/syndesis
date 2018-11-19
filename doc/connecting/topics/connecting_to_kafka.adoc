@@ -1,9 +1,5 @@
-// This assembly is included in the following assemblies:
-// Upstream: connecting/master.adoc  
-// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
-
-[id='connecting-to-kafka_{context}']
-= Connect to Kafka
+[id='connecting-to-kafka']
+= Connecting to Kafka
 :context: kafka
 
 Apache Kafka is a distributed streaming platform that you can use to

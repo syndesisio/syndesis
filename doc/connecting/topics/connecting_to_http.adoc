@@ -1,9 +1,5 @@
-// This assembly is included in the following assemblies:
-// Upstream: connecting/master.adoc  
-// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
-
-[id='connecting-to-http_{context}']
-= Connect to HTTP and HTTPS endpoints
+[id='connecting-to-http']
+= Connecting to HTTP and HTTPS endpoints
 :context: http
 
 In an integration, you can connect to HTTP and HTTPS endpoints to execute

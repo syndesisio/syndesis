@@ -44,8 +44,8 @@ click *Register* to display the client ID and client secret fields.
 clipboard.
 . In another browser tab, go to the web site for the application that you
 want to register with and perform the steps required to obtain
-a client ID and secret. One of these steps requires you to enter
-the callback URL for your {prodname} environment. Paste the
+a client ID and secret from that application. One of these steps requires you to enter
+the callback URL for your installation of {prodname}. Paste the
 URL that you copied to the clipboard in the second step. 
 . In {prodname}, on the *Settings* page, paste the
 client ID and client secret and save the settings.
@@ -54,14 +54,14 @@ client ID and client secret and save the settings.
 
 * Examples of registering applications that have entries in the *Settings* page:
 
-** link:{LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce[Register {prodname} as a Salesforce client]
-** link:{LinkFuseOnlineConnectorGuide}#register-with-twitter_twitter[Register {prodname} as a Twitter client]
+** link:{LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce[Registering {prodname} as a Salesforce client]
+** link:{LinkFuseOnlineConnectorGuide}#register-with-twitter_twitter[Registering {prodname} as a Twitter client]
 
 * Example of registering with an application that does not have 
 an entry in the {prodname} *Settings* page: 
-link:{LinkFuseOnlineConnectorGuide}#register-with-dropbox_dropbox[Register {prodname} as a Dropbox client]
+link:{LinkFuseOnlineConnectorGuide}#register-with-dropbox_dropbox[Registering {prodname} as a Dropbox client]
 
 * Information about using custom connectors that let 
 you access applications that use the
 OAuth protocol: 
-link:{LinkFuseOnlineIntegrationGuide}#creating-connections-from-custom-connectors_connections[Create connections from custom connectors]. 
+link:{LinkFuseOnlineIntegrationGuide}#creating-connections-from-custom-connectors_connections[Creating connections from custom connectors]. 

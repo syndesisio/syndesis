@@ -31,8 +31,8 @@ and in the popup that appears, click *Add a Step*.
 +
 The list of available steps includes any
 custom steps that are defined in extensions that were uploaded to
-your {prodname} environment.
-
+your installation of {prodname}.
++
 At the top of the list of steps, in the *Name* field, you can select
 *Custom Steps* to display only custom steps.
 

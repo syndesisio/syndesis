@@ -19,6 +19,6 @@ different broker.
 
 For examples, see: 
 
-* link:{LinkFuseOnlineConnectorGuide}#create-amq-connection_amq[Create AMQ connections]
-* link:{LinkFuseOnlineConnectorGuide}#creating-http-connections_http[Create HTTP and HTTPS connections]
-* link:{LinkFuseOnlineConnectorGuide}#creating-slack-connections_slack[Create Slack connections]
+* link:{LinkFuseOnlineConnectorGuide}#create-amq-connection_amq[Creating AMQ connections]
+* link:{LinkFuseOnlineConnectorGuide}#creating-http-connections_http[Creating HTTP and HTTPS connections]
+* link:{LinkFuseOnlineConnectorGuide}#creating-slack-connections_slack[Creating Slack connections]

@@ -1,9 +1,5 @@
-// This assembly is included in the following assemblies:
-// Upstream: connecting/master.adoc  
-// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
-
-[id='connecting-to-rest-apis_{context}']
-= Connect to REST APIs
+[id='connecting-to-rest-apis']
+= Connecting to REST APIs
 :context: rest
 
 In an integration, to connect to a REST API, you must have created a
