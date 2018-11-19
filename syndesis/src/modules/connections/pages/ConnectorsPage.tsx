@@ -15,17 +15,19 @@ export default class ConnectorsPage extends React.Component {
       <WithRouter>
         {({ match }) => (
           <WithConnectors>
-            {({ data, loading, error }) => (
+            {({ data, hasData, error }) => (
               <ConnectionsGrid>
                 <WithLoader
                   error={error}
-                  loading={loading}
+                  loading={!hasData}
                   loaderChildren={
-                    <ConnectionsGridCell>
+                    <>
                       {new Array(5).fill(0).map((_, index) => (
-                        <ConnectionSkeleton key={index} />
+                        <ConnectionsGridCell key={index}>
+                          <ConnectionSkeleton />
+                        </ConnectionsGridCell>
                       ))}
-                    </ConnectionsGridCell>
+                    </>
                   }
                   errorChildren={<div>TODO</div>}
                 >

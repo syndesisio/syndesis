@@ -21,7 +21,7 @@ export class WithLoader extends React.Component<
     minWait: 500,
   };
 
-  protected waitInterval?: number;
+  protected waitTimeout?: number;
 
   constructor(props: IWithLoaderProps) {
     super(props);
@@ -30,13 +30,15 @@ export class WithLoader extends React.Component<
     };
   }
 
+  public componentWillReceiveProps(nextProps: IWithLoaderProps) {
+    this.setState({
+      loaded: !nextProps.loading,
+    });
+  }
+
   public componentDidUpdate(prevProps: IWithLoaderProps) {
-    if (prevProps.loading && !this.props.loading) {
-      this.waitInterval = window.setTimeout(() => {
-        this.setState({
-          loaded: true,
-        });
-      }, this.props.minWait!);
+    if (!this.props.loading && !this.waitTimeout) {
+      this.setTimeout();
     }
   }
 
@@ -45,8 +47,24 @@ export class WithLoader extends React.Component<
       return this.props.errorChildren;
     }
     if (!this.state.loaded) {
-      return this.props.loading;
+      return this.props.loaderChildren;
     }
     return this.props.children();
+  }
+
+  protected setTimeout() {
+    this.clearTimeout();
+    this.waitTimeout = window.setTimeout(() => {
+      this.setState({
+        loaded: true,
+      });
+    }, this.props.minWait!);
+  }
+
+  protected clearTimeout() {
+    if (this.waitTimeout) {
+      clearTimeout(this.waitTimeout);
+      this.waitTimeout = undefined;
+    }
   }
 }
