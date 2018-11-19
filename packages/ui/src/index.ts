@@ -2,6 +2,7 @@ export * from './AggregatedMetricCard';
 export * from './ConnectionCard';
 export * from './ConnectionsGrid';
 export * from './ConnectionSkeleton';
+export * from './Dashboard';
 export * from './IntegrationProgress';
 export * from './IntegrationsList';
 export * from './IntegrationsListItem';

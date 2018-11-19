@@ -4,7 +4,8 @@ export interface IWithLoaderProps {
   error: boolean;
   loading: boolean;
   minWait?: number;
-  loader(loading: boolean, error: boolean): JSX.Element;
+  loaderChildren: JSX.Element;
+  errorChildren: JSX.Element;
   children(): any;
 }
 
@@ -40,8 +41,12 @@ export class WithLoader extends React.Component<
   }
 
   public render() {
-    return this.state.loaded && !this.props.error
-      ? this.props.children()
-      : this.props.loader(this.props.loading, this.props.error);
+    if (this.props.error) {
+      return this.props.errorChildren;
+    }
+    if (!this.state.loaded) {
+      return this.props.loading;
+    }
+    return this.props.children();
   }
 }
