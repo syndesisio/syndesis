@@ -5,11 +5,11 @@ import {
   IActiveFilter,
   IFilterType,
   IListViewToolbarAbstractComponent,
-  ISortType,
   IntegrationsList,
-  IntegrationsListSkeleton,
   IntegrationsListItem,
+  IntegrationsListSkeleton,
   IntegrationsListView,
+  ISortType,
   ListViewToolbarAbstractComponent,
 } from '@syndesis/ui';
 import * as React from 'react';
