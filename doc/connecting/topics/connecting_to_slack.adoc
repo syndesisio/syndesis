@@ -1,5 +1,6 @@
 [id='connecting-to-slack']
 = Connecting to Slack
+:context: slack
 
 As a business user, you can create an integration that connects to Slack. A 
 connection to Slack can do either one of the following:

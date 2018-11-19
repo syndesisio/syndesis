@@ -1,5 +1,6 @@
 [id='connecting-to-kafka']
 = Connecting to Kafka
+:context: kafka
 
 Apache Kafka is a distributed streaming platform that you can use to
 obtain and publish data. 

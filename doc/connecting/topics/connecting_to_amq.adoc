@@ -1,5 +1,6 @@
 [id='connecting-to-amq']
 = Connecting to AMQ
+:context: amq
 
 In an integration, you can obtain messages from an 
 ApacheMQ (AMQ) broker or publish messages to 
@@ -25,7 +26,10 @@ To use the AMQ connector, see:
 
 * <<create-amq-connection>>
 * <<adding-amq-connections>>
+* <<specifying-connection-input-output-types_{context}>>
 
 include::create_amq_connection.adoc[leveloffset=+1]
 
 include::adding_amq_connections.adoc[leveloffset=+1]
+
+include::specifying_connection_input_output_types.adoc[leveloffset=+1]

@@ -1,4 +1,7 @@
-[id='example-route-builder']
+// This module is included in the following assembly:
+// develop_step_extensions.adoc
+
+[id='example-route-builder_{context}']
 = Example of developing a Camel route with RouteBuilder
 
 You can implement a custom step by developing an action as a Camel

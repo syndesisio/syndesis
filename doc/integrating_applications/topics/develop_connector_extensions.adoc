@@ -1,4 +1,7 @@
-[id='develop-connector-extensions']
+// This module is included in the following assembly:
+// developing_extensions.adoc
+
+[id='develop-connector-extensions_{context}']
 = Example of developing a connector extension
 
 If {prodname} does not provide a connector for the application or 

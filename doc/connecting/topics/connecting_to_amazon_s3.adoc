@@ -1,5 +1,6 @@
 [id='connecting-to-s3']
-= Connecting to Amazon S3
+= Connect to Amazon S3
+:context: s3
 
 An integration can retrieve data from an Amazon S3 bucket or copy data into
 an Amazon S3 bucket. To do this, you create an Amazon S3
@@ -9,9 +10,13 @@ For details, see:
 * <<prerequisites-for-creating-s3-connection>>
 * <<create-s3-connection>>
 * <<adding-s3-connections>>
+* <<specifying-connection-input-output-types_{context}>>
 
 include::prerequisites_for_creating_s3_connection.adoc[leveloffset=+1]
 
 include::create_s3_connection.adoc[leveloffset=+1]
 
 include::adding_s3_connections.adoc[leveloffset=+1]
+
+include::specifying_connection_input_output_types.adoc[leveloffset=+1]
+* <<specifying-connection-input-output-types_{context}>>

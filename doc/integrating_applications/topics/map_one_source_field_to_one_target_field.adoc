@@ -1,4 +1,7 @@
-[id='map-one-source-field-to-one-target-field']
+// This module is included in the following assemblies:
+// mapping_data.adoc
+
+[id='map-one-source-field-to-one-target-field_{context}']
 = Map one source field to one target field
 
 The default mapping behavior maps one source field to one target field.
