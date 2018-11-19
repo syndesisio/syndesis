@@ -12,6 +12,7 @@ import {
   ISortType,
   ListViewToolbarAbstractComponent,
 } from '@syndesis/ui';
+import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 
 function getFilteredAndSortedIntegrations(
@@ -122,7 +123,7 @@ export default class IntegrationsPage extends ListViewToolbarAbstractComponent<
   public render() {
     return (
       <WithMonitoredIntegrations>
-        {({ data: integrationsData, loading }) => (
+        {({ data: integrationsData, hasData, error }) => (
           <WithConnections>
             {({ data: connectionsData }) => {
               const filteredAndSortedIntegrations = getFilteredAndSortedIntegrations(
@@ -151,47 +152,55 @@ export default class IntegrationsPage extends ListViewToolbarAbstractComponent<
                   }
                   onUpdateCurrentSortType={this.onUpdateCurrentSortType}
                 >
-                  {loading ? (
-                    <IntegrationsListSkeleton
-                      width={800}
-                      style={{
-                        backgroundColor: '#FFF',
-                        marginTop: 30,
-                      }}
-                    />
-                  ) : (
-                    <IntegrationsList>
-                      {filteredAndSortedIntegrations.map(
-                        (mi: IntegrationWithMonitoring, index) => (
-                          <IntegrationsListItem
-                            integrationId={mi.integration.id!}
-                            integrationName={mi.integration.name!}
-                            currentState={mi.integration.currentState!}
-                            targetState={mi.integration.targetState!}
-                            isConfigurationRequired={
-                              !!(
-                                mi.integration!.board!.warnings ||
-                                mi.integration!.board!.errors ||
-                                mi.integration!.board!.notices
-                              )
-                            }
-                            monitoringValue={
-                              mi.monitoring && mi.monitoring.detailedState.value
-                            }
-                            monitoringCurrentStep={
-                              mi.monitoring &&
-                              mi.monitoring.detailedState.currentStep
-                            }
-                            monitoringTotalSteps={
-                              mi.monitoring &&
-                              mi.monitoring.detailedState.totalSteps
-                            }
-                            key={index}
-                          />
-                        )
-                      )}
-                    </IntegrationsList>
-                  )}
+                  <WithLoader
+                    error={error}
+                    loading={!hasData}
+                    loaderChildren={
+                      <IntegrationsListSkeleton
+                        width={800}
+                        style={{
+                          backgroundColor: '#FFF',
+                          marginTop: 30,
+                        }}
+                      />
+                    }
+                    errorChildren={<div>TODO</div>}
+                  >
+                    {() => (
+                      <IntegrationsList>
+                        {filteredAndSortedIntegrations.map(
+                          (mi: IntegrationWithMonitoring, index) => (
+                            <IntegrationsListItem
+                              integrationId={mi.integration.id!}
+                              integrationName={mi.integration.name!}
+                              currentState={mi.integration.currentState!}
+                              targetState={mi.integration.targetState!}
+                              isConfigurationRequired={
+                                !!(
+                                  mi.integration!.board!.warnings ||
+                                  mi.integration!.board!.errors ||
+                                  mi.integration!.board!.notices
+                                )
+                              }
+                              monitoringValue={
+                                mi.monitoring &&
+                                mi.monitoring.detailedState.value
+                              }
+                              monitoringCurrentStep={
+                                mi.monitoring &&
+                                mi.monitoring.detailedState.currentStep
+                              }
+                              monitoringTotalSteps={
+                                mi.monitoring &&
+                                mi.monitoring.detailedState.totalSteps
+                              }
+                              key={index}
+                            />
+                          )
+                        )}
+                      </IntegrationsList>
+                    )}
+                  </WithLoader>
                 </IntegrationsListView>
               );
             }}

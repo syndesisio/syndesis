@@ -73,7 +73,7 @@ export default class ConnectionsPage extends ListViewToolbarAbstractComponent<
   public render() {
     return (
       <WithConnections>
-        {({ data, loading, error }) => {
+        {({ data, hasData, error }) => {
           const filteredAndSortedConnections = getFilteredAndSortedConnections(
             data.items,
             this.state.activeFilters,
@@ -100,13 +100,15 @@ export default class ConnectionsPage extends ListViewToolbarAbstractComponent<
               <ConnectionsGrid>
                 <WithLoader
                   error={error}
-                  loading={loading}
+                  loading={!hasData}
                   loaderChildren={
-                    <ConnectionsGridCell>
+                    <>
                       {new Array(5).fill(0).map((_, index) => (
-                        <ConnectionSkeleton key={index} />
+                        <ConnectionsGridCell key={index}>
+                          <ConnectionSkeleton />
+                        </ConnectionsGridCell>
                       ))}
-                    </ConnectionsGridCell>
+                    </>
                   }
                   errorChildren={<div>TODO</div>}
                 >

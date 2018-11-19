@@ -109,7 +109,7 @@ export default () => (
   <WithMonitoredIntegrations>
     {({ data: integrationsData, hasData: hasIntegrations }) => (
       <WithIntegrationsMetrics>
-        {({ data: metricsData, hasData: hasMetrics }) => (
+        {({ data: metricsData }) => (
           <WithConnections>
             {({ data: connectionsData, hasData: hasConnections }) => {
               const integrationStatesCount = getIntegrationsCountsByState(
@@ -239,11 +239,13 @@ export default () => (
                         error={false}
                         loading={!hasConnections}
                         loaderChildren={
-                          <ConnectionsGridCell>
+                          <>
                             {new Array(5).fill(0).map((_, index) => (
-                              <ConnectionSkeleton key={index} />
+                              <ConnectionsGridCell key={index}>
+                                <ConnectionSkeleton />
+                              </ConnectionsGridCell>
                             ))}
-                          </ConnectionsGridCell>
+                          </>
                         }
                         errorChildren={<div>TODO</div>}
                       >
