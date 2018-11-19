@@ -1,14 +1,18 @@
 import { WithConnections, WithMonitoredIntegrations } from '@syndesis/api';
 import { Connection, IntegrationWithOverview } from '@syndesis/models';
+import { IntegrationWithMonitoring } from '@syndesis/models/src';
 import {
   IActiveFilter,
   IFilterType,
   IListViewToolbarAbstractComponent,
+  IntegrationsList,
+  IntegrationsListItem,
+  IntegrationsListSkeleton,
+  IntegrationsListView,
   ISortType,
   ListViewToolbarAbstractComponent,
 } from '@syndesis/ui';
 import * as React from 'react';
-import { IntegrationsListView } from '../components/IntegrationsListView';
 
 function getFilteredAndSortedIntegrations(
   integrations: IntegrationWithOverview[],
@@ -118,7 +122,7 @@ export default class IntegrationsPage extends ListViewToolbarAbstractComponent<
   public render() {
     return (
       <WithMonitoredIntegrations>
-        {({ data: integrationsData, loading, hasData }) => (
+        {({ data: integrationsData, loading }) => (
           <WithConnections>
             {({ data: connectionsData }) => {
               const filteredAndSortedIntegrations = getFilteredAndSortedIntegrations(
@@ -129,9 +133,8 @@ export default class IntegrationsPage extends ListViewToolbarAbstractComponent<
               );
               return (
                 <IntegrationsListView
-                  loading={!hasData && loading}
-                  match={'TODO'}
-                  monitoredIntegrations={filteredAndSortedIntegrations}
+                  linkToIntegrationImport={'/integrations/import'}
+                  linkToIntegrationCreation={'/integrations/create'}
                   filterTypes={getFilterTypes(connectionsData.items)}
                   sortTypes={sortTypes}
                   resultsCount={filteredAndSortedIntegrations.length}
@@ -147,7 +150,49 @@ export default class IntegrationsPage extends ListViewToolbarAbstractComponent<
                     this.onToggleCurrentSortDirection
                   }
                   onUpdateCurrentSortType={this.onUpdateCurrentSortType}
-                />
+                >
+                  {loading ? (
+                    <IntegrationsListSkeleton
+                      width={800}
+                      style={{
+                        backgroundColor: '#FFF',
+                        marginTop: 30,
+                      }}
+                    />
+                  ) : (
+                    <IntegrationsList>
+                      {filteredAndSortedIntegrations.map(
+                        (mi: IntegrationWithMonitoring, index) => (
+                          <IntegrationsListItem
+                            integrationId={mi.integration.id!}
+                            integrationName={mi.integration.name!}
+                            currentState={mi.integration.currentState!}
+                            targetState={mi.integration.targetState!}
+                            isConfigurationRequired={
+                              !!(
+                                mi.integration!.board!.warnings ||
+                                mi.integration!.board!.errors ||
+                                mi.integration!.board!.notices
+                              )
+                            }
+                            monitoringValue={
+                              mi.monitoring && mi.monitoring.detailedState.value
+                            }
+                            monitoringCurrentStep={
+                              mi.monitoring &&
+                              mi.monitoring.detailedState.currentStep
+                            }
+                            monitoringTotalSteps={
+                              mi.monitoring &&
+                              mi.monitoring.detailedState.totalSteps
+                            }
+                            key={index}
+                          />
+                        )
+                      )}
+                    </IntegrationsList>
+                  )}
+                </IntegrationsListView>
               );
             }}
           </WithConnections>

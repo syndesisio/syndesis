@@ -11,9 +11,6 @@ import { AppContext } from './AppContext';
 import { Layout } from './Layout';
 import { WithConfig } from './WithConfig';
 
-const AppLoader = (isLoading: boolean, isError: boolean) =>
-  isError ? <UnrecoverableError /> : <Loader />;
-
 export class App extends React.Component {
   public render() {
     return (
@@ -22,7 +19,8 @@ export class App extends React.Component {
           <WithLoader
             loading={loading}
             error={error}
-            loader={AppLoader}
+            loaderChildren={<Loader />}
+            errorChildren={<UnrecoverableError />}
             minWait={1000}
           >
             {() => (

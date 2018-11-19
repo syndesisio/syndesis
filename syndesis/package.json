@@ -15,8 +15,7 @@
     "react-fast-compare": "^2.0.2",
     "react-loadable": "^5.5.0",
     "react-router": "^4.3.1",
-    "react-router-dom": "^4.3.1",
-    "react-virtualized": "^9.20.1"
+    "react-router-dom": "^4.3.1"
   },
   "scripts": {
     "lint": "tslint -c ../tslint.json --project .",
@@ -46,7 +45,6 @@
     "@types/react-dom": "^16.0.8",
     "@types/react-loadable": "*",
     "@types/react-router-dom": "^4.3.1",
-    "@types/react-virtualized": "^9.18.7",
     "@types/storybook__react": "^3.0.9",
     "babel-loader": "^8.0.4",
     "babel-plugin-named-asset-import": "^0.2.3",
