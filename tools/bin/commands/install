@@ -78,7 +78,7 @@ install::run() {
 
     # Deploy operator and wait until its up
     echo "Deploying Syndesis operator"
-    result=$(deploy_syndesis_operator)
+    result=$(deploy_syndesis_operator "$(oc project -q)")
     check_error "$result"
 
     if [ $(hasflag --operator-only) ]; then
