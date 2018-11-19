@@ -26,6 +26,7 @@ import org.apache.camel.util.component.AbstractApiComponent;
 /**
  * Represents the component that manages {@link GoogleSheetsEndpoint}.
  */
+@Metadata(label = "verifiers", enums = "parameters,connectivity")
 public class GoogleSheetsComponent extends AbstractApiComponent<GoogleSheetsApiName, GoogleSheetsConfiguration, GoogleSheetsApiCollection> {
 
     @Metadata(label = "advanced")
@@ -35,10 +36,12 @@ public class GoogleSheetsComponent extends AbstractApiComponent<GoogleSheetsApiN
 
     public GoogleSheetsComponent() {
         super(GoogleSheetsEndpoint.class, GoogleSheetsApiName.class, GoogleSheetsApiCollection.getCollection());
+        registerExtension(new GoogleSheetsVerifierExtension("google-sheets"));
     }
 
     public GoogleSheetsComponent(CamelContext context) {
         super(context, GoogleSheetsEndpoint.class, GoogleSheetsApiName.class, GoogleSheetsApiCollection.getCollection());
+        registerExtension(new GoogleSheetsVerifierExtension("google-sheets", context));
     }
 
     @Override

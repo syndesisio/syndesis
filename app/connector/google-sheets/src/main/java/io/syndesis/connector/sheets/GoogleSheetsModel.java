@@ -77,7 +77,7 @@ public class GoogleSheetsModel {
 
     @Override
     public String toString() {
-        return "GmailMessageModel [spreadsheetId=" + spreadsheetId + ", range=" + range + ", values=" + values + "]";
+        return String.format("%s [spreadsheetId=%s, range=%s, values=%s]", GoogleSheetsModel.class.getSimpleName(), spreadsheetId, range, values);
     }
 
 }

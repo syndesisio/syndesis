@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.sheets;
+package org.apache.camel.component.google.sheets;
 
 import com.google.api.services.sheets.v4.Sheets;
 import org.apache.camel.CamelContext;
@@ -21,19 +21,20 @@ import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExt
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
-import org.apache.camel.component.google.sheets.BatchGoogleSheetsClientFactory;
-import org.apache.camel.component.google.sheets.GoogleSheetsClientFactory;
-import org.apache.camel.component.google.sheets.GoogleSheetsConfiguration;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class GoogleSheetsVerifierExtension extends DefaultComponentVerifierExtension {
 
-    protected GoogleSheetsVerifierExtension(String defaultScheme, CamelContext context) {
-        super(defaultScheme, context);
+    public GoogleSheetsVerifierExtension(String defaultScheme) {
+        super(defaultScheme);
     }
 
+    public GoogleSheetsVerifierExtension(String defaultScheme, CamelContext context) {
+        super(defaultScheme, context);
+    }
 
     // *********************************
     // Parameters validation
@@ -41,7 +42,6 @@ public class GoogleSheetsVerifierExtension extends DefaultComponentVerifierExten
 
     @Override
     protected Result verifyParameters(Map<String, Object> parameters) {
-
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS).error(ResultErrorHelper.requiresOption("applicationName", parameters))
             .error(ResultErrorHelper.requiresOption("clientId", parameters)).error(ResultErrorHelper.requiresOption("clientSecret", parameters));
 
@@ -61,11 +61,14 @@ public class GoogleSheetsVerifierExtension extends DefaultComponentVerifierExten
             GoogleSheetsConfiguration configuration = setProperties(new GoogleSheetsConfiguration(), parameters);
             GoogleSheetsClientFactory clientFactory = new BatchGoogleSheetsClientFactory();
             Sheets client = clientFactory.makeClient(configuration.getClientId(), configuration.getClientSecret(),
-                    configuration.getApplicationName(), configuration.getRefreshToken(), configuration.getAccessToken());
-            client.spreadsheets().get(UUID.randomUUID().toString()).execute();
+                    configuration.getApplicationName(),
+                    configuration.getRefreshToken(), configuration.getAccessToken());
+            client.spreadsheets().get(Optional.ofNullable(parameters.get("spreadsheetId"))
+                                              .map(Object::toString)
+                                              .orElse(UUID.randomUUID().toString())).execute();
         } catch (Exception e) {
             ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, e.getMessage())
-                .detail("sheets_exception_message", e.getMessage()).detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())
+                .detail("google_sheets_exception_message", e.getMessage()).detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())
                 .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e);
 
             builder.error(errorBuilder.build());

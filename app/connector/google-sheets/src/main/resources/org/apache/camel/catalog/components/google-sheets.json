@@ -5,7 +5,7 @@
     "syntax": "google-sheets:apiName/methodName",
     "title": "Google Sheets",
     "description": "The google-sheets component provides access to Google Sheets.",
-    "label": "api,cloud",
+    "label": "api,cloud,sheets",
     "deprecated": false,
     "deprecationNote": "",
     "async": false,
@@ -16,6 +16,7 @@
     "firstVersion": "2.23.0",
     "groupId": "org.apache.camel",
     "artifactId": "camel-google-sheets",
+    "verifiers": "parameters,connectivity",
     "version": "2.23.0-SNAPSHOT"
   },
   "componentProperties": {

@@ -18,6 +18,7 @@ package io.syndesis.connector.sheets;
 import io.syndesis.connector.support.verifier.api.ComponentVerifier;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
+import org.apache.camel.component.google.sheets.GoogleSheetsVerifierExtension;
 
 public class GoogleSheetsVerifier extends ComponentVerifier {
 

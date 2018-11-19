@@ -2,6 +2,46 @@
   "actions": [
     {
       "actionType": "connector",
+      "description": "Create a spreadsheet on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsCreateSpreadsheetCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify spreadsheet properties. ",
+            "name": "Create spreadsheets through Google Sheets",
+            "properties": {
+              "title": {
+                "deprecated": false,
+                "displayName": "Title",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet title.",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-create-spreadsheet-connector",
+      "name": "Create spreadsheets",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
       "description": "Update values in a spreadsheet on your Google Sheets account that this connection is authorized to access.",
       "descriptor": {
         "componentScheme": "google-sheets",
@@ -35,6 +75,7 @@
               },
               "range": {
                 "deprecated": false,
+                "defaultValue": "A1",
                 "displayName": "Range",
                 "group": "producer",
                 "javaType": "java.lang.String",
@@ -55,7 +96,7 @@
                 "label": "producer",
                 "labelHint": "Values to write into the spreadsheet range.",
                 "order": "3",
-                "required": true,
+                "required": false,
                 "secret": false,
                 "type": "string"
               }
@@ -102,6 +143,7 @@
               },
               "range": {
                 "deprecated": false,
+                "defaultValue": "A1",
                 "displayName": "Range",
                 "group": "producer",
                 "javaType": "java.lang.String",
@@ -122,7 +164,7 @@
                 "label": "producer",
                 "labelHint": "Values to append into the spreadsheet.",
                 "order": "3",
-                "required": true,
+                "required": false,
                 "secret": false,
                 "type": "string"
               }
@@ -136,9 +178,9 @@
     },
     {
       "actionType": "connector",
-      "description": "Obtain values in a spreadsheet on your the Google Sheets account that this connection is authorized to access.",
+      "description": "Obtain sheet grid data values from a spreadsheet on your the Google Sheets account that this connection is authorized to access.",
       "descriptor": {
-        "componentScheme": "google-sheets",
+        "componentScheme": "google-sheets-stream",
         "connectorCustomizers": [
           "io.syndesis.connector.sheets.GoogleSheetsGetValuesCustomizer"
         ],
@@ -209,7 +251,7 @@
       "actionType": "connector",
       "description": "Obtain a spreadsheet on your the Google Sheets account that this connection is authorized to access.",
       "descriptor": {
-        "componentScheme": "google-sheets",
+        "componentScheme": "google-sheets-stream",
         "connectorCustomizers": [
           "io.syndesis.connector.sheets.GoogleSheetsGetSpreadsheetCustomizer"
         ],
@@ -237,6 +279,36 @@
                 "required": true,
                 "secret": false,
                 "type": "string"
+              },
+              "includeGridData": {
+                "deprecated": false,
+                "defaultValue": false,
+                "displayName": "Include grid data",
+                "group": "producer",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Should include grid data in result.",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "boolean"
+              },
+              "delay": {
+                "componentProperty": false,
+                "defaultValue": 30000,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Time interval between polls for value changes.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "duration"
               }
             }
           }
@@ -245,46 +317,6 @@
       "id": "io.syndesis:sheets-get-spreadsheet-connector",
       "name": "Get spreadsheets",
       "pattern": "From"
-    },
-    {
-      "actionType": "connector",
-      "description": "Create a spreadsheet on your Google Sheets account that this connection is authorized to access.",
-      "descriptor": {
-        "componentScheme": "google-sheets",
-        "connectorCustomizers": [
-          "io.syndesis.connector.sheets.GoogleSheetsCreateSpreadsheetCustomizer"
-        ],
-        "inputDataShape": {
-          "kind": "none"
-        },
-        "outputDataShape": {
-          "kind": "none"
-        },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify spreadsheet properties. ",
-            "name": "Create spreadsheets through Google Sheets",
-            "properties": {
-              "title": {
-                "deprecated": false,
-                "displayName": "Title",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "The spreadsheet title.",
-                "order": "1",
-                "required": true,
-                "secret": false,
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "id": "io.syndesis:sheets-create-spreadsheet-connector",
-      "name": "Create spreadsheets",
-      "pattern": "To"
     }
   ],
   "configuredProperties": {
