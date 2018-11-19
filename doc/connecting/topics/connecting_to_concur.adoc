@@ -1,5 +1,6 @@
 [id='connecting-to-concur']
 = Connecting to SAP Concur
+:context: concur
 
 SAP Concur manages business expenses, travel, and invoices. 
 In an integration, you can connect to SAP Concur and perform

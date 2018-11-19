@@ -1,5 +1,8 @@
-[id='refreshing-access-tokens']
-= Automatically refreshing access tokens
+// This module is included in the following assemblies:
+// developing_rest_api_client_connectors.adoc
+
+[id='refreshing-access-tokens_{context}']
+= Automatically refresh access tokens
 
 If an access token has an expiration date, then {prodname} integrations 
 that use that token to connect to an application stop running successfully 
@@ -25,7 +28,7 @@ endif::[]
 
 To specify that {prodname} should automatically try to obtain a new 
 access token in the situations described, 
-in the `securityDefinitions` section of the OpenAPI specification, 
+in the `securityDefinitions` section of the OpenAPI schema, 
 add the `x-refresh-token-retry-statuses` vendor extension. The setting 
 of this extension is a comma separated list that
 specifies HTTP response status codes. When an access token's 

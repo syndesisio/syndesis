@@ -1,5 +1,6 @@
 [id='connecting-to-gmail']
 = Connecting to Gmail
+:context: gmail
 
 To trigger execution of an integration when a particular Gmail
 account receives an email, add a Gmail connection to an integration as its

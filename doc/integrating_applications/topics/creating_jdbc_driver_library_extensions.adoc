@@ -1,5 +1,8 @@
-[id='creating-jdbc-driver-library-extensions']
-= Creating JDBC driver library extensions
+// This module is included in the following assembly:
+// developing_extensions.adoc
+
+[id='creating-jdbc-driver-library-extensions_{context}']
+= Create JDBC driver library extensions
 
 To connect to a SQL database other than Apache Derby, MySQL, and
 PostgreSQL, you can create a library extension that wraps a JDBC driver for 

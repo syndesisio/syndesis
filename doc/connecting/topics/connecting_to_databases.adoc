@@ -1,5 +1,6 @@
 [id='connecting-to-databases']
 = Connecting to SQL databases
+:context: db
 
 In an integration, you can connect to any of the following types of SQL
 databases:

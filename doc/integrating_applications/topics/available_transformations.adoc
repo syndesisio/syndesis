@@ -1,4 +1,7 @@
-[id='available-transformations']
+// This module is included in the following assemblies:
+// mapping_data.adoc
+
+[id='available-transformations_{context}']
 = Descriptions of available transformations
 
 The following table describes the available transformations. The date and

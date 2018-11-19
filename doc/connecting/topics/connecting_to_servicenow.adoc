@@ -1,5 +1,6 @@
 [id='connecting-to-servicenow']
 = Connecting to ServiceNow
+:context: servicenow
 
 An integration can retrieve records from a ServiceNow table or add records to 
 a ServiceNow import set. To do this, you create a ServiceNow

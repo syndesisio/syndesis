@@ -1,4 +1,7 @@
-[id='transform-target-data']
+// This module is included in the following assemblies:
+// mapping_data.adoc
+
+[id='transform-target-data_{context}']
 = Transform source or target data
 
 In the data mapper, after you define a mapping, you can transform
@@ -7,7 +10,7 @@ Transforming a data field defines how you want to store the data.
 For example, you could specify the *Capitalize* transformation to ensure that the first
 letter of a data value is uppercase.
 
-To transform a field:
+.Procedure
 
 . Map the fields. This can be a one-to-one mapping, a combination mapping,
 or a separation mapping.
@@ -22,4 +25,6 @@ in the appropriate input fields.
 . To add another transformation, click the arrow that points to the
 trash can again. 
 
-See <<available-transformations>>.
+.Additional resource
+
+* link:{LinkFuseOnlineIntegrationGuide}#available-transformations_map[Available transformations].

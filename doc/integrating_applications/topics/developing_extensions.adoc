@@ -1,5 +1,10 @@
-[id='developing-extensions']
-= Developing {prodname} extensions
+// This assembly is included in the following assemblies:
+// customizing.adoc
+
+:context: custom
+[id='developing-extensions_{context}']
+= Develop {prodname} extensions
+:context: extensions
 
 If {prodname} does not provide a feature that is needed to create an
 integration, then an expert developer 
@@ -18,20 +23,21 @@ that helps you develop a step extension or a connector extension. It is
 a matter of personal preference whether you choose to develop a step
 extension or a connector extension in Developer Studio or in some other
 IDE. For information about using the Developer Studio plugin, see 
-{LinkToolingUserGuide}#igniteextension[Developing extensions for {prodname} integrations].
+link:{LinkToolingUserGuide}#igniteextension[Developing extensions for {prodname} integrations].
 
 In this document, the following topics outline the 
 procedure, describe the requirements, and provide additional examples for
 developing extensions in an IDE that you choose. 
 
-* <<procedure-for-developing-extensions>>
-* <<description-kinds-extensions>>
-* <<overview-extension-content-structure>>
-* <<about-extension-definitions>>
-* <<using-maven-to-generate-extension-definitions>>
-* <<develop-step-extensions>>
-* <<develop-connector-extensions>>
-* <<develop-library-extensions>>
+* <<procedure-for-developing-extensions_{context}>>
+* <<description-kinds-extensions_{context}>>
+* <<overview-extension-content-structure_{context}>>
+* <<about-extension-definitions_{context}>>
+* <<using-maven-to-generate-extension-definitions_{context}>>
+* <<develop-step-extensions_{context}>>
+* <<develop-connector-extensions_{context}>>
+* <<develop-library-extensions_{context}>>
+* <<creating-jdbc-driver-library-extensions_{context}>>
 
 include::proc_developing_extensions.adoc[leveloffset=+1]
 
@@ -50,3 +56,7 @@ include::develop_step_extensions.adoc[leveloffset=+1]
 include::develop_connector_extensions.adoc[leveloffset=+1]
 
 include::develop_library_extensions.adoc[leveloffset=+1]
+
+include::creating_jdbc_driver_library_extensions.adoc[leveloffset=+1]
+
+:context: custom

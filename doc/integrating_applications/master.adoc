@@ -13,21 +13,21 @@ include::topics/shared/attributes.adoc[]
 
 [id='integrating_applications']
 = Integrating Applications with {prodname}
-:context: userguide
+:context: ug
 
 This guide provides information and instructions for using
 {prodname}'s web interface to integrate applications.
 
 The content in this guide is organized as follows:
 
-* <<high-level-overview>>
-* <<how-to-get-ready>>
+* <<high-level-overview_{context}>>
+* <<how-to-get-ready_{context}>>
 // * <<logging-in-and-out_{context}>>
-* <<connecting-to-applications>>
-* <<creating-integrations>>
-* <<mapping-data>>
-* <<customizing>>
-* <<managing-integrations>>
+* <<connecting-to-applications_{context}>>
+* <<creating-integrations_{context}>>
+* <<mapping-data_{context}>>
+* <<customizing_{context}>>
+* <<managing-integrations_{context}>>
 
 To learn how to use {prodname} by creating sample integrations, see:
 link:{LinkFuseOnlineTutorials}[{NameOfFuseOnlineTutorials}].

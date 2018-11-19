@@ -1,6 +1,7 @@
 <productname>Syndesis</productname>
 <productnumber>{version}</productnumber>
-<subtitle>User's guide to integrating applications with Syndesis</subtitle>
+<subtitle>For business users who want to share data between
+different applications and services</subtitle>
 <abstract>
  <para>Syndesis provides integration as a service.</para>
 </abstract>

@@ -1,14 +1,18 @@
-[id='add-log-step']
-= Adding a log step
+// This module is included in the following assemblies:
+// creating_integrations.adoc
+
+[id='add-log-step_{context}']
+= Add a log step
 
 {prodname} provides information about each execution of an integration. 
 To learn what information is automatically provided,
-see <<viewing-integration-activity-information>>.
+see link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_monitor[View integration activity information].
 
 To obtain additional information, between any two steps, add a log step or a 
-log connection to the integration. See link:{LinkFuseOnlineConnectorGuide}#comparison-log-step-connection_connect-to-log[Comparison of log step and log connection].
+log connection to the integration. See 
+link:{LinkFuseOnlineConnectorGuide}#comparison-log-step-connection_connect-to-log[Comparison of log step and log connection].
 
-For each message that it receives, a log step can provide
+For each message that an integration receives, a log step can provide
 one or more of the following:
 
 * The message's header, which provides metadata about the message.
@@ -16,16 +20,11 @@ one or more of the following:
 * Text that you specify either explicitly or through evaluation of an 
 http://camel.apache.org/simple.html[Apache Camel Simple language] expression. 
 
-To add a log step, you must be creating a new integration or
-editing an integration. The integration must already have
-its start and finish connections.
+.Prerequisites
+* You are creating an integration or editing an integration. 
+* The integration already has its start and finish connections. 
 
-To finish an integration by logging information about the messages that an
-integration processes, or to log message information at a particular log level, 
-link:{LinkFuseOnlineConnectorGuide}#connecting-to-log[add a log connection]
-instead of a log step. 
-
-To add a log step:
+.Procedure
 
 . In the integration visualization panel on the left, hover over the
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
@@ -47,8 +46,10 @@ to the integration.
 from the new log step.
 
 .Additional resources
-* link:{LinkFuseOnlineConnectorGuide}#comparison-log-step-connection_connect-to-log[Comparison of log step and log connection].
-* link:{LinkFuseOnlineConnectorGuide}#add-log-connection_connect-to-log[Add a log connection].
+* To finish an integration by logging information about the messages that an
+integration processes, or to log message information at a particular log level, 
+link:{LinkFuseOnlineConnectorGuide}#add-log-connection_connect-to-log[Add a log connection]
+instead of a log step.
 * After an integration that has a log step has been executed, output from
 its log step appears in the integration's *Activity* tab. See
-<<viewing-integration-activity-information>>.
+link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_monitor[View integration activity information].

@@ -1,5 +1,6 @@
 [id='connecting-to-mqtt']
 = Connecting to MQTT
+:context: mqtt
 
 MQ Telemetry Transport (MQTT) is a lightweight,
 machine-to-machine, internet of things, connectivity protocol. 

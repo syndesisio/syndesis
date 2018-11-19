@@ -1,5 +1,8 @@
-[id='add-advanced-filter-step']
-= Adding an advanced filter step
+// This module is included in the following assemblies:
+// creating_integrations.adoc
+
+[id='add-advanced-filter-step_{context}']
+= Add an advanced filter step
 
 In a filter step, {prodname} inspects the
 data and continues the integration only if the content meets
@@ -7,14 +10,11 @@ criteria that you define.
 If the basic filter step does not let you
 define the exact filter you need, then add an advanced filter step.
 
-Add all connections to your integration before you add additional steps. When you
-add a step, {prodname} operates on the data it receives from the
-previous connections and any additional step(s).
+.Prerequisites
+* The integration contains all connections that it needs to. 
+* You are creating or editing an integration. 
 
-When you add a step you might be creating a new integration or editing
-an integration. The flow of the integration appears in the left panel.
-
-To add an advanced filter step:
+.Procedure
 
 . In the left panel, where you want to add an advanced filter step to
 the integration, hover over the

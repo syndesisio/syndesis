@@ -1,5 +1,6 @@
 [id='connecting-to-rest-apis']
 = Connecting to REST APIs
+:context: rest
 
 In an integration, to connect to a REST API, you must have created a
 connector for that API by uploading an OpenAPI specification that
