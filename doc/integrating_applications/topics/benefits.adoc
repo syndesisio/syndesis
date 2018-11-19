@@ -1,4 +1,7 @@
-[id='benefits']
+// This module is included in these assemblies:
+// high_level_overview.adoc
+
+[id='benefits_{context}']
 = Benefits of using {prodname}
 
 {prodname} has a number of benefits: 

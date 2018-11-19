@@ -1,8 +1,12 @@
-[id='troubleshooting-integration-execution']
-= Troubleshooting integration execution
+// This module is included in these assemblies:
+// managing_integrations.adoc
+
+[id='troubleshooting-integration-execution_{context}']
+= Tips for troubleshooting integration execution
 
 If an integration stops working, check its activity and history details.
-See <<viewing-integration-activity-information>> and <<viewing-integration-history>>. 
+See link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_monitor[View integration activity information]
+and link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-history_monitor[View integration history]. 
 
 For a connection to an application that uses OAuth, 
 you might see an error message that indicates
@@ -31,7 +35,7 @@ for other applications.
 If reconnection is not successful, try this:
 
 . Re-register {prodname} as a client of the application. See 
-<<obtaining-authorization-to-access-applications>>. 
+link:{LinkFuseOnlineIntegrationGuide}#general-procedure-for-obtaining-authorization_connections[General procedure for obtaining authorization]. 
 . Create a new connection. 
 . Edit each integration that was using the old connection:
 .. Remove the old connection. 

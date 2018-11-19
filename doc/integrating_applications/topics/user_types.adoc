@@ -1,4 +1,7 @@
-[id='audience']
+// This module is included in these assemblies:
+// high_level_overview.adoc
+
+[id='user-types_{context}']
 = Who {prodname} is for
 
 {prodname} is for business experts in, for example,

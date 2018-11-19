@@ -1,5 +1,6 @@
 [id='connecting-to-amqp']
 = Connecting to AMQP
+:context: amqp
 
 In an integration, you can obtain messages from or publish messages
 to an Advanced Message Queue Protocol (AMQP) broker. AMQP defines communication 
@@ -33,7 +34,10 @@ To use the AMQP connector, see:
 
 * <<create-amqp-connection>> 
 * <<adding-amqp-connections>>
+* <<specifying-connection-input-output-types_{context}>>
 
 include::create_amqp_connection.adoc[leveloffset=+1]
 
 include::adding_amqp_connections.adoc[leveloffset=+1]
+
+include::specifying_connection_input_output_types.adoc[leveloffset=+1]

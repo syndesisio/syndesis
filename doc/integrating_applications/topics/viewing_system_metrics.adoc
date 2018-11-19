@@ -1,5 +1,8 @@
-[id='viewing-system-metrics']
-= Viewing metrics for a {prodname} environment
+// This module is included in these assemblies:
+// monitoring_integrations.adoc
+
+[id='viewing-system-metrics_{context}']
+= View metrics for a {prodname} environment
 
 Metrics for your {prodname} environment 
 appear on the {prodname} home page. To see them, click

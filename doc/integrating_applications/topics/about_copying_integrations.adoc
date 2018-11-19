@@ -1,4 +1,7 @@
-[id='about-copying-integrations']
+// This module is included in the following assemblies:
+// copying_integrations_to_other_environments.adoc
+
+[id='about-copying-integrations_{context}']
 = About copying integrations
 
 Each {prodname} installation is an environment from which you

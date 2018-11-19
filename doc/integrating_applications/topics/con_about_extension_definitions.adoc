@@ -1,4 +1,7 @@
-[id='about-extension-definitions']
+// This module is included in the following assembly:
+// developing_extensions.adoc
+
+[id='about-extension-definitions_{context}']
 = Requirements in an extension definition JSON file
 
 Each extension must have a `.json` file that defines the extension 

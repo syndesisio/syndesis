@@ -1,4 +1,7 @@
-[id='about-connection-validation']
+// This module is included in the following assemblies:
+// connecting_to_applications.adoc
+
+[id='about-connection-validation_{context}']
 = About connection validation
 
 After obtaining authorization for {prodname} to access an application
@@ -17,7 +20,7 @@ To validate a connection that uses OAuth or to obtain a new access token
 for an OAuth application:
 
 . In the left panel, click *Connections*.
-. Click the connection you want to validate or for which you want to
+. Click the connection that you want to validate or for which you want to
 obtain a new access token.
 . In the connection's details page, click *Validate* or click
 *Reconnect*. 
@@ -29,7 +32,7 @@ valid. It is possible that an item has expired or been revoked.
 If you find that an OAuth item is invalid, has expired, or been
 revoked, obtain new values and paste them into the {prodname} settings
 for the application. See the instructions in 
-{LinkFuseOnlineConnectorGuide}[{NameOfFuseOnlineConnectorGuide}] 
+link:{LinkFuseOnlineConnectorGuide}[{NameOfFuseOnlineConnectorGuide}] 
 for registering the application whose connection did not validate. With the
 updated settings in place, follow the instructions above to try to
 validate the updated connection. If validation is successful, and there

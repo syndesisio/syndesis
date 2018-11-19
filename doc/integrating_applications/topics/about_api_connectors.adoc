@@ -1,7 +1,10 @@
-[id='about-api-client-connectors']
+// This module is included in the following assemblies:
+// developing_rest_api_client_connectors.adoc
+
+[id='about-api-client-connectors_{context}']
 = Requirements for REST API client connectors
 
-After you upload an OpenAPI specification to {prodname}, a connector to the REST API
+After you upload an OpenAPI schema to {prodname}, a connector to the REST API
 becomes available. You can select the connector to create
 a REST API client connection. You can then create a new integration and 
 add the REST API client connection, or you can edit an existing integration 
@@ -19,7 +22,7 @@ register your {prodname} environment as a client of the REST API.
 This authorizes your {prodname} environment to access the REST API. As part
 of registration, you provide the {prodname} callback URL. 
 The details for doing this are described in
-{LinkFuseOnlineConnectorGuide}#register-with-rest-apis[Connecting Fuse Online to Applications and Services, Register with REST APIs].
+link:{LinkFuseOnlineConnectorGuide}#register-with-rest-apis_rest[{NameOfFuseOnlineConnectorGuide}, Register with REST APIs].
 
 {prodname} cannot create connectors for REST APIs that support the HTTP 2.0
 protocol.

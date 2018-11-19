@@ -1,4 +1,7 @@
-[id='how-you-use']
+// This module is included in the following assemblies:
+// how_to_get_ready.adoc
+
+[id='example-workflow_{context}']
 = Example workflow for creating a Salesforce to database integration
 
 The best way to understand the workflow for using {prodname} is to 

@@ -1,4 +1,7 @@
-[id='procedure-for-developing-extensions']
+// This module is included in the following assembly:
+// developing_extensions.adoc
+
+[id='procedure-for-developing-extensions_{context}']
 = General procedure for developing extensions
 
 Before you start to develop an extension, become familiar with the tasks that

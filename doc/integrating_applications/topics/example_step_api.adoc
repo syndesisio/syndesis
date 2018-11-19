@@ -1,4 +1,7 @@
-[id='example-step-api']
+// This module is included in the following assembly:
+// develop_step_extensions.adoc
+
+[id='example-step-api_{context}']
 = Example of using the Syndesis Step API
 
 You can implement a custom step by using the Syndesis `Step` API. This

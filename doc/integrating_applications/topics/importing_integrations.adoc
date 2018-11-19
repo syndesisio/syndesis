@@ -1,15 +1,19 @@
-[id='importing-integrations']
-= Importing integrations
+// This module is included in the following assemblies:
+// copying_integrations_to_other_environments.adoc
 
-In a {prodname} environment, to import an integration from another 
-{prodname} environment, you must have used that other {prodname} 
-environment to <<exporting-integrations,export the integraion>>. 
+[id='importing-integrations_{context}']
+= Import integrations
+
+In a {prodname} environment, you can import an integration that was
+exported from another {prodname} environment. 
 Exporting an integration downloads the zip file that you upload
 to import the integration.
 
-To import an integration:
+.Prerequisite
+You have a zip file that contains an integration that was exported in another
+{prodname} environment. 
 
-:context: ug
+.Procedure
 . Open the {prodname} environment that you want to import the integration into.
 . In the left panel, click *Integrations*.
 . In the upper right, click *Import*.
@@ -39,11 +43,11 @@ application that uses the OAuth protocol, register this installation of
 {prodname} with the application. The steps vary for each application.
 See the appropriate topic:
 
-* {LinkFuseOnlineConnectorGuide}#register-with-dropbox[Register with Dropbox]
-* {LinkFuseOnlineConnectorGuide}#register-with-gmail[Register with Gmail]
-* {LinkFuseOnlineConnectorGuide}#register-with-rest-api[Register with a REST API]
-* {LinkFuseOnlineConnectorGuide}#register-with-salesforce_{context}[Register with Salesforce]
-* {LinkFuseOnlineConnectorGuide}#register-with-twitter[Register with Twitter]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-dropbox_dropbox[Register with Dropbox]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-gmail_gmail[Register with Gmail]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-rest-api_rest[Register with a REST API]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce{context}[Register with Salesforce]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-twitter_twitter[Register with Twitter]
 
 . In the left panel, click *Connections* and confirm that there are no
 longer any connections that require configuration.

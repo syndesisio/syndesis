@@ -1,4 +1,7 @@
-[id='develop-library-extensions']
+// This module is included in the following assembly:
+// developing_extensions.adoc
+
+[id='develop-library-extensions_{context}']
 = How to develop library extensions
 
 A library extension provides a resource that an 
@@ -28,11 +31,36 @@ https://github.com/syndesisio/syndesis/issues/2809[this GitHub issue].
 endif::[]
 
 
-See the following topics for information about creating library extensions:
+A library extension does not define any actions. 
+Here is a sample definition for a library extension:
 
-* <<library-extension-definition>>
-* <<creating-jdbc-driver-library-extensions>>
+[source,json]
+----
+{
+  "schemaVersion" : "v1",
+  "name" : "Example JDBC Driver Library",
+  "description" : "Syndesis Extension for adding a custom JDBC Driver",
+  "extensionId" : "io.syndesis.extensions:syndesis-library-jdbc-driver",
+  "version" : "1.0.0",
+  "tags" : [ "jdbc-driver" ],
+  "extensionType" : "Libraries"
+}
+----
 
-include::con_library_extension_definition.adoc[leveloffset=+1]
+Other than the lack of actions, the structure of a library extension 
+is the same as the structure of a step or connector extension. 
 
-include::creating_jdbc_driver_library_extensions.adoc[leveloffset=+1]
+In a Maven project that creates a library extension, to add dependencies 
+that are not available from a Maven repository, 
+specify a `system` dependency, for example: 
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.company</groupId>
+    <artifactId>jdbc-driver</artifactId>
+    <version>1.0</version>
+    <scope>system</scope>
+    <systemPath>${project.basedir}/lib/jdbc-driver-1.0.jar</systemPath>
+</dependency>
+----
