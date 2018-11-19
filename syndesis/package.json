@@ -6,6 +6,8 @@
     "@syndesis/api": "*",
     "@syndesis/models": "*",
     "@syndesis/ui": "*",
+    "@syndesis/utils": "*",
+    "@syndesis/connector-ftp": "*",
     "patternfly-react": "^2.19.1",
     "react": "^16.5.2",
     "react-content-loader": "^3.2.0",
