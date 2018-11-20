@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.sheets;
+package io.syndesis.connector.sheets.model;
 
-public class GoogleSheetsModel {
+public class GoogleValueRange {
 
     private String spreadsheetId;
     private String range;
@@ -77,7 +77,7 @@ public class GoogleSheetsModel {
 
     @Override
     public String toString() {
-        return String.format("%s [spreadsheetId=%s, range=%s, values=%s]", GoogleSheetsModel.class.getSimpleName(), spreadsheetId, range, values);
+        return String.format("%s [spreadsheetId=%s, range=%s, values=%s]", GoogleValueRange.class.getSimpleName(), spreadsheetId, range, values);
     }
 
 }

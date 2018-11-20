@@ -16,6 +16,8 @@
 package io.syndesis.connector.sheets;
 
 import com.google.api.services.sheets.v4.model.ValueRange;
+import io.syndesis.common.util.Json;
+import io.syndesis.connector.sheets.model.GoogleValueRange;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -24,9 +26,10 @@ import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollecti
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
 import org.apache.camel.util.ObjectHelper;
 
+import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomizer {
@@ -34,6 +37,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
     private String spreadsheetId;
     private String range;
     private String values;
+    private String valueInputOption;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
@@ -44,16 +48,27 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
     private void setApiMethod(Map<String, Object> options) {
         spreadsheetId = (String) options.get("spreadsheetId");
         range = (String) options.get("range");
-        values = (String) options.get("values");
+        values = Optional.ofNullable(options.get("values"))
+                         .map(Object::toString)
+                         .orElse("[[]]");
+        valueInputOption = (String) options.get("valueInputOption");
 
         options.put("apiName",
                 GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName());
-        options.put("methodName", "update");
+        options.put("methodName", getApiMethodName());
     }
 
-    private void beforeProducer(Exchange exchange) {
+    /**
+     * Gets the api method name. Subclasses may override method names here.
+     * @return
+     */
+    protected String getApiMethodName() {
+        return "update";
+    }
+
+    private void beforeProducer(Exchange exchange) throws IOException {
         final Message in = exchange.getIn();
-        final GoogleSheetsModel model = exchange.getIn().getBody(GoogleSheetsModel.class);
+        final GoogleValueRange model = exchange.getIn().getBody(GoogleValueRange.class);
 
         if (model != null) {
             if (ObjectHelper.isNotEmpty(model.getValues())) {
@@ -67,13 +82,21 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
             }
         }
 
+        if (!values.startsWith("[")) {
+            values = "[[" + Arrays.stream(values.split(","))
+                    .map(value -> "\"" + value + "\"")
+                    .collect(Collectors.joining(",")) + "]]";
+        }
+
         ValueRange valueRange = new ValueRange();
-        valueRange.setValues(Collections.singletonList(Arrays.stream(values.split(","))
-                .collect(Collectors.toList())));
+        valueRange.setValues(Arrays.stream((Object[][]) Json.reader().forType(Object[][].class).readValue(values))
+                                    .map(Arrays::asList)
+                                    .collect(Collectors.toList()));
 
         in.setHeader("CamelGoogleSheets.spreadsheetId", spreadsheetId);
         in.setHeader("CamelGoogleSheets.range", range);
         in.setHeader("CamelGoogleSheets.values", valueRange);
-        in.setHeader("CamelGoogleSheets.valueInputOption", "USER_ENTERED");
+        in.setHeader("CamelGoogleSheets.valueInputOption", Optional.ofNullable(valueInputOption)
+                                                                      .orElse("USER_ENTERED"));
     }
 }

@@ -15,7 +15,11 @@
  */
 package io.syndesis.connector.sheets;
 
+import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
+import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
+import io.syndesis.connector.sheets.model.GoogleSheet;
+import io.syndesis.connector.sheets.model.GoogleSpreadsheet;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -44,9 +48,30 @@ public class GoogleSheetsGetSpreadsheetCustomizer implements ComponentProxyCusto
         final Message in = exchange.getIn();
         final Spreadsheet spreadsheet = exchange.getIn().getBody(Spreadsheet.class);
 
+        GoogleSpreadsheet model = new GoogleSpreadsheet();
+
         if (ObjectHelper.isNotEmpty(spreadsheet)) {
-            in.setHeader("CamelGoogleSheets.spreadsheetId", spreadsheet.getSpreadsheetId());
+            model.setSpreadsheetId(spreadsheet.getSpreadsheetId());
+
+            SpreadsheetProperties spreadsheetProperties = spreadsheet.getProperties();
+            if (ObjectHelper.isNotEmpty(spreadsheetProperties)) {
+                model.setTitle(spreadsheetProperties.getTitle());
+                model.setUrl(spreadsheet.getSpreadsheetUrl());
+                model.setTimeZone(spreadsheetProperties.getTimeZone());
+                model.setLocale(spreadsheetProperties.getLocale());
+            }
+
+            if (ObjectHelper.isNotEmpty(spreadsheet.getSheets())) {
+                SheetProperties sheetProperties = spreadsheet.getSheets().get(0).getProperties();
+                GoogleSheet sheet = new GoogleSheet();
+                sheet.setSheetId(sheetProperties.getSheetId());
+                sheet.setIndex(sheetProperties.getIndex());
+                sheet.setTitle(sheetProperties.getTitle());
+                model.setSheet(sheet);
+            }
         }
+
+        in.setBody(model);
     }
 
 }

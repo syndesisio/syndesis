@@ -15,8 +15,12 @@
  */
 package io.syndesis.connector.sheets;
 
+import com.google.api.services.sheets.v4.model.Sheet;
+import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
+import io.syndesis.connector.sheets.model.GoogleSheet;
+import io.syndesis.connector.sheets.model.GoogleSpreadsheet;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -25,20 +29,26 @@ import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollecti
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
 import org.apache.camel.util.ObjectHelper;
 
+import java.util.Collections;
 import java.util.Map;
 
 public class GoogleSheetsCreateSpreadsheetCustomizer implements ComponentProxyCustomizer {
 
     private String title;
+    private String timeZone;
+    private String locale;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setApiMethod(options);
         component.setBeforeProducer(this::beforeProducer);
+        component.setAfterProducer(this::afterProducer);
     }
 
     private void setApiMethod(Map<String, Object> options) {
         title = (String) options.get("title");
+        timeZone = (String) options.get("timeZone");
+        locale = (String) options.get("locale");
 
         options.put("apiName",
                 GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName());
@@ -47,19 +57,68 @@ public class GoogleSheetsCreateSpreadsheetCustomizer implements ComponentProxyCu
 
     private void beforeProducer(Exchange exchange) {
         final Message in = exchange.getIn();
-        final String body = exchange.getIn().getBody(String.class);
+        final GoogleSpreadsheet model = exchange.getIn().getBody(GoogleSpreadsheet.class);
 
-        if (ObjectHelper.isNotEmpty(body)) {
-            title = body;
+        if (model != null) {
+            if (ObjectHelper.isNotEmpty(model.getTitle())) {
+                title = model.getTitle();
+            }
+            if (ObjectHelper.isNotEmpty(model.getTimeZone())) {
+                timeZone = model.getTimeZone();
+            }
+            if (ObjectHelper.isNotEmpty(model.getLocale())) {
+                locale = model.getLocale();
+            }
         }
 
         Spreadsheet spreadsheet = new Spreadsheet();
         SpreadsheetProperties spreadsheetProperties = new SpreadsheetProperties();
 
         spreadsheetProperties.setTitle(title);
+        spreadsheetProperties.setTimeZone(timeZone);
+        spreadsheetProperties.setLocale(locale);
 
         spreadsheet.setProperties(spreadsheetProperties);
 
+        if (model != null && model.getSheet() != null) {
+            Sheet sheet = new Sheet();
+            SheetProperties sheetProperties = new SheetProperties();
+            sheetProperties.setTitle(model.getSheet().getTitle());
+            sheet.setProperties(sheetProperties);
+
+            spreadsheet.setSheets(Collections.singletonList(sheet));
+        }
+
         in.setHeader("CamelGoogleSheets.content", spreadsheet);
+    }
+
+    private void afterProducer(Exchange exchange) {
+        final Message in = exchange.getIn();
+        final Spreadsheet spreadsheet = in.getBody(Spreadsheet.class);
+
+        GoogleSpreadsheet model = new GoogleSpreadsheet();
+
+        if (ObjectHelper.isNotEmpty(spreadsheet)) {
+            model.setSpreadsheetId(spreadsheet.getSpreadsheetId());
+
+            SpreadsheetProperties spreadsheetProperties = spreadsheet.getProperties();
+            if (ObjectHelper.isNotEmpty(spreadsheetProperties)) {
+                model.setTitle(spreadsheetProperties.getTitle());
+                model.setUrl(spreadsheet.getSpreadsheetUrl());
+                model.setTimeZone(spreadsheetProperties.getTimeZone());
+                model.setLocale(spreadsheetProperties.getLocale());
+            }
+
+            if (ObjectHelper.isNotEmpty(spreadsheet.getSheets())) {
+                SheetProperties sheetProperties = spreadsheet.getSheets().get(0).getProperties();
+                GoogleSheet sheet = new GoogleSheet();
+                sheet.setSheetId(sheetProperties.getSheetId());
+                sheet.setIndex(sheetProperties.getIndex());
+                sheet.setTitle(sheetProperties.getTitle());
+                model.setSheet(sheet);
+            }
+        }
+
+        in.setBody(model);
     }
 }

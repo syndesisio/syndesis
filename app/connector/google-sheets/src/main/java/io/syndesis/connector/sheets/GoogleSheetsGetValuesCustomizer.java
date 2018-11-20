@@ -15,7 +15,10 @@
  */
 package io.syndesis.connector.sheets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import io.syndesis.common.util.Json;
+import io.syndesis.connector.sheets.model.GoogleValueRange;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -23,8 +26,6 @@ import org.apache.camel.Message;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer {
@@ -45,20 +46,16 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
         options.put("methodName", "get");
     }
 
-    private void beforeConsumer(Exchange exchange) {
+    private void beforeConsumer(Exchange exchange) throws JsonProcessingException {
         final Message in = exchange.getIn();
         final ValueRange valueRange = in.getBody(ValueRange.class);
 
-        final GoogleSheetsModel model = new GoogleSheetsModel();
+        final GoogleValueRange model = new GoogleValueRange();
 
         if (valueRange != null) {
             model.setSpreadsheetId(spreadsheetId);
             model.setRange(valueRange.getRange());
-            model.setValues(Arrays.toString(valueRange.getValues()
-                    .stream()
-                    .map(List::toArray)
-                    .map(Arrays::toString)
-                    .toArray()));
+            model.setValues(Json.writer().writeValueAsString(valueRange.getValues()));
         }
 
         in.setBody(model);

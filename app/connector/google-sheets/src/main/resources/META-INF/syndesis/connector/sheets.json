@@ -9,10 +9,14 @@
           "io.syndesis.connector.sheets.GoogleSheetsCreateSpreadsheetCustomizer"
         ],
         "inputDataShape": {
-          "kind": "none"
+          "name": "Spreadsheet",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
         },
         "outputDataShape": {
-          "kind": "none"
+          "name": "Spreadsheet",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
         },
         "propertyDefinitionSteps": [
           {
@@ -28,7 +32,33 @@
                 "label": "producer",
                 "labelHint": "The spreadsheet title.",
                 "order": "1",
-                "required": true,
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "timeZone": {
+                "deprecated": false,
+                "displayName": "Time Zone",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet time zone.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "locale": {
+                "deprecated": false,
+                "displayName": "Locale",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet locale.",
+                "order": "3",
+                "required": false,
                 "secret": false,
                 "type": "string"
               }
@@ -49,8 +79,9 @@
           "io.syndesis.connector.sheets.GoogleSheetsUpdateValuesCustomizer"
         ],
         "inputDataShape": {
+          "name": "ValueRange",
           "kind": "java",
-          "type": "io.syndesis.connector.sheets.GoogleSheetsModel"
+          "type": "io.syndesis.connector.sheets.model.GoogleValueRange"
         },
         "outputDataShape": {
           "kind": "none"
@@ -69,7 +100,7 @@
                 "label": "producer",
                 "labelHint": "The target spreadsheet identifier.",
                 "order": "1",
-                "required": true,
+                "required": false,
                 "secret": false,
                 "type": "string"
               },
@@ -83,7 +114,7 @@
                 "label": "producer",
                 "labelHint": "The range to write values to.",
                 "order": "2",
-                "required": true,
+                "required": false,
                 "secret": false,
                 "type": "string"
               },
@@ -96,6 +127,34 @@
                 "label": "producer",
                 "labelHint": "Values to write into the spreadsheet range.",
                 "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "valueInputOption": {
+                "deprecated": false,
+                "defaultValue": "USER_ENTERED",
+                "displayName": "Value Input Option",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "enum": [
+                  {
+                    "label": "Unspecified",
+                    "value": "INPUT_VALUE_OPTION_UNSPECIFIED"
+                  },
+                  {
+                    "label": "User entered",
+                    "value": "USER_ENTERED"
+                  },
+                  {
+                    "label": "Raw",
+                    "value": "RAW"
+                  }
+                ],
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "How to interpret input data.",
+                "order": "4",
                 "required": false,
                 "secret": false,
                 "type": "string"
@@ -117,8 +176,9 @@
           "io.syndesis.connector.sheets.GoogleSheetsAppendValuesCustomizer"
         ],
         "inputDataShape": {
+          "name": "ValueRange",
           "kind": "java",
-          "type": "io.syndesis.connector.sheets.GoogleSheetsModel"
+          "type": "io.syndesis.connector.sheets.model.GoogleValueRange"
         },
         "outputDataShape": {
           "kind": "none"
@@ -137,7 +197,7 @@
                 "label": "producer",
                 "labelHint": "The target spreadsheet identifier.",
                 "order": "1",
-                "required": true,
+                "required": false,
                 "secret": false,
                 "type": "string"
               },
@@ -151,7 +211,7 @@
                 "label": "producer",
                 "labelHint": "The target range. Operation will append the values to that range.",
                 "order": "2",
-                "required": true,
+                "required": false,
                 "secret": false,
                 "type": "string"
               },
@@ -164,6 +224,34 @@
                 "label": "producer",
                 "labelHint": "Values to append into the spreadsheet.",
                 "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "valueInputOption": {
+                "deprecated": false,
+                "defaultValue": "USER_ENTERED",
+                "displayName": "Value Input Option",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "enum": [
+                  {
+                    "label": "Unspecified",
+                    "value": "INPUT_VALUE_OPTION_UNSPECIFIED"
+                  },
+                  {
+                    "label": "User entered",
+                    "value": "USER_ENTERED"
+                  },
+                  {
+                    "label": "Raw",
+                    "value": "RAW"
+                  }
+                ],
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "How to interpret input data.",
+                "order": "4",
                 "required": false,
                 "secret": false,
                 "type": "string"
@@ -188,8 +276,9 @@
           "kind": "none"
         },
         "outputDataShape": {
+          "name": "ValueRange",
           "kind": "java",
-          "type": "io.syndesis.connector.sheets.GoogleSheetsModel"
+          "type": "io.syndesis.connector.sheets.model.GoogleValueRange"
         },
         "propertyDefinitionSteps": [
           {
@@ -205,7 +294,7 @@
                 "label": "producer",
                 "labelHint": "The spreadsheet identifier.",
                 "order": "1",
-                "required": true,
+                "required": false,
                 "secret": false,
                 "type": "string"
               },
@@ -235,7 +324,7 @@
                 "label": "producer",
                 "labelHint": "Value range in a spreadsheet to obtain.",
                 "order": "2",
-                "required": true,
+                "required": false,
                 "secret": false,
                 "type": "string"
               }
@@ -259,8 +348,9 @@
           "kind": "none"
         },
         "outputDataShape": {
+          "name": "Spreadsheet",
           "kind": "java",
-          "type": "com.google.api.services.sheets.v4.model.Spreadsheet"
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
         },
         "propertyDefinitionSteps": [
           {
@@ -276,7 +366,7 @@
                 "label": "producer",
                 "labelHint": "The spreadsheet identifier.",
                 "order": "1",
-                "required": true,
+                "required": false,
                 "secret": false,
                 "type": "string"
               },
@@ -285,14 +375,24 @@
                 "defaultValue": false,
                 "displayName": "Include grid data",
                 "group": "producer",
-                "javaType": "java.lang.Boolean",
+                "javaType": "boolean",
+                "enum": [
+                  {
+                    "label": "No",
+                    "value": "false"
+                  },
+                  {
+                    "label": "Yes",
+                    "value": "true"
+                  }
+                ],
                 "kind": "parameter",
                 "label": "producer",
                 "labelHint": "Should include grid data in result.",
                 "order": "2",
-                "required": true,
+                "required": false,
                 "secret": false,
-                "type": "boolean"
+                "type": "string"
               },
               "delay": {
                 "componentProperty": false,
