@@ -159,3 +159,15 @@ body.cards-pf {
 .glyphicon-info-sign {
   display: block;
 }
+
+// Centering tooltip styling above and below parent div
+.bs-tooltip-top .arrow,
+.bs-tooltip-bottom .arrow {
+  margin: 0 !important;
+  transform: translateX(-50%);
+}
+.bs-tooltip-left .arrow,
+.bs-tooltip-right .arrow {
+  margin: 0 !important;
+  transform: translateY(-50%);
+}
