@@ -1,5 +1,4 @@
 #!/bin/bash
-set -eu
 
 build::description() {
     echo "Build Syndesis builds"
@@ -36,6 +35,7 @@ build::usage() {
                                    argument is given, the MAVEN_MIRROR_URL environment variable is used or
                                    'http://nexus.myproject:8081/nexus/content/groups/public', if none is set.
                                    See also https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html
+        --man                      Open HTML documentation in the Syndesis Developer Handbook
 
 EOT
 
