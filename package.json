@@ -12,6 +12,8 @@
     "lint:staged": "lint-staged",
     "lint": "lerna run --parallel --no-bail lint",
     "test": "CI=true lerna run --parallel test -- --coverage --color",
+    "extra:atlasmap": "cd extra/atlasmap; yarn build",
+    "prebuild": "npm-run-all extra:*",
     "build": "lerna run --stream build",
     "watch:app": "lerna run --stream --scope @syndesis/syndesis start",
     "watch:packages": "lerna run --stream --parallel dev",
@@ -32,7 +34,8 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.16.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.1.6"
+    "typescript": "^3.1.6",
+    "yalc": "^1.0.0-pre.23"
   },
   "husky": {
     "hooks": {

@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@syndesis/api": "*",
+    "@syndesis/atlasmap": "file:.yalc/@syndesis/atlasmap",
+    "@syndesis/connector-ftp": "*",
     "@syndesis/models": "*",
     "@syndesis/ui": "*",
     "@syndesis/utils": "*",

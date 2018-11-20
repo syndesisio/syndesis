@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "@syndesis/atlasmap": {
+      "signature": "a0688a8dcdf3442fb329be73de3f7e7c",
+      "file": true
+    }
+  }
+}
