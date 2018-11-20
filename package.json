@@ -12,7 +12,9 @@
     "lint:staged": "lint-staged",
     "lint": "lerna run --parallel --no-bail lint",
     "test": "CI=true lerna run --parallel test -- --coverage --color",
-    "extra:atlasmap": "cd extra/atlasmap; yarn build",
+    "extra:atlasmap:copy-assets": "cpr extra/atlasmap/dist/atlasmap syndesis/public/atlasmap -d",
+    "extra:atlasmap:build": "cd extra/atlasmap; yarn build",
+    "extra:atlasmap": "npm-run-all -s extra:atlasmap:build extra:atlasmap:copy-assets",
     "prebuild": "npm-run-all extra:*",
     "build": "lerna run --stream build",
     "watch:app": "lerna run --stream --scope @syndesis/syndesis start",
@@ -27,6 +29,7 @@
     "prepush": "npm-run-all -p lint test"
   },
   "devDependencies": {
+    "cpr": "^3.0.1",
     "husky": "^1.1.4",
     "lerna": "^3.4.3",
     "npm-run-all": "^4.1.5",

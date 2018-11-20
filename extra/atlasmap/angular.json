@@ -23,9 +23,20 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "node_modules/patternfly/dist/css/patternfly.css",
+              "node_modules/patternfly/dist/css/patternfly-additions.css",
+              "node_modules/patternfly-ng/dist/css/patternfly-ng.min.css",
+              "node_modules/font-awesome/css/font-awesome.min.css",
+              "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jquery-match-height/dist/jquery.matchHeight.js",
+              "node_modules/tether/dist/js/tether.js",
+              "node_modules/bootstrap/dist/js/bootstrap.js",
+              "node_modules/patternfly/dist/js/patternfly.js",
+              "node_modules/chart.js/dist/Chart.js"
+            ]
           },
           "configurations": {
             "production": {

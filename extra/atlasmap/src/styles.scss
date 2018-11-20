@@ -1,0 +1,42 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  overflow:hidden;
+  .DataMapperUI {
+    width:90%;
+    margin: 0 auto;
+  }
+}
+
+.row {
+  margin: 0px;
+}
+
+.toolbar-pf {
+  background-color:#f5f5f5;
+  border-bottom:1px solid #d1d1d1;
+
+  .form-group .btn-link:focus {
+    color:#252525;
+    outline-style: none;
+  }
+}
+.breadcrumb {
+  margin:0px;
+  padding:0px;
+  padding-bottom:10px;
+  padding-left:20px;
+
+  a {
+    color:#5CBADF;
+    font-weight:bold;
+  }
+}
+
+.atlasmap__root {
+  position:relative;
+  height:calc(100% - 130px);
+}

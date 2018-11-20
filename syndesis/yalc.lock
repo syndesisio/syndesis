@@ -2,7 +2,7 @@
   "version": "v1",
   "packages": {
     "@syndesis/atlasmap": {
-      "signature": "a0688a8dcdf3442fb329be73de3f7e7c",
+      "signature": "92630a7d5bd932345c7184804ff66caa",
       "file": true
     }
   }
