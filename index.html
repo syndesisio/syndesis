@@ -521,8 +521,8 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-8317-g0420a9646,</span>
-<span id="revdate">2018-11-19</span>
+<span id="revnumber">version 1.1.3-8319-gb2dc4f3e9,</span>
+<span id="revdate">2018-11-20</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Syndesis Developer Handbook</div>
@@ -920,6 +920,10 @@ Options for build:
         --batch-mode               Run mvn in batch mode
         --camel-snapshot &lt;version&gt; Run a build with a specific Camel snapshot. If no argument is given the
                                    environment variable CAMEL_SNAPSHOT_VERSION is used or an error thrown.
+        --maven-mirror &lt;url&gt;       Use the maven mirror for the build, e.g. a maven repo proxy in OpenShift. If no
+                                   argument is given, the MAVEN_MIRROR_URL environment variable is used or
+                                   'http://nexus.myproject:8081/nexus/content/groups/public', if none is set.
+                                   See also https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html
         --man                      Open HTML documentation in the Syndesis Developer Handbook</code></pre>
 </div>
 </div>
@@ -1097,6 +1101,11 @@ The following table shows these options, and also how long a full clean build ov
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--flash</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fastest mode with skipping all checks and tests and with even some other aggressive optimizations</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--maven-mirror &lt;url&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use a maven mirror, e.g. a maven repo proxy in OpenShift with cached dependencies. See also [setting up a maven mirror](<a href="https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html" class="bare">https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html</a>).</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
@@ -3304,8 +3313,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-8317-g0420a9646<br>
-Last updated 2018-11-19 21:30:33 UTC
+Version 1.1.3-8319-gb2dc4f3e9<br>
+Last updated 2018-11-20 11:20:24 UTC
 </div>
 </div>
 </body>
