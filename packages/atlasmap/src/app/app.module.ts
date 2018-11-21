@@ -8,20 +8,15 @@ import { AppComponent } from './app.component';
 import { DataMapperHostComponent } from './data-mapper-host.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    DataMapperHostComponent
-  ],
+  declarations: [AppComponent, DataMapperHostComponent],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot([]),
-    DataMapperModule
+    DataMapperModule,
   ],
   providers: [],
-  bootstrap: [
-    AppComponent
-  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

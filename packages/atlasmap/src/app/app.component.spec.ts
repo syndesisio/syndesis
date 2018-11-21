@@ -5,19 +5,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { DataMapperModule } from '@atlasmap/atlasmap-data-mapper';
 import { AppComponent } from './app.component';
+import { DataMapperHostComponent } from './data-mapper-host.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
+      declarations: [AppComponent, DataMapperHostComponent],
       imports: [
         BrowserModule,
         FormsModule,
         HttpClientModule,
         RouterModule.forRoot([]),
-        DataMapperModule.withInterceptor(),
+        DataMapperModule,
       ],
     }).compileComponents();
   }));

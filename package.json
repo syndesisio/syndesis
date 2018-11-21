@@ -3,27 +3,28 @@
   "version": "0.1.0",
   "repository": "git@github.com:syndesisio/syndesis-react-poc.git",
   "private": true,
-  "workspaces": [
-    "syndesis",
-    "packages/*",
-    "typings/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "syndesis",
+      "packages/*",
+      "typings/*"
+    ]
+  },
   "scripts": {
     "lint:staged": "lint-staged",
     "lint": "lerna run --parallel --no-bail lint",
-    "test": "CI=true lerna run --parallel test -- --coverage --color",
-    "extra:atlasmap:copy-assets": "cpr extra/atlasmap/dist/atlasmap syndesis/public/atlasmap -d",
-    "extra:atlasmap:build": "cd extra/atlasmap; yarn build",
-    "extra:atlasmap": "npm-run-all -s extra:atlasmap:build extra:atlasmap:copy-assets",
-    "prebuild": "npm-run-all extra:*",
+    "test:angular": "lerna run --stream test:ci",
+    "test:jest": "CI=true lerna run --stream test -- --coverage --color",
+    "test": "npm-run-all -s test:*",
     "build": "lerna run --stream build",
+    "postbuild": "cpr packages/atlasmap/dist/atlasmap syndesis/public/atlasmap -d",
     "watch:app": "lerna run --stream --scope @syndesis/syndesis start",
     "watch:packages": "lerna run --stream --parallel dev",
     "watch": "npm-run-all --parallel watch:*",
     "minishift:setup": "lerna run --scope @syndesis/syndesis minishift:setup",
     "minishift:restore": "lerna run --scope @syndesis/syndesis minishift:restore",
-    "format:app": "prettier --single-quote --write 'syndesis/src/**/*.{js,ts,tsx,json}'",
-    "format:packages": "prettier --single-quote --write 'packages/*/src/**/*.{js,ts,tsx,json}'",
+    "format:app": "prettier --write 'syndesis/src/**/*.{js,ts,tsx,json}'",
+    "format:packages": "prettier --write 'packages/*/src/**/*.{js,ts,tsx,json}'",
     "format": "npm-run-all format:*",
     "precommit": "npm-run-all -s lint:staged",
     "prepush": "npm-run-all -p lint test"
@@ -48,11 +49,11 @@
   },
   "lint-staged": {
     "syndesis/**/*.{js,ts,tsx,json}": [
-      "prettier --trailing-comma es5 --single-quote --write",
+      "prettier --write",
       "git add"
     ],
     "packages/**/*.{js,ts,tsx,json}": [
-      "prettier --trailing-comma es5 --single-quote --write",
+      "prettier --write",
       "git add"
     ]
   },

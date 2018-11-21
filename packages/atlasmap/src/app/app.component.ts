@@ -14,8 +14,8 @@ import {
     InitializationService,
     MappingManagementService,
     ErrorHandlerService,
-    DocumentManagementService
-  ]
+    DocumentManagementService,
+  ],
 })
 export class AppComponent {
   title = 'atlasmap';

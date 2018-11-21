@@ -6,25 +6,30 @@ import {
   DocumentType,
   DocumentManagementService,
   ErrorHandlerService,
-  InitializationService, InspectionType,
-  MappingManagementService, MappingDefinition, MappingSerializer,
+  InitializationService,
+  InspectionType,
+  MappingManagementService,
+  MappingDefinition,
+  MappingSerializer,
 } from '@atlasmap/atlasmap-data-mapper';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-data-mapper-host',
   template: '<data-mapper #dataMapperComponent></data-mapper>',
-  providers: [MappingManagementService, ErrorHandlerService, DocumentManagementService],
+  providers: [
+    MappingManagementService,
+    ErrorHandlerService,
+    DocumentManagementService,
+  ],
 })
-
 export class DataMapperHostComponent implements OnInit, OnDestroy {
-
   @ViewChild('dataMapperComponent')
   dataMapperComponent: DataMapperAppComponent;
 
   private saveMappingSubscription: Subscription;
 
-  constructor(private initializationService: InitializationService) { }
+  constructor(private initializationService: InitializationService) {}
 
   ngOnInit() {
     // initialize config information before initializing services
@@ -114,10 +119,32 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     const left: DocumentInitializationModel = new DocumentInitializationModel();
     left.type = DocumentType.JSON;
     left.inspectionType = InspectionType.SCHEMA;
-    left.inspectionSource = '{"type":"object","$schema":"http://json-schema.org/schema#","title":"create_lead_OUT","properties":{"first_name":{"type":"string","required":true},"last_name":{"type":"string","required":true},"company":{"type":"string","required":true},"lead_source":{"type":"string","required":true}}}';
+    left.inspectionSource = JSON.stringify({
+      type: 'object',
+      $schema: 'http://json-schema.org/schema#',
+      title: 'create_lead_OUT',
+      properties: {
+        first_name: {
+          type: 'string',
+          required: true,
+        },
+        last_name: {
+          type: 'string',
+          required: true,
+        },
+        company: {
+          type: 'string',
+          required: true,
+        },
+        lead_source: {
+          type: 'string',
+          required: true,
+        },
+      },
+    });
     left.id = 'sql-stored-start-connector';
     left.name = 'sql-stored-start-connector';
-    left.description = 'Return value of Stored Procedure \'create_lead\'';
+    left.description = 'Return value of Stored Procedure "create_lead"';
     left.isSource = true;
     left.showFields = true;
     c.addDocument(left);
@@ -125,10 +152,44 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     const right: DocumentInitializationModel = new DocumentInitializationModel();
     right.type = DocumentType.JSON;
     right.inspectionType = InspectionType.SCHEMA;
-    right.inspectionSource = '{"type":"object","$schema":"http://json-schema.org/schema#","title":"add_lead_IN","properties":{"first_and_last_name":{"type":"string","required":true},"company":{"type":"string","required":true},"phone":{"type":"string","required":true},"email":{"type":"string","required":true},"lead_source":{"type":"string","required":true},"lead_status":{"type":"string","required":true},"rating":{"type":"string","required":true}}}';
+    right.inspectionSource = JSON.stringify({
+      type: 'object',
+      $schema: 'http://json-schema.org/schema#',
+      title: 'add_lead_IN',
+      properties: {
+        first_and_last_name: {
+          type: 'string',
+          required: true,
+        },
+        company: {
+          type: 'string',
+          required: true,
+        },
+        phone: {
+          type: 'string',
+          required: true,
+        },
+        email: {
+          type: 'string',
+          required: true,
+        },
+        lead_source: {
+          type: 'string',
+          required: true,
+        },
+        lead_status: {
+          type: 'string',
+          required: true,
+        },
+        rating: {
+          type: 'string',
+          required: true,
+        },
+      },
+    });
     right.id = 'add_lead Parameter';
     right.name = 'add_lead Parameter';
-    right.description = 'Parameters of Stored Procedure \'add_lead\'';
+    right.description = 'Parameters of Stored Procedure "add_lead"';
     right.isSource = false;
     right.showFields = true;
     c.addDocument(right);
