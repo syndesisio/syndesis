@@ -15,7 +15,6 @@
  */
 package io.syndesis.connector.calendar;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,21 +22,16 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
-
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.calendar.internal.CalendarEventsApiMethod;
 import org.apache.camel.component.google.calendar.internal.GoogleCalendarApiCollection;
 import org.apache.camel.util.ObjectHelper;
-
-import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
-
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesList;
 import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesString;
@@ -78,7 +72,7 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
     }
 
     @SuppressWarnings("PMD.NPathComplexity")
-    private void beforeProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
+    private void beforeProducer(Exchange exchange) throws ParseException {
 
         final Message in = exchange.getIn();
         final GoogleCalendarEventModel event = exchange.getIn().getBody(GoogleCalendarEventModel.class);
@@ -119,7 +113,7 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
     }
 
     @SuppressWarnings("PMD.NPathComplexity")
-    private void afterProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
+    private void afterProducer(Exchange exchange) {
 
         final Message in = exchange.getIn();
         final Event event = exchange.getIn().getBody(Event.class);
@@ -164,7 +158,7 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
         in.setBody(model);
     }
 
-    private Event createGoogleEvent(String summary, String description, String attendees, String startDate, String startTime, String endDate, String endTime, String location) throws AddressException, ParseException {
+    private Event createGoogleEvent(String summary, String description, String attendees, String startDate, String startTime, String endDate, String endTime, String location) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         Event event = new Event();
         event.setSummary(summary);

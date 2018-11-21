@@ -15,26 +15,20 @@
  */
 package io.syndesis.connector.calendar;
 
-import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.mail.MessagingException;
-
+import com.google.api.services.calendar.model.Event;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.calendar.internal.CalendarEventsApiMethod;
 import org.apache.camel.component.google.calendar.internal.GoogleCalendarApiCollection;
 import org.apache.camel.util.ObjectHelper;
-
-import com.google.api.services.calendar.model.Event;
-
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesString;
 
@@ -59,7 +53,7 @@ public class GoogleCalendarGetEventCustomizer implements ComponentProxyCustomize
         options.put("methodName", "get");
     }
 
-    private void beforeProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
+    private void beforeProducer(Exchange exchange) {
 
         final Message in = exchange.getIn();
 
@@ -68,7 +62,7 @@ public class GoogleCalendarGetEventCustomizer implements ComponentProxyCustomize
     }
 
     @SuppressWarnings("PMD.NPathComplexity")
-    private void afterProducer(Exchange exchange) throws MessagingException, IOException, ParseException {
+    private void afterProducer(Exchange exchange) {
 
         final Message in = exchange.getIn();
         final Event event = exchange.getIn().getBody(Event.class);

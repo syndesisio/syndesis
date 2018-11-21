@@ -23,7 +23,7 @@
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} [%-15.15thread] %-5level %-30.30logger - %msg%n</pattern>
     </encoder>
-    <file>target/gmail-connector.log</file>
+    <file>target/google-calendar-connector.log</file>
   </appender>
 
   <logger name="org.apache.camel.util.IntrospectionSupport" level="INFO"/>
