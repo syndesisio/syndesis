@@ -17,7 +17,7 @@
     "test:jest": "CI=true lerna run --stream test -- --coverage --color",
     "test": "npm-run-all -s test:*",
     "build": "lerna run --stream build",
-    "postbuild": "cpr packages/atlasmap/dist/atlasmap syndesis/public/atlasmap -d",
+    "postbuild": "cpr packages/atlasmap-assembly/dist/atlasmap syndesis/public/atlasmap -d",
     "watch:app": "lerna run --stream --scope @syndesis/syndesis start",
     "watch:packages": "lerna run --stream --parallel dev",
     "watch": "npm-run-all --parallel watch:*",
