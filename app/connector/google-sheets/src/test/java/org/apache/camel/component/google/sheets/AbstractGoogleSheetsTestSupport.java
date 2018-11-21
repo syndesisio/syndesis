@@ -50,22 +50,32 @@ public class AbstractGoogleSheetsTestSupport extends CamelTestSupport {
         sheetProperties.setTitle(TEST_SHEET);
         sheet.setProperties(sheetProperties);
 
-        GridData grid = new GridData();
-        grid.setStartRow(1);
-        grid.setStartColumn(1);
-        grid.setRowData(Arrays.asList(
-                new RowData().setValues(Arrays.asList(
-                        new CellData().setEffectiveValue(new ExtendedValue().setStringValue("a1")),
-                        new CellData().setEffectiveValue(new ExtendedValue().setStringValue("b1")))),
-                new RowData().setValues(Arrays.asList(
-                        new CellData().setEffectiveValue(new ExtendedValue().setStringValue("a2")),
-                        new CellData().setEffectiveValue(new ExtendedValue().setStringValue("b2"))))));
-
-        sheet.setData(Collections.singletonList(grid));
-
         spreadsheet.setSheets(Collections.singletonList(sheet));
-        
+
         this.spreadsheet = (Spreadsheet) requestBody("google-sheets://spreadsheets/create?inBody=content", spreadsheet);
+    }
+
+    /**
+     * Add some initial test data to test spreadsheet.
+     */
+    private void createTestData() {
+        if (spreadsheet == null) {
+            createTestSpreadsheet();
+        }
+
+        ValueRange valueRange = new ValueRange();
+        valueRange.setValues(Arrays.asList(Arrays.asList("a1", "b1"), Arrays.asList("a2", "b2")));
+
+        final Map<String, Object> headers = new HashMap<>();
+        // parameter type is String
+        headers.put("CamelGoogleSheets.spreadsheetId", spreadsheet.getSpreadsheetId());
+        // parameter type is String
+        headers.put("CamelGoogleSheets.range", TEST_SHEET + "!A1:B2");
+
+        // parameter type is String
+        headers.put("CamelGoogleSheets.valueInputOption", "USER_ENTERED");
+
+        requestBodyAndHeaders("google-sheets://data/update?inBody=values", valueRange, headers);
     }
 
     @Override
@@ -73,8 +83,23 @@ public class AbstractGoogleSheetsTestSupport extends CamelTestSupport {
 
         final CamelContext context = super.createCamelContext();
 
-        // read GoogleSheets component configuration from
-        // TEST_OPTIONS_PROPERTIES
+        final GoogleSheetsConfiguration configuration = new GoogleSheetsConfiguration();
+        IntrospectionSupport.setProperties(configuration, getTestOptions());
+
+        // add GoogleSheetsComponent to Camel context
+        final GoogleSheetsComponent component = new GoogleSheetsComponent(context);
+        component.setConfiguration(configuration);
+        context.addComponent("google-sheets", component);
+
+        return context;
+    }
+
+    /**
+     * Read component configuration from TEST_OPTIONS_PROPERTIES.
+     * @return Map of component options.
+     * @throws IOException when TEST_OPTIONS_PROPERTIES could not be loaded.
+     */
+    protected Map<String, Object> getTestOptions() throws IOException {
         final Properties properties = new Properties();
         try {
             properties.load(getClass().getResourceAsStream(TEST_OPTIONS_PROPERTIES));
@@ -87,15 +112,7 @@ public class AbstractGoogleSheetsTestSupport extends CamelTestSupport {
             options.put(entry.getKey().toString(), entry.getValue());
         }
 
-        final GoogleSheetsConfiguration configuration = new GoogleSheetsConfiguration();
-        IntrospectionSupport.setProperties(configuration, options);
-
-        // add GoogleSheetsComponent to Camel context
-        final GoogleSheetsComponent component = new GoogleSheetsComponent(context);
-        component.setConfiguration(configuration);
-        context.addComponent("google-sheets", component);
-
-        return context;
+        return options;
     }
 
     @Override
@@ -118,6 +135,16 @@ public class AbstractGoogleSheetsTestSupport extends CamelTestSupport {
         if (spreadsheet == null) {
             createTestSpreadsheet();
         }
+        return spreadsheet;
+    }
+
+    public Spreadsheet getSpreadsheetWithTestData() {
+        if (spreadsheet == null) {
+            createTestSpreadsheet();
+        }
+
+        createTestData();
+
         return spreadsheet;
     }
 

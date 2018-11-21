@@ -17,7 +17,6 @@ package org.apache.camel.component.google.sheets.stream;
 
 import com.google.api.services.sheets.v4.SheetsScopes;
 import org.apache.camel.RuntimeCamelException;
-import org.apache.camel.spi.Metadata;
 import org.apache.camel.spi.UriParam;
 import org.apache.camel.spi.UriParams;
 import org.apache.camel.spi.UriPath;
@@ -55,7 +54,6 @@ public class GoogleSheetsStreamConfiguration implements Cloneable {
     private String applicationName;
 
     @UriParam
-    @Metadata(required = "true")
     private String spreadsheetId;
 
     @UriParam(defaultValue = "10")

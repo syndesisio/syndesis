@@ -118,13 +118,13 @@ public class SheetsSpreadsheetsValuesIntegrationTest extends AbstractGoogleSheet
     @Ignore
     @Test
     public void testClear() throws Exception {
-        Spreadsheet testSheet = getSpreadsheet();
+        Spreadsheet testSheet = getSpreadsheetWithTestData();
 
         final Map<String, Object> headers = new HashMap<>();
         // parameter type is String
         headers.put("CamelGoogleSheets.spreadsheetId", testSheet.getSpreadsheetId());
         // parameter type is String
-        headers.put("CamelGoogleSheets.range", TEST_SHEET + "!A1:A10");
+        headers.put("CamelGoogleSheets.range", TEST_SHEET + "!A1:B2");
         // parameter type is com.google.api.services.sheets.v4.model.ClearValuesRequest
         headers.put("CamelGoogleSheets.clearValuesRequest", new ClearValuesRequest());
 
@@ -132,7 +132,7 @@ public class SheetsSpreadsheetsValuesIntegrationTest extends AbstractGoogleSheet
 
         assertNotNull("clear result is null", result);
         assertEquals(testSheet.getSpreadsheetId(), result.getSpreadsheetId());
-        assertEquals(TEST_SHEET + "!A1:A10", result.getClearedRange());
+        assertEquals(TEST_SHEET + "!A1:B2", result.getClearedRange());
 
         LOG.debug("clear: " + result);
     }

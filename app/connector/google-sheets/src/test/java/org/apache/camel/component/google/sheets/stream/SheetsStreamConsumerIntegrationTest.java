@@ -15,6 +15,7 @@
  */
 package org.apache.camel.component.google.sheets.stream;
 
+import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
@@ -29,23 +30,26 @@ import static org.apache.camel.component.google.sheets.stream.GoogleSheetsStream
 
 public class SheetsStreamConsumerIntegrationTest extends AbstractGoogleSheetsStreamTestSupport {
 
-    private String spreadsheetId = "1Um7NfoWCX8vG1Tc6I0WYoiYM3skHflTY430S5FXn7UQ";
     private String range = "A1:B2";
-    
+
     @Ignore
     @Test
-    @SuppressWarnings("unchecked")
     public void testConsumeValueRange() throws Exception {
+        Spreadsheet testSheet = getSpreadsheetWithTestData();
+
+        context().addRoutes(createGoogleStreamRouteBuilder(testSheet.getSpreadsheetId()));
+        context().startRoute("google-stream-test");
+
         MockEndpoint mock = getMockEndpoint("mock:result");
         mock.expectedMinimumMessageCount(1);
         assertMockEndpointsSatisfied();
-        
+
         Exchange exchange = mock.getReceivedExchanges().get(0);
         Assert.assertTrue(exchange.getIn().getHeaders().containsKey(SPREADSHEET_ID));
         Assert.assertTrue(exchange.getIn().getHeaders().containsKey(RANGE));
         Assert.assertTrue(exchange.getIn().getHeaders().containsKey(MAJOR_DIMENSION));
-        Assert.assertEquals(spreadsheetId, exchange.getIn().getHeaders().get(SPREADSHEET_ID));
-        Assert.assertEquals("Sheet1!" + range, exchange.getIn().getHeaders().get(RANGE));
+        Assert.assertEquals(testSheet.getSpreadsheetId(), exchange.getIn().getHeaders().get(SPREADSHEET_ID));
+        Assert.assertEquals(TEST_SHEET + "!" + range, exchange.getIn().getHeaders().get(RANGE));
         Assert.assertEquals("ROWS", exchange.getIn().getHeaders().get(MAJOR_DIMENSION));
 
         ValueRange values = (ValueRange) exchange.getIn().getBody();
@@ -56,12 +60,11 @@ public class SheetsStreamConsumerIntegrationTest extends AbstractGoogleSheetsStr
         Assert.assertEquals("b2", values.getValues().get(1).get(1));
     }
 
-    @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
+    private RouteBuilder createGoogleStreamRouteBuilder(String spreadsheetId) throws Exception {
         return new RouteBuilder() {
             @Override
             public void configure() {
-                from("google-sheets-stream://data?spreadsheetId=" + spreadsheetId + "&range=" + range + "&delay=5000&maxResults=5").to("mock:result");
+                from("google-sheets-stream://data?spreadsheetId=" + spreadsheetId + "&range=" + range + "&delay=2000&maxResults=5").routeId("google-stream-test").to("mock:result");
             }
         };
     }
