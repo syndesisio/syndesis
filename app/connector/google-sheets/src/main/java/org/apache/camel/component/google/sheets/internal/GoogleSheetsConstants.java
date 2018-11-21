@@ -16,14 +16,17 @@
 package org.apache.camel.component.google.sheets.internal;
 
 /**
- * Constants for GoogleSheets component.
+ * Constants for Camel Google Sheets component.
  */
-@SuppressWarnings("PMD.ConstantsInInterface")
-public interface GoogleSheetsConstants {
+public final class GoogleSheetsConstants {
 
     // suffix for parameters when passed as exchange header properties
-    String PROPERTY_PREFIX = "CamelGoogleSheets.";
-
+    public static final String PROPERTY_PREFIX = "CamelGoogleSheets.";
     // thread profile name for this component
-    String THREAD_PROFILE_NAME = "CamelGoogleSheets";
+    public static final String THREAD_PROFILE_NAME = "CamelGoogleSheets";
+
+    /**
+     * Prevent instantiation.
+     */
+    private GoogleSheetsConstants() {}
 }
