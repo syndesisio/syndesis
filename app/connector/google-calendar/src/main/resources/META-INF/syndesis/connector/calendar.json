@@ -9,10 +9,12 @@
           "io.syndesis.connector.calendar.GoogleCalendarSendEventCustomizer"
         ],
         "inputDataShape": {
+          "name": "CalendarEvent",
           "kind": "java",
           "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "outputDataShape": {
+          "name": "CalendarEvent",
           "kind": "java",
           "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
@@ -158,10 +160,12 @@
           "io.syndesis.connector.calendar.GoogleCalendarUpdateEventCustomizer"
         ],
         "inputDataShape": {
+          "name": "CalendarEvent",
           "kind": "java",
           "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "outputDataShape": {
+          "name": "CalendarEvent",
           "kind": "java",
           "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
@@ -323,6 +327,7 @@
           "kind": "none"
         },
         "outputDataShape": {
+          "name": "CalendarEvent",
           "kind": "java",
           "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
@@ -380,6 +385,7 @@
           "kind": "none"
         },
         "outputDataShape": {
+          "name": "CalendarEvent",
           "kind": "java",
           "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
@@ -509,7 +515,7 @@
       "group": "common",
       "javaType": "java.lang.String",
       "kind": "path",
-      "labelHint": "String provided by Google that authorizes access to a Gmail account.",
+      "labelHint": "String provided by Google that authorizes access to a Google calendar account.",
       "order": "4",
       "raw": true,
       "required": true,
@@ -539,7 +545,7 @@
       "group": "common",
       "javaType": "java.lang.String",
       "kind": "parameter",
-      "labelHint": "A name that you choose as the name of an OAuth 2.0 Gmail client. This name appears in the Google developers account list of OAuth clients.",
+      "labelHint": "A name that you choose as the name of an OAuth 2.0 Google calendar client. This name appears in the Google developers account list of OAuth clients.",
       "order": "3",
       "raw": true,
       "required": true,
@@ -660,7 +666,7 @@
       "group": "common",
       "javaType": "java.lang.String",
       "kind": "parameter",
-      "labelHint": "Gmail account name that is associated with this registration.",
+      "labelHint": "Google calendar account name that is associated with this registration.",
       "order": "6",
       "raw": true,
       "required": true,
