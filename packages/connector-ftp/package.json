@@ -42,8 +42,8 @@
     "test": "jest",
     "test:watch": "yarn run test --watch",
     "prebuild": "rimraf dist",
-    "build": "microbundle",
-    "dev": "yarn build watch",
+    "build": "microbundle --no-compress",
+    "dev": "microbundle watch --no-compress",
     "storybook": "start-storybook -p 9001"
   },
   "peerDependencies": {
