@@ -15,18 +15,14 @@
  */
 package io.syndesis.connector.gmail;
 
-import java.io.IOException;
 import java.util.Map;
 
-import javax.mail.MessagingException;
-
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.mail.stream.GoogleMailStreamConstants;
 import org.apache.camel.util.ObjectHelper;
-
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public class GmailReceiveEmailCustomizer implements ComponentProxyCustomizer {
 
@@ -35,26 +31,24 @@ public class GmailReceiveEmailCustomizer implements ComponentProxyCustomizer {
         component.setBeforeConsumer(this::beforeConsumer);
     }
 
-    private void beforeConsumer(Exchange exchange) throws MessagingException, IOException {
+    private void beforeConsumer(Exchange exchange) {
 
         final Message in = exchange.getIn();
         final GmailMessageModel mail = new GmailMessageModel();
-        if (mail != null) {
-            if (ObjectHelper.isNotEmpty(in.getBody())) {
-                mail.setText(in.getBody(String.class));
-            }
-            if (ObjectHelper.isNotEmpty(in.getHeader(GoogleMailStreamConstants.MAIL_SUBJECT))) {
-                mail.setSubject(in.getHeader(GoogleMailStreamConstants.MAIL_SUBJECT, String.class));
-            }
-            if (ObjectHelper.isNotEmpty(in.getHeader(GoogleMailStreamConstants.MAIL_TO))) {
-                mail.setTo(in.getHeader(GoogleMailStreamConstants.MAIL_TO, String.class));
-            }
-            if (ObjectHelper.isNotEmpty(in.getHeader(GoogleMailStreamConstants.MAIL_CC))) {
-                mail.setCc(in.getHeader(GoogleMailStreamConstants.MAIL_CC, String.class));
-            }
-            if (ObjectHelper.isNotEmpty(in.getHeader(GoogleMailStreamConstants.MAIL_BCC))) {
-                mail.setBcc(in.getHeader(GoogleMailStreamConstants.MAIL_BCC, String.class));
-            }
+        if (ObjectHelper.isNotEmpty(in.getBody())) {
+            mail.setText(in.getBody(String.class));
+        }
+        if (ObjectHelper.isNotEmpty(in.getHeader(GoogleMailStreamConstants.MAIL_SUBJECT))) {
+            mail.setSubject(in.getHeader(GoogleMailStreamConstants.MAIL_SUBJECT, String.class));
+        }
+        if (ObjectHelper.isNotEmpty(in.getHeader(GoogleMailStreamConstants.MAIL_TO))) {
+            mail.setTo(in.getHeader(GoogleMailStreamConstants.MAIL_TO, String.class));
+        }
+        if (ObjectHelper.isNotEmpty(in.getHeader(GoogleMailStreamConstants.MAIL_CC))) {
+            mail.setCc(in.getHeader(GoogleMailStreamConstants.MAIL_CC, String.class));
+        }
+        if (ObjectHelper.isNotEmpty(in.getHeader(GoogleMailStreamConstants.MAIL_BCC))) {
+            mail.setBcc(in.getHeader(GoogleMailStreamConstants.MAIL_BCC, String.class));
         }
         exchange.getIn().setBody(mail);
     }

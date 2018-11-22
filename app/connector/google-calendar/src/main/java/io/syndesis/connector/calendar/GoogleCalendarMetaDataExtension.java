@@ -21,19 +21,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.mail.internet.AddressException;
-
+import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.CalendarList;
+import com.google.api.services.calendar.model.CalendarListEntry;
+import com.google.common.base.Splitter;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.MetaDataBuilder;
 import org.apache.camel.component.google.calendar.BatchGoogleCalendarClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.api.services.calendar.Calendar;
-import com.google.api.services.calendar.model.CalendarList;
-import com.google.api.services.calendar.model.CalendarListEntry;
-import com.google.common.base.Splitter;
 
 public class GoogleCalendarMetaDataExtension extends AbstractMetaDataExtension {
 
@@ -81,7 +78,7 @@ public class GoogleCalendarMetaDataExtension extends AbstractMetaDataExtension {
         }
     }
 
-    private List<String> getScopes(String scopesString) throws AddressException {
+    private List<String> getScopes(String scopesString) {
        return Splitter.on(',').splitToList(scopesString);
     }
 }

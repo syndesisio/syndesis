@@ -18,21 +18,18 @@ package io.syndesis.connector.calendar.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.mail.internet.AddressException;
-
-import org.apache.camel.util.ObjectHelper;
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.api.services.calendar.model.EventAttendee;
 import com.google.common.base.Splitter;
+import org.apache.camel.util.ObjectHelper;
+import org.apache.commons.lang3.StringUtils;
 
 public final class GoogleCalendarUtils {
 
     private GoogleCalendarUtils() {
     }
 
-    public static List<EventAttendee> getAttendeesList(String attendeesString) throws AddressException {
-        List<EventAttendee> attendeesList = new ArrayList<EventAttendee>();
+    public static List<EventAttendee> getAttendeesList(String attendeesString) {
+        List<EventAttendee> attendeesList = new ArrayList<>();
         if (ObjectHelper.isNotEmpty(attendeesString)) {
             List<String> list = Splitter.on(',').trimResults().splitToList(attendeesString);
             for (String string : list) {
@@ -44,7 +41,7 @@ public final class GoogleCalendarUtils {
         return attendeesList;
     }
 
-    public static String getAttendeesString(List<EventAttendee> attendees) throws AddressException {
+    public static String getAttendeesString(List<EventAttendee> attendees) {
         String attendeesString;
         List<String> attendeesList = new ArrayList<>();
         for (EventAttendee eventAttendee : attendees) {

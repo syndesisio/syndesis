@@ -9,6 +9,7 @@
           "io.syndesis.connector.gmail.GmailSendEmailCustomizer"
         ],
         "inputDataShape": {
+          "name": "MailMessage",
           "kind": "java",
           "type": "io.syndesis.connector.gmail.GmailMessageModel"
         },
@@ -105,6 +106,7 @@
           "kind": "none"
         },
         "outputDataShape": {
+          "name": "MailMessage",
           "kind": "java",
           "type": "io.syndesis.connector.gmail.GmailMessageModel"
         },
