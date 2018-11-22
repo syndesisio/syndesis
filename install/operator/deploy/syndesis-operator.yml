@@ -87,7 +87,7 @@ objects:
 - apiVersion: rbac.authorization.k8s.io/v1beta1
   kind: ClusterRole
   metadata:
-    name: syndesis-operator
+    name: syndesis-operator:${NAMESPACE}
     labels:
       app: syndesis
       syndesis.io/app: syndesis
@@ -151,7 +151,7 @@ objects:
 - apiVersion: authorization.openshift.io/v1
   kind: ClusterRoleBinding
   metadata:
-    name: syndesis-operator:oauth
+    name: syndesis-operator:oauth:${NAMESPACE}
     labels:
       app: syndesis
       syndesis.io/app: syndesis
