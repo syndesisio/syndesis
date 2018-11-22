@@ -1,1 +1,1 @@
-export * from './DataMapper';
+export * from './DataMapperAdapter';

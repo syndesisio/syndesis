@@ -47,7 +47,8 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --deployUrl=atlasmap/",
+    "dev": "ng build --watch --deployUrl=atlasmap/",
     "build": "ng build --deployUrl=atlasmap/",
     "test:ci": "ng test --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test:watch": "ng test",

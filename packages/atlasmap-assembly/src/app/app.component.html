@@ -1,1 +1,9 @@
-<app-data-mapper-host></app-data-mapper-host>
+<app-data-mapper-host
+  *ngIf="hasData"
+  [inputDocumentType]="inputDocumentType"
+  [inputInspectionType]="inputInspectionType"
+  [inputDataShape]="inputDataShape"
+  [outputDocumentType]="outputDocumentType"
+  [outputInspectionType]="outputInspectionType"
+  [outputDataShape]="outputDataShape"
+></app-data-mapper-host>
