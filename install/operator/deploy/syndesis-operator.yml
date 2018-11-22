@@ -162,8 +162,8 @@ objects:
     name: syndesis-operator
     namespace: ${NAMESPACE}
   roleRef:
-    kind: Role
-    name: syndesis-operator
+    kind: ClusterRole
+    name: syndesis-operator:${NAMESPACE}
     apiGroup: rbac.authorization.k8s.io
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
