@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.camel.catalog.CamelCatalog;
-import org.immutables.value.Value;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,6 +28,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import org.apache.camel.catalog.CamelCatalog;
+import org.immutables.value.Value;
 
 /**
  * Component model.
@@ -120,7 +119,9 @@ public interface ComponentDefinition {
 
     @JsonIgnore
     static ComponentDefinition forScheme(CamelCatalog catalog, String scheme) throws IOException {
-        final String json = catalog.componentJSonSchema(scheme);
+        final String json = Optional.ofNullable(catalog.componentJSonSchema(scheme))
+                                    .orElseThrow(() -> new IllegalArgumentException(String.format("Failed to find component definition for scheme '%s'." +
+                                            " Missing component definition in classpath '%s/%s.json'", scheme, catalog.getRuntimeProvider().getComponentJSonSchemaDirectory(), scheme)));
 
         return new ObjectMapper()
             .registerModule(new Jdk8Module())

@@ -1,0 +1,609 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Create a spreadsheet on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsCreateSpreadsheetCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "Spreadsheet",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
+        },
+        "outputDataShape": {
+          "name": "Spreadsheet",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify spreadsheet properties. ",
+            "name": "Create spreadsheets through Google Sheets",
+            "properties": {
+              "title": {
+                "deprecated": false,
+                "displayName": "Title",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet title.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "timeZone": {
+                "deprecated": false,
+                "displayName": "Time Zone",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet time zone.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "locale": {
+                "deprecated": false,
+                "displayName": "Locale",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet locale.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-create-spreadsheet-connector",
+      "name": "Create spreadsheets",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Update values in a spreadsheet on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsUpdateValuesCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "ValueRange",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GoogleValueRange"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify grid data content and target spreadsheet id. ",
+            "name": "Update values through Google Sheets",
+            "properties": {
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "range": {
+                "deprecated": false,
+                "defaultValue": "A1",
+                "displayName": "Range",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The range to write values to.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "values": {
+                "deprecated": false,
+                "displayName": "Values",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Values to write into the spreadsheet range.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "valueInputOption": {
+                "deprecated": false,
+                "defaultValue": "USER_ENTERED",
+                "displayName": "Value Input Option",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "enum": [
+                  {
+                    "label": "Unspecified",
+                    "value": "INPUT_VALUE_OPTION_UNSPECIFIED"
+                  },
+                  {
+                    "label": "User entered",
+                    "value": "USER_ENTERED"
+                  },
+                  {
+                    "label": "Raw",
+                    "value": "RAW"
+                  }
+                ],
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "How to interpret input data.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-update-values-connector",
+      "name": "Update sheet values",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Append values to a spreadsheet on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsAppendValuesCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "ValueRange",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GoogleValueRange"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify grid data content and target spreadsheet id. ",
+            "name": "Append values through Google Sheets",
+            "properties": {
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "range": {
+                "deprecated": false,
+                "defaultValue": "A1",
+                "displayName": "Range",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target range. Operation will append the values to that range.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "values": {
+                "deprecated": false,
+                "displayName": "Values",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Values to append into the spreadsheet.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "valueInputOption": {
+                "deprecated": false,
+                "defaultValue": "USER_ENTERED",
+                "displayName": "Value Input Option",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "enum": [
+                  {
+                    "label": "Unspecified",
+                    "value": "INPUT_VALUE_OPTION_UNSPECIFIED"
+                  },
+                  {
+                    "label": "User entered",
+                    "value": "USER_ENTERED"
+                  },
+                  {
+                    "label": "Raw",
+                    "value": "RAW"
+                  }
+                ],
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "How to interpret input data.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-append-values-connector",
+      "name": "Append values to a sheet",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Obtain sheet grid data values from a spreadsheet on your the Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets-stream",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsGetValuesCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "name": "ValueRange",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GoogleValueRange"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the value range that you want to obtain.",
+            "name": "Obtain spreadsheet values from Google Sheets",
+            "properties": {
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "delay": {
+                "componentProperty": false,
+                "defaultValue": 30000,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Time interval between polls for value changes.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "duration"
+              },
+              "range": {
+                "defaultValue": "A1:A10",
+                "deprecated": false,
+                "displayName": "Range",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Value range in a spreadsheet to obtain.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-get-values-connector",
+      "name": "Get sheet values",
+      "pattern": "From"
+    },
+    {
+      "actionType": "connector",
+      "description": "Obtain a spreadsheet on your the Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets-stream",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsGetSpreadsheetCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "name": "Spreadsheet",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the spreadsheet that you want to obtain.",
+            "name": "Obtain spreadsheet from Google Sheets",
+            "properties": {
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "includeGridData": {
+                "deprecated": false,
+                "defaultValue": false,
+                "displayName": "Include grid data",
+                "group": "producer",
+                "javaType": "boolean",
+                "enum": [
+                  {
+                    "label": "No",
+                    "value": "false"
+                  },
+                  {
+                    "label": "Yes",
+                    "value": "true"
+                  }
+                ],
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Should include grid data in result.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "delay": {
+                "componentProperty": false,
+                "defaultValue": 30000,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Time interval between polls for value changes.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "duration"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-get-spreadsheet-connector",
+      "name": "Get spreadsheets",
+      "pattern": "From"
+    }
+  ],
+  "configuredProperties": {
+    "additionalOAuthQueryParameters": "{\"access_type\": \"offline\"}",
+    "applicationName": "sheets-syndesis",
+    "authenticationType": "oauth2",
+    "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+    "googleScopes": "https://www.googleapis.com/auth/spreadsheets",
+    "tokenUrl": "https://www.googleapis.com/oauth2/v4/token"
+  },
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Read and write data to spreadsheets.",
+  "icon": "data:image/png;base64,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",
+  "id": "sheets",
+  "name": "Google Sheets",
+  "properties": {
+    "accessToken": {
+      "deprecated": false,
+      "displayName": "Access Token",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "path",
+      "labelHint": "String provided by Google that authorizes access to a Google Sheets account.",
+      "order": "4",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "tags": [
+        "oauth-access-token"
+      ],
+      "type": "string"
+    },
+    "additionalOAuthQueryParameters": {
+      "deprecated": false,
+      "displayName": "Additional OAuth query parameters",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "tags": [
+        "oauth-additional-query-parameters"
+      ],
+      "type": "hidden"
+    },
+    "applicationName": {
+      "deprecated": false,
+      "displayName": "Application Name",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "A name that you choose as the name of an OAuth 2.0 Google Sheets client. This name appears in the Google developers account list of OAuth clients.",
+      "order": "3",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "authenticationType": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "The access token",
+      "displayName": "Authorization URL",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "required": false,
+      "secret": true,
+      "tags": [
+        "authentication-type"
+      ],
+      "type": "hidden"
+    },
+    "authorizationUrl": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "The access token",
+      "displayName": "Authorization URL",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "required": false,
+      "secret": true,
+      "tags": [
+        "oauth-authorization-url"
+      ],
+      "type": "hidden"
+    },
+    "clientId": {
+      "deprecated": false,
+      "displayName": "Client ID",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The client ID that Google provides when you register a client application.",
+      "order": "1",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "tags": [
+        "oauth-client-id"
+      ],
+      "type": "string"
+    },
+    "clientSecret": {
+      "deprecated": false,
+      "displayName": "Client Secret",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The client secret that Google provides when you register a client application.",
+      "order": "2",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "tags": [
+        "oauth-client-secret"
+      ],
+      "type": "string"
+    },
+    "googleScopes": {
+      "deprecated": false,
+      "displayName": "Scopes",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "UserId",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "tags": [
+        "oauth-scope"
+      ],
+      "type": "hidden"
+    },
+    "refreshToken": {
+      "deprecated": false,
+      "displayName": "Refresh Token",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "path",
+      "labelHint": "String provided by Google that enables retrieval of a new access token.",
+      "order": "5",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
+    "tokenUrl": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "The access token",
+      "displayName": "Token URL",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "required": false,
+      "secret": true,
+      "tags": [
+        "oauth-access-token-url"
+      ],
+      "type": "hidden"
+    },
+    "userId": {
+      "deprecated": false,
+      "displayName": "User ID",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Google Sheets account name that is associated with this registration.",
+      "order": "6",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}
