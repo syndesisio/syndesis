@@ -10,10 +10,9 @@
 ## Environment
 
 * Operating system: (E.g RHEL 7.6 )
-* OpenShift version:
 <!-- Run the command `oc version` and add the result here. -->
-* Ansible version:
-<!-- Run the command `ansible --version` and add the result here. -->
+* Yarn version:
+<!-- Run the command `yarn --version` and add the result here. -->
 * Project Version/Tag: (E.g release-1.0.1)
 
 ## Steps to reproduce
