@@ -148,7 +148,7 @@
       <groupId>io.swagger</groupId>
       <artifactId>swagger-jaxrs</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
@@ -319,6 +319,12 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-google-calendar</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-google-sheets</artifactId>
       <scope>runtime</scope>
     </dependency>
 
