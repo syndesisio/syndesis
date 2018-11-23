@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   InitializationService,
   ErrorHandlerService,
@@ -8,19 +8,23 @@ import {
   InspectionType,
 } from '@atlasmap/atlasmap-data-mapper';
 
-interface IInitMessagePayload {
-  inputId: string;
+export interface IInitMessagePayload {
+  documentId: string;
   inputName: string;
   inputDescription: string;
   inputDocumentType: DocumentType;
   inputInspectionType: InspectionType;
   inputDataShape: string;
-  outputId: string;
   outputName: string;
   outputDescription: string;
   outputDocumentType: DocumentType;
   outputInspectionType: InspectionType;
   outputDataShape: string;
+  mappings?: string;
+}
+
+export interface IMappingsMessagePayload {
+  mappings: string;
 }
 
 @Component({
@@ -36,19 +40,22 @@ interface IInitMessagePayload {
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'atlasmap';
+
   hasData = false;
-  inputId: string;
+  documentId: string;
   inputName: string;
   inputDescription: string;
   inputDocumentType: DocumentType;
   inputInspectionType: InspectionType;
   inputDataShape: string;
-  outputId: string;
   outputName: string;
   outputDescription: string;
   outputDocumentType: DocumentType;
   outputInspectionType: InspectionType;
   outputDataShape: string;
+  mappings?: string;
+
+  messagePort?: MessagePort;
 
   ngOnInit(): void {
     this.onMessage = this.onMessage.bind(this);
@@ -62,6 +69,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onMessage(event: MessageEvent) {
+    this.messagePort = event.ports[0];
+
     switch (event.data.message) {
       case 'init':
         this.onInitMessage(event.data.payload);
@@ -73,17 +82,28 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onInitMessage(payload: IInitMessagePayload) {
     this.hasData = true;
-    this.inputId = payload.inputId;
+    this.documentId = payload.documentId;
     this.inputName = payload.inputName;
     this.inputDescription = payload.inputDescription;
     this.inputDocumentType = payload.inputDocumentType;
     this.inputInspectionType = payload.inputInspectionType;
     this.inputDataShape = payload.inputDataShape;
-    this.outputId = payload.outputId;
     this.outputName = payload.outputName;
     this.outputDescription = payload.outputDescription;
     this.outputDocumentType = payload.outputDocumentType;
     this.outputInspectionType = payload.outputInspectionType;
     this.outputDataShape = payload.outputDataShape;
+    this.mappings = payload.mappings;
+  }
+
+  onMappings(mappings: string) {
+    if (this.messagePort) {
+      this.messagePort.postMessage({
+        message: 'mappings',
+        payload: {
+          mappings,
+        } as IMappingsMessagePayload,
+      });
+    }
   }
 }

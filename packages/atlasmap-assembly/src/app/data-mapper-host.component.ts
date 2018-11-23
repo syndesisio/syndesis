@@ -1,4 +1,12 @@
-import { Component, ViewChild, OnInit, OnDestroy, Input } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  OnInit,
+  OnDestroy,
+  Input,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import {
   ConfigModel,
   DataMapperAppComponent,
@@ -10,6 +18,7 @@ import {
   InspectionType,
   MappingManagementService,
   MappingDefinition,
+  MappingSerializer,
 } from '@atlasmap/atlasmap-data-mapper';
 import { Subscription } from 'rxjs';
 
@@ -23,18 +32,19 @@ import { Subscription } from 'rxjs';
   ],
 })
 export class DataMapperHostComponent implements OnInit, OnDestroy {
-  @Input() inputId: string;
+  @Input() documentId: string;
   @Input() inputName: string;
   @Input() inputDescription: string;
   @Input() inputDocumentType: DocumentType;
   @Input() inputInspectionType: InspectionType;
   @Input() inputDataShape: string;
-  @Input() outputId: string;
   @Input() outputName: string;
   @Input() outputDescription: string;
   @Input() outputDocumentType: DocumentType;
   @Input() outputInspectionType: InspectionType;
   @Input() outputDataShape: string;
+  @Input() mappings?: string;
+  @Output() onMappings = new EventEmitter<string>();
   @ViewChild('dataMapperComponent')
   dataMapperComponent: DataMapperAppComponent;
 
@@ -86,7 +96,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     inputDoc.type = this.inputDocumentType;
     inputDoc.inspectionType = this.inputInspectionType;
     inputDoc.inspectionSource = this.inputDataShape;
-    inputDoc.id = this.inputId;
+    inputDoc.id = this.documentId;
     inputDoc.name = this.inputName;
     inputDoc.description = this.inputDescription;
     inputDoc.isSource = true;
@@ -97,14 +107,35 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     outputDoc.type = this.outputDocumentType;
     outputDoc.inspectionType = this.outputInspectionType;
     outputDoc.inspectionSource = this.outputDataShape;
-    outputDoc.id = this.outputId;
+    outputDoc.id = this.documentId;
     outputDoc.name = this.outputName;
     outputDoc.description = this.outputDescription;
     outputDoc.isSource = false;
     outputDoc.showFields = true;
     c.addDocument(outputDoc);
 
-    c.mappings = new MappingDefinition();
+    if (this.mappings) {
+      const mappingDefinition = new MappingDefinition();
+      try {
+        MappingSerializer.deserializeMappingServiceJSON(
+          JSON.parse(this.mappings),
+          mappingDefinition,
+          c
+        );
+        c.mappings = mappingDefinition;
+      } catch (err) {
+        // TODO popup or error alert?  At least catch this so we initialize
+        console.error(err);
+      }
+    }
+
+    this.saveMappingSubscription = c.mappingService.saveMappingOutput$.subscribe(
+      (saveHandler: Function) => {
+        const json = c.mappingService.serializeMappingsToJSON();
+        this.onMappings.emit(JSON.stringify(json));
+        c.mappingService.handleMappingSaveSuccess(saveHandler);
+      }
+    );
 
     this.initializationService.initialize();
   }

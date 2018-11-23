@@ -1,3 +1,7 @@
+import {
+  IInitMessagePayload,
+  IMappingsMessagePayload,
+} from '@syndesis/atlasmap-assembly/src/app/app.component';
 import * as React from 'react';
 
 /* tslint:disable */
@@ -9,30 +13,25 @@ const vendor = require('file-loader?name=atlasmap-vendor.js!@syndesis/atlasmap-a
 const main = require('file-loader?name=atlasmap-main.js!@syndesis/atlasmap-assembly/dist/atlasmap/main.js');
 /* tslint:enable*/
 
-type DocumentType =
-  | 'Java'
-  | 'XML'
-  | 'XSD'
-  | 'JSON'
-  | 'Core'
-  | 'CSV'
-  | 'Constants'
-  | 'Property';
-type InspectionType = 'JAVA_CLASS' | 'SCHEMA' | 'INSTANCE' | 'UNKNOWN';
+export enum DocumentType {
+  JAVA = 'Java',
+  XML = 'XML',
+  XSD = 'XSD',
+  JSON = 'JSON',
+  CORE = 'Core',
+  CSV = 'CSV',
+  CONSTANT = 'Constants',
+  PROPERTY = 'Property',
+}
+export enum InspectionType {
+  JAVA_CLASS = 'JAVA_CLASS',
+  SCHEMA = 'SCHEMA',
+  INSTANCE = 'INSTANCE',
+  UNKNOWN = 'UNKNOWN',
+}
 
-export interface IDataMapperAdapterProps {
-  inputDataShape: string;
-  inputDescription: string;
-  inputDocumentType: DocumentType;
-  inputId: string;
-  inputInspectionType: InspectionType;
-  inputName: string;
-  outputDataShape: string;
-  outputDescription: string;
-  outputDocumentType: DocumentType;
-  outputId: string;
-  outputInspectionType: InspectionType;
-  outputName: string;
+export interface IDataMapperAdapterProps extends IInitMessagePayload {
+  onMappings(mappings: string): void;
 }
 
 export class DataMapperAdapter extends React.Component<
@@ -66,16 +65,16 @@ export class DataMapperAdapter extends React.Component<
       {
         message: 'init',
         payload: {
+          documentId: this.props.documentId,
           inputDataShape: this.props.inputDataShape,
           inputDescription: this.props.inputDescription,
           inputDocumentType: this.props.inputDocumentType,
-          inputId: this.props.inputId,
           inputInspectionType: this.props.inputInspectionType,
           inputName: this.props.inputName,
+          mappings: this.props.mappings,
           outputDataShape: this.props.outputDataShape,
           outputDescription: this.props.outputDescription,
           outputDocumentType: this.props.outputDocumentType,
-          outputId: this.props.outputId,
           outputInspectionType: this.props.outputInspectionType,
           outputName: this.props.outputName,
         },
@@ -86,7 +85,12 @@ export class DataMapperAdapter extends React.Component<
   }
 
   public onMessage(event: MessageEvent) {
-    // TODO
+    switch (event.data.message) {
+      case 'mappings': {
+        const payload: IMappingsMessagePayload = event.data.payload;
+        this.props.onMappings(payload.mappings);
+      }
+    }
   }
 
   public render() {

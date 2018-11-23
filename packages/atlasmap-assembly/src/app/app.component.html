@@ -1,9 +1,16 @@
 <app-data-mapper-host
   *ngIf="hasData"
+  [documentId]="documentId"
+  [inputName]="inputName"
+  [inputDescription]="inputDescription"
   [inputDocumentType]="inputDocumentType"
   [inputInspectionType]="inputInspectionType"
   [inputDataShape]="inputDataShape"
+  [outputName]="outputName"
+  [outputDescription]="outputDescription"
   [outputDocumentType]="outputDocumentType"
   [outputInspectionType]="outputInspectionType"
   [outputDataShape]="outputDataShape"
+  [mappings]="mappings"
+  (onMappings)="onMappings($event)"
 ></app-data-mapper-host>
