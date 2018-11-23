@@ -11,8 +11,6 @@
 
 * Operating system: (E.g RHEL 7.6 )
 <!-- Run the command `oc version` and add the result here. -->
-* OpenShift version:
-<!-- Run the command `oc version` and add the result here. -->
 * Yarn version:
 <!-- Run the command `yarn --version` and add the result here. -->
 * Project Version/Tag: (E.g release-1.0.1)
