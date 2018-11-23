@@ -32,15 +32,6 @@ import java.util.stream.StreamSupport;
 
 import static java.util.Optional.ofNullable;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.report.ProcessingMessage;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
-import com.github.fge.jsonschema.main.JsonSchema;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.Operation;
@@ -52,23 +43,38 @@ import io.swagger.parser.SwaggerParser;
 import io.swagger.parser.util.RemoteUrl;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.Resources;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.swagger.SwaggerModelInfo;
 import io.syndesis.server.api.generator.swagger.SyndesisSwaggerValidationRules;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
+import com.github.fge.jsonschema.core.report.ProcessingMessage;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
+
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 public final class SwaggerHelper {
+
+    private static final String SWAGGER_IO_V2_SCHEMA_URI = "http://swagger.io/v2/schema.json#";
 
     private static final Logger LOG = LoggerFactory.getLogger(SwaggerHelper.class);
 
     private static final JsonSchema SWAGGER_2_0_SCHEMA;
 
-    private static final String SWAGGER_2_0_SCHEMA_FILE = "/schema/swagger-2.0-schema.json";
+    private static final String SWAGGER_2_0_SCHEMA_FILE = "schema/swagger-2.0-schema.json";
 
     private static final Yaml YAML_PARSER = new Yaml();
 
@@ -78,8 +84,12 @@ public final class SwaggerHelper {
 
     static {
         try {
-            SWAGGER_2_0_SCHEMA = JsonSchemaFactory.byDefault().getJsonSchema("resource:" + SWAGGER_2_0_SCHEMA_FILE);
-        } catch (final ProcessingException ex) {
+            final JsonNode swagger20Schema = Json.reader().readTree(Resources.getResourceAsText(SWAGGER_2_0_SCHEMA_FILE));
+            final LoadingConfiguration loadingConfiguration = LoadingConfiguration.newBuilder()
+                .preloadSchema(SWAGGER_IO_V2_SCHEMA_URI, swagger20Schema)
+                .freeze();
+            SWAGGER_2_0_SCHEMA = JsonSchemaFactory.newBuilder().setLoadingConfiguration(loadingConfiguration).freeze().getJsonSchema(SWAGGER_IO_V2_SCHEMA_URI);
+        } catch (final ProcessingException | IOException ex) {
             throw new IllegalStateException("Unable to load the schema file embedded in the artifact", ex);
         }
     }

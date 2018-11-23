@@ -715,7 +715,6 @@
       "componentProperty": true,
       "deprecated": false,
       "description": "Seconds in UTC when the access token expires",
-      "displayName": "",
       "group": "producer",
       "javaType": "java.lang.Long",
       "kind": "property",
