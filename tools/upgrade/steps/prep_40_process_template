@@ -35,7 +35,7 @@ process_template::run() {
     echo "      - Current Syndesis version \"$syndesis_version\""
     read_global_config params > ${workdir}/template_params.props
 
-    add_missing_template_params "${workdir}/template_params.props"
+    post_process_template_params "${workdir}/template_params.props"
 
     local new_template=$(template_path)
 
@@ -73,8 +73,9 @@ process_template::rollback() {
     fi
 }
 
-add_missing_template_params() {
+post_process_template_params() {
     local params="$1"
+    local tmp=$(mktemp)
 
     # Adding possibly missing template parameters for new templates here.
     # Don't forget to add it later int the global config map to, with a file
@@ -83,11 +84,20 @@ add_missing_template_params() {
     if ! grep -q SAR_PROJECT "${params}"; then
         # SAR_PROJECT defaults to OPENSHIFT_PROJECT
         local sar_project=$(grep OPENSHIFT_PROJECT ${params} | sed -e s/OPENSHIFT_PROJECT/SAR_PROJECT/)
-        local tmp=$(mktemp)
         echo $sar_project > ${tmp}
         cat "${params}" >> ${tmp}
         mv "${tmp}" "${params}"
     fi
     set -e
 
+    # Remove SYNDESIS_REGISTRY from params if not present in the template
+    set +e
+    if ! grep -q SYNDESIS_REGISTRY "$(template_path)"; then
+        # No SYNDESIS_REGISTRY in the new template so just remove it from the
+        # params
+
+        grep -v SYNDESIS_REGISTRY "$params" > "$tmp"
+        mv "$tmp" "$params"
+    fi
+    set -e
 }
