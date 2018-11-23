@@ -42,7 +42,7 @@ backup_resource() {
     local kind=$2
 
     mkdir -p ${backupdir}/${kind}
-    for res in $(oc get ${kind} -l syndesis.io/app=syndesis,syndesis.io/type=infrastructure -o custom-columns=:.metadata.name | tail +2; do
+    for res in $(oc get ${kind} -l syndesis.io/app=syndesis,syndesis.io/type=infrastructure -o custom-columns=:.metadata.name | tail +2); do
         echo "        * $res"
         oc get ${kind} $res -o json > "${backupdir}/${kind}/${res}.json"
     done
