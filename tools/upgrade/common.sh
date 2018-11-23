@@ -42,19 +42,19 @@ backup_resource() {
     local kind=$2
 
     mkdir -p ${backupdir}/${kind}
-    for res in $(oc get ${kind} -l syndesis.io/app=syndesis,syndesis.io/type=infrastructure -o name | sed -e "s/^[^\/]*\///"); do
+    for res in $(oc get ${kind} -l syndesis.io/app=syndesis,syndesis.io/type=infrastructure -o custom-columns=:.metadata.name | tail -n +2); do
         echo "        * $res"
         oc get ${kind} $res -o json > "${backupdir}/${kind}/${res}.json"
     done
 }
 
 syndesis_deployments() {
-  oc get dc -l syndesis.io/app=syndesis,syndesis.io/type=infrastructure -o name | sed -e "s/^deploymentconfigs\///"
+  oc get dc -l syndesis.io/app=syndesis,syndesis.io/type=infrastructure -o custom-columns=:.metadata.name | tail -n +2
 }
 
 pod() {
   local dc=${1}
-  local ret=$(oc get pod -o name | grep "$dc" | sed -e "s/^pods\///")
+  local ret=$(oc get pod -o custom-columns=:.metadata.name | tail -n +2 | grep "$dc")
   local nr_pods=$(echo $ret | wc -l | awk '$1=$1')
   if [ $nr_pods != "1" ]; then
       echo "ERROR: More than 1 pod found for $dc ($nr_pods found)"
