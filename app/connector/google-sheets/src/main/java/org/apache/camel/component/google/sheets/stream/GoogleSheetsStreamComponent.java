@@ -15,6 +15,8 @@
  */
 package org.apache.camel.component.google.sheets.stream;
 
+import java.util.Map;
+
 import com.google.api.services.sheets.v4.Sheets;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
@@ -23,8 +25,6 @@ import org.apache.camel.component.google.sheets.GoogleSheetsClientFactory;
 import org.apache.camel.component.google.sheets.GoogleSheetsVerifierExtension;
 import org.apache.camel.impl.DefaultComponent;
 import org.apache.camel.spi.Metadata;
-
-import java.util.Map;
 
 /**
  * Represents the component that manages {@link GoogleSheetsStreamEndpoint}.
@@ -51,9 +51,11 @@ public class GoogleSheetsStreamComponent extends DefaultComponent {
 
     public Sheets getClient(GoogleSheetsStreamConfiguration endpointConfiguration) {
         if (client == null) {
-            client = getClientFactory().makeClient(endpointConfiguration.getClientId(), endpointConfiguration.getClientSecret(),
-                                                    endpointConfiguration.getApplicationName(), endpointConfiguration.getRefreshToken(),
-                                                    endpointConfiguration.getAccessToken());
+            client = getClientFactory().makeClient(endpointConfiguration.getClientId(),
+                                                endpointConfiguration.getClientSecret(),
+                                                endpointConfiguration.getApplicationName(),
+                                                endpointConfiguration.getRefreshToken(),
+                                                endpointConfiguration.getAccessToken());
         }
         return client;
     }

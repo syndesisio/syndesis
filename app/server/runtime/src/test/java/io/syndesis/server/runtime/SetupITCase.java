@@ -15,12 +15,20 @@
  */
 package io.syndesis.server.runtime;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
-import io.syndesis.server.credential.*;
+import io.syndesis.server.credential.CredentialFlowState;
+import io.syndesis.server.credential.CredentialProvider;
+import io.syndesis.server.credential.CredentialProviderLocator;
+import io.syndesis.server.credential.Credentials;
+import io.syndesis.server.credential.OAuth1CredentialFlowState;
+import io.syndesis.server.credential.OAuth1CredentialProvider;
 import io.syndesis.server.endpoint.v1.handler.setup.OAuthApp;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +36,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.social.oauth1.OAuthToken;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
