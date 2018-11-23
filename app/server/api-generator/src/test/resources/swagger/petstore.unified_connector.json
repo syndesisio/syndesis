@@ -72,7 +72,7 @@
           "kind": "json-schema",
           "name": "Response",
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\",  \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"category\":{\"properties\":{\"id\":{\"format\":\"int64\",\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"format\":\"int64\",\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"format\":\"int64\",\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"type\":\"object\",\"xml\":{\"name\":\"Pet\"}},\"type\":\"array\" }}, \"type\":\"object\" }"
-         }
+        }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:findPetsByStatus",
       "name": "Finds Pets by status",
@@ -577,7 +577,6 @@
       "componentProperty": true,
       "deprecated": false,
       "description": "Seconds in UTC when the access token expires",
-      "displayName": "",
       "group": "producer",
       "javaType": "java.lang.Long",
       "kind": "property",
