@@ -1,4 +1,5 @@
-import { callFetch, IRestProps, Rest } from './Rest';
+import { callFetch } from './callFetch';
+import { IRestProps, Rest } from './Rest';
 
 export class Stream extends Rest<string[]> {
   protected reader: ReadableStreamReader | undefined;

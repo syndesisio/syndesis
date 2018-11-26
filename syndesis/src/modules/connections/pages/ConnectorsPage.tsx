@@ -36,7 +36,10 @@ export default class ConnectorsPage extends React.Component {
                       <ConnectionsGridCell key={index}>
                         <Link
                           to={`${match.url}/${c.id}`}
-                          style={{ color: 'inherit', textDecoration: 'none' }}
+                          style={{
+                            color: 'inherit',
+                            textDecoration: 'none',
+                          }}
                         >
                           <ConnectionCard
                             name={c.name}

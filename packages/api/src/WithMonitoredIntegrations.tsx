@@ -8,6 +8,7 @@ import * as React from 'react';
 import { IRestState } from './Rest';
 import { SyndesisRest } from './SyndesisRest';
 import { WithIntegrations } from './WithIntegrations';
+import { WithPolling } from './WithPolling';
 
 export interface IMonitoredIntegrationsResponse {
   items: IntegrationWithMonitoring[];
@@ -15,6 +16,7 @@ export interface IMonitoredIntegrationsResponse {
 }
 
 export interface IWithMonitoredIntegrationsProps {
+  disableUpdates?: boolean;
   children(props: IRestState<IMonitoredIntegrationsResponse>): any;
 }
 
@@ -23,28 +25,32 @@ export class WithMonitoredIntegrations extends React.Component<
 > {
   public render() {
     return (
-      <WithIntegrations>
+      <WithIntegrations disableUpdates={this.props.disableUpdates}>
         {({ data: integrations, ...props }) => (
           <SyndesisRest<IntegrationMonitoring[]>
             url={'/monitoring/integrations'}
-            poll={5000}
             defaultValue={[]}
           >
-            {({ data: monitorings }) => {
-              return this.props.children({
-                ...props,
-                data: {
-                  items: integrations.items.map(
-                    (i: Integration): IntegrationWithOverview => ({
-                      integration: i,
-                      overview: monitorings.find(
-                        (o: IntegrationMonitoring) => o.id === i.id
-                      ),
-                    })
-                  ),
-                  totalCount: integrations.totalCount,
-                },
-              });
+            {({ read, response }) => {
+              const data = {
+                items: integrations.items.map(
+                  (i: Integration): IntegrationWithOverview => ({
+                    integration: i,
+                    overview: response.data.find(
+                      (o: IntegrationMonitoring) => o.id === i.id
+                    ),
+                  })
+                ),
+                totalCount: integrations.totalCount,
+              };
+              if (this.props.disableUpdates) {
+                return this.props.children({ ...props, data });
+              }
+              return (
+                <WithPolling read={read} polling={5000}>
+                  {() => this.props.children({ ...props, data })}
+                </WithPolling>
+              );
             }}
           </SyndesisRest>
         )}

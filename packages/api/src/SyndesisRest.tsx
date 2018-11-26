@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
-import { IRestState, Rest } from './Rest';
+import { IRestRenderProps, Rest } from './Rest';
 import { Stream } from './Stream';
 
 export interface ISyndesisRestProps<T> {
   autoload?: boolean;
   contentType?: string;
-  poll?: number;
   url: string;
   stream?: boolean;
   defaultValue: T;
-
-  children(props: IRestState<T>): any;
+  children(props: IRestRenderProps<T>): any;
 }
 
 export class SyndesisRest<T> extends React.Component<ISyndesisRestProps<T>> {
@@ -22,14 +20,12 @@ export class SyndesisRest<T> extends React.Component<ISyndesisRestProps<T>> {
 
     return (
       <ApiContext.Consumer>
-        {({ apiUri }) => (
+        {({ apiUri, headers }) => (
           <RestOrStream
             baseUrl={apiUri}
             url={url}
+            headers={headers}
             {...props}
-            headers={{
-              'SYNDESIS-XSRF-TOKEN': 'awesome',
-            }}
           />
         )}
       </ApiContext.Consumer>

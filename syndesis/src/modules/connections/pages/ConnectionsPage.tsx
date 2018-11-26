@@ -80,6 +80,7 @@ export default class ConnectionsPage extends ListViewToolbarAbstractComponent<
             this.state.currentSortType,
             this.state.isSortAscending
           );
+
           return (
             <ConnectionsListView
               linkToConnectionCreate={'/connections/create'}
