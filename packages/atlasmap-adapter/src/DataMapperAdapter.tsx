@@ -3,6 +3,7 @@ import {
   IMappingsMessagePayload,
 } from '@syndesis/atlasmap-assembly/src/app/app.component';
 import * as React from 'react';
+import equal from 'react-fast-compare';
 
 /* tslint:disable */
 const runtime = require('file-loader?name=atlasmap-runtime.js!@syndesis/atlasmap-assembly/dist/atlasmap/runtime.js');
@@ -37,19 +38,33 @@ export interface IDataMapperAdapterProps extends IInitMessagePayload {
 export class DataMapperAdapter extends React.Component<
   IDataMapperAdapterProps
 > {
-  protected messageChannel = new MessageChannel();
+  protected messageChannel: MessageChannel;
+  protected messagePort?: MessagePort;
   protected iframe: HTMLIFrameElement | null = null;
 
   constructor(props: IDataMapperAdapterProps) {
     super(props);
+    this.messageChannel = new MessageChannel();
     this.onIframeLoad = this.onIframeLoad.bind(this);
-    this.onMessage = this.onMessage.bind(this);
+    this.onMessages = this.onMessages.bind(this);
   }
 
   public componentDidMount() {
     if (this.iframe) {
       this.iframe.addEventListener('load', this.onIframeLoad);
     }
+  }
+
+  public componentWillReceiveProps(nextProps: IDataMapperAdapterProps) {
+    const { onMappings: _, ...prevPayload } = this.props;
+    const { onMappings: __, ...nextPayload } = nextProps;
+    if (!equal(prevPayload, nextPayload)) {
+      this.updateDataMapperApp(nextPayload);
+    }
+  }
+
+  public shouldComponentUpdate() {
+    return false;
   }
 
   public componentWillUnmount() {
@@ -59,37 +74,48 @@ export class DataMapperAdapter extends React.Component<
   }
 
   public onIframeLoad() {
-    this.messageChannel.port1.onmessage = this.onMessage;
-
-    this.iframe!.contentWindow!.postMessage(
-      {
-        message: 'init',
-        payload: {
-          documentId: this.props.documentId,
-          inputDataShape: this.props.inputDataShape,
-          inputDescription: this.props.inputDescription,
-          inputDocumentType: this.props.inputDocumentType,
-          inputInspectionType: this.props.inputInspectionType,
-          inputName: this.props.inputName,
-          mappings: this.props.mappings,
-          outputDataShape: this.props.outputDataShape,
-          outputDescription: this.props.outputDescription,
-          outputDocumentType: this.props.outputDocumentType,
-          outputInspectionType: this.props.outputInspectionType,
-          outputName: this.props.outputName,
-        },
-      },
-      '*',
-      [this.messageChannel.port2]
-    );
+    this.messagePort = this.messageChannel.port1;
+    this.messagePort.onmessage = this.onMessages;
+    this.iframe!.contentWindow!.postMessage('init', '*', [
+      this.messageChannel.port2,
+    ]);
   }
 
-  public onMessage(event: MessageEvent) {
+  public onMessages(event: MessageEvent) {
     switch (event.data.message) {
+      case 'ready': {
+        const { onMappings, ...payload } = this.props;
+        this.updateDataMapperApp(payload);
+        break;
+      }
       case 'mappings': {
         const payload: IMappingsMessagePayload = event.data.payload;
         this.props.onMappings(payload.mappings);
+        break;
       }
+    }
+  }
+
+  public updateDataMapperApp(props: IInitMessagePayload) {
+    if (this.messagePort) {
+      const message = {
+        message: 'update',
+        payload: {
+          documentId: props.documentId,
+          inputDataShape: props.inputDataShape,
+          inputDescription: props.inputDescription,
+          inputDocumentType: props.inputDocumentType,
+          inputInspectionType: props.inputInspectionType,
+          inputName: props.inputName,
+          mappings: props.mappings,
+          outputDataShape: props.outputDataShape,
+          outputDescription: props.outputDescription,
+          outputDocumentType: props.outputDocumentType,
+          outputInspectionType: props.outputInspectionType,
+          outputName: props.outputName,
+        },
+      };
+      this.messagePort.postMessage(message);
     }
   }
 
@@ -104,7 +130,7 @@ export class DataMapperAdapter extends React.Component<
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
-<body>
+<body style="background: transparent;">
   <app-root></app-root>
   <script type="text/javascript" src="${runtime}"></script>
   <script type="text/javascript" src="${polyfills}"></script>
@@ -121,15 +147,13 @@ export class DataMapperAdapter extends React.Component<
       allowtransparency: '',
     };
     return (
-      <div style={{ display: 'flex', flexFlow: 'column', height: '100%' }}>
-        <iframe
-          srcDoc={srcDoc}
-          style={{ width: '100%', height: '100%' }}
-          frameBorder={0}
-          {...extraProps}
-          ref={el => (this.iframe = el)}
-        />
-      </div>
+      <iframe
+        srcDoc={srcDoc}
+        style={{ width: '100%', height: '100%' }}
+        frameBorder={0}
+        {...extraProps}
+        ref={el => (this.iframe = el)}
+      />
     );
   }
 }

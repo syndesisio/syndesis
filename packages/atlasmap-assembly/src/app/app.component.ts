@@ -1,11 +1,17 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
-  InitializationService,
-  ErrorHandlerService,
+  Component,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
+import {
   DocumentManagementService,
-  MappingManagementService,
   DocumentType,
+  ErrorHandlerService,
+  InitializationService,
   InspectionType,
+  MappingManagementService,
 } from '@atlasmap/atlasmap-data-mapper';
 
 export interface IInitMessagePayload {
@@ -42,7 +48,7 @@ export interface IMappingsMessagePayload {
 export class AppComponent implements OnInit, OnDestroy {
   title = 'atlasmap';
 
-  hasData = false;
+  loading = true;
   documentId: string;
   inputName: string;
   inputDescription: string;
@@ -58,31 +64,43 @@ export class AppComponent implements OnInit, OnDestroy {
 
   messagePort?: MessagePort;
 
-  ngOnInit(): void {
-    this.onMessage = this.onMessage.bind(this);
-    this.onInitMessage = this.onInitMessage.bind(this);
+  constructor(private _ngZone: NgZone) {}
 
-    window.addEventListener('message', this.onMessage);
+  ngOnInit(): void {
+    this.onMessagePort = this.onMessagePort.bind(this);
+    this.onMessages = this.onMessages.bind(this);
+    this.onUpdateMessage = this.onUpdateMessage.bind(this);
+
+    window.addEventListener('message', this.onMessagePort);
   }
 
   ngOnDestroy(): void {
-    window.removeEventListener('message', this.onMessage);
+    window.removeEventListener('message', this.onMessagePort);
   }
 
-  onMessage(event: MessageEvent) {
+  onMessagePort(event: MessageEvent) {
     this.messagePort = event.ports[0];
+    this.messagePort.onmessage = this.onMessages;
 
-    switch (event.data.message) {
-      case 'init':
-        this.onInitMessage(event.data.payload);
-        break;
-      default:
-      // nohop
-    }
+    this.messagePort.postMessage({
+      message: 'ready',
+    });
   }
 
-  onInitMessage(payload: IInitMessagePayload) {
-    this.hasData = true;
+  onMessages(event: MessageEvent) {
+    this._ngZone.run(() => {
+      switch (event.data.message) {
+        case 'update':
+          this.onUpdateMessage(event.data.payload);
+          break;
+        default:
+        // nohop
+      }
+    });
+  }
+
+  onUpdateMessage(payload: IInitMessagePayload) {
+    this.loading = false;
     this.documentId = payload.documentId;
     this.inputName = payload.inputName;
     this.inputDescription = payload.inputDescription;

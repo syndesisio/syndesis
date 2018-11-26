@@ -6,6 +6,8 @@ import {
   Input,
   Output,
   EventEmitter,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import {
   ConfigModel,
@@ -33,7 +35,7 @@ import { Subscription } from 'rxjs';
     DocumentManagementService,
   ],
 })
-export class DataMapperHostComponent implements OnInit, OnDestroy {
+export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
   @Input() documentId: string;
   @Input() inputName: string;
   @Input() inputDescription: string;
@@ -48,13 +50,34 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   @Input() mappings?: string;
   @Output() outputMappings = new EventEmitter<string>();
   @ViewChild('dataMapperComponent')
-  dataMapperComponent: DataMapperAppComponent;
-
+  private dataMapperComponent: DataMapperAppComponent;
   private saveMappingSubscription: Subscription;
+  private modifiedMappings?: string;
 
   constructor(private initializationService: InitializationService) {}
 
   ngOnInit() {
+    this.reset();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      Object.keys(changes).length === 1 &&
+      (changes['mappings'] &&
+        changes['mappings'].previousValue !== this.modifiedMappings)
+    ) {
+      // do nothing, it's us updating the mappings and getting it back from the app component
+    } else {
+      this.reset();
+    }
+  }
+
+  reset() {
+    if (this.saveMappingSubscription) {
+      this.saveMappingSubscription.unsubscribe();
+    }
+    this.initializationService.resetConfig();
+
     // initialize config information before initializing services
     const c: ConfigModel = this.initializationService.cfg;
 
@@ -116,25 +139,26 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     outputDoc.showFields = true;
     c.addDocument(outputDoc);
 
+    const mappingDefinition = new MappingDefinition();
     if (this.mappings) {
-      const mappingDefinition = new MappingDefinition();
       try {
         MappingSerializer.deserializeMappingServiceJSON(
           JSON.parse(this.mappings),
           mappingDefinition,
           c
         );
-        c.mappings = mappingDefinition;
       } catch (err) {
         // TODO popup or error alert?  At least catch this so we initialize
         console.error(err);
       }
     }
+    c.mappings = mappingDefinition;
 
     this.saveMappingSubscription = c.mappingService.saveMappingOutput$.subscribe(
       (saveHandler: Function) => {
         const json = c.mappingService.serializeMappingsToJSON();
-        this.outputMappings.emit(JSON.stringify(json));
+        this.modifiedMappings = JSON.stringify(json);
+        this.outputMappings.emit(this.modifiedMappings);
         c.mappingService.handleMappingSaveSuccess(saveHandler);
       }
     );
@@ -143,6 +167,8 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.saveMappingSubscription.unsubscribe();
+    if (this.saveMappingSubscription) {
+      this.saveMappingSubscription.unsubscribe();
+    }
   }
 }
