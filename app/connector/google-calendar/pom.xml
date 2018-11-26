@@ -179,6 +179,7 @@
         <executions>
           <execution>
             <id>inspections</id>
+            <phase>generate-resources</phase>
             <goals>
               <goal>generate-connector-inspections</goal>
             </goals>
