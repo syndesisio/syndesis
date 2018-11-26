@@ -64,7 +64,7 @@
 
     <swagger.version>1.5.19</swagger.version>
 
-    <activemq.version>5.15.4</activemq.version>
+    <activemq.version>5.15.6</activemq.version>
 
     <arquillian.version>1.4.0.Final</arquillian.version>
     <arquillian.cube.version>1.15.2</arquillian.cube.version>
