@@ -24,7 +24,9 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-data-mapper-host',
-  template: '<data-mapper #dataMapperComponent></data-mapper>',
+  template: `
+    <data-mapper #dataMapperComponent></data-mapper>
+  `,
   providers: [
     MappingManagementService,
     ErrorHandlerService,
@@ -63,7 +65,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     c.initCfg.baseMappingServiceUrl = '/api/v1/atlas/';
 
     // // enable the navigation bar and import/export for stand-alone
-    c.initCfg.disableNavbar = false;
+    c.initCfg.disableNavbar = true;
     //
     c.initCfg.disableMappingPreviewMode = false;
     c.initCfg.discardNonMockSources = false;

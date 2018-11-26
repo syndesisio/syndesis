@@ -115,12 +115,18 @@ export class DataMapperAdapter extends React.Component<
 </html>
 
 `;
+    // bypass some odd typing incompatibility with base React when using "exotic"
+    // html attributes
+    const extraProps = {
+      allowtransparency: '',
+    };
     return (
       <div style={{ display: 'flex', flexFlow: 'column', height: '100%' }}>
         <iframe
           srcDoc={srcDoc}
           style={{ width: '100%', height: '100%' }}
           frameBorder={0}
+          {...extraProps}
           ref={el => (this.iframe = el)}
         />
       </div>

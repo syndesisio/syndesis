@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   InitializationService,
   ErrorHandlerService,
@@ -31,6 +31,7 @@ export interface IMappingsMessagePayload {
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+  encapsulation: ViewEncapsulation.None,
   providers: [
     InitializationService,
     MappingManagementService,
