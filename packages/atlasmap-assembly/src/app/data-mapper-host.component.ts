@@ -44,7 +44,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   @Input() outputInspectionType: InspectionType;
   @Input() outputDataShape: string;
   @Input() mappings?: string;
-  @Output() onMappings = new EventEmitter<string>();
+  @Output() outputMappings = new EventEmitter<string>();
   @ViewChild('dataMapperComponent')
   dataMapperComponent: DataMapperAppComponent;
 
@@ -132,7 +132,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     this.saveMappingSubscription = c.mappingService.saveMappingOutput$.subscribe(
       (saveHandler: Function) => {
         const json = c.mappingService.serializeMappingsToJSON();
-        this.onMappings.emit(JSON.stringify(json));
+        this.outputMappings.emit(JSON.stringify(json));
         c.mappingService.handleMappingSaveSuccess(saveHandler);
       }
     );
