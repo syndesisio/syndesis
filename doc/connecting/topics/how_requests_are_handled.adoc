@@ -1,4 +1,7 @@
-[id='how-requests-are-handled']
+// This module is included in the following assemblies:
+// triggering_integrations_with_http_requests.adoc
+
+[id='how-requests-are-handled_{context}']
 = How {prodname} handles HTTP requests
 
 You can specify an HTTP `GET` or `POST` request to trigger execution of
@@ -7,15 +10,15 @@ an integration. Although a `GET` request usually obtains data and a
 to trigger an integration that does either operation. Any parameters 
 in the request are available for mapping to data fields in the
 next connection that is in the integration. For details, see
-<<about-json-schema-for-http-requests>>.
+link:{LinkFuseOnlineConnectorGuide}#about-json-schema-for-http-requests_webhook[JSON schema for specifying request parameters]. 
 
 A Webhook connection only passes the data it receives to
 the next connection in the integration. 
 When {prodname} receives an HTTP request, it:
 
 * Returns an HTTP status header to the requester. When a request successfully
-triggers an integration, the {prodname} return code is `201`.
-When a request fails to trigger an integration, the {prodname}
+triggers execution of an integration, the {prodname} return code is `201`.
+When a request fails to trigger execution of an integration, the {prodname}
 return code is `5xx`. 
 * Does not return any other data to the requester. In other words, there is 
 no data in the HTTP body of the response that contains the status header.

@@ -1,7 +1,18 @@
-[id='creating-kafka-connections']
+// This module is included in the following assemblies:
+// connecting_to_kafka.adoc
+
+[id='creating-kafka-connections_{context}']
 = Create a connection to a Kafka broker
 
-To create a Kafka connection:
+In an integration, to subscribe for data from a Kafka topic 
+or publish data to a Kafka topic, 
+create a connection to Kafka and then add that connection to an 
+integration.
+
+.Prerequisite
+You must know the  URI for the Kafka broker that you want to connect to. 
+
+.Procedure
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.

@@ -1,21 +1,22 @@
-[id='adding-sf-connections']
+// This module is included in the following assemblies:
+// connecting_to_sf.adoc
+
+[id='adding-sf-connections_{context}']
 = Add a Salesforce connection to an integration
 
-You must create a Salesforce connection before you can add a Salesforce
-connection to an integration. If you did not already create a Salesforce
-connection, see <<create-salesforce-connection_{context}>>.
+In an integration, you can connect to Salesforce to start or finish the
+integration, or in the middle of an integration. To connect to Salesforce,
+add a Salesforce connection to the integration.
 
-You must be creating an integration or updating an integration to
-add a connection to that integration. If you need to, see the 
-{LinkFuseOnlineIntegrationGuide}#procedure-for-creating-an-integration[general procedure
-for creating an integration]. 
-or see {LinkFuseOnlineIntegrationGuide}#updating-integrations[updating integrations].
-
-The instructions below
-assume that {prodname} is prompting you to select a start connection, a
+.Prerequisites
+* You created a Salesforce connection. 
+* You are creating or updating an integration. If you need to, see the 
+link:{LinkFuseOnlineIntegrationGuide}#procedure-for-creating-an-integration_create[general procedure for creating an integration]
+or see link:{LinkFuseOnlineIntegrationGuide}#updating-integrations_manage[updating integrations].
+* {prodname} is prompting you to select a start connection, a
 finish connection or a middle connection.
 
-To add a Salesforce connection to an integration:
+.Procedure
 
 . On the page that displays available connections, click the Salesforce
 connection that you want to add to the integration. When the integration
@@ -32,5 +33,6 @@ to select from a list of Salesforce objects or enter the name of the object.
 
 . Click *Done* to add the connection to the integration.
 
+.Result
 The connection appears in the integration flow 
 in the location where you added it. 

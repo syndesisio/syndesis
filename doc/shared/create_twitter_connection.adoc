@@ -1,22 +1,26 @@
 // Module included in the following assemblies:
-// tutorials t2sf_intro.adoc
-// connecting connecting_to_twitter.adoc
+// Upstream:
+// tutorials/topics/t2sf_intro.adoc
+// connecting/topics/connecting_to_twitter.adoc
+// Downstream:
+// fuse-online-sample-integration-tutorials/topics/t2sf_intro.adoc
+// connecting-fuse-online-to-applications-and-services/topics/connecting_to_twitter.adoc
+
 
 [id='create-twitter-connection_{context}']
 = Create a Twitter connection
 
 To create an integration that obtains data from Twitter, you 
 must first create a Twitter connection.  
-After you create a Twitter connection, you can use it in multiple 
+After you create a Twitter connection, you can use it in any number of  
 integrations.
 
 .Prerequisites
 * You are logged in to {prodname}. The URL for accessing {prodname} is in the 
 email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
 * {prodname} is open in a web browser. 
-* You already registered your {prodname} environment as an application
-that can access Twitter. If you did not already register {prodname}, 
-see <<register-with-twitter_{context}>>.
+* You registered your {prodname} environment as an application
+that can access Twitter.
 
 .Procedure
 

@@ -1,7 +1,18 @@
-[id='creating-http-connections']
+// This module is included in the following assemblies:
+// connecting_to_http.adoc
+
+[id='creating-http-connections_{context}']
 = Create a connection to an HTTP or HTTPS endpoint
 
-To create a connection to an HTTP or HTTPS endpoint:
+In an integration, to execute the HTTP `GET`, `PUT`, `POST`, `DELETE`, 
+`HEAD`, `OPTIONS`, `TRACE`, or `PATCH` method, create a connection to
+an HTTP or HTTPS endpoint. You can then add the connection to one
+or more integrations. 
+
+.Prerequisite
+You must know the URL for the endpoint that you want to connect to.
+
+.Procedures
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.

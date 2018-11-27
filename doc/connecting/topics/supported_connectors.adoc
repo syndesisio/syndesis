@@ -1,4 +1,7 @@
-[id='supported-connectors']
+// This module is included in the following assembly:
+// connecting/master.adoc
+
+[id='supported-connectors_{context}']
 = Connectors that are supported by {prodname}
 
 {prodname} supports the following connectors. 
@@ -9,74 +12,74 @@
 |Name 
 |Description
 
-|<<connecting-to-s3,Amazon S3>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-s3_connectors[Amazon S3]
 |Retrieve data from an Amazon S3 bucket or copy data into a bucket. 
 
-|<<connecting-to-amq,AMQ>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-amq_connectors[AMQ]
 |Obtain messages from an ApacheMQ broker or publish messages to an ApacheMQ
 broker. 
 
-|<<connecting-to-amqp,AMQP>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-amqp_connectors[AMQP]
 |Obtain messages from an Advanced Message Queue Protocol broker or
 publish messages to an AMQP broker. 
 
-|<<connecting-to-dropbox,Dropbox>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-dropbox_connectors[Dropbox]
 |Download files from Dropbox or upload files to Dropbox. 
 
-|<<connecting-to-ftp,FTP/SFTP>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-ftp_connectors[FTP/SFTP]
 |Download files from an FTP or SFTP server or upload files to an
 FTP or SFTP server.
 
-|<<connecting-to-gmail,Gmail>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-gmail_connectors[Gmail]
 |Obtain messages sent to a particular Gmail account and send messages
 from a particular Gmail account. 
 
-|<<connecting-to-http,HTTP/HTTPS>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-http_connectors[HTTP/HTTPS]
 |Connect to an HTTP or HTTPS endpoint and execute the
 `GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, OR `PATCH` method.
 
-|<<connecting-to-kafka,Kafka>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-kafka_connectors[Kafka]
 |Obtain streams of records from
 or publish streams of records to a Kafka topic that you specify.
 
-|<<connecting-to-log,Log>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-log_connectors[Log]
 |Send information about messages that an integration processes to the integration's log. 
 
-|<<connecting-to-mqtt,MQTT>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-mqtt_connectors[MQTT]
 |Obtain messages from an MQ Telemetry Transport broker or publish messages
 to an MQTT broker. 
 
-|<<connecting-to-rest-apis,REST APIs>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis_connectors[REST APIs]
 |Create a custom REST API client connector by uploading an OpenAPI
 specification. You can then create a connection to that REST API. 
 
-|<<connecting-to-sf,Salesforce>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-sf_connectors[Salesforce]
 |Create, update, fetch, or delete a Salesforce record. 
 
-|<<connecting-to-concur,SAP Concur>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-concur_connectors[SAP Concur]
 |Perform any one of a large variety of SAP Concur actions. 
 
-|<<connecting-to-servicenow,ServiceNow>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-servicenow_connectors[ServiceNow]
 |Obtain records from or copy records to your ServiceNow instance. 
 
-|<<connecting-to-slack,Slack>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-slack_connectors[Slack]
 |Obtain messages from a channel or send a message to a 
 Slack channel or user. 
 
-|<<connecting-to-databases,SQL databases>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-databases_connectors[SQL databases]
 |Invoke a SQL statement or a SQL stored procedure on an Apache Derby, 
 MySQL, or PostgreSQL database. To connect to other types of SQL databases,
 you upload a {prodname} library extension that contains a 
 JDBC driver for that database. 
 
-|<<triggering-integrations-with-timers,Timer>>
+|link:{LinkFuseOnlineConnectorGuide}#triggering-integrations-with-timers_connectors[Timer]
 | Set a simple timer or a `cron` timer to trigger integration execution.
 
-|<<connecting-to-twitter,Twitter>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-twitter_connectors[Twitter]
 |Trigger execution of an integration upon tweets that mention you or that 
 contain data you specify. 
 
-|<<triggering-integrations-with-http-requests,Webhook>>
+|link:{LinkFuseOnlineConnectorGuide}#triggering-integrations-with-http-requests_connectors[Webhook]
 |Trigger integrations with HTTP `GET` or `POST` requests.
 
 |===
@@ -86,6 +89,5 @@ experienced developer can create an extension that defines a custom
 connector. For information about coding the 
 extension and creating its `.jar` file, which you upload to 
 {prodname}, see 
-{LinkToolingUserGuide}#IgniteExtension[{NameOfToolingUserGuide}, Developing extensions for
-{prodname} integrations] and 
-{LinkFuseOnlineIntegrationGuide}#developing-extensions[{NameOfFuseOnlineIntegrationGuide}, Developing extensions].
+link:{LinkToolingUserGuide}#IgniteExtension[{NameOfToolingUserGuide},Develop extensions for {prodname} integrations] and 
+link:{LinkFuseOnlineIntegrationGuide}#developing-extensions_dev-extension[{NameOfFuseOnlineIntegrationGuide}, Develop extensions].

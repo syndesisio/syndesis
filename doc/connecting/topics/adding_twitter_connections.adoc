@@ -1,20 +1,20 @@
-[id='adding-twitter-connections']
+// This module is included in these assemblies:
+// connecting_to_twitter.adoc
+
+[id='adding-twitter-connections_{context}']
 = Add a Twitter connection to an integration
 
-You must create a Twitter connection before you can add a Twitter
-connection to an integration. If you did not already create a Twitter connection,
-see <<create-twitter-connection_{context}>>.
+In an integration, a connection to Twitter can trigger execution of
+an integration when a tweet contains your Twitter handle or when 
+a tweet contains text that you have specified. A connection to 
+Twitter must be the integration's start connection. 
 
-A connection to Twitter must be the start connection in an integration. 
-You must be creating an integration and being prompted to choose
-its start connection or you can be updating an integration to
-change its start connection. 
-If you need to, see the 
-{LinkFuseOnlineIntegrationGuide}#procedure-for-creating-an-integration[general procedure
-for creating an integration]. 
-or see {LinkFuseOnlineIntegrationGuide}#updating-integrations[updating integrations].
+.Prerequisites
+* You created a Twitter connection. 
+* You must be creating or editing an integration and {prodname} is 
+prompting you to choose the start connection. 
 
-To add a Twitter connection to an integration:
+.Procedure
 
 . On the page that displays available connections, click the Twitter
 connection that you want to add to the integration. When the integration
@@ -36,5 +36,6 @@ how often to search and keywords to search for.
 
 . Click *Done* to add the connection to the integration.
 
+.Result
 The connection appears in the integration flow 
 as the start connection. 

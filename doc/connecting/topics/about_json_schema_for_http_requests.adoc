@@ -1,4 +1,7 @@
-[id='about-json-schema-for-http-requests']
+// This module is included in the following assemblies:
+// triggering_integrations_with_http_requests.adoc
+
+[id='about-json-schema-for-http-requests_{context}']
 = About the JSON schema for specifying request parameters
 
 In an integration, you typically map header and query parameters 
@@ -37,4 +40,5 @@ While all data that an HTTP client sends is available in the integration,
 when a Webhook connection's data shape conforms to this JSON schema, 
 then query parameters and body content are available for mapping. 
 
-For examples, see <<how-to-specify-request>>.  
+For examples, see 
+link:{LinkFuseOnlineConnectorGuide}#how-to-specify-request_webhook[How to specify HTTP requests].
