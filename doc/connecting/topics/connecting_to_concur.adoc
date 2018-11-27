@@ -1,5 +1,9 @@
-[id='connecting-to-concur']
-= Connecting to SAP Concur
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-concur_{context}']
+= Connect to SAP Concur
 :context: concur
 
 SAP Concur manages business expenses, travel, and invoices. 

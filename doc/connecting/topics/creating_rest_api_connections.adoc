@@ -7,7 +7,7 @@
 In an integration, to connect to a REST API, create a connection to 
 that REST API, which you can then add to any number of integrations. 
 
-.Prerequisites
+.Prerequisite
 * You created a connector for the REST API that you want to connect to. 
 * If the REST API uses the OAuth protocol then you registered you
 {prodname} environment as a client application that can access that

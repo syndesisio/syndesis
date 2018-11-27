@@ -34,26 +34,13 @@ FTP or SFTP server.
 |Obtain messages sent to a particular Gmail account and send messages
 from a particular Gmail account. 
 
-<<<<<<< HEAD
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-google-calendar_connectors[Google Calendar]
-|Obtain calendar entries from a particular Google Calendar account or add/update
-entries in that account's Google Calendar.  
-=======
-|<<connecting-to-google-calendar_{context},Google Calendar>>
-|Obtain events from a Google Calendar that you specify or add/update
-events in a Google Calendar that you specify.  
->>>>>>> user doc: Updated draft doc for Google Calendar connector/connection
-
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-http_connectors[HTTP/HTTPS]
 |Connect to an HTTP or HTTPS endpoint and execute the
 `GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, OR `PATCH` method.
 
-|<<connecting-to-kafka,Kafka>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-kafka_connectors[Kafka]
 |Obtain streams of records from
 or publish streams of records to a Kafka topic that you specify.
-
-|<<connecting-to-log,Log>>
-|Send information about messages that an integration processes to the integration's log. 
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-log_connectors[Log]
 |Send information about messages that an integration processes to the integration's log. 
@@ -73,7 +60,7 @@ in the {NameOfFuseOnlineIntegrationGuide}.
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-sf_connectors[Salesforce]
 |Create, update, fetch, or delete a Salesforce record. 
 
-|<<connecting-to-concur,SAP Concur>>
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-concur_connectors[SAP Concur]
 |Perform any one of a large variety of SAP Concur actions. 
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-servicenow_connectors[ServiceNow]
@@ -88,10 +75,6 @@ Slack channel or user.
 MySQL, or PostgreSQL database. To connect to other types of SQL databases,
 you upload a {prodname} library extension that contains a 
 JDBC driver for that database. 
-
-|link:{LinkFuseOnlineConnectorGuide}#connecting_to_telegram_connectors[Telegram]
-|Obtain messages from a chat or send messages to a chat by using 
-a Telegram chat bot. 
 
 |link:{LinkFuseOnlineConnectorGuide}#triggering-integrations-with-timers_connectors[Timer]
 | Set a simple timer or a `cron` timer to trigger integration execution.

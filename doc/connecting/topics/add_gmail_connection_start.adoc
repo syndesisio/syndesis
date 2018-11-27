@@ -2,7 +2,7 @@
 // connecting_to_gmail.adoc
 
 [id='add-gmail-connection-start_{context}']
-= Trigger an integration when polling returns a Gmail message
+= Obtain emails that are received by a Gmail account
 
 To trigger execution of an integration based on email received by 
 a particular Gmail account, add a Gmail connection as the start connection of
@@ -12,9 +12,8 @@ When the connection finds an unread
 email, it passes the email to the next step in the integration and, by default, 
 marks the email as *read*.  
 
-.Prerequisites
-You created a Gmail connection that is authorized to access the Gmail
-account that you want to obtain emails from.   
+.Prerequisite
+You created a Gmail connection. 
 
 .Procedure
 

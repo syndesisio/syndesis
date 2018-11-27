@@ -1,5 +1,9 @@
-[id='connecting-to-dropbox']
-= Connecting to Dropbox
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-dropbox_{context}']
+= Connect to Dropbox
 :context: dropbox
 
 In an integration, you can download files from Dropbox or upload files
@@ -15,6 +19,11 @@ include::register_with_dropbox.adoc[leveloffset=+1]
 
 include::create_dropbox_connection.adoc[leveloffset=+1]
 
-include::adding_dropbox_connections.adoc[leveloffset=+1]
+include::adding_dropbox_connection_start.adoc[leveloffset=+1]
 
-include::specifying_connection_input_output_types.adoc[leveloffset=+1]
+include::adding_dropbox_connection_finish.adoc[leveloffset=+1]
+
+include::adding_dropbox_connection_middle.adoc[leveloffset=+1]
+
+
+:context: connectors

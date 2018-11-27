@@ -1,6 +1,6 @@
-[id='connecting-to-twitter']
-= Connecting to Twitter
-:context: twitter
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
 [id='connecting-to-twitter_{context}']
 = Connect to Twitter

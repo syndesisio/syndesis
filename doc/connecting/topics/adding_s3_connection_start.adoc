@@ -8,7 +8,7 @@ To start an integration by obtaining data from an Amazon S3 bucket,
 add an Amazon S3 connection as the start connection in an integration.
 
 .Prerequisite
-You created an Amazon S3 connection.
+* You created an Amazon S3 connection.
 
 .Procedure
 

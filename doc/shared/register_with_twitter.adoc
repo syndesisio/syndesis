@@ -21,7 +21,7 @@ of {prodname} as a Twitter client application. However, while each Twitter
 connection uses the same registration, it can use different user
 credentials. 
 
-.Prerequisite
+.Prerequisites
 You are logged in to {prodname}. The URL for accessing {prodname} is in the 
 email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
 

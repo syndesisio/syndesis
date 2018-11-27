@@ -22,14 +22,12 @@ to integrate.
 as templates for creating connections. The following topics provide 
 details for creating connections and adding them to integrations:
 
-<<<<<<< HEAD
 * <<connecting-to-s3_{context}>>
 * <<connecting-to-amq_{context}>>
 * <<connecting-to-amqp_{context}>>
 * <<connecting-to-dropbox_{context}>>
 * <<connecting-to-ftp_{context}>>
 * <<connecting-to-gmail_{context}>>
-* <<connecting-to-google-calendar_{context}>>
 * <<connecting-to-http_{context}>>
 * <<connecting-to-log_{context}>>
 * <<connecting-to-kafka_{context}>> 
@@ -40,33 +38,9 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-servicenow_{context}>>
 * <<connecting-to-slack_{context}>>
 * <<connecting-to-databases_{context}>>
-* <<connecting-to-telegram_{context}>>
 * <<connecting-to-twitter_{context}>>
 * <<triggering-integrations-with-http-requests_{context}>>
 * <<triggering-integrations-with-timers_{context}>>
-=======
-* <<connecting-to-s3>>
-* <<connecting-to-amq>>
-* <<connecting-to-amqp>>
-* <<connecting-to-dropbox>>
-* <<connecting-to-ftp>>
-* <<connecting-to-gmail>>
-* <<connecting-to-http>>
-* <<connecting-to-log>>
-* <<connecting-to-kafka>> 
-* <<connecting-to-mqtt>>
-* <<connecting-to-rest-apis>>
-* <<connecting-to-sf>>
-* <<connecting-to-concur>>
-* <<connecting-to-servicenow>>
-* <<connecting-to-slack_{context}>>
-* <<connecting-to-databases>>
-* <<connecting-to-telegram_{context}>>
-* <<connecting-to-twitter>>
-* <<triggering-integrations-with-http-requests>>
-* <<triggering-integrations-with-timers>>
->>>>>>> user doc: Initial draft of doc for Telegram connector
-
 
 include::topics/supported_connectors.adoc[leveloffset=+1]
 
