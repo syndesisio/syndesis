@@ -19,29 +19,29 @@ or service that you want to integrate. You then create an integration and
 add a connection to it for each integration or service that you want
 to integrate.
 
-{prodname} <<supported-connectors,supports numerous connectors>> that serve
+{prodname} <<supported-connectors_{context},supports numerous connectors>> that serve
 as templates for creating connections. The following topics provide 
 details for creating connections and adding them to integrations:
 
-* <<connecting-to-s3>>
-* <<connecting-to-amq>>
-* <<connecting-to-amqp>>
-* <<connecting-to-dropbox>>
-* <<connecting-to-ftp>>
-* <<connecting-to-gmail>>
-* <<connecting-to-http>>
-* <<connecting-to-log>>
-* <<connecting-to-kafka>> 
-* <<connecting-to-mqtt>>
-* <<connecting-to-rest-apis>>
-* <<connecting-to-sf>>
-* <<connecting-to-concur>>
-* <<connecting-to-servicenow>>
-* <<connecting-to-slack>>
-* <<connecting-to-databases>>
-* <<connecting-to-twitter>>
-* <<triggering-integrations-with-http-requests>>
-* <<triggering-integrations-with-timers>>
+* <<connecting-to-s3_{context}>>
+* <<connecting-to-amq_{context}>>
+* <<connecting-to-amqp_{context}>>
+* <<connecting-to-dropbox_{context}>>
+* <<connecting-to-ftp_{context}>>
+* <<connecting-to-gmail_{context}>>
+* <<connecting-to-http_{context}>>
+* <<connecting-to-log_{context}>>
+* <<connecting-to-kafka_{context}>> 
+* <<connecting-to-mqtt_{context}>>
+* <<connecting-to-rest-apis_{context}>>
+* <<connecting-to-sf_{context}>>
+* <<connecting-to-concur_{context}>>
+* <<connecting-to-servicenow_{context}>>
+* <<connecting-to-slack_{context}>>
+* <<connecting-to-databases_{context}>>
+* <<connecting-to-twitter_{context}>>
+* <<triggering-integrations-with-http-requests_{context}>>
+* <<triggering-integrations-with-timers_{context}>>
 
 include::topics/supported_connectors.adoc[leveloffset=+1]
 

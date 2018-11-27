@@ -1,7 +1,11 @@
-[id='add-servicenow-connection-finish']
+// This module is included in the following assemblies:
+// connecting_to_servicenow.adoc
+
+[id='add-servicenow-connection-finish_{context}']
 = Copy records to ServiceNow during or to finish an integration
 
-During an integration, or to finish an integration, you can copy records to 
+In the middle of an integration, or to finish an integration, 
+you can copy records to 
 ServiceNow. To do this, add a ServiceNow connection to an integration
 as the finish connection or as a middle connection. 
 

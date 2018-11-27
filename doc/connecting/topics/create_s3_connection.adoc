@@ -1,7 +1,16 @@
-[id='create-s3-connection']
-= Create an Amazon S3 connection
+// This module is included in the following assemblies:
+// connecting_to_amazon_s3.adoc
 
-To create an Amazon S3 connection:
+[id='create-s3-connection_{context}']
+= Create Amazon S3 connections
+
+You must create an Amazon S3 connection before you can add an
+Amazon S3 connection to an integration.
+
+.Prerequisites
+See link:{LinkFuseOnlineConnectorGuide}#prerequisites-for-creating-s3-connection_s3[Prerequisites for creating Amazon S3 connections].
+
+.Procedure
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
@@ -20,8 +29,7 @@ AWS account, then the connection cannot create the bucket and the integration ca
 the bucket that you want this connection to access or enter the bucket's ARN.
 If the bucket does not already exist 
 in either the AWS account being used or in any other AWS account, 
-then the connection creates it. For details about bucket name requirements,
-see <<prerequisites-for-creating-s3-connection>>.
+then the connection creates it. 
 . In the *Region* field, select the AWS region in which the bucket resides.
 If the connection creates the bucket, then it creates it in the
 selected region.

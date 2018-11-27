@@ -1,4 +1,7 @@
-[id='how-to-specify-request']
+// This module is included in the following assemblies:
+// triggering_integrations_with_http_requests.adoc
+
+[id='how-to-specify-request_{context}']
 = How to specify HTTP requests
 
 The following examples show how to specify HTTP requests for the

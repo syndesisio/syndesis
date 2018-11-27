@@ -1,5 +1,9 @@
-[id='connecting-to-amqp']
-= Connecting to AMQP
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-amqp_{context}']
+= Connect to AMQP
 :context: amqp
 
 In an integration, you can obtain messages from or publish messages
@@ -13,13 +17,12 @@ broker of interest:
 * AMQ 7 broker
 * EnMasse, which is an open source messaging platform
 
-To communicate with one of the following broker types, use the AMQ connector 
+To communicate with one of the following broker types, 
+link:{LinkFuseOnlineConnectorGuide}#connecting-to-amq_amq[use the AMQ connector] 
 to create a connection to the broker of interest:
 
 * Apache ActiveMQ broker that does not support AMQP
 * AMQ 6 broker
-
-See <<connecting-to-amq>>.
 
 [NOTE]
 It is possible to use the AMQP connector to create a connection to an
@@ -32,12 +35,17 @@ https://access.redhat.com/documentation/en-us/red_hat_jboss_a-mq/6.3/html-single
 
 To use the AMQP connector, see:
 
-* <<create-amqp-connection>> 
-* <<adding-amqp-connections>>
-* <<specifying-connection-input-output-types_{context}>>
+* <<create-amqp-connection_{context}>> 
+* <<adding-amqp-connection-start_{context}>>
+* <<adding-amqp-connection-finish_{context}>>
+* <<adding-amqp-connection-middle_{context}>>
 
 include::create_amqp_connection.adoc[leveloffset=+1]
 
-include::adding_amqp_connections.adoc[leveloffset=+1]
+include::adding_amqp_connection_start.adoc[leveloffset=+1]
 
-include::specifying_connection_input_output_types.adoc[leveloffset=+1]
+include::adding_amqp_connection_finish.adoc[leveloffset=+1]
+
+include::adding_amqp_connection_middle.adoc[leveloffset=+1]
+
+:context: connectors

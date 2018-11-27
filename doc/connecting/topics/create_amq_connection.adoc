@@ -1,7 +1,20 @@
-[id='create-amq-connection']
+// This module is included in the following assemblies:
+// connecting_to_amq.adoc
+
+[id='create-amq-connection_{context}']
 = Create an AMQ connection
 
-To create an AMQ connection:
+In an integration, to obtain messages from or to publish messages to 
+an Apache ActiveMQ broker that does not support AMQP or an AMQ 6 broker, 
+create an AMQ connection, which you can add to an integration.
+
+.Prerequisites
+For the AMQ broker that you want to connect to, you have the following:
+* Broker URL
+* User account credentials
+* Broker's PEM certificate text
+
+.Procedure
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
