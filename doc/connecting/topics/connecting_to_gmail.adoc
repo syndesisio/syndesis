@@ -1,5 +1,9 @@
-[id='connecting-to-gmail']
-= Connecting to Gmail
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-gmail_{context}']
+= Connect to Gmail
 :context: gmail
 
 To trigger execution of an integration when a particular Gmail
@@ -21,10 +25,11 @@ data to the email fields.
 
 Information and instructions are in the following topics:
 
-* <<register-with-gmail>>
-* <<create-gmail-connection>>
-* <<alternatives-for-populating-email-to-send>>
-* <<add-gmail-connection>>
+* <<register-with-gmail_{context}>>
+* <<create-gmail-connection_{context}>>
+* <<alternatives-for-populating-email-to-send_{context}>>
+* <<add-gmail-connection-start_{context}>>
+* <<add-gmail-connection-finish-middle_{context}>>
 
 include::register_with_gmail.adoc[leveloffset=+1]
 
@@ -34,4 +39,9 @@ include::create_gmail_connection.adoc[leveloffset=+1]
 
 include::alternatives_for_populating_email_to_send.adoc[leveloffset=+1]
 
-include::add_gmail_connection.adoc[leveloffset=+1]
+include::add_gmail_connection_start.adoc[leveloffset=+1]
+
+include::add_gmail_connection_finish_middle.adoc[leveloffset=+1]
+
+
+:context: connectors

@@ -1,5 +1,8 @@
-[id='identify-concur-fields-for-mapping']
-= Map integration data fields to SAP Concur fields
+// This module is included in the following assemblies:
+// connecting_to_concur.adoc
+
+[id='identify-concur-fields-for-mapping_{context}']
+= Example of mapping integration data fields to SAP Concur fields
 
 In most integrations, you need to add a data mapping step before a 
 connection to SAP Concur. In the data mapping step, you map data fields
@@ -7,17 +10,6 @@ that are available from previous integration steps to SAP Concur action
 parameters. In the data mapper, the *Target* panel displays the
 SAP Concur parameters for the action that you selected when you added
 the SAP Concur connection to the integration. 
-
-ifeval::["{location}" == "downstream"]
-In this release, you might want to invoke the following 
-https://developer.concur.com/api-explorer/v3-0/Lists.html[SAP Concur actions]. 
-
-* Get all lists requires the `limit` parameter. The `offset` parameter is optional.
-* Get a single list requires the `id` parameter.
-* Create a new list requires the `content` parameter.
-* Update a list requires the `id` and `content` parameters.
-
-endif::[]
 
 Suppose that an integration starts by executing a SQL stored procedure
 that obtains new project codes. The integration finishes by adding

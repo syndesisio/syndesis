@@ -1,4 +1,7 @@
-[id='prerequisites-for-creating-s3-connection']
+// This module is included in the following assemblies:
+// connecting_to_amazon_s3
+
+[id='prerequisites-for-creating-s3-connection_{context}']
 = Prerequisites for creating an Amazon S3 connection
 
 To create an Amazon S3 connection, you must know the

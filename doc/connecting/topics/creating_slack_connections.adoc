@@ -1,3 +1,6 @@
+// This module is included in the following assemblies:
+// connecting_to_slack.adoc
+
 [id='creating-slack-connections_{context}']
 = Create a Slack connection
 

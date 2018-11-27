@@ -1,7 +1,17 @@
-[id='adding-db-connection-start']
+// This module is included in the following assemblies:
+// connecting_to_databases.adoc
+
+[id='adding-db-connection-start_{context}']
 = Start an integration by accessing a database
 
-To start an integration by accessing a database:
+To trigger execution of an integration based on the result of invoking a SQL
+query or a SQL stored procedures, choose a database connection as the 
+integration's start connection. 
+
+.Prerequisite
+You created a database connection. 
+
+.Procedure
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
@@ -30,6 +40,7 @@ the connection invokes the specified query or stored procedure every
 five minutes.
 . Click *Done*.
 
+.Result
 {prodname} tries to validate the connection, which includes
 checking that a specified SQL query is syntactically correct and
 confirming that the query or stored procedure target data exists. If

@@ -1,4 +1,7 @@
-[id='create-servicenow-connection']
+// This module is included in the following assemblies:
+// connecting_to_servicenow.adoc
+
+[id='create-servicenow-connection_{context}']
 = Create a ServiceNow connection
 
 In an integration, to connect to your company's ServiceNow instance,

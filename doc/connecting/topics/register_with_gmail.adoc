@@ -1,4 +1,7 @@
-[id='register-with-gmail']
+// This module is included in these assemblies:
+// connecting_to_gmail.adoc
+
+[id='register-with-gmail_{context}']
 = Register {prodname} as a Gmail client application
 
 To be able to connect to Gmail in an integration, 
@@ -19,7 +22,11 @@ enabled Google APIs. You do not need to follow the procedure documented here.
 To be able to create a Gmail connection, you
 just need to <<enable-gmail-api_{context},enable the Gmail API>>. 
 
-To authorize your {prodname} environment to access Gmail:
+.Prerequisite
+You must be able to sign in to the Google account that you want to 
+use to register {prodname} as a Gmail client application. 
+
+.Procedure
 
 . In {prodname}, in the left navigation panel, click *Settings*. 
 . On the *Settings* page, near the top, to the right of the callback URL, 

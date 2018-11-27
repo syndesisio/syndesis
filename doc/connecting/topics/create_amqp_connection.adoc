@@ -1,8 +1,20 @@
-[id='create-amqp-connection']
+// This module is included in the following assemblies:
+// connecting_to_amqp.adoc
+
+[id='create-amqp-connection_{context}']
 = Create an AMQP connection
 
-To create an AMQP connection:
+In an integration, to obtain messages from or publish messages to an AMQP
+broker, create an AMQP connection, which you can add to an integration.
 
+.Prerequisites
+For the AMQP broker that you want to connect to, you have the following:
+
+* Its URI
+* User account credentials
+* Its PEM certificate text
+
+.Procedure
 . In {prodname}, in the left panel, click *Connections* to 
 display any available connections. 
 . In the upper right, click *Create Connection* to display

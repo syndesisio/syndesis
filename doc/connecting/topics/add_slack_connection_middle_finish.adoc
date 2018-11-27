@@ -1,3 +1,6 @@
+// This module is included in the following assemblies:
+// connecting_to_slack.adoc
+
 [id='add-slack-connection-middle-finish_{context}']
 = Add a Slack connection to send a message to a Slack channel or user
 
@@ -6,7 +9,7 @@ finish an integration or in the middle of an integration.
 
 .Prerequisites
 
-* You created a <<creating-slack-connections_{context},Slack connection>>. 
+* You created a Slack connection.
 * You are creating or editing an integration. If you are creating an integration, then
 {prodname} might be prompting you to choose a finish connection. 
 To add a middle connection, hover over the plus
@@ -35,4 +38,4 @@ in this procedure. In the mapping step, map a string
 from a data mapping source to the Slack *message* field. This string 
 should contain the message that you want to send to the Slack
 user or channel. See
-{LinkFuseOnlineIntegrationGuide}#add-data-mapping-step[Add data mapping step].
+link:{LinkFuseOnlineIntegrationGuide}#add-data-mapping-step_map[Add data mapping step].

@@ -1,4 +1,7 @@
-[id='configure-concur-connector']
+// This module is included in the following assemblies:
+// connecting_to_concur.adoc
+
+[id='configure-concur-connector_{context}']
 = Configure the SAP Concur connector
 
 To connect to SAP Concur in an integration, you must configure the
@@ -32,7 +35,8 @@ If validation is not successful, correct the input values and try again.
 If validation is successful, you can create a SAP Concur connection,
 which you can add to an integration. 
 
-. To create a SAP Concur connection, click the *create a connection* link
+.Next steps
+To create a SAP Concur connection, click the *create a connection* link
 in the success message. Or, to create a connection later, click *Ok* to 
 contract the SAP Concur entry in the *Settings* page. 
 

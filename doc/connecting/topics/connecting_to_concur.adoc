@@ -1,5 +1,9 @@
-[id='connecting-to-concur']
-= Connecting to SAP Concur
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-concur_{context}']
+= Connect to SAP Concur
 :context: concur
 
 SAP Concur manages business expenses, travel, and invoices. 
@@ -14,13 +18,13 @@ upload the new project codes to the appropriate list.
 
 See the following topics: 
 
-* <<user-roles-for-connecting-to-concur>>
-* <<obtain-concur-oauth-credentials-implementation>>
-* <<obtain-concur-oauth-credentials-production>>
-* <<configure-concur-connector>>
-* <<create-concur-connection>>
-* <<add-concur-connection>>
-* <<identify-concur-fields-for-mapping>>
+* <<user-roles-for-connecting-to-concur_{context}>>
+* <<obtain-concur-oauth-credentials-implementation_{context}>>
+* <<obtain-concur-oauth-credentials-production_{context}>>
+* <<configure-concur-connector_{context}>>
+* <<create-concur-connection_{context}>>
+* <<add-concur-connection_{context}>>
+* <<identify-concur-fields-for-mapping_{context}>>
 
 
 include::user_roles_for_connecting_to_concur.adoc[leveloffset=+1]
@@ -36,3 +40,5 @@ include::create_concur_connection.adoc[leveloffset=+1]
 include::add_concur_connection.adoc[leveloffset=+1]
 
 include::identify_concur_fields_for_mapping.adoc[leveloffset=+1]
+
+:context: connectors
