@@ -24,7 +24,8 @@ same as the integrations you already published.
 https://www.youtube.com/watch?v=RAa1qy3WnWQ&feature=youtu.be[A video of configuring and publishing this quickstart is also available.] 
 
 .Prerequisites
-* {prodname} is open in a browser.
+
+{prodname} is open in a browser.
 
 .Procedure
 

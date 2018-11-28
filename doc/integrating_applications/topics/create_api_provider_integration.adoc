@@ -67,5 +67,5 @@ description that will appear in the operations list in {prodname}.
 . Optionally, enter a description that helps you distinguish this integration
 from other integrations. 
 . Click *Save and continue* to display the *Choose Operation* page. You are
-ready to define a flow for each operation. 
-See <<create-integration-operation-flows_{context}>>.
+ready to 
+link:{LinkFuseOnlineIntrationGuide}#create-integration-operation-flows_api-provider[define a flow for each operation].
