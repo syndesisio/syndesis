@@ -52,6 +52,10 @@ to an MQTT broker.
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis_connectors[REST APIs]
 |Create a custom REST API client connector by uploading an OpenAPI
 specification. You can then create a connection to that REST API. 
+Create a REST API provider integration by uploading an OpenAPI specification
+that defines operations that trigger integration execution. See
+link:{LinkFuseOnlineIntegrationGuide}#trigger-integrations-with-api-calls_ug[triggering integration execution with API calls] 
+in the {NameOfFuseOnlineIntegrationGuide}.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-sf_connectors[Salesforce]
 |Create, update, fetch, or delete a Salesforce record. 
