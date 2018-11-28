@@ -38,9 +38,11 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-servicenow_{context}>>
 * <<connecting-to-slack_{context}>>
 * <<connecting-to-databases_{context}>>
+* <<connecting-to-telegram_{context}>>
 * <<connecting-to-twitter_{context}>>
 * <<triggering-integrations-with-http-requests_{context}>>
 * <<triggering-integrations-with-timers_{context}>>
+
 
 include::topics/supported_connectors.adoc[leveloffset=+1]
 
