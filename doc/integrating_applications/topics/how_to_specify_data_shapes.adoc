@@ -4,13 +4,12 @@
 [id='how-to-specify-data-shapes_{context}']
 = How to specify data shapes in extensions
 
-In the extension definition JSON file for a connector or for a custom
-step, each `action` specification defines an input data shape
-(`inputDataShape`) and an output data shape (`outputDataShape`). 
-A data shape holds data type metadata that the data mapper
-consumes to create internal documents. The data mapper then uses
-these internal documents to display the source and target fields 
-in the data mapper user interface. 
+A data shape holds data type metadata for use by the data mapper. 
+The data mapper transforms this metadata into internal documents that 
+it uses to display the source and target data fields in the data mapper 
+user interface. In an extension definition JSON file for a connector or 
+for a custom step, each action specification defines an input 
+data shape (`inputDataShape`) and an output data shape (`outputDataShape`).
 
 When you are developing an extension, it is important to specify data
 shape properties that allow the data mapper to correctly handle and display the
@@ -23,6 +22,7 @@ data mapper behavior:
 * `name`
 * `description`
 
+.About the `kind` property
 The data shape `kind` property is represented by the `DataShapeKinds` enum. 
 There are seven possible values for the `kind` property:
 
@@ -36,42 +36,26 @@ class name for the `type` property. For example:
      "type": "org.apache.camel.component.telegram.model.IncomingMessage"
 },
 ----
-+
-In {prodname}, a data shape whose `kind` property is `java` must have the Java 
-inspection result in the data shape's `specification` property. 
-If you are developing a custom step extension, then you can use 
-`extension.maven.plugin` to generate the JSON extension definition file. 
-When you do this, the plugin inserts the Java inspection result as 
-the setting of the `specification` property. If you do not use 
-`extension.maven.plugin` for a custom step extension or if you are 
-developing a connector extension, then the setting of the `specification` 
-property must be the actual result of the Java inspection. 
-
-+
-When the `kind` property is set to anything other than `java` then any 
-setting for the `type` property is ignored.
 
 * `json-schema` indicates that the data type is represented by a JSON schema. 
-The data shape's `specification` property must contain an actual 
-JSON schema document. The setting cannot be a reference to a document. 
 
-* `json-instance` indicates that the data type is represented by a JSON instance. 
-The data shape's `specification` property must contain an actual JSON 
-instance document.  The setting cannot be a reference to a document. 
+* `json-instance` indicates that the data type is represented by a JSON instance.  
 
 * `xml-schema` indicates that the data type is represented by an XML schema. 
-The data shape's `specification` property must contain an actual XML schema 
-document. The setting cannot be a reference to a document. 
 
 * `xml-instance` indicates that the data type is represented by an XML instance. 
-The data shape's `specification` property must contain an actual 
-XML instance document. The setting cannot be a reference to a document. 
 
 * `any` indicates that the data type is not structured. For example, it might
 be a byte array or free format text. The data mapper ignores a data shape when
 its `kind` property is set to `any`. 
 In other words, the data does not appear in the data mapper and therefore 
 you cannot map any fields to or from this data.  
++
+However, for custom connectors, when the `kind` property is set to any, 
+{prodname} prompts you to specify input and/or output data types when you 
+configure a connection that you have created from the custom connector. 
+You can specify the kind of the data shape’s schema, the appropriate 
+document for the schema you specify, and a name for the data type. 
 
 * `none` indicates that there is no data type. For an input data shape,
 this indicates that the connection or step does not read data. For an output data shape,
@@ -81,6 +65,70 @@ setting the `kind` property to `none` indicates that the data is only passing
 through. The data mapper ignores data shapes when `kind` is set to `none`.
 In other words, the data does not appear in the data mapper and therefore 
 you cannot map any fields to or from this data. 
+
+.About the `type` property
+When the value of the `kind` property is `java`, the `"kind": "java"` 
+declaration is followed by a `type` declaration that specifies a fully qualified
+Java class name. For example: 
+
+----
+"outputDataShape": {
+     "kind": "java",
+     "type": "org.apache.camel.component.telegram.model.IncomingMessage"
+},
+----
+
+When the `kind` property is set to anything other than `java` then any 
+setting for the `type` property is ignored.
+
+.About the `specification` property
+
+The setting of the `kind` property determines the setting of the 
+`specification` property, as shown in the following table. 
+
+[cols=2*,options="header"]
+|===
+|`kind` property setting
+|`specification` property setting
+
+|`java`
+| Java inspection result. 
+If you are developing a custom step extension, then you can use 
+`extension-maven-plugin` to generate the JSON extension definition file. 
+When you do this, the plugin inserts the Java inspection result as 
+the setting of the `specification` property. If you do not use 
+`extension-maven-plugin` for a custom step extension or if you are 
+developing a connector extension, then the setting of the `specification` 
+property must be the actual result of the Java inspection. 
+
+|`json-schema`
+|An actual JSON schema document. The setting cannot be a reference to a 
+document and the JSON schema cannot point to other JSON schema documents 
+by means of references. 
+
+|`json-instance`
+|An actual JSON document that contains example data. The data mapper 
+derives the data types from the example data. The setting cannot be a 
+reference to a document.
+
+|`xml-schema`
+|An actual XML schema document. The setting cannot be a reference to a 
+document and the XML schema cannot point to other XML schema documents 
+by means of references.
+
+|`xml-instance`
+|An actual 
+XML instance document. The setting cannot be a reference to a document.
+
+|`any`
+|The `specification` property is not required. Any setting is ignored.
+
+|`none`
+|The `specification` property is not required. Any setting is ignored. 
+
+|===
+
+.About the `name` property
 
 The data shape `name` property specifies a human readable name for the
 data type. The data mapper displays this name in its user interface
@@ -92,6 +140,8 @@ image:images/TwitterMention.png[Name example]
 
 This name also appears in data type indicators in the {prodname} 
 integration visualization panel. 
+
+.About the `description` property
 
 The data shape `description` property specifies text that appears as a 
 tooltip when the cursor hovers over the data type name in the data mapper
