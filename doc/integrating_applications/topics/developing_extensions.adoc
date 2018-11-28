@@ -1,3 +1,4 @@
+
 // This assembly is included in the following assemblies:
 // customizing.adoc
 
@@ -34,6 +35,7 @@ developing extensions in an IDE that you choose.
 * <<overview-extension-content-structure_{context}>>
 * <<about-extension-definitions_{context}>>
 * <<using-maven-to-generate-extension-definitions_{context}>>
+* <<how-to-specify-data-shapes_{context}>>
 * <<develop-step-extensions_{context}>>
 * <<develop-connector-extensions_{context}>>
 * <<develop-library-extensions_{context}>>
