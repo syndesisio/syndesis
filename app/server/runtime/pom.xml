@@ -923,6 +923,11 @@
       <artifactId>hibernate-jpa-2.1-api</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>jaeger-spring-boot-starter</artifactId>
+    </dependency>
+
     <!--  ==== Test Scope === -->
     <dependency>
       <groupId>io.fabric8</groupId>
