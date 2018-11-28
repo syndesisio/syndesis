@@ -9,9 +9,9 @@ invoke `curl` utility commands that send HTTP requests to the Task API service.
 How you specify the HTTP request determines which integration flow the call
 triggers.  
 
-.Prerequisites
+.Prerequisite
 
-* {prodname} indicates that the Task API is *Running*. 
+{prodname} indicates that the Task API is *Running*. 
 
 .Procedure
 

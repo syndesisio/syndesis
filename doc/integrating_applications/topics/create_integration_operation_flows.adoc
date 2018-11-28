@@ -19,7 +19,7 @@ between connections.
 * You created an API provider integration, gave it a name, and saved it.
 * You created a connection to each application or service that you want
 an integration flow to connect to. For details, see the
-link:{LinkFuseOnlineIntegrationGuide}connecting-to-applications#about-creating-connections[information about creating connections].
+link:{LinkFuseOnlineIntegrationGuide}#about-creating-connections_connections[information about creating connections].
 * {prodname} is displaying the *Choose operation* page. 
 
 .Procedure
@@ -82,7 +82,7 @@ popup that appears, click *Add a step*.
 
 +
 For help, see
-link:{LinkFuseOnlineIntegrationGuide}#add-steps[Adding steps between connections].
+link:{LinkFuseOnlineIntegrationGuide}#about-adding-steps_create[Adding steps between connections].
 
 +
 Repeat this subset of instructions to add another step that processes
@@ -96,7 +96,7 @@ to add a data mapper step here. Go back to the previous
 subset of instructions. 
 On the *Choose a Step* page, click *Data Mapper*, and define the
 needed mappings. For help, see
-link:{LinkFuseOnlineIntegrationGuide}mapping-data[Mapping Data].
+link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Map integration data fields to the next connection in the integration].
 
 . When this integration flow has all needed 
 connections and steps, do one of the following:
@@ -135,4 +135,4 @@ endif::[]
 When an API provider integration 
 is running, you can use the `curl` utility to confirm that it is
 working as expected. For examples of doing this, see 
-link:{LinkFuseOnlineIntegrationGuide}trigger-integrations-with-api-calls_{context}#view-try-api-provider-quickstart_{context}[the description of the API provider quickstart].
+link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[the description of the API provider quickstart].

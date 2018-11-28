@@ -23,6 +23,12 @@ can add to an integration. For example, many retail web sites provide
 a REST API client interface that a developer can capture in an 
 OpenAPI schema.  
 
+* An OpenAPI schema for a REST API service. 
++
+You upload this schema to {prodname}. {prodname} makes the
+API service available and provides the URL for API calls. This lets you 
+link:{LinkFuseOnlineIntegrationGuide}#trigger-integrations-with-api-calls_ug[trigger integration execution with an API call]. 
+
 * A `JAR` file that implements a {prodname} extension. An extension
 can be any one of the following:  
 +
