@@ -1,4 +1,5 @@
-import i18n from 'i18next';
+import i18n, { InitOptions } from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
 import { en, it } from './locales';
 
 const options = {
@@ -6,7 +7,7 @@ const options = {
     escapeValue: false, // not needed for react!!
   },
 
-  debug: true, // change to false for release
+  debug: process.env.NODE_ENV !== 'production',
 
   resources: {
     en: {
@@ -22,17 +23,11 @@ const options = {
   },
 
   defaultNS: 'shared',
-  fallbackLng: 'it',
+  fallbackLng: process.env.NODE_ENV === 'production' ? 'en' : 'it',
+  fallbackNS: ['shared'],
   keySeparator: false, // we do not use keys in form messages.welcome
-  ns: ['shared'],
+  ns: ['shared', 'app', 'dashboard'],
+} as InitOptions;
 
-  react: {
-    bindI18n: 'languageChanged loaded',
-    bindStore: 'added removed',
-    nsMode: 'default',
-    wait: false,
-  },
-};
-
-i18n.init(options);
+i18n.use(LanguageDetector).init(options);
 export default i18n;
