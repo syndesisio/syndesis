@@ -24,7 +24,7 @@ Your OpenAPI schema determines which HTTP verbs (such as
 `GET`, `POST`, `DELETE` and so on) you can specify
 in calls to your REST API service URLs. Examples of calls to 
 API provider URLs are in the 
-link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_{context}[instructions for trying out the API provider quickstart].   
+link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[instructions for trying out the API provider quickstart].   
 
 The following diagram shows an API provider integration that processes data
 about people. An external REST API client invokes the REST API URLs that are 
