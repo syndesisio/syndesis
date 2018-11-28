@@ -2,6 +2,7 @@ import { ApiContext } from '@syndesis/api';
 import { Loader, PfVerticalNavItem, UnrecoverableError } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
+import { withNamespaces, WithNamespaces } from 'react-i18next';
 import { Route, Switch } from 'react-router-dom';
 import { ConnectionsModule } from '../modules/connections';
 import { DashboardModule } from '../modules/dashboard';
@@ -11,7 +12,7 @@ import { AppContext } from './AppContext';
 import { Layout } from './Layout';
 import { WithConfig } from './WithConfig';
 
-export class App extends React.Component {
+export class AppComponent extends React.Component<WithNamespaces> {
   public render() {
     return (
       <WithConfig>
@@ -64,36 +65,38 @@ export class App extends React.Component {
   }
 
   public renderNavbar() {
+    const { t } = this.props;
+
     return [
       <PfVerticalNavItem
         icon={'fa fa-tachometer'}
         to={'/'}
         exact={true}
-        label={'Home'}
+        label={t('Home')}
         key={1}
       />,
       <PfVerticalNavItem
         icon={'pficon pficon-integration'}
         to={'/integrations'}
-        label={'Integrations'}
+        label={t('Integrations')}
         key={2}
       />,
       <PfVerticalNavItem
         icon={'pficon pficon-plugged'}
         to={'/connections'}
-        label={'Connections'}
+        label={t('Connections')}
         key={3}
       />,
       <PfVerticalNavItem
         icon={'fa fa-cube'}
         to={'/customizations'}
-        label={'Customizations'}
+        label={t('Customizations')}
         key={4}
       />,
       <PfVerticalNavItem
         icon={'pficon pficon-settings'}
         to={'/settings'}
-        label={'Settings'}
+        label={t('Settings')}
         key={5}
       />,
     ];
@@ -103,3 +106,5 @@ export class App extends React.Component {
     // do nothing
   };
 }
+
+export const App = withNamespaces(['shared'])(AppComponent);

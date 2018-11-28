@@ -29,6 +29,7 @@ import {
 import { getConnectionIcon, WithLoader } from '@syndesis/utils';
 import { Grid } from 'patternfly-react';
 import * as React from 'react';
+import { NamespacesConsumer } from 'react-i18next';
 
 export interface IIntegrationCountsByState {
   Error: number;
@@ -123,150 +124,171 @@ export default () => (
                 metricsData.topIntegrations
               );
               return (
-                <Dashboard
-                  linkToIntegrations={'/integrations'}
-                  linkToIntegrationCreation={'/integration/create'}
-                  linkToConnections={'/connections'}
-                  linkToConnectionCreation={'/connection/create'}
-                  integrationsOverview={
-                    <AggregatedMetricCard
-                      title={`${integrationsData.totalCount} Integrations`}
-                      ok={
-                        integrationsData.totalCount -
-                        integrationStatesCount.Error
+                <NamespacesConsumer ns={['dashboard', 'shared']}>
+                  {t => (
+                    <Dashboard
+                      linkToIntegrations={'/integrations'}
+                      linkToIntegrationCreation={'/integration/create'}
+                      linkToConnections={'/connections'}
+                      linkToConnectionCreation={'/connection/create'}
+                      integrationsOverview={
+                        <AggregatedMetricCard
+                          title={t('titleTotalIntegrations', {
+                            count: integrationsData.totalCount,
+                          })}
+                          ok={
+                            integrationsData.totalCount -
+                            integrationStatesCount.Error
+                          }
+                          error={integrationStatesCount.Error}
+                        />
                       }
-                      error={integrationStatesCount.Error}
-                    />
-                  }
-                  connectionsOverview={
-                    <ConnectionsMetric count={connectionsData.totalCount} />
-                  }
-                  messagesOverview={
-                    <AggregatedMetricCard
-                      title={`${metricsData.messages} Total Messages`}
-                      ok={metricsData.messages! - metricsData.errors!}
-                      error={metricsData.errors!}
-                    />
-                  }
-                  uptimeOverview={
-                    <UptimeMetric start={parseInt(metricsData.start!, 10)} />
-                  }
-                  topIntegrations={
-                    <TopIntegrationsCard>
-                      <WithLoader
-                        error={false}
-                        loading={!hasIntegrations}
-                        loaderChildren={
-                          <IntegrationsListSkeleton width={500} />
-                        }
-                        errorChildren={<div>TODO</div>}
-                      >
-                        {() => (
-                          <IntegrationsList>
-                            {topIntegrations.map(
-                              (mi: IntegrationWithMonitoring, index) => (
-                                <IntegrationsListItem
-                                  integrationId={mi.integration.id!}
-                                  integrationName={mi.integration.name}
-                                  currentState={mi.integration!.currentState!}
-                                  targetState={mi.integration!.targetState!}
-                                  isConfigurationRequired={
-                                    !!(
-                                      mi.integration!.board!.warnings ||
-                                      mi.integration!.board!.errors ||
-                                      mi.integration!.board!.notices
-                                    )
-                                  }
-                                  monitoringValue={
-                                    mi.monitoring &&
-                                    mi.monitoring.detailedState.value
-                                  }
-                                  monitoringCurrentStep={
-                                    mi.monitoring &&
-                                    mi.monitoring.detailedState.currentStep
-                                  }
-                                  monitoringTotalSteps={
-                                    mi.monitoring &&
-                                    mi.monitoring.detailedState.totalSteps
-                                  }
-                                  key={index}
-                                />
-                              )
-                            )}
-                          </IntegrationsList>
-                        )}
-                      </WithLoader>
-                    </TopIntegrationsCard>
-                  }
-                  integrationBoard={
-                    <IntegrationBoard
-                      runningIntegrations={integrationStatesCount.Published}
-                      pendingIntegrations={integrationStatesCount.Pending}
-                      stoppedIntegrations={integrationStatesCount.Unpublished}
-                    />
-                  }
-                  integrationUpdates={
-                    <RecentUpdatesCard>
-                      <WithLoader
-                        error={false}
-                        loading={!hasIntegrations}
-                        loaderChildren={<RecentUpdatesSkeleton />}
-                        errorChildren={<div>TODO</div>}
-                      >
-                        {() =>
-                          recentlyUpdatedIntegrations.map(i => (
-                            <Grid.Row key={i.id}>
-                              <Grid.Col sm={5}>{i.name}</Grid.Col>
-                              <Grid.Col sm={3}>
-                                <IntegrationStatus
-                                  currentState={i.currentState}
-                                />
-                              </Grid.Col>
-                              <Grid.Col sm={4}>
-                                {new Date(
-                                  i.updatedAt! || i.createdAt!
-                                ).toLocaleString()}
-                              </Grid.Col>
-                            </Grid.Row>
-                          ))
-                        }
-                      </WithLoader>
-                    </RecentUpdatesCard>
-                  }
-                  connections={
-                    <ConnectionsGrid>
-                      <WithLoader
-                        error={false}
-                        loading={!hasConnections}
-                        loaderChildren={
-                          <>
-                            {new Array(5).fill(0).map((_, index) => (
-                              <ConnectionsGridCell key={index}>
-                                <ConnectionSkeleton />
-                              </ConnectionsGridCell>
-                            ))}
-                          </>
-                        }
-                        errorChildren={<div>TODO</div>}
-                      >
-                        {() =>
-                          connectionsData.items.map((c, index) => (
-                            <ConnectionsGridCell key={index}>
-                              <ConnectionCard
-                                name={c.name}
-                                description={c.description || ''}
-                                icon={getConnectionIcon(
-                                  c,
-                                  process.env.PUBLIC_URL
+                      connectionsOverview={
+                        <ConnectionsMetric count={connectionsData.totalCount} />
+                      }
+                      messagesOverview={
+                        <AggregatedMetricCard
+                          title={t('titleTotalMessages', {
+                            count: metricsData.messages,
+                          })}
+                          ok={metricsData.messages! - metricsData.errors!}
+                          error={metricsData.errors!}
+                        />
+                      }
+                      uptimeOverview={
+                        <UptimeMetric
+                          start={parseInt(metricsData.start!, 10)}
+                        />
+                      }
+                      topIntegrations={
+                        <TopIntegrationsCard>
+                          <WithLoader
+                            error={false}
+                            loading={!hasIntegrations}
+                            loaderChildren={
+                              <IntegrationsListSkeleton width={500} />
+                            }
+                            errorChildren={<div>TODO</div>}
+                          >
+                            {() => (
+                              <IntegrationsList>
+                                {topIntegrations.map(
+                                  (mi: IntegrationWithMonitoring, index) => (
+                                    <IntegrationsListItem
+                                      integrationId={mi.integration.id!}
+                                      integrationName={mi.integration.name}
+                                      currentState={
+                                        mi.integration!.currentState!
+                                      }
+                                      targetState={mi.integration!.targetState!}
+                                      isConfigurationRequired={
+                                        !!(
+                                          mi.integration!.board!.warnings ||
+                                          mi.integration!.board!.errors ||
+                                          mi.integration!.board!.notices
+                                        )
+                                      }
+                                      monitoringValue={
+                                        mi.monitoring &&
+                                        mi.monitoring.detailedState.value
+                                      }
+                                      monitoringCurrentStep={
+                                        mi.monitoring &&
+                                        mi.monitoring.detailedState.currentStep
+                                      }
+                                      monitoringTotalSteps={
+                                        mi.monitoring &&
+                                        mi.monitoring.detailedState.totalSteps
+                                      }
+                                      key={index}
+                                    />
+                                  )
                                 )}
-                              />
-                            </ConnectionsGridCell>
-                          ))
-                        }
-                      </WithLoader>
-                    </ConnectionsGrid>
-                  }
-                />
+                              </IntegrationsList>
+                            )}
+                          </WithLoader>
+                        </TopIntegrationsCard>
+                      }
+                      integrationBoard={
+                        <IntegrationBoard
+                          runningIntegrations={integrationStatesCount.Published}
+                          pendingIntegrations={integrationStatesCount.Pending}
+                          stoppedIntegrations={
+                            integrationStatesCount.Unpublished
+                          }
+                        />
+                      }
+                      integrationUpdates={
+                        <RecentUpdatesCard>
+                          <WithLoader
+                            error={false}
+                            loading={!hasIntegrations}
+                            loaderChildren={<RecentUpdatesSkeleton />}
+                            errorChildren={<div>TODO</div>}
+                          >
+                            {() =>
+                              recentlyUpdatedIntegrations.map(i => (
+                                <Grid.Row key={i.id}>
+                                  <Grid.Col sm={5}>{i.name}</Grid.Col>
+                                  <Grid.Col sm={3}>
+                                    <IntegrationStatus
+                                      currentState={i.currentState}
+                                    />
+                                  </Grid.Col>
+                                  <Grid.Col sm={4}>
+                                    {new Date(
+                                      i.updatedAt! || i.createdAt!
+                                    ).toLocaleString()}
+                                  </Grid.Col>
+                                </Grid.Row>
+                              ))
+                            }
+                          </WithLoader>
+                        </RecentUpdatesCard>
+                      }
+                      connections={
+                        <ConnectionsGrid>
+                          <WithLoader
+                            error={false}
+                            loading={!hasConnections}
+                            loaderChildren={
+                              <>
+                                {new Array(5).fill(0).map((_, index) => (
+                                  <ConnectionsGridCell key={index}>
+                                    <ConnectionSkeleton />
+                                  </ConnectionsGridCell>
+                                ))}
+                              </>
+                            }
+                            errorChildren={<div>TODO</div>}
+                          >
+                            {() =>
+                              connectionsData.items.map((c, index) => (
+                                <ConnectionsGridCell key={index}>
+                                  <ConnectionCard
+                                    name={c.name}
+                                    description={c.description || ''}
+                                    icon={getConnectionIcon(
+                                      c,
+                                      process.env.PUBLIC_URL
+                                    )}
+                                  />
+                                </ConnectionsGridCell>
+                              ))
+                            }
+                          </WithLoader>
+                        </ConnectionsGrid>
+                      }
+                      i18nConnections={t('shared:Connections')}
+                      i18nLinkCreateConnection={t('linkCreateConnection')}
+                      i18nLinkCreateIntegration={t('linkToIntegrations')}
+                      i18nLinkToConnections={t('linkToConnections')}
+                      i18nLinkToIntegrations={t('linkToIntegrations')}
+                      i18nTitle={t('title')}
+                      i18nTitleIntegrationUpdates={t('titleIntegrationUpdates')}
+                    />
+                  )}
+                </NamespacesConsumer>
               );
             }}
           </WithConnections>
