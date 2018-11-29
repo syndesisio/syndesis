@@ -15,7 +15,10 @@
  */
 package io.syndesis.integration.runtime;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import javax.xml.bind.JAXBException;
@@ -145,5 +148,22 @@ public class IntegrationTestSupport implements StringConstants {
         JsonNode jsonNode = jsonData(snippets);
         String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
         return json;
+    }
+
+    /**
+     * @param inStream
+     * @return a string representation of the content of the given stream
+     * @throws IOException
+     */
+    public static String streamToString(InputStream inStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+        StringBuilder builder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            builder.append(line);
+            builder.append(NEW_LINE);
+        }
+
+        return builder.toString().trim();
     }
 }

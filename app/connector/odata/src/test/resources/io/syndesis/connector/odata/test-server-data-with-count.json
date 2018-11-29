@@ -1,0 +1,47 @@
+{
+  "count": 3,
+  "entities":[
+    {
+      "ID":{
+        "type":"Int32",
+        "value":"1"
+      },
+      "Name":{
+        "type":"String",
+        "value":"Notebook Basic 15"
+      },
+      "Description":{
+        "type":"String",
+        "value":"Notebook Basic, 1.7GHz - 15 XGA - 1024MB DDR2 SDRAM - 40GB"
+      }
+    },
+    {
+      "ID":{
+        "type":"Int32",
+        "value":"2"
+      },
+      "Name":{
+        "type":"String",
+        "value":"1UMTS PDA"
+      },
+      "Description":{
+        "type":"String",
+        "value":"Ultrafast 3G UMTS/HSDPA Pocket PC, supports GSM network"
+      }
+    },
+    {
+      "ID":{
+        "type":"Int32",
+        "value":"3"
+      },
+      "Name":{
+        "type":"String",
+        "value":"Ergo Screen"
+      },
+      "Description":{
+        "type":"String",
+        "value":"19 Optimum Resolution 1024 x 768 @ 85Hz, resolution 1280 x 960"
+      }
+    }
+  ]
+}

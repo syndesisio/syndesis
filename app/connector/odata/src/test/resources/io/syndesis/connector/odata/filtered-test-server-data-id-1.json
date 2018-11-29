@@ -1,0 +1,18 @@
+{
+  "entities":[
+    {
+      "ID":{
+        "type":"Int32",
+        "value":"1"
+      },
+      "Name":{
+        "type":"String",
+        "value":"Notebook Basic 15"
+      },
+      "Description":{
+        "type":"String",
+        "value":"Notebook Basic, 1.7GHz - 15 XGA - 1024MB DDR2 SDRAM - 40GB"
+      }
+    }
+  ]
+}

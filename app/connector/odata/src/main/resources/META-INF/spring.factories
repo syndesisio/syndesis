@@ -1,0 +1,4 @@
+
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    io.syndesis.connector.odata.verifier.ODataVerifierAutoConfiguration,\
+    io.syndesis.connector.odata.meta.ODataMetaDataAutoConfiguration

@@ -305,6 +305,11 @@
         <artifactId>connector-kudu</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-odata</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
