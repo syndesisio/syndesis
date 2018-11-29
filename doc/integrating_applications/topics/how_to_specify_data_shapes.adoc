@@ -24,7 +24,7 @@ data mapper behavior:
 
 .About the `kind` property
 The data shape `kind` property is represented by the `DataShapeKinds` enum. 
-There are seven possible values for the `kind` property:
+The possible values for the `kind` property are: 
 
 * `java` indicates that the data type is represented by a Java class. 
 Follow the `"kind": "java"` declaration by specifying a fully qualified
@@ -51,11 +51,12 @@ its `kind` property is set to `any`.
 In other words, the data does not appear in the data mapper and therefore 
 you cannot map any fields to or from this data.  
 +
-However, for custom connectors, when the `kind` property is set to any, 
+However, for a custom connector, when its `kind` property is set to `any`, 
 {prodname} prompts you to specify input and/or output data types when you 
 configure a connection that you have created from the custom connector. 
-You can specify the kind of the data shape’s schema, the appropriate 
-document for the schema you specify, and a name for the data type. 
+This happens when you add a connection to an integration. 
+You can specify the kind of the data shape’s schema, an appropriate 
+document for the kind of schema that you specify, and a name for the data type. 
 
 * `none` indicates that there is no data type. For an input data shape,
 this indicates that the connection or step does not read data. For an output data shape,
@@ -92,7 +93,7 @@ The setting of the `kind` property determines the setting of the
 |`specification` property setting
 
 |`java`
-| Java inspection result. 
+|Java inspection result. 
 If you are developing a custom step extension, then you can use 
 `extension-maven-plugin` to generate the JSON extension definition file. 
 When you do this, the plugin inserts the Java inspection result as 
