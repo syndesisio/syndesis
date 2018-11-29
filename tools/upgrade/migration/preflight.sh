@@ -56,6 +56,11 @@ extract_minor_version() {
         echo "latest"
         return
     fi
+    if [[ $version == [0-9]\.[0-9] ]]; then
+        # Already minor version, no need to parse
+        echo $version
+        return
+    fi
     local minor_version=$(echo $version | sed 's/^\([0-9]*\.[0-9]*\)\.[0-9]*\(-.*\)*$/\1/')
     if [ "$minor_version" = "$version" ]; then
         echo "ERROR: Cannot extract minor version from '$version'"
