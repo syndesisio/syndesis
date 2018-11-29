@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.api.services.sheets.v4.model.ValueRange;
 import io.syndesis.connector.sheets.model.GoogleValueRange;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
@@ -37,20 +36,18 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
-public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
+public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
     private GoogleSheetsGetValuesCustomizer customizer;
 
     private final String range;
     private final String sheetName;
-    private final String majorDimension;
-    private final List<List<Object>> values;
+    private final List<Object> values;
     private final String expectedValueModel;
 
-    public GoogleSheetsGetValuesCustomizerTest(String range, String sheetName, String majorDimension, List<List<Object>> values, String expectedValueModel) {
+    public GoogleSheetsGetValuesSplitResultsCustomizerTest(String range, String sheetName, List<Object> values, String expectedValueModel) {
         this.range = range;
         this.sheetName = sheetName;
-        this.majorDimension = majorDimension;
         this.values = values;
         this.expectedValueModel = expectedValueModel;
     }
@@ -58,14 +55,10 @@ public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCus
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { "A1:A5", "Sheet1", "ROWS", Arrays.asList(Collections.singletonList("a1"),
-                                                            Collections.singletonList("a2"),
-                                                            Collections.singletonList("a3"),
-                                                            Collections.singletonList("a4"),
-                                                            Collections.singletonList("a5")), "[[\"a1\"],[\"a2\"],[\"a3\"],[\"a4\"],[\"a5\"]]"},
-                { "A1:A5", "Sheet1", "COLUMNS", Collections.singletonList(Arrays.asList("a1", "a2", "a3", "a4", "a5")), "[[\"a1\",\"a2\",\"a3\",\"a4\",\"a5\"]]"},
-                { "A1:B2", "Sheet1", "ROWS", Arrays.asList(Arrays.asList("a1", "b1"), Arrays.asList("a2", "b2")), "[[\"a1\",\"b1\"],[\"a2\",\"b2\"]]"},
-                { "A1:B2", "Sheet1", "COLUMNS", Arrays.asList(Arrays.asList("a1", "a2"), Arrays.asList("b1", "b2")), "[[\"a1\",\"a2\"],[\"b1\",\"b2\"]]"}
+                { "A1", "Sheet1", Collections.singletonList("a1"), "[\"a1\"]"},
+                { "A1:A5", "Sheet1", Arrays.asList("a1", "a2", "a3", "a4", "a5"), "[\"a1\",\"a2\",\"a3\",\"a4\",\"a5\"]"},
+                { "A1:B2", "Sheet1", Arrays.asList("a1", "b1"), "[\"a1\",\"b1\"]"},
+                { "A1:B2", "Sheet1", Arrays.asList("a1", "a2"), "[\"a1\",\"a2\"]"}
         });
     }
 
@@ -79,21 +72,17 @@ public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCus
         Map<String, Object> options = new HashMap<>();
         options.put("spreadsheetId", getSpreadsheetId());
         options.put("range", range);
-        options.put("splitResults", false);
+        options.put("splitResults", true);
 
         customizer.customize(getComponent(), options);
 
         Exchange inbound = new DefaultExchange(createCamelContext());
 
+        inbound.getIn().setHeader(GoogleSheetsStreamConstants.RANGE, sheetName + "!" + range);
         inbound.getIn().setHeader(GoogleSheetsStreamConstants.RANGE_INDEX, 1);
         inbound.getIn().setHeader(GoogleSheetsStreamConstants.VALUE_INDEX, 1);
 
-        ValueRange valueRange = new ValueRange();
-        valueRange.setRange(sheetName + "!" + range);
-        valueRange.setMajorDimension(majorDimension);
-        valueRange.setValues(values);
-
-        inbound.getIn().setBody(valueRange);
+        inbound.getIn().setBody(values);
         getComponent().getBeforeConsumer().process(inbound);
 
         Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));

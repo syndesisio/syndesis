@@ -15,14 +15,16 @@
  */
 package org.apache.camel.component.google.sheets.stream;
 
+import java.util.List;
+
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
-import org.apache.camel.Consumer;
 import org.apache.camel.component.google.sheets.GoogleSheetsClientFactory;
 import org.apache.camel.impl.ScheduledPollEndpoint;
 import org.apache.camel.spi.UriEndpoint;
@@ -81,13 +83,26 @@ public class GoogleSheetsStreamEndpoint extends ScheduledPollEndpoint {
         return true;
     }
 
-    public Exchange createExchange(ValueRange valueRange) {
+    public Exchange createExchange(int rangeIndex, ValueRange valueRange) {
         Exchange exchange = super.createExchange(getExchangePattern());
         Message message = exchange.getIn();
         exchange.getIn().setHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID, configuration.getSpreadsheetId());
         exchange.getIn().setHeader(GoogleSheetsStreamConstants.RANGE, valueRange.getRange());
+        exchange.getIn().setHeader(GoogleSheetsStreamConstants.RANGE_INDEX, rangeIndex);
         exchange.getIn().setHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION, valueRange.getMajorDimension());
         message.setBody(valueRange);
+        return exchange;
+    }
+
+    public Exchange createExchange(int rangeIndex, int valueIndex, String range, String majorDimension, List<Object> values) {
+        Exchange exchange = super.createExchange(getExchangePattern());
+        Message message = exchange.getIn();
+        exchange.getIn().setHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID, configuration.getSpreadsheetId());
+        exchange.getIn().setHeader(GoogleSheetsStreamConstants.RANGE_INDEX, rangeIndex);
+        exchange.getIn().setHeader(GoogleSheetsStreamConstants.VALUE_INDEX, valueIndex);
+        exchange.getIn().setHeader(GoogleSheetsStreamConstants.RANGE, range);
+        exchange.getIn().setHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION, majorDimension);
+        message.setBody(values);
         return exchange;
     }
 
