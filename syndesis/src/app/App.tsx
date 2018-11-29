@@ -2,7 +2,7 @@ import { ApiContext } from '@syndesis/api';
 import { Loader, PfVerticalNavItem, UnrecoverableError } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { withNamespaces, WithNamespaces } from 'react-i18next';
+import { NamespacesConsumer } from 'react-i18next';
 import { Route, Switch } from 'react-router-dom';
 import { ConnectionsModule } from '../modules/connections';
 import { DashboardModule } from '../modules/dashboard';
@@ -12,7 +12,7 @@ import { AppContext } from './AppContext';
 import { Layout } from './Layout';
 import { WithConfig } from './WithConfig';
 
-export class AppComponent extends React.Component<WithNamespaces> {
+export class App extends React.Component {
   public render() {
     return (
       <WithConfig>
@@ -65,46 +65,53 @@ export class AppComponent extends React.Component<WithNamespaces> {
   }
 
   public renderNavbar() {
-    const { t } = this.props;
-
-    return [
-      <PfVerticalNavItem
-        icon={'fa fa-tachometer'}
-        to={'/'}
-        exact={true}
-        label={t('Home')}
-        key={1}
-      />,
-      <PfVerticalNavItem
-        icon={'pficon pficon-integration'}
-        to={'/integrations'}
-        label={t('Integrations')}
-        key={2}
-      />,
-      <PfVerticalNavItem
-        icon={'pficon pficon-plugged'}
-        to={'/connections'}
-        label={t('Connections')}
-        key={3}
-      />,
-      <PfVerticalNavItem
-        icon={'fa fa-cube'}
-        to={'/customizations'}
-        label={t('Customizations')}
-        key={4}
-      />,
-      <PfVerticalNavItem
-        icon={'pficon pficon-settings'}
-        to={'/settings'}
-        label={t('Settings')}
-        key={5}
-      />,
-    ];
+    return (
+      <NamespacesConsumer ns={['shared']}>
+        {t => (
+          <>
+            <PfVerticalNavItem
+              icon={'fa fa-tachometer'}
+              to={'/'}
+              exact={true}
+              label={t('Home')}
+              key={1}
+            />
+            ,
+            <PfVerticalNavItem
+              icon={'pficon pficon-integration'}
+              to={'/integrations'}
+              label={t('Integrations')}
+              key={2}
+            />
+            ,
+            <PfVerticalNavItem
+              icon={'pficon pficon-plugged'}
+              to={'/connections'}
+              label={t('Connections')}
+              key={3}
+            />
+            ,
+            <PfVerticalNavItem
+              icon={'fa fa-cube'}
+              to={'/customizations'}
+              label={t('Customizations')}
+              key={4}
+            />
+            ,
+            <PfVerticalNavItem
+              icon={'pficon pficon-settings'}
+              to={'/settings'}
+              label={t('Settings')}
+              key={5}
+            />
+            ,
+          </>
+        )}
+      </NamespacesConsumer>
+    );
   }
 
   public logout = () => {
     // do nothing
   };
 }
-
-export const App = withNamespaces(['shared'])(AppComponent);
