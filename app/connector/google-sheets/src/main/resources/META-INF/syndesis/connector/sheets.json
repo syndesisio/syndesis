@@ -538,6 +538,87 @@
       "id": "io.syndesis:sheets-get-spreadsheet-connector",
       "name": "Get spreadsheets",
       "pattern": "From"
+    },
+    {
+      "actionType": "connector",
+      "description": "Add charts on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsAddChartCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "Chart",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GoogleChart"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify chart properties. ",
+            "name": "Add charts through Google Sheets",
+            "properties": {
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "title": {
+                "deprecated": false,
+                "displayName": "Chart Title",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The chart title.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "subtitle": {
+                "deprecated": false,
+                "displayName": "Subtitle",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The chart subtitle.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "sheetId": {
+                "deprecated": false,
+                "displayName": "Sheet identifier",
+                "group": "producer",
+                "javaType": "java.lang.Integer",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target sheet index. New sheet if unspecified",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-add-chart-connector",
+      "name": "Add charts",
+      "pattern": "To"
     }
   ],
   "configuredProperties": {
