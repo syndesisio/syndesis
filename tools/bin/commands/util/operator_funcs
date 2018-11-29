@@ -113,58 +113,25 @@ build_operator_local() {
 
 build_operator_docker() {
     local operator_dir="${1}"
-    local as_user="${2:-}"
-    local do_skip_tests="${3:-}"
+    local do_skip_tests="${2:-}"
 
-    echo "Creating syndesis-operator with $GO_BUILDER_IMAGE"
-    local extra_opts=""
-    if [ -n "$as_user" ]; then
-        extra_opts="$extra_opts -u $as_user -e XDG_CACHE_HOME=.cache"
-    else
-        extra_opts="$extra_opts -u $(id -u):$(id -g)"
-    fi
-
-    local cmd="(echo Compiling syndesis-operator; go build ./cmd/syndesis-operator)"
-
-    if [ ! "$do_skip_tests" ]; then
-        cmd="(echo Running tests; go test $TEST_TARGETS) && $cmd"
-    fi
-
-    if [ $(need_to_ensure_dep) == 1 ]; then
-        cmd="(echo Running 'dep ensure'; dep ensure -vendor-only -v) && $cmd"
-    fi
-
-    local docker_gopath_volume=$(mktemp -d ${TMPDIR:-/tmp}/gopath.XXXXX)
-    local docker_cache_volume=$(mktemp -d ${TMPDIR:-/tmp}/gocache.XXXXX)
-    trap "rm -rf $docker_cache_volume $docker_gopath_volume" EXIT
-
-    mkdir_and_check_owner "$operator_dir/dep-cache"
-    mkdir_and_check_owner "$docker_cache_volume"
-    mkdir_and_check_owner "$docker_gopath_volume/pkg/dep"
-    mkdir_and_check_owner "$docker_gopath_volume/src/github.com/syndesisio/syndesis/install/operator"
-
-    docker run -w /gopath/src/github.com/syndesisio/syndesis/install/operator \
-               $extra_opts \
-               -v "$docker_gopath_volume":/gopath:z \
-               -v "$docker_cache_volume":/.cache:z \
-               -v $operator_dir/dep-cache:/gopath/pkg/dep:z \
-               -v $operator_dir:/gopath/src/github.com/syndesisio/syndesis/install/operator:z \
-               -e CGO_ENABLED=0 \
-               $GO_BUILDER_IMAGE \
-               sh -c "$cmd"
+    cd $operator_dir
+    docker build -t syndesis-operator-builder . -f Dockerfile-builder
+    docker run syndesis-operator-builder cat /syndesis-operator > syndesis-operator
+    chmod a+x syndesis-operator
+    cd -
 }
 
 build_operator() {
     local operator_dir="${1}"
     local do_local="${2:-}"
     local do_linux="${3:-}"
-    local as_user="${4:-}"
-    local do_skip_tests="${5:-}"
+    local do_skip_tests="${4:-}"
 
     if [ "${do_local}" ]; then
         build_operator_local $do_skip_tests $do_linux
     else
-        build_operator_docker $operator_dir $as_user $do_skip_tests
+        build_operator_docker $operator_dir $do_skip_tests
     fi
 }
 
