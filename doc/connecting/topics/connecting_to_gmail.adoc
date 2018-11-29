@@ -30,6 +30,7 @@ data to the email fields.
 Information and instructions are in the following topics:
 
 * <<register-with-gmail_{context}>>
+* <<enable-gmail-api_{context}>>
 * <<create-gmail-connection_{context}>>
 * <<alternatives-for-populating-email-to-send_{context}>>
 * <<add-gmail-connection-start_{context}>>

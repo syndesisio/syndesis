@@ -29,3 +29,5 @@ include::add_google_calendar_connection_start.adoc[leveloffset=+1]
 include::add_google_calendar_connection_finish_middle.adoc[leveloffset=+1]
 
 include::add_google_calendar_connection_to_get_one_event.adoc[leveloffset=+1]
+
+:context: connectors
