@@ -1,0 +1,10 @@
+{
+  "linkCreateConnection": "Crea Connessione",
+  "linkCreateIntegration": "Crea Integrazione",
+  "linkToConnections": "Visualizza Tutte le Connessioni",
+  "linkToIntegrations": "Visualizza Tutte le Integrazioni",
+  "title": "Metrica di Sistema",
+  "titleIntegrationUpdates": "Aggiornamenti Recenti",
+  "titleTotalIntegrations": "{{count}} Integrazioni",
+  "titleTotalMessages": "{{count}} Messaggi"
+}

@@ -17,6 +17,13 @@ export interface IIntegrationsPageProps {
   integrationBoard: JSX.Element;
   integrationUpdates: JSX.Element;
   connections: JSX.Element;
+  i18nConnections: string;
+  i18nLinkCreateConnection: string;
+  i18nLinkCreateIntegration: string;
+  i18nLinkToConnections: string;
+  i18nLinkToIntegrations: string;
+  i18nTitle: string;
+  i18nTitleIntegrationUpdates: string;
 }
 
 export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
@@ -27,16 +34,18 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
           <Grid.Row>
             <Grid.Col sm={12}>
               <div className={'Dashboard-header'}>
-                <h1 className={'Dashboard-header__title'}>System metric</h1>
+                <h1 className={'Dashboard-header__title'}>
+                  {this.props.i18nTitle}
+                </h1>
                 <div className="Dashboard-header__actions">
                   <Link to={this.props.linkToIntegrations}>
-                    View All Integrations
+                    {this.props.i18nLinkToIntegrations}
                   </Link>
                   <Link
                     to={this.props.linkToIntegrationCreation}
                     className={'btn btn-primary'}
                   >
-                    Create Integration
+                    {this.props.i18nLinkCreateIntegration}
                   </Link>
                 </div>
               </div>
@@ -72,7 +81,9 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 <Grid.Col sm={12}>
                   <Card accented={false}>
                     <Card.Heading>
-                      <Card.Title>Recent Updates</Card.Title>
+                      <Card.Title>
+                        {this.props.i18nTitleIntegrationUpdates}
+                      </Card.Title>
                     </Card.Heading>
                     <Card.Body>{this.props.integrationUpdates}</Card.Body>
                   </Card>
@@ -86,16 +97,18 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
           <Grid.Row>
             <Grid.Col sm={12}>
               <div className={'Dashboard-header'}>
-                <h1 className={'Dashboard-header__title'}>Connections</h1>
+                <h1 className={'Dashboard-header__title'}>
+                  {this.props.i18nConnections}
+                </h1>
                 <div className="Dashboard-header__actions">
                   <Link to={this.props.linkToConnections}>
-                    View All Connections
+                    {this.props.i18nLinkToConnections}
                   </Link>
                   <Link
                     to={this.props.linkToConnectionCreation}
                     className={'btn btn-primary'}
                   >
-                    Create Connection
+                    {this.props.i18nLinkCreateConnection}
                   </Link>
                 </div>
               </div>

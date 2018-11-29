@@ -7,7 +7,9 @@
       "**/coverage/lcov-report/*.js",
       "**/.jest/**/*",
       "**/.storybook/**/*",
-      "**/*.test.tsx"
+      "**/*.test.tsx",
+      "*.json",
+      "**/*.json"
     ]
   },
   "rules": {
