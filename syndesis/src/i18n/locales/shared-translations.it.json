@@ -1,0 +1,17 @@
+{
+  "it": {
+    "app": {},
+    "modules": {
+      "connections": {},
+      "dashboard": {},
+      "integrations": {}
+    },
+    "shared": {
+      "Connections": "Connessioni",
+      "Customizations": "Personalizzazioni",
+      "Home": "Casa",
+      "Integrations": "Integrazioni",
+      "Settings": "Impostazioni"
+    }
+  }
+}

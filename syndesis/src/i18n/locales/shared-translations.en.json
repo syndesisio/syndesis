@@ -1,0 +1,17 @@
+{
+  "en": {
+    "app": {},
+    "modules": {
+      "connections": {},
+      "dashboard": {},
+      "integrations": {}
+    },
+    "shared": {
+      "Connections": "Connections",
+      "Customizations": "Customizations",
+      "Home": "Home",
+      "Integrations": "Integrations",
+      "Settings": "Settings"
+    }
+  }
+}
