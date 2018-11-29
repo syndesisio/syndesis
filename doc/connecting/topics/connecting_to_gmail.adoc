@@ -27,10 +27,10 @@ Information and instructions are in the following topics:
 
 * <<register-with-gmail_{context}>>
 * <<enable-gmail-api_{context}>>
-* <<create-gmail-connection>>
-* <<alternatives-for-populating-email-to-send>>
-* <<add-gmail-connection-start>>
-* <<add-gmail-connection-finish-middle>>
+* <<create-gmail-connection_{context}>>
+* <<alternatives-for-populating-email-to-send_{context}>>
+* <<add-gmail-connection-start_{context}>>
+* <<add-gmail-connection-finish-middle_{context}>>
 
 include::register_with_gmail.adoc[leveloffset=+1]
 
