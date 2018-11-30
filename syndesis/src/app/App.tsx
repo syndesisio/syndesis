@@ -2,17 +2,27 @@ import { ApiContext } from '@syndesis/api';
 import { Loader, PfVerticalNavItem, UnrecoverableError } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
-import { Route, Switch } from 'react-router-dom';
-import { ConnectionsModule } from '../modules/connections';
-import { DashboardModule } from '../modules/dashboard';
-import { IntegrationsModule } from '../modules/integrations';
+import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import './App.css';
 import { AppContext } from './AppContext';
 import { Layout } from './Layout';
 import { WithConfig } from './WithConfig';
 
-export class App extends React.Component {
+export interface IAppRoute {
+  component:
+    | React.ComponentType<RouteComponentProps<any>>
+    | React.ComponentType<any>;
+  exact?: boolean;
+  icon: string;
+  label: string;
+  to: string;
+}
+
+export interface IAppBaseProps {
+  routes: IAppRoute[];
+}
+
+export class App extends React.Component<IAppBaseProps> {
   public render() {
     return (
       <WithConfig>
@@ -38,21 +48,7 @@ export class App extends React.Component {
                 >
                   <Layout navbar={this.renderNavbar()}>
                     <React.Fragment>
-                      <Switch>
-                        <Route
-                          path="/"
-                          exact={true}
-                          component={DashboardModule}
-                        />
-                        <Route
-                          path="/integrations"
-                          component={IntegrationsModule}
-                        />
-                        <Route
-                          path="/connections"
-                          component={ConnectionsModule}
-                        />
-                      </Switch>
+                      <Switch>{this.renderRoutes()}</Switch>
                     </React.Fragment>
                   </Layout>
                 </ApiContext.Provider>
@@ -65,50 +61,22 @@ export class App extends React.Component {
   }
 
   public renderNavbar() {
-    return (
-      <NamespacesConsumer ns={['shared']}>
-        {t => (
-          <>
-            <PfVerticalNavItem
-              icon={'fa fa-tachometer'}
-              to={'/'}
-              exact={true}
-              label={t('Home')}
-              key={1}
-            />
-            ,
-            <PfVerticalNavItem
-              icon={'pficon pficon-integration'}
-              to={'/integrations'}
-              label={t('Integrations')}
-              key={2}
-            />
-            ,
-            <PfVerticalNavItem
-              icon={'pficon pficon-plugged'}
-              to={'/connections'}
-              label={t('Connections')}
-              key={3}
-            />
-            ,
-            <PfVerticalNavItem
-              icon={'fa fa-cube'}
-              to={'/customizations'}
-              label={t('Customizations')}
-              key={4}
-            />
-            ,
-            <PfVerticalNavItem
-              icon={'pficon pficon-settings'}
-              to={'/settings'}
-              label={t('Settings')}
-              key={5}
-            />
-            ,
-          </>
-        )}
-      </NamespacesConsumer>
-    );
+    return this.props.routes.map(({ exact, icon, label, to }, index) => (
+      <PfVerticalNavItem
+        exact={exact}
+        icon={icon}
+        label={label}
+        to={to}
+        key={index}
+        data-testid={`navbar-link-${to}`}
+      />
+    ));
+  }
+
+  public renderRoutes() {
+    return this.props.routes.map(({ to, exact, component }, index) => (
+      <Route path={to} exact={exact} component={component} key={index} />
+    ));
   }
 
   public logout = () => {

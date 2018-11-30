@@ -7,7 +7,7 @@ const options = {
     escapeValue: false, // not needed for react!!
   },
 
-  debug: process.env.NODE_ENV !== 'production',
+  debug: false,
 
   resources: {
     en: {
