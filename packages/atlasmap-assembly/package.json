@@ -49,7 +49,7 @@
     "ng": "ng",
     "start": "ng serve --deployUrl=atlasmap/",
     "dev": "ng build --watch --deployUrl=atlasmap/",
-    "build": "ng build --deployUrl=atlasmap/",
+    "build": "ng build --deployUrl=atlasmap/ --prod",
     "test:ci": "ng test --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test:watch": "ng test",
     "lint": "ng lint",
