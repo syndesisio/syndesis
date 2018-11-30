@@ -50,7 +50,7 @@ import java.util.Optional;
 
 @Mojo(
     name = "generate-connector-inspections",
-    defaultPhase = LifecyclePhase.PREPARE_PACKAGE,
+    defaultPhase = LifecyclePhase.GENERATE_RESOURCES,
     requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,
     requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GenerateConnectorInspectionsMojo extends AbstractMojo {

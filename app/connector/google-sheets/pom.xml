@@ -113,7 +113,7 @@
       <groupId>io.syndesis.common</groupId>
       <artifactId>common-util</artifactId>
       <scope>provided</scope>
-    </dependency>  
+    </dependency>
 
     <!-- ToDo add once camel component made it into the fuse build -->
     <!--dependency>
@@ -322,6 +322,7 @@
         <executions>
           <execution>
             <id>inspections</id>
+            <phase>generate-resources</phase>
             <goals>
               <goal>generate-connector-inspections</goal>
             </goals>
