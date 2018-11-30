@@ -316,7 +316,7 @@
       "pod-events-url": "{{consoleurl}}/project/{{0}}/browse/pods/{{1}}?tab=events",
       "project": {
         "name": "Syndesis (tokenized)",
-        "version": "7.1"
+        "version": "7.2"
       },
       "ok": "Ok",
       "save": "Save",
