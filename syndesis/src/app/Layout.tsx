@@ -21,7 +21,7 @@ class LayoutBase extends React.Component<ILayoutBase> {
               <VerticalNav.Masthead
                 iconImg={pitto}
                 titleImg={typo}
-                title="camel-k UI"
+                title="Syndesis"
                 href={'/'}
                 onTitleClick={this.goToHome}
               >
@@ -51,10 +51,6 @@ class LayoutBase extends React.Component<ILayoutBase> {
 
   protected goToHome = () => {
     this.props.history.replace('/');
-  };
-
-  protected goToKubernetes = () => {
-    this.props.history.replace('/kubernetes');
   };
 }
 
