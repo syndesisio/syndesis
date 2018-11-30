@@ -1,7 +1,10 @@
-[id='add-google-calendar-connection-start_{context}']
-= Obtain events from a Google Calendar 
+// This module is included in the following assemblies:
+// connecting_to_google_calendar.adoc
 
-To trigger execution of an integration by obtaining events from 
+[id='add-google-calendar-connection-start_{context}']
+= Trigger an integration when polling returns an event from a Google calendar
+
+To trigger execution of an integration upon obtaining events from 
 a Google Calendar that you specify, add a Google Calendar connection to an integration as 
 its start connection. When the integration is running, the Google Calendar
 connection checks the Google calendar for events at intervals that you
@@ -10,8 +13,7 @@ you configured the Google Calendar *Get Events* action, the connection
 passes the events to the next step in the integration. 
 
 .Prerequisite
-In {prodname}, a 
-<<create-google-calendar-connection_{context},Google Calendar connection is available>>.
+You created a Google Calendar connection. 
 
 .Procedure
 
@@ -55,9 +57,11 @@ most recently updated event that was returned in the previous poll.
 
 .. Optionally, in the *Query for events* field, specify text to filter the 
 events that the poll can return. The connection returns only 
-events that contain the specified text in at least one event field. For example,
-suppose that you specify `{prodname}` in the query field. A poll would
-return only those events that have `{prodname}` in an event
+events that contain the specified text in at least one event field. 
++
+For example,
+suppose that you specify `Standup meeting` in the query field. A poll would
+return only those events that have `Standup meeting` in an event
 field. 
 . Click *Done* to add this Google Calendar connection as the integration's 
 start connection. The connection appears as the

@@ -24,7 +24,7 @@ Calendar entry displays *Edit* and *Remove*, which
 indicate that {prodname} has the credentials to access 
 enabled Google APIs. If *Register* appears in the Google
 Calendar entry and the Gmail entry, then you must 
-<<register-with-gmail_{context},register your {prodname} environment as a Google client application>>. 
+link:{LinkFuseOnlineConnectorGuide}#register-with-gmail_gmail[register your {prodname} environment as a Google client application]. 
 
 .Procedure
 
