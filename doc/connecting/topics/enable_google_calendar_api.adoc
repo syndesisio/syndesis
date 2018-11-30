@@ -1,3 +1,6 @@
+// This module is included in the following assemblies:
+// connecting_to_google_calendar.adoc
+
 [id='enable-google-calendar-api_{context}']
 = Enable access to the Google Calendar API
 
@@ -23,25 +26,26 @@ entry displays *Edit* and *Remove*, which
 indicate that {prodname} has the credentials to access 
 enabled Google APIs. If *Register* appears in the Gmail
 entry, then you must 
-<<register-with-google-calendar_{context},register your {prodname} environment as a Google client application>>. 
+link:{LinkFuseOnlineConnectorGuide}#register-with-google-calendar_google-calendar[register your {prodname} environment as a Google client application]. 
 
 .Procedure
 
-. In a browser, go to `https://console.developers.google.com`.
-. Confirm that you are signed in to the Google account that you used
+. In a browser, go to `https://console.developers.google.com` and do the 
+following:
+.. Confirm that you are signed in to the Google account that you used
 to register your {prodname} environment as a Google client. If you 
 are not, sign in to that account.  
-. Ensure that the current Google project is the one you used for
+.. Ensure that the current Google project is the one you used for
 registration. If it is not, change to that project. 
-. You should see the *APIs and Services* dashboard. If you do not, then
+.. You should see the *APIs and Services* dashboard. If you do not, then
 in the upper left, click 
 image:images/Hamburger.png[Navigation menu icon] and select
 *APIs and Services* > *Dashboard*. 
-. At the top of the page, click *ENABLE APIS AND SERVICES*. 
-. In the page that appears, in the search field, enter `*Google Calendar*`. 
-. In the search results, click the *Google Calendar* card. 
-. In the *Google Calendar API* page, click *ENABLE*.
-. In the {prodname} *Settings* page: 
+.. At the top of the page, click *ENABLE APIS AND SERVICES*. 
+.. In the page that appears, in the search field, enter `*Google Calendar*`. 
+.. In the search results, click the *Google Calendar* card. 
+.. In the *Google Calendar API* page, click *ENABLE*.
+. In the {prodname} *Settings* page, do the following:
 .. Expand the Gmail entry.
 .. Expand the Google Calendar entry. 
 .. Copy the Gmail client ID to the input field for the Google Calendar 

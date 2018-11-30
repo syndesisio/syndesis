@@ -32,3 +32,7 @@ a previous Google Calendar connection.
 
 . Click *Done* to add the connection to the integration. 
 The connection appears in the integration flow in the location where you added it. 
+
+. In the integration visualization flow, check for 
+image:images/DataTypeMismatchWarning.png[data type mismatch] warnings and
+add a data mapper step before each connection that displays this warning. 
