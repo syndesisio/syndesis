@@ -15,6 +15,12 @@
  */
 package io.syndesis.connector.sheets;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import com.google.api.services.sheets.v4.model.ValueRange;
 import io.syndesis.common.util.Json;
 import io.syndesis.connector.sheets.model.GoogleValueRange;
@@ -25,12 +31,6 @@ import org.apache.camel.Message;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
 import org.apache.camel.util.ObjectHelper;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomizer {
 
@@ -82,7 +82,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
             }
         }
 
-        if (!values.startsWith("[")) {
+        if (values.charAt(0) != '[') {
             values = "[[" + Arrays.stream(values.split(","))
                     .map(value -> "\"" + value + "\"")
                     .collect(Collectors.joining(",")) + "]]";

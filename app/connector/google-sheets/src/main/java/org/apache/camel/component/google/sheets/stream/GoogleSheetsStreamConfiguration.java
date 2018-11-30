@@ -15,14 +15,14 @@
  */
 package org.apache.camel.component.google.sheets.stream;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.google.api.services.sheets.v4.SheetsScopes;
 import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.spi.UriParam;
 import org.apache.camel.spi.UriParams;
 import org.apache.camel.spi.UriPath;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Component configuration for GoogleSheets stream component.
@@ -64,6 +64,9 @@ public class GoogleSheetsStreamConfiguration implements Cloneable {
 
     @UriParam
     private boolean includeGridData;
+
+    @UriParam
+    private boolean splitResults;
 
     @UriParam(enums = "ROWS,COLUMNS,DIMENSION_UNSPECIFIED", defaultValue = "ROWS")
     private String majorDimension = "ROWS";
@@ -237,6 +240,21 @@ public class GoogleSheetsStreamConfiguration implements Cloneable {
      */
     public void setIncludeGridData(boolean includeGridData) {
         this.includeGridData = includeGridData;
+    }
+
+    public boolean isSplitResults() {
+        return splitResults;
+    }
+
+    /**
+     * True if value range result should be split into rows or columns to process each of them individually. When true
+     * each row or column is represented with a separate exchange in batch processing. Otherwise value range object is used
+     * as exchange junk size.
+     *
+     * @param splitResults
+     */
+    public void setSplitResults(boolean splitResults) {
+        this.splitResults = splitResults;
     }
 
     // *************************************************

@@ -15,6 +15,10 @@
  */
 package io.syndesis.connector.sheets;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import io.syndesis.common.util.Json;
@@ -25,12 +29,13 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
-
-import java.util.Map;
+import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
+import org.apache.camel.util.ObjectHelper;
 
 public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer {
 
     private String spreadsheetId;
+    private boolean splitResults;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
@@ -40,6 +45,9 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
 
     private void setApiMethod(Map<String, Object> options) {
         spreadsheetId = (String) options.get("spreadsheetId");
+        splitResults = Boolean.valueOf(Optional.ofNullable(options.get("splitResults"))
+                                                .map(Object::toString)
+                                                .orElse("false"));
 
         options.put("apiName",
                 GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName());
@@ -48,15 +56,36 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
 
     private void beforeConsumer(Exchange exchange) throws JsonProcessingException {
         final Message in = exchange.getIn();
-        final ValueRange valueRange = in.getBody(ValueRange.class);
 
         final GoogleValueRange model = new GoogleValueRange();
+        if (splitResults) {
+            final List<?> values = in.getBody(List.class);
+            if (values != null) {
+                model.setSpreadsheetId(spreadsheetId);
 
-        if (valueRange != null) {
-            model.setSpreadsheetId(spreadsheetId);
-            model.setRange(valueRange.getRange());
-            model.setValues(Json.writer().writeValueAsString(valueRange.getValues()));
+                if (ObjectHelper.isNotEmpty(in.getHeader(GoogleSheetsStreamConstants.RANGE))) {
+                    model.setRange(in.getHeader(GoogleSheetsStreamConstants.RANGE).toString());
+                }
+
+                model.setValues(Json.writer().writeValueAsString(values));
+            }
+        } else {
+            final ValueRange valueRange = in.getBody(ValueRange.class);
+            if (valueRange != null) {
+                model.setSpreadsheetId(spreadsheetId);
+                model.setRange(valueRange.getRange());
+                model.setValues(Json.writer().writeValueAsString(valueRange.getValues()));
+            }
         }
+
+        model.setRangeIndex(Optional.ofNullable(in.getHeader(GoogleSheetsStreamConstants.RANGE_INDEX))
+                .map(Object::toString)
+                .map(Integer::valueOf)
+                .orElse(0));
+        model.setValueIndex(Optional.ofNullable(in.getHeader(GoogleSheetsStreamConstants.VALUE_INDEX))
+                .map(Object::toString)
+                .map(Integer::valueOf)
+                .orElse(0));
 
         in.setBody(model);
     }
