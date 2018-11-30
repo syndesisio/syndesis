@@ -6,7 +6,7 @@
 = Connect to Gmail
 :context: gmail
 
-To trigger an integration when a particular Gmail
+To trigger execution of an integration when a particular Gmail
 account receives an email, add a Gmail connection to an integration as its
 start connection. In an integration, to send an email from a
 particular Gmail account, add a Gmail connection as the integration's
@@ -14,7 +14,7 @@ finish connection, or as a middle connection.
 
 The general steps for connecting to Gmail in an integration are:
 
-. Register {prodname} as a client application that can access the Gmail API.
+. Register {prodname} as a Google client application.
 . Create a Gmail connection. When you do this you choose the Gmail account that
 the connection is authorized to access.
 . If your integration sends an email from a Gmail account, 
@@ -26,12 +26,15 @@ data to the email fields.
 Information and instructions are in the following topics:
 
 * <<register-with-gmail_{context}>>
+* <<enable-gmail-api_{context}>>
 * <<create-gmail-connection_{context}>>
 * <<alternatives-for-populating-email-to-send_{context}>>
 * <<add-gmail-connection-start_{context}>>
 * <<add-gmail-connection-finish-middle_{context}>>
 
 include::register_with_gmail.adoc[leveloffset=+1]
+
+include::enable_gmail_api.adoc[leveloffset=+1]
 
 include::create_gmail_connection.adoc[leveloffset=+1]
 

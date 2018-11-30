@@ -34,6 +34,10 @@ FTP or SFTP server.
 |Obtain messages sent to a particular Gmail account and send messages
 from a particular Gmail account. 
 
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-google-calendar_connectors[Google Calendar]
+|Obtain events from a Google Calendar that you specify or add/update
+events in a Google Calendar that you specify.  
+
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-http_connectors[HTTP/HTTPS]
 |Connect to an HTTP or HTTPS endpoint and execute the
 `GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, OR `PATCH` method.
