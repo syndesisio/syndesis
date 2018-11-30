@@ -4,7 +4,7 @@
 [id='register-with-gmail_{context}']
 = Register {prodname} as a Gmail client application
 
-To be able to connect to Gmail in an integration, 
+In an integration, to be able to connect to Gmail, 
 you must register your {prodname} environment as a Google client application. 
 During registration, you enable the Gmail API and create credentials that
 {prodname} uses to access Google APIs that you have enabled. 
@@ -20,7 +20,8 @@ If you already created a Google Calendar connection, then you already
 created the credentials that your {prodname} environment needs to access
 enabled Google APIs. You do not need to follow the procedure documented here.
 To be able to create a Gmail connection, you
-just need to <<enable-gmail-api_{context},enable the Gmail API>>. 
+just need to
+link:{LinkFuseOnlineConnectorGuide}#enable-gmail-api_gmail[enable the Gmail API]. 
 
 .Prerequisite
 You must be able to sign in to the Google account that you want to 
@@ -28,8 +29,9 @@ use to register {prodname} as a Gmail client application.
 
 .Procedure
 
-. In {prodname}, in the left navigation panel, click *Settings*. 
-. On the *Settings* page, near the top, to the right of the callback URL, 
+. In {prodname}, do the following:  
+.. In the left navigation panel, click *Settings*. 
+.. On the *Settings* page, near the top, to the right of the callback URL, 
 click
 image:shared/images/CopyCallback.png[Copy Callback URL] to 
 copy the callback URL for your {prodname} environment to the clipboard. 
@@ -87,17 +89,21 @@ client secret field, click
 image:images/copy_icon.png[the Copy icon] to copy the client secret to
 your clipboard.
 
-. Return to the {prodname} *Settings* page and in the 
+. Return to {prodname} and do the following:
+.. In the *Settings* page, in the 
 Gmail *Client Secret* field, paste the Gmail client secret that you 
 just copied. 
-. Click *Save*. You should get a *Registration Successful!* notification. 	
-. Click *Ok* to collapse the fields. 
+.. Click *Save*. You should get a *Registration Successful!* notification. 	
+.. Click *Ok* to collapse the fields. 
 
 .Results
 You can now create a Gmail connection. 
 
-The Google client ID and Google client secret indicate internal refresh
-information that keeps your connections and integrations working correctly. 
-Consequently, you should not obtain new credentials. If you do, then you
-would need to recreate each Gmail connection and re-publish each
+[IMPORTANT]
+The Google client ID and Google client secret contain token refresh 
+information that ensures that your Gmail connections, and integrations 
+that have Gmail connections continuously work correctly.
+Consequently, you should *not* obtain new credentials. If you do, then you
+would need to recreate each Gmail connection, replace the old Gmail
+connections with new Gmail connections, and re-publish each
 integration that uses a Gmail connection. 

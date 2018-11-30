@@ -1,7 +1,10 @@
+// This module is included in the following assemblies:
+// connecting_to_google_calendar.adoc
+
 [id='register-with-google-calendar_{context}']
 = Register {prodname} as a Google Calendar client application
 
-To be able to connect to Google Calendar in an integration, 
+In an integration, to be able to connect to Google Calendar, 
 you must register your {prodname} environment as a  Google client application. 
 During registration, you enable the Google
 Calendar API and create credentials that {prodname} uses to access
@@ -17,14 +20,15 @@ access the calendars that belong to a different Google account.
 If you already created a Gmail connection, then you already 
 created the credentials that your {prodname} environment needs to access
 enabled Google APIs. You do not need to follow the procedure documented here.
-To be able to create a Google Calendar connection, you
-just need to <<enable-google-calendar-api_{context},enable the Google Calendar API>>
+To be able to create a Google Calendar connection, you just need to 
+link:{LinkFuseOnlineConnectorGuide}#enable-google-calendar-api_google-calendar[enable the Google Calendar API] 
 and then copy {prodname} settings from Gmail to Google Calendar.
 
 .Procedure
 
-. In {prodname}, in the left navigation panel, click *Settings*. 
-. On the *Settings* page, near the top, to the right of the callback URL, 
+. In {prodname}, obtain the callback URL as follows: 
+.. In the left navigation panel, click *Settings*. 
+.. On the *Settings* page, near the top, to the right of the callback URL, 
 click
 image:shared/images/CopyCallback.png[Copy Callback URL] to 
 copy the callback URL for your {prodname} environment to the clipboard. 
@@ -85,17 +89,19 @@ client secret field, click
 image:images/copy_icon.png[the Copy icon] to copy the client secret to
 your clipboard.
 
-. Return to the {prodname} *Settings* page and in the 
-Google Calendar *Client Secret* field, paste the Google Calendar client secret that you 
-just copied. 
-. Click *Save*. You should get a *Registration Successful!* notification. 	
-. Click *Ok* to collapse the fields. 
+. Return to the {prodname} *Settings* page and do the following: 
+.. In the Google Calendar *Client Secret* field, paste the Google Calendar 
+client secret that you just copied. 
+.. Click *Save*. You should get a *Registration Successful!* notification. 	
+.. Click *Ok* to collapse the fields. 
 
 .Results
 You can now create a Google Calendar connection. 
 
-The Google client ID and Google client secret indicate internal refresh
-information that keeps your connections and integrations working correctly. 
-Consequently, you should not obtain new credentials. If you do, then you
+[IMPORTANT]
+The Google client ID and Google client secret contain token refresh 
+information that ensures that  your Google Calendar connections and integrations 
+that have Google Calendar connections continuously work correctly.
+Consequently, you should *not* obtain new credentials. If you do, then you
 would need to recreate each Google Calendar connection and re-publish each
 integration that uses a Google Calendar connection. 
