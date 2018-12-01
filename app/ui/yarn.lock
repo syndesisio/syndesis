@@ -8229,14 +8229,18 @@ sw-toolbox@^3.4.0:
     path-to-regexp "^1.0.1"
     serviceworker-cache-polyfill "^4.0.0"
 
-swagger-js-codegen@1.7.12:
-  version "1.7.12"
-  resolved "https://registry.yarnpkg.com/swagger-js-codegen/-/swagger-js-codegen-1.7.12.tgz#0500cdaeb1149da093bc2e843a19f466c4af8f86"
+swagger-js-codegen@1.12.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/swagger-js-codegen/-/swagger-js-codegen-1.12.0.tgz#57efada2e016e22e73832f8f1893a1b1223e872a"
+  integrity sha512-XLYnLf4UwPNRuubVw0igZckix42LPpTRgU3ajLq0XKH6o5iBLi02cu2cui0SNUXeXWrwbp26I7UE2hkL5N2Q0A==
   dependencies:
+    commander "^2.9.0"
     js-beautify "^1.5.1"
+    js-yaml "^3.10.0"
     jshint "^2.5.1"
     lodash "^4.15.0"
     mustache "^2.0.0"
+    update-notifier "^2.1.0"
 
 symbol-observable@^1.2.0:
   version "1.2.0"
@@ -8734,7 +8738,7 @@ update-notifier@^1.0.3:
     semver-diff "^2.0.0"
     xdg-basedir "^2.0.0"
 
-update-notifier@^2.2.0:
+update-notifier@^2.1.0, update-notifier@^2.2.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/update-notifier/-/update-notifier-2.5.0.tgz#d0744593e13f161e406acb1d9408b72cad08aff6"
   dependencies:
