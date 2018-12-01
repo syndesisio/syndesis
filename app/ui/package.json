@@ -76,7 +76,7 @@
     "pluralize": "5.0.0",
     "postinstall-postinstall": "^2.0.0",
     "rxjs": "^6.2.0",
-    "snyk": "^1.88.1",
+    "snyk": "^1.112.0",
     "tether": "1.4.0",
     "ts-helpers": "1.1.2",
     "typescript-logging": "0.6.2",
