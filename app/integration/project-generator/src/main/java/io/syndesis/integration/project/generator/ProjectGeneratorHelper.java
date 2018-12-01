@@ -29,11 +29,15 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import org.apache.camel.util.ObjectHelper;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import io.syndesis.integration.api.IntegrationResourceManager;
-import io.syndesis.integration.project.generator.mvn.MavenGav;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import io.syndesis.common.model.connection.Connection;
@@ -42,14 +46,9 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
-
-import org.apache.camel.util.ObjectHelper;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
+import io.syndesis.integration.api.IntegrationResourceManager;
+import io.syndesis.integration.project.generator.mvn.MavenGav;
 
 @SuppressWarnings("PMD.CyclomaticComplexity")
 public final class ProjectGeneratorHelper {
@@ -163,6 +162,7 @@ public final class ProjectGeneratorHelper {
             while (steps.hasNext()) {
                 final Step source = steps.next();
 
+                Step replacement = source;
                 if (source.getConnection().isPresent()) {
                     final Connection connection = source.getConnection().get();
 
@@ -179,14 +179,19 @@ public final class ProjectGeneratorHelper {
                             .build();
 
                         // Replace with the new 'sanitized' step
-                        steps.set(
+                        replacement =
                             new Step.Builder()
                                 .createFrom(source)
                                 .connection(newConnection)
-                                .build()
-                        );
+                                .build();
                     }
                 }
+
+                //
+                // If a template step then update it to ensure it
+                // has the correct dependencies
+                //
+                steps.set(TemplateStepLanguage.updateStep(replacement));
             }
 
             final Flow.Builder replacementFlowBuider = flow.builder().createFrom(flow).steps(replacementSteps);

@@ -16,10 +16,17 @@ export { FileItem, FileLikeObject, FileUploader, FileUploaderOptions, ParsedResp
 import 'codemirror/addon/display/placeholder.js';
 import 'codemirror/addon/mode/overlay.js';
 import 'codemirror/addon/lint/lint.js';
+import 'codemirror/mode/velocity/velocity.js';
 import * as CodeMirror from 'codemirror/lib/codemirror.js';
 export { CodeMirror };
 
 import * as Mustache from 'mustache/mustache.js';
 export { Mustache };
+
+import * as Velocity from 'velocityjs';
+export { Velocity };
+
+import { Parser as FreemarkerParser, Tokenizer as FreemarkerTokenizer } from 'freemarker-parser/dist';
+export { FreemarkerParser, FreemarkerTokenizer };
 
 export * from '@syndesis/ui/vendor/vendor.module';

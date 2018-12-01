@@ -96,6 +96,8 @@ public interface IntegrationResourceManager {
         final List<Dependency> dependencies = new ArrayList<>();
 
         for (Step step : steps) {
+            dependencies.addAll(step.getDependencies());
+
             step.getAction()
                 .filter(WithDependencies.class::isInstance)
                 .map(WithDependencies.class::cast)
