@@ -16,6 +16,7 @@ OAuth protocol. For each application that uses OAuth, register
 {prodname} as a client that is authorized to access that application.
 Applications that use the OAuth protocol include: 
 
+* Dropbox
 * Gmail
 * Google Calendar
 * Salesforce

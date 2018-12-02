@@ -4,14 +4,15 @@
 
 :context: connectors
 [id='connecting-to-google-calendar_{context}']
-= Connecting to Google Calendar
+= Connect to Google Calendar
 :context: calendar
 
-To trigger execution of an integration when polling returns an event from a 
-particular Google calendar, add a Google Calendar connection to an integration as its
-start connection. In an integration, to obtain, update, or create an event
-in a Google calendar, add a Google Calendar connection as the integration's
-finish connection, or as a middle connection. 
+You can add a Google Calendar connection to an integration as its start 
+connection to trigger execution of an integration.. You can add a Google 
+Calendar connection to an integration as its finish connection when you want 
+to add or update an event. In the middle of an integration, you can add a 
+Google Calendar connection when you want to obtain a particular event, 
+add a new event, or update an event.
 
 Details for connecting to Google Calendar are in the following topics:
 
