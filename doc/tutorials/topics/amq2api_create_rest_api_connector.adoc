@@ -21,7 +21,7 @@ OpenAPI specification:
 .. Copy the URL into a text editor.
 .. At the beginning of the URL, insert `*todo-*`.
 .. At the end of the URL, replace `dashboard` with `*swagger.json*`.
-.. Use the `http` scheme instead of `https`
+.. Use the `http` scheme instead of `https`.
 
 +
 The result is something like this:

@@ -8,7 +8,7 @@ To finish an integration by copying data to Amazon S3,
 add an Amazon S3 connection as the finish connection in an integration. 
 
 .Prerequisite
-* You created an Amazon S3 connection.
+You created an Amazon S3 connection.
 
 .Procedure
 
