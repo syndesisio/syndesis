@@ -9,7 +9,7 @@ add an Amazon S3 connection between the start and
 finish connections of an integration.
 
 .Prerequisite
-* You created an Amazon S3 connection.
+You created an Amazon S3 connection.
 
 .Procedure
 

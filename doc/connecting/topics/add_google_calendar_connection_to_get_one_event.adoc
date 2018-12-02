@@ -36,7 +36,7 @@ the calendar that you want to connect to.
 . Specify the ID of the event to get. To obtain the event ID, do one of the 
 following:
 +
-* Map it from the previous Google Calendar connection. 
+* Map it from a previous Google Calendar connection. 
 * Manually obtain it from the calendar as follows: 
 +
 .. In a browser, display the calendar that contains the event you want to get. 

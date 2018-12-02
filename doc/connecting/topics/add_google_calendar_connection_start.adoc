@@ -12,6 +12,11 @@ control. When the connection finds events that comply with the way that
 you configured the Google Calendar *Get Events* action, the connection
 passes the events to the next step in the integration. 
 
+When a Google Calendar connection returns more than one event, 
+{prodname} executes the integration for each returned event. 
+For example, if the poll returns 5 events then {prodname} executes
+the integration five times.
+
 .Prerequisite
 You created a Google Calendar connection. 
 
@@ -31,10 +36,6 @@ is authorized to access.
 .. In the *Max Results* field, accept the default of *5* or 
 indicate the maximum number of events that the connection 
 can return for each poll. 
-+
-When a Google Calendar connection returns more than one event, the integration
-processes the events as a batch. In other words, {prodname} 
-executes the integration once for the batch. 
 .. Select one of the following to indicate the date that you want the connection
 to use to start checking for events. The connection checks that date and
 subsequent dates.

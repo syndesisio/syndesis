@@ -13,7 +13,8 @@ email, it passes the email to the next step in the integration and, by default,
 marks the email as *read*.  
 
 .Prerequisite
-You created a Gmail connection. 
+You created a Gmail connection that is authorized to access the Gmail
+account that you want to obtain emails from.   
 
 .Procedure
 
