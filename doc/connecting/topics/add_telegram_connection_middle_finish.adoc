@@ -26,4 +26,7 @@ a message to.
 If you leave this field blank, and if there is an earlier 
 Telegram connection that receives messages, then {prodname} uses the
 chat ID that is in an incoming message. 
++
+For information about obtaining a chat ID, see 
+https://answers.splunk.com/answers/590658/telegram-alert-action-where-do-you-get-a-chat-id.html.
 . Click *Done* to add the connection to the integration. 

@@ -36,8 +36,8 @@ link:{LinkFuseOnlineTutorials}#create-sf-db-integration_sf2db[Create Salesforce 
 endif::[]
 
  
-.Prerequisites
-* You are logged in to {prodname}. The URL for accessing {prodname} is in the 
+.Prerequisite
+You are logged in to {prodname}. The URL for accessing {prodname} is in the 
 email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
 
 .Procedure

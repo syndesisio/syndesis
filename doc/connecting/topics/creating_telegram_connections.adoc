@@ -6,8 +6,9 @@
 
 In an integration, a Telegram connection can receive messages that have been 
 sent to a particular chat. A chat bot that you create forwards the messages 
-to {prodname}. A Telegram connection can also send a message to a same chat 
-by using the bot. You can use the same Telegram connection:
+to {prodname}. A Telegram connection can also send a message to a same chat
+or to a different chat that you identify and that the same bot has access to.  
+You can use the same Telegram connection:
 
 * In any number of integrations that use the connection to send messages 
 to a chat.
