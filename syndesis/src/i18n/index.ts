@@ -12,12 +12,16 @@ const options = {
   resources: {
     en: {
       app: en.en.app,
+      connections: en.en.modules.connections,
       dashboard: en.en.modules.dashboard,
+      integrations: en.en.modules.integrations,
       shared: en.en.shared,
     },
     it: {
       app: it.it.app,
+      connections: it.it.modules.connections,
       dashboard: it.it.modules.dashboard,
+      integrations: it.it.modules.integrations,
       shared: it.it.shared,
     },
   },

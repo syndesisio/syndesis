@@ -1,10 +1,16 @@
 {
-  "linkCreateConnection": "Create Connection",
-  "linkCreateIntegration": "Create Integration",
+  "integrationStatePending": "Pending",
+  "integrationStateRunning": "Running",
+  "integrationStateStopped": "Stopped",
+  "lastNumberOfDays": "Last {{numberOfDays}} Days",
   "linkToConnections": "View All Connections",
   "linkToIntegrations": "View All Integrations",
   "title": "System Metric",
+  "titleIntegrationBoard": "Integration Board",
   "titleIntegrationUpdates": "Recent Updates",
+  "titleTopIntegrations": "Top {{count}} Integrations",
+  "titleTotalConnections": "{{count}} Connections",
   "titleTotalIntegrations": "{{count}} Integrations",
-  "titleTotalMessages": "{{count}} Messages"
+  "titleTotalMessages": "{{count}} Messages",
+  "titleUptimeMetric": "Uptime"
 }

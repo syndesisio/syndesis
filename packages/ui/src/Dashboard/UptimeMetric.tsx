@@ -3,6 +3,7 @@ import * as React from 'react';
 
 export interface IUptimeMetricProps {
   start: number;
+  i18nTitle: string;
 }
 
 export class UptimeMetric extends React.PureComponent<IUptimeMetricProps> {
@@ -13,7 +14,7 @@ export class UptimeMetric extends React.PureComponent<IUptimeMetricProps> {
       <Card accented={true} aggregated={true} matchHeight={true}>
         <Card.Title className={'text-left'}>
           <small className={'pull-right'}>since {startAsHuman}</small>
-          <div>Uptime</div>
+          <div>{this.props.i18nTitle}</div>
         </Card.Title>
         <Card.Body>TODO</Card.Body>
       </Card>

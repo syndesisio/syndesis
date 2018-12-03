@@ -3,6 +3,8 @@ import * as React from 'react';
 
 export interface IIntegrationStatusProps {
   currentState?: string;
+  i18nPublished: string;
+  i18nUnpublished: string;
 }
 
 export class IntegrationStatus extends React.Component<
@@ -17,10 +19,10 @@ export class IntegrationStatus extends React.Component<
     let label = 'Pending';
     switch (this.props.currentState) {
       case 'Published':
-        label = 'Published';
+        label = this.props.i18nPublished;
         break;
       case 'Unpublished':
-        label = 'Unpublished';
+        label = this.props.i18nUnpublished;
         break;
     }
     return <Label type={labelType}>{label}</Label>;

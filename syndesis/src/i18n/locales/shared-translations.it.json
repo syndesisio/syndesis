@@ -7,11 +7,22 @@
       "integrations": {}
     },
     "shared": {
+      "Connection": "Connessione",
       "Connections": "Connessioni",
       "Customizations": "Personalizzazioni",
+      "filterByNamePlaceholder": "Filtra per Nome",
       "Home": "Casa",
+      "Import": "Importare",
       "Integrations": "Integrazioni",
-      "Settings": "Impostazioni"
+      "linkCreateConnection": "Crea Connessione",
+      "linkCreateIntegration": "Crea Integrazione",
+      "Name": "Nome",
+      "Published": "Pubblicato",
+      "resultsCount": "{{count}} Risultati",
+      "Settings": "Impostazioni",
+      "Status": "Stato",
+      "Total": "Totale",
+      "Unpublished": "Inedito"
     }
   }
 }

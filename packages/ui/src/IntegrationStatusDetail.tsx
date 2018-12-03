@@ -9,6 +9,8 @@ export interface IIntegrationStatusDetailProps {
   value?: string;
   currentStep?: number;
   totalSteps?: number;
+  i18nProgressStarting: string;
+  i18nProgressStopping: string;
 }
 
 export class IntegrationStatusDetail extends React.Component<

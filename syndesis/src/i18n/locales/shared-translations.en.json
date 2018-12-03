@@ -7,11 +7,22 @@
       "integrations": {}
     },
     "shared": {
+      "Connection": "Connection",
       "Connections": "Connections",
       "Customizations": "Customizations",
+      "filterByNamePlaceholder": "Filter by Name",
       "Home": "Home",
+      "Import": "Import",
       "Integrations": "Integrations",
-      "Settings": "Settings"
+      "linkCreateConnection": "Create Connection",
+      "linkCreateIntegration": "Create Integration",
+      "Name": "Name",
+      "Published": "Published",
+      "resultsCount": "{{count}} Results",
+      "Settings": "Settings",
+      "Status": "Status",
+      "Total": "Total",
+      "Unpublished": "Unpublished"
     }
   }
 }

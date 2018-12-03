@@ -5,6 +5,12 @@ export interface IIntegrationBoardProps {
   pendingIntegrations: number;
   runningIntegrations: number;
   stoppedIntegrations: number;
+  i18nIntegrationStatePending: string;
+  i18nIntegrationStateRunning: string;
+  i18nIntegrationStateStopped: string;
+  i18nIntegrations: string;
+  i18nTitle: string;
+  i18nTotal: string;
 }
 
 export class IntegrationBoard extends React.PureComponent<
@@ -18,9 +24,18 @@ export class IntegrationBoard extends React.PureComponent<
         Stopped: patternfly.pfPaletteColors.black300,
       },
       columns: [
-        ['Running', this.props.runningIntegrations],
-        ['Stopped', this.props.stoppedIntegrations],
-        ['Pending', this.props.pendingIntegrations],
+        [
+          this.props.i18nIntegrationStateRunning,
+          this.props.runningIntegrations,
+        ],
+        [
+          this.props.i18nIntegrationStateStopped,
+          this.props.stoppedIntegrations,
+        ],
+        [
+          this.props.i18nIntegrationStatePending,
+          this.props.pendingIntegrations,
+        ],
       ],
       type: 'donut',
     };
@@ -28,7 +43,7 @@ export class IntegrationBoard extends React.PureComponent<
     return (
       <Card>
         <Card.Heading>
-          <Card.Title>Integration Board</Card.Title>
+          <Card.Title>{this.props.i18nTitle}</Card.Title>
         </Card.Heading>
         <Card.Body>
           <DonutChart
@@ -39,7 +54,10 @@ export class IntegrationBoard extends React.PureComponent<
               contents: patternfly.pfDonutTooltipContents,
               show: true,
             }}
-            title={{ type: 'total', secondary: 'Integrations' }}
+            title={{
+              secondary: this.props.i18nIntegrations,
+              type: this.props.i18nTotal,
+            }}
             legend={{ show: true, position: 'right' }}
           />
         </Card.Body>
