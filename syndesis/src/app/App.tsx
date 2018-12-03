@@ -1,4 +1,8 @@
-import { ApiContext } from '@syndesis/api';
+import {
+  ApiContext,
+  ServerEventsContext,
+  WithServerEvents,
+} from '@syndesis/api';
 import { Loader, PfVerticalNavItem, UnrecoverableError } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -36,21 +40,29 @@ export class App extends React.Component<IAppBaseProps> {
           >
             {() => (
               <AppContext.Provider
-                value={{
-                  config: config!,
-                  logout: this.logout,
-                }}
+                value={{ config: config!, logout: this.logout }}
               >
                 <ApiContext.Provider
                   value={{
                     apiUri: `${config!.apiBase}${config!.apiEndpoint}`,
+                    headers: { 'SYNDESIS-XSRF-TOKEN': 'awesome' },
                   }}
                 >
-                  <Layout navbar={this.renderNavbar()}>
-                    <React.Fragment>
-                      <Switch>{this.renderRoutes()}</Switch>
-                    </React.Fragment>
-                  </Layout>
+                  <ApiContext.Consumer>
+                    {({ apiUri, headers }) => (
+                      <WithServerEvents apiUri={apiUri} headers={headers}>
+                        {functions => (
+                          <ServerEventsContext.Provider value={functions}>
+                            <Layout navbar={this.renderNavbar()}>
+                              <React.Fragment>
+                                <Switch>{this.renderRoutes()}</Switch>
+                              </React.Fragment>
+                            </Layout>
+                          </ServerEventsContext.Provider>
+                        )}
+                      </WithServerEvents>
+                    )}
+                  </ApiContext.Consumer>
                 </ApiContext.Provider>
               </AppContext.Provider>
             )}

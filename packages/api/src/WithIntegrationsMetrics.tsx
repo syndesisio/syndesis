@@ -2,8 +2,10 @@ import { IntegrationMetricsSummary } from '@syndesis/models';
 import * as React from 'react';
 import { IRestState } from './Rest';
 import { SyndesisRest } from './SyndesisRest';
+import { WithPolling } from './WithPolling';
 
 export interface IWithIntegrationsMetricsProps {
+  disableUpdates?: boolean;
   children(props: IRestState<IntegrationMetricsSummary>): any;
 }
 
@@ -14,7 +16,6 @@ export class WithIntegrationsMetrics extends React.Component<
     return (
       <SyndesisRest<IntegrationMetricsSummary>
         url={'/metrics/integrations'}
-        poll={5000}
         defaultValue={{
           errors: 0, // int64
           id: '-1',
@@ -26,7 +27,16 @@ export class WithIntegrationsMetrics extends React.Component<
           topIntegrations: {},
         }}
       >
-        {response => this.props.children(response)}
+        {({ read, response }) => {
+          if (this.props.disableUpdates) {
+            return this.props.children(response);
+          }
+          return (
+            <WithPolling read={read} polling={5000}>
+              {() => this.props.children(response)}
+            </WithPolling>
+          );
+        }}
       </SyndesisRest>
     );
   }
