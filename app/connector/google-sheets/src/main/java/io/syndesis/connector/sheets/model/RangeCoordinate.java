@@ -19,7 +19,7 @@ package io.syndesis.connector.sheets.model;
 /**
  * @author Christoph Deppisch
  */
-public class RangeCoordinate extends CellCoordinate {
+public final class RangeCoordinate extends CellCoordinate {
 
     private int rowStartIndex;
     private int rowEndIndex;
