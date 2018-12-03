@@ -20,9 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.api.services.sheets.v4.model.AddChartRequest;
+import com.google.api.services.sheets.v4.model.BasicChartSeries;
 import com.google.api.services.sheets.v4.model.BasicChartSpec;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
+import com.google.api.services.sheets.v4.model.ChartData;
 import com.google.api.services.sheets.v4.model.EmbeddedChart;
+import com.google.api.services.sheets.v4.model.GridRange;
+import com.google.api.services.sheets.v4.model.PieChartSpec;
 import io.syndesis.connector.sheets.model.GoogleChart;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
@@ -83,32 +87,15 @@ public class GoogleSheetsAddChartCustomizerTest extends AbstractGoogleSheetsCust
         model.setSpreadsheetId(getSpreadsheetId());
         model.setTitle("SyndesisChart");
         model.setSubtitle("Some subtitle");
+        model.setSourceSheetId(0);
         model.setSheetId(1);
 
         GoogleChart.BasicChart basicChart = new GoogleChart.BasicChart();
         basicChart.setAxisTitleBottom("Product Names");
         basicChart.setAxisTitleLeft("Sales Numbers");
 
-        GoogleChart.ChartSource domainSource = new GoogleChart.ChartSource();
-        domainSource.setFromRow(0);
-        domainSource.setFromRow(10);
-        domainSource.setColumnIndex(0);
-        domainSource.setSheetId(1);
-        basicChart.setDomainSource(domainSource);
-
-        GoogleChart.ChartSource firstColumnSource = new GoogleChart.ChartSource();
-        firstColumnSource.setFromRow(0);
-        firstColumnSource.setFromRow(10);
-        firstColumnSource.setColumnIndex(1);
-        firstColumnSource.setSheetId(1);
-        basicChart.getDataSources().add(firstColumnSource);
-
-        GoogleChart.ChartSource secondColumnSource = new GoogleChart.ChartSource();
-        secondColumnSource.setFromRow(0);
-        secondColumnSource.setFromRow(10);
-        secondColumnSource.setColumnIndex(2);
-        secondColumnSource.setSheetId(1);
-        basicChart.getDataSources().add(secondColumnSource);
+        basicChart.setDomainRange("A1:A10");
+        basicChart.setDataRange("B1:B10");
 
         model.setBasicChart(basicChart);
 
@@ -134,5 +121,120 @@ public class GoogleSheetsAddChartCustomizerTest extends AbstractGoogleSheetsCust
         Assert.assertEquals("BOTTOM_AXIS", chartSpec.getAxis().get(0).getPosition());
         Assert.assertEquals("Sales Numbers", chartSpec.getAxis().get(1).getTitle());
         Assert.assertEquals("LEFT_AXIS", chartSpec.getAxis().get(1).getPosition());
+
+        Assert.assertEquals(1, chartSpec.getDomains().size());
+        Assert.assertEquals(1, chartSpec.getDomains().get(0).getDomain().getSourceRange().getSources().size());
+        Assert.assertEquals(Integer.valueOf(0), chartSpec.getDomains().get(0).getDomain().getSourceRange().getSources().get(0).getStartRowIndex());
+        Assert.assertEquals(Integer.valueOf(10), chartSpec.getDomains().get(0).getDomain().getSourceRange().getSources().get(0).getEndRowIndex());
+        Assert.assertEquals(Integer.valueOf(0), chartSpec.getDomains().get(0).getDomain().getSourceRange().getSources().get(0).getStartColumnIndex());
+        Assert.assertEquals(Integer.valueOf(1), chartSpec.getDomains().get(0).getDomain().getSourceRange().getSources().get(0).getEndColumnIndex());
+
+        Assert.assertEquals(1, chartSpec.getSeries().size());
+
+        Assert.assertEquals("LEFT_AXIS", chartSpec.getSeries().get(0).getTargetAxis());
+        BasicChartSeries basicChartSeries = chartSpec.getSeries().get(0);
+        Assert.assertEquals(1, basicChartSeries.getSeries().getSourceRange().getSources().size());
+        GridRange gridRange = basicChartSeries.getSeries().getSourceRange().getSources().get(0);
+        Assert.assertEquals(Integer.valueOf(0), gridRange.getStartRowIndex());
+        Assert.assertEquals(Integer.valueOf(10), gridRange.getEndRowIndex());
+        Assert.assertEquals(Integer.valueOf(1), gridRange.getStartColumnIndex());
+        Assert.assertEquals(Integer.valueOf(2), gridRange.getEndColumnIndex());
+    }
+
+    @Test
+    public void testBarChartWithMultipleSeries() throws Exception {
+        customizer.customize(getComponent(), new HashMap<>());
+
+        Exchange inbound = new DefaultExchange(createCamelContext());
+
+        GoogleChart model = new GoogleChart();
+        model.setSpreadsheetId(getSpreadsheetId());
+        model.setTitle("SyndesisBars");
+        model.setSheetId(0);
+
+        GoogleChart.BasicChart basicChart = new GoogleChart.BasicChart();
+        basicChart.setAxisTitleBottom("Product Names");
+        basicChart.setAxisTitleLeft("Sales Numbers");
+
+        basicChart.setDomainRange("A1:A10");
+        basicChart.setDataRange("B1:B10,C1:C10");
+
+        model.setBasicChart(basicChart);
+
+        inbound.getIn().setBody(model);
+        getComponent().getBeforeProducer().process(inbound);
+
+        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader("CamelGoogleSheets.batchUpdateSpreadsheetRequest");
+        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+
+        AddChartRequest addChartRequest = batchUpdateRequest.getRequests().get(0).getAddChart();
+        BasicChartSpec chartSpec = addChartRequest.getChart().getSpec().getBasicChart();
+        Assert.assertNotNull(chartSpec);
+        Assert.assertEquals(2, chartSpec.getSeries().size());
+
+        Assert.assertEquals("LEFT_AXIS", chartSpec.getSeries().get(0).getTargetAxis());
+        BasicChartSeries basicChartSeries = chartSpec.getSeries().get(0);
+        Assert.assertEquals(1, basicChartSeries.getSeries().getSourceRange().getSources().size());
+        GridRange gridRange = basicChartSeries.getSeries().getSourceRange().getSources().get(0);
+        Assert.assertEquals(Integer.valueOf(0), gridRange.getStartRowIndex());
+        Assert.assertEquals(Integer.valueOf(10), gridRange.getEndRowIndex());
+        Assert.assertEquals(Integer.valueOf(1), gridRange.getStartColumnIndex());
+        Assert.assertEquals(Integer.valueOf(2), gridRange.getEndColumnIndex());
+
+        Assert.assertEquals("LEFT_AXIS", chartSpec.getSeries().get(1).getTargetAxis());
+        basicChartSeries = chartSpec.getSeries().get(1);
+        Assert.assertEquals(1, basicChartSeries.getSeries().getSourceRange().getSources().size());
+        gridRange = basicChartSeries.getSeries().getSourceRange().getSources().get(0);
+        Assert.assertEquals(Integer.valueOf(0), gridRange.getStartRowIndex());
+        Assert.assertEquals(Integer.valueOf(10), gridRange.getEndRowIndex());
+        Assert.assertEquals(Integer.valueOf(2), gridRange.getStartColumnIndex());
+        Assert.assertEquals(Integer.valueOf(3), gridRange.getEndColumnIndex());
+    }
+
+    @Test
+    public void testPieChart() throws Exception {
+        customizer.customize(getComponent(), new HashMap<>());
+
+        Exchange inbound = new DefaultExchange(createCamelContext());
+
+        GoogleChart model = new GoogleChart();
+        model.setSpreadsheetId(getSpreadsheetId());
+        model.setTitle("SyndesisPie");
+        model.setSheetId(0);
+
+        GoogleChart.PieChart pieChart = new GoogleChart.PieChart();
+
+        pieChart.setDomainRange("A1:A5");
+        pieChart.setDataRange("B1:B5");
+
+        model.setPieChart(pieChart);
+
+        inbound.getIn().setBody(model);
+        getComponent().getBeforeProducer().process(inbound);
+
+        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader("CamelGoogleSheets.batchUpdateSpreadsheetRequest");
+        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+
+        AddChartRequest addChartRequest = batchUpdateRequest.getRequests().get(0).getAddChart();
+        PieChartSpec chartSpec = addChartRequest.getChart().getSpec().getPieChart();
+        Assert.assertNotNull(chartSpec);
+        Assert.assertEquals("RIGHT_LEGEND", chartSpec.getLegendPosition());
+        Assert.assertEquals(1, chartSpec.getSeries().size());
+
+        ChartData domain = chartSpec.getDomain();
+        Assert.assertEquals(1, domain.getSourceRange().getSources().size());
+        GridRange domainRange = domain.getSourceRange().getSources().get(0);
+        Assert.assertEquals(Integer.valueOf(0), domainRange.getStartRowIndex());
+        Assert.assertEquals(Integer.valueOf(5), domainRange.getEndRowIndex());
+        Assert.assertEquals(Integer.valueOf(0), domainRange.getStartColumnIndex());
+        Assert.assertEquals(Integer.valueOf(1), domainRange.getEndColumnIndex());
+
+        ChartData data = chartSpec.getSeries();
+        Assert.assertEquals(1, data.getSourceRange().getSources().size());
+        GridRange dataRange = data.getSourceRange().getSources().get(0);
+        Assert.assertEquals(Integer.valueOf(0), dataRange.getStartRowIndex());
+        Assert.assertEquals(Integer.valueOf(5), dataRange.getEndRowIndex());
+        Assert.assertEquals(Integer.valueOf(1), dataRange.getStartColumnIndex());
+        Assert.assertEquals(Integer.valueOf(2), dataRange.getEndColumnIndex());
     }
 }
