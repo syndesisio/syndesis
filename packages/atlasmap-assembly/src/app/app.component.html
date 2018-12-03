@@ -1,0 +1,20 @@
+<div *ngIf="loading; else dataMapperTpl">
+  loading... {{loading}}
+</div>
+<ng-template #dataMapperTpl>
+  <app-data-mapper-host
+    [documentId]="documentId"
+    [inputName]="inputName"
+    [inputDescription]="inputDescription"
+    [inputDocumentType]="inputDocumentType"
+    [inputInspectionType]="inputInspectionType"
+    [inputDataShape]="inputDataShape"
+    [outputName]="outputName"
+    [outputDescription]="outputDescription"
+    [outputDocumentType]="outputDocumentType"
+    [outputInspectionType]="outputInspectionType"
+    [outputDataShape]="outputDataShape"
+    [mappings]="mappings"
+    (outputMappings)="onMappings($event)"
+  ></app-data-mapper-host>
+</ng-template>

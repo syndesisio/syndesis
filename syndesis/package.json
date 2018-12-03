@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^3.1.0",
     "@syndesis/api": "*",
+    "@syndesis/atlasmap-adapter": "*",
+    "@syndesis/connector-ftp": "*",
     "@syndesis/models": "*",
     "@syndesis/ui": "*",
     "@syndesis/utils": "*",
@@ -23,9 +26,9 @@
   "scripts": {
     "lint": "tslint -c ../tslint.json --project .",
     "prestart": "yarn minishift:setup",
-    "start": "BROWSER=false HOST=0.0.0.0 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "BROWSER=false HOST=0.0.0.0 craco start --react-scripts ../node_modules/react-scripts",
+    "build": "craco build --react-scripts ../node_modules/react-scripts",
+    "test": "craco test --react-scripts ../node_modules/react-scripts",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",

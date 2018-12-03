@@ -1,9 +1,9 @@
 {
-  "name": "@syndesis/utils",
+  "name": "@syndesis/atlasmap-adapter",
   "version": "0.1.0",
-  "main": "dist/utils.js",
-  "umd:main": "dist/utils.umd.js",
-  "typings": "dist/utils/src/index.d.ts",
+  "main": "dist/atlasmap-adapter.js",
+  "umd:main": "dist/atlasmap-adapter.umd.js",
+  "typings": "dist/atlasmap-adapter/src/index.d.ts",
   "source": "src/index.ts",
   "files": [
     "dist"
@@ -56,13 +56,14 @@
     "typescript": "^3.1.6"
   },
   "dependencies": {
-    "@syndesis/models": "*",
+    "@syndesis/atlasmap-assembly": "*",
     "react-fast-compare": "^2.0.2"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>/../.jest/setup.ts",
     "preset": "ts-jest",
     "moduleNameMapper": {
+      "\\atlasmap/.*.js$": "<rootDir>/../.jest/fileMock.js",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/../.jest/fileMock.js",
       "\\.(css|less)$": "<rootDir>/../.jest/styleMock.js"
     },

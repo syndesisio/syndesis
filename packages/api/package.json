@@ -31,7 +31,6 @@
     "react-dom": "^16.6.0",
     "react-testing-library": "^5.2.3",
     "rimraf": "^2.6.2",
-    "storybook-addon-specifications": "^2.1.2",
     "ts-jest": "^23.10.4",
     "tslib": "^1.9.3",
     "tslint": "^5.11.0",
@@ -44,8 +43,8 @@
     "test": "jest",
     "test:watch": "yarn run test --watch",
     "prebuild": "rimraf dist",
-    "build": "microbundle",
-    "dev": "yarn build watch",
+    "build": "microbundle --no-compress",
+    "dev": "microbundle watch --no-compress",
     "storybook": "start-storybook -p 9001"
   },
   "peerDependencies": {
@@ -63,8 +62,8 @@
     "setupTestFrameworkScriptFile": "<rootDir>/../.jest/setup.ts",
     "preset": "ts-jest",
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.jest/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/..//.jest/styleMock.js"
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/../.jest/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/../.jest/styleMock.js"
     },
     "globals": {
       "ts-jest": {
