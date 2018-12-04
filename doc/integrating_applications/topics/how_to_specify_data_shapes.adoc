@@ -94,13 +94,19 @@ The setting of the `kind` property determines the setting of the
 
 |`java`
 |Java inspection result. 
-If you are developing a custom step extension, then you can use 
-`extension-maven-plugin` to generate the JSON extension definition file. 
-When you do this, the plugin inserts the Java inspection result as 
-the setting of the `specification` property. If you do not use 
-`extension-maven-plugin` for a custom step extension or if you are 
-developing a connector extension, then the setting of the `specification` 
-property must be the actual result of the Java inspection. 
+
+For each extension that you write in Java, use `extension-maven-plugin` 
+to at least obtain the Java inspection result. The plugin inserts the Java 
+inspection result in the JSON extension definition file as the setting 
+of the `specification` property. This is the only way to obtain the Java 
+inspection result, which is required for data mapping in {prodname}. 
+
+As a reminder, for step extensions written in Java, `extension-maven-plugin` 
+generates the JSON extension definition file and populates it with
+required content. For connector extensions, while `extension-maven-plugin`
+inserts the Java inspection result in the JSON extension definition file, 
+you will need to manually 
+add the required content that the plugin does not insert. 
 
 |`json-schema`
 |An actual JSON schema document. The setting cannot be a reference to a 
