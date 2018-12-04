@@ -124,7 +124,9 @@ export default () => (
                 metricsData.topIntegrations
               );
               return (
-                <NamespacesConsumer ns={['dashboard', 'shared']}>
+                <NamespacesConsumer
+                  ns={['dashboard', 'integrations', 'shared']}
+                >
                   {t => (
                     <Dashboard
                       linkToIntegrations={'/integrations'}
@@ -144,7 +146,12 @@ export default () => (
                         />
                       }
                       connectionsOverview={
-                        <ConnectionsMetric count={connectionsData.totalCount} />
+                        <ConnectionsMetric
+                          count={connectionsData.totalCount}
+                          i18nTitle={t('titleTotalConnections', {
+                            count: connectionsData.totalCount,
+                          })}
+                        />
                       }
                       messagesOverview={
                         <AggregatedMetricCard
@@ -158,10 +165,22 @@ export default () => (
                       uptimeOverview={
                         <UptimeMetric
                           start={parseInt(metricsData.start!, 10)}
+                          i18nTitle={t('titleUptimeMetric')}
                         />
                       }
                       topIntegrations={
-                        <TopIntegrationsCard>
+                        <TopIntegrationsCard
+                          i18nTitle={t('titleTopIntegrations', { count: 5 })}
+                          i18nLast30Days={t('lastNumberOfDays', {
+                            numberOfDays: 30,
+                          })}
+                          i18nLast60Days={t('lastNumberOfDays', {
+                            numberOfDays: 60,
+                          })}
+                          i18nLast90Days={t('lastNumberOfDays', {
+                            numberOfDays: 90,
+                          })}
+                        >
                           <WithLoader
                             error={false}
                             loading={!hasIntegrations}
@@ -201,6 +220,17 @@ export default () => (
                                         mi.monitoring.detailedState.totalSteps
                                       }
                                       key={index}
+                                      i18nConfigurationRequired={t(
+                                        'integrations:ConfigurationRequired'
+                                      )}
+                                      i18nPublished={t('shared:Published')}
+                                      i18nUnpublished={t('shared:Unpublished')}
+                                      i18nProgressStarting={t(
+                                        'integrations:progressStarting'
+                                      )}
+                                      i18nProgressStopping={t(
+                                        'integrations:progressStopping'
+                                      )}
                                     />
                                   )
                                 )}
@@ -216,10 +246,24 @@ export default () => (
                           stoppedIntegrations={
                             integrationStatesCount.Unpublished
                           }
+                          i18nTitle={t('titleIntegrationBoard')}
+                          i18nIntegrationStatePending={t(
+                            'integrationStatePending'
+                          )}
+                          i18nIntegrationStateRunning={t(
+                            'integrationStateRunning'
+                          )}
+                          i18nIntegrationStateStopped={t(
+                            'integrationStateStopped'
+                          )}
+                          i18nIntegrations={t('shared:Integrations')}
+                          i18nTotal={t('shared:Total')}
                         />
                       }
                       integrationUpdates={
-                        <RecentUpdatesCard>
+                        <RecentUpdatesCard
+                          i18nTitle={t('titleIntegrationUpdates')}
+                        >
                           <WithLoader
                             error={false}
                             loading={!hasIntegrations}
@@ -233,6 +277,8 @@ export default () => (
                                   <Grid.Col sm={3}>
                                     <IntegrationStatus
                                       currentState={i.currentState}
+                                      i18nPublished={t('shared:Published')}
+                                      i18nUnpublished={t('shared:Unpublished')}
                                     />
                                   </Grid.Col>
                                   <Grid.Col sm={4}>
@@ -280,8 +326,12 @@ export default () => (
                         </ConnectionsGrid>
                       }
                       i18nConnections={t('shared:Connections')}
-                      i18nLinkCreateConnection={t('linkCreateConnection')}
-                      i18nLinkCreateIntegration={t('linkToIntegrations')}
+                      i18nLinkCreateConnection={t(
+                        'shared:linkCreateConnection'
+                      )}
+                      i18nLinkCreateIntegration={t(
+                        'shared:linkCreateIntegration'
+                      )}
                       i18nLinkToConnections={t('linkToConnections')}
                       i18nLinkToIntegrations={t('linkToIntegrations')}
                       i18nTitle={t('title')}

@@ -1,10 +1,16 @@
 {
-  "linkCreateConnection": "Crea Connessione",
-  "linkCreateIntegration": "Crea Integrazione",
+  "integrationStatePending": "Pendenti",
+  "integrationStateRunning": "Esecuzione",
+  "integrationStateStopped": "Fermato",
+  "lastNumberOfDays": "Ultimi {{numberOfDays}} Giorni",
   "linkToConnections": "Visualizza Tutte le Connessioni",
   "linkToIntegrations": "Visualizza Tutte le Integrazioni",
   "title": "Metrica di Sistema",
+  "titleIntegrationBoard": "Consiglio di Integrazione",
   "titleIntegrationUpdates": "Aggiornamenti Recenti",
+  "titleTopIntegrations": "Top {{count}} Integrazioni",
+  "titleTotalConnections": "{{count}} Connessioni",
   "titleTotalIntegrations": "{{count}} Integrazioni",
-  "titleTotalMessages": "{{count}} Messaggi"
+  "titleTotalMessages": "{{count}} Messaggi",
+  "titleUptimeMetric": "Tempo Di"
 }

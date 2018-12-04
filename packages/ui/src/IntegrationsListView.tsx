@@ -5,6 +5,8 @@ import { IListViewToolbarProps, ListViewToolbar } from './ListViewToolbar';
 export interface IIntegrationsListViewProps extends IListViewToolbarProps {
   linkToIntegrationImport: string;
   linkToIntegrationCreation: string;
+  i18nImport: string;
+  i18nLinkCreateConnection: string;
 }
 
 export class IntegrationsListView extends React.Component<
@@ -19,13 +21,13 @@ export class IntegrationsListView extends React.Component<
               to={this.props.linkToIntegrationImport}
               className={'btn btn-default'}
             >
-              Import
+              {this.props.i18nImport}
             </Link>
             <Link
               to={this.props.linkToIntegrationCreation}
               className={'btn btn-primary'}
             >
-              Create Integration
+              {this.props.i18nLinkCreateConnection}
             </Link>
           </div>
         </ListViewToolbar>

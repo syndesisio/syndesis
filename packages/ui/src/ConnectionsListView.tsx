@@ -4,6 +4,7 @@ import { IListViewToolbarProps, ListViewToolbar } from './ListViewToolbar';
 
 export interface IConnectionsListViewProps extends IListViewToolbarProps {
   linkToConnectionCreate: string;
+  i18nLinkCreateConnection: string;
 }
 
 export class ConnectionsListView extends React.Component<
@@ -18,7 +19,7 @@ export class ConnectionsListView extends React.Component<
               to={this.props.linkToConnectionCreate}
               className={'btn btn-primary'}
             >
-              Create Connection
+              {this.props.i18nLinkCreateConnection}
             </Link>
           </div>
         </ListViewToolbar>

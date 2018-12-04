@@ -14,6 +14,8 @@ import {
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
+import { NamespacesConsumer } from 'react-i18next';
+import i18n from '../../../i18n';
 
 function getFilteredAndSortedIntegrations(
   integrations: IntegrationWithOverview[],
@@ -68,16 +70,16 @@ function getFilteredAndSortedIntegrations(
 const filterByName = {
   filterType: 'text',
   id: 'name',
-  placeholder: 'Filter by Name',
-  title: 'Name',
+  placeholder: i18n.t('shared:filterByNamePlaceholder'),
+  title: i18n.t('shared:Name'),
 } as IFilterType;
 
 const filterByConnection = {
   filterType: 'select',
   filterValues: [],
   id: 'connection',
-  placeholder: 'Filter by Connection',
-  title: 'Connection',
+  placeholder: i18n.t('shared:filterByConnectionPlaceholder'),
+  title: i18n.t('shared:Connection'),
 };
 
 function getFilterTypes(connections: Connection[]): IFilterType[] {
@@ -96,13 +98,13 @@ function getFilterTypes(connections: Connection[]): IFilterType[] {
 const sortByName = {
   id: 'name',
   isNumeric: false,
-  title: 'Name',
+  title: i18n.t('shared:Name'),
 } as ISortType;
 
 const sortByStatus = {
   id: 'status',
   isNumeric: false,
-  title: 'Status',
+  title: i18n.t('shared:Status'),
 } as ISortType;
 
 const sortTypes: ISortType[] = [sortByName, sortByStatus];
@@ -133,75 +135,97 @@ export default class IntegrationsPage extends ListViewToolbarAbstractComponent<
                 this.state.isSortAscending
               );
               return (
-                <IntegrationsListView
-                  linkToIntegrationImport={'/integrations/import'}
-                  linkToIntegrationCreation={'/integrations/create'}
-                  filterTypes={getFilterTypes(connectionsData.items)}
-                  sortTypes={sortTypes}
-                  resultsCount={filteredAndSortedIntegrations.length}
-                  {...this.state}
-                  onUpdateCurrentValue={this.onUpdateCurrentValue}
-                  onValueKeyPress={this.onValueKeyPress}
-                  onFilterAdded={this.onFilterAdded}
-                  onSelectFilterType={this.onSelectFilterType}
-                  onFilterValueSelected={this.onFilterValueSelected}
-                  onRemoveFilter={this.onRemoveFilter}
-                  onClearFilters={this.onClearFilters}
-                  onToggleCurrentSortDirection={
-                    this.onToggleCurrentSortDirection
-                  }
-                  onUpdateCurrentSortType={this.onUpdateCurrentSortType}
-                >
-                  <WithLoader
-                    error={error}
-                    loading={!hasData}
-                    loaderChildren={
-                      <IntegrationsListSkeleton
-                        width={800}
-                        style={{
-                          backgroundColor: '#FFF',
-                          marginTop: 30,
-                        }}
-                      />
-                    }
-                    errorChildren={<div>TODO</div>}
-                  >
-                    {() => (
-                      <IntegrationsList>
-                        {filteredAndSortedIntegrations.map(
-                          (mi: IntegrationWithMonitoring, index) => (
-                            <IntegrationsListItem
-                              integrationId={mi.integration.id!}
-                              integrationName={mi.integration.name!}
-                              currentState={mi.integration.currentState!}
-                              targetState={mi.integration.targetState!}
-                              isConfigurationRequired={
-                                !!(
-                                  mi.integration!.board!.warnings ||
-                                  mi.integration!.board!.errors ||
-                                  mi.integration!.board!.notices
-                                )
-                              }
-                              monitoringValue={
-                                mi.monitoring &&
-                                mi.monitoring.detailedState.value
-                              }
-                              monitoringCurrentStep={
-                                mi.monitoring &&
-                                mi.monitoring.detailedState.currentStep
-                              }
-                              monitoringTotalSteps={
-                                mi.monitoring &&
-                                mi.monitoring.detailedState.totalSteps
-                              }
-                              key={index}
-                            />
-                          )
+                <NamespacesConsumer ns={['integrations', 'shared']}>
+                  {t => (
+                    <IntegrationsListView
+                      linkToIntegrationImport={'/integrations/import'}
+                      linkToIntegrationCreation={'/integrations/create'}
+                      filterTypes={getFilterTypes(connectionsData.items)}
+                      sortTypes={sortTypes}
+                      resultsCount={filteredAndSortedIntegrations.length}
+                      {...this.state}
+                      onUpdateCurrentValue={this.onUpdateCurrentValue}
+                      onValueKeyPress={this.onValueKeyPress}
+                      onFilterAdded={this.onFilterAdded}
+                      onSelectFilterType={this.onSelectFilterType}
+                      onFilterValueSelected={this.onFilterValueSelected}
+                      onRemoveFilter={this.onRemoveFilter}
+                      onClearFilters={this.onClearFilters}
+                      onToggleCurrentSortDirection={
+                        this.onToggleCurrentSortDirection
+                      }
+                      onUpdateCurrentSortType={this.onUpdateCurrentSortType}
+                      i18nImport={t('shared:Import')}
+                      i18nLinkCreateConnection={t(
+                        'shared:linkCreateIntegration'
+                      )}
+                      i18nResultsCount={t('shared:resultsCount', {
+                        count: filteredAndSortedIntegrations.length,
+                      })}
+                    >
+                      <WithLoader
+                        error={error}
+                        loading={!hasData}
+                        loaderChildren={
+                          <IntegrationsListSkeleton
+                            width={800}
+                            style={{
+                              backgroundColor: '#FFF',
+                              marginTop: 30,
+                            }}
+                          />
+                        }
+                        errorChildren={<div>TODO</div>}
+                      >
+                        {() => (
+                          <IntegrationsList>
+                            {filteredAndSortedIntegrations.map(
+                              (mi: IntegrationWithMonitoring, index) => (
+                                <IntegrationsListItem
+                                  integrationId={mi.integration.id!}
+                                  integrationName={mi.integration.name!}
+                                  currentState={mi.integration.currentState!}
+                                  targetState={mi.integration.targetState!}
+                                  isConfigurationRequired={
+                                    !!(
+                                      mi.integration!.board!.warnings ||
+                                      mi.integration!.board!.errors ||
+                                      mi.integration!.board!.notices
+                                    )
+                                  }
+                                  monitoringValue={
+                                    mi.monitoring &&
+                                    mi.monitoring.detailedState.value
+                                  }
+                                  monitoringCurrentStep={
+                                    mi.monitoring &&
+                                    mi.monitoring.detailedState.currentStep
+                                  }
+                                  monitoringTotalSteps={
+                                    mi.monitoring &&
+                                    mi.monitoring.detailedState.totalSteps
+                                  }
+                                  key={index}
+                                  i18nConfigurationRequired={t(
+                                    'ConfigurationRequired'
+                                  )}
+                                  i18nPublished={t('shared:Published')}
+                                  i18nUnpublished={t('shared:Unpublished')}
+                                  i18nProgressStarting={t(
+                                    'integrations:progressStarting'
+                                  )}
+                                  i18nProgressStopping={t(
+                                    'integrations:progressStopping'
+                                  )}
+                                />
+                              )
+                            )}
+                          </IntegrationsList>
                         )}
-                      </IntegrationsList>
-                    )}
-                  </WithLoader>
-                </IntegrationsListView>
+                      </WithLoader>
+                    </IntegrationsListView>
+                  )}
+                </NamespacesConsumer>
               );
             }}
           </WithConnections>
