@@ -598,19 +598,6 @@
                 "required": false,
                 "secret": false,
                 "type": "string"
-              },
-              "sheetId": {
-                "deprecated": false,
-                "displayName": "Sheet identifier",
-                "group": "producer",
-                "javaType": "java.lang.Integer",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "The target sheet index. New sheet if unspecified",
-                "order": "4",
-                "required": false,
-                "secret": false,
-                "type": "integer"
               }
             }
           }

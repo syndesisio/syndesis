@@ -16,8 +16,6 @@
 
 package io.syndesis.connector.sheets.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -27,82 +25,60 @@ import java.util.Optional;
 public class GoogleChart {
 
     private String spreadsheetId;
-    private Integer sheetId;
     private String title;
     private String subtitle;
 
+    private String overlayPosition;
+
+    private Integer sheetId;
+    private Integer sourceSheetId;
+
     private BasicChart basicChart;
+    private PieChart pieChart;
 
-    public static class ChartSource {
-        private Integer sheetId;
-        private Integer fromRow;
-        private Integer toRow;
-        private Integer columnIndex;
-        private String targetAxis;
+    public static class PieChart {
+        private String domainRange;
+        private String dataRange;
 
-        public Integer getSheetId() {
-            return sheetId;
+        private String legendPosition = "RIGHT_LEGEND";
+
+        public String getDomainRange() {
+            return domainRange;
         }
 
         /**
-         * Specifies the sheetId.
+         * Specifies the domainRange.
          *
-         * @param sheetId
+         * @param domainRange
          */
-        public void setSheetId(Integer sheetId) {
-            this.sheetId = sheetId;
+        public void setDomainRange(String domainRange) {
+            this.domainRange = domainRange;
         }
 
-        public Integer getFromRow() {
-            return fromRow;
+        public String getDataRange() {
+            return dataRange;
         }
 
         /**
-         * Specifies the fromRow.
+         * Specifies the dataRange.
          *
-         * @param fromRow
+         * @param dataRange
          */
-        public void setFromRow(Integer fromRow) {
-            this.fromRow = fromRow;
+        public void setDataRange(String dataRange) {
+            this.dataRange = dataRange;
         }
 
-        public Integer getToRow() {
-            return toRow;
+        public String getLegendPosition() {
+            return legendPosition;
         }
 
         /**
-         * Specifies the toRow.
+         * Specifies the legendPosition.
          *
-         * @param toRow
+         * @param legendPosition
          */
-        public void setToRow(Integer toRow) {
-            this.toRow = toRow;
-        }
-
-        public Integer getColumnIndex() {
-            return columnIndex;
-        }
-
-        /**
-         * Specifies the columnIndex.
-         *
-         * @param columnIndex
-         */
-        public void setColumnIndex(Integer columnIndex) {
-            this.columnIndex = columnIndex;
-        }
-
-        public String getTargetAxis() {
-            return targetAxis;
-        }
-
-        /**
-         * Specifies the targetAxis.
-         *
-         * @param targetAxis
-         */
-        public void setTargetAxis(String targetAxis) {
-            this.targetAxis = targetAxis;
+        public void setLegendPosition(String legendPosition) {
+            this.legendPosition = legendPosition;
         }
     }
 
@@ -111,8 +87,34 @@ public class GoogleChart {
         private String axisTitleBottom;
         private String axisTitleLeft;
 
-        private ChartSource domainSource;
-        private List<ChartSource> dataSources = new ArrayList<>();
+        private String domainRange;
+        private String dataRange;
+
+        public String getDomainRange() {
+            return domainRange;
+        }
+
+        /**
+         * Specifies the domainRange.
+         *
+         * @param domainRange
+         */
+        public void setDomainRange(String domainRange) {
+            this.domainRange = domainRange;
+        }
+
+        public String getDataRange() {
+            return dataRange;
+        }
+
+        /**
+         * Specifies the dataRange.
+         *
+         * @param dataRange
+         */
+        public void setDataRange(String dataRange) {
+            this.dataRange = dataRange;
+        }
 
         public String getAxisTitleBottom() {
             return axisTitleBottom;
@@ -140,19 +142,6 @@ public class GoogleChart {
             this.axisTitleLeft = axisTitleLeft;
         }
 
-        public ChartSource getDomainSource() {
-            return domainSource;
-        }
-
-        /**
-         * Specifies the domainSource.
-         *
-         * @param domainSource
-         */
-        public void setDomainSource(ChartSource domainSource) {
-            this.domainSource = domainSource;
-        }
-
         public String getType() {
             return type;
         }
@@ -164,19 +153,6 @@ public class GoogleChart {
          */
         public void setType(String type) {
             this.type = type;
-        }
-
-        public List<ChartSource> getDataSources() {
-            return dataSources;
-        }
-
-        /**
-         * Specifies the dataSources.
-         *
-         * @param dataSources
-         */
-        public void setDataSources(List<ChartSource> dataSources) {
-            this.dataSources = dataSources;
         }
     }
 
@@ -232,6 +208,33 @@ public class GoogleChart {
         this.subtitle = subtitle;
     }
 
+    public String getOverlayPosition() {
+        return overlayPosition;
+    }
+
+    /**
+     * Specifies the overlayPosition in A1 notation representing a target cell as anchor. If set
+     * the chart is placed as overlayPosition on the same sheet next to the anchor cell.
+     *
+     * @param overlayPosition
+     */
+    public void setOverlayPosition(String overlayPosition) {
+        this.overlayPosition = overlayPosition;
+    }
+
+    public Integer getSourceSheetId() {
+        return sourceSheetId;
+    }
+
+    /**
+     * Specifies the sourceSheetId.
+     *
+     * @param sourceSheetId
+     */
+    public void setSourceSheetId(Integer sourceSheetId) {
+        this.sourceSheetId = sourceSheetId;
+    }
+
     public BasicChart getBasicChart() {
         return basicChart;
     }
@@ -243,6 +246,19 @@ public class GoogleChart {
      */
     public void setBasicChart(BasicChart basicChart) {
         this.basicChart = basicChart;
+    }
+
+    public PieChart getPieChart() {
+        return pieChart;
+    }
+
+    /**
+     * Specifies the pieChart.
+     *
+     * @param pieChart
+     */
+    public void setPieChart(PieChart pieChart) {
+        this.pieChart = pieChart;
     }
 
     @Override

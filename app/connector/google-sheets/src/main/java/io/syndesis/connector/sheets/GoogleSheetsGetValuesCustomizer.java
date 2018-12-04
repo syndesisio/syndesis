@@ -78,15 +78,6 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
             }
         }
 
-        model.setRangeIndex(Optional.ofNullable(in.getHeader(GoogleSheetsStreamConstants.RANGE_INDEX))
-                .map(Object::toString)
-                .map(Integer::valueOf)
-                .orElse(0));
-        model.setValueIndex(Optional.ofNullable(in.getHeader(GoogleSheetsStreamConstants.VALUE_INDEX))
-                .map(Object::toString)
-                .map(Integer::valueOf)
-                .orElse(0));
-
         in.setBody(model);
     }
 

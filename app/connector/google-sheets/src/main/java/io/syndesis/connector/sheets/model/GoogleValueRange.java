@@ -21,9 +21,6 @@ public class GoogleValueRange {
     private String range;
     private String values;
 
-    private Integer rangeIndex;
-    private Integer valueIndex;
-
     public String getSpreadsheetId() {
         return spreadsheetId;
     }
@@ -61,32 +58,6 @@ public class GoogleValueRange {
      */
     public void setValues(String values) {
         this.values = values;
-    }
-
-    public Integer getRangeIndex() {
-        return rangeIndex;
-    }
-
-    /**
-     * Specifies the rangeIndex.
-     *
-     * @param rangeIndex
-     */
-    public void setRangeIndex(Integer rangeIndex) {
-        this.rangeIndex = rangeIndex;
-    }
-
-    public Integer getValueIndex() {
-        return valueIndex;
-    }
-
-    /**
-     * Specifies the valueIndex.
-     *
-     * @param valueIndex
-     */
-    public void setValueIndex(Integer valueIndex) {
-        this.valueIndex = valueIndex;
     }
 
     @Override

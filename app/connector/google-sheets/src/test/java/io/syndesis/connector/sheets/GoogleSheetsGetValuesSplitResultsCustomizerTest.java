@@ -92,7 +92,5 @@ public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoo
         Assert.assertEquals(getSpreadsheetId(), model.getSpreadsheetId());
         Assert.assertEquals(sheetName + "!" + range, model.getRange());
         Assert.assertEquals(expectedValueModel, model.getValues());
-        Assert.assertEquals(Integer.valueOf(1), model.getRangeIndex());
-        Assert.assertEquals(Integer.valueOf(1), model.getValueIndex());
     }
 }
