@@ -264,7 +264,7 @@ done
 ```
 
 ## Modify the limit of number of integrations deployed:
-Add this entry to `system-rest-config` `ConfigMap`
+Add or update this entry to `syndesis-server-config` `ConfigMap`
 ```yaml
 controllers:
     maxIntegrationsPerUser: 4
