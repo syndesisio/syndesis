@@ -2,13 +2,14 @@ import {
   Integration,
   IntegrationMonitoring,
   IntegrationWithMonitoring,
-  IntegrationWithOverview,
 } from '@syndesis/models';
 import * as React from 'react';
 import { IRestState } from './Rest';
+import { ServerEventsContext } from './ServerEventsContext';
 import { SyndesisRest } from './SyndesisRest';
-import { WithIntegrations } from './WithIntegrations';
-import { WithPolling } from './WithPolling';
+import { WithChangeListener } from './WithChangeListener';
+import { IIntegrationsResponse, WithIntegrations } from './WithIntegrations';
+import { IChangeEvent } from './WithServerEvents';
 
 export interface IMonitoredIntegrationsResponse {
   items: IntegrationWithMonitoring[];
@@ -23,6 +24,28 @@ export interface IWithMonitoredIntegrationsProps {
 export class WithMonitoredIntegrations extends React.Component<
   IWithMonitoredIntegrationsProps
 > {
+  public changeFilter(change: IChangeEvent) {
+    return (
+      change.kind === 'integration-deployment' ||
+      change.kind === 'integration-deployment-state-details'
+    );
+  }
+  public getMonitoredIntegrations(
+    integrations: IIntegrationsResponse,
+    response: IRestState<IntegrationMonitoring[]>
+  ) {
+    return {
+      items: integrations.items.map(
+        (i: Integration): IntegrationWithMonitoring => ({
+          integration: i,
+          monitoring: response.data.find(
+            (o: IntegrationMonitoring) => o.integrationId === i.id
+          ),
+        })
+      ),
+      totalCount: integrations.totalCount,
+    } as IMonitoredIntegrationsResponse;
+  }
   public render() {
     return (
       <WithIntegrations disableUpdates={this.props.disableUpdates}>
@@ -32,24 +55,32 @@ export class WithMonitoredIntegrations extends React.Component<
             defaultValue={[]}
           >
             {({ read, response }) => {
-              const data = {
-                items: integrations.items.map(
-                  (i: Integration): IntegrationWithOverview => ({
-                    integration: i,
-                    overview: response.data.find(
-                      (o: IntegrationMonitoring) => o.id === i.id
-                    ),
-                  })
-                ),
-                totalCount: integrations.totalCount,
-              };
               if (this.props.disableUpdates) {
+                const data = this.getMonitoredIntegrations(
+                  integrations,
+                  response
+                );
                 return this.props.children({ ...props, data });
               }
               return (
-                <WithPolling read={read} polling={5000}>
-                  {() => this.props.children({ ...props, data })}
-                </WithPolling>
+                <ServerEventsContext.Consumer>
+                  {({ registerChangeListener, unregisterChangeListener }) => (
+                    <WithChangeListener
+                      read={read}
+                      registerChangeListener={registerChangeListener}
+                      unregisterChangeListener={unregisterChangeListener}
+                      filter={this.changeFilter}
+                    >
+                      {() => {
+                        const data = this.getMonitoredIntegrations(
+                          integrations,
+                          response
+                        );
+                        return this.props.children({ ...props, data });
+                      }}
+                    </WithChangeListener>
+                  )}
+                </ServerEventsContext.Consumer>
               );
             }}
           </SyndesisRest>

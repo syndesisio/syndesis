@@ -10,6 +10,7 @@
       "Connection": "Connection",
       "Connections": "Connections",
       "Customizations": "Customizations",
+      "Error": "Error",
       "filterByNamePlaceholder": "Filter by Name",
       "Home": "Home",
       "Import": "Import",
@@ -17,12 +18,14 @@
       "linkCreateConnection": "Create Connection",
       "linkCreateIntegration": "Create Integration",
       "Name": "Name",
-      "Published": "Published",
+      "Pending": "Pending",
+      "Published": "Running",
       "resultsCount": "{{count}} Results",
       "Settings": "Settings",
       "Status": "Status",
       "Total": "Total",
-      "Unpublished": "Unpublished"
+      "Unpublished": "Stopped",
+      "viewLogs": "View Logs"
     }
   }
 }

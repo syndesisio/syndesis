@@ -10,6 +10,7 @@
       "Connection": "Connessione",
       "Connections": "Connessioni",
       "Customizations": "Personalizzazioni",
+      "Error": "Errore",
       "filterByNamePlaceholder": "Filtra per Nome",
       "Home": "Casa",
       "Import": "Importare",
@@ -17,12 +18,14 @@
       "linkCreateConnection": "Crea Connessione",
       "linkCreateIntegration": "Crea Integrazione",
       "Name": "Nome",
-      "Published": "Pubblicato",
+      "Pending": "Pendente",
+      "Published": "Funzionante",
       "resultsCount": "{{count}} Risultati",
       "Settings": "Impostazioni",
       "Status": "Stato",
       "Total": "Totale",
-      "Unpublished": "Inedito"
+      "Unpublished": "Fermato",
+      "viewLogs": "Visualizza i registri"
     }
   }
 }

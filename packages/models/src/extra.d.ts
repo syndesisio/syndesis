@@ -20,7 +20,7 @@ export interface IntegrationMonitoring {
   value: string;
   id: string;
   integrationId: string;
-  linkType: string;
+  linkType: 'LOGS' | 'EVENTS';
   namespace: string;
   podName: string;
 }

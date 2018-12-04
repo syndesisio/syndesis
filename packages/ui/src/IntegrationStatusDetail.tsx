@@ -1,38 +1,47 @@
 import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { IntegrationProgress } from './IntegrationProgress';
+import { IntegrationState, PUBLISHED, UNPUBLISHED } from './sharedModels';
 
 import './IntegrationStatusDetail.css';
 
 export interface IIntegrationStatusDetailProps {
-  targetState: string;
+  targetState: IntegrationState;
   value?: string;
   currentStep?: number;
   totalSteps?: number;
+  logUrl?: string;
+  i18nProgressPending: string;
   i18nProgressStarting: string;
   i18nProgressStopping: string;
+  i18nLogUrlText: string;
 }
 
 export class IntegrationStatusDetail extends React.Component<
   IIntegrationStatusDetailProps
 > {
   public render() {
-    let fallbackText = 'Pending';
+    let fallbackText = this.props.i18nProgressPending;
     switch (this.props.targetState) {
-      case 'Published':
-        fallbackText = 'Starting...';
+      case PUBLISHED:
+        fallbackText = this.props.i18nProgressStarting;
         break;
-      case 'Unpublished':
-        fallbackText = 'Stopping...';
+      case UNPUBLISHED:
+        fallbackText = this.props.i18nProgressStopping;
         break;
     }
     return (
-      <div className={'integration-status-detail'}>
+      <div
+        data-testid="integration-status-detail"
+        className={'integration-status-detail'}
+      >
         {this.props.value && this.props.currentStep && this.props.totalSteps ? (
           <IntegrationProgress
             currentStep={this.props.currentStep}
             totalSteps={this.props.totalSteps}
             value={this.props.value}
+            logUrl={this.props.logUrl}
+            i18nLogUrlText={this.props.i18nLogUrlText}
           />
         ) : (
           <>

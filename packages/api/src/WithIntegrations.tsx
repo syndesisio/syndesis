@@ -18,7 +18,9 @@ export interface IWithIntegrationsProps {
 
 export class WithIntegrations extends React.Component<IWithIntegrationsProps> {
   public changeFilter(change: IChangeEvent) {
-    return change.kind.startsWith('integration');
+    return (
+      change.kind === 'integration' || change.kind === 'integration-deployment'
+    );
   }
 
   public render() {
@@ -27,11 +29,10 @@ export class WithIntegrations extends React.Component<IWithIntegrationsProps> {
         url={'/integrations'}
         defaultValue={{ items: [], totalCount: 0 }}
       >
-        {({ read, response }) => {
-          if (this.props.disableUpdates) {
-            return this.props.children(response);
-          }
-          return (
+        {({ read, response }) =>
+          this.props.disableUpdates ? (
+            this.props.children(response)
+          ) : (
             <ServerEventsContext.Consumer>
               {({ registerChangeListener, unregisterChangeListener }) => (
                 <WithChangeListener
@@ -44,8 +45,8 @@ export class WithIntegrations extends React.Component<IWithIntegrationsProps> {
                 </WithChangeListener>
               )}
             </ServerEventsContext.Consumer>
-          );
-        }}
+          )
+        }
       </SyndesisRest>
     );
   }
