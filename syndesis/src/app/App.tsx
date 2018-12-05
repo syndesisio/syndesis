@@ -3,14 +3,25 @@ import {
   ServerEventsContext,
   WithServerEvents,
 } from '@syndesis/api';
-import { Loader, PfVerticalNavItem, UnrecoverableError } from '@syndesis/ui';
+import {
+  AppLayout,
+  Loader,
+  PfNavLink,
+  PfVerticalNavItem,
+  UnrecoverableError,
+} from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
+import { TranslationFunction } from 'i18next';
+import { Icon, Masthead } from 'patternfly-react';
 import * as React from 'react';
+import { NamespacesConsumer } from 'react-i18next';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import './App.css';
 import { AppContext } from './AppContext';
-import { Layout } from './Layout';
 import { WithConfig } from './WithConfig';
+
+import pictogram from './glasses_logo_square.png';
+import typogram from './syndesis-logo-svg-white.svg';
 
 export interface IAppRoute {
   component:
@@ -29,50 +40,76 @@ export interface IAppBaseProps {
 export class App extends React.Component<IAppBaseProps> {
   public render() {
     return (
-      <WithConfig>
-        {({ config, loading, error }) => (
-          <WithLoader
-            loading={loading}
-            error={error}
-            loaderChildren={<Loader />}
-            errorChildren={<UnrecoverableError />}
-            minWait={1000}
-          >
-            {() => (
-              <AppContext.Provider
-                value={{ config: config!, logout: this.logout }}
+      <NamespacesConsumer ns={['app']}>
+        {t => (
+          <WithConfig>
+            {({ config, loading, error }) => (
+              <WithLoader
+                loading={loading}
+                error={error}
+                loaderChildren={<Loader />}
+                errorChildren={<UnrecoverableError />}
+                minWait={1000}
               >
-                <ApiContext.Provider
-                  value={{
-                    apiUri: `${config!.apiBase}${config!.apiEndpoint}`,
-                    headers: { 'SYNDESIS-XSRF-TOKEN': 'awesome' },
-                  }}
-                >
-                  <ApiContext.Consumer>
-                    {({ apiUri, headers }) => (
-                      <WithServerEvents apiUri={apiUri} headers={headers}>
-                        {functions => (
-                          <ServerEventsContext.Provider value={functions}>
-                            <Layout navbar={this.renderNavbar()}>
-                              <React.Fragment>
-                                <Switch>{this.renderRoutes()}</Switch>
-                              </React.Fragment>
-                            </Layout>
-                          </ServerEventsContext.Provider>
+                {() => (
+                  <AppContext.Provider
+                    value={{ config: config!, logout: this.logout }}
+                  >
+                    <ApiContext.Provider
+                      value={{
+                        apiUri: `${config!.apiBase}${config!.apiEndpoint}`,
+                        headers: { 'SYNDESIS-XSRF-TOKEN': 'awesome' },
+                      }}
+                    >
+                      <ApiContext.Consumer>
+                        {({ apiUri, headers }) => (
+                          <WithServerEvents apiUri={apiUri} headers={headers}>
+                            {functions => (
+                              <ServerEventsContext.Provider value={functions}>
+                                <AppLayout
+                                  appTitle={'Syndesis'}
+                                  appNav={this.renderAppNav(t)}
+                                  verticalNav={this.renderVerticalNav()}
+                                  pictograph={pictogram}
+                                  typogram={typogram}
+                                  logoHref={'/'}
+                                >
+                                  <React.Fragment>
+                                    <Switch>{this.renderRoutes()}</Switch>
+                                  </React.Fragment>
+                                </AppLayout>
+                              </ServerEventsContext.Provider>
+                            )}
+                          </WithServerEvents>
                         )}
-                      </WithServerEvents>
-                    )}
-                  </ApiContext.Consumer>
-                </ApiContext.Provider>
-              </AppContext.Provider>
+                      </ApiContext.Consumer>
+                    </ApiContext.Provider>
+                  </AppContext.Provider>
+                )}
+              </WithLoader>
             )}
-          </WithLoader>
+          </WithConfig>
         )}
-      </WithConfig>
+      </NamespacesConsumer>
     );
   }
 
-  public renderNavbar() {
+  public renderAppNav(t: TranslationFunction) {
+    return (
+      <Masthead.Dropdown
+        id="app-user-dropdown"
+        title={[
+          <span className="dropdown-title" key="dropdown-title">
+            <Icon type={'fa'} name={'user'} /> developer
+          </span>,
+        ]}
+      >
+        <PfNavLink to={'/logout'} label={t('Logout')} />
+      </Masthead.Dropdown>
+    );
+  }
+
+  public renderVerticalNav() {
     return this.props.routes.map(({ exact, icon, label, to }, index) => (
       <PfVerticalNavItem
         exact={exact}

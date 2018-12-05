@@ -1,4 +1,5 @@
 export * from './AggregatedMetricCard';
+export * from './AppLayout';
 export * from './ConnectionCard';
 export * from './ConnectionsGrid';
 export * from './ConnectionsGridCell';
