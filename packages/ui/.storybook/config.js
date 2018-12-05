@@ -47,7 +47,7 @@ addDecorator(
      * show addon panel as a vertical panel on the right
      * @type {Boolean}
      */
-    addonPanelInRight: true,
+    addonPanelInRight: false,
     /**
      * sorts stories
      * @type {Boolean}
