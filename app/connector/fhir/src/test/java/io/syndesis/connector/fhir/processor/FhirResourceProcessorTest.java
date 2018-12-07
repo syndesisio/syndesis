@@ -13,29 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.fhir;
+package io.syndesis.connector.fhir.processor;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
 import io.atlasmap.xml.inspect.SchemaInspector;
+import io.syndesis.connector.fhir.FhirMetaDataExtension;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
 
 @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
-public class FhirMetadataRetrievalTest {
+public class FhirResourceProcessorTest {
 
     @Test
     public void buildSpecificationShouldIncludeFhirBase() throws Exception {
-        FhirMetadataRetrieval fhirMetadataRetrieval = new FhirMetadataRetrieval();
+        FhirResourcesProcessor fhirResourcesProcessor = new FhirResourcesProcessor();
 
-        String accountSpecification = fhirMetadataRetrieval.buildSpecification("Account");
+        Path account = FileSystems.getDefault().getPath("src/main/resources/META-INF/syndesis/schemas/dstu3/account.xsd");
+
+        String accountSpecification = fhirResourcesProcessor.buildSchema(account);
 
         Assertions.assertThat(accountSpecification).doesNotContain("<xs:include schemaLocation=\"fhir-base.xsd\"/>");
         Assertions.assertThat(accountSpecification).containsSequence("<xs:complexType name=\"ResourceContainer\"><xs:choice><xs:element ref=\"Account\"/></xs:choice></xs:complexType>");
 
-        String patientSpecification = fhirMetadataRetrieval.buildSpecification("Patient");
+        Path patient = FileSystems.getDefault().getPath("src/main/resources/META-INF/syndesis/schemas/dstu3/patient.xsd");
+
+        String patientSpecification = fhirResourcesProcessor.buildSchema(patient);
 
         Assertions.assertThat(patientSpecification).doesNotContain("<xs:include schemaLocation=\"fhir-base.xsd\"/>");
         Assertions.assertThat(patientSpecification).containsSequence("<xs:complexType name=\"ResourceContainer\"><xs:choice><xs:element ref=\"Patient\"/></xs:choice></xs:complexType>");
@@ -46,11 +54,12 @@ public class FhirMetadataRetrievalTest {
         Assertions.assertThat(FhirMetaDataExtension.getResources(FhirVersionEnum.DSTU3)).hasSize(117);
 
         SchemaInspector inspector = new SchemaInspector();
-        FhirMetadataRetrieval fhirMetadataRetrieval = new FhirMetadataRetrieval();
+        FhirResourcesProcessor fhirResourcesProcessor = new FhirResourcesProcessor();
 
         List<Exception> errors = new ArrayList<>();
         for (String resource : FhirMetaDataExtension.getResources(FhirVersionEnum.DSTU3)) {
-            String specification = fhirMetadataRetrieval.buildSpecification(resource);
+            Path file = FileSystems.getDefault().getPath("src/main/resources/META-INF/syndesis/schemas/dstu3/" + resource.toLowerCase() + ".xsd");
+            String specification = fhirResourcesProcessor.buildSchema(file);
             try {
                 inspector.inspect(specification);
 
