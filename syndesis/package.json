@@ -5,6 +5,7 @@
   "dependencies": {
     "@craco/craco": "^3.1.0",
     "@syndesis/api": "*",
+    "@syndesis/auto-form": "*",
     "@syndesis/atlasmap-adapter": "*",
     "@syndesis/connector-ftp": "*",
     "@syndesis/models": "*",
