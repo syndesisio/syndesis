@@ -44,7 +44,7 @@ public class FhirMetaDataExtension extends AbstractMetaDataExtension {
                         .withAttribute(MetaData.JAVA_TYPE, String.class).withPayload(resources).build());
     }
 
-    static Set<String> getResources(FhirVersionEnum fhirVersion) {
+    public static Set<String> getResources(FhirVersionEnum fhirVersion) {
         if (FhirVersionEnum.DSTU3.equals(fhirVersion)) {
             return toSet(org.hl7.fhir.dstu3.model.ResourceType.values());
         } else {

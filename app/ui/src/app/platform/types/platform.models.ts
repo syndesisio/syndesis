@@ -155,6 +155,7 @@ export enum DataShapeKinds {
   JSON_SCHEMA = 'json-schema',
   JSON_INSTANCE = 'json-instance',
   XML_SCHEMA = 'xml-schema',
+  XML_SCHEMA_INSPECTED = 'xml-schema-inspected',
   XML_INSTANCE = 'xml-instance',
   NONE = 'none'
 }

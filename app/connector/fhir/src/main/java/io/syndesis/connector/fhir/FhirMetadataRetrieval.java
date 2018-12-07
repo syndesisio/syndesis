@@ -24,9 +24,7 @@ import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -64,8 +62,8 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
 
             String type = properties.get("resourceType").toString();
             try {
-
-                String specification = buildSpecification(type);
+                String resourcePath = type.toLowerCase(Locale.ENGLISH);
+                String specification = Resources.getResourceAsText("META-INF/syndesis/schemas/dstu3/" + resourcePath + ".json", FhirMetadataRetrieval.class.getClassLoader());
 
                 if (actionId.contains("read")) {
                     return new SyndesisMetadata(
@@ -74,7 +72,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                             .type("io.syndesis.connector.fhir.FhirReadMessageModel")
                             .description("FHIR " + actionId)
                             .name(actionId).build(),
-                        new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA)//
+                        new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA_INSPECTED)//
                             .type(type)
                             .description("FHIR " + type)
                             .specification(specification)
@@ -82,7 +80,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                 } else {
                     return new SyndesisMetadata(
                         enrichedProperties,
-                        new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA)//
+                        new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA_INSPECTED)//
                             .type(type)
                             .description("FHIR " + type)
                             .specification(specification)
@@ -103,23 +101,5 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
         }
 
         return SyndesisMetadata.EMPTY;
-    }
-
-    @SuppressWarnings({"PMD.UseStringBufferForStringAppends"})
-    String buildSpecification(String type) throws IOException {
-        String resourcePath = type.toLowerCase(Locale.ENGLISH);
-
-        String specification = Resources.getResourceAsText("schemas/dstu3/" + resourcePath + ".xsd", FhirMetadataRetrieval.class.getClassLoader());
-
-        String fhirBaseTemplate = Resources.getResourceAsText("schemas/dstu3/fhir-base-template.xml", FhirMetadataRetrieval.class.getClassLoader());
-        String resourceContainer = "<xs:complexType name=\"ResourceContainer\"><xs:choice><xs:element ref=\"" + type + "\"/></xs:choice></xs:complexType>";
-
-        fhirBaseTemplate = StringUtils.replaceOnce(fhirBaseTemplate, "<!-- RESOURCE CONTAINER PLACEHOLDER -->", resourceContainer);
-
-        String fhirCommonTemplate = Resources.getResourceAsText("schemas/dstu3/fhir-common-template.xml", FhirMetadataRetrieval.class.getClassLoader());
-        fhirBaseTemplate += fhirCommonTemplate;
-
-        specification = StringUtils.replaceOnce(specification, "<xs:include schemaLocation=\"fhir-base.xsd\"/>", fhirBaseTemplate);
-        return specification;
     }
 }
