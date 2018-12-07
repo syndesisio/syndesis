@@ -3,6 +3,7 @@ import {
   ServerEventsContext,
   WithServerEvents,
 } from '@syndesis/api';
+import { IntegrationMonitoring } from '@syndesis/models';
 import {
   AppLayout,
   Loader,
@@ -18,7 +19,7 @@ import { NamespacesConsumer } from 'react-i18next';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import './App.css';
 import { AppContext } from './AppContext';
-import { WithConfig } from './WithConfig';
+import { IConfigFile, WithConfig } from './WithConfig';
 
 import pictogram from './glasses_logo_square.png';
 import typogram from './syndesis-logo-svg-white.svg';
@@ -53,7 +54,11 @@ export class App extends React.Component<IAppBaseProps> {
               >
                 {() => (
                   <AppContext.Provider
-                    value={{ config: config!, logout: this.logout }}
+                    value={{
+                      config: config!,
+                      getPodLogUrl: this.getPodLogUrl,
+                      logout: this.logout,
+                    }}
                   >
                     <ApiContext.Provider
                       value={{
@@ -130,5 +135,31 @@ export class App extends React.Component<IAppBaseProps> {
 
   public logout = () => {
     // do nothing
+  };
+
+  public getPodLogUrl = (
+    config: IConfigFile,
+    monitoring: IntegrationMonitoring | undefined
+  ): string | undefined => {
+    if (
+      !config ||
+      !monitoring ||
+      !monitoring.linkType ||
+      !monitoring.namespace ||
+      !monitoring.podName
+    ) {
+      return undefined;
+    }
+    const baseUrl = `${config.consoleUrl}/project/${
+      monitoring.namespace
+    }/browse/pods/${monitoring.podName}?tab=`;
+    switch (monitoring.linkType) {
+      case 'LOGS':
+        return baseUrl + 'logs';
+      case 'EVENTS':
+        return baseUrl + 'events';
+      default:
+        return undefined;
+    }
   };
 }

@@ -1,6 +1,10 @@
 {
   "ConfigurationRequired": "Configuration Required",
   "filterByConnectionPlaceholder": "Filter by Connection",
-  "progressStarting": "Di Partenza...",
-  "progressStopping": "Sosta..."
+  "progressStarting": "Starting...",
+  "progressStopping": "Stopping...",
+  "ASSEMBLING": "Assembling",
+  "BUILDING": "Building",
+  "DEPLOYING": "Deploying",
+  "STARTING": "Starting"
 }

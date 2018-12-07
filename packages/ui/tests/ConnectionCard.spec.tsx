@@ -1,8 +1,8 @@
-import { render } from 'react-testing-library';
 import * as React from 'react';
+import { render } from 'react-testing-library';
 import { ConnectionCard } from '../src';
 
-export default describe('ConnectionCard', function() {
+export default describe('ConnectionCard', () => {
   const testComponent = (
     <ConnectionCard
       name={'Sample connection'}
@@ -13,7 +13,7 @@ export default describe('ConnectionCard', function() {
     />
   );
 
-  it('Should have the Sample connection title', function() {
+  it('Should have the Sample connection title', () => {
     const { getByTestId } = render(testComponent);
     expect(getByTestId('connection-card-title')).toHaveTextContent(
       'Sample connection'

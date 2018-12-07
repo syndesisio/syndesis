@@ -1,10 +1,18 @@
 import { Label } from 'patternfly-react';
 import * as React from 'react';
+import {
+  ERROR,
+  IntegrationState,
+  PENDING,
+  PUBLISHED,
+  UNPUBLISHED,
+} from './sharedModels';
 
 export interface IIntegrationStatusProps {
-  currentState?: string;
+  currentState?: IntegrationState;
   i18nPublished: string;
   i18nUnpublished: string;
+  i18nError: string;
 }
 
 export class IntegrationStatus extends React.Component<
@@ -12,17 +20,22 @@ export class IntegrationStatus extends React.Component<
 > {
   public render() {
     const labelType =
-      this.props.currentState === 'Published' ||
-      this.props.currentState === 'Pending'
+      this.props.currentState === ERROR
+        ? 'danger'
+        : this.props.currentState === PUBLISHED ||
+          this.props.currentState === PENDING
         ? 'primary'
         : 'default';
-    let label = 'Pending';
+    let label = PENDING; // it's a parachute
     switch (this.props.currentState) {
-      case 'Published':
+      case PUBLISHED:
         label = this.props.i18nPublished;
         break;
-      case 'Unpublished':
+      case UNPUBLISHED:
         label = this.props.i18nUnpublished;
+        break;
+      case ERROR:
+        label = this.props.i18nError;
         break;
     }
     return <Label type={labelType}>{label}</Label>;

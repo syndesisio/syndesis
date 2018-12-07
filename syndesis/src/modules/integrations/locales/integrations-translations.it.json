@@ -1,6 +1,10 @@
 {
   "ConfigurationRequired": "Configurazione Richiesta",
   "filterByConnectionPlaceholder": "Filtra per Nome",
-  "progressStarting": "Starting...",
-  "progressStopping": "Stopping..."
+  "progressStarting": "Di Partenza...",
+  "progressStopping": "Sosta...",
+  "ASSEMBLING": "Assemblaggio",
+  "BUILDING": "Costruzione",
+  "DEPLOYING": "La Diffusione",
+  "STARTING": "Di Partenza"
 }
