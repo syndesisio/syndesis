@@ -167,22 +167,7 @@ do_operator() {
         return
     fi
 
-    if [ ! $(hasflag -l --local) ] && $(is_minishift_docker_daemon); then
-        echo "Building on Minishift"
-        local minishift_build_dir="/opt/syndesis"
-
-        if [ $(hasflag --clean-cache) ]; then
-            echo "Cleaning cache on Minishift"
-            minishift ssh "sudo su -c 'rm -rf $minishift_build_dir'"
-        fi
-
-        ensure_rcp_on_minishift
-        rsync_source_to_minishift "$operator_dir" "$minishift_build_dir"
-        build_operator_from_dir "$minishift_build_dir" 1000
-        rsync_binary_from_minishift "$minishift_build_dir/syndesis-operator" "$operator_dir"
-    else
-        build_operator_from_dir "$operator_dir"
-    fi
+    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$(hasflag -f --flash)"
 
     if [ "$(hasflag -i --image --docker)" ]; then
         create_operator_image "$operator_dir" "$(hasflag --docker)"
@@ -213,12 +198,6 @@ do_upgrade_pod() {
     docker build --build-arg version=latest -t syndesis/syndesis-upgrade:latest ${build_dir}
 }
 
-build_operator_from_dir() {
-    local operator_dir=${1}
-    local as_user=${2:-}
-    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$as_user" "$(hasflag -f --flash)"
-}
-
 is_minishift_docker_daemon() {
     if [ -n "${DOCKER_CERT_PATH:-}" ] && [ "${DOCKER_CERT_PATH//minishift/}" != "$DOCKER_CERT_PATH" ]; then
         echo "true"
@@ -234,20 +213,6 @@ ensure_rcp_on_minishift() {
     fi
 }
 
-rsync_source_to_minishift() {
-    local operator_source_dir=${1}
-    local minishift_build_dir=${2}
-
-    echo "Rsync local sources to Minishift VM to $minishift_build_dir"
-    # Ensure that target directory exist
-    mkdir_on_minishift $minishift_build_dir $minishift_build_dir/dep-cache $minishift_build_dir/vendor
-
-    rsync -az \
-          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes -o PasswordAuthentication=no -i ~/.minishift/machines/minishift/id_rsa"\
-          --progress \
-          ${operator_source_dir}/ \
-          docker@$(minishift ip):${minishift_build_dir}
-}
 
 mkdir_on_minishift() {
     local dirs="$@"
