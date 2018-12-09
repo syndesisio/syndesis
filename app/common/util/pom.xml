@@ -21,7 +21,7 @@
   <parent>
     <groupId>io.syndesis.common</groupId>
     <artifactId>common-parent</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.6.1-20181209</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
