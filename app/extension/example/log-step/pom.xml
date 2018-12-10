@@ -163,7 +163,7 @@
         <executions>
           <execution>
             <id>generate-metadata</id>
-            <phase>compile</phase>
+            <phase>process-classes</phase>
             <goals>
               <goal>generate-metadata</goal>
             </goals>

@@ -83,7 +83,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
  * @author pantinor
  */
 @Mojo(name = "generate-metadata",
-        defaultPhase = LifecyclePhase.COMPILE,
+        defaultPhase = LifecyclePhase.PROCESS_CLASSES,
         requiresProject = true,
         threadSafe = true,
         requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,

@@ -50,7 +50,7 @@ import org.apache.maven.shared.utils.StringUtils;
 
 @Mojo(
     name = "generate-connector-inspections",
-    defaultPhase = LifecyclePhase.COMPILE,
+    defaultPhase = LifecyclePhase.PROCESS_CLASSES,
     requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,
     requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GenerateConnectorInspectionsMojo extends AbstractMojo {
