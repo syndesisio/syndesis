@@ -162,19 +162,14 @@
         <version>${syndesis.version}</version>
         <executions>
           <execution>
+            <id>generate-metadata</id>
             <phase>compile</phase>
             <goals>
               <goal>generate-metadata</goal>
             </goals>
           </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>io.syndesis.extension</groupId>
-        <artifactId>extension-maven-plugin</artifactId>
-        <version>${syndesis.version}</version>
-        <executions>
           <execution>
+            <id>repackage-extension</id>
             <phase>package</phase>
             <goals>
               <goal>repackage-extension</goal>
@@ -256,7 +251,7 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
               <skip>false</skip>
-              <additionalparam>-Xdoclint:none</additionalparam>
+              <doclint>none</doclint>
             </configuration>
             <executions>
               <execution>
