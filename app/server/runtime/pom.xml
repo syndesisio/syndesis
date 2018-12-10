@@ -115,7 +115,7 @@
         <executions>
           <execution>
             <id>generate-mapper-inspections</id>
-            <phase>genrate-resources</phase>
+            <phase>generate-resources</phase>
             <goals>
               <goal>generate-mapper-inspections</goal>
             </goals>
