@@ -21,7 +21,7 @@
   <parent>
     <groupId>io.syndesis.server</groupId>
     <artifactId>server-parent</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -722,7 +722,7 @@
       <artifactId>resteasy-spring-boot-starter</artifactId>
       <scope>runtime</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>

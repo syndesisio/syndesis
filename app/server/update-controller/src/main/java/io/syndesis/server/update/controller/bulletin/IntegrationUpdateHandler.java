@@ -74,23 +74,24 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
      * message with the difference code if the connections differ in their metadata.
      *
      * @param connection the connection to compare
+     * @param dbConnection the connection from the data manager
      * @param messages the messages collection to add the message to
      * @param supplier the supplier for generating the message
      * @param missingCode the code if the connection is missing
      * @param differenceCode the code if the connection has different metadata
      */
+    @SuppressWarnings("PMD.AvoidReassigningParameters")
     private void compareConnection(
             Connection connection,
+            Connection dbConnection,
             List<LeveledMessage> messages,
             Supplier<LeveledMessage.Builder> supplier,
             LeveledMessage.Code missingCode,
             LeveledMessage.Code differenceCode) {
 
-        Connection newConnection = getDataManager().fetch(Connection.class, connection.getId().get());
-
         // There's no connection with the given id so this means
         // that the connection has been deleted or is is not present
-        if (newConnection == null) {
+        if (dbConnection == null) {
             messages.add(
                 supplier.get()
                     .level(LeveledMessage.Level.WARN)
@@ -103,9 +104,9 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
             // still equivalent to the connection in the database. If not then
             // flag a warning.
             //
-            newConnection = includeConnector(newConnection);
+            dbConnection = includeConnector(dbConnection);
             Equivalencer equiv = new Equivalencer();
-            if (! equiv.equivalent(null, connection, newConnection)) {
+            if (! equiv.equivalent(null, connection, dbConnection)) {
                 String message = equiv.message();
                 messages.add(
                      supplier.get()
@@ -301,6 +302,20 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                         }
 
                         final Connection connection = step.getConnection().get();
+                        Connection dbConnection = getDataManager().fetch(Connection.class, connection.getId().get());
+
+                        if (Kind.Integration.equals(event.getKind().map(Kind::from).orElse(null))) {
+                            /*
+                             * An integration event will create, delete or update it. This has an impact on associated connections
+                             * in that their augmented properties, ie. those appended by the
+                             * {@link ConnectionHandler#augmentedWithUsage}, eg. uses, need to be re-synced by clients.
+                             * In order to do that, a change event must be broadcast to all clients and a call to update() provides
+                             * such an event.
+                             *
+                             * see #4008
+                             */
+                            dataManager.update(dbConnection);
+                        }
 
                         if (connection.getId().isPresent()) {
                             //
@@ -310,6 +325,7 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                             //
                             compareConnection(
                                 connection,
+                                dbConnection,
                                 messages,
                                 supplier,
                                 LeveledMessage.Code.SYNDESIS009,
@@ -430,9 +446,11 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                         // result using the given message codes
                         //
                         final Connection connection = deployedStep.getConnection().get();
+                        Connection dbConnection = getDataManager().fetch(Connection.class, connection.getId().get());
 
                         compareConnection(
                             connection,
+                            dbConnection,
                             messages,
                             supplier,
                             LeveledMessage.Code.SYNDESIS009,

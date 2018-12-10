@@ -102,7 +102,7 @@ deploy_syndesis_operator() {
     local project="${1}"
     local operator_installed=$(oc get dc -o name | grep syndesis-operator)
     if [ -n "$operator_installed" ]; then
-        local result=$(delete_openshift_resource "install/operator/deploy/syndesis-operator.yml")
+        local result=$(delete_openshift_resource "install/operator/deploy/syndesis-operator.yml" "NAMESPACE=$project")
         check_error $result
         wait_for_deployments 0 syndesis-operator >/dev/null 2>&1
     fi
@@ -269,7 +269,7 @@ create_openshift_resource() {
 }
 
 delete_openshift_resource() {
-    create_or_delete_openshift_resource "delete --ignore-not-found" "${1:-}"
+    create_or_delete_openshift_resource "delete --ignore-not-found" "${1:-}" "${2:-}"
 }
 
 create_or_delete_openshift_resource() {

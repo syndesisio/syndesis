@@ -16,24 +16,25 @@
 
 package io.syndesis.connector.sheets;
 
-import com.google.api.services.sheets.v4.model.ValueRange;
-import io.syndesis.connector.sheets.model.GoogleValueRange;
-import org.apache.camel.Exchange;
-import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
-import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
-import org.apache.camel.impl.DefaultExchange;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.api.services.sheets.v4.model.ValueRange;
+import io.syndesis.connector.sheets.model.GoogleValueRange;
+import org.apache.camel.Exchange;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
+import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
+import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
+import org.apache.camel.impl.DefaultExchange;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
 public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
@@ -78,10 +79,14 @@ public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCus
         Map<String, Object> options = new HashMap<>();
         options.put("spreadsheetId", getSpreadsheetId());
         options.put("range", range);
+        options.put("splitResults", false);
 
         customizer.customize(getComponent(), options);
 
         Exchange inbound = new DefaultExchange(createCamelContext());
+
+        inbound.getIn().setHeader(GoogleSheetsStreamConstants.RANGE_INDEX, 1);
+        inbound.getIn().setHeader(GoogleSheetsStreamConstants.VALUE_INDEX, 1);
 
         ValueRange valueRange = new ValueRange();
         valueRange.setRange(sheetName + "!" + range);

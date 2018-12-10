@@ -7,8 +7,12 @@ import {
   ViewChild,
   OnInit,
   AfterViewInit,
+  OnDestroy,
   HostListener
 } from '@angular/core';
+import {
+  Subscription
+} from 'rxjs';
 import {
   I18NService,
   DataShape,
@@ -20,19 +24,23 @@ import {
 import { CurrentFlowService } from '@syndesis/ui/integration/edit-page';
 import {
   FileLikeObject,
-  FileUploader,
-  Mustache
+  FileUploader
 } from '@syndesis/ui/vendor';
-import { MustacheMode } from './mustache-mode';
+import {
+  TemplateSymbol,
+  MustacheModeLint,
+  VelocityLint,
+  FreemarkerModeLint
+} from './codemirror';
 
 @Component({
   selector: 'syndesis-templater',
   templateUrl: './templater.component.html',
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./templater.component.scss'],
-  providers: [MustacheMode]
+  providers: [MustacheModeLint, VelocityLint, FreemarkerModeLint]
 })
-export class TemplaterComponent implements OnInit, AfterViewInit {
+export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() configuredProperties: any;
   @Input() valid: boolean;
@@ -46,12 +54,12 @@ export class TemplaterComponent implements OnInit, AfterViewInit {
    * The template content string
    */
   templateContent: string;
+  templateLanguage = 'mustache';
 
   invalidFileMsg: string;
   uploader: FileUploader;
   editorFocused: boolean;
   validationErrors: any[] = [];
-  validationErrorsExpanded = false;
   dragEnter: boolean;
 
   /*
@@ -76,8 +84,15 @@ export class TemplaterComponent implements OnInit, AfterViewInit {
 
   private outShapeSpec: any;
 
+  private validationSubscription: Subscription;
+
+  private parseFunction: (text: string) => TemplateSymbol[];
+
   constructor(private i18NService: I18NService, public currentFlowService: CurrentFlowService,
-              public integrationSupportService: IntegrationSupportService, private mustacheMode: MustacheMode) {}
+              public integrationSupportService: IntegrationSupportService,
+              private mustacheModeLint: MustacheModeLint,
+              private velocityLint: VelocityLint,
+              private freemarkerModeLint: FreemarkerModeLint) {}
 
   @HostListener('document:dragenter', ['$event'])
   onDocumentDragEnter(event: Event) {
@@ -91,11 +106,7 @@ export class TemplaterComponent implements OnInit, AfterViewInit {
     //
     // Initialise the out data shape specification
     //
-    const outSpecSymbol = {
-      id: 'message',
-      type: 'string'
-    };
-    this.outShapeSpec = this.createSpecification([outSpecSymbol]);
+    this.outShapeSpec = this.createSpecification([new TemplateSymbol('message', 'string')]);
 
     //
     // Initialise the values
@@ -104,10 +115,12 @@ export class TemplaterComponent implements OnInit, AfterViewInit {
       if (this.configuredProperties.template) {
         this.templateContent = this.configuredProperties.template;
       }
+      if (this.configuredProperties.language) {
+        this.templateLanguage = this.configuredProperties.language;
+      }
     }
 
     this.initUploader();
-    this.initCodeMirror();
   }
 
   ngAfterViewInit() {
@@ -132,6 +145,13 @@ export class TemplaterComponent implements OnInit, AfterViewInit {
         this.onEditorDrop(event);
       });
     }
+
+    // Set the editor language and validator
+    this.changeEditorLanguage();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeValidator();
   }
 
   onEditorFocus() {
@@ -143,8 +163,12 @@ export class TemplaterComponent implements OnInit, AfterViewInit {
     this.editorFocused = false;
   }
 
+  onLanguageChange() {
+    this.changeEditorLanguage();
+  }
+
   onChange() {
-    let symbols: any = [];
+    let symbols: TemplateSymbol[] = [];
 
     if (this.templateContent) {
       try {
@@ -219,14 +243,11 @@ export class TemplaterComponent implements OnInit, AfterViewInit {
     });
 
     const formattedProperties: any = {
-      template: this.templateContent
+      template: this.templateContent,
+      language: this.templateLanguage
     };
 
     this.configuredPropertiesChange.emit(formattedProperties);
-  }
-
-  expandCollapseValidDetail() {
-    this.validationErrorsExpanded = !this.validationErrorsExpanded;
   }
 
   private initUploader() {
@@ -284,65 +305,88 @@ export class TemplaterComponent implements OnInit, AfterViewInit {
     this.dragEnter = false;
   }
 
-  private initCodeMirror() {
-    /**
-     * Defines mode for mustache,
-     * which does not yet have its own mode
-     * defined in CodeMirror
-     *
-     * TODO
-     * This should only have to be done once so should be
-     * moved to a service. Probably when this is revisited
-     * with adding both the framewaker and velocity support.
-     */
-    this.mustacheMode.define();
-
-    //
-    // Subscription to the validation event emitted when
-    // the editor has completed its validation. Since the
-    // editor's onChange event occurs before the validation
-    // it is possible to get the wrong state of validation
-    // errors. By letting the validation take control of when
-    // onChange is called then the correct errors are provided
-    // and the on change is kept up to date.
-    //
-    this.mustacheMode.validationChanged$.subscribe(
-      errors => {
-        this.validationErrors = errors.slice(0);
-        this.onChange();
-      });
+  private unsubscribeValidator() {
+    if (this.validationSubscription) {
+      this.validationSubscription.unsubscribe();
+    }
   }
 
-  private extractTemplateSymbols(): any[] {
-    const symbols: string[] = [];
+  private validationCallback(errors: any[]) {
+    this.validationErrors = errors.slice(0);
+    this.onChange();
+  }
+
+  /**
+   * Updates the mode and linting language of the editor
+   */
+  private changeEditorLanguage() {
+    if (! this.templateEditor) {
+      return;
+    }
+
+    // Clear any validation errors
+    this.validationErrors = [];
+
+    // Unsubscribe the current validator
+    this.unsubscribeValidator();
+
+    // Get the instance of the codemirror editor
+    const instance = this.templateEditor.instance;
+
+    // Set the mode of the editor in accordance with the selected lanaguage
+    instance.setOption('mode', this.templateLanguage);
+
+    //
+    // Based on the choice of language subscribe to the
+    // relevant validator and parser
+    //
+    switch (this.templateLanguage) {
+      case 'mustache': {
+        this.validationSubscription = this.mustacheModeLint.validationChanged$.subscribe(
+          errors => this.validationCallback(errors)
+        );
+
+        this.parseFunction = this.mustacheModeLint.parse;
+        break;
+      }
+      case 'velocity': {
+        this.validationSubscription = this.velocityLint.validationChanged$.subscribe(
+          errors => this.validationCallback(errors)
+        );
+
+        this.parseFunction = this.velocityLint.parse;
+        break;
+      }
+      case 'freemarker': {
+        this.validationSubscription = this.freemarkerModeLint.validationChanged$.subscribe(
+          errors => this.validationCallback(errors)
+        );
+
+        this.parseFunction = this.freemarkerModeLint.parse;
+        break;
+      }
+      default: {
+        // Cannot really be anything but these 3 choices
+        // so nothing to do.
+      }
+    }
+
+    // Perform a new linting of the text based on the updated language
+    instance.performLint();
+  }
+
+  private extractTemplateSymbols(): TemplateSymbol[] {
+    let symbols: TemplateSymbol[] = [];
 
     if (!this.templateContent) {
       return symbols;
     }
 
-    const tokens: any[] = Mustache.parse(this.templateContent);
-    Mustache.clearCache();
-    for (const token of tokens) {
-      if (token[0] === 'text' || token[0] === '!') {
-        continue;
-      }
-
-      const symbol: any = {};
-      symbol.id = token[1];
-
-      if (token[0] === 'name') {
-        symbol.type = 'string';
-      } else {
-        continue; // not currently supported
-      }
-
-      symbols.push(symbol);
-    }
-
+    symbols = this.parseFunction(this.templateContent);
     return symbols;
   }
 
-  private createSpecification(symbols: any[]): string {
+  private createSpecification(symbols: TemplateSymbol[]): string {
     const spec: any = {
       type: 'object',
       $schema: 'http://json-schema.org/schema#',
@@ -355,9 +399,9 @@ export class TemplaterComponent implements OnInit, AfterViewInit {
 
     const properties: any = {};
     for (const symbol of symbols) {
-      properties[symbol.id] = {
-        description: 'Identifier for the symbol ' + symbol.id,
-        type: symbol.type
+      properties[symbol.getId()] = {
+        description: 'Identifier for the symbol ' + symbol.getId(),
+        type: symbol.getType()
       };
     }
     spec.properties = properties;

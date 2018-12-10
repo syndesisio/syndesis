@@ -22,11 +22,6 @@ public class GoogleSheet {
     private int sheetId;
     private String title;
 
-    /**
-     * Obtains the index.
-     *
-     * @return
-     */
     public int getIndex() {
         return index;
     }
@@ -68,6 +63,6 @@ public class GoogleSheet {
 
     @Override
     public String toString() {
-        return String.format("%s [sheet=%s, index=%s, title=%s]", GoogleSpreadsheet.class.getSimpleName(), sheetId, index, title);
+        return String.format("%s [sheet=%s, index=%s, title=%s]", GoogleSheet.class.getSimpleName(), sheetId, index, title);
     }
 }

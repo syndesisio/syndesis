@@ -34,6 +34,10 @@ FTP or SFTP server.
 |Obtain messages sent to a particular Gmail account and send messages
 from a particular Gmail account. 
 
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-google-calendar_connectors[Google Calendar]
+|Obtain events from a Google Calendar that you specify or add/update
+events in a Google Calendar that you specify.  
+
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-http_connectors[HTTP/HTTPS]
 |Connect to an HTTP or HTTPS endpoint and execute the
 `GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, OR `PATCH` method.
@@ -51,11 +55,12 @@ to an MQTT broker.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis_connectors[REST APIs]
 |Create a custom REST API client connector by uploading an OpenAPI
-specification. You can then create a connection to that REST API. 
-Create a REST API provider integration by uploading an OpenAPI specification
+schema. You can then create a connection to that REST API. 
+
+Create a REST API provider integration by uploading an OpenAPI schema 
 that defines operations that trigger integration execution. See
 link:{LinkFuseOnlineIntegrationGuide}#trigger-integrations-with-api-calls_ug[triggering integration execution with API calls] 
-in the {NameOfFuseOnlineIntegrationGuide}.
+in {NameOfFuseOnlineIntegrationGuide}.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-sf_connectors[Salesforce]
 |Create, update, fetch, or delete a Salesforce record. 

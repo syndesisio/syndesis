@@ -72,6 +72,89 @@
     },
     {
       "actionType": "connector",
+      "description": "Update spreadsheet properties on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsUpdateSpreadsheetCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "Spreadsheet",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
+        },
+        "outputDataShape": {
+          "name": "Spreadsheet",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify spreadsheet properties. ",
+            "name": "Update spreadsheet properties through Google Sheets",
+            "properties": {
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "title": {
+                "deprecated": false,
+                "displayName": "Title",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet title.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "timeZone": {
+                "deprecated": false,
+                "displayName": "Time Zone",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet time zone.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "locale": {
+                "deprecated": false,
+                "displayName": "Locale",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet locale.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-update-spreadsheet-connector",
+      "name": "Update spreadsheet properties",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
       "description": "Update values in a spreadsheet on your Google Sheets account that this connection is authorized to access.",
       "descriptor": {
         "componentScheme": "google-sheets",
@@ -308,7 +391,7 @@
                 "kind": "parameter",
                 "label": "consumer,scheduler",
                 "labelHint": "Time interval between polls for value changes.",
-                "order": "3",
+                "order": "4",
                 "required": false,
                 "secret": false,
                 "tags": [],
@@ -324,6 +407,44 @@
                 "label": "producer",
                 "labelHint": "Value range in a spreadsheet to obtain.",
                 "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "splitResults": {
+                "deprecated": false,
+                "defaultValue": false,
+                "displayName": "Split results",
+                "group": "producer",
+                "javaType": "boolean",
+                "enum": [
+                  {
+                    "label": "No",
+                    "value": "false"
+                  },
+                  {
+                    "label": "Yes",
+                    "value": "true"
+                  }
+                ],
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "When enabled value range is split into multiple results where each result represents a single row or column.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "maxResults": {
+                "defaultValue": "25",
+                "deprecated": false,
+                "displayName": "Max results",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Maximum number of values to return.",
+                "order": "5",
                 "required": false,
                 "secret": false,
                 "type": "string"
@@ -417,6 +538,74 @@
       "id": "io.syndesis:sheets-get-spreadsheet-connector",
       "name": "Get spreadsheets",
       "pattern": "From"
+    },
+    {
+      "actionType": "connector",
+      "description": "Add charts on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsAddChartCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "Chart",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GoogleChart"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify chart properties. ",
+            "name": "Add charts through Google Sheets",
+            "properties": {
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "title": {
+                "deprecated": false,
+                "displayName": "Chart Title",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The chart title.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "subtitle": {
+                "deprecated": false,
+                "displayName": "Subtitle",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The chart subtitle.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-add-chart-connector",
+      "name": "Add charts",
+      "pattern": "To"
     }
   ],
   "configuredProperties": {

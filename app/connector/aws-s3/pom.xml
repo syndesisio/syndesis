@@ -19,7 +19,7 @@
   <parent>
     <groupId>io.syndesis.connector</groupId>
     <artifactId>connector-parent</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -178,6 +178,7 @@
         <executions>
           <execution>
             <id>inspections</id>
+            <phase>generate-resources</phase>
             <goals>
               <goal>generate-connector-inspections</goal>
             </goals>

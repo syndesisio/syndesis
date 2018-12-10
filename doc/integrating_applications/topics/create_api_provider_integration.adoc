@@ -58,7 +58,8 @@ that Syndesis opens:
 .. Click *Next*. 
 
 +
-For information about using the Apicurio editor, see xref-to-be-added.
+For information about using the Apicurio editor, see 
+link:https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/designing_apis_with_apicurito/#create-api-definition[Design and develop an API definition with Apicurito].
 In this Technology Preview release, you cannot edit the operation 
 description that will appear in the operations list in {prodname}. 
 

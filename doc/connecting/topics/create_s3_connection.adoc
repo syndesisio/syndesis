@@ -7,7 +7,7 @@
 You must create an Amazon S3 connection before you can add an
 Amazon S3 connection to an integration.
 
-.Prerequisites
+.Prerequisite
 See link:{LinkFuseOnlineConnectorGuide}#prerequisites-for-creating-s3-connection_s3[Prerequisites for creating Amazon S3 connections].
 
 .Procedure

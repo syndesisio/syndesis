@@ -21,11 +21,6 @@ public class GoogleValueRange {
     private String range;
     private String values;
 
-    /**
-     * Gets the spreadsheetId.
-     *
-     * @return
-     */
     public String getSpreadsheetId() {
         return spreadsheetId;
     }
@@ -39,11 +34,6 @@ public class GoogleValueRange {
         this.spreadsheetId = spreadsheetId;
     }
 
-    /**
-     * Gets the range.
-     *
-     * @return
-     */
     public String getRange() {
         return range;
     }
@@ -57,11 +47,6 @@ public class GoogleValueRange {
         this.range = range;
     }
 
-    /**
-     * Gets the values.
-     *
-     * @return
-     */
     public String getValues() {
         return values;
     }

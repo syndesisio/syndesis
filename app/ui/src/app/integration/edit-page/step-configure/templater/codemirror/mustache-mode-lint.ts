@@ -2,34 +2,41 @@ import {
   Injectable
 } from '@angular/core';
 import {
-  Subject,
-  Observable
-} from 'rxjs';
-import {
   I18NService
 } from '@syndesis/ui/platform';
 import {
-  CodeMirror
+  CodeMirror,
+  Mustache
 } from '@syndesis/ui/vendor';
+import { AbstractLanguageLint } from './abstract-language-lint';
+import { TemplateSymbol } from './template-symbol';
 
 @Injectable()
-export class MustacheMode {
+export class MustacheModeLint extends AbstractLanguageLint {
 
-  public validationChanged$: Observable<any[]>;
-
-  private _errors: any[] = [];
-
-  private validationChangeSource = new Subject<any[]>();
-
-  constructor(private i18NService: I18NService) {
-    this.validationChanged$ = this.validationChangeSource.asObservable();
+  constructor(protected i18NService: I18NService) {
+    super('mustache', i18NService);
   }
 
-  public name(): string {
-    return 'mustache';
+  public parse(content: string): any[] {
+    const symbols: TemplateSymbol[] = [];
+
+    const tokens: any[] = Mustache.parse(content);
+    Mustache.clearCache();
+
+    for (const token of tokens) {
+      if (token[0] === 'text' || token[0] === '!') {
+        continue;
+      }
+
+      if (token[0] === 'name') {
+        symbols.push(new TemplateSymbol(token[1], 'string'));
+      }
+    }
+    return symbols;
   }
 
-  public define(): void {
+  protected define(): void {
     CodeMirror.defineMode(this.name(), function(config, parserConfig) {
       return {
         token: function(stream, state) {
@@ -53,12 +60,10 @@ export class MustacheMode {
       };
     });
 
-    CodeMirror.registerHelper('lint', 'mustache', (text, options) => this.validator(text, options));
+    super.define();
   }
 
-  private validator(text: string, options: any): any[] {
-    this._errors = [];
-
+  protected validate(text: string, errors: any[]): void {
     const symRegex = /^[A-Za-z_]+$/g;
     const format = '{{xyz}}';
 
@@ -71,17 +76,6 @@ export class MustacheMode {
     let haveSymbol = false;
     let theSymbol = '';
     let reset = false;
-
-    if (text.length === 0) {
-      const msg = this.i18NService.localize('integrations.steps.templater-no-content');
-      this._errors.push({
-        message: msg,
-        severity: 'warning',
-        from: CodeMirror.Pos(line, startCol),
-        to: CodeMirror.Pos(line, endCol)
-      });
-      return this._errors;
-    }
 
     for (let i = 0; i < text.length; i++) {
 
@@ -104,7 +98,7 @@ export class MustacheMode {
         if (closeSymbol > 0) {
           // Found an open symbol before all close symbols
           const msg = this.i18NService.localize('integrations.steps.templater-illegal-open-symbol', [line, endCol]);
-          this._errors.push({
+          errors.push({
             message: msg,
             severity: 'error',
             from: CodeMirror.Pos(line, startCol),
@@ -117,7 +111,7 @@ export class MustacheMode {
         if (openSymbol > 2) {
           // Too many open symbols encountered
           const msg = this.i18NService.localize('integrations.steps.templater-too-many-open-symbols', [line, endCol]);
-          this._errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
+          errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
           reset = true;
           continue;
         }
@@ -128,7 +122,7 @@ export class MustacheMode {
         if (openSymbol < 2) {
           // Found a close symbol before all the open symbols
           const msg = this.i18NService.localize('integrations.steps.templater-illegal-close-symbol', [line, endCol]);
-          this._errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
+          errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
           reset = true;
           continue;
         }
@@ -136,7 +130,7 @@ export class MustacheMode {
         if (closeSymbol > 2) {
           // Too many close symbols encountered
           const msg = this.i18NService.localize('integrations.steps.templater-too-many-close-symbols', [line, endCol]);
-          this._errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
+          errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
           reset = true;
           continue;
         }
@@ -155,7 +149,7 @@ export class MustacheMode {
         if (openSymbol === 1) {
           // Should have encountered another open symbol but not
           const msg = this.i18NService.localize('integrations.steps.templater-expected-open-symbol', [line, endCol]);
-          this._errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
+          errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
           reset = true;
           continue;
         }
@@ -163,7 +157,7 @@ export class MustacheMode {
         if (closeSymbol === 1) {
           // Should have encountered another close symbol but not
           const msg = this.i18NService.localize('integrations.steps.templater-expected-close-symbol', [line, endCol]);
-          this._errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
+          errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
           reset = true;
           continue;
         }
@@ -186,22 +180,19 @@ export class MustacheMode {
             'integrations.steps.templater-wrong-symbol-format',
             ['{{' + theSymbol + '}}', format, line, endCol]
           );
-          this._errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
+          errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
         }
       }
     }
 
     if (! haveSymbol) {
       const msg = this.i18NService.localize('integrations.steps.templater-no-symbols');
-      this._errors.push({
+      errors.push({
         message: msg,
         severity: 'warning',
         from: CodeMirror.Pos(0, 0),
         to: CodeMirror.Pos(0, 0)
       });
     }
-
-    this.validationChangeSource.next(this._errors);
-    return this._errors;
   }
 }

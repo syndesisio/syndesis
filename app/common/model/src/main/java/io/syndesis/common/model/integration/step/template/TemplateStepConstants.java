@@ -13,23 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.templater;
+package io.syndesis.common.model.integration.step.template;
 
-import java.util.regex.Pattern;
 import io.syndesis.common.util.StringConstants;
 
 @SuppressWarnings("PMD.ConstantsInInterface")
-public interface TemplateMustacheConstants extends StringConstants {
+public interface TemplateStepConstants extends StringConstants {
 
     String BODY_PREFIX = "body" + DOT;
 
-    String DOUBLE_OPEN_BRACE_PATTERN = "\\{\\{";
-
-    String DOUBLE_CLOSE_BRACE_PATTERN = "\\}\\}";
-
-    Pattern SYMBOL_PATTERN = Pattern.compile("(" + DOUBLE_OPEN_BRACE_PATTERN + "(?:\\/|#|\\^|>)?)(.*?)(" + DOUBLE_CLOSE_BRACE_PATTERN + ")");
-
-    Pattern SYMBOL_OPEN_SECTION_PATTERN = Pattern.compile(DOUBLE_OPEN_BRACE_PATTERN + "(#|\\^)(.*?)" + DOUBLE_CLOSE_BRACE_PATTERN);
-
-    Pattern SYMBOL_CLOSE_SECTION_PATTERN = Pattern.compile(DOUBLE_OPEN_BRACE_PATTERN + "\\/(.*?)" + DOUBLE_CLOSE_BRACE_PATTERN);
 }

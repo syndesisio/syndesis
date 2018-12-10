@@ -15,13 +15,13 @@ an OpenAPI (Swagger) specification for this API.
 
 .Procedure
 
-. Identify the URL for your {prodname} installation's copy of the
+. Identify the URL for your {prodname} environment's copy of the
 OpenAPI specification:
 .. In the {prodname} navigation panel, click *Home*.
 .. Copy the URL into a text editor.
 .. At the beginning of the URL, insert `*todo-*`.
 .. At the end of the URL, replace `dashboard` with `*swagger.json*`.
-.. Use the `http` scheme instead of `https`
+.. Use the `http` scheme instead of `https`.
 
 +
 The result is something like this:

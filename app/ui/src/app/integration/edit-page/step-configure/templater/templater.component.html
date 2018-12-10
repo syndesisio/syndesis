@@ -1,5 +1,27 @@
 <form (change)="onChange()" class="templater-form">
   <p>
+    {{ 'integrations.steps.templater-specify-type' | synI18n }}
+  </p>
+
+  <div class="template-language-choices">
+    <div class="radio-inline">
+      <input type="radio" id="freemarker-choice" name="template-lang-choice"
+             value="freemarker" [(ngModel)]="templateLanguage" (change)="onLanguageChange()">
+      <label for="freemarker-choice">Freemarker</label>
+    </div>
+    <div class="radio-inline">
+      <input type="radio" id="mustache-choice" name="template-lang-choice"
+             value="mustache" [(ngModel)]="templateLanguage" (change)="onLanguageChange()">
+      <label for="mustache-choice">Mustache</label>
+    </div>
+    <div class="radio-inline">
+      <input type="radio" id="velocity-choice" name="template-lang-choice"
+             value="velocity" [(ngModel)]="templateLanguage" (change)="onLanguageChange()">
+      <label for="velocity-choice">Velocity</label>
+    </div>
+  </div>
+
+  <p>
     {{ 'integrations.steps.templater-instruct-text1' | synI18n }}
     <a role="button" (click)="fileUpload.click()">
       {{ 'integrations.steps.templater-instruct-text2' | synI18n }}

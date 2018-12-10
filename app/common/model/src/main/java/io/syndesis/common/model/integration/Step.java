@@ -28,6 +28,7 @@ import io.syndesis.common.model.WithMetadata;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Integration.Builder;
 
 @Value.Immutable
 @JsonDeserialize(builder = Step.Builder.class)
@@ -44,6 +45,10 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
     @JsonIgnore
     default <T extends Action> Optional<T> getActionAs(Class<T> type) {
         return getAction().filter(type::isInstance).map(type::cast);
+    }
+
+    default Builder builder() {
+        return new Builder().createFrom(this);
     }
 
     Optional<Connection> getConnection();

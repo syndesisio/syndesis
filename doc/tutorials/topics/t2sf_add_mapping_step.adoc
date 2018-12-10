@@ -38,6 +38,15 @@ The blue lines indicate the current focus.
 +
 In the *Mapping Details* panel, you can see that the data mapper
 automatically changed the action from *Map* to *Separate*. 
+
++
+[NOTE]
+====
+If you accidentally map the wrong fields then delete the incorrect mapping by 
+selecting one of its fields to make it the current
+mapping. Then click the trash can icon in the top right of the data mapper. 
+====
+
 . Map the Twitter `screenName` field to the Salesforce
 `Title` field:
 .. In the *Sources* panel, scroll down to click
@@ -52,6 +61,8 @@ from the Twitter *screenName* field to the Salesforce *Title* field.
 `Description` field:
 .. In the *Sources* search field, enter `*text*` and click the
  *text* field.
+ Be sure to click the toplevel *text* field. Do not click one of 
+ the *text* fields that is contained in the *user* field.
 .. In the *Target* search field, enter `*description*`.
 .. Click the
 Salesforce *Description* field to create the mapping.

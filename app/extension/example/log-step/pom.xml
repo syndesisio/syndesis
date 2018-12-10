@@ -20,7 +20,7 @@
 
   <groupId>io.syndesis.extension</groupId>
   <artifactId>extension-example-log-step</artifactId>
-  <version>1.5-SNAPSHOT</version>
+  <version>1.6-SNAPSHOT</version>
 
   <name>Extension :: Example :: Log Step</name>
   <description>Syndesis :: ${project.name}</description>
@@ -162,8 +162,21 @@
         <version>${syndesis.version}</version>
         <executions>
           <execution>
+            <phase>generate-resources</phase>
             <goals>
               <goal>generate-metadata</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-maven-plugin</artifactId>
+        <version>${syndesis.version}</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
               <goal>repackage-extension</goal>
             </goals>
           </execution>

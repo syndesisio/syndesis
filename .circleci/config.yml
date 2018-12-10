@@ -319,8 +319,6 @@ jobs:
       <<: *common_env
     steps:
       - checkout
-      - restore_cache:
-          key: syndesis-operator-{{ checksum "install/operator/Gopkg.lock" }}
       - run:
           name: Build Operator
           command: |
@@ -328,11 +326,6 @@ jobs:
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
-      - save_cache:
-          key: syndesis-operator-{{ checksum "install/operator/Gopkg.lock" }}
-          paths:
-          - dep-cache
-          - vendor
       - <<: *irc_notify_on_failure
 
   upgrade:

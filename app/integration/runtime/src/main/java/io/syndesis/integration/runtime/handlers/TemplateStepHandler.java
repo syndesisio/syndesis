@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Optional;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.component.mustache.MustacheConstants;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.URISupport;
@@ -36,22 +35,19 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.model.integration.step.template.TemplateStepConstants;
+import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
+import io.syndesis.common.util.StringConstants;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.integration.runtime.templater.MustacheTemplatePreProcessor;
-import io.syndesis.integration.runtime.templater.TemplateMustacheConstants;
 
 /**
  * Handler for processing JSON messages and using their properties to populate a
  * template written in recognised template languages.
  */
-public class TemplateStepHandler implements IntegrationStepHandler, TemplateMustacheConstants {
+public class TemplateStepHandler implements IntegrationStepHandler, StringConstants {
 
     private static final String TEMPLATE_PROPERTY = "template";
-
-    private static final String MUSTACHE_OPEN_DELIMITER = "[[";
-
-    private static final String MUSTACHE_CLOSE_DELIMITER = "]]";
 
     private final JsonToMapProcessor jsonToMapProcessor = new JsonToMapProcessor();
 
@@ -77,10 +73,7 @@ public class TemplateStepHandler implements IntegrationStepHandler, TemplateMust
     }
 
     @SuppressWarnings("PMD.AvoidReassigningParameters")
-    @Override
-    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String flowIndex, String stepIndex) {
-        ObjectHelper.notNull(route, "route");
-
+    private Optional<ProcessorDefinition<?>> handle(TemplateStepLanguage language, Step step, ProcessorDefinition<?> route, String flowIndex, String stepIndex) {
         Map<String, String> properties = step.getConfiguredProperties();
         String template = properties.get(TEMPLATE_PROPERTY);
 
@@ -88,28 +81,10 @@ public class TemplateStepHandler implements IntegrationStepHandler, TemplateMust
             /*
              * Pre-process the template to ensure it conforms to the standard.
              */
-            MustacheTemplatePreProcessor parser = new MustacheTemplatePreProcessor();
-            template = parser.preProcess(template);
+            template = language.preProcess(template);
         } catch (Exception ex) {
             throw new IllegalStateException(ex);
         }
-
-        /*
-         * To avoid creating a temporary file, we use the mustache template header
-         * to override the camel-mustache resource uri. This is more efficient but has
-         * a downside.
-         *
-         * Once returned, the route (ProcessorDefinition) is resolved. This resolution
-         * looks for any properties delimited by {{ and }}, which is the default syntax
-         * for mustache properties. Thus, resolution of the mustache properties is
-         * incorrectly attempted and unsurprisingly fails since these properties are
-         * meant for mustache and not camel.
-         *
-         * Changing the mustache delimiter patterns avoids this problem and allows the
-         * properties to be resolved later by mustache.
-         */
-        template = template.replaceAll(DOUBLE_OPEN_BRACE_PATTERN, MUSTACHE_OPEN_DELIMITER);
-        template = template.replaceAll(DOUBLE_CLOSE_BRACE_PATTERN, MUSTACHE_CLOSE_DELIMITER);
 
         //
         // Convert the exchange's in message from JSON
@@ -118,22 +93,21 @@ public class TemplateStepHandler implements IntegrationStepHandler, TemplateMust
         route = route.process(jsonToMapProcessor);
 
         //
-        // Apply the template to the mustache header property
+        // Apply the template to the header property
         // Then add to the route path
         //
-        route.setHeader(MustacheConstants.MUSTACHE_TEMPLATE).constant(template);
+        route.setHeader(language.camelHeader()).constant(template);
 
         //
         // Encode the delimiters since they are applied as URI query parameters
         //
         try {
             String id = flowIndex + HYPHEN + stepIndex;
-            String uri = "mustache" + COLON + id;
-            Map<String, Object> params = new HashMap<>();
-            params.put("startDelimiter", MUSTACHE_OPEN_DELIMITER);
-            params.put("endDelimiter", MUSTACHE_CLOSE_DELIMITER);
-
-            uri = URISupport.appendParametersToURI(uri, params);
+            String uri = language.generateUri(id);
+            Map<String, Object> params = language.getUriParams();
+            if (params != null) {
+                uri = URISupport.appendParametersToURI(uri, params);
+            }
             route = route.to(uri);
 
             //
@@ -149,13 +123,27 @@ public class TemplateStepHandler implements IntegrationStepHandler, TemplateMust
         }
     }
 
+    @SuppressWarnings("PMD.AvoidReassigningParameters")
+    @Override
+    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String flowIndex, String stepIndex) {
+        ObjectHelper.notNull(route, "route");
+
+        Map<String, String> properties = step.getConfiguredProperties();
+        String languageId = properties.get(TemplateStepLanguage.LANGUAGE_PROPERTY);
+        //
+        // If languageId is null then defaults to mustache
+        //
+        TemplateStepLanguage language = TemplateStepLanguage.stepLanguage(languageId);
+        return this.handle(language, step, route, flowIndex, stepIndex);
+    }
+
     /**
      * Processor that is designed to jump in front of the template routing.
      * The handler accepts messages in JSON but the mustache route requires
      * all properties to be available in a {@link Map}. Thus, this parses the JSON
      * and converts it to the appropriate {@link Map}.
      */
-    public static class JsonToMapProcessor implements Processor, TemplateMustacheConstants {
+    public static class JsonToMapProcessor implements Processor, TemplateStepConstants {
 
         private static final Logger LOGGER = LoggerFactory.getLogger(JsonToMapProcessor.class);
 
