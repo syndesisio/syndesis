@@ -15,12 +15,6 @@
  */
 package io.syndesis.connector.fhir;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Resources;
@@ -30,6 +24,16 @@ import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.util.ObjectHelper;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
 
@@ -60,10 +64,9 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
 
             String type = properties.get("resourceType").toString();
             try {
-//                https://github.com/atlasmap/atlasmap/issues/577
-//                String resourcePath = type.toLowerCase();
-                String resourcePath = "patient";
-                String specification = Resources.getResourceAsText("schemas/dstu3/" + resourcePath + ".xsd", getClass().getClassLoader());
+
+                String specification = buildSpecification(type);
+
                 if (actionId.contains("read")) {
                     return new SyndesisMetadata(
                         enrichedProperties,
@@ -100,5 +103,23 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
         }
 
         return SyndesisMetadata.EMPTY;
+    }
+
+    @SuppressWarnings({"PMD.UseStringBufferForStringAppends"})
+    String buildSpecification(String type) throws IOException {
+        String resourcePath = type.toLowerCase(Locale.ENGLISH);
+
+        String specification = Resources.getResourceAsText("schemas/dstu3/" + resourcePath + ".xsd", FhirMetadataRetrieval.class.getClassLoader());
+
+        String fhirBaseTemplate = Resources.getResourceAsText("schemas/dstu3/fhir-base-template.xml", FhirMetadataRetrieval.class.getClassLoader());
+        String resourceContainer = "<xs:complexType name=\"ResourceContainer\"><xs:choice><xs:element ref=\"" + type + "\"/></xs:choice></xs:complexType>";
+
+        fhirBaseTemplate = StringUtils.replaceOnce(fhirBaseTemplate, "<!-- RESOURCE CONTAINER PLACEHOLDER -->", resourceContainer);
+
+        String fhirCommonTemplate = Resources.getResourceAsText("schemas/dstu3/fhir-common-template.xml", FhirMetadataRetrieval.class.getClassLoader());
+        fhirBaseTemplate += fhirCommonTemplate;
+
+        specification = StringUtils.replaceOnce(specification, "<xs:include schemaLocation=\"fhir-base.xsd\"/>", fhirBaseTemplate);
+        return specification;
     }
 }

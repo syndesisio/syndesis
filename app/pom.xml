@@ -516,7 +516,7 @@
                 <arg>-XepDisableWarningsInGeneratedCode</arg>
                 <arg>-XepExcludedPaths:.*/generated-sources/.*</arg>
                 <arg>-implicit:none</arg>
-              <!-- temporary disable until https://github.com/google/error-prone/issues/780 is resolved -->
+                <!-- temporary disable until https://github.com/google/error-prone/issues/780 is resolved -->
                 <arg>-Xep:ParameterName:OFF</arg>
               </compilerArgs>
             </configuration>
@@ -588,6 +588,7 @@
               <exclude>connector/**/META-INF/syndesis/connector/verifier/*</exclude>
               <exclude>connector/**/springboot/*Configuration.java</exclude><!-- auto generated without headers -->
               <exclude>connector/**/springboot/*Common.java </exclude><!-- auto generated without headers -->
+              <exclude>connector/fhir/src/main/resources/schemas/**</exclude><!-- HL7 license -->
               <exclude>meta/**/run-env.sh</exclude>
               <exclude>server/syndesis-builder-image-generator/image/**</exclude><!-- auto generated without headers -->
               <exclude>**/src/main/resources/banner.txt</exclude>
