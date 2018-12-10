@@ -15,6 +15,7 @@
  */
 package io.syndesis.extension.maven.plugin;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -36,7 +37,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,10 +45,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.atlasmap.core.DefaultAtlasConversionService;
 import io.atlasmap.java.inspect.ClassInspectionService;
 import io.atlasmap.java.v2.JavaClass;
-import io.syndesis.common.util.Json;
-import io.syndesis.common.util.Names;
-import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
-import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.Action;
@@ -59,6 +55,10 @@ import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.Names;
+import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
+import io.syndesis.extension.converter.ExtensionConverter;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -82,7 +82,12 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
  *
  * @author pantinor
  */
-@Mojo(name = "generate-metadata", defaultPhase = LifecyclePhase.PREPARE_PACKAGE, requiresProject = true, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@Mojo(name = "generate-metadata",
+        defaultPhase = LifecyclePhase.COMPILE,
+        requiresProject = true,
+        threadSafe = true,
+        requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,
+        requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 @SuppressWarnings({ "PMD.GodClass", "PMD.TooManyFields", "PMD.TooManyMethods" })
 public class GenerateMetadataMojo extends AbstractMojo {
     public enum InspectionMode {

@@ -162,7 +162,7 @@
         <version>${syndesis.version}</version>
         <executions>
           <execution>
-            <phase>generate-resources</phase>
+            <phase>compile</phase>
             <goals>
               <goal>generate-metadata</goal>
             </goals>
