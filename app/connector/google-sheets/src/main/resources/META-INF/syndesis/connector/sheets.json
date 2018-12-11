@@ -20,7 +20,7 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Specify spreadsheet properties. ",
+            "description": "Specify spreadsheet properties.",
             "name": "Create spreadsheets through Google Sheets",
             "properties": {
               "title": {
@@ -90,7 +90,7 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Specify spreadsheet properties. ",
+            "description": "Specify spreadsheet properties.",
             "name": "Update spreadsheet properties through Google Sheets",
             "properties": {
               "spreadsheetId": {
@@ -171,7 +171,7 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Specify grid data content and target spreadsheet id. ",
+            "description": "Specify grid data content and target spreadsheet id.",
             "name": "Update values through Google Sheets",
             "properties": {
               "spreadsheetId": {
@@ -268,7 +268,7 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Specify grid data content and target spreadsheet id. ",
+            "description": "Specify grid data content and target spreadsheet id.",
             "name": "Append values through Google Sheets",
             "properties": {
               "spreadsheetId": {
@@ -557,7 +557,7 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Specify chart properties. ",
+            "description": "Specify chart properties.",
             "name": "Add charts through Google Sheets",
             "properties": {
               "spreadsheetId": {
@@ -605,6 +605,48 @@
       },
       "id": "io.syndesis:sheets-add-chart-connector",
       "name": "Add charts",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Add pivot tables on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsAddPivotTableCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "PivotTable",
+          "kind": "java",
+          "type": "io.syndesis.connector.sheets.model.GooglePivotTable"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify pivot table properties.",
+            "name": "Add pivot tables through Google Sheets",
+            "properties": {
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-add-pivot-tables-connector",
+      "name": "Add pivot tables",
       "pattern": "To"
     }
   ],

@@ -46,8 +46,10 @@ public class CellCoordinate {
     public static CellCoordinate fromCellId(String cellId) {
         CellCoordinate coordinate = new CellCoordinate();
 
-        coordinate.setRowIndex(getRowIndex(cellId));
-        coordinate.setColumnIndex(getColumnIndex(cellId));
+        if (cellId != null) {
+            coordinate.setRowIndex(getRowIndex(cellId));
+            coordinate.setColumnIndex(getColumnIndex(cellId));
+        }
 
         return coordinate;
     }
