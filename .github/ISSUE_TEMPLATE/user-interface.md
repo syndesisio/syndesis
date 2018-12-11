@@ -23,7 +23,7 @@ Briefly describe the issue you are experiencing (or the feature you want to see 
 -->
 
 ## Expected behavior
-<!-- Describe what the desired behavior would be, enlistin gthe acceptance criteria. -->
+<!-- Describe what the desired behavior would be, enlisting the acceptance criteria. -->
 
 ## Screenshot
 <!--
@@ -32,7 +32,7 @@ For features/bugs tackling with UI functionality, drag and drop a screenshot dep
 
 ## Request and Response Data
 <!--
-Many issues involve both the UI and it's backend, if possible capture relevant request and response data JSON messages and include it here.
+Many issues involve both the UI and its backend, if possible capture relevant request and response data JSON messages and include it here.
 Request and response data can be gathered from your browser's developer tools on the 'Network' tab.
  + As you reproduce the issue, take note of any network requests that are made.
  + Requests that result in an error will be highlighted red.
