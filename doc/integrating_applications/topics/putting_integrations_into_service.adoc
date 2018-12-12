@@ -1,27 +1,29 @@
-[id='putting-integrations-into-service']
-= Putting integrations into and out of service
+// This module is included in these assemblies:
+// managing_integrations.adoc
+
+[id='putting-integrations-into-service_{context}']
+= Put integrations into and out of service
+:context: service
 
 After you create an integration, you can save it as a draft or 
-start running it. The first time that you 
-run an integration, {prodname} assembles the needed resources, 
+publish it to start running it. When you publish
+an integration, {prodname} assembles the needed resources, 
 builds the integration runtime, deploys the OpenShift pod that will
-run the integration, and then starts executing the integration. 
+run the integration, and then starts running the integration. 
 
 At any time, you can click a button to stop running the integration. 
 When you want to start the integration again, {prodname} already
 has what it needs so starting it takes less time
-than when you ran it for the first time. 
+than when you published it to run it for the first time. 
 
-The process of starting an integration for the first time is 
+The process of starting a version of an integration for the first time is 
 referred to as publishing the integration. The following topics 
 provide details:
 
-* <<publishing-integrations>>
-* <<stopping-integrations>>
-* <<starting-integrations>>
-* <<restarting-older-integration-versions>>
-* <<troubleshooting-integration-execution>>
-* <<copying-integrations-to-other-environments>>
+* <<publishing-integrations_{context}>>
+* <<stopping-integrations_{context}>>
+* <<starting-integrations_{context}>>
+* <<restarting-older-integration-versions_{context}>>
 
 include::publishing_integrations.adoc[leveloffset=+1]
 
@@ -31,6 +33,4 @@ include::starting_integrations.adoc[leveloffset=+1]
 
 include::restarting_older_integration_versions.adoc[leveloffset=+1]
 
-include::troubleshooting_integration_execution.adoc[leveloffset=+1]
-
-include::copying_integrations_to_other_environments.adoc[leveloffset=+1]
+:context: manage

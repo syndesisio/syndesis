@@ -1,4 +1,7 @@
-[id='how-to-use-webhook']
+// This module is included in the following assemblies:
+// triggering_integrations_with_http_requests.adoc
+
+[id='how-to-use-webhook_{context}']
 = General procedure for using the {prodname} webhook
 
 To trigger execution of an integration with an HTTP `GET` or `POST`

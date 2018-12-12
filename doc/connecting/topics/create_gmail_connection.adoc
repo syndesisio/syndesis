@@ -1,15 +1,17 @@
-[id='create-gmail-connection']
-= Create a Gmail connection 
+// This module is included in these assemblies:
+// connecting_to_gmail.adoc
 
-A connection to Gmail requires registration of
-{prodname} as an application that can access Gmail.
-If you did not already register {prodname}, see <<register-with-gmail>>.
+[id='create-gmail-connection_{context}']
+= Create a Gmail connection 
 
 When you create a Gmail connection, you authorize the connection to access one
 particular Gmail account. After you create a Gmail connection, you can 
 add it to multiple integrations.
 
-To create a Gmail connection:
+.Prerequisite
+You registered your {prodname} environment as a Gmail client application. 
+
+.Procedure
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
@@ -20,10 +22,11 @@ you use to create one or more connections.
 . In the *Configure Connection* page, click *Connect Gmail*, 
 which takes you to a *Sign in with Gmail* page.
 +
-If *Connect Gmail* does not appear, then your {prodname} installation
+If *Connect Gmail* does not appear, then your {prodname} environment
 is not registered as a Gmail client application. See
-<<register-with-gmail>>. When your installation is not registered with
-Gmail, then when you try to create a Gmail connection, {prodname} displays
+link:{LinkFuseOnlineConnectorGuide}#register-with-gmail_gmail[Register with Gmail].
+When you try to create a Gmail connection and your {prodname} environment 
+is not registered as a Gmail client application, then {prodname} displays
 multiple fields that prompt for authorization information. While you can
 create a Gmail connection by entering values in these fields, 
 you should register with Gmail first, and then create a Gmail connection

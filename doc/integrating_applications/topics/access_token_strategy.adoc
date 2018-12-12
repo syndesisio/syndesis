@@ -1,4 +1,8 @@
-[id='access-token-strategy']
+// This content is not included in any published doc.
+// This vendor extension was planned, but not implemented.
+// It might be implemented in the future. 
+
+id='access-token-strategy']
 = Carrying the access token in a query parameter
 
 In messages between {prodname} and a REST API that uses OAuth2, the
@@ -18,7 +22,7 @@ https://access.redhat.com/support/offerings/techpreview/[Technology Preview feat
 endif::[]
 
 To specify that the access token is in a query parameter, 
-in the `securityDefinitions` section of the Swagger specification, 
+in the `securityDefinitions` section of the Swagger schema, 
 add the `x-token-strategy` vendor extension. In the example
 below, the last line specifies `x-token-strategy`:
 

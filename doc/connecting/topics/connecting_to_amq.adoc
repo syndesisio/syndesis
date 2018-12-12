@@ -1,5 +1,9 @@
-[id='connecting-to-amq']
-= Connecting to AMQ
+// This assembly is included in the following assemblies:
+// connecting/master.adoc
+
+[id='connecting-to-amq_{context}']
+= Connect to AMQ
+:context: amq
 
 In an integration, you can obtain messages from an 
 ApacheMQ (AMQ) broker or publish messages to 
@@ -11,7 +15,8 @@ broker of interest:
 * Apache ActiveMQ broker that does not support AMQP
 * AMQ 6 broker
 
-To communicate with one of the following broker types, use the AMQP connector 
+To communicate with one of the following broker types, 
+link:{LinkFuseOnlineConnectorGuide}#connecting-to-amqp_amqp[use the AMQP connector] 
 to create a connection to the broker of interest:
 
 * Apache ActiveMQ broker that supports AMQP
@@ -19,13 +24,19 @@ to create a connection to the broker of interest:
 * AMQ 7 broker
 * EnMasse, which is an open source messaging platform
 
-See <<connecting-to-amqp>>. 
-
 To use the AMQ connector, see:
 
-* <<create-amq-connection>>
-* <<adding-amq-connections>>
+* <<create-amq-connection_{context}>>
+* <<adding-amq-connection-start_{context}>>
+* <<adding-amq-connection-finish_{context}>>
+* <<adding-amq-connection-middle_{context}>>
 
 include::create_amq_connection.adoc[leveloffset=+1]
 
-include::adding_amq_connections.adoc[leveloffset=+1]
+include::adding_amq_connection_start.adoc[leveloffset=+1]
+
+include::adding_amq_connection_finish.adoc[leveloffset=+1]
+
+include::adding_amq_connection_middle.adoc[leveloffset=+1]
+
+:context: connectors

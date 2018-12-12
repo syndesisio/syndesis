@@ -1,9 +1,18 @@
-[id='updating-extensions']
-= Updating extensions
+// This assembly is included in the following assemblies:
+// adding_extensions.adoc
 
-To update an extension:
+[id='updating-extensions_{context}']
+= Update extensions
 
-. Obtain an updated `.jar` file for the extension from the developer.
+When a developer updates an extension, you can upload the updated `.jar`
+file to implement the updates in your integrations. 
+
+.Prerequisite
+A developer has provided you with an updated `.jar` file for an extension
+that you previously uploaded. 
+
+.Procedure
+
 . In {prodname}, in the left panel, click *Customizations*.
 . Click the *Extensions* tab. 
 . At the right of the entry for the extension that you want to update, 
@@ -17,9 +26,8 @@ It is up to you to
 know exactly what is required to update each integration that uses a 
 custom connector or a 
 custom step from the updated extension.  At the very least, you must
-stop and restart (click *Start*) each 
+republish each 
 integration that uses a customization defined in the updated extension.
-See <<stopping-integrations>>. 
 
 In some cases, you might need to edit the integration to change
 or add configuration details for a customization. You must communicate

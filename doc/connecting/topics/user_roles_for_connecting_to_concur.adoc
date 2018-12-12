@@ -1,4 +1,7 @@
-[id='user-roles-for-connecting-to-concur']
+// This module is included in the following assemblies:
+// connecting_to_concur.adoc
+
+[id='user-roles-for-connecting-to-concur_{context}']
 = User roles for connecting to SAP Concur
 
 SAP Concur has an implementation site for development work and a production

@@ -17,7 +17,8 @@ inadvertently delete the provided log connection.
 
 .Prerequisites
 * You have chosen to add a log connection rather than a log step to an
-integration. For help with this, see <<comparison-log-step-connection_{context}>>.
+integration. For help with this, see 
+link:{LinkFuseOnlineConnectorGuide}#comparison-log-step-connection_connect-to-log[Comparison of log step and log connection].
 * You must be creating or editing an integration. If you are creating an
 integration then the integration must already have its start connection. 
 * {prodname} is prompting you to choose a new integration's finish connection 
@@ -90,4 +91,4 @@ provides for each integration step, which you can view in the
 
 .Additional resource
 
-* {LinkFuseOnlineIntegrationGuide}managing-integrations#viewing-integration-activity-information[View integration activity]
+* link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_monitor[View integration activity]

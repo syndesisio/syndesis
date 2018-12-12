@@ -1,18 +1,26 @@
-[id='add-api-client-connection']
+// This module is included in the following assemblies:
+// connecting_to_rest_apis.adoc
+
+[id='add-api-client-connection_{context}']
 = Add an API client connection to an integration
 
-Before you can add an API connection to an integration, you must
-create a connection to that API. See <<create-rest-api-connection>>.
+In an integration, to connect to a REST API, add a connection to that
+REST API to the integration. 
 
-In this release, in an integration, a connection to an API can be
+In this release, in an integration, a connection to a REST API can be
 the finish connection or a middle connection. It cannot be the
-start connection. The instructions below
-assume that {prodname} is prompting you to select a finish connection
+start connection. 
+ 
+.Prerequisites
+* You created a connection to the REST API.
+* You are creating or editing an integration.
+* The integration already has its start connection. 
+* {prodname} is prompting you to select a finish connection
 or a connection that is not the start connection.
 
-To add an API connection to an integration:
+.Procedure
 
-. On the page that displays available connections, click the API
+. On the page that displays available connections, click the REST API
 connection that you want to add to the integration.
 . Click the action that you want the connection to perform.
 The actions that are available are based on the resource operations
@@ -22,6 +30,7 @@ describes the API you are connecting to.
 {prodname} prompts for.
 . Click *Done*.
 
+.Result
 The connection appears in the integration flow 
 in the location where you added it. 
  

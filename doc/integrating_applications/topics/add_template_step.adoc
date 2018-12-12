@@ -1,3 +1,6 @@
+// This module is included in the following assemblies:
+// creating_integrations.adoc
+
 [id='add-template-step_{context}']
 = Add a template step
 
@@ -113,5 +116,5 @@ source field to the *text* target field.
 
 .Additional resources
 
-* For details about mapping fields, see <<mapping-data>>. 
+* For details about mapping fields, see link:{LinkFuseOnlineIntegrationGuide}#mapping-data_map[Map integration data to fields for the next connection in the integration].
 * https://mustache.github.io/mustache.5.html[Mustache Manual]

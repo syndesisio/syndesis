@@ -1,12 +1,18 @@
-[id='adding-ftp-finish-middle-connection']
+// This module is included in these assemblies:
+// connecting_to_ftp.adoc
+
+[id='adding-ftp-finish-middle-connection_{context}']
 = Upload files to an FTP or SFTP server
 
-To finish an integration by uploading files to an FTP or SFTP server, you 
-add an FTP or SFTP connection as the finish connection. You can also
+To finish an integration by uploading files to an FTP or SFTP server, 
+add an FTP or SFTP connection as the integration's finish connection. You can also
 upload files to an FTP or SFTP server in the middle of an integration. To
-do this, you add an FTP or SFTP connection as a middle connection.  
+do this, add an FTP or SFTP connection as a middle connection.  
 
-To add an FTP or SFTP connection that uploads files:
+.Prerequisite
+You created an FTP or SFTP connection. 
+
+.Procedure
 
 . Start creating the integration.
 . Add and configure the start connection.
@@ -63,5 +69,43 @@ This enables the connection to write to a temporary file on the
 server and then rename that temporary file to have the correct name. 
 This is useful for reducing locks when uploading very large files.
 
-. Click *Next* to specify the action's input type. See 
-{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 
+. Click *Next* to specify the action's input type. 
+
+. In the *Select Type* field, if the data type does not need to be known, 
+accept *Type specification not required* 
+and then, at the bottom, click *Done*. You do not need to follow the rest of these
+instructions. 
++
+Otherwise, select one of the following as the schema type:
++
+* *JSON schema* is a document that describes the structure of JSON data.
+The document's media type is `application/schema+json`. 
+* *JSON instance* is a document that contains JSON data. The document's 
+media type is `application/json`. 
+* *XML schema* is a document that describes the structure of XML data.
+The document's file extension is `.xsd`.
+* *XML instance* is a document that contains XML data. The
+document's file extension is `.xml`. 
+
+. In the *Definition* input box, paste a definition that conforms to the
+schema type you selected. 
+For example, if you select *JSON schema* then you would paste the content of
+a JSON schema file, which has a media type of `application/schema+json`.
+
+. In the *Data Type Name* field, enter a name that you choose for the
+data type. For example, suppose you are specifying a JSON schema for
+vendors. You can specify `*Vendor*` as the data type name. 
++
+You will see this data type name when you are creating 
+or editing an integration that uses the connection
+for which you are specifying this type. {prodname} displays the type name
+in the integration visualization panel and in the data mapper. 
+
+. In the *Data Type Description* field, provide information that helps you
+distinguish this type. This description appears in the data mapper when 
+you hover over the step that processes this type. 
+. Click *Done*. 
+
+.Result
+The connection appears in the integration flow 
+in the location where you added it. 

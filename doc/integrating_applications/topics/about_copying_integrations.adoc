@@ -1,4 +1,7 @@
-[id='about-copying-integrations']
+// This module is included in the following assemblies:
+// copying_integrations_to_other_environments.adoc
+
+[id='about-copying-integrations_{context}']
 = About copying integrations
 
 Each {prodname} installation is an environment from which you
@@ -41,7 +44,7 @@ environment before the import operation.
 secrets. You must review each new connection. If a connection is not
 completely configured for its new environment then you must add the
 missing settings. For example, you might need to obtain secret settings by
-registering this installation of {prodname} as a client of the application that this
+registering this {prodname} environment as a client of the application that this
 connection accesses.
 
 |===

@@ -1,4 +1,7 @@
-[id='example-camel-bean']
+// This module is included in the following assembly:
+// develop_step_extensions.adoc
+
+[id='example-camel-bean_{context}']
 = Example of using a Camel bean
 
 You can implement a custom step by developing an action as a Camel bean processor. 

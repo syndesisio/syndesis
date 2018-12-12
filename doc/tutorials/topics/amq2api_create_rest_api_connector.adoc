@@ -15,16 +15,17 @@ an OpenAPI (Swagger) specification for this API.
 
 .Procedure
 
-. Identify the URL for your {prodname} installation's copy of the
+. Identify the URL for your {prodname} environment's copy of the
 OpenAPI specification:
 .. In the {prodname} navigation panel, click *Home*.
 .. Copy the URL into a text editor.
 .. At the beginning of the URL, insert `*todo-*`.
 .. At the end of the URL, replace `dashboard` with `*swagger.json*`.
+.. Use the `http` scheme instead of `https`.
 
 +
 The result is something like this:
-`\https://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com/swagger.json`
+`\http://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com/swagger.json`
 
 . In the {prodname} navigation panel, click *Customizations*.
 . Click *Create API Connector*.
@@ -35,13 +36,13 @@ click *Next*.
 a warning, you can ignore it.
 . Click *Next* again to accept *HTTP Basic Authorization*.
 . On the *Review/Edit Connector Details* page, {prodname} populates
-the fields with values from the OpenAPI specification. 
-.. If you want to, you can 
-change the values in the *Connector Name* and *Description* fields. 
-.. Confirm that the value in the *Host* field is correct. For example, 
+the fields with values from the OpenAPI specification.
+.. If you want to, you can
+change the values in the *Connector Name* and *Description* fields.
+.. Confirm that the value in the *Host* field is correct. For example,
 it should be something like this:
-`\https://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com`.
-.. Confirm that the value in the *Base URL* field is `/api`. 
+`\http://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com`.
+.. Confirm that the value in the *Base URL* field is `/api`.
 . Click *Create API Connector*.
 +
 {prodname} displays the *API Client Connectors* tab with an entry for

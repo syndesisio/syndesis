@@ -1,6 +1,10 @@
 // Module included in the following assemblies:
-// tutorials t2sf_intro.adoc
-// connecting connecting_to_twitter.adoc
+// Upstream:
+// tutorials/topics/t2sf_intro.adoc
+// connecting/topics/connecting_to_twitter.adoc
+// Downstream:
+// fuse-online-sample-integration-tutorials/topics/t2sf_intro.adoc
+// connecting-fuse-online-to-applications-and-services/topics/connecting_to_twitter.adoc
 
 [id='register-with-twitter_{context}']
 = Register {prodname} as a Twitter client application
@@ -17,8 +21,8 @@ of {prodname} as a Twitter client application. However, while each Twitter
 connection uses the same registration, it can use different user
 credentials. 
 
-.Prerequisites
-* You are logged in to {prodname}. The URL for accessing {prodname} is in the 
+.Prerequisite
+You are logged in to {prodname}. The URL for accessing {prodname} is in the 
 email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
 
 .Procedure

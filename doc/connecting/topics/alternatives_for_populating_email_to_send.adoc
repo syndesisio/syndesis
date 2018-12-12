@@ -1,4 +1,7 @@
-[id='alternatives-for-populating-email-to-send']
+// This module is included in these assemblies:
+// connecting_to_gmail.adoc
+
+[id='alternatives-for-populating-email-to-send_{context}']
 = Alternatives for populating email to send
 
 A Gmail connection that finishes an integration or that is

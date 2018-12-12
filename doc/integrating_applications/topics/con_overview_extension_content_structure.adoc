@@ -1,4 +1,7 @@
-[id='overview-extension-content-structure']
+// This module is included in the following assembly:
+// developing_extensions.adoc
+
+[id='overview-extension-content-structure_{context}']
 = Overview of extension content and structure
 
 An extension is a collection of classes, dependencies, and resources 

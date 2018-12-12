@@ -1,12 +1,12 @@
 [[syndesis-build]]
-## syndesis build
+== syndesis build
 
 The primary goal of `syndesis build` is to build Syndesis.
 
 It is mainly a wrapper around Maven and Go but adds some convenience functionality for common developer workflows.
 
 [[syndesis-build-usage]]
-### Usage
+=== Usage
 [source,indent=0,subs="verbatim,quotes"]
 ----
 Build Syndesis builds
@@ -39,11 +39,15 @@ Options for build:
         --batch-mode               Run mvn in batch mode
         --camel-snapshot <version> Run a build with a specific Camel snapshot. If no argument is given the
                                    environment variable CAMEL_SNAPSHOT_VERSION is used or an error thrown.
+        --maven-mirror <url>       Use the maven mirror for the build, e.g. a maven repo proxy in OpenShift. If no
+                                   argument is given, the MAVEN_MIRROR_URL environment variable is used or
+                                   'http://nexus.myproject:8081/nexus/content/groups/public', if none is set.
+                                   See also https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html
         --man                      Open HTML documentation in the Syndesis Developer Handbook
 ----
 
 [[syndesis-build-modules]]
-### Modules
+=== Modules
 A plain `build` command without any options performs a plain `mvn install` for all Java and UI modules.
 Plus it also builds the infrastructure operator via Go (see <<below,syndesis-build-operator>> for details)
 
@@ -138,7 +142,7 @@ For this to work you must have access to Docker daemon, which you can verify wit
 When the option `--dependencies` (short: `-d`) is given in addition to `--modules`, also all Maven modules which the specified modules depend on are build, too.
 
 [[syndesis-build-tuning]]
-### Tuning
+=== Tuning
 By default, all checks like license or code quality checks are performed.
 Also, all unit and local integration tests are run.
 A full build eats up quite some time, but you should always run at full blast before submitting a pull request.
@@ -169,12 +173,16 @@ The following table shows these options, and also how long a full clean build ov
 | Fastest mode with skipping all checks and tests and with even some other aggressive optimizations
 |
 
+|`--maven-mirror <url>`
+| Use a maven mirror, e.g. a maven repo proxy in OpenShift with cached dependencies. See also [setting up a maven mirror](https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html).
+|
+
 | `--camel-snapshot <version>`
 | Sometimes it's needed to use a Camel snapshot version for building. This snapshot most be available in you local Maven repo (`~/.m2`) Use this option with the Camel version. Alternatively, you can also set the environment variable `CAMEL_SNAPSHOT` to the corresponding version.
 |===
 
 [[syndesis-build-operator]]
-### Infrastructure Operator
+=== Infrastructure Operator
 
 `syndesis build` can also build the infrastructure operator, which is a golang program.
 
@@ -183,7 +191,7 @@ as part of a module collection like `--all-images` or `--infra-images`
 
 There are three modes, how the operator can be created:
 
-* Running you go compiler locally
+* Running your go compiler locally
 * Compiling in a local Docker daemon which allows volume mounts with the localhost
 * Compiling in Minishift Docker daemon, which was made accessible via `eval $(minishift docker-env)`
 
@@ -262,7 +270,7 @@ Some simple benchmark reveals the following timings (in minutes) :
 The fastest mode is obviously the local mode, followed surprisingly by Minishift.
 The local mode is probably slow because of how the macOS daemon mounts ts volumes (which can probably be optimized)
 
-### Examples
+=== Examples
 
 Some common usage examples for `syndesis build` are
 

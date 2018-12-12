@@ -1,7 +1,12 @@
 // Module included in the following assemblies:
-// tutorials t2sf_intro.adoc
-// tutorials sf2db_intro.adoc
-// connecting connecting_to_sf.adoc
+// Upstream:
+// tutorials/topics/t2sf_intro.adoc
+// tutorials/topics/sf2db_intro.adoc
+// connecting/topics/connecting_to_sf.adoc
+// Downstream:
+// connecting-fuse-online-to-applications-and-services/topics/connecting_to_sf.adoc
+// fuse-online-sample-integration-tutorials/topics/t2sf_intro.adoc
+// fuse-online-sample-integration-tutorials/topics/sf2db_intro.adoc
 
 [id='register-with-salesforce_{context}']
 = Register {prodname} as a Salesforce client application
@@ -20,17 +25,19 @@ credentials.
 
 ifeval::["{context}" == "t2sf"]
 If you already registered {prodname} as a Salesforce
-client and created a Salesforce connection, skip to <<create-twitter-sf-integration_{context}>>.
+client and created a Salesforce connection, skip to 
+link:{LinkFuseOnlineTutorials}#create-twitter-sf-integration_t2sf[Create Twitter to Salesforce integration].
 endif::[]
 
 ifeval::["{context}" == "sf2db"]
 If you already registered {prodname} as a Salesforce
-client and created a Salesforce connection, skip to  <<create-sf-db-integration_{context}>>.
+client and created a Salesforce connection, skip to 
+link:{LinkFuseOnlineTutorials}#create-sf-db-integration_sf2db[Create Salesforce to database integration]. 
 endif::[]
 
  
-.Prerequisites
-* You are logged in to {prodname}. The URL for accessing {prodname} is in the 
+.Prerequisite
+You are logged in to {prodname}. The URL for accessing {prodname} is in the 
 email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
 
 .Procedure

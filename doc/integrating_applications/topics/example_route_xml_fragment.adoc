@@ -1,4 +1,7 @@
-[id='example-route-xml-fragment']
+// This module is included in the following assembly:
+// develop_step_extensions.adoc
+
+[id='example-route-xml-fragment_{context}']
 = Example of developing a Camel route with XML fragments
 
 To develop a custom step, you can implement the action as an XML fragment that 
