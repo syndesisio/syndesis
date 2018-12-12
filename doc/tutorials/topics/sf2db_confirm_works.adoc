@@ -36,3 +36,14 @@ OpenAPI (Swagger) file for the To Do app to create an API client connector.
 
 . In the *To Do App* display, you should see a notification that a new 
 lead was created in the database. 
+
+
+. Optionally, view the integration log to troubleshoot an
+unexpected result or to learn more about integration execution: 
+
+.. In {prodname}, in the left panel, click *Integrations*.
+.. Click the entry for your Salesforce to database integration.
+.. In the integration's summary page, click the *Activity* tab.
+.. Optionally, enter date and/or keyword filters to limit the executions
+listed.
+.. Click the integration execution for which you want to view activity information.
