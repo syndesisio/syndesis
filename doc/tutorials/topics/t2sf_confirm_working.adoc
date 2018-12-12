@@ -47,3 +47,14 @@ account.
 The new contact record should have the name that is associated with the 
 Twitter account that you used to tweet. The text of your tweet should be in the
 *Description* field, and your Twitter screen name should be in the *Title* field.
+
+
+. Optionally, view the integration log to troubleshoot an
+unexpected result or to learn more about integration execution: 
+
+.. In {prodname}, in the left panel, click *Integrations*.
+.. Click the entry for your Twitter to Salesforce integration.
+.. In the integration's summary page, click the *Activity* tab.
+.. Optionally, enter date and/or keyword filters to limit the executions
+listed.
+.. Click the integration execution for which you want to view activity information.
