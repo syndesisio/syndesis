@@ -6,6 +6,7 @@ import { App } from './app';
 import i18n from './i18n';
 import './index.css';
 import { ConnectionsModule } from './modules/connections';
+import { CustomizationsModule } from './modules/customizations';
 import { DashboardModule } from './modules/dashboard';
 import { IntegrationsModule } from './modules/integrations';
 import registerServiceWorker from './registerServiceWorker';
@@ -35,17 +36,19 @@ ReactDOM.render(
                 icon: 'pficon pficon-plugged',
                 label: t('Connections'),
                 to: '/connections',
-              } /* {
-              component: TODO,
-              icon: 'fa fa-cube',
-              label: t('Customizations'),
-              to: '/customizations',
-            }, {
-              component: TODO,
-              icon: 'pficon pficon-settings',
-              label: t('Settings'),
-              to: '/settings',
-            } */,
+              },
+              {
+                component: CustomizationsModule,
+                icon: 'fa fa-cube',
+                label: t('Customizations'),
+                to: '/customizations',
+              },
+              // {
+              // component: TODO,
+              // icon: 'pficon pficon-settings',
+              // label: t('Settings'),
+              // to: '/settings',
+              // },
             ]}
           />
         )}
