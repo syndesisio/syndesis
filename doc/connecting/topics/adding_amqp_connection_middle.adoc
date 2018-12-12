@@ -44,6 +44,19 @@ to send messages to.
 .. For the *Destination Type*, accept *Queue* or select *Topic*.
 .. In the *Message Selector* field, if you want to receive only responses 
 that satisfy a particular condition, enter a filter expression. 
++
+A message selector is a string that contains an expression. The syntax of 
+the expression is based on a subset of the SQL92 conditional expression syntax. 
+The message selector in the following example selects any message that has a 
+`NewsType` property whose value is set to `Sports` or `Opinion`:
++
+`NewsType = ’Sports’ OR NewsType = ’Opinion’`
++
+The message consumer receives only those messages whose headers and 
+properties match the message selector expression. A message selector cannot select messages on 
+the basis of the content of the message body.
+
+
 .. In the *Named Reply To* field, enter the name of
 a queue or topic. The destination sends its response
 to this queue or topic. 

@@ -28,6 +28,17 @@ close and reopen without missing messages, enter the durable
 subscription ID. The destination type must be a topic. 
 .. In the *Message Selector* field, if you want to receive only 
 data that satisfies a particular condition, enter a filter expression.
++
+A message selector is a string that contains an expression. The syntax of 
+the expression is based on a subset of the SQL92 conditional expression syntax. 
+The message selector in the following example selects any message that has a 
+`NewsType` property whose value is set to `Sports` or `Opinion`:
++
+`NewsType = ’Sports’ OR NewsType = ’Opinion’`
++
+The message consumer receives only those messages whose headers and 
+properties match the message selector expression. A message selector cannot select messages on 
+the basis of the content of the message body.
 
 .  Click *Next* to specify the action's output type. 
 
