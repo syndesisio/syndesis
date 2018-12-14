@@ -1,12 +1,12 @@
-import * as React from 'react';
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
-import { StoryHelper } from '../../.storybook/StoryHelper';
+import * as React from 'react';
+
 import { CustomizationsApiConnectorListItem } from '../../src/Customizations';
 
-const stories = storiesOf('Components', module);
+const stories = storiesOf('CustomizationsApiConnectorListItem', module);
 const apiConnectorId = 'beer-api-2.0';
 const apiDescription = 'An OpenAPI 2.0 version of the Beer API';
 const apiIcon =
@@ -39,9 +39,9 @@ const usedByZeroTestNotes =
   '- Verify the delete button is disabled';
 
 stories
-  .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
+
   .add(
-    'CustomizationsApiConnectorListItem-with-icon',
+    'with icon',
     withNotes(withIconTestNotes)(() => (
       <CustomizationsApiConnectorListItem
         apiConnectorId={text('apiConnectorId', apiConnectorId)}
@@ -59,7 +59,7 @@ stories
     ))
   )
   .add(
-    'CustomizationsApiConnectorListItem-no-icon',
+    'no icon',
     withNotes(withOutIconTestNotes)(() => (
       <CustomizationsApiConnectorListItem
         apiConnectorId={text('apiConnectorId', apiConnectorId)}
@@ -76,7 +76,7 @@ stories
     ))
   )
   .add(
-    'CustomizationsApiConnectorListItem-used-by-zero',
+    'used by zero',
     withNotes(usedByZeroTestNotes)(() => (
       <CustomizationsApiConnectorListItem
         apiConnectorId={text('apiConnectorId', apiConnectorId)}

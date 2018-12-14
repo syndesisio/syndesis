@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
-import { StoryHelper } from '../../.storybook/StoryHelper';
+import * as React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+
 import {
   CustomizationsApiConnectorListItem,
   CustomizationsApiConnectorListView,
@@ -82,12 +82,12 @@ const noApiConnectorsTestNotes =
   '- Verify no connector list items are displayed\n' +
   '- Verify results message shows 0 results';
 
-const stories = storiesOf('Components', module);
+const stories = storiesOf('CustomizationsApiConnectorListView', module);
 
 stories
-  .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
+
   .add(
-    'CustomizationsApiConnectorListView-no-connectors',
+    'no connectors',
     withNotes(noApiConnectorsTestNotes)(() => (
       <Router>
         <CustomizationsApiConnectorListView
@@ -136,7 +136,7 @@ stories
     ))
   )
   .add(
-    'CustomizationsApiConnectorListView-has-api-connectors',
+    'has api connectors',
     withNotes(hasApiConnectorsTestNotes)(() => (
       <Router>
         <CustomizationsApiConnectorListView
