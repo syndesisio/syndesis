@@ -1,14 +1,14 @@
+import { text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { text } from '@storybook/addon-knobs';
-import { StoryHelper } from '../.storybook/StoryHelper';
+
 import { IntegrationStatusDetail } from '../src';
 
-const stories = storiesOf('Components', module);
+const stories = storiesOf('IntegrationStatusDetail', module);
 
 stories
-  .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
-  .add('IntegrationStatusDetail - Without Detail', () => (
+
+  .add('without detail', () => (
     <IntegrationStatusDetail
       targetState={text('targetState', 'Published')}
       i18nProgressPending={'Pending'}
@@ -17,7 +17,7 @@ stories
       i18nLogUrlText={'View Log'}
     />
   ))
-  .add('IntegrationStatusDetail - With Detail', () => (
+  .add('with detail', () => (
     <IntegrationStatusDetail
       value={text('value', 'Building')}
       targetState={text('targetState', 'Published')}

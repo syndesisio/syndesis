@@ -4,13 +4,30 @@ import { checkA11y } from '@storybook/addon-a11y';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { withOptions } from '@storybook/addon-options';
+import * as React from 'react';
+import { StoryHelper } from './StoryHelper';
 
+import './vendor.css';
+
+/* load all stories in the story folder */
 const req = require.context('../stories', true, /\.stories\.tsx$/);
-
 function loadStories() {
   req.keys().forEach(filename => req(filename));
 }
 
+/* this MUST always be the first decorator */
+addDecorator(
+  withInfo({
+    inline: false,
+    header: false,
+    maxPropsIntoLine: 1,
+  })
+);
+
+/* load the required vendor CSS files and does some minimal styling */
+addDecorator(story => <StoryHelper>{story()}</StoryHelper>);
+
+/* configure how our storybook instance works */
 addDecorator(
   withOptions({
     /**
@@ -88,14 +105,14 @@ addDecorator(
     enableShortcuts: false, // true by default
   })
 );
-addDecorator(
-  withInfo({
-    inline: true,
-    header: false,
-    maxPropsIntoLine: 1,
-  })
-);
+
+/* load the accessibility check addon */
 addDecorator(checkA11y);
+
+/* load the knobs addon */
 addDecorator(withKnobs);
+
+/* load the notes addon */
 addDecorator(withNotes);
+
 configure(loadStories, module);
