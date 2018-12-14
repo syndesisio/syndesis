@@ -1,6 +1,5 @@
 import {
   Button,
-  ListViewIcon,
   ListViewInfoItem,
   ListViewItem,
   OverlayTrigger,
@@ -8,23 +7,26 @@ import {
 } from 'patternfly-react';
 import * as React from 'react';
 
-export interface IApiConnectorListItemProps {
-  apiConnectorDescription?: string;
-  apiConnectorId: string;
-  apiConnectorName: string;
-  apiConnectorIcon?: string;
+export interface IExtensionListItemProps {
+  extensionDescription?: string;
+  extensionIcon?: string;
+  extensionId: string;
   i18nDelete: string;
   i18nDeleteTip?: string;
   i18nDetails: string;
   i18nDetailsTip?: string;
+  i18nExtensionType: string;
+  i18nUpdate: string;
+  i18nUpdateTip?: string;
   i18nUsedByMessage: string;
-  onDelete: (apiConnectorId: string) => void;
+  onDelete: (extensionId: string) => void;
   onDetails: (extensionId: string) => void;
+  onUpdate: (extensionId: string) => void;
   usedBy: number;
 }
 
-export class CustomizationsApiConnectorListItem extends React.Component<
-  IApiConnectorListItemProps
+export class CustomizationsExtensionListItem extends React.Component<
+  IExtensionListItemProps
 > {
   public render() {
     return (
@@ -34,6 +36,11 @@ export class CustomizationsApiConnectorListItem extends React.Component<
             <OverlayTrigger overlay={this.getDetailsTooltip()} placement="top">
               <Button bsStyle="default" onClick={this.handleDetails}>
                 {this.props.i18nDetails}
+              </Button>
+            </OverlayTrigger>
+            <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
+              <Button bsStyle="default" onClick={this.handleUpdate}>
+                {this.props.i18nUpdate}
               </Button>
             </OverlayTrigger>
             <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
@@ -48,17 +55,23 @@ export class CustomizationsApiConnectorListItem extends React.Component<
           </div>
         }
         additionalInfo={
-          <ListViewInfoItem>{this.props.i18nUsedByMessage}</ListViewInfoItem>
+          <ListViewInfoItem>{this.props.i18nExtensionType}</ListViewInfoItem>
         }
         description={
-          this.props.apiConnectorDescription
-            ? this.props.apiConnectorDescription
-            : ''
+          this.props.extensionDescription ? this.props.extensionDescription : ''
         }
-        heading={this.props.apiConnectorName}
+        heading={this.props.extensionId}
         hideCloseIcon={true}
         leftContent={
-          this.props.apiConnectorIcon ? <ListViewIcon name={'gear'} /> : null
+          this.props.extensionIcon ? (
+            <div className="blank-slate-pf-icon">
+              <img
+                src={this.props.extensionIcon}
+                alt={this.props.extensionId}
+                width={46}
+              />
+            </div>
+          ) : null
         }
         stacked={false}
       />
@@ -85,11 +98,25 @@ export class CustomizationsApiConnectorListItem extends React.Component<
     );
   }
 
+  private getUpdateTooltip() {
+    return (
+      <Tooltip id="updateTip">
+        {this.props.i18nUpdateTip
+          ? this.props.i18nUpdateTip
+          : this.props.i18nUpdate}
+      </Tooltip>
+    );
+  }
+
   private handleDelete = () => {
-    this.props.onDelete(this.props.apiConnectorId);
+    this.props.onDelete(this.props.extensionId);
   };
 
   private handleDetails = () => {
-    this.props.onDetails(this.props.apiConnectorId);
+    this.props.onDetails(this.props.extensionId);
+  };
+
+  private handleUpdate = () => {
+    this.props.onUpdate(this.props.extensionId);
   };
 }
