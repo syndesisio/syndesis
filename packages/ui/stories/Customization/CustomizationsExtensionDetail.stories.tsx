@@ -2,22 +2,24 @@ import * as React from 'react';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import { StoryHelper } from '../../.storybook/StoryHelper';
-import { CustomizationsApiConnectorDetail } from '../../src/Customizations';
+import { CustomizationsExtensionDetail } from '../../src';
 
-export const apiConnectorDetailsStory = 'story-tbd';
+export const extensionDetailStory = 'story-tbd';
 
-const stories = storiesOf('CustomizationsApiConnectorDetail', module);
-
+const stories = storiesOf(
+  'Customization/CustomizationsExtensionDetail',
+  module
+);
 const storyNotes = '- Verify something here';
 
 stories
   .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
   .add(
-    apiConnectorDetailsStory,
+    extensionDetailStory,
     withNotes(storyNotes)(() => (
-      <CustomizationsApiConnectorDetail
-        apiConnectorId={'apiConnectorId'}
-        i18nTitle={'API Connector Detail'}
+      <CustomizationsExtensionDetail
+        extensionId={'extensionId'}
+        i18nTitle={'Extension Detail'}
       />
     ))
   );

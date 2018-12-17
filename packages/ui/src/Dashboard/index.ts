@@ -1,3 +1,4 @@
+export * from './AggregatedMetricCard';
 export * from './ConnectionsMetric';
 export * from './Dashboard';
 export * from './IntegrationBoard';

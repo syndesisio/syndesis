@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IActiveFilter, IFilterType } from './ListViewToolbar';
+import { IActiveFilter, IFilterType } from '../Shared';
 
 export interface IListViewToolbarAbstractComponent {
   activeFilters: IActiveFilter[];

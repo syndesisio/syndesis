@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render } from 'react-testing-library';
-import { IntegrationProgress } from '../src';
+import { IntegrationProgress } from '../src/Integration';
 
 export default describe('IntegrationProgress', () => {
   // Component with a log link

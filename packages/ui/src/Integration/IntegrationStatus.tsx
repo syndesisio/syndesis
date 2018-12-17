@@ -6,7 +6,7 @@ import {
   PENDING,
   PUBLISHED,
   UNPUBLISHED,
-} from './sharedModels';
+} from './models';
 
 export interface IIntegrationStatusProps {
   currentState?: IntegrationState;

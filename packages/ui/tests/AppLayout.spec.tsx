@@ -1,7 +1,8 @@
+import * as React from 'react';
 import { MemoryRouter } from 'react-router';
 import { render } from 'react-testing-library';
-import * as React from 'react';
-import { AppLayout, PfVerticalNavItem } from '../src';
+import { AppLayout } from '../src/Layout';
+import { PfVerticalNavItem } from '../src/Shared';
 
 export default describe('ConnectionCard', () => {
   const testComponent = (

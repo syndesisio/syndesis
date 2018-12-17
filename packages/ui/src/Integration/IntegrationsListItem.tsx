@@ -2,7 +2,7 @@ import { DropdownKebab, Icon, ListView, MenuItem } from 'patternfly-react';
 import * as React from 'react';
 import { IntegrationStatus } from './IntegrationStatus';
 import { IntegrationStatusDetail } from './IntegrationStatusDetail';
-import { IntegrationState } from './sharedModels';
+import { IntegrationState } from './models';
 
 export interface IIntegrationsListItemProps {
   integrationId: string;

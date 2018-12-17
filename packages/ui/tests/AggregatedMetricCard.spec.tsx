@@ -1,8 +1,8 @@
-import { render } from 'react-testing-library';
 import * as React from 'react';
-import { AggregatedMetricCard } from '../src';
+import { render } from 'react-testing-library';
+import { AggregatedMetricCard } from '../src/Dashboard';
 
-export default describe('AggregatedMetricCard', function() {
+export default describe('AggregatedMetricCard', () => {
   const testComponent = (
     <AggregatedMetricCard title={'A Title'} ok={10} error={5} />
   );
