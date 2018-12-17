@@ -1,60 +1,66 @@
+import * as React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
 import { linkTo } from '@storybook/addon-links';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
-import * as React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-
+import { StoryHelper } from '../../.storybook/StoryHelper';
 import {
-  CustomizationsApiConnectorListItem,
-  CustomizationsApiConnectorListView,
+  CustomizationsExtensionListItem,
+  CustomizationsExtensionListView,
 } from '../../src/Customizations';
-import { extensionDetailStory } from './CustomizationsExtensionDetail.stories';
+import { extensionImportStory } from './CustomizationsExtensionImport.stories';
 
-const stories = storiesOf('CustomizationsApiConnectorListView', module);
+const description =
+  'Extensions provide custom features for use in integrations. Find out more at Syndesis Help.';
+const importText = 'Import Extension';
+const importTip = 'Import extension from your filesystem';
+const title = 'Extensions';
 
-const connectors = [
-  <CustomizationsApiConnectorListItem
-    apiConnectorId={text('apiConnectorId', 'api-conn-1')}
-    apiConnectorDescription={text(
-      'apiConnectorDescription',
-      'api-conn-1-description'
-    )}
-    apiConnectorName={text('apiConnectorName', 'Api Conn 1')}
-    i18nDelete={text('i18nDescription', 'Delete')}
-    i18nDetails={text('i18nDetails', 'Details')}
-    i18nUsedByMessage={text(
-      'i18nUsedByMessage',
-      'Not used by any integrations'
-    )}
-    onDelete={action('api-conn-1')}
-    onDetails={linkTo('Customizations', extensionDetailStory)}
+const extensions = [
+  <CustomizationsExtensionListItem
+    extensionDescription="id-0 description goes here"
+    extensionId={'id-0'}
+    i18nDelete={'Delete'}
+    i18nDetails={'Details'}
+    i18nExtensionType={'Step Extension'}
+    i18nUpdate={'Update'}
+    i18nUsedByMessage={'Used by 0 integration(s)'}
+    onDelete={action('Delete id-0')}
+    onDetails={action('Details id-1')}
+    onUpdate={action('Update id-0')}
     usedBy={0}
   />,
-  <CustomizationsApiConnectorListItem
-    apiConnectorId={text('apiConnectorId', 'api-conn-2')}
-    apiConnectorDescription={text(
-      'apiConnectorDescription',
-      'api-conn-2-description'
-    )}
-    apiConnectorName={text('apiConnectorName', 'Api Conn 2')}
-    i18nDelete={text('i18nDescription', 'Delete')}
-    i18nDetails={text('i18nDetails', 'Details')}
-    i18nUsedByMessage={text('i18nUsedByMessage', 'Used by 2 integrations')}
-    onDelete={action('api-conn-1')}
-    onDetails={linkTo('Customizations', extensionDetailStory)}
+  <CustomizationsExtensionListItem
+    extensionId={'id-1'}
+    i18nDelete={'Delete'}
+    i18nDetails={'Details'}
+    i18nExtensionType={'Step Extension'}
+    i18nUpdate={'Update'}
+    i18nUsedByMessage={'Used by 1 integration(s)'}
+    onDelete={action('Delete id-1')}
+    onDetails={action('Details id-1')}
+    onUpdate={action('Update id-1')}
+    usedBy={1}
+  />,
+  <CustomizationsExtensionListItem
+    extensionId={'id-2'}
+    i18nDelete={'Delete'}
+    i18nDetails={'Details'}
+    i18nExtensionType={'Step Extension'}
+    i18nUpdate={'Update'}
+    i18nUsedByMessage={'Used by 2 integration(s)'}
+    onDelete={action('Delete id-2')}
+    onDetails={action('Details id-1')}
+    onUpdate={action('Update id-2')}
     usedBy={2}
   />,
 ];
 
-const title = 'API Client Connectors';
-const description =
-  'Syndesis creates an API client connector when you upload a valid OpenAPI 2.0 specification that describes the API you want to connect to.';
-const createConnector = 'Create API Connector';
-const createConnectorTip = 'Upload file or use URL to create API connector';
+const stories = storiesOf('CustomizationsExtensionListView', module);
 
-const hasApiConnectorsTestNotes =
+const hasExtensionsTestNotes =
   '- Verify page title is "' +
   title +
   '"\n' +
@@ -62,26 +68,26 @@ const hasApiConnectorsTestNotes =
   description +
   '"\n' +
   '- Verify toolbar is displayed\n' +
-  '- Verify toolbar contains "' +
-  createConnector +
+  '- Verify toolbar contains an "' +
+  importText +
   '" button\n' +
-  '- Verify toolbar "' +
-  createConnector +
+  '- Verify the "' +
+  importText +
   '" button is enabled\n' +
-  '- Verify toolbar "' +
-  createConnector +
-  '" button tooltip is "' +
-  createConnector +
+  '- Verify the "' +
+  importText +
+  '" button has a tooltip of "' +
+  importTip +
   '"\n' +
   '- Verify empty state component does not show\n' +
   '- Verify results message shows ' +
-  connectors.length +
-  ' results\n' +
+  extensions.length +
+  ' Results\n' +
   '- Verify ' +
-  connectors.length +
-  ' API connectors list items are displayed';
+  extensions.length +
+  ' extension list items are displayed';
 
-const noApiConnectorsTestNotes =
+const noExtensionsTestNotes =
   '- Verify page title is "' +
   title +
   '"\n' +
@@ -89,28 +95,28 @@ const noApiConnectorsTestNotes =
   description +
   '"\n' +
   '- Verify toolbar is displayed\n' +
-  '- Verify toolbar contains "' +
-  createConnector +
+  '- Verify toolbar contains an "' +
+  importText +
   '" button\n' +
-  '- Verify toolbar "' +
-  createConnector +
+  '- Verify the "' +
+  importText +
   '" button is enabled\n' +
-  '- Verify toolbar "' +
-  createConnector +
-  '" button tooltip is "' +
-  createConnectorTip +
+  '- Verify the "' +
+  importText +
+  '" button has a tooltip of "' +
+  importText +
   '"\n' +
-  '- Verify results message shows 0 results\n' +
-  '- Verify empty state component is displayed and has a create connector button\n' +
-  '- Verify no connector list items are displayed';
+  '- Verify empty state component is displayed and has an import extension button\n' +
+  '- Verify no extension list items are displayed\n' +
+  '- Verify results message shows 0 Results';
 
 stories
-
+  .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
   .add(
-    'no connectors',
-    withNotes(noApiConnectorsTestNotes)(() => (
+    'no extensions',
+    withNotes(noExtensionsTestNotes)(() => (
       <Router>
-        <CustomizationsApiConnectorListView
+        <CustomizationsExtensionListView
           activeFilters={[]}
           currentFilterType={{
             filterType: 'text',
@@ -122,7 +128,7 @@ stories
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
-          linkCreateApiConnector={action('/customizations/create')}
+          linkImportExtension={linkTo('Customizations', extensionImportStory)}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -137,14 +143,10 @@ stories
           i18nDescription={text('i18nDescription', description)}
           i18nEmptyStateInfo={text(
             'i18nEmptyStateInfo',
-            'There are no currently available API connectors. Please click on the button below to create one.'
+            'There are no extensions available. Please click on the button below to import one.'
           )}
-          i18nEmptyStateTitle={text('i18nEmptyStateTitle', createConnector)}
-          i18nLinkCreateApiConnector={text(
-            'i18nLinkCreateApiConnector',
-            createConnector
-          )}
-          i18nLinkCreateApiConnectorTip={createConnectorTip}
+          i18nEmptyStateTitle={text('i18nEmptyStateTitle', importText)}
+          i18nLinkImportExtension={text('i18nLinkImportExtension', importText)}
           i18nName={text('i18nName', 'Name')}
           i18nNameFilterPlaceholder={text(
             'i18nNameFilterPlaceholder',
@@ -157,10 +159,10 @@ stories
     ))
   )
   .add(
-    'has api connectors',
-    withNotes(hasApiConnectorsTestNotes)(() => (
+    'has extensions',
+    withNotes(hasExtensionsTestNotes)(() => (
       <Router>
-        <CustomizationsApiConnectorListView
+        <CustomizationsExtensionListView
           activeFilters={[]}
           currentFilterType={{
             filterType: 'text',
@@ -172,7 +174,7 @@ stories
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
-          linkCreateApiConnector={action('/customizations/create')}
+          linkImportExtension={linkTo('Customizations', extensionImportStory)}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -187,13 +189,11 @@ stories
           i18nDescription={text('i18nDescription', description)}
           i18nEmptyStateInfo={text(
             'i18nEmptyStateInfo',
-            'There are no currently available API connectors. Please click on the button below to create one.'
+            'There are no extensions available. Please click on the button below to import one.'
           )}
-          i18nEmptyStateTitle={text('i18nEmptyStateTitle', createConnector)}
-          i18nLinkCreateApiConnector={text(
-            'i18nLinkCreateApiConnector',
-            createConnector
-          )}
+          i18nEmptyStateTitle={text('i18nEmptyStateTitle', importText)}
+          i18nLinkImportExtension={text('i18nLinkImportExtension', importText)}
+          i18nLinkImportExtensionTip={importTip}
           i18nName={text('i18nName', 'Name')}
           i18nNameFilterPlaceholder={text(
             'i18nNameFilterPlaceholder',
@@ -201,10 +201,10 @@ stories
           )}
           i18nResultsCount={text(
             'i18nResultsCount',
-            connectors.length + ' Results'
+            extensions.length + ' Results'
           )}
           i18nTitle={text('i18nTitle', title)}
-          children={connectors}
+          children={extensions}
         />
       </Router>
     ))
