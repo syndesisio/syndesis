@@ -300,6 +300,11 @@
         <artifactId>connector-google-sheets</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-kudu</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

@@ -96,7 +96,7 @@
         <executions>
           <execution>
             <id>inspections</id>
-            <phase>generate-resources</phase>
+            <phase>process-classes</phase>
             <goals>
               <goal>generate-connector-inspections</goal>
             </goals>

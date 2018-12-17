@@ -65,6 +65,7 @@
     <module>servicenow</module>
     <module>webhook</module>
     <module>concur</module>
+    <module>kudu</module>
   </modules>
 
   <build>
