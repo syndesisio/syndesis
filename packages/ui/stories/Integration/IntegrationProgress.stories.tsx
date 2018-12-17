@@ -2,9 +2,9 @@ import { text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
-import { IntegrationProgress } from '../src';
+import { IntegrationProgress } from '../../src';
 
-const stories = storiesOf('IntegrationProgress', module);
+const stories = storiesOf('Integration/IntegrationProgress', module);
 
 stories
 

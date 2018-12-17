@@ -1,7 +1,7 @@
 import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { IntegrationProgress } from './IntegrationProgress';
-import { IntegrationState, PUBLISHED, UNPUBLISHED } from './sharedModels';
+import { IntegrationState, PUBLISHED, UNPUBLISHED } from './models';
 
 import './IntegrationStatusDetail.css';
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render } from 'react-testing-library';
-import { ConnectionCard } from '../src';
+import { ConnectionCard } from '../src/Connection';
 
 export default describe('ConnectionCard', () => {
   const testComponent = (

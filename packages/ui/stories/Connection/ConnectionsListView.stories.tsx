@@ -9,9 +9,9 @@ import {
   ConnectionsGrid,
   ConnectionsGridCell,
   ConnectionsListView,
-} from '../src';
+} from '../../src';
 
-const stories = storiesOf('ConnectionsListView', module);
+const stories = storiesOf('Connection/ConnectionsListView', module);
 
 const connections = (
   <ConnectionsGrid>

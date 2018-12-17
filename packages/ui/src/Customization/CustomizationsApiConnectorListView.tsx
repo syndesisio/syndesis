@@ -6,7 +6,7 @@ import {
 } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { IListViewToolbarProps, ListViewToolbar } from '../ListViewToolbar';
+import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
 
 export interface IApiConnectorListViewProps extends IListViewToolbarProps {
   i18nDescription: string;

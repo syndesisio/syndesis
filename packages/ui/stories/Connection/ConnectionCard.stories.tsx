@@ -2,9 +2,9 @@ import { text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
-import { ConnectionCard } from '../src';
+import { ConnectionCard } from '../../src';
 
-const stories = storiesOf('ConnectionCard', module);
+const stories = storiesOf('Connection/ConnectionCard', module);
 
 stories.add('sample usage', () => (
   <ConnectionCard
