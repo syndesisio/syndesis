@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.syndesis.connector.kudu.model;
+package org.apache.camel.component.kudu.api;
 
 import org.apache.kudu.Schema;
 import org.apache.kudu.client.CreateTableOptions;

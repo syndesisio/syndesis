@@ -16,7 +16,6 @@
 
 package io.syndesis.connector.kudu;
 
-import io.syndesis.connector.kudu.model.KuduModelTable;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;

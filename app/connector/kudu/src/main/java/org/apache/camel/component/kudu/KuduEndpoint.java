@@ -16,7 +16,6 @@
 
 package org.apache.camel.component.kudu;
 
-import org.apache.camel.component.kudu.api.KuduTablesManager;
 import org.apache.camel.component.kudu.internal.*;
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;

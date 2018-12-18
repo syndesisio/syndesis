@@ -16,11 +16,7 @@
 
 package org.apache.camel.component.kudu.api;
 
-import io.syndesis.connector.kudu.model.KuduModelTable;
 import org.apache.kudu.client.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Map;
 
 /**
@@ -29,7 +25,6 @@ import java.util.Map;
  * Provides operations to manage kudu tables and rows
  */
 public class KuduTablesManager {
-    private static final Logger LOG = LoggerFactory.getLogger(KuduTablesManager.class);
     private KuduClient client;
 
     public KuduTablesManager(KuduClient client) {
@@ -46,16 +41,13 @@ public class KuduTablesManager {
         if (table == null) {
             throw new IllegalArgumentException("Parameter 'table' can not be null");
         }
-        LOG.debug("Deleting table {}", table.getName());
 
         // Set up a simple schema.
         try {
             // Create the table.
             KuduTable t = client.createTable( table.getName(), table.getSchema(), table.getCto());
-            LOG.info("Kudu table {} successfully reated!", t.getName());
             return t;
         } catch (KuduException e) {
-            LOG.error("Error creating kudu table {}", table.getName());
             throw new RuntimeException(
                     String.format("Kudu API returned the error \n message: %s\n\n cause: %s", e.getMessage(), e.getCause()));
         }
@@ -71,14 +63,11 @@ public class KuduTablesManager {
         if (tableName == null) {
             throw new IllegalArgumentException("Parameter 'tableName' can not be null");
         }
-        LOG.debug("Deleteing table {}", tableName);
 
         try {
             DeleteTableResponse r = client.deleteTable(tableName);
-            LOG.info("Kudu table {} successfully deleted!", tableName);
             return r;
         } catch (KuduException e) {
-            LOG.error("Error deleting kudu table" + tableName);
             throw new RuntimeException(
                     String.format("Kudu API returned the error \n message: %s\n\n cause: %s", e.getMessage(), e.getCause()));
         }
@@ -95,7 +84,6 @@ public class KuduTablesManager {
      */
     public KuduSession insertRow(String tableName, Map<String, Object> insertRow) {
         try {
-            LOG.debug("Inserting row {} into table {}", insertRow, tableName);
             if (tableName == null) {
                 throw new IllegalArgumentException("Parameter 'tableName' can not be null");
             }
@@ -111,7 +99,6 @@ public class KuduTablesManager {
             PartialRow row = insert.getRow();
 
             for (Map.Entry<String, Object> entry : insertRow.entrySet()) {
-                LOG.debug(entry.getKey() + "/" + entry.getValue());
                 switch (entry.getValue().getClass().getName()) {
                     case "java.lang.String":
                         row.addString(entry.getKey(), (String) entry.getValue());
@@ -136,25 +123,19 @@ public class KuduTablesManager {
             session.close();
 
             if (session.countPendingErrors() != 0) {
-                LOG.error("ERRORS inserting rows");
                 org.apache.kudu.client.RowErrorsAndOverflowStatus roStatus = session.getPendingErrors();
                 org.apache.kudu.client.RowError[] errs = roStatus.getRowErrors();
                 int numErrs = Math.min(errs.length, 5);
-                LOG.error("There were errors inserting rows to Kudu, the few first errors follow:");
                 for (int i = 0; i < numErrs; i++) {
-                    LOG.error(errs[i].getMessage());
                 }
 
                 if (roStatus.isOverflowed()) {
-                    LOG.error("Error buffer overflowed: some errors were discarded");
                 }
                 throw new RuntimeException(
                         String.format("Error inserting row to Kudu table %s", tableName));
             }
-            LOG.info("Row successfully inserted");
             return session;
         } catch (KuduException e) {
-            LOG.error("Error inserting row {} into table {}", insertRow, tableName);
             throw new RuntimeException(
                     String.format("Kudu API returned the error \n message: %s\n\n cause: %s", e.getMessage(), e.getCause()));
         }

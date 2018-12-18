@@ -16,7 +16,7 @@
 
 package org.apache.camel.component.kudu;
 
-import io.syndesis.connector.kudu.model.KuduModelTable;
+import org.apache.camel.component.kudu.api.KuduModelTable;
 import org.apache.camel.component.kudu.internal.KuduApiCollection;
 import org.apache.camel.component.kudu.internal.KuduClientApiMethod;
 import org.apache.camel.RoutesBuilder;
@@ -25,7 +25,6 @@ import org.apache.kudu.client.DeleteTableResponse;
 import org.apache.kudu.client.KuduSession;
 import org.apache.kudu.client.KuduTable;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

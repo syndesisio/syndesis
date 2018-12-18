@@ -16,7 +16,7 @@
 
 package org.apache.camel.component.kudu;
 
-import io.syndesis.connector.kudu.model.KuduModelTable;
+import org.apache.camel.component.kudu.api.KuduModelTable;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.component.kudu.api.KuduTablesManager;
