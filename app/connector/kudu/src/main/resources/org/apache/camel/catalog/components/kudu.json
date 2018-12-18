@@ -1,0 +1,30 @@
+{
+  "component": {
+    "kind": "component",
+    "scheme": "kudu",
+    "syntax": "kudu:apiName/methodName",
+    "title": "Apache Kudu",
+    "description": "Camel component to manage apache kudu resources",
+    "label": "api,cloud,kudu",
+    "deprecated": false,
+    "deprecationNote": "",
+    "async": false,
+    "consumerOnly": false,
+    "producerOnly": false,
+    "lenientProperties": false,
+    "javaType": "org.apache.kudu.client.KuduClient",
+    "firstVersion": "2.23.0",
+    "groupId": "org.apache.camel",
+    "artifactId": "camel-apache-kudu",
+    "verifiers": "parameters,connectivity",
+    "version": "2.23.0-SNAPSHOT"
+  },
+  "componentProperties": {
+    "configuration": { "kind": "property", "displayName": "Configuration", "group": "common", "type": "object", "javaType": "org.apache.camel.component.kudu.KuduConfiguration", "deprecated": false, "secret": false, "description": "To use the shared configuration" }
+  },
+  "properties": {
+    "apiName": { "kind": "path", "displayName": "Api Name", "group": "common", "required": true, "type": "object", "javaType": "org.apache.camel.component.kudu.internal.KuduApiName", "enum": [ "TABLES" ], "deprecated": false, "secret": false, "description": "What kind of operation to perform" },
+    "methodName": { "kind": "path", "displayName": "Method Name", "group": "common", "required": true, "type": "string", "javaType": "java.lang.String", "enum": [ "create" ], "deprecated": false, "secret": false, "description": "What sub operation to use for the selected operation" }
+  }
+}
+
