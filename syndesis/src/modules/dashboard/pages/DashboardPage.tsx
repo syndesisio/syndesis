@@ -4,16 +4,13 @@ import {
   WithMonitoredIntegrations,
 } from '@syndesis/api';
 import {
+  Connection,
   IntegrationOverview,
   IntegrationWithMonitoring,
   IntegrationWithOverview,
 } from '@syndesis/models';
 import {
   AggregatedMetricCard,
-  ConnectionCard,
-  ConnectionsGrid,
-  ConnectionsGridCell,
-  ConnectionSkeleton,
   ConnectionsMetric,
   Dashboard,
   IntegrationBoard,
@@ -26,11 +23,12 @@ import {
   TopIntegrationsCard,
   UptimeMetric,
 } from '@syndesis/ui';
-import { getConnectionIcon, WithLoader } from '@syndesis/utils';
+import { WithLoader } from '@syndesis/utils';
 import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
-import { AppContext } from '../../../app/AppContext';
+import { AppContext } from '../../../app';
+import { Connections } from '../../connections/containers/Connections';
 
 export interface IIntegrationCountsByState {
   Error: number;
@@ -105,6 +103,10 @@ export function getTopIntegrations(
     })
     .reverse()
     .slice(0, 5);
+}
+
+export function getConnectionHref(connection: Connection) {
+  return `/connections/${connection.id}`;
 }
 
 export default () => (
@@ -327,37 +329,14 @@ export default () => (
                             </RecentUpdatesCard>
                           }
                           connections={
-                            <ConnectionsGrid>
-                              <WithLoader
-                                error={false}
-                                loading={!hasConnections}
-                                loaderChildren={
-                                  <>
-                                    {new Array(5).fill(0).map((_, index) => (
-                                      <ConnectionsGridCell key={index}>
-                                        <ConnectionSkeleton />
-                                      </ConnectionsGridCell>
-                                    ))}
-                                  </>
-                                }
-                                errorChildren={<div>TODO</div>}
-                              >
-                                {() =>
-                                  connectionsData.items.map((c, index) => (
-                                    <ConnectionsGridCell key={index}>
-                                      <ConnectionCard
-                                        name={c.name}
-                                        description={c.description || ''}
-                                        icon={getConnectionIcon(
-                                          c,
-                                          process.env.PUBLIC_URL
-                                        )}
-                                      />
-                                    </ConnectionsGridCell>
-                                  ))
-                                }
-                              </WithLoader>
-                            </ConnectionsGrid>
+                            <Connections
+                              error={false}
+                              loading={!hasConnections}
+                              connections={
+                                connectionsData.connectionsForDisplay
+                              }
+                              getConnectionHref={getConnectionHref}
+                            />
                           }
                           i18nConnections={t('shared:Connections')}
                           i18nLinkCreateConnection={t(

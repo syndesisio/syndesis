@@ -1,4 +1,5 @@
 import { WithConnectors } from '@syndesis/api';
+import { Connection } from '@syndesis/models';
 import {
   ConnectionCard,
   ConnectionsGrid,
@@ -8,6 +9,13 @@ import {
 import { getConnectionIcon, WithLoader, WithRouter } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
+export function getConnectionHref(
+  baseUrl: string,
+  connection: Connection
+): string {
+  return `${baseUrl}/${connection.id}`;
+}
 
 export default class ConnectorsPage extends React.Component {
   public render() {
@@ -45,6 +53,7 @@ export default class ConnectorsPage extends React.Component {
                             name={c.name}
                             description={c.description || ''}
                             icon={getConnectionIcon(c, process.env.PUBLIC_URL)}
+                            href={getConnectionHref.bind(null, match.url)}
                           />
                         </Link>
                       </ConnectionsGridCell>

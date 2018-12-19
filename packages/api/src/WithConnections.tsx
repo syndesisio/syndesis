@@ -6,9 +6,48 @@ import { SyndesisRest } from './SyndesisRest';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
 
+export function getConnectionsForDisplay(connections: ConnectionOverview[]) {
+  return connections.filter(
+    c => !c.metadata || !c.metadata['hide-from-connection-pages']
+  );
+}
+
+export function getConnectionsWithFromAction(
+  connections: ConnectionOverview[]
+) {
+  return connections.filter(connection => {
+    if (!connection.connector) {
+      // safety net
+      return true;
+    }
+    return connection.connector.actions.some(action => {
+      return action.pattern === 'From';
+    });
+  });
+}
+
+export function getConnectionsWithToAction(connections: ConnectionOverview[]) {
+  return connections.filter(connection => {
+    if (!connection.connector) {
+      // safety net
+      return true;
+    }
+    if (connection.connectorId === 'api-provider') {
+      // api provider can be used only for From actions
+      return false;
+    }
+    return connection.connector.actions.some(action => {
+      return action.pattern === 'To';
+    });
+  });
+}
+
 export interface IConnectionsResponse {
-  items: ConnectionOverview[];
-  totalCount: number;
+  readonly connectionsForDisplay: ConnectionOverview[];
+  readonly connectionsWithToction: ConnectionOverview[];
+  readonly connectionsWithFromAction: ConnectionOverview[];
+  readonly items: ConnectionOverview[];
+  readonly totalCount: number;
 }
 
 export interface IWithConnectionsProps {
@@ -26,6 +65,9 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
       <SyndesisRest<IConnectionsResponse>
         url={'/connections'}
         defaultValue={{
+          connectionsForDisplay: [],
+          connectionsWithFromAction: [],
+          connectionsWithToction: [],
           items: [],
           totalCount: 0,
         }}
@@ -43,7 +85,23 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
                   unregisterChangeListener={unregisterChangeListener}
                   filter={this.changeFilter}
                 >
-                  {() => this.props.children(response)}
+                  {() =>
+                    this.props.children({
+                      ...response,
+                      data: {
+                        ...response.data,
+                        connectionsForDisplay: getConnectionsForDisplay(
+                          response.data.items
+                        ),
+                        connectionsWithFromAction: getConnectionsWithFromAction(
+                          response.data.items
+                        ),
+                        connectionsWithToction: getConnectionsWithToAction(
+                          response.data.items
+                        ),
+                      },
+                    })
+                  }
                 </WithChangeListener>
               )}
             </ServerEventsContext.Consumer>
