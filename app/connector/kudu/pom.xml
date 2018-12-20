@@ -225,6 +225,21 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>io.syndesis.connector</groupId>
+                <artifactId>connector-support-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>inspections</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>generate-connector-inspections</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>
