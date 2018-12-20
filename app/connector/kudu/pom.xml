@@ -61,6 +61,7 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>apt</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Camel annotations in provided scope to avoid compile errors in IDEs -->
@@ -105,6 +106,12 @@
         </dependency>
 
         <!-- testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-test</artifactId>
@@ -193,7 +200,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.10</version>
                 <executions>
                     <execution>
                         <id>add-generated-sources</id>
@@ -219,6 +225,21 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>io.syndesis.connector</groupId>
+                <artifactId>connector-support-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>inspections</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>generate-connector-inspections</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>

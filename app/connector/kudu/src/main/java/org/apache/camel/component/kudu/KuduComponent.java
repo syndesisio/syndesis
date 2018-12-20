@@ -62,14 +62,14 @@ public class KuduComponent extends AbstractApiComponent<KuduApiName, KuduConfigu
                                       KuduConfiguration endpointConfiguration) {
         endpointConfiguration.setApiName(apiName);
         endpointConfiguration.setMethodName(methodName);
-        KuduEndpoint endpoint = new KuduEndpoint(uri, this, apiName, methodName, endpointConfiguration);
-        return endpoint;
+        return new KuduEndpoint(uri, this, apiName, methodName, endpointConfiguration);
     }
 
     /**
      * To use the shared configuration
      */
     @Override
+    @SuppressWarnings("PMD.UselessOverridingMethod") // needed for component metadata
     public void setConfiguration(KuduConfiguration configuration) {
         super.setConfiguration(configuration);
     }
@@ -78,6 +78,7 @@ public class KuduComponent extends AbstractApiComponent<KuduApiName, KuduConfigu
      * To use the shared configuration
      */
     @Override
+    @SuppressWarnings("PMD.UselessOverridingMethod") // needed for component metadata
     public KuduConfiguration getConfiguration() {
         return super.getConfiguration();
     }
