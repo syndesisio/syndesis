@@ -19,11 +19,15 @@ package org.apache.camel.component.kudu.internal;
 /**
  * Constants for Kudu component.
  */
-public interface KuduConstants {
+public final class KuduConstants {
 
     // suffix for parameters when passed as exchange header properties
-    String PROPERTY_PREFIX = "CamelKudu.";
+    public static final String PROPERTY_PREFIX = "CamelKudu.";
 
     // thread profile name for this component
-    String THREAD_PROFILE_NAME = "CamelKudu";
+    public static final String THREAD_PROFILE_NAME = "CamelKudu";
+
+    private KuduConstants() {
+        // just holds the constant values
+    }
 }

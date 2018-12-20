@@ -16,7 +16,11 @@
 
 package org.apache.camel.component.kudu;
 
-import org.apache.camel.component.kudu.internal.*;
+import org.apache.camel.component.kudu.internal.KuduApiCollection;
+import org.apache.camel.component.kudu.internal.KuduApiName;
+import org.apache.camel.component.kudu.internal.KuduConnectionHelper;
+import org.apache.camel.component.kudu.internal.KuduConstants;
+import org.apache.camel.component.kudu.internal.KuduPropertiesHelper;
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
@@ -41,11 +45,9 @@ import java.util.Map;
 public class KuduEndpoint extends AbstractApiEndpoint<KuduApiName, KuduConfiguration> {
 
     @UriParam(name = "configuration")
-    private KuduConfiguration kuduConfiguration;
+    private final KuduConfiguration kuduConfiguration;
 
     private KuduClient client;
-
-    private boolean clientShared;
 
     private Object apiProxy;
 
@@ -89,7 +91,7 @@ public class KuduEndpoint extends AbstractApiEndpoint<KuduApiName, KuduConfigura
      */
     private void createKuduConnection() {
         final KuduComponent component = getComponent();
-        this.clientShared = kuduConfiguration.equals(getComponent().getConfiguration());
+        final boolean clientShared = kuduConfiguration.equals(getComponent().getConfiguration());
         if (clientShared) {
             // get shared singleton connection from Component
             this.client = component.getClient();
@@ -100,10 +102,9 @@ public class KuduEndpoint extends AbstractApiEndpoint<KuduApiName, KuduConfigura
 
     /**
      * Set the correct apiProxy and method call based on the apiName parameter
-     *
-     * @param args Args
      */
-    private void createApiProxy(Map<String, Object> args) {
+    @SuppressWarnings("PMD.TooFewBranchesForASwitchStatement") // more to be added
+    private void createApiProxy() {
         switch (apiName) {
             case TABLES:
                 apiProxy = getClient();
@@ -123,7 +124,7 @@ public class KuduEndpoint extends AbstractApiEndpoint<KuduApiName, KuduConfigura
     public Object getApiProxy(ApiMethod method, Map<String, Object> args) {
         if (apiProxy == null) {
             // create API proxy lazily
-            createApiProxy(args);
+            createApiProxy();
         }
         return apiProxy;
     }

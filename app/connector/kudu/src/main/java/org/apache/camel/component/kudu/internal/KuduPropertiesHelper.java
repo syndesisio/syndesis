@@ -24,16 +24,13 @@ import org.apache.camel.component.kudu.KuduConfiguration;
  */
 public final class KuduPropertiesHelper extends ApiMethodPropertiesHelper<KuduConfiguration> {
 
-    private static KuduPropertiesHelper helper;
+    private static final KuduPropertiesHelper INSTANCE = new KuduPropertiesHelper();
 
     private KuduPropertiesHelper() {
         super(KuduConfiguration.class, KuduConstants.PROPERTY_PREFIX);
     }
 
-    public static synchronized KuduPropertiesHelper getHelper() {
-        if (helper == null) {
-            helper = new KuduPropertiesHelper();
-        }
-        return helper;
+    public static KuduPropertiesHelper getHelper() {
+        return INSTANCE;
     }
 }

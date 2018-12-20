@@ -19,12 +19,13 @@ package org.apache.camel.component.kudu.internal;
 import org.apache.camel.component.kudu.KuduConfiguration;
 import org.apache.kudu.client.KuduClient;
 
-public class KuduConnectionHelper {
+public final class KuduConnectionHelper {
 
-    public KuduConnectionHelper(){}
+    private KuduConnectionHelper() {
+        // utility class
+    }
 
     public static KuduClient createConnection(final KuduConfiguration configuration) {
-        KuduClient client = new KuduClient.KuduClientBuilder(configuration.getKuduMasters()).build();
-        return client;
+        return new KuduClient.KuduClientBuilder(configuration.getKuduMasters()).build();
     }
 }

@@ -42,7 +42,6 @@ public class KuduCreateTableCustomizer  implements ComponentProxyCustomizer {
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setApiMethod(options);
         component.setBeforeProducer(this::beforeProducer);
-        component.setAfterProducer(this::afterProducer);
     }
 
     private void setApiMethod(Map<String, Object> options) {
@@ -71,10 +70,6 @@ public class KuduCreateTableCustomizer  implements ComponentProxyCustomizer {
         in.setHeader("CamelKudu.name", name);
         in.setHeader("CamelKudu.schema", schema);
         in.setHeader("CamelKudu.builder", cto);
-    }
-
-    private void afterProducer(Exchange exchange) {
-
     }
 
     private Schema toSchema(String columns) {
