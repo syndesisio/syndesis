@@ -11,12 +11,12 @@
         "inputDataShape": {
           "name": "KuduTable",
           "kind": "java",
-          "type": "org.apache.kudu.client.KuduTable"
+          "type": "io.syndesis.connector.kudu.model.KuduTable"
         },
         "outputDataShape": {
           "name": "KuduTable",
           "kind": "java",
-          "type": "org.apache.kudu.client.KuduTable"
+          "type": "io.syndesis.connector.kudu.model.KuduTable"
         },
         "propertyDefinitionSteps": [
           {
