@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
-import IntegrationCreatorStep0Page from './pages/IntegrationCreatorStep0Page';
+import {
+  IntegrationCreatorSelectConnectionActionPage,
+  IntegrationCreatorSelectConnectionPage,
+} from './pages';
 
 export interface IIntegrationCreatorAppProps {
   baseurl: string;
@@ -13,9 +16,13 @@ export default class IntegrationCreatorApp extends React.Component<
     return (
       <Switch>
         <Route
+          path={`${this.props.baseurl}/:connectionId`}
+          component={IntegrationCreatorSelectConnectionActionPage}
+        />
+        <Route
           path={this.props.baseurl}
           exact={true}
-          component={IntegrationCreatorStep0Page}
+          component={IntegrationCreatorSelectConnectionPage}
         />
       </Switch>
     );

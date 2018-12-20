@@ -10,6 +10,7 @@ export * from './WithIntegrations';
 export * from './WithMonitoredIntegrations';
 export * from './WithIntegrationsMetrics';
 export * from './WithConnections';
+export * from './WithConnection';
 export * from './WithConnectors';
 export * from './WithPolling';
 export * from './WithChangeListener';

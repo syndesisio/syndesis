@@ -44,7 +44,7 @@ export function getConnectionsWithToAction(connections: ConnectionOverview[]) {
 
 export interface IConnectionsResponse {
   readonly connectionsForDisplay: ConnectionOverview[];
-  readonly connectionsWithToction: ConnectionOverview[];
+  readonly connectionsWithToAction: ConnectionOverview[];
   readonly connectionsWithFromAction: ConnectionOverview[];
   readonly items: ConnectionOverview[];
   readonly totalCount: number;
@@ -67,7 +67,7 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
         defaultValue={{
           connectionsForDisplay: [],
           connectionsWithFromAction: [],
-          connectionsWithToction: [],
+          connectionsWithToAction: [],
           items: [],
           totalCount: 0,
         }}
@@ -96,7 +96,7 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
                         connectionsWithFromAction: getConnectionsWithFromAction(
                           response.data.items
                         ),
-                        connectionsWithToction: getConnectionsWithToAction(
+                        connectionsWithToAction: getConnectionsWithToAction(
                           response.data.items
                         ),
                       },

@@ -9,7 +9,7 @@ import {
   IntegrationsListView,
   ISortType,
 } from '@syndesis/ui';
-import { WithLoader, WithListViewToolbarHelpers } from '@syndesis/utils';
+import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import { AppContext } from '../../../app';
@@ -107,7 +107,7 @@ const sortByStatus = {
 
 const sortTypes: ISortType[] = [sortByName, sortByStatus];
 
-export default class IntegrationsPage extends React.Component {
+export class IntegrationsPage extends React.Component {
   public render() {
     return (
       <WithMonitoredIntegrations>

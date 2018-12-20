@@ -135,9 +135,9 @@ export default () => (
                       {t => (
                         <Dashboard
                           linkToIntegrations={'/integrations'}
-                          linkToIntegrationCreation={'/integration/create'}
+                          linkToIntegrationCreation={'/integrations/create'}
                           linkToConnections={'/connections'}
-                          linkToConnectionCreation={'/connection/create'}
+                          linkToConnectionCreation={'/connections/create'}
                           integrationsOverview={
                             <AggregatedMetricCard
                               title={t('titleTotalIntegrations', {

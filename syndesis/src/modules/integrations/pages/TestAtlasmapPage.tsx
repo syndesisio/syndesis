@@ -10,7 +10,7 @@ export interface ITestAtlasmapPageState {
   mappings?: string;
 }
 
-export default class TestAtlasmapPage extends React.Component<
+export class TestAtlasmapPage extends React.Component<
   {},
   ITestAtlasmapPageState
 > {
