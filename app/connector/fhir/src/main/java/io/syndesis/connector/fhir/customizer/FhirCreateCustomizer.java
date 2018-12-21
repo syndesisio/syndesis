@@ -13,37 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.fhir;
+package io.syndesis.connector.fhir.customizer;
 
-import ca.uhn.fhir.model.primitive.IdDt;
+import org.apache.camel.component.fhir.internal.FhirCreateApiMethod;
+import org.apache.camel.util.component.ApiMethod;
 
-public class FhirReadMessageModel {
+public class FhirCreateCustomizer extends FhirCreateUpdateBaseCustomizer {
 
-    private IdDt complexId;
-    private String id;
-    private String version;
-
-    public IdDt getComplexId() {
-        return complexId;
-    }
-
-    public void setComplexId(IdDt complexId) {
-        this.complexId = complexId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
+    @Override
+    public Class<? extends ApiMethod> getApiMethodClass() {
+        return FhirCreateApiMethod.class;
     }
 }

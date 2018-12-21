@@ -5,11 +5,11 @@
       "description": "Read a resource from the server",
       "descriptor": {
         "connectorCustomizers": [
-          "io.syndesis.connector.fhir.FhirReadCustomizer"
+          "io.syndesis.connector.fhir.customizer.FhirReadCustomizer"
         ],
         "inputDataShape": {
           "kind": "java",
-          "type": "io.syndesis.connector.fhir.FhirReadMessageModel"
+          "type": "io.syndesis.connector.fhir.FhirResourceId"
         },
         "outputDataShape": {
           "kind": "xml-schema"
@@ -19,17 +19,6 @@
             "description": "Specify the resource id and type to read",
             "name": "Read resource from the server",
             "properties": {
-              "id": {
-                "deprecated": false,
-                "displayName": "Resource id",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource id",
-                "required": false,
-                "secret": false,
-                "type": "String"
-              },
               "resourceType": {
                 "defaultValue": "Patient",
                 "deprecated": false,
@@ -38,6 +27,17 @@
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "labelHint": "The resource type e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
+                "required": false,
+                "secret": false,
+                "type": "String"
+              },
+              "id": {
+                "deprecated": false,
+                "displayName": "Resource id",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource id",
                 "required": false,
                 "secret": false,
                 "type": "String"
@@ -66,11 +66,76 @@
     },
     {
       "actionType": "connector",
-      "description": "Update or create a resource from the server",
+      "description": "Delete a resource from the server",
+      "descriptor": {
+        "connectorCustomizers": [
+          "io.syndesis.connector.fhir.customizer.FhirDeleteCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "type": "io.syndesis.connector.fhir.FhirResourceId"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "type": "ca.uhn.fhir.rest.api.MethodOutcome"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the resource id and type to delete",
+            "name": "Delete resource from the server",
+            "properties": {
+              "resourceType": {
+                "defaultValue": "Patient",
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
+                "required": false,
+                "secret": false,
+                "type": "String"
+              },
+              "id": {
+                "deprecated": false,
+                "displayName": "Resource id",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource id",
+                "required": false,
+                "secret": false,
+                "type": "String"
+              },
+              "version": {
+                "deprecated": false,
+                "displayName": "Resource version",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The version e.g \"123\"",
+                "required": false,
+                "secret": false,
+                "type": "String"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:fhir-delete-connector",
+      "name": "Delete",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Update (all fields) or create a resource (with defined ID) on the server",
       "descriptor": {
         "configuredProperties": {},
         "connectorCustomizers": [
-          "io.syndesis.connector.fhir.FhirUpdateCustomizer"
+          "io.syndesis.connector.fhir.customizer.FhirUpdateCustomizer"
         ],
         "inputDataShape": {
           "kind": "xml-schema"
@@ -82,19 +147,8 @@
         "propertyDefinitionSteps": [
           {
             "description": "Specify the resource to update or create",
-            "name": "Update or create a resource from the server",
+            "name": "Update (all fields) or create a resource (with defined ID) on the server",
             "properties": {
-              "resource": {
-                "deprecated": false,
-                "displayName": "Resource",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource to update",
-                "required": false,
-                "secret": false,
-                "type": "String"
-              },
               "resourceType": {
                 "defaultValue": "Patient",
                 "deprecated": false,
@@ -102,7 +156,7 @@
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
-                "labelHint": "The resource type only \"Patient\" is supported.",
+                "labelHint": "The resource type to update",
                 "required": false,
                 "secret": false,
                 "type": "String"
@@ -113,6 +167,49 @@
       },
       "id": "io.syndesis:fhir-update-connector",
       "name": "Update",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Create a resource on the server (with auto-generated ID)",
+      "descriptor": {
+        "configuredProperties": {},
+        "connectorCustomizers": [
+          "io.syndesis.connector.fhir.customizer.FhirCreateCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "xml-schema"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "type": "ca.uhn.fhir.rest.api.MethodOutcome"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the resource to create",
+            "name": "Create a resource on the server (with auto-generated ID)",
+            "properties": {
+              "resourceType": {
+                "defaultValue": "Patient",
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type to create",
+                "required": false,
+                "secret": false,
+                "type": "String"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:fhir-create-connector",
+      "name": "Create",
       "pattern": "To",
       "tags": [
         "dynamic"
