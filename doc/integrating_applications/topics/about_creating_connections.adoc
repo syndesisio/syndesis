@@ -1,4 +1,7 @@
-[id='about-creating-connections']
+// This module is included in the following assemblies:
+// connecting_to_applications.adoc
+
+[id='about-creating-connections_{context}']
 = About creating connections from {prodname} to applications
 
 To create a connection, you
@@ -16,6 +19,6 @@ different broker.
 
 For examples, see: 
 
-* {LinkFuseOnlineConnectorGuide}#create-amq-connection[Creating AMQ connections]
-* {LinkFuseOnlineConnectorGuide}#creating-http-connections[Creating HTTP and HTTPS connections]
-* {LinkFuseOnlineConnectorGuide}#creating-slack-connections[Creating Slack connections]
+* link:{LinkFuseOnlineConnectorGuide}#create-amq-connection_amq[Create AMQ connections]
+* link:{LinkFuseOnlineConnectorGuide}#creating-http-connections_http[Create HTTP and HTTPS connections]
+* link:{LinkFuseOnlineConnectorGuide}#creating-slack-connections_slack[Create Slack connections]

@@ -1,7 +1,19 @@
-[id='create-rest-api-connection']
-= Create an API client connection
+// This module is included in the following assemblies:
+// connecting_to_rest_apis.adoc
 
-To create a connection to a REST API:
+[id='create-rest-api-connection_{context}']
+= Create a An API client connection
+
+In an integration, to connect to a REST API, create a connection to 
+that REST API, which you can then add to any number of integrations. 
+
+.Prerequisites
+* You created a connector for the REST API that you want to connect to. 
+* If the REST API uses the OAuth protocol then you registered you
+{prodname} environment as a client application that can access that
+REST API. 
+
+.Procedure
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.

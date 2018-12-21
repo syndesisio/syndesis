@@ -1,4 +1,7 @@
-[id='find-the-field-you-want-to-map']
+// This module is included in the following assemblies:
+// mapping_data.adoc
+
+[id='find-the-field-you-want-to-map_{context}']
 = Find the data field that you want to map
 
 In a relatively simple integration, mapping data fields is easy
@@ -10,7 +13,8 @@ The data mapper displays two columns of data fields:
 
 * *Sources* is a list of the data fields that are obtained or
 processed in all previous steps in the integration. 
-* *Target* is a list of the data fields that the next connection expects
+* *Target* is a list of the data fields that the next 
+connection in the integration expects
 and can process.
 
 To quickly find the data field that you

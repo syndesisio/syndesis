@@ -1,3 +1,6 @@
+// This module is included in the following assemblies:
+// connecting_to_slack.adoc
+
 [id='add-slack-connection-start_{context}']
 = Add a Slack connection to trigger execution upon receiving messages
 
@@ -7,7 +10,7 @@ you specify.
 
 .Prerequisites
 
-* You created a <<creating-slack-connections_{context},Slack connection>>. 
+* You created a Slack connection. 
 * You are creating an integration and {prodname} is prompting you to 
 choose how you want to start the integration. 
 
@@ -37,3 +40,5 @@ poll are never returned.
 When a Slack connection returns more than one message, the integration 
 processes the messages as a batch. In other words, {prodname} executes 
 the integration once for the batch.
+
+. Click *Done* to add the connection to the integration. 

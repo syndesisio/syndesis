@@ -26,13 +26,24 @@ sure to enter data
 in the fields that you mapped: *Company*, *Email*, *FirstName*,
 *LastName*, *LeadSource*, *Status*, *Phone*, and *Rating*.
 . In a new browser window, insert `*todo-*` in front of the URL
-for your {prodname} installation. For example: 
+for your {prodname} environment. For example: 
 `\https://todo-app-proj7614.6a63.fuse-ignite.openshiftapps.com/`.
 +
-Your {prodname} installation provides the To Do app, which has a 
+Your {prodname} environment provides the To Do app, which has a 
 REST API for accessing a database that contains tasks. In the AMQ to REST 
 API sample integration tutorial, there are instructions for uploading an
 OpenAPI (Swagger) file for the To Do app to create an API client connector. 
 
 . In the *To Do App* display, you should see a notification that a new 
 lead was created in the database. 
+
+
+. Optionally, view the integration log to troubleshoot an
+unexpected result or to learn more about integration execution: 
+
+.. In {prodname}, in the left panel, click *Integrations*.
+.. Click the entry for your Salesforce to database integration.
+.. In the integration's summary page, click the *Activity* tab.
+.. Optionally, enter date and/or keyword filters to limit the executions
+listed.
+.. Click the integration execution for which you want to view activity information.

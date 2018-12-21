@@ -1,4 +1,7 @@
-[id='register-with-dropbox']
+// This module is included in the following assemblies:
+// connecting_to_dropbox.adoc
+
+[id='register-with-dropbox_{context}']
 = Register {prodname} as a Dropbox client
 
 You must register your {prodname} environment as a client application
@@ -12,14 +15,18 @@ of {prodname} as a Dropbox client application. However, while each Dropbox
 connection uses the same registration, it can use different user
 credentials. 
 
-Perform these steps:
+.Prerequisite
+You can sign in to the Dropbox account that you want an integration to use
+to download or upload files. 
+
+.Procedure
 
 . In {prodname}:
 .. In the left panel, click *Settings*.
 .. On the *Settings* page, near the top, to the right of the callback URL, 
 click 
 image:shared/images/CopyCallback.png[Copy Callback URL] to 
-copy the callback URL for your installation of {prodname} to the clipboard. 
+copy the callback URL for your {prodname} environment to the clipboard. 
 You will need this URL toward the end of this procedure. 
 . In another browser tab, go  to `https://www.dropbox.com` 
 and do the following:
@@ -46,6 +53,8 @@ conditions.
 the input field for *OAuth2 Redirect URIs*, paste your {prodname} URL,
 which you copied to the clipboard at the beginning of this procedure. 
 .. Click *Add*. 
+
+.Result 
 
 Your {prodname} environment is now registered as a Dropbox client, which 
 means that {prodname} can access content in the Dropbox account that

@@ -1,32 +1,20 @@
-[id='add-concur-connection']
+// This module is included in the following assemblies:
+// connecting_to_concur.adoc
+
+[id='add-concur-connection_{context}']
 = Add a SAP Concur connection to an integration
 
-ifeval::["{location}" == "upstream"]
 In an integration, a connection to SAP Concur is a middle or finish
 connection and not a start connection. A connection to SAP Concur can perform
 any one of 85 actions.  
-endif::[]
-
-ifeval::["{location}" == "downstream"]
-
-In an integration, a connection to SAP Concur is a middle or finish
-connection and not a start connection. A connection to SAP Concur
-can obtain all lists, obtain a list that you specify, update a list, or create a list. 
-There are other actions as well. 
- 
-
-endif::[]
 
 .Prerequisites
-* You must create a SAP Concur connection before you can add a SAP Concur
-connection to an integration. If you did not already create a SAP Concur
-connection, see <<create-concur-connection>>.
+* You created a SAP Concur connection.
 
-* You must be creating an integration or updating an integration to
+* You are creating an integration or updating an integration to
 add a connection to that integration. If you need to, see the 
-{LinkFuseOnlineIntegrationGuide}#procedure-for-creating-an-integration[general procedure
-for creating an integration]. 
-or see {LinkFuseOnlineIntegrationGuide}#updating-integrations[updating integrations].
+link:{LinkFuseOnlineIntegrationGuide}#procedure-for-creating-an-integration_create[general procedure for creating an integration]
+or see link:{LinkFuseOnlineIntegrationGuide}#updating-integrations_manage[updating integrations].
 
 .Procedure
 The instructions below
@@ -35,10 +23,9 @@ finish connection or a middle connection.
 
 . On the page that displays available connections, click the SAP Concur
 connection that you want to add to the integration. When the integration
-uses the connection you select to connect to SAP Concur, {prodname}
+uses the connection that you select to connect to SAP Concur, {prodname}
 uses the credentials defined in that connection.
 
-ifeval::["{location}" == "upstream"]
 . Click the action that you want the selected connection to perform.  Each
 SAP Concur connection that you add to an integration performs only the action 
 you choose.
@@ -46,25 +33,9 @@ you choose.
 For details about SAP Concur actions, visit the 
 https://developer.concur.com/api-explorer/[SAP Concur developer center]
 and expand *v3.0*.
-endif::[]
-
-ifeval::["{location}" == "downstream"]
-. Click the action that you want the selected connection to perform.  Each
-SAP Concur connection that you add to an integration performs only the action 
-you choose. In this release, the supported actions are: 
-+
-* Get all lists
-* Get a single list, which you identify by its ID
-* Create a new list
-* Update a list
-
-+
-For details about these actions, visit the 
-https://developer.concur.com/api-explorer/v3-0/Lists.html[SAP Concur developer center].
-
-endif::[]
 
 . Click *Done* to add the connection to the integration.
 
+.Result
 The connection appears in the integration flow 
 in the location where you added it. 

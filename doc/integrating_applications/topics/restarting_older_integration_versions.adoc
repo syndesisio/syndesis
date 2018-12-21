@@ -1,12 +1,19 @@
-[id='restarting-older-integration-versions']
-= Restarting older integration versions
+// This module is included in the following assemblies:
+// putting_integrations_into_service.adoc
+
+[id='restarting-older-integration-versions_{context}']
+= Restart older integration versions
 
 You might publish an integration that does not work the way you want it to.
 In this situation, you can stop the incorrect version
 and replace it with a version that you published previously and that
 runs correctly.
 
-To republish an older integration version:
+.Prerequisites
+* A version of the integration is running but you want to stop it.
+* You have another version of the integration and you want to run that one.
+
+.Procedure
 
 . In the left panel, click *Integrations* to display a list of the
 the integrations in this environment.
@@ -19,11 +26,11 @@ image:shared/images/ThreeVerticalDotsKebab.png[Kebab] and select
 . Click *OK* to confirm that you want to stop running this version.
 . Wait for *Stopped* to appear to the right of the integration name near
 the top of the page.
-. Optionally, before you publish the older version, you can update it: 
+. To publish the older version as is, skip to the next step. Or, before you publish the older version, you can update it: 
 .. In the entry for the integration version that you want to update, 
 at the far right, click  
 image:shared/images/ThreeVerticalDotsKebab.png[Kebab] and select *Replace Draft*.
-.. Update the integration as needed. For details, see <<updating-integrations>>.
+.. Update the integration as needed. 
 .. When updates are complete, in the upper right, click *Publish*, 
 and then click *Publish* to confirm. This takes the place of the next two steps. 
 . To publish the older version as is, in the entry for the integration 
@@ -34,6 +41,7 @@ and select *Start*.
 . Click *Start* to confirm that you want to start this version of the
 integration.
 
+.Result
 {prodname} starts 
 the integration, which takes a few minutes. When the integration 
 is running, then *Running version _n_* appears to the right

@@ -1,19 +1,24 @@
-[id='create-dropbox-connection']
+// This module is included in the following assemblies:
+// connecting_to_dropbox.adoc
+
+[id='create-dropbox-connection_{context}']
 = Create a Dropbox connection
 
-A connection to Dropbox requires registration of
-{prodname} as an application that can access Dropbox.
-If you did not already register {prodname}, see <<register-with-dropbox>>.
+In an integration, to download or upload Dropbox files, create a 
+Dropbox connection, which you can add
+to an integration. You can add the same connection to any number of
+integrations. 
 
-Follow the instructions below to create a Dropbox connection.
-You can use the same Dropbox connection in multiple integrations.
+.Prerequisite
+You registered your {prodname} environment as an application that can
+access Dropbox. 
 
-To create a Dropbox connection:
+.Procedure
 
 . In a new browser tab, go  to `https://www.dropbox.com` 
 and do the following:
 .. Sign in to the Dropbox account in which you created the app that
-registers access from your {prodname} installation. 
+registers access from your {prodname} environment. 
 .. Go to https://www.dropbox.com/developers/apps.
 .. Click the {prodname} app to display its settings.
 

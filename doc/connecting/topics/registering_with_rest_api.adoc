@@ -1,17 +1,25 @@
-[id='register-with-rest-api']
+// This module is included in the following assemblies:
+// connecting_to_rest_apis.adoc
+
+[id='register-with-rest-api_{context}']
 = Register {prodname} as an API client
 
 Before {prodname} creates an API client
 connector, it prompts you to indicate the API's security requirements.
-For APIs that use OAuth, when {prodname} creates the connector it also
+For APIs that use the OAuth protocol, when {prodname} creates the connector it also
 adds an entry for the API to the {prodname} *Settings* page. This is
 where you provide the API client ID and the API client secret that
 authorize {prodname} to access the API.
 
 If the API you want to connect to does not use OAuth, skip this
-section and see <<create-rest-api-connection>>.
+section and see 
+link:{LinkFuseOnlineConnectorGuide}#create-rest-api-connection_rest[Create a REST API connection].
 
-To register {prodname} as an authorized API client application:
+.Prerequisite
+You must know the URL for the OAuth custom application setting page for the
+REST API that you want to connect to.
+
+.Procedure
 
 . In {prodname}:
 .. On the *Settings* page, near the top, to the right of the callback URL, click

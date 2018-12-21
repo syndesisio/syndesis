@@ -1,4 +1,7 @@
-[id='using-maven-to-generate-extension-definitions']
+// This module is included in the following assembly:
+// developing_extensions.adoc
+
+[id='using-maven-to-generate-extension-definitions_{context}']
 = Description of Maven plugin that supports extensions
 
 The `extension-maven-plugin` supports extension development by

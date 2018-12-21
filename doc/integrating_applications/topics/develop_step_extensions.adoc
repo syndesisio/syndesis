@@ -1,5 +1,10 @@
-[id='develop-step-extensions']
+// This assembly is included in the following assemblies:
+// developing_extensions.adoc
+
+:context: extensions
+[id='develop-step-extensions_{context}']
 = Alternatives for developing step extensions 
+:context: step-alternatives
 
 A step extension implements one or more custom steps. 
 Each custom step implements one action for processing integration data
@@ -7,10 +12,10 @@ between connections.
 The following examples demonstrate the alternatives for developing
 step extensions: 
 
-* <<example-route-xml-fragment>>
-* <<example-route-builder>>
-* <<example-camel-bean>>
-* <<example-step-api>>
+* <<example-route-xml-fragment_{context}>>
+* <<example-route-builder_{context}>>
+* <<example-camel-bean_{context}>>
+* <<example-step-api_{context}>>
 
 Syndesis provides custom Java annotations that you can use in 
 conjunction with the `syndesis-extension-plugin`.  When you implement
@@ -35,3 +40,5 @@ include::example_route_builder.adoc[leveloffset=+1]
 include::example_camel_bean.adoc[leveloffset=+1]
 
 include::example_step_api.adoc[leveloffset=+1]
+
+:context: extensions

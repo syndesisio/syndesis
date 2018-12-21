@@ -1,5 +1,10 @@
-[id='connecting-to-slack']
-= Connecting to Slack
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-slack_{context}']
+= Connect to Slack
+:context: slack
 
 As a business user, you can create an integration that connects to Slack. A 
 connection to Slack can do either one of the following:
@@ -30,3 +35,5 @@ include::creating_slack_connections.adoc[leveloffset=+1]
 include::add_slack_connection_start.adoc[leveloffset=+1]
 
 include::add_slack_connection_middle_finish.adoc[leveloffset=+1]
+
+:context: connectors

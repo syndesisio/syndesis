@@ -1,4 +1,7 @@
-[id='add-gmail-connection-finish-middle']
+// This module is included in these assemblies:
+// connecting_to_gmail.adoc
+
+[id='add-gmail-connection-finish-middle_{context}']
 = Send an email from a Gmail account
 
 In an integration, you can send an email from a Gmail account either
@@ -6,12 +9,14 @@ in the middle of the integration or to finish the integration.
 To do this, add a Gmail connection to the middle of an integration or as the 
 integration's finish connection. 
 
-Before you add a Gmail connection that sends an email, decide how you
-want to populate the fields in the email. See 
-<<alternatives-for-populating-email-to-send>>. 
+.Prerequisites
 
-To add a Gmail connection that sends an email from the authorized Gmail 
-account:
+* You created a Gmail connection. 
+* You are familiar with the
+link:{LinkFuseOnlineConnectorGuide}#alternative-for-populating-email-to-send_gmail[alternatives for populating an email to send]
+and you have a plan for populating such emails. 
+ 
+.Procedure
 
 . Start creating the integration.
 . Add and configure the start connection.
@@ -56,11 +61,11 @@ and you want to map integration data to some email fields, leave those fields
 blank in the action configuration. Enter values in other action fields as needed. 
 +
 A value that you specify in a *Send Email* action configuration field
-has precedence over a value that is mapped from a previous step. For
-more information about this, see <<alternatives-for-populating-email-to-send>>.
-
+has precedence over a value that is mapped from a previous step. 
 
 . Click *Done* to add the connection to the integration. 
+
+.Result and next steps
 
 The connection appears in the integration flow 
 in the location where you added it. If you plan to add a data mapper step

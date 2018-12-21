@@ -1,7 +1,17 @@
-[id='creating-ftp-connections']
+// This module is included in these assemblies:
+// connecting_to_ftp.adoc
+
+[id='creating-ftp-connections_{context}']
 = Create an FTP or SFTP connection
 
-To create a connection to an FTP server or an SFTP server:
+In an integration, to download or upload files from/to an FTP or SFTP server, 
+create a connection to that FTP or SFTP server. You can add the same 
+connection to any number of integrations. 
+
+.Prerequisite
+You must know the host name of the server you want to connect to. 
+
+.Procedure
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.

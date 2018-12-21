@@ -1,10 +1,9 @@
 // This assembly is included in the following assemblies:
-// master.adoc
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
-ifdef::context[:parent-context: {context}]
-
-[id='connecting-to-log']
-= Connecting to an integration's log
+[id='connecting-to-log_{context}']
+= Connect to an integration's log
 
 :context: connect-to-log
 
@@ -18,7 +17,7 @@ information:
 
 To view this information in {prodname}, display the integration's summary
 and then click the *Activity* tab. See also:
-{LinkFuseOnlineIntegrationGuide}managing-integrations#viewing-integration-activity-information[Viewing integration activity information].
+link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_monitor[Viewing integration activity information].
 
 To obtain further details about integration execution, you can 
 log information about the messages that an integration processes by 
@@ -28,14 +27,10 @@ adding a log step and/or a log connection to an integration.
 * <<add-log-connection_{context}>>
 * <<create-replacement-log-connection_{context}>>
 
-
 include::comparison_log_step_connection.adoc[leveloffset=+1]
 
 include::add_log_connection.adoc[leveloffset=+1]
 
 include::create_replacement_log_connection.adoc[leveloffset=+1]
 
-
-
-ifdef::parent-context[:context: {parent-context}]
-ifndef::parent-context[:!context:]
+:context: connectors

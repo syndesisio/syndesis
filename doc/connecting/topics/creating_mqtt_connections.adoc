@@ -1,7 +1,17 @@
-[id='creating-mqtt-connections']
+// This module is included in the following assemblies:
+// connecting_to_mqtt.adoc
+
+[id='creating-mqtt-connections_{context}']
 = Create a connection to an MQTT broker
 
-To create an MQTT connection:
+In an integration, to obtain messages from or publish messages to
+an MQTT broker, create a connection to the MQTT broker
+of interest and then add that connection to an integration.
+
+.Prerequisite
+You must know the URL for the MQTT broker that you want to connect to. 
+
+.Procedure
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.

@@ -27,16 +27,34 @@ step:
 +
 For example: `*@Aslan #likesRedHat.*`
 .. Wait for the polling interval to elapse, which can be 30 - 60 seconds.
-.. In Salesforce, confirm that a contact record with your
-name does not exist.
+.. In Salesforce, confirm that there is *not* a new contact record for the 
+name that is associated with the Twitter account that you used to tweet.
+
 . Confirm that the integration creates a new contact record when it should:
 .. In Twitter, send a tweet that:
 * Mentions your Twitter handle
-* Contains the text you specified in the basic filter step
+* Contains the text that you specified in the basic filter step
 +
 For example: `*@Aslan knows #RedHatIsGreat.*`
 .. Wait for the polling interval to elapse.
-.. In Salesforce, locate a contact record that has
-your name, the text of your tweet in the
-`Description` field, and your Twitter screen name
-in the `Title` field.
+
+.. In Salesforce, do the following:
+... Log in to your regular Salesforce account, not your Salesforce developer 
+account. 
+... On your home page, under *Recent Items* you should see your new contact. 
+... Click on it to view the details.
++
+The new contact record should have the name that is associated with the 
+Twitter account that you used to tweet. The text of your tweet should be in the
+*Description* field, and your Twitter screen name should be in the *Title* field.
+
+
+. Optionally, view the integration log to troubleshoot an
+unexpected result or to learn more about integration execution: 
+
+.. In {prodname}, in the left panel, click *Integrations*.
+.. Click the entry for your Twitter to Salesforce integration.
+.. In the integration's summary page, click the *Activity* tab.
+.. Optionally, enter date and/or keyword filters to limit the executions
+listed.
+.. Click the integration execution for which you want to view activity information.

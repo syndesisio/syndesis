@@ -1,11 +1,16 @@
-[id='connecting-to-twitter']
-= Connecting to Twitter
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
-To connect to Twitter in an integration, see the following topics:
+[id='connecting-to-twitter_{context}']
+= Connect to Twitter
+:context: twitter
+
+To connect to Twitter in an integration, the main steps are: 
 
 * <<register-with-twitter_{context}>>
 * <<create-twitter-connection_{context}>>
-* <<adding-twitter-connections>>
+* <<adding-twitter-connections_{context}>>
 
 You need a Twitter developer account to authorize access from your
 {prodname} environment to Twitter. If you do not already have a Twitter
@@ -20,3 +25,5 @@ include::shared/register_with_twitter.adoc[leveloffset=+1]
 include::shared/create_twitter_connection.adoc[leveloffset=+1]
 
 include::adding_twitter_connections.adoc[leveloffset=+1]
+
+:context: connectors

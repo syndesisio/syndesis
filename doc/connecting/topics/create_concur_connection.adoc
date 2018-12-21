@@ -1,4 +1,7 @@
-[id='create-concur-connection']
+// This module is included in the following assemblies:
+// connecting_to_concur.adoc
+
+[id='create-concur-connection_{context}']
 = Create a SAP Concur connection
 
 To connect to SAP Concur in an integration, you must first create a SAP
@@ -30,7 +33,7 @@ configured.
 If *Connect SAP Concur* does not appear, then the SAP Concur
 connector in your {prodname} environment
 is not configured.  See
-<<configure-concur-connector>>. 
+link:{LinkFuseOnlineConnectorGuide}#configure-concur-connector_concur[Configure SAP Concur connector]. 
 +
 If `redirect_uri is improper or not previously registered` appears, then 
 the SAP Concur connector configuration is incorrect. 

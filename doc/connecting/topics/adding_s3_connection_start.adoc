@@ -1,9 +1,16 @@
-[id='adding-s3-connection-start']
+// This module is included in the following assemblies:
+// connecting_to_amazon_s3.adoc
+
+[id='adding-s3-connection-start_{context}']
 = Start an integration by obtaining data from Amazon S3
 
-:context: start
 To start an integration by obtaining data from an Amazon S3 bucket, 
-add an Amazon S3 connection as the start connection:
+add an Amazon S3 connection as the start connection in an integration.
+
+.Prerequisite
+You created an Amazon S3 connection.
+
+.Procedure
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
@@ -38,5 +45,43 @@ only when its name starts with that string.
 .. Indicate whether you want to  
 *Obtain files and then delete them from the bucket*.
 
-. After you configure the action, click *Done* to specify the action's output type. See 
-{LinkFuseOnlineIntegrationGuide}#specifying-connection-input-output-types[Specifying connection action input and output types]. 
+. After you configure the action, click *Done* to specify the action's output type. 
+
+
+. In the *Select Type* field, if the data type does not need to be known, 
+accept *Type specification not required* 
+and then, at the bottom, click *Done*. You do not need to follow the rest of these
+instructions. 
++
+Otherwise, select one of the following as the schema type:
++
+* *JSON schema* is a document that describes the structure of JSON data.
+The document's media type is `application/schema+json`. 
+* *JSON instance* is a document that contains JSON data. The document's 
+media type is `application/json`. 
+* *XML schema* is a document that describes the structure of XML data.
+The document's file extension is `.xsd`.
+* *XML instance* is a document that contains XML data. The
+document's file extension is `.xml`. 
+
+. In the *Definition* input box, paste a definition that conforms to the
+schema type you selected. 
+For example, if you select *JSON schema* then you would paste the content of
+a JSON schema file, which has a media type of `application/schema+json`.
+
+. In the *Data Type Name* field, enter a name that you choose for the
+data type. For example, suppose you are specifying a JSON schema for
+vendors. You can specify `*Vendor*` as the data type name. 
++
+You will see this data type name when you are creating 
+or editing an integration that uses the connection
+for which you are specifying this type. {prodname} displays the type name
+in the integration visualization panel and in the data mapper. 
+
+. In the *Data Type Description* field, provide information that helps you
+distinguish this type. This description appears in the data mapper when 
+you hover over the step that processes this type. 
+. Click *Done*. 
+
+The connection appears in the integration flow 
+in the location where you added it. 

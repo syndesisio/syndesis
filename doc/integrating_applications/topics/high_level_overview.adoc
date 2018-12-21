@@ -1,5 +1,10 @@
-[id='high-level-overview']
+// This assembly is included in these assemblies:
+// integrating_applications/master.adoc
+
+:context: ug
+[id='high-level-overview_{context}']
 = High level overview of {prodname}
+:context: high
 
 With {prodname}, you can obtain data from an
 application or service, operate on that data if you need to, and then
@@ -8,10 +13,10 @@ required to accomplish this.
 
 The following topics provide a high-level overview of {prodname}:
 
-* <<how-it-works>>
-* <<audience>>
-* <<benefits>>
-* <<understanding-terms>>
+* <<how-it-works_{context}>>
+* <<user-types_{context}>>
+* <<benefits_{context}>>
+* <<description-of-constructs_{context}>>
 
 include::how_it_works.adoc[leveloffset=+1]
 
@@ -19,4 +24,6 @@ include::user_types.adoc[leveloffset=+1]
 
 include::benefits.adoc[leveloffset=+1]
 
-include::term_definitions.adoc[leveloffset=+1]
+include::description_of_constructs.adoc[leveloffset=+1]
+
+:context: ug

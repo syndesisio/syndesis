@@ -1,12 +1,14 @@
-[id='add-servicenow-connection-start']
+// This module is included in the following assemblies:
+// connecting_to_servicenow.adoc
+
+[id='add-servicenow-connection-start_{context}']
 = Start an integration by obtaining records from ServiceNow
 
 To start an integration by obtaining records from ServiceNow,
 add a ServiceNow connection to an integration as the start connection.
 
 .Prerequisites
-* You must have already created a ServiceNow connection. 
-See <<create-servicenow-connection>>.
+* You created a ServiceNow connection. 
 * You must know the name of the table that you want to retrieve
 records from. 
 * You should have already defined a ServiceNow query that obtains

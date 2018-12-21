@@ -1,4 +1,7 @@
-[id='combine-multiple-source-fields-into-one-target-field']
+// This module is included in the following assemblies:
+// mapping_data.adoc
+
+[id='combine-multiple-source-fields-into-one-target-field_{context}']
 = Combine multiple source fields into one target field
 
 In a data mapper step, you can combine multiple source fields into one 
@@ -9,7 +12,7 @@ fields to the `CustomerName` field.
 For the target field, you must know what type of content is in each
 part of this compound field, the order and index of each part of the content, 
 and the separator between parts, such as a space or comma. See
-<<example-missing-unwanted-data>>. 
+link:{LinkFuseOnlineIntegrationGuide}#example-missing-unwanted-data_map[Example of missing or unwanted data]. 
 
 .Procedure
 

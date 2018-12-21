@@ -1,4 +1,7 @@
-[id='how-to-specify-request']
+// This module is included in the following assemblies:
+// triggering_integrations_with_http_requests.adoc
+
+[id='how-to-specify-request_{context}']
 = How to specify HTTP requests
 
 The following examples show how to specify HTTP requests for the
@@ -186,20 +189,10 @@ does not specify query parameters:
 
 `curl 'https://i-webhook-params-to-db-myproject.192.168.42.235.nip.io/webhook/ZYWrhaW7dVk097vNsLX3YJ1GyxUFMFRteLpw0z4O69MW7d2Kjg'`
 
-[IMPORTANT]
-====
-In this release, it is a known problem that specification of a JSON schema 
-for a Webhook connection output data shape is not applied to `GET` requests. 
-Consequently, the only way to access query parameters in a `GET` request is to 
-create an extension that accesses the query parameters from Camel message 
-headers. It is expected that this limitation will be removed in a future release.
-====
-
-When this limitation is removed then you can change the previous `POST` example to 
+You can change the previous `POST` example to 
 send a `GET` request with query parameters but no body. You would 
 specify the Webhook connection output data shape as a JSON schema with the
 definition as shown below.
-
 
 [source,json]
 ----
@@ -219,17 +212,10 @@ definition as shown below.
           "type": "string"
         }
       }
-    },
-    "body": {
-      "type": "object"
     }
   }
 }
 ----
-This schema defines an empty body. Here is the `curl` command that sends
-the `GET` request:
+Here is the `curl` command that sends the `GET` request:
 
 `curl 'https://i-webhook-params-to-db-myproject.192.168.42.235.nip.io/webhook/ZYWrhaW7dVk097vNsLX3YJ1GyxUFMFRteLpw0z4O69MW7d2Kjg?source=web&status=new'``
-
-In this release, this example works only if you create an extension
-that accesses the query parameters. 
