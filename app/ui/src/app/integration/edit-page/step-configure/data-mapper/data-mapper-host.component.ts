@@ -352,7 +352,8 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
         DataShapeKinds.JSON_INSTANCE,
         DataShapeKinds.JSON_SCHEMA,
         DataShapeKinds.XML_INSTANCE,
-        DataShapeKinds.XML_SCHEMA
+        DataShapeKinds.XML_SCHEMA,
+        DataShapeKinds.XML_SCHEMA_INSPECTED
       ].indexOf(dataShape.kind) > -1
     );
   }
@@ -415,6 +416,11 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
         initModel.inspectionType = InspectionType.SCHEMA;
         initModel.inspectionSource = dataShape.specification;
         break;
+      case DataShapeKinds.XML_SCHEMA_INSPECTED:
+        initModel.type = DocumentType.XML;
+        initModel.inspectionType = InspectionType.SCHEMA;
+        initModel.inspectionResult = dataShape.specification;
+        break;
       default:
         return false; // unsupported 'kind' of document
     }
@@ -425,6 +431,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     initModel.description = dataShape.description;
     initModel.isSource = isSource;
     initModel.showFields = showFields;
+
     this.cfg.addDocument(initModel);
     return true;
   }

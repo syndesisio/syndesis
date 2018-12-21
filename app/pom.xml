@@ -588,7 +588,7 @@
               <exclude>connector/**/META-INF/syndesis/connector/verifier/*</exclude>
               <exclude>connector/**/springboot/*Configuration.java</exclude><!-- auto generated without headers -->
               <exclude>connector/**/springboot/*Common.java </exclude><!-- auto generated without headers -->
-              <exclude>connector/fhir/src/main/resources/schemas/**</exclude><!-- HL7 license -->
+              <exclude>connector/fhir/**/META-INF/syndesis/schemas/**</exclude><!-- HL7 license -->
               <exclude>meta/**/run-env.sh</exclude>
               <exclude>server/syndesis-builder-image-generator/image/**</exclude><!-- auto generated without headers -->
               <exclude>**/src/main/resources/banner.txt</exclude>
@@ -1944,6 +1944,18 @@
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-java-service</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-xml-model</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-xml-core</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
 
