@@ -60,29 +60,23 @@ export class AutoForm<T extends object = IFormValue> extends React.Component<
               onSubmit={onSave}
               validate={this.props.validate}
             >
-              {({ handleSubmit, values, touched, errors }) => (
-                <form
-                  className="form-horizontal required-pf"
-                  role="form"
-                  onSubmit={handleSubmit}
-                >
-                  {this.props.children({
-                    fields: (
-                      <React.Fragment>
-                        {fields.map(property =>
-                          getField({
-                            errors,
-                            property,
-                            touched,
-                            value: (values || {})[property.name],
-                          })
-                        )}
-                      </React.Fragment>
-                    ),
-                    handleSubmit,
-                  })}
-                </form>
-              )}
+              {({ handleSubmit, values, touched, errors }) =>
+                this.props.children({
+                  fields: (
+                    <React.Fragment>
+                      {fields.map(property =>
+                        getField({
+                          errors,
+                          property,
+                          touched,
+                          value: (values || {})[property.name],
+                        })
+                      )}
+                    </React.Fragment>
+                  ),
+                  handleSubmit,
+                })
+              }
             </Formik>
           )}
         </FormBuilder>

@@ -5,7 +5,7 @@ import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-export class IntegrationCreatorSelectConnectionActionPage extends React.Component {
+export class IntegrationCreatorSelectConnectionActionsPage extends React.Component {
   public render() {
     return (
       <WithRouter>
@@ -25,20 +25,25 @@ export class IntegrationCreatorSelectConnectionActionPage extends React.Componen
                         <Link to={'/'}>Home</Link>
                         <Link to={'/integrations'}>Integrations</Link>
                         <Link to={'/integrations/create'}>New integration</Link>
-                        <span>{data.name} - Choose Action</span>
+                        <span>{data.name}</span>
                       </Breadcrumb>
 
-                      <h1>{data.name} - Choose Action</h1>
+                      <h1>Choose Action</h1>
                       <p>Choose an action for the selected connection.</p>
                     </PageHeader>
                     <div className={'container-fluid'}>
                       <ListView>
                         {data.actionsWithFrom.map((a, idx) => (
-                          <ListView.Item
-                            heading={a.name}
-                            description={a.description}
-                            key={idx}
-                          />
+                          <Link
+                            to={`${match.url}/${a.id}`}
+                            style={{ color: 'inherit', textDecoration: 'none' }}
+                          >
+                            <ListView.Item
+                              heading={a.name}
+                              description={a.description}
+                              key={idx}
+                            />
+                          </Link>
                         ))}
                       </ListView>
                     </div>
