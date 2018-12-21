@@ -37,7 +37,6 @@
 
     <google-api-client-version>1.22.0</google-api-client-version>
     <google-api-services-sheets-version>v4-rev551-1.22.0</google-api-services-sheets-version>
-    <citrus.version>2.7.8</citrus.version>
   </properties>
 
   <!-- ToDo add once camel component made it into the fuse build -->
@@ -203,49 +202,16 @@
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-core</artifactId>
       <scope>test</scope>
-      <version>${citrus.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-java-dsl</artifactId>
       <scope>test</scope>
-      <version>${citrus.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-http</artifactId>
       <scope>test</scope>
-      <version>${citrus.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.springframework.security.oauth</groupId>
