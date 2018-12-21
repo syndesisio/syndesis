@@ -26,12 +26,16 @@
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} [%-15.15thread] %-5level %-30.30logger - %msg%n</pattern>
     </encoder>
-    <file>target/gmail-connector.log</file>
+    <file>target/google-sheets-connector.log</file>
   </appender>
 
   <logger name="org.apache.camel.util.IntrospectionSupport" level="INFO"/>
   <logger name="org.apache.camel" level="INFO"/>
   <logger name="io.syndesis" level="DEBUG"/>
+  <logger name="com.consol.citrus" level="INFO"/>
+  <logger name="org.springframework" level="INFO"/>
+  <logger name="org.eclipse.jetty" level="WARN"/>
+  <logger name="com.google.api" level="INFO"/>
 
   <root level="INFO">
     <!--<appender-ref ref="STDOUT"/>-->
