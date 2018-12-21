@@ -658,6 +658,7 @@
     "googleScopes": "https://www.googleapis.com/auth/spreadsheets",
     "tokenUrl": "https://www.googleapis.com/oauth2/v4/token"
   },
+  "connectorFactory": "io.syndesis.connector.sheets.GoogleSheetsConnectorFactory",
   "dependencies": [
     {
       "id": "@project.groupId@:@project.artifactId@:@project.version@",
@@ -669,35 +670,19 @@
   "id": "sheets",
   "name": "Google Sheets",
   "properties": {
-    "accessToken": {
+    "rootUrl": {
       "deprecated": false,
-      "displayName": "Access Token",
+      "defaultValue": "https://sheets.googleapis.com/",
+      "displayName": "Google Sheets API server root URL",
       "group": "common",
       "javaType": "java.lang.String",
-      "kind": "path",
-      "labelHint": "String provided by Google that authorizes access to a Google Sheets account.",
-      "order": "4",
-      "raw": true,
-      "required": true,
-      "secret": true,
-      "tags": [
-        "oauth-access-token"
-      ],
-      "type": "string"
-    },
-    "additionalOAuthQueryParameters": {
-      "deprecated": false,
-      "displayName": "Additional OAuth query parameters",
-      "group": "security",
-      "javaType": "java.lang.String",
       "kind": "parameter",
-      "raw": true,
+      "labelHint": "The root URL pointing to the Google sheets API server.",
+      "order": "1",
       "required": true,
       "secret": false,
-      "tags": [
-        "oauth-additional-query-parameters"
-      ],
-      "type": "hidden"
+      "tags": [],
+      "type": "string"
     },
     "applicationName": {
       "deprecated": false,
@@ -706,7 +691,7 @@
       "javaType": "java.lang.String",
       "kind": "parameter",
       "labelHint": "A name that you choose as the name of an OAuth 2.0 Google Sheets client. This name appears in the Google developers account list of OAuth clients.",
-      "order": "3",
+      "order": "2",
       "raw": true,
       "required": true,
       "secret": false,
@@ -751,7 +736,7 @@
       "javaType": "java.lang.String",
       "kind": "parameter",
       "labelHint": "The client ID that Google provides when you register a client application.",
-      "order": "1",
+      "order": "3",
       "raw": true,
       "required": true,
       "secret": false,
@@ -767,7 +752,7 @@
       "javaType": "java.lang.String",
       "kind": "parameter",
       "labelHint": "The client secret that Google provides when you register a client application.",
-      "order": "2",
+      "order": "4",
       "raw": true,
       "required": true,
       "secret": true,
@@ -776,20 +761,21 @@
       ],
       "type": "string"
     },
-    "googleScopes": {
+    "accessToken": {
       "deprecated": false,
-      "displayName": "Scopes",
+      "displayName": "Access Token",
       "group": "common",
       "javaType": "java.lang.String",
-      "kind": "parameter",
-      "labelHint": "UserId",
+      "kind": "path",
+      "labelHint": "String provided by Google that authorizes access to a Google Sheets account.",
+      "order": "5",
       "raw": true,
       "required": true,
-      "secret": false,
+      "secret": true,
       "tags": [
-        "oauth-scope"
+        "oauth-access-token"
       ],
-      "type": "hidden"
+      "type": "string"
     },
     "refreshToken": {
       "deprecated": false,
@@ -798,7 +784,7 @@
       "javaType": "java.lang.String",
       "kind": "path",
       "labelHint": "String provided by Google that enables retrieval of a new access token.",
-      "order": "5",
+      "order": "6",
       "raw": true,
       "required": true,
       "secret": true,
@@ -820,6 +806,21 @@
       ],
       "type": "hidden"
     },
+    "googleScopes": {
+      "deprecated": false,
+      "displayName": "Scopes",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "UserId",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "tags": [
+        "oauth-scope"
+      ],
+      "type": "hidden"
+    },
     "userId": {
       "deprecated": false,
       "displayName": "User ID",
@@ -827,11 +828,75 @@
       "javaType": "java.lang.String",
       "kind": "parameter",
       "labelHint": "Google Sheets account name that is associated with this registration.",
-      "order": "6",
+      "order": "7",
+      "raw": true,
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "additionalOAuthQueryParameters": {
+      "deprecated": false,
+      "displayName": "Additional OAuth query parameters",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
       "raw": true,
       "required": true,
       "secret": false,
+      "tags": [
+        "oauth-additional-query-parameters"
+      ],
+      "type": "hidden"
+    },
+    "validateCertificates": {
+      "deprecated": false,
+      "defaultValue": "false",
+      "displayName": "Check server certificates",
+      "componentProperty": true,
+      "enum": [
+        {
+          "label": "Disable",
+          "value": "true"
+        },
+        {
+          "label": "Enable",
+          "value": "false"
+        }
+      ],
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
+      "order": "8",
+      "required": false,
+      "secret": false,
       "type": "string"
+    },
+    "serverCertificate": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Google API Server X.509 PEM Certificate",
+      "displayName": "Server Certificate",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": "9",
+      "relation": [
+        {
+          "action": "ENABLE",
+          "when": [
+            {
+              "id": "validateCertificates",
+              "value": "false"
+            }
+          ]
+        }
+      ],
+      "required": false,
+      "secret": false,
+      "type": "textarea"
     }
   },
   "tags": [

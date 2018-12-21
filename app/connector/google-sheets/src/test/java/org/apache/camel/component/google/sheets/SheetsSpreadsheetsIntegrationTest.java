@@ -15,19 +15,25 @@
  */
 package org.apache.camel.component.google.sheets;
 
-import com.google.api.services.sheets.v4.model.*;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
-import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
+import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetResponse;
+import com.google.api.services.sheets.v4.model.Request;
+import com.google.api.services.sheets.v4.model.Spreadsheet;
+import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
+import com.google.api.services.sheets.v4.model.UpdateSpreadsheetPropertiesRequest;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
+import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.apache.camel.component.google.sheets.server.GoogleSheetsApiTestServerAssert.assertThatGoogleApi;
 
 /**
  * Test class for {@link com.google.api.services.sheets.v4.Sheets.Spreadsheets} APIs.
@@ -37,7 +43,6 @@ public class SheetsSpreadsheetsIntegrationTest extends AbstractGoogleSheetsTestS
     private static final Logger LOG = LoggerFactory.getLogger(SheetsSpreadsheetsIntegrationTest.class);
     private static final String PATH_PREFIX = GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName();
 
-    @Ignore
     @Test
     public void testCreate() throws Exception {
         String title = "camel-sheets-" + Math.abs(new Random().nextInt());
@@ -47,7 +52,11 @@ public class SheetsSpreadsheetsIntegrationTest extends AbstractGoogleSheetsTestS
 
         sheetToCreate.setProperties(sheetProperties);
 
-        // using com.google.api.services.sheets.v4.model.Spreadsheet message body for single parameter "content"
+        assertThatGoogleApi(getGoogleApiTestServer())
+                .createSpreadsheetRequest()
+                .hasTitle(title)
+                .andReturnRandomSpreadsheet();
+
         final Spreadsheet result = (Spreadsheet) requestBody("direct://CREATE", sheetToCreate);
 
         assertNotNull("create result is null", result);
@@ -56,10 +65,18 @@ public class SheetsSpreadsheetsIntegrationTest extends AbstractGoogleSheetsTestS
         LOG.debug("create: " + result);
     }
 
-    @Ignore
     @Test
     public void testGet() throws Exception {
+        assertThatGoogleApi(getGoogleApiTestServer())
+                .createSpreadsheetRequest()
+                .hasSheetTitle("TestData")
+                .andReturnRandomSpreadsheet();
+
         Spreadsheet testSheet = getSpreadsheet();
+
+        assertThatGoogleApi(getGoogleApiTestServer())
+                .getSpreadsheetRequest(testSheet.getSpreadsheetId())
+                .andReturnSpreadsheet(testSheet);
 
         // using String message body for single parameter "spreadsheetId"
         final Spreadsheet result = (Spreadsheet) requestBody("direct://GET", testSheet.getSpreadsheetId());
@@ -70,11 +87,20 @@ public class SheetsSpreadsheetsIntegrationTest extends AbstractGoogleSheetsTestS
         LOG.debug("get: " + result);
     }
 
-    @Ignore
     @Test
     public void testBatchUpdate() throws Exception {
+        assertThatGoogleApi(getGoogleApiTestServer())
+                .createSpreadsheetRequest()
+                .hasSheetTitle("TestData")
+                .andReturnRandomSpreadsheet();
+
         Spreadsheet testSheet = getSpreadsheet();
         String updateTitle = "updated-" + testSheet.getProperties().getTitle();
+
+        assertThatGoogleApi(getGoogleApiTestServer())
+                .batchUpdateSpreadsheetRequest(testSheet.getSpreadsheetId())
+                .updateTitle(updateTitle)
+                .andReturnUpdated();
 
         final Map<String, Object> headers = new HashMap<>();
         // parameter type is String
@@ -88,7 +114,7 @@ public class SheetsSpreadsheetsIntegrationTest extends AbstractGoogleSheetsTestS
 
         final BatchUpdateSpreadsheetResponse result = (BatchUpdateSpreadsheetResponse) requestBodyAndHeaders("direct://BATCHUPDATE", null, headers);
 
-        assertNotNull("batchUpdate result in null", result);
+        assertNotNull("batchUpdate result is null", result);
         assertEquals(updateTitle, result.getUpdatedSpreadsheet().getProperties().getTitle());
 
         LOG.debug("batchUpdate: " + result);

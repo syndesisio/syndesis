@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.camel.component.google.sheets;
+package io.syndesis.connector.sheets;
 
-import com.google.api.services.sheets.v4.Sheets;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyFactory;
 
-public interface GoogleSheetsClientFactory {
-
-    Sheets makeClient(String clientId,
-                      String clientSecret,
-                      String applicationName,
-                      String refreshToken,
-                      String accessToken);
-
+public class GoogleSheetsConnectorFactory implements ComponentProxyFactory {
+    @Override
+    public ComponentProxyComponent newInstance(String componentId, String componentScheme) {
+        return new GoogleSheetsConnector(componentId, componentScheme);
+    }
 }
