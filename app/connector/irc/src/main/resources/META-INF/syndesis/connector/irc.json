@@ -2,7 +2,7 @@
   "actions": [
     {
       "actionType": "connector",
-      "description": "React to privmsg",
+      "description": "Receive a private message",
       "descriptor": {
         "componentScheme": "irc",
         "configuredProperties": {
@@ -14,7 +14,8 @@
           "onPart": false,
           "onPrivmsg": true,
           "onQuit": false,
-          "onTopic": false
+          "onTopic": false,
+          "commandTimeout": 15000
         },
         "inputDataShape": {
           "kind": "any"
@@ -24,70 +25,118 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Properties",
-            "name": "properties",
+            "description": "Specify the channels to join",
+            "name": "Specify IRC channels",
             "properties": {
-              "channels": {
-                "componentProperty": false,
-                "deprecated": false,
-                "description": "IRC channels to join",
-                "displayName": "Channels",
-                "enum": [],
-                "javaType": "string",
-                "kind": "parameter",
-                "required": true,
-                "secret": false,
-                "tags": [],
-                "type": "string"
-              },
-              "hostname": {
-                "componentProperty": false,
-                "deprecated": false,
-                "description": "IRC Server hostname",
-                "displayName": "Hostname",
-                "enum": [],
-                "javaType": "string",
-                "kind": "parameter",
-                "required": true,
-                "secret": false,
-                "tags": [],
-                "type": "string"
-              },
-              "nickname": {
-                "componentProperty": false,
-                "deprecated": false,
+             "nickname": {
                 "description": "Nickname for IRC connector user",
                 "displayName": "Nickname",
-                "enum": [],
                 "javaType": "string",
                 "kind": "parameter",
+                "labelHint": "Desired nickname for the integration user",
                 "required": true,
                 "secret": false,
                 "tags": [],
                 "type": "string"
               },
-              "port": {
-                "componentProperty": false,
-                "deprecated": false,
-                "description": "IRC Server port",
-                "displayName": "Port",
-                "enum": [],
-                "javaType": "int",
-                "kind": "parameter",
-                "required": true,
+               "channels": {
+                "description": "IRC channels to join",
+                "displayName": "Channels",
+                "javaType": "string",
+                "kind": "path",
+                "labelHint": "If the integration should connect to the IRC channels, you can specify multiple channels delimited by comma",
+                "required": false,
                 "secret": false,
                 "tags": [],
-                "type": "int"
+                "type": "string"
+              },
+              "nicknamePassword": {
+                "description": "Password for IRC connector user",
+                "displayName": "NickServ password",
+                "javaType": "string",
+                "kind": "parameter",
+                "labelHint": "If the integration user nickname is registered with IRC NickServ, you can specify its password here",
+                "required": false,
+                "secret": true,
+                "tags": [],
+                "type": "string"
               }
             }
           }
         ]
       },
-      "id": "io.syndesis:irc-privmsg",
-      "name": "IRC PRIVMSG",
+      "id": "io.syndesis.connector:connector-irc-privmsg",
+      "name": "IRC Receive Private Message",
       "pattern": "From"
+    },
+    {
+      "actionType": "connector",
+      "description": "Sends message to given IRC channel(s)",
+      "descriptor": {
+        "componentScheme": "irc",
+        "configuredProperties": {
+          "autoRejoin": true,
+          "onJoin": false,
+          "onKick": false,
+          "onMode": false,
+          "onNick": false,
+          "onPart": false,
+          "onPrivmsg": false,
+          "onQuit": false,
+          "onTopic": false,
+          "commandTimeout": 15000
+        },
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the channels to join",
+            "name": "Specify IRC channels",
+            "properties": {
+             "nickname": {
+                "description": "Nickname for IRC connector user",
+                "displayName": "Nickname",
+                "javaType": "string",
+                "kind": "parameter",
+                "labelHint": "Desired nickname for the integration user",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+               "channels": {
+                "description": "IRC channels to join",
+                "displayName": "Channels",
+                "javaType": "string",
+                "kind": "path",
+                "labelHint": "You can specify multiple channels delimited by comma",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "nicknamePassword": {
+                "description": "Password for IRC connector user",
+                "displayName": "NickServ password",
+                "javaType": "string",
+                "kind": "parameter",
+                "labelHint": "If the integration user nickname is registered with IRC NickServ, you can specify its password here",
+                "required": false,
+                "secret": true,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-irc-sendmsg",
+      "name": "IRC Send Message To Channel",
+      "pattern": "To"
     }
   ],
+  "connectorFactory": "io.syndesis.connector.irc.IrcConnectorFactory",
   "dependencies": [
     {
       "id": "@project.groupId@:@project.artifactId@:@project.version@",
@@ -96,9 +145,56 @@
   ],
   "description": "Send and receive messages to/from an IRC chat",
   "icon": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjAiIHk9IjAiIHZpZXdCb3g9IjAgMCAzMDAgMzAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48c3R5bGU+LnN0MzV7ZmlsbDojNmM0MTk5fTwvc3R5bGU+PHBhdGggY2xhc3M9InN0MzUiIGQ9Ik0xNTUuMiAxLjFjLTE3My03LjUtMjMyLjkgMjE2LjctNC4zIDIzOC43bC0yMSA1OS4yczEyMS40LTY1IDE1MS43LTExMkMzMTguMiAxMzAuNCAzMDMuOCA3LjYgMTU1LjIgMS4xek0yMTkgMTQwLjhjNS42IDAgMTAuMiA0LjUgMTAuMiAxMC4ycy00LjUgMTAuMi0xMC4yIDEwLjJoLTMwLjN2MzEuMmMwIDUuNi00LjUgMTAuMi0xMC4yIDEwLjItNS42IDAtMTAuMi00LjUtMTAuMi0xMC4ydi0zMS4yaC0zNi43djMxLjJjMCA1LjYtNC41IDEwLjItMTAuMiAxMC4yLTUuNiAwLTEwLjItNC41LTEwLjItMTAuMnYtMzEuMkg4MWMtNS42IDAtMTAuMi00LjUtMTAuMi0xMC4yczQuNS0xMC4yIDEwLjItMTAuMmgzMC4zdi0zNUg4MWMtNS42IDAtMTAuMi00LjUtMTAuMi0xMC4yIDAtNS42IDQuNS0xMC4yIDEwLjItMTAuMmgzMC4zdi0zMWMwLTUuNiA0LjUtMTAuMiAxMC4yLTEwLjIgNS42IDAgMTAuMiA0LjUgMTAuMiAxMC4ydjMxLjJoMzYuN1Y1NC40YzAtNS42IDQuNS0xMC4yIDEwLjItMTAuMiA1LjYgMCAxMC4yIDQuNSAxMC4yIDEwLjJ2MzEuMkgyMTljNS42IDAgMTAuMiA0LjUgMTAuMiAxMC4yIDAgNS42LTQuNSAxMC4yLTEwLjIgMTAuMmgtMzAuM3YzNUgyMTl6Ii8+PHBhdGggY2xhc3M9InN0MzUiIGQ9Ik0xMzEuNyAxMDUuOWgzNi43djM1aC0zNi43eiIvPjwvc3ZnPg==",
-  "id": "irc",
-  "metadata": {
-    "tech-preview": true
+  "properties": {
+    "hostname": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "IRC Server hostname",
+      "displayName": "Hostname",
+      "enum": [],
+      "javaType": "string",
+      "kind": "parameter",
+      "labelHint": "Hostname of the IRC server to connect to",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "password": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "IRC Server password",
+      "displayName": "Password",
+      "enum": [],
+      "javaType": "string",
+      "kind": "parameter",
+      "labelHint": "Password is required only when the IRC server requires password to join",
+      "order": "3",
+      "required": false,
+      "secret": true,
+      "tags": [],
+      "type": "string"
+    },
+    "port": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "IRC Server port",
+      "displayName": "Port",
+      "enum": [],
+      "javaType": "int",
+      "kind": "parameter",
+      "labelHint": "Port of the IRC server to connect to",
+      "order": "2",
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "int"
+    }
   },
-  "name": "IRC"
+  "id": "irc",
+  "name": "IRC",
+  "tags": [
+    "verifier"
+  ]
 }
