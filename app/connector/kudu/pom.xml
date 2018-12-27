@@ -31,11 +31,10 @@
 
     <properties>
         <schemeName>apache-kudu</schemeName>
-        <componentName>Kudu</componentName>
+        <componentName>Apache Kudu</componentName>
         <componentPackage>org.apache.camel.component.kudu</componentPackage>
         <kuduVersion>1.7.0</kuduVersion>
         <slf4jVersion>1.7.25</slf4jVersion>
-        <outPackage>org.apache.camel.component.kudu.internal</outPackage>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -111,6 +110,11 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
@@ -118,128 +122,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-        <plugins>
-            <!-- to generate the MANIFEST-FILE of the bundle -->
-            <plugin>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-api-component-maven-plugin</artifactId>
-                <version>${camel.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <scheme>${schemeName}</scheme>
-                    <componentName>${componentName}</componentName>
-                    <componentPackage>${componentPackage}</componentPackage>
-                    <outPackage>${outPackage}</outPackage>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate-test-component-classes</id>
-                        <goals>
-                            <goal>fromApis</goal>
-                        </goals>
-                        <configuration>
-                            <apis>
-                                <api>
-                                    <apiName>tables</apiName>
-                                    <proxyClass>org.apache.kudu.client.KuduClient</proxyClass>
-                                    <fromJavadoc>
-                                    </fromJavadoc>
-                                    <aliases>
-                                        <alias>
-                                            <methodPattern>createTable</methodPattern>
-                                            <methodAlias>create</methodAlias>
-                                        </alias>
-                                        <alias>
-                                            <methodPattern>deleteTable</methodPattern>
-                                            <methodAlias>delete</methodAlias>
-                                        </alias>
-                                        <alias>
-                                            <methodPattern>insertRow</methodPattern>
-                                            <methodAlias>insert</methodAlias>
-                                        </alias>
-                                    </aliases>
-                                </api>
-                            </apis>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- generate components meta-data and validate component includes documentation etc -->
-            <plugin>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-package-maven-plugin</artifactId>
-                <version>${camel.version}</version>
-                <executions>
-                    <execution>
-                        <id>prepare</id>
-                        <goals>
-                            <goal>prepare-components</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                    </execution>
-                    <execution>
-                        <id>validate</id>
-                        <goals>
-                            <goal>validate-components</goal>
-                        </goals>
-                        <phase>prepare-package</phase>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- add generated source and test source to build -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>add-generated-sources</id>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.build.directory}/generated-sources/camel-component</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>add-generated-test-sources</id>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.build.directory}/generated-test-sources/camel-component</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>io.syndesis.connector</groupId>
-                <artifactId>connector-support-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>inspections</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>generate-connector-inspections</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-        </plugins>
-    </build>
 </project>

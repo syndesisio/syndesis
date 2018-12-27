@@ -16,18 +16,8 @@
 
 package org.apache.camel.component.kudu;
 
-import org.apache.camel.Processor;
-import org.apache.camel.util.component.AbstractApiConsumer;
-
-import org.apache.camel.component.kudu.internal.KuduApiName;
-
-/**
- * The Kudu consumer.
- */
-public class KuduConsumer extends AbstractApiConsumer<KuduApiName, KuduConfiguration> {
-
-    public KuduConsumer(KuduEndpoint endpoint, Processor processor) {
-        super(endpoint, processor);
-    }
-
+public interface KuduDbOperations {
+    String INSERT = "insert";
+    String QUERY = "query";
+    String CREATE_TABLE = "create_table";
 }

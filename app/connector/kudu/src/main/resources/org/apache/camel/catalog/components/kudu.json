@@ -20,10 +20,10 @@
     "version": "2.23.0-SNAPSHOT"
   },
   "componentProperties": {
-    "configuration": { "kind": "property", "displayName": "Configuration", "group": "common", "type": "object", "javaType": "org.apache.camel.component.kudu.KuduConfiguration", "deprecated": false, "secret": false, "description": "To use the shared configuration" }
+    "configuration": { }
   },
   "properties": {
-    "apiName": { "kind": "path", "displayName": "Api Name", "group": "common", "required": true, "type": "object", "javaType": "org.apache.camel.component.kudu.internal.KuduApiName", "enum": [ "TABLES" ], "deprecated": false, "secret": false, "description": "What kind of operation to perform" },
+    "apiName": { "kind": "path", "displayName": "Api Name", "group": "common", "required": true, "type": "object", "javaType": "java.lang.String", "enum": [ "TABLES" ], "deprecated": false, "secret": false, "description": "What kind of operation to perform" },
     "methodName": { "kind": "path", "displayName": "Method Name", "group": "common", "required": true, "type": "string", "javaType": "java.lang.String", "enum": [ "create" ], "deprecated": false, "secret": false, "description": "What sub operation to use for the selected operation" }
   }
 }

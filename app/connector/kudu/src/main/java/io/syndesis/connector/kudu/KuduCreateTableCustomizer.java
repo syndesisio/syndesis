@@ -18,19 +18,9 @@ package io.syndesis.connector.kudu;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.apache.camel.component.kudu.internal.KuduApiCollection;
-import org.apache.camel.component.kudu.internal.KuduClientApiMethod;
-import org.apache.camel.util.ObjectHelper;
-import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
-import org.apache.kudu.Type;
 import org.apache.kudu.client.CreateTableOptions;
-import org.apache.kudu.client.KuduTable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class KuduCreateTableCustomizer  implements ComponentProxyCustomizer {
@@ -40,72 +30,6 @@ public class KuduCreateTableCustomizer  implements ComponentProxyCustomizer {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        setApiMethod(options);
-        component.setBeforeProducer(this::beforeProducer);
-    }
-
-    private void setApiMethod(Map<String, Object> options) {
-        name = (String) options.get("name");
-        schema = toSchema((String) options.get("columns"));
-        cto = toCreateTableOptions((String) options.get("table_options_key"),
-                (int) options.get("table_options_bucket"));
-
-        options.put("apiName",
-                KuduApiCollection.getCollection().getApiName(KuduClientApiMethod.class).getName());
-        options.put("methodName", "create");
-    }
-
-    private void beforeProducer(Exchange exchange) {
-        final Message in = exchange.getIn();
-        final KuduTable model = exchange.getIn().getBody(KuduTable.class);
-
-        if (model != null) {
-            if (ObjectHelper.isNotEmpty(model.getName())) {
-                name = model.getName();
-            }
-            if (ObjectHelper.isNotEmpty(model.getSchema())) {
-                schema = model.getSchema();
-            }
-        }
-        in.setHeader("CamelKudu.name", name);
-        in.setHeader("CamelKudu.schema", schema);
-        in.setHeader("CamelKudu.builder", cto);
-    }
-
-    private Schema toSchema(String columns) {
-        String[] c = columns.split(":", -1);
-        List<ColumnSchema> tableColumns = new ArrayList<>(c.length);
-
-        Type t = Type.STRING;
-        for (int i = 0; i < c.length; i++ ) {
-            String[] column = c[i].split(",", 2);
-
-            switch (column[1]) {
-                case "java.lang.String":
-                    t = Type.STRING;
-                    break;
-                case "java.lang.Integer":
-                    t = Type.INT32;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid row type " + t);
-            }
-
-            tableColumns.add(new ColumnSchema.ColumnSchemaBuilder(column[0], t)
-                    .key((i == 0))
-                    .build());
-        }
-
-        return new Schema(tableColumns);
-    }
-
-    private CreateTableOptions toCreateTableOptions(String tableOptionsKey, int tableOptionsBucket) {
-        CreateTableOptions builder = new CreateTableOptions();
-
-        List<String> hashKeys = new ArrayList<>(1);
-        hashKeys.add(tableOptionsKey);
-
-        builder.addHashPartitions(hashKeys, tableOptionsBucket);
-        return builder;
+        //component.setBeforeProducer(this::beforeProducer);
     }
 }
