@@ -21,10 +21,16 @@ import org.apache.camel.CamelExecutionException;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.test.junit4.CamelTestSupport;
+import org.apache.kudu.ColumnSchema;
+import org.apache.kudu.Schema;
+import org.apache.kudu.Type;
+import org.apache.kudu.client.CreateTableOptions;
+import org.apache.kudu.client.KuduClient;
+import org.apache.kudu.client.KuduException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.util.Map;
+import java.util.*;
 
 public class AbstractKuduTest extends CamelTestSupport {
 
@@ -49,5 +55,42 @@ public class AbstractKuduTest extends CamelTestSupport {
     @SuppressWarnings("unchecked")
     protected Object requestBody(String endpoint, Object body) throws CamelExecutionException {
         return template().requestBody(endpoint, body);
+    }
+
+    protected void deleteTestTable(String tableName, String connection) {
+        KuduClient client = new KuduClient.KuduClientBuilder(connection).build();
+        try {
+            client.deleteTable(tableName);
+        } catch (Exception e){
+
+        }
+    }
+
+    protected void createTestTable(String tableName, String connection) {
+        KuduClient client = new KuduClient.KuduClientBuilder(connection).build();
+        final Map<String, Object> headers = new HashMap<>();
+
+        List<ColumnSchema> columns = new ArrayList<>(5);
+        final List<String> columnNames = Arrays.asList("id", "title", "name", "lastname", "address");
+
+        for (int i = 0; i < columnNames.size(); i++) {
+            Type type = i == 0 ? Type.INT32 : Type.STRING;
+            columns.add(
+                    new ColumnSchema.ColumnSchemaBuilder(columnNames.get(i), type)
+                            .key(i == 0)
+                            .build()
+            );
+        }
+
+        List<String> rangeKeys = new ArrayList<>();
+        rangeKeys.add("id");
+
+        try {
+            client.createTable(tableName,
+                    new Schema(columns),
+                    new CreateTableOptions().setRangePartitionColumns(rangeKeys));
+        } catch (Exception e) {
+
+        }
     }
 }

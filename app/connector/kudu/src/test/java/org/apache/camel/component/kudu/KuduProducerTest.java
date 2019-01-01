@@ -23,6 +23,9 @@ import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
 import org.apache.kudu.client.CreateTableOptions;
+import org.apache.kudu.client.KuduException;
+import org.apache.kudu.client.KuduTable;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,6 +34,10 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class KuduProducerTest extends AbstractKuduTest {
+
+    private static final String TABLE = "CamelTestFolder";
+    private static final String HOST = "quickstart.cloudera";
+    private static final String PORT = "7051";
 
     @EndpointInject(uri = "mock:test")
     MockEndpoint successEndpoint;
@@ -49,17 +56,23 @@ public class KuduProducerTest extends AbstractKuduTest {
                 //test route
                 /*
                 from("direct:test")
-                        .to("kudu:influxDbBean?tableName={{influxdb.testDb}}")
+                        .to("kudu:kuduClientBean?tableName={{influxdb.testDb}}")
                         .to("mock:test");
                 */
 
                 //integration test route
                 from("direct:create")
-                        .to("kudu?host={{address}}" +
-                                "&host={{host.address}}" +
-                                "&port={{host.port}}" +
-                                "&tableName={{table.name}}" +
-                                "&operation=create_table");
+                        .to("kudu?host=" + HOST +
+                                "&port=" + PORT +
+                                "&tableName=" + TABLE +
+                                "&operation=create_table")
+                        .to("mock:test");
+
+                from("direct:insert")
+                        .to("kudu?host=" + HOST +
+                                "&port=" + PORT +
+                                "&tableName=" + TABLE)
+                         .to("mock:test");
             }
         };
     }
@@ -71,7 +84,12 @@ public class KuduProducerTest extends AbstractKuduTest {
     }
 
     @Test
-    public void createTable() {
+    public void createTable() throws InterruptedException {
+        deleteTestTable(TABLE, HOST + ":" + PORT);
+
+        errorEndpoint.expectedMessageCount(0);
+        successEndpoint.expectedMessageCount(1);
+
         final Map<String, Object> headers = new HashMap<>();
 
         List<ColumnSchema> columns = new ArrayList<>(5);
@@ -89,22 +107,34 @@ public class KuduProducerTest extends AbstractKuduTest {
         List<String> rangeKeys = new ArrayList<>();
         rangeKeys.add("id");
 
-        headers.put("CamelKudu.Schema", new Schema(columns));
-        headers.put("CamelKudu.TableOptions", new CreateTableOptions().setRangePartitionColumns(rangeKeys));
+        headers.put("Schema", new Schema(columns));
+        headers.put("TableOptions", new CreateTableOptions().setRangePartitionColumns(rangeKeys));
 
         requestBodyAndHeaders("direct://create", null, headers);
+
+        errorEndpoint.assertIsSatisfied();
+        successEndpoint.assertIsSatisfied();
     }
 
-    @Ignore
-    public void insertRow() {
-        // Create a sample row that can be inserted in the test table
-        List<Object> row = new ArrayList<>();
-        row.add(ThreadLocalRandom.current().nextInt(0, 9999));
-        row.add("Mr.");
-        row.add("Samuel");
-        row.add("Smith");
-        row.add("4359  Plainfield Avenue");
+    @Test
+    public void insertRow()  throws InterruptedException {
+        deleteTestTable(TABLE, HOST + ":" + PORT);
+        createTestTable(TABLE, HOST + ":" + PORT);
 
-        sendBody("direct:integration", row);
+        errorEndpoint.expectedMessageCount(0);
+        successEndpoint.expectedMessageCount(1);
+
+        // Create a sample row that can be inserted in the test table
+        Object[] row =
+                {
+                        //ThreadLocalRandom.current().nextInt(0, 9999),
+                        5,
+                        "Mr.", "Samuel", "Smith", "4359  Plainfield Avenue"
+                };
+
+        sendBody("direct:insert", row);
+
+        errorEndpoint.assertIsSatisfied();
+        successEndpoint.assertIsSatisfied();
     }
 }

@@ -16,8 +16,15 @@
 
 package io.syndesis.connector.kudu.model;
 
+import org.apache.kudu.Type;
+
+import java.util.List;
+
 public class KuduTable {
     private String name;
+    private Schema schema;
+    private CreateTableOptions builder;
+
 
     /**
      * @return name of the table
@@ -38,5 +45,67 @@ public class KuduTable {
     @Override
     public String toString() {
         return String.format(name);
+    }
+
+    public CreateTableOptions getBuilder() {
+        return builder;
+    }
+
+    public void setBuilder(CreateTableOptions builder) {
+        this.builder = builder;
+    }
+
+    public Schema getSchema() {
+        return schema;
+    }
+
+    public void setSchema(Schema schema) {
+        this.schema = schema;
+    }
+
+
+    public static class Schema {
+        private ColumnSchema[] columns;
+
+        public ColumnSchema[] getColumns() {
+            return columns;
+        }
+
+        public void setColumns(ColumnSchema[] columns) {
+            this.columns = columns;
+        }
+    }
+
+    public static class CreateTableOptions {
+        private List<String> rangeKeys;
+
+        public List<String> getRangeKeys() {
+            return rangeKeys;
+        }
+
+        public void setRangeKeys(List<String> rangeKeys) {
+            this.rangeKeys = rangeKeys;
+        }
+    }
+
+    public static class ColumnSchema {
+        private String name;
+        private boolean key;
+
+        public boolean isKey() {
+            return key;
+        }
+
+        public void setKey(boolean key) {
+            this.key = key;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 }

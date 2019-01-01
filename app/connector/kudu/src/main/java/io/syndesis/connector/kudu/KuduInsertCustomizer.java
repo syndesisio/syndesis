@@ -16,17 +16,14 @@
 
 package io.syndesis.connector.kudu;
 
+import io.syndesis.connector.kudu.model.KuduInsert;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
-import org.apache.kudu.Schema;
-import org.apache.kudu.client.CreateTableOptions;
 
 import java.util.Map;
 
-public class KuduCreateTableCustomizer implements ComponentProxyCustomizer {
-    private String name;
-    private Schema schema;
-    private CreateTableOptions cto;
+public class KuduInsertCustomizer implements ComponentProxyCustomizer {
+    private KuduInsert row;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {

@@ -79,12 +79,13 @@ public class KuduProducer extends DefaultProducer {
 
         for (int i = 0; i < rows.length; i++) {
             Object value = rows[i];
+            String a = value.getClass().toString();
             switch (value.getClass().toString()) {
-                case "java.lang.String":
+                case "class java.lang.String":
                     row.addString(i, (String) value);
                     break;
-                case "java.lang.Integer":
-                    row.addInt(i, (Integer) value);
+                case "class java.lang.Integer":
+                    row.addInt(i, (int) value);
                     break;
                 default:
                     throw new IllegalArgumentException("The type " + value.getClass().toString() + " is not supported");
@@ -94,13 +95,12 @@ public class KuduProducer extends DefaultProducer {
         session.apply(insert);
     }
 
-    private void doCreateTable(Exchange exchange, String tableName) throws Exception {
+    private KuduTable doCreateTable(Exchange exchange, String tableName) throws Exception {
         LOG.debug("Creating table {}", tableName);
-        connection.createTable(
-                tableName,
-                (Schema) exchange.getIn().getHeader("Schema"),
-                (CreateTableOptions) exchange.getIn().getHeader("TableOptions")
-        );
+
+        Schema schema = (Schema) exchange.getIn().getHeader("Schema");
+        CreateTableOptions builder = (CreateTableOptions) exchange.getIn().getHeader("TableOptions");
+        return connection.createTable(tableName, schema, builder);
     }
 
     private void doQuery(Exchange exchange, String table) {
