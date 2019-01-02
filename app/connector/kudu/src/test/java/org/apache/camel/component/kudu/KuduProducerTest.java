@@ -23,15 +23,10 @@ import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
 import org.apache.kudu.client.CreateTableOptions;
-import org.apache.kudu.client.KuduException;
-import org.apache.kudu.client.KuduTable;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class KuduProducerTest extends AbstractKuduTest {
 
@@ -83,7 +78,7 @@ public class KuduProducerTest extends AbstractKuduTest {
         successEndpoint.reset();
     }
 
-    @Test
+    @Ignore
     public void createTable() throws InterruptedException {
         deleteTestTable(TABLE, HOST + ":" + PORT);
 
@@ -116,7 +111,7 @@ public class KuduProducerTest extends AbstractKuduTest {
         successEndpoint.assertIsSatisfied();
     }
 
-    @Test
+    @Ignore
     public void insertRow()  throws InterruptedException {
         deleteTestTable(TABLE, HOST + ":" + PORT);
         createTestTable(TABLE, HOST + ":" + PORT);
