@@ -16,20 +16,71 @@
 
 package io.syndesis.connector.kudu;
 
+import io.syndesis.connector.kudu.model.KuduTable;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.component.kudu.KuduDbOperations;
+import org.apache.camel.util.ObjectHelper;
+import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
+import org.apache.kudu.Type;
 import org.apache.kudu.client.CreateTableOptions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class KuduCreateTableCustomizer implements ComponentProxyCustomizer {
-    private String name;
-    private Schema schema;
-    private CreateTableOptions cto;
+    private KuduTable.Schema schema;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        //component.setBeforeProducer(this::beforeProducer);
+        setOptions(options);
+        component.setBeforeProducer(this::beforeProducer);
+    }
+
+    private void setOptions(Map<String, Object> options) {
+        options.put("operation", KuduDbOperations.CREATE_TABLE);
+    }
+
+    private void beforeProducer(Exchange exchange) {
+        final Message in = exchange.getIn();
+        final KuduTable model = exchange.getIn().getBody(KuduTable.class);
+
+        if (model != null && ObjectHelper.isNotEmpty(model.getSchema())) {
+            schema = model.getSchema();
+        }
+
+        KuduTable.ColumnSchema[] columnSchema = schema.getColumns();
+        List<ColumnSchema> columns = new ArrayList<>(columnSchema.length);
+        List<String> rangeKeys = new ArrayList<>();
+        for (int i = 0; i < columnSchema.length; i++) {
+            if (columnSchema[i].isKey()) {
+                rangeKeys.add(columnSchema[i].getName());
+            }
+
+            columns.add(
+                    new ColumnSchema.ColumnSchemaBuilder(columnSchema[i].getName(), convertType(columnSchema[i].getType()))
+                            .key(columnSchema[i].isKey())
+                            .build()
+            );
+        }
+
+
+        in.setHeader("Schema", new Schema(columns));
+        in.setHeader("TableOptions", new CreateTableOptions().setRangePartitionColumns(rangeKeys));
+    }
+
+    private Type convertType(String type) {
+        switch (type) {
+            case "String":
+                return Type.STRING;
+            case "Integer":
+                return Type.INT32;
+            default:
+                throw new IllegalArgumentException("The type " + type + " is not supported");
+        }
     }
 }

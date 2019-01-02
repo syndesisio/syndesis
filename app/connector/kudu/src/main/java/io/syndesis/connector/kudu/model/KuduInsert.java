@@ -19,12 +19,13 @@ package io.syndesis.connector.kudu.model;
 public class KuduInsert {
     private Object[] row;
 
-
     public Object[] getRow() {
-        return row;
+        return row.clone();
     }
 
-    public void setRow(Object[] row) {
-        this.row = row;
+    public void setRow(Object[] row, boolean set) {
+        if (set) {
+            this.row = row.clone();
+        }
     }
 }

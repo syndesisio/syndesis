@@ -16,8 +16,6 @@
 
 package io.syndesis.connector.kudu.model;
 
-import org.apache.kudu.Type;
-
 import java.util.List;
 
 public class KuduTable {
@@ -68,11 +66,13 @@ public class KuduTable {
         private ColumnSchema[] columns;
 
         public ColumnSchema[] getColumns() {
-            return columns;
+            return columns.clone();
         }
 
-        public void setColumns(ColumnSchema[] columns) {
-            this.columns = columns;
+        public void setColumns(ColumnSchema[] columns, boolean set) {
+            if (set) {
+                this.columns = columns.clone();
+            }
         }
     }
 
@@ -90,6 +90,7 @@ public class KuduTable {
 
     public static class ColumnSchema {
         private String name;
+        private String type;
         private boolean key;
 
         public boolean isKey() {
@@ -106,6 +107,14 @@ public class KuduTable {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
         }
     }
 }

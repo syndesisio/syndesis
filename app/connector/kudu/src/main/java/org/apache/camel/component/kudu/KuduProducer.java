@@ -17,14 +17,21 @@
 package org.apache.camel.component.kudu;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.InvalidPayloadException;
 import org.apache.camel.impl.DefaultProducer;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.kudu.Schema;
-import org.apache.kudu.client.*;
+import org.apache.kudu.client.Insert;
+import org.apache.kudu.client.KuduClient;
+import org.apache.kudu.client.KuduException;
+import org.apache.kudu.client.KuduTable;
+import org.apache.kudu.client.PartialRow;
+import org.apache.kudu.client.CreateTableOptions;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Arrays;
 
 /**
  * The Kudu producer.
@@ -55,21 +62,16 @@ public class KuduProducer extends DefaultProducer {
             case KuduDbOperations.INSERT:
                 doInsert(exchange, table);
                 break;
-            case KuduDbOperations.QUERY:
-                doQuery(exchange, table);
-                break;
             case KuduDbOperations.CREATE_TABLE:
                 doCreateTable(exchange, table);
                 break;
             default:
                 throw new IllegalArgumentException("The operation " + endpoint.getOperation() + " is not supported");
         }
-        System.out.println(exchange.getIn().getBody());
     }
 
-    private void doInsert(Exchange exchange, String tableName) throws Exception {
+    private void doInsert(Exchange exchange, String tableName) throws KuduException, InvalidPayloadException {
         KuduTable table = connection.openTable(tableName);
-        KuduSession session = connection.newSession();
 
         Insert insert = table.newInsert();
         PartialRow row = insert.getRow();
@@ -79,7 +81,6 @@ public class KuduProducer extends DefaultProducer {
 
         for (int i = 0; i < rows.length; i++) {
             Object value = rows[i];
-            String a = value.getClass().toString();
             switch (value.getClass().toString()) {
                 case "class java.lang.String":
                     row.addString(i, (String) value);
@@ -92,19 +93,14 @@ public class KuduProducer extends DefaultProducer {
             }
         }
 
-        session.apply(insert);
+        connection.newSession().apply(insert);
     }
 
-    private KuduTable doCreateTable(Exchange exchange, String tableName) throws Exception {
+    private KuduTable doCreateTable(Exchange exchange, String tableName) throws KuduException {
         LOG.debug("Creating table {}", tableName);
 
         Schema schema = (Schema) exchange.getIn().getHeader("Schema");
         CreateTableOptions builder = (CreateTableOptions) exchange.getIn().getHeader("TableOptions");
         return connection.createTable(tableName, schema, builder);
     }
-
-    private void doQuery(Exchange exchange, String table) {
-
-    }
-
 }

@@ -16,8 +16,7 @@
 
 package org.apache.camel.component.kudu;
 
-public interface KuduDbOperations {
-    String INSERT = "insert";
-    String QUERY = "query";
-    String CREATE_TABLE = "create_table";
+public class KuduDbOperations {
+    public static final String INSERT = "insert";
+    public static final String CREATE_TABLE = "create_table";
 }

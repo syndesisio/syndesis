@@ -145,7 +145,7 @@
   "id": "kudu",
   "name": "Apache Kudu",
   "properties": {
-    "host_address": {
+    "host": {
       "componentProperty": true,
       "deprecated": false,
       "displayName": "Address of kudu master host",
@@ -160,7 +160,7 @@
       "tags": [],
       "type": "string"
     },
-    "host_port": {
+    "port": {
       "componentProperty": true,
       "deprecated": false,
       "displayName": "Port to establish the connection to",
@@ -169,6 +169,21 @@
       "kind": "property",
       "label": "Port",
       "labelHint": "Port where kudu service is listening in the remote port, by default 7051",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "tableName": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Table",
+      "group": "common",
+      "javaType": "java.lang.Integer",
+      "kind": "property",
+      "label": "Table name",
+      "labelHint": "Table where operations are going to be done",
       "order": "1",
       "required": true,
       "secret": false,
