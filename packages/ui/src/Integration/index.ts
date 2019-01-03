@@ -1,3 +1,4 @@
+export * from './IntegrationActionConfigurationForm';
 export * from './IntegrationProgress';
 export * from './IntegrationStatus';
 export * from './IntegrationStatusDetail';

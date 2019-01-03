@@ -1,31 +1,44 @@
-import { WithRouter } from '@syndesis/utils';
 import * as React from 'react';
-import Loadable from 'react-loadable';
-import { ModuleLoader } from '../../containers';
-
-const LoadableIntegrationsApp = Loadable({
-  loader: () =>
-    import(/* webpackChunkName: "Integrations" */ './IntegrationsApp'),
-  loading: ModuleLoader,
-});
-
-const LoadableIntegrationCreatorApp = Loadable({
-  loader: () =>
-    import(/* webpackChunkName: "IntegrationCreator" */ './IntegrationCreatorApp'),
-  loading: ModuleLoader,
-});
+import { Route, Switch } from 'react-router';
+import {
+  IntegrationCreatorStartActionPage,
+  IntegrationCreatorStartConfigurationPage,
+  IntegrationCreatorStartConnectionPage,
+  IntegrationsPage,
+  TestAtlasmapPage,
+} from './pages';
+import routes from './routes';
 
 export class IntegrationsModule extends React.Component {
   public render() {
     return (
-      <WithRouter>
-        {({ match }) => (
-          <>
-            <LoadableIntegrationsApp baseurl={match.path} />
-            <LoadableIntegrationCreatorApp baseurl={`${match.path}/create`} />
-          </>
-        )}
-      </WithRouter>
+      <Switch>
+        <Route
+          path={routes.integrations.create.start.configureAction}
+          exact={true}
+          component={IntegrationCreatorStartConfigurationPage}
+        />
+        <Route
+          path={routes.integrations.create.start.selectAction}
+          exact={true}
+          component={IntegrationCreatorStartActionPage}
+        />
+        <Route
+          path={routes.integrations.create.begin}
+          exact={true}
+          component={IntegrationCreatorStartConnectionPage}
+        />
+        <Route
+          path={routes.integrations.list}
+          exact={true}
+          component={IntegrationsPage}
+        />
+        <Route
+          path={'/integrations/atlasmap'}
+          exact={true}
+          component={TestAtlasmapPage}
+        />
+      </Switch>
     );
   }
 }
