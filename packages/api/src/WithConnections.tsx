@@ -1,8 +1,8 @@
 import { ConnectionOverview } from '@syndesis/models';
 import * as React from 'react';
-import { IRestState } from './Rest';
+import { IFetchState } from './Fetch';
 import { ServerEventsContext } from './ServerEventsContext';
-import { SyndesisRest } from './SyndesisRest';
+import { SyndesisFetch } from './SyndesisFetch';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
 
@@ -52,7 +52,7 @@ export interface IConnectionsResponse {
 
 export interface IWithConnectionsProps {
   disableUpdates?: boolean;
-  children(props: IRestState<IConnectionsResponse>): any;
+  children(props: IFetchState<IConnectionsResponse>): any;
 }
 
 export class WithConnections extends React.Component<IWithConnectionsProps> {
@@ -62,7 +62,7 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
 
   public render() {
     return (
-      <SyndesisRest<IConnectionsResponse>
+      <SyndesisFetch<IConnectionsResponse>
         url={'/connections'}
         defaultValue={{
           connectionsForDisplay: [],
@@ -107,7 +107,7 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
             </ServerEventsContext.Consumer>
           );
         }}
-      </SyndesisRest>
+      </SyndesisFetch>
     );
   }
 }

@@ -6,8 +6,8 @@ import {
 } from '@syndesis/models';
 import { ActionDescriptor, ActionDescriptorStep } from '@syndesis/models/src';
 import * as React from 'react';
-import { IRestState } from './Rest';
-import { SyndesisRest } from './SyndesisRest';
+import { IFetchState } from './Fetch';
+import { SyndesisFetch } from './SyndesisFetch';
 
 export function getActionsWithFrom(actions: Action[] = []) {
   return actions.filter(a => a.pattern === 'From');
@@ -90,13 +90,13 @@ export interface IConnectionResponse extends ConnectionOverview {
 
 export interface IWithConnectionProps {
   id: string;
-  children(props: IRestState<IConnectionResponse>): any;
+  children(props: IFetchState<IConnectionResponse>): any;
 }
 
 export class WithConnection extends React.Component<IWithConnectionProps> {
   public render() {
     return (
-      <SyndesisRest<ConnectionOverview>
+      <SyndesisFetch<ConnectionOverview>
         url={`/connections/${this.props.id}`}
         defaultValue={{
           name: '',
@@ -130,7 +130,7 @@ export class WithConnection extends React.Component<IWithConnectionProps> {
             },
           })
         }
-      </SyndesisRest>
+      </SyndesisFetch>
     );
   }
 }

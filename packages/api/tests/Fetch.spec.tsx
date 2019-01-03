@@ -1,17 +1,12 @@
 import { render } from 'react-testing-library';
 import * as React from 'react';
-import { Rest } from '../src';
+import { Fetch } from '../src';
 
-export default describe('Rest', function() {
+export default describe('Fetch', function() {
   const testComponent = (
-    <Rest
-      baseUrl={'http://example.com'}
-      url={'/test'}
-      defaultValue={{}}
-      autoload={false}
-    >
+    <Fetch baseUrl={'http://example.com'} url={'/test'} defaultValue={{}}>
       {props => <span>ok</span>}
-    </Rest>
+    </Fetch>
   );
 
   it('Should render', function() {
