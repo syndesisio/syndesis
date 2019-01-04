@@ -36,32 +36,34 @@ public class KuduInsertCustomizer implements ComponentProxyCustomizer {
     }
 
     private void setOptions(Map<String, Object> options) {
-        String[] ro = options.get("row").toString().split(";", -1);
-        Object[] optionsRow = new Object[ro.length];
-
-        for (int i = 0; i < ro.length; i++) {
-            String[] current = ro[i].split(",", 2);
-            switch (current[0]) {
-                case "String":
-                    optionsRow[i] = current[1];
-                    break;
-                case "Integer":
-                    optionsRow[i] = Integer.parseInt(current[1]);
-                    break;
-                default:
-                    throw new IllegalArgumentException("The type " + current[0] + " is not supported");
-            }
-        }
-
         row = new KuduInsert();
-        row.setRow(optionsRow, true);
+
+        if(options != null && !options.isEmpty()) {
+            String[] ro = options.get("row").toString().split(";", -1);
+            Object[] optionsRow = new Object[ro.length];
+
+            for (int i = 0; i < ro.length; i++) {
+                String[] current = ro[i].split(",", 2);
+                switch (current[0]) {
+                    case "String":
+                        optionsRow[i] = current[1];
+                        break;
+                    case "Integer":
+                        optionsRow[i] = Integer.parseInt(current[1]);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("The type " + current[0] + " is not supported");
+                }
+            }
+            row.setRow(optionsRow, true);
+        }
 
         options.put("operation", KuduDbOperations.INSERT);
     }
 
     private void beforeProducer(Exchange exchange) {
         final Message in = exchange.getIn();
-        final KuduInsert model = exchange.getIn().getBody(KuduInsert.class);
+        final KuduInsert model = in.getBody(KuduInsert.class);
 
         if (model != null && ObjectHelper.isNotEmpty(model.getRow())) {
                 row = model;

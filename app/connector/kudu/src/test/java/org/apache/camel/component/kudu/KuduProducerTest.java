@@ -48,13 +48,6 @@ public class KuduProducerTest extends AbstractKuduTest {
 
                 errorHandler(deadLetterChannel("mock:error").redeliveryDelay(0).maximumRedeliveries(0));
 
-                //test route
-                /*
-                from("direct:test")
-                        .to("kudu:kuduClientBean?tableName={{influxdb.testDb}}")
-                        .to("mock:test");
-                */
-
                 //integration test route
                 from("direct:create")
                         .to("kudu?host=" + HOST +
