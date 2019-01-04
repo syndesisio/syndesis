@@ -16,50 +16,69 @@
 
 package org.apache.camel.component.kudu;
 
-import org.apache.camel.component.kudu.internal.KuduApiCollection;
-import org.apache.camel.component.kudu.internal.KuduApiName;
-import org.apache.camel.component.kudu.internal.KuduConnectionHelper;
-import org.apache.camel.component.kudu.internal.KuduConstants;
-import org.apache.camel.component.kudu.internal.KuduPropertiesHelper;
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
+import org.apache.camel.impl.DefaultEndpoint;
+import org.apache.camel.spi.Metadata;
 import org.apache.camel.spi.UriEndpoint;
 import org.apache.camel.spi.UriParam;
-import org.apache.camel.util.component.AbstractApiEndpoint;
-import org.apache.camel.util.component.ApiMethod;
-import org.apache.camel.util.component.ApiMethodPropertiesHelper;
+import org.apache.camel.spi.UriPath;
 import org.apache.kudu.client.KuduClient;
-
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Represents a Kudu endpoint.
+ * Represents a Kudu endpoint. A kudu endpoint allows you to interact with
+ * <a href="https://kudu.apache.org/">Apache Kudu</a>,  a free and open source
+ * column-oriented data store of the Apache Hadoop ecosystem.
  */
-@UriEndpoint(firstVersion = "1.0-SNAPSHOT",
+@UriEndpoint(firstVersion = "2.23.0",
         scheme = "kudu",
-        title = "Kudu",
-        syntax="kudu:apiName/methodName",
-        consumerClass = KuduConsumer.class,
-        label = "database")
-public class KuduEndpoint extends AbstractApiEndpoint<KuduApiName, KuduConfiguration> {
+        title = "Apache Kudu", syntax="kudu",
+        producerOnly = true,
+        label = "database,iot")
+public class KuduEndpoint extends DefaultEndpoint {
 
-    @UriParam(name = "configuration")
-    private final KuduConfiguration kuduConfiguration;
+    private static final Logger LOG = LoggerFactory.getLogger(KuduEndpoint.class);
+    private KuduClient kuduClient;
 
-    private KuduClient client;
+    @UriPath
+    @Metadata(required = "true")
+    private String host;
 
-    private Object apiProxy;
+    @UriPath
+    @Metadata(required = "true")
+    private String port;
 
-    private KuduClient getClient() {
-        return client;
+    @UriParam
+    private String tableName;
+
+    @UriParam(defaultValue = KuduDbOperations.INSERT)
+    private String operation = KuduDbOperations.INSERT;
+
+
+    public KuduEndpoint(String uri, KuduComponent component) {
+        super(uri, component);
     }
 
-    public KuduEndpoint(String uri, KuduComponent component,
-                        KuduApiName apiName, String methodName, KuduConfiguration endpointConfiguration) {
-        super(uri, component, apiName, methodName, KuduApiCollection.getCollection().getHelper(apiName), endpointConfiguration);
+    @Override
+    protected void doStart() throws Exception {
+        LOG.debug("Connection: {}, {}", host, port);
+        kuduClient = new KuduClient.KuduClientBuilder(host + ":" + port).build();
+        LOG.debug("Resolved the host with the name {} as {}", host, kuduClient);
+        super.doStart();
+    }
 
-        this.kuduConfiguration = endpointConfiguration;
+    @Override
+    protected void doStop() throws Exception {
+        try {
+            kuduClient.shutdown();
+        } catch (Exception e) {
+            LOG.error("Error -> " + e.getMessage());
+        }
+
+        super.doStop();
     }
 
     @Override
@@ -69,73 +88,70 @@ public class KuduEndpoint extends AbstractApiEndpoint<KuduApiName, KuduConfigura
 
     @Override
     public Consumer createConsumer(Processor processor) throws Exception {
-        // make sure inBody is not set for consumers
-        if (inBody != null) {
-            throw new IllegalArgumentException("Option inBody is not supported for consumer endpoint");
-        }
-        final KuduConsumer consumer = new KuduConsumer(this, processor);
-        // also set consumer.* properties
-        configureConsumer(consumer);
-        return consumer;
+        throw new UnsupportedOperationException("You cannot receive messages from this endpoint");
     }
 
     @Override
-    protected String getThreadProfileName() {
-        return KuduConstants.THREAD_PROFILE_NAME;
+    public boolean isSingleton() {
+        return true;
     }
 
     /**
-     * Create connection to kudu or reuse the connection held
-     * by the component
-     *
+     * Some description of this option, and what it does
      */
-    private void createKuduConnection() {
-        final KuduComponent component = getComponent();
-        final boolean clientShared = kuduConfiguration.equals(getComponent().getConfiguration());
-        if (clientShared) {
-            // get shared singleton connection from Component
-            this.client = component.getClient();
-        } else {
-            this.client = KuduConnectionHelper.createConnection(kuduConfiguration);
-        }
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public KuduClient getKuduClient() {
+        return kuduClient;
     }
 
     /**
-     * Set the correct apiProxy and method call based on the apiName parameter
+     * Set the client to connect to a kudu resource
+     * @param kuduClient
      */
-    @SuppressWarnings("PMD.TooFewBranchesForASwitchStatement") // more to be added
-    private void createApiProxy() {
-        switch (apiName) {
-            case TABLES:
-                apiProxy = getClient();
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid API name " + apiName);
-        }
+    public void setKuduClient(KuduClient kuduClient) {
+        this.kuduClient = kuduClient;
     }
 
-    @Override
-    protected void afterConfigureProperties() {
-        // create connection eagerly, a good way to validate kuduConfiguration
-        createKuduConnection();
+    public String getTableName() {
+        return tableName;
     }
 
-    @Override
-    public Object getApiProxy(ApiMethod method, Map<String, Object> args) {
-        if (apiProxy == null) {
-            // create API proxy lazily
-            createApiProxy();
-        }
-        return apiProxy;
+    /**
+     * The name of the table where the rows are stored
+     * @param tableName
+     */
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
-    @Override
-    public KuduComponent getComponent() {
-        return (KuduComponent) super.getComponent();
+    public String getOperation() {
+        return operation;
     }
 
-    @Override
-    protected ApiMethodPropertiesHelper<KuduConfiguration> getPropertiesHelper() {
-        return KuduPropertiesHelper.getHelper();
+    /**
+     * What kind of operation are to be performed in the table
+     * @param operation
+     */
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    /**
+     * Port where kudu service is listening
+     * @param port
+     */
+    public void setPort(String port) {
+        this.port = port;
     }
 }

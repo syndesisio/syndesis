@@ -16,8 +16,13 @@
 
 package io.syndesis.connector.kudu.model;
 
+import java.util.List;
+
 public class KuduTable {
     private String name;
+    private Schema schema;
+    private CreateTableOptions builder;
+
 
     /**
      * @return name of the table
@@ -38,5 +43,78 @@ public class KuduTable {
     @Override
     public String toString() {
         return String.format(name);
+    }
+
+    public CreateTableOptions getBuilder() {
+        return builder;
+    }
+
+    public void setBuilder(CreateTableOptions builder) {
+        this.builder = builder;
+    }
+
+    public Schema getSchema() {
+        return schema;
+    }
+
+    public void setSchema(Schema schema) {
+        this.schema = schema;
+    }
+
+
+    public static class Schema {
+        private ColumnSchema[] columns;
+
+        public ColumnSchema[] getColumns() {
+            return columns.clone();
+        }
+
+        public void setColumns(ColumnSchema[] columns, boolean set) {
+            if (set) {
+                this.columns = columns.clone();
+            }
+        }
+    }
+
+    public static class CreateTableOptions {
+        private List<String> rangeKeys;
+
+        public List<String> getRangeKeys() {
+            return rangeKeys;
+        }
+
+        public void setRangeKeys(List<String> rangeKeys) {
+            this.rangeKeys = rangeKeys;
+        }
+    }
+
+    public static class ColumnSchema {
+        private String name;
+        private String type;
+        private boolean key;
+
+        public boolean isKey() {
+            return key;
+        }
+
+        public void setKey(boolean key) {
+            this.key = key;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
     }
 }

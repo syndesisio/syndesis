@@ -14,13 +14,11 @@
           "type": "io.syndesis.connector.kudu.model.KuduTable"
         },
         "outputDataShape": {
-          "name": "KuduTable",
-          "kind": "java",
-          "type": "io.syndesis.connector.kudu.model.KuduTable"
+          "kind": "none"
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Specify table properties. ",
+            "description": "Specify table properties.",
             "name": "Create a kudu table",
             "properties": {
               "name": {
@@ -32,7 +30,7 @@
                 "label": "producer",
                 "labelHint": "The table name.",
                 "order": "1",
-                "required": false,
+                "required": true,
                 "secret": false,
                 "type": "string"
               },
@@ -45,7 +43,7 @@
                 "label": "producer",
                 "labelHint": "Table's columns in the way: column1Name,type:column2Name,type.",
                 "order": "2",
-                "required": false,
+                "required": true,
                 "secret": false,
                 "type": "string"
               },
@@ -71,7 +69,7 @@
                 "label": "producer",
                 "labelHint": "Name of the key used for hashing",
                 "order": "2",
-                "required": false,
+                "required": true,
                 "secret": false,
                 "type": "string"
               }
@@ -81,6 +79,61 @@
       },
       "id": "io.syndesis:kudu-create-table-connector",
       "name": "Create kudu table",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Insert data into kudu tables",
+      "descriptor": {
+        "componentScheme": "apache-kudu",
+        "connectorCustomizers": [
+          "io.syndesis.connector.kudu.KuduInsertCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "KuduTable",
+          "kind": "java",
+          "type": "io.syndesis.connector.kudu.model.KuduInsert"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Insert a single row in a kudu table",
+            "name": "Insert a row",
+            "properties": {
+              "name": {
+                "deprecated": false,
+                "displayName": "Table",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Name of the table where records are going to be inserted",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "columns": {
+                "deprecated": false,
+                "displayName": "Row",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Row to be inserted in the way: column1Name,type:column2Name,type.",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:kudu-insert-connector",
+      "name": "Insert a row in a kudu table",
       "pattern": "To"
     }
   ],
@@ -92,15 +145,45 @@
   "id": "kudu",
   "name": "Apache Kudu",
   "properties": {
-    "masters": {
+    "host": {
       "componentProperty": true,
       "deprecated": false,
-      "displayName": "List of kudu master hosts to establish the connection to",
+      "displayName": "Address of kudu master host",
       "group": "common",
       "javaType": "java.lang.String",
       "kind": "property",
-      "label": "",
-      "labelHint": "List of master servers to connect to ex: hostname1:7051,hostname2:7051.",
+      "label": "Address",
+      "labelHint": "Address of the host to connect to: hostname OR 10.10.10.10",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "port": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Port to establish the connection to",
+      "group": "common",
+      "javaType": "java.lang.Integer",
+      "kind": "property",
+      "label": "Port",
+      "labelHint": "Port where kudu service is listening in the remote port, by default 7051",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "tableName": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Table",
+      "group": "common",
+      "javaType": "java.lang.Integer",
+      "kind": "property",
+      "label": "Table name",
+      "labelHint": "Table where operations are going to be done",
       "order": "1",
       "required": true,
       "secret": false,

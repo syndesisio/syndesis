@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-package org.apache.camel.component.kudu.internal;
+package org.apache.camel.component.kudu;
 
-/**
- * Constants for Kudu component.
- */
-public final class KuduConstants {
-
-    // suffix for parameters when passed as exchange header properties
-    public static final String PROPERTY_PREFIX = "CamelKudu.";
-
-    // thread profile name for this component
-    public static final String THREAD_PROFILE_NAME = "CamelKudu";
-
-    private KuduConstants() {
-        // just holds the constant values
-    }
+public class KuduDbOperations {
+    public static final String INSERT = "insert";
+    public static final String CREATE_TABLE = "create_table";
 }

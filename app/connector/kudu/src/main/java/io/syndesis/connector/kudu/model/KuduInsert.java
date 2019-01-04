@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package org.apache.camel.component.kudu;
+package io.syndesis.connector.kudu.model;
 
-import org.apache.camel.Processor;
-import org.apache.camel.util.component.AbstractApiConsumer;
+public class KuduInsert {
+    private Object[] row;
 
-import org.apache.camel.component.kudu.internal.KuduApiName;
-
-/**
- * The Kudu consumer.
- */
-public class KuduConsumer extends AbstractApiConsumer<KuduApiName, KuduConfiguration> {
-
-    public KuduConsumer(KuduEndpoint endpoint, Processor processor) {
-        super(endpoint, processor);
+    public Object[] getRow() {
+        return row.clone();
     }
 
+    public void setRow(Object[] row, boolean set) {
+        if (set) {
+            this.row = row.clone();
+        }
+    }
 }

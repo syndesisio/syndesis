@@ -16,16 +16,91 @@
 
 package org.apache.camel.component.kudu;
 
-import org.apache.camel.util.component.AbstractApiProducer;
-import org.apache.camel.component.kudu.internal.KuduApiName;
-import org.apache.camel.component.kudu.internal.KuduPropertiesHelper;
+import org.apache.camel.Exchange;
+import org.apache.camel.InvalidPayloadException;
+import org.apache.camel.impl.DefaultProducer;
+import org.apache.camel.util.ObjectHelper;
+import org.apache.kudu.Schema;
+import org.apache.kudu.client.Insert;
+import org.apache.kudu.client.KuduClient;
+import org.apache.kudu.client.KuduException;
+import org.apache.kudu.client.KuduTable;
+import org.apache.kudu.client.PartialRow;
+import org.apache.kudu.client.CreateTableOptions;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 /**
  * The Kudu producer.
  */
-public class KuduProducer extends AbstractApiProducer<KuduApiName, KuduConfiguration> {
+public class KuduProducer extends DefaultProducer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(KuduProducer.class);
+
+    private KuduEndpoint endpoint;
+    private KuduClient connection;
 
     public KuduProducer(KuduEndpoint endpoint) {
-        super(endpoint, KuduPropertiesHelper.getHelper());
+        super(endpoint);
+        this.endpoint = endpoint;
+
+        if (ObjectHelper.isEmpty(endpoint.getKuduClient())) {
+            throw new IllegalArgumentException("Can't create a producer when the database connection is null");
+        }
+
+        this.connection = endpoint.getKuduClient();
+        this.endpoint = endpoint;
+    }
+
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        String table = endpoint.getTableName();
+        switch (endpoint.getOperation()) {
+            case KuduDbOperations.INSERT:
+                doInsert(exchange, table);
+                break;
+            case KuduDbOperations.CREATE_TABLE:
+                doCreateTable(exchange, table);
+                break;
+            default:
+                throw new IllegalArgumentException("The operation " + endpoint.getOperation() + " is not supported");
+        }
+    }
+
+    private void doInsert(Exchange exchange, String tableName) throws KuduException, InvalidPayloadException {
+        KuduTable table = connection.openTable(tableName);
+
+        Insert insert = table.newInsert();
+        PartialRow row = insert.getRow();
+
+        Object[] rows = exchange.getIn().getMandatoryBody(Object[].class);
+        LOG.debug("Writing row {}", Arrays.toString(rows));
+
+        for (int i = 0; i < rows.length; i++) {
+            Object value = rows[i];
+            switch (value.getClass().toString()) {
+                case "class java.lang.String":
+                    row.addString(i, (String) value);
+                    break;
+                case "class java.lang.Integer":
+                    row.addInt(i, (int) value);
+                    break;
+                default:
+                    throw new IllegalArgumentException("The type " + value.getClass().toString() + " is not supported");
+            }
+        }
+
+        connection.newSession().apply(insert);
+    }
+
+    private KuduTable doCreateTable(Exchange exchange, String tableName) throws KuduException {
+        LOG.debug("Creating table {}", tableName);
+
+        Schema schema = (Schema) exchange.getIn().getHeader("Schema");
+        CreateTableOptions builder = (CreateTableOptions) exchange.getIn().getHeader("TableOptions");
+        return connection.createTable(tableName, schema, builder);
     }
 }
