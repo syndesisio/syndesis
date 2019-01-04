@@ -6,13 +6,14 @@ export default {
     list: '',
     create: include('create', {
       begin: '',
-      start: include(':integrationData/start', {
+      start: include('start', {
         configureAction: `:connectionId/:actionId/:step?`,
         selectAction: `:connectionId`,
       }),
-      end: include(':integrationData/end', {
+      end: include('end/:integrationData', {
         configureAction: `:connectionId/:actionId/:step?`,
         selectAction: `:connectionId`,
+        selectConnection: ``,
       }),
     }),
   }),

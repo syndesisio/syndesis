@@ -5,18 +5,11 @@ import { reverse } from 'named-urls';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ConnectionsWithToolbar } from '../../connections/containers/ConnectionsWithToolbar';
-import { serializeIntegration } from '../helpers';
 import routes from '../routes';
 
 export function getConnectionHref(connection: Connection): string {
-  const integrationData = serializeIntegration({
-    flows: [],
-    name: '',
-    tags: [],
-  });
   return reverse(routes.integrations.create.start.selectAction, {
     connectionId: connection.id,
-    integrationData,
   });
 }
 

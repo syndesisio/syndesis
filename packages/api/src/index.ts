@@ -4,6 +4,7 @@ export * from './callFetch';
 export * from './Fetch';
 export * from './ServerEventsContext';
 export * from './Stream';
+export * from './WithIntegrationHelpers';
 export * from './WithApiConnectors';
 export * from './WithExtensions';
 export * from './WithIntegrations';

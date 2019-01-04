@@ -12,7 +12,7 @@ export class IntegrationCreatorStartActionPage extends React.Component {
     return (
       <WithRouter>
         {({ match }) => {
-          const { connectionId, integrationData } = match.params as any;
+          const { connectionId } = match.params as any;
           return (
             <WithConnection id={(match.params as any).connectionId}>
               {({ data, hasData, error }) => (
@@ -51,7 +51,6 @@ export class IntegrationCreatorStartActionPage extends React.Component {
                                   {
                                     actionId: a.id,
                                     connectionId,
-                                    integrationData,
                                   }
                                 )}
                                 style={{

@@ -13,6 +13,7 @@
     "@syndesis/utils": "*",
     "i18next": "^12.1.0",
     "i18next-browser-languagedetector": "^2.2.4",
+    "immer": "^1.9.3",
     "named-urls": "^1.4.0",
     "patternfly-react": "^2.19.1",
     "react": "^16.5.2",
