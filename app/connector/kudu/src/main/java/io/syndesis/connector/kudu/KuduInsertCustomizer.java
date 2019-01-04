@@ -33,12 +33,13 @@ public class KuduInsertCustomizer implements ComponentProxyCustomizer {
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setOptions(options);
         component.setBeforeProducer(this::beforeProducer);
+        component.setAfterProducer(this::afterProducer);
     }
 
     private void setOptions(Map<String, Object> options) {
         row = new KuduInsert();
 
-        if(options != null && !options.isEmpty()) {
+        if (options != null && !options.isEmpty()) {
             String[] ro = options.get("row").toString().split(";", -1);
             Object[] optionsRow = new Object[ro.length];
 
@@ -66,9 +67,22 @@ public class KuduInsertCustomizer implements ComponentProxyCustomizer {
         final KuduInsert model = in.getBody(KuduInsert.class);
 
         if (model != null && ObjectHelper.isNotEmpty(model.getRow())) {
-                row = model;
+            row = model;
         }
 
         in.setBody(row.getRow());
+    }
+
+    private void afterProducer(Exchange exchange) {
+        final Message in = exchange.getIn();
+        final KuduInsert insert = in.getBody(KuduInsert.class);
+
+        KuduInsert model = new KuduInsert();
+        if (ObjectHelper.isNotEmpty(insert) &&
+                insert.getRow() != null && insert.getRow().length != 0) {
+            model.setRow(insert.getRow(), true);
+        }
+
+        in.setBody(model);
     }
 }

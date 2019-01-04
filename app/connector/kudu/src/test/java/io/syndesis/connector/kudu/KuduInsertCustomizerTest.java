@@ -76,4 +76,29 @@ public class KuduInsertCustomizerTest extends AbstractKuduCustomizerTestSupport 
         Assert.assertEquals("First element of the row is an integer", 5, row[0]);
         Assert.assertEquals("Second element of the row is the title", "Mr.", row[1]);
     }
+
+    @Test
+    public void testAfterProducerFromModel() throws Exception {
+        customizer.customize(getComponent(), new HashMap<>());
+
+        KuduInsert kuduInsert = new KuduInsert();
+        Object[] insert =
+                {
+                        5,
+                        "Mr.", "Samuel", "Smith", "4359  Plainfield Avenue"
+                };
+        kuduInsert.setRow(insert, true);
+
+        Exchange inbound = new DefaultExchange(createCamelContext());
+        inbound.getIn().setBody(kuduInsert);
+        getComponent().getAfterProducer().process(inbound);
+
+        KuduInsert model = (KuduInsert) inbound.getIn().getBody();
+
+        Assert.assertNotNull("Model is not null", model);
+        Assert.assertEquals("Model has all elements", 5, model.getRow().length);
+
+        Assert.assertEquals("First element is the id", 5, model.getRow()[0]);
+        Assert.assertEquals("Third element is the name", "Samuel", model.getRow()[2]);
+    }
 }

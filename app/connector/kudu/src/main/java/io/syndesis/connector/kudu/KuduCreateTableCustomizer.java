@@ -39,9 +39,27 @@ public class KuduCreateTableCustomizer implements ComponentProxyCustomizer {
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setOptions(options);
         component.setBeforeProducer(this::beforeProducer);
+        component.setAfterProducer(this::afterProducer);
     }
 
     private void setOptions(Map<String, Object> options) {
+        if(options != null && !options.isEmpty()) {
+            String[] columns = ((String) options.get("columns")).split(";", -1);
+            KuduTable.ColumnSchema[] columnSchemas = new KuduTable.ColumnSchema[columns.length];
+
+            for (int i = 0; i < columns.length; i++) {
+                String[] column = columns[i].split(",", 2);
+                columnSchemas[i] = new KuduTable.ColumnSchema(
+                        column[1],
+                        column[0],
+                        i == 0
+                );
+            }
+
+            schema = new KuduTable.Schema();
+            schema.setColumns(columnSchemas, true);
+        }
+
         options.put("operation", KuduDbOperations.CREATE_TABLE);
     }
 
@@ -68,9 +86,22 @@ public class KuduCreateTableCustomizer implements ComponentProxyCustomizer {
             );
         }
 
-
         in.setHeader("Schema", new Schema(columns));
         in.setHeader("TableOptions", new CreateTableOptions().setRangePartitionColumns(rangeKeys));
+    }
+
+    private void afterProducer(Exchange exchange) {
+        final Message in = exchange.getIn();
+        final KuduTable table = exchange.getIn().getBody(KuduTable.class);
+
+        KuduTable model = new KuduTable();
+        if (ObjectHelper.isNotEmpty(table)) {
+            model.setName(table.getName());
+            model.setSchema(table.getSchema());
+            model.setBuilder(table.getBuilder());
+        }
+
+        in.setBody(model);
     }
 
     private Type convertType(String type) {
