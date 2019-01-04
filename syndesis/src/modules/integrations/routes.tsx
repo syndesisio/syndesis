@@ -10,7 +10,7 @@ export default {
         configureAction: `:connectionId/:actionId/:step?`,
         selectAction: `:connectionId`,
       }),
-      end: include('end/:integrationData', {
+      finish: include('finish/:integrationData', {
         configureAction: `:connectionId/:actionId/:step?`,
         selectAction: `:connectionId`,
         selectConnection: ``,

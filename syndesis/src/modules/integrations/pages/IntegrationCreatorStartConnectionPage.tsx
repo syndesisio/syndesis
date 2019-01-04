@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { ConnectionsWithToolbar } from '../../connections/containers/ConnectionsWithToolbar';
 import routes from '../routes';
 
-export function getConnectionHref(connection: Connection): string {
+export function getStartSelectActionHref(connection: Connection): string {
   return reverse(routes.integrations.create.start.selectAction, {
     connectionId: connection.id,
   });
@@ -19,7 +19,6 @@ export class IntegrationCreatorStartConnectionPage extends React.Component {
       <>
         <PageHeader>
           <Breadcrumb>
-            <Link to={'/'}>Home</Link>
             <Link to={routes.integrations.list}>Integrations</Link>
             <span>New integration</span>
           </Breadcrumb>
@@ -35,7 +34,7 @@ export class IntegrationCreatorStartConnectionPage extends React.Component {
               error={error}
               loading={!hasData}
               connections={data.connectionsWithFromAction}
-              getConnectionHref={getConnectionHref}
+              getConnectionHref={getStartSelectActionHref}
             />
           )}
         </WithConnections>

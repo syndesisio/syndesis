@@ -10,18 +10,24 @@ import { WithLoader, WithRouter } from '@syndesis/utils';
 import { reverse } from 'named-urls';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { serializeIntegration } from '../helpers';
+import { deserializeIntegration } from '../helpers';
 import routes from '../routes';
 
-export class IntegrationCreatorStartConfigurationPage extends React.Component {
+export class IntegrationCreatorFinishConfigurationPage extends React.Component {
   public render() {
     return (
       <WithRouter>
         {({ match, history }) => {
-          const { actionId, connectionId, step = 0 } = match.params as any;
+          const {
+            actionId,
+            connectionId,
+            integrationData,
+            step = 0,
+          } = match.params as any;
+          const integration = deserializeIntegration(integrationData);
           return (
             <WithIntegrationHelpers>
-              {({ addConnection, getEmptyIntegration }) => (
+              {({ addConnection, saveIntegration, setName }) => (
                 <WithConnection id={connectionId}>
                   {({ data, hasData, error }) => (
                     <WithLoader
@@ -48,29 +54,27 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                               })
                             );
                           } else {
-                            const updatedIntegration = await addConnection(
-                              getEmptyIntegration(),
+                            let updatedIntegration = await addConnection(
+                              integration,
                               data,
                               action,
                               0,
-                              0,
+                              1,
                               configuredProperties
                             );
                             console.log(
                               'After addConnection',
                               updatedIntegration
                             );
-                            history.push(
-                              reverse(
-                                routes.integrations.create.finish
-                                  .selectConnection,
-                                {
-                                  integrationData: serializeIntegration(
-                                    updatedIntegration
-                                  ),
-                                }
-                              )
+                            updatedIntegration = setName(
+                              updatedIntegration,
+                              'Hello from React!'
                             );
+                            const savedIntegration = saveIntegration(
+                              updatedIntegration
+                            );
+                            console.log('After save', savedIntegration);
+                            history.push(reverse(routes.integrations.list));
                           }
                         };
                         return (
@@ -88,11 +92,49 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                                     routes.integrations.create.start
                                       .selectAction,
                                     {
-                                      connectionId,
+                                      connectionId: integration.flows![0]
+                                        .steps![0].connection!.id,
                                     }
                                   )}
                                 >
                                   Start connection
+                                </Link>
+                                <Link
+                                  to={reverse(
+                                    routes.integrations.create.start
+                                      .configureAction,
+                                    {
+                                      actionId: integration.flows![0].steps![0]
+                                        .action!.id,
+                                      connectionId: integration.flows![0]
+                                        .steps![0].connection!.id,
+                                    }
+                                  )}
+                                >
+                                  Configure action
+                                </Link>
+                                <Link
+                                  to={reverse(
+                                    routes.integrations.create.finish
+                                      .selectConnection,
+                                    {
+                                      integrationData,
+                                    }
+                                  )}
+                                >
+                                  Finish Connection
+                                </Link>
+                                <Link
+                                  to={reverse(
+                                    routes.integrations.create.finish
+                                      .selectAction,
+                                    {
+                                      connectionId,
+                                      integrationData,
+                                    }
+                                  )}
+                                >
+                                  Choose Action
                                 </Link>
                                 <span>Configure action</span>
                               </Breadcrumb>

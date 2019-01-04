@@ -19,7 +19,7 @@ export const FormCheckboxComponent = ({
         id={field.name}
         data-testid={field.name}
         {...field}
-        checked={field.value}
+        checked={field.value === 'true'}
       />
       {touched[field.name] && errors[field.name] && (
         <div className="error">{errors[field.name]}</div>

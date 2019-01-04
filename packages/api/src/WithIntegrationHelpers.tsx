@@ -11,7 +11,6 @@ import { ApiContext, IApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
 import { key } from './helpers';
 
-type CreateIntegration = (integration?: Integration) => Integration;
 type AddConnection = (
   integration: Integration,
   connection: Connection,
@@ -22,30 +21,30 @@ type AddConnection = (
     [name: string]: string;
   }
 ) => Promise<Integration>;
+type GetEmptyIntegration = (integration?: Integration) => Integration;
+type SaveIntegration = (integration: Integration) => Promise<Integration>;
+type SetName = (integration: Integration, name: string) => Integration;
 
 export interface IWithIntegrationHelpersChildrenProps {
-  createIntegration: CreateIntegration;
   addConnection: AddConnection;
+  getEmptyIntegration: GetEmptyIntegration;
+  saveIntegration: SaveIntegration;
+  setName: SetName;
 }
 
 export interface IWithIntegrationHelpersProps {
   children(props: IWithIntegrationHelpersChildrenProps): any;
 }
 
-export interface IWithIntegrationHelpersState {
-  error: boolean;
-  errorMessage?: string;
-  loading: boolean;
-}
-
 export class WithIntegrationHelpersWrapped extends React.Component<
-  IWithIntegrationHelpersProps & IApiContext,
-  IWithIntegrationHelpersState
+  IWithIntegrationHelpersProps & IApiContext
 > {
   constructor(props: IWithIntegrationHelpersProps & IApiContext) {
     super(props);
     this.addConnection = this.addConnection.bind(this);
-    this.createIntegration = this.createIntegration.bind(this);
+    this.getEmptyIntegration = this.getEmptyIntegration.bind(this);
+    this.saveIntegration = this.saveIntegration.bind(this);
+    this.setName = this.setName.bind(this);
   }
 
   public async getActionDescriptor(
@@ -77,60 +76,72 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       [name: string]: string;
     }
   ): Promise<Integration> {
-    let nextIntegration: Integration = integration;
-    try {
-      this.setState({ loading: true });
-      const actionDescriptor = await this.getActionDescriptor(
-        connection.id!,
-        action.id!,
-        configuredProperties
-      );
-      nextIntegration = produce(integration, draft => {
-        if (!draft.flows) {
-          draft.flows = [];
-        }
-        if (!draft.flows[flow]) {
-          draft.flows[flow] = {
-            id: key(),
-            name: '',
-            steps: [],
-          };
-        }
-        if (!draft.flows[flow].steps) {
-          draft.flows[flow].steps = [];
-        }
-        const step: Step = {
-          action,
-          configuredProperties,
-          connection,
-          id: draft.flows[flow].id,
+    const actionDescriptor = await this.getActionDescriptor(
+      connection.id!,
+      action.id!,
+      configuredProperties
+    );
+    return produce(integration, draft => {
+      if (!draft.flows) {
+        draft.flows = [];
+      }
+      if (!draft.flows[flow]) {
+        draft.flows[flow] = {
+          id: key(),
+          name: '',
+          steps: [],
         };
-        step.action!.descriptor = actionDescriptor;
-        draft.flows[flow].steps!.splice(position, 0, step);
-      });
-    } catch (e) {
-      this.setState({
-        error: true,
-        errorMessage: e.message,
-      });
-    } finally {
-      this.setState({ loading: false });
-    }
-    return nextIntegration;
+      }
+      if (!draft.flows[flow].steps) {
+        draft.flows[flow].steps = [];
+      }
+      const step: Step = {
+        action,
+        configuredProperties,
+        connection,
+        id: draft.flows[flow].id,
+      };
+      step.action!.descriptor = actionDescriptor;
+      step.stepKind = 'endpoint';
+      draft.flows[flow].steps!.splice(position, 0, step);
+      draft.tags = Array.from(new Set([...(draft.tags || []), connection.id!]));
+    });
   }
 
-  public createIntegration(): Integration {
+  public getEmptyIntegration(): Integration {
     return {
-      id: 'todo',
       name: '',
       tags: [],
     };
   }
 
+  public async saveIntegration(integration: Integration): Promise<Integration> {
+    const response = await callFetch({
+      body: integration,
+      headers: this.props.headers,
+      method: integration.id ? 'PUT' : 'POST',
+      url: integration.id
+        ? `${this.props.apiUri}/integrations/${integration.id}`
+        : `${this.props.apiUri}/integrations`,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    return (await response.json()) as Integration;
+  }
+
+  public setName(integration: Integration, name: string): Integration {
+    return produce(integration, nextIntegration => {
+      nextIntegration.name = name;
+    });
+  }
+
   public render() {
     return this.props.children({
       addConnection: this.addConnection,
-      createIntegration: this.createIntegration,
+      getEmptyIntegration: this.getEmptyIntegration,
+      saveIntegration: this.saveIntegration,
+      setName: this.setName,
     });
   }
 }

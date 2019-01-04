@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import {
+  IntegrationCreatorFinishActionPage,
+  IntegrationCreatorFinishConfigurationPage,
+  IntegrationCreatorFinishConnectionPage,
   IntegrationCreatorStartActionPage,
   IntegrationCreatorStartConfigurationPage,
   IntegrationCreatorStartConnectionPage,
@@ -27,6 +30,21 @@ export class IntegrationsModule extends React.Component {
           path={routes.integrations.create.begin}
           exact={true}
           component={IntegrationCreatorStartConnectionPage}
+        />
+        <Route
+          path={routes.integrations.create.finish.configureAction}
+          exact={true}
+          component={IntegrationCreatorFinishConfigurationPage}
+        />
+        <Route
+          path={routes.integrations.create.finish.selectAction}
+          exact={true}
+          component={IntegrationCreatorFinishActionPage}
+        />
+        <Route
+          path={routes.integrations.create.finish.selectConnection}
+          exact={true}
+          component={IntegrationCreatorFinishConnectionPage}
         />
         <Route
           path={routes.integrations.list}
