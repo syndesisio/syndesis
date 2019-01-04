@@ -93,6 +93,12 @@ public class KuduTable {
         private String type;
         private boolean key;
 
+        public ColumnSchema(String name, String type, boolean key) {
+            this.name = name;
+            this.type = type;
+            this.key = key;
+        }
+
         public boolean isKey() {
             return key;
         }

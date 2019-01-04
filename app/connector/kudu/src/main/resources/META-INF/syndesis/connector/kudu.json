@@ -14,7 +14,9 @@
           "type": "io.syndesis.connector.kudu.model.KuduTable"
         },
         "outputDataShape": {
-          "kind": "none"
+          "name": "KuduTable",
+          "kind": "java",
+          "type": "io.syndesis.connector.kudu.model.KuduTable"
         },
         "propertyDefinitionSteps": [
           {
@@ -41,7 +43,7 @@
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "label": "producer",
-                "labelHint": "Table's columns in the way: column1Name,type:column2Name,type.",
+                "labelHint": "Table's columns in the way: column1Name,type;column2Name,type.",
                 "order": "2",
                 "required": true,
                 "secret": false,
@@ -95,7 +97,9 @@
           "type": "io.syndesis.connector.kudu.model.KuduInsert"
         },
         "outputDataShape": {
-          "kind": "none"
+          "name": "KuduTable",
+          "kind": "java",
+          "type": "io.syndesis.connector.kudu.model.KuduInsert"
         },
         "propertyDefinitionSteps": [
           {
@@ -122,7 +126,7 @@
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "label": "producer",
-                "labelHint": "Row to be inserted in the way: column1Name,type:column2Name,type.",
+                "labelHint": "Row to be inserted in the way: column1Name,type;column2Name,type.",
                 "order": "2",
                 "required": true,
                 "secret": false,
