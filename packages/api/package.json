@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "@syndesis/models": "*",
+    "@syndesis/utils": "*",
     "deepmerge": "^2.2.1",
     "react-fast-compare": "^2.0.2"
   },

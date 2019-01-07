@@ -5,11 +5,21 @@ import {
   Integration,
   Step,
 } from '@syndesis/models';
+import { key } from '@syndesis/utils';
 import produce from 'immer';
 import * as React from 'react';
 import { ApiContext, IApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
-import { key } from './helpers';
+import {
+  deserializeIntegration,
+  serializeIntegration,
+} from './integrationHelpers';
+
+export const NEW_INTEGRATION = {
+  name: '',
+  tags: [],
+} as Integration;
+export const NEW_INTEGRATION_ID = 'new-integration';
 
 type AddConnection = (
   integration: Integration,
@@ -21,15 +31,28 @@ type AddConnection = (
     [name: string]: string;
   }
 ) => Promise<Integration>;
-type GetEmptyIntegration = (integration?: Integration) => Integration;
-type SaveIntegration = (integration: Integration) => Promise<Integration>;
-type SetName = (integration: Integration, name: string) => Integration;
+type UpdateConnection = (
+  integration: Integration,
+  connection: Connection,
+  action: Action,
+  flow: number,
+  position: number,
+  configuredProperties: {
+    [name: string]: string;
+  }
+) => Promise<Integration>;
 
 export interface IWithIntegrationHelpersChildrenProps {
   addConnection: AddConnection;
-  getEmptyIntegration: GetEmptyIntegration;
-  saveIntegration: SaveIntegration;
-  setName: SetName;
+  updateConnection: UpdateConnection;
+  getEmptyIntegration(integration?: Integration): Integration;
+  saveIntegration(integration: Integration): Promise<Integration>;
+  setName(integration: Integration, name: string): Integration;
+  createDraft(value: Integration): Promise<string>;
+  getCreationDraft(): Integration;
+  getDraft(id: string): Promise<Integration>;
+  setCreationDraft(value: Integration): void;
+  setDraft(id: string, value: Integration): Promise<void>;
 }
 
 export interface IWithIntegrationHelpersProps {
@@ -45,6 +68,13 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     this.getEmptyIntegration = this.getEmptyIntegration.bind(this);
     this.saveIntegration = this.saveIntegration.bind(this);
     this.setName = this.setName.bind(this);
+    this.updateConnection = this.updateConnection.bind(this);
+    this.makeLocalStorageId = this.makeLocalStorageId.bind(this);
+    this.createDraft = this.createDraft.bind(this);
+    this.getDraft = this.getDraft.bind(this);
+    this.setDraft = this.setDraft.bind(this);
+    this.getCreationDraft = this.getCreationDraft.bind(this);
+    this.setCreationDraft = this.setCreationDraft.bind(this);
   }
 
   public async getActionDescriptor(
@@ -108,11 +138,49 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     });
   }
 
+  public async updateConnection(
+    integration: Integration,
+    connection: Connection,
+    action: Action,
+    flow: number,
+    position: number,
+    configuredProperties: {
+      [name: string]: string;
+    }
+  ): Promise<Integration> {
+    const actionDescriptor = await this.getActionDescriptor(
+      connection.id!,
+      action.id!,
+      configuredProperties
+    );
+    return produce(integration, draft => {
+      if (!draft.flows) {
+        draft.flows = [];
+      }
+      if (!draft.flows[flow]) {
+        draft.flows[flow] = {
+          id: key(),
+          name: '',
+          steps: [],
+        };
+      }
+      if (!draft.flows[flow].steps) {
+        draft.flows[flow].steps = [];
+      }
+      const step: Step = {
+        action,
+        configuredProperties,
+        connection,
+        id: draft.flows[flow].id,
+      };
+      step.action!.descriptor = actionDescriptor;
+      step.stepKind = 'endpoint';
+      draft.flows[flow].steps![position] = step;
+    });
+  }
+
   public getEmptyIntegration(): Integration {
-    return {
-      name: '',
-      tags: [],
-    };
+    return NEW_INTEGRATION;
   }
 
   public async saveIntegration(integration: Integration): Promise<Integration> {
@@ -136,12 +204,66 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     });
   }
 
+  public makeLocalStorageId(id: string) {
+    return `iec-${id}`;
+  }
+
+  public async createDraft(value: Integration) {
+    // TODO: this should be handled by the BE
+    const id = value.id || NEW_INTEGRATION_ID;
+    await this.setDraft(id, value);
+    return Promise.resolve(id);
+  }
+
+  public getDraft(id: string): Promise<Integration> {
+    // TODO: this should be handled by the BE
+    const serializedIntegration = localStorage.getItem(
+      this.makeLocalStorageId(id)
+    );
+    if (!serializedIntegration) {
+      throw new Error(`There is no draft for id ${id}`);
+    }
+    return Promise.resolve(deserializeIntegration(serializedIntegration));
+  }
+
+  public setDraft(id: string, value: Integration): Promise<void> {
+    // TODO: this should be handled by the BE
+    localStorage.setItem(
+      this.makeLocalStorageId(id),
+      serializeIntegration(value)
+    );
+    return Promise.resolve();
+  }
+
+  public getCreationDraft(): Integration {
+    const serializedIntegration = localStorage.getItem(
+      this.makeLocalStorageId(NEW_INTEGRATION_ID)
+    );
+    if (!serializedIntegration) {
+      throw new Error('There is no creation draft');
+    }
+    return deserializeIntegration(serializedIntegration);
+  }
+
+  public setCreationDraft(value: Integration): void {
+    localStorage.setItem(
+      this.makeLocalStorageId(NEW_INTEGRATION_ID),
+      serializeIntegration(value)
+    );
+  }
+
   public render() {
     return this.props.children({
       addConnection: this.addConnection,
+      createDraft: this.createDraft,
+      getCreationDraft: this.getCreationDraft,
+      getDraft: this.getDraft,
       getEmptyIntegration: this.getEmptyIntegration,
       saveIntegration: this.saveIntegration,
+      setCreationDraft: this.setCreationDraft,
+      setDraft: this.setDraft,
       setName: this.setName,
+      updateConnection: this.updateConnection,
     });
   }
 }

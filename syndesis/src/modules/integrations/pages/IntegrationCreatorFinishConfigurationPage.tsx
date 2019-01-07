@@ -10,24 +10,26 @@ import { WithLoader, WithRouter } from '@syndesis/utils';
 import { reverse } from 'named-urls';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { deserializeIntegration } from '../helpers';
 import routes from '../routes';
 
 export class IntegrationCreatorFinishConfigurationPage extends React.Component {
   public render() {
     return (
-      <WithRouter>
-        {({ match, history }) => {
-          const {
-            actionId,
-            connectionId,
-            integrationData,
-            step = 0,
-          } = match.params as any;
-          const integration = deserializeIntegration(integrationData);
-          return (
-            <WithIntegrationHelpers>
-              {({ addConnection, saveIntegration, setName }) => (
+      <WithIntegrationHelpers>
+        {({
+          addConnection,
+          saveIntegration,
+          setName,
+          updateConnection,
+          createDraft,
+          getCreationDraft,
+          setCreationDraft,
+        }) => (
+          <WithRouter>
+            {({ match, history }) => {
+              const { actionId, connectionId, step = 0 } = match.params as any;
+              const integration = getCreationDraft();
+              return (
                 <WithConnection id={connectionId}>
                   {({ data, hasData, error }) => (
                     <WithLoader
@@ -44,17 +46,8 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                         );
                         const moreSteps = step < steps.length - 1;
                         const onSave = async (configuredProperties: any) => {
-                          console.log('onSave', configuredProperties);
                           if (moreSteps) {
-                            // TODO: preserve configuration state
-                            history.push(
-                              reverse(match.path, {
-                                ...match.params,
-                                step: step + 1,
-                              })
-                            );
-                          } else {
-                            let updatedIntegration = await addConnection(
+                            const updatedIntegration = await updateConnection(
                               integration,
                               data,
                               action,
@@ -62,19 +55,41 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                               1,
                               configuredProperties
                             );
-                            console.log(
-                              'After addConnection',
-                              updatedIntegration
+                            setCreationDraft(updatedIntegration);
+                            history.push(
+                              reverse(
+                                routes.integrations.create.finish
+                                  .configureAction,
+                                {
+                                  actionId,
+                                  connectionId,
+                                  step: step + 1,
+                                }
+                              )
+                            );
+                          } else {
+                            let updatedIntegration = await (step === 0
+                              ? addConnection
+                              : updateConnection)(
+                              integration,
+                              data,
+                              action,
+                              0,
+                              1,
+                              configuredProperties
                             );
                             updatedIntegration = setName(
                               updatedIntegration,
                               'Hello from React!'
                             );
-                            const savedIntegration = saveIntegration(
+                            const integrationId = await createDraft(
                               updatedIntegration
                             );
-                            console.log('After save', savedIntegration);
-                            history.push(reverse(routes.integrations.list));
+                            history.push(
+                              reverse(routes.integrations.editor.begin, {
+                                integrationId,
+                              })
+                            );
                           }
                         };
                         return (
@@ -116,10 +131,7 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                                 <Link
                                   to={reverse(
                                     routes.integrations.create.finish
-                                      .selectConnection,
-                                    {
-                                      integrationData,
-                                    }
+                                      .selectConnection
                                   )}
                                 >
                                   Finish Connection
@@ -130,7 +142,6 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                                       .selectAction,
                                     {
                                       connectionId,
-                                      integrationData,
                                     }
                                   )}
                                 >
@@ -166,11 +177,11 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                     </WithLoader>
                   )}
                 </WithConnection>
-              )}
-            </WithIntegrationHelpers>
-          );
-        }}
-      </WithRouter>
+              );
+            }}
+          </WithRouter>
+        )}
+      </WithIntegrationHelpers>
     );
   }
 }

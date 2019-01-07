@@ -10,7 +10,6 @@ import { WithLoader, WithRouter } from '@syndesis/utils';
 import { reverse } from 'named-urls';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { serializeIntegration } from '../helpers';
 import routes from '../routes';
 
 export class IntegrationCreatorStartConfigurationPage extends React.Component {
@@ -21,7 +20,13 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
           const { actionId, connectionId, step = 0 } = match.params as any;
           return (
             <WithIntegrationHelpers>
-              {({ addConnection, getEmptyIntegration }) => (
+              {({
+                addConnection,
+                getEmptyIntegration,
+                updateConnection,
+                getCreationDraft,
+                setCreationDraft,
+              }) => (
                 <WithConnection id={connectionId}>
                   {({ data, hasData, error }) => (
                     <WithLoader
@@ -37,38 +42,48 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                           data.getActionStep(action, step)
                         );
                         const moreSteps = step < steps.length - 1;
+                        const integration =
+                          step === 0
+                            ? getEmptyIntegration()
+                            : getCreationDraft();
                         const onSave = async (configuredProperties: any) => {
-                          console.log('onSave', configuredProperties);
                           if (moreSteps) {
-                            // TODO: preserve configuration state
+                            const updatedIntegration = await updateConnection(
+                              integration,
+                              data,
+                              action,
+                              0,
+                              1,
+                              configuredProperties
+                            );
+                            setCreationDraft(updatedIntegration);
                             history.push(
-                              reverse(match.path, {
-                                ...match.params,
-                                step: step + 1,
-                              })
+                              reverse(
+                                routes.integrations.create.finish
+                                  .configureAction,
+                                {
+                                  actionId,
+                                  connectionId,
+                                  step: step + 1,
+                                }
+                              )
                             );
                           } else {
-                            const updatedIntegration = await addConnection(
-                              getEmptyIntegration(),
+                            const updatedIntegration = await (step === 0
+                              ? addConnection
+                              : updateConnection)(
+                              integration,
                               data,
                               action,
                               0,
                               0,
                               configuredProperties
                             );
-                            console.log(
-                              'After addConnection',
-                              updatedIntegration
-                            );
+                            setCreationDraft(updatedIntegration);
                             history.push(
                               reverse(
                                 routes.integrations.create.finish
-                                  .selectConnection,
-                                {
-                                  integrationData: serializeIntegration(
-                                    updatedIntegration
-                                  ),
-                                }
+                                  .selectConnection
                               )
                             );
                           }

@@ -10,11 +10,14 @@ export default {
         configureAction: `:connectionId/:actionId/:step?`,
         selectAction: `:connectionId`,
       }),
-      finish: include('finish/:integrationData', {
+      finish: include('finish', {
         configureAction: `:connectionId/:actionId/:step?`,
         selectAction: `:connectionId`,
         selectConnection: ``,
       }),
+    }),
+    editor: include('edit/:integrationId', {
+      begin: '',
     }),
   }),
 };
