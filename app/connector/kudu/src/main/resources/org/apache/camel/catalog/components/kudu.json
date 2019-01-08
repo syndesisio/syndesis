@@ -2,10 +2,10 @@
   "component": {
     "kind": "component",
     "scheme": "kudu",
-    "syntax": "kudu:apiName/methodName",
+    "syntax": "kudu",
     "title": "Apache Kudu",
     "description": "Camel component to manage apache kudu resources",
-    "label": "api,cloud,kudu",
+    "label": "database,cloud,kudu",
     "deprecated": false,
     "deprecationNote": "",
     "async": false,
@@ -20,11 +20,12 @@
     "version": "2.23.0-SNAPSHOT"
   },
   "componentProperties": {
-    "configuration": { }
   },
   "properties": {
-    "apiName": { "kind": "path", "displayName": "Api Name", "group": "common", "required": true, "type": "object", "javaType": "java.lang.String", "enum": [ "TABLES" ], "deprecated": false, "secret": false, "description": "What kind of operation to perform" },
-    "methodName": { "kind": "path", "displayName": "Method Name", "group": "common", "required": true, "type": "string", "javaType": "java.lang.String", "enum": [ "create" ], "deprecated": false, "secret": false, "description": "What sub operation to use for the selected operation" }
+    "host": { "kind": "parameter", "displayName": "Host", "group": "common", "required": true, "type": "string", "javaType": "java.lang.String",  "deprecated": false, "secret": false, "description": "Address of the host to connect to: hostname OR 10.10.10.10" },
+    "port": { "kind": "parameter", "displayName": "Port", "group": "common", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Port where kudu service is listening in the remote port, by default 7051" },
+    "tableName": { "kind": "parameter", "displayName": "Table Name", "group": "common", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Table where operations are going to be done" },
+    "operation": { "kind": "parameter", "displayName": "Operation", "group": "common", "required": false, "type": "string", "javaType": "java.lang.String", "enum": [ "insert", "create_table" ], "deprecated": false, "secret": false, "description": "Operation to perform, can be either create table, insert or scan" }
   }
 }
 
