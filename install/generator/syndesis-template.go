@@ -40,6 +40,7 @@ type supportImages struct {
 	Postgresql string
 	OAuthProxy string
 	Prometheus string
+	Grafana    string
 }
 
 type syndesisImages struct {
@@ -57,6 +58,7 @@ type images struct {
 	SyndesisImagesPrefix  string
 	OAuthProxyImagePrefix string
 	PrometheusImagePrefix string
+	GrafanaImagePrefix    string
 }
 
 type tags struct {
@@ -65,6 +67,7 @@ type tags struct {
 	OAuthProxy string
 	Prometheus string
 	Upgrade    string
+	Grafana    string
 }
 
 type Context struct {
@@ -89,10 +92,12 @@ var syndesisContext = Context{
 		SyndesisImagesPrefix:  "syndesis",
 		OAuthProxyImagePrefix: "openshift",
 		PrometheusImagePrefix: "prom",
+		GrafanaImagePrefix:    "grafana",
 		Support: supportImages{
 			Postgresql: "postgresql",
 			OAuthProxy: "oauth-proxy",
 			Prometheus: "prometheus",
+			Grafana:    "grafana",
 		},
 		Syndesis: syndesisImages{
 			Rest:     "syndesis-server",
@@ -106,6 +111,7 @@ var syndesisContext = Context{
 		Postgresql: "9.5",
 		OAuthProxy: "v1.1.0",
 		Prometheus: "v2.1.0",
+		Grafana:    "5.4.2",
 	},
 }
 
@@ -116,10 +122,12 @@ var productContext = Context{
 		SyndesisImagesPrefix:  "fuse7",
 		OAuthProxyImagePrefix: "openshift",
 		PrometheusImagePrefix: "prom",
+		GrafanaImagePrefix:    "grafana",
 		Support: supportImages{
 			Postgresql: "postgresql",
 			OAuthProxy: "oauth-proxy",
 			Prometheus: "prometheus",
+			Grafana:    "grafana",
 		},
 		Syndesis: syndesisImages{
 			Rest:     "fuse-ignite-server",
@@ -133,6 +141,7 @@ var productContext = Context{
 		Postgresql: "9.5",
 		OAuthProxy: "v1.1.0",
 		Prometheus: "v2.1.0",
+		Grafana:    "5.4.2",
 	},
 	Registry: "registry.fuse-ignite.openshift.com",
 }

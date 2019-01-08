@@ -85,6 +85,23 @@
       importPolicy:
         scheduled: true
       name: "{{ Tags.Prometheus }}"
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: {{ Images.Support.Grafana }}
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-grafana
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/{{Images.GrafanaImagePrefix}}/{{ Images.Support.Grafana }}:{{ Tags.Grafana }}
+      importPolicy:
+        scheduled: true
+      name: "{{ Tags.Grafana }}"
 {{/WithDockerImages}}
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
