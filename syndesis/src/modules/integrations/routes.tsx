@@ -1,23 +1,39 @@
 /* tslint:disable:object-literal-sort-keys */
 import { include } from 'named-urls';
 
+const editorRoutes = {
+  index: 'save-or-add-step',
+  addConnection: include(':position', {
+    selectConnection: '',
+    selectAction: `:connectionId`,
+    configureAction: `:connectionId/:actionId/:step?`,
+  }),
+  addStep: include(':position', {
+    selectStep: '',
+    configureStep: `:stepId`,
+  }),
+  saveAsDraft: 'save-as-draft',
+};
+
 export default {
   integrations: include('/integrations', {
     list: '',
     create: include('create', {
-      begin: '',
       start: include('start', {
+        selectConnection: '',
         configureAction: `:connectionId/:actionId/:step?`,
         selectAction: `:connectionId`,
       }),
       finish: include('finish', {
-        configureAction: `:connectionId/:actionId/:step?`,
-        selectAction: `:connectionId`,
         selectConnection: ``,
+        selectAction: `:connectionId`,
+        configureAction: `:connectionId/:actionId/:step?`,
       }),
+      configure: include(':integrationId', editorRoutes),
     }),
-    editor: include('edit/:integrationId', {
-      begin: '',
+    integration: include(':integrationId', {
+      details: '',
+      edit: include('edit', editorRoutes),
     }),
   }),
 };

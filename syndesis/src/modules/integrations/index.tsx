@@ -4,6 +4,7 @@ import {
   IntegrationCreatorFinishActionPage,
   IntegrationCreatorFinishConfigurationPage,
   IntegrationCreatorFinishConnectionPage,
+  IntegrationCreatorSaveOrAddStepPage,
   IntegrationCreatorStartActionPage,
   IntegrationCreatorStartConfigurationPage,
   IntegrationCreatorStartConnectionPage,
@@ -27,7 +28,7 @@ export class IntegrationsModule extends React.Component {
           component={IntegrationCreatorStartActionPage}
         />
         <Route
-          path={routes.integrations.create.begin}
+          path={routes.integrations.create.start.selectConnection}
           exact={true}
           component={IntegrationCreatorStartConnectionPage}
         />
@@ -45,6 +46,11 @@ export class IntegrationsModule extends React.Component {
           path={routes.integrations.create.finish.selectConnection}
           exact={true}
           component={IntegrationCreatorFinishConnectionPage}
+        />
+        <Route
+          path={routes.integrations.create.configure.index}
+          exact={true}
+          component={IntegrationCreatorSaveOrAddStepPage}
         />
         <Route
           path={routes.integrations.list}

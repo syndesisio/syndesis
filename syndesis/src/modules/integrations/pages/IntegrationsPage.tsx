@@ -14,6 +14,7 @@ import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import { AppContext } from '../../../app';
 import i18n from '../../../i18n';
+import routes from '../routes';
 
 function getFilteredAndSortedIntegrations(
   integrations: IntegrationWithMonitoring[],
@@ -133,7 +134,10 @@ export class IntegrationsPage extends React.Component {
                           return (
                             <IntegrationsListView
                               linkToIntegrationImport={'/integrations/import'}
-                              linkToIntegrationCreation={'/integrations/create'}
+                              linkToIntegrationCreation={
+                                routes.integrations.create.start
+                                  .selectConnection
+                              }
                               filterTypes={getFilterTypes(
                                 connectionsData.items
                               )}
