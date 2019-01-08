@@ -1,0 +1,40 @@
+.integration-flow-step {
+  display: flex;
+  padding-bottom: 20px;
+}
+
+.integration-flow-step__iconWrapper {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  flex: 0 0 155px;
+}
+
+.integration-flow-step:not(:last-child) .integration-flow-step__iconWrapper::before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background-color: #d4d4d4;
+  top: 0;
+  bottom: -70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 0;
+}
+
+.integration-flow-step__icon {
+  border: 3px solid #d0d0d0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  width: 55px;
+  height: 55px;
+  z-index: 1;
+}
+
+
+.is-active .integration-flow-step__icon {
+  border-color: #0088ce;
+}
