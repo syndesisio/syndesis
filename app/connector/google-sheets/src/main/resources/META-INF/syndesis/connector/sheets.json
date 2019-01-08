@@ -162,9 +162,7 @@
           "io.syndesis.connector.sheets.GoogleSheetsUpdateValuesCustomizer"
         ],
         "inputDataShape": {
-          "name": "ValueRange",
-          "kind": "java",
-          "type": "io.syndesis.connector.sheets.model.GoogleValueRange"
+          "kind": "json-schema"
         },
         "outputDataShape": {
           "kind": "none"
@@ -201,19 +199,6 @@
                 "secret": false,
                 "type": "string"
               },
-              "values": {
-                "deprecated": false,
-                "displayName": "Values",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Values to write into the spreadsheet range.",
-                "order": "3",
-                "required": false,
-                "secret": false,
-                "type": "string"
-              },
               "valueInputOption": {
                 "deprecated": false,
                 "defaultValue": "USER_ENTERED",
@@ -237,7 +222,7 @@
                 "kind": "parameter",
                 "label": "producer",
                 "labelHint": "How to interpret input data.",
-                "order": "4",
+                "order": "3",
                 "required": false,
                 "secret": false,
                 "type": "string"
@@ -248,7 +233,10 @@
       },
       "id": "io.syndesis:sheets-update-values-connector",
       "name": "Update sheet values",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",
@@ -259,9 +247,7 @@
           "io.syndesis.connector.sheets.GoogleSheetsAppendValuesCustomizer"
         ],
         "inputDataShape": {
-          "name": "ValueRange",
-          "kind": "java",
-          "type": "io.syndesis.connector.sheets.model.GoogleValueRange"
+          "kind": "json-schema"
         },
         "outputDataShape": {
           "kind": "none"
@@ -294,20 +280,7 @@
                 "label": "producer",
                 "labelHint": "The target range. Operation will append the values to that range.",
                 "order": "2",
-                "required": false,
-                "secret": false,
-                "type": "string"
-              },
-              "values": {
-                "deprecated": false,
-                "displayName": "Values",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Values to append into the spreadsheet.",
-                "order": "3",
-                "required": false,
+                "required": true,
                 "secret": false,
                 "type": "string"
               },
@@ -334,7 +307,7 @@
                 "kind": "parameter",
                 "label": "producer",
                 "labelHint": "How to interpret input data.",
-                "order": "4",
+                "order": "3",
                 "required": false,
                 "secret": false,
                 "type": "string"
@@ -345,7 +318,10 @@
       },
       "id": "io.syndesis:sheets-append-values-connector",
       "name": "Append values to a sheet",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",
@@ -359,9 +335,7 @@
           "kind": "none"
         },
         "outputDataShape": {
-          "name": "ValueRange",
-          "kind": "java",
-          "type": "io.syndesis.connector.sheets.model.GoogleValueRange"
+          "kind": "json-schema"
         },
         "propertyDefinitionSteps": [
           {
@@ -391,7 +365,7 @@
                 "kind": "parameter",
                 "label": "consumer,scheduler",
                 "labelHint": "Time interval between polls for value changes.",
-                "order": "4",
+                "order": "5",
                 "required": false,
                 "secret": false,
                 "tags": [],
@@ -407,6 +381,30 @@
                 "label": "producer",
                 "labelHint": "Value range in a spreadsheet to obtain.",
                 "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "majorDimension": {
+                "deprecated": false,
+                "defaultValue": "ROWS",
+                "displayName": "Major Dimension",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "enum": [
+                  {
+                    "label": "Rows",
+                    "value": "ROWS"
+                  },
+                  {
+                    "label": "Columns",
+                    "value": "COLUMNS"
+                  }
+                ],
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The major dimension that results should use. Indicates which dimension results apply to.",
+                "order": "3",
                 "required": false,
                 "secret": false,
                 "type": "string"
@@ -430,7 +428,7 @@
                 "kind": "parameter",
                 "label": "producer",
                 "labelHint": "When enabled value range is split into multiple results where each result represents a single row or column.",
-                "order": "3",
+                "order": "4",
                 "required": false,
                 "secret": false,
                 "type": "string"
@@ -444,7 +442,7 @@
                 "kind": "parameter",
                 "label": "producer",
                 "labelHint": "Maximum number of values to return.",
-                "order": "5",
+                "order": "6",
                 "required": false,
                 "secret": false,
                 "type": "string"
@@ -455,7 +453,10 @@
       },
       "id": "io.syndesis:sheets-get-values-connector",
       "name": "Get sheet values",
-      "pattern": "From"
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",

@@ -15,7 +15,7 @@
  */
 package io.syndesis.connector.sheets;
 
-import io.syndesis.connector.support.verifier.api.Verifier;
+import io.syndesis.connector.support.verifier.api.MetadataRetrieval;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -24,14 +24,13 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 @Configuration
-@ConditionalOnProperty(prefix = "io.syndesis.connector.verifier", name = "enabled")
-public class GoogleSheetsVerifierAutoConfiguration {
-
-    @Bean("sheets")
+@ConditionalOnProperty(prefix = "io.syndesis.connector.meta", name = "enabled")
+public class GoogleSheetsMetaDataAutoConfiguration {
+    @Bean("sheets-adapter")
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     @Lazy
-    @ConditionalOnProperty(prefix = "io.syndesis.connector.sheets.verifier", name = "enabled", matchIfMissing = true)
-    public Verifier sheetsVerifier() {
-        return new GoogleSheetsVerifier();
+    @ConditionalOnProperty(prefix = "io.syndesis.connector.sheets.meta", name = "enabled", matchIfMissing = true)
+    public MetadataRetrieval sheetsMetaDataAdapter() {
+        return new GoogleSheetsMetadataRetrieval();
     }
 }

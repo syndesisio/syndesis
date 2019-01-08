@@ -16,8 +16,10 @@
 
 package io.syndesis.connector.sheets;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.api.services.sheets.v4.model.ValueRange;
-import io.syndesis.connector.sheets.model.GoogleValueRange;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
@@ -25,9 +27,6 @@ import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
@@ -43,7 +42,6 @@ public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheets
         Map<String, Object> options = new HashMap<>();
         options.put("spreadsheetId", getSpreadsheetId());
         options.put("range", "A1");
-        options.put("values", "a1");
         options.put("valueInputOption", "RAW");
 
         customizer.customize(getComponent(), options);
@@ -59,21 +57,25 @@ public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheets
         Assert.assertEquals("RAW", inbound.getIn().getHeader("CamelGoogleSheets.valueInputOption"));
 
         ValueRange valueRange = (ValueRange) inbound.getIn().getHeader("CamelGoogleSheets.values");
-        Assert.assertEquals(1L, valueRange.getValues().size());
-        Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
+        Assert.assertEquals(0L, valueRange.getValues().size());
     }
 
     @Test
     public void testBeforeProducerFromModel() throws Exception {
         Map<String, Object> options = new HashMap<>();
+        options.put("range", "A1:B1");
+
         customizer.customize(getComponent(), options);
 
         Exchange inbound = new DefaultExchange(createCamelContext());
 
-        GoogleValueRange model = new GoogleValueRange();
-        model.setSpreadsheetId(getSpreadsheetId());
-        model.setRange("A1:B1");
-        model.setValues("a1,b1");
+        String model = "{" +
+                    "\"spreadsheetId\": \"" + getSpreadsheetId() + "\"," +
+                    "\"#1\": {" +
+                        "\"A\": \"a1\"," +
+                        "\"B\": \"b1\"" +
+                    "}" +
+                "}";
         inbound.getIn().setBody(model);
 
         getComponent().getBeforeProducer().process(inbound);
@@ -94,14 +96,23 @@ public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheets
     @Test
     public void testBeforeProducerMultipleRows() throws Exception {
         Map<String, Object> options = new HashMap<>();
+        options.put("range", "A1:B2");
+
         customizer.customize(getComponent(), options);
 
         Exchange inbound = new DefaultExchange(createCamelContext());
 
-        GoogleValueRange model = new GoogleValueRange();
-        model.setSpreadsheetId(getSpreadsheetId());
-        model.setRange("A1:B2");
-        model.setValues("[[\"a1\",\"b1\"],[\"a2\",\"b2\"]]");
+        String model = "{" +
+                    "\"spreadsheetId\": \"" + getSpreadsheetId() + "\"," +
+                    "\"#1\": {" +
+                        "\"A\": \"a1\"," +
+                        "\"B\": \"b1\"" +
+                    "}," +
+                    "\"#2\": {" +
+                        "\"A\": \"a2\"," +
+                        "\"B\": \"b2\"" +
+                    "}" +
+                "}";
         inbound.getIn().setBody(model);
 
         getComponent().getBeforeProducer().process(inbound);

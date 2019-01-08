@@ -1,0 +1,13 @@
+{
+  "inputShape" : {
+    "kind" : "json-schema",
+    "type" : "VALUE_RANGE_PARAM_IN",
+    "name" : "ValueRange Parameter",
+    "description" : "Parameters of range [A1:G3]",
+    "specification" : "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"VALUE_RANGE\",\"properties\":{\"spreadsheetId\":{\"type\":\"string\",\"required\":true},\"A\":{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"required\":true,\"title\":\"A\",\"properties\":{\"#1\":{\"type\":\"string\",\"required\":true},\"#2\":{\"type\":\"string\",\"required\":true},\"#3\":{\"type\":\"string\",\"required\":true}}},\"B\":{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"required\":true,\"title\":\"B\",\"properties\":{\"#1\":{\"type\":\"string\",\"required\":true},\"#2\":{\"type\":\"string\",\"required\":true},\"#3\":{\"type\":\"string\",\"required\":true}}},\"C\":{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"required\":true,\"title\":\"C\",\"properties\":{\"#1\":{\"type\":\"string\",\"required\":true},\"#2\":{\"type\":\"string\",\"required\":true},\"#3\":{\"type\":\"string\",\"required\":true}}},\"D\":{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"required\":true,\"title\":\"D\",\"properties\":{\"#1\":{\"type\":\"string\",\"required\":true},\"#2\":{\"type\":\"string\",\"required\":true},\"#3\":{\"type\":\"string\",\"required\":true}}},\"E\":{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"required\":true,\"title\":\"E\",\"properties\":{\"#1\":{\"type\":\"string\",\"required\":true},\"#2\":{\"type\":\"string\",\"required\":true},\"#3\":{\"type\":\"string\",\"required\":true}}},\"F\":{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"required\":true,\"title\":\"F\",\"properties\":{\"#1\":{\"type\":\"string\",\"required\":true},\"#2\":{\"type\":\"string\",\"required\":true},\"#3\":{\"type\":\"string\",\"required\":true}}},\"G\":{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"required\":true,\"title\":\"G\",\"properties\":{\"#1\":{\"type\":\"string\",\"required\":true},\"#2\":{\"type\":\"string\",\"required\":true},\"#3\":{\"type\":\"string\",\"required\":true}}}}}"
+  },
+  "outputShape" : {
+    "kind" : "none",
+    "type" : "VALUE_RANGE_PARAM_OUT"
+  }
+}

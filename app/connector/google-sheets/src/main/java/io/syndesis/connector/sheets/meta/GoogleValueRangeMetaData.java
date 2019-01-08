@@ -13,33 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.sheets.model;
 
-public class GoogleValueRange {
+package io.syndesis.connector.sheets.meta;
 
-    private String spreadsheetId;
+/**
+ * @author Christoph Deppisch
+ */
+public class GoogleValueRangeMetaData {
+
     private String range;
-    private String values;
+    private String majorDimension;
 
-    public String getSpreadsheetId() {
-        return spreadsheetId;
-    }
-
-    /**
-     * Sets the spreadsheetId.
-     *
-     * @param spreadsheetId
-     */
-    public void setSpreadsheetId(String spreadsheetId) {
-        this.spreadsheetId = spreadsheetId;
-    }
+    private boolean split;
 
     public String getRange() {
         return range;
     }
 
     /**
-     * Sets the range.
+     * Specifies the range.
      *
      * @param range
      */
@@ -47,22 +39,29 @@ public class GoogleValueRange {
         this.range = range;
     }
 
-    public String getValues() {
-        return values;
+    public String getMajorDimension() {
+        return majorDimension;
     }
 
     /**
-     * Sets the values.
+     * Specifies the majorDimension.
      *
-     * @param values
+     * @param majorDimension
      */
-    public void setValues(String values) {
-        this.values = values;
+    public void setMajorDimension(String majorDimension) {
+        this.majorDimension = majorDimension;
     }
 
-    @Override
-    public String toString() {
-        return String.format("%s [spreadsheetId=%s, range=%s, values=%s]", GoogleValueRange.class.getSimpleName(), spreadsheetId, range, values);
+    public boolean isSplit() {
+        return split;
     }
 
+    /**
+     * Specifies the split.
+     *
+     * @param split
+     */
+    public void setSplit(boolean split) {
+        this.split = split;
+    }
 }

@@ -1,0 +1,13 @@
+{
+  "inputShape" : {
+    "kind" : "json-schema",
+    "type" : "VALUE_RANGE_PARAM_IN",
+    "name" : "ValueRange Parameter",
+    "description" : "Parameters of range [A5:C5]",
+    "specification" : "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"VALUE_RANGE\",\"properties\":{\"spreadsheetId\":{\"type\":\"string\",\"required\":true},\"A\":{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"required\":true,\"title\":\"A\",\"properties\":{\"#5\":{\"type\":\"string\",\"required\":true}}},\"B\":{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"required\":true,\"title\":\"B\",\"properties\":{\"#5\":{\"type\":\"string\",\"required\":true}}},\"C\":{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"required\":true,\"title\":\"C\",\"properties\":{\"#5\":{\"type\":\"string\",\"required\":true}}}}}"
+  },
+  "outputShape" : {
+    "kind" : "none",
+    "type" : "VALUE_RANGE_PARAM_OUT"
+  }
+}
