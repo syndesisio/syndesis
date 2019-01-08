@@ -1,6 +1,6 @@
-import { mergeMap, map, catchError, tap } from 'rxjs/operators';
+import { mergeMap, map, catchError, tap, withLatestFrom, filter } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Action, Store, select } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 import { ApiProviderService } from '@syndesis/ui/integration/api-provider/api-provider.service';
@@ -40,10 +40,10 @@ export class ApiProviderEffects {
 
   @Effect({ dispatch: false })
   syncIntegrationNameWithFromForm$ = this.actions$
-    .ofType<ApiProviderUpdateIntegrationName>(
-      ApiProviderActions.UPDATE_INTEGRATION_NAME,
-    )
     .pipe(
+      ofType<ApiProviderUpdateIntegrationName>(
+        ApiProviderActions.UPDATE_INTEGRATION_NAME,
+      ),
       tap(action => {
         this.currentFlowService.events.emit({
           kind: 'integration-set-property',
@@ -55,28 +55,30 @@ export class ApiProviderEffects {
 
   @Effect()
   reviewStep$: Observable<Action> = this.actions$
-    .ofType<ApiProviderPreviousStep | ApiProviderNextStep | ApiProviderUpdateSpecification>(
-      ApiProviderActions.PREV_STEP,
-      ApiProviderActions.NEXT_STEP,
-      ApiProviderActions.UPDATE_SPEC
-    )
-    .withLatestFrom(this.apiProviderStore.select(
-      getApiProviderWizardStep
-    ))
-    .filter(([action, step]) => step === ApiProviderWizardSteps.ReviewApiProvider)
-    .map(action => {
-      return {
-        type: ApiProviderActions.VALIDATE_SPEC
-      };
-    });
+    .pipe(
+      ofType<ApiProviderPreviousStep | ApiProviderNextStep | ApiProviderUpdateSpecification>(
+        ApiProviderActions.PREV_STEP,
+        ApiProviderActions.NEXT_STEP,
+        ApiProviderActions.UPDATE_SPEC
+      ),
+      withLatestFrom(this.apiProviderStore.pipe(select(
+        getApiProviderWizardStep
+      ))),
+      filter(([action, step]) => step === ApiProviderWizardSteps.ReviewApiProvider),
+      map(action => {
+        return {
+          type: ApiProviderActions.VALIDATE_SPEC
+        };
+      })
+    );
 
   @Effect()
   validateSwagger$: Observable<Action> = this.actions$
-    .ofType<ApiProviderValidateSwagger>(ApiProviderActions.VALIDATE_SPEC)
-    .withLatestFrom(this.apiProviderStore.select(
-      getApiProviderSpecificationForValidation
-    ))
     .pipe(
+      ofType<ApiProviderValidateSwagger>(ApiProviderActions.VALIDATE_SPEC),
+      withLatestFrom(this.apiProviderStore.pipe(select(
+        getApiProviderSpecificationForValidation
+      ))),
       mergeMap(([action, spec]) =>
         this.apiProviderService
           .validateOpenApiSpecification(spec)
@@ -102,17 +104,17 @@ export class ApiProviderEffects {
 
   @Effect()
   createIntegration$: Observable<Action> = this.actions$
-    .ofType<ApiProviderCreate>(ApiProviderActions.CREATE)
-    .withLatestFrom(this.apiProviderStore.select(
-      getApiProviderSpecificationForEditor
-    ))
-    .withLatestFrom(this.apiProviderStore.select(
-      getApiProviderIntegrationName
-    ))
-    .withLatestFrom(this.apiProviderStore.select(
-      getApiProviderIntegrationDescription
-    ))
     .pipe(
+      ofType<ApiProviderCreate>(ApiProviderActions.CREATE),
+      withLatestFrom(this.apiProviderStore.pipe(select(
+        getApiProviderSpecificationForEditor
+      ))),
+      withLatestFrom(this.apiProviderStore.pipe(select(
+        getApiProviderIntegrationName
+      ))),
+      withLatestFrom(this.apiProviderStore.pipe(select(
+        getApiProviderIntegrationDescription
+      ))),
       mergeMap(([[[action, spec], integrationName], integrationDescription]) =>
         this.apiProviderService
           .getIntegrationFromSpecification(spec)

@@ -1,7 +1,7 @@
 import { map, first, combineLatest, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import {
@@ -36,12 +36,8 @@ export class ApiConnectorDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.apiConnectorState$ = this.apiConnectorStore.select<ApiConnectorState>(
-      getApiConnectorState
-    );
-    this.createRequest$ = this.apiConnectorStore.select<CustomConnectorRequest>(
-      getApiConnectorRequest
-    );
+    this.apiConnectorState$ = this.apiConnectorStore.pipe(select(getApiConnectorState));
+    this.createRequest$ = this.apiConnectorStore.pipe(select(getApiConnectorRequest));
 
     this.apiConnectorData$ = this.route.paramMap
       .pipe(

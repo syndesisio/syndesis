@@ -1,6 +1,6 @@
 import { take } from 'rxjs/operators';
 import { Injectable, TemplateRef } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap';
 import { Modal } from '@syndesis/ui/common/modal/modal.models';
 
 @Injectable()

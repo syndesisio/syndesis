@@ -14,8 +14,7 @@ import {
 import { ConnectionsListComponent } from '@syndesis/ui/connections/list/list.component';
 import { SyndesisStoreModule } from '@syndesis/ui/store';
 
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { CollapseModule, PopoverModule } from 'ngx-bootstrap';
+import { CollapseModule, PopoverModule, ModalModule } from 'ngx-bootstrap';
 
 describe('IntegrationsEditComponent', () => {
   let component: IntegrationEditPage;

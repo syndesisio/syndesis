@@ -5,7 +5,6 @@ import { log } from '@syndesis/ui/logging';
 import {
   Activity,
   Integration,
-  IntegrationDeployment,
   IntegrationSupportService,
   Step,
   I18NService
@@ -82,7 +81,7 @@ export class IntegrationActivityComponent implements OnInit, OnDestroy {
       this.integration.id
     );
 
-    this.subscription = forkJoin<[Activity[], IntegrationDeployment[]]>([
+    this.subscription = forkJoin([
       activities$,
       integrationDeployments$
     ])

@@ -4,7 +4,7 @@ import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { PlatformActions } from '@syndesis/ui/platform';
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 
 import { moment } from '@syndesis/ui/vendor';
 
@@ -22,8 +22,8 @@ interface PayloadAction extends Action {
 export class I18NEffects {
   @Effect()
   fetch$: Observable<Action> = this.actions$
-    .ofType<I18NActions.I18NFetch>(I18NActions.FETCH)
     .pipe(
+      ofType<PayloadAction>(I18NActions.FETCH),
       switchMap(action => this.i18nService.setLocale(action.payload)),
       map((response: I18NState) => new I18NActions.I18NFetchComplete(response)),
       catchError(() => observableOf(new I18NActions.I18NFetchFail()))
@@ -31,8 +31,8 @@ export class I18NEffects {
 
   @Effect({ dispatch: false })
   updateLocale$: Observable<PayloadAction> = this.actions$
-    .ofType<I18NActions.I18NFetchComplete>(I18NActions.FETCH_COMPLETE)
     .pipe(
+      ofType<PayloadAction>(I18NActions.FETCH_COMPLETE),
       tap(action => {
         const { locale } = action.payload;
         this.i18nService.persistLocale(locale);
@@ -46,8 +46,8 @@ export class I18NEffects {
 
   @Effect()
   localize$: Observable<Action> = this.actions$
-    .ofType(PlatformActions.APP_BOOTSTRAP)
     .pipe(
+      ofType(PlatformActions.APP_BOOTSTRAP),
       map(
         action =>
           new I18NActions.I18NFetch(

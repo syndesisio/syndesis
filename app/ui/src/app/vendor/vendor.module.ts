@@ -4,76 +4,77 @@ import { FileUploadModule } from 'ng2-file-upload';
 
 import {
   AlertModule,
+  BsDropdownModule,
+  BsModalRef,
   CollapseModule,
+  ComponentLoaderFactory,
   ModalModule,
   PopoverModule,
   TooltipModule,
   TypeaheadModule,
-  BsDropdownModule,
-  ComponentLoaderFactory
 } from 'ngx-bootstrap';
 
 import {
   ActionModule,
   BlockCopyModule,
-  InlineCopyModule,
-  ToastNotificationModule,
-  ToastNotificationListModule,
-  InlineNotificationModule,
   CardModule,
+  InlineCopyModule,
+  InlineNotificationModule,
   ListModule,
-  ToolbarModule,
   PaginationModule,
+  ToastNotificationListModule,
+  ToastNotificationModule,
+  ToolbarModule,
 } from 'patternfly-ng';
 
 import { CodemirrorModule } from 'ng2-codemirror';
 
 const imports = [
+  ActionModule,
   AlertModule.forRoot(),
+  BlockCopyModule,
+  BsDropdownModule.forRoot(),
+  CardModule,
+  CodemirrorModule,
   CollapseModule.forRoot(),
+  FileUploadModule,
+  InlineCopyModule,
+  InlineNotificationModule,
+  ListModule,
   ModalModule.forRoot(),
   PopoverModule.forRoot(),
+  ToastNotificationListModule,
+  ToastNotificationModule,
+  ToolbarModule,
   TooltipModule.forRoot(),
   TypeaheadModule.forRoot(),
-  BsDropdownModule.forRoot(),
-  ActionModule,
-  BlockCopyModule,
-  InlineCopyModule,
-  ToastNotificationModule,
-  ToastNotificationListModule,
-  InlineNotificationModule,
-  CardModule,
-  ListModule,
-  ToolbarModule,
-  FileUploadModule,
-  CodemirrorModule
 ];
 
 const _exports = [
+  ActionModule,
   AlertModule,
+  BlockCopyModule,
+  BsDropdownModule,
+  CardModule,
+  CodemirrorModule,
   CollapseModule,
+  FileUploadModule,
+  InlineCopyModule,
+  InlineNotificationModule,
+  ListModule,
   ModalModule,
+  PaginationModule,
   PopoverModule,
+  ToastNotificationListModule,
+  ToastNotificationModule,
+  ToolbarModule,
   TooltipModule,
   TypeaheadModule,
-  BsDropdownModule,
-  ActionModule,
-  BlockCopyModule,
-  InlineCopyModule,
-  ToastNotificationModule,
-  ToastNotificationListModule,
-  InlineNotificationModule,
-  CardModule,
-  ListModule,
-  ToolbarModule,
-  PaginationModule,
-  FileUploadModule,
-  CodemirrorModule
 ];
 
 @NgModule({
   imports: imports,
-  providers: [ComponentLoaderFactory],
+  providers: [ComponentLoaderFactory, BsModalRef],
   exports: _exports
 })
 export class VendorModule {}

@@ -2,7 +2,7 @@ import { map, catchError } from 'rxjs/operators';
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
 
 import {
@@ -35,8 +35,10 @@ export class I18NProviderService extends I18NService {
     super();
 
     this.platformStore
-      .select(selectI18NState)
-      .pipe(map(state => state.dictionary))
+      .pipe(
+        select(selectI18NState),
+        map(state => state.dictionary)
+      )
       .subscribe(dictionary => (this.dictionary = dictionary));
   }
 
@@ -90,8 +92,10 @@ export class I18NProviderService extends I18NService {
 
   getValue(dictionaryKey: string, args?: any[]): Observable<string> {
     return this.platformStore
-      .select(selectI18NState)
-      .pipe(map(() => this.localize(dictionaryKey, args)));
+      .pipe(
+        select(selectI18NState),
+        map(() => this.localize(dictionaryKey, args))
+      );
   }
 
   private getTranslatedTerm(

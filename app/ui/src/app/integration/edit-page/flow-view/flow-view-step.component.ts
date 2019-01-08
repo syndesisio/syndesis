@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PopoverDirective } from 'ngx-bootstrap/popover';
+import { PopoverDirective } from 'ngx-bootstrap';
 
 import {
   Action,

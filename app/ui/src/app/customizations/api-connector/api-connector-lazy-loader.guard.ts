@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 
-import { ApiConnectorState } from '@syndesis/ui/customizations/api-connector/api-connector.models';
 import { ApiConnectorActions } from '@syndesis/ui/customizations/api-connector/api-connector.actions';
 import {
   ApiConnectorStore,
@@ -21,8 +20,8 @@ export class ApiConnectorLazyLoaderGuard implements CanActivate {
 
   private lazyLoadApiConnectors(): Observable<boolean> {
     return this.apiConnectorStore
-      .select<ApiConnectorState>(getApiConnectorState)
       .pipe(
+        select(getApiConnectorState),
         first(apiConnectorState => !apiConnectorState.loading),
         switchMap(apiConnectorState => {
           if (!apiConnectorState.loaded) {
