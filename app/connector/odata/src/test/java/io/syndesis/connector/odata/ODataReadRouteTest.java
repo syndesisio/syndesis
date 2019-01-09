@@ -500,7 +500,6 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             Object body = result.getExchanges().get(0).getIn().getBody();
             assertTrue(body instanceof String);
             String json = (String) body;
-            System.out.println(json);
             String expected = testData(TEST_SERVER_DATA_WITH_COUNT);
             JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
 
@@ -608,7 +607,6 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             Object body = result.getExchanges().get(0).getIn().getBody();
             assertTrue(body instanceof String);
             String json = (String) body;
-            System.out.println(json);
             String expected = testData(SINGLE_TEST_ENTITY_DATA);
             JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
 
@@ -662,7 +660,6 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             Object body = result.getExchanges().get(0).getIn().getBody();
             assertTrue(body instanceof String);
             String json = (String) body;
-            System.out.println(json);
             String expected = testData(SINGLE_TEST_ENTITY_DATA);
             JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
 

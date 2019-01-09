@@ -153,6 +153,7 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
             .build();
     }
 
+    @SuppressWarnings("PMD.UseStringBufferForStringAppends")
     @Override
     protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
         Olingo4Component component = new Olingo4Component(getCamelContext());

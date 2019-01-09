@@ -28,6 +28,19 @@
   <name>Connector :: OData</name>
   <packaging>jar</packaging>
 
+  <properties>
+    <olingoVersion>4.4.0</olingoVersion>
+    <!-- To be removed once CAMEL-13006 has been integrated into fuse release of camel-olingo4 component -->
+    <schemeName>olingo4</schemeName>
+    <componentName>Olingo4</componentName>
+    <componentPackage>org.apache.camel.component.olingo4</componentPackage>
+    <maven.exe.file.extension />
+    <camel.osgi.export.pkg>${componentPackage}</camel.osgi.export.pkg>
+    <componentPackage>org.apache.camel.component.olingo4</componentPackage>
+    <outPackage>org.apache.camel.component.olingo4.internal</outPackage>
+    <camel.osgi.private.pkg>${outPackage}</camel.osgi.private.pkg>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -51,38 +64,40 @@
       <dependency>
         <groupId>org.apache.olingo</groupId>
         <artifactId>odata-commons-api</artifactId>
-        <version>4.4.0</version>
+        <version>${olingoVersion}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.olingo</groupId>
         <artifactId>odata-client-core</artifactId>
-        <version>4.4.0</version>
+        <version>${olingoVersion}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.olingo</groupId>
         <artifactId>odata-client-api</artifactId>
-        <version>4.4.0</version>
+        <version>${olingoVersion}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.olingo</groupId>
         <artifactId>odata-server-api</artifactId>
-        <version>4.4.0</version>
+        <version>${olingoVersion}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.olingo</groupId>
         <artifactId>odata-commons-core</artifactId>
-        <version>4.4.0</version>
+        <version>${olingoVersion}</version>
       </dependency>
+      <!-- Include once CAMEL-13006 has been integrated into fuse release of camel-olingo4 component
       <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-olingo4</artifactId>
-      <version>2.21.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-olingo4-api</artifactId>
-      <version>2.21.0</version>
-    </dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-olingo4</artifactId>
+        <version>${camel.version}</version>
+      </dependency>
+      -->
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-olingo4-api</artifactId>
+        <version>${camel.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -187,10 +202,18 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
     </dependency>
+    <!-- Include once CAMEL-13006 has been integrated into fuse release of camel-olingo4 component
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-olingo4</artifactId>
     </dependency>
+    -->
+    <!-- Exclude once CAMEL-13006 has been integrated into fuse release of camel-olingo4 component -->
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-olingo4-api</artifactId>
