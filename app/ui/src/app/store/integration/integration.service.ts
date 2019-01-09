@@ -44,14 +44,14 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
 
   get(id: string): Observable<Integration> {
     return forkJoin<Integration, IntegrationStatusDetail>([
-      super.get(id),
+      super.get(id) as Observable<Integration>,
       this.integrationSupportService.fetchDetailedStatus(id).pipe(
         catchError( err => {
           // Fall back to showing the coarse status
           log.warn('error fetching detailed status: ', err);
           return undefined;
         })
-      )
+      ) as Observable<IntegrationStatusDetail>
     ]).pipe(
       map(results => {
         const integration = results[0];

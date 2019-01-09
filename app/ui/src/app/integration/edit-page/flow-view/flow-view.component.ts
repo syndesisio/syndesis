@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { PopoverDirective } from 'ngx-bootstrap/popover';
+import { PopoverDirective } from 'ngx-bootstrap';
 import {
   CurrentFlowService,
   FlowEvent,

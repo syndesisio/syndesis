@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 import { ActionModule, ListModule, ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';

@@ -17,10 +17,10 @@ import 'codemirror/addon/display/placeholder.js';
 import 'codemirror/addon/mode/overlay.js';
 import 'codemirror/addon/lint/lint.js';
 import 'codemirror/mode/velocity/velocity.js';
-import * as CodeMirror from 'codemirror/lib/codemirror.js';
+import * as CodeMirror from 'codemirror';
 export { CodeMirror };
 
-import * as Mustache from 'mustache/mustache.js';
+import * as Mustache from 'mustache';
 export { Mustache };
 
 import * as Velocity from 'velocityjs';

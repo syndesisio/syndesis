@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import {
   ModalService,
   NavigationService,
@@ -65,14 +65,14 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
       this.cancelModalTemplate
     );
 
-    this.loading$ = this.apiConnectorStore.select(getApiConnectorLoading);
-    this.currentActiveStep$ = this.apiConnectorStore.select(getApiConnectorWizardStep);
-    this.uploadSpecification$ = this.apiConnectorStore.select(getApiConnectorUploadSpecification);
-    this.validationErrors$ = this.apiConnectorStore.select(getApiConnectorValidationError);
-    this.specificationForEditor$ = this.apiConnectorStore.select(getApiConnectorSpecificationForEditor);
-    this.createRequest$ = this.apiConnectorStore.select(getApiConnectorRequest);
-    this.showApiEditor$ = this.apiConnectorStore.select(getShowApiEditor);
-    this.apiConnectorState$ = this.apiConnectorStore.select(getApiConnectorState);
+    this.loading$ = this.apiConnectorStore.pipe(select(getApiConnectorLoading));
+    this.currentActiveStep$ = this.apiConnectorStore.pipe(select(getApiConnectorWizardStep));
+    this.uploadSpecification$ = this.apiConnectorStore.pipe(select(getApiConnectorUploadSpecification));
+    this.validationErrors$ = this.apiConnectorStore.pipe(select(getApiConnectorValidationError));
+    this.specificationForEditor$ = this.apiConnectorStore.pipe(select(getApiConnectorSpecificationForEditor));
+    this.createRequest$ = this.apiConnectorStore.pipe(select(getApiConnectorRequest));
+    this.showApiEditor$ = this.apiConnectorStore.pipe(select(getShowApiEditor));
+    this.apiConnectorState$ = this.apiConnectorStore.pipe(select(getApiConnectorState));
 
     this.nav.hide();
   }

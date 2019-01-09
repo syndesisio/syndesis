@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { ActionConfig, ListConfig, EmptyStateConfig } from 'patternfly-ng';
 
 import { ModalService } from '@syndesis/ui/common';
@@ -88,9 +88,9 @@ export class ApiConnectorListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
-    this.apiConnectorState$ = this.apiConnectorStore.select<ApiConnectorState>(
+    this.apiConnectorState$ = this.apiConnectorStore.pipe(select(
       getApiConnectorState
-    );
+    ));
     this.modalService.registerModal(
       this.confirmDeleteModalId,
       this.confirmDeleteModalTemplate

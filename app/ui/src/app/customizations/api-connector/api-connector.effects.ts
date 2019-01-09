@@ -1,6 +1,6 @@
-import { filter, mergeMap, map, switchMap, catchError, tap } from 'rxjs/operators';
+import { filter, mergeMap, map, switchMap, catchError, tap, withLatestFrom } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Action, Store, select } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 
@@ -29,13 +29,13 @@ import { Router } from '@angular/router';
 export class ApiConnectorEffects {
   @Effect()
   fetchApiConnectors$: Observable<Action> = this.actions$
-    .ofType(
-      ApiConnectorActions.FETCH,
-      ApiConnectorActions.UPDATE_FAIL,
-      ApiConnectorActions.DELETE_FAIL,
-      ApiConnectorActions.CREATE_CANCEL
-    )
     .pipe(
+      ofType(
+        ApiConnectorActions.FETCH,
+        ApiConnectorActions.UPDATE_FAIL,
+        ApiConnectorActions.DELETE_FAIL,
+        ApiConnectorActions.CREATE_CANCEL
+      ),
       mergeMap(() =>
         this.apiConnectorService
           .getCustomConnectorList()
@@ -56,28 +56,30 @@ export class ApiConnectorEffects {
 
   @Effect()
   reviewStep$: Observable<Action> = this.actions$
-    .ofType<ApiConnectorPreviousStep | ApiConnectorNextStep | ApiConnectorUpdateSpecification>(
-      ApiConnectorActions.PREV_STEP,
-      ApiConnectorActions.NEXT_STEP,
-      ApiConnectorActions.UPDATE_SPEC
-    )
-    .withLatestFrom(this.apiConnectorStore.select(
-      getApiConnectorWizardStep
-    ))
-    .filter(([action, step]) => step === ApiConnectorWizardStep.ReviewApiConnector)
-    .map(action => {
-      return {
-        type: ApiConnectorActions.VALIDATE_SWAGGER
-      };
-    });
+    .pipe(
+      ofType<ApiConnectorPreviousStep | ApiConnectorNextStep | ApiConnectorUpdateSpecification>(
+        ApiConnectorActions.PREV_STEP,
+        ApiConnectorActions.NEXT_STEP,
+        ApiConnectorActions.UPDATE_SPEC
+      ),
+      withLatestFrom(this.apiConnectorStore.pipe(select(
+        getApiConnectorWizardStep
+      ))),
+      filter(([action, step]) => step === ApiConnectorWizardStep.ReviewApiConnector),
+      map(action => {
+        return {
+          type: ApiConnectorActions.VALIDATE_SWAGGER
+        };
+      })
+    );
 
   @Effect()
   validateSwagger$: Observable<Action> = this.actions$
-    .ofType<ApiConnectorValidateSwagger>(ApiConnectorActions.VALIDATE_SWAGGER)
-    .withLatestFrom(this.apiConnectorStore.select(
-      getApiConnectorSpecificationForValidation
-    ))
     .pipe(
+      ofType<ApiConnectorValidateSwagger>(ApiConnectorActions.VALIDATE_SWAGGER),
+      withLatestFrom(this.apiConnectorStore.pipe(select(
+        getApiConnectorSpecificationForValidation
+      ))),
       mergeMap(([action, request]) =>
         this.apiConnectorService
           .validateCustomConnectorInfo(request)
@@ -98,8 +100,8 @@ export class ApiConnectorEffects {
 
   @Effect()
   createCustomConnector$: Observable<Action> = this.actions$
-    .ofType<ApiConnectorCreate>(ApiConnectorActions.CREATE)
     .pipe(
+      ofType<ApiConnectorCreate>(ApiConnectorActions.CREATE),
       mergeMap(action =>
         this.apiConnectorService
           .createCustomConnector(action.payload)
@@ -120,8 +122,8 @@ export class ApiConnectorEffects {
 
   @Effect()
   updateCustomConnector$: Observable<Action> = this.actions$
-    .ofType<ApiConnectorUpdate>(ApiConnectorActions.UPDATE)
     .pipe(
+      ofType<ApiConnectorUpdate>(ApiConnectorActions.UPDATE),
       mergeMap((action: ApiConnectorUpdate) => {
         const hasUpdatedIcon = !!action.payload.iconFile;
         return this.apiConnectorService
@@ -143,16 +145,18 @@ export class ApiConnectorEffects {
 
   @Effect()
   refreshApiConnectors$: Observable<Action> = this.actions$
-    .ofType(
-      ApiConnectorActions.CREATE_COMPLETE,
-      ApiConnectorActions.UPDATE_COMPLETE
-    )
-    .pipe(switchMap(() => of(ApiConnectorActions.fetch())));
+    .pipe(
+      ofType(
+        ApiConnectorActions.CREATE_COMPLETE,
+        ApiConnectorActions.UPDATE_COMPLETE
+      ),
+      switchMap(() => of(ApiConnectorActions.fetch()))
+    );
 
   @Effect()
   deleteCustomConnector$: Observable<Action> = this.actions$
-    .ofType<ApiConnectorDelete>(ApiConnectorActions.DELETE)
     .pipe(
+      ofType<ApiConnectorDelete>(ApiConnectorActions.DELETE),
       mergeMap(action =>
         this.apiConnectorService
           .deleteCustomConnector(action.payload)
@@ -173,8 +177,8 @@ export class ApiConnectorEffects {
 
   @Effect()
   watchCustomConnectorUse$: Observable<Action> = this.actions$
-    .ofType(ApiConnectorActions.FETCH_COMPLETE)
     .pipe(
+      ofType(ApiConnectorActions.FETCH_COMPLETE),
       switchMap(() => {
         return this.eventsService.changeEvents.pipe(
           filter(

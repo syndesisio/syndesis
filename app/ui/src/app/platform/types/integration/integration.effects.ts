@@ -3,7 +3,7 @@ import { of as observableOf, Observable } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 
 import { IntegrationService } from '@syndesis/ui/platform/types/integration/integration.service';
 import * as IntegrationActions from '@syndesis/ui/platform/types/integration/integration.actions';
@@ -12,8 +12,8 @@ import * as IntegrationActions from '@syndesis/ui/platform/types/integration/int
 export class IntegrationEffects {
   @Effect()
   fetchIntegrations$: Observable<Action> = this.actions$
-    .ofType(IntegrationActions.FETCH_INTEGRATIONS)
     .pipe(
+      ofType(IntegrationActions.FETCH_INTEGRATIONS),
       mergeMap(() =>
         this.integrationService.fetch().pipe(
           map(response => ({
@@ -32,11 +32,11 @@ export class IntegrationEffects {
 
   @Effect()
   fetchIntegrationMetrics$: Observable<Action> = this.actions$
-    .ofType<IntegrationActions.FetchMetrics>(
-      IntegrationActions.FETCH_METRICS,
-      IntegrationActions.FETCH_INTEGRATIONS
-    )
     .pipe(
+      ofType<IntegrationActions.FetchMetrics>(
+        IntegrationActions.FETCH_METRICS,
+        IntegrationActions.FETCH_INTEGRATIONS
+      ),
       mergeMap(action =>
         this.integrationService.fetchMetrics(action.id).pipe(
           map(response => ({

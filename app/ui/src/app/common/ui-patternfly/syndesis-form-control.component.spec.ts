@@ -32,7 +32,7 @@ import {
   DynamicTextAreaModel,
   DynamicTimePickerModel
 } from '@ng-dynamic-forms/core';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TooltipModule } from 'ngx-bootstrap';
 import { DurationFormControlComponent } from '@syndesis/ui/common/ui-patternfly/duration-form-control.component';
 import {
   SyndesisFormControlType,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import {
@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.integrationState$ = this.store.select(selectIntegrationState);
+    this.integrationState$ = this.store.pipe(select(selectIntegrationState));
 
     this.connectionStore.loadAll();
     this.integrationStore.loadAll();

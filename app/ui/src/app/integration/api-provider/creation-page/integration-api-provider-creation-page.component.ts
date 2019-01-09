@@ -6,7 +6,7 @@ import {
   OpenApiUploadSpecification,
   OpenApiValidationErrorMessage
 } from '@syndesis/ui/common';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { ApiProviderActions } from '@syndesis/ui/integration/api-provider/api-provider.actions';
 import {
@@ -67,16 +67,16 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
       this.cancelModalTemplate
     );
 
-    this.loading$ = this.apiProviderStore.select(getApiProviderLoading);
-    this.currentActiveStep$ = this.apiProviderStore.select(getApiProviderWizardStep);
-    this.uploadSpecification$ = this.apiProviderStore.select(getApiProviderUploadSpecification);
-    this.validationErrors$ = this.apiProviderStore.select(getApiProviderValidationError);
-    this.validationResponse$ = this.apiProviderStore.select(getApiProviderValidationResponse);
-    this.integrationName$ = this.apiProviderStore.select(getApiProviderIntegrationName);
-    this.specificationForEditor$ = this.apiProviderStore.select(getApiProviderSpecificationForEditor);
-    this.specificationTitle$ = this.apiProviderStore.select(getApiProviderSpecificationTitle);
-    this.integrationDescription$ = this.apiProviderStore.select(getApiProviderIntegrationDescription);
-    this.creationError$ = this.apiProviderStore.select(getApiProviderCreationError);
+    this.loading$ = this.apiProviderStore.pipe(select(getApiProviderLoading));
+    this.currentActiveStep$ = this.apiProviderStore.pipe(select(getApiProviderWizardStep));
+    this.uploadSpecification$ = this.apiProviderStore.pipe(select(getApiProviderUploadSpecification));
+    this.validationErrors$ = this.apiProviderStore.pipe(select(getApiProviderValidationError));
+    this.validationResponse$ = this.apiProviderStore.pipe(select(getApiProviderValidationResponse));
+    this.integrationName$ = this.apiProviderStore.pipe(select(getApiProviderIntegrationName));
+    this.specificationForEditor$ = this.apiProviderStore.pipe(select(getApiProviderSpecificationForEditor));
+    this.specificationTitle$ = this.apiProviderStore.pipe(select(getApiProviderSpecificationTitle));
+    this.integrationDescription$ = this.apiProviderStore.pipe(select(getApiProviderIntegrationDescription));
+    this.creationError$ = this.apiProviderStore.pipe(select(getApiProviderCreationError));
 
     this.nav.hide();
   }

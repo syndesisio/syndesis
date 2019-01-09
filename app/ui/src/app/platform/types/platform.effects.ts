@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 
 import * as PlatformActions from '@syndesis/ui/platform/types/platform.actions';
@@ -12,8 +12,10 @@ import { I18NEffects } from '@syndesis/ui/platform/types/i18n';
 export class PlatformEffects {
   @Effect()
   bootstrapIntegration$: Observable<Action> = this.actions$
-    .ofType(PlatformActions.APP_BOOTSTRAP)
-    .pipe(map(() => ({ type: IntegrationActions.FETCH_INTEGRATIONS })));
+    .pipe(
+      ofType(PlatformActions.APP_BOOTSTRAP),
+      map(() => ({ type: IntegrationActions.FETCH_INTEGRATIONS }))
+    );
 
   constructor(private actions$: Actions) {}
 

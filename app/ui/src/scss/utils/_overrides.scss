@@ -159,3 +159,16 @@ body.cards-pf {
 .glyphicon-info-sign {
   display: block;
 }
+
+// Override PF3's popover/tooltip arrow margin, use ngx-bootstrap's positioning
+.popover,
+.tooltip {
+  &.top,
+  &.right,
+  &.bottom,
+  &.left {
+    .arrow {
+      margin: 0;
+    }
+  }
+}
