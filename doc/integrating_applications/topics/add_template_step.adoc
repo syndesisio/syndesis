@@ -4,30 +4,30 @@
 [id='add-template-step_{context}']
 = Add a template step
 
-In an integration, a template step takes data from a source and 
+In an integration, a template step takes data from a source and
 inserts it into the format that is defined in a template that you upload to {prodname}.
-The benefit of a template step is that it provides data output in a 
-consistent format that you specify. 
+The benefit of a template step is that it provides data output in a
+consistent format that you specify.
 
-In the template, you define placeholders and specify static text. 
-When you create the integration, you add a template step, map source fields 
-to the template placeholders, and then map template content to the next step 
+In the template, you define placeholders and specify static text.
+When you create the integration, you add a template step, map source fields
+to the template placeholders, and then map template content to the next step
 in the integration. When the integration executes, {prodname}
 inserts the values that are in the mapped source fields into an
 instance of the template and passes the result to the next step in the integration.
 
-If an integration includes a template step then it is most likely the only 
-template step in the integration. However, more than one template step in an 
-integration is allowed. 
+If an integration includes a template step then it is most likely the only
+template step in the integration. However, more than one template step in an
+integration is allowed.
 
-In this release, {prodname} supports only 
-https://mustache.github.io[Mustache] templates. It is expected that 
+In this release, {prodname} supports only
+https://mustache.github.io[Mustache] templates. It is expected that
 https://velocity.apache.org[Velocity] and
 https://freemarker.apache.org[Freemarker] templates will be supported
-in a future release. 
+in a future release.
 
 .Prerequisites
-* You must be creating or editing an integration. 
+* You must be creating or editing an integration.
 * If you are creating an
 integration then it must already have its start and finish connections.
 
@@ -37,81 +37,75 @@ integration then it must already have its start and finish connections.
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
 at the location where you want to add a template step.
 . In the popup, click *Add a Step*.
-. On the *Choose a Step* page, click *Template*. The 
-*Upload Template* page opens and prompts you to choose how you want to define 
-the template. 
+. On the *Choose a Step* page, click *Template*. The
+*Upload Template* page opens and prompts you to choose how you want to define
+the template.
 
 . To define the template, do one of the following:
 +
 * Drag and drop a template file or a file that contains text that you
-want to modify to create a template, into the template editor. 
-* Click *browse to upload*, navigate to a file, and upload it. 
+want to modify to create a template, into the template editor.
+* Click *browse to upload*, navigate to a file, and upload it.
 * In the template editor, start typing to define a template.
 
 +
-Note that you might upload a template that is valid in other environments but that 
-has errors in {prodname}. {prodname} requires that you append the `body.`
-prefix to each placeholder inside double curly braces. 
-For example, while `{{text}}` is valid in a typical template, you must 
-specify `{{body.text}}` in a template that you use with {prodname}. 
+In the previous release, you were required to prefix each
+placeholder with `body.`. This is no longer necessary, and
+`.` in a placeholder is not allowed. The
+editor displays a syntax error if you specify`.` in a placeholder.
 Here is an example of a valid template:
 
 +
 ----
-At {{body.time}}, {{body.name}} tweeted:
-{{body.text}}
+At {{time}}, {{name}} tweeted:
+{{text}}
 ----
 
 . In the template editor, ensure that the template
-is valid for use with {prodname}. {prodname} displays 
+is valid for use with {prodname}. {prodname} displays
 image:images/RedCircleXError.png[a red error indicator] to the left of
 a line that contains a syntax error. Hovering over a red indicator displays hints
-about how to resolve the error. 
-+
-Inside each set of double curly braces, the `body.` prefix is required. 
-Data mapping does not work if the `body.` prefix is missing. 
-For example, if you upload a template that does not have the `body.` prefix 
-on each placeholder, {prodname} displays an error icon on those lines.
+about how to resolve the error.
 
 . Click *Done* to add the template step to the integration.
-+ 
-If the *Done* button is not enabled then there is at least one syntax error 
-that you must correct. 
 +
-Input to a template step must be in the form of a JSON object. Consequently, 
+If the *Done* button is not enabled then there is at least one syntax error
+that you must correct.
++
+Input to a template step must be in the form of a JSON object. Consequently,
 you must add
-a data mapping step before a template step. 
+a data mapping step before a template step.
 . To add a data mapper step before the template step:
-.. In the left panel, hover over the  
-image:images/PlusSignToAddStepOrConnection.png[Plus Sign] that is 
-immediately before the template step that you just added and then click *Add a Step*. 
+.. In the left panel, hover over the
+image:images/PlusSignToAddStepOrConnection.png[Plus Sign] that is
+immediately before the template step that you just added and then click *Add a Step*.
 .. On the *Choose a Step* page, click *Data Mapper*.
-.. In the data mapper, map a source field to each template placeholder field. 
+.. In the data mapper, map a source field to each template placeholder field.
 +
-For example, using the template above, map a source field 
+For example, using the template above, map a source field
 to each of these template fields:
 +
-* `body.time`
-* `body.name`
-* `body.text`
-.. In the upper right, click *Done* to add the data mapper step to the 
+* `time`
+* `name`
+* `text`
+.. In the upper right, click *Done* to add the data mapper step to the
 integration.
 
 +
 Output from a template step is always a JSON object. Consequently, you must
 add a data mapper step after a template step.
 . To add a data mapper step after the template step:
-.. In the left panel, hover over the  
-image:images/PlusSignToAddStepOrConnection.png[Plus Sign] that is 
-immediately after the template step you just added and then click *Add a Step*. 
+.. In the left panel, hover over the
+image:images/PlusSignToAddStepOrConnection.png[Plus Sign] that is
+immediately after the template step you just added and then click *Add a Step*.
 .. On the *Choose a Step* page, click *Data Mapper*.
-.. In the data mapper, map the template's *message* field, which 
+.. In the data mapper, map the template's *message* field, which
 always contains the result of inserting source fields into the
-template, to a target field. For example, suppose that a Gmail connection is 
+template, to a target field. For example, suppose that a Gmail connection is
 next in the integration and you want to send the result of the template step
-as the content of a Gmail message. To do this, you would map the *message* 
+as the content of a Gmail message. To do this, you would map the *message*
 source field to the *text* target field.
-.. In the upper right, click *Done*. 
+.. In the upper right, click *Done*.
 
 
 .Additional resources
