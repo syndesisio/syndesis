@@ -88,14 +88,6 @@
     justify-content: center;
     position: relative;
 
-    &.not-connection {
-      background-color: #ffffff;
-      border-width: 10px;
-      border-radius: 50%;
-      height: 32px;
-      width: 32px;
-    }
-
     &:not(.not-connection) + .data-mismatch {
       transform: translate(25%, -25%);
     }
