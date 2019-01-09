@@ -67,7 +67,7 @@
     "mustache": "3.0.1",
     "ng2-codemirror": "1.1.3",
     "ng2-file-upload": "1.3.0",
-    "ngx-bootstrap": "3.0.1",
+    "ngx-bootstrap": "3.1.4",
     "ngx-chips": "1.9.8",
     "oai-ts-commands": "0.2.59",
     "oai-ts-core": "0.2.33",
@@ -131,6 +131,9 @@
     "tslint": "5.7.0",
     "typescript": "2.9.2",
     "webdriver-manager": "12.0.2"
+  },
+  "resolutions": {
+    "ngx-bootstrap": "3.1.4"
   },
   "snyk": true
 }
