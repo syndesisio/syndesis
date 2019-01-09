@@ -17,7 +17,7 @@ export class IntegrationVerticalFlow extends React.Component<
   IIntegrationVerticalFlowState
 > {
   public state = {
-    expanded: false,
+    expanded: localStorage.getItem('iec-vertical-flow-expanded') === 'y',
   };
 
   constructor(props: IIntegrationVerticalFlowProps) {
@@ -26,8 +26,10 @@ export class IntegrationVerticalFlow extends React.Component<
   }
 
   public toggleExpanded(): void {
+    const expanded = !this.state.expanded;
+    localStorage.setItem('iec-vertical-flow-expanded', expanded ? 'y' : 'n');
     this.setState({
-      expanded: !this.state.expanded,
+      expanded,
     });
   }
 

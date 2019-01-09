@@ -2,7 +2,11 @@ import { WithConnection, WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import {
   Breadcrumb,
+  ContentWithSidebarLayout,
   IntegrationActionConfigurationForm,
+  IntegrationFlowStepGeneric,
+  IntegrationFlowStepWithOverview,
+  IntegrationVerticalFlow,
   Loader,
   PageHeader,
 } from '@syndesis/ui';
@@ -31,119 +35,173 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                 }) => (
                   <WithConnection id={connectionId}>
                     {({ data, hasData, error }) => (
-                      <WithLoader
-                        error={error}
-                        loading={!hasData}
-                        loaderChildren={<Loader />}
-                        errorChildren={<div>TODO</div>}
-                      >
-                        {() => {
-                          const action = data.getActionById(actionId);
-                          const steps = data.getActionSteps(action);
-                          const definition = data.getActionStepDefinition(
-                            data.getActionStep(action, step)
-                          );
-                          const moreSteps = step < steps.length - 1;
-                          const integration =
-                            step === 0
-                              ? getEmptyIntegration()
-                              : getCreationDraft();
-                          const onSave = async (configuredProperties: any) => {
-                            if (moreSteps) {
-                              const updatedIntegration = await updateConnection(
-                                integration,
-                                data,
-                                action,
-                                0,
-                                1,
-                                configuredProperties
-                              );
-                              setCreationDraft(updatedIntegration);
-                              history.push(
-                                reverse(
-                                  routes.integrations.create.finish
-                                    .configureAction,
-                                  {
-                                    actionId,
-                                    connectionId,
-                                    step: step + 1,
+                      <ContentWithSidebarLayout
+                        sidebar={
+                          <IntegrationVerticalFlow disabled={true}>
+                            {({ expanded }) => (
+                              <>
+                                <IntegrationFlowStepGeneric
+                                  icon={
+                                    hasData ? (
+                                      <img
+                                        src={data.icon}
+                                        width={24}
+                                        height={24}
+                                      />
+                                    ) : (
+                                      <Loader />
+                                    )
                                   }
-                                )
+                                  i18nTitle={
+                                    hasData
+                                      ? `1. ${data.connector!.name}`
+                                      : '1. Start'
+                                  }
+                                  i18nTooltip={
+                                    hasData ? `1. ${data.name}` : 'Start'
+                                  }
+                                  active={true}
+                                  showDetails={expanded}
+                                  description={'Configure the action'}
+                                />
+                                <IntegrationFlowStepWithOverview
+                                  icon={'+'}
+                                  i18nTitle={'2. Finish'}
+                                  i18nTooltip={'Finish'}
+                                  active={false}
+                                  showDetails={expanded}
+                                  name={'n/a'}
+                                  action={'n/a'}
+                                  dataType={'n/a'}
+                                />
+                              </>
+                            )}
+                          </IntegrationVerticalFlow>
+                        }
+                        content={
+                          <WithLoader
+                            error={error}
+                            loading={!hasData}
+                            loaderChildren={<Loader />}
+                            errorChildren={<div>TODO</div>}
+                          >
+                            {() => {
+                              const action = data.getActionById(actionId);
+                              const steps = data.getActionSteps(action);
+                              const definition = data.getActionStepDefinition(
+                                data.getActionStep(action, step)
                               );
-                            } else {
-                              const updatedIntegration = await (step === 0
-                                ? addConnection
-                                : updateConnection)(
-                                integration,
-                                data,
-                                action,
-                                0,
-                                0,
-                                configuredProperties
-                              );
-                              setCreationDraft(updatedIntegration);
-                              history.push(
-                                reverse(
-                                  routes.integrations.create.finish
-                                    .selectConnection
-                                )
-                              );
-                            }
-                          };
-                          return (
-                            <>
-                              <PageHeader>
-                                <Breadcrumb>
-                                  <Link to={routes.integrations.list}>
-                                    Integrations
-                                  </Link>
-                                  <Link
-                                    to={
-                                      routes.integrations.create.start
-                                        .selectConnection
-                                    }
-                                  >
-                                    New integration
-                                  </Link>
-                                  <Link
-                                    to={reverse(
-                                      routes.integrations.create.start
-                                        .selectAction,
+                              const moreSteps = step < steps.length - 1;
+                              const integration =
+                                step === 0
+                                  ? getEmptyIntegration()
+                                  : getCreationDraft();
+                              const onSave = async (
+                                configuredProperties: any
+                              ) => {
+                                if (moreSteps) {
+                                  const updatedIntegration = await updateConnection(
+                                    integration,
+                                    data,
+                                    action,
+                                    0,
+                                    1,
+                                    configuredProperties
+                                  );
+                                  setCreationDraft(updatedIntegration);
+                                  history.push(
+                                    reverse(
+                                      routes.integrations.create.finish
+                                        .configureAction,
                                       {
+                                        actionId,
                                         connectionId,
+                                        step: step + 1,
                                       }
-                                    )}
-                                  >
-                                    Start connection
-                                  </Link>
-                                  <span>Configure action</span>
-                                </Breadcrumb>
+                                    )
+                                  );
+                                } else {
+                                  const updatedIntegration = await (step === 0
+                                    ? addConnection
+                                    : updateConnection)(
+                                    integration,
+                                    data,
+                                    action,
+                                    0,
+                                    0,
+                                    configuredProperties
+                                  );
+                                  setCreationDraft(updatedIntegration);
+                                  history.push(
+                                    reverse(
+                                      routes.integrations.create.finish
+                                        .selectConnection
+                                    )
+                                  );
+                                }
+                              };
+                              return (
+                                <>
+                                  <PageHeader>
+                                    <Breadcrumb>
+                                      <Link to={routes.integrations.list}>
+                                        Integrations
+                                      </Link>
+                                      <Link
+                                        to={
+                                          routes.integrations.create.start
+                                            .selectConnection
+                                        }
+                                      >
+                                        New integration
+                                      </Link>
+                                      <Link
+                                        to={reverse(
+                                          routes.integrations.create.start
+                                            .selectAction,
+                                          {
+                                            connectionId,
+                                          }
+                                        )}
+                                      >
+                                        Start connection
+                                      </Link>
+                                      <span>Configure action</span>
+                                    </Breadcrumb>
 
-                                <h1>{action.name}</h1>
-                                <p>{action.description}</p>
-                              </PageHeader>
-                              <AutoForm
-                                i18nRequiredProperty={'* Required field'}
-                                definition={definition as IFormDefinition}
-                                initialValue={{}}
-                                onSave={onSave}
-                              >
-                                {({ fields, handleSubmit }) => (
-                                  <IntegrationActionConfigurationForm
-                                    backLink={`/integrations/create/${data.id}`}
-                                    fields={fields}
-                                    handleSubmit={handleSubmit}
-                                    i18nBackLabel={'< Choose action'}
-                                    i18nSubmitLabel={
-                                      moreSteps ? 'Continue' : 'Done'
-                                    }
-                                  />
-                                )}
-                              </AutoForm>
-                            </>
-                          );
-                        }}
-                      </WithLoader>
+                                    <h1>{action.name}</h1>
+                                    <p>{action.description}</p>
+                                  </PageHeader>
+                                  <AutoForm
+                                    i18nRequiredProperty={'* Required field'}
+                                    definition={definition as IFormDefinition}
+                                    initialValue={{}}
+                                    onSave={onSave}
+                                  >
+                                    {({ fields, handleSubmit }) => (
+                                      <IntegrationActionConfigurationForm
+                                        backLink={reverse(
+                                          routes.integrations.create.start
+                                            .selectAction,
+                                          {
+                                            connectionId,
+                                          }
+                                        )}
+                                        fields={fields}
+                                        handleSubmit={handleSubmit}
+                                        i18nBackLabel={'< Choose action'}
+                                        i18nSubmitLabel={
+                                          moreSteps ? 'Continue' : 'Done'
+                                        }
+                                      />
+                                    )}
+                                  </AutoForm>
+                                </>
+                              );
+                            }}
+                          </WithLoader>
+                        }
+                      />
                     )}
                   </WithConnection>
                 )}

@@ -51,6 +51,7 @@ export interface IWithIntegrationHelpersChildrenProps {
   createDraft(value: Integration): Promise<string>;
   getCreationDraft(): Integration;
   getDraft(id: string): Promise<Integration>;
+  getStep(value: Integration, flow: number, step: number): Step;
   setCreationDraft(value: Integration): void;
   setDraft(id: string, value: Integration): Promise<void>;
 }
@@ -75,6 +76,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     this.setDraft = this.setDraft.bind(this);
     this.getCreationDraft = this.getCreationDraft.bind(this);
     this.setCreationDraft = this.setCreationDraft.bind(this);
+    this.getStep = this.getStep.bind(this);
   }
 
   public async getActionDescriptor(
@@ -252,6 +254,16 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     );
   }
 
+  public getStep(value: Integration, flow: number, step: number): Step {
+    try {
+      return value.flows![flow].steps![step];
+    } catch (e) {
+      throw new Error(
+        `Can't find a step in position flow:${flow} step:${step}`
+      );
+    }
+  }
+
   public render() {
     return this.props.children({
       addConnection: this.addConnection,
@@ -259,6 +271,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       getCreationDraft: this.getCreationDraft,
       getDraft: this.getDraft,
       getEmptyIntegration: this.getEmptyIntegration,
+      getStep: this.getStep,
       saveIntegration: this.saveIntegration,
       setCreationDraft: this.setCreationDraft,
       setDraft: this.setDraft,

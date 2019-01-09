@@ -3,8 +3,8 @@ import { Connection } from '@syndesis/models';
 import {
   Breadcrumb,
   ContentWithSidebarLayout,
-  IntegrationFlowStep,
-  IntegrationFlowStepDetails,
+  IntegrationFlowStepGeneric,
+  IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
   PageHeader,
 } from '@syndesis/ui';
@@ -30,44 +30,24 @@ export class IntegrationCreatorStartConnectionPage extends React.Component {
             <IntegrationVerticalFlow disabled={true}>
               {({ expanded }) => (
                 <>
-                  <IntegrationFlowStep
+                  <IntegrationFlowStepGeneric
                     icon={'+'}
-                    active={true}
+                    i18nTitle={'1. Start'}
                     i18nTooltip={'Start'}
+                    active={true}
                     showDetails={expanded}
-                  >
-                    <IntegrationFlowStepDetails active={true}>
-                      {({ Title, GenericDescription }) => (
-                        <>
-                          <Title>Start</Title>
-                          <GenericDescription>
-                            Choose a connection
-                          </GenericDescription>
-                        </>
-                      )}
-                    </IntegrationFlowStepDetails>
-                  </IntegrationFlowStep>
-                  <IntegrationFlowStep
+                    description={'Choose a connection'}
+                  />
+                  <IntegrationFlowStepWithOverview
                     icon={'+'}
+                    i18nTitle={'2. Finish'}
                     i18nTooltip={'Finish'}
+                    active={false}
                     showDetails={expanded}
-                  >
-                    <IntegrationFlowStepDetails>
-                      {({ Title, StepOverview }) => (
-                        <>
-                          <Title>Start</Title>
-                          <StepOverview
-                            nameI18nLabel={'Name:'}
-                            name={'n/a'}
-                            actionI18nLabel={'Action:'}
-                            action={'n/a'}
-                            dataTypeI18nLabel={'Data Type:'}
-                            dataType={'n/a'}
-                          />
-                        </>
-                      )}
-                    </IntegrationFlowStepDetails>
-                  </IntegrationFlowStep>
+                    name={'n/a'}
+                    action={'n/a'}
+                    dataType={'n/a'}
+                  />
                 </>
               )}
             </IntegrationVerticalFlow>

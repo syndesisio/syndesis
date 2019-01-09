@@ -1,5 +1,6 @@
 .content-with-sidebar {
   display: flex;
+  height: 100%;
 }
 
 .content-with-sidebar__sidebar {
