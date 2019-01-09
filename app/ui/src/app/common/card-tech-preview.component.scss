@@ -7,10 +7,4 @@
   right: -2px;
   border-bottom: 1px solid $color-pf-black-300;
   padding: 5px 10px;
-
-  ::ng-deep {
-    .bs-popover-left .arrow {
-      transform: translateY(-3px);
-    }
-  }
 }
