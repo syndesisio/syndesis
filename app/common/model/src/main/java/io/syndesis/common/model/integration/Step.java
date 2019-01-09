@@ -17,9 +17,7 @@ package io.syndesis.common.model.integration;
 
 import java.io.Serializable;
 import java.util.Optional;
-import org.immutables.value.Value;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithDependencies;
@@ -28,7 +26,11 @@ import io.syndesis.common.model.WithMetadata;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.extension.Extension;
-import io.syndesis.common.model.integration.Integration.Builder;
+
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = Step.Builder.class)

@@ -15,13 +15,14 @@
  */
 package io.syndesis.common.model.integration;
 
-import org.immutables.value.Value;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.connection.Connector.Builder;
 import io.syndesis.common.model.validation.UniquenessRequired;
 import io.syndesis.common.model.validation.integration.NoDuplicateIntegration;
+
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
