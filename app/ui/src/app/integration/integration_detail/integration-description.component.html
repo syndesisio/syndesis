@@ -47,7 +47,6 @@
        class="text-center connection"
        (click)="onClick"
        title="{{ connectionName }}&nbsp;{{ actionName }}">
-    <div [class]="'step-line ' + class"></div>
     <div class="icon">
       <img class="syn-icon-small"
         [ngClass]="{ 'api-provider' : (id == 'api-provider') }"
@@ -58,14 +57,13 @@
   </div>
 </ng-template>
 
-<ng-template #stepDefault let-id="id" let-name="name"  let-iconSrc="iconSrc">
+<ng-template #stepDefault let-id="id" let-name="name" let-iconSrc="iconSrc">
   <div [id]="id"
        class="text-center step">
-    <div class="step-line"></div>
-    <div class="icon not-connection">
-      <div class="icon-line"></div>
+    <div class="icon">
+      <img class="syn-icon-small" [src]="iconSrc" alt="{{ name }}">
     </div>
-    <div>{{ name }}</div>
+    <div class="syn-truncate__ellipsis">{{ name }}</div>
   </div>
 </ng-template>
 
