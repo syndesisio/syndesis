@@ -22,7 +22,9 @@ import java.util.Map;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
+import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
 import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
@@ -52,11 +54,11 @@ public class GoogleSheetsUpdateValuesCustomizerTest extends AbstractGoogleSheets
         Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
         Assert.assertEquals("update", options.get("methodName"));
 
-        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader("CamelGoogleSheets.spreadsheetId"));
-        Assert.assertEquals("A1", inbound.getIn().getHeader("CamelGoogleSheets.range"));
-        Assert.assertEquals("RAW", inbound.getIn().getHeader("CamelGoogleSheets.valueInputOption"));
+        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assert.assertEquals("A1", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assert.assertEquals("RAW", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
 
-        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader("CamelGoogleSheets.values");
+        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
         Assert.assertEquals(0L, valueRange.getValues().size());
     }
 
@@ -83,11 +85,11 @@ public class GoogleSheetsUpdateValuesCustomizerTest extends AbstractGoogleSheets
         Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
         Assert.assertEquals("update", options.get("methodName"));
 
-        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader("CamelGoogleSheets.spreadsheetId"));
-        Assert.assertEquals("A1:B1", inbound.getIn().getHeader("CamelGoogleSheets.range"));
-        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader("CamelGoogleSheets.valueInputOption"));
+        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assert.assertEquals("A1:B1", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
 
-        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader("CamelGoogleSheets.values");
+        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
         Assert.assertEquals(1L, valueRange.getValues().size());
         Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
         Assert.assertEquals("b1", valueRange.getValues().get(0).get(1));
@@ -118,10 +120,10 @@ public class GoogleSheetsUpdateValuesCustomizerTest extends AbstractGoogleSheets
 
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals("A1:B2", inbound.getIn().getHeader("CamelGoogleSheets.range"));
-        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader("CamelGoogleSheets.valueInputOption"));
+        Assert.assertEquals("A1:B2", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
 
-        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader("CamelGoogleSheets.values");
+        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
         Assert.assertEquals(2L, valueRange.getValues().size());
         Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
         Assert.assertEquals("b1", valueRange.getValues().get(0).get(1));

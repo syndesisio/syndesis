@@ -30,6 +30,7 @@ import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
 import org.apache.camel.util.ObjectHelper;
 import org.junit.Test;
@@ -61,9 +62,9 @@ public class SheetsSpreadsheetsValuesIntegrationTest extends AbstractGoogleSheet
 
         final Map<String, Object> headers = new HashMap<>();
         // parameter type is String
-        headers.put("CamelGoogleSheets.spreadsheetId", testSheet.getSpreadsheetId());
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "spreadsheetId", testSheet.getSpreadsheetId());
         // parameter type is String
-        headers.put("CamelGoogleSheets.range", TEST_SHEET + "!A1:B2");
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "range", TEST_SHEET + "!A1:B2");
 
         final ValueRange result = (ValueRange) requestBodyAndHeaders("direct://GET", null, headers);
 
@@ -97,14 +98,14 @@ public class SheetsSpreadsheetsValuesIntegrationTest extends AbstractGoogleSheet
 
         final Map<String, Object> headers = new HashMap<>();
         // parameter type is String
-        headers.put("CamelGoogleSheets.spreadsheetId", testSheet.getSpreadsheetId());
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "spreadsheetId", testSheet.getSpreadsheetId());
         // parameter type is String
-        headers.put("CamelGoogleSheets.range", TEST_SHEET + "!A1:B2");
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "range", TEST_SHEET + "!A1:B2");
         // parameter type is com.google.api.services.sheets.v4.model.ValueRange
-        headers.put("CamelGoogleSheets.values", values);
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "values", values);
 
         // parameter type is String
-        headers.put("CamelGoogleSheets.valueInputOption", "USER_ENTERED");
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption", "USER_ENTERED");
 
         final UpdateValuesResponse result = (UpdateValuesResponse) requestBodyAndHeaders("direct://UPDATE", null, headers);
 
@@ -134,14 +135,14 @@ public class SheetsSpreadsheetsValuesIntegrationTest extends AbstractGoogleSheet
 
         final Map<String, Object> headers = new HashMap<>();
         // parameter type is String
-        headers.put("CamelGoogleSheets.spreadsheetId", testSheet.getSpreadsheetId());
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "spreadsheetId", testSheet.getSpreadsheetId());
         // parameter type is String
-        headers.put("CamelGoogleSheets.range", TEST_SHEET + "!A10");
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "range", TEST_SHEET + "!A10");
         // parameter type is com.google.api.services.sheets.v4.model.ValueRange
-        headers.put("CamelGoogleSheets.values", new ValueRange().setValues(data));
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "values", new ValueRange().setValues(data));
 
         // parameter type is String
-        headers.put("CamelGoogleSheets.valueInputOption", "USER_ENTERED");
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption", "USER_ENTERED");
 
         final AppendValuesResponse result = (AppendValuesResponse) requestBodyAndHeaders("direct://APPEND", null, headers);
 
@@ -175,11 +176,11 @@ public class SheetsSpreadsheetsValuesIntegrationTest extends AbstractGoogleSheet
 
         final Map<String, Object> headers = new HashMap<>();
         // parameter type is String
-        headers.put("CamelGoogleSheets.spreadsheetId", testSheet.getSpreadsheetId());
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "spreadsheetId", testSheet.getSpreadsheetId());
         // parameter type is String
-        headers.put("CamelGoogleSheets.range", TEST_SHEET + "!A1:B2");
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "range", TEST_SHEET + "!A1:B2");
         // parameter type is com.google.api.services.sheets.v4.model.ClearValuesRequest
-        headers.put("CamelGoogleSheets.clearValuesRequest", new ClearValuesRequest());
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "clearValuesRequest", new ClearValuesRequest());
 
         final ClearValuesResponse result = (ClearValuesResponse) requestBodyAndHeaders("direct://CLEAR", null, headers);
 

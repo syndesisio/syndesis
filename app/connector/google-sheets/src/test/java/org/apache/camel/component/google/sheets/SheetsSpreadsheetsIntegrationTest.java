@@ -28,6 +28,7 @@ import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
 import com.google.api.services.sheets.v4.model.UpdateSpreadsheetPropertiesRequest;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -104,9 +105,9 @@ public class SheetsSpreadsheetsIntegrationTest extends AbstractGoogleSheetsTestS
 
         final Map<String, Object> headers = new HashMap<>();
         // parameter type is String
-        headers.put("CamelGoogleSheets.spreadsheetId", testSheet.getSpreadsheetId());
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "spreadsheetId", testSheet.getSpreadsheetId());
         // parameter type is com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest
-        headers.put("CamelGoogleSheets.batchUpdateSpreadsheetRequest", new BatchUpdateSpreadsheetRequest()
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest", new BatchUpdateSpreadsheetRequest()
                                                                             .setIncludeSpreadsheetInResponse(true)
                                                                             .setRequests(Collections.singletonList(new Request().setUpdateSpreadsheetProperties(new UpdateSpreadsheetPropertiesRequest()
                                                                                     .setProperties(new SpreadsheetProperties().setTitle(updateTitle))

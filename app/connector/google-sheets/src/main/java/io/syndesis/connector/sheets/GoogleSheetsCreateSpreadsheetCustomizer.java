@@ -15,6 +15,9 @@
  */
 package io.syndesis.connector.sheets;
 
+import java.util.Collections;
+import java.util.Map;
+
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
@@ -26,11 +29,9 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
 import org.apache.camel.util.ObjectHelper;
-
-import java.util.Collections;
-import java.util.Map;
 
 public class GoogleSheetsCreateSpreadsheetCustomizer implements ComponentProxyCustomizer {
 
@@ -89,7 +90,7 @@ public class GoogleSheetsCreateSpreadsheetCustomizer implements ComponentProxyCu
             spreadsheet.setSheets(Collections.singletonList(sheet));
         }
 
-        in.setHeader("CamelGoogleSheets.content", spreadsheet);
+        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "content", spreadsheet);
     }
 
     private void afterProducer(Exchange exchange) {

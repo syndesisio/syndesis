@@ -28,7 +28,9 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
+import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
 import org.apache.camel.util.ObjectHelper;
 
 public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomizer {
@@ -90,10 +92,10 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
 
         valueRange.setValues(values);
 
-        in.setHeader("CamelGoogleSheets.spreadsheetId", spreadsheetId);
-        in.setHeader("CamelGoogleSheets.range", range);
-        in.setHeader("CamelGoogleSheets.values", valueRange);
-        in.setHeader("CamelGoogleSheets.valueInputOption", Optional.ofNullable(valueInputOption)
+        in.setHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID, spreadsheetId);
+        in.setHeader(GoogleSheetsStreamConstants.RANGE, range);
+        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values", valueRange);
+        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption", Optional.ofNullable(valueInputOption)
                                                                       .orElse("USER_ENTERED"));
     }
 }
