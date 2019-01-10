@@ -15,14 +15,13 @@
  */
 package io.syndesis.connector.meta.v1;
 
-import java.util.Map;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
 import io.syndesis.connector.support.verifier.api.MetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
@@ -59,7 +58,7 @@ public class ConnectorEndpoint {
         try {
             adapter = applicationContext.getBean(connectorId + "-adapter", MetadataRetrieval.class);
         } catch (NoSuchBeanDefinitionException | NoSuchBeanException ignored) {
-            LOGGER.debug("No bean of type: {} with id: {} found in application context, switch to factory finder",
+            LOGGER.debug("No bean of type: {} with id: '{}-adapter' found in application context, switch to factory finder",
                 MetadataRetrieval.class.getName(), connectorId);
 
             try {
@@ -74,7 +73,7 @@ public class ConnectorEndpoint {
         }
 
         if (adapter == null) {
-            throw new IllegalStateException("Unable to find adapter for:" + connectorId);
+            throw new IllegalStateException("Unable to find adapter for: " + connectorId);
         }
 
         try {
