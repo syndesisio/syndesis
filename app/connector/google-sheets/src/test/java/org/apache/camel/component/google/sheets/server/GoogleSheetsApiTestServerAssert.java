@@ -21,6 +21,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import com.consol.citrus.message.MessageType;
@@ -53,6 +59,29 @@ public class GoogleSheetsApiTestServerAssert extends AbstractAssert<GoogleSheets
 
     public GetSpreadsheetAssert getSpreadsheetRequest(String spreadsheetId) {
         return new GetSpreadsheetAssert(spreadsheetId);
+    }
+
+    public void isRunning() {
+        isRunning(5000, TimeUnit.MILLISECONDS);
+    }
+
+    public void isRunning(long timeout, TimeUnit timeUnit) {
+        ScheduledFuture<?> schedule = null;
+        try {
+            CompletableFuture<Boolean> runningProbe = new CompletableFuture<>();
+            schedule = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+                if (actual.getHttpServer().isRunning()) {
+                    runningProbe.complete(true);
+                }
+            }, 0, timeout / 10, timeUnit);
+
+            runningProbe.get(timeout, timeUnit);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            Optional.ofNullable(schedule)
+                .ifPresent(future -> future.cancel(true));
+        }
     }
 
     public class GetSpreadsheetAssert {
