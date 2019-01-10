@@ -135,8 +135,7 @@ export class IntegrationsPage extends React.Component {
                             <IntegrationsListView
                               linkToIntegrationImport={'/integrations/import'}
                               linkToIntegrationCreation={
-                                routes.integrations.create.start
-                                  .selectConnection
+                                routes.create.start.selectConnection
                               }
                               filterTypes={getFilterTypes(
                                 connectionsData.items

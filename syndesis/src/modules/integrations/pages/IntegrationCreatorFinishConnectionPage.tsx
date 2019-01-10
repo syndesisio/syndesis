@@ -1,6 +1,5 @@
 import { WithConnections } from '@syndesis/api';
-import { Connection } from '@syndesis/models';
-import { Action, ConnectionOverview } from '@syndesis/models';
+import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import {
   Breadcrumb,
   ContentWithSidebarLayout,
@@ -11,26 +10,24 @@ import {
 } from '@syndesis/ui';
 import { WithRouter } from '@syndesis/utils';
 import * as H from 'history';
-import { reverse } from 'named-urls';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
 import { ConnectionsWithToolbar } from '../../connections/containers/ConnectionsWithToolbar';
-import routes from '../routes';
+import resolvers from '../resolvers';
 
 export function getFinishSelectActionHref(
-  locationState: any,
-  connection: Connection
+  startConnection: ConnectionOverview,
+  startAction: Action,
+  integration: Integration,
+  connection: ConnectionOverview
 ): H.LocationDescriptor {
-  return {
-    pathname: reverse(routes.integrations.create.finish.selectAction, {
-      connectionId: connection.id,
-    }),
-    state: {
-      ...locationState,
-      finishConnection: connection,
-    },
-  };
+  return resolvers.create.finish.selectAction({
+    finishConnection: connection,
+    integration,
+    startAction,
+    startConnection,
+  });
 }
 
 export class IntegrationCreatorFinishConnectionPage extends React.Component {
@@ -42,6 +39,7 @@ export class IntegrationCreatorFinishConnectionPage extends React.Component {
             const startConnection: ConnectionOverview =
               location.state.startConnection;
             const startAction: Action = location.state.startAction;
+            const integration: Integration = location.state.integration;
             return (
               <ContentWithSidebarLayout
                 sidebar={
@@ -80,30 +78,22 @@ export class IntegrationCreatorFinishConnectionPage extends React.Component {
                   <>
                     <PageHeader>
                       <Breadcrumb>
-                        <Link to={routes.integrations.list}>Integrations</Link>
-                        <Link
-                          to={routes.integrations.create.start.selectConnection}
-                        >
+                        <Link to={resolvers.list({})}>Integrations</Link>
+                        <Link to={resolvers.create.start.selectConnection({})}>
                           New integration
                         </Link>
                         <Link
-                          to={reverse(
-                            routes.integrations.create.start.selectAction,
-                            {
-                              connectionId: startConnection.id,
-                            }
-                          )}
+                          to={resolvers.create.start.selectAction({
+                            connection: startConnection,
+                          })}
                         >
                           Start connection
                         </Link>
                         <Link
-                          to={reverse(
-                            routes.integrations.create.start.configureAction,
-                            {
-                              actionId: startAction.id,
-                              connectionId: startConnection.id,
-                            }
-                          )}
+                          to={resolvers.create.start.configureAction({
+                            actionId: startAction.id!,
+                            connection: startConnection,
+                          })}
                         >
                           Configure action
                         </Link>
@@ -124,7 +114,9 @@ export class IntegrationCreatorFinishConnectionPage extends React.Component {
                           connections={data.connectionsWithToAction}
                           getConnectionHref={getFinishSelectActionHref.bind(
                             null,
-                            location.state
+                            startConnection,
+                            startAction,
+                            integration
                           )}
                         />
                       )}

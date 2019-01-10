@@ -10,7 +10,7 @@ import {
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
-import { Action, ConnectionOverview } from '@syndesis/models';
+import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import {
   Breadcrumb,
   ContentWithSidebarLayout,
@@ -22,11 +22,10 @@ import {
   PageHeader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouter } from '@syndesis/utils';
-import { reverse } from 'named-urls';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
-import routes from '../routes';
+import resolvers from '../resolvers';
 
 export class IntegrationCreatorFinishConfigurationPage extends React.Component {
   public render() {
@@ -44,10 +43,13 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                 const startConnection: ConnectionOverview =
                   location.state.startConnection;
                 const startAction: Action = location.state.startAction;
+                const integration: Integration = location.state.integration;
+                const finishConnection: ConnectionOverview =
+                  location.state.finishConnection;
                 return (
                   <WithConnection
                     id={connectionId}
-                    initialValue={location.state.finishConnection}
+                    initialValue={finishConnection}
                   >
                     {({ data, hasData, error }) => (
                       <ContentWithSidebarLayout
@@ -120,7 +122,6 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                                 getActionStep(steps, step)
                               );
                               const moreSteps = step < steps.length - 1;
-                              const integration = location.state.integration;
                               const onSave = async (
                                 configuredProperties: any
                               ) => {
@@ -133,21 +134,16 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                                     1,
                                     configuredProperties
                                   );
-                                  history.push({
-                                    pathname: reverse(
-                                      routes.integrations.create.finish
-                                        .configureAction,
-                                      {
-                                        actionId,
-                                        connectionId,
-                                        step: step + 1,
-                                      }
-                                    ),
-                                    state: {
-                                      ...location.state,
+                                  history.push(
+                                    resolvers.create.finish.configureAction({
+                                      actionId,
+                                      finishConnection,
                                       integration: updatedIntegration,
-                                    },
-                                  });
+                                      startAction,
+                                      startConnection,
+                                      step: step + 1,
+                                    })
+                                  );
                                 } else {
                                   const updatedIntegration = await (step === 0
                                     ? addConnection
@@ -159,68 +155,62 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                                     1,
                                     configuredProperties
                                   );
-                                  history.push({
-                                    pathname: reverse(
-                                      routes.integrations.create.configure.index
-                                    ),
-                                    state: {
+                                  history.push(
+                                    resolvers.create.configure.index({
                                       integration: updatedIntegration,
-                                    },
-                                  });
+                                    })
+                                  );
                                 }
                               };
                               return (
                                 <>
                                   <PageHeader>
                                     <Breadcrumb>
-                                      <Link to={routes.integrations.list}>
+                                      <Link to={resolvers.list({})}>
                                         Integrations
                                       </Link>
                                       <Link
-                                        to={
-                                          routes.integrations.create.start
-                                            .selectConnection
-                                        }
+                                        to={resolvers.create.start.selectConnection(
+                                          {}
+                                        )}
                                       >
                                         New integration
                                       </Link>
                                       <Link
-                                        to={reverse(
-                                          routes.integrations.create.start
-                                            .selectAction,
-                                          {
-                                            connectionId: startConnection.id,
-                                          }
+                                        to={resolvers.create.start.selectAction(
+                                          { connection: startConnection }
                                         )}
                                       >
                                         Start connection
                                       </Link>
                                       <Link
-                                        to={reverse(
-                                          routes.integrations.create.start
-                                            .configureAction,
+                                        to={resolvers.create.start.configureAction(
                                           {
-                                            actionId: startAction.id,
-                                            connectionId: startConnection.id,
+                                            actionId: startAction.id!,
+                                            connection: startConnection,
                                           }
                                         )}
                                       >
                                         Configure action
                                       </Link>
                                       <Link
-                                        to={reverse(
-                                          routes.integrations.create.finish
-                                            .selectConnection
+                                        to={resolvers.create.finish.selectConnection(
+                                          {
+                                            integration,
+                                            startAction,
+                                            startConnection,
+                                          }
                                         )}
                                       >
                                         Finish Connection
                                       </Link>
                                       <Link
-                                        to={reverse(
-                                          routes.integrations.create.finish
-                                            .selectAction,
+                                        to={resolvers.create.finish.selectAction(
                                           {
-                                            connectionId,
+                                            finishConnection,
+                                            integration,
+                                            startAction,
+                                            startConnection,
                                           }
                                         )}
                                       >

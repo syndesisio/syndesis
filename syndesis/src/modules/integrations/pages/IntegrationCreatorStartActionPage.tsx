@@ -9,12 +9,11 @@ import {
   PageHeader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouter } from '@syndesis/utils';
-import { reverse } from 'named-urls';
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
-import routes from '../routes';
+import resolvers from '../resolvers';
 
 export class IntegrationCreatorStartActionPage extends React.Component {
   public render() {
@@ -22,7 +21,6 @@ export class IntegrationCreatorStartActionPage extends React.Component {
       <WithClosedNavigation>
         <WithRouter>
           {({ match, location }) => {
-            const { connectionId } = match.params as any;
             return (
               <WithConnection
                 id={(match.params as any).connectionId}
@@ -83,14 +81,13 @@ export class IntegrationCreatorStartActionPage extends React.Component {
                           <>
                             <PageHeader>
                               <Breadcrumb>
-                                <Link to={routes.integrations.list}>
+                                <Link to={resolvers.list({})}>
                                   Integrations
                                 </Link>
                                 <Link
-                                  to={
-                                    routes.integrations.create.start
-                                      .selectConnection
-                                  }
+                                  to={resolvers.create.start.selectConnection(
+                                    {}
+                                  )}
                                 >
                                   New integration
                                 </Link>
@@ -108,19 +105,12 @@ export class IntegrationCreatorStartActionPage extends React.Component {
                                   .sort((a, b) => a.name.localeCompare(b.name))
                                   .map((a, idx) => (
                                     <Link
-                                      to={{
-                                        pathname: reverse(
-                                          routes.integrations.create.start
-                                            .configureAction,
-                                          {
-                                            actionId: a.id,
-                                            connectionId,
-                                          }
-                                        ),
-                                        state: {
+                                      to={resolvers.create.start.configureAction(
+                                        {
+                                          actionId: a.id!,
                                           connection: data,
-                                        },
-                                      }}
+                                        }
+                                      )}
                                       style={{
                                         color: 'inherit',
                                         textDecoration: 'none',

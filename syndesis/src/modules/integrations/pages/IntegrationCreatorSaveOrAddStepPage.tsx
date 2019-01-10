@@ -11,7 +11,7 @@ export class IntegrationCreatorSaveOrAddStepPage extends React.Component {
         <>
           <PageHeader>
             <Breadcrumb>
-              <Link to={routes.integrations.list}>Integrations</Link>
+              <Link to={routes.list}>Integrations</Link>
               <span>New integration</span>
             </Breadcrumb>
           </PageHeader>

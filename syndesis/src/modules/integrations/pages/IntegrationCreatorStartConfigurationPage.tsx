@@ -21,11 +21,10 @@ import {
   PageHeader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouter } from '@syndesis/utils';
-import { reverse } from 'named-urls';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
-import routes from '../routes';
+import resolvers from '../resolvers';
 
 export class IntegrationCreatorStartConfigurationPage extends React.Component {
   public render() {
@@ -74,21 +73,14 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                                 1,
                                 configuredProperties
                               );
-                              history.push({
-                                pathname: reverse(
-                                  routes.integrations.create.finish
-                                    .configureAction,
-                                  {
-                                    actionId,
-                                    connectionId,
-                                    step: step + 1,
-                                  }
-                                ),
-                                state: {
+                              history.push(
+                                resolvers.create.start.configureAction({
+                                  actionId,
                                   connection: data,
                                   integration: updatedIntegration,
-                                },
-                              });
+                                  step: step + 1,
+                                })
+                              );
                             } else {
                               const updatedIntegration = await (step === 0
                                 ? addConnection
@@ -100,17 +92,13 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                                 0,
                                 configuredProperties
                               );
-                              history.push({
-                                pathname: reverse(
-                                  routes.integrations.create.finish
-                                    .selectConnection
-                                ),
-                                state: {
+                              history.push(
+                                resolvers.create.finish.selectConnection({
                                   integration: updatedIntegration,
                                   startAction: action,
                                   startConnection: data,
-                                },
-                              });
+                                })
+                              );
                             }
                           };
                           return (
@@ -161,24 +149,19 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                                 <>
                                   <PageHeader>
                                     <Breadcrumb>
-                                      <Link to={routes.integrations.list}>
+                                      <Link to={resolvers.list({})}>
                                         Integrations
                                       </Link>
                                       <Link
-                                        to={
-                                          routes.integrations.create.start
-                                            .selectConnection
-                                        }
+                                        to={resolvers.create.start.selectConnection(
+                                          {}
+                                        )}
                                       >
                                         New integration
                                       </Link>
                                       <Link
-                                        to={reverse(
-                                          routes.integrations.create.start
-                                            .selectAction,
-                                          {
-                                            connectionId,
-                                          }
+                                        to={resolvers.create.start.selectAction(
+                                          { connection: data }
                                         )}
                                       >
                                         Start connection
@@ -197,12 +180,8 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                                   >
                                     {({ fields, handleSubmit }) => (
                                       <IntegrationActionConfigurationForm
-                                        backLink={reverse(
-                                          routes.integrations.create.start
-                                            .selectAction,
-                                          {
-                                            connectionId,
-                                          }
+                                        backLink={resolvers.create.start.selectAction(
+                                          { connection: data }
                                         )}
                                         fields={fields}
                                         handleSubmit={handleSubmit}

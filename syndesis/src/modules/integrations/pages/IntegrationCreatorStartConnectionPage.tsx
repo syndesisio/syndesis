@@ -8,25 +8,14 @@ import {
   IntegrationVerticalFlow,
   PageHeader,
 } from '@syndesis/ui';
-import * as H from 'history';
-import { reverse } from 'named-urls';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
 import { ConnectionsWithToolbar } from '../../connections/containers/ConnectionsWithToolbar';
-import routes from '../routes';
+import resolvers from '../resolvers';
 
-export function getStartSelectActionHref(
-  connection: Connection
-): H.LocationDescriptor {
-  return {
-    pathname: reverse(routes.integrations.create.start.selectAction, {
-      connectionId: connection.id,
-    }),
-    state: {
-      connection,
-    },
-  };
+export function getStartSelectActionHref(connection: Connection) {
+  return resolvers.create.start.selectAction({ connection });
 }
 
 export class IntegrationCreatorStartConnectionPage extends React.Component {
@@ -64,7 +53,7 @@ export class IntegrationCreatorStartConnectionPage extends React.Component {
             <>
               <PageHeader>
                 <Breadcrumb>
-                  <Link to={routes.integrations.list}>Integrations</Link>
+                  <Link to={resolvers.list({})}>Integrations</Link>
                   <span>New integration</span>
                 </Breadcrumb>
                 <h1>Choose a Start Connection</h1>

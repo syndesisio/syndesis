@@ -17,37 +17,37 @@ export class IntegrationCreatorApp extends React.Component {
       <>
         <Switch>
           <Route
-            path={routes.integrations.create.start.configureAction}
+            path={routes.create.start.configureAction}
             exact={true}
             component={IntegrationCreatorStartConfigurationPage}
           />
           <Route
-            path={routes.integrations.create.start.selectAction}
+            path={routes.create.start.selectAction}
             exact={true}
             component={IntegrationCreatorStartActionPage}
           />
           <Route
-            path={routes.integrations.create.start.selectConnection}
+            path={routes.create.start.selectConnection}
             exact={true}
             component={IntegrationCreatorStartConnectionPage}
           />
           <Route
-            path={routes.integrations.create.finish.configureAction}
+            path={routes.create.finish.configureAction}
             exact={true}
             component={IntegrationCreatorFinishConfigurationPage}
           />
           <Route
-            path={routes.integrations.create.finish.selectAction}
+            path={routes.create.finish.selectAction}
             exact={true}
             component={IntegrationCreatorFinishActionPage}
           />
           <Route
-            path={routes.integrations.create.finish.selectConnection}
+            path={routes.create.finish.selectConnection}
             exact={true}
             component={IntegrationCreatorFinishConnectionPage}
           />
           <Route
-            path={routes.integrations.create.configure.index}
+            path={routes.create.configure.index}
             exact={true}
             component={IntegrationCreatorSaveOrAddStepPage}
           />

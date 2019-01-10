@@ -1,8 +1,9 @@
+import * as H from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 export interface IIntegrationActionConfigurationFormProps {
-  backLink: string;
+  backLink: H.LocationDescriptor;
   fields: JSX.Element;
   handleSubmit: (e?: any) => void;
   i18nBackLabel: string;

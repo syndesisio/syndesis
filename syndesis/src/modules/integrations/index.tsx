@@ -8,15 +8,8 @@ export class IntegrationsModule extends React.Component {
   public render() {
     return (
       <Switch>
-        <Route
-          path={routes.integrations.create.root}
-          component={IntegrationCreatorApp}
-        />
-        <Route
-          path={routes.integrations.list}
-          exact={true}
-          component={IntegrationsPage}
-        />
+        <Route path={routes.create.root} component={IntegrationCreatorApp} />
+        <Route path={routes.list} exact={true} component={IntegrationsPage} />
         <Route
           path={'/integrations/atlasmap'}
           exact={true}
