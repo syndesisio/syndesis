@@ -19,7 +19,6 @@ export const NEW_INTEGRATION = {
   name: '',
   tags: [],
 } as Integration;
-export const NEW_INTEGRATION_ID = 'new-integration';
 
 type AddConnection = (
   integration: Integration,
@@ -49,10 +48,8 @@ export interface IWithIntegrationHelpersChildrenProps {
   saveIntegration(integration: Integration): Promise<Integration>;
   setName(integration: Integration, name: string): Integration;
   createDraft(value: Integration): Promise<string>;
-  getCreationDraft(): Integration;
   getDraft(id: string): Promise<Integration>;
   getStep(value: Integration, flow: number, step: number): Step;
-  setCreationDraft(value: Integration): void;
   setDraft(id: string, value: Integration): Promise<void>;
 }
 
@@ -74,8 +71,6 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     this.createDraft = this.createDraft.bind(this);
     this.getDraft = this.getDraft.bind(this);
     this.setDraft = this.setDraft.bind(this);
-    this.getCreationDraft = this.getCreationDraft.bind(this);
-    this.setCreationDraft = this.setCreationDraft.bind(this);
     this.getStep = this.getStep.bind(this);
   }
 
@@ -212,7 +207,10 @@ export class WithIntegrationHelpersWrapped extends React.Component<
 
   public async createDraft(value: Integration) {
     // TODO: this should be handled by the BE
-    const id = value.id || NEW_INTEGRATION_ID;
+    if (!value.id) {
+      throw new Error("Integration has no id, can't create a draft");
+    }
+    const id = value.id;
     await this.setDraft(id, value);
     return Promise.resolve(id);
   }
@@ -237,23 +235,6 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     return Promise.resolve();
   }
 
-  public getCreationDraft(): Integration {
-    const serializedIntegration = localStorage.getItem(
-      this.makeLocalStorageId(NEW_INTEGRATION_ID)
-    );
-    if (!serializedIntegration) {
-      throw new Error('There is no creation draft');
-    }
-    return deserializeIntegration(serializedIntegration);
-  }
-
-  public setCreationDraft(value: Integration): void {
-    localStorage.setItem(
-      this.makeLocalStorageId(NEW_INTEGRATION_ID),
-      serializeIntegration(value)
-    );
-  }
-
   public getStep(value: Integration, flow: number, step: number): Step {
     try {
       return value.flows![flow].steps![step];
@@ -268,12 +249,10 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     return this.props.children({
       addConnection: this.addConnection,
       createDraft: this.createDraft,
-      getCreationDraft: this.getCreationDraft,
       getDraft: this.getDraft,
       getEmptyIntegration: this.getEmptyIntegration,
       getStep: this.getStep,
       saveIntegration: this.saveIntegration,
-      setCreationDraft: this.setCreationDraft,
       setDraft: this.setDraft,
       setName: this.setName,
       updateConnection: this.updateConnection,

@@ -21,58 +21,65 @@ export class IntegrationCreatorStartActionPage extends React.Component {
     return (
       <WithClosedNavigation>
         <WithRouter>
-          {({ match }) => {
+          {({ match, location }) => {
             const { connectionId } = match.params as any;
             return (
-              <WithConnection id={(match.params as any).connectionId}>
+              <WithConnection
+                id={(match.params as any).connectionId}
+                initialValue={(location.state || {}).connection}
+              >
                 {({ data, hasData, error }) => (
-                  <ContentWithSidebarLayout
-                    sidebar={
-                      <IntegrationVerticalFlow disabled={true}>
-                        {({ expanded }) => (
-                          <>
-                            <IntegrationFlowStepGeneric
-                              icon={
-                                hasData ? (
-                                  <img src={data.icon} width={24} height={24} />
-                                ) : (
-                                  <Loader />
-                                )
-                              }
-                              i18nTitle={
-                                hasData
-                                  ? `1. ${data.connector!.name}`
-                                  : '1. Start'
-                              }
-                              i18nTooltip={
-                                hasData ? `1. ${data.name}` : 'Start'
-                              }
-                              active={true}
-                              showDetails={expanded}
-                              description={'Choose an action'}
-                            />
-                            <IntegrationFlowStepWithOverview
-                              icon={'+'}
-                              i18nTitle={'2. Finish'}
-                              i18nTooltip={'Finish'}
-                              active={false}
-                              showDetails={expanded}
-                              name={'n/a'}
-                              action={'n/a'}
-                              dataType={'n/a'}
-                            />
-                          </>
-                        )}
-                      </IntegrationVerticalFlow>
-                    }
-                    content={
-                      <WithLoader
-                        error={error}
-                        loading={!hasData}
-                        loaderChildren={<Loader />}
-                        errorChildren={<div>TODO</div>}
-                      >
-                        {() => (
+                  <WithLoader
+                    error={error}
+                    loading={!hasData}
+                    loaderChildren={<Loader />}
+                    errorChildren={<div>TODO</div>}
+                  >
+                    {() => (
+                      <ContentWithSidebarLayout
+                        sidebar={
+                          <IntegrationVerticalFlow disabled={true}>
+                            {({ expanded }) => (
+                              <>
+                                <IntegrationFlowStepGeneric
+                                  icon={
+                                    hasData ? (
+                                      <img
+                                        src={data.icon}
+                                        width={24}
+                                        height={24}
+                                      />
+                                    ) : (
+                                      <Loader />
+                                    )
+                                  }
+                                  i18nTitle={
+                                    hasData
+                                      ? `1. ${data.connector!.name}`
+                                      : '1. Start'
+                                  }
+                                  i18nTooltip={
+                                    hasData ? `1. ${data.name}` : 'Start'
+                                  }
+                                  active={true}
+                                  showDetails={expanded}
+                                  description={'Choose an action'}
+                                />
+                                <IntegrationFlowStepWithOverview
+                                  icon={'+'}
+                                  i18nTitle={'2. Finish'}
+                                  i18nTooltip={'Finish'}
+                                  active={false}
+                                  showDetails={expanded}
+                                  name={'n/a'}
+                                  action={'n/a'}
+                                  dataType={'n/a'}
+                                />
+                              </>
+                            )}
+                          </IntegrationVerticalFlow>
+                        }
+                        content={
                           <>
                             <PageHeader>
                               <Breadcrumb>
@@ -101,14 +108,19 @@ export class IntegrationCreatorStartActionPage extends React.Component {
                                   .sort((a, b) => a.name.localeCompare(b.name))
                                   .map((a, idx) => (
                                     <Link
-                                      to={reverse(
-                                        routes.integrations.create.start
-                                          .configureAction,
-                                        {
-                                          actionId: a.id,
-                                          connectionId,
-                                        }
-                                      )}
+                                      to={{
+                                        pathname: reverse(
+                                          routes.integrations.create.start
+                                            .configureAction,
+                                          {
+                                            actionId: a.id,
+                                            connectionId,
+                                          }
+                                        ),
+                                        state: {
+                                          connection: data,
+                                        },
+                                      }}
                                       style={{
                                         color: 'inherit',
                                         textDecoration: 'none',
@@ -124,10 +136,10 @@ export class IntegrationCreatorStartActionPage extends React.Component {
                               </ListView>
                             </div>
                           </>
-                        )}
-                      </WithLoader>
-                    }
-                  />
+                        }
+                      />
+                    )}
+                  </WithLoader>
                 )}
               </WithConnection>
             );

@@ -1,5 +1,6 @@
-import { WithConnections, WithIntegrationHelpers } from '@syndesis/api';
+import { WithConnections } from '@syndesis/api';
 import { Connection } from '@syndesis/models';
+import { Action, ConnectionOverview } from '@syndesis/models';
 import {
   Breadcrumb,
   ContentWithSidebarLayout,
@@ -8,6 +9,8 @@ import {
   IntegrationVerticalFlow,
   PageHeader,
 } from '@syndesis/ui';
+import { WithRouter } from '@syndesis/utils';
+import * as H from 'history';
 import { reverse } from 'named-urls';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -15,20 +18,30 @@ import { WithClosedNavigation } from '../../../containers';
 import { ConnectionsWithToolbar } from '../../connections/containers/ConnectionsWithToolbar';
 import routes from '../routes';
 
-export function getFinishSelectActionHref(connection: Connection): string {
-  return reverse(routes.integrations.create.finish.selectAction, {
-    connectionId: connection.id,
-  });
+export function getFinishSelectActionHref(
+  locationState: any,
+  connection: Connection
+): H.LocationDescriptor {
+  return {
+    pathname: reverse(routes.integrations.create.finish.selectAction, {
+      connectionId: connection.id,
+    }),
+    state: {
+      ...locationState,
+      finishConnection: connection,
+    },
+  };
 }
 
 export class IntegrationCreatorFinishConnectionPage extends React.Component {
   public render() {
     return (
       <WithClosedNavigation>
-        <WithIntegrationHelpers>
-          {({ getCreationDraft, getStep }) => {
-            const integration = getCreationDraft();
-            const startStep = getStep(integration, 0, 0);
+        <WithRouter>
+          {({ location }) => {
+            const startConnection: ConnectionOverview =
+              location.state.startConnection;
+            const startAction: Action = location.state.startAction;
             return (
               <ContentWithSidebarLayout
                 sidebar={
@@ -38,17 +51,17 @@ export class IntegrationCreatorFinishConnectionPage extends React.Component {
                         <IntegrationFlowStepWithOverview
                           icon={
                             <img
-                              src={startStep.connection!.icon}
+                              src={startConnection.icon}
                               width={24}
                               height={24}
                             />
                           }
-                          i18nTitle={`1. ${startStep.action!.name}`}
-                          i18nTooltip={`1. ${startStep.action!.name}`}
+                          i18nTitle={`1. ${startAction.name}`}
+                          i18nTooltip={`1. ${startAction.name}`}
                           active={false}
                           showDetails={expanded}
-                          name={startStep.connection!.connector!.name}
-                          action={startStep.action!.name}
+                          name={startConnection.connector!.name}
+                          action={startAction.name}
                           dataType={'TODO'}
                         />
                         <IntegrationFlowStepGeneric
@@ -77,8 +90,7 @@ export class IntegrationCreatorFinishConnectionPage extends React.Component {
                           to={reverse(
                             routes.integrations.create.start.selectAction,
                             {
-                              connectionId: integration.flows![0].steps![0]
-                                .connection!.id,
+                              connectionId: startConnection.id,
                             }
                           )}
                         >
@@ -88,10 +100,8 @@ export class IntegrationCreatorFinishConnectionPage extends React.Component {
                           to={reverse(
                             routes.integrations.create.start.configureAction,
                             {
-                              actionId: integration.flows![0].steps![0].action!
-                                .id,
-                              connectionId: integration.flows![0].steps![0]
-                                .connection!.id,
+                              actionId: startAction.id,
+                              connectionId: startConnection.id,
                             }
                           )}
                         >
@@ -112,7 +122,10 @@ export class IntegrationCreatorFinishConnectionPage extends React.Component {
                           error={error}
                           loading={!hasData}
                           connections={data.connectionsWithToAction}
-                          getConnectionHref={getFinishSelectActionHref}
+                          getConnectionHref={getFinishSelectActionHref.bind(
+                            null,
+                            location.state
+                          )}
                         />
                       )}
                     </WithConnections>
@@ -121,7 +134,7 @@ export class IntegrationCreatorFinishConnectionPage extends React.Component {
               />
             );
           }}
-        </WithIntegrationHelpers>
+        </WithRouter>
       </WithClosedNavigation>
     );
   }

@@ -9,6 +9,7 @@ export interface ISyndesisFetchProps<T> {
   url: string;
   stream?: boolean;
   defaultValue: T;
+  initialValue?: T;
   children(props: IFetchRenderProps<T>): any;
 }
 

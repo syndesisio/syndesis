@@ -19,6 +19,7 @@ export default {
   integrations: include('/integrations', {
     list: '',
     create: include('create', {
+      root: '',
       start: include('start', {
         selectConnection: '',
         configureAction: `:connectionId/:actionId/:step?`,
@@ -29,7 +30,7 @@ export default {
         selectAction: `:connectionId`,
         configureAction: `:connectionId/:actionId/:step?`,
       }),
-      configure: include(':integrationId', editorRoutes),
+      configure: include('configure', editorRoutes),
     }),
     integration: include(':integrationId', {
       details: '',

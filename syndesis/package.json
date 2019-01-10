@@ -11,6 +11,7 @@
     "@syndesis/models": "*",
     "@syndesis/ui": "*",
     "@syndesis/utils": "*",
+    "history": "^4.7.2",
     "i18next": "^12.1.0",
     "i18next-browser-languagedetector": "^2.2.4",
     "immer": "^1.9.3",

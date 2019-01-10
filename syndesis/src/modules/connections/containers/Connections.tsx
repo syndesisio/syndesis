@@ -6,13 +6,14 @@ import {
   ConnectionSkeleton,
 } from '@syndesis/ui';
 import { getConnectionIcon, WithLoader } from '@syndesis/utils';
+import * as H from 'history';
 import * as React from 'react';
 
 export interface IConnectionsProps {
   error: boolean;
   loading: boolean;
   connections: Connection[];
-  getConnectionHref(connection: Connection): string;
+  getConnectionHref(connection: Connection): H.LocationDescriptor;
 }
 
 export class Connections extends React.Component<IConnectionsProps> {

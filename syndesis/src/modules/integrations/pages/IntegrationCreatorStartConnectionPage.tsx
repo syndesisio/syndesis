@@ -8,6 +8,7 @@ import {
   IntegrationVerticalFlow,
   PageHeader,
 } from '@syndesis/ui';
+import * as H from 'history';
 import { reverse } from 'named-urls';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -15,10 +16,17 @@ import { WithClosedNavigation } from '../../../containers';
 import { ConnectionsWithToolbar } from '../../connections/containers/ConnectionsWithToolbar';
 import routes from '../routes';
 
-export function getStartSelectActionHref(connection: Connection): string {
-  return reverse(routes.integrations.create.start.selectAction, {
-    connectionId: connection.id,
-  });
+export function getStartSelectActionHref(
+  connection: Connection
+): H.LocationDescriptor {
+  return {
+    pathname: reverse(routes.integrations.create.start.selectAction, {
+      connectionId: connection.id,
+    }),
+    state: {
+      connection,
+    },
+  };
 }
 
 export class IntegrationCreatorStartConnectionPage extends React.Component {

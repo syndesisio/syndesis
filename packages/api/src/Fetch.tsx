@@ -22,6 +22,7 @@ export interface IFetchProps<T> {
   headers?: IFetchHeaders;
   contentType?: string;
   defaultValue: T;
+  initialValue?: T;
   children(props: IFetchRenderProps<T>): any;
 }
 
@@ -30,9 +31,9 @@ export class Fetch<T> extends React.Component<IFetchProps<T>, IFetchState<T>> {
     super(props);
     this.read = this.read.bind(this);
     this.state = {
-      data: this.props.defaultValue,
+      data: this.props.initialValue || this.props.defaultValue,
       error: false,
-      hasData: false,
+      hasData: !!this.props.initialValue,
       loading: true,
     };
   }

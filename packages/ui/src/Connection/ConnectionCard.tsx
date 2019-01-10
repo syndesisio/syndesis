@@ -1,3 +1,4 @@
+import * as H from 'history';
 import { Card, EmptyState } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -6,7 +7,7 @@ export interface IConnectionProps {
   name: string;
   description: string;
   icon: string;
-  href: string;
+  href: H.LocationDescriptor;
 }
 
 export class ConnectionCard extends React.PureComponent<IConnectionProps> {

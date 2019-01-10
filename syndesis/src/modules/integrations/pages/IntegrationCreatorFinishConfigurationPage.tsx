@@ -1,5 +1,16 @@
-import { WithConnection, WithIntegrationHelpers } from '@syndesis/api';
+import {
+  getActionById,
+  getActionDescriptor,
+  getActionStep,
+  getActionStepDefinition,
+  getActionSteps,
+  getConnectionConnector,
+  getConnectorActions,
+  WithConnection,
+  WithIntegrationHelpers,
+} from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
+import { Action, ConnectionOverview } from '@syndesis/models';
 import {
   Breadcrumb,
   ContentWithSidebarLayout,
@@ -22,27 +33,22 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
     return (
       <WithClosedNavigation>
         <WithIntegrationHelpers>
-          {({
-            addConnection,
-            saveIntegration,
-            setName,
-            updateConnection,
-            createDraft,
-            getCreationDraft,
-            setCreationDraft,
-            getStep,
-          }) => (
+          {({ addConnection, saveIntegration, updateConnection }) => (
             <WithRouter>
-              {({ match, history }) => {
+              {({ match, history, location }) => {
                 const {
                   actionId,
                   connectionId,
                   step = 0,
                 } = match.params as any;
-                const integration = getCreationDraft();
-                const startStep = getStep(integration, 0, 0);
+                const startConnection: ConnectionOverview =
+                  location.state.startConnection;
+                const startAction: Action = location.state.startAction;
                 return (
-                  <WithConnection id={connectionId}>
+                  <WithConnection
+                    id={connectionId}
+                    initialValue={location.state.finishConnection}
+                  >
                     {({ data, hasData, error }) => (
                       <ContentWithSidebarLayout
                         sidebar={
@@ -52,17 +58,17 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                                 <IntegrationFlowStepWithOverview
                                   icon={
                                     <img
-                                      src={startStep.connection!.icon}
+                                      src={startConnection.icon}
                                       width={24}
                                       height={24}
                                     />
                                   }
-                                  i18nTitle={`1. ${startStep.action!.name}`}
-                                  i18nTooltip={`1. ${startStep.action!.name}`}
+                                  i18nTitle={`1. ${startAction.name}`}
+                                  i18nTooltip={`1. ${startAction.name}`}
                                   active={false}
                                   showDetails={expanded}
-                                  name={startStep.connection!.connector!.name}
-                                  action={startStep.action!.name}
+                                  name={startConnection.connector!.name}
+                                  action={startAction.name}
                                   dataType={'TODO'}
                                 />
                                 <IntegrationFlowStepGeneric
@@ -101,12 +107,20 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                             errorChildren={<div>TODO</div>}
                           >
                             {() => {
-                              const action = data.getActionById(actionId);
-                              const steps = data.getActionSteps(action);
-                              const definition = data.getActionStepDefinition(
-                                data.getActionStep(action, step)
+                              const action = getActionById(
+                                getConnectorActions(
+                                  getConnectionConnector(data)
+                                ),
+                                actionId
+                              );
+                              const steps = getActionSteps(
+                                getActionDescriptor(action)
+                              );
+                              const definition = getActionStepDefinition(
+                                getActionStep(steps, step)
                               );
                               const moreSteps = step < steps.length - 1;
+                              const integration = location.state.integration;
                               const onSave = async (
                                 configuredProperties: any
                               ) => {
@@ -119,9 +133,8 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                                     1,
                                     configuredProperties
                                   );
-                                  setCreationDraft(updatedIntegration);
-                                  history.push(
-                                    reverse(
+                                  history.push({
+                                    pathname: reverse(
                                       routes.integrations.create.finish
                                         .configureAction,
                                       {
@@ -129,10 +142,14 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                                         connectionId,
                                         step: step + 1,
                                       }
-                                    )
-                                  );
+                                    ),
+                                    state: {
+                                      ...location.state,
+                                      integration: updatedIntegration,
+                                    },
+                                  });
                                 } else {
-                                  let updatedIntegration = await (step === 0
+                                  const updatedIntegration = await (step === 0
                                     ? addConnection
                                     : updateConnection)(
                                     integration,
@@ -142,22 +159,14 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                                     1,
                                     configuredProperties
                                   );
-                                  updatedIntegration = setName(
-                                    updatedIntegration,
-                                    'Hello from React!'
-                                  );
-                                  const integrationId = await createDraft(
-                                    updatedIntegration
-                                  );
-                                  history.push(
-                                    reverse(
-                                      routes.integrations.create.configure
-                                        .index,
-                                      {
-                                        integrationId,
-                                      }
-                                    )
-                                  );
+                                  history.push({
+                                    pathname: reverse(
+                                      routes.integrations.create.configure.index
+                                    ),
+                                    state: {
+                                      integration: updatedIntegration,
+                                    },
+                                  });
                                 }
                               };
                               return (
@@ -180,8 +189,7 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                                           routes.integrations.create.start
                                             .selectAction,
                                           {
-                                            connectionId: integration.flows![0]
-                                              .steps![0].connection!.id,
+                                            connectionId: startConnection.id,
                                           }
                                         )}
                                       >
@@ -192,10 +200,8 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                                           routes.integrations.create.start
                                             .configureAction,
                                           {
-                                            actionId: integration.flows![0]
-                                              .steps![0].action!.id,
-                                            connectionId: integration.flows![0]
-                                              .steps![0].connection!.id,
+                                            actionId: startAction.id,
+                                            connectionId: startConnection.id,
                                           }
                                         )}
                                       >
