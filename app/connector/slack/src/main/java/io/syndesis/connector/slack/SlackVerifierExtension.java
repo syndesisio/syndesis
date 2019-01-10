@@ -99,7 +99,8 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
             } catch (Exception e) {
                 builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid webhookUrl").parameterKey("webhookUrl").build());
             }
-        } else if (ObjectHelper.isNotEmpty((String)parameters.get("token"))) {
+        } 
+        if (ObjectHelper.isNotEmpty((String)parameters.get("token"))) {
             String token = (String)parameters.get("token");
 
             try {
