@@ -31,30 +31,43 @@ import org.junit.runners.Parameterized;
 public class CellCoordinateTest {
 
     private String cellId;
-    private int rowIndex;
-    private int columnIndex;
+    private String columnName;
+    private int rowIndexCheck;
+    private int columnIndexCheck;
 
-    public CellCoordinateTest(String cellId, int rowIndex, int columnIndex) {
-        this.cellId = cellId;
-        this.rowIndex = rowIndex;
-        this.columnIndex = columnIndex;
+    public CellCoordinateTest(String columnName, String rowIndex, int rowIndexCheck, int columnIndexCheck) {
+        this.cellId = columnName + rowIndex;
+        this.columnName = columnName;
+        this.rowIndexCheck = rowIndexCheck;
+        this.columnIndexCheck = columnIndexCheck;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { "A1", 0, 0},
-            { "C5", 4, 2},
-            { "B10", 9, 1},
-            { "A", 0, 0},
-            { "E", 0, 4}
+            { "A", "1", 0, 0},
+            { "C", "5", 4, 2},
+            { "B", "10", 9, 1},
+            { "A", "", 0, 0},
+            { "E", "", 0, 4},
+            { "Z", "1", 0, 25},
+            { "AA", "1", 0, 26},
+            { "AZ", "10", 9, 51},
+            { "BA", "1", 0, 52},
+            { "CC", "1", 0, 80},
+            { "ZZ", "1", 0, 27 * 26 - 1}
         });
     }
 
     @Test
     public void testFromCellId() {
         CellCoordinate coordinate = CellCoordinate.fromCellId(cellId);
-        Assert.assertEquals(rowIndex, coordinate.getRowIndex());
-        Assert.assertEquals(columnIndex, coordinate.getColumnIndex());
+        Assert.assertEquals(rowIndexCheck, coordinate.getRowIndex());
+        Assert.assertEquals(columnIndexCheck, coordinate.getColumnIndex());
+    }
+
+    @Test
+    public void testGetColumnName() {
+        Assert.assertEquals(columnName, CellCoordinate.getColumnName(columnIndexCheck));
     }
 }

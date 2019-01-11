@@ -41,7 +41,9 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
+import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
 import org.apache.camel.util.ObjectHelper;
 
 public class GoogleSheetsAddPivotTableCustomizer implements ComponentProxyCustomizer {
@@ -106,8 +108,8 @@ public class GoogleSheetsAddPivotTableCustomizer implements ComponentProxyCustom
         rowData.setValues(Collections.singletonList(new CellData().setPivotTable(pivotTable)));
         updateCellsRequest.setRows(Collections.singletonList(rowData));
 
-        in.setHeader("CamelGoogleSheets.spreadsheetId", spreadsheetId);
-        in.setHeader("CamelGoogleSheets.batchUpdateSpreadsheetRequest", batchUpdateRequest);
+        in.setHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID, spreadsheetId);
+        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest", batchUpdateRequest);
     }
 
     private GridCoordinate getStartCoordinate(PivotTable pivotTable, GooglePivotTable model) {

@@ -34,6 +34,7 @@ import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.server.GoogleSheetsApiTestServer;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.apache.camel.util.IntrospectionSupport;
@@ -102,12 +103,12 @@ public class AbstractGoogleSheetsTestSupport extends CamelTestSupport {
 
         final Map<String, Object> headers = new HashMap<>();
         // parameter type is String
-        headers.put("CamelGoogleSheets.spreadsheetId", spreadsheet.getSpreadsheetId());
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "spreadsheetId", spreadsheet.getSpreadsheetId());
         // parameter type is String
-        headers.put("CamelGoogleSheets.range", TEST_SHEET + "!A1:B2");
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "range", TEST_SHEET + "!A1:B2");
 
         // parameter type is String
-        headers.put("CamelGoogleSheets.valueInputOption", "USER_ENTERED");
+        headers.put(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption", "USER_ENTERED");
 
         requestBodyAndHeaders("google-sheets://data/update?inBody=values", valueRange, headers);
     }

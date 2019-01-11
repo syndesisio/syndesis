@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.syndesis.connector.sheets.model.GoogleValueRange;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
@@ -34,6 +33,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 
 @RunWith(Parameterized.class)
 public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
@@ -42,12 +43,14 @@ public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoo
 
     private final String range;
     private final String sheetName;
+    private final String majorDimension;
     private final List<Object> values;
     private final String expectedValueModel;
 
-    public GoogleSheetsGetValuesSplitResultsCustomizerTest(String range, String sheetName, List<Object> values, String expectedValueModel) {
+    public GoogleSheetsGetValuesSplitResultsCustomizerTest(String range, String sheetName, String majorDimension, List<Object> values, String expectedValueModel) {
         this.range = range;
         this.sheetName = sheetName;
+        this.majorDimension = majorDimension;
         this.values = values;
         this.expectedValueModel = expectedValueModel;
     }
@@ -55,10 +58,14 @@ public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoo
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { "A1", "Sheet1", Collections.singletonList("a1"), "[\"a1\"]"},
-                { "A1:A5", "Sheet1", Arrays.asList("a1", "a2", "a3", "a4", "a5"), "[\"a1\",\"a2\",\"a3\",\"a4\",\"a5\"]"},
-                { "A1:B2", "Sheet1", Arrays.asList("a1", "b1"), "[\"a1\",\"b1\"]"},
-                { "A1:B2", "Sheet1", Arrays.asList("a1", "a2"), "[\"a1\",\"a2\"]"}
+                { "A1", "Sheet1", "ROWS", Collections.singletonList("a1"),
+                        "{\"#\": {\"A\":\"a1\"},\"spreadsheetId\":\"%s\"}"},
+                { "A1:A5", "Sheet1", "COLUMNS", Arrays.asList("a1", "a2", "a3", "a4", "a5"),
+                        "{\"$\": {\"#1\":\"a1\",\"#2\":\"a2\",\"#3\":\"a3\",\"#4\":\"a4\",\"#5\":\"a5\"},\"spreadsheetId\":\"%s\"}"},
+                { "A1:B2", "Sheet1", "ROWS", Arrays.asList("a1", "b1"),
+                        "{\"#\": {\"A\":\"a1\",\"B\":\"b1\"},\"spreadsheetId\":\"%s\"}"},
+                { "A1:B2", "Sheet1", "COLUMNS", Arrays.asList("a1", "a2"),
+                        "{\"$\": {\"#1\":\"a1\",\"#2\":\"a2\"},\"spreadsheetId\":\"%s\"}"}
         });
     }
 
@@ -79,6 +86,7 @@ public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoo
         Exchange inbound = new DefaultExchange(createCamelContext());
 
         inbound.getIn().setHeader(GoogleSheetsStreamConstants.RANGE, sheetName + "!" + range);
+        inbound.getIn().setHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION, majorDimension);
         inbound.getIn().setHeader(GoogleSheetsStreamConstants.RANGE_INDEX, 1);
         inbound.getIn().setHeader(GoogleSheetsStreamConstants.VALUE_INDEX, 1);
 
@@ -88,9 +96,7 @@ public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoo
         Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
         Assert.assertEquals("get", options.get("methodName"));
 
-        GoogleValueRange model = (GoogleValueRange) inbound.getIn().getBody();
-        Assert.assertEquals(getSpreadsheetId(), model.getSpreadsheetId());
-        Assert.assertEquals(sheetName + "!" + range, model.getRange());
-        Assert.assertEquals(expectedValueModel, model.getValues());
+        String model = (String) inbound.getIn().getBody();
+        JSONAssert.assertEquals(String.format(expectedValueModel, getSpreadsheetId()), model, JSONCompareMode.STRICT);
     }
 }

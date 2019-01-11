@@ -16,18 +16,19 @@
 
 package io.syndesis.connector.sheets;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.api.services.sheets.v4.model.ValueRange;
-import io.syndesis.connector.sheets.model.GoogleValueRange;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
+import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
 import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class GoogleSheetsUpdateValuesCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
@@ -43,7 +44,6 @@ public class GoogleSheetsUpdateValuesCustomizerTest extends AbstractGoogleSheets
         Map<String, Object> options = new HashMap<>();
         options.put("spreadsheetId", getSpreadsheetId());
         options.put("range", "A1");
-        options.put("values", "a1");
         options.put("valueInputOption", "RAW");
 
         customizer.customize(getComponent(), options);
@@ -54,26 +54,30 @@ public class GoogleSheetsUpdateValuesCustomizerTest extends AbstractGoogleSheets
         Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
         Assert.assertEquals("update", options.get("methodName"));
 
-        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader("CamelGoogleSheets.spreadsheetId"));
-        Assert.assertEquals("A1", inbound.getIn().getHeader("CamelGoogleSheets.range"));
-        Assert.assertEquals("RAW", inbound.getIn().getHeader("CamelGoogleSheets.valueInputOption"));
+        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assert.assertEquals("A1", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assert.assertEquals("RAW", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
 
-        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader("CamelGoogleSheets.values");
-        Assert.assertEquals(1L, valueRange.getValues().size());
-        Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
+        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
+        Assert.assertEquals(0L, valueRange.getValues().size());
     }
 
     @Test
     public void testBeforeProducerFromModel() throws Exception {
         Map<String, Object> options = new HashMap<>();
+        options.put("range", "A1:B1");
+
         customizer.customize(getComponent(), options);
 
         Exchange inbound = new DefaultExchange(createCamelContext());
 
-        GoogleValueRange model = new GoogleValueRange();
-        model.setSpreadsheetId(getSpreadsheetId());
-        model.setRange("A1:B1");
-        model.setValues("a1,b1");
+        String model = "{" +
+                    "\"spreadsheetId\": \"" + getSpreadsheetId() + "\"," +
+                    "\"#1\": {" +
+                        "\"A\": \"a1\"," +
+                        "\"B\": \"b1\"" +
+                    "}" +
+                "}";
         inbound.getIn().setBody(model);
 
         getComponent().getBeforeProducer().process(inbound);
@@ -81,11 +85,11 @@ public class GoogleSheetsUpdateValuesCustomizerTest extends AbstractGoogleSheets
         Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
         Assert.assertEquals("update", options.get("methodName"));
 
-        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader("CamelGoogleSheets.spreadsheetId"));
-        Assert.assertEquals("A1:B1", inbound.getIn().getHeader("CamelGoogleSheets.range"));
-        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader("CamelGoogleSheets.valueInputOption"));
+        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assert.assertEquals("A1:B1", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
 
-        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader("CamelGoogleSheets.values");
+        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
         Assert.assertEquals(1L, valueRange.getValues().size());
         Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
         Assert.assertEquals("b1", valueRange.getValues().get(0).get(1));
@@ -94,22 +98,32 @@ public class GoogleSheetsUpdateValuesCustomizerTest extends AbstractGoogleSheets
     @Test
     public void testBeforeProducerMultipleRows() throws Exception {
         Map<String, Object> options = new HashMap<>();
+        options.put("range", "A1:B2");
+
         customizer.customize(getComponent(), options);
 
         Exchange inbound = new DefaultExchange(createCamelContext());
 
-        GoogleValueRange model = new GoogleValueRange();
-        model.setSpreadsheetId(getSpreadsheetId());
-        model.setRange("A1:B2");
-        model.setValues("[[\"a1\",\"b1\"],[\"a2\",\"b2\"]]");
+        String model = "{" +
+                    "\"spreadsheetId\": \"" + getSpreadsheetId() + "\"," +
+                    "\"#1\": {" +
+                        "\"A\": \"a1\"," +
+                        "\"B\": \"b1\"" +
+                    "}," +
+                    "\"#2\": {" +
+                        "\"A\": \"a2\"," +
+                        "\"B\": \"b2\"" +
+                    "}" +
+                "}";
+
         inbound.getIn().setBody(model);
 
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals("A1:B2", inbound.getIn().getHeader("CamelGoogleSheets.range"));
-        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader("CamelGoogleSheets.valueInputOption"));
+        Assert.assertEquals("A1:B2", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
 
-        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader("CamelGoogleSheets.values");
+        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
         Assert.assertEquals(2L, valueRange.getValues().size());
         Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
         Assert.assertEquals("b1", valueRange.getValues().get(0).get(1));

@@ -33,7 +33,9 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
+import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
 import org.apache.camel.util.ObjectHelper;
 
 public class GoogleSheetsUpdateSpreadsheetCustomizer implements ComponentProxyCustomizer {
@@ -100,8 +102,8 @@ public class GoogleSheetsUpdateSpreadsheetCustomizer implements ComponentProxyCu
             batchUpdateRequest.getRequests().add(new Request().setUpdateSheetProperties(updateSheetPropertiesRequest));
         }
 
-        in.setHeader("CamelGoogleSheets.spreadsheetId", spreadsheetId);
-        in.setHeader("CamelGoogleSheets.batchUpdateSpreadsheetRequest", batchUpdateRequest);
+        in.setHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID, spreadsheetId);
+        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest", batchUpdateRequest);
     }
 
     private void afterProducer(Exchange exchange) {

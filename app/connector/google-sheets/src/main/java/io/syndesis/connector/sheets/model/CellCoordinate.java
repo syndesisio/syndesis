@@ -16,6 +16,7 @@
 
 package io.syndesis.connector.sheets.model;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -38,7 +39,7 @@ public class CellCoordinate {
 
     /**
      * Construct grid coordinate from given cell identifier representation in A1 form. For instance convert
-     * cell id string "A1" to a coordinate with rowIndex=1, and columnIndex=1.
+     * cell id string "A1" to a coordinate with rowIndex=0, and columnIndex=0.
      *
      * @param cellId
      * @return
@@ -54,19 +55,49 @@ public class CellCoordinate {
         return coordinate;
     }
 
-    protected static int getColumnIndex(String range) {
-        char[] characters = range.toCharArray();
-        return IntStream.range(0, characters.length)
+    /**
+     * Evaluate the column index from cellId in A1 notation. Column name letters are translated to numeric column index values.
+     * Column "A" will result in column index 0. Method does support columns with combined name letters such as "AA" where this is
+     * the first column after "Z" resulting in a column index of 26.
+     *
+     * @param cellId
+     * @return
+     */
+    protected static int getColumnIndex(String cellId) {
+        char[] characters = cellId.toCharArray();
+        List<Integer> chars = IntStream.range(0, characters.length)
             .mapToObj(i -> characters[i])
             .filter(c -> !Character.isDigit(c))
-            .findFirst()
             .map(Character::toUpperCase)
             .map(Character::getNumericValue)
-            .orElse(0) - Character.getNumericValue('A');
+            .collect(Collectors.toList());
+
+        if (chars.size() > 1) {
+            int index = 0;
+            for (int i = 0; i < chars.size(); i++) {
+                if (i == chars.size() -1) {
+                    index += chars.get(i) - Character.getNumericValue('A');
+                } else {
+                    index += ((chars.get(i) - Character.getNumericValue('A')) + 1) * 26;
+                }
+            }
+            return index;
+        } else if (chars.size() == 1) {
+            return chars.get(0) - Character.getNumericValue('A');
+        } else {
+            return 0;
+        }
     }
 
-    protected static int getRowIndex(String range) {
-        char[] characters = range.toCharArray();
+    /**
+     * Evaluates the row index from a given cellId in A1 notation. Extracts the row number and translates that to an numeric
+     * index value beginning with 0.
+     *
+     * @param cellId
+     * @return
+     */
+    protected static int getRowIndex(String cellId) {
+        char[] characters = cellId.toCharArray();
         String index = IntStream.range(0, characters.length)
             .mapToObj(i -> characters[i])
             .filter(Character::isDigit)
@@ -78,6 +109,33 @@ public class CellCoordinate {
         }
 
         return 0;
+    }
+
+    /**
+     * Evaluates column name in A1 notation based on column index. Index 0 will be "A" and index 25 will be "Z". Method also supports
+     * name overflow where index 26 will be "AA" and index 51 will be "AZ" and so on.
+     *
+     * @param columnIndex
+     * @return
+     */
+    public static String getColumnName(int columnIndex) {
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder columnName = new StringBuilder();
+
+        int index = columnIndex;
+        int overflowIndex = -1;
+        while (index > 25) {
+            overflowIndex++;
+            index -= 26;
+        }
+
+        if (overflowIndex >= 0) {
+            columnName.append(String.valueOf(alphabet.toCharArray()[overflowIndex]));
+        }
+
+        columnName.append(String.valueOf(alphabet.toCharArray()[index]));
+
+        return columnName.toString();
     }
 
     public int getRowIndex() {

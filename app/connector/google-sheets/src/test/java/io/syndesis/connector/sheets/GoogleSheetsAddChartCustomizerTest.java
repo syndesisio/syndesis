@@ -30,7 +30,9 @@ import com.google.api.services.sheets.v4.model.PieChartSpec;
 import io.syndesis.connector.sheets.model.GoogleChart;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
+import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
 import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
@@ -63,10 +65,10 @@ public class GoogleSheetsAddChartCustomizerTest extends AbstractGoogleSheetsCust
         Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), options.get("apiName"));
         Assert.assertEquals("batchUpdate", options.get("methodName"));
 
-        Assert.assertNotNull(inbound.getIn().getHeader("CamelGoogleSheets.spreadsheetId"));
-        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader("CamelGoogleSheets.spreadsheetId"));
+        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
 
-        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader("CamelGoogleSheets.batchUpdateSpreadsheetRequest");
+        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
         Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         AddChartRequest addChartRequest = batchUpdateRequest.getRequests().get(0).getAddChart();
@@ -102,10 +104,10 @@ public class GoogleSheetsAddChartCustomizerTest extends AbstractGoogleSheetsCust
         inbound.getIn().setBody(model);
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertNotNull(inbound.getIn().getHeader("CamelGoogleSheets.spreadsheetId"));
-        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader("CamelGoogleSheets.spreadsheetId"));
+        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
 
-        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader("CamelGoogleSheets.batchUpdateSpreadsheetRequest");
+        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
         Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         AddChartRequest addChartRequest = batchUpdateRequest.getRequests().get(0).getAddChart();
@@ -164,7 +166,7 @@ public class GoogleSheetsAddChartCustomizerTest extends AbstractGoogleSheetsCust
         inbound.getIn().setBody(model);
         getComponent().getBeforeProducer().process(inbound);
 
-        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader("CamelGoogleSheets.batchUpdateSpreadsheetRequest");
+        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
         Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         AddChartRequest addChartRequest = batchUpdateRequest.getRequests().get(0).getAddChart();
@@ -212,7 +214,7 @@ public class GoogleSheetsAddChartCustomizerTest extends AbstractGoogleSheetsCust
         inbound.getIn().setBody(model);
         getComponent().getBeforeProducer().process(inbound);
 
-        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader("CamelGoogleSheets.batchUpdateSpreadsheetRequest");
+        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
         Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         AddChartRequest addChartRequest = batchUpdateRequest.getRequests().get(0).getAddChart();

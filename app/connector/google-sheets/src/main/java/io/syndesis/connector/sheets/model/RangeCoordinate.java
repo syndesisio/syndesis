@@ -45,15 +45,17 @@ public final class RangeCoordinate extends CellCoordinate {
     public static RangeCoordinate fromRange(String range) {
         RangeCoordinate coordinate = new RangeCoordinate();
 
-        if (range.contains(":")) {
-            String[] coordinates = range.split(":", -1);
+        String rangeExpression = normalizeRange(range);
+
+        if (rangeExpression.contains(":")) {
+            String[] coordinates = rangeExpression.split(":", -1);
 
             coordinate.setRowStartIndex(getRowIndex(coordinates[0]));
             coordinate.setColumnStartIndex(getColumnIndex(coordinates[0]));
             coordinate.setRowEndIndex(getRowIndex(coordinates[1]) + 1);
             coordinate.setColumnEndIndex(getColumnIndex(coordinates[1]) + 1);
         } else {
-            CellCoordinate cellCoordinate = CellCoordinate.fromCellId(range);
+            CellCoordinate cellCoordinate = CellCoordinate.fromCellId(rangeExpression);
             coordinate.setRowIndex(cellCoordinate.getRowIndex());
             coordinate.setColumnIndex(cellCoordinate.getColumnIndex());
             coordinate.setRowStartIndex(cellCoordinate.getRowIndex());
@@ -63,6 +65,19 @@ public final class RangeCoordinate extends CellCoordinate {
         }
 
         return coordinate;
+    }
+
+    /**
+     * Removes optional sheet name from range expression if any.
+     * @param range
+     * @return
+     */
+    private static String normalizeRange(String range) {
+        if (range.contains("!")) {
+            return range.substring(range.indexOf('!') + 1);
+        } else {
+            return range;
+        }
     }
 
     public int getRowStartIndex() {
