@@ -1,19 +1,17 @@
 import { WithConnections } from '@syndesis/api';
 import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import {
-  Breadcrumb,
   ContentWithSidebarLayout,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
-  PageHeader,
 } from '@syndesis/ui';
 import { WithRouter } from '@syndesis/utils';
 import * as H from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
-import { ConnectionsWithToolbar } from '../../connections/containers/ConnectionsWithToolbar';
+import { IntegrationEditorChooseConnection } from '../components';
 import resolvers from '../resolvers';
 
 export function getFinishSelectActionHref(
@@ -75,53 +73,54 @@ export class IntegrationCreatorFinishConnectionPage extends React.Component {
                   </IntegrationVerticalFlow>
                 }
                 content={
-                  <>
-                    <PageHeader>
-                      <Breadcrumb>
-                        <Link to={resolvers.list({})}>Integrations</Link>
-                        <Link to={resolvers.create.start.selectConnection({})}>
-                          New integration
-                        </Link>
-                        <Link
-                          to={resolvers.create.start.selectAction({
-                            connection: startConnection,
-                          })}
-                        >
-                          Start connection
-                        </Link>
-                        <Link
-                          to={resolvers.create.start.configureAction({
-                            actionId: startAction.id!,
-                            connection: startConnection,
-                          })}
-                        >
-                          Configure action
-                        </Link>
-                        <span>Finish Connection</span>
-                      </Breadcrumb>
-                      <h1>Choose a Finish Connection</h1>
-                      <p>
-                        Click the connection that completes the integration. If
-                        the connection you need is not available, click Create
-                        Connection.
-                      </p>
-                    </PageHeader>
-                    <WithConnections>
-                      {({ data, hasData, error }) => (
-                        <ConnectionsWithToolbar
-                          error={error}
-                          loading={!hasData}
-                          connections={data.connectionsWithToAction}
-                          getConnectionHref={getFinishSelectActionHref.bind(
-                            null,
-                            startConnection,
-                            startAction,
-                            integration
-                          )}
-                        />
-                      )}
-                    </WithConnections>
-                  </>
+                  <WithConnections>
+                    {({ data, hasData, error }) => (
+                      <IntegrationEditorChooseConnection
+                        breadcrumb={[
+                          <Link to={resolvers.list({})} key={1}>
+                            Integrations
+                          </Link>,
+                          <Link
+                            to={resolvers.create.start.selectConnection({})}
+                            key={2}
+                          >
+                            New integration
+                          </Link>,
+                          <Link
+                            to={resolvers.create.start.selectAction({
+                              connection: startConnection,
+                            })}
+                            key={3}
+                          >
+                            Start connection
+                          </Link>,
+                          <Link
+                            to={resolvers.create.start.configureAction({
+                              actionId: startAction.id!,
+                              connection: startConnection,
+                            })}
+                            key={4}
+                          >
+                            Configure action
+                          </Link>,
+                          <span key={5}>Finish Connection</span>,
+                        ]}
+                        i18nTitle={'Choose a Finish Connection'}
+                        i18nSubtitle={
+                          'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
+                        }
+                        connections={data.connectionsWithToAction}
+                        loading={!hasData}
+                        error={error}
+                        getConnectionHref={getFinishSelectActionHref.bind(
+                          null,
+                          startConnection,
+                          startAction,
+                          integration
+                        )}
+                      />
+                    )}
+                  </WithConnections>
                 }
               />
             );

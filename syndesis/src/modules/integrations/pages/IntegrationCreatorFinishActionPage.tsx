@@ -1,20 +1,35 @@
 import { WithConnection } from '@syndesis/api';
 import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import {
-  Breadcrumb,
   ContentWithSidebarLayout,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
   Loader,
-  PageHeader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouter } from '@syndesis/utils';
-import { ListView } from 'patternfly-react';
+import * as H from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
+import { IntegrationEditorChooseAction } from '../components';
 import resolvers from '../resolvers';
+
+function getActionHref(
+  startConnection: ConnectionOverview,
+  startAction: Action,
+  finishConnection: ConnectionOverview,
+  integration: Integration,
+  action: Action
+): H.LocationDescriptor {
+  return resolvers.create.finish.configureAction({
+    actionId: action.id!,
+    finishConnection,
+    integration,
+    startAction,
+    startConnection,
+  });
+}
 
 export class IntegrationCreatorFinishActionPage extends React.Component {
   public render() {
@@ -87,81 +102,57 @@ export class IntegrationCreatorFinishActionPage extends React.Component {
                         errorChildren={<div>TODO</div>}
                       >
                         {() => (
-                          <>
-                            <PageHeader>
-                              <Breadcrumb>
-                                <Link to={resolvers.list({})}>
-                                  Integrations
-                                </Link>
-                                <Link
-                                  to={resolvers.create.start.selectConnection(
-                                    {}
-                                  )}
-                                >
-                                  New integration
-                                </Link>
-                                <Link
-                                  to={resolvers.create.start.selectAction({
-                                    connection: startConnection,
-                                  })}
-                                >
-                                  Start connection
-                                </Link>
-                                <Link
-                                  to={resolvers.create.start.configureAction({
-                                    actionId: startAction.id!,
-                                    connection: startConnection,
-                                  })}
-                                >
-                                  Configure action
-                                </Link>
-                                <Link
-                                  to={resolvers.create.finish.selectConnection({
-                                    integration,
-                                    startAction,
-                                    startConnection,
-                                  })}
-                                >
-                                  Finish Connection
-                                </Link>
-                                <span>Choose Action</span>
-                              </Breadcrumb>
-
-                              <h1>Choose Action</h1>
-                              <p>
-                                Choose an action for the selected connection.
-                              </p>
-                            </PageHeader>
-                            <div className={'container-fluid'}>
-                              <ListView>
-                                {data.actionsWithTo
-                                  .sort((a, b) => a.name.localeCompare(b.name))
-                                  .map((a, idx) => (
-                                    <Link
-                                      to={resolvers.create.finish.configureAction(
-                                        {
-                                          actionId: a.id!,
-                                          finishConnection,
-                                          integration,
-                                          startAction,
-                                          startConnection,
-                                        }
-                                      )}
-                                      style={{
-                                        color: 'inherit',
-                                        textDecoration: 'none',
-                                      }}
-                                      key={idx}
-                                    >
-                                      <ListView.Item
-                                        heading={a.name}
-                                        description={a.description}
-                                      />
-                                    </Link>
-                                  ))}
-                              </ListView>
-                            </div>
-                          </>
+                          <IntegrationEditorChooseAction
+                            breadcrumb={[
+                              <Link to={resolvers.list({})} key={1}>
+                                Integrations
+                              </Link>,
+                              <Link
+                                to={resolvers.create.start.selectConnection({})}
+                                key={2}
+                              >
+                                New integration
+                              </Link>,
+                              <Link
+                                to={resolvers.create.start.selectAction({
+                                  connection: startConnection,
+                                })}
+                                key={3}
+                              >
+                                Start connection
+                              </Link>,
+                              <Link
+                                to={resolvers.create.start.configureAction({
+                                  actionId: startAction.id!,
+                                  connection: startConnection,
+                                })}
+                                key={4}
+                              >
+                                Configure action
+                              </Link>,
+                              <Link
+                                to={resolvers.create.finish.selectConnection({
+                                  integration,
+                                  startAction,
+                                  startConnection,
+                                })}
+                                key={5}
+                              >
+                                Finish Connection
+                              </Link>,
+                              <span key={6}>Choose Action</span>,
+                            ]}
+                            actions={data.actionsWithTo.sort((a, b) =>
+                              a.name.localeCompare(b.name)
+                            )}
+                            getActionHref={getActionHref.bind(
+                              null,
+                              startConnection,
+                              startAction,
+                              finishConnection,
+                              integration
+                            )}
+                          />
                         )}
                       </WithLoader>
                     }

@@ -19,7 +19,7 @@ export interface IAutoFormProps<T extends object> {
   /**
    * Callback function that will be called when the form is submitted
    */
-  onSave: (value?: T) => void;
+  onSave: (value: T) => void;
   /**
    * Validation function called whenever a change or blur event occurs on the form
    */

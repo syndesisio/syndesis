@@ -9,21 +9,18 @@ import {
   WithConnection,
   WithIntegrationHelpers,
 } from '@syndesis/api';
-import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import {
-  Breadcrumb,
   ContentWithSidebarLayout,
-  IntegrationActionConfigurationForm,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
   Loader,
-  PageHeader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouter } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
+import { IntegrationEditorConfigureConnection } from '../components';
 import resolvers from '../resolvers';
 
 export class IntegrationCreatorStartConfigurationPage extends React.Component {
@@ -63,7 +60,9 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                             step === 0
                               ? getEmptyIntegration()
                               : location.state.integration;
-                          const onSave = async (configuredProperties: any) => {
+                          const onSave = async (configuredProperties: {
+                            [key: string]: string;
+                          }) => {
                             if (moreSteps) {
                               const updatedIntegration = await updateConnection(
                                 integration,
@@ -146,53 +145,38 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                                 </IntegrationVerticalFlow>
                               }
                               content={
-                                <>
-                                  <PageHeader>
-                                    <Breadcrumb>
-                                      <Link to={resolvers.list({})}>
-                                        Integrations
-                                      </Link>
-                                      <Link
-                                        to={resolvers.create.start.selectConnection(
-                                          {}
-                                        )}
-                                      >
-                                        New integration
-                                      </Link>
-                                      <Link
-                                        to={resolvers.create.start.selectAction(
-                                          { connection: data }
-                                        )}
-                                      >
-                                        Start connection
-                                      </Link>
-                                      <span>Configure action</span>
-                                    </Breadcrumb>
-
-                                    <h1>{action.name}</h1>
-                                    <p>{action.description}</p>
-                                  </PageHeader>
-                                  <AutoForm
-                                    i18nRequiredProperty={'* Required field'}
-                                    definition={definition as IFormDefinition}
-                                    initialValue={{}}
-                                    onSave={onSave}
-                                  >
-                                    {({ fields, handleSubmit }) => (
-                                      <IntegrationActionConfigurationForm
-                                        backLink={resolvers.create.start.selectAction(
-                                          { connection: data }
-                                        )}
-                                        fields={fields}
-                                        handleSubmit={handleSubmit}
-                                        i18nBackLabel={'< Choose action'}
-                                        i18nSubmitLabel={
-                                          moreSteps ? 'Continue' : 'Done'
-                                        }
-                                      />
-                                    )}
-                                  </AutoForm>
-                                </>
+                                <IntegrationEditorConfigureConnection
+                                  breadcrumb={[
+                                    <Link to={resolvers.list({})} key={1}>
+                                      Integrations
+                                    </Link>,
+                                    <Link
+                                      to={resolvers.create.start.selectConnection(
+                                        {}
+                                      )}
+                                      key={2}
+                                    >
+                                      New integration
+                                    </Link>,
+                                    <Link
+                                      to={resolvers.create.start.selectAction({
+                                        connection: data,
+                                      })}
+                                      key={3}
+                                    >
+                                      Start connection
+                                    </Link>,
+                                    <span key={4}>Configure action</span>,
+                                  ]}
+                                  definition={definition}
+                                  i18nTitle={action.name}
+                                  i18nSubtitle={action.description || ''}
+                                  moreSteps={moreSteps}
+                                  backLink={resolvers.create.start.selectAction(
+                                    { connection: data }
+                                  )}
+                                  onSave={onSave}
+                                />
                               }
                             />
                           );

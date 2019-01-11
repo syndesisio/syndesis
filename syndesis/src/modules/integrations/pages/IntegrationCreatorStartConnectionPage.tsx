@@ -1,17 +1,15 @@
 import { WithConnections } from '@syndesis/api';
 import { Connection } from '@syndesis/models';
 import {
-  Breadcrumb,
   ContentWithSidebarLayout,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
-  PageHeader,
 } from '@syndesis/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
-import { ConnectionsWithToolbar } from '../../connections/containers/ConnectionsWithToolbar';
+import { IntegrationEditorChooseConnection } from '../components';
 import resolvers from '../resolvers';
 
 export function getStartSelectActionHref(connection: Connection) {
@@ -50,29 +48,26 @@ export class IntegrationCreatorStartConnectionPage extends React.Component {
             </IntegrationVerticalFlow>
           }
           content={
-            <>
-              <PageHeader>
-                <Breadcrumb>
-                  <Link to={resolvers.list({})}>Integrations</Link>
-                  <span>New integration</span>
-                </Breadcrumb>
-                <h1>Choose a Start Connection</h1>
-                <p>
-                  Click the connection that starts the integration. If the
-                  connection you need is not available, click Create Connection.
-                </p>
-              </PageHeader>
-              <WithConnections>
-                {({ data, hasData, error }) => (
-                  <ConnectionsWithToolbar
-                    error={error}
-                    loading={!hasData}
-                    connections={data.connectionsWithFromAction}
-                    getConnectionHref={getStartSelectActionHref}
-                  />
-                )}
-              </WithConnections>
-            </>
+            <WithConnections>
+              {({ data, hasData, error }) => (
+                <IntegrationEditorChooseConnection
+                  breadcrumb={[
+                    <Link to={resolvers.list({})} key={1}>
+                      Integrations
+                    </Link>,
+                    <span key={2}>New integration</span>,
+                  ]}
+                  connections={data.connectionsWithFromAction}
+                  loading={!hasData}
+                  error={error}
+                  i18nTitle={'Choose a Start Connection'}
+                  i18nSubtitle={
+                    'Click the connection that starts the integration. If the connection you need is not available, click Create Connection.'
+                  }
+                  getConnectionHref={getStartSelectActionHref}
+                />
+              )}
+            </WithConnections>
           }
         />
       </WithClosedNavigation>

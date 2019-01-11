@@ -1,19 +1,29 @@
 import { WithConnection } from '@syndesis/api';
+import { Action, Connection } from '@syndesis/models';
 import {
-  Breadcrumb,
   ContentWithSidebarLayout,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
   Loader,
-  PageHeader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouter } from '@syndesis/utils';
-import { ListView } from 'patternfly-react';
+import * as H from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
+import { IntegrationEditorChooseAction } from '../components';
 import resolvers from '../resolvers';
+
+function getActionHref(
+  connection: Connection,
+  action: Action
+): H.LocationDescriptor {
+  return resolvers.create.start.configureAction({
+    actionId: action.id!,
+    connection,
+  });
+}
 
 export class IntegrationCreatorStartActionPage extends React.Component {
   public render() {
@@ -78,54 +88,24 @@ export class IntegrationCreatorStartActionPage extends React.Component {
                           </IntegrationVerticalFlow>
                         }
                         content={
-                          <>
-                            <PageHeader>
-                              <Breadcrumb>
-                                <Link to={resolvers.list({})}>
-                                  Integrations
-                                </Link>
-                                <Link
-                                  to={resolvers.create.start.selectConnection(
-                                    {}
-                                  )}
-                                >
-                                  New integration
-                                </Link>
-                                <span>Start connection</span>
-                              </Breadcrumb>
-
-                              <h1>Choose Action</h1>
-                              <p>
-                                Choose an action for the selected connection.
-                              </p>
-                            </PageHeader>
-                            <div className={'container-fluid'}>
-                              <ListView>
-                                {data.actionsWithFrom
-                                  .sort((a, b) => a.name.localeCompare(b.name))
-                                  .map((a, idx) => (
-                                    <Link
-                                      to={resolvers.create.start.configureAction(
-                                        {
-                                          actionId: a.id!,
-                                          connection: data,
-                                        }
-                                      )}
-                                      style={{
-                                        color: 'inherit',
-                                        textDecoration: 'none',
-                                      }}
-                                      key={idx}
-                                    >
-                                      <ListView.Item
-                                        heading={a.name}
-                                        description={a.description}
-                                      />
-                                    </Link>
-                                  ))}
-                              </ListView>
-                            </div>
-                          </>
+                          <IntegrationEditorChooseAction
+                            breadcrumb={[
+                              <Link to={resolvers.list({})} key={1}>
+                                Integrations
+                              </Link>,
+                              <Link
+                                to={resolvers.create.start.selectConnection({})}
+                                key={2}
+                              >
+                                New integration
+                              </Link>,
+                              <span key={3}>Start connection</span>,
+                            ]}
+                            actions={data.actionsWithFrom.sort((a, b) =>
+                              a.name.localeCompare(b.name)
+                            )}
+                            getActionHref={getActionHref.bind(null, data)}
+                          />
                         }
                       />
                     )}
