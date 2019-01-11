@@ -8,9 +8,9 @@ import {
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
 import { IntegrationEditorConfigureConnection } from '../components';
+import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
 import { IWithAutoFormHelperOnUpdatedIntegrationProps } from '../containers';
 import resolvers from '../resolvers';
 
@@ -100,26 +100,12 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                     }
                     content={
                       <IntegrationEditorConfigureConnection
-                        breadcrumb={[
-                          <Link to={resolvers.list()} key={1}>
-                            Integrations
-                          </Link>,
-                          <Link
-                            to={resolvers.create.start.selectConnection()}
-                            key={2}
-                          >
-                            New integration
-                          </Link>,
-                          <Link
-                            to={resolvers.create.start.selectAction({
-                              connection,
-                            })}
-                            key={3}
-                          >
-                            Start connection
-                          </Link>,
-                          <span key={4}>Configure action</span>,
-                        ]}
+                        breadcrumb={
+                          <IntegrationCreatorBreadcrumbs
+                            step={3}
+                            startConnection={connection}
+                          />
+                        }
                         integration={integration}
                         connection={connection}
                         actionId={actionId}

@@ -7,9 +7,9 @@ import {
   IntegrationVerticalFlow,
 } from '@syndesis/ui';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
 import { IntegrationEditorChooseConnection } from '../components';
+import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
 import resolvers from '../resolvers';
 
 export function getStartSelectActionHref(connection: Connection) {
@@ -51,12 +51,7 @@ export class IntegrationCreatorStartConnectionPage extends React.Component {
             <WithConnections>
               {({ data, hasData, error }) => (
                 <IntegrationEditorChooseConnection
-                  breadcrumb={[
-                    <Link to={resolvers.list()} key={1}>
-                      Integrations
-                    </Link>,
-                    <span key={2}>New integration</span>,
-                  ]}
+                  breadcrumb={<IntegrationCreatorBreadcrumbs step={1} />}
                   connections={data.connectionsWithFromAction}
                   loading={!hasData}
                   error={error}

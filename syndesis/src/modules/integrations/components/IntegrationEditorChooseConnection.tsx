@@ -1,11 +1,11 @@
 import { ConnectionOverview } from '@syndesis/models';
-import { Breadcrumb, PageHeader } from '@syndesis/ui';
+import { PageHeader } from '@syndesis/ui';
 import * as H from 'history';
 import * as React from 'react';
 import { ConnectionsWithToolbar } from '../../connections/containers';
 
 export interface IIntegrationEditorChooseConnection {
-  breadcrumb: JSX.Element[];
+  breadcrumb: JSX.Element;
   error: boolean;
   loading: boolean;
   connections: ConnectionOverview[];
@@ -21,7 +21,7 @@ export class IntegrationEditorChooseConnection extends React.Component<
     return (
       <>
         <PageHeader>
-          <Breadcrumb>{this.props.breadcrumb}</Breadcrumb>
+          {this.props.breadcrumb}
           <h1>{this.props.i18nTitle}</h1>
           <p>{this.props.i18nSubtitle}</p>
         </PageHeader>

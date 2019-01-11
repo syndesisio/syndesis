@@ -9,7 +9,7 @@ import {
 } from '@syndesis/api';
 import { AutoForm } from '@syndesis/auto-form';
 import { ConnectionOverview, Integration } from '@syndesis/models';
-import { Breadcrumb, PageHeader } from '@syndesis/ui';
+import { PageHeader } from '@syndesis/ui';
 import { IntegrationActionConfigurationForm } from '@syndesis/ui';
 import * as H from 'history';
 import * as React from 'react';
@@ -19,7 +19,7 @@ import {
 } from '../containers';
 
 export interface IIntegrationEditorConfigureConnection {
-  breadcrumb: JSX.Element[];
+  breadcrumb: JSX.Element;
   integration: Integration;
   connection: ConnectionOverview;
   actionId: string;
@@ -49,7 +49,7 @@ export class IntegrationEditorConfigureConnection extends React.Component<
     return (
       <>
         <PageHeader>
-          <Breadcrumb>{this.props.breadcrumb}</Breadcrumb>
+          {this.props.breadcrumb}
           <h1>{action.name}</h1>
           <p>{action.description}</p>
         </PageHeader>

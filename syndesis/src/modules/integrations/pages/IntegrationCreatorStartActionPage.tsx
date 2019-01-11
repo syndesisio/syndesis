@@ -10,9 +10,9 @@ import {
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as H from 'history';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
 import { IntegrationEditorChooseAction } from '../components';
+import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
 import resolvers from '../resolvers';
 
 function getActionHref(
@@ -97,18 +97,9 @@ export class IntegrationCreatorStartActionPage extends React.Component {
                         }
                         content={
                           <IntegrationEditorChooseAction
-                            breadcrumb={[
-                              <Link to={resolvers.list()} key={1}>
-                                Integrations
-                              </Link>,
-                              <Link
-                                to={resolvers.create.start.selectConnection()}
-                                key={2}
-                              >
-                                New integration
-                              </Link>,
-                              <span key={3}>Start connection</span>,
-                            ]}
+                            breadcrumb={
+                              <IntegrationCreatorBreadcrumbs step={2} />
+                            }
                             actions={data.actionsWithFrom.sort((a, b) =>
                               a.name.localeCompare(b.name)
                             )}

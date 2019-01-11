@@ -1,12 +1,12 @@
 import { Action } from '@syndesis/models';
-import { Breadcrumb, PageHeader } from '@syndesis/ui';
+import { PageHeader } from '@syndesis/ui';
 import * as H from 'history';
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 export interface IIntegrationEditorChooseActionProps {
-  breadcrumb: JSX.Element[];
+  breadcrumb: JSX.Element;
   actions: Action[];
   getActionHref(action: Action): H.LocationDescriptor;
 }
@@ -18,8 +18,7 @@ export class IntegrationEditorChooseAction extends React.Component<
     return (
       <>
         <PageHeader>
-          <Breadcrumb>{this.props.breadcrumb}</Breadcrumb>
-
+          {this.props.breadcrumb}
           <h1>Choose Action</h1>
           <p>Choose an action for the selected connection.</p>
         </PageHeader>

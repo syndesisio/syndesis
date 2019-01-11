@@ -10,9 +10,9 @@ import {
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as H from 'history';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
 import { IntegrationEditorChooseAction } from '../components';
+import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
 import resolvers from '../resolvers';
 
 function getActionHref(
@@ -108,45 +108,14 @@ export class IntegrationCreatorFinishActionPage extends React.Component {
                     >
                       {() => (
                         <IntegrationEditorChooseAction
-                          breadcrumb={[
-                            <Link to={resolvers.list()} key={1}>
-                              Integrations
-                            </Link>,
-                            <Link
-                              to={resolvers.create.start.selectConnection()}
-                              key={2}
-                            >
-                              New integration
-                            </Link>,
-                            <Link
-                              to={resolvers.create.start.selectAction({
-                                connection: startConnection,
-                              })}
-                              key={3}
-                            >
-                              Start connection
-                            </Link>,
-                            <Link
-                              to={resolvers.create.start.configureAction({
-                                actionId: startAction.id!,
-                                connection: startConnection,
-                              })}
-                              key={4}
-                            >
-                              Configure action
-                            </Link>,
-                            <Link
-                              to={resolvers.create.finish.selectConnection({
-                                integration,
-                                startAction,
-                                startConnection,
-                              })}
-                              key={5}
-                            >
-                              Finish Connection
-                            </Link>,
-                            <span key={6}>Choose Action</span>,
-                          ]}
+                          breadcrumb={
+                            <IntegrationCreatorBreadcrumbs
+                              step={5}
+                              startConnection={startConnection}
+                              startAction={startAction}
+                              integration={integration}
+                            />
+                          }
                           actions={data.actionsWithTo.sort((a, b) =>
                             a.name.localeCompare(b.name)
                           )}

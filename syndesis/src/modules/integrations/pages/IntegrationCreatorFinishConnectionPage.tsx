@@ -9,9 +9,9 @@ import {
 import { WithRouteData } from '@syndesis/utils';
 import * as H from 'history';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
 import { IntegrationEditorChooseConnection } from '../components';
+import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
 import resolvers from '../resolvers';
 
 export function getFinishSelectActionHref(
@@ -77,35 +77,14 @@ export class IntegrationCreatorFinishConnectionPage extends React.Component {
                 <WithConnections>
                   {({ data, hasData, error }) => (
                     <IntegrationEditorChooseConnection
-                      breadcrumb={[
-                        <Link to={resolvers.list()} key={1}>
-                          Integrations
-                        </Link>,
-                        <Link
-                          to={resolvers.create.start.selectConnection()}
-                          key={2}
-                        >
-                          New integration
-                        </Link>,
-                        <Link
-                          to={resolvers.create.start.selectAction({
-                            connection: startConnection,
-                          })}
-                          key={3}
-                        >
-                          Start connection
-                        </Link>,
-                        <Link
-                          to={resolvers.create.start.configureAction({
-                            actionId: startAction.id!,
-                            connection: startConnection,
-                          })}
-                          key={4}
-                        >
-                          Configure action
-                        </Link>,
-                        <span key={5}>Finish Connection</span>,
-                      ]}
+                      breadcrumb={
+                        <IntegrationCreatorBreadcrumbs
+                          step={4}
+                          startConnection={startConnection}
+                          startAction={startAction}
+                          integration={integration}
+                        />
+                      }
                       i18nTitle={'Choose a Finish Connection'}
                       i18nSubtitle={
                         'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
