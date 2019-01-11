@@ -90,11 +90,11 @@ export class IntegrationCreatorStartActionPage extends React.Component {
                         content={
                           <IntegrationEditorChooseAction
                             breadcrumb={[
-                              <Link to={resolvers.list({})} key={1}>
+                              <Link to={resolvers.list()} key={1}>
                                 Integrations
                               </Link>,
                               <Link
-                                to={resolvers.create.start.selectConnection({})}
+                                to={resolvers.create.start.selectConnection()}
                                 key={2}
                               >
                                 New integration

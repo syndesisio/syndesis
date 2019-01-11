@@ -52,7 +52,7 @@ export class IntegrationCreatorStartConnectionPage extends React.Component {
               {({ data, hasData, error }) => (
                 <IntegrationEditorChooseConnection
                   breadcrumb={[
-                    <Link to={resolvers.list({})} key={1}>
+                    <Link to={resolvers.list()} key={1}>
                       Integrations
                     </Link>,
                     <span key={2}>New integration</span>,

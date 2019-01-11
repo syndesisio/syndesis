@@ -17,17 +17,17 @@ function makeResolver<T>(route: string, mapper: (data: T) => IRoute) {
     };
   };
 }
-
-const nullMapper = () => ({});
+function makeResolverNoParams(route: string) {
+  return () => reverse(route);
+}
 
 export default {
-  list: makeResolver(routes.list, nullMapper),
+  list: makeResolverNoParams(routes.list),
   create: {
-    root: makeResolver(routes.create.root, nullMapper),
+    root: makeResolverNoParams(routes.create.root),
     start: {
-      selectConnection: makeResolver(
-        routes.create.start.selectConnection,
-        nullMapper
+      selectConnection: makeResolverNoParams(
+        routes.create.start.selectConnection
       ),
       selectAction: makeResolver<{ connection: ConnectionOverview }>(
         routes.create.start.selectAction,
