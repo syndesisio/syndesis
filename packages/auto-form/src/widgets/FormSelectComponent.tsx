@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export const FormSelectComponent = ({
   field,
-  form: { touched, errors },
+  form: { touched, errors, isSubmitting },
   ...props
 }: {
   [name: string]: any;
@@ -13,7 +13,12 @@ export const FormSelectComponent = ({
       {props.property.displayName}
     </label>
     <div className="col-sm-10">
-      <select id={field.name} data-testid={field.name} {...field}>
+      <select
+        id={field.name}
+        data-testid={field.name}
+        disabled={isSubmitting}
+        {...field}
+      >
         {props.property.enum.map((opt: any) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}

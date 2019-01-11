@@ -3,7 +3,7 @@ import * as React from 'react';
 export const FormInputComponent = ({
   field,
   type,
-  form: { touched, errors },
+  form: { touched, errors, isSubmitting },
   ...props
 }: {
   [name: string]: any;
@@ -14,7 +14,13 @@ export const FormInputComponent = ({
       {props.property.displayName}
     </label>
     <div className="col-sm-10">
-      <input type={type} id={field.name} data-testid={field.name} {...field} />
+      <input
+        type={type}
+        id={field.name}
+        data-testid={field.name}
+        disabled={isSubmitting}
+        {...field}
+      />
       {touched[field.name] && errors[field.name] && (
         <div className="error">{errors[field.name]}</div>
       )}

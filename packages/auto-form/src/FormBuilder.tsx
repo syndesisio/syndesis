@@ -1,7 +1,7 @@
 import { IConfigurationProperty } from '@syndesis/models';
 import { Field } from 'formik';
 import * as React from 'react';
-import { IFormDefinition, IFormValue } from './models';
+import { IFormDefinition } from './models';
 import {
   FormCheckboxComponent,
   FormHiddenComponent,
@@ -24,18 +24,18 @@ export interface IFormBuilderProps<T> {
   definition: IFormDefinition;
   initialValue: T;
   i18nRequiredProperty: string;
-  onSave: (value?: T | any) => void;
+  onSave: (value: T | any, actions: any) => void;
   children(props: IFormBuilderState<T>): any;
 }
 
 export interface IFormBuilderState<T> {
   fields: INamedConfigurationProperty[];
   getField: (props: IRenderFieldProps) => any;
-  initialValue?: T;
-  onSave: (value?: T) => void;
+  initialValue: T;
+  onSave: (value: T, actions: any) => void;
 }
 
-export class FormBuilder<T extends object = IFormValue> extends React.Component<
+export class FormBuilder<T> extends React.Component<
   IFormBuilderProps<T>,
   IFormBuilderState<T>
 > {

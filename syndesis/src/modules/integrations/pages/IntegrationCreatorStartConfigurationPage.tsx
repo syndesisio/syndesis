@@ -10,10 +10,8 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
-import {
-  IIntegrationEditorConfigureConnectionOnSaveProps,
-  IntegrationEditorConfigureConnection,
-} from '../components';
+import { IntegrationEditorConfigureConnection } from '../components';
+import { IWithAutoFormHelperOnUpdatedIntegrationProps } from '../containers';
 import resolvers from '../resolvers';
 
 export interface IIntegrationCreatorStartConfigurationPageRouteParams {
@@ -32,7 +30,7 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
     return (
       <WithClosedNavigation>
         <WithIntegrationHelpers>
-          {({ addConnection, getEmptyIntegration, updateConnection }) => (
+          {({ getEmptyIntegration }) => (
             <WithRouteData<
               IIntegrationCreatorStartConfigurationPageRouteParams,
               IIntegrationCreatorStartConfigurationPageRouteState
@@ -42,20 +40,12 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                 { connection, integration = getEmptyIntegration() },
                 { history }
               ) => {
-                const onSave = async ({
-                  moreSteps,
-                  configuredProperties,
+                const onUpdatedIntegration = ({
                   action,
-                }: IIntegrationEditorConfigureConnectionOnSaveProps) => {
-                  if (moreSteps) {
-                    const updatedIntegration = await updateConnection(
-                      integration,
-                      connection,
-                      action,
-                      0,
-                      1,
-                      configuredProperties
-                    );
+                  updatedIntegration,
+                  moreConfigurationSteps,
+                }: IWithAutoFormHelperOnUpdatedIntegrationProps) => {
+                  if (moreConfigurationSteps) {
                     history.push(
                       resolvers.create.start.configureAction({
                         actionId,
@@ -65,16 +55,6 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                       })
                     );
                   } else {
-                    const updatedIntegration = await (step === 0
-                      ? addConnection
-                      : updateConnection)(
-                      integration,
-                      connection,
-                      action,
-                      0,
-                      0,
-                      configuredProperties
-                    );
                     history.push(
                       resolvers.create.finish.selectConnection({
                         integration: updatedIntegration,
@@ -140,13 +120,16 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                           </Link>,
                           <span key={4}>Configure action</span>,
                         ]}
+                        integration={integration}
                         connection={connection}
                         actionId={actionId}
-                        step={step}
+                        configurationStep={step}
+                        flow={0}
+                        flowStep={0}
                         backLink={resolvers.create.start.selectAction({
                           connection,
                         })}
-                        onSave={onSave}
+                        onUpdatedIntegration={onUpdatedIntegration}
                       />
                     }
                   />

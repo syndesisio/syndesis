@@ -1,6 +1,7 @@
 import * as H from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { Loader } from '../Shared';
 
 export interface IIntegrationActionConfigurationFormProps {
   backLink: H.LocationDescriptor;
@@ -8,11 +9,19 @@ export interface IIntegrationActionConfigurationFormProps {
   handleSubmit: (e?: any) => void;
   i18nBackLabel: string;
   i18nSubmitLabel: string;
+  disabled?: boolean;
 }
 
 export const IntegrationActionConfigurationForm: React.FunctionComponent<
   IIntegrationActionConfigurationFormProps
-> = ({ backLink, handleSubmit, fields, i18nSubmitLabel, i18nBackLabel }) => (
+> = ({
+  backLink,
+  handleSubmit,
+  fields,
+  i18nSubmitLabel,
+  i18nBackLabel,
+  disabled,
+}) => (
   <form
     className="form-horizontal required-pf"
     role="form"
@@ -24,8 +33,13 @@ export const IntegrationActionConfigurationForm: React.FunctionComponent<
           <div className="card-pf-body">{fields}</div>
           <div className="card-pf-footer">
             <div className="card-pf-time-frame-filter">
-              <button type={'submit'} className={'btn btn-primary'}>
-                {i18nSubmitLabel}
+              <button
+                type={'submit'}
+                className={'btn btn-primary'}
+                disabled={disabled}
+              >
+                {i18nSubmitLabel}{' '}
+                {disabled && <Loader size={'xs'} inline={true} />}
               </button>
             </div>
             <Link to={backLink} className={'btn btn-default'}>

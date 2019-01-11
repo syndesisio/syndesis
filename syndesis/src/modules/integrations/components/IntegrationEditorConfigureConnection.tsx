@@ -8,27 +8,27 @@ import {
   getConnectorActions,
 } from '@syndesis/api';
 import { AutoForm } from '@syndesis/auto-form';
-import { Action, ConnectionOverview } from '@syndesis/models';
+import { ConnectionOverview, Integration } from '@syndesis/models';
 import { Breadcrumb, PageHeader } from '@syndesis/ui';
 import { IntegrationActionConfigurationForm } from '@syndesis/ui';
 import * as H from 'history';
 import * as React from 'react';
-
-export interface IIntegrationEditorConfigureConnectionOnSaveProps {
-  action: Action;
-  configuredProperties: { [key: string]: string };
-  moreSteps: boolean;
-}
+import {
+  IWithAutoFormHelperOnUpdatedIntegrationProps,
+  WithAutoFormHelper,
+} from '../containers';
 
 export interface IIntegrationEditorConfigureConnection {
   breadcrumb: JSX.Element[];
-  disabled?: boolean;
+  integration: Integration;
   connection: ConnectionOverview;
   actionId: string;
-  step: number;
+  configurationStep: number;
   backLink: H.LocationDescriptor;
-  onSave(
-    configuredProperties: IIntegrationEditorConfigureConnectionOnSaveProps
+  flow: number;
+  flowStep: number;
+  onUpdatedIntegration(
+    props: IWithAutoFormHelperOnUpdatedIntegrationProps
   ): void;
 }
 
@@ -42,40 +42,48 @@ export class IntegrationEditorConfigureConnection extends React.Component<
     );
     const steps = getActionSteps(getActionDescriptor(action));
     const definition = getActionStepDefinition(
-      getActionStep(steps, this.props.step)
+      getActionStep(steps, this.props.configurationStep)
     );
-    const moreSteps = this.props.step < steps.length - 1;
-    const onSave = async (configuredProperties: { [key: string]: string }) => {
-      this.props.onSave({
-        action,
-        configuredProperties,
-        moreSteps,
-      });
-    };
+    const moreConfigurationSteps =
+      this.props.configurationStep < steps.length - 1;
     return (
       <>
         <PageHeader>
           <Breadcrumb>{this.props.breadcrumb}</Breadcrumb>
-
           <h1>{action.name}</h1>
           <p>{action.description}</p>
         </PageHeader>
-        <AutoForm<{ [key: string]: string }>
-          i18nRequiredProperty={'* Required field'}
-          definition={definition}
-          initialValue={{}}
-          onSave={onSave}
+        <WithAutoFormHelper<{ [key: string]: string }>
+          integration={this.props.integration}
+          connection={this.props.connection}
+          action={action}
+          configurationStep={this.props.configurationStep}
+          moreConfigurationSteps={moreConfigurationSteps}
+          flow={this.props.flow}
+          flowStep={this.props.flowStep}
+          onUpdatedIntegration={this.props.onUpdatedIntegration}
         >
-          {({ fields, handleSubmit }) => (
-            <IntegrationActionConfigurationForm
-              backLink={this.props.backLink}
-              fields={fields}
-              handleSubmit={handleSubmit}
-              i18nBackLabel={'< Choose action'}
-              i18nSubmitLabel={moreSteps ? 'Continue' : 'Done'}
-            />
+          {({ onSave }) => (
+            <AutoForm<{ [key: string]: string }>
+              i18nRequiredProperty={'* Required field'}
+              definition={definition}
+              initialValue={{}}
+              onSave={onSave}
+              key={this.props.configurationStep}
+            >
+              {({ fields, handleSubmit, isSubmitting }) => (
+                <IntegrationActionConfigurationForm
+                  backLink={this.props.backLink}
+                  fields={fields}
+                  handleSubmit={handleSubmit}
+                  i18nBackLabel={'< Choose action'}
+                  i18nSubmitLabel={moreConfigurationSteps ? 'Continue' : 'Done'}
+                  disabled={isSubmitting}
+                />
+              )}
+            </AutoForm>
           )}
-        </AutoForm>
+        </WithAutoFormHelper>
       </>
     );
   }

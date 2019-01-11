@@ -1,9 +1,9 @@
 import { Formik } from 'formik';
 import * as React from 'react';
 import { FormBuilder } from './FormBuilder';
-import { IFormDefinition, IFormErrors, IFormValue } from './models';
+import { IFormDefinition, IFormErrors } from './models';
 
-export interface IAutoFormProps<T extends object> {
+export interface IAutoFormProps<T> {
   /**
    * A map of configuration properties as returned by the Syndesis API
    */
@@ -11,7 +11,7 @@ export interface IAutoFormProps<T extends object> {
   /**
    * The initial value that should be set on the form
    */
-  initialValue?: T;
+  initialValue: T;
   /**
    * String to be displayed when a required field isn't set
    */
@@ -19,7 +19,7 @@ export interface IAutoFormProps<T extends object> {
   /**
    * Callback function that will be called when the form is submitted
    */
-  onSave: (value: T) => void;
+  onSave: (value: T, actions: any) => void;
   /**
    * Validation function called whenever a change or blur event occurs on the form
    */
@@ -39,9 +39,11 @@ export interface IAutoFormState {
    * Function to trigger a form submit which will then trigger onSave
    */
   handleSubmit: (e?: any) => void;
+  isSubmitting: boolean;
+  isValidating: boolean;
 }
 
-export class AutoForm<T extends object = IFormValue> extends React.Component<
+export class AutoForm<T> extends React.Component<
   IAutoFormProps<T>,
   IAutoFormState
 > {
@@ -50,17 +52,24 @@ export class AutoForm<T extends object = IFormValue> extends React.Component<
       <React.Fragment>
         <FormBuilder
           definition={this.props.definition}
-          initialValue={this.props.initialValue || {}}
+          initialValue={this.props.initialValue}
           onSave={this.props.onSave}
           i18nRequiredProperty={this.props.i18nRequiredProperty}
         >
           {({ initialValue, fields, onSave, getField }) => (
-            <Formik
+            <Formik<T>
               initialValues={initialValue}
               onSubmit={onSave}
               validate={this.props.validate}
             >
-              {({ handleSubmit, values, touched, errors }) =>
+              {({
+                handleSubmit,
+                values,
+                touched,
+                errors,
+                isValidating,
+                isSubmitting,
+              }) =>
                 this.props.children({
                   fields: (
                     <React.Fragment>
@@ -75,6 +84,8 @@ export class AutoForm<T extends object = IFormValue> extends React.Component<
                     </React.Fragment>
                   ),
                   handleSubmit,
+                  isSubmitting,
+                  isValidating,
                 })
               }
             </Formik>

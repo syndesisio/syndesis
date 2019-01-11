@@ -26,9 +26,7 @@ type AddConnection = (
   action: Action,
   flow: number,
   position: number,
-  configuredProperties: {
-    [name: string]: string;
-  }
+  configuredProperties: any
 ) => Promise<Integration>;
 type UpdateConnection = (
   integration: Integration,
@@ -36,9 +34,7 @@ type UpdateConnection = (
   action: Action,
   flow: number,
   position: number,
-  configuredProperties: {
-    [name: string]: string;
-  }
+  configuredProperties: any
 ) => Promise<Integration>;
 
 export interface IWithIntegrationHelpersChildrenProps {
@@ -99,9 +95,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     action: Action,
     flow: number,
     position: number,
-    configuredProperties: {
-      [name: string]: string;
-    }
+    configuredProperties: any
   ): Promise<Integration> {
     const actionDescriptor = await this.getActionDescriptor(
       connection.id!,
@@ -141,9 +135,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     action: Action,
     flow: number,
     position: number,
-    configuredProperties: {
-      [name: string]: string;
-    }
+    configuredProperties: any
   ): Promise<Integration> {
     const actionDescriptor = await this.getActionDescriptor(
       connection.id!,

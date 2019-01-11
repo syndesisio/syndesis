@@ -3,7 +3,7 @@ import * as React from 'react';
 export const FormCheckboxComponent = ({
   field,
   type,
-  form: { touched, errors },
+  form: { touched, errors, isSubmitting },
   ...props
 }: {
   [name: string]: any;
@@ -20,6 +20,7 @@ export const FormCheckboxComponent = ({
         data-testid={field.name}
         {...field}
         checked={field.value === 'true'}
+        disabled={isSubmitting}
       />
       {touched[field.name] && errors[field.name] && (
         <div className="error">{errors[field.name]}</div>
