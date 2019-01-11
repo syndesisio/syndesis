@@ -1,5 +1,5 @@
 import { WithConnection } from '@syndesis/api';
-import { Action, Connection } from '@syndesis/models';
+import { Action, ConnectionOverview } from '@syndesis/models';
 import {
   ContentWithSidebarLayout,
   IntegrationFlowStepGeneric,
@@ -7,7 +7,7 @@ import {
   IntegrationVerticalFlow,
   Loader,
 } from '@syndesis/ui';
-import { WithLoader, WithRouter } from '@syndesis/utils';
+import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as H from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -16,7 +16,7 @@ import { IntegrationEditorChooseAction } from '../components';
 import resolvers from '../resolvers';
 
 function getActionHref(
-  connection: Connection,
+  connection: ConnectionOverview,
   action: Action
 ): H.LocationDescriptor {
   return resolvers.create.start.configureAction({
@@ -25,17 +25,25 @@ function getActionHref(
   });
 }
 
+export interface IIntegrationCreatorStartActionRouteParams {
+  connectionId: string;
+}
+
+export interface IIntegrationCreatorStartActionRouteState {
+  connection?: ConnectionOverview;
+}
+
 export class IntegrationCreatorStartActionPage extends React.Component {
   public render() {
     return (
       <WithClosedNavigation>
-        <WithRouter>
-          {({ match, location }) => {
+        <WithRouteData<
+          IIntegrationCreatorStartActionRouteParams,
+          IIntegrationCreatorStartActionRouteState
+        >>
+          {({ connectionId }, { connection } = {}) => {
             return (
-              <WithConnection
-                id={(match.params as any).connectionId}
-                initialValue={(location.state || {}).connection}
-              >
+              <WithConnection id={connectionId} initialValue={connection}>
                 {({ data, hasData, error }) => (
                   <WithLoader
                     error={error}
@@ -114,7 +122,7 @@ export class IntegrationCreatorStartActionPage extends React.Component {
               </WithConnection>
             );
           }}
-        </WithRouter>
+        </WithRouteData>
       </WithClosedNavigation>
     );
   }
