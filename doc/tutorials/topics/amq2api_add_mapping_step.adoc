@@ -15,12 +15,12 @@ database that the REST API accesses.
 .Procedure
 . In {prodname}, in the left panel, hover over the plus sign between the damage reporter
 step and the finish connection to display a pop-up in which
-you click *Add a Step*.
+you click *Add a step*.
 . On the *Choose a Step* page, click *Data Mapper*. In the data mapper,
-the *Sources* panel on the left displays the fields in the
+the *Source* panel on the left displays the fields in the
 output from the damage reporter step. The
 *Target* panel on the right displays the fields in the database that
 the API accesses.
-. In the *Sources* panel, click the `task` field.
+. In the *Source* panel, click the `task` field.
 . In the *Target* panel, expand the `body` field and click `task`.
-. Click *Done*.
+. In the upper right, click *Done*.

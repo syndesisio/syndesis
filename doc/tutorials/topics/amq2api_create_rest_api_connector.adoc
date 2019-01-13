@@ -7,7 +7,7 @@
 {prodname} can create connectors for REST APIs
 that support Hypertext Transfer Protocol (HTTP)/1.0 or HTTP/1.1.
 To do this, {prodname} requires a valid
-OpenAPI 2.0 specification that describes a REST API you want to connect to.
+OpenAPI 2.0 specification that describes a REST API that you want to connect to.
 
 Your {prodname} environment provides the To Do app, which has a REST API
 for accessing a database that contains tasks. Your environment also provides
@@ -20,7 +20,8 @@ OpenAPI specification:
 .. In the {prodname} navigation panel, click *Home*.
 .. Copy the URL into a text editor.
 .. At the beginning of the URL, insert `*todo-*`.
-.. At the end of the URL, replace `dashboard` with `*swagger.json*`.
+.. At the end of the URL, remove `dashboard` if it is present.
+.. At the end of the URL, add `*swagger.json*`.
 .. Use the `http` scheme instead of `https`.
 
 +
@@ -32,7 +33,7 @@ The result is something like this:
 . Select *Use a URL*.
 . In the input box, paste the URL for your OpenAPI specification and
 click *Next*.
-. On the *Review OpenAPI Actions* page, click *Next*. If you see
+. On the *Review Actions* page, click *Next*. If you see
 a warning, you can ignore it.
 . Click *Next* again to accept *HTTP Basic Authorization*.
 . On the *Review/Edit Connector Details* page, {prodname} populates
@@ -41,7 +42,7 @@ the fields with values from the OpenAPI specification.
 change the values in the *Connector Name* and *Description* fields.
 .. Confirm that the value in the *Host* field is correct. For example,
 it should be something like this:
-`\http://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com`.
+`\https://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com`.
 .. Confirm that the value in the *Base URL* field is `/api`.
 . Click *Create API Connector*.
 +

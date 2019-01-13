@@ -18,7 +18,7 @@ the first task is to choose the start connection.
 . On the *Choose a Start Connection* page, click your
 AMQ connection. If you specified the example name,
 you would click *AMQ Broker 1*.
-. On the *Choose an Action* page, click the *Subscribe for Messages* action
+. On the *Choose an Action* page, click the *Subscribe for messages* action
 to receive messages from the queue you specify.
 . In the *Destination Name* field, enter `*inventoryReceived*` for
 the name of the queue to obtain data from.

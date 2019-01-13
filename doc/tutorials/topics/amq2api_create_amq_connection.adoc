@@ -22,7 +22,8 @@ display the project's overview.
 +
 Your project's name is something like `proj123456`.
 
-.. In the overview, click the first entry, *broker-amq, #1* to expand the entry for the
+.. In the overview, click the *>* to the left of the first entry, 
+*broker-amq, #1*, to expand the entry for the
 provided AMQ broker.
 
 .. On the right, click the up caret to scale up to running 1 pod. This starts
@@ -48,7 +49,7 @@ the account that accesses this AMQ broker.
 connection and displays a message that indicates whether
 validation is successful. If validation fails, check the values you
 entered and try again.
-.. When validation is successful, click *Next*.
+.. When validation is successful, in the upper right, click *Next*.
 .. In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, enter `*AMQ Broker 1*`.
