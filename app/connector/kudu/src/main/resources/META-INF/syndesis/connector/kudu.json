@@ -4,7 +4,7 @@
       "actionType": "connector",
       "description": "Create a table in kudu",
       "descriptor": {
-        "componentScheme": "apache-kudu",
+        "componentScheme": "kudu",
         "connectorCustomizers": [
           "io.syndesis.connector.kudu.KuduCreateTableCustomizer"
         ],
@@ -87,7 +87,7 @@
       "actionType": "connector",
       "description": "Insert data into kudu tables",
       "descriptor": {
-        "componentScheme": "apache-kudu",
+        "componentScheme": "kudu",
         "connectorCustomizers": [
           "io.syndesis.connector.kudu.KuduInsertCustomizer"
         ],
@@ -173,21 +173,6 @@
       "kind": "property",
       "label": "Port",
       "labelHint": "Port where kudu service is listening in the remote port, by default 7051",
-      "order": "1",
-      "required": true,
-      "secret": false,
-      "tags": [],
-      "type": "string"
-    },
-    "tableName": {
-      "componentProperty": true,
-      "deprecated": false,
-      "displayName": "Table",
-      "group": "common",
-      "javaType": "java.lang.Integer",
-      "kind": "property",
-      "label": "Table name",
-      "labelHint": "Table where operations are going to be done",
       "order": "1",
       "required": true,
       "secret": false,
