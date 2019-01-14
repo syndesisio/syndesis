@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.api.services.sheets.v4.model.ValueRange;
+import io.syndesis.connector.sheets.model.RangeCoordinate;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
@@ -59,17 +60,17 @@ public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCus
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { "A1:A5", "Sheet1", "ROWS", Arrays.asList(Collections.singletonList("a1"),
+                { "A1:A5", "Sheet1", RangeCoordinate.DIMENSION_ROWS, Arrays.asList(Collections.singletonList("a1"),
                                                             Collections.singletonList("a2"),
                                                             Collections.singletonList("a3"),
                                                             Collections.singletonList("a4"),
                                                             Collections.singletonList("a5")),
                         "{\"#1\": {\"A\":\"a1\"},\"#2\": {\"A\":\"a2\"}, \"#3\": {\"A\":\"a3\"}, \"#4\": {\"A\":\"a4\"}, \"#5\": {\"A\":\"a5\"},\"spreadsheetId\":\"%s\"}"},
-                { "A1:A5", "Sheet1", "COLUMNS", Collections.singletonList(Arrays.asList("a1", "a2", "a3", "a4", "a5")),
+                { "A1:A5", "Sheet1", RangeCoordinate.DIMENSION_COLUMNS, Collections.singletonList(Arrays.asList("a1", "a2", "a3", "a4", "a5")),
                         "{\"A\": {\"#1\":\"a1\",\"#2\":\"a2\",\"#3\":\"a3\",\"#4\":\"a4\",\"#5\":\"a5\"},\"spreadsheetId\":\"%s\"}"},
-                { "A1:B2", "Sheet1", "ROWS", Arrays.asList(Arrays.asList("a1", "b1"), Arrays.asList("a2", "b2")),
+                { "A1:B2", "Sheet1", RangeCoordinate.DIMENSION_ROWS, Arrays.asList(Arrays.asList("a1", "b1"), Arrays.asList("a2", "b2")),
                         "{\"#1\": {\"A\":\"a1\",\"B\":\"b1\"},\"#2\": {\"A\":\"a2\",\"B\":\"b2\"},\"spreadsheetId\":\"%s\"}"},
-                { "A1:B2", "Sheet1", "COLUMNS", Arrays.asList(Arrays.asList("a1", "a2"), Arrays.asList("b1", "b2")),
+                { "A1:B2", "Sheet1", RangeCoordinate.DIMENSION_COLUMNS, Arrays.asList(Arrays.asList("a1", "a2"), Arrays.asList("b1", "b2")),
                         "{\"A\": {\"#1\":\"a1\",\"#2\":\"a2\"},\"B\": {\"#1\":\"b1\",\"#2\":\"b2\"},\"spreadsheetId\":\"%s\"}"}
         });
     }

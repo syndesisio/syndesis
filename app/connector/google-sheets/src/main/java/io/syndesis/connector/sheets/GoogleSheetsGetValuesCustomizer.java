@@ -37,8 +37,6 @@ import org.apache.camel.util.ObjectHelper;
 public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer {
 
     private static final String ROW_PREFIX = "#";
-    private static final String DIMENSION_ROWS = "ROWS";
-    private static final String DIMENSION_COLUMNS = "COLUMNS";
 
     private String spreadsheetId;
     private String range;
@@ -54,7 +52,8 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
     private void setApiMethod(Map<String, Object> options) {
         spreadsheetId = (String) options.get("spreadsheetId");
         range = (String) options.get("range");
-        majorDimension = (String) options.get("majorDimension");
+        majorDimension = (String) Optional.ofNullable(options.get("majorDimension"))
+                                          .orElse(RangeCoordinate.DIMENSION_ROWS);
         splitResults = Optional.ofNullable(options.get("splitResults"))
                                                 .map(Object::toString)
                                                 .map(Boolean::valueOf)
@@ -92,7 +91,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
                 majorDimension = valueRange.getMajorDimension();
             }
 
-            if (ObjectHelper.equal(DIMENSION_ROWS, majorDimension)) {
+            if (ObjectHelper.equal(RangeCoordinate.DIMENSION_ROWS, majorDimension)) {
                 int rowIndex = rangeCoordinate.getRowStartIndex() + 1;
                 for (List<Object> values : valueRange.getValues()) {
                     final Map<String, Object> rowModel = new HashMap<>();
@@ -104,7 +103,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
                     model.put(ROW_PREFIX + rowIndex, rowModel);
                     rowIndex++;
                 }
-            } else if (ObjectHelper.equal(DIMENSION_COLUMNS, majorDimension)) {
+            } else if (ObjectHelper.equal(RangeCoordinate.DIMENSION_COLUMNS, majorDimension)) {
                 int columnIndex = rangeCoordinate.getColumnStartIndex();
                 for (List<Object> values : valueRange.getValues()) {
                     final Map<String, Object> columnModel = new HashMap<>();
@@ -132,8 +131,8 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
                 majorDimension = in.getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION).toString();
             }
 
-            int columnIndex = rangeCoordinate.getColumnStartIndex();
-            if (ObjectHelper.equal(DIMENSION_ROWS, majorDimension)) {
+            if (ObjectHelper.equal(RangeCoordinate.DIMENSION_ROWS, majorDimension)) {
+                int columnIndex = rangeCoordinate.getColumnStartIndex();
                 final Map<String, Object> rowModel = new HashMap<>();
                 for (Object value : values) {
                     rowModel.put(CellCoordinate.getColumnName(columnIndex), value);
@@ -141,7 +140,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
                 }
 
                 model.put(ROW_PREFIX, rowModel);
-            } else if (ObjectHelper.equal(DIMENSION_COLUMNS, majorDimension)) {
+            } else if (ObjectHelper.equal(RangeCoordinate.DIMENSION_COLUMNS, majorDimension)) {
                 final Map<String, Object> columnModel = new HashMap<>();
                 int rowIndex = rangeCoordinate.getRowStartIndex() + 1;
                 for (Object value : values) {

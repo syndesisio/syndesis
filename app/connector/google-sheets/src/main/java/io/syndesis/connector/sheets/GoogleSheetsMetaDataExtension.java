@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import io.syndesis.connector.sheets.meta.GoogleValueRangeMetaData;
+import io.syndesis.connector.sheets.model.RangeCoordinate;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.DefaultMetaData;
@@ -45,7 +46,7 @@ public class GoogleSheetsMetaDataExtension extends AbstractMetaDataExtension {
 
             final String majorDimension = Optional.ofNullable(properties.get("majorDimension"))
                     .map(Object::toString)
-                    .orElse("ROWS");
+                    .orElse(RangeCoordinate.DIMENSION_ROWS);
 
             valueRangeMetaData.setMajorDimension(majorDimension);
 

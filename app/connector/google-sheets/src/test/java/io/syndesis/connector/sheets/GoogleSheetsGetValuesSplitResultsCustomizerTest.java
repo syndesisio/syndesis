@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.syndesis.connector.sheets.model.RangeCoordinate;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
@@ -58,13 +59,13 @@ public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoo
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { "A1", "Sheet1", "ROWS", Collections.singletonList("a1"),
+                { "A1", "Sheet1", RangeCoordinate.DIMENSION_ROWS, Collections.singletonList("a1"),
                         "{\"#\": {\"A\":\"a1\"},\"spreadsheetId\":\"%s\"}"},
-                { "A1:A5", "Sheet1", "COLUMNS", Arrays.asList("a1", "a2", "a3", "a4", "a5"),
+                { "A1:A5", "Sheet1", RangeCoordinate.DIMENSION_COLUMNS, Arrays.asList("a1", "a2", "a3", "a4", "a5"),
                         "{\"$\": {\"#1\":\"a1\",\"#2\":\"a2\",\"#3\":\"a3\",\"#4\":\"a4\",\"#5\":\"a5\"},\"spreadsheetId\":\"%s\"}"},
-                { "A1:B2", "Sheet1", "ROWS", Arrays.asList("a1", "b1"),
+                { "A1:B2", "Sheet1", RangeCoordinate.DIMENSION_ROWS, Arrays.asList("a1", "b1"),
                         "{\"#\": {\"A\":\"a1\",\"B\":\"b1\"},\"spreadsheetId\":\"%s\"}"},
-                { "A1:B2", "Sheet1", "COLUMNS", Arrays.asList("a1", "a2"),
+                { "A1:B2", "Sheet1", RangeCoordinate.DIMENSION_COLUMNS, Arrays.asList("a1", "a2"),
                         "{\"$\": {\"#1\":\"a1\",\"#2\":\"a2\"},\"spreadsheetId\":\"%s\"}"}
         });
     }
