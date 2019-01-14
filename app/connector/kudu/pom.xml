@@ -30,7 +30,7 @@
     <description>Parent project for Camel Kudu connector</description>
 
     <properties>
-        <schemeName>apache-kudu</schemeName>
+        <schemeName>kudu</schemeName>
         <componentName>Apache Kudu</componentName>
         <componentPackage>org.apache.camel.component.kudu</componentPackage>
         <kuduVersion>1.7.0</kuduVersion>
