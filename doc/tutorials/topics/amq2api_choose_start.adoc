@@ -8,8 +8,8 @@ In {prodname}, to create the sample AMQ to REST API sample integration,
 the first task is to choose the start connection. 
 
 .Prerequisites
-* You started the provided AMQ broker. 
-* You created an AMQ connection. 
+* You started the provided Red Hat AMQ broker. 
+* You created a connection to that message broker. 
 
 .Procedure
 
@@ -17,7 +17,7 @@ the first task is to choose the start connection.
 . Click *Create Integration*.
 . On the *Choose a Start Connection* page, click your
 AMQ connection. If you specified the example name,
-you would click *AMQ Broker 1*.
+you would click *Red Hat AMQ Broker 1*.
 . On the *Choose an Action* page, click the *Subscribe for messages* action
 to receive messages from the queue you specify.
 . In the *Destination Name* field, enter `*inventoryReceived*` for
@@ -29,7 +29,7 @@ This is not needed for this sample integration.
 . Click *Done* to add the start connection to the integration.
 
 .Next step
-When the integration is running, after connecting to AMQ, the integration watches for
+When the integration is running, after connecting to Red Hat AMQ, the integration watches for
 messages on the `inventoryReceived` queue. When a message is available,
 the integration passes it to the *Damage Reporter* step.
 However, before you can add that step to the integration, you must choose the

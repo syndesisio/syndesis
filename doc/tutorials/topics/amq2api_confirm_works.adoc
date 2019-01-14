@@ -21,7 +21,7 @@ for your {prodname} environment. For example:
 . In the To Do app display, click *Show JMS Form* to display an
 input box that contains an XML message.
 . Click *Send JMS Message* to send that message
-to the AMQ broker in your OpenShift project.
+to the Red Hat AMQ broker in your OpenShift project.
 +
 Successful execution returns a task from the To Do app client API. The task
 identifies the ID of the damaged item and the contact information for its
@@ -45,7 +45,7 @@ task with the item ID that you just entered.
 unexpected result or to learn more about integration execution: 
 
 .. In {prodname}, in the left panel, click *Integrations*.
-.. Click the entry for your AMQ to API integration.
+.. Click the entry for your AMQ to REST API integration.
 .. In the integration's summary page, click the *Activity* tab.
 .. Optionally, enter date and/or keyword filters to limit the executions
 listed.

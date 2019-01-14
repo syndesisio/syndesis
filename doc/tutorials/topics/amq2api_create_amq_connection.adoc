@@ -5,9 +5,10 @@
 = Create an AMQ connection
 
 The AMQ to REST API sample integration starts by connecting to an
-AMQ broker that is provided in your OpenShift Online  project. Before you
+AMQ broker (Red Hat AMQ) that is provided in your OpenShift Online  
+project. Before you
 start to create the integration itself, you must start the broker
-and create an AMQ connection to that broker. 
+and create a connection to that broker. 
 
 .Procedure
 
@@ -24,7 +25,7 @@ Your project's name is something like `proj123456`.
 
 .. In the overview, click the *>* to the left of the first entry, 
 *broker-amq, #1*, to expand the entry for the
-provided AMQ broker.
+provided Red Hat AMQ broker.
 
 .. On the right, click the up caret to scale up to running 1 pod. This starts
 the AMQ broker.
@@ -35,7 +36,7 @@ the AMQ broker.
 available connections.
 .. In the upper right, click *Create Connection* to display
 {prodname} connectors.
-.. Click the *AMQ* connector.
+.. Click the *Red Hat AMQ* connector.
 .. Configure the connection by entering:
 +
 ... In the *Broker URL* field, enter `*tcp://broker-amq-tcp:61616*`
@@ -52,11 +53,10 @@ entered and try again.
 .. When validation is successful, in the upper right, click *Next*.
 .. In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
-For example, enter `*AMQ Broker 1*`.
+For example, enter `*Red Hat AMQ Broker 1*`.
 .. In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
-enter `*Sample AMQ connection
-that uses the provided broker.*`
+enter `*Connection to the provided Red Hat AMQ message broker.*`
 .. In the upper right, click *Create* to see that the connection you
 created is now available. If you entered the example name, you would
-see that *AMQ Broker 1* is now available.
+see that *Red Hat AMQ Broker 1* is now available.
