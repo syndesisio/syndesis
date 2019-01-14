@@ -199,6 +199,30 @@
                 "secret": false,
                 "type": "string"
               },
+              "majorDimension": {
+                "deprecated": false,
+                "defaultValue": "ROWS",
+                "displayName": "Major Dimension",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "enum": [
+                  {
+                    "label": "Rows",
+                    "value": "ROWS"
+                  },
+                  {
+                    "label": "Columns",
+                    "value": "COLUMNS"
+                  }
+                ],
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The major dimension that results should use. Indicates which dimension results apply to.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
               "valueInputOption": {
                 "deprecated": false,
                 "defaultValue": "USER_ENTERED",
@@ -222,7 +246,7 @@
                 "kind": "parameter",
                 "label": "producer",
                 "labelHint": "How to interpret input data.",
-                "order": "3",
+                "order": "4",
                 "required": false,
                 "secret": false,
                 "type": "string"
@@ -284,6 +308,30 @@
                 "secret": false,
                 "type": "string"
               },
+              "majorDimension": {
+                "deprecated": false,
+                "defaultValue": "ROWS",
+                "displayName": "Major Dimension",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "enum": [
+                  {
+                    "label": "Rows",
+                    "value": "ROWS"
+                  },
+                  {
+                    "label": "Columns",
+                    "value": "COLUMNS"
+                  }
+                ],
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The major dimension that results should use. Indicates which dimension results apply to.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
               "valueInputOption": {
                 "deprecated": false,
                 "defaultValue": "USER_ENTERED",
@@ -307,7 +355,7 @@
                 "kind": "parameter",
                 "label": "producer",
                 "labelHint": "How to interpret input data.",
-                "order": "3",
+                "order": "4",
                 "required": false,
                 "secret": false,
                 "type": "string"

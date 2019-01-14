@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import io.syndesis.connector.sheets.model.RangeCoordinate;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -76,7 +77,7 @@ public class SheetsStreamConsumerIntegrationTest extends AbstractGoogleSheetsStr
         Assert.assertEquals(testSheet.getSpreadsheetId(), exchange.getIn().getHeaders().get(SPREADSHEET_ID));
         Assert.assertEquals(range, exchange.getIn().getHeaders().get(RANGE));
         Assert.assertEquals(1, exchange.getIn().getHeaders().get(RANGE_INDEX));
-        Assert.assertEquals("ROWS", exchange.getIn().getHeaders().get(MAJOR_DIMENSION));
+        Assert.assertEquals(RangeCoordinate.DIMENSION_ROWS, exchange.getIn().getHeaders().get(MAJOR_DIMENSION));
 
         ValueRange values = (ValueRange) exchange.getIn().getBody();
         Assert.assertEquals(2L, values.getValues().size());
@@ -127,7 +128,7 @@ public class SheetsStreamConsumerIntegrationTest extends AbstractGoogleSheetsStr
         Assert.assertEquals(range, exchange.getIn().getHeaders().get(RANGE));
         Assert.assertEquals(1, exchange.getIn().getHeaders().get(RANGE_INDEX));
         Assert.assertEquals(1, exchange.getIn().getHeaders().get(VALUE_INDEX));
-        Assert.assertEquals("ROWS", exchange.getIn().getHeaders().get(MAJOR_DIMENSION));
+        Assert.assertEquals(RangeCoordinate.DIMENSION_ROWS, exchange.getIn().getHeaders().get(MAJOR_DIMENSION));
 
         List<?> values = (List) exchange.getIn().getBody();
         Assert.assertEquals(2L, values.size());

@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.syndesis.common.util.Json;
+import io.syndesis.connector.sheets.model.RangeCoordinate;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
@@ -60,15 +61,15 @@ public class GoogleSheetsMetadataAdapterTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { "A1:D1", "io.syndesis:sheets-get-values-connector", "ROWS", "/meta/get_rows_split_metadata.json", true },
-                { "A1:D1", "io.syndesis:sheets-get-values-connector", "ROWS", "/meta/get_rows_metadata.json", false },
                 { "A1:D1", "io.syndesis:sheets-get-values-connector", "", "/meta/get_rows_metadata.json", false },
-                { "A1:C5", "io.syndesis:sheets-get-values-connector", "COLUMNS", "/meta/get_columns_split_metadata.json", true },
-                { "A1:A5", "io.syndesis:sheets-get-values-connector", "COLUMNS", "/meta/get_columns_metadata.json", false },
-                { "A5:C5", "io.syndesis:sheets-update-values-connector", "ROWS", "/meta/update_rows_metadata.json", false },
-                { "A5:C5", "io.syndesis:sheets-update-values-connector", "COLUMNS", "/meta/update_columns_metadata.json", false },
-                { "A1:G3", "io.syndesis:sheets-append-values-connector", "ROWS", "/meta/append_rows_metadata.json", false },
-                { "A1:G3", "io.syndesis:sheets-append-values-connector", "COLUMNS", "/meta/append_columns_metadata.json", false }
+                { "A1:D1", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/get_rows_split_metadata.json", true },
+                { "A1:D1", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/get_rows_metadata.json", false },
+                { "A1:C5", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_COLUMNS, "/meta/get_columns_split_metadata.json", true },
+                { "A1:A5", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_COLUMNS, "/meta/get_columns_metadata.json", false },
+                { "A5:C5", "io.syndesis:sheets-update-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/update_rows_metadata.json", false },
+                { "A5:C5", "io.syndesis:sheets-update-values-connector", RangeCoordinate.DIMENSION_COLUMNS, "/meta/update_columns_metadata.json", false },
+                { "A1:G3", "io.syndesis:sheets-append-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/append_rows_metadata.json", false },
+                { "A1:G3", "io.syndesis:sheets-append-values-connector", RangeCoordinate.DIMENSION_COLUMNS, "/meta/append_columns_metadata.json", false }
         });
     }
 

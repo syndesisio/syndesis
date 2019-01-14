@@ -21,8 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import io.syndesis.common.util.Json;
+import io.syndesis.connector.sheets.meta.GoogleSheetsMetaDataHelper;
+import io.syndesis.connector.sheets.model.RangeCoordinate;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -37,6 +41,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
 
     private String spreadsheetId;
     private String range;
+    private String majorDimension;
     private String valueInputOption;
 
     @Override
@@ -48,7 +53,12 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
     private void setApiMethod(Map<String, Object> options) {
         spreadsheetId = (String) options.get("spreadsheetId");
         range = (String) options.get("range");
-        valueInputOption = (String) options.get("valueInputOption");
+        majorDimension = Optional.ofNullable(options.get("majorDimension"))
+                                  .map(Object::toString)
+                                  .orElse(RangeCoordinate.DIMENSION_ROWS);
+        valueInputOption = Optional.ofNullable(options.get("valueInputOption"))
+                                   .map(Object::toString)
+                                   .orElse("USER_ENTERED");
 
         options.put("apiName",
                 GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName());
@@ -79,23 +89,39 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
                                 .orElse(spreadsheetId);
             }
 
-            for(Map.Entry<String, Object> rangeEntry : dataShape.entrySet()) {
-                if (rangeEntry.getValue() instanceof Map) {
-                    List<Object> rangeValues = new ArrayList<>();
-                    for (Object value : ((Map) rangeEntry.getValue()).values()) {
-                        rangeValues.add(value);
-                    }
-                    values.add(rangeValues);
-                }
-            }
+            final ObjectSchema spec = GoogleSheetsMetaDataHelper.createSchema(range, majorDimension, false);
+
+            spec.getProperties()
+                    .entrySet()
+                    .stream()
+                    .filter(specEntry -> specEntry.getValue() instanceof ObjectSchema)
+                    .forEach(specEntry -> {
+                        ObjectSchema propertySpec = ((ObjectSchema) specEntry.getValue());
+                        List<Object> rangeValues = new ArrayList<>();
+
+                        if (dataShape.containsKey(specEntry.getKey())) {
+                            Object dataShapeEntry = dataShape.get(specEntry.getKey());
+                            if (dataShapeEntry instanceof Map) {
+                                Map<?, ?> properties = (Map) dataShapeEntry;
+                                for (Map.Entry<String, JsonSchema> propertyEntry : propertySpec.getProperties().entrySet()) {
+                                    rangeValues.add(properties.getOrDefault(propertyEntry.getKey(), null));
+                                }
+                            }
+                        } else {
+                            propertySpec.getProperties().forEach((k, v) -> rangeValues.add(null));
+                        }
+
+                        values.add(rangeValues);
+                    });
         }
 
+        valueRange.setMajorDimension(majorDimension);
         valueRange.setValues(values);
 
         in.setHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID, spreadsheetId);
         in.setHeader(GoogleSheetsStreamConstants.RANGE, range);
+        in.setHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION, majorDimension);
         in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values", valueRange);
-        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption", Optional.ofNullable(valueInputOption)
-                                                                      .orElse("USER_ENTERED"));
+        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption", valueInputOption);
     }
 }

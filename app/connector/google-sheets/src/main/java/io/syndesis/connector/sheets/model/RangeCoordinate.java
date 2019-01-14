@@ -21,6 +21,9 @@ package io.syndesis.connector.sheets.model;
  */
 public final class RangeCoordinate extends CellCoordinate {
 
+    public static final String DIMENSION_ROWS = "ROWS";
+    public static final String DIMENSION_COLUMNS = "COLUMNS";
+
     private int rowStartIndex;
     private int rowEndIndex;
 

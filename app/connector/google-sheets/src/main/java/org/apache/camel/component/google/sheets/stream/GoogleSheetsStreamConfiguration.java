@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.api.services.sheets.v4.SheetsScopes;
+import io.syndesis.connector.sheets.model.RangeCoordinate;
 import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.spi.UriParam;
 import org.apache.camel.spi.UriParams;
@@ -68,8 +69,8 @@ public class GoogleSheetsStreamConfiguration implements Cloneable {
     @UriParam
     private boolean splitResults;
 
-    @UriParam(enums = "ROWS,COLUMNS,DIMENSION_UNSPECIFIED", defaultValue = "ROWS")
-    private String majorDimension = "ROWS";
+    @UriParam(enums = "ROWS,COLUMNS,DIMENSION_UNSPECIFIED", defaultValue = RangeCoordinate.DIMENSION_ROWS)
+    private String majorDimension = RangeCoordinate.DIMENSION_ROWS;
 
     @UriParam(enums = "FORMATTED_VALUE,UNFORMATTED_VALUE,FORMULA", defaultValue = "FORMATTED_VALUE")
     private String valueRenderOption = "FORMATTED_VALUE";
