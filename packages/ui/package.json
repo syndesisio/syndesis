@@ -33,7 +33,7 @@
     "jest-cli": "^23.6.0",
     "jest-dom": "^2.1.1",
     "microbundle": "^0.7.0",
-    "patternfly-react": "^2.22.3",
+    "patternfly-react": "^2.29.2",
     "react": "^16.6.0",
     "react-content-loader": "^3.2.0",
     "react-docgen-typescript-loader": "^3.0.0",
@@ -59,7 +59,7 @@
     "storybook": "start-storybook -p 9001"
   },
   "peerDependencies": {
-    "patternfly-react": "^2.22.3",
+    "patternfly-react": "^2.29.2",
     "react": "^16.6.0",
     "react-content-loader": "^3.2.0",
     "react-dom": "^16.6.0",

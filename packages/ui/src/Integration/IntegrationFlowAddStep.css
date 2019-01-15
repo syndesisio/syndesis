@@ -1,0 +1,37 @@
+.integration-flow-add-step {
+  display: flex;
+  justify-content: center;
+  z-index: 2;
+  position: relative;
+}
+
+.integration-flow-add-step::before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background-color: #d4d4d4;
+  top: 0;
+  bottom: 0;
+  left: calc(100% / 2);
+  z-index: -1;
+}
+
+.integration-flow-add-step__icon {
+  color: #158acc;
+  font-size: 24px;
+  display: inline;
+}
+
+.integration-flow-add-step__icon .fa {
+  background-color: #fff;
+}
+
+.integration-flow-add-step__links .popover-content {
+  display: flex;
+  flex-flow: column;
+}
+
+.integration-flow-add-step__links .popover-content a {
+  margin: 3px 0;
+}
+

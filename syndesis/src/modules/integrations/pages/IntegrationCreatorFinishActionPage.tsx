@@ -31,11 +31,11 @@ function getActionHref(
   });
 }
 
-export interface IntegrationCreatorFinishActionRouteParams {
+export interface IIntegrationCreatorFinishActionRouteParams {
   connectionId: string;
 }
 
-export interface IntegrationCreatorFinishActionRouteState {
+export interface IIntegrationCreatorFinishActionRouteState {
   startConnection: ConnectionOverview;
   startAction: Action;
   integration: Integration;
@@ -47,8 +47,8 @@ export class IntegrationCreatorFinishActionPage extends React.Component {
     return (
       <WithClosedNavigation>
         <WithRouteData<
-          IntegrationCreatorFinishActionRouteParams,
-          IntegrationCreatorFinishActionRouteState
+          IIntegrationCreatorFinishActionRouteParams,
+          IIntegrationCreatorFinishActionRouteState
         >>
           {(
             { connectionId },

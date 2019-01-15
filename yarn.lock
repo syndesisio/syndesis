@@ -11874,14 +11874,16 @@ patternfly-ng@^4.0.0:
     ng2-dragula "^1.5.0"
     ngx-bootstrap "^3.0.0"
 
-patternfly-react@^2.19.1, patternfly-react@^2.22.3:
-  version "2.25.1"
-  resolved "https://registry.yarnpkg.com/patternfly-react/-/patternfly-react-2.25.1.tgz#0a05830317219e4c7e27fcb5c703c9e19077fab4"
+patternfly-react@^2.29.2:
+  version "2.29.2"
+  resolved "https://registry.yarnpkg.com/patternfly-react/-/patternfly-react-2.29.2.tgz#e0ae2389ee04b9a9f66310be3d7c213150734fb5"
+  integrity sha512-6GVwuWbWigO4qoEyyJkvZW7GGdhxDmpxA/Si208kQE7izpNYfk6+Uy7t63RnM93v8US/agwFJBMK9MhJp0qaGA==
   dependencies:
     bootstrap-slider-without-jquery "^10.0.0"
     breakjs "^1.0.0"
     classnames "^2.2.5"
     css-element-queries "^1.0.1"
+    lodash "^4.17.11"
     patternfly "^3.58.0"
     react-bootstrap "^0.32.1"
     react-bootstrap-switch "^15.5.3"
@@ -11893,6 +11895,7 @@ patternfly-react@^2.19.1, patternfly-react@^2.22.3:
     react-motion "^0.5.2"
     reactabular-table "^8.14.0"
     recompose "^0.26.0"
+    uuid "^3.3.2"
   optionalDependencies:
     sortabular "^1.5.1"
     table-resolver "^3.2.0"

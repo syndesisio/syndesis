@@ -4,7 +4,7 @@ import * as React from 'react';
 import './IntegrationVerticalFlow.css';
 
 export interface IIntegrationVerticalFlowProps {
-  disabled: boolean;
+  disabled?: boolean;
   children(props: IIntegrationVerticalFlowState): any;
 }
 
@@ -16,6 +16,10 @@ export class IntegrationVerticalFlow extends React.Component<
   IIntegrationVerticalFlowProps,
   IIntegrationVerticalFlowState
 > {
+  public static defaultProps = {
+    disabled: false,
+  };
+
   public state = {
     expanded: localStorage.getItem('iec-vertical-flow-expanded') === 'y',
   };

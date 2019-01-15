@@ -3,12 +3,12 @@ import { include } from 'named-urls';
 
 const editorRoutes = {
   index: 'save-or-add-step',
-  addConnection: include(':position', {
+  addConnection: include('add-connection/:position', {
     selectConnection: '',
     selectAction: `:connectionId`,
     configureAction: `:connectionId/:actionId/:step?`,
   }),
-  addStep: include(':position', {
+  addStep: include('add-step/:position', {
     selectStep: '',
     configureStep: `:stepId`,
   }),

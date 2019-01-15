@@ -28,7 +28,7 @@ export function getFinishSelectActionHref(
   });
 }
 
-export interface IntegrationCreatorFinishConnectionRouteState {
+export interface IIntegrationCreatorFinishConnectionRouteState {
   startConnection: ConnectionOverview;
   startAction: Action;
   integration: Integration;
@@ -38,7 +38,7 @@ export class IntegrationCreatorFinishConnectionPage extends React.Component {
   public render() {
     return (
       <WithClosedNavigation>
-        <WithRouteData<null, IntegrationCreatorFinishConnectionRouteState>>
+        <WithRouteData<null, IIntegrationCreatorFinishConnectionRouteState>>
           {(_, { startConnection, startAction, integration }) => (
             <ContentWithSidebarLayout
               sidebar={

@@ -134,6 +134,38 @@ export default {
           },
         })
       ),
+      addConnection: {
+        selectConnection: makeResolver<{
+          position: number;
+          integration: Integration;
+        }>(
+          routes.create.configure.addConnection.selectConnection,
+          ({ position, integration }) => ({
+            params: {
+              position,
+            },
+            state: {
+              integration,
+            },
+          })
+        ),
+      },
+      addStep: {
+        selectStep: makeResolver<{
+          position: number;
+          integration: Integration;
+        }>(
+          routes.create.configure.addStep.selectStep,
+          ({ position, integration }) => ({
+            params: {
+              position,
+            },
+            state: {
+              integration,
+            },
+          })
+        ),
+      },
     },
   },
 };

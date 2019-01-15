@@ -16,7 +16,7 @@
     "i18next-browser-languagedetector": "^2.2.4",
     "immer": "^1.9.3",
     "named-urls": "^1.4.0",
-    "patternfly-react": "^2.19.1",
+    "patternfly-react": "^2.29.2",
     "react": "^16.5.2",
     "react-content-loader": "^3.2.0",
     "react-dom": "^16.5.2",
