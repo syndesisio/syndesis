@@ -5,17 +5,17 @@
 = Start an integration based on receiving AMQ messages
 
 To trigger execution of an integration based on receiving a message
-from an AMQ broker, add an AMQ connection as the start connection.
+from a Red Hat AMQ broker, add a Red Hat AMQ connection as the start connection.
 
 .Prerequisite
-You created an AMQ connection to the broker that you want to obtain
+You created a Red Hat AMQ connection to the Red Hat AMQ broker that you want to obtain
 messages from. 
 
 .Procedure
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click the AMQ connection that
+. On the *Choose a Start Connection* page, click the Red Hat AMQ connection that
 you want to use to start the integration. 
 . On the *Choose an Action* page, click the *Subscribe for messages* action
 to receive messages from the queue or topic you specify. 

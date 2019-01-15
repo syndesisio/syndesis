@@ -16,8 +16,8 @@
 |Retrieve data from an Amazon S3 bucket or copy data into a bucket. 
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-amq_connectors[AMQ]
-|Obtain messages from an ApacheMQ broker or publish messages to an ApacheMQ
-broker. 
+|Obtain messages from a Red Hat AMQ (ApacheMQ) broker or publish messages to 
+a Red Hat AMQ (ApacheMQ) broker. 
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-amqp_connectors[AMQP]
 |Obtain messages from an Advanced Message Queue Protocol broker or
@@ -101,6 +101,7 @@ If {prodname} does not provide a connector that you need, an
 experienced developer can create an extension that defines a custom
 connector. For information about coding the 
 extension and creating its `.jar` file, which you upload to 
-{prodname}, see 
-link:{LinkToolingUserGuide}#IgniteExtension[{NameOfToolingUserGuide},Develop extensions for {prodname} integrations] and 
-link:{LinkFuseOnlineIntegrationGuide}#developing-extensions_dev-extension[{NameOfFuseOnlineIntegrationGuide}, Develop extensions].
+{prodname}, see:
+
+* link:{LinkToolingUserGuide}#fuseonlineextension[{NameOfToolingUserGuide}, how to use Fuse tooling to develop extensions]
+* link:{LinkFuseOnlineIntegrationGuide}#developing-extensions_dev-extension[{NameOfFuseOnlineIntegrationGuide}, how to code extensions]

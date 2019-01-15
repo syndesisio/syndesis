@@ -4,12 +4,16 @@
 [id='create-amq-connection_{context}']
 = Create an AMQ connection
 
-In an integration, to obtain messages from or to publish messages to 
-an Apache ActiveMQ broker that does not support AMQP or an AMQ 6 broker, 
-create an AMQ connection, which you can add to an integration.
+In an integration, to obtain messages from or to publish messages to: 
+
+* An Apache ActiveMQ broker that does not support AMQP
+* An  AMQ 6 broker
+
+Create a Red Hat AMQ connection, which you can add to an integration.
 
 .Prerequisites
-For the AMQ broker that you want to connect to, you have the following:
+For the Red Hat AMQ broker that you want to connect to, you have the following:
+
 * Broker URL
 * User account credentials
 * Broker's PEM certificate text
@@ -20,7 +24,7 @@ For the AMQ broker that you want to connect to, you have the following:
 display any available connections.
 . In the upper right, click *Create Connection* to display
 connectors.  
-. Click the *AMQ Message Broker* connector.
+. Click the *Red Hat AMQ* connector.
 . Configure the connection by entering: 
 +
 .. In the *Broker URL* field, enter the location that you want to send data
@@ -36,10 +40,10 @@ environment, you can save some time by disabling
 *Check Certificates*. Disabling the checking of certificates is a convenience for
 development environments. For secure production environments, always enable 
 *Check Certificates*.
-.. In the *Broker Certificate* field, paste the broker's PEM certificate text.
+.. In the *Broker Certificate* field, paste the Red Hat AMQ broker's PEM certificate text.
 This is required except when you disable
 checking the certificates. 
-.. In the *Client Certificate* field, paste the client's PEM certificate text. 
+.. In the *Client Certificate* field, paste the Red Hat client's PEM certificate text. 
 Content in this field is always optional. 
 . Click *Validate*. {prodname} immediately tries to validate the 
 connection and displays a message that indicates whether 
@@ -48,13 +52,13 @@ details as needed and try again.
 . If validation is successful, click *Next*.
 . In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
-For example, you might enter `AMQ 1`.
+For example, you might enter `Red Hat AMQ 1`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
-enter `*Sample AMQ connection
+enter `*Sample Red Hat AMQ connection
 that uses a provided broker.*`
 . In the upper right, click *Create* to see that the connection you 
 created is now available. If you
 entered the example name, you would 
-see that *AMQ 1* appears as a connection that you can 
+see that *Red Hat AMQ 1* appears as a connection that you can 
 choose to add to an integration.
