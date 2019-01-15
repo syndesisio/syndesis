@@ -9,7 +9,7 @@ integration, after you add the start connection, you add the finish connection
 to the integration.
 
 .Prerequisites
-* You uploaded the provided OpenAPI specification to create the Todo App API 
+* You uploaded the provided OpenAPI document to create the Todo App API 
 connector. 
 * You used the Todo App API connector to create a Todo App API connection.
 

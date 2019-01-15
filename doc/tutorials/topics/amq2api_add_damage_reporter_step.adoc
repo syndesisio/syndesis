@@ -5,7 +5,7 @@
 = Add a damage reporter step
 
 With the start and finish connections in place, you are ready to
-add the custom step that receives the messages from the AMQ broker
+add the custom step that receives the messages from the Red Hat AMQ broker
 and identifies any items that were damaged when they were received.
 
 .Prerequisite

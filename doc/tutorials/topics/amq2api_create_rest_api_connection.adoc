@@ -6,10 +6,12 @@
 
 In an integration, before you can connect to a REST API, you create a REST API 
 client connector and then use that connector to create a connection. 
-Follow the instructions here to create a connection to the To Do app REST API. 
+You already created a REST API connector for the To Do app. Follow the 
+instructions here to use that connector to create a connection to the 
+To Do app REST API. 
 
 .Prerequisite
-* You created the Todo App API connector. 
+* You created the Todo App REST API connector. 
 
 .Procedure
 

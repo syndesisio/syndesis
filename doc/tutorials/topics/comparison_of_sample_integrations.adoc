@@ -22,7 +22,7 @@ and Salesforce creates a new contact.
 |Captures updates in Salesforce and then calls a database
 stored procedure to synchronize a particular database table
 with the Salesforce updates.
-|Obtains delivery records from an AMQ broker, executes
+|Obtains delivery records from a Red Hat AMQ broker, executes
 a custom step to identify any
 items that were damaged when they were received, and 
 connects to a REST API to provide contact information for vendors of
@@ -36,7 +36,7 @@ the next connected application in the integration can operate on, filtering data
 to determine whether to continue integration execution. 
 |Connecting to Salesforce and a SQL database, OAuth support, data mapping, 
 how to update a SQL database as part of an integration.
-|Connecting to an AMQ broker and a REST API, data mapping, 
+|Connecting to a Red Hat AMQ broker and a REST API, data mapping, 
 uploading extensions for a step and for a REST API client
 connector, using a custom step and a custom API client connection.
 

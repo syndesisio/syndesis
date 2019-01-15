@@ -4,7 +4,7 @@
 [id='amq2api-name-and-publish_{context}']
 = Give the integration a name and deploy it
 
-The AMQ to REST API sample integration is complete when it has an AMQ start
+The AMQ to REST API sample integration is complete when it has a Red Hat AMQ start
 connection, a Damage Reporter step, a data mapper step, and it finishes
 with a Todo App Client API connection. Follow the instructions here to 
 deploy it. 

@@ -6,12 +6,12 @@
 = Implement an AMQ to REST API sample integration
 
 :context: amq2api
-This sample integration connects to an AMQ broker to obtain item
+This sample integration connects to a Red Hat AMQ broker to obtain item
 delivery records for a hypothetical enterprise. The integration then executes
 a custom step that operates on the records to identify any
 items that were damaged when they were received. After a simple data mapping,
 the integration connects to
-a REST API to obtain and provide contact information for vendors of
+a REST API to obtain contact information for vendors of
 damaged items.
 
 The other sample integrations use connectors and data operations that are built

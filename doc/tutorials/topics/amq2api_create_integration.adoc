@@ -15,7 +15,7 @@ To create and deploy the AMQ to REST API sample integration, the main steps are:
 . <<amq2api-name-and-publish_{context}>>
 
 .Prerequisites
-* You created a connection to the provided AMQ broker. 
+* You created a connection to the provided Red Hat AMQ broker. 
 * You created an API Client connection to the provided Todo app.
 * You uploaded the extension that provides the Damage Reporter step. 
 

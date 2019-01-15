@@ -27,14 +27,16 @@ https://github.com/syndesisio/fuse-online-sample-extension/releases.
 . In {prodname}, in the left panel, click *Customizations*. 
 . At the top, click *Extensions*. 
 . Click *Import Extension*. 
-. Click *Browse* and select the downloaded `.jar` file that contains the 
+. Click *Choose File* and select the downloaded `.jar` file that contains the 
 extension. 
 {prodname} validates the file, extracts and displays the extension's 
-name, ID, and description, and lists *Damage Reporter* as the custom step
+ID, name, description, and type, and lists *Damage Reporter* as the custom step
 that the extension defines.
-. Click *Import*. {prodname} makes the custom step available and displays
+. Click *Import Extension*. {prodname} makes the custom step available and displays
 the extension details page.
 
-.Additional resource
-For more information about coding an extension and creating its `.jar` file, see the
-{LinkToolingUserGuide}igniteextension/[{NameOfToolingUserGuide}].
+.Additional resources
+For information about coding an extension and creating its `.jar` file, see: 
+
+* link:{LinkToolingUserGuide}#fuseonlineextension[{NameOfToolingUserGuide} - Use Fuse toolineg to develop an extension.]
+* link:{LinkFuseOnlineIntegrationGuide}#developing-extensions_custom[{NameOfFuseOnlineIntegrationGuide} - Manually code an extension.]
