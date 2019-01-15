@@ -4,11 +4,11 @@
 [id='adding-amq-connection-finish_{context}']
 = Finish an integration by publishing AMQ messages
 
-To finish an integration by publishing messages to an AMQ broker, 
-add an AMQ connection as the finish connection.
+To finish an integration by publishing messages to a Red Hat AMQ broker, 
+add a Red Hat AMQ connection as the finish connection.
 
 .Prerequisites
-* You created a connection to the AMQ broker that you want to publish 
+* You created a connection to the Red Hat AMQ broker that you want to publish 
 messages to.
 * You are creating an integration and {prodname} is prompting you
 to choose the 
@@ -17,7 +17,7 @@ connection.
 
 .Procedure
 
-. On the *Choose a Finish Connection* page, click the AMQ connection that
+. On the *Choose a Finish Connection* page, click the Red Hat AMQ connection that
 you want to use to finish the integration. 
 . On the *Choose an Action* page, click the *Publish messages* action to
 publish messages to the queue or topic you specify. 

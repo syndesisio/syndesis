@@ -5,11 +5,11 @@
 = Connect to AMQ
 :context: amq
 
-In an integration, you can obtain messages from an 
-ApacheMQ (AMQ) broker or publish messages to 
-an AMQ broker. AMQ uses the OpenWire protocol for communication
+In an integration, you can obtain messages from a
+Red Hat AMQ broker or publish messages to 
+a Red Hat AMQ broker. Red Hat AMQ uses the OpenWire protocol for communication
 between clients and message brokers. To communicate with the following 
-broker types, use the AMQ connector to create a connection to the
+broker types, use the Red Hat AMQ connector to create a connection to the
 broker of interest:
 
 * Apache ActiveMQ broker that does not support AMQP
@@ -24,7 +24,7 @@ to create a connection to the broker of interest:
 * AMQ 7 broker
 * EnMasse, which is an open source messaging platform
 
-To use the AMQ connector, see:
+To use the Red Hat AMQ connector, see:
 
 * <<create-amq-connection_{context}>>
 * <<adding-amq-connection-start_{context}>>
