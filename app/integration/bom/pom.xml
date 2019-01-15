@@ -28,7 +28,7 @@
 
   <properties>
     <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
-    <camel.version>2.21.0.fuse-720029</camel.version>
+    <camel.version>2.21.0.fuse-730026</camel.version>
     <atlasmap.version>1.38.1</atlasmap.version>
   </properties>
 
