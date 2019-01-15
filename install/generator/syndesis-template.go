@@ -37,10 +37,11 @@ var installCommand = &cobra.Command{
 }
 
 type supportImages struct {
-	Postgresql string
-	OAuthProxy string
-	Prometheus string
-	Grafana    string
+	Postgresql       string
+	OAuthProxy       string
+	Prometheus       string
+	Grafana          string
+	PostgresExporter string
 }
 
 type syndesisImages struct {
@@ -52,22 +53,24 @@ type syndesisImages struct {
 }
 
 type images struct {
-	Support               supportImages
-	Syndesis              syndesisImages
-	ImageStreamNamespace  string
-	SyndesisImagesPrefix  string
-	OAuthProxyImagePrefix string
-	PrometheusImagePrefix string
-	GrafanaImagePrefix    string
+	Support                     supportImages
+	Syndesis                    syndesisImages
+	ImageStreamNamespace        string
+	SyndesisImagesPrefix        string
+	OAuthProxyImagePrefix       string
+	PrometheusImagePrefix       string
+	GrafanaImagePrefix          string
+	PostgresExporterImagePrefix string
 }
 
 type tags struct {
-	Syndesis   string
-	Postgresql string
-	OAuthProxy string
-	Prometheus string
-	Upgrade    string
-	Grafana    string
+	Syndesis         string
+	Postgresql       string
+	OAuthProxy       string
+	Prometheus       string
+	Upgrade          string
+	Grafana          string
+	PostgresExporter string
 }
 
 type Context struct {
@@ -89,15 +92,17 @@ type Context struct {
 // TODO: Could be added from a local configuration file
 var syndesisContext = Context{
 	Images: images{
-		SyndesisImagesPrefix:  "syndesis",
-		OAuthProxyImagePrefix: "openshift",
-		PrometheusImagePrefix: "prom",
-		GrafanaImagePrefix:    "grafana",
+		SyndesisImagesPrefix:        "syndesis",
+		OAuthProxyImagePrefix:       "openshift",
+		PrometheusImagePrefix:       "prom",
+		GrafanaImagePrefix:          "grafana",
+		PostgresExporterImagePrefix: "wrouesnel",
 		Support: supportImages{
-			Postgresql: "postgresql",
-			OAuthProxy: "oauth-proxy",
-			Prometheus: "prometheus",
-			Grafana:    "grafana",
+			Postgresql:       "postgresql",
+			OAuthProxy:       "oauth-proxy",
+			Prometheus:       "prometheus",
+			Grafana:          "grafana",
+			PostgresExporter: "postgres_exporter",
 		},
 		Syndesis: syndesisImages{
 			Rest:     "syndesis-server",
@@ -108,26 +113,29 @@ var syndesisContext = Context{
 		},
 	},
 	Tags: tags{
-		Postgresql: "9.5",
-		OAuthProxy: "v1.1.0",
-		Prometheus: "v2.1.0",
-		Grafana:    "5.4.2",
+		Postgresql:       "9.5",
+		OAuthProxy:       "v1.1.0",
+		Prometheus:       "v2.1.0",
+		Grafana:          "5.4.2",
+		PostgresExporter: "v0.4.7",
 	},
 }
 
 // TODO: Update with product image references here
 var productContext = Context{
 	Images: images{
-		ImageStreamNamespace:  "fuse-ignite",
-		SyndesisImagesPrefix:  "fuse7",
-		OAuthProxyImagePrefix: "openshift",
-		PrometheusImagePrefix: "prom",
-		GrafanaImagePrefix:    "grafana",
+		ImageStreamNamespace:        "fuse-ignite",
+		SyndesisImagesPrefix:        "fuse7",
+		OAuthProxyImagePrefix:       "openshift",
+		PrometheusImagePrefix:       "prom",
+		GrafanaImagePrefix:          "grafana",
+		PostgresExporterImagePrefix: "wrouesnel",
 		Support: supportImages{
-			Postgresql: "postgresql",
-			OAuthProxy: "oauth-proxy",
-			Prometheus: "prometheus",
-			Grafana:    "grafana",
+			Postgresql:       "postgresql",
+			OAuthProxy:       "oauth-proxy",
+			Prometheus:       "prometheus",
+			Grafana:          "grafana",
+			PostgresExporter: "postgres_exporter",
 		},
 		Syndesis: syndesisImages{
 			Rest:     "fuse-ignite-server",
@@ -138,10 +146,11 @@ var productContext = Context{
 		},
 	},
 	Tags: tags{
-		Postgresql: "9.5",
-		OAuthProxy: "v1.1.0",
-		Prometheus: "v2.1.0",
-		Grafana:    "5.4.2",
+		Postgresql:       "9.5",
+		OAuthProxy:       "v1.1.0",
+		Prometheus:       "v2.1.0",
+		Grafana:          "5.4.2",
+		PostgresExporter: "v0.4.7",
 	},
 	Registry: "registry.fuse-ignite.openshift.com",
 }

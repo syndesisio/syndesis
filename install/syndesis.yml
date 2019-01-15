@@ -282,6 +282,23 @@ objects:
       importPolicy:
         scheduled: true
       name: "5.4.2"
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: postgres_exporter
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-db-metrics
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/wrouesnel/postgres_exporter:v0.4.7
+      importPolicy:
+        scheduled: true
+      name: "v0.4.7"
 
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -492,6 +509,110 @@ objects:
        }
       }
 
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: syndesis-db-metrics-config
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-db-metrics
+  data:
+    queries.yaml: |
+        pg_database:
+          query: " SELECT pg_database.datname, pg_database_size(pg_database.datname) as size FROM pg_database"
+          metrics:
+            - datname:
+                usage: "LABEL"
+                description: "Name of the database"
+            - size:
+                usage: "GAUGE"
+                description: "Disk space used by the database"
+
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    name: syndesis-db-metrics
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-db-metrics
+  spec:
+    replicas: 1
+    selector:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-db-metrics
+    strategy:
+      type: Recreate
+      resources:
+        limits:
+          memory: "256Mi"
+        requests:
+          memory: "20Mi"
+    template:
+      metadata:
+        labels:
+          app: syndesis
+          syndesis.io/app: syndesis
+          syndesis.io/type: infrastructure
+          syndesis.io/component: syndesis-db-metrics
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "9187"
+      spec:
+        containers:
+        - capabilities: {}
+          env:
+          - name: DATA_SOURCE_NAME
+            value: postgresql://${POSTGRESQL_USER}:${POSTGRESQL_PASSWORD}@syndesis-db:5432/syndesis?sslmode=disable
+          - name: PG_EXPORTER_EXTEND_QUERY_PATH
+            value: /etc/postgres/exporter/queries.yaml
+          image: ' '
+
+          imagePullPolicy: IfNotPresent
+          name: syndesis-db-metrics
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              port: 9187
+              path: /metrics
+            initialDelaySeconds: 60
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              port: 9187
+              path: /metrics
+            initialDelaySeconds: 30
+          ports:
+          - containerPort: 9187
+            name: prometheus
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              memory: 20Mi
+          volumeMounts:
+          - mountPath: /etc/postgres/exporter
+            name: syndesis-db-metrics-config
+        volumes:
+        - name: syndesis-db-metrics-config
+          configMap:
+            name: syndesis-db-metrics-config
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-db-metrics
+        from:
+          kind: ImageStreamTag
+          name: postgres_exporter:v0.4.7
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+
+    - type: ConfigChange
 - apiVersion: v1
   kind: ConfigMap
   metadata:
@@ -1490,6 +1611,36 @@ objects:
             regex: tsdb_(.+)
             action: drop
 
+        - job_name: syndesis-db
+          kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - ${OPENSHIFT_PROJECT}
+
+          relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+            target_label: __address__
+          - source_labels: [__meta_kubernetes_pod_label_syndesis_io_component]
+            action: keep
+            regex: syndesis-db
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+
+          metric_relabel_configs:
+          - source_labels: [__name__]
+            regex: go_(.+)
+            action: drop
+          - source_labels: [datname]
+            regex: (postgres|grafana|template.*)
+            action: drop
+
         - job_name: integration-pods
 
           kubernetes_sd_configs:
@@ -1502,6 +1653,9 @@ objects:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
             action: keep
             regex: true
+          - source_labels: [__meta_kubernetes_pod_label_syndesis_io_type]
+            action: keep
+            regex: integration
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
             action: replace
             target_label: __metrics_path__
@@ -1521,7 +1675,6 @@ objects:
           - source_labels: [__meta_kubernetes_pod_name]
             action: replace
             target_label: kubernetes_pod_name
-
           metric_relabel_configs:
           - source_labels: [__name__]
             regex: jmx_(.+)
