@@ -10,7 +10,7 @@ metadata:
 #
 # Allow localhost refs: false
 # Use docker images: false
-# Syndesis Tag: 1.5.10
+# Syndesis Tag: 1.5
 # Prometheus Tag: v2.1.0
 # Postgresql Tag: 9.5
 # OAuthProxy Tag: v1.1.0
@@ -182,10 +182,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-server:1.5.10
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-server:1.5
       importPolicy:
         scheduled: true
-      name: "1.5.10"
+      name: "1.5"
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -199,10 +199,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:1.5.10
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:1.5
       importPolicy:
         scheduled: true
-      name: "1.5.10"
+      name: "1.5"
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -216,10 +216,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-meta:1.5.10
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-meta:1.5
       importPolicy:
         scheduled: true
-      name: "1.5.10"
+      name: "1.5"
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -268,10 +268,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:1.5.10
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:1.5
       importPolicy:
         scheduled: true
-      name: "1.5.10"
+      name: "1.5"
 
 - apiVersion: v1
   kind: Secret
@@ -303,7 +303,7 @@ objects:
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
   stringData:
-    syndesis: "1.5.10"
+    syndesis: "1.5"
     postgresql: "9.5"
     oauthproxy: "v1.1.0"
     prometheus: "v2.1.0"
@@ -419,7 +419,7 @@ objects:
         - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: syndesis-ui:1.5.10
+          name: syndesis-ui:1.5
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -820,7 +820,7 @@ objects:
         - syndesis-meta
         from:
           kind: ImageStreamTag
-          name: syndesis-meta:1.5.10
+          name: syndesis-meta:1.5
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -1151,7 +1151,7 @@ objects:
         - syndesis-server
         from:
           kind: ImageStreamTag
-          name: syndesis-server:1.5.10
+          name: syndesis-server:1.5
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -1211,7 +1211,7 @@ objects:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: syndesis-s2i:1.5.10
+        builderImageStreamTag: syndesis-s2i:1.5
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
