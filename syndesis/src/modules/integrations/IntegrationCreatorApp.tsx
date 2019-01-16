@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import {
+  IntegrationCreatorConfigureActionPage,
   IntegrationCreatorFinishActionPage,
   IntegrationCreatorFinishConfigurationPage,
   IntegrationCreatorFinishConnectionPage,
@@ -61,6 +62,11 @@ export class IntegrationCreatorApp extends React.Component {
           path={routes.create.configure.addConnection.selectAction}
           exact={true}
           component={IntegrationCreatorSelectActionPage}
+        />
+        <Route
+          path={routes.create.configure.addConnection.configureAction}
+          exact={true}
+          component={IntegrationCreatorConfigureActionPage}
         />
       </Switch>
     );

@@ -86,7 +86,7 @@ export class IntegrationCreatorSelectConnectionPage extends React.Component {
                           <span>Choose a connection</span>
                         </Breadcrumb>
                       }
-                      connections={data.connectionsWithFromAction}
+                      connections={data.connectionsWithToAction}
                       loading={!hasData}
                       error={error}
                       i18nTitle={'Choose a connection'}

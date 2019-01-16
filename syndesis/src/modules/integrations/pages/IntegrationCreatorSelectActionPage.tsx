@@ -128,7 +128,7 @@ export class IntegrationCreatorSelectActionPage extends React.Component {
                               <span>Choose action</span>
                             </Breadcrumb>
                           }
-                          actions={data.actionsWithFrom.sort((a, b) =>
+                          actions={data.actionsWithTo.sort((a, b) =>
                             a.name.localeCompare(b.name)
                           )}
                           getActionHref={getCreateConfigureActionHref.bind(
