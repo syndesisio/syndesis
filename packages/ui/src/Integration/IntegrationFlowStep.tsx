@@ -1,4 +1,5 @@
 import classnames from 'classnames';
+import * as H from 'history';
 import { OverlayTrigger, Tooltip } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -9,7 +10,7 @@ export interface IIntegrationFlowStepProps {
   showDetails: boolean;
   i18nTooltip: string;
   active?: boolean;
-  href?: string;
+  href?: H.LocationDescriptor;
 }
 
 export class IntegrationFlowStep extends React.Component<

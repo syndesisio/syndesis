@@ -7,26 +7,11 @@ import {
   IntegrationVerticalFlow,
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
-import * as H from 'history';
 import * as React from 'react';
 import { WithClosedNavigation } from '../../../containers';
 import { IntegrationEditorChooseConnection } from '../components';
 import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
-import resolvers from '../resolvers';
-
-export function getFinishSelectActionHref(
-  startConnection: ConnectionOverview,
-  startAction: Action,
-  integration: Integration,
-  connection: ConnectionOverview
-): H.LocationDescriptor {
-  return resolvers.create.finish.selectAction({
-    finishConnection: connection,
-    integration,
-    startAction,
-    startConnection,
-  });
-}
+import { getFinishSelectActionHref } from './resolversHelpers';
 
 export interface IIntegrationCreatorFinishConnectionRouteState {
   startConnection: ConnectionOverview;
@@ -62,7 +47,7 @@ export class IntegrationCreatorFinishConnectionPage extends React.Component {
                         dataType={'TODO'}
                       />
                       <IntegrationFlowStepGeneric
-                        icon={'+'}
+                        icon={<i className={'fa fa-plus'} />}
                         i18nTitle={'2. Finish'}
                         i18nTooltip={'Finish'}
                         active={true}

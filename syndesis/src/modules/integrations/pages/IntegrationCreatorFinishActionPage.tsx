@@ -8,28 +8,11 @@ import {
   Loader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
-import * as H from 'history';
 import * as React from 'react';
 import { WithClosedNavigation } from '../../../containers';
 import { IntegrationEditorChooseAction } from '../components';
 import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
-import resolvers from '../resolvers';
-
-function getActionHref(
-  startConnection: ConnectionOverview,
-  startAction: Action,
-  finishConnection: ConnectionOverview,
-  integration: Integration,
-  action: Action
-): H.LocationDescriptor {
-  return resolvers.create.finish.configureAction({
-    actionId: action.id!,
-    finishConnection,
-    integration,
-    startAction,
-    startConnection,
-  });
-}
+import { getFinishConfigureActionHref } from './resolversHelpers';
 
 export interface IIntegrationCreatorFinishActionRouteParams {
   connectionId: string;
@@ -119,7 +102,7 @@ export class IntegrationCreatorFinishActionPage extends React.Component {
                           actions={data.actionsWithTo.sort((a, b) =>
                             a.name.localeCompare(b.name)
                           )}
-                          getActionHref={getActionHref.bind(
+                          getActionHref={getFinishConfigureActionHref.bind(
                             null,
                             startConnection,
                             startAction,

@@ -17,7 +17,7 @@ import resolvers from '../resolvers';
 export interface IIntegrationCreatorStartConfigurationPageRouteParams {
   actionId: string;
   connectionId: string;
-  step?: number;
+  step?: string;
 }
 
 export interface IIntegrationCreatorStartConfigurationPageRouteState {
@@ -36,10 +36,11 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
               IIntegrationCreatorStartConfigurationPageRouteState
             >>
               {(
-                { actionId, connectionId, step = 0 },
+                { actionId, connectionId, step = '0' },
                 { connection, integration = getEmptyIntegration() },
                 { history }
               ) => {
+                const stepAsNumber = parseInt(step, 10);
                 const onUpdatedIntegration = ({
                   action,
                   updatedIntegration,
@@ -51,7 +52,7 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                         actionId,
                         connection,
                         integration: updatedIntegration,
-                        step: step + 1,
+                        step: stepAsNumber + 1,
                       })
                     );
                   } else {
@@ -85,7 +86,7 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                               description={'Configure the action'}
                             />
                             <IntegrationFlowStepWithOverview
-                              icon={'+'}
+                              icon={<i className={'fa fa-plus'} />}
                               i18nTitle={'2. Finish'}
                               i18nTooltip={'Finish'}
                               active={false}
@@ -109,7 +110,7 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                         integration={integration}
                         connection={connection}
                         actionId={actionId}
-                        configurationStep={step}
+                        configurationStep={stepAsNumber}
                         flow={0}
                         flowStep={0}
                         backLink={resolvers.create.start.selectAction({

@@ -1,5 +1,4 @@
 import { WithConnections } from '@syndesis/api';
-import { Connection } from '@syndesis/models';
 import {
   ContentWithSidebarLayout,
   IntegrationFlowStepGeneric,
@@ -10,11 +9,7 @@ import * as React from 'react';
 import { WithClosedNavigation } from '../../../containers';
 import { IntegrationEditorChooseConnection } from '../components';
 import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
-import resolvers from '../resolvers';
-
-export function getStartSelectActionHref(connection: Connection) {
-  return resolvers.create.start.selectAction({ connection });
-}
+import { getStartSelectActionHref } from './resolversHelpers';
 
 export class IntegrationCreatorStartConnectionPage extends React.Component {
   public render() {
@@ -26,7 +21,7 @@ export class IntegrationCreatorStartConnectionPage extends React.Component {
               {({ expanded }) => (
                 <>
                   <IntegrationFlowStepGeneric
-                    icon={'+'}
+                    icon={<i className={'fa fa-plus'} />}
                     i18nTitle={'1. Start'}
                     i18nTooltip={'Start'}
                     active={true}
@@ -34,7 +29,7 @@ export class IntegrationCreatorStartConnectionPage extends React.Component {
                     description={'Choose a connection'}
                   />
                   <IntegrationFlowStepWithOverview
-                    icon={'+'}
+                    icon={<i className={'fa fa-plus'} />}
                     i18nTitle={'2. Finish'}
                     i18nTooltip={'Finish'}
                     active={false}

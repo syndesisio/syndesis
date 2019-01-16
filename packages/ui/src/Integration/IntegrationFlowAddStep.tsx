@@ -1,3 +1,4 @@
+import * as H from 'history';
 import { Overlay, Popover } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -6,9 +7,9 @@ import './IntegrationFlowAddStep.css';
 export interface IIntegrationFlowAddStepProps {
   showDetails: boolean;
   forceTooltip?: boolean;
-  addStepHref?: string;
+  addStepHref?: H.LocationDescriptor;
   i18nAddStep?: string;
-  addConnectionHref?: string;
+  addConnectionHref?: H.LocationDescriptor;
   i18nAddConnection?: string;
 }
 

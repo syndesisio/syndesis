@@ -16,7 +16,7 @@ import resolvers from '../resolvers';
 export interface IIntegrationCreatorFinishConfigurationPageRouteParams {
   actionId: string;
   connectionId: string;
-  step?: number;
+  step?: string;
 }
 
 export interface IIntegrationCreatorFinishConfigurationPageRouteState {
@@ -35,10 +35,11 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
           IIntegrationCreatorFinishConfigurationPageRouteState
         >>
           {(
-            { actionId, connectionId, step = 0 },
+            { actionId, connectionId, step = '0' },
             { startAction, startConnection, finishConnection, integration },
             { history }
           ) => {
+            const stepAsNumber = parseInt(step, 10);
             const onUpdatedIntegration = ({
               updatedIntegration,
               moreConfigurationSteps,
@@ -51,7 +52,7 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                     integration: updatedIntegration,
                     startAction,
                     startConnection,
-                    step: step + 1,
+                    step: stepAsNumber + 1,
                   })
                 );
               } else {
@@ -116,7 +117,7 @@ export class IntegrationCreatorFinishConfigurationPage extends React.Component {
                     integration={integration}
                     connection={finishConnection}
                     actionId={actionId}
-                    configurationStep={step}
+                    configurationStep={stepAsNumber}
                     flow={0}
                     flowStep={1}
                     backLink={resolvers.create.finish.selectAction({

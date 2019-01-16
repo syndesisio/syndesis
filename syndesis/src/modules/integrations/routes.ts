@@ -3,12 +3,12 @@ import { include } from 'named-urls';
 
 const editorRoutes = {
   index: 'save-or-add-step',
-  addConnection: include('add-connection/:position', {
+  addConnection: include(':position/connection', {
     selectConnection: '',
     selectAction: `:connectionId`,
     configureAction: `:connectionId/:actionId/:step?`,
   }),
-  addStep: include('add-step/:position', {
+  addStep: include(':position/step', {
     selectStep: '',
     configureStep: `:stepId`,
   }),
@@ -18,7 +18,6 @@ const editorRoutes = {
 export default include('/integrations', {
   list: '',
   create: include('create', {
-    root: '',
     start: include('start', {
       selectConnection: '',
       selectAction: `:connectionId`,
@@ -30,6 +29,7 @@ export default include('/integrations', {
       configureAction: `:connectionId/:actionId/:step?`,
     }),
     configure: include('configure', editorRoutes),
+    root: '',
   }),
   integration: include(':integrationId', {
     details: '',

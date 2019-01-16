@@ -1,3 +1,5 @@
+export * from './IntegrationCreatorSelectConnectionPage';
+export * from './IntegrationCreatorSelectActionPage';
 export * from './IntegrationCreatorStartActionPage';
 export * from './IntegrationCreatorStartConfigurationPage';
 export * from './IntegrationCreatorStartConnectionPage';

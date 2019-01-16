@@ -1,5 +1,5 @@
 import { WithConnection } from '@syndesis/api';
-import { Action, ConnectionOverview } from '@syndesis/models';
+import { ConnectionOverview } from '@syndesis/models';
 import {
   ContentWithSidebarLayout,
   IntegrationFlowStepGeneric,
@@ -8,22 +8,11 @@ import {
   Loader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
-import * as H from 'history';
 import * as React from 'react';
 import { WithClosedNavigation } from '../../../containers';
 import { IntegrationEditorChooseAction } from '../components';
 import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
-import resolvers from '../resolvers';
-
-function getActionHref(
-  connection: ConnectionOverview,
-  action: Action
-): H.LocationDescriptor {
-  return resolvers.create.start.configureAction({
-    actionId: action.id!,
-    connection,
-  });
-}
+import { getStartConfigureActionHref } from './resolversHelpers';
 
 export interface IIntegrationCreatorStartActionRouteParams {
   connectionId: string;
@@ -82,7 +71,7 @@ export class IntegrationCreatorStartActionPage extends React.Component {
                                   description={'Choose an action'}
                                 />
                                 <IntegrationFlowStepWithOverview
-                                  icon={'+'}
+                                  icon={<i className={'fa fa-plus'} />}
                                   i18nTitle={'2. Finish'}
                                   i18nTooltip={'Finish'}
                                   active={false}
@@ -103,7 +92,10 @@ export class IntegrationCreatorStartActionPage extends React.Component {
                             actions={data.actionsWithFrom.sort((a, b) =>
                               a.name.localeCompare(b.name)
                             )}
-                            getActionHref={getActionHref.bind(null, data)}
+                            getActionHref={getStartConfigureActionHref.bind(
+                              null,
+                              data
+                            )}
                           />
                         }
                       />

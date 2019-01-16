@@ -5,6 +5,7 @@ import {
   IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
 } from '@syndesis/ui';
+import * as H from 'history';
 import * as React from 'react';
 
 export interface IIntegrationEditorSidebarProps {
@@ -13,9 +14,14 @@ export interface IIntegrationEditorSidebarProps {
   activeIndex?: number;
   addAtIndex?: number;
   addType?: 'connection' | 'step';
+  addI18nTitle?: string;
+  addI18nTooltip?: string;
+  addI18nDescription?: string;
   forceTooltips?: boolean;
-  addStepHref?(idx: number): string;
-  addConnectionHref?(idx: number): string;
+  addConnectionHref?(idx: number): H.LocationDescriptor;
+  addStepHref?(idx: number): H.LocationDescriptor;
+  configureConnectionHref(idx: number, step: Step): H.LocationDescriptor;
+  configureStepHref(idx: number, step: Step): H.LocationDescriptor;
 }
 
 export class IntegrationEditorSidebar extends React.Component<
@@ -36,36 +42,55 @@ export class IntegrationEditorSidebar extends React.Component<
               <IntegrationFlowAddStep
                 forceTooltip={this.props.forceTooltips}
                 showDetails={expanded}
-                addStepHref={this.props.addStepHref!(idx + 1)}
+                addStepHref={
+                  this.props.disabled
+                    ? undefined
+                    : this.props.addStepHref!(idx + 1)
+                }
                 i18nAddStep={'Add a step'}
-                addConnectionHref={this.props.addConnectionHref!(idx + 1)}
+                addConnectionHref={
+                  this.props.disabled
+                    ? undefined
+                    : this.props.addConnectionHref!(idx + 1)
+                }
                 i18nAddConnection={'Add a connection'}
               />
             );
             const activeAddStep = (
               <IntegrationFlowStepGeneric
-                icon={'+'}
-                i18nTitle={'1. Start'}
-                i18nTooltip={'Start'}
+                icon={<i className={'fa fa-plus'} />}
+                i18nTitle={this.props.addI18nTitle!}
+                i18nTooltip={this.props.addI18nTooltip!}
                 active={true}
                 showDetails={expanded}
-                description={'Choose a connection'}
+                description={this.props.addI18nDescription!}
               />
             );
             return (
               <React.Fragment key={idx}>
-                <IntegrationFlowStepWithOverview
-                  icon={<img src={s.connection!.icon} width={24} height={24} />}
-                  i18nTitle={`${idx + 1}. ${s.action!.name}`}
-                  i18nTooltip={`${idx + 1}. ${s.action!.name}`}
-                  active={false}
-                  showDetails={expanded}
-                  name={s.connection!.connector!.name}
-                  action={s.action!.name}
-                  dataType={'TODO'}
-                />
+                {s.stepKind === 'endpoint' && (
+                  <IntegrationFlowStepWithOverview
+                    icon={
+                      <img src={s.connection!.icon} width={24} height={24} />
+                    }
+                    i18nTitle={`${idx + 1}. ${s.action!.name}`}
+                    i18nTooltip={`${idx + 1}. ${s.action!.name}`}
+                    active={false}
+                    showDetails={expanded}
+                    name={s.connection!.connector!.name}
+                    action={s.action!.name}
+                    dataType={'TODO'}
+                    href={
+                      this.props.disabled
+                        ? undefined
+                        : this.props.configureConnectionHref(idx, s)
+                    }
+                  />
+                )}
                 {hasAddStep &&
-                  (this.props.addAtIndex === idx ? activeAddStep : addStep)}
+                  (this.props.addAtIndex! - 1 === idx
+                    ? activeAddStep
+                    : addStep)}
               </React.Fragment>
             );
           })

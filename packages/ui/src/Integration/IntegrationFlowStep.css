@@ -11,7 +11,7 @@
   background-color: #d4d4d4;
   top: -20px; /* same as root container top margin */
   bottom: 0;
-  left: calc(100% / 2);
+  left: 77px;
   z-index: 0;
 }
 
@@ -22,7 +22,7 @@
   background-color: #d4d4d4;
   top: 0;
   bottom: -20px; /* same as root container bottom margin */
-  left: calc(100% / 2);
+  left: 77px;
   z-index: 0;
 }
 

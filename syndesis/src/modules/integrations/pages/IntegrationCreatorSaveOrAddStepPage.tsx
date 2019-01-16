@@ -1,5 +1,5 @@
 import { WithIntegrationHelpers } from '@syndesis/api';
-import { Integration } from '@syndesis/models';
+import { Integration, Step } from '@syndesis/models';
 import { Breadcrumb, ContentWithSidebarLayout, PageHeader } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -7,20 +7,11 @@ import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../containers';
 import { IntegrationEditorSidebar } from '../components';
 import resolvers from '../resolvers';
-
-function getAddConnectionHref(integration: Integration, position: number) {
-  return resolvers.create.configure.addConnection.selectConnection({
-    integration,
-    position,
-  });
-}
-
-function getAddStepHref(integration: Integration, position: number) {
-  return resolvers.create.configure.addStep.selectStep({
-    integration,
-    position,
-  });
-}
+import {
+  getCreateAddConnectionHref,
+  getCreateAddStepHref,
+  getCreateConfigureActionHref,
+} from './resolversHelpers';
 
 export interface IIntegrationCreatorSaveOrAddStepPageState {
   forceSidebarTooltips: boolean;
@@ -74,18 +65,34 @@ export class IntegrationCreatorSaveOrAddStepPage extends React.Component<
               onClick={this.hideSidebarTooltips}
               sidebar={
                 <WithIntegrationHelpers>
-                  {({ getSteps }) => (
-                    <IntegrationEditorSidebar
-                      disabled={false}
-                      steps={getSteps(integration, 0)}
-                      addConnectionHref={getAddConnectionHref.bind(
-                        null,
-                        integration
-                      )}
-                      addStepHref={getAddStepHref.bind(null, integration)}
-                      forceTooltips={this.state.forceSidebarTooltips}
-                    />
-                  )}
+                  {({ getSteps }) => {
+                    const configureConnectionHref = (idx: number, step: Step) =>
+                      getCreateConfigureActionHref(
+                        `${idx}`,
+                        integration,
+                        step.connection!,
+                        step.action!
+                      );
+                    const configureStepHref = (idx: number, step: Step) =>
+                      'TODO';
+                    return (
+                      <IntegrationEditorSidebar
+                        disabled={false}
+                        steps={getSteps(integration, 0)}
+                        addConnectionHref={getCreateAddConnectionHref.bind(
+                          null,
+                          integration
+                        )}
+                        addStepHref={getCreateAddStepHref.bind(
+                          null,
+                          integration
+                        )}
+                        configureConnectionHref={configureConnectionHref}
+                        configureStepHref={configureStepHref}
+                        forceTooltips={this.state.forceSidebarTooltips}
+                      />
+                    );
+                  }}
                 </WithIntegrationHelpers>
               }
               content={
@@ -93,7 +100,10 @@ export class IntegrationCreatorSaveOrAddStepPage extends React.Component<
                   <PageHeader>
                     <Breadcrumb>
                       <Link to={resolvers.list()}>Integrations</Link>
-                      <span>New integration</span>
+                      <Link to={resolvers.create.start.selectConnection()}>
+                        New integration
+                      </Link>
+                      <span>Save or add step</span>
                     </Breadcrumb>
                     <h1>Add to Integration</h1>
                     <p>

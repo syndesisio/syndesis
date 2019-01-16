@@ -136,7 +136,7 @@ export default {
       ),
       addConnection: {
         selectConnection: makeResolver<{
-          position: number;
+          position: string;
           integration: Integration;
         }>(
           routes.create.configure.addConnection.selectConnection,
@@ -149,10 +149,48 @@ export default {
             },
           })
         ),
+        selectAction: makeResolver<{
+          position: string;
+          integration: Integration;
+          connection: ConnectionOverview;
+        }>(
+          routes.create.configure.addConnection.selectAction,
+          ({ connection, position, integration }) => ({
+            params: {
+              position,
+              connectionId: connection.id,
+            },
+            state: {
+              integration,
+              connection,
+            },
+          })
+        ),
+        configureAction: makeResolver<{
+          connection: ConnectionOverview;
+          actionId: string;
+          step?: number;
+          integration?: Integration;
+          position: string;
+        }>(
+          routes.create.configure.addConnection.configureAction,
+          ({ connection, integration, actionId, step, position }) => ({
+            params: {
+              connectionId: connection.id,
+              actionId,
+              step,
+              position,
+            },
+            state: {
+              connection,
+              integration,
+            },
+          })
+        ),
       },
       addStep: {
         selectStep: makeResolver<{
-          position: number;
+          position: string;
           integration: Integration;
         }>(
           routes.create.configure.addStep.selectStep,
