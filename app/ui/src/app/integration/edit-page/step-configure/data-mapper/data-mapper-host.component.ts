@@ -33,9 +33,7 @@ import {
   ActionDescriptor,
   Action
 } from '@syndesis/ui/platform';
-import {
-  CurrentFlowService
-} from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService } from '@syndesis/ui/integration/edit-page';
 /*
  * Example host component:
  *
@@ -52,7 +50,8 @@ const MAPPING_KEY = 'atlasmapping';
     </div>
   `,
   styles: [
-    `.data-mapper-host {
+    `
+      .data-mapper-host {
         /* TODO probably a better way to set this height to the viewport */
         height: calc(100vh - 140px);
       }
@@ -93,7 +92,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     public configService: ConfigService,
     public initializationService: InitializationService,
     public support: IntegrationSupportService
-  ) { }
+  ) {}
 
   initialize() {
     this.resetConfig();
@@ -465,8 +464,10 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     );
 
     try {
-      this.cfg.initCfg.disableMappingPreviewMode =
-        this.configService.getSettings('datamapper', 'disableMappingPreviewMode');
+      this.cfg.initCfg.disableMappingPreviewMode = this.configService.getSettings(
+        'datamapper',
+        'disableMappingPreviewMode'
+      );
     } catch (err) {
       this.cfg.initCfg.disableMappingPreviewMode = true;
     }

@@ -1,0 +1,525 @@
+import {
+  Integration,
+  createStep,
+  Connection,
+  Step,
+  DataShape,
+  Action,
+  Flow,
+  key,
+  ActionDescriptor,
+  DataShapeKinds,
+  ActionDescriptorStep,
+  StringMap,
+  ConfigurationProperty,
+  createConnectionStep
+} from '@syndesis/ui/platform';
+import { ENDPOINT, StepStore } from '@syndesis/ui/store';
+
+//
+// Various helper functions that the current flow service uses to build an integration object
+//
+
+function setFlowId(flow: Flow) {
+  return flow.id ? flow : { ...flow, ...{ id: key() } };
+}
+
+function setStepId(step: Step) {
+  return step.id ? step : { ...step, ...{ id: key() } };
+}
+
+/**
+ * Validate and add/correct items in a flow's step array
+ * @param flow
+ */
+function validateFlowSteps(flow: Flow) {
+  return { ...flow, ...{ steps: (flow.steps || []).map(setStepId) } };
+}
+
+/**
+ * Validate all flows and add/correct items as needed
+ * @param flows
+ */
+function validateFlows(flows: Flow[] = []) {
+  return flows.map(setFlowId).map(validateFlowSteps);
+}
+
+/**
+ * Create or enrich the tags for an integration
+ * @param flows
+ * @param tags
+ */
+function buildTags(flows: Flow[] = [], tags: string[] = []) {
+  const connectorIds = [].concat(
+    ...flows.map(f =>
+      f.steps
+        .filter(step => step.stepKind === ENDPOINT)
+        .map(step => step.connection.connectorId)
+    )
+  );
+  return Array.from(new Set([...tags, ...connectorIds]));
+}
+
+/**
+ * Creates a map of default configured property values for the given properties object
+ * @param properties
+ */
+function getDefaultsFromProperties(
+  properties: StringMap<ConfigurationProperty>
+) {
+  return Object.keys(properties).reduce((result, k) => {
+    return { ...result, [k]: properties[k].defaultValue };
+  }, {});
+}
+
+function getDefaultsForPropertyDefinitionStep(
+  propertyDefinitionStep: ActionDescriptorStep
+) {
+  return getDefaultsFromProperties(propertyDefinitionStep.properties);
+}
+
+/**
+ * Extracts out the default configuredProperty values for the supplied propertyDefinitionSteps
+ * @param propertyDefinitionSteps
+ */
+function getPropertyDefaults(
+  propertyDefinitionSteps: ActionDescriptorStep[] = []
+) {
+  return propertyDefinitionSteps
+    .map(getDefaultsForPropertyDefinitionStep)
+    .reduce((result, current) => {
+      return { ...result, ...current };
+    }, {});
+}
+
+/**
+ * Inspects the supplied data shape and determines if the user set it on the step or not
+ * @param dataShape
+ */
+export function isUserDefinedDataShape(dataShape: DataShape) {
+  return (
+    dataShape && dataShape.metadata && dataShape.metadata.userDefined === 'true'
+  );
+}
+
+/**
+ * Checks if the supplied step has either an input or output data shape
+ * @param step
+ * @param isInput
+ */
+export function hasDataShape(step: Step, isInput = false) {
+  if (!step.action || !step.action.descriptor) {
+    return false;
+  }
+  const descriptor = step.action.descriptor;
+  const dataShape = isInput
+    ? descriptor.inputDataShape
+    : descriptor.outputDataShape;
+  return dataShape && dataShape.kind !== DataShapeKinds.NONE;
+}
+
+/**
+ * Sets an arbitrary property on an integration
+ * @param integration
+ * @param propertyName
+ * @param value
+ */
+export function setIntegrationProperty(
+  integration: Integration,
+  propertyName: string,
+  value: any
+) {
+  if (!propertyName) {
+    return integration;
+  }
+  return { ...integration, ...{ [propertyName]: value } };
+}
+
+/**
+ * Creates a step object using the supplied connection
+ * @param connection
+ */
+export function createStepWithConnection(connection: Connection) {
+  return { ...createStep(), ...{ stepKind: ENDPOINT, connection: connection } };
+}
+
+/**
+ * Adds the supplied metadata to the step, adding to any existing metadata
+ * @param step
+ * @param metadata
+ */
+export function addMetadataToStep(step: Step, metadata: StringMap<any>) {
+  if (!metadata || !step) {
+    return step;
+  }
+  const combinedMetadata = { ...step.metadata, ...metadata };
+  return { ...step, metadata: combinedMetadata };
+}
+
+/**
+ * Sets the datashape on a step in the specified direction, preserving any existing configuration
+ * @param step
+ * @param dataShape
+ * @param isInput
+ */
+export function setDataShapeOnStep(
+  step: Step,
+  dataShape: DataShape,
+  isInput: boolean
+) {
+  if (!step || !dataShape) {
+    return step;
+  }
+  const prop = isInput ? 'inputDataShape' : 'outputDataShape';
+  const action = step.action ? { ...step.action } : ({} as Action);
+  const descriptor = { ...action.descriptor, ...{ [prop]: dataShape } };
+  return {
+    ...step,
+    ...{ action: { ...action, ...{ descriptor: { ...descriptor } } } }
+  };
+}
+
+/**
+ * Sets the configured properties on the step
+ * @param step
+ * @param configuredProperties
+ */
+export function setConfiguredPropertiesOnStep(
+  step: Step,
+  configuredProperties: StringMap<any>
+) {
+  return {
+    ...step,
+    configuredProperties: stringifyValues(configuredProperties)
+  };
+}
+
+/**
+ * Sets the action on the given step if it's not set or different
+ * @param step
+ * @param action
+ * @param stepKind
+ */
+export function setActionOnStep(
+  step: Step,
+  action: Action,
+  stepKind: string = ENDPOINT
+) {
+  // if the step has an action, only set it if the new action is different
+  if (step.action && step.action.id === action.id) {
+    return step;
+  }
+  return { ...step, stepKind, action };
+}
+
+/**
+ * Sets the descriptor on the step, preserving user defined data shapes and setting any config defaults
+ * @param step
+ * @param descriptor
+ */
+export function setDescriptorOnStep(
+  step: Step,
+  descriptor: ActionDescriptor
+): Step {
+  if (!step) {
+    return step;
+  }
+  // If the step doesn't have an action but we're trying to set a data shape on it, it's probably an extension or something
+  if (!step.action) {
+    return {
+      ...step,
+      action: { actionType: 'step', descriptor } as Action
+    };
+  }
+  const propertyDefaults = getPropertyDefaults(
+    descriptor.propertyDefinitionSteps
+  );
+  // Technically this shouldn't actually be a condition, but for safety's sake...
+  if (!step.action.descriptor) {
+    return {
+      configuredProperties: propertyDefaults,
+      ...step,
+      action: { ...step.action, descriptor }
+    };
+  }
+  // Update the step's configured properties with any defaults in the descriptor
+  const configuredProperties = {
+    ...(propertyDefaults || {}),
+    ...(step.configuredProperties || {})
+  };
+  const oldDescriptor = { ...step.action.descriptor };
+  const oldInputDataShape = oldDescriptor.inputDataShape;
+  const oldOutputDataShape = oldDescriptor.outputDataShape;
+  const preserveInput =
+    isUserDefinedDataShape(oldInputDataShape) ||
+    (descriptor.inputDataShape.kind !== DataShapeKinds.NONE &&
+      !descriptor.inputDataShape.specification);
+  const preserveOutput =
+    isUserDefinedDataShape(oldOutputDataShape) ||
+    (descriptor.outputDataShape.kind !== DataShapeKinds.NONE &&
+      !descriptor.outputDataShape.specification);
+  return {
+    ...step,
+    configuredProperties,
+    action: {
+      ...step.action,
+      descriptor: {
+        ...descriptor,
+        inputDataShape: preserveInput
+          ? oldInputDataShape
+          : descriptor.inputDataShape,
+        outputDataShape: preserveOutput
+          ? oldOutputDataShape
+          : descriptor.outputDataShape
+      }
+    }
+  };
+}
+
+/**
+ * Prepare the configuration for the backend which supports only numbers and strings
+ * @param configuredProperties
+ */
+export function stringifyValues(configuredProperties: any) {
+  if (!configuredProperties) {
+    return configuredProperties;
+  }
+  return Object.keys(configuredProperties).reduce((props, name) => {
+    const value = configuredProperties[name];
+    switch (typeof value) {
+      case 'string':
+      case 'number':
+        return { ...props, [name]: value };
+      default:
+        return { ...props, [name]: JSON.stringify(value) };
+    }
+  }, {});
+}
+
+/**
+ * Performs final checks and tweaks to the integration object, use before posting to the backend
+ * @param integration
+ */
+export function prepareIntegrationForSaving(integration: Integration) {
+  const flows = validateFlows(integration.flows);
+  const tags = buildTags(integration.flows, integration.tags);
+  return { ...integration, tags, flows };
+}
+
+/**
+ * Returns the flow object with the given ID
+ * @param integration
+ * @param flowId
+ */
+export function getFlow(integration: Integration, flowId: string) {
+  // TODO some code relies on these semantics
+  if (!integration || !integration.flows || !flowId) {
+    return undefined;
+  }
+  return integration.flows.find(flow => flow.id === flowId);
+}
+
+/**
+ * Returns a new integration object, adding or replacing the supplied flow
+ * @param integration
+ * @param flow
+ */
+export function setFlow(integration: Integration, flow: Flow) {
+  if (getFlow(integration, flow.id)) {
+    return {
+      ...integration,
+      flows: integration.flows.map(f => {
+        if (f.id === flow.id) {
+          return flow;
+        }
+        return f;
+      })
+    };
+  } else {
+    return { ...integration, flows: [...integration.flows, flow] };
+  }
+}
+
+/**
+ * Inserts the supplied step into the indicated flow after the given position
+ * @param integration
+ * @param flowId
+ * @param step
+ * @param position
+ */
+export function insertStepIntoFlowAfter(
+  integration: Integration,
+  flowId: string,
+  step: Step,
+  position: number
+) {
+  const flow = getFlow(integration, flowId);
+  const steps = insertStepAfter(flow.steps, step, position);
+  return setFlow(integration, { ...flow, steps });
+}
+
+/**
+ * Inserts the supplied step into the indicated flow before the given position
+ * @param integration
+ * @param flowId
+ * @param step
+ * @param position
+ */
+export function insertStepIntoFlowBefore(
+  integration: Integration,
+  flowId: string,
+  step: Step,
+  position: number
+) {
+  const flow = getFlow(integration, flowId);
+  const steps = insertStepBefore(flow.steps, step, position);
+  return setFlow(integration, { ...flow, steps });
+}
+
+/**
+ * Overwrites the supplied step at the given position into the flow
+ * @param integration
+ * @param flowId
+ * @param step
+ * @param position
+ */
+export function setStepInFlow(
+  integration: Integration,
+  flowId: string,
+  step: Step,
+  position: number
+) {
+  const flow = getFlow(integration, flowId);
+  const steps = [...flow.steps];
+  steps[position] = step;
+  return setFlow(integration, { ...flow, steps });
+}
+
+/**
+ * Removes the step at the given position in the supplied flow
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function removeStepFromFlow(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  const flow = getFlow(integration, flowId);
+  const steps = [...flow.steps];
+  if (
+    position === getFirstPosition(integration, flowId) ||
+    position === getLastPosition(integration, flowId)
+  ) {
+    steps[position] = createStep();
+    steps[position].stepKind = ENDPOINT;
+  } else {
+    steps.splice(position, 1);
+  }
+  return setFlow(integration, { ...flow, steps });
+}
+
+/**
+ * Inserts the supplied step after the position
+ * @param steps
+ * @param step
+ * @param position
+ */
+export function insertStepAfter(steps: Step[], step: Step, position: number) {
+  return insertStepBefore(steps, step, position + 1);
+}
+
+/**
+ * Inserts the supplied step before the position
+ * @param steps
+ * @param step
+ * @param position
+ */
+export function insertStepBefore(steps: Step[], step: Step, position: number) {
+  return [].concat(...steps.slice(0, position), step, ...steps.slice(position));
+}
+
+/**
+ * Creates a new step, using any default values supplied for the given step kind
+ * @param store
+ * @param stepKind
+ */
+export function createStepUsingStore(store: StepStore, stepKind?: string) {
+  const stepConfig = store.getDefaultStepDefinition(stepKind);
+  return { ...createStep(), stepKind, ...stepConfig };
+}
+
+/**
+ * Creates a new empty flow object
+ * @param id
+ */
+export function createFlowWithId(id: string) {
+  return {
+    id: id,
+    steps: [createConnectionStep(), createConnectionStep()]
+  } as Flow;
+}
+
+/**
+ * Returns the start of the step array or undefined if it's not set up
+ * @param integration
+ * @param flowId
+ */
+export function getFirstPosition(integration: Integration, flowId: string) {
+  if (!flowId) {
+    return undefined;
+  }
+  const flow = getFlow(integration, flowId);
+  // TODO preserving semantics for some legacy code
+  return typeof flow.steps !== 'undefined' ? 0 : undefined;
+}
+
+/**
+ * Returns the last index of the step array of the given flow or undefined if it hasn't been created
+ * @param integration
+ * @param flowId
+ */
+export function getLastPosition(integration: Integration, flowId: string) {
+  if (!flowId) {
+    return undefined;
+  }
+  const flow = getFlow(integration, flowId);
+  // TODO preserve this block for now
+  if (!flow.steps) {
+    return undefined;
+  }
+  if (flow.steps.length <= 1) {
+    return 1;
+  }
+  return flow.steps.length - 1;
+}
+
+/**
+ * Returns an index in between the first and last step of the given flow
+ * @param integration
+ * @param flowId
+ */
+export function getMiddlePosition(integration: Integration, flowId: string) {
+  const position = getLastPosition(integration, flowId);
+  return typeof position !== 'undefined' ? Math.round(position / 2) : undefined;
+}
+
+/**
+ * Returns a copy of the step in the desired flow at the given position
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getStep(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  const flow = getFlow(integration, flowId);
+  if (!flow) {
+    return undefined;
+  }
+  const step = flow.steps[position];
+  return typeof step !== 'undefined' ? { ...step } : undefined;
+}
