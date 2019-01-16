@@ -1,5 +1,5 @@
 import { WithConnection, WithIntegrationHelpers } from '@syndesis/api';
-import { ConnectionOverview, Integration, Step } from '@syndesis/models';
+import { ConnectionOverview, Integration } from '@syndesis/models';
 import { Breadcrumb, ContentWithSidebarLayout, Loader } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -14,6 +14,7 @@ import {
   getCreateAddConnectionHref,
   getCreateAddStepHref,
   getCreateConfigureActionHref,
+  getCreateEditConnectionHref,
 } from './resolversHelpers';
 
 export interface IIntegrationCreatorSelectActionRouteParams {
@@ -27,33 +28,6 @@ export interface IIntegrationCreatorSelectActionRouteState {
 }
 
 export class IntegrationCreatorSelectActionPage extends React.Component {
-  constructor(props: any) {
-    super(props);
-    this.onAddStep = this.onAddStep.bind(this);
-    this.onAddConnection = this.onAddConnection.bind(this);
-    this.hideSidebarTooltips = this.hideSidebarTooltips.bind(this);
-  }
-
-  public onAddStep(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    this.setState({
-      forceSidebarTooltips: true,
-    });
-  }
-
-  public onAddConnection(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    this.setState({
-      forceSidebarTooltips: true,
-    });
-  }
-
-  public hideSidebarTooltips() {
-    this.setState({
-      forceSidebarTooltips: false,
-    });
-  }
-
   public render() {
     return (
       <WithClosedNavigation>
@@ -72,27 +46,18 @@ export class IntegrationCreatorSelectActionPage extends React.Component {
                 >
                   {() => (
                     <ContentWithSidebarLayout
-                      onClick={this.hideSidebarTooltips}
                       sidebar={
                         <WithIntegrationHelpers>
                           {({ getSteps }) => {
-                            const configureConnectionHref = (
-                              idx: number,
-                              step: Step
-                            ) =>
-                              getCreateConfigureActionHref(
+                            const positionAsNumber = parseInt(position, 10);
+                            const configureConnectionHref = (idx: number) =>
+                              getCreateEditConnectionHref(
                                 `${idx}`,
-                                integration,
-                                step.connection!,
-                                step.action!
+                                integration
                               );
-                            const configureStepHref = (
-                              idx: number,
-                              step: Step
-                            ) => 'TODO';
+                            const configureStepHref = (idx: number) => 'TODO';
                             return (
                               <IntegrationEditorSidebar
-                                disabled={true}
                                 steps={getSteps(integration, 0)}
                                 addConnectionHref={getCreateAddConnectionHref.bind(
                                   null,
@@ -106,14 +71,29 @@ export class IntegrationCreatorSelectActionPage extends React.Component {
                                   null,
                                   integration
                                 )}
-                                addAtIndex={parseInt(position, 10)}
+                                addAtIndex={positionAsNumber}
+                                addIcon={
+                                  hasData ? (
+                                    <img
+                                      src={data.icon}
+                                      width={24}
+                                      height={24}
+                                    />
+                                  ) : (
+                                    <Loader />
+                                  )
+                                }
                                 addI18nTitle={
                                   hasData
-                                    ? `1. ${data.connector!.name}`
-                                    : '1. Start'
+                                    ? `${positionAsNumber + 1}. ${
+                                        data.connector!.name
+                                      }`
+                                    : `${positionAsNumber + 1}. Start`
                                 }
                                 addI18nTooltip={
-                                  hasData ? `1. ${data.name}` : 'Start'
+                                  hasData
+                                    ? `${positionAsNumber + 1}. ${data.name}`
+                                    : 'Start'
                                 }
                                 addI18nDescription={'Choose an action'}
                               />

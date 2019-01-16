@@ -16,6 +16,36 @@ export function getStartConfigureActionHref(
   });
 }
 
+export function getFinishSelectActionHref(
+  startConnection: ConnectionOverview,
+  startAction: Action,
+  integration: Integration,
+  connection: ConnectionOverview
+): H.LocationDescriptor {
+  return resolvers.create.finish.selectAction({
+    finishConnection: connection,
+    integration,
+    startAction,
+    startConnection,
+  });
+}
+
+export function getFinishConfigureActionHref(
+  startConnection: ConnectionOverview,
+  startAction: Action,
+  finishConnection: ConnectionOverview,
+  integration: Integration,
+  action: Action
+): H.LocationDescriptor {
+  return resolvers.create.finish.configureAction({
+    actionId: action.id!,
+    finishConnection,
+    integration,
+    startAction,
+    startConnection,
+  });
+}
+
 export function getCreateAddConnectionHref(
   integration: Integration,
   position: string
@@ -62,32 +92,12 @@ export function getCreateConfigureActionHref(
   });
 }
 
-export function getFinishSelectActionHref(
-  startConnection: ConnectionOverview,
-  startAction: Action,
-  integration: Integration,
-  connection: ConnectionOverview
+export function getCreateEditConnectionHref(
+  position: string,
+  integration: Integration
 ): H.LocationDescriptor {
-  return resolvers.create.finish.selectAction({
-    finishConnection: connection,
+  return resolvers.create.configure.editConnection({
     integration,
-    startAction,
-    startConnection,
-  });
-}
-
-export function getFinishConfigureActionHref(
-  startConnection: ConnectionOverview,
-  startAction: Action,
-  finishConnection: ConnectionOverview,
-  integration: Integration,
-  action: Action
-): H.LocationDescriptor {
-  return resolvers.create.finish.configureAction({
-    actionId: action.id!,
-    finishConnection,
-    integration,
-    startAction,
-    startConnection,
+    position,
   });
 }

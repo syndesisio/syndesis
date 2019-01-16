@@ -56,9 +56,11 @@ export class IntegrationFlowAddStep extends React.Component<
         className={'integration-flow-add-step'}
         onMouseEnter={this.showTooltip}
         onMouseLeave={this.hideTooltip}
-        ref={this.containerRef}
       >
-        <div className={'integration-flow-add-step__iconWrapper'}>
+        <div
+          className={'integration-flow-add-step__iconWrapper'}
+          ref={this.containerRef}
+        >
           <div className={'integration-flow-add-step__icon'}>
             <i className="fa fa-plus-square" />
           </div>

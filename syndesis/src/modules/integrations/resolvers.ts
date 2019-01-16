@@ -188,6 +188,20 @@ export default {
           })
         ),
       },
+      editConnection: makeResolver<{
+        integration?: Integration;
+        position: string;
+      }>(
+        routes.create.configure.editConnection,
+        ({ integration, position }) => ({
+          params: {
+            position,
+          },
+          state: {
+            integration,
+          },
+        })
+      ),
       addStep: {
         selectStep: makeResolver<{
           position: string;

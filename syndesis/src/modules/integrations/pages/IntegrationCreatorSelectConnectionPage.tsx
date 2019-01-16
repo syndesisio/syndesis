@@ -1,5 +1,5 @@
 import { WithConnections, WithIntegrationHelpers } from '@syndesis/api';
-import { Connection, Integration, Step } from '@syndesis/models';
+import { Connection, Integration } from '@syndesis/models';
 import { Breadcrumb, ContentWithSidebarLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -13,7 +13,7 @@ import resolvers from '../resolvers';
 import {
   getCreateAddConnectionHref,
   getCreateAddStepHref,
-  getCreateConfigureActionHref,
+  getCreateEditConnectionHref,
   getCreateSelectActionHref,
 } from './resolversHelpers';
 
@@ -28,33 +28,6 @@ export interface IIntegrationCreatorSelectConnectionRouteState {
 }
 
 export class IntegrationCreatorSelectConnectionPage extends React.Component {
-  constructor(props: any) {
-    super(props);
-    this.onAddStep = this.onAddStep.bind(this);
-    this.onAddConnection = this.onAddConnection.bind(this);
-    this.hideSidebarTooltips = this.hideSidebarTooltips.bind(this);
-  }
-
-  public onAddStep(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    this.setState({
-      forceSidebarTooltips: true,
-    });
-  }
-
-  public onAddConnection(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    this.setState({
-      forceSidebarTooltips: true,
-    });
-  }
-
-  public hideSidebarTooltips() {
-    this.setState({
-      forceSidebarTooltips: false,
-    });
-  }
-
   public render() {
     return (
       <WithClosedNavigation>
@@ -64,22 +37,15 @@ export class IntegrationCreatorSelectConnectionPage extends React.Component {
         >>
           {({ position }, { connection, integration }) => (
             <ContentWithSidebarLayout
-              onClick={this.hideSidebarTooltips}
               sidebar={
                 <WithIntegrationHelpers>
                   {({ getSteps }) => {
-                    const configureConnectionHref = (idx: number, step: Step) =>
-                      getCreateConfigureActionHref(
-                        `${idx}`,
-                        integration,
-                        step.connection!,
-                        step.action!
-                      );
-                    const configureStepHref = (idx: number, step: Step) =>
-                      'TODO';
+                    const positionAsNumber = parseInt(position, 10);
+                    const configureConnectionHref = (idx: number) =>
+                      getCreateEditConnectionHref(`${idx}`, integration);
+                    const configureStepHref = (idx: number) => 'TODO';
                     return (
                       <IntegrationEditorSidebar
-                        disabled={true}
                         steps={getSteps(integration, 0)}
                         addConnectionHref={getCreateAddConnectionHref.bind(
                           null,
@@ -91,8 +57,8 @@ export class IntegrationCreatorSelectConnectionPage extends React.Component {
                           null,
                           integration
                         )}
-                        addAtIndex={parseInt(position, 10)}
-                        addI18nTitle={'1. Start'}
+                        addAtIndex={positionAsNumber}
+                        addI18nTitle={`${positionAsNumber + 1}. Start`}
                         addI18nTooltip={'Start'}
                         addI18nDescription={'Choose a connection'}
                       />

@@ -36,6 +36,7 @@ export class IntegrationFlowStep extends React.Component<
       <div
         className={classnames('integration-flow-step', {
           'is-active': this.props.active,
+          'is-expanded': this.props.showDetails,
         })}
       >
         {this.props.showDetails ? (

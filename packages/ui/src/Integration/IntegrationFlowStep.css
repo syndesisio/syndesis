@@ -1,29 +1,9 @@
 .integration-flow-step {
   display: flex;
   margin: 20px 0;
-  position: relative;
 }
-
-.integration-flow-step:not(:first-child)::before {
-  content: '';
-  position: absolute;
-  width: 2px;
-  background-color: #d4d4d4;
-  top: -20px; /* same as root container top margin */
-  bottom: 0;
-  left: 77px;
-  z-index: 0;
-}
-
-.integration-flow-step:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  width: 2px;
-  background-color: #d4d4d4;
-  top: 0;
-  bottom: -20px; /* same as root container bottom margin */
-  left: 77px;
-  z-index: 0;
+.integration-flow-step:last-child {
+  align-items: flex-start; /* to cut the vertical line at the end of the icon, and not of the whole container */
 }
 
 .integration-flow-step__iconWrapper {
@@ -32,6 +12,28 @@
   position: relative;
   flex: 0 0 155px;
   z-index: 1;
+}
+
+.integration-flow-step:not(:first-child) .integration-flow-step__iconWrapper::before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background-color: #d4d4d4;
+  top: -20px; /* same as root container top margin */
+  bottom: 0;
+  left: calc(100% / 2);
+  z-index: 0;
+}
+
+.integration-flow-step:not(:last-child) .integration-flow-step__iconWrapper::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background-color: #d4d4d4;
+  top: 0;
+  bottom: -20px; /* same as root container bottom margin */
+  left: calc(100% / 2);
+  z-index: 0;
 }
 
 .integration-flow-step__icon {
@@ -43,6 +45,8 @@
   background: #fff;
   width: 55px;
   height: 55px;
+  position: relative;
+  z-index: 1;
 }
 
 

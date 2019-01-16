@@ -1,5 +1,5 @@
 import { WithIntegrationHelpers } from '@syndesis/api';
-import { Integration, Step } from '@syndesis/models';
+import { Integration } from '@syndesis/models';
 import { Breadcrumb, ContentWithSidebarLayout, PageHeader } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -10,7 +10,7 @@ import resolvers from '../resolvers';
 import {
   getCreateAddConnectionHref,
   getCreateAddStepHref,
-  getCreateConfigureActionHref,
+  getCreateEditConnectionHref,
 } from './resolversHelpers';
 
 export interface IIntegrationCreatorSaveOrAddStepPageState {
@@ -66,18 +66,11 @@ export class IntegrationCreatorSaveOrAddStepPage extends React.Component<
               sidebar={
                 <WithIntegrationHelpers>
                   {({ getSteps }) => {
-                    const configureConnectionHref = (idx: number, step: Step) =>
-                      getCreateConfigureActionHref(
-                        `${idx}`,
-                        integration,
-                        step.connection!,
-                        step.action!
-                      );
-                    const configureStepHref = (idx: number, step: Step) =>
-                      'TODO';
+                    const configureConnectionHref = (idx: number) =>
+                      getCreateEditConnectionHref(`${idx}`, integration);
+                    const configureStepHref = (idx: number) => 'TODO';
                     return (
                       <IntegrationEditorSidebar
-                        disabled={false}
                         steps={getSteps(integration, 0)}
                         addConnectionHref={getCreateAddConnectionHref.bind(
                           null,

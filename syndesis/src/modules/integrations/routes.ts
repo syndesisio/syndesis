@@ -8,10 +8,12 @@ const editorRoutes = {
     selectAction: `:connectionId`,
     configureAction: `:connectionId/:actionId/:step?`,
   }),
+  editConnection: ':position/edit-connection',
   addStep: include(':position/step', {
     selectStep: '',
     configureStep: `:stepId`,
   }),
+  editStep: ':position/edit-step',
   saveAsDraft: 'save-as-draft',
 };
 
