@@ -1,0 +1,211 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Read a resource from the server",
+      "descriptor": {
+        "configuredProperties": {
+          "apiName": "read"
+        },
+        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
+        "connectorCustomizers": [
+          "io.syndesis.connector.odata.customizer.ODataStartCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+        {
+            "description": "Enhance the service url with a resource path",
+            "name": "Resource Path and Query Options",
+            "properties": {
+              "methodName": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be queried, eg. an <i><b>EntitySetName</b></i> or <i><b>EntityFunctionImportCall</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "keyPredicate": {
+                "deprecated": false,
+                "displayName": "Entity Key Predicate",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Parameter to refine the collection to a single entity, eg. People(<i><b>UserName='Bob'</i></b>) or Categories(<i><b>1</b></i>)",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "queryParams": {
+                "deprecated": false,
+                "displayName": "Query Options",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Enter the full query to be applied to the collection in OData query syntax.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "initialDelay": {
+                "defaultValue": 1000,
+                "deprecated": false,
+                "displayName": "Interval before polling starts",
+                "group": "consumer",
+                "javaType": "java.lang.Integer",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Wait amount of time before starting to poll",
+                "optionalPrefix": "consumer.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "duration"
+              },
+              "delay": {
+                "defaultValue": 30000,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
+                "optionalPrefix": "consumer.",
+                "order": "5",
+                "required": false,
+                "secret": false,
+                "type": "duration"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:odata-read-connector",
+      "name": "Read",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    }
+  ],
+  "componentScheme": "olingo4",
+  "configuredProperties": {},
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Communicate with an OData service",
+  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDMwMCAzMDAiPgogIDxnIGlkPSJsYXllcjEiPgogICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNmZThiMDAiIC8+CgogICAgPHJlY3QgeD0iMjYiIHk9IjMwIiB3aWR0aD0iMTExIiBoZWlnaHQ9IjI4IiBmaWxsPSJ3aGl0ZSIgLz4KICAgIDxyZWN0IHg9IjI2IiB5PSI4NiIgd2lkdGg9IjExMSIgaGVpZ2h0PSIyOCIgZmlsbD0id2hpdGUiIC8+CiAgICA8cmVjdCB4PSIyNiIgeT0iMTQyIiB3aWR0aD0iMTExIiBoZWlnaHQ9IjI4IiBmaWxsPSJ3aGl0ZSIgLz4KICAgIDxjaXJjbGUgY3g9IjgxLjUiIGN5PSIyMzAiIHI9IjQ4IiBmaWxsPSJ3aGl0ZSIgLz4KCiAgICA8cmVjdCB4PSIxNjMiIHk9IjMwIiB3aWR0aD0iMTExIiBoZWlnaHQ9IjI4IiBmaWxsPSJ3aGl0ZSIgLz4KICAgIDxyZWN0IHg9IjE2MyIgeT0iODYiIHdpZHRoPSIxMTEiIGhlaWdodD0iMjgiIGZpbGw9IndoaXRlIiAvPgogICAgPHJlY3QgeD0iMTYzIiB5PSIxNDIiIHdpZHRoPSIxMTEiIGhlaWdodD0iMjgiIGZpbGw9IndoaXRlIiAvPgogICAgPHJlY3QgeD0iMTYzIiB5PSIxOTgiIHdpZHRoPSIxMTEiIGhlaWdodD0iMjgiIGZpbGw9IndoaXRlIiAvPgogICAgCiAgPC9nPgo8L3N2Zz4K",
+  "id": "odata",
+  "name": "OData",
+  "properties": {
+    "serviceUri": {
+      "deprecated": false,
+      "displayName": "Service Root URL",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The service root URL of your OData server",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+      "basicUserName": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "User Name",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common,security",
+      "labelHint": "Specify a user name for basic authentication of the odata service url, if required.",
+      "order": "2",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "basicPassword": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common,security",
+      "labelHint": "Specify a password for basic authentication of the odata service url, if required.",
+      "order": "3",
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "skipCertificateCheck": {
+      "componentProperty": true,
+      "defaultValue": "false",
+      "deprecated": false,
+      "displayName": "Check Certificate",
+      "enum": [
+        {
+          "label": "Disable",
+          "value": "true"
+        },
+        {
+          "label": "Enable",
+          "value": "false"
+        }
+      ],
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
+      "order": "4",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "clientCertificate": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Client certificate for SSL connections",
+      "displayName": "Client Certificate",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common,security",
+      "order": "5",
+      "relation": [
+        {
+          "action": "ENABLE",
+          "when": [
+            {
+              "id": "skipCertificateCheck",
+              "value": "false"
+            }
+          ]
+        }
+      ],
+      "required": false,
+      "secret": false,
+      "type": "textarea"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

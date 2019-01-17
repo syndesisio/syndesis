@@ -1,0 +1,45 @@
+{
+  "baseScheme" : "olingo4",
+  "baseGroupId" : "org.apache.camel",
+  "baseArtifactId" : "camel-olingo4",
+  "baseVersion" : "2.21.0.fuse-000094",
+  "baseJavaType" : "org.apache.camel.component.olingo4.Olingo4Component",
+  "name" : "ODataRetrieveEntity",
+  "scheme" : "odata-retrieve-entity",
+  "javaType" : "io.syndesis.connector.odata.ODataRetrieveEntityComponent",
+  "groupId" : "io.syndesis.connector",
+  "artifactId" : "connector-odata-retrieve-entity",
+  "version" : "1.5-SNAPSHOT",
+  "description" : "Retrieve OData Entity",
+  "labels" : [ "odata" ],
+  "pattern" : "To",
+  "inputDataType" : "java:io.syndesis.connector.odata.ODataIdentifier",
+  "outputDataType" : "json",
+  "globalOptions" : [ "serviceUri" ],
+  "componentOptions" : [ ],
+  "connectorProperties" : {
+    "serviceUri" : {
+      "kind" : "property",
+      "displayName" : "Service Uri",
+      "group" : "security",
+      "label" : "common,security",
+      "required" : true,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "defaultValue" : "http://services.odata.org/TripPinRESTierService(SessionId)",
+      "description" : "URL of the OData Service"
+    }
+  },
+  "endpointOptions" : [ "resourcePath" ],
+  "endpointValues" : {
+    "methodName" : "read",
+    "resourcePath" : "People"
+  },
+  "endpointOverrides" : {
+    "resourcePath" : {
+      "required" : "true"
+    }
+  }
+}

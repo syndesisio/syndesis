@@ -70,6 +70,7 @@
     <module>webhook</module>
     <module>concur</module>
     <module>kudu</module>
+    <module>odata</module>
   </modules>
 
   <dependencyManagement>

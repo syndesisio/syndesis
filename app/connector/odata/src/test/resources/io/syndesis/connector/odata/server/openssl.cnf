@@ -1,0 +1,116 @@
+#
+# OpenSSL configuration file.
+#
+
+# Establish working directory.
+
+dir = .
+
+[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+serial = $dir/serial
+database = $dir/certindex.txt
+new_certs_dir = $dir/certs
+certificate = $dir/cacert.pem
+private_key = $dir/private/cakey.pem
+default_days = 365
+default_md = sha512
+preserve = no
+email_in_dn = no
+nameopt = default_ca
+certopt = default_ca
+policy = policy_match
+
+[ policy_match ]
+countryName = match
+stateOrProvinceName = match
+organizationName = match
+organizationalUnitName = optional
+commonName = supplied
+emailAddress = optional
+
+[ req ]
+default_bits = 2048 # Size of keys
+default_keyfile = key.pem # name of generated keys
+default_md = sha512 # message digest algorithm
+string_mask = nombstr # permitted characters
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+
+[ req_distinguished_name ]
+countryName = Country Name (2 letter code)
+countryName_default = UK
+countryName_min = 2
+countryName_max = 2
+
+stateOrProvinceName = State or Province Name (full name)
+stateOrProvinceName_default = England
+
+localityName = Locality Name (eg, city)
+localityName_default = London
+
+0.organizationName = Organization Name (eg, company)
+0.organizationName_default = Red Hat
+
+organizationalUnitName = Organizational Unit Name (eg, section)
+organizationalUnitName_default = Engineering
+
+commonName = Common Name (eg, YOUR name)
+commonName_max = 64
+commonName_default = localhost
+
+emailAddress = Email Address
+emailAddress_max = 64
+
+# SET-ex3 = SET extension number 3
+
+[ req_attributes ]
+challengePassword = A challenge password
+challengePassword_min = 4
+challengePassword_max = 20
+
+unstructuredName = An optional company name
+
+[ req_distinguished_name ]
+countryName = Country Name (2 letter code)
+countryName_default = UK
+countryName_min = 2
+countryName_max = 2
+
+stateOrProvinceName = State or Province Name (full name)
+stateOrProvinceName_default = England
+
+localityName = Locality Name (eg, city)
+localityName_default = London
+
+0.organizationName = Organization Name (eg, company)
+0.organizationName_default = Red Hat
+
+organizationalUnitName = Organizational Unit Name (eg, section)
+organizationalUnitName_default = Engineering
+
+commonName = Common Name (eg, YOUR name)
+commonName_max = 64
+commonName_default = differenthost
+
+emailAddress = Email Address
+emailAddress_max = 64
+
+# SET-ex3 = SET extension number 3
+
+[ req_attributes ]
+challengePassword = A challenge password
+challengePassword_min = 4
+challengePassword_max = 20
+
+unstructuredName = An optional company name
+[ v3_ca ]
+basicConstraints = CA:TRUE
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer:always
+
+[ v3_req ]
+basicConstraints = CA:FALSE
+subjectKeyIdentifier = hash

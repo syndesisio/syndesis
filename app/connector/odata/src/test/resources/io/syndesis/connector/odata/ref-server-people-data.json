@@ -1,0 +1,1440 @@
+{
+  "count": 20,
+  "entities": [
+    {
+      "UserName": {
+        "type": "String",
+        "value": "russellwhyte"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Russell"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Whyte"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Male"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Russell@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Russell@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Feature1"
+          },
+          {
+            "type": "String",
+            "value": "Feature2"
+          }
+        ]
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "187 Suffolk Ln."
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Boise"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "ID"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "scottketchum"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Scott"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Ketchum"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Male"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Scott@example.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "2817 Milton Dr."
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Albuquerque"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "NM"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "ronaldmundy"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Ronald"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Mundy"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Male"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Ronald@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Ronald@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "187 Suffolk Ln."
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Boise"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "ID"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "javieralfred"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Javier"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Alfred"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Male"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Javier@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Javier@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "89 Jefferson Way Suite 2"
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Portland"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "WA"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "willieashmore"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Willie"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Ashmore"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Male"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": []
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": []
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "vincentcalabrese"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Vincent"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Calabrese"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Male"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Vincent@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Vincent@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "55 Grizzly Peak Rd."
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Butte"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "MT"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "clydeguess"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Clyde"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Guess"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Male"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": []
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": []
+      },
+      "HomeAddress": {
+        "Address": {
+          "type": "String",
+          "value": ""
+        },
+        "City": {
+          "type": "String",
+          "value": ""
+        }
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "keithpinckney"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Keith"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Pinckney"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Male"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Keith@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Keith@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "55 Grizzly Peak Rd."
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Butte"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "MT"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "marshallgaray"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Marshall"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Garay"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Male"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Marshall@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Marshall@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "55 Grizzly Peak Rd."
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Butte"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "MT"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "ryantheriault"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Ryan"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Theriault"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Male"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Ryan@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Ryan@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "55 Grizzly Peak Rd."
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Butte"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "MT"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "elainestewart"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Elaine"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Stewart"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Female"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Elaine@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Elaine@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "55 Grizzly Peak Rd."
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Butte"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "MT"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "salliesampson"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Sallie"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Sampson"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Female"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Sallie@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Sallie@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "87 Polk St. Suite 5"
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "San Francisco"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "CA"
+              }
+            }
+          },
+          {
+            "Address": {
+              "type": "String",
+              "value": "89 Chiaroscuro Rd."
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Portland"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "OR"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "jonirosales"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Joni"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Rosales"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Female"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Joni@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Joni@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "55 Grizzly Peak Rd."
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Butte"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "MT"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "georginabarlow"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Georgina"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Barlow"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Female"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Georgina@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Georgina@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "55 Grizzly Peak Rd."
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Butte"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "MT"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "angelhuffman"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Angel"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Huffman"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Female"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Angel@example.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "55 Grizzly Peak Rd."
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "Butte"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "MT"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "laurelosborn"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Laurel"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Osborn"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Female"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Laurel@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Laurel@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "87 Polk St. Suite 5"
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "San Francisco"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "CA"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "sandyosborn"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Sandy"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Osborn"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Female"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Sandy@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Sandy@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "87 Polk St. Suite 5"
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "San Francisco"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "CA"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "ursulabright"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Ursula"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Bright"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Female"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Ursula@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Ursula@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "87 Polk St. Suite 5"
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "San Francisco"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "CA"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "genevievereeves"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Genevieve"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Reeves"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Female"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Genevieve@example.com"
+          },
+          {
+            "type": "String",
+            "value": "Genevieve@contoso.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "Budget": {
+        "type": "Int32",
+        "value": "0"
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "87 Polk St. Suite 5"
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "San Francisco"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "CA"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      },
+      "BossOffice": {
+        "type": "String",
+        "value": ""
+      }
+    },
+    {
+      "UserName": {
+        "type": "String",
+        "value": "kristakemp"
+      },
+      "FirstName": {
+        "type": "String",
+        "value": "Krista"
+      },
+      "LastName": {
+        "type": "String",
+        "value": "Kemp"
+      },
+      "MiddleName": {
+        "type": "String",
+        "value": ""
+      },
+      "Gender": {
+        "type": "String",
+        "value": "Female"
+      },
+      "Age": {
+        "type": "String",
+        "value": ""
+      },
+      "Emails": {
+        "values": [
+          {
+            "type": "String",
+            "value": "Krista@example.com"
+          }
+        ]
+      },
+      "FavoriteFeature": {
+        "type": "String",
+        "value": "Feature1"
+      },
+      "Features": {
+        "values": []
+      },
+      "Cost": {
+        "type": "Int32",
+        "value": "0"
+      },
+      "AddressInfo": {
+        "values": [
+          {
+            "Address": {
+              "type": "String",
+              "value": "87 Polk St. Suite 5"
+            },
+            "City": {
+              "Name": {
+                "type": "String",
+                "value": "San Francisco"
+              },
+              "CountryRegion": {
+                "type": "String",
+                "value": "United States"
+              },
+              "Region": {
+                "type": "String",
+                "value": "CA"
+              }
+            }
+          }
+        ]
+      },
+      "HomeAddress": {
+        "type": "String",
+        "value": ""
+      }
+    }
+  ]
+}
