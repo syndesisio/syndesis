@@ -57,6 +57,14 @@ body.cards-pf {
   margin-left: 290px;
 }
 
+.pf-c-page__main.collapsed-nav {
+  margin-left: 0;
+}
+
+.pf-c-page__main {
+  margin-left: 290px;
+}
+
 /// Patternfly Tabbed Nav overrides (which also override ngx-bootstrap's tab style)
 .tab-container {
   .nav-tabs {
