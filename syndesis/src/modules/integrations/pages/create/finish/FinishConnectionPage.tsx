@@ -8,22 +8,24 @@ import {
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { WithClosedNavigation } from '../../../containers';
-import { IntegrationEditorChooseConnection } from '../components';
-import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
-import { getFinishSelectActionHref } from './resolversHelpers';
+import { WithClosedNavigation } from '../../../../../containers';
+import {
+  IntegrationCreatorBreadcrumbs,
+  IntegrationEditorChooseConnection,
+} from '../../../components';
+import { getFinishSelectActionHref } from '../../resolversHelpers';
 
-export interface IIntegrationCreatorFinishConnectionRouteState {
+export interface IFinishConnectionRouteState {
   startConnection: ConnectionOverview;
   startAction: Action;
   integration: Integration;
 }
 
-export class IntegrationCreatorFinishConnectionPage extends React.Component {
+export class FinishConnectionPage extends React.Component {
   public render() {
     return (
       <WithClosedNavigation>
-        <WithRouteData<null, IIntegrationCreatorFinishConnectionRouteState>>
+        <WithRouteData<null, IFinishConnectionRouteState>>
           {(_, { startConnection, startAction, integration }) => (
             <ContentWithSidebarLayout
               sidebar={

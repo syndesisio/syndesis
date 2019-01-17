@@ -4,37 +4,35 @@ import { Breadcrumb, ContentWithSidebarLayout, Loader } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { WithClosedNavigation } from '../../../containers';
+import { WithClosedNavigation } from '../../../../../../containers';
 import {
   IntegrationEditorChooseAction,
   IntegrationEditorSidebar,
-} from '../components';
-import resolvers from '../resolvers';
+} from '../../../../components';
+import resolvers from '../../../../resolvers';
 import {
+  getConfigureConnectionHrefCallback,
+  getConfigureStepHrefCallback,
   getCreateAddConnectionHref,
   getCreateAddStepHref,
   getCreateConfigureActionHref,
-  getCreateEditConnectionHref,
-} from './resolversHelpers';
+} from '../../../resolversHelpers';
 
-export interface IIntegrationCreatorSelectActionRouteParams {
+export interface ISelectActionRouteParams {
   connectionId: string;
   position: string;
 }
 
-export interface IIntegrationCreatorSelectActionRouteState {
+export interface ISelectActionRouteState {
   connection: ConnectionOverview;
   integration: Integration;
 }
 
-export class IntegrationCreatorSelectActionPage extends React.Component {
+export class SelectActionPage extends React.Component {
   public render() {
     return (
       <WithClosedNavigation>
-        <WithRouteData<
-          IIntegrationCreatorSelectActionRouteParams,
-          IIntegrationCreatorSelectActionRouteState
-        >>
+        <WithRouteData<ISelectActionRouteParams, ISelectActionRouteState>>
           {({ connectionId, position }, { connection, integration }) => (
             <WithConnection id={connectionId} initialValue={connection}>
               {({ data, hasData, error }) => (
@@ -50,12 +48,6 @@ export class IntegrationCreatorSelectActionPage extends React.Component {
                         <WithIntegrationHelpers>
                           {({ getSteps }) => {
                             const positionAsNumber = parseInt(position, 10);
-                            const configureConnectionHref = (idx: number) =>
-                              getCreateEditConnectionHref(
-                                `${idx}`,
-                                integration
-                              );
-                            const configureStepHref = (idx: number) => 'TODO';
                             return (
                               <IntegrationEditorSidebar
                                 steps={getSteps(integration, 0)}
@@ -63,10 +55,12 @@ export class IntegrationCreatorSelectActionPage extends React.Component {
                                   null,
                                   integration
                                 )}
-                                configureConnectionHref={
-                                  configureConnectionHref
-                                }
-                                configureStepHref={configureStepHref}
+                                configureConnectionHref={getConfigureConnectionHrefCallback(
+                                  integration
+                                )}
+                                configureStepHref={getConfigureStepHrefCallback(
+                                  integration
+                                )}
                                 addStepHref={getCreateAddStepHref.bind(
                                   null,
                                   integration

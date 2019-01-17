@@ -1,4 +1,9 @@
-import { Action, ConnectionOverview, Integration } from '@syndesis/models';
+import {
+  Action,
+  ConnectionOverview,
+  Integration,
+  Step,
+} from '@syndesis/models';
 import * as H from 'history';
 import resolvers from '../resolvers';
 
@@ -92,12 +97,27 @@ export function getCreateConfigureActionHref(
   });
 }
 
-export function getCreateEditConnectionHref(
+export function getEditConfigureActionHref(
   position: string,
-  integration: Integration
+  integration: Integration,
+  action: Action
 ): H.LocationDescriptor {
-  return resolvers.create.configure.editConnection({
+  return resolvers.create.configure.editConnection.configureAction({
+    actionId: action.id!,
     integration,
     position,
   });
+}
+
+export function getConfigureConnectionHrefCallback(integration: Integration) {
+  return (stepIdx: number, step: Step) =>
+    resolvers.create.configure.editConnection.configureAction({
+      actionId: step.action!.id!,
+      integration,
+      position: `${stepIdx}`,
+    });
+}
+
+export function getConfigureStepHrefCallback(integration: Integration) {
+  return (stepIdx: number, step: Step) => 'TODO';
 }

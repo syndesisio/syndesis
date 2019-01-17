@@ -10,6 +10,7 @@ import * as React from 'react';
 
 export interface IIntegrationEditorSidebarProps {
   steps: Step[];
+  canAdd?: boolean;
   activeIndex?: number;
   addAtIndex?: number;
   addType?: 'connection' | 'step';
@@ -20,41 +21,47 @@ export interface IIntegrationEditorSidebarProps {
   forceTooltips?: boolean;
   addConnectionHref?(idx: number): H.LocationDescriptor;
   addStepHref?(idx: number): H.LocationDescriptor;
-  configureConnectionHref(idx: number): H.LocationDescriptor;
-  configureStepHref(idx: number): H.LocationDescriptor;
+  configureConnectionHref(stepIdx: number, step: Step): H.LocationDescriptor;
+  configureStepHref(stepIdx: number, step: Step): H.LocationDescriptor;
 }
 
 export class IntegrationEditorSidebar extends React.Component<
   IIntegrationEditorSidebarProps
 > {
   public static defaultProps = {
+    canAdd: false,
     forceTooltips: false,
   };
 
   public render() {
-    const disabled = !!this.props.addAtIndex;
     return (
-      <IntegrationVerticalFlow disabled={disabled}>
+      <IntegrationVerticalFlow>
         {({ expanded }) =>
           this.props.steps.map((s, idx) => {
+            const isActive = idx === this.props.activeIndex;
             const hasAddStep = idx < this.props.steps.length - 1;
             const hasActiveAddStep = this.props.addAtIndex! - 1 === idx;
             const isAfterActiveAddStep = this.props.addAtIndex! - 1 < idx;
             const position = isAfterActiveAddStep ? idx + 2 : idx + 1;
-            const addStep = (
+            const addStep = this.props.canAdd ? (
               <IntegrationFlowAddStep
+                active={hasActiveAddStep}
                 forceTooltip={this.props.forceTooltips}
                 showDetails={expanded}
                 addStepHref={
-                  disabled ? undefined : this.props.addStepHref!(position)
+                  this.props.addStepHref
+                    ? this.props.addStepHref(position)
+                    : undefined
                 }
                 i18nAddStep={'Add a step'}
                 addConnectionHref={
-                  disabled ? undefined : this.props.addConnectionHref!(position)
+                  this.props.addConnectionHref
+                    ? this.props.addConnectionHref(position)
+                    : undefined
                 }
                 i18nAddConnection={'Add a connection'}
               />
-            );
+            ) : null;
             const activeAddStep = (
               <IntegrationFlowStepGeneric
                 icon={this.props.addIcon || <i className={'fa fa-plus'} />}
@@ -74,16 +81,12 @@ export class IntegrationEditorSidebar extends React.Component<
                     }
                     i18nTitle={`${position}. ${s.action!.name}`}
                     i18nTooltip={`${position}. ${s.action!.name}`}
-                    active={false}
+                    active={isActive}
                     showDetails={expanded}
                     name={s.connection!.connector!.name}
                     action={s.action!.name}
                     dataType={'TODO'}
-                    href={
-                      disabled
-                        ? undefined
-                        : this.props.configureConnectionHref(idx)
-                    }
+                    href={this.props.configureConnectionHref(idx, s)}
                   />
                 )}
                 {hasAddStep && (hasActiveAddStep ? activeAddStep : addStep)}

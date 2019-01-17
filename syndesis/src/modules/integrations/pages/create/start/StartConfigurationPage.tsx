@@ -8,32 +8,34 @@ import {
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { WithClosedNavigation } from '../../../containers';
-import { IntegrationEditorConfigureConnection } from '../components';
-import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
-import { IWithAutoFormHelperOnUpdatedIntegrationProps } from '../containers';
-import resolvers from '../resolvers';
+import { WithClosedNavigation } from '../../../../../containers';
+import {
+  IntegrationCreatorBreadcrumbs,
+  IntegrationEditorConfigureConnection,
+  IOnUpdatedIntegrationProps,
+} from '../../../components';
+import resolvers from '../../../resolvers';
 
-export interface IIntegrationCreatorStartConfigurationPageRouteParams {
+export interface IStartConfigurationPageRouteParams {
   actionId: string;
   connectionId: string;
   step?: string;
 }
 
-export interface IIntegrationCreatorStartConfigurationPageRouteState {
+export interface IStartConfigurationPageRouteState {
   connection: ConnectionOverview;
   integration?: Integration;
 }
 
-export class IntegrationCreatorStartConfigurationPage extends React.Component {
+export class StartConfigurationPage extends React.Component {
   public render() {
     return (
       <WithClosedNavigation>
         <WithIntegrationHelpers>
-          {({ getEmptyIntegration }) => (
+          {({ addConnection, getEmptyIntegration, updateConnection }) => (
             <WithRouteData<
-              IIntegrationCreatorStartConfigurationPageRouteParams,
-              IIntegrationCreatorStartConfigurationPageRouteState
+              IStartConfigurationPageRouteParams,
+              IStartConfigurationPageRouteState
             >>
               {(
                 { actionId, connectionId, step = '0' },
@@ -41,11 +43,21 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                 { history }
               ) => {
                 const stepAsNumber = parseInt(step, 10);
-                const onUpdatedIntegration = ({
+                const onUpdatedIntegration = async ({
                   action,
-                  updatedIntegration,
                   moreConfigurationSteps,
-                }: IWithAutoFormHelperOnUpdatedIntegrationProps) => {
+                  values,
+                }: IOnUpdatedIntegrationProps) => {
+                  const updatedIntegration = await (stepAsNumber === 0
+                    ? addConnection
+                    : updateConnection)(
+                    integration,
+                    connection,
+                    action,
+                    0,
+                    0,
+                    values
+                  );
                   if (moreConfigurationSteps) {
                     history.push(
                       resolvers.create.start.configureAction({
@@ -107,12 +119,9 @@ export class IntegrationCreatorStartConfigurationPage extends React.Component {
                             startConnection={connection}
                           />
                         }
-                        integration={integration}
                         connection={connection}
                         actionId={actionId}
                         configurationStep={stepAsNumber}
-                        flow={0}
-                        flowStep={0}
                         backLink={resolvers.create.start.selectAction({
                           connection,
                         })}

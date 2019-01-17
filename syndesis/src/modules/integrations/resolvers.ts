@@ -188,20 +188,43 @@ export default {
           })
         ),
       },
-      editConnection: makeResolver<{
-        integration?: Integration;
-        position: string;
-      }>(
-        routes.create.configure.editConnection,
-        ({ integration, position }) => ({
-          params: {
-            position,
-          },
-          state: {
-            integration,
-          },
-        })
-      ),
+      editConnection: {
+        selectAction: makeResolver<{
+          position: string;
+          integration: Integration;
+          connection: ConnectionOverview;
+        }>(
+          routes.create.configure.editConnection.selectAction,
+          ({ connection, position, integration }) => ({
+            params: {
+              position,
+              connectionId: connection.id,
+            },
+            state: {
+              integration,
+              connection,
+            },
+          })
+        ),
+        configureAction: makeResolver<{
+          actionId: string;
+          step?: number;
+          integration: Integration;
+          position: string;
+        }>(
+          routes.create.configure.editConnection.configureAction,
+          ({ integration, actionId, step, position }) => ({
+            params: {
+              actionId,
+              step,
+              position,
+            },
+            state: {
+              integration,
+            },
+          })
+        ),
+      },
       addStep: {
         selectStep: makeResolver<{
           position: string;

@@ -4,51 +4,63 @@ import { Breadcrumb, ContentWithSidebarLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { WithClosedNavigation } from '../../../containers';
+import { WithClosedNavigation } from '../../../../../../containers';
 import {
   IntegrationEditorConfigureConnection,
   IntegrationEditorSidebar,
-} from '../components';
-import { IWithAutoFormHelperOnUpdatedIntegrationProps } from '../containers';
-import resolvers from '../resolvers';
+  IOnUpdatedIntegrationProps,
+} from '../../../../components';
+import resolvers from '../../../../resolvers';
 import {
+  getConfigureConnectionHrefCallback,
+  getConfigureStepHrefCallback,
   getCreateAddConnectionHref,
   getCreateAddStepHref,
-  getCreateEditConnectionHref,
-} from './resolversHelpers';
+} from '../../../resolversHelpers';
 
-export interface IIntegrationCreatorConfigureActionRouteParams {
+export interface IConfigureActionRouteParams {
   position: string;
   actionId: string;
-  connectionId: string;
   step?: string;
 }
 
-export interface IIntegrationCreatorConfigureActionRouteState {
+export interface IConfigureActionRouteState {
   connection: ConnectionOverview;
   integration: Integration;
 }
 
-export class IntegrationCreatorConfigureActionPage extends React.Component {
+export class ConfigureActionPage extends React.Component {
   public render() {
     return (
       <WithClosedNavigation>
         <WithIntegrationHelpers>
-          {({ getSteps }) => (
+          {({ addConnection, getSteps, updateConnection }) => (
             <WithRouteData<
-              IIntegrationCreatorConfigureActionRouteParams,
-              IIntegrationCreatorConfigureActionRouteState
+              IConfigureActionRouteParams,
+              IConfigureActionRouteState
             >>
               {(
-                { actionId, connectionId, step = '0', position },
+                { actionId, step = '0', position },
                 { connection, integration },
                 { history }
               ) => {
                 const stepAsNumber = parseInt(step, 10);
-                const onUpdatedIntegration = ({
-                  updatedIntegration,
+                const positionAsNumber = parseInt(position, 10);
+                const onUpdatedIntegration = async ({
+                  action,
                   moreConfigurationSteps,
-                }: IWithAutoFormHelperOnUpdatedIntegrationProps) => {
+                  values,
+                }: IOnUpdatedIntegrationProps) => {
+                  const updatedIntegration = await (stepAsNumber === 0
+                    ? addConnection
+                    : updateConnection)(
+                    integration,
+                    connection,
+                    action,
+                    0,
+                    positionAsNumber,
+                    values
+                  );
                   if (moreConfigurationSteps) {
                     history.push(
                       resolvers.create.configure.addConnection.configureAction({
@@ -67,10 +79,7 @@ export class IntegrationCreatorConfigureActionPage extends React.Component {
                     );
                   }
                 };
-                const positionAsNumber = parseInt(position, 10);
-                const configureConnectionHref = (idx: number) =>
-                  getCreateEditConnectionHref(`${idx}`, integration);
-                const configureStepHref = (idx: number) => 'TODO';
+
                 return (
                   <ContentWithSidebarLayout
                     sidebar={
@@ -80,13 +89,19 @@ export class IntegrationCreatorConfigureActionPage extends React.Component {
                           null,
                           integration
                         )}
-                        configureConnectionHref={configureConnectionHref}
-                        configureStepHref={configureStepHref}
+                        configureConnectionHref={getConfigureConnectionHrefCallback(
+                          integration
+                        )}
+                        configureStepHref={getConfigureStepHrefCallback(
+                          integration
+                        )}
                         addStepHref={getCreateAddStepHref.bind(
                           null,
                           integration
                         )}
-                        addAtIndex={positionAsNumber}
+                        addAtIndex={
+                          stepAsNumber === 0 ? positionAsNumber : undefined
+                        }
                         addIcon={
                           <img src={connection.icon} width={24} height={24} />
                         }
@@ -133,12 +148,9 @@ export class IntegrationCreatorConfigureActionPage extends React.Component {
                             <span>Configure the action</span>
                           </Breadcrumb>
                         }
-                        integration={integration}
                         connection={connection}
                         actionId={actionId}
                         configurationStep={stepAsNumber}
-                        flow={0}
-                        flowStep={1}
                         backLink={resolvers.create.configure.addConnection.selectAction(
                           { position, integration, connection }
                         )}

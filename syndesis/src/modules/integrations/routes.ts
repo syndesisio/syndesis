@@ -8,7 +8,10 @@ const editorRoutes = {
     selectAction: `:connectionId`,
     configureAction: `:connectionId/:actionId/:step?`,
   }),
-  editConnection: ':position/edit-connection',
+  editConnection: include(':position/edit-connection', {
+    selectAction: `select-action/:connectionId`,
+    configureAction: `:actionId/:step?`,
+  }),
   addStep: include(':position/step', {
     selectStep: '',
     configureStep: `:stepId`,

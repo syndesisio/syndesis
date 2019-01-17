@@ -4,26 +4,27 @@ import { Breadcrumb, ContentWithSidebarLayout, PageHeader } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { WithClosedNavigation } from '../../../containers';
-import { IntegrationEditorSidebar } from '../components';
-import resolvers from '../resolvers';
+import { WithClosedNavigation } from '../../../../../../containers';
+import { IntegrationEditorSidebar } from '../../../../components';
+import resolvers from '../../../../resolvers';
 import {
+  getConfigureConnectionHrefCallback,
+  getConfigureStepHrefCallback,
   getCreateAddConnectionHref,
   getCreateAddStepHref,
-  getCreateEditConnectionHref,
-} from './resolversHelpers';
+} from '../../../resolversHelpers';
 
-export interface IIntegrationCreatorSaveOrAddStepPageState {
+export interface ISaveOrAddStepPageState {
   forceSidebarTooltips: boolean;
 }
 
-export interface IIntegrationCreatorSaveOrAddStepRouteState {
+export interface ISaveOrAddStepRouteState {
   integration: Integration;
 }
 
-export class IntegrationCreatorSaveOrAddStepPage extends React.Component<
+export class SaveOrAddStepPage extends React.Component<
   any,
-  IIntegrationCreatorSaveOrAddStepPageState
+  ISaveOrAddStepPageState
 > {
   public state = {
     forceSidebarTooltips: false,
@@ -59,33 +60,30 @@ export class IntegrationCreatorSaveOrAddStepPage extends React.Component<
   public render() {
     return (
       <WithClosedNavigation>
-        <WithRouteData<null, IIntegrationCreatorSaveOrAddStepRouteState>>
+        <WithRouteData<null, ISaveOrAddStepRouteState>>
           {(_, { integration }) => (
             <ContentWithSidebarLayout
               onClick={this.hideSidebarTooltips}
               sidebar={
                 <WithIntegrationHelpers>
-                  {({ getSteps }) => {
-                    const configureConnectionHref = (idx: number) =>
-                      getCreateEditConnectionHref(`${idx}`, integration);
-                    const configureStepHref = (idx: number) => 'TODO';
-                    return (
-                      <IntegrationEditorSidebar
-                        steps={getSteps(integration, 0)}
-                        addConnectionHref={getCreateAddConnectionHref.bind(
-                          null,
-                          integration
-                        )}
-                        addStepHref={getCreateAddStepHref.bind(
-                          null,
-                          integration
-                        )}
-                        configureConnectionHref={configureConnectionHref}
-                        configureStepHref={configureStepHref}
-                        forceTooltips={this.state.forceSidebarTooltips}
-                      />
-                    );
-                  }}
+                  {({ getSteps }) => (
+                    <IntegrationEditorSidebar
+                      canAdd={true}
+                      steps={getSteps(integration, 0)}
+                      addConnectionHref={getCreateAddConnectionHref.bind(
+                        null,
+                        integration
+                      )}
+                      addStepHref={getCreateAddStepHref.bind(null, integration)}
+                      configureConnectionHref={getConfigureConnectionHrefCallback(
+                        integration
+                      )}
+                      configureStepHref={getConfigureStepHrefCallback(
+                        integration
+                      )}
+                      forceTooltips={this.state.forceSidebarTooltips}
+                    />
+                  )}
                 </WithIntegrationHelpers>
               }
               content={

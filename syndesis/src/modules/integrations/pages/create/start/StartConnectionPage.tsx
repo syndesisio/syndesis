@@ -6,12 +6,14 @@ import {
   IntegrationVerticalFlow,
 } from '@syndesis/ui';
 import * as React from 'react';
-import { WithClosedNavigation } from '../../../containers';
-import { IntegrationEditorChooseConnection } from '../components';
-import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
-import { getStartSelectActionHref } from './resolversHelpers';
+import { WithClosedNavigation } from '../../../../../containers';
+import {
+  IntegrationCreatorBreadcrumbs,
+  IntegrationEditorChooseConnection,
+} from '../../../components';
+import { getStartSelectActionHref } from '../../resolversHelpers';
 
-export class IntegrationCreatorStartConnectionPage extends React.Component {
+export class StartConnectionPage extends React.Component {
   public render() {
     return (
       <WithClosedNavigation>

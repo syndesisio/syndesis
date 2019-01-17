@@ -9,27 +9,26 @@ import {
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { WithClosedNavigation } from '../../../containers';
-import { IntegrationEditorChooseAction } from '../components';
-import { IntegrationCreatorBreadcrumbs } from '../components/IntegrationCreatorBreadcrumbs';
-import { getStartConfigureActionHref } from './resolversHelpers';
+import { WithClosedNavigation } from '../../../../../containers';
+import {
+  IntegrationCreatorBreadcrumbs,
+  IntegrationEditorChooseAction,
+} from '../../../components';
+import { getStartConfigureActionHref } from '../../resolversHelpers';
 
-export interface IIntegrationCreatorStartActionRouteParams {
+export interface IStartActionRouteParams {
   connectionId: string;
 }
 
-export interface IIntegrationCreatorStartActionRouteState {
+export interface IStartActionRouteState {
   connection?: ConnectionOverview;
 }
 
-export class IntegrationCreatorStartActionPage extends React.Component {
+export class StartActionPage extends React.Component {
   public render() {
     return (
       <WithClosedNavigation>
-        <WithRouteData<
-          IIntegrationCreatorStartActionRouteParams,
-          IIntegrationCreatorStartActionRouteState
-        >>
+        <WithRouteData<IStartActionRouteParams, IStartActionRouteState>>
           {({ connectionId }, { connection } = {}) => {
             return (
               <WithConnection id={connectionId} initialValue={connection}>
