@@ -85,3 +85,11 @@ main {
     text-decoration: none;
   }
 }
+
+.nav-pf-vertical {
+  top: 76px;
+  width: 290px;
+  .list-group-item > a {
+    width: 100%;
+  }
+}

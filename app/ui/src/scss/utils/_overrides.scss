@@ -15,8 +15,23 @@ body.cards-pf {
   margin-bottom: 10px;
 }
 
-.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.collapsed-nav {
-  margin-left: 0;
+// .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.collapsed-nav {
+//   margin-left: 0;
+// }
+
+.pf-c-page__header {
+  position: fixed;
+  display: block;
+  width: 100%;
+  z-index: 300;
+}
+
+.pf-c-page__header-brand {
+  background-color: #363636;
+}
+
+.pf-c-page__header-tools {
+  background-color: #363636;
 }
 
 .navbar {
@@ -42,6 +57,14 @@ body.cards-pf {
       vertical-align: middle;
     }
   }
+}
+
+.pf-c-page__main.collapsed-nav {
+  margin-left: 0;
+}
+
+.pf-c-page__main {
+  margin-left: 290px;
 }
 
 /// Patternfly Tabbed Nav overrides (which also override ngx-bootstrap's tab style)
