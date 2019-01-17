@@ -2,6 +2,8 @@ import appEn from '../../app/locales/app-translations.en.json';
 import appIt from '../../app/locales/app-translations.it.json';
 import connectionsEn from '../../modules/connections/locales/connections-translations.en.json';
 import connectionsIt from '../../modules/connections/locales/connections-translations.it.json';
+import customizationsEn from '../../modules/customizations/locales/customizations-translations.en.json';
+import customizationsIt from '../../modules/customizations/locales/customizations-translations.it.json';
 import dashboardEn from '../../modules/dashboard/locales/dashboard-translations.en.json';
 import dashboardIt from '../../modules/dashboard/locales/dashboard-translations.it.json';
 import integrationsEn from '../../modules/integrations/locales/integrations-translations.en.json';
@@ -16,6 +18,10 @@ it.it.app = appIt;
 // connections
 en.en.modules.connections = connectionsEn;
 it.it.modules.connections = connectionsIt;
+
+// customizations
+en.en.modules.customizations = customizationsEn;
+it.it.modules.customizations = customizationsIt;
 
 // dashboard
 en.en.modules.dashboard = dashboardEn;

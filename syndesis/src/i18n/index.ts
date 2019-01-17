@@ -13,6 +13,7 @@ const options = {
     en: {
       app: en.en.app,
       connections: en.en.modules.connections,
+      customizations: en.en.modules.customizations,
       dashboard: en.en.modules.dashboard,
       integrations: en.en.modules.integrations,
       shared: en.en.shared,
@@ -20,6 +21,7 @@ const options = {
     it: {
       app: it.it.app,
       connections: it.it.modules.connections,
+      customizations: it.it.modules.customizations,
       dashboard: it.it.modules.dashboard,
       integrations: it.it.modules.integrations,
       shared: it.it.shared,
@@ -29,8 +31,8 @@ const options = {
   defaultNS: 'shared',
   fallbackLng: process.env.NODE_ENV === 'production' ? 'en' : 'it',
   fallbackNS: ['shared'],
-  keySeparator: false, // we do not use keys in form messages.welcome
-  ns: ['shared', 'app', 'dashboard'],
+  keySeparator: '.',
+  ns: ['shared', 'app', 'customizations', 'dashboard'],
 } as InitOptions;
 
 i18n.use(LanguageDetector).init(options);

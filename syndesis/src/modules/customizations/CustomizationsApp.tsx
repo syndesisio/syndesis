@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
-import CustomizationsPage from './pages/CustomizationsPage';
+import ApiConnectorsPage from './pages/ApiConnectorsPage';
+import ExtensionsPage from './pages/ExtensionsPage';
 
 export interface ICustomizationsAppProps {
   baseurl: string;
@@ -15,7 +16,17 @@ export default class CustomizationApp extends React.Component<
         <Route
           path={this.props.baseurl}
           exact={true}
-          component={CustomizationsPage}
+          component={ApiConnectorsPage}
+        />
+        <Route
+          path={`${this.props.baseurl}/api-connector`}
+          exact={true}
+          component={ApiConnectorsPage}
+        />
+        <Route
+          path={`${this.props.baseurl}/extensions`}
+          exact={true}
+          component={ExtensionsPage}
         />
       </Switch>
     );

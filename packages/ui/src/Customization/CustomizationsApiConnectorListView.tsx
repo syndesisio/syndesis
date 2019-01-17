@@ -15,7 +15,6 @@ export interface IApiConnectorListViewProps extends IListViewToolbarProps {
   i18nLinkCreateApiConnector: string;
   i18nLinkCreateApiConnectorTip?: string;
   i18nName: string;
-  i18nNameFilterPlaceholder: string;
   i18nTitle: string;
   linkCreateApiConnector: string;
 }

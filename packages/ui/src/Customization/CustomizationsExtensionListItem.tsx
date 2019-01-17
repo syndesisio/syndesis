@@ -10,7 +10,8 @@ import * as React from 'react';
 export interface IExtensionListItemProps {
   extensionDescription?: string;
   extensionIcon?: string;
-  extensionId: string;
+  extensionId?: string;
+  extensionName: string;
   i18nDelete: string;
   i18nDeleteTip?: string;
   i18nDetails: string;
@@ -28,6 +29,54 @@ export interface IExtensionListItemProps {
 export class CustomizationsExtensionListItem extends React.Component<
   IExtensionListItemProps
 > {
+  public getDeleteTooltip() {
+    return (
+      <Tooltip id="deleteTip">
+        {this.props.i18nDeleteTip
+          ? this.props.i18nDeleteTip
+          : this.props.i18nDelete}
+      </Tooltip>
+    );
+  }
+
+  public getDetailsTooltip() {
+    return (
+      <Tooltip id="detailsTip">
+        {this.props.i18nDetailsTip
+          ? this.props.i18nDetailsTip
+          : this.props.i18nDetails}
+      </Tooltip>
+    );
+  }
+
+  public getUpdateTooltip() {
+    return (
+      <Tooltip id="updateTip">
+        {this.props.i18nUpdateTip
+          ? this.props.i18nUpdateTip
+          : this.props.i18nUpdate}
+      </Tooltip>
+    );
+  }
+
+  public handleDelete = () => {
+    if (this.props.extensionId) {
+      this.props.onDelete(this.props.extensionId);
+    }
+  };
+
+  public handleDetails = () => {
+    if (this.props.extensionId) {
+      this.props.onDetails(this.props.extensionId);
+    }
+  };
+
+  public handleUpdate = () => {
+    if (this.props.extensionId) {
+      this.props.onUpdate(this.props.extensionId);
+    }
+  };
+
   public render() {
     return (
       <ListViewItem
@@ -46,7 +95,7 @@ export class CustomizationsExtensionListItem extends React.Component<
             <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
               <Button
                 bsStyle="default"
-                disabled={this.props.usedBy !== 0}
+                disabled={this.props.extensionId && this.props.usedBy !== 0}
                 onClick={this.handleDelete}
               >
                 {this.props.i18nDelete}
@@ -54,20 +103,22 @@ export class CustomizationsExtensionListItem extends React.Component<
             </OverlayTrigger>
           </div>
         }
-        additionalInfo={
-          <ListViewInfoItem>{this.props.i18nExtensionType}</ListViewInfoItem>
-        }
+        additionalInfo={[
+          <ListViewInfoItem key={1}>
+            {this.props.i18nExtensionType}
+          </ListViewInfoItem>,
+        ]}
         description={
           this.props.extensionDescription ? this.props.extensionDescription : ''
         }
-        heading={this.props.extensionId}
+        heading={this.props.extensionName}
         hideCloseIcon={true}
         leftContent={
           this.props.extensionIcon ? (
             <div className="blank-slate-pf-icon">
               <img
                 src={this.props.extensionIcon}
-                alt={this.props.extensionId}
+                alt={this.props.extensionName}
                 width={46}
               />
             </div>
@@ -77,46 +128,4 @@ export class CustomizationsExtensionListItem extends React.Component<
       />
     );
   }
-
-  private getDeleteTooltip() {
-    return (
-      <Tooltip id="deleteTip">
-        {this.props.i18nDeleteTip
-          ? this.props.i18nDeleteTip
-          : this.props.i18nDelete}
-      </Tooltip>
-    );
-  }
-
-  private getDetailsTooltip() {
-    return (
-      <Tooltip id="detailsTip">
-        {this.props.i18nDetailsTip
-          ? this.props.i18nDetailsTip
-          : this.props.i18nDetails}
-      </Tooltip>
-    );
-  }
-
-  private getUpdateTooltip() {
-    return (
-      <Tooltip id="updateTip">
-        {this.props.i18nUpdateTip
-          ? this.props.i18nUpdateTip
-          : this.props.i18nUpdate}
-      </Tooltip>
-    );
-  }
-
-  private handleDelete = () => {
-    this.props.onDelete(this.props.extensionId);
-  };
-
-  private handleDetails = () => {
-    this.props.onDetails(this.props.extensionId);
-  };
-
-  private handleUpdate = () => {
-    this.props.onUpdate(this.props.extensionId);
-  };
 }
