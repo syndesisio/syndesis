@@ -10,6 +10,7 @@ import {
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { WithClosedNavigation } from '../../../../../containers';
+import { PageTitle } from '../../../../../containers/PageTitle';
 import {
   IntegrationCreatorBreadcrumbs,
   IntegrationEditorChooseAction,
@@ -38,81 +39,86 @@ export class FinishActionPage extends React.Component {
           ) => (
             <WithConnection id={connectionId} initialValue={finishConnection}>
               {({ data, hasData, error }) => (
-                <ContentWithSidebarLayout
-                  sidebar={
-                    <IntegrationVerticalFlow disabled={true}>
-                      {({ expanded }) => (
-                        <>
-                          <IntegrationFlowStepWithOverview
-                            icon={
-                              <img
-                                src={startConnection.icon}
-                                width={24}
-                                height={24}
+                <>
+                  <PageTitle title={'Choose an action'} />
+                  <ContentWithSidebarLayout
+                    sidebar={
+                      <IntegrationVerticalFlow disabled={true}>
+                        {({ expanded }) => (
+                          <>
+                            <IntegrationFlowStepWithOverview
+                              icon={
+                                <img
+                                  src={startConnection.icon}
+                                  width={24}
+                                  height={24}
+                                />
+                              }
+                              i18nTitle={`1. ${startAction.name}`}
+                              i18nTooltip={`1. ${startAction.name}`}
+                              active={false}
+                              showDetails={expanded}
+                              name={startConnection.connector!.name}
+                              action={startAction.name}
+                              dataType={'TODO'}
+                            />
+                            <IntegrationFlowStepGeneric
+                              icon={
+                                hasData ? (
+                                  <img src={data.icon} width={24} height={24} />
+                                ) : (
+                                  <Loader />
+                                )
+                              }
+                              i18nTitle={
+                                hasData
+                                  ? `2. ${data.connector!.name}`
+                                  : '2. Finish'
+                              }
+                              i18nTooltip={
+                                hasData ? `2. ${data.name}` : 'Finish'
+                              }
+                              active={true}
+                              showDetails={expanded}
+                              description={'Choose an action'}
+                            />
+                          </>
+                        )}
+                      </IntegrationVerticalFlow>
+                    }
+                    content={
+                      <WithLoader
+                        error={error}
+                        loading={!hasData}
+                        loaderChildren={<Loader />}
+                        errorChildren={<div>TODO</div>}
+                      >
+                        {() => (
+                          <IntegrationEditorChooseAction
+                            breadcrumb={
+                              <IntegrationCreatorBreadcrumbs
+                                step={5}
+                                startConnection={startConnection}
+                                startAction={startAction}
+                                integration={integration}
                               />
                             }
-                            i18nTitle={`1. ${startAction.name}`}
-                            i18nTooltip={`1. ${startAction.name}`}
-                            active={false}
-                            showDetails={expanded}
-                            name={startConnection.connector!.name}
-                            action={startAction.name}
-                            dataType={'TODO'}
+                            actions={data.actionsWithTo.sort((a, b) =>
+                              a.name.localeCompare(b.name)
+                            )}
+                            getActionHref={getFinishConfigureActionHref.bind(
+                              null,
+                              startConnection,
+                              startAction,
+                              finishConnection,
+                              integration
+                            )}
                           />
-                          <IntegrationFlowStepGeneric
-                            icon={
-                              hasData ? (
-                                <img src={data.icon} width={24} height={24} />
-                              ) : (
-                                <Loader />
-                              )
-                            }
-                            i18nTitle={
-                              hasData
-                                ? `2. ${data.connector!.name}`
-                                : '2. Finish'
-                            }
-                            i18nTooltip={hasData ? `2. ${data.name}` : 'Finish'}
-                            active={true}
-                            showDetails={expanded}
-                            description={'Choose an action'}
-                          />
-                        </>
-                      )}
-                    </IntegrationVerticalFlow>
-                  }
-                  content={
-                    <WithLoader
-                      error={error}
-                      loading={!hasData}
-                      loaderChildren={<Loader />}
-                      errorChildren={<div>TODO</div>}
-                    >
-                      {() => (
-                        <IntegrationEditorChooseAction
-                          breadcrumb={
-                            <IntegrationCreatorBreadcrumbs
-                              step={5}
-                              startConnection={startConnection}
-                              startAction={startAction}
-                              integration={integration}
-                            />
-                          }
-                          actions={data.actionsWithTo.sort((a, b) =>
-                            a.name.localeCompare(b.name)
-                          )}
-                          getActionHref={getFinishConfigureActionHref.bind(
-                            null,
-                            startConnection,
-                            startAction,
-                            finishConnection,
-                            integration
-                          )}
-                        />
-                      )}
-                    </WithLoader>
-                  }
-                />
+                        )}
+                      </WithLoader>
+                    }
+                  />
+                </>
               )}
             </WithConnection>
           )}

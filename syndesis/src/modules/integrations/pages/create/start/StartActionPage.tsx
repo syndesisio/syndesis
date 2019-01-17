@@ -10,6 +10,7 @@ import {
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { WithClosedNavigation } from '../../../../../containers';
+import { PageTitle } from '../../../../../containers/PageTitle';
 import {
   IntegrationCreatorBreadcrumbs,
   IntegrationEditorChooseAction,
@@ -40,64 +41,67 @@ export class StartActionPage extends React.Component {
                     errorChildren={<div>TODO</div>}
                   >
                     {() => (
-                      <ContentWithSidebarLayout
-                        sidebar={
-                          <IntegrationVerticalFlow disabled={true}>
-                            {({ expanded }) => (
-                              <>
-                                <IntegrationFlowStepGeneric
-                                  icon={
-                                    hasData ? (
-                                      <img
-                                        src={data.icon}
-                                        width={24}
-                                        height={24}
-                                      />
-                                    ) : (
-                                      <Loader />
-                                    )
-                                  }
-                                  i18nTitle={
-                                    hasData
-                                      ? `1. ${data.connector!.name}`
-                                      : '1. Start'
-                                  }
-                                  i18nTooltip={
-                                    hasData ? `1. ${data.name}` : 'Start'
-                                  }
-                                  active={true}
-                                  showDetails={expanded}
-                                  description={'Choose an action'}
-                                />
-                                <IntegrationFlowStepWithOverview
-                                  icon={<i className={'fa fa-plus'} />}
-                                  i18nTitle={'2. Finish'}
-                                  i18nTooltip={'Finish'}
-                                  active={false}
-                                  showDetails={expanded}
-                                  name={'n/a'}
-                                  action={'n/a'}
-                                  dataType={'n/a'}
-                                />
-                              </>
-                            )}
-                          </IntegrationVerticalFlow>
-                        }
-                        content={
-                          <IntegrationEditorChooseAction
-                            breadcrumb={
-                              <IntegrationCreatorBreadcrumbs step={2} />
-                            }
-                            actions={data.actionsWithFrom.sort((a, b) =>
-                              a.name.localeCompare(b.name)
-                            )}
-                            getActionHref={getStartConfigureActionHref.bind(
-                              null,
-                              data
-                            )}
-                          />
-                        }
-                      />
+                      <>
+                        <PageTitle title={'Choose an action'} />
+                        <ContentWithSidebarLayout
+                          sidebar={
+                            <IntegrationVerticalFlow disabled={true}>
+                              {({ expanded }) => (
+                                <>
+                                  <IntegrationFlowStepGeneric
+                                    icon={
+                                      hasData ? (
+                                        <img
+                                          src={data.icon}
+                                          width={24}
+                                          height={24}
+                                        />
+                                      ) : (
+                                        <Loader />
+                                      )
+                                    }
+                                    i18nTitle={
+                                      hasData
+                                        ? `1. ${data.connector!.name}`
+                                        : '1. Start'
+                                    }
+                                    i18nTooltip={
+                                      hasData ? `1. ${data.name}` : 'Start'
+                                    }
+                                    active={true}
+                                    showDetails={expanded}
+                                    description={'Choose an action'}
+                                  />
+                                  <IntegrationFlowStepWithOverview
+                                    icon={<i className={'fa fa-plus'} />}
+                                    i18nTitle={'2. Finish'}
+                                    i18nTooltip={'Finish'}
+                                    active={false}
+                                    showDetails={expanded}
+                                    name={'n/a'}
+                                    action={'n/a'}
+                                    dataType={'n/a'}
+                                  />
+                                </>
+                              )}
+                            </IntegrationVerticalFlow>
+                          }
+                          content={
+                            <IntegrationEditorChooseAction
+                              breadcrumb={
+                                <IntegrationCreatorBreadcrumbs step={2} />
+                              }
+                              actions={data.actionsWithFrom.sort((a, b) =>
+                                a.name.localeCompare(b.name)
+                              )}
+                              getActionHref={getStartConfigureActionHref.bind(
+                                null,
+                                data
+                              )}
+                            />
+                          }
+                        />
+                      </>
                     )}
                   </WithLoader>
                 )}

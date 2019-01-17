@@ -7,6 +7,7 @@ import {
 } from '@syndesis/ui';
 import * as React from 'react';
 import { WithClosedNavigation } from '../../../../../containers';
+import { PageTitle } from '../../../../../containers/PageTitle';
 import {
   IntegrationCreatorBreadcrumbs,
   IntegrationEditorChooseConnection,
@@ -47,17 +48,20 @@ export class StartConnectionPage extends React.Component {
           content={
             <WithConnections>
               {({ data, hasData, error }) => (
-                <IntegrationEditorChooseConnection
-                  breadcrumb={<IntegrationCreatorBreadcrumbs step={1} />}
-                  connections={data.connectionsWithFromAction}
-                  loading={!hasData}
-                  error={error}
-                  i18nTitle={'Choose a Start Connection'}
-                  i18nSubtitle={
-                    'Click the connection that starts the integration. If the connection you need is not available, click Create Connection.'
-                  }
-                  getConnectionHref={getStartSelectActionHref}
-                />
+                <>
+                  <PageTitle title={'New Integration'} />
+                  <IntegrationEditorChooseConnection
+                    breadcrumb={<IntegrationCreatorBreadcrumbs step={1} />}
+                    connections={data.connectionsWithFromAction}
+                    loading={!hasData}
+                    error={error}
+                    i18nTitle={'Choose a Start Connection'}
+                    i18nSubtitle={
+                      'Click the connection that starts the integration. If the connection you need is not available, click Create Connection.'
+                    }
+                    getConnectionHref={getStartSelectActionHref}
+                  />
+                </>
               )}
             </WithConnections>
           }

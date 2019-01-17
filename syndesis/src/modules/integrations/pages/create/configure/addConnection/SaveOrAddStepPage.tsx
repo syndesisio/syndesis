@@ -5,6 +5,7 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../../../../containers';
+import { PageTitle } from '../../../../../../containers/PageTitle';
 import { IntegrationEditorSidebar } from '../../../../components';
 import resolvers from '../../../../resolvers';
 import {
@@ -88,6 +89,7 @@ export class SaveOrAddStepPage extends React.Component<
               }
               content={
                 <>
+                  <PageTitle title={'Save or add step'} />
                   <PageHeader>
                     <Breadcrumb>
                       <Link to={resolvers.list()}>Integrations</Link>

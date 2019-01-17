@@ -13,6 +13,7 @@ import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import { AppContext } from '../../../app';
+import { PageTitle } from '../../../containers/PageTitle';
 import i18n from '../../../i18n';
 import routes from '../routes';
 
@@ -132,112 +133,122 @@ export class IntegrationsPage extends React.Component {
                           );
 
                           return (
-                            <IntegrationsListView
-                              linkToIntegrationImport={'/integrations/import'}
-                              linkToIntegrationCreation={
-                                routes.create.start.selectConnection
-                              }
-                              filterTypes={getFilterTypes(
-                                connectionsData.items
-                              )}
-                              sortTypes={sortTypes}
-                              resultsCount={
-                                filteredAndSortedIntegrations.length
-                              }
-                              {...helpers}
-                              i18nImport={t('shared:Import')}
-                              i18nLinkCreateConnection={t(
-                                'shared:linkCreateIntegration'
-                              )}
-                              i18nResultsCount={t('shared:resultsCount', {
-                                count: filteredAndSortedIntegrations.length,
-                              })}
-                            >
-                              <WithLoader
-                                error={error}
-                                loading={!hasData}
-                                loaderChildren={
-                                  <IntegrationsListSkeleton
-                                    width={800}
-                                    style={{
-                                      backgroundColor: '#FFF',
-                                      marginTop: 30,
-                                    }}
-                                  />
+                            <>
+                              <PageTitle title={t('shared:Integrations')} />
+                              <IntegrationsListView
+                                linkToIntegrationImport={'/integrations/import'}
+                                linkToIntegrationCreation={
+                                  routes.create.start.selectConnection
                                 }
-                                errorChildren={<div>TODO</div>}
-                              >
-                                {() => (
-                                  <IntegrationsList>
-                                    {filteredAndSortedIntegrations.map(
-                                      (
-                                        mi: IntegrationWithMonitoring,
-                                        index
-                                      ) => (
-                                        <IntegrationsListItem
-                                          integrationId={mi.integration.id!}
-                                          integrationName={mi.integration.name!}
-                                          currentState={
-                                            mi.integration.currentState!
-                                          }
-                                          targetState={
-                                            mi.integration.targetState!
-                                          }
-                                          isConfigurationRequired={
-                                            !!(
-                                              mi.integration!.board!.warnings ||
-                                              mi.integration!.board!.errors ||
-                                              mi.integration!.board!.notices
-                                            )
-                                          }
-                                          monitoringValue={
-                                            mi.monitoring &&
-                                            t(
-                                              'integrations:' +
-                                                mi.monitoring.detailedState
-                                                  .value
-                                            )
-                                          }
-                                          monitoringCurrentStep={
-                                            mi.monitoring &&
-                                            mi.monitoring.detailedState
-                                              .currentStep
-                                          }
-                                          monitoringTotalSteps={
-                                            mi.monitoring &&
-                                            mi.monitoring.detailedState
-                                              .totalSteps
-                                          }
-                                          monitoringLogUrl={getPodLogUrl(
-                                            config,
-                                            mi.monitoring
-                                          )}
-                                          key={index}
-                                          i18nConfigurationRequired={t(
-                                            'ConfigurationRequired'
-                                          )}
-                                          i18nError={t('shared:Error')}
-                                          i18nPublished={t('shared:Published')}
-                                          i18nUnpublished={t(
-                                            'shared:Unpublished'
-                                          )}
-                                          i18nProgressPending={t(
-                                            'shared:Pending'
-                                          )}
-                                          i18nProgressStarting={t(
-                                            'integrations:progressStarting'
-                                          )}
-                                          i18nProgressStopping={t(
-                                            'integrations:progressStopping'
-                                          )}
-                                          i18nLogUrlText={t('shared:viewLogs')}
-                                        />
-                                      )
-                                    )}
-                                  </IntegrationsList>
+                                filterTypes={getFilterTypes(
+                                  connectionsData.items
                                 )}
-                              </WithLoader>
-                            </IntegrationsListView>
+                                sortTypes={sortTypes}
+                                resultsCount={
+                                  filteredAndSortedIntegrations.length
+                                }
+                                {...helpers}
+                                i18nImport={t('shared:Import')}
+                                i18nLinkCreateConnection={t(
+                                  'shared:linkCreateIntegration'
+                                )}
+                                i18nResultsCount={t('shared:resultsCount', {
+                                  count: filteredAndSortedIntegrations.length,
+                                })}
+                              >
+                                <WithLoader
+                                  error={error}
+                                  loading={!hasData}
+                                  loaderChildren={
+                                    <IntegrationsListSkeleton
+                                      width={800}
+                                      style={{
+                                        backgroundColor: '#FFF',
+                                        marginTop: 30,
+                                      }}
+                                    />
+                                  }
+                                  errorChildren={<div>TODO</div>}
+                                >
+                                  {() => (
+                                    <IntegrationsList>
+                                      {filteredAndSortedIntegrations.map(
+                                        (
+                                          mi: IntegrationWithMonitoring,
+                                          index
+                                        ) => (
+                                          <IntegrationsListItem
+                                            integrationId={mi.integration.id!}
+                                            integrationName={
+                                              mi.integration.name!
+                                            }
+                                            currentState={
+                                              mi.integration.currentState!
+                                            }
+                                            targetState={
+                                              mi.integration.targetState!
+                                            }
+                                            isConfigurationRequired={
+                                              !!(
+                                                mi.integration!.board!
+                                                  .warnings ||
+                                                mi.integration!.board!.errors ||
+                                                mi.integration!.board!.notices
+                                              )
+                                            }
+                                            monitoringValue={
+                                              mi.monitoring &&
+                                              t(
+                                                'integrations:' +
+                                                  mi.monitoring.detailedState
+                                                    .value
+                                              )
+                                            }
+                                            monitoringCurrentStep={
+                                              mi.monitoring &&
+                                              mi.monitoring.detailedState
+                                                .currentStep
+                                            }
+                                            monitoringTotalSteps={
+                                              mi.monitoring &&
+                                              mi.monitoring.detailedState
+                                                .totalSteps
+                                            }
+                                            monitoringLogUrl={getPodLogUrl(
+                                              config,
+                                              mi.monitoring
+                                            )}
+                                            key={index}
+                                            i18nConfigurationRequired={t(
+                                              'ConfigurationRequired'
+                                            )}
+                                            i18nError={t('shared:Error')}
+                                            i18nPublished={t(
+                                              'shared:Published'
+                                            )}
+                                            i18nUnpublished={t(
+                                              'shared:Unpublished'
+                                            )}
+                                            i18nProgressPending={t(
+                                              'shared:Pending'
+                                            )}
+                                            i18nProgressStarting={t(
+                                              'integrations:progressStarting'
+                                            )}
+                                            i18nProgressStopping={t(
+                                              'integrations:progressStopping'
+                                            )}
+                                            i18nLogUrlText={t(
+                                              'shared:viewLogs'
+                                            )}
+                                          />
+                                        )
+                                      )}
+                                    </IntegrationsList>
+                                  )}
+                                </WithLoader>
+                              </IntegrationsListView>
+                            </>
                           );
                         }}
                       </WithListViewToolbarHelpers>

@@ -5,6 +5,7 @@ import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../../../../containers';
+import { PageTitle } from '../../../../../../containers/PageTitle';
 import {
   IntegrationEditorChooseAction,
   IntegrationEditorSidebar,
@@ -43,55 +44,60 @@ export class SelectActionPage extends React.Component {
                     errorChildren={<div>TODO</div>}
                   >
                     {() => (
-                      <ContentWithSidebarLayout
-                        sidebar={
-                          <WithIntegrationHelpers>
-                            {({ getSteps }) => (
-                              <IntegrationEditorSidebar
-                                steps={getSteps(integration, 0)}
-                                configureConnectionHref={getConfigureConnectionHrefCallback(
-                                  integration
-                                )}
-                                configureStepHref={getConfigureStepHrefCallback(
-                                  integration
-                                )}
-                                activeIndex={positionAsNumber}
-                              />
-                            )}
-                          </WithIntegrationHelpers>
-                        }
-                        content={
-                          <IntegrationEditorChooseAction
-                            breadcrumb={
-                              <Breadcrumb>
-                                <Link to={resolvers.list()}>Integrations</Link>
-                                <Link
-                                  to={resolvers.create.start.selectConnection()}
-                                >
-                                  New integration
-                                </Link>
-                                <Link
-                                  to={resolvers.create.configure.index({
-                                    integration,
-                                  })}
-                                >
-                                  Save or add step
-                                </Link>
-                                <span>Choose action</span>
-                              </Breadcrumb>
-                            }
-                            actions={(positionAsNumber > 0
-                              ? data.actionsWithTo
-                              : data.actionsWithFrom
-                            ).sort((a, b) => a.name.localeCompare(b.name))}
-                            getActionHref={getEditConfigureActionHref.bind(
-                              null,
-                              position,
-                              integration
-                            )}
-                          />
-                        }
-                      />
+                      <>
+                        <PageTitle title={'Choose an action'} />
+                        <ContentWithSidebarLayout
+                          sidebar={
+                            <WithIntegrationHelpers>
+                              {({ getSteps }) => (
+                                <IntegrationEditorSidebar
+                                  steps={getSteps(integration, 0)}
+                                  configureConnectionHref={getConfigureConnectionHrefCallback(
+                                    integration
+                                  )}
+                                  configureStepHref={getConfigureStepHrefCallback(
+                                    integration
+                                  )}
+                                  activeIndex={positionAsNumber}
+                                />
+                              )}
+                            </WithIntegrationHelpers>
+                          }
+                          content={
+                            <IntegrationEditorChooseAction
+                              breadcrumb={
+                                <Breadcrumb>
+                                  <Link to={resolvers.list()}>
+                                    Integrations
+                                  </Link>
+                                  <Link
+                                    to={resolvers.create.start.selectConnection()}
+                                  >
+                                    New integration
+                                  </Link>
+                                  <Link
+                                    to={resolvers.create.configure.index({
+                                      integration,
+                                    })}
+                                  >
+                                    Save or add step
+                                  </Link>
+                                  <span>Choose action</span>
+                                </Breadcrumb>
+                              }
+                              actions={(positionAsNumber > 0
+                                ? data.actionsWithTo
+                                : data.actionsWithFrom
+                              ).sort((a, b) => a.name.localeCompare(b.name))}
+                              getActionHref={getEditConfigureActionHref.bind(
+                                null,
+                                position,
+                                integration
+                              )}
+                            />
+                          }
+                        />
+                      </>
                     )}
                   </WithLoader>
                 )}

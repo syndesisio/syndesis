@@ -5,6 +5,7 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../../../../containers';
+import { PageTitle } from '../../../../../../containers/PageTitle';
 import {
   IntegrationEditorConfigureConnection,
   IntegrationEditorSidebar,
@@ -81,83 +82,86 @@ export class ConfigureActionPage extends React.Component {
                 };
 
                 return (
-                  <ContentWithSidebarLayout
-                    sidebar={
-                      <IntegrationEditorSidebar
-                        steps={getSteps(integration, 0)}
-                        addConnectionHref={getCreateAddConnectionHref.bind(
-                          null,
-                          integration
-                        )}
-                        configureConnectionHref={getConfigureConnectionHrefCallback(
-                          integration
-                        )}
-                        configureStepHref={getConfigureStepHrefCallback(
-                          integration
-                        )}
-                        addStepHref={getCreateAddStepHref.bind(
-                          null,
-                          integration
-                        )}
-                        addAtIndex={
-                          stepAsNumber === 0 ? positionAsNumber : undefined
-                        }
-                        addIcon={
-                          <img src={connection.icon} width={24} height={24} />
-                        }
-                        addI18nTitle={`${positionAsNumber + 1}. ${
-                          connection.connector!.name
-                        }`}
-                        addI18nTooltip={`${positionAsNumber + 1}. ${
-                          connection.name
-                        }`}
-                        addI18nDescription={'Configure the action'}
-                      />
-                    }
-                    content={
-                      <IntegrationEditorConfigureConnection
-                        breadcrumb={
-                          <Breadcrumb>
-                            <Link to={resolvers.list()}>Integrations</Link>
-                            <Link
-                              to={resolvers.create.start.selectConnection()}
-                            >
-                              New integration
-                            </Link>
-                            <Link
-                              to={resolvers.create.configure.index({
-                                integration,
-                              })}
-                            >
-                              Save or add step
-                            </Link>
-                            <Link
-                              to={resolvers.create.configure.addConnection.selectConnection(
-                                { position, integration }
-                              )}
-                            >
-                              Choose a connection
-                            </Link>
-                            <Link
-                              to={resolvers.create.configure.addConnection.selectAction(
-                                { position, integration, connection }
-                              )}
-                            >
-                              Choose action
-                            </Link>
-                            <span>Configure the action</span>
-                          </Breadcrumb>
-                        }
-                        connection={connection}
-                        actionId={actionId}
-                        configurationStep={stepAsNumber}
-                        backLink={resolvers.create.configure.addConnection.selectAction(
-                          { position, integration, connection }
-                        )}
-                        onUpdatedIntegration={onUpdatedIntegration}
-                      />
-                    }
-                  />
+                  <>
+                    <PageTitle title={'Configure the action'} />
+                    <ContentWithSidebarLayout
+                      sidebar={
+                        <IntegrationEditorSidebar
+                          steps={getSteps(integration, 0)}
+                          addConnectionHref={getCreateAddConnectionHref.bind(
+                            null,
+                            integration
+                          )}
+                          configureConnectionHref={getConfigureConnectionHrefCallback(
+                            integration
+                          )}
+                          configureStepHref={getConfigureStepHrefCallback(
+                            integration
+                          )}
+                          addStepHref={getCreateAddStepHref.bind(
+                            null,
+                            integration
+                          )}
+                          addAtIndex={
+                            stepAsNumber === 0 ? positionAsNumber : undefined
+                          }
+                          addIcon={
+                            <img src={connection.icon} width={24} height={24} />
+                          }
+                          addI18nTitle={`${positionAsNumber + 1}. ${
+                            connection.connector!.name
+                          }`}
+                          addI18nTooltip={`${positionAsNumber + 1}. ${
+                            connection.name
+                          }`}
+                          addI18nDescription={'Configure the action'}
+                        />
+                      }
+                      content={
+                        <IntegrationEditorConfigureConnection
+                          breadcrumb={
+                            <Breadcrumb>
+                              <Link to={resolvers.list()}>Integrations</Link>
+                              <Link
+                                to={resolvers.create.start.selectConnection()}
+                              >
+                                New integration
+                              </Link>
+                              <Link
+                                to={resolvers.create.configure.index({
+                                  integration,
+                                })}
+                              >
+                                Save or add step
+                              </Link>
+                              <Link
+                                to={resolvers.create.configure.addConnection.selectConnection(
+                                  { position, integration }
+                                )}
+                              >
+                                Choose a connection
+                              </Link>
+                              <Link
+                                to={resolvers.create.configure.addConnection.selectAction(
+                                  { position, integration, connection }
+                                )}
+                              >
+                                Choose action
+                              </Link>
+                              <span>Configure the action</span>
+                            </Breadcrumb>
+                          }
+                          connection={connection}
+                          actionId={actionId}
+                          configurationStep={stepAsNumber}
+                          backLink={resolvers.create.configure.addConnection.selectAction(
+                            { position, integration, connection }
+                          )}
+                          onUpdatedIntegration={onUpdatedIntegration}
+                        />
+                      }
+                    />
+                  </>
                 );
               }}
             </WithRouteData>
