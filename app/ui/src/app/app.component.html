@@ -1,246 +1,243 @@
-<div class="app">
+<div class="pf-c-background-image">
+    <svg xmlns="http://www.w3.org/2000/svg" class="pf-c-background-image__filter" width="0" height="0">
+      <filter id="image_overlay" width="">
+        <feColorMatrix type="matrix" values="1 0 0 0 0
+                1 0 0 0 0
+                1 0 0 0 0
+                0 0 0 1 0" />
+        <feComponentTransfer color-interpolation-filters="sRGB" result="duotone">
+          <feFuncR type="table" tableValues="0.086274509803922 0.43921568627451"></feFuncR>
+          <feFuncG type="table" tableValues="0.086274509803922 0.43921568627451"></feFuncG>
+          <feFuncB type="table" tableValues="0.086274509803922 0.43921568627451"></feFuncB>
+          <feFuncA type="table" tableValues="0 1"></feFuncA>
+        </feComponentTransfer>
+      </filter>
+    </svg>
+  </div>
 
-  <pfng-toast-notification-list [notifications]="notifications|async" (onActionSelect)="handleAction($event)" (onCloseSelect)="handleClose($event)"
-    [showClose]="showClose">
-  </pfng-toast-notification-list>
+<div class="pf-c-page" id="page-layout-default-nav">
+  <header role="banner" class="pf-c-page__header">
+  
+    <!-- LOGO -->
+    <div class="pf-c-page__header-brand">
+      <div class="pf-c-page__header-brand-toggle">
 
-  <ng-template #brandTemplate>
-    <a routerLink="/" class="navbar-brand" role="link">
-      <!-- <img *ngIf="logoDarkBg" [class]="productBuild ? 'navbar-brand-name product' : 'navbar-brand-name'" [src]="logoDarkBg" alt="{{ appName }}" /> -->
-      <svg id="appLogo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 265"><defs><style>.cls-1{fill:#9adde8;}.cls-2{fill:#49badc;}.cls-3{fill:#fff;}</style></defs><title>syndesis_logo_full_1280px_lightbkg</title><polygon class="cls-1" points="129.95 98.77 33.99 144.38 122.22 167.37 218.18 121.75 129.95 98.77"/><polygon class="cls-2" points="218.18 121.75 218.18 121.75 122.22 167.37 242.17 198.61 218.18 121.75"/><polygon class="cls-1" points="154.99 86.86 131 10 10 67.52 129.95 98.77 154.99 86.86"/><polygon class="cls-2" points="33.99 144.38 129.95 98.77 10 67.52 10 67.52 33.99 144.38"/><polygon class="cls-2" points="189.64 25.27 131 10 154.99 86.86 213.63 102.14 189.64 25.27"/><polygon class="cls-2" points="38.54 164 62.53 240.86 121.17 256.13 121.17 256.13 97.18 179.27 97.18 179.27 38.54 164"/><polygon class="cls-1" points="242.17 198.61 122.22 167.37 97.18 179.27 121.17 256.13 242.17 198.61"/><path class="cls-3" d="M358.91,210.23c-23.57,0-43.44-17.22-44.06-41.6H329.2c.41,22.74,17.21,29.3,37.09,29.3,16.6,0,35.65-9.63,35.65-28.48,0-14.76-10.65-21.73-23.15-25.82-24-8-60.45-15.58-60.45-47.55,0-25.82,23.77-40,47.13-40,19.47,0,44.88,6.77,48.15,35.25H399.28c-.41-18.24-17-23-32.17-23-15.37,0-34.43,7.79-34.43,25.82,0,42,83.61,23,83.61,74C416.29,200.39,388.62,210.23,358.91,210.23Z"/><path class="cls-3" d="M484.32,143.22l-54.51-84h17l45.29,71.52L537.4,59.2h14.34l-54.1,83.61v64.34H484.32Z"/><path class="cls-3" d="M572.24,59.2H587.4L669,189.32h.41V59.2h13.32v148h-16.8L586,79.28h-.41V207.15H572.24Z"/><path class="cls-3" d="M760,59.2c48.56,0,76.23,25,76.23,74s-27.67,74-76.23,74H720V59.2Zm3.27,135.66c41.6,0,58.61-24.39,58.61-61.69,0-43.64-25.61-62.91-67.62-61.68h-20.9V194.86Z"/><path class="cls-3" d="M870.19,207.15V59.2H958.1V71.49H883.51v53.08h71.73v12.29H883.51v58h77.67v12.29Z"/><path class="cls-3" d="M1030.44,210.23c-23.56,0-43.44-17.22-44.05-41.6h14.34c.41,22.74,17.21,29.3,37.09,29.3,16.6,0,35.66-9.63,35.66-28.48,0-14.76-10.66-21.73-23.16-25.82-24-8-60.45-15.58-60.45-47.55,0-25.82,23.77-40,47.13-40,19.47,0,44.88,6.77,48.16,35.25h-14.35c-.41-18.24-17-23-32.17-23-15.37,0-34.43,7.79-34.43,25.82,0,42,83.61,23,83.61,74C1087.82,200.39,1060.16,210.23,1030.44,210.23Z"/><path class="cls-3" d="M1121.63,207.15V58.58H1135V207.15Z"/><path class="cls-3" d="M1212.62,210.23c-23.56,0-43.44-17.22-44.06-41.6h14.35c.41,22.74,17.21,29.3,37.09,29.3,16.6,0,35.66-9.63,35.66-28.48,0-14.76-10.66-21.73-23.16-25.82-24-8-60.45-15.58-60.45-47.55,0-25.82,23.77-40,47.13-40,19.47,0,44.88,6.77,48.16,35.25H1253c-.41-18.24-17-23-32.17-23-15.37,0-34.43,7.79-34.43,25.82,0,42,83.61,23,83.61,74C1270,200.39,1242.34,210.23,1212.62,210.23Z"/></svg>
-    </a>
-  </ng-template>
 
-  <header *ngIf="!firstTime" role="banner">
-
-    <!-- Navbar: Logged Out -->
-    <nav class="navbar navbar-fixed-top navbar-light loggedOut" role="navigation" *ngIf="!loggedIn">
-      <!-- Logo -->
-      <ng-container *ngTemplateOutlet="brandTemplate"></ng-container>
-    </nav>
-
-    <!-- Navbar: Logged In -->
-    <div *ngIf="loggedIn" class="navbar navbar-pf-vertical">
-      <div class="navbar-header">
-
-        <!-- Toggle Sidebar-->
-        <button
-          aria-label="Toggle Main Naivgation"
-          type="button"
-          class="navbar-toggle">
-          <span class="sr-only">{{ 'menu.navbartoggle' | synI18n }}</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
+        <button 
+          class="pf-c-button pf-m-plain" 
+          id="page-layout-default-nav-nav-toggle" 
+          aria-label="Toggle primary navigation" 
+          aria-expanded="true"
+          (click)="hamburgerToggle()">
+          <i class="fas fa-bars" aria-hidden="true"></i>
         </button>
 
-        <!-- Logo -->
-        <ng-container *ngTemplateOutlet="brandTemplate"></ng-container>
+
+      </div>
+      <a routerLink="/" class="navbar-brand" role="link">
+        <svg id="appLogo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 265"><defs><style>.cls-1{fill:#9adde8;}.cls-2{fill:#49badc;}.cls-3{fill:#fff;}</style></defs><title>syndesis_logo_full_1280px_lightbkg</title><polygon class="cls-1" points="129.95 98.77 33.99 144.38 122.22 167.37 218.18 121.75 129.95 98.77"/><polygon class="cls-2" points="218.18 121.75 218.18 121.75 122.22 167.37 242.17 198.61 218.18 121.75"/><polygon class="cls-1" points="154.99 86.86 131 10 10 67.52 129.95 98.77 154.99 86.86"/><polygon class="cls-2" points="33.99 144.38 129.95 98.77 10 67.52 10 67.52 33.99 144.38"/><polygon class="cls-2" points="189.64 25.27 131 10 154.99 86.86 213.63 102.14 189.64 25.27"/><polygon class="cls-2" points="38.54 164 62.53 240.86 121.17 256.13 121.17 256.13 97.18 179.27 97.18 179.27 38.54 164"/><polygon class="cls-1" points="242.17 198.61 122.22 167.37 97.18 179.27 121.17 256.13 242.17 198.61"/><path class="cls-3" d="M358.91,210.23c-23.57,0-43.44-17.22-44.06-41.6H329.2c.41,22.74,17.21,29.3,37.09,29.3,16.6,0,35.65-9.63,35.65-28.48,0-14.76-10.65-21.73-23.15-25.82-24-8-60.45-15.58-60.45-47.55,0-25.82,23.77-40,47.13-40,19.47,0,44.88,6.77,48.15,35.25H399.28c-.41-18.24-17-23-32.17-23-15.37,0-34.43,7.79-34.43,25.82,0,42,83.61,23,83.61,74C416.29,200.39,388.62,210.23,358.91,210.23Z"/><path class="cls-3" d="M484.32,143.22l-54.51-84h17l45.29,71.52L537.4,59.2h14.34l-54.1,83.61v64.34H484.32Z"/><path class="cls-3" d="M572.24,59.2H587.4L669,189.32h.41V59.2h13.32v148h-16.8L586,79.28h-.41V207.15H572.24Z"/><path class="cls-3" d="M760,59.2c48.56,0,76.23,25,76.23,74s-27.67,74-76.23,74H720V59.2Zm3.27,135.66c41.6,0,58.61-24.39,58.61-61.69,0-43.64-25.61-62.91-67.62-61.68h-20.9V194.86Z"/><path class="cls-3" d="M870.19,207.15V59.2H958.1V71.49H883.51v53.08h71.73v12.29H883.51v58h77.67v12.29Z"/><path class="cls-3" d="M1030.44,210.23c-23.56,0-43.44-17.22-44.05-41.6h14.34c.41,22.74,17.21,29.3,37.09,29.3,16.6,0,35.66-9.63,35.66-28.48,0-14.76-10.66-21.73-23.16-25.82-24-8-60.45-15.58-60.45-47.55,0-25.82,23.77-40,47.13-40,19.47,0,44.88,6.77,48.16,35.25h-14.35c-.41-18.24-17-23-32.17-23-15.37,0-34.43,7.79-34.43,25.82,0,42,83.61,23,83.61,74C1087.82,200.39,1060.16,210.23,1030.44,210.23Z"/><path class="cls-3" d="M1121.63,207.15V58.58H1135V207.15Z"/><path class="cls-3" d="M1212.62,210.23c-23.56,0-43.44-17.22-44.06-41.6h14.35c.41,22.74,17.21,29.3,37.09,29.3,16.6,0,35.66-9.63,35.66-28.48,0-14.76-10.66-21.73-23.16-25.82-24-8-60.45-15.58-60.45-47.55,0-25.82,23.77-40,47.13-40,19.47,0,44.88,6.77,48.16,35.25H1253c-.41-18.24-17-23-32.17-23-15.37,0-34.43,7.79-34.43,25.82,0,42,83.61,23,83.61,74C1270,200.39,1242.34,210.23,1212.62,210.23Z"/></svg>
+      </a>
+    </div>
+
+    <div class="pf-c-page__header-tools">
+
+      <div class="pf-c-page__header-tools-group">
+        <button class="pf-c-button pf-m-plain pf-m-mobile" aria-label="Overflow actions">
+          <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
+        </button>
+        <div class="pf-m-user pf-screen-reader">
+          <div class="pf-c-dropdown">
+            <button 
+              id="helpDropdownButton" 
+              class="pf-c-dropdown__toggle pf-m-plain" 
+              aria-expanded="false"
+              (click)="expandHelpDropdown()">
+              <i class="fas fa-question-circle pf-c-dropdown__toggle-icon" aria-hidden="true"></i>
+            </button>
+            <ul 
+              class="pf-c-dropdown__menu" 
+              aria-labelledby="helpDropdownButton"
+              *ngIf="helpExpanded">
+                <li>
+                  <a
+                    class="pf-c-dropdown__menu-item" 
+                    [attr.href]="'links.tutorial' | synI18n" 
+                    rel="nofollow" 
+                    role="link" 
+                    target="_blank">{{ 'header.helpmenu.sampletutorials' | synI18n }}
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    [attr.href]="'links.userguide' | synI18n:' '"
+                    rel="nofollow"
+                    role="link"
+                    target="_blank"
+                    class="pf-c-dropdown__menu-item">{{ 'header.helpmenu.userguide' | synI18n }}
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    [attr.href]="'links.connectorsguide' | synI18n:' '"
+                    rel="nofollow"
+                    role="link"
+                    target="_blank"
+                    class="pf-c-dropdown__menu-item">{{ 'header.helpmenu.connectorsguide' | synI18n }}
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    routerLink="/support" 
+                    role="link"  
+                    class="pf-c-dropdown__menu-item">{{ 'support' | synI18n }}
+                  </a>
+                </li>
+                <li>
+                  <a href="mailto:{{ 'email' | synI18n }}"
+                    rel="nofollow"
+                    role="link"
+                    target="_blank"
+                    class="pf-c-dropdown__menu-item">{{ 'contactus' | synI18n }}
+                  </a>
+                </li>
+              </ul>
+          </div>
+        </div>
       </div>
 
-      <!-- Top Navbar -->
-
-      <nav class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right navbar-iconic" role="list">
-
-          <!-- Help Navbar -->
-
-          <li dropdown class="dropdown help">
-            <button dropdownToggle
-                    class="btn btn-link dropdown-toggle nav-item-iconic"
-                    id="helpDropdown"
-                    aria-haspopup="true"
-                    aria-label="Help Dropdown"
-                    aria-controls="helpDropdownMenu"
-                    role="link"
-                    aria-expanded="true">
-              <span title="Help" class="pficon pficon-help"></span>
-            </button>
-            <ul class="dropdown-menu" id="helpDropdownMenu" aria-labelledby="helpDropdown">
-              <li>
-                <a [attr.href]="'links.tutorial' | synI18n"
-                    rel="nofollow"
-                    role="link"
-                    target="_blank">{{ 'header.helpmenu.sampletutorials' | synI18n }}</a>
-              </li>
-              <li>
-                <a [attr.href]="'links.userguide' | synI18n:' '"
-                    rel="nofollow"
-                    role="link"
-                    target="_blank">{{ 'header.helpmenu.userguide' | synI18n }}</a>
-              <li>
-                <a [attr.href]="'links.connectorsguide' | synI18n:' '"
-                    rel="nofollow"
-                    role="link"
-                    target="_blank">{{ 'header.helpmenu.connectorsguide' | synI18n }}</a>
-              <li>
-                <a routerLink="/support" role="link">{{ 'support' | synI18n }}</a>
-              </li>
-              <li>
-                <a [attr.href]="'links.contactus' | synI18n"
-                rel="nofollow"
-                role="link"
-                target="_blank">{{ 'contactus' | synI18n }}</a>
-              </li>
-            </ul>
-          </li>
-
-          <!-- User w/ No Dropdown -->
-
-          <!--
-          <li class="nav-item-iconic">
-            <span title="Username"
-                  class="fa pficon-user"></span>
-            <span class="username">{{( user | async)?.name || ( user | async)?.fullName || ( user | async)?.username}}</span>
-          </li>
-          -->
-
-          <!-- User Dropdown -->
-          <li dropdown
-              class="dropdown user">
-            <button dropdownToggle
-              class="btn btn-link dropdown-toggle nav-item-iconic"
-                id="userDropdown"
-                aria-haspopup="true"
-                aria-controls="userDropdownMenu"
-                aria-label="User Dropdown"
-                role="link"
-                aria-expanded="false">
-              <span title="Username" class="fa pficon-user"></span>
-              <span class="dropdown-title">
-                <span class="username">{{ ( user$ | async)?.username }}</span>
-                <span class="caret"></span>
-              </span>
-            </button>
-            <ul *dropdownMenu class="dropdown-menu" id="userDropdownMenu" aria-labelledby="userDropdown">
-              <li>
-                <a (click)="logout()" role="link">{{ 'header.usermenu.logout' | synI18n }}</a>
-              </li>
-              <!--
-              <li>
-                <a (click)="resetDB()" role="link">Reset DB</a>
-              </li>
-              <li>
-                <a (click)="exportDB()" role="link">Export DB</a>
-              </li>
-              <li>
-                <a (click)="showImportDB()" role="link">Import DB</a>
-              </li>
-              -->
-            </ul>
-          </li>
-        </ul>
-      </nav>
+      <div class="pf-c-page__header-tools-group">
+          <button class="pf-c-button pf-m-plain pf-m-mobile" aria-label="Overflow actions">
+            <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
+          </button>
+          <div class="pf-m-user pf-screen-reader">
+            <div class="pf-c-dropdown">
+              <button 
+                id="userMenuDropdownButton" 
+                class="pf-c-dropdown__toggle pf-m-plain" 
+                aria-expanded="false"
+                (click)="userMenuDropdown()">
+                {{ ( user$ | async)?.username }}
+                <img class="pf-c-avatar" src="/assets/images/img_avatar.svg" alt="Avatar Image">
+              </button>
+              <ul 
+                class="pf-c-dropdown__menu" 
+                aria-labelledby="userMenuDropdownButton"
+                *ngIf="userMenuExpanded">
+                <li>
+                  <a
+                    (click)="logout()" 
+                    class="pf-c-dropdown__menu-item"                  
+                    role="link">{{ 'header.usermenu.logout' | synI18n }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
     </div>
-    <!--/.navbar-->
 
   </header>
-
-  <!-- Sidebar -->
-  <nav class="nav-pf-vertical hidden-icons-pf" role="navigation" *ngIf="loggedIn">
-    <ul class="list-group" role="list">
-      <li class="list-group-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <a routerLink="/" role="link">
-          <span class="fa fa-tachometer" data-toggle="tooltip" title="Dashboard"></span>
-          <span class="list-group-item-value">{{ 'menu.home' | synI18n }}</span>
-        </a>
-      </li>
-      <li class="list-group-item" routerLinkActive="active">
-        <a routerLink="integrations" role="link">
-          <span class="pficon pficon-topology" data-toggle="tooltip" title="Integrations"></span>
-          <span class="list-group-item-value">{{ 'menu.integrations' | synI18n }}</span>
-        </a>
-      </li>
-      <li class="list-group-item" routerLinkActive="active">
-        <a routerLink="connections" role="link">
-          <span class="pficon pficon-network" data-toggle="tooltip" title="Connections"></span>
-          <span class="list-group-item-value">{{ 'menu.connections' | synI18n }}</span>
-        </a>
-      </li>
-      <li class="list-group-item" routerLinkActive="active">
-        <a routerLink="customizations" role="link">
-          <span class="pficon pficon-network" data-toggle="tooltip" title="Customizations"></span>
-          <span class="list-group-item-value">{{ 'menu.customizations' | synI18n }}</span>
-        </a>
-      </li>
-      <li class="list-group-item" routerLinkActive="active">
-        <a routerLink="settings" role="link">
-          <span class="fa fa-lock" data-toggle="tooltip" title="Settings"></span>
-          <span class="list-group-item-value">{{ 'menu.settings' | synI18n }}</span>
-        </a>
-      </li>
-      <li class="list-group-item secondary-nav-item-pf mobile-nav-item-pf visible-xs-block">
-        <a role="link">
-          <span class="pficon pficon-user"
-                data-toggle="tooltip"
-                title="User"></span>
-          <span class="list-group-item-value">{{ 'user' | synI18n }}</span>
-        </a>
-        <div class="nav-pf-secondary-nav">
-          <div class="nav-item-pf-header">
-            <a role="button" class="secondary-collapse-toggle-pf" data-toggle="collapse-secondary-nav"></a>
-            <span>{{ 'user' | synI18n }}</span>
+  <nav class="nav-pf-vertical hidden-icons-pf" role="navigation" *ngIf="loggedIn" [ngClass]="{'collapsed': menuExpanded}">
+      <ul class="list-group" role="list">
+        <li class="list-group-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a routerLink="/" role="link">
+            <span class="fa fa-tachometer" data-toggle="tooltip" title="Dashboard"></span>
+            <span class="list-group-item-value">{{ 'menu.home' | synI18n }}</span>
+          </a>
+        </li>
+        <li class="list-group-item" routerLinkActive="active">
+          <a routerLink="integrations" role="link">
+            <span class="pficon pficon-topology" data-toggle="tooltip" title="Integrations"></span>
+            <span class="list-group-item-value">{{ 'menu.integrations' | synI18n }}</span>
+          </a>
+        </li>
+        <li class="list-group-item" routerLinkActive="active">
+          <a routerLink="connections" role="link">
+            <span class="pficon pficon-network" data-toggle="tooltip" title="Connections"></span>
+            <span class="list-group-item-value">{{ 'menu.connections' | synI18n }}</span>
+          </a>
+        </li>
+        <li class="list-group-item" routerLinkActive="active">
+          <a routerLink="customizations" role="link">
+            <span class="pficon pficon-network" data-toggle="tooltip" title="Customizations"></span>
+            <span class="list-group-item-value">{{ 'menu.customizations' | synI18n }}</span>
+          </a>
+        </li>
+        <li class="list-group-item" routerLinkActive="active">
+          <a routerLink="settings" role="link">
+            <span class="fa fa-lock" data-toggle="tooltip" title="Settings"></span>
+            <span class="list-group-item-value">{{ 'menu.settings' | synI18n }}</span>
+          </a>
+        </li>
+        <li class="list-group-item secondary-nav-item-pf mobile-nav-item-pf visible-xs-block">
+          <a role="link">
+            <span class="pficon pficon-user"
+                  data-toggle="tooltip"
+                  title="User"></span>
+            <span class="list-group-item-value">{{ 'user' | synI18n }}</span>
+          </a>
+          <div class="nav-pf-secondary-nav">
+            <div class="nav-item-pf-header">
+              <a role="button" class="secondary-collapse-toggle-pf" data-toggle="collapse-secondary-nav"></a>
+              <span>{{ 'user' | synI18n }}</span>
+            </div>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <a (click)="logout()" role="link">
+                  <span class="list-group-item-value">{{ 'header.usermenu.logout' | synI18n }}</span>
+                </a>
+              </li>
+            </ul>
           </div>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <a (click)="logout()" role="link">
-                <span class="list-group-item-value">{{ 'header.usermenu.logout' | synI18n }}</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li class="list-group-item secondary-nav-item-pf mobile-nav-item-pf visible-xs-block">
-        <a role="link">
-          <span class="pficon pficon-help"
-                data-toggle="tooltip"
-                title="User"></span>
-          <span class="list-group-item-value">{{ 'help' | synI18n }}</span>
-        </a>
-        <div class="nav-pf-secondary-nav">
-          <div class="nav-item-pf-header">
-            <a role="button" class="secondary-collapse-toggle-pf" data-toggle="collapse-secondary-nav"></a>
-            <span>{{ 'help' | synI18n }}</span>
+        </li>
+        <li class="list-group-item secondary-nav-item-pf mobile-nav-item-pf visible-xs-block">
+          <a role="link">
+            <span class="pficon pficon-help"
+                  data-toggle="tooltip"
+                  title="User"></span>
+            <span class="list-group-item-value">{{ 'help' | synI18n }}</span>
+          </a>
+          <div class="nav-pf-secondary-nav">
+            <div class="nav-item-pf-header">
+              <a role="button" class="secondary-collapse-toggle-pf" data-toggle="collapse-secondary-nav"></a>
+              <span>{{ 'help' | synI18n }}</span>
+            </div>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <a [attr.href]="'links.tutorial' | synI18n"
+                  rel="nofollow"
+                  role="link"
+                  target="_blank"
+                  class="list-group-item-value">{{ 'header.helpmenu.sampletutorials' | synI18n }}</a>
+              </li>
+              <li class="list-group-item">
+                <a [attr.href]="'links.userguide' | synI18n:' '"
+                  rel="nofollow"
+                  role="link"
+                  target="_blank"
+                  class="list-group-item-value">{{ 'header.helpmenu.userguide' | synI18n }}</a>
+              </li>
+              <li class="list-group-item">
+                <a routerLink="/support" role="link"  class="list-group-item-value">{{ 'support' | synI18n }}</a>
+              </li>
+              <li class="list-group-item">
+                <a href="mailto:{{ 'email' | synI18n }}"
+                  rel="nofollow"
+                  role="link"
+                  target="_blank"
+                  class="list-group-item-value">{{ 'contactus' | synI18n }}</a>
+              </li>
+            </ul>
           </div>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <a [attr.href]="'links.tutorial' | synI18n"
-                rel="nofollow"
-                role="link"
-                target="_blank"
-                class="list-group-item-value">{{ 'header.helpmenu.sampletutorials' | synI18n }}</a>
-            </li>
-            <li class="list-group-item">
-              <a [attr.href]="'links.userguide' | synI18n:' '"
-                rel="nofollow"
-                role="link"
-                target="_blank"
-                class="list-group-item-value">{{ 'header.helpmenu.userguide' | synI18n }}</a>
-            </li>
-            <li class="list-group-item">
-              <a routerLink="/support" role="link"  class="list-group-item-value">{{ 'support' | synI18n }}</a>
-            </li>
-            <li class="list-group-item">
-              <a href="mailto:{{ 'email' | synI18n }}"
-                rel="nofollow"
-                role="link"
-                target="_blank"
-                class="list-group-item-value">{{ 'contactus' | synI18n }}</a>
-            </li>
-          </ul>
-        </div>
-      </li>
-    </ul>
-  </nav>
-  <main role="main" class="container-fluid container-pf-nav-pf-vertical" *ngIf="loggedIn">
-    <router-outlet></router-outlet>
+        </li>
+      </ul>
+    </nav>
+  <main role="main" class="pf-c-page__main" [ngClass]="{'collapsed-nav': menuExpanded}">
+    <section class="pf-c-page__main-section pf-m-light">
+      <router-outlet></router-outlet>
+    </section>
   </main>
-
-  <syndesis-modal id="importDb" title="Import Selection" [body]="importDbModal">
-    <ng-template #importDbModal let-modal="modal">
-        {{ 'import-db-txt' | synI18n }}
-      <input type="file" id="file-import" (change)="importDB($event, modal)">
-    </ng-template>
-  </syndesis-modal>
-
+  <!-- <main role="main" class="container-fluid container-pf-nav-pf-vertical" *ngIf="loggedIn">
+    <router-outlet></router-outlet>
+  </main> -->
 </div>

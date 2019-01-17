@@ -32,6 +32,13 @@ import {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewInit {
+<<<<<<< HEAD
+=======
+  helpExpanded = false;
+  userMenuExpanded = false;
+  menuExpanded = false;
+  // TODO icon?
+>>>>>>> feat(masthead): convert masthead to pf4.
   /**
    * Logo and Icon with dark background
    */
@@ -203,6 +210,27 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   handleClose($event: NotificationEvent): void {
     this.notificationService.remove($event.notification);
+  }
+
+  /**
+   * Expands the help dropdown menu within the masthead.
+   */
+  expandHelpDropdown(): void {
+    this.helpExpanded = this.helpExpanded ? false : true;
+  }
+
+  /**
+   * Expands the logout dropdown menu within the masthead.
+   */
+  userMenuDropdown(): void {
+    this.userMenuExpanded = this.userMenuExpanded ? false : true;
+  }
+
+  /**
+   * Expands and contracts the vertical navigation menu.
+   */
+  hamburgerToggle(): void {
+    this.menuExpanded = !this.menuExpanded;
   }
 
   ngAfterViewInit() {
