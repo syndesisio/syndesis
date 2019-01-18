@@ -20,9 +20,7 @@ import {
   IntegrationService,
   StepStore
 } from '@syndesis/ui/store';
-import {
-  CurrentFlowService
-} from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService } from '@syndesis/ui/integration/edit-page';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 describe('CurrentFlow', () => {
@@ -42,7 +40,7 @@ describe('CurrentFlow', () => {
         StepStore
       ]
     });
-    inject([CurrentFlowService], c => c.flowId = 'flow1');
+    inject([CurrentFlowService], c => (c.flowId = 'flow1'));
   });
 
   function getDummyIntegration(): Integration {
@@ -88,97 +86,97 @@ describe('CurrentFlow', () => {
     return rc;
   }
 
-  it(
-    'should return the previous connection',
-    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+  it('should return the previous connection', inject(
+    [CurrentFlowService],
+    (currentFlowService: CurrentFlowService) => {
       currentFlowService.integration = getDummyIntegration();
       const step = currentFlowService.getPreviousConnection(2);
       expect(step.id).toEqual('3');
-    })
-  );
+    }
+  ));
 
-  it(
-    'should return the subsequent connection',
-    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+  it('should return the subsequent connection', inject(
+    [CurrentFlowService],
+    (currentFlowService: CurrentFlowService) => {
       currentFlowService.integration = getDummyIntegration();
       const step = currentFlowService.getSubsequentConnection(2);
       expect(step.id).toEqual('4');
-    })
-  );
+    }
+  ));
 
-  it(
-    'should return all subsequent connections',
-    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+  it('should return all subsequent connections', inject(
+    [CurrentFlowService],
+    (currentFlowService: CurrentFlowService) => {
       currentFlowService.integration = getDummyIntegration();
       const steps = currentFlowService.getSubsequentConnections(2);
       expect(steps.length).toEqual(1);
       expect(steps[0].id).toEqual('4');
-    })
-  );
+    }
+  ));
 
-  it(
-    'should return all previous connections',
-    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+  it('should return all previous connections', inject(
+    [CurrentFlowService],
+    (currentFlowService: CurrentFlowService) => {
       currentFlowService.integration = getDummyIntegration();
       const steps = currentFlowService.getPreviousConnections(2);
       expect(steps.length).toEqual(2);
       expect(steps[0].id).toEqual('foobar');
-    })
-  );
+    }
+  ));
 
-  it(
-    'should return the first step in the flow',
-    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+  it('should return the first step in the flow', inject(
+    [CurrentFlowService],
+    (currentFlowService: CurrentFlowService) => {
       currentFlowService.integration = getDummyIntegration();
-      const conn = currentFlowService.getStartConnection();
+      const conn = currentFlowService.getStartStep().connection;
       expect(conn.connectorId).toEqual('timer');
-    })
-  );
+    }
+  ));
 
-  it(
-    'should return the last step in the flow',
-    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+  it('should return the last step in the flow', inject(
+    [CurrentFlowService],
+    (currentFlowService: CurrentFlowService) => {
       currentFlowService.integration = getDummyIntegration();
-      const conn = currentFlowService.getEndConnection();
+      const conn = currentFlowService.getEndStep().connection;
       expect(conn.connectorId).toEqual('http');
-    })
-  );
+    }
+  ));
 
-  it(
-    'should return the middle steps in the flow',
-    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+  it('should return the middle steps in the flow', inject(
+    [CurrentFlowService],
+    (currentFlowService: CurrentFlowService) => {
       currentFlowService.integration = getDummyIntegration();
       const steps: Step[] = currentFlowService.getMiddleSteps();
       expect(steps.length).toEqual(2);
       expect(steps[0].id).toEqual('3');
       expect(steps[0].stepKind).toEqual('endpoint');
-    })
-  );
+    }
+  ));
 
-  it(
-    'Should return an undefined start and end connection with an empty integration',
-    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+  it('Should return an undefined start and end connection with an empty integration', inject(
+    [CurrentFlowService],
+    (currentFlowService: CurrentFlowService) => {
       currentFlowService.integration = <Integration>{};
-      expect(currentFlowService.getStartConnection()).toBeUndefined();
-      expect(currentFlowService.getEndConnection()).toBeUndefined();
+      expect(currentFlowService.getStartStep()).toBeUndefined();
+      expect(currentFlowService.getEndStep()).toBeUndefined();
       expect(currentFlowService.getFirstPosition()).toBeUndefined();
       expect(currentFlowService.getLastPosition()).toBeUndefined();
-    })
-  );
+    }
+  ));
 
-  it(
-    'Should return an 0 as start and 1 end connection with an minimal integration',
-    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+  it('Should return an 0 as start and 1 end connection with an minimal integration', inject(
+    [CurrentFlowService],
+    (currentFlowService: CurrentFlowService) => {
       const flow = <Flow>{};
       flow.id = 'flow1';
       flow.steps = [createConnectionStep(), createConnectionStep()];
       const integration = <Integration>{};
-      integration.flows = [ flow ];
+      integration.flows = [flow];
       currentFlowService.integration = integration;
-      expect(currentFlowService.getStartConnection()).toBeUndefined();
-      expect(currentFlowService.getEndConnection()).toBeUndefined();
+      expect(currentFlowService.getStartStep().connection).toBeUndefined();
+      expect(currentFlowService.getEndStep().connection).toBeUndefined();
       expect(currentFlowService.getFirstPosition()).toBe(0);
       expect(currentFlowService.getLastPosition()).toBe(1);
-    })
-  );
+    }
+  ));
 });

@@ -90,7 +90,7 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
       position: position,
       onSave: () => {
         this.router.navigate(['step-select', position + 1], {
-          relativeTo: this.route,
+          relativeTo: this.route
         });
       }
     });
@@ -102,7 +102,7 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
       position: position,
       onSave: () => {
         this.router.navigate(['connection-select', position + 1], {
-          relativeTo: this.route,
+          relativeTo: this.route
         });
       }
     });
@@ -132,18 +132,26 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
     if (!this.currentFlowService.loaded) {
       return;
     }
-    if (this.currentFlowService.getStartConnection() === undefined) {
+    if (
+      !this.currentFlowService.getStartStep() ||
+      typeof this.currentFlowService.getStartStep().connection === 'undefined'
+    ) {
       this.router.navigate(
-        ['connection-select', this.currentFlowService.getFirstPosition()], {
-          relativeTo: this.route.parent,
+        ['connection-select', this.currentFlowService.getFirstPosition()],
+        {
+          relativeTo: this.route.parent
         }
       );
       return;
     }
-    if (this.currentFlowService.getEndConnection() === undefined) {
+    if (
+      !this.currentFlowService.getEndStep() ||
+      typeof this.currentFlowService.getEndStep().connection === 'undefined'
+    ) {
       this.router.navigate(
-        ['connection-select', this.currentFlowService.getLastPosition()], {
-          relativeTo: this.route.parent,
+        ['connection-select', this.currentFlowService.getLastPosition()],
+        {
+          relativeTo: this.route.parent
         }
       );
       return;
@@ -152,12 +160,21 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
 
   ngOnInit() {
     const lastStep = this.currentFlowService.getEndStep();
-    if (lastStep && lastStep.action && lastStep.action.id == 'io.syndesis:api-provider-end') {
+    if (
+      lastStep &&
+      lastStep.action &&
+      lastStep.action.id == 'io.syndesis:api-provider-end'
+    ) {
       if (lastStep.configuredProperties['httpResponseCode'] == '501') {
-        const returnCode = this.currentFlowService.currentFlow.metadata['default-return-code'];
-        const returnCodeEdited = this.currentFlowService.currentFlow.metadata['return-code-edited'];
+        const returnCode = this.currentFlowService.currentFlow.metadata[
+          'default-return-code'
+        ];
+        const returnCodeEdited = this.currentFlowService.currentFlow.metadata[
+          'return-code-edited'
+        ];
         if (returnCode && !returnCodeEdited) {
-          this.currentFlowService.currentFlow.metadata['return-code-edited'] = 'true';
+          this.currentFlowService.currentFlow.metadata['return-code-edited'] =
+            'true';
           lastStep.configuredProperties['httpResponseCode'] = returnCode;
         }
       }
