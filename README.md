@@ -27,3 +27,4 @@ cd syndesis
 This will install the latest bleeding edge version from Syndesis from the `master` branch.
 For a more stable experience, use the option `--tag` with a [stable version](https://github.com/syndesisio/syndesis/releases).
 
+
