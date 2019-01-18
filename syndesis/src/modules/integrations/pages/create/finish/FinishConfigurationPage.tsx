@@ -28,6 +28,7 @@ export interface IFinishConfigurationPageRouteState {
   startConnection: ConnectionOverview;
   finishConnection: ConnectionOverview;
   integration: Integration;
+  updatedIntegration: Integration;
 }
 
 export class FinishConfigurationPage extends React.Component {
@@ -42,7 +43,13 @@ export class FinishConfigurationPage extends React.Component {
             >>
               {(
                 { actionId, connectionId, step = '0' },
-                { startAction, startConnection, finishConnection, integration },
+                {
+                  startAction,
+                  startConnection,
+                  finishConnection,
+                  integration,
+                  updatedIntegration,
+                },
                 { history }
               ) => {
                 const stepAsNumber = parseInt(step, 10);
@@ -51,10 +58,10 @@ export class FinishConfigurationPage extends React.Component {
                   moreConfigurationSteps,
                   values,
                 }: IOnUpdatedIntegrationProps) => {
-                  const updatedIntegration = await (stepAsNumber === 0
+                  updatedIntegration = await (stepAsNumber === 0
                     ? addConnection
                     : updateConnection)(
-                    integration,
+                    updatedIntegration || integration,
                     finishConnection,
                     action,
                     0,
@@ -66,10 +73,11 @@ export class FinishConfigurationPage extends React.Component {
                       resolvers.create.finish.configureAction({
                         actionId,
                         finishConnection,
-                        integration: updatedIntegration,
+                        integration,
                         startAction,
                         startConnection,
                         step: stepAsNumber + 1,
+                        updatedIntegration,
                       })
                     );
                   } else {

@@ -21,8 +21,8 @@ export interface IIntegrationEditorSidebarProps {
   forceTooltips?: boolean;
   addConnectionHref?(idx: number): H.LocationDescriptor;
   addStepHref?(idx: number): H.LocationDescriptor;
-  configureConnectionHref(stepIdx: number, step: Step): H.LocationDescriptor;
-  configureStepHref(stepIdx: number, step: Step): H.LocationDescriptor;
+  configureConnectionHref?(stepIdx: number, step: Step): H.LocationDescriptor;
+  configureStepHref?(stepIdx: number, step: Step): H.LocationDescriptor;
 }
 
 export class IntegrationEditorSidebar extends React.Component<
@@ -86,7 +86,11 @@ export class IntegrationEditorSidebar extends React.Component<
                     name={s.connection!.connector!.name}
                     action={s.action!.name}
                     dataType={'TODO'}
-                    href={this.props.configureConnectionHref(idx, s)}
+                    href={
+                      this.props.configureConnectionHref
+                        ? this.props.configureConnectionHref(idx, s)
+                        : undefined
+                    }
                   />
                 )}
                 {hasAddStep && (hasActiveAddStep ? activeAddStep : addStep)}

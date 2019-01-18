@@ -26,6 +26,7 @@ export interface IStartConfigurationPageRouteParams {
 export interface IStartConfigurationPageRouteState {
   connection: ConnectionOverview;
   integration?: Integration;
+  updatedIntegration?: Integration;
 }
 
 export class StartConfigurationPage extends React.Component {
@@ -40,7 +41,11 @@ export class StartConfigurationPage extends React.Component {
             >>
               {(
                 { actionId, connectionId, step = '0' },
-                { connection, integration = getEmptyIntegration() },
+                {
+                  connection,
+                  integration = getEmptyIntegration(),
+                  updatedIntegration,
+                },
                 { history }
               ) => {
                 const stepAsNumber = parseInt(step, 10);
@@ -49,10 +54,10 @@ export class StartConfigurationPage extends React.Component {
                   moreConfigurationSteps,
                   values,
                 }: IOnUpdatedIntegrationProps) => {
-                  const updatedIntegration = await (stepAsNumber === 0
+                  updatedIntegration = await (stepAsNumber === 0
                     ? addConnection
                     : updateConnection)(
-                    integration,
+                    updatedIntegration || integration,
                     connection,
                     action,
                     0,
@@ -64,8 +69,9 @@ export class StartConfigurationPage extends React.Component {
                       resolvers.create.start.configureAction({
                         actionId,
                         connection,
-                        integration: updatedIntegration,
+                        integration,
                         step: stepAsNumber + 1,
+                        updatedIntegration,
                       })
                     );
                   } else {

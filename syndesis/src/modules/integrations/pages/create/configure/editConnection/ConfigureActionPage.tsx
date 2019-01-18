@@ -12,10 +12,6 @@ import {
   IOnUpdatedIntegrationProps,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
-import {
-  getConfigureConnectionHrefCallback,
-  getConfigureStepHrefCallback,
-} from '../../../resolversHelpers';
 
 export interface IConfigureActionRouteParams {
   position: string;
@@ -25,6 +21,7 @@ export interface IConfigureActionRouteParams {
 
 export interface IConfigureActionRouteState {
   integration: Integration;
+  updatedIntegration?: Integration;
 }
 
 export class ConfigureActionPage extends React.Component {
@@ -39,7 +36,7 @@ export class ConfigureActionPage extends React.Component {
             >>
               {(
                 { actionId, step = '0', position },
-                { integration },
+                { integration, updatedIntegration },
                 { history }
               ) => {
                 const stepAsNumber = parseInt(step, 10);
@@ -50,8 +47,8 @@ export class ConfigureActionPage extends React.Component {
                   moreConfigurationSteps,
                   values,
                 }: IOnUpdatedIntegrationProps) => {
-                  const updatedIntegration = await updateConnection(
-                    integration,
+                  updatedIntegration = await updateConnection(
+                    updatedIntegration || integration,
                     stepObject.connection!,
                     action,
                     0,
@@ -63,9 +60,10 @@ export class ConfigureActionPage extends React.Component {
                       resolvers.create.configure.addConnection.configureAction({
                         actionId,
                         connection: stepObject.connection!,
-                        integration: updatedIntegration,
+                        integration,
                         position,
                         step: stepAsNumber + 1,
+                        updatedIntegration,
                       })
                     );
                   } else {
@@ -83,13 +81,7 @@ export class ConfigureActionPage extends React.Component {
                     <ContentWithSidebarLayout
                       sidebar={
                         <IntegrationEditorSidebar
-                          steps={getSteps(integration, 0)}
-                          configureConnectionHref={getConfigureConnectionHrefCallback(
-                            integration
-                          )}
-                          configureStepHref={getConfigureStepHrefCallback(
-                            integration
-                          )}
+                          steps={getSteps(updatedIntegration || integration, 0)}
                           activeIndex={positionAsNumber}
                         />
                       }
@@ -113,9 +105,9 @@ export class ConfigureActionPage extends React.Component {
                               <Link
                                 to={resolvers.create.configure.editConnection.selectAction(
                                   {
-                                    position,
-                                    integration,
                                     connection: stepObject.connection!,
+                                    integration,
+                                    position,
                                   }
                                 )}
                               >
@@ -129,9 +121,9 @@ export class ConfigureActionPage extends React.Component {
                           configurationStep={stepAsNumber}
                           backLink={resolvers.create.configure.editConnection.selectAction(
                             {
-                              position,
-                              integration,
                               connection: stepObject.connection!,
+                              integration,
+                              position,
                             }
                           )}
                           initialValue={stepObject.configuredProperties}

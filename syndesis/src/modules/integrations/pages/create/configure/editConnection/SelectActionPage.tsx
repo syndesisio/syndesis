@@ -11,11 +11,7 @@ import {
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
-import {
-  getConfigureConnectionHrefCallback,
-  getConfigureStepHrefCallback,
-  getEditConfigureActionHref,
-} from '../../../resolversHelpers';
+import { getEditConfigureActionHref } from '../../../resolversHelpers';
 
 export interface ISelectActionRouteParams {
   connectionId: string;
@@ -52,12 +48,6 @@ export class SelectActionPage extends React.Component {
                               {({ getSteps }) => (
                                 <IntegrationEditorSidebar
                                   steps={getSteps(integration, 0)}
-                                  configureConnectionHref={getConfigureConnectionHrefCallback(
-                                    integration
-                                  )}
-                                  configureStepHref={getConfigureStepHrefCallback(
-                                    integration
-                                  )}
                                   activeIndex={positionAsNumber}
                                 />
                               )}

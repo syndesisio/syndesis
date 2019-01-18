@@ -45,9 +45,10 @@ export default {
         actionId: string;
         step?: number;
         integration?: Integration;
+        updatedIntegration?: Integration;
       }>(
         routes.create.start.configureAction,
-        ({ connection, integration, actionId, step }) => ({
+        ({ connection, integration, actionId, step, updatedIntegration }) => ({
           params: {
             connectionId: connection.id,
             actionId,
@@ -56,6 +57,7 @@ export default {
           state: {
             connection,
             integration,
+            updatedIntegration,
           },
         })
       ),
@@ -96,6 +98,7 @@ export default {
       ),
       configureAction: makeResolver<{
         integration: Integration;
+        updatedIntegration?: Integration;
         startConnection: ConnectionOverview;
         startAction: Action;
         finishConnection: ConnectionOverview;
@@ -110,6 +113,7 @@ export default {
           finishConnection,
           actionId,
           step,
+          updatedIntegration,
         }) => ({
           params: {
             actionId,
@@ -118,6 +122,7 @@ export default {
           },
           state: {
             integration,
+            updatedIntegration,
             startAction,
             startConnection,
             finishConnection,
@@ -171,10 +176,18 @@ export default {
           actionId: string;
           step?: number;
           integration?: Integration;
+          updatedIntegration?: Integration;
           position: string;
         }>(
           routes.create.configure.addConnection.configureAction,
-          ({ connection, integration, actionId, step, position }) => ({
+          ({
+            connection,
+            integration,
+            actionId,
+            step,
+            position,
+            updatedIntegration,
+          }) => ({
             params: {
               connectionId: connection.id,
               actionId,
@@ -184,6 +197,7 @@ export default {
             state: {
               connection,
               integration,
+              updatedIntegration,
             },
           })
         ),
@@ -210,10 +224,11 @@ export default {
           actionId: string;
           step?: number;
           integration: Integration;
+          updatedIntegration?: Integration;
           position: string;
         }>(
           routes.create.configure.editConnection.configureAction,
-          ({ integration, actionId, step, position }) => ({
+          ({ integration, actionId, step, position, updatedIntegration }) => ({
             params: {
               actionId,
               step,
@@ -221,6 +236,7 @@ export default {
             },
             state: {
               integration,
+              updatedIntegration,
             },
           })
         ),
