@@ -2,7 +2,6 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import {
-  Action,
   Connection,
   Connections,
   createStep,
@@ -13,7 +12,6 @@ import {
   Step,
   IntegrationSupportService,
   ActionDescriptor,
-  key,
   Flow,
   Flows
 } from '@syndesis/ui/platform';
@@ -25,8 +23,37 @@ import {
   StepStore
 } from '@syndesis/ui/store';
 import { FlowEvent } from '@syndesis/ui/integration/edit-page';
+import {
+  setIntegrationProperty,
+  createStepUsingStore,
+  createStepWithConnection,
+  setDataShapeOnStep,
+  prepareIntegrationForSaving,
+  hasDataShape,
+  setDescriptorOnStep,
+  setActionOnStep,
+  setConfiguredPropertiesOnStep,
+  addMetadataToStep,
+  getFlow,
+  setFlow,
+  createFlowWithId,
+  insertStepIntoFlowAfter,
+  insertStepIntoFlowBefore,
+  setStepInFlow,
+  getLastPosition,
+  getFirstPosition,
+  removeStepFromFlow,
+  getMiddlePosition,
+  getStep
+} from './flow-functions';
 
 const category = getCategory('CurrentFlow');
+
+function executeEventAction(func: any, ...args: any[]) {
+  if (func && typeof func === 'function') {
+    func.call(func, args);
+  }
+}
 
 @Injectable()
 export class CurrentFlowService {
@@ -215,7 +242,7 @@ export class CurrentFlowService {
     const steps = this.getSubsequentSteps(position);
     if (steps) {
       steps.forEach((step, index) => {
-        if (this.hasDataShape(step, true)) {
+        if (hasDataShape(step, true)) {
           answer.push({ step: step, index: position + index });
         }
       });
@@ -248,7 +275,7 @@ export class CurrentFlowService {
   ): Array<{ step: Step; index: number }> {
     const answer: { step: Step; index: number }[] = [];
     this.getPreviousSteps(position).forEach((step, index) => {
-      if (this.hasDataShape(step, false)) {
+      if (hasDataShape(step, false)) {
         answer.push({ step, index });
       }
     });
@@ -328,10 +355,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getFirstPosition(): number {
-    if (!this.steps) {
-      return undefined;
-    }
-    return 0;
+    return getFirstPosition(this._integration, this.flowId);
   }
 
   /**
@@ -341,13 +365,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getLastPosition(): number {
-    if (!this.steps) {
-      return undefined;
-    }
-    if (this.steps.length <= 1) {
-      return 1;
-    }
-    return this.steps.length - 1;
+    return getLastPosition(this._integration, this.flowId);
   }
 
   /**
@@ -357,13 +375,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getMiddlePosition(): number {
-    const last = this.getLastPosition();
-    if (last !== undefined) {
-      // TODO yes, this
-      return Math.round(last / 2);
-    } else {
-      return undefined;
-    }
+    return getMiddlePosition(this._integration, this.flowId);
   }
 
   /**
@@ -374,10 +386,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getStep(position: number): Step {
-    if (!this.steps || position === undefined) {
-      return undefined;
-    }
-    return this.steps[position];
+    return getStep(this.integration, this.flowId, position);
   }
 
   isEmpty(): boolean {
@@ -421,208 +430,164 @@ export class CurrentFlowService {
         break;
       }
       case 'integration-insert-step': {
-        const position = +event['position'];
-        this.insertStepAfter(position);
-        this.maybeDoAction(event['onSave']);
+        const position = +event.position;
+        this._integration = insertStepIntoFlowAfter(
+          this._integration,
+          this.flowId,
+          createStepUsingStore(this.stepStore),
+          position
+        );
+        executeEventAction(event.onSave);
         break;
       }
       case 'integration-insert-datamapper': {
-        const position = +event['position'];
-        this.insertStepBefore(position, DATA_MAPPER);
-        this.maybeDoAction(event['onSave']);
+        const position = +event.position;
+        this._integration = insertStepIntoFlowBefore(
+          this._integration,
+          this.flowId,
+          createStepUsingStore(this.stepStore, DATA_MAPPER),
+          position
+        );
+        executeEventAction(event.onSave);
         break;
       }
       case 'integration-insert-connection': {
-        const position = +event['position'];
-        this.insertConnectionAfter(position);
-        this.maybeDoAction(event['onSave']);
+        const position = +event.position;
+        this._integration = insertStepIntoFlowAfter(
+          this._integration,
+          this.flowId,
+          createConnectionStep(),
+          position
+        );
+        executeEventAction(event.onSave);
         break;
       }
       case 'integration-remove-step': {
         {
-          const position = +event['position'];
-          if (
-            position === this.getFirstPosition() ||
-            position === this.getLastPosition()
-          ) {
-            this.steps[position] = createStep();
-            this.steps[position].stepKind = ENDPOINT;
-          } else {
-            this.steps.splice(position, 1);
-          }
-          this.maybeDoAction(event['onSave']);
+          const position = +event.position;
+          this._integration = removeStepFromFlow(
+            this._integration,
+            this.flowId,
+            position
+          );
+          executeEventAction(event.onSave);
         }
         break;
       }
       case 'integration-set-step': {
-        const position = +event['position'];
-        const step = <Step>event['step'];
-        this.steps[position] = { ...createStep(), ...step };
-        if (this.steps[position].id == undefined) {
-          this.steps[position].id = key();
-        }
-        this.maybeDoAction(event['onSave']);
-        log.debug(() => 'Set step at position: ' + position, category);
+        const position = +event.position;
+        const step = event.step as Step;
+        this._integration = setStepInFlow(
+          this._integration,
+          this.flowId,
+          { ...step },
+          position
+        );
+        executeEventAction(event.onSave);
         break;
       }
       case 'integration-set-metadata': {
-        const position = +event['position'];
-        const metadata = event['metadata'];
-        const step = <any>(this.steps[position] || createStep());
-        step.metadata = { ...step.metadata, ...metadata };
-        this.maybeDoAction(event['onSave']);
+        const position = +event.position;
+        const metadata = event.metadata;
+        const step =
+          getStep(this._integration, this.flowId, position) || createStep();
+        this._integration = setStepInFlow(
+          this._integration,
+          this.flowId,
+          addMetadataToStep(step, metadata),
+          position
+        );
+        executeEventAction(event.onSave);
         break;
       }
       case 'integration-set-properties': {
-        const position = +event['position'];
-        const properties = this.stringifyValues(event['properties']);
-        const step = this.steps[position] || createStep();
-        step.configuredProperties = properties;
-        this.steps[position] = step;
-        this.maybeDoAction(event['onSave']);
-        log.debug(
-          () =>
-            'Set properties at position: ' +
-            position +
-            ' step: ' +
-            JSON.stringify(step),
-          category
+        const position = +event.position;
+        const properties = event.properties;
+        const step =
+          getStep(this._integration, this.flowId, position) || createStep();
+        this._integration = setStepInFlow(
+          this._integration,
+          this.flowId,
+          setConfiguredPropertiesOnStep(step, properties),
+          position
         );
+        executeEventAction(event.onSave);
         break;
       }
       case 'integration-set-action': {
-        const position = +event['position'];
-        const action = event['action'];
-        const stepKind = event['stepKind'] || ENDPOINT;
-        // TODO no step here should really raise an error
-        const step = this.steps[position] || createStep();
-        // only reset this object if the action is being changed
-        if (!step.action || step.action.id !== action.id) {
-          step.action = action;
-        }
-        step.stepKind = stepKind;
-        this.steps[position] = step;
-        this.maybeDoAction(event['onSave']);
-        log.debug(
-          () => 'Set action ' + action.name + ' at position: ' + position,
-          category
+        const position = +event.position;
+        const action = event.action;
+        const stepKind = event.stepKind;
+        const step =
+          getStep(this._integration, this.flowId, position) || createStep();
+        this._integration = setStepInFlow(
+          this._integration,
+          this.flowId,
+          setActionOnStep(step, action, stepKind),
+          position
         );
+        executeEventAction(event.onSave);
         break;
       }
       case 'integration-set-descriptor': {
-        const position = +event['position'];
-        const descriptor = event['descriptor'] as ActionDescriptor;
-        const step = this.steps[position] || createStep();
-        if (!step.action) {
-          step.action = { actionType: 'step' } as Action;
-          step.action.descriptor = descriptor;
-          return;
-        }
-        // update the step's configured properties with any defaults defined in the descriptor
-        const data = step.configuredProperties || {};
-        for (const actionProperty of Object.keys(data)) {
-          if (!data[actionProperty]) {
-            step.configuredProperties[
-              actionProperty
-            ] = descriptor.propertyDefinitionSteps.map(actionDefinitionStep => {
-              return actionDefinitionStep.properties[actionProperty]
-                .defaultValue;
-            })[0];
-          }
-        }
-        // set the descriptor but avoid overwriting data shapes if they're user set, or if the incoming datashapes don't have the spec set
-        const inputDataShape = step.action.descriptor.inputDataShape;
-        const outputDataShape = step.action.descriptor.outputDataShape;
-        step.action.descriptor = descriptor;
-        if (
-          this.isUserDefined(inputDataShape) ||
-          (descriptor.inputDataShape.kind !== DataShapeKinds.NONE &&
-            !descriptor.inputDataShape.specification)
-        ) {
-          step.action.descriptor.inputDataShape = inputDataShape;
-        }
-        if (
-          this.isUserDefined(outputDataShape) ||
-          (descriptor.outputDataShape.kind !== DataShapeKinds.NONE &&
-            !descriptor.outputDataShape.specification)
-        ) {
-          step.action.descriptor.outputDataShape = outputDataShape;
-        }
-        this.maybeDoAction(event['onSave']);
+        const position = +event.position;
+        const descriptor = event.descriptor;
+        const step =
+          getStep(this._integration, this.flowId, position) || createStep();
+        this._integration = setStepInFlow(
+          this._integration,
+          this.flowId,
+          setDescriptorOnStep(step, descriptor),
+          position
+        );
+        executeEventAction(event.onSave);
         break;
       }
       case 'integration-set-datashape': {
-        const position = +event['position'];
-        const dataShape = event['dataShape'] as DataShape;
-        const isInput = event['isInput'] || false;
-        const step = this.steps[position] || createStep();
-        if (!step.action) {
-          step.action = {} as Action;
-          step.action.descriptor = {} as ActionDescriptor;
-        }
-        if (isInput) {
-          step.action.descriptor.inputDataShape = dataShape;
-        } else {
-          step.action.descriptor.outputDataShape = dataShape;
-        }
-        this.maybeDoAction(event['onSave']);
+        const position = +event.position;
+        const dataShape = event.dataShape as DataShape;
+        const isInput = event.isInput;
+        const step =
+          getStep(this._integration, this.flowId, position) || createStep();
+        this._integration = setStepInFlow(
+          this._integration,
+          this.flowId,
+          setDataShapeOnStep(step, dataShape, isInput),
+          position
+        );
+        executeEventAction(event['onSave']);
         break;
       }
       case 'integration-set-connection': {
-        const position = +event['position'];
-        const connection = event['connection'];
-        const step = createStep();
-        step.stepKind = ENDPOINT;
-        step.connection = connection;
-        this.steps[position] = step;
-        this.maybeDoAction(event['onSave']);
-        log.debug(
-          () =>
-            'Set connection ' + connection.name + ' at position: ' + position,
-          category
+        const position = +event.position;
+        const connection = event.connection;
+        this._integration = setStepInFlow(
+          this._integration,
+          this.flowId,
+          createStepWithConnection(connection),
+          position
         );
+        executeEventAction(event.onSave);
         break;
       }
       case 'integration-set-property':
-        const property = event['property'];
-        let value = event['value'];
-        if (property === 'configuredProperties') {
-          value = this.stringifyValues(value);
-        }
-        this._integration[event['property']] = event['value'];
-        this.maybeDoAction(event['onSave']);
+        this._integration = setIntegrationProperty(
+          this._integration,
+          event.property,
+          event.value
+        );
+        executeEventAction(event.onSave);
         break;
       case 'integration-save': {
-        log.debug(() => 'Saving integration: ' + this.integration);
         // ensure that all steps have IDs before saving
-        this.steps.forEach(s => {
-          if (!s.id) {
-            s.id = key();
-          }
-        });
-        // poor man's clone in case we need to munge the data
-        const integration = this.getIntegrationClone();
-        const tags = integration.tags || [];
-        const connectorIds = this.getSubsequentConnections(0).map(
-          step => (step.connection ? step.connection.connectorId : undefined)
+        const integration = prepareIntegrationForSaving(
+          this.getIntegrationClone()
         );
-        connectorIds.forEach(id => {
-          if (id && tags.indexOf(id) === -1) {
-            tags.push(id);
-          }
-        });
         const finishUp = (i: Integration, subscription: Subscription) => {
-          log.debug(
-            () => 'Saved integration: ' + JSON.stringify(i, undefined, 2),
-            category
-          );
-          const action = event['action'];
-          if (action && typeof action === 'function') {
-            action(i);
-          }
+          executeEventAction(event.action, i);
           sub.unsubscribe();
         };
-        integration.tags = tags;
+
         const sub = this.integrationStore.updateOrCreate(integration).subscribe(
           (i: Integration) => {
             if (!this._integration.id) {
@@ -646,10 +611,7 @@ export class CurrentFlowService {
                 JSON.stringify(reason, undefined, 2),
               category
             );
-            const errorAction = event['error'];
-            if (errorAction && typeof errorAction === 'function') {
-              errorAction(reason);
-            }
+            executeEventAction(event.error, reason);
             sub.unsubscribe();
           }
         );
@@ -658,7 +620,6 @@ export class CurrentFlowService {
       default:
         break;
     }
-    // log.debug(() => 'integration: ' + JSON.stringify(this._integration, undefined, 2), category);
   }
 
   getIntegrationClone(): Integration {
@@ -684,7 +645,6 @@ export class CurrentFlowService {
     if (!this._integration || !this.flowId) {
       return undefined;
     }
-
     return this.currentFlow.steps;
   }
 
@@ -707,82 +667,11 @@ export class CurrentFlowService {
   }
 
   private flow(id: string): Flow {
-    let flow = this.integration.flows.find(f => f.id === id);
+    let flow = getFlow(this._integration, id);
     if (flow === undefined) {
-      flow = this.createFlowWithId(id);
-      this.integration.flows.push(flow);
+      flow = createFlowWithId(id);
+      this._integration = setFlow(this._integration, flow);
     }
-
     return flow;
-  }
-
-  private isUserDefined(dataShape: DataShape) {
-    return (
-      dataShape &&
-      dataShape.metadata &&
-      dataShape.metadata.userDefined === 'true'
-    );
-  }
-
-  private hasDataShape(step: Step, isInput = false): boolean {
-    if (!step.action || !step.action.descriptor) {
-      return false;
-    }
-    const descriptor = step.action.descriptor;
-    const dataShape = isInput
-      ? descriptor.inputDataShape
-      : descriptor.outputDataShape;
-    return dataShape && dataShape.kind !== DataShapeKinds.NONE;
-  }
-
-  private maybeDoAction(thing: any) {
-    if (thing && typeof thing === 'function') {
-      thing.call(thing);
-    }
-  }
-
-  private insertStepBefore(position: number, stepKind?: string) {
-    const stepConfig = this.stepStore.getDefaultStepDefinition(stepKind);
-    const step = { ...createStep(), stepKind, ...stepConfig };
-    this.steps.splice(position, 0, step);
-  }
-
-  private insertStepAfter(position: number, stepKind?: string) {
-    const target = position + 1;
-    const stepConfig = this.stepStore.getDefaultStepDefinition(stepKind);
-    const step = { ...createStep(), stepKind, ...stepConfig };
-    this.steps.splice(target, 0, step);
-  }
-
-  private insertConnectionAfter(position: number) {
-    const target = position + 1;
-    const step = createConnectionStep();
-    this.steps.splice(target, 0, step);
-  }
-
-  private stringifyValues(_props: any) {
-    if (!_props) {
-      return _props;
-    }
-    // let's clone this to be on the safe side
-    const props = JSON.parse(JSON.stringify(_props));
-    for (const prop of Object.keys(props)) {
-      const value = props[prop];
-      switch (typeof value) {
-        case 'string':
-        case 'number':
-          continue;
-        default:
-          props[prop] = JSON.stringify(value);
-      }
-    }
-    return props;
-  }
-
-  private createFlowWithId(id: string): Flow {
-    return {
-      id: id,
-      steps: [createConnectionStep(), createConnectionStep()]
-    } as Flow;
   }
 }

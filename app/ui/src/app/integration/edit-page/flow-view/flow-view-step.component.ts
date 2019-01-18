@@ -2,12 +2,7 @@ import { Component, Input, ViewChild, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PopoverDirective } from 'ngx-bootstrap';
 
-import {
-  Action,
-  Step,
-  DataShape,
-  DataShapeKinds
-} from '@syndesis/ui/platform';
+import { Action, Step, DataShape, DataShapeKinds } from '@syndesis/ui/platform';
 import {
   CurrentFlowService,
   FlowPageService
@@ -392,7 +387,11 @@ export class FlowViewStepComponent implements OnChanges {
     }
     switch (step.stepKind) {
       case 'endpoint':
-        if (this.isApiProvider && this.getPosition() === 0 && !this.isApiProviderOperationsPage) {
+        if (
+          this.isApiProvider &&
+          this.getPosition() === 0 &&
+          !this.isApiProviderOperationsPage
+        ) {
           return this.getFlowName();
         }
         if (step.action && step.action.name) {

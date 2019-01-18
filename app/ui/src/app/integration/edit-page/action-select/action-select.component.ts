@@ -1,14 +1,15 @@
 import { filter, switchMap } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, EMPTY, Subject, BehaviorSubject, Subscription } from 'rxjs';
-
 import {
-  Actions,
-  Action,
-  Connector,
-  Step
-} from '@syndesis/ui/platform';
+  Observable,
+  EMPTY,
+  Subject,
+  BehaviorSubject,
+  Subscription
+} from 'rxjs';
+
+import { Actions, Action, Connector, Step } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import {
   CurrentFlowService,
@@ -34,7 +35,6 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
   actionsSubscription: Subscription;
   position: number;
   step: Step;
-  currentStep: number;
 
   constructor(
     public connectorStore: ConnectorStore,
@@ -61,7 +61,7 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
       action: action,
       onSave: () => {
         this.router.navigate(['action-configure', this.position], {
-          relativeTo: this.route.parent,
+          relativeTo: this.route.parent
         });
       }
     });
@@ -78,11 +78,44 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
     if (!this.currentFlowService.loaded) {
       return;
     }
+    // filter the avaliable connections based on where we are in the flow
+    if (this.position === this.currentFlowService.getFirstPosition()) {
+      this.actions$ = this.connector$.pipe(
+        filter(connector => connector !== undefined),
+        switchMap(connector => [
+          connector.actions.filter(action => action.pattern === 'From')
+        ])
+      );
+    }
+    if (
+      this.position > this.currentFlowService.getFirstPosition() &&
+      this.position <= this.currentFlowService.getLastPosition()
+    ) {
+      this.actions$ = this.connector$.pipe(
+        filter(connector => connector !== undefined),
+        switchMap(connector => [
+          connector.actions.filter(action => action.pattern === 'To')
+        ])
+      );
+    }
+    if (
+      this.position > this.currentFlowService.getFirstPosition() &&
+      this.position < this.currentFlowService.getLastPosition()
+    ) {
+      this.actions$ = this.connector$.pipe(
+        filter(connector => connector !== undefined),
+        switchMap(connector => [
+          connector.actions.filter(
+            action => action.pattern === 'To' || action.pattern === 'Pipe'
+          )
+        ])
+      );
+    }
     const step = (this.step = this.currentFlowService.getStep(this.position));
     if (!step) {
       /* Safety net */
       this.router.navigate(['save-or-add-step'], {
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       return;
     }
@@ -94,7 +127,7 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
     }
     if (step.action) {
       this.router.navigate(['action-configure', this.position], {
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       return;
     }
@@ -112,59 +145,20 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.currentStep = +this.route.snapshot.paramMap.get('position');
-
-    if (this.currentStep === this.currentFlowService.getFirstPosition()) {
-      this.actions$ = this.connector$.pipe(
-        filter(connector => connector !== undefined),
-        switchMap(connector => [
-          connector.actions.filter(action => action.pattern === 'From')
-        ])
-      );
-    }
-
-    if (
-      this.currentStep > this.currentFlowService.getFirstPosition() &&
-      this.currentStep <= this.currentFlowService.getLastPosition()
-    ) {
-      this.actions$ = this.connector$.pipe(
-        filter(connector => connector !== undefined),
-        switchMap(connector => [
-          connector.actions.filter(action => action.pattern === 'To')
-        ])
-      );
-    }
-
-    if (
-      this.currentStep > this.currentFlowService.getFirstPosition() &&
-      this.currentStep < this.currentFlowService.getLastPosition()
-    ) {
-      this.actions$ = this.connector$.pipe(
-        filter(connector => connector !== undefined),
-        switchMap(connector => [
-          connector.actions.filter(
-            action => action.pattern === 'To' || action.pattern === 'Pipe'
-          )
-        ])
-      );
-    }
-
     this.actionsSubscription = this.actions$.subscribe(_ =>
       this.currentFlowService.events.emit({
         kind: 'integration-action-select',
         position: this.position
       })
     );
-
     this.route.paramMap.subscribe(params => {
       this.position = +params.get('position');
       this.loadActions();
     });
-
     this.connector$.subscribe(connector => {
       if (connector && connector.id === 'api-provider') {
         this.router.navigate(['api-provider', 'create'], {
-          relativeTo: this.route.parent,
+          relativeTo: this.route.parent
         });
       }
     });

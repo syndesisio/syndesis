@@ -60,9 +60,19 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    const step = this.currentFlowService.getStep(this.position);
-    step.action = undefined;
-    this.flowPageService.goBack(['action-select', this.position], this.route);
+    const { action: omit, ...step } = this.currentFlowService.getStep(
+      this.position
+    );
+    this.currentFlowService.events.emit({
+      kind: 'integration-set-step',
+      position: this.position,
+      step,
+      onSave: () =>
+        this.flowPageService.goBack(
+          ['action-select', this.position],
+          this.route
+        )
+    });
   }
 
   buildData(data: any) {
@@ -84,13 +94,14 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
           /* All done configuring this action... */
           this.router.navigate(['save-or-add-step'], {
             queryParams: { validate: true },
-            relativeTo: this.route.parent,
+            relativeTo: this.route.parent
           });
         } else {
           /* Go to the previous configuration page... */
           this.router.navigate(
-            ['action-configure', this.position, this.page - 1], {
-              relativeTo: this.route.parent,
+            ['action-configure', this.position, this.page - 1],
+            {
+              relativeTo: this.route.parent
             }
           );
         }
@@ -113,7 +124,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       metadata: { configured: 'true' },
       onSave: () => {
         this.router.navigate(['describe-data', this.position, direction], {
-          relativeTo: this.route.parent,
+          relativeTo: this.route.parent
         });
       }
     });
@@ -122,21 +133,24 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   continue() {
     this.loading = true;
     this.error = undefined;
-    const data = this.buildData({});
+    const configuredProperties = this.buildData({});
     this.currentFlowService.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
-      properties: data,
+      properties: configuredProperties,
       onSave: () => {
+        const step = (this.step = this.currentFlowService.getStep(
+          this.position
+        ));
         if (!this.lastPage || this.page >= this.lastPage) {
           /**
            * If there are action properties that depend on having other action
            * properties defined in previous steps we need to fetch metadata one
            * more time and apply those action property values that we get
            */
-          if (Object.keys(this.step.configuredProperties).length > 0) {
+          if (Object.keys(step.configuredProperties).length > 0) {
             this.integrationSupport
-              .fetchMetadata(this.step.connection, this.step.action, data)
+              .fetchMetadata(step.connection, step.action, configuredProperties)
               .toPromise()
               .then((descriptor: ActionDescriptor) => {
                 this.currentFlowService.events.emit({
@@ -160,8 +174,9 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
         } else {
           /* Go to the next wizard page... */
           this.router.navigate(
-            ['action-configure', this.position, this.page + 1], {
-              relativeTo: this.route.parent,
+            ['action-configure', this.position, this.page + 1],
+            {
+              relativeTo: this.route.parent
             }
           );
         }
@@ -171,17 +186,11 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
 
   setError(error) {
     // the message is in the _meta attribute in the response
-    const message = error.data._meta
-      ? error.data._meta.message
-      : null;
+    const message = error.data._meta ? error.data._meta.message : null;
     this.error = {
       class: 'alert alert-warning',
       icon: 'pficon pficon-warning-triangle-o',
-      message:
-        message ||
-        error.message ||
-        error.userMsg ||
-        error.developerMsg
+      message: message || error.message || error.userMsg || error.developerMsg
     };
   }
 
@@ -190,13 +199,13 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     const step = this.currentFlowService.getStep(this.position);
     if (!step || !step.connection) {
       this.router.navigate(['connection-select', this.position], {
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       return;
     }
     if (!step.action) {
       this.router.navigate(['action-select', this.position], {
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       return;
     }
@@ -280,9 +289,12 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   }
 
   hasNoActionPropertiesToDisplay(descriptor: ActionDescriptor) {
-    return !descriptor || descriptor === undefined ||
+    return (
+      !descriptor ||
+      descriptor === undefined ||
       descriptor.propertyDefinitionSteps === undefined ||
-      Object.keys(descriptor.propertyDefinitionSteps[0]).length === 0;
+      Object.keys(descriptor.propertyDefinitionSteps[0]).length === 0
+    );
   }
 
   configuredPropertiesForMetadataCall(action: Action) {
@@ -315,7 +327,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       (params: ParamMap) => {
         if (!params.has('page')) {
           this.router.navigate(['0'], {
-            relativeTo: this.route,
+            relativeTo: this.route
           });
           return;
         }
