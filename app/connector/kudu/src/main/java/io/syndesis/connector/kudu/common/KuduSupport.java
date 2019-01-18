@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package io.syndesis.connector.kudu.model;
+package io.syndesis.connector.kudu.common;
 
-public class KuduInsert {
-    private Object[] row;
+import org.apache.kudu.client.KuduClient;
 
-    public Object[] getRow() {
-        return row.clone();
+import java.util.List;
+import java.util.Map;
+
+public final class KuduSupport {
+    private KuduSupport() {
     }
 
-    public void setRow(Object[] row, boolean set) {
-        if (set) {
-            this.row = row.clone();
-        }
+    public static KuduClient createConnection(String host, String port) {
+        return new KuduClient.KuduClientBuilder(host + ":" + port).build();
     }
+
 }

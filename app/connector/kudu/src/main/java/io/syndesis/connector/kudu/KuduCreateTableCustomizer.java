@@ -61,6 +61,7 @@ public class KuduCreateTableCustomizer implements ComponentProxyCustomizer {
         }
 
         options.put("operation", KuduDbOperations.CREATE_TABLE);
+        options.put("type", KuduDbOperations.CREATE_TABLE);
     }
 
     private void beforeProducer(Exchange exchange) {
