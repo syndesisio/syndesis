@@ -1,4 +1,4 @@
-export * from './IntegrationActionConfigurationForm';
+export * from './IntegrationActionConfigurationCard';
 export * from './IntegrationFlowAddStep';
 export * from './IntegrationFlowStep';
 export * from './IntegrationFlowStepDetails';

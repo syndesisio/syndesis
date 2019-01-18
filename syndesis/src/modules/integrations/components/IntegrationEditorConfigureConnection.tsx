@@ -10,14 +10,14 @@ import {
 import { AutoForm } from '@syndesis/auto-form';
 import { Action, ConnectionOverview } from '@syndesis/models';
 import { PageHeader } from '@syndesis/ui';
-import { IntegrationActionConfigurationForm } from '@syndesis/ui';
+import { IntegrationActionConfigurationCard } from '@syndesis/ui';
 import * as H from 'history';
 import * as React from 'react';
 
 export interface IOnUpdatedIntegrationProps {
   action: Action;
   moreConfigurationSteps: boolean;
-  values: { [key: string]: string };
+  values: { [key: string]: string } | null;
 }
 
 export interface IIntegrationEditorConfigureConnection {
@@ -37,34 +37,26 @@ export class IntegrationEditorConfigureConnection extends React.Component<
     initialValue: {},
   };
 
-  public render() {
-    const action = getActionById(
-      getConnectorActions(getConnectionConnector(this.props.connection)),
-      this.props.actionId
-    );
-    const steps = getActionSteps(getActionDescriptor(action));
-    const step = getActionStep(steps, this.props.configurationStep);
-    const definition = getActionStepDefinition(step);
-    const moreConfigurationSteps =
-      this.props.configurationStep < steps.length - 1;
-    const onSave = async (
-      values: { [key: string]: string },
-      actions: any
-    ): Promise<void> => {
-      await this.props.onUpdatedIntegration({
-        action,
-        moreConfigurationSteps,
-        values,
-      });
-      actions.setSubmitting(false);
-    };
-    return (
-      <>
-        <PageHeader>
-          {this.props.breadcrumb}
-          <h1>{action.name}</h1>
-          <p>{action.description}</p>
-        </PageHeader>
+  public renderConfigurationForm(action: Action): JSX.Element | null {
+    try {
+      const descriptor = getActionDescriptor(action);
+      const steps = getActionSteps(descriptor);
+      const step = getActionStep(steps, this.props.configurationStep);
+      const definition = getActionStepDefinition(step);
+      const moreConfigurationSteps =
+        this.props.configurationStep < steps.length - 1;
+      const onSave = async (
+        values: { [key: string]: string },
+        actions: any
+      ): Promise<void> => {
+        await this.props.onUpdatedIntegration({
+          action,
+          moreConfigurationSteps,
+          values,
+        });
+        actions.setSubmitting(false);
+      };
+      return (
         <AutoForm<{ [key: string]: string }>
           i18nRequiredProperty={'* Required field'}
           definition={definition}
@@ -73,16 +65,61 @@ export class IntegrationEditorConfigureConnection extends React.Component<
           key={this.props.configurationStep}
         >
           {({ fields, handleSubmit, isSubmitting }) => (
-            <IntegrationActionConfigurationForm
+            <IntegrationActionConfigurationCard
               backLink={this.props.backLink}
-              fields={fields}
-              handleSubmit={handleSubmit}
+              content={fields}
+              onSubmit={handleSubmit}
               i18nBackLabel={'< Choose action'}
               i18nSubmitLabel={moreConfigurationSteps ? 'Continue' : 'Done'}
               disabled={isSubmitting}
             />
           )}
         </AutoForm>
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  public renderNoPropertiesInfo(action: Action) {
+    const onSave = () => {
+      this.props.onUpdatedIntegration({
+        action,
+        moreConfigurationSteps: false,
+        values: null,
+      });
+    };
+    return (
+      <IntegrationActionConfigurationCard
+        backLink={this.props.backLink}
+        content={
+          <p className="alert alert-info">
+            <span className="pficon pficon-info" />
+            There are no properties to configure for this action.
+          </p>
+        }
+        onSubmit={onSave}
+        i18nBackLabel={'< Choose action'}
+        i18nSubmitLabel={'Done'}
+        disabled={false}
+      />
+    );
+  }
+
+  public render() {
+    const action = getActionById(
+      getConnectorActions(getConnectionConnector(this.props.connection)),
+      this.props.actionId
+    );
+    return (
+      <>
+        <PageHeader>
+          {this.props.breadcrumb}
+          <h1>{action.name}</h1>
+          <p>{action.description}</p>
+        </PageHeader>
+        {this.renderConfigurationForm(action) ||
+          this.renderNoPropertiesInfo(action)}
       </>
     );
   }

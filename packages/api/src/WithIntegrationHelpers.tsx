@@ -76,19 +76,23 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     connectionId: string,
     actionId: string,
     configuredProperties: any
-  ): Promise<ActionDescriptor> {
-    const response = await callFetch({
-      body: configuredProperties,
-      headers: this.props.headers,
-      method: 'POST',
-      url: `${
-        this.props.apiUri
-      }/connections/${connectionId}/actions/${actionId}`,
-    });
-    if (!response.ok) {
-      throw new Error(response.statusText);
+  ): Promise<ActionDescriptor | null> {
+    if (configuredProperties) {
+      const response = await callFetch({
+        body: configuredProperties,
+        headers: this.props.headers,
+        method: 'POST',
+        url: `${
+          this.props.apiUri
+        }/connections/${connectionId}/actions/${actionId}`,
+      });
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return (await response.json()) as ActionDescriptor;
+    } else {
+      return null;
     }
-    return (await response.json()) as ActionDescriptor;
   }
 
   public async addConnection(
@@ -124,7 +128,9 @@ export class WithIntegrationHelpersWrapped extends React.Component<
         connection,
         id: draft.flows[flow].id,
       };
-      step.action!.descriptor = actionDescriptor;
+      if (actionDescriptor) {
+        step.action!.descriptor = actionDescriptor;
+      }
       step.stepKind = 'endpoint';
       draft.flows[flow].steps!.splice(position, 0, step);
       draft.tags = Array.from(new Set([...(draft.tags || []), connection.id!]));
@@ -164,7 +170,9 @@ export class WithIntegrationHelpersWrapped extends React.Component<
         connection,
         id: draft.flows[flow].id,
       };
-      step.action!.descriptor = actionDescriptor;
+      if (actionDescriptor) {
+        step.action!.descriptor = actionDescriptor;
+      }
       step.stepKind = 'endpoint';
       draft.flows[flow].steps![position] = step;
     });

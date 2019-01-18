@@ -5,32 +5,28 @@ import { Loader } from '../Shared';
 
 export interface IIntegrationActionConfigurationFormProps {
   backLink: H.LocationDescriptor;
-  fields: JSX.Element;
-  handleSubmit: (e?: any) => void;
+  content: JSX.Element;
+  onSubmit: (e?: any) => void;
   i18nBackLabel: string;
   i18nSubmitLabel: string;
   disabled?: boolean;
 }
 
-export const IntegrationActionConfigurationForm: React.FunctionComponent<
+export const IntegrationActionConfigurationCard: React.FunctionComponent<
   IIntegrationActionConfigurationFormProps
 > = ({
   backLink,
-  handleSubmit,
-  fields,
+  onSubmit,
+  content,
   i18nSubmitLabel,
   i18nBackLabel,
   disabled,
 }) => (
-  <form
-    className="form-horizontal required-pf"
-    role="form"
-    onSubmit={handleSubmit}
-  >
+  <form className="form-horizontal required-pf" role="form" onSubmit={onSubmit}>
     <div className={'container-fluid'}>
       <div className="row row-cards-pf">
         <div className="card-pf">
-          <div className="card-pf-body">{fields}</div>
+          <div className="card-pf-body">{content}</div>
           <div className="card-pf-footer">
             <div className="card-pf-time-frame-filter">
               <button
