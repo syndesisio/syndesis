@@ -75,7 +75,7 @@
     <commons.compress.version>1.18</commons.compress.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.21.0.fuse-730026</camel.version>
+    <camel.version>2.21.0.fuse-730029</camel.version>
 
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
     <dep.plugin.pmd.version>3.10.0</dep.plugin.pmd.version>
