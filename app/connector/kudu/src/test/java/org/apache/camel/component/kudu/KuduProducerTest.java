@@ -25,6 +25,7 @@ import org.apache.kudu.Type;
 import org.apache.kudu.client.CreateTableOptions;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -32,7 +33,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class KuduProducerTest extends AbstractKuduTest {
 
     private static final String TABLE = "KuduTestTable";
-    private static final String HOST = "quickstart.cloudera";
+    private static final String HOST = "localhost";
     private static final String PORT = "7051";
 
     @EndpointInject(uri = "mock:test")

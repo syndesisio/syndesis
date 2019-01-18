@@ -17,13 +17,10 @@
 package io.syndesis.connector.kudu;
 
 import io.syndesis.common.util.Json;
-import io.syndesis.connector.kudu.model.KuduInsert;
 import org.apache.camel.Exchange;
-import org.apache.camel.component.kudu.KuduDbOperations;
 import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
