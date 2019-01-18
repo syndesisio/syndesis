@@ -44,6 +44,12 @@ public interface ODataConstants extends StringConstants {
 
     String DELAY = "delay";
 
+    String BACKOFF_IDLE_THRESHOLD = "backoffIdleThreshold";
+
+    String BACKOFF_MULTIPLIER = "backoffMultiplier";
+
+    String FILTER_ALREADY_SEEN = "filterAlreadySeen";
+
     String METADATA_ENDPOINT = "/$metadata";
 
     String ENDPOINT_HTTP_HEADERS = "endpointHttpHeaders";
