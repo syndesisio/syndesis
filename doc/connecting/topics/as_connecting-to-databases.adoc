@@ -1,0 +1,37 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-databases_{context}']
+= Connect to SQL databases
+:context: db
+
+In an integration, you can connect to any of the following types of SQL
+databases:
+
+* Apache Derby
+* MySQL
+* PostgreSQL
+
+You create a connection to the database that you want to access in an integration
+and then you add that connection to an integration. 
+
+To connect to other types of databases, you must upload a JDBC driver for
+that database. 
+
+See the following topics for details:
+
+* <<create-database-connection_{context}>>
+* <<adding-db-connection-start_{context}>>
+* <<adding-db-connection-finish-middle_{context}>>
+* <<connecting-to-proprietary-databases_{context}>>
+
+include::p_create-database-connection.adoc[leveloffset=+1]
+
+include::p_adding-db-connection-start.adoc[leveloffset=+1]
+
+include::p_adding-db-connection-finish-middle.adoc[leveloffset=+1]
+
+include::p_connecting-to-proprietary-databases.adoc[leveloffset=+1]
+
+:context: connectors

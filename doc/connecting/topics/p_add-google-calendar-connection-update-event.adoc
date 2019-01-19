@@ -1,0 +1,58 @@
+// This module is included in the following assemblies:
+// as_connecting-to-google-calendar.adoc
+
+[id='add-google-calendar-connection-update-event_{context}']
+= Update an event in a Google calendar 
+
+In an integration, you can update an event in a Google calendar
+in the middle of the integration or to finish the integration.  
+To do this, add a Google Calendar connection to the middle of an integration 
+or as the integration's finish connection. 
+
+[IMPORTANT]
+====
+In this release, the *Update Event* action requires a value in each event 
+field. In most if not all cases, this means that you must add a Google 
+Calendar connection that 
+link:{LinkFuseOnlineConnectorGuide}#add-google-calendar-connection-to-get-one-event_google-calendar[obtains the event that you want to update], 
+then add the Google Calendar connection that updates the event, and then 
+insert a data mapper step between the two Google Calendar connections. 
+====
+
+.Prerequisites
+* A Google Calendar connection is available and this connection
+is authorized to access the Google calendar that has the event that
+you want to update.
+* In the integration, there is an earlier connection to Google Calendar 
+and that connection obtains the event that you want to update. 
+* You are creating or editing an integration and {prodname} is prompting you 
+to add a finish connection or select the connection that you want to add
+in the middle of an integration. 
+
+.Procedure
+. Click a Google Calendar connection that is authorized to access
+the calendar that you want to connect to.   
+. On the *Choose an Action* page, click *Update Event*. 
+. To configure the *Update Event* action: 
++
+.. Enter the title of the event that you want to update.
+.. Enter content in each event field that you want to update.
+Do not enter content in an event field when you want the content 
+in that field to remain the same as it was. 
+
+. Click *Done* to add the connection to the integration. 
+The connection appears in the integration visualization flow in the 
+location where you added it. 
+. In the integration visualization flow, hover over the plus sign that is 
+just before the connection that you just added and click *Add a step*. 
+. Click *Data Mapper*. 
+. In the data mapper, for each event field that remains the same in the 
+updated event, map that field from the Google Calendar connection that 
+obtained the event to the corresponding field in the Google Calendar 
+connection that updates the event. 
++
+Do not map fields that you are updating. If you map a field and also 
+specify an update for that field when you configure the *Update Event* action, 
+{prodname} uses the mapped value. 
+
+. In the upper right, click *Done* to add the data mapper step. 

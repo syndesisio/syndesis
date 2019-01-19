@@ -1,0 +1,58 @@
+// This module is included in the following assemblies:
+// as_triggering-integrations-with-http-requests.adoc
+
+[id='how-to-use-webhook_{context}']
+= General procedure for using the {prodname} webhook
+
+To trigger execution of an integration with an HTTP `GET` or `POST`
+request, you must do the following:
+
+. Decide whether you want to send a `GET` or `POST` request to {prodname}. 
+. Plan your integration to handle this request. 
+. Create the connection that finishes the integration.
++
+{prodname} provides a Webhook connection that you use as the start 
+connection. 
+ 
+. Create any other connections that you want to add to the integration. 
+. Create the integration:
+.. Add the Webhook connection as the start connection.
+.. Add the finish connection and then any other connections that are
+required in the integration. The finish connection and any middle
+connections handle the HTTP request that triggers execution of the
+integration. It is up to you to choose and specify the most appropriate
+HTTP request for accomplishing your goals. Keep the following in mind:
++
+** Add a connection to the application that contains the 
+data that you want to obtain or that contains the data that you want to 
+update.
+** A `GET` request is limited to specification of key/value
+parameters. 
+** A `POST` request can provide an arbitrary body, such
+as an XML or JSON instance. 
+** {prodname} returns only an HTTP status header and does not return
+any data. Consequently, you can define an integration that is triggered by
+a `GET` request and that updates data rather than obtaining data. 
+Likewise, you can define an
+integration that is triggered by a `POST` request and that obtains data
+rather than updating data. 
+ 
+.. Add a data mapper step after the Webhook connection. 
++
+For a `GET` request, map the parameter fields in the HTTP request to the 
+data fields in the next connection. 
++
+For a `POST` request, you might
+have specified the output data shape in the request by passing a JSON 
+instance, JSON schema, XML instance, or XML schema. If you did not, then 
+when you add a Webhook connection as the start connection of an integration, 
+{prodname} prompts you to specify the output data type. If you do not,
+then the default Webhook connection output data type is in JSON format.   
+
+.. Add any other steps that the integration needs.
+. Publish the integration and wait for it to be *Running*. 
+. Go to the integration summary page and copy the external URL that 
+{prodname} provides. 
+. Modify this external URL to construct your `GET` or `POST` request. 
+. Implement the application that sends the HTTP `GET` or `POST` request 
+to {prodname}. 

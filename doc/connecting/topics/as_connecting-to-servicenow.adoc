@@ -1,0 +1,26 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-servicenow_{context}']
+= Connect to ServiceNow
+:context: servicenow
+
+An integration can retrieve records from a ServiceNow table or add records to 
+a ServiceNow import set. To do this, you create a ServiceNow
+connection and then add that connection to an integration.
+For details, see:
+
+* <<create-servicenow-connection_{context}>>
+* <<add-servicenow-connection-start_{context}>>
+* <<add-servicenow-connection-finish_{context}>>
+
+
+include::p_create-servicenow-connection.adoc[leveloffset=+1]
+
+include::p_add-servicenow-connection-start.adoc[leveloffset=+1]
+
+include::p_add-servicenow-connection-finish.adoc[leveloffset=+1]
+
+
+:context: connectors

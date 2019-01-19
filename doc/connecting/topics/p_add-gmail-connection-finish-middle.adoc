@@ -1,0 +1,73 @@
+// This module is included in these assemblies:
+// as_connecting-to-gmail.adoc
+
+[id='add-gmail-connection-finish-middle_{context}']
+= Send an email from a Gmail account
+
+In an integration, you can send an email from a Gmail account either
+in the middle of the integration or to finish the integration.  
+To do this, add a Gmail connection to the middle of an integration or as the 
+integration's finish connection. 
+
+.Prerequisites
+
+* You created a Gmail connection. 
+* You are familiar with the
+link:{LinkFuseOnlineConnectorGuide}#alternative-for-populating-email-to-send_gmail[alternatives for populating an email to send]
+and you have a plan for populating such emails. 
+ 
+.Procedure
+
+. Start creating the integration.
+. Add and configure the start connection.
+. On the *Choose a Finish Connection* page, do one of the following:
++
+* To finish an integration by sending an email from a Gmail
+account, click the Gmail connection that is authorized to access
+the Gmail account that you want to send the email from. 
+* To send an email in the middle of an integration:
++
+.. Click the connection that you want to use to finish the integration. 
+.. Configure that connection. 
+.. When the finish connection is part of the integration, in the left panel, 
+hover over the plus sign where you want to add a Gmail connection and click
+*Add a connection*. 
+.. Click the Gmail connection that you want to use
+to send an email in the middle of an integration. 
+
+. On the *Choose an Action* page, click *Send Email*. 
+. On the *Configure Send Email* page, do one of the following:
++
+* Leave all fields blank if you plan to add a data mapper step
+just before this connection and you plan to map integration data 
+to the *Send Email* fields.
+
+* Enter information in one or more fields:
+
+.. In the *Email To* field, enter one email address or a comma separated 
+list of email addresses to send the email to.
+.. In the *Email Subject* field, enter text that states the subject of
+the email.
+.. In the *Email Text* field, enter the message that you want to send.
+.. In the *Email cc* field, enter a comma separated list of email addresses
+to which you want to send copies of the email.
+.. In the *Email bcc* field, enter a comma separated list of email addresses
+to which you want to send blind copies of the email.
+
+* Leave some fields blank and enter information in some fields. 
++
+If you plan to add a data mapper step just before this Gmail connection,
+and you want to map integration data to some email fields, leave those fields
+blank in the action configuration. Enter values in other action fields as needed. 
++
+A value that you specify in a *Send Email* action configuration field
+has precedence over a value that is mapped from a previous step. 
+
+. Click *Done* to add the connection to the integration. 
+
+.Result and next steps
+
+The connection appears in the integration flow 
+in the location where you added it. If you plan to add a data mapper step
+before this connection, first add any other connections that you plan to add
+to this integration. Then add the data mapper step. 

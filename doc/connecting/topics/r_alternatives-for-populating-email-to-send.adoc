@@ -1,0 +1,60 @@
+// This module is included in these assemblies:
+// as_connecting-to-gmail.adoc
+
+[id='alternatives-for-populating-email-to-send_{context}']
+= Alternatives for populating email to send
+
+A Gmail connection that finishes an integration or that is
+in the middle of an integration sends an email from the Gmail
+account that the connection is authorized to access. There are 
+several ways to populate the content of the email that the connection
+sends. Before you add a Gmail connection that sends an email, consider 
+how you want to populate that email.
+
+The alternatives for populating an email to send are as follows:
+
+* Add a data mapper step just before the Gmail connection that sends
+an email. In this data mapper step, map data fields that are output 
+from previous integration steps to Gmail connection *Send Email* action fields. 
+The *Send Email* action fields are: 
++ 
+** *Email to*
+** *Email subject*
+** *Email text*
+** *Email cc*
+** *Email bcc*
+
++
+If you add a data mapper step then you can map one, some, or all 
+*Send Email* action fields. 
+
+* When you add a Gmail connection to an integration, configure the 
+action by specifying values
+in the *Send Email* action fields. 
+You can specify values in one, some, or all fields. 
+
+* Use both a data mapper step and *Send Email* action configuration to
+populate the fields. In other words, you can configure the 
+*Send Email* action by specifying one or more fields and
+also add a data mapper step that populates other fields. 
++
+A value that you specify directly in a *Send Email* action 
+field has precedence over a value that is
+mapped to the *Send Email* action field. In other words, suppose you populate
+a *Send Email* field by specifying a value when you add the connection
+and configure the action 
+and also by mapping a value to the same field. The value that you specify 
+in the action configuration always overrides the value that was mapped. 
+For example, suppose you specify 
+`people@redhat.com` in the *Email to* action field and you also map an
+email field from a previous step to the Gmail *Email to* field. The integration
+always uses `people@redhat.com` and only `people@redhat.com` as the email address. 
+
+When you add a Gmail connection that sends an email, no action configuration
+parameters are required. This is because you might choose to populate an
+email entirely by mapping integration data to the *Send Email* action
+fields. However, the presence of an email address
+in the *Email to* field, either by configuration specification or by 
+mapping, is required. Without an email address to send
+the message to, {prodname} generates a runtime error and the integration
+stops executing. 

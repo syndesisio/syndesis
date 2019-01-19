@@ -1,0 +1,41 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+:context: connectors
+[id='connecting-to-google-calendar_{context}']
+= Connect to Google Calendar
+:context: calendar
+
+You can add a Google Calendar connection to an integration as its start 
+connection to trigger execution of an integration.. You can add a Google 
+Calendar connection to an integration as its finish connection when you want 
+to add or update an event. In the middle of an integration, you can add a 
+Google Calendar connection when you want to obtain a particular event, 
+add a new event, or update an event.
+
+Details for connecting to Google Calendar are in the following topics:
+
+* <<register-with-google-calendar_{context}>>
+* <<enable-google-calendar-api_{context}>>
+* <<create-google-calendar-connection_{context}>>
+* <<add-google-calendar-connection-start_{context}>>
+* <<add-google-calendar-connection-to-get-one-event_{context}>>
+* <<add-google-calendar-connection-update-event_{context}>>
+* <<add-google-calendar-connection-add-event_{context}>>
+
+include::p_register-with-google-calendar.adoc[leveloffset=+1]
+
+include::p_enable-google-calendar-api.adoc[leveloffset=+1]
+
+include::p_create-google-calendar-connection.adoc[leveloffset=+1]
+
+include::p_add-google-calendar-connection-start.adoc[leveloffset=+1]
+
+include::p_add-google-calendar-connection-to-get-one-event.adoc[leveloffset=+1]
+
+include::p_add-google-calendar-connection-add-event.adoc[leveloffset=+1]
+
+include::p_add-google-calendar-connection-update-event.adoc[leveloffset=+1]
+
+:context: connectors

@@ -1,0 +1,47 @@
+// This module is included in the following assemblies:
+// as_connecting-to-servicenow.adoc
+
+[id='add-servicenow-connection-finish_{context}']
+= Copy records to ServiceNow during or to finish an integration
+
+In the middle of an integration, or to finish an integration, 
+you can copy records to 
+ServiceNow. To do this, add a ServiceNow connection to an integration
+as the finish connection or as a middle connection. 
+
+.Prerequisites
+
+* You are creating or editing an integration. 
+* The integration has a start connection.
+* You know the name of the ServiceNow import set that you want to 
+add records to. Your ServiceNow administrator can
+help you identify the appropriate import set. 
+* The ServiceNow import set must have been configured to handle the addition 
+of records.
+
+.Procedure
+
+. Do one of the following:
++
+* To finish the integration by copying records to ServiceNow, 
+on the *Choose a Finish Connection* page, click the ServiceNow connection that
+you want to use to finish the integration. 
+* To copy records to ServiceNow in the middle of an integration,
+after the integration has a start connection and a finish connection, 
+in the integration visualization panel on the left, hover over the plus sign
+that is in the location where you want to copy records to ServiceNow. 
+Click *Add a connection*, and click the ServiceNow connection that you
+want to add to the integration. 
+
+. Click the *Create Record* action. 
+. Click in *The Import Set name* field and select the import set that
+you want to add records to. 
+. Click *Next*. 
+
+.Results
+* {prodname} adds the connection to the integration. 
+* If a data mapper step is needed before this connection, then 
+in the integration visualization panel, 
+{prodname} displays 
+image:shared/images/WarningIcon.png[Data Type Mismatch] on the
+connection.
