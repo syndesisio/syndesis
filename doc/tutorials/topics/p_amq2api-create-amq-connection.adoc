@@ -1,5 +1,5 @@
 // Module included in the following assemblies:
-// amq2api_intro.adoc
+// as_amq2api-intro.adoc
 
 [id='amq2api-create-amq-connection_{context}']
 = Create an AMQ connection

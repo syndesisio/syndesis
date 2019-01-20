@@ -1,5 +1,5 @@
 // Module included in the following assemblies:
-// sf2db_intro.adoc
+// as_sf2db-intro.adoc
 
 [id='sf2db-confirm-working_{context}']
 = Confirm that the Salesforce to database integration works

@@ -1,7 +1,7 @@
 // Module included in the following assemblies:
-// t2sf_intro.adoc
-// sf2db_intro.adoc
-// amq2api_intro.adoc
+// as_t2sf-intro.adoc
+// as_sf2db-intro.adoc
+// as_amq2api-intro.adoc
 
 [id='cleanup_{context}']
 = Clean up your integration

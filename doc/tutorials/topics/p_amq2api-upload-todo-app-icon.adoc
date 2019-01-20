@@ -1,5 +1,5 @@
 // Module included in the following assemblies:
-// amq2api_intro.adoc
+// as_amq2api-intro.adoc
 
 [id='amq2api-upload-todo-app-icon_{context}']
 = Upload the To Do app icon

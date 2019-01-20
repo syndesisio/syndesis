@@ -1,25 +1,27 @@
 // Module included in the following assemblies:
-// sf2db_create_integration.adoc
+// as_amq2api-create-integration.adoc
 
-[id='sf2db-name-and-publish_{context}']
+[id='amq2api-name-and-publish_{context}']
 = Give the integration a name and deploy it
 
-When the Salesforce to database sample integration is complete then you
-can deploy it and see how it works. 
+The AMQ to REST API sample integration is complete when it has a Red Hat AMQ start
+connection, a Damage Reporter step, a data mapper step, and it finishes
+with a Todo App Client API connection. Follow the instructions here to 
+deploy it. 
 
 .Prerequisites
-* The integration's start connection is Salesforce. 
-* The integration's finish connection is to the sample database that
-is provided with {prodname}.
-* You just added a data mapping step to the integration. 
+* You added the start and finish connections to the integration.
+* You added a Damager Reporter step between the start and finish connections.
+* You added a Data Mapper step between the Damage Reporter step and 
+the connection to the Todo App API. 
 
 .Procedure
-
 . In {prodname}, in the upper right, click *Publish* to give it a name.
 . In the *Integration Name* field, enter a name for the
-integration. For example, `*Salesforce to Database Sample Integration*`.
+integration. For example, `*AMQ to REST API Sample Integration*`.
+. Optionally, in the *Description* field, enter information that might be
+helpful to know about this integration.
 . In the upper right corner, click *Publish*.
-
 +
 {prodname} displays the integration summary page with a progress
 indicator that shows the publishing stages. 

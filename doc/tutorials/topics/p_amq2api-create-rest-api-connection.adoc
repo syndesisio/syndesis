@@ -1,5 +1,5 @@
 // Module included in the following assemblies:
-// amq2api_intro.adoc
+// as_amq2api-intro.adoc
 
 [id='amq2api-create-rest-api-connection_{context}']
 = Create a REST API connection

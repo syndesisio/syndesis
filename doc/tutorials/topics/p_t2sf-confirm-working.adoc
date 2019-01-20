@@ -1,5 +1,5 @@
 // Module included in the following assemblies:
-// t2sf_intro.adoc
+// as_t2sf-intro.adoc
 
 [id='t2sf-confirm-working_{context}']
 = Confirm that the Twitter to Salesforce integration works

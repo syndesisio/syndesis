@@ -44,20 +44,20 @@ To implement the AMQ to REST API sample integration, the main steps are:
 . <<cleanup_{context}>>
 
 
-include::amq2api_create_amq_connection.adoc[leveloffset=+1]
+include::p_amq2api-create-amq-connection.adoc[leveloffset=+1]
 
-include::amq2api_create_custom_step.adoc[leveloffset=+1]
+include::p_amq2api-create-custom-step.adoc[leveloffset=+1]
 
-include::amq2api_create_rest_api_connector.adoc[leveloffset=+1]
+include::p_amq2api-create-rest-api-connector.adoc[leveloffset=+1]
 
-include::amq2api_upload_todo_app_icon.adoc[leveloffset=+1]
+include::p_amq2api-upload-todo-app-icon.adoc[leveloffset=+1]
 
-include::amq2api_create_rest_api_connection.adoc[leveloffset=+1]
+include::p_amq2api-create-rest-api-connection.adoc[leveloffset=+1]
 
-include::amq2api_create_integration.adoc[leveloffset=+1]
+include::as_amq2api-create-integration.adoc[leveloffset=+1]
 
-include::amq2api_confirm_works.adoc[leveloffset=+1]
+include::p_amq2api-confirm-works.adoc[leveloffset=+1]
 
-include::clean_up.adoc[leveloffset=+1]
+include::p_clean-up.adoc[leveloffset=+1]
 
 :context: {parent-context}

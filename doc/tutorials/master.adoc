@@ -30,12 +30,12 @@ to decide which integration to create first.
 
 See also: link:{LinkFuseOnlineIntegrationGuide}[{NameOfFuseOnlineIntegrationGuide}]
 
-include::topics/comparison_of_sample_integrations.adoc[leveloffset=+1]
+include::topics/r_comparison-of-sample-integrations.adoc[leveloffset=+1]
 
 // include::topics/shared/log_in.adoc[leveloffset=+1]
 
-include::topics/t2sf_intro.adoc[leveloffset=+1]
+include::topics/as_t2sf-intro.adoc[leveloffset=+1]
 
-include::topics/sf2db_intro.adoc[leveloffset=+1]
+include::topics/as_sf2db-intro.adoc[leveloffset=+1]
 
-include::topics/amq2api_intro.adoc[leveloffset=+1]
+include::topics/as_amq2api-intro.adoc[leveloffset=+1]

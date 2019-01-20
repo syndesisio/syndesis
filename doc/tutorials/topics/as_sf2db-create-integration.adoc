@@ -1,5 +1,5 @@
 // Module included in the following assemblies:
-// sf2db_intro.adoc
+// as_sf2db-intro.adoc
 
 :parent-context: {context}
 [id='create-sf-db-integration_{context}']
@@ -19,12 +19,12 @@ connection and the database connection, the main steps are:
 * You created a {prodname} Salesforce connection.
 * {prodname} is open and you are logged in. 
 
-include::sf2db_choose_start.adoc[leveloffset=+1]
+include::p_sf2db-choose-start.adoc[leveloffset=+1]
 
-include::sf2db_choose_finish.adoc[leveloffset=+1]
+include::p_sf2db-choose-finish.adoc[leveloffset=+1]
 
-include::sf2db_add_mapping_step.adoc[leveloffset=+1]
+include::p_sf2db-add-mapping-step.adoc[leveloffset=+1]
 
-include::sf2db_name_and_publish.adoc[leveloffset=+1]
+include::p_sf2db-name-and-publish.adoc[leveloffset=+1]
 
 :context: {parent-context}

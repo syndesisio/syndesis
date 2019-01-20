@@ -1,5 +1,5 @@
 // This assembly is included in the following assemblies:
-// t2sf_intro.adoc
+// as_t2sf-intro.adoc
 ifdef::context[:parent-context: {context}]
 
 [id='create-twitter-sf-integration_{context}']
@@ -23,15 +23,15 @@ created a {prodname} Twitter connection.
 created a {prodname} Salesforce connection. 
 * {prodname} is open and you are logged in. 
 
-include::t2sf_choose_start.adoc[leveloffset=+1]
+include::p_t2sf-choose-start.adoc[leveloffset=+1]
 
-include::t2sf_choose_finish.adoc[leveloffset=+1]
+include::p_t2sf-choose-finish.adoc[leveloffset=+1]
 
-include::t2sf_add_filter_step.adoc[leveloffset=+1]
+include::p_t2sf-add-filter-step.adoc[leveloffset=+1]
 
-include::t2sf_add_mapping_step.adoc[leveloffset=+1]
+include::p_t2sf-add-mapping-step.adoc[leveloffset=+1]
 
-include::t2sf_name_and_publish.adoc[leveloffset=+1]
+include::p_t2sf-name-and-publish.adoc[leveloffset=+1]
 
 
 ifdef::parent-context[:context: {parent-context}]

@@ -45,14 +45,14 @@ To implement, deploy, and test this sample integration, the main steps are:
 . <<sf2db-confirm-working_{context}>>
 . <<cleanup_{context}>>
 
-include::shared/register_with_sf.adoc[leveloffset=+1]
+include::shared/p_register-with-sf.adoc[leveloffset=+1]
 
-include::shared/create_sf_connection.adoc[leveloffset=+1]
+include::shared/p_create-sf-connection.adoc[leveloffset=+1]
 
-include::sf2db_create_integration.adoc[leveloffset=+1]
+include::as_sf2db-create-integration.adoc[leveloffset=+1]
 
-include::sf2db_confirm_works.adoc[leveloffset=+1]
+include::p_sf2db-confirm-works.adoc[leveloffset=+1]
 
-include::clean_up.adoc[leveloffset=+1]
+include::p_clean-up.adoc[leveloffset=+1]
 
 :context: tutorials

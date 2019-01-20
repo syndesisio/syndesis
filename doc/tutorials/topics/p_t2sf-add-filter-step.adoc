@@ -1,5 +1,5 @@
 // Module included in the following assemblies:
-// t2sf_create_integration.adoc
+// as_t2sf-create-integration.adoc
 
 [id='t2sf-add-basic-filter-step_{context}']
 = Add a basic filter step

@@ -1,5 +1,5 @@
 // Module included in the following assemblies:
-// amq2api_create_integration.adoc
+// as_amq2api-create-integration.adoc
 
 [id='amq2api-choose-finish-connection_{context}']
 = Choose the finish connection

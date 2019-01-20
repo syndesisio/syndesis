@@ -44,18 +44,18 @@ To implement, deploy, and test this sample integration, the main steps are:
 . <<t2sf-confirm-working_{context}>>
 . <<cleanup_{context}>>
 
-include::shared/register_with_twitter.adoc[leveloffset=+1]
+include::shared/p_register-with-twitter.adoc[leveloffset=+1]
 
-include::shared/create_twitter_connection.adoc[leveloffset=+1]
+include::shared/p_create-twitter-connection.adoc[leveloffset=+1]
 
-include::shared/register_with_sf.adoc[leveloffset=+1]
+include::shared/p_register-with-sf.adoc[leveloffset=+1]
 
-include::shared/create_sf_connection.adoc[leveloffset=+1]
+include::shared/p_create-sf-connection.adoc[leveloffset=+1]
 
-include::t2sf_create_integration.adoc[leveloffset=+1]
+include::as_t2sf-create-integration.adoc[leveloffset=+1]
 
-include::t2sf_confirm_working.adoc[leveloffset=+1]
+include::p_t2sf-confirm-working.adoc[leveloffset=+1]
 
-include::clean_up.adoc[leveloffset=+1]
+include::p_clean-up.adoc[leveloffset=+1]
 
 :context: tutorials

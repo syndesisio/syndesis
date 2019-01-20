@@ -1,5 +1,5 @@
 // Module included in the following assemblies:
-// sf2db_create_integration.adoc
+// as_sf2db-create-integration.adoc
 
 [id='sf2db-add-data-mapping-step_{context}']
 = Add a data mapping step

@@ -1,27 +1,25 @@
 // Module included in the following assemblies:
-// amq2api_create_integration.adoc
+// as_t2sf-create-integration.adoc
 
-[id='amq2api-name-and-publish_{context}']
+[id='t2sf-name-and-publish_{context}']
 = Give the integration a name and deploy it
 
-The AMQ to REST API sample integration is complete when it has a Red Hat AMQ start
-connection, a Damage Reporter step, a data mapper step, and it finishes
-with a Todo App Client API connection. Follow the instructions here to 
-deploy it. 
+When the Twitter to Salesforce sample integration is complete then you
+can deploy it and see how it works. 
 
 .Prerequisites
-* You added the start and finish connections to the integration.
-* You added a Damager Reporter step between the start and finish connections.
-* You added a Data Mapper step between the Damage Reporter step and 
-the connection to the Todo App API. 
+* The integration's start connection is Twitter.
+* The integration's finish connection is Salesforce. 
+* The integration has a filter step.
+* You just added a data mapping step to the integration. 
 
 .Procedure
-. In {prodname}, in the upper right, click *Publish* to give it a name.
-. In the *Integration Name* field, enter a name for the
-integration. For example, `*AMQ to REST API Sample Integration*`.
-. Optionally, in the *Description* field, enter information that might be
-helpful to know about this integration.
+. In {prodname}, at the top of the left panel, in the *Integration Name* field,
+enter a name of your choice that distinguishes this integration
+from any other integrations. For
+example: `*Twitter to Salesforce Sample Integration*`.
 . In the upper right corner, click *Publish*.
+
 +
 {prodname} displays the integration summary page with a progress
 indicator that shows the publishing stages. 
