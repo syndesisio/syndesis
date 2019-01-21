@@ -1,12 +1,13 @@
 import { WithConnections, WithIntegrationHelpers } from '@syndesis/api';
 import { Connection, Integration } from '@syndesis/models';
-import { Breadcrumb, ContentWithSidebarLayout } from '@syndesis/ui';
+import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../../../../containers';
 import { PageTitle } from '../../../../../../containers/PageTitle';
 import {
+  IntegrationCreatorBreadcrumbs,
   IntegrationEditorChooseConnection,
   IntegrationEditorSidebar,
 } from '../../../../components';
@@ -34,7 +35,25 @@ export class SelectConnectionPage extends React.Component {
           {({ position }, { connection, integration }) => (
             <>
               <PageTitle title={'Choose a connection'} />
-              <ContentWithSidebarLayout
+              <IntegrationEditorLayout
+                header={
+                  <IntegrationCreatorBreadcrumbs
+                    step={3}
+                    startConnection={integration.flows![0].steps![0].connection}
+                    startAction={integration.flows![0].steps![0].action}
+                    finishActionId={
+                      integration.flows![0].steps![
+                        integration.flows![0].steps!.length - 1
+                      ].action!.id!
+                    }
+                    finishConnection={
+                      integration.flows![0].steps![
+                        integration.flows![0].steps!.length - 1
+                      ].connection
+                    }
+                    integration={integration}
+                  />
+                }
                 sidebar={
                   <WithIntegrationHelpers>
                     {({ getSteps }) => {
@@ -55,24 +74,6 @@ export class SelectConnectionPage extends React.Component {
                   <WithConnections>
                     {({ data, hasData, error }) => (
                       <IntegrationEditorChooseConnection
-                        breadcrumb={
-                          <Breadcrumb>
-                            <Link to={resolvers.list()}>Integrations</Link>
-                            <Link
-                              to={resolvers.create.start.selectConnection()}
-                            >
-                              New integration
-                            </Link>
-                            <Link
-                              to={resolvers.create.configure.index({
-                                integration,
-                              })}
-                            >
-                              Save or add step
-                            </Link>
-                            <span>Choose a connection</span>
-                          </Breadcrumb>
-                        }
                         connections={data.connectionsWithToAction}
                         loading={!hasData}
                         error={error}
@@ -88,6 +89,14 @@ export class SelectConnectionPage extends React.Component {
                       />
                     )}
                   </WithConnections>
+                }
+                footer={
+                  <Link
+                    to={resolvers.create.configure.index({ integration })}
+                    className={'btn btn-default'}
+                  >
+                    Cancel add connection
+                  </Link>
                 }
               />
             </>

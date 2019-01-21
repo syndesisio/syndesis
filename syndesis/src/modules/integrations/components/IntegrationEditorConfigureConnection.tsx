@@ -9,7 +9,6 @@ import {
 } from '@syndesis/api';
 import { AutoForm } from '@syndesis/auto-form';
 import { Action, ConnectionOverview } from '@syndesis/models';
-import { PageHeader } from '@syndesis/ui';
 import { IntegrationActionConfigurationCard } from '@syndesis/ui';
 import * as H from 'history';
 import * as React from 'react';
@@ -21,7 +20,6 @@ export interface IOnUpdatedIntegrationProps {
 }
 
 export interface IIntegrationEditorConfigureConnection {
-  breadcrumb: JSX.Element;
   connection: ConnectionOverview;
   actionId: string;
   configurationStep: number;
@@ -69,6 +67,7 @@ export class IntegrationEditorConfigureConnection extends React.Component<
               backLink={this.props.backLink}
               content={fields}
               onSubmit={handleSubmit}
+              title={`${action.name} - ${action.description}`}
               i18nBackLabel={'< Choose action'}
               i18nSubmitLabel={moreConfigurationSteps ? 'Continue' : 'Done'}
               disabled={isSubmitting}
@@ -99,6 +98,7 @@ export class IntegrationEditorConfigureConnection extends React.Component<
           </p>
         }
         onSubmit={onSave}
+        title={`${action.name} - ${action.description}`}
         i18nBackLabel={'< Choose action'}
         i18nSubmitLabel={'Done'}
         disabled={false}
@@ -113,11 +113,10 @@ export class IntegrationEditorConfigureConnection extends React.Component<
     );
     return (
       <>
-        <PageHeader>
-          {this.props.breadcrumb}
-          <h1>{action.name}</h1>
-          <p>{action.description}</p>
-        </PageHeader>
+        <div className="container-fluid">
+          <h1>Configure action</h1>
+          <p>Fill in the required information for the selected action.</p>
+        </div>
         {this.renderConfigurationForm(action) ||
           this.renderNoPropertiesInfo(action)}
       </>

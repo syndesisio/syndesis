@@ -1,6 +1,6 @@
 import { WithConnections } from '@syndesis/api';
 import {
-  ContentWithSidebarLayout,
+  IntegrationEditorLayout,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
@@ -18,7 +18,8 @@ export class StartConnectionPage extends React.Component {
   public render() {
     return (
       <WithClosedNavigation>
-        <ContentWithSidebarLayout
+        <IntegrationEditorLayout
+          header={<IntegrationCreatorBreadcrumbs step={1} />}
           sidebar={
             <IntegrationVerticalFlow disabled={true}>
               {({ expanded }) => (
@@ -51,7 +52,6 @@ export class StartConnectionPage extends React.Component {
                 <>
                   <PageTitle title={'New Integration'} />
                   <IntegrationEditorChooseConnection
-                    breadcrumb={<IntegrationCreatorBreadcrumbs step={1} />}
                     connections={data.connectionsWithFromAction}
                     loading={!hasData}
                     error={error}

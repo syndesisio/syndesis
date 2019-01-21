@@ -1,12 +1,13 @@
 import { WithConnection, WithIntegrationHelpers } from '@syndesis/api';
 import { ConnectionOverview, Integration } from '@syndesis/models';
-import { Breadcrumb, ContentWithSidebarLayout, Loader } from '@syndesis/ui';
+import { IntegrationEditorLayout, Loader } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../../../../containers';
 import { PageTitle } from '../../../../../../containers/PageTitle';
 import {
+  IntegrationCreatorBreadcrumbs,
   IntegrationEditorChooseAction,
   IntegrationEditorSidebar,
 } from '../../../../components';
@@ -40,7 +41,27 @@ export class SelectActionPage extends React.Component {
                   {() => (
                     <>
                       <PageTitle title={'Choose an action'} />
-                      <ContentWithSidebarLayout
+                      <IntegrationEditorLayout
+                        header={
+                          <IntegrationCreatorBreadcrumbs
+                            step={3}
+                            startConnection={
+                              integration.flows![0].steps![0].connection
+                            }
+                            startAction={integration.flows![0].steps![0].action}
+                            finishActionId={
+                              integration.flows![0].steps![
+                                integration.flows![0].steps!.length - 1
+                              ].action!.id!
+                            }
+                            finishConnection={
+                              integration.flows![0].steps![
+                                integration.flows![0].steps!.length - 1
+                              ].connection
+                            }
+                            integration={integration}
+                          />
+                        }
                         sidebar={
                           <WithIntegrationHelpers>
                             {({ getSteps }) => {
@@ -80,31 +101,6 @@ export class SelectActionPage extends React.Component {
                         }
                         content={
                           <IntegrationEditorChooseAction
-                            breadcrumb={
-                              <Breadcrumb>
-                                <Link to={resolvers.list()}>Integrations</Link>
-                                <Link
-                                  to={resolvers.create.start.selectConnection()}
-                                >
-                                  New integration
-                                </Link>
-                                <Link
-                                  to={resolvers.create.configure.index({
-                                    integration,
-                                  })}
-                                >
-                                  Save or add step
-                                </Link>
-                                <Link
-                                  to={resolvers.create.configure.addConnection.selectConnection(
-                                    { position, integration }
-                                  )}
-                                >
-                                  Choose a connection
-                                </Link>
-                                <span>Choose action</span>
-                              </Breadcrumb>
-                            }
                             actions={data.actionsWithTo.sort((a, b) =>
                               a.name.localeCompare(b.name)
                             )}
@@ -115,6 +111,16 @@ export class SelectActionPage extends React.Component {
                               data
                             )}
                           />
+                        }
+                        footer={
+                          <Link
+                            to={resolvers.create.configure.index({
+                              integration,
+                            })}
+                            className={'btn btn-default'}
+                          >
+                            Cancel add connection
+                          </Link>
                         }
                       />
                     </>

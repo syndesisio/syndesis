@@ -1,7 +1,7 @@
 import { WithIntegrationHelpers } from '@syndesis/api';
 import { ConnectionOverview, Integration } from '@syndesis/models';
 import {
-  ContentWithSidebarLayout,
+  IntegrationEditorLayout,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
@@ -87,7 +87,14 @@ export class StartConfigurationPage extends React.Component {
                 return (
                   <>
                     <PageTitle title={'Configure the action'} />
-                    <ContentWithSidebarLayout
+                    <IntegrationEditorLayout
+                      header={
+                        <IntegrationCreatorBreadcrumbs
+                          step={1}
+                          subStep={2}
+                          startConnection={connection}
+                        />
+                      }
                       sidebar={
                         <IntegrationVerticalFlow disabled={true}>
                           {({ expanded }) => (
@@ -122,12 +129,6 @@ export class StartConfigurationPage extends React.Component {
                       }
                       content={
                         <IntegrationEditorConfigureConnection
-                          breadcrumb={
-                            <IntegrationCreatorBreadcrumbs
-                              step={3}
-                              startConnection={connection}
-                            />
-                          }
                           connection={connection}
                           actionId={actionId}
                           configurationStep={stepAsNumber}

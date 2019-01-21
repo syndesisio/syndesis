@@ -36,6 +36,7 @@ export class IntegrationFlowAddStep extends React.Component<
     super(props);
     this.showTooltip = this.showTooltip.bind(this);
     this.hideTooltip = this.hideTooltip.bind(this);
+    this.toggleTooltip = this.toggleTooltip.bind(this);
   }
 
   public showTooltip() {
@@ -50,12 +51,19 @@ export class IntegrationFlowAddStep extends React.Component<
     });
   }
 
+  public toggleTooltip() {
+    this.setState({
+      showTooltip: !this.state.showTooltip,
+    });
+  }
+
   public render() {
     return (
       <div
         className={'integration-flow-add-step'}
         onMouseEnter={this.showTooltip}
         onMouseLeave={this.hideTooltip}
+        onTouchStart={this.toggleTooltip}
       >
         <div
           className={'integration-flow-add-step__iconWrapper'}
@@ -67,7 +75,7 @@ export class IntegrationFlowAddStep extends React.Component<
         </div>
         {this.props.showDetails && this.props.children}
         <Overlay
-          placement="bottom"
+          placement="top"
           rootClose={false}
           show={this.props.forceTooltip || this.state.showTooltip}
           target={this.containerRef.current}

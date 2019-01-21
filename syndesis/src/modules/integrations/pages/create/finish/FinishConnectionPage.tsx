@@ -1,7 +1,7 @@
 import { WithConnections } from '@syndesis/api';
 import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import {
-  ContentWithSidebarLayout,
+  IntegrationEditorLayout,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
@@ -30,7 +30,15 @@ export class FinishConnectionPage extends React.Component {
           {(_, { startConnection, startAction, integration }) => (
             <>
               <PageTitle title={'Choose a Finish Connection'} />
-              <ContentWithSidebarLayout
+              <IntegrationEditorLayout
+                header={
+                  <IntegrationCreatorBreadcrumbs
+                    step={2}
+                    startConnection={startConnection}
+                    startAction={startAction}
+                    integration={integration}
+                  />
+                }
                 sidebar={
                   <IntegrationVerticalFlow disabled={true}>
                     {({ expanded }) => (
@@ -67,14 +75,6 @@ export class FinishConnectionPage extends React.Component {
                   <WithConnections>
                     {({ data, hasData, error }) => (
                       <IntegrationEditorChooseConnection
-                        breadcrumb={
-                          <IntegrationCreatorBreadcrumbs
-                            step={4}
-                            startConnection={startConnection}
-                            startAction={startAction}
-                            integration={integration}
-                          />
-                        }
                         i18nTitle={'Choose a Finish Connection'}
                         i18nSubtitle={
                           'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'

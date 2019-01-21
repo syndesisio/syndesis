@@ -2,11 +2,11 @@
   display: flex;
   z-index: 2;
   position: relative;
+  justify-content: center;
 }
 
 .integration-flow-add-step__iconWrapper {
   display: flex;
-  flex: 0 0 155px;
   justify-content: center;
   position: relative;
 }

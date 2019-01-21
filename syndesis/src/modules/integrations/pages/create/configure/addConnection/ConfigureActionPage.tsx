@@ -1,12 +1,13 @@
 import { WithIntegrationHelpers } from '@syndesis/api';
 import { ConnectionOverview, Integration } from '@syndesis/models';
-import { Breadcrumb, ContentWithSidebarLayout } from '@syndesis/ui';
+import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../../../../containers';
 import { PageTitle } from '../../../../../../containers/PageTitle';
 import {
+  IntegrationCreatorBreadcrumbs,
   IntegrationEditorConfigureConnection,
   IntegrationEditorSidebar,
   IOnUpdatedIntegrationProps,
@@ -80,7 +81,27 @@ export class ConfigureActionPage extends React.Component {
                 return (
                   <>
                     <PageTitle title={'Configure the action'} />
-                    <ContentWithSidebarLayout
+                    <IntegrationEditorLayout
+                      header={
+                        <IntegrationCreatorBreadcrumbs
+                          step={3}
+                          startConnection={
+                            integration.flows![0].steps![0].connection
+                          }
+                          startAction={integration.flows![0].steps![0].action}
+                          finishActionId={
+                            integration.flows![0].steps![
+                              integration.flows![0].steps!.length - 1
+                            ].action!.id!
+                          }
+                          finishConnection={
+                            integration.flows![0].steps![
+                              integration.flows![0].steps!.length - 1
+                            ].connection
+                          }
+                          integration={integration}
+                        />
+                      }
                       sidebar={
                         <IntegrationEditorSidebar
                           steps={getSteps(updatedIntegration || integration, 0)}
@@ -101,38 +122,6 @@ export class ConfigureActionPage extends React.Component {
                       }
                       content={
                         <IntegrationEditorConfigureConnection
-                          breadcrumb={
-                            <Breadcrumb>
-                              <Link to={resolvers.list()}>Integrations</Link>
-                              <Link
-                                to={resolvers.create.start.selectConnection()}
-                              >
-                                New integration
-                              </Link>
-                              <Link
-                                to={resolvers.create.configure.index({
-                                  integration,
-                                })}
-                              >
-                                Save or add step
-                              </Link>
-                              <Link
-                                to={resolvers.create.configure.addConnection.selectConnection(
-                                  { position, integration }
-                                )}
-                              >
-                                Choose a connection
-                              </Link>
-                              <Link
-                                to={resolvers.create.configure.addConnection.selectAction(
-                                  { position, integration, connection }
-                                )}
-                              >
-                                Choose action
-                              </Link>
-                              <span>Configure the action</span>
-                            </Breadcrumb>
-                          }
                           connection={connection}
                           actionId={actionId}
                           configurationStep={stepAsNumber}
@@ -141,6 +130,14 @@ export class ConfigureActionPage extends React.Component {
                           )}
                           onUpdatedIntegration={onUpdatedIntegration}
                         />
+                      }
+                      footer={
+                        <Link
+                          to={resolvers.create.configure.index({ integration })}
+                          className={'btn btn-default'}
+                        >
+                          Cancel add connection
+                        </Link>
                       }
                     />
                   </>

@@ -53,7 +53,13 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export class ConnectionsWithToolbar extends React.Component<IConnectionsProps> {
+export interface IConnectionsWithToolbarProps extends IConnectionsProps {
+  children?: any;
+}
+
+export class ConnectionsWithToolbar extends React.Component<
+  IConnectionsWithToolbarProps
+> {
   public static defaultProps = {
     includeHidden: false,
   };
@@ -86,6 +92,7 @@ export class ConnectionsWithToolbar extends React.Component<IConnectionsProps> {
                     count: filteredAndSortedConnections.length,
                   })}
                 >
+                  {this.props.children}
                   <Connections
                     error={this.props.error}
                     loading={this.props.loading}

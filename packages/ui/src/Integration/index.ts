@@ -1,4 +1,5 @@
 export * from './IntegrationActionConfigurationCard';
+export * from './IntegrationEditorLayout';
 export * from './IntegrationFlowAddStep';
 export * from './IntegrationFlowStep';
 export * from './IntegrationFlowStepDetails';

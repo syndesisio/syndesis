@@ -1,7 +1,7 @@
 import { WithConnection } from '@syndesis/api';
 import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import {
-  ContentWithSidebarLayout,
+  IntegrationEditorLayout,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
@@ -41,7 +41,16 @@ export class FinishActionPage extends React.Component {
               {({ data, hasData, error }) => (
                 <>
                   <PageTitle title={'Choose an action'} />
-                  <ContentWithSidebarLayout
+                  <IntegrationEditorLayout
+                    header={
+                      <IntegrationCreatorBreadcrumbs
+                        step={2}
+                        subStep={1}
+                        startConnection={startConnection}
+                        startAction={startAction}
+                        integration={integration}
+                      />
+                    }
                     sidebar={
                       <IntegrationVerticalFlow disabled={true}>
                         {({ expanded }) => (
@@ -95,14 +104,6 @@ export class FinishActionPage extends React.Component {
                       >
                         {() => (
                           <IntegrationEditorChooseAction
-                            breadcrumb={
-                              <IntegrationCreatorBreadcrumbs
-                                step={5}
-                                startConnection={startConnection}
-                                startAction={startAction}
-                                integration={integration}
-                              />
-                            }
                             actions={data.actionsWithTo.sort((a, b) =>
                               a.name.localeCompare(b.name)
                             )}

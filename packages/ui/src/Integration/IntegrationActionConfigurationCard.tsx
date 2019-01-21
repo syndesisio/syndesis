@@ -6,10 +6,11 @@ import { Loader } from '../Shared';
 export interface IIntegrationActionConfigurationFormProps {
   backLink: H.LocationDescriptor;
   content: JSX.Element;
-  onSubmit: (e?: any) => void;
+  title: string;
   i18nBackLabel: string;
   i18nSubmitLabel: string;
   disabled?: boolean;
+  onSubmit: (e?: any) => void;
 }
 
 export const IntegrationActionConfigurationCard: React.FunctionComponent<
@@ -18,6 +19,7 @@ export const IntegrationActionConfigurationCard: React.FunctionComponent<
   backLink,
   onSubmit,
   content,
+  title,
   i18nSubmitLabel,
   i18nBackLabel,
   disabled,
@@ -26,6 +28,7 @@ export const IntegrationActionConfigurationCard: React.FunctionComponent<
     <div className={'container-fluid'}>
       <div className="row row-cards-pf">
         <div className="card-pf">
+          <div className="card-pf-title">{title}</div>
           <div className="card-pf-body">{content}</div>
           <div className="card-pf-footer">
             <div className="card-pf-time-frame-filter">
