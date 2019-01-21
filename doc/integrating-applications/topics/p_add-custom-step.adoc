@@ -1,0 +1,40 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='add-custom-step_{context}']
+= Add a custom step
+
+If {prodname} does not provide a step that you need in an integration,
+a developer can define one or more custom steps in an extension. A custom
+step operates on integration data between connections. 
+
+You add a custom step to an integration in the same way that you add
+a built-in step. Create an integration, choose the start and finish
+connections, add other connections as needed and then add additional steps.
+When you add a step, {prodname} operates on the data it receives from the
+previous step(s).
+
+.Prerequisites
+* You uploaded the custom step extension to {prodname}. See 
+link:{LinkFuseOnlineIntegrationGuide}#making-extensions-available_custom[Make extensions available].
+* You are creating or editing an integration.
+* The integration already has all the connections that it requires.
+
+.Procedure
+
+. In the left panel, where you want to add a custom step to
+the integration, hover over the
+image:images/PlusSignToAddStepOrConnection.png[title='plus sign']
+and in the popup that appears, click *Add a Step*.
+
+. On the *Add a Step* page, click the custom step that you want to add.
++
+The list of available steps includes any
+custom steps that are defined in extensions that were uploaded to
+your {prodname} environment.
+
+At the top of the list of steps, in the *Name* field, you can select
+*Custom Steps* to display only custom steps.
+
+. Respond to prompts for any information that is required to perform the step.
+This information varies for each custom step.

@@ -1,0 +1,72 @@
+// Module included in the following assemblies:
+// as_trigger-integrations-with-api-calls.adoc
+
+[id='create-api-provider-integration_{context}']
+= Create an integration that is triggered by an API call
+
+To be able to invoke a call that triggers execution of an integration, you provide
+an OpenAPI schema that defines the operations that the integration
+can perform. For each operation, you specify an integration flow that
+connects to the applications and processes the integration data according to the
+requirements for that operation. 
+
+.Prerequisites
+* You can provide an OpenAPI schema for the REST API
+operations that you want the integration to perform. 
++
+To experiment,
+https://github.com/syndesisio/syndesis-quickstarts/blob/master/api-provider/task-api.json[download the `task-api.json` file], 
+which is an OpenAPI schema for an API provider quickstart. You can
+then drag this file in when {prodname} prompts you to provide an OpenAPI
+schema. 
+* You have a plan for the integration flow for each OpenAPI operation. 
+* You created a connection for each application or service that you want
+to add to an integration flow. 
+
+.Procedure
+
+. In {prodname}, in the left navigation panel, click *Integrations*. 
+. In the upper right, click *Create Integration*. 
+. On the *Choose a Start Connection* page, click the *API Provider* card. 
+. On the *Start integration with an API call* page, if you have an OpenAPI 2.0
+schema that defines the REST API operations then upload it in one of the 
+following ways:
++
+* Drag and drop the file that contains the schema. 
+* Click *Choose File* to navigate to and select the file that contains the
+schema. 
+* Click *Use a URL* and enter the URL for the schema. 
+
++
+Or, if you need to define the schema, select *Create from scratch*. 
+
+. Click *Next*. 
++
+* If you uploaded a schema, remember that this is your only opportunity
+to change it. To review or edit the schema: 
++
+.. Click *Review/Edit* to open the Apicurio editor.
+.. Review and edit as needed.
+.. In the upper right, click *Save* or *Cancel* to close the editor.
+.. Click *Next* and go to step 6 in this procedure. 
+
+* If you are creating a schema from scratch then in the Apicurio editor 
+that Syndesis opens:
++
+.. Define the OpenAPI schema.
+.. In the upper right, click *Save*, which closes the editor. 
+.. Click *Next*. 
+
++
+For information about using the Apicurio editor, see 
+link:https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/designing_apis_with_apicurito/#create-api-definition[Design and develop an API definition with Apicurito].
+In this Technology Preview release, you cannot edit the operation 
+description that will appear in the operations list in {prodname}. 
+
+
+. On the *Give this integration a name* page, enter a name for your integration.
+. Optionally, enter a description that helps you distinguish this integration
+from other integrations. 
+. Click *Save and continue* to display the *Choose Operation* page. You are
+ready to 
+link:{LinkFuseOnlineIntrationGuide}#create-integration-operation-flows_api-provider[define a flow for each operation].

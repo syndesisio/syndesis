@@ -1,0 +1,25 @@
+// This module is included in these assemblies:
+// as_managing-integrations.adoc
+
+:context: manage
+[id='copying-integrations-to-other-environments_{context}']
+= Copy an integration to another environment
+:context: copy
+
+To run integrations across development, staging and
+production environments, you can export and import integrations.
+The environments can all be on a single OpenShift cluster,
+or they can be spread out across multiple OpenShift clusters.
+See the following topics:
+
+* <<about-copying-integrations_{context}>>
+* <<exporting-integrations_{context}>>
+* <<importing-integrations_{context}>>
+
+include::c_about-copying-integrations.adoc[leveloffset=+1]
+
+include::p_exporting-integrations.adoc[leveloffset=+1]
+
+include::p_importing-integrations.adoc[leveloffset=+1]
+
+:context: manage

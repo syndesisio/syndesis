@@ -1,0 +1,29 @@
+// This module is included in these assemblies:
+// as_high-level-overview.adoc
+
+[id='user-types_{context}']
+= Who {prodname} is for
+
+{prodname} is for business experts in, for example,
+finance, human resources, or
+marketing, who do not want to write code in order
+to share data between two different applications. Their use of a
+variety of software-as-a-service (SaaS) applications gives them an
+understanding of business requirements, workflows, and relevant data.
+
+As a business user, you can use {prodname} to:
+
+* Capture tweets that mention your company, filter them, and create new
+contacts in your Salesforce environment when the tweet is from an unknown
+source.  
+
+* Identify Salesforce lead updates and then execute a SQL stored procedure
+to keep your related database up to date. 
+
+* Subscribe for orders received by an AMQ broker and then operate on 
+those orders with a custom API. 
+
+* Obtain data from an Amazon S3 bucket and add it to a Dropbox folder. 
+
+These are just a few examples of what a business user can do without
+writing code. 

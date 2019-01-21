@@ -1,0 +1,35 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='triggering-integrations-with-http-requests_{context}']
+= Trigger integration execution with an HTTP request (Webhook)
+:context: webhook
+
+You can trigger execution of an integration by sending an HTTP `GET` or `POST`
+request to an HTTP endpoint that {prodname} exposes. The following topics
+provide details: 
+
+* <<how-to-use-webhook_{context}>>
+* <<create-webhook-connection_{context}>>
+* <<start-with-webhook-connection_{context}>>
+* <<how-requests-are-handled_{context}>>
+* <<guidelines-for-service-sending-requests_{context}>>
+* <<about-json-schema-for-http-requests_{context}>>
+* <<how-to-specify-request_{context}>>
+
+include::p_how-to-use-webhook.adoc[leveloffset=+1]
+
+include::p_create-webhook-connection.adoc[leveloffset=+1]
+
+include::p_start-with-webhook-connection.adoc[leveloffset=+1]
+
+include::r_how-requests-are-handled.adoc[leveloffset=+1]
+
+include::r_guidelines-for-service-sending-requests.adoc[leveloffset=+1]
+
+include::r_about-json-schema-for-http-requests.adoc[leveloffset=+1]
+
+include::r_how-to-specify-request.adoc[leveloffset=+1]
+
+:context: connectors

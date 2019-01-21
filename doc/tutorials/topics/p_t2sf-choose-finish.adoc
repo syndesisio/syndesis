@@ -1,0 +1,28 @@
+// Module included in the following assemblies:
+// as_t2sf-create-integration.adoc
+
+[id='t2sf-choose-finish-connection_{context}']
+= Choose the finish connection
+
+In {prodname}, to continue creating the Twitter to Salesforce sample
+integration, after you add the start connection, you add the finish connection
+ to the integration.
+ 
+.Prerequisites
+* You added the Twitter connection to the integration as the start connection. 
+* {prodname} is prompting you to add the finish connection. 
+* You created a Salesforce connection.
+
+.Procedure
+
+. On the *Choose a Finish Connection* page, click the Salesforce
+connection that you created. If you gave it the example name, you
+would click *SF Connect 1*.
+This integration finishes by using the credentials
+defined in this connection to connect to Salesforce.
+. On the *Choose an Action* page, click *New record*.
+. On the *New record* page, click in the *Object name* field
+and select *Contact* as the
+Salesforce record to create.
+. Click  *Done* to add the finish
+connection to the integration.

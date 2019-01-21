@@ -1,0 +1,97 @@
+// This module is used in the following assemblies:
+// as_adding-api-connectors.adoc
+
+[id='creating-api-connectors_{context}']
+= Create REST API client connectors
+
+Upload an OpenAPI schema to enable {prodname} to create a REST API
+client connector. 
+
+.Prerequisite
+You have an OpenAPI schema for the connector that you want
+{prodname} to create.
+
+.Procedure
+
+. In the {prodname} navigation panel, click *Customizations* to display
+the *API Client Connectors* tab. Any API client connectors that are
+already available are listed here.
+. Click *Create API Connector*.
+. On the *Create API Client Connector* page, do one of the following:
++
+* Click *Browse* and select the OpenAPI file that you want to upload.
+* Select *Use a URL* and paste the URL for your OpenAPI schema
+in the input field. 
+
+. Click *Next*. If there is invalid or missing content, {prodname}
+displays information about what needs to be corrected. Select a different
+OpenAPI file to upload or click *Cancel*,
+revise the OpenAPI file, and upload the updated file.
++
+If the schema is valid, {prodname} displays a summary of
+the actions that the connector provides. This might include errors and
+warnings about the action definitions.
+
+. If you are satisfied with the action summary, click *Next*.
++
+Or, to revise the OpenAPI schema, in the lower right, click *Review/Edit* 
+to open Apicurio Studio. Update the schema as needed. 
+In the upper right, click *Save* to incorporate your updates into the 
+new API client connector. Then click *Next* to continue creating the 
+API client connector. 
++
+For details about using Apicurio Studio, see https://www.apicur.io/. 
+Sometimes, if you provide a URL for the OpenAPI schema, {prodname} 
+can upload it but  cannot open it for editing. Typically, this is caused by 
+settings on the file’s host. To open the schema for editing, 
+{prodname} requires that the file host has:
++
+* An `https` URL. An `http` URL does not work. 
+* Enabled CORS. 
+
+. Indicate the API's security requirements by selecting one of the
+following:
+.. *No Security*
+.. *HTTP Basic Authorization* -- Enter the user name and password you
+want to use to access the API.
+.. *OAuth* -- {prodname} prompts you to enter:
+... *Authorization URL* is the location for registering {prodname} as
+a client of the API. Registration authorizes {prodname} to access the API.
+See link:{LinkFuseOnlineConnectorGuide}#register-with-rest-api_rest[{NameOfFuseOnlineConnectorGuide}, Register {prodname} as a REST API client]. 
+The OpenAPI schema or other
+documentation for the API should specify this URL. If it does not then
+you must contact the service provider to obtain this URL.
+... *Access Token URL* is required for OAuth authorization. Again, the
+OpenAPI schema or other documentation for the API should provide
+this URL. If it does not then you must contact the service provider.
+. Click *Next*. {prodname} displays the connector's name,
+description, host, and base URL as indicated by the OpenAPI schema.
+For connections that you create from this connector,
++
+** {prodname}
+concatenates the host and base URL values to define the endpoint for
+the connection. For example, if the host is `\https://example.com` and
+the base URL is `/api/v1` then the connection endpoint is
+`\https://example.com/api/v1`.
+** {prodname} applies the OpenAPI schema to data
+mapping steps. If the OpenAPI schema supports more than one schema then {prodname}
+uses the TLS (HTTPS) schema.
+. Review the connector details and optionally upload an icon for the connector.
+If you do not upload an icon, {prodname} generates one.
+You can upload an icon at a later time. When {prodname} displays
+the flow of an integration, it displays a connector's icon
+to represent connections that are created from that connector.
++
+To override a value obtained from
+the OpenAPI file, edit the field value that you want to change.
+After {prodname} creates a connector,
+you cannot change it. To effect a change, you need to upload an updated
+OpenAPI schema so that {prodname} can create a new connector
+or you can upload the same schema and then edit it in Apicurio Studio. 
+You then continue the process for creating a new API client connector. 
+. When you are satisfied with the connector details, click *Create API Connector*.
+{prodname} displays the new connector with the other connectors. 
+
+.Next step
+For details about using your new API connector, see
+link:{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis_rest[{NameOfFuseOnlineConnectorGuide}, Connect to REST APIs]. 

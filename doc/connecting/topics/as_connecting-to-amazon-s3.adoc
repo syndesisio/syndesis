@@ -1,0 +1,29 @@
+// This assembly is included in the following assemblies:
+// connecting/master.adoc
+
+[id='connecting-to-s3_{context}']
+= Connect to Amazon S3
+:context: s3
+
+An integration can retrieve data from an Amazon S3 bucket or copy data into
+an Amazon S3 bucket. To do this, you create an Amazon S3
+connection and then add that Amazon S3 connection to an integration.
+For details, see:
+
+* <<prerequisites-for-creating-s3-connection_{context}>>
+* <<create-s3-connection_{context}>>
+* <<adding-s3-connection-start_{context}>>
+* <<adding-s3-connection-finish_{context}>>
+* <<adding-s3-connection-middle_{context}>>
+
+include::r_prerequisites-for-creating-s3-connection.adoc[leveloffset=+1]
+
+include::p_create-s3-connection.adoc[leveloffset=+1]
+
+include::p_adding-s3-connection-start.adoc[leveloffset=+1]
+
+include::p_adding-s3-connection-finish.adoc[leveloffset=+1]
+
+include::p_adding-s3-connection-middle.adoc[leveloffset=+1]
+
+:context: connectors

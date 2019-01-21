@@ -1,0 +1,31 @@
+// Module included in the following assemblies:
+// as_sf2db-create-integration.adoc
+
+[id='sf2db-choose-finish-connection_{context}']
+= Choose the finish connection
+
+In {prodname}, to continue creating the Salesforce to database sample
+integration, after you add the start connection, you add the finish connection
+ to the integration.
+ 
+.Prerequisites
+* You added the Salesforce connection to the integration as the start connection. 
+* {prodname} is prompting you to add the finish connection. 
+
+.Procedure
+. In {prodname}, on the *Choose a Finish Connection* page,
+click the  *PostgresDB* connection.
+This integration finishes by using the credentials
+defined in this database connection to connect to the
+provided sample database.
+
+. On the *Choose an Action* page, click *Invoke SQL stored procedure*,
+which passes data to a stored procedure.
+
+. In the *Procedure Name* field, click and select *add_lead*, which is the
+provided stored procedure to run in the sample database.
+The selected procedure determines the requirements for additional
+steps in the integration, for example, which Salesforce data fields
+need to be mapped to which database fields.
+
+. Click *Done* to add the finish connection to the integration.
