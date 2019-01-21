@@ -17,7 +17,6 @@
 package io.syndesis.connector.kudu.meta;
 
 public class KuduMetaData {
-    public KuduMetaData(){}
 
     private String tableName;
     private String host;

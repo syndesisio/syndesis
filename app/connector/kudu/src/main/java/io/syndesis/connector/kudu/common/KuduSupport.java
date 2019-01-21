@@ -18,9 +18,6 @@ package io.syndesis.connector.kudu.common;
 
 import org.apache.kudu.client.KuduClient;
 
-import java.util.List;
-import java.util.Map;
-
 public final class KuduSupport {
     private KuduSupport() {
     }

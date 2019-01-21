@@ -23,12 +23,19 @@ import java.util.List;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.impl.ScheduledPollConsumer;
-import org.apache.kudu.client.*;
+import org.apache.kudu.client.KuduClient;
+import org.apache.kudu.client.KuduException;
+import org.apache.kudu.client.KuduScanner;
+import org.apache.kudu.client.KuduTable;
+import org.apache.kudu.client.RowResultIterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Kudu consumer.
  */
 public class KuduConsumer extends ScheduledPollConsumer {
+    private static final Logger LOG = LoggerFactory.getLogger(KuduConsumer.class);
     private final KuduEndpoint endpoint;
     private KuduClient connection;
 
@@ -70,8 +77,7 @@ public class KuduConsumer extends ScheduledPollConsumer {
         while (scanner.hasMoreRows()) {
             RowResultIterator results = scanner.nextRows();
             while (results.hasNext()) {
-                RowResult result = results.next();
-                System.out.println(result.getString(0));
+                LOG.debug("Creating table {}", results.next());
             }
         }
     }

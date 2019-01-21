@@ -126,7 +126,7 @@ public class KuduMetadataRetrieval extends ComponentMetadataRetrieval {
                 }
             }
         } catch (KuduException e) {
-            throw new SyndesisServerException("Unable to connect to kudu schema " + kuduMetaData.getTableName());
+            throw new SyndesisServerException("Unable to connect to kudu schema " + kuduMetaData.getTableName(), e);
         }
 
         return spec;
