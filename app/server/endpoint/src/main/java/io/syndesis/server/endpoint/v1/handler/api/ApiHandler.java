@@ -18,19 +18,13 @@ package io.syndesis.server.endpoint.v1.handler.api;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.syndesis.common.model.api.APISummary;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.openapi.OpenApi;
-import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.APIValidationContext;
-import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
-import okio.BufferedSource;
-import okio.Okio;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.springframework.stereotype.Component;
 
@@ -40,17 +34,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
 import java.io.InputStream;
 
 @Path("/apis")
 @Api(value = "apis")
 @Component
 public class ApiHandler extends BaseHandler {
-
-    private static final String API_PROVIDER_CONNECTION_ID = "api-provider";
-    private static final String API_PROVIDER_START_ACTION_ID = "io.syndesis:api-provider-start";
-    private static final String API_PROVIDER_END_ACTION_ID = "io.syndesis:api-provider-end";
 
     private final APIGenerator apiGenerator;
 
@@ -65,25 +54,12 @@ public class ApiHandler extends BaseHandler {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation("Provides a integration from a API specification. Does not store it in the database")
     public Integration createIntegrationFromAPI(@MultipartForm final APIFormData apiFormData) {
-        Connection apiProviderConnection = getDataManager().fetch(Connection.class, API_PROVIDER_CONNECTION_ID);
-        if (apiProviderConnection == null) {
-            throw new IllegalStateException("Cannot find api-provider connection with id: " + API_PROVIDER_CONNECTION_ID);
-        }
-
-        String spec = getSpec(apiFormData);
-        if (!apiProviderConnection.getConnector().isPresent()) {
-            Connector apiProviderConnector = getDataManager().fetch(Connector.class, apiProviderConnection.getConnectorId());
-            apiProviderConnection = new Connection.Builder()
-                .createFrom(apiProviderConnection)
-                .connector(apiProviderConnector)
-                .build();
-        }
-
-        ProvidedApiTemplate template = new ProvidedApiTemplate(apiProviderConnection, API_PROVIDER_START_ACTION_ID, API_PROVIDER_END_ACTION_ID);
-
-        APIIntegration apiIntegration = apiGenerator.generateIntegration(spec, template);
+        final APIIntegration apiIntegration = ApiGeneratorHelper.generateIntegrationFrom(apiFormData, getDataManager(), apiGenerator);
 
         if (apiIntegration.getSpec() != null) {
+            // TODO we should probably reconsider this, even if the user
+            // cancels the the integration creation, so no integration
+            // is stored the specification is stored in the database
             getDataManager().store(apiIntegration.getSpec(), OpenApi.class);
         }
 
@@ -96,18 +72,8 @@ public class ApiHandler extends BaseHandler {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation("Validates the API and provides a summary of the operations")
     public APISummary info(@MultipartForm final APIFormData apiFormData) {
-        String spec = getSpec(apiFormData);
+        String spec = ApiGeneratorHelper.getSpec(apiFormData);
         return apiGenerator.info(spec, APIValidationContext.PROVIDED_API);
-    }
-
-    protected String getSpec(APIFormData apiFormData) {
-        final String spec;
-        try (BufferedSource source = Okio.buffer(Okio.source(apiFormData.getSpecification()))) {
-            spec = source.readUtf8();
-        } catch (IOException e) {
-            throw SyndesisServerException.launderThrowable("Failed to read specification", e);
-        }
-        return spec;
     }
 
     public static class APIFormData {

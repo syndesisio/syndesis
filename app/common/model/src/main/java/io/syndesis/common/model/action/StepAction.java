@@ -15,9 +15,14 @@
  */
 package io.syndesis.common.model.action;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Optional;
+
+import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.WithId;
+
 import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = StepAction.Builder.class)
@@ -46,5 +51,19 @@ public interface StepAction extends Action, WithId<StepAction> {
         STEP,
         BEAN,
         ENDPOINT
+    }
+
+    default StepAction.Builder builder() {
+        return new Builder().createFrom(this);
+    }
+
+    @Override
+    default StepAction withInputDataShape(final Optional<DataShape> inputDataShape) {
+        return builder().descriptor(getDescriptor().builder().withInputDataShape(inputDataShape)).build();
+    }
+
+    @Override
+    default StepAction withOutputDataShape(final Optional<DataShape> outputDataShape) {
+        return builder().descriptor(getDescriptor().builder().withOutputDataShape(outputDataShape)).build();
     }
 }
