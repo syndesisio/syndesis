@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.fhir;
+package io.syndesis.connector.fhir.verifier;
 
 import io.syndesis.connector.support.verifier.api.Verifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

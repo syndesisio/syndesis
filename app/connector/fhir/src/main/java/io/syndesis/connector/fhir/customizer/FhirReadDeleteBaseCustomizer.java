@@ -13,59 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.fhir;
+package io.syndesis.connector.fhir.customizer;
 
-import java.util.Map;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import io.syndesis.connector.fhir.FhirResourceId;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.fhir.internal.FhirApiCollection;
-import org.apache.camel.component.fhir.internal.FhirReadApiMethod;
-import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.apache.camel.util.component.ApiMethod;
 
-public class FhirReadCustomizer implements ComponentProxyCustomizer {
+import java.util.Map;
 
-    private String id;
-    private String resourceType;
-    private String version;
-    private FhirContext fhirContext;
+public abstract class FhirReadDeleteBaseCustomizer implements ComponentProxyCustomizer {
+    protected FhirContext fhirContext;
+    protected String id;
+    protected String resourceType;
+    protected String version;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         String fhirVersion = (String) options.get("fhirVersion");
         FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
-        this.fhirContext = new FhirContext(fhirVersionEnum);
-        setApiMethod(options);
+        fhirContext = new FhirContext(fhirVersionEnum);
+
+        id = (String) options.get("id");
+        resourceType = (String) options.get("resourceType");
+        version = (String) options.get("version");
+
+        options.put("apiName", FhirApiCollection.getCollection().getApiName(getApiMethodClass()).getName());
+        options.put("methodName", "resourceById");
+
         component.setBeforeProducer(this::beforeProducer);
         component.setAfterProducer(this::afterProducer);
     }
 
-    private void setApiMethod(Map<String, Object> options) {
-        id = (String) options.get("id");
-        resourceType = (String) options.get("resourceType");
-        version = (String) options.get("version");
-        options.put("apiName", FhirApiCollection.getCollection().getApiName(FhirReadApiMethod.class).getName());
-        options.put("methodName", "resourceById");
+    public abstract Class<? extends ApiMethod> getApiMethodClass();
+
+    @SuppressWarnings({"PMD.EmptyMethodInAbstractClassShouldBeAbstract"})
+    public void afterProducer(Exchange exchange) {
+        //By default do nothing
     }
 
-    private void afterProducer(Exchange exchange) {
-        Message in = exchange.getIn();
-        IBaseResource body = in.getBody(IBaseResource.class);
-        if (body == null) {
-            return;
-        }
-        String s = fhirContext.newXmlParser().encodeResourceToString(body);
-        in.setBody(s);
-    }
-
-    private void beforeProducer(Exchange exchange) {
+    public void beforeProducer(Exchange exchange) {
         final Message in = exchange.getIn();
         in.setHeader("CamelFhir.resourceClass", resourceType);
 
-        final FhirReadMessageModel read = exchange.getIn().getBody(FhirReadMessageModel.class);
+        final FhirResourceId read = in.getBody(FhirResourceId.class);
         if (read != null) {
             if (read.getComplexId() != null) {
                 in.setHeader("CamelFhir.id", read.getComplexId());

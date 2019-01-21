@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.fhir;
+package io.syndesis.connector.fhir.customizer;
 
-public class FhirUpdateMessageModel {
+import org.apache.camel.component.fhir.internal.FhirUpdateApiMethod;
+import org.apache.camel.util.component.ApiMethod;
 
-    private String resource;
+public class FhirUpdateCustomizer extends FhirCreateUpdateBaseCustomizer {
 
-    public String getResource() {
-        return resource;
-    }
-
-    public void setResource(String resource) {
-        this.resource = resource;
+    @Override
+    public Class<? extends ApiMethod> getApiMethodClass() {
+        return FhirUpdateApiMethod.class;
     }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.fhir;
+package io.syndesis.connector.fhir.verifier;
 
 import io.syndesis.connector.support.verifier.api.ComponentVerifier;
 import org.apache.camel.CamelContext;
