@@ -17,21 +17,19 @@
 package org.apache.camel.component.kudu;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.InvalidPayloadException;
 import org.apache.camel.impl.DefaultProducer;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.kudu.Schema;
+import org.apache.kudu.client.CreateTableOptions;
+import org.apache.kudu.client.PartialRow;
 import org.apache.kudu.client.Insert;
 import org.apache.kudu.client.KuduClient;
 import org.apache.kudu.client.KuduException;
 import org.apache.kudu.client.KuduTable;
-import org.apache.kudu.client.PartialRow;
-import org.apache.kudu.client.CreateTableOptions;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.util.Map;
 
 /**
  * The Kudu producer.
@@ -70,23 +68,32 @@ public class KuduProducer extends DefaultProducer {
         }
     }
 
-    private void doInsert(Exchange exchange, String tableName) throws KuduException, InvalidPayloadException {
+    private void doInsert(Exchange exchange, String tableName) throws KuduException {
         KuduTable table = connection.openTable(tableName);
 
         Insert insert = table.newInsert();
         PartialRow row = insert.getRow();
 
-        Object[] rows = exchange.getIn().getMandatoryBody(Object[].class);
-        LOG.debug("Writing row {}", Arrays.toString(rows));
+        Map<?, ?> rows = exchange.getIn().getBody(Map.class);
 
-        for (int i = 0; i < rows.length; i++) {
-            Object value = rows[i];
+        for (Map.Entry<?, ?> entry : rows.entrySet()) {
+            String key = (String) entry.getKey();
+            Object value = entry.getValue();
             switch (value.getClass().toString()) {
                 case "class java.lang.String":
-                    row.addString(i, (String) value);
+                    row.addString(key, (String) value);
+                    break;
+                case "class java.lang.Long":
+                    row.addLong(key, (long) value);
                     break;
                 case "class java.lang.Integer":
-                    row.addInt(i, (int) value);
+                    row.addInt(key, (int) value);
+                    break;
+                case "class java.lang.Double":
+                    row.addDouble(key, (double) value);
+                    break;
+                case "class java.lang.Float":
+                    row.addFloat(key, (float) value);
                     break;
                 default:
                     throw new IllegalArgumentException("The type " + value.getClass().toString() + " is not supported");

@@ -61,14 +61,13 @@ public class AbstractKuduTest extends CamelTestSupport {
         KuduClient client = new KuduClient.KuduClientBuilder(connection).build();
         try {
             client.deleteTable(tableName);
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
 
     protected void createTestTable(String tableName, String connection) {
         KuduClient client = new KuduClient.KuduClientBuilder(connection).build();
-        final Map<String, Object> headers = new HashMap<>();
 
         List<ColumnSchema> columns = new ArrayList<>(5);
         final List<String> columnNames = Arrays.asList("id", "title", "name", "lastname", "address");

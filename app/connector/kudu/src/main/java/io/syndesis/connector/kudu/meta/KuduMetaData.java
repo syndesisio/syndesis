@@ -14,18 +14,36 @@
  * limitations under the License.
  */
 
-package io.syndesis.connector.kudu.model;
+package io.syndesis.connector.kudu.meta;
 
-public class KuduInsert {
-    private Object[] row;
+public class KuduMetaData {
 
-    public Object[] getRow() {
-        return row.clone();
+    private String tableName;
+    private String host;
+    private String port;
+
+
+    public String getHost() {
+        return host;
     }
 
-    public void setRow(Object[] row, boolean set) {
-        if (set) {
-            this.row = row.clone();
-        }
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }

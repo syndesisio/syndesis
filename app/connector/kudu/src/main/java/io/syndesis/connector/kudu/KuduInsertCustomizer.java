@@ -16,7 +16,7 @@
 
 package io.syndesis.connector.kudu;
 
-import io.syndesis.connector.kudu.model.KuduInsert;
+import io.syndesis.common.util.Json;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -24,65 +24,47 @@ import org.apache.camel.Message;
 import org.apache.camel.component.kudu.KuduDbOperations;
 import org.apache.camel.util.ObjectHelper;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class KuduInsertCustomizer implements ComponentProxyCustomizer {
-    private KuduInsert row;
+
+    private Map<String, Object> row;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        row = new HashMap<>();
         setOptions(options);
         component.setBeforeProducer(this::beforeProducer);
         component.setAfterProducer(this::afterProducer);
     }
 
     private void setOptions(Map<String, Object> options) {
-        row = new KuduInsert();
-
-        if (options != null && !options.isEmpty()) {
-            String[] ro = options.get("row").toString().split(";", -1);
-            Object[] optionsRow = new Object[ro.length];
-
-            for (int i = 0; i < ro.length; i++) {
-                String[] current = ro[i].split(",", 2);
-                switch (current[0]) {
-                    case "String":
-                        optionsRow[i] = current[1];
-                        break;
-                    case "Integer":
-                        optionsRow[i] = Integer.parseInt(current[1]);
-                        break;
-                    default:
-                        throw new IllegalArgumentException("The type " + current[0] + " is not supported");
-                }
-            }
-            row.setRow(optionsRow, true);
-        }
-
         options.put("operation", KuduDbOperations.INSERT);
+        options.put("type", KuduDbOperations.INSERT);
     }
 
-    private void beforeProducer(Exchange exchange) {
+    private void beforeProducer(Exchange exchange) throws IOException {
         final Message in = exchange.getIn();
-        final KuduInsert model = in.getBody(KuduInsert.class);
+        final String body = in.getBody(String.class);
 
-        if (model != null && ObjectHelper.isNotEmpty(model.getRow())) {
-            row = model;
+        if (ObjectHelper.isNotEmpty(body)) {
+            Map<String, Object> dataShape = Json.reader().forType(Map.class).readValue(body);
+            row = dataShape;
         }
 
-        in.setBody(row.getRow());
+        in.setBody(row);
     }
 
     private void afterProducer(Exchange exchange) {
         final Message in = exchange.getIn();
-        final KuduInsert insert = in.getBody(KuduInsert.class);
+        final String body = in.getBody(String.class);
 
-        KuduInsert model = new KuduInsert();
-        if (ObjectHelper.isNotEmpty(insert) &&
-                insert.getRow() != null && insert.getRow().length != 0) {
-            model.setRow(insert.getRow(), true);
+        if (ObjectHelper.isNotEmpty(body)) {
+            in.setBody(body);
+        } else {
+            in.setBody("{}");
         }
-
-        in.setBody(model);
     }
 }

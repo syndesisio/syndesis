@@ -16,13 +16,11 @@
 
 package io.syndesis.connector.kudu;
 
-import io.syndesis.connector.kudu.model.KuduInsert;
+import io.syndesis.common.util.Json;
 import org.apache.camel.Exchange;
-import org.apache.camel.component.kudu.KuduDbOperations;
 import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -37,68 +35,53 @@ public class KuduInsertCustomizerTest extends AbstractKuduCustomizerTestSupport 
     }
 
     @Test
-    public void testBeforeProducerFromOptions() throws Exception {
-        Map<String, Object> options = new HashMap<>();
-        options.put("row", "Integer,6;String,Mr.;String,Samuel;String,Smith;String,4359  Plainfield Avenue");
-
-        customizer.customize(getComponent(), options);
-
-        Exchange inbound = new DefaultExchange(createCamelContext());
-        getComponent().getBeforeProducer().process(inbound);
-
-        Object[] row = (Object[]) inbound.getIn().getMandatoryBody();
-
-        Assert.assertEquals(KuduDbOperations.INSERT, options.get("operation"));
-        Assert.assertEquals("The row has the expected elements", 5, row.length);
-        Assert.assertEquals("First element of the row is an integer", 6, row[0]);
-        Assert.assertEquals("Second element of the row is the title", "Mr.", row[1]);
-    }
-
-    @Test
     public void testBeforeProducerFromModel() throws Exception {
         customizer.customize(getComponent(), new HashMap<>());
 
-        KuduInsert model = new KuduInsert();
-        Object[] insert =
-                {
-                        5,
-                        "Mr.", "Samuel", "Smith", "4359  Plainfield Avenue"
-                };
-        model.setRow(insert, true);
+        String model = "{" +
+                "\"id\": " + 5 + "," +
+                "\"title\": \"Mr.\"," +
+                "\"name\": \"Samuel\"," +
+                "\"lastname\": \"Smith\"," +
+                "\"address\": \"4359  Plainfield Avenue\"" +
+                "}";
 
         Exchange inbound = new DefaultExchange(createCamelContext());
         inbound.getIn().setBody(model);
         getComponent().getBeforeProducer().process(inbound);
 
-        Object[] row = (Object[]) inbound.getIn().getMandatoryBody();
+        Map<?, ?> body = inbound.getIn().getMandatoryBody(Map.class);
 
-        Assert.assertEquals("The row has the expected elements", 5, row.length);
-        Assert.assertEquals("First element of the row is an integer", 5, row[0]);
-        Assert.assertEquals("Second element of the row is the title", "Mr.", row[1]);
+        Assert.assertEquals("The row has the expected elements", 5, body.size());
+        Assert.assertEquals("First element of the row is an integer", 5, body.get("id"));
+        Assert.assertEquals("Second element of the row is the title", "Mr.", body.get("title"));
     }
 
     @Test
     public void testAfterProducerFromModel() throws Exception {
         customizer.customize(getComponent(), new HashMap<>());
 
-        KuduInsert kuduInsert = new KuduInsert();
-        Object[] insert =
-                {
-                        5,
-                        "Mr.", "Samuel", "Smith", "4359  Plainfield Avenue"
-                };
-        kuduInsert.setRow(insert, true);
+        String json = "{" +
+                "\"id\": " + 5 + "," +
+                "\"title\": \"Mr.\"," +
+                "\"name\": \"Samuel\"," +
+                "\"lastname\": \"Smith\"," +
+                "\"address\": \"4359  Plainfield Avenue\"" +
+                "}";
 
         Exchange inbound = new DefaultExchange(createCamelContext());
-        inbound.getIn().setBody(kuduInsert);
+        inbound.getIn().setBody(json);
         getComponent().getAfterProducer().process(inbound);
 
-        KuduInsert model = (KuduInsert) inbound.getIn().getBody();
+        String model = (String) inbound.getIn().getBody();
 
         Assert.assertNotNull("Model is not null", model);
-        Assert.assertEquals("Model has all elements", 5, model.getRow().length);
 
-        Assert.assertEquals("First element is the id", 5, model.getRow()[0]);
-        Assert.assertEquals("Third element is the name", "Samuel", model.getRow()[2]);
+        Map<String, Object> modelMap = Json.reader().forType(Map.class).readValue(model);
+
+        Assert.assertEquals("Model has all elements", 5, modelMap.size());
+
+        Assert.assertEquals("First element is the id", 5, modelMap.get("id"));
+        Assert.assertEquals("Third element is the name", "Samuel", modelMap.get("name"));
     }
 }

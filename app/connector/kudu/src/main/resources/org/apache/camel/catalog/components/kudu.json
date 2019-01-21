@@ -2,30 +2,31 @@
   "component": {
     "kind": "component",
     "scheme": "kudu",
-    "syntax": "kudu",
+    "syntax": "kudu:type",
     "title": "Apache Kudu",
-    "description": "Camel component to manage apache kudu resources",
-    "label": "database,cloud,kudu",
+    "description": "Represents a Kudu endpoint. A kudu endpoint allows you to interact with Apache Kudu, a free and open source column-oriented data store of the Apache Hadoop ecosystem.",
+    "label": "database,iot",
     "deprecated": false,
     "deprecationNote": "",
     "async": false,
     "consumerOnly": false,
-    "producerOnly": false,
+    "producerOnly": true,
     "lenientProperties": false,
-    "javaType": "org.apache.kudu.client.KuduClient",
+    "javaType": "org.apache.camel.component.kudu.KuduComponent",
     "firstVersion": "2.23.0",
-    "groupId": "org.apache.camel",
-    "artifactId": "camel-apache-kudu",
-    "verifiers": "parameters,connectivity",
-    "version": "2.23.0-SNAPSHOT"
+    "groupId": "camelinaction.component",
+    "artifactId": "connector-kudu",
+    "version": "1.6-SNAPSHOT"
   },
   "componentProperties": {
+    "resolvePropertyPlaceholders": { "kind": "property", "displayName": "Resolve Property Placeholders", "group": "advanced", "label": "advanced", "required": false, "type": "boolean", "javaType": "boolean", "deprecated": false, "secret": false, "defaultValue": true, "description": "Whether the component should resolve property placeholders on itself when starting. Only properties which are of String type can use property placeholders." }
   },
   "properties": {
-    "host": { "kind": "parameter", "displayName": "Host", "group": "common", "required": true, "type": "string", "javaType": "java.lang.String",  "deprecated": false, "secret": false, "description": "Address of the host to connect to: hostname OR 10.10.10.10" },
-    "port": { "kind": "parameter", "displayName": "Port", "group": "common", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Port where kudu service is listening in the remote port, by default 7051" },
-    "tableName": { "kind": "parameter", "displayName": "Table Name", "group": "common", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Table where operations are going to be done" },
-    "operation": { "kind": "parameter", "displayName": "Operation", "group": "common", "required": false, "type": "string", "javaType": "java.lang.String", "enum": [ "insert", "create_table" ], "deprecated": false, "secret": false, "description": "Operation to perform, can be either create table, insert or scan" }
+    "type": { "kind": "path", "displayName": "Type", "group": "producer", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Kudu type" },
+    "host": { "kind": "parameter", "displayName": "Host", "group": "producer", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Kudu master to connect to" },
+    "operation": { "kind": "parameter", "displayName": "Operation", "group": "producer", "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "defaultValue": "insert", "description": "What kind of operation is to be performed in the table" },
+    "port": { "kind": "parameter", "displayName": "Port", "group": "producer", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Port where kudu service is listening" },
+    "tableName": { "kind": "parameter", "displayName": "Table Name", "group": "producer", "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "The name of the table where the rows are stored" },
+    "synchronous": { "kind": "parameter", "displayName": "Synchronous", "group": "advanced", "label": "advanced", "type": "boolean", "javaType": "boolean", "deprecated": false, "secret": false, "defaultValue": false, "description": "Sets whether synchronous processing should be strictly used, or Camel is allowed to use asynchronous processing (if supported)." }
   }
 }
-

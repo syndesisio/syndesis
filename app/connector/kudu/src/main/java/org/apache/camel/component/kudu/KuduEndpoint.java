@@ -35,8 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 @UriEndpoint(firstVersion = "2.23.0",
         scheme = "kudu",
-        title = "Apache Kudu", syntax="kudu",
-        producerOnly = true,
+        title = "Apache Kudu", syntax = "kudu:type",
         label = "database,iot")
 public class KuduEndpoint extends DefaultEndpoint {
 
@@ -45,18 +44,21 @@ public class KuduEndpoint extends DefaultEndpoint {
 
     @UriPath
     @Metadata(required = "true")
-    private String host;
-
-    @UriPath
-    @Metadata(required = "true")
-    private String port;
+    private String type;
 
     @UriParam
-    private String tableName;
+    @Metadata(required = "true")
+    private String host;
+
+    @UriParam
+    @Metadata(required = "true")
+    private String port;
 
     @UriParam(defaultValue = KuduDbOperations.INSERT)
     private String operation = KuduDbOperations.INSERT;
 
+    @UriParam
+    private String tableName;
 
     public KuduEndpoint(String uri, KuduComponent component) {
         super(uri, component);
@@ -88,7 +90,7 @@ public class KuduEndpoint extends DefaultEndpoint {
 
     @Override
     public Consumer createConsumer(Processor processor) throws Exception {
-        throw new UnsupportedOperationException("You cannot receive messages from this endpoint");
+        return new KuduConsumer(this, processor);
     }
 
     @Override
@@ -97,7 +99,7 @@ public class KuduEndpoint extends DefaultEndpoint {
     }
 
     /**
-     * Some description of this option, and what it does
+     * Kudu master to connect to
      */
     public void setHost(String host) {
         this.host = host;
@@ -113,6 +115,7 @@ public class KuduEndpoint extends DefaultEndpoint {
 
     /**
      * Set the client to connect to a kudu resource
+     *
      * @param kuduClient
      */
     public void setKuduClient(KuduClient kuduClient) {
@@ -125,6 +128,7 @@ public class KuduEndpoint extends DefaultEndpoint {
 
     /**
      * The name of the table where the rows are stored
+     *
      * @param tableName
      */
     public void setTableName(String tableName) {
@@ -136,7 +140,8 @@ public class KuduEndpoint extends DefaultEndpoint {
     }
 
     /**
-     * What kind of operation are to be performed in the table
+     * What kind of operation is to be performed in the table
+     *
      * @param operation
      */
     public void setOperation(String operation) {
@@ -149,9 +154,23 @@ public class KuduEndpoint extends DefaultEndpoint {
 
     /**
      * Port where kudu service is listening
+     *
      * @param port
      */
     public void setPort(String port) {
         this.port = port;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Kudu type
+     *
+     * @param type
+     */
+    public void setType(String type) {
+        this.type = type;
     }
 }

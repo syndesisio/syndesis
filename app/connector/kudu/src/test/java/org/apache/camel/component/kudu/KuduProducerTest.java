@@ -25,13 +25,15 @@ import org.apache.kudu.Type;
 import org.apache.kudu.client.CreateTableOptions;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class KuduProducerTest extends AbstractKuduTest {
 
-    private static final String TABLE = "CamelTestFolder";
-    private static final String HOST = "quickstart.cloudera";
+    private static final String TABLE = "KuduTestTable";
+    private static final String HOST = "localhost";
     private static final String PORT = "7051";
 
     @EndpointInject(uri = "mock:test")
@@ -50,17 +52,28 @@ public class KuduProducerTest extends AbstractKuduTest {
 
                 //integration test route
                 from("direct:create")
-                        .to("kudu?host=" + HOST +
+                        .to("kudu:create?host=" + HOST +
                                 "&port=" + PORT +
                                 "&tableName=" + TABLE +
-                                "&operation=create_table")
+                                "&operation=create_table"
+                        )
                         .to("mock:test");
 
                 from("direct:insert")
-                        .to("kudu?host=" + HOST +
+                        .to("kudu:insert?host=" + HOST +
                                 "&port=" + PORT +
-                                "&tableName=" + TABLE)
+                                "&tableName=" + TABLE +
+                                "&operation=insert"
+                        )
                          .to("mock:test");
+
+                from("direct:data")
+                        .to("kudu:insert?host=" + HOST +
+                                "&port=" + PORT +
+                                "&tableName=impala::default.syndesis_test" +
+                                "&operation=insert"
+                        )
+                        .to("mock:test");
             }
         };
     }
@@ -105,7 +118,7 @@ public class KuduProducerTest extends AbstractKuduTest {
     }
 
     @Ignore
-    public void insertRow()  throws InterruptedException {
+    public void insertRow() throws InterruptedException {
         deleteTestTable(TABLE, HOST + ":" + PORT);
         createTestTable(TABLE, HOST + ":" + PORT);
 
@@ -113,14 +126,32 @@ public class KuduProducerTest extends AbstractKuduTest {
         successEndpoint.expectedMessageCount(1);
 
         // Create a sample row that can be inserted in the test table
-        Object[] row =
-                {
-                        //ThreadLocalRandom.current().nextInt(0, 9999),
-                        5,
-                        "Mr.", "Samuel", "Smith", "4359  Plainfield Avenue"
-                };
+        Map<String, Object> row = new HashMap<>();
+        row.put("id", 5);
+        row.put("title", "Mr.");
+        row.put("name", "Samuel");
+        row.put("lastname", "Smith");
+        row.put("address", "4359  Plainfield Avenue");
 
         sendBody("direct:insert", row);
+
+        errorEndpoint.assertIsSatisfied();
+        successEndpoint.assertIsSatisfied();
+    }
+
+    @Ignore
+    public void insertRowDifferentData() throws InterruptedException {
+        errorEndpoint.expectedMessageCount(0);
+        successEndpoint.expectedMessageCount(1);
+
+        Map<String, Object> row = new HashMap<>();
+        row.put("id", ThreadLocalRandom.current().nextInt(1, 99));
+        row.put("_integer", ThreadLocalRandom.current().nextInt(1, 99));
+        row.put("_long", ThreadLocalRandom.current().nextLong(500, 600));
+        row.put("_double", ThreadLocalRandom.current().nextDouble(9000, 9999));
+        row.put("_float", ThreadLocalRandom.current().nextFloat() * (499 - 100) + 100);
+
+        sendBody("direct:data", row);
 
         errorEndpoint.assertIsSatisfied();
         successEndpoint.assertIsSatisfied();
