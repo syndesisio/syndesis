@@ -1,18 +1,18 @@
 // same level
-export * from '@syndesis/ui/integration/edit-page/edit-page.component';
-export * from '@syndesis/ui/integration/edit-page/edit-page.models';
-export * from '@syndesis/ui/integration/edit-page/current-flow.service';
-export * from '@syndesis/ui/integration/edit-page/flow-page.service';
-
+export * from './edit-page.component';
+export * from './edit-page.models';
+export * from './current-flow.service';
+export * from './flow-page.service';
+export * from './flow-functions';
 // subdirectories
-export * from '@syndesis/ui/integration/edit-page/action-configure';
-export * from '@syndesis/ui/integration/edit-page/action-select';
-export * from '@syndesis/ui/integration/edit-page/common';
-export * from '@syndesis/ui/integration/edit-page/describe-data';
-export * from '@syndesis/ui/integration/edit-page/connection-select';
-export * from '@syndesis/ui/integration/edit-page/flow-view';
-export * from '@syndesis/ui/integration/edit-page/integration-basics';
-export * from '@syndesis/ui/integration/edit-page/list-actions';
-export * from '@syndesis/ui/integration/edit-page/save-or-add-step';
-export * from '@syndesis/ui/integration/edit-page/step-configure';
-export * from '@syndesis/ui/integration/edit-page/step-select';
+export * from './action-configure';
+export * from './action-select';
+export * from './common';
+export * from './describe-data';
+export * from './connection-select';
+export * from './flow-view';
+export * from './integration-basics';
+export * from './list-actions';
+export * from './save-or-add-step';
+export * from './step-configure';
+export * from './step-select';

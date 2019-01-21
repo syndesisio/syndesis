@@ -119,6 +119,61 @@ export function hasDataShape(step: Step, isInput = false) {
 }
 
 /**
+ * Returns whether or not the supplied descriptor has an input or output datashape or ANY
+ * @param descriptor
+ */
+export function isActionShapeless(descriptor: ActionDescriptor) {
+  if (!descriptor) {
+    return false;
+  }
+  const inputDataShape = descriptor.inputDataShape;
+  const outputDataShape = descriptor.outputDataShape;
+  return (
+    inputDataShape.kind === DataShapeKinds.ANY ||
+    outputDataShape.kind === DataShapeKinds.ANY
+  );
+}
+
+/**
+ * Filters connections based on the supplied position in the step array
+ * @param connections
+ * @param position
+ */
+export function filterConnectionsByPosition(
+  connections: Connection[],
+  position: number
+) {
+  if (typeof position === 'undefined' || !connections) {
+    // safety net
+    return connections;
+  }
+  if (position === 0) {
+    return connections.filter(connection => {
+      if (!connection.connector) {
+        // safety net
+        return true;
+      }
+      return connection.connector.actions.some(action => {
+        return action.pattern === 'From';
+      });
+    });
+  }
+  return connections.filter(connection => {
+    if (!connection.connector) {
+      // safety net
+      return true;
+    }
+    if (connection.connectorId === 'api-provider') {
+      // api provider can be used only for From actions
+      return false;
+    }
+    return connection.connector.actions.some(action => {
+      return action.pattern === 'To';
+    });
+  });
+}
+
+/**
  * Sets an arbitrary property on an integration
  * @param integration
  * @param propertyName
@@ -518,8 +573,251 @@ export function getStep(
 ) {
   const flow = getFlow(integration, flowId);
   if (!flow) {
+    // TODO following semantics for now, this should throw an error
     return undefined;
   }
   const step = flow.steps[position];
   return typeof step !== 'undefined' ? { ...step } : undefined;
+}
+
+/**
+ * Returns a copy of the first step in the flow
+ * @param integration
+ * @param flowId
+ */
+export function getStartStep(integration: Integration, flowId: string) {
+  return getStep(integration, flowId, getFirstPosition(integration, flowId));
+}
+
+/**
+ * Returns a copy of the last step in the flow
+ * @param integration
+ * @param flowId
+ */
+export function getLastStep(integration: Integration, flowId: string) {
+  return getStep(integration, flowId, getLastPosition(integration, flowId));
+}
+
+/**
+ * Get an array of middle steps from the given flow, or an empty array if there's only a start/end step
+ * @param integration
+ * @param flowId
+ */
+export function getMiddleSteps(integration: Integration, flowId: string) {
+  if (getLastPosition(integration, flowId) < 2) {
+    // TODO there's no middle steps maybe this should be undefined but following current semantics for now
+    return [];
+  }
+  const flow = getFlow(integration, flowId);
+  if (!flow || !flow.steps) {
+    // TODO following semantics for now, this should be an error
+    return [];
+  }
+  return flow.steps.slice(1, -1);
+}
+
+/**
+ * Get an array of steps from the flow after the given position
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getSubsequentSteps(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  const flow = getFlow(integration, flowId);
+  if (!flow.steps) {
+    // TODO following semantics for now, this should throw an error
+    return undefined;
+  }
+  return flow.steps.slice(position);
+}
+
+/**
+ * Get an array of steps from the flow before the given position
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getPreviousSteps(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  const flow = getFlow(integration, flowId);
+  if (!flow.steps) {
+    // TODO following semantics for now, this should throw an error
+    return undefined;
+  }
+  return flow.steps.slice(0, position);
+}
+
+/**
+ * Returns all connections after the specified position
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getSubsequentConnections(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  const steps = getSubsequentSteps(integration, flowId, position);
+  if (steps) {
+    return steps.filter(s => s.stepKind === ENDPOINT);
+  }
+  // TODO this seems like an odd thing to do, but preserving semantics for now
+  return null;
+}
+
+/**
+ * Return all connections before the given position
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getPreviousConnections(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  const steps = getPreviousSteps(integration, flowId, position);
+  if (steps) {
+    return steps.filter(s => s.stepKind === ENDPOINT);
+  }
+  // TODO this seems like an odd thing to do, but preserving semantics for now
+  return null;
+}
+
+/**
+ * Return the first connection before the given position
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getPreviousConnection(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  return (
+    getPreviousConnections(integration, flowId, position) || []
+  ).reverse()[0];
+}
+
+/**
+ * Return the first connection after the given position
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getSubsequentConnection(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  return (getSubsequentConnections(integration, flowId, position) || [])[0];
+}
+
+/**
+ * Returns an array of all steps after the given position that contain a data shape
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getSubsequentStepsWithDataShape(
+  integration: Integration,
+  flowId: string,
+  position: number
+): Array<{ step: Step; index: number }> {
+  const steps = getSubsequentSteps(integration, flowId, position);
+  if (steps) {
+    return steps
+      .map((step, index) => {
+        return { step, index: position + index };
+      })
+      .filter(indexedStep => hasDataShape(indexedStep.step, true));
+  }
+  // TODO preserving semantics for now
+  return [];
+}
+
+/**
+ * Return all steps before the given position that have a data shape
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getPreviousStepsWithDataShape(
+  integration: Integration,
+  flowId: string,
+  position: number
+): Array<{ step: Step; index: number }> {
+  const steps = getPreviousSteps(integration, flowId, position);
+  if (steps) {
+    return steps
+      .map((step, index) => {
+        return { step, index };
+      })
+      .filter(indexedStep => hasDataShape(indexedStep.step, false));
+  }
+  // TODO preserving semantics for now
+  return [];
+}
+
+/**
+ * Returns the index of the previous step that has a data shape
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getPreviousStepIndexWithDataShape(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  const steps = getPreviousStepsWithDataShape(integration, flowId, position);
+  if (steps && steps.length) {
+    return steps.reverse()[0].index;
+  }
+  return -1;
+}
+
+/**
+ * Returns the first previous step that has a data shape
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getPreviousStepWithDataShape(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  const steps = getPreviousStepsWithDataShape(integration, flowId, position);
+  if (steps && steps.length) {
+    return steps.reverse()[0].step;
+  }
+  return undefined;
+}
+
+/**
+ * Returns the next step after the given position that contains a data shape
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getSubsequentStepWithDataShape(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  const steps = getSubsequentStepsWithDataShape(integration, flowId, position);
+  if (steps && steps.length) {
+    return steps[0].step;
+  }
+  return undefined;
 }

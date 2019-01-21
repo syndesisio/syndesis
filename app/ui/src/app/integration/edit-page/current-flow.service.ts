@@ -2,11 +2,9 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import {
-  Connection,
   Connections,
   createStep,
   createConnectionStep,
-  DataShapeKinds,
   DataShape,
   Integration,
   Step,
@@ -16,12 +14,7 @@ import {
   Flows
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
-import {
-  IntegrationStore,
-  DATA_MAPPER,
-  ENDPOINT,
-  StepStore
-} from '@syndesis/ui/store';
+import { IntegrationStore, DATA_MAPPER, StepStore } from '@syndesis/ui/store';
 import { FlowEvent } from '@syndesis/ui/integration/edit-page';
 import {
   setIntegrationProperty,
@@ -29,7 +22,6 @@ import {
   createStepWithConnection,
   setDataShapeOnStep,
   prepareIntegrationForSaving,
-  hasDataShape,
   setDescriptorOnStep,
   setActionOnStep,
   setConfiguredPropertiesOnStep,
@@ -44,7 +36,23 @@ import {
   getFirstPosition,
   removeStepFromFlow,
   getMiddlePosition,
-  getStep
+  getStep,
+  isActionShapeless,
+  filterConnectionsByPosition,
+  getStartStep,
+  getLastStep,
+  getMiddleSteps,
+  getSubsequentSteps,
+  getSubsequentConnections,
+  getSubsequentStepsWithDataShape,
+  getPreviousSteps,
+  getPreviousStepsWithDataShape,
+  getPreviousConnections,
+  getPreviousConnection,
+  getSubsequentConnection,
+  getPreviousStepIndexWithDataShape,
+  getPreviousStepWithDataShape,
+  getSubsequentStepWithDataShape
 } from './flow-functions';
 
 const category = getCategory('CurrentFlow');
@@ -89,34 +97,7 @@ export class CurrentFlowService {
    * @param position
    */
   filterConnectionsByPosition(connections: Connections, position: number) {
-    if (position === undefined) {
-      // safety net
-      return connections;
-    }
-    if (position === 0) {
-      return connections.filter(connection => {
-        if (!connection.connector) {
-          // safety net
-          return true;
-        }
-        return connection.connector.actions.some(action => {
-          return action.pattern === 'From';
-        });
-      });
-    }
-    return connections.filter(connection => {
-      if (!connection.connector) {
-        // safety net
-        return true;
-      }
-      if (connection.connectorId === 'api-provider') {
-        // api provider can be used only for From actions
-        return false;
-      }
-      return connection.connector.actions.some(action => {
-        return action.pattern === 'To';
-      });
-    });
+    return filterConnectionsByPosition(connections, position);
   }
 
   /**
@@ -146,7 +127,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getStartStep(): Step {
-    return this.getStep(this.getFirstPosition());
+    return getStartStep(this._integration, this.flowId);
   }
 
   /**
@@ -156,33 +137,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getEndStep(): Step {
-    const lastPosition = this.getLastPosition();
-    if (lastPosition < 1) {
-      return undefined;
-    }
-    return this.getStep(lastPosition);
-  }
-
-  /**
-   * Returns the connection object in the first step in the integration
-   *
-   * @returns {Connection}
-   * @memberof CurrentFlow
-   */
-  getStartConnection(): Connection {
-    const step = this.getStartStep();
-    return step ? step.connection : undefined;
-  }
-
-  /**
-   * Returns the connection object in the last step in the integration
-   *
-   * @returns {Connection}
-   * @memberof CurrentFlow
-   */
-  getEndConnection(): Connection {
-    const step = this.getEndStep();
-    return step ? step.connection : undefined;
+    return getLastStep(this._integration, this.flowId);
   }
 
   /**
@@ -192,13 +147,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getMiddleSteps(): Array<Step> {
-    if (this.getLastPosition() < 2) {
-      return [];
-    }
-    if (!this.steps) {
-      return [];
-    }
-    return this.steps.slice(1, -1);
+    return getMiddleSteps(this._integration, this.flowId);
   }
 
   /**
@@ -209,10 +158,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getSubsequentSteps(position): Array<Step> {
-    if (!this.steps) {
-      return undefined;
-    }
-    return this.steps.slice(position);
+    return getSubsequentSteps(this._integration, this.flowId, position);
   }
 
   /**
@@ -223,11 +169,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getSubsequentConnections(position): Array<Step> {
-    const answer = this.getSubsequentSteps(position);
-    if (answer) {
-      return answer.filter(s => s.stepKind === ENDPOINT);
-    }
-    return null;
+    return getSubsequentConnections(this._integration, this.flowId, position);
   }
 
   /**
@@ -238,16 +180,11 @@ export class CurrentFlowService {
   getSubsequentStepsWithDataShape(
     position
   ): Array<{ step: Step; index: number }> {
-    const answer: { step: Step; index: number }[] = [];
-    const steps = this.getSubsequentSteps(position);
-    if (steps) {
-      steps.forEach((step, index) => {
-        if (hasDataShape(step, true)) {
-          answer.push({ step: step, index: position + index });
-        }
-      });
-    }
-    return answer;
+    return getSubsequentStepsWithDataShape(
+      this._integration,
+      this.flowId,
+      position
+    );
   }
 
   /**
@@ -258,11 +195,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getPreviousSteps(position): Array<Step> {
-    if (!this.steps) {
-      return undefined;
-    }
-
-    return this.steps.slice(0, position);
+    return getPreviousSteps(this._integration, this.flowId, position);
   }
 
   /**
@@ -273,13 +206,11 @@ export class CurrentFlowService {
   getPreviousStepsWithDataShape(
     position
   ): Array<{ step: Step; index: number }> {
-    const answer: { step: Step; index: number }[] = [];
-    this.getPreviousSteps(position).forEach((step, index) => {
-      if (hasDataShape(step, false)) {
-        answer.push({ step, index });
-      }
-    });
-    return answer;
+    return getPreviousStepsWithDataShape(
+      this._integration,
+      this.flowId,
+      position
+    );
   }
 
   /**
@@ -290,11 +221,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getPreviousConnections(position): Array<Step> {
-    const answer = this.getPreviousSteps(position);
-    if (answer) {
-      return answer.filter(s => s.stepKind === ENDPOINT);
-    }
-    return null;
+    return getPreviousConnections(this._integration, this.flowId, position);
   }
 
   /**
@@ -305,8 +232,7 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getPreviousConnection(position): Step {
-    const connections = (this.getPreviousConnections(position) || []).reverse();
-    return connections[0];
+    return getPreviousConnection(this._integration, this.flowId, position);
   }
 
   /**
@@ -317,35 +243,31 @@ export class CurrentFlowService {
    * @memberof CurrentFlow
    */
   getSubsequentConnection(position): Step {
-    const connections = this.getSubsequentConnections(position);
-    return connections[0];
+    return getSubsequentConnection(this._integration, this.flowId, position);
   }
 
   getPreviousStepIndexWithDataShape(position): number {
-    const steps = this.getPreviousStepsWithDataShape(position).reverse();
-    if (steps && steps.length) {
-      return steps[0].index;
-    } else {
-      return -1;
-    }
+    return getPreviousStepIndexWithDataShape(
+      this._integration,
+      this.flowId,
+      position
+    );
   }
 
   getPreviousStepWithDataShape(position): Step {
-    const steps = this.getPreviousStepsWithDataShape(position).reverse();
-    if (steps && steps.length) {
-      return steps[0].step;
-    } else {
-      return undefined;
-    }
+    return getPreviousStepWithDataShape(
+      this._integration,
+      this.flowId,
+      position
+    );
   }
 
   getSubsequentStepWithDataShape(position): Step {
-    const steps = this.getSubsequentStepsWithDataShape(position);
-    if (steps && steps.length) {
-      return steps[0].step;
-    } else {
-      return undefined;
-    }
+    return getSubsequentStepWithDataShape(
+      this._integration,
+      this.flowId,
+      position
+    );
   }
 
   /**
@@ -405,15 +327,7 @@ export class CurrentFlowService {
   }
 
   isActionShapeless(descriptor: ActionDescriptor) {
-    if (!descriptor) {
-      return false;
-    }
-    const inputDataShape = descriptor.inputDataShape;
-    const outputDataShape = descriptor.outputDataShape;
-    return (
-      inputDataShape.kind === DataShapeKinds.ANY ||
-      outputDataShape.kind === DataShapeKinds.ANY
-    );
+    return isActionShapeless(descriptor);
   }
 
   handleEvent(event: FlowEvent): void {
