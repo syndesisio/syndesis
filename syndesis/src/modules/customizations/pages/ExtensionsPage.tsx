@@ -9,12 +9,12 @@ import {
   IListViewToolbarAbstractComponent,
   ISortType,
   ListViewToolbarAbstractComponent,
+  NavLinkTab,
 } from '@syndesis/ui';
-import { OptionalIntUtil, WithLoader } from '@syndesis/utils';
+import { optionalIntValue, WithLoader } from '@syndesis/utils';
 import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
-import { NavLink } from 'react-router-dom';
 import i18n from '../../../i18n';
 import '../customizations.css';
 
@@ -102,7 +102,7 @@ export default class ExtensionsPage extends ListViewToolbarAbstractComponent<
   }
 
   public getUsedByMessage(extension: Extension): string {
-    const numUsedBy = OptionalIntUtil.getValue(extension.uses);
+    const numUsedBy = optionalIntValue(extension.uses);
 
     if (numUsedBy === 1) {
       return i18n.t('customizations:usedByOne');
@@ -147,21 +147,18 @@ export default class ExtensionsPage extends ListViewToolbarAbstractComponent<
                 <Grid fluid={true}>
                   <Grid.Row className="bottom-bordered">
                     <Grid.Col xs={6} md={3}>
-                      <NavLink
-                        className="link-enabled"
-                        to="/customizations/api-connector"
-                      >
-                        {t('apiConnector.apiConnectorsPageTitle')}
-                      </NavLink>
+                      <NavLinkTab
+                        disableLink={false}
+                        i18nLinkTitle={t('apiConnector.apiConnectorsPageTitle')}
+                        toLink={'/customizations/api-connector'}
+                      />
                     </Grid.Col>
                     <Grid.Col>
-                      <NavLink
-                        className="link-disabled"
-                        to="/customizations/extensions"
-                        onClick={this.stopClickEvent}
-                      >
-                        {t('extension.extensionsPageTitle')}
-                      </NavLink>
+                      <NavLinkTab
+                        disableLink={true}
+                        i18nLinkTitle={t('extension.extensionsPageTitle')}
+                        toLink={'/customizations/extensions'}
+                      />
                     </Grid.Col>
                   </Grid.Row>
                   <Grid.Row>
@@ -243,9 +240,7 @@ export default class ExtensionsPage extends ListViewToolbarAbstractComponent<
                                 onDelete={this.handleDelete}
                                 onDetails={this.handleDetails}
                                 onUpdate={this.handleUpdate}
-                                usedBy={OptionalIntUtil.getValue(
-                                  extension.uses
-                                )}
+                                usedBy={optionalIntValue(extension.uses)}
                               />
                             ))
                         }

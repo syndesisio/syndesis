@@ -59,23 +59,23 @@ export class CustomizationsExtensionListItem extends React.Component<
     );
   }
 
-  public handleDelete = () => {
+  public handleDelete() {
     if (this.props.extensionId) {
       this.props.onDelete(this.props.extensionId);
     }
-  };
+  }
 
-  public handleDetails = () => {
+  public handleDetails() {
     if (this.props.extensionId) {
       this.props.onDetails(this.props.extensionId);
     }
-  };
+  }
 
-  public handleUpdate = () => {
+  public handleUpdate() {
     if (this.props.extensionId) {
       this.props.onUpdate(this.props.extensionId);
     }
-  };
+  }
 
   public render() {
     return (

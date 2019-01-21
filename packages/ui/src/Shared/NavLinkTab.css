@@ -1,0 +1,16 @@
+.NavLinkTab {
+  color: black;
+  font-size: 14px;
+}
+
+.NavLinkTab_disabled {
+  border-bottom: 2px solid currentColor;
+  color: #00659c;
+  cursor: default;
+  font-size: 14px;
+}
+
+.NavLinkTab:hover,
+.NavLinkTab_disabled:hover {
+  text-decoration: none;
+}

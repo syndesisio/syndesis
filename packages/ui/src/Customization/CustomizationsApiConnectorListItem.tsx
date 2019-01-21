@@ -25,6 +25,34 @@ export interface IApiConnectorListItemProps {
 export class CustomizationsApiConnectorListItem extends React.Component<
   IApiConnectorListItemProps
 > {
+  public getDeleteTooltip() {
+    return (
+      <Tooltip id="deleteTip">
+        {this.props.i18nDeleteTip
+          ? this.props.i18nDeleteTip
+          : this.props.i18nDelete}
+      </Tooltip>
+    );
+  }
+
+  public getDetailsTooltip() {
+    return (
+      <Tooltip id="detailsTip">
+        {this.props.i18nDetailsTip
+          ? this.props.i18nDetailsTip
+          : this.props.i18nDetails}
+      </Tooltip>
+    );
+  }
+
+  public handleDelete() {
+    this.props.onDelete(this.props.apiConnectorId);
+  }
+
+  public handleDetails() {
+    this.props.onDetails(this.props.apiConnectorId);
+  }
+
   public render() {
     return (
       <ListViewItem
@@ -73,32 +101,4 @@ export class CustomizationsApiConnectorListItem extends React.Component<
       />
     );
   }
-
-  private getDeleteTooltip() {
-    return (
-      <Tooltip id="deleteTip">
-        {this.props.i18nDeleteTip
-          ? this.props.i18nDeleteTip
-          : this.props.i18nDelete}
-      </Tooltip>
-    );
-  }
-
-  private getDetailsTooltip() {
-    return (
-      <Tooltip id="detailsTip">
-        {this.props.i18nDetailsTip
-          ? this.props.i18nDetailsTip
-          : this.props.i18nDetails}
-      </Tooltip>
-    );
-  }
-
-  private handleDelete = () => {
-    this.props.onDelete(this.props.apiConnectorId);
-  };
-
-  private handleDetails = () => {
-    this.props.onDetails(this.props.apiConnectorId);
-  };
 }

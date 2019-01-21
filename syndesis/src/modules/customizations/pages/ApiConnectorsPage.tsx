@@ -9,12 +9,12 @@ import {
   IListViewToolbarAbstractComponent,
   ISortType,
   ListViewToolbarAbstractComponent,
+  NavLinkTab,
 } from '@syndesis/ui';
-import { OptionalIntUtil, WithLoader } from '@syndesis/utils';
+import { optionalIntValue, WithLoader } from '@syndesis/utils';
 import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
-import { NavLink } from 'react-router-dom';
 import i18n from '../../../i18n';
 
 function getFilteredAndSortedApiConnectors(
@@ -83,7 +83,7 @@ export default class ApiConnectorsPage extends ListViewToolbarAbstractComponent<
   }
 
   public getUsedByMessage(api: Connector): string {
-    const numUsedBy = OptionalIntUtil.getValue(api.uses);
+    const numUsedBy = optionalIntValue(api.uses);
 
     if (numUsedBy === 1) {
       return i18n.t('customizations:usedByOne');
@@ -123,21 +123,18 @@ export default class ApiConnectorsPage extends ListViewToolbarAbstractComponent<
                 <Grid fluid={true}>
                   <Grid.Row className="bottom-bordered">
                     <Grid.Col xs={6} md={3}>
-                      <NavLink
-                        className="link-disabled"
-                        to="/customizations/api-connector"
-                        onClick={this.stopClickEvent}
-                      >
-                        {t('apiConnector.apiConnectorsPageTitle')}
-                      </NavLink>
+                      <NavLinkTab
+                        disableLink={true}
+                        i18nLinkTitle={t('apiConnector.apiConnectorsPageTitle')}
+                        toLink={'/customizations/api-connector'}
+                      />
                     </Grid.Col>
                     <Grid.Col>
-                      <NavLink
-                        className="link-enabled"
-                        to="/customizations/extensions"
-                      >
-                        {t('extension.extensionsPageTitle')}
-                      </NavLink>
+                      <NavLinkTab
+                        disableLink={false}
+                        i18nLinkTitle={t('extension.extensionsPageTitle')}
+                        toLink={'/customizations/extensions'}
+                      />
                     </Grid.Col>
                   </Grid.Row>
                   <Grid.Row>
@@ -211,7 +208,7 @@ export default class ApiConnectorsPage extends ListViewToolbarAbstractComponent<
                                 i18nUsedByMessage={this.getUsedByMessage(api)}
                                 onDelete={this.handleDelete}
                                 onDetails={this.handleDetails}
-                                usedBy={OptionalIntUtil.getValue(api.uses)}
+                                usedBy={optionalIntValue(api.uses)}
                               />
                             ))
                         }
