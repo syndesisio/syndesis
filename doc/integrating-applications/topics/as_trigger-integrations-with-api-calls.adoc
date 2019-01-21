@@ -1,0 +1,61 @@
+// This assembly is included in the following assemblies:
+// upstream: integrating-applications/master.adoc
+// downstream: integrating-applications-with-fuse-online/master.adoc
+
+:context: ug
+[id='trigger-integrations-with-api-calls_{context}']
+= Trigger integration execution with a REST API call
+
+:context: api-provider
+
+To trigger execution of an integration on demand, start the integration
+with a REST API service that you provide. 
+Integrations that start this way are referred to as _API provider 
+integrations_. An API provider integration allows REST API clients to invoke 
+commands that trigger execution of the integration. 
+
+When {prodname} publishes an API provider integration, it annotates the API 
+service definition for use with Red Hat 3scale. 3scale is Red Hat's API
+management solution. 3scale enforces API access policies, centralizes 
+API control, provides high availability for your API, and integrates with 
+Red Hat Fuse. For more information, see the API Gateway 
+documentation that is available from 
+https://access.redhat.com/documentation/en-us/red_hat_3scale/2.3/[the Red Hat 3scale documentation page.]
+
+The following topics provide information and 
+instructions for creating API provider integrations: 
+
+* <<overview-benefit-api-provider-integrations_{context}>>
+* <<about-api-provider-flows_{context}>>
+* <<about-api-provider-urls_{context}>>
+* <<workflow-api-providers_{context}>>
+* <<create-api-provider-integration_{context}>>
+* <<create-integration-operation-flows_{context}>>
+* <<configure-publish-api-provider-quickstart_{context}>>
+* <<try-api-provider-quickstart_{context}>>
+
+ifeval::["{location}" == "downstream"]
+[IMPORTANT]
+==== 
+In this release, an API provider integration is a 
+https://access.redhat.com/support/offerings/techpreview/[Technology Preview feature].
+====
+endif::[]
+
+include::c_overview-benefit-api-provider-integrations.adoc[leveloffset=+1]
+
+include::c_about-api-provider-flows.adoc[leveloffset=+1]
+
+include::c_about-api-provider-urls.adoc[leveloffset=+1]
+
+include::c_workflow-api-providers.adoc[leveloffset=+1]
+
+include::p_create-api-provider-integration.adoc[leveloffset=+1]
+
+include::p_create-integration-operation-flows.adoc[leveloffset=+1]
+
+include::p_configure-publish-api-provider-quickstart.adoc[leveloffset=+1]
+
+include::p_try-api-provider-quickstart.adoc[leveloffset=+1]
+
+:context: ug

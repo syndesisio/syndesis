@@ -1,0 +1,20 @@
+// This module is included in these assemblies:
+// as_high-level-overview.adoc
+
+[id='benefits_{context}']
+= Benefits of using {prodname}
+
+{prodname} has a number of benefits: 
+
+* Integrate data from different applications or services without writing code.
+
+* Run the integration on OpenShift Online in the public cloud or on
+OpenShift Container Platform on site.
+
+* Use the visual data mapper to map data fields in one application to data
+fields in another application.
+
+* Leverage all the benefits of open source software. You can extend features,
+and customize interfaces. If {prodname} does not provide a connector for an
+application or service that you want to integrate then a developer can
+create the connector that you need.

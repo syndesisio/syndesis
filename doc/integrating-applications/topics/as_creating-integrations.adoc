@@ -1,0 +1,50 @@
+// This assembly is included in these assemblies:
+// upstream: integrating-applications/master.adoc
+// downstream: integrating-applications-with-fuse-online/master.adoc
+
+:context: ug
+[id='creating-integrations_{context}']
+= Create integrations
+:context: create
+
+After some planning and preparation, you are ready to create an
+integration. In the {prodname} web interface, when you
+click *Create Integration*, {prodname} guides you
+through the procedure to create an integration.
+
+.Prerequisites
+* link:{LinkFuseOnlineIntegrationGuide}#plan_ready[Plan your integrations]
+* link:{LinkFuseOnlineIntegrationGuide}#workflow-overview_ready[General workflow for creating an integration]
+
+The following topics provide information and instructions for creating
+an integration:
+
+* <<preparing-to-create-an-integration_{context}>>
+* <<procedure-for-creating-an-integration_{context}>>
+* <<about-adding-steps_{context}>>
+* <<add-data-mapping-step_{context}>>
+* <<add-basic-filter-step_{context}>>
+* <<add-advanced-filter-step_{context}>>
+* <<add-log-step_{context}>>
+* <<add-template-step_{context}>>
+* <<add-custom-step_{context}>>
+
+include::c_preparing-to-create-an-integration.adoc[leveloffset=+1]
+
+include::p_procedure-for-creating-an-integration.adoc[leveloffset=+1]
+
+include::c_about-adding-steps.adoc[leveloffset=+1]
+
+include::p_add-data-mapping-step.adoc[leveloffset=+1]
+
+include::p_add-basic-filter-step.adoc[leveloffset=+1]
+
+include::p_add-advanced-filter-step.adoc[leveloffset=+1]
+
+include::p_add-log-step.adoc[leveloffset=+1]
+
+include::p_add-template-step.adoc[leveloffset=+1]
+
+include::p_add-custom-step.adoc[leveloffset=+1]
+
+:context: ug

@@ -1,0 +1,47 @@
+// This module is included in the following assemblies:
+// as_how-to-get-ready.adoc
+
+[id='plan_{context}']
+= Plan your integrations
+
+Consider the following questions before you create an integration.
+
+How do you want to trigger execution of the integration?
+
+* Do you want to set a timer to trigger execution at intervals that you
+specify?
+* Do you want to send an HTTP request?
+* Do you want to connect to an application to obtain data from?
+** In that application, what triggers the action that obtains the data?
+For example, an integration that starts by obtaining data from
+Twitter might trigger on a Twitter mention.
+** What are the data fields of interest?
+** What credentials does {prodname} use to access this application?
+
+To finish the integration:
+
+* Which application receives the data?
+* In that application, what action does the integration perform?
+* What are the data fields of interest?
+* What credentials does {prodname} use to access this application?
+
+Between the start and finish applications:
+
+* Do you need to access any other applications? For any other
+applications the integration accesses:
++
+** Which application does the integration need to connect to?
+** What action should the integration perform?
+** What are the data fields of interest?
+** What credentials should the integration use to connect to this application?
+
+* Does the integration need to operate on the data between connections?
+For example:
++
+** Should the integration filter the data it operates on?
+** Do field names differ between source and target applications? If they
+do then data mapping is required.
+** Would a template be helpful for outputting data in a consistent form?
+** Do you want to send information about messages being processed to the
+integration's log?
+** Does the integration need to operate on the data in some customized way?

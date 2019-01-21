@@ -1,0 +1,39 @@
+// This assembly is included in the following assemblies:
+// as_customizing.adoc
+
+:context: custom
+[id='developing-rest-api-client-connectors_{context}']
+= Develop REST API client connectors
+:context: dev-client-connector
+
+{prodname} can create connectors for
+Representational State Transfer Application Programming Interfaces
+(REST APIs)
+that support Hypertext Transfer Protocol (HTTP).
+To do this, {prodname} requires a valid
+OpenAPI 2.0 schema that describes a REST API that you want to connect to.
+If the API service provider does not make an OpenAPI schema available
+then an experienced developer must create the OpenAPI schema.
+
+The following topics provide information and instructions for developing
+REST API connectors:
+
+* <<about-api-client-connectors_{context}>>
+* <<guidelines-for-openapi-specifications_{context}>>
+// The following file contains content for a feature that was not actually added. 
+// So it is not linked in anywhere. But maybe some day, it will be. 
+// * <<access-token-strategy>>
+* <<providing-client-credentials_{context}>>
+* <<refreshing-access-tokens_{context}>>
+
+include::c_about-api-connectors.adoc[leveloffset=+1]
+
+include::c_guidelines-for-openapi-specifications.adoc[leveloffset=+1]
+
+// include::access-token-strategy.adoc[leveloffset=+1]
+
+include::r_providing-client-credentials.adoc[leveloffset=+1]
+
+include::r_refreshing-access-tokens.adoc[leveloffset=+1]
+
+:context: custom

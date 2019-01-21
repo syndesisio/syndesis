@@ -1,0 +1,63 @@
+// This assembly is included in the following assemblies:
+// as_customizing.adoc
+
+:context: custom
+[id='developing-extensions_{context}']
+= Develop {prodname} extensions
+:context: extensions
+
+If {prodname} does not provide a feature that is needed to create an
+integration, then an expert developer 
+can code an extension that provides the needed behavior.  The
+https://github.com/syndesisio/syndesis-extensions[Syndesis extensions repository]
+contains examples of extensions. 
+
+A business integrator shares requirements with a developer who codes the 
+extension. The developer provides a `.jar` file that contains the extension. 
+The business integrator uploads the `.jar` file in {prodname} to make the 
+custom connector, custom step(s), or library resource available for use 
+in {prodname}. 
+
+The Fuse Tooling plugin to Red Hat Developer Studio provides a wizard
+that helps you develop a step extension or a connector extension. It is 
+a matter of personal preference whether you choose to develop a step
+extension or a connector extension in Developer Studio or in some other
+IDE. For information about using the Developer Studio plugin, see 
+link:{LinkToolingUserGuide}#igniteextension[Developing extensions for {prodname} integrations].
+
+In this document, the following topics outline the 
+procedure, describe the requirements, and provide additional examples for
+developing extensions in an IDE that you choose. 
+
+* <<procedure-for-developing-extensions_{context}>>
+* <<description-kinds-extensions_{context}>>
+* <<overview-extension-content-structure_{context}>>
+* <<about-extension-definitions_{context}>>
+* <<using-maven-to-generate-extension-definitions_{context}>>
+* <<how-to-specify-data-shapes_{context}>>
+* <<develop-step-extensions_{context}>>
+* <<develop-connector-extensions_{context}>>
+* <<develop-library-extensions_{context}>>
+* <<creating-jdbc-driver-library-extensions_{context}>>
+
+include::p_developing-extensions.adoc[leveloffset=+1]
+
+include::c_description-kinds-extensions.adoc[leveloffset=+1]
+
+include::c_overview-extension-content-structure.adoc[leveloffset=+1]
+
+include::c_about-extension-definitions.adoc[leveloffset=+1]
+
+include::p_using-maven-to-generate-extension-definitions.adoc[leveloffset=+1]
+
+include::r_how-to-specify-data-shapes.adoc[leveloffset=+1]
+
+include::as_develop-step-extensions.adoc[leveloffset=+1]
+
+include::r_develop-connector-extensions.adoc[leveloffset=+1]
+
+include::r_develop-library-extensions.adoc[leveloffset=+1]
+
+include::p_creating-jdbc-driver-library-extensions.adoc[leveloffset=+1]
+
+:context: custom

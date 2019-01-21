@@ -1,0 +1,28 @@
+// This module is included in the following assemblies:
+// as_developing-rest-api-client_connectors.adoc
+
+[id='about-api-client-connectors_{context}']
+= Requirements for REST API client connectors
+
+After you upload an OpenAPI schema to {prodname}, a connector to the REST API
+becomes available. You can select the connector to create
+a REST API client connection. You can then create a new integration and 
+add the REST API client connection, or you can edit an existing integration 
+to add the REST API client connection. 
+
+{prodname} connectors support OAuth 2.0 and HTTP Basic
+Authorization. If access to the REST API requires Transport Layer Security (TLS)
+then the API needs to use a valid certificate that is issued by
+a recognized Certificate Authority (CA).
+
+A REST API that uses OAuth must have an authorization URL that takes a client
+callback URL as input. After {prodname} creates the connector and before you
+use the connector to create a connection, you must visit that URL to 
+register your {prodname} environment as a client of the REST API.
+This authorizes your {prodname} environment to access the REST API. As part
+of registration, you provide the {prodname} callback URL. 
+The details for doing this are described in
+link:{LinkFuseOnlineConnectorGuide}#register-with-rest-apis_rest[{NameOfFuseOnlineConnectorGuide}, Register with REST APIs].
+
+{prodname} cannot create connectors for REST APIs that support the HTTP 2.0
+protocol.

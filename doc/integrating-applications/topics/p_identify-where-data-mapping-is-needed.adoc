@@ -1,0 +1,24 @@
+// This module is included in the following assemblies:
+// as_mapping-data.adoc
+
+[id='identify-where-data-mapping-is-needed_{context}']
+= Identify where data mapping is needed
+
+{prodname} displays warning icons to indicate where an integration
+requires data mapping. 
+
+.Prerequisites
+* You are creating or editing an integration.
+* The integration contains all connections that it requires. 
+
+.Procedure
+
+. In the integration visualization panel on the left, look for any
+image:shared/images/WarningIcon.png[Warning] icons.
+
+. Click the icon to see the message. A *Data Type Mismatch* notification
+indicates that you need to add a data mapper step before that connection. 
++
+In the integration's visualization panel, to the right of a connection, click 
+image:shared/images/InfoIcon.png[Info] to display information about that
+connection, including its input and/or output type. 
