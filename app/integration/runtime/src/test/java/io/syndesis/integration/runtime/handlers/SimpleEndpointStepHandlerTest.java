@@ -180,6 +180,69 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
         }
     }
 
+    @Test
+    public void testSimpleEndpointStepWithSplitDisabled() throws Exception {
+        final CamelContext context = new SpringCamelContext(applicationContext);
+
+        try {
+            final RouteBuilder routes = newIntegrationRouteBuilder(
+                    new Step.Builder()
+                        .stepKind(StepKind.endpoint)
+                        .action(new ConnectorAction.Builder()
+                            .descriptor(new ConnectorDescriptor.Builder()
+                                .componentScheme("direct")
+                                .putConfiguredProperty("name", "start")
+                                .build())
+                            .build())
+                        .build(),
+                    new Step.Builder()
+                        .stepKind(StepKind.endpoint)
+                        .putConfiguredProperty("split", "false")
+                        .action(new ConnectorAction.Builder()
+                            .descriptor(new ConnectorDescriptor.Builder()
+                                .componentScheme("bean")
+                                .putConfiguredProperty("beanName", "myBean")
+                                .putConfiguredProperty("method", "myProcessor")
+                                .split(new Split.Builder()
+                                    .language("tokenize")
+                                    .expression("|")
+                                    .build())
+                                .build())
+                            .build())
+                        .build(),
+                    new Step.Builder()
+                        .stepKind(StepKind.endpoint)
+                        .action(new ConnectorAction.Builder()
+                            .descriptor(new ConnectorDescriptor.Builder()
+                                .componentScheme("mock")
+                                .putConfiguredProperty("name", "result")
+                                .build())
+                            .build())
+                        .build()
+            );
+
+            // Set up the camel context
+            context.addRoutes(routes);
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            final ProducerTemplate template = context.createProducerTemplate();
+            final MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
+            final String body = "a|b|c";
+            final String expected = body.toUpperCase();
+
+            result.expectedMessageCount(1);
+            result.expectedBodiesReceived(expected);
+            template.sendBody("direct:start", body);
+
+            result.assertIsSatisfied();
+        } finally {
+            context.stop();
+        }
+    }
+
     // ***************************
     //
     // ***************************

@@ -68,6 +68,7 @@
                 "javaType": "java.lang.String",
                 "kind": "path",
                 "labelHint": "SQL SELECT statement to be executed.",
+                "order": "1",
                 "required": true,
                 "secret": false,
                 "type": "string"
@@ -80,9 +81,34 @@
                 "javaType": "long",
                 "kind": "parameter",
                 "labelHint": "Delay between scheduling (executing).",
+                "order": "2",
                 "required": false,
                 "secret": false,
                 "type": "duration"
+              },
+              "split": {
+                "deprecated": false,
+                "defaultValue": true,
+                "displayName": "Split results",
+                "group": "consumer",
+                "javaType": "boolean",
+                "enum": [
+                  {
+                    "label": "No",
+                    "value": "false"
+                  },
+                  {
+                    "label": "Yes",
+                    "value": "true"
+                  }
+                ],
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "When enabled result set entries are automatically split and processed one by one in that integration.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
               }
             }
           }
