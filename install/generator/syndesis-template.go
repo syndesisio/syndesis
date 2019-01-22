@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -70,6 +71,11 @@ type tags struct {
 	Grafana    string
 }
 
+type Dashboard struct {
+	FileName string
+	Json     string
+}
+
 type Context struct {
 	Name             string
 	AllowLocalHost   bool
@@ -84,6 +90,7 @@ type Context struct {
 	Tags             tags
 	Debug            bool
 	WithOAuthClient  bool
+	Dashboards       []Dashboard
 }
 
 // TODO: Could be added from a local configuration file
@@ -177,6 +184,23 @@ func install(cmd *cobra.Command, args []string) {
 		}
 	}
 
+	regex := regexp.MustCompile("(?m)^(.*)$")
+	dashboardDir := "../dashboards/"
+	dashboardFiles, err := ioutil.ReadDir(dashboardDir)
+	check(err)
+
+	for _, dashboardFile := range dashboardFiles {
+		if strings.HasSuffix(dashboardFile.Name(), ".json") {
+			json, err := ioutil.ReadFile(dashboardDir + dashboardFile.Name())
+			check(err)
+			dashboard := Dashboard{
+				FileName: dashboardFile.Name(),
+				Json:     regex.ReplaceAllString(string(json), "      $1"),
+			}
+			context.Dashboards = append(context.Dashboards, dashboard)
+		}
+	}
+
 	files, err := ioutil.ReadDir("./")
 	check(err)
 
@@ -191,7 +215,6 @@ func install(cmd *cobra.Command, args []string) {
 			fmt.Print(mustache.Render(string(template), context))
 		}
 	}
-
 }
 
 func check(e error) {
