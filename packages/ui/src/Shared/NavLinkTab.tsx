@@ -1,3 +1,4 @@
+import classnames from 'classnames';
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import './NavLinkTab.css';
@@ -16,6 +17,11 @@ export interface INavLinkTabProps {
 // A class to represent a tab. Use multiple to create a tab folder. A tab can be disabled when its
 // link should not be navigated too.
 export class NavLinkTab extends React.Component<INavLinkTabProps> {
+  public constructor(props: INavLinkTabProps) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
   public handleClick(event: React.MouseEvent<HTMLAnchorElement>) {
     if (this.props && this.props.disableLink) {
       event.preventDefault();
@@ -25,9 +31,9 @@ export class NavLinkTab extends React.Component<INavLinkTabProps> {
   public render() {
     return (
       <NavLink
-        className={
-          this.props.disableLink ? 'NavLinkTab_disabled' : 'NavLinkTab'
-        }
+        className={classnames('NavLinkTab', {
+          'is-disabled': this.props.disableLink,
+        })}
         to={this.props.toLink}
         onClick={this.handleClick}
       >

@@ -20,7 +20,7 @@ export class WithApiConnectors extends React.Component<
   IWithApiConnectorsProps
 > {
   public changeFilter(change: IChangeEvent) {
-    return change.kind.startsWith('apiConnector');
+    return change.kind.startsWith('connector');
   }
 
   public render() {

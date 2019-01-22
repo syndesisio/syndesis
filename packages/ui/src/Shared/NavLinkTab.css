@@ -3,7 +3,7 @@
   font-size: 14px;
 }
 
-.NavLinkTab_disabled {
+.NavLinkTab.is-disabled {
   border-bottom: 2px solid currentColor;
   color: #00659c;
   cursor: default;

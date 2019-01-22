@@ -25,6 +25,12 @@ export interface IApiConnectorListItemProps {
 export class CustomizationsApiConnectorListItem extends React.Component<
   IApiConnectorListItemProps
 > {
+  public constructor(props: IApiConnectorListItemProps) {
+    super(props);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleDetails = this.handleDetails.bind(this);
+  }
+
   public getDeleteTooltip() {
     return (
       <Tooltip id="deleteTip">

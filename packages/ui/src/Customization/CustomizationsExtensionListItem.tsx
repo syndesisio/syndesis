@@ -29,6 +29,13 @@ export interface IExtensionListItemProps {
 export class CustomizationsExtensionListItem extends React.Component<
   IExtensionListItemProps
 > {
+  public constructor(props: IExtensionListItemProps) {
+    super(props);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleDetails = this.handleDetails.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+  }
+
   public getDeleteTooltip() {
     return (
       <Tooltip id="deleteTip">

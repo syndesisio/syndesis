@@ -73,11 +73,6 @@ export default class ApiConnectorsPage extends ListViewToolbarAbstractComponent<
     isSortAscending: true,
   };
 
-  constructor(props: {}) {
-    super(props);
-    this.stopClickEvent = this.stopClickEvent.bind(this);
-  }
-
   public filterUndefinedId(api: Connector): boolean {
     return api.id !== undefined;
   }
@@ -102,10 +97,6 @@ export default class ApiConnectorsPage extends ListViewToolbarAbstractComponent<
     alert('Show details of API client connector ' + apiConnectorId);
   }
 
-  public stopClickEvent(event: React.MouseEvent<HTMLAnchorElement>) {
-    event.preventDefault();
-  }
-
   public render() {
     return (
       <WithApiConnectors>
@@ -121,7 +112,12 @@ export default class ApiConnectorsPage extends ListViewToolbarAbstractComponent<
             <NamespacesConsumer ns={['customizations', 'shared']}>
               {t => (
                 <Grid fluid={true}>
-                  <Grid.Row className="bottom-bordered">
+                  <Grid.Row
+                    style={{
+                      borderBottom: '1px solid #d1d1d1',
+                      paddingBottom: 0,
+                    }}
+                  >
                     <Grid.Col xs={6} md={3}>
                       <NavLinkTab
                         disableLink={true}

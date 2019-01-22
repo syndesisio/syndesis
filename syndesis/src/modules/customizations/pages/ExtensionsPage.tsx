@@ -16,7 +16,6 @@ import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import i18n from '../../../i18n';
-import '../customizations.css';
 
 function getFilteredAndSortedExtensions(
   extensions: Extension[],
@@ -74,11 +73,6 @@ export default class ExtensionsPage extends ListViewToolbarAbstractComponent<
     isSortAscending: true,
   };
 
-  constructor(props: {}) {
-    super(props);
-    this.stopClickEvent = this.stopClickEvent.bind(this);
-  }
-
   public filterUndefinedId(extension: Extension): boolean {
     return extension.id !== undefined;
   }
@@ -126,10 +120,6 @@ export default class ExtensionsPage extends ListViewToolbarAbstractComponent<
     alert('Update extension ' + extensionId);
   }
 
-  public stopClickEvent(event: React.MouseEvent<HTMLAnchorElement>) {
-    event.preventDefault();
-  }
-
   public render() {
     return (
       <WithExtensions>
@@ -145,7 +135,12 @@ export default class ExtensionsPage extends ListViewToolbarAbstractComponent<
             <NamespacesConsumer ns={['customizations', 'shared']}>
               {t => (
                 <Grid fluid={true}>
-                  <Grid.Row className="bottom-bordered">
+                  <Grid.Row
+                    style={{
+                      borderBottom: '1px solid #d1d1d1',
+                      paddingBottom: 0,
+                    }}
+                  >
                     <Grid.Col xs={6} md={3}>
                       <NavLinkTab
                         disableLink={false}
