@@ -102,6 +102,23 @@
       importPolicy:
         scheduled: true
       name: "{{ Tags.Grafana }}"
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: {{ Images.Support.PostgresExporter }}
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-db-metrics
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/{{Images.PostgresExporterImagePrefix}}/{{ Images.Support.PostgresExporter }}:{{ Tags.PostgresExporter }}
+      importPolicy:
+        scheduled: true
+      name: "{{ Tags.PostgresExporter }}"
 {{/WithDockerImages}}
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
