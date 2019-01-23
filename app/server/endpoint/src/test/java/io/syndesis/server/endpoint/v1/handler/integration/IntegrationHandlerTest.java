@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
+import java.io.ByteArrayInputStream;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,21 +29,28 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.filter.FilterOptions;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.server.api.generator.APIGenerator;
+import io.syndesis.server.api.generator.APIIntegration;
+import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
+import io.syndesis.server.endpoint.v1.handler.api.ApiHandler.APIFormData;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -224,6 +232,32 @@ public class IntegrationHandlerTest {
             .build().deleted().deleted());
         verify(openShiftService).delete("first to delete");
         verify(openShiftService).delete("second to delete");
+    }
+
+    @Test
+    public void shouldPerformUpdatesBasedOnNewSpecification() {
+        final Integration existing = new Integration.Builder().addFlow(new Flow.Builder().id("flow1").build()).build();
+        final Integration updated = new Integration.Builder().addFlow(new Flow.Builder().id("flow2").build()).build();
+        final OpenApi updatedSpecification = new OpenApi.Builder().build();
+        final APIIntegration updatedApiIntegration = new APIIntegration(updated, updatedSpecification);
+
+        when(dataManager.fetch(Connection.class, "api-provider")).thenReturn(new Connection.Builder().connectorId("api-provider-connector").build());
+        when(dataManager.fetch(Connector.class, "api-provider-connector")).thenReturn(new Connector.Builder().build());
+        when(dataManager.fetch(Integration.class, "integration-1")).thenReturn(existing);
+        when(encryptionSupport.encrypt(updated)).thenReturn(updated);
+        when(apiGenerator.generateIntegration(any(String.class), any(ProvidedApiTemplate.class))).thenReturn(updatedApiIntegration);
+
+        final APIFormData openApiUpdate = new APIFormData();
+        openApiUpdate.setSpecification(new ByteArrayInputStream("updated specification".getBytes()));
+
+        handler.updateSpecification("integration-1", openApiUpdate);
+
+        verify(dataManager).store(updatedSpecification, OpenApi.class);
+        verify(dataManager).update(ArgumentMatchers.<Integration> argThat(v -> {
+            assertThat(v).isEqualToIgnoringGivenFields(updated, "version", "updatedAt");
+            assertThat(v.getVersion()).isEqualTo(2);
+            return true;
+        }));
     }
 
     @Test

@@ -50,6 +50,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
@@ -257,8 +258,12 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             return;
         }
 
-        // TODO update the specification resource
+        // store the OpenAPI resource, we keep the old one as it might
+        // be referenced from Integration's stored in IntegrationDeployent's
+        // this gives us a rollback mechanism
+        getDataManager().store(apiIntegration.getSpec(), OpenApi.class);
 
+        // perform the regular update
         update(id, updated);
     }
 
@@ -322,9 +327,11 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             updatedFlows.add(updatedFlow);
         }
 
-        final Integration.Builder updater = existing.builder();
-        updater.flows(updatedFlows);
-
-        return updater.build();
+        return existing.builder()
+            .flows(updatedFlows)
+            // we replace all resources counting that the only resource
+            // present is the OpenAPI specification
+            .resources(given.getResources())
+            .build();
     }
 }
