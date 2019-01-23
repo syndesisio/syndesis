@@ -1,8 +1,8 @@
 import { Connector } from '@syndesis/models';
 import * as React from 'react';
-import { IRestState } from './Rest';
+import { IFetchState } from './Fetch';
 import { ServerEventsContext } from './ServerEventsContext';
-import { SyndesisRest } from './SyndesisRest';
+import { SyndesisFetch } from './SyndesisFetch';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
 
@@ -13,7 +13,7 @@ export interface IApiConnectorsResponse {
 
 export interface IWithApiConnectorsProps {
   disableUpdates?: boolean;
-  children(props: IRestState<IApiConnectorsResponse>): any;
+  children(props: IFetchState<IApiConnectorsResponse>): any;
 }
 
 export class WithApiConnectors extends React.Component<
@@ -25,7 +25,7 @@ export class WithApiConnectors extends React.Component<
 
   public render() {
     return (
-      <SyndesisRest<IApiConnectorsResponse>
+      <SyndesisFetch<IApiConnectorsResponse>
         url={'/connectors?query=connectorGroupId%3Dswagger-connector-template'}
         defaultValue={{
           items: [],
@@ -51,7 +51,7 @@ export class WithApiConnectors extends React.Component<
             </ServerEventsContext.Consumer>
           );
         }}
-      </SyndesisRest>
+      </SyndesisFetch>
     );
   }
 }
