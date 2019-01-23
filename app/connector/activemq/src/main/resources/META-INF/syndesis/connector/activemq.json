@@ -304,12 +304,12 @@
   "description": "Subscribe for and publish messages.",
   "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDMuOTM2IiBoZWlnaHQ9IjE1NS42MjQiIHZpZXdCb3g9IjAgMCAyNy41IDQxLjE3NiI+PGcgdHJhbnNmb3JtPSJtYXRyaXgoLjA3NzYgMCAwIC4wNzc2IC0xMTkuMDEgLTg4LjQ3KSI+PHBhdGggZD0iTTE4MzguNDQ2IDE0OTAuODk5bC05OC45ODItLjMwNy00OS4yMjYtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjYgODUuODc0eiIgZmlsbD0iI2MxMjc2NiIvPjxwYXRoIGQ9Ik0xNjgxLjk5OSAxNTgwLjY1MmwtOTguOTgyLS4zMDctNDkuMjI2LTg1Ljg3NCA0OS43NTctODUuNTY4IDk4Ljk4Mi4zMDcgNDkuMjI1IDg1Ljg3NXoiIGZpbGw9IiMzZTQ4OWYiLz48cGF0aCBkPSJNMTgzNy40NzQgMTY3MC44NDVsLTk4Ljk4My0uMzA3LTQ5LjIyNS04NS44NzQgNDkuNzU3LTg1LjU2OCA5OC45ODIuMzA3IDQ5LjIyNSA4NS44NzV6IiBmaWxsPSIjNzE0MDk5Ii8+PHBhdGggZD0iTTE2ODIuODIyIDE0MDEuODA4bC05OC45ODItLjMwNy00OS4yMjUtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjUgODUuODc0eiIgZmlsbD0iIzc4OTMyYyIvPjxwYXRoIGQ9Ik0xODM4LjM3MSAxMzExLjkzbC05OC45ODItLjMwNy00OS4yMjUtODUuODc0IDQ5Ljc1Ny04NS41NjggOTguOTgyLjMwNyA0OS4yMjUgODUuODc1eiIgZmlsbD0iI2NmMjQyYSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxMjI2LjA1NiIgY3g9IjE3ODkuMTQ2IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSByPSIxNSIgY3k9IjEzMTUuOTMzIiBjeD0iMTYzMy41OTciIGZpbGw9IiNmZmYiLz48Y2lyY2xlIHI9IjE1IiBjeT0iMTQ5NC43NzgiIGN4PSIxNjMyLjc3MyIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNTg0Ljk3MSIgY3g9IjE3ODguMjQ4IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTE3NzkuNjcgMTIzMC4yNDRsLTEzNi4xOTggNzguMDMxTTE2MzMuMDI5IDEzMjcuNjUybC40NiAxNTYuOTY3TTE2NDMuODE4IDE1MDEuMzE1bDEzNC45NTMgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNDA1LjAyNCIgY3g9IjE3ODkuMjIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTc4OC42NjggMTIzNi42MWwuNDU5IDE1Ni45NjdNMTc4OS41MzQgMTQxNi41MjZsLjQ2IDE1Ni45NjhNMTc3OS45MDEgMTQxMC42NDFsLTEzNi4xOTggNzguMDMyTTE2NDQuMzI1IDEzMjIuNTEzbDEzNC45NTQgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjwvZz48L3N2Zz4=",
   "id": "activemq",
-  "name": "AMQ Message Broker",
+  "name": "Red Hat AMQ",
   "properties": {
     "brokerCertificate": {
       "componentProperty": true,
       "deprecated": false,
-      "description": "AMQ Broker X.509 PEM Certificate",
+      "description": "Red Hat AMQ Broker X.509 PEM Certificate",
       "displayName": "Broker Certificate",
       "group": "security",
       "javaType": "java.lang.String",
@@ -349,7 +349,7 @@
     "clientCertificate": {
       "componentProperty": true,
       "deprecated": false,
-      "description": "AMQ Client X.509 PEM Certificate",
+      "description": "Red Hat AMQ Client X.509 PEM Certificate",
       "displayName": "Client Certificate",
       "group": "security",
       "javaType": "java.lang.String",
