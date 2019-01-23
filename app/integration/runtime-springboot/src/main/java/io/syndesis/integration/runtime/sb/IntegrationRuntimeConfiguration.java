@@ -13,16 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.jmx;
+package io.syndesis.integration.runtime.sb;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "syndesis.integration.runtime.metadata")
-public class IntegrationMetadataConfiguration {
+@ConfigurationProperties(prefix = "syndesis.integration.runtime")
+public class IntegrationRuntimeConfiguration {
     /**
-     * Enable/Disable syndesis runtime metadata.
+     * Enable/Disable syndesis runtime.
      */
     private boolean enabled = true;
+
+    /**
+     * The Syndesis configuration location;
+     */
+    private String configurationLocation = "classpath:syndesis/integration/integration.json";
 
     public boolean isEnabled() {
         return enabled;
@@ -30,5 +35,13 @@ public class IntegrationMetadataConfiguration {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getConfigurationLocation() {
+        return configurationLocation;
+    }
+
+    public void setConfigurationLocation(String configurationLocation) {
+        this.configurationLocation = configurationLocation;
     }
 }

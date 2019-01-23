@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.logging;
+package io.syndesis.integration.runtime.sb.logging;
 
-import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultUuidGenerator;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
@@ -27,6 +26,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import io.syndesis.integration.runtime.logging.ActivityTracker;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
+import io.syndesis.integration.runtime.sb.IntegrationRuntimeAutoConfiguration;
+import io.syndesis.integration.runtime.sb.logging.IntegrationLoggingAutoConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

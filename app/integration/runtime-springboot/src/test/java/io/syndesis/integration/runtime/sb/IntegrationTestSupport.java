@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime;
+package io.syndesis.integration.runtime.sb;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,6 +37,7 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.util.StringConstants;
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 
 public class IntegrationTestSupport implements StringConstants {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);

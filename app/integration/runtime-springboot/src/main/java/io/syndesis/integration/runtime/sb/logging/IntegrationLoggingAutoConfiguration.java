@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.logging;
+package io.syndesis.integration.runtime.sb.logging;
 
 import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.integration.runtime.logging.ActivityTracker;
+import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.spi.InterceptStrategy;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;

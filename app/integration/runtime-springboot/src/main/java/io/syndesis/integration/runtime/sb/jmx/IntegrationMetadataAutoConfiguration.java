@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.jmx;
+package io.syndesis.integration.runtime.sb.jmx;
 
-import io.syndesis.integration.runtime.logging.IntegrationLoggingConfiguration;
 import org.apache.camel.CamelContext;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
@@ -28,6 +27,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import io.syndesis.integration.runtime.jmx.CamelContextMetadataMBean;
+import io.syndesis.integration.runtime.sb.logging.IntegrationLoggingConfiguration;
 
 @Configuration
 @AutoConfigureAfter(CamelAutoConfiguration.class)

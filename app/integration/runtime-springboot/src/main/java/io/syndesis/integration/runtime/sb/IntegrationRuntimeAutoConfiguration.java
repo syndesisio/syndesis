@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime;
+package io.syndesis.integration.runtime.sb;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,8 +21,11 @@ import java.util.List;
 import java.util.ServiceLoader;
 import javax.xml.bind.JAXBException;
 
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
-import io.syndesis.integration.runtime.logging.IntegrationLoggingConfiguration;
+import io.syndesis.integration.runtime.sb.logging.IntegrationLoggingConfiguration;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ModelHelper;

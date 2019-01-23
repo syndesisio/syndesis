@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.jmx;
+package io.syndesis.integration.runtime.sb.jmx;
 
 import java.util.Set;
 import javax.management.AttributeList;
@@ -21,7 +21,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 
-import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +28,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jmx.support.JmxUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import io.syndesis.integration.runtime.sb.IntegrationRuntimeAutoConfiguration;
+import io.syndesis.integration.runtime.sb.jmx.IntegrationMetadataAutoConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

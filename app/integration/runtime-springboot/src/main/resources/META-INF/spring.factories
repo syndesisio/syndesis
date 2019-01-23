@@ -16,6 +16,6 @@
 #
 
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration,\
-    io.syndesis.integration.runtime.jmx.IntegrationMetadataAutoConfiguration,\
-    io.syndesis.integration.runtime.logging.IntegrationLoggingAutoConfiguration
+    io.syndesis.integration.runtime.sb.IntegrationRuntimeAutoConfiguration,\
+    io.syndesis.integration.runtime.sb.jmx.IntegrationMetadataAutoConfiguration,\
+    io.syndesis.integration.runtime.sb.logging.IntegrationLoggingAutoConfiguration

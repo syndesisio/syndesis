@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.capture;
+package io.syndesis.integration.runtime.sb.capture;
 
 import java.util.Map;
 
@@ -23,8 +23,9 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
+import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
+import io.syndesis.integration.runtime.sb.IntegrationRuntimeAutoConfiguration;
+import io.syndesis.integration.runtime.sb.IntegrationTestSupport;
 import io.syndesis.common.model.Split;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;

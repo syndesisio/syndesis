@@ -17,7 +17,6 @@ package io.syndesis.integration.component.proxy;
 
 import java.util.Arrays;
 
-import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -29,6 +28,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import io.syndesis.integration.runtime.sb.IntegrationRuntimeAutoConfiguration;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
