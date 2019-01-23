@@ -22,6 +22,7 @@ const extensions = [
   <CustomizationsExtensionListItem
     extensionDescription="id-0 description goes here"
     extensionId={'id-0'}
+    extensionName={'id-0 name'}
     i18nDelete={'Delete'}
     i18nDetails={'Details'}
     i18nExtensionType={'Step Extension'}
@@ -34,6 +35,7 @@ const extensions = [
   />,
   <CustomizationsExtensionListItem
     extensionId={'id-1'}
+    extensionName={'id-1 name'}
     i18nDelete={'Delete'}
     i18nDetails={'Details'}
     i18nExtensionType={'Step Extension'}
@@ -46,6 +48,7 @@ const extensions = [
   />,
   <CustomizationsExtensionListItem
     extensionId={'id-2'}
+    extensionName={'id-2 name'}
     i18nDelete={'Delete'}
     i18nDetails={'Details'}
     i18nExtensionType={'Step Extension'}

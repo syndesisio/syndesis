@@ -25,7 +25,7 @@ const connectors = [
       'api-conn-1-description'
     )}
     apiConnectorName={text('apiConnectorName', 'Api Conn 1')}
-    i18nDelete={text('i18nDescription', 'Delete')}
+    i18nDelete={text('i18nDelete', 'Delete')}
     i18nDetails={text('i18nDetails', 'Details')}
     i18nUsedByMessage={text(
       'i18nUsedByMessage',
@@ -149,10 +149,6 @@ stories
           )}
           i18nLinkCreateApiConnectorTip={createConnectorTip}
           i18nName={text('i18nName', 'Name')}
-          i18nNameFilterPlaceholder={text(
-            'i18nNameFilterPlaceholder',
-            'Filter by Name...'
-          )}
           i18nResultsCount={text('i18nResultsCount', '0 Results')}
           i18nTitle={text('i18nTitle', title)}
         />
@@ -198,10 +194,6 @@ stories
             createConnector
           )}
           i18nName={text('i18nName', 'Name')}
-          i18nNameFilterPlaceholder={text(
-            'i18nNameFilterPlaceholder',
-            'Filter by Name...'
-          )}
           i18nResultsCount={text(
             'i18nResultsCount',
             connectors.length + ' Results'

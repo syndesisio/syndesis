@@ -4,6 +4,8 @@ export * from './callFetch';
 export * from './Rest';
 export * from './ServerEventsContext';
 export * from './Stream';
+export * from './WithApiConnectors';
+export * from './WithExtensions';
 export * from './WithIntegrations';
 export * from './WithMonitoredIntegrations';
 export * from './WithIntegrationsMetrics';

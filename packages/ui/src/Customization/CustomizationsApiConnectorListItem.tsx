@@ -1,6 +1,5 @@
 import {
   Button,
-  ListViewIcon,
   ListViewInfoItem,
   ListViewItem,
   OverlayTrigger,
@@ -26,6 +25,40 @@ export interface IApiConnectorListItemProps {
 export class CustomizationsApiConnectorListItem extends React.Component<
   IApiConnectorListItemProps
 > {
+  public constructor(props: IApiConnectorListItemProps) {
+    super(props);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleDetails = this.handleDetails.bind(this);
+  }
+
+  public getDeleteTooltip() {
+    return (
+      <Tooltip id="deleteTip">
+        {this.props.i18nDeleteTip
+          ? this.props.i18nDeleteTip
+          : this.props.i18nDelete}
+      </Tooltip>
+    );
+  }
+
+  public getDetailsTooltip() {
+    return (
+      <Tooltip id="detailsTip">
+        {this.props.i18nDetailsTip
+          ? this.props.i18nDetailsTip
+          : this.props.i18nDetails}
+      </Tooltip>
+    );
+  }
+
+  public handleDelete() {
+    this.props.onDelete(this.props.apiConnectorId);
+  }
+
+  public handleDetails() {
+    this.props.onDetails(this.props.apiConnectorId);
+  }
+
   public render() {
     return (
       <ListViewItem
@@ -47,9 +80,11 @@ export class CustomizationsApiConnectorListItem extends React.Component<
             </OverlayTrigger>
           </div>
         }
-        additionalInfo={
-          <ListViewInfoItem>{this.props.i18nUsedByMessage}</ListViewInfoItem>
-        }
+        additionalInfo={[
+          <ListViewInfoItem key={1}>
+            {this.props.i18nUsedByMessage}
+          </ListViewInfoItem>,
+        ]}
         description={
           this.props.apiConnectorDescription
             ? this.props.apiConnectorDescription
@@ -58,38 +93,18 @@ export class CustomizationsApiConnectorListItem extends React.Component<
         heading={this.props.apiConnectorName}
         hideCloseIcon={true}
         leftContent={
-          this.props.apiConnectorIcon ? <ListViewIcon name={'gear'} /> : null
+          this.props.apiConnectorIcon ? (
+            <div className="blank-slate-pf-icon">
+              <img
+                src={this.props.apiConnectorIcon}
+                alt={this.props.apiConnectorName}
+                width={46}
+              />
+            </div>
+          ) : null
         }
         stacked={false}
       />
     );
   }
-
-  private getDeleteTooltip() {
-    return (
-      <Tooltip id="deleteTip">
-        {this.props.i18nDeleteTip
-          ? this.props.i18nDeleteTip
-          : this.props.i18nDelete}
-      </Tooltip>
-    );
-  }
-
-  private getDetailsTooltip() {
-    return (
-      <Tooltip id="detailsTip">
-        {this.props.i18nDetailsTip
-          ? this.props.i18nDetailsTip
-          : this.props.i18nDetails}
-      </Tooltip>
-    );
-  }
-
-  private handleDelete = () => {
-    this.props.onDelete(this.props.apiConnectorId);
-  };
-
-  private handleDetails = () => {
-    this.props.onDetails(this.props.apiConnectorId);
-  };
 }

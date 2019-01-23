@@ -1,0 +1,29 @@
+{
+  "usedByOne": "Utilizzato da 1 integrazione",
+  "usedByMulti": "Utilizzato dalle integrazioni {{count}} volte",
+  "apiConnector": {
+    "apiConnectorsPageDescription": "Syndesis crea un connettore client API quando carichi una specifica OpenAPI 2.0 valida che descrive l'API a cui desideri connetterti.",
+    "apiConnectorsPageTitle": "Connettori Client API",
+    "CreateApiConnector": "Creare un Connettore API",
+    "createApiConnectorTip": "Carica il file o utilizza l'URL per creare il connettore API",
+    "detailsApiConnectorTip": "Visualizza i dettagli del connettore API",
+    "emptyStateInfo": "Non ci sono connettori API attualmente disponibili. Si prega di fare clic sul pulsante qui sotto per crearne uno.",
+    "showDetailsTip": "Mostra i dettagli di questo connettore client API"
+  },
+  "extension": {
+    "ConnectorExtension": "$t(shared:Extension) del $t(shared:Connector)",
+    "deleteExtensionTip": "Elimina questa estensione",
+    "detailsExtensionTip": "Visualizza i dettagli dell'estensione",
+    "emptyStateInfoMessage": "Non ci sono estensioni disponibili. Si prega di fare clic sul pulsante qui sotto per importarne uno.",
+    "emptyStateTitle": "$t(extension.ImportExtension)",
+    "extensionsPageDescription": "Syndesis crea un connettore client API quando carichi una specifica OpenAPI 2.0 valida che descrive l'API a cui desideri connetterti.",
+    "extensionsPageTitle": "$t(shared:Extensions)",
+    "ImportExtension": "$t(shared:Extension) di $t(shared:Import)",
+    "importExtensionTip": "Seleziona il file .jar dell'estensione da importare",
+    "LibraryExtension": "$t(shared:Extension) del $t(shared:Library)",
+    "notUsed": "Non utilizzato da alcuna integrazione",
+    "StepExtension": "$t(shared:Extension) del $t(shared:Step)",
+    "unknownExtensionType": "$t(shared:Extension) Sconosciuta",
+    "updateExtensionTip": "Aggiorna questa estensione"
+  }
+}
