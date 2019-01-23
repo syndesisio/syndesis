@@ -26,14 +26,23 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.filter.FilterPredicate;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.runtime.IntegrationTestSupport;
+import io.syndesis.integration.runtime.logging.ActivityTracker;
+import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
+import io.syndesis.integration.runtime.util.JsonSupport;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.spring.SpringCamelContext;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
@@ -42,6 +51,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
@@ -56,15 +74,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 )
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class FilterStepHandlerTest extends IntegrationTestSupport {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FilterStepHandlerTest.class);
+
     @Autowired
     private ApplicationContext applicationContext;
+
+    private ActivityTracker activityTracker = Mockito.mock(ActivityTracker.class);
+
+    @Before
+    public void setupMocks() {
+        reset(activityTracker);
+        doAnswer(invocation -> {
+            LOGGER.debug(JsonSupport.toJsonObject(invocation.getArguments()));
+            return null;
+        }).when(activityTracker).track(any());
+    }
 
     @Test
     public void testPlaintextFilterStep() throws Exception {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
-            final RouteBuilder routes = newIntegrationRouteBuilder(
+            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
                 new Step.Builder()
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
@@ -90,6 +121,9 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             );
 
             // Set up the camel context
+            context.setUuidGenerator(KeyGenerator::createKey);
+            context.addLogListener(new IntegrationLoggingListener(activityTracker));
+            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
             context.addRoutes(routes);
             context.start();
 
@@ -112,6 +146,10 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             }
 
             result.assertIsSatisfied();
+
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
         } finally {
             context.stop();
         }
@@ -122,7 +160,7 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
-            final RouteBuilder routes = newIntegrationRouteBuilder(
+            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
                 new Step.Builder()
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
@@ -148,6 +186,9 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             );
 
             // Set up the camel context
+            context.setUuidGenerator(KeyGenerator::createKey);
+            context.addLogListener(new IntegrationLoggingListener(activityTracker));
+            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
             context.addRoutes(routes);
             context.start();
 
@@ -170,6 +211,10 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             }
 
             result.assertIsSatisfied();
+
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
         } finally {
             context.stop();
         }
@@ -195,7 +240,7 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
-            final RouteBuilder routes = newIntegrationRouteBuilder(
+            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
                 new Step.Builder()
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
@@ -223,6 +268,9 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             );
 
             // Set up the camel context
+            context.setUuidGenerator(KeyGenerator::createKey);
+            context.addLogListener(new IntegrationLoggingListener(activityTracker));
+            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
             context.addRoutes(routes);
             context.start();
 
@@ -245,6 +293,10 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             }
 
             result.assertIsSatisfied();
+
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
         } finally {
             context.stop();
         }
@@ -255,7 +307,7 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
-            final RouteBuilder routes = newIntegrationRouteBuilder(
+            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
                 new Step.Builder()
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
@@ -283,6 +335,9 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             );
 
             // Set up the camel context
+            context.setUuidGenerator(KeyGenerator::createKey);
+            context.addLogListener(new IntegrationLoggingListener(activityTracker));
+            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
             context.addRoutes(routes);
             context.start();
 
@@ -305,6 +360,10 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             }
 
             result.assertIsSatisfied();
+
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
         } finally {
             context.stop();
         }
@@ -315,7 +374,7 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
-            final RouteBuilder routes = newIntegrationRouteBuilder(
+            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
                 new Step.Builder()
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
@@ -343,6 +402,9 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             );
 
             // Set up the camel context
+            context.setUuidGenerator(KeyGenerator::createKey);
+            context.addLogListener(new IntegrationLoggingListener(activityTracker));
+            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
             context.addRoutes(routes);
             context.start();
 
@@ -365,6 +427,10 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             }
 
             result.assertIsSatisfied();
+
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
         } finally {
             context.stop();
         }

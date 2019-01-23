@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class ActivityLoggingWithSplitTest extends AbstractActivityLoggingTest {
+public class ActivityLoggingTest extends AbstractActivityLoggingTest {
 
     @Override
     protected RoutesBuilder createTestRoutes() {
@@ -40,31 +40,27 @@ public class ActivityLoggingWithSplitTest extends AbstractActivityLoggingTest {
                     .id("start")
                     .routePolicy(new ActivityTrackingPolicy(activityTracker))
                     .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
-                    .process(OutMessageCaptureProcessor.INSTANCE)
-                    .split()
-                        .body()
-                        .pipeline()
-                            .id("step:log")
-                            .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
-                            .log(LoggingLevel.INFO, "log", "log", "hi")
-                            .process(OutMessageCaptureProcessor.INSTANCE)
-                        .end()
-                        .pipeline()
-                            .id("step:rnderr")
-                            .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
-                            .process().body(String.class, body -> {
-                                if ("error".equals(body)) {
-                                    throw new RuntimeException("Bean Error");
-                                }
-                            })
-                            .process(OutMessageCaptureProcessor.INSTANCE)
-                        .end()
-                        .pipeline()
-                            .id("step:end")
-                            .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
-                            .to("mock:end")
-                            .process(OutMessageCaptureProcessor.INSTANCE)
-                        .end()
+                    .pipeline()
+                        .id("step:log")
+                        .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
+                        .log(LoggingLevel.INFO, "log", "log", "hi")
+                        .process(OutMessageCaptureProcessor.INSTANCE)
+                    .end()
+                    .pipeline()
+                        .id("step:rnderr")
+                        .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
+                        .process().body(String.class, body -> {
+                            if ("Hello Error".equals(body)) {
+                                throw new RuntimeException("Bean Error");
+                            }
+                        })
+                        .process(OutMessageCaptureProcessor.INSTANCE)
+                    .end()
+                    .pipeline()
+                        .id("step:end")
+                        .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
+                        .to("mock:end")
+                        .process(OutMessageCaptureProcessor.INSTANCE)
                     .end();
             }
         };
@@ -73,11 +69,11 @@ public class ActivityLoggingWithSplitTest extends AbstractActivityLoggingTest {
     @Test
     public void testLoggingWithSuccessStep() throws Exception {
         final MockEndpoint result = context.getEndpoint("mock:end", MockEndpoint.class);
-        result.expectedBodiesReceived("Hello", "World");
-        context.createProducerTemplate().sendBody("direct:start", new String[]{"Hello", "World"});
+        result.expectedBodiesReceived("Hello World");
+        context.createProducerTemplate().sendBody("direct:start", "Hello World");
         result.assertIsSatisfied();
 
-        // There should be 1 exchanges logged.
+        // There should be 1 exchanges logged
         assertEquals(1, findExchangesLogged().size());
         // There should be 1 "status":"begin"
         assertEquals(1, findActivityEvents(x -> "begin".equals(x.status)).size());
@@ -86,24 +82,24 @@ public class ActivityLoggingWithSplitTest extends AbstractActivityLoggingTest {
         // There should be no failed flag on activity with "status":"done"
         assertEquals("false", findActivityEvent(x -> "done".equals(x.status)).failed);
 
-        // There should be log activities
-        assertEquals(2, findActivityEvents(x -> "log".equals(x.step)).size());
+        // There should be 1 log activity
+        assertEquals(1, findActivityEvents(x -> "log".equals(x.step)).size());
         assertEquals("hi", findActivityEvent(x -> "log".equals(x.step)).message);
 
         // There should be step activity tracking events
-        assertEquals(6, findActivityEvents(x -> ObjectHelper.isNotEmpty(x.duration)).size());
+        assertEquals(3, findActivityEvents(x -> ObjectHelper.isNotEmpty(x.duration)).size());
     }
 
     @Test
     public void testLoggingWithErrorStep() {
         try {
-            context.createProducerTemplate().sendBody("direct:start", new String[]{"Hello", "error"});
+            context.createProducerTemplate().sendBody("direct:start", "Hello Error");
             fail("Expected exception");
         } catch (CamelExecutionException e) {
             // expected.
         }
 
-        // There should be 1 exchanges logged.
+        // There should be 1 exchanges logged
         assertEquals(1, findExchangesLogged().size());
         // There should be 1 "status":"begin"
         assertEquals(1, findActivityEvents(x -> "begin".equals(x.status)).size());
@@ -112,12 +108,12 @@ public class ActivityLoggingWithSplitTest extends AbstractActivityLoggingTest {
         // There should be a failed flag on activity with "status":"done"
         assertEquals("true", findActivityEvent(x -> "done".equals(x.status)).failed);
 
-        // There should be log activities
-        assertEquals(2, findActivityEvents(x -> "log".equals(x.step)).size());
+        // There should be 1 log activity
+        assertEquals(1, findActivityEvents(x -> "log".equals(x.step)).size());
         assertEquals("hi", findActivityEvent(x -> "log".equals(x.step)).message);
 
         // There should be step activity tracking events
-        assertEquals(5, findActivityEvents(x -> ObjectHelper.isNotEmpty(x.duration)).size());
+        assertEquals(2, findActivityEvents(x -> ObjectHelper.isNotEmpty(x.duration)).size());
 
         // There should be a failure report activity event
         assertEquals(1, findActivityEvents(x -> ObjectHelper.isNotEmpty(x.failure)).size());

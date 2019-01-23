@@ -66,6 +66,12 @@ public class IntegrationLoggingAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(BodyLogger.class)
+    public BodyLogger bodyLogger() {
+        return new BodyLogger.Default();
+    }
+
+    @Bean
     public InterceptStrategy integrationLoggingInterceptStrategy(ActivityTracker activityTracker) {
         return new ActivityTrackingInterceptStrategy(activityTracker);
     }
