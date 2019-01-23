@@ -245,11 +245,12 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @Path("/{id}/specification")
     @ApiOperation("For an integration that is generated from a specification updates it so it conforms to the updated specification")
     public void updateSpecification(@PathParam("id") final String id, @MultipartForm final ApiHandler.APIFormData apiFormData) {
-        final APIIntegration apiIntegration = ApiGeneratorHelper.generateIntegrationFrom(apiFormData, getDataManager(), apiGenerator);
+        final Integration existing = getIntegration(id);
+
+        final APIIntegration apiIntegration = ApiGeneratorHelper.generateIntegrationUpdateFrom(existing, apiFormData, getDataManager(), apiGenerator);
 
         final Integration givenIntegration = apiIntegration.getIntegration();
 
-        final Integration existing = getIntegration(id);
 
         final Integration updated = updateFlowsAndStartAndEndDataShapes(existing, givenIntegration);
 

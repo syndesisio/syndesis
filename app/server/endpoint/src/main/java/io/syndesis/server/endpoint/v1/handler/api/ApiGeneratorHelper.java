@@ -16,9 +16,13 @@
 package io.syndesis.server.endpoint.v1.handler.api;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Flow;
+import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
@@ -52,11 +56,36 @@ public final class ApiGeneratorHelper {
         return apiGenerator.generateIntegration(spec, template);
     }
 
+    public static APIIntegration generateIntegrationUpdateFrom(final Integration existing, final APIFormData apiFormData, final DataManager dataManager,
+        final APIGenerator apiGenerator) {
+        final APIIntegration newApiIntegration = generateIntegrationFrom(apiFormData, dataManager, apiGenerator);
+
+        final Integration newIntegration = newApiIntegration.getIntegration();
+
+        final Integration updatedIntegration = newIntegration.builder().id(existing.getId())
+            .flows(withSameIntegrationIdPrefix(existing, newIntegration.getFlows())).build();
+
+        return new APIIntegration(updatedIntegration, newApiIntegration.getSpec());
+    }
+
     static String getSpec(final APIFormData apiFormData) {
         try (BufferedSource source = Okio.buffer(Okio.source(apiFormData.getSpecification()))) {
             return source.readUtf8();
         } catch (final IOException e) {
             throw SyndesisServerException.launderThrowable("Failed to read specification", e);
         }
+    }
+
+    static Iterable<Flow> withSameIntegrationIdPrefix(final Integration existing, final List<Flow> flows) {
+        final List<Flow> ret = new ArrayList<>(flows.size());
+
+        final String flowIdPrefix = existing.getId().get();
+        for (final Flow flow : flows) {
+            final String flowId = flow.getId().get();
+            final Flow updatedFlow = flow.withId(flowId.replaceFirst("[^:]+", flowIdPrefix));
+            ret.add(updatedFlow);
+        }
+
+        return ret;
     }
 }

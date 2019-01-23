@@ -236,15 +236,17 @@ public class IntegrationHandlerTest {
 
     @Test
     public void shouldPerformUpdatesBasedOnNewSpecification() {
-        final Integration existing = new Integration.Builder().addFlow(new Flow.Builder().id("flow1").build()).build();
-        final Integration updated = new Integration.Builder().addFlow(new Flow.Builder().id("flow2").build()).build();
+        final Integration existing = new Integration.Builder().id("integration-1").addFlow(new Flow.Builder().id("integration-1:flows:flow1").build()).build();
+        final Integration given = new Integration.Builder().id("integration-2").addFlow(new Flow.Builder().id("integration-2:flows:flow2").build()).build();
+        final Integration expected = new Integration.Builder().id("integration-1").addFlow(new Flow.Builder().id("integration-1:flows:flow2").build()).build();
+
         final OpenApi updatedSpecification = new OpenApi.Builder().build();
-        final APIIntegration updatedApiIntegration = new APIIntegration(updated, updatedSpecification);
+        final APIIntegration updatedApiIntegration = new APIIntegration(given, updatedSpecification);
 
         when(dataManager.fetch(Connection.class, "api-provider")).thenReturn(new Connection.Builder().connectorId("api-provider-connector").build());
         when(dataManager.fetch(Connector.class, "api-provider-connector")).thenReturn(new Connector.Builder().build());
         when(dataManager.fetch(Integration.class, "integration-1")).thenReturn(existing);
-        when(encryptionSupport.encrypt(updated)).thenReturn(updated);
+        when(encryptionSupport.encrypt(expected)).thenReturn(expected);
         when(apiGenerator.generateIntegration(any(String.class), any(ProvidedApiTemplate.class))).thenReturn(updatedApiIntegration);
 
         final APIFormData openApiUpdate = new APIFormData();
@@ -254,7 +256,7 @@ public class IntegrationHandlerTest {
 
         verify(dataManager).store(updatedSpecification, OpenApi.class);
         verify(dataManager).update(ArgumentMatchers.<Integration> argThat(v -> {
-            assertThat(v).isEqualToIgnoringGivenFields(updated, "version", "updatedAt");
+            assertThat(v).isEqualToIgnoringGivenFields(expected, "version", "updatedAt");
             assertThat(v.getVersion()).isEqualTo(2);
             return true;
         }));
