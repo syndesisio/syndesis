@@ -38,12 +38,59 @@ class name for the `type` property. For example:
 ----
 
 * `json-schema` indicates that the data type is represented by a JSON schema. 
+When `kind` is set to `json-schema`, specify a JSON schema as the value of
+the data shape's `specification` property. For example:
++
+----
+"inputDataShape": {
+  "description": "Person data",
+  "kind": "json-schema",
+  "name": "Person",
+  "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"Person\",\"type\":\"object\",\"properties\":{\"firstName\":{...}}}"
+}
+----
++
+The code for the SAP Concur connector contains 
+link:https://github.com/syndesisio/syndesis/blob/master/app/connector/concur/src/main/resources/META-INF/syndesis/connector/concur-api.json[examples of data shapes that are specified by JSON schemas]. 
 
 * `json-instance` indicates that the data type is represented by a JSON instance.  
+When `kind` is set to `json-instance`, specify a JSON instance as the value of
+the data shape's `specification` property. For example:
++
+----
+"inputDataShape": {
+  "description": "Person data",
+  "kind": "json-instance",
+  "name": "Person",
+  "specification": "{\"firstName\":\"John\",...}"
+}
+----
 
 * `xml-schema` indicates that the data type is represented by an XML schema. 
+When `kind` is set to `xml-schema`, specify an XML Schema as the value of
+the data shape's `specification` property. For example:
++
+----
+"inputDataShape": {
+  "description": "Person data",
+  "kind": "xml-schema",
+  "name": "Person",
+  "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">...</xs:schema>"
+}
+----
 
 * `xml-instance` indicates that the data type is represented by an XML instance. 
+When `kind` is set to `xml-instance`, specify an XML instance as the value of
+the data shape's `specification` property. For example:
++
+----
+"inputDataShape": {
+  "description": "Person data",
+  "kind": "xml-instance",
+  "name": "Person",
+  "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><Person><firstName>Jane</firstName></Person>"
+}
+----
 
 * `any` indicates that the data type is not structured. For example, it might
 be a byte array or free format text. The data mapper ignores a data shape when
