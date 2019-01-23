@@ -1,10 +1,10 @@
 // Module included in the following assemblies:
 // Upstream:
-// tutorials/topics/t2sf_intro.adoc
-// connecting/topics/connecting_to_twitter.adoc
+// tutorials/topics/as_t2sf-intro.adoc
+// connecting/topics/as_connecting-to-twitter.adoc
 // Downstream:
-// fuse-online-sample-integration-tutorials/topics/t2sf_intro.adoc
-// connecting-fuse-online-to-applications-and-services/topics/connecting_to_twitter.adoc
+// fuse-online-sample-integration-tutorials/upstream/as_t2sf-intro.adoc
+// connecting-fuse-online-to-applications-and-services/upstream/as_connecting-to-twitter.adoc
 
 [id='register-with-twitter_{context}']
 = Register {prodname} as a Twitter client application
