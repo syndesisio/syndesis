@@ -61,6 +61,24 @@ public class IntegrationHandlerTest {
     private DataManager dataManager;
     private EncryptionComponent encryptionSupport;
 
+    @Test
+    public void filterOptionsNoOutputShape() {
+        DataShape dataShape = dataShape(DataShapeKinds.NONE);
+
+        FilterOptions options = handler.getFilterOptions(dataShape);
+        assertThat(options.getPaths()).isEmpty();
+    }
+
+    @Test
+    public void filterOptionsSimple() {
+        when(inspectors.getPaths(DataShapeKinds.JAVA.toString(), "twitter4j.Status", null, Optional.empty()))
+            .thenReturn(Arrays.asList("paramA", "paramB"));
+        DataShape dataShape = dataShape(DataShapeKinds.JAVA, "twitter4j.Status");
+
+        FilterOptions options = handler.getFilterOptions(dataShape);
+        assertThat(options.getPaths()).hasSize(2).contains("paramA", "paramB");
+    }
+
     @Before
     public void setUp() {
         dataManager = mock(DataManager.class);
@@ -75,21 +93,41 @@ public class IntegrationHandlerTest {
     }
 
     @Test
-    public void filterOptionsSimple() {
-        when(inspectors.getPaths(DataShapeKinds.JAVA.toString(), "twitter4j.Status", null, Optional.empty()))
-            .thenReturn(Arrays.asList("paramA", "paramB"));
-        DataShape dataShape = dataShape(DataShapeKinds.JAVA, "twitter4j.Status");
+    public void shouldAddNewFlowsNonTrivialCase() {
+        final Step step = new Step.Builder()
+            .action(new ConnectorAction.Builder()
+                .descriptor(new ConnectorDescriptor.Builder().build())
+                .build())
+            .build();
 
-        FilterOptions options = handler.getFilterOptions(dataShape);
-        assertThat(options.getPaths()).hasSize(2).contains("paramA", "paramB");
+        final Flow flow1 = new Flow.Builder().id("flow1").addStep(step, step).build();
+        final Flow flow2 = new Flow.Builder().id("flow2").addStep(step, step).build();
+        final Flow flow3 = new Flow.Builder().id("flow3").addStep(step, step).build();
+
+        final Integration existing = new Integration.Builder().addFlow(flow1, flow3).build();
+        final Integration given = new Integration.Builder().addFlow(flow1, flow2, flow3).build();
+
+        final Integration updated = IntegrationHandler.updateFlowsAndStartAndEndDataShapes(existing, given);
+
+        assertThat(updated).as("there should be three flows").isEqualTo(given);
     }
 
     @Test
-    public void filterOptionsNoOutputShape() {
-        DataShape dataShape = dataShape(DataShapeKinds.NONE);
+    public void shouldAddNewFlowsTrivialCase() {
+        final Step step = new Step.Builder()
+            .action(new ConnectorAction.Builder()
+                .descriptor(new ConnectorDescriptor.Builder().build())
+                .build())
+            .build();
 
-        FilterOptions options = handler.getFilterOptions(dataShape);
-        assertThat(options.getPaths()).isEmpty();
+        final Flow flow = new Flow.Builder().id("flow1").addStep(step, step).build();
+
+        final Integration existing = new Integration.Builder().build();
+        final Integration given = new Integration.Builder().addFlow(flow).build();
+
+        final Integration updated = IntegrationHandler.updateFlowsAndStartAndEndDataShapes(existing, given);
+
+        assertThat(updated).as("there should be one flow").isEqualTo(given);
     }
 
     @Test
@@ -112,6 +150,43 @@ public class IntegrationHandlerTest {
         assertThat(persisted.getValue()).isEqualToIgnoringGivenFields(encrypted, "createdAt");
 
         verify(encryptionSupport).encrypt(same(integration));
+    }
+
+    @Test
+    public void shouldDeleteFlowsThatHaveBeenRemovedNonTrivialCase() {
+        final Step step = new Step.Builder()
+            .action(new ConnectorAction.Builder()
+                .descriptor(new ConnectorDescriptor.Builder().build())
+                .build())
+            .build();
+
+        final Flow existingFlow1 = new Flow.Builder().id("flow1").addStep(step, step).build();
+        final Flow existingFlow2 = new Flow.Builder().id("flow2").addStep(step, step).build();
+
+        final Integration existing = new Integration.Builder().addFlow(existingFlow1, existingFlow2).build();
+        final Integration given = new Integration.Builder().addFlow(existingFlow2).build();
+
+        final Integration updated = IntegrationHandler.updateFlowsAndStartAndEndDataShapes(existing, given);
+
+        assertThat(updated).as("there should be only one flow").isEqualTo(given);
+    }
+
+    @Test
+    public void shouldDeleteFlowsThatHaveBeenRemovedTrivialCase() {
+        final Step step = new Step.Builder()
+            .action(new ConnectorAction.Builder()
+                .descriptor(new ConnectorDescriptor.Builder().build())
+                .build())
+            .build();
+
+        final Flow existingFlow = new Flow.Builder().id("flow1").addStep(step, step).build();
+
+        final Integration existing = new Integration.Builder().addFlow(existingFlow).build();
+        final Integration given = new Integration.Builder().build();
+
+        final Integration updated = IntegrationHandler.updateFlowsAndStartAndEndDataShapes(existing, given);
+
+        assertThat(updated.getFlows()).as("there shouldn't be any flows as we removed the single existing flow").isEmpty();
     }
 
     @Test
@@ -152,96 +227,22 @@ public class IntegrationHandlerTest {
     }
 
     @Test
-    public void shouldUpdateFlowsStartAndEndDataShapesWithoutChanges() {
+    public void shouldUpdateFlowNameAndDescription() {
         final Step step = new Step.Builder()
             .action(new ConnectorAction.Builder()
                 .descriptor(new ConnectorDescriptor.Builder().build())
                 .build())
             .build();
 
-        final Flow flow = new Flow.Builder().id("flow1").addStep(step, step).build();
+        final Flow flow = new Flow.Builder().id("flow1").name("name").description("description").addStep(step, step).build();
+        final Flow flowUpdated = new Flow.Builder().id("flow1").name("updated name").description("updated description").addStep(step, step).build();
 
         final Integration existing = new Integration.Builder().addFlow(flow).build();
-        final Integration given = new Integration.Builder().addFlow(flow).build();
+        final Integration given = new Integration.Builder().addFlow(flowUpdated).build();
 
         final Integration updated = IntegrationHandler.updateFlowsAndStartAndEndDataShapes(existing, given);
 
-        assertThat(updated).as("there should be no changes in trivial case").isEqualTo(existing);
-    }
-
-    @Test
-    public void shouldDeleteFlowsThatHaveBeenRemovedTrivialCase() {
-        final Step step = new Step.Builder()
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder().build())
-                .build())
-            .build();
-
-        final Flow existingFlow = new Flow.Builder().id("flow1").addStep(step, step).build();
-
-        final Integration existing = new Integration.Builder().addFlow(existingFlow).build();
-        final Integration given = new Integration.Builder().build();
-
-        final Integration updated = IntegrationHandler.updateFlowsAndStartAndEndDataShapes(existing, given);
-
-        assertThat(updated.getFlows()).as("there shouldn't be any flows as we removed the single existing flow").isEmpty();
-    }
-
-    @Test
-    public void shouldDeleteFlowsThatHaveBeenRemovedNonTrivialCase() {
-        final Step step = new Step.Builder()
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder().build())
-                .build())
-            .build();
-
-        final Flow existingFlow1 = new Flow.Builder().id("flow1").addStep(step, step).build();
-        final Flow existingFlow2 = new Flow.Builder().id("flow2").addStep(step, step).build();
-
-        final Integration existing = new Integration.Builder().addFlow(existingFlow1, existingFlow2).build();
-        final Integration given = new Integration.Builder().addFlow(existingFlow2).build();
-
-        final Integration updated = IntegrationHandler.updateFlowsAndStartAndEndDataShapes(existing, given);
-
-        assertThat(updated).as("there should be only one flow").isEqualTo(given);
-    }
-
-    @Test
-    public void shouldAddNewFlowsTrivialCase() {
-        final Step step = new Step.Builder()
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder().build())
-                .build())
-            .build();
-
-        final Flow flow = new Flow.Builder().id("flow1").addStep(step, step).build();
-
-        final Integration existing = new Integration.Builder().build();
-        final Integration given = new Integration.Builder().addFlow(flow).build();
-
-        final Integration updated = IntegrationHandler.updateFlowsAndStartAndEndDataShapes(existing, given);
-
-        assertThat(updated).as("there should be one flow").isEqualTo(given);
-    }
-
-    @Test
-    public void shouldAddNewFlowsNonTrivialCase() {
-        final Step step = new Step.Builder()
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder().build())
-                .build())
-            .build();
-
-        final Flow flow1 = new Flow.Builder().id("flow1").addStep(step, step).build();
-        final Flow flow2 = new Flow.Builder().id("flow2").addStep(step, step).build();
-        final Flow flow3 = new Flow.Builder().id("flow3").addStep(step, step).build();
-
-        final Integration existing = new Integration.Builder().addFlow(flow1, flow3).build();
-        final Integration given = new Integration.Builder().addFlow(flow1, flow2, flow3).build();
-
-        final Integration updated = IntegrationHandler.updateFlowsAndStartAndEndDataShapes(existing, given);
-
-        assertThat(updated).as("there should be three flows").isEqualTo(given);
+        assertThat(updated).as("name and description should be updated").isEqualTo(given);
     }
 
     @Test
@@ -321,6 +322,24 @@ public class IntegrationHandlerTest {
             .build();
 
         assertThat(updated).as("should update only the data shapes").isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldUpdateFlowsStartAndEndDataShapesWithoutChanges() {
+        final Step step = new Step.Builder()
+            .action(new ConnectorAction.Builder()
+                .descriptor(new ConnectorDescriptor.Builder().build())
+                .build())
+            .build();
+
+        final Flow flow = new Flow.Builder().id("flow1").addStep(step, step).build();
+
+        final Integration existing = new Integration.Builder().addFlow(flow).build();
+        final Integration given = new Integration.Builder().addFlow(flow).build();
+
+        final Integration updated = IntegrationHandler.updateFlowsAndStartAndEndDataShapes(existing, given);
+
+        assertThat(updated).as("there should be no changes in trivial case").isEqualTo(existing);
     }
 
     private static DataShape dataShape(DataShapeKinds kind) {

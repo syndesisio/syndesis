@@ -314,7 +314,11 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             updatedSteps.set(start, updatedStart);
             updatedSteps.set(end, updatedEnd);
 
-            final Flow updatedFlow = existingFlow.builder().steps(updatedSteps).build();
+            final Flow updatedFlow = existingFlow.builder()
+                .name(givenFlow.getName())
+                .description(givenFlow.getDescription())
+                .steps(updatedSteps)
+                .build();
             updatedFlows.add(updatedFlow);
         }
 
