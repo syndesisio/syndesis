@@ -87,8 +87,8 @@ export class FinishConnectionPage extends React.Component {
                   </WithConnections>
                 }
                 backHref={resolvers.create.start.configureAction({
-                  connection: startConnection,
                   actionId: startAction.id!,
+                  connection: startConnection,
                   integration,
                 })}
                 cancelHref={resolvers.list()}

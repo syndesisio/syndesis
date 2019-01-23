@@ -161,7 +161,7 @@ export class IntegrationsPage extends React.Component {
                                   loading={!hasData}
                                   loaderChildren={
                                     <IntegrationsListSkeleton
-                                      width={800}
+                                      width={window.innerWidth}
                                       style={{
                                         backgroundColor: '#FFF',
                                         marginTop: 30,

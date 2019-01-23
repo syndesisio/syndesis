@@ -113,6 +113,7 @@ export class SaveOrAddStepPage extends React.Component<
                 startAction: integration.flows![0].steps![0].action!,
                 startConnection: integration.flows![0].steps![0].connection!,
               })}
+              nextHref={'#todo'}
             />
           )}
         </WithRouteData>

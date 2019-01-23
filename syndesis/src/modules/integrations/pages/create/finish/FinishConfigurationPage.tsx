@@ -53,12 +53,18 @@ export class FinishConfigurationPage extends React.Component {
                 { history }
               ) => {
                 const stepAsNumber = parseInt(step, 10);
-                const position = integration.flows![0].steps!.length - 1;
-                const stepObject = getStep(
-                  updatedIntegration || integration,
-                  0,
-                  position
-                );
+                const position = integration.flows![0].steps!.length;
+                let initialValue;
+                try {
+                  const stepObject = getStep(
+                    updatedIntegration || integration,
+                    0,
+                    0
+                  );
+                  initialValue = stepObject.configuredProperties;
+                } catch (e) {
+                  // noop
+                }
                 const onUpdatedIntegration = async ({
                   action,
                   moreConfigurationSteps,
@@ -97,7 +103,7 @@ export class FinishConfigurationPage extends React.Component {
                     connection={finishConnection}
                     actionId={actionId}
                     configurationStep={stepAsNumber}
-                    initialValue={stepObject.configuredProperties}
+                    initialValue={initialValue}
                     onUpdatedIntegration={onUpdatedIntegration}
                   >
                     {({ form, onSubmit, isSubmitting }) => (

@@ -11,6 +11,7 @@ export interface IIntegrationCreatorBreadcrumbsState {
 
 interface IWizardStepProps {
   isActive: boolean;
+  isDisabled: boolean;
   isAlt?: boolean;
   onClick?: () => any;
   step: number;
@@ -20,6 +21,7 @@ interface IWizardStepProps {
 }
 const WizardStep: React.FunctionComponent<IWizardStepProps> = ({
   isActive,
+  isDisabled,
   isAlt = false,
   onClick,
   step,
@@ -30,7 +32,7 @@ const WizardStep: React.FunctionComponent<IWizardStepProps> = ({
   <li
     className={`${isAlt ? 'wizard-pf-step-alt' : 'wizard-pf-step'} ${
       isActive ? 'active' : ''
-    }`}
+    } ${isDisabled ? 'disabled' : ''}`}
     onClick={onClick}
   >
     <a>
@@ -98,6 +100,7 @@ export class IntegrationCreatorBreadcrumbs extends React.Component<
         >
           <WizardStep
             isActive={this.props.step === 1}
+            isDisabled={this.props.step < 1}
             onClick={this.toggleActive}
             step={1}
             title={'Start connection'}
@@ -110,6 +113,7 @@ export class IntegrationCreatorBreadcrumbs extends React.Component<
           />
           <WizardStep
             isActive={this.props.step === 2}
+            isDisabled={this.props.step < 2}
             onClick={this.toggleActive}
             step={2}
             title={'Finish connection'}
@@ -122,12 +126,14 @@ export class IntegrationCreatorBreadcrumbs extends React.Component<
           />
           <WizardStep
             isActive={this.props.step === 3}
+            isDisabled={this.props.step < 3}
             onClick={this.toggleActive}
             step={3}
             title={'Add to integration'}
           />
           <WizardStep
             isActive={this.props.step === 4}
+            isDisabled={this.props.step < 4}
             onClick={this.toggleActive}
             step={4}
             title={'Save and publish'}
@@ -138,6 +144,7 @@ export class IntegrationCreatorBreadcrumbs extends React.Component<
         >
           <WizardStep
             isActive={this.props.step === 1}
+            isDisabled={this.props.step < 1}
             isAlt={true}
             onClick={this.toggleActive}
             step={1}
@@ -151,6 +158,7 @@ export class IntegrationCreatorBreadcrumbs extends React.Component<
           />
           <WizardStep
             isActive={this.props.step === 2}
+            isDisabled={this.props.step < 2}
             isAlt={true}
             onClick={this.toggleActive}
             step={2}
@@ -164,6 +172,7 @@ export class IntegrationCreatorBreadcrumbs extends React.Component<
           />
           <WizardStep
             isActive={this.props.step === 3}
+            isDisabled={this.props.step < 3}
             isAlt={true}
             onClick={this.toggleActive}
             step={3}
@@ -171,6 +180,7 @@ export class IntegrationCreatorBreadcrumbs extends React.Component<
           />
           <WizardStep
             isActive={this.props.step === 4}
+            isDisabled={this.props.step < 4}
             isAlt={true}
             onClick={this.toggleActive}
             step={4}
