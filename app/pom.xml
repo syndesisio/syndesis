@@ -1177,6 +1177,12 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-routebuilder</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <!-- ::::::::::: extension :::::::::::: -->
 
       <dependency>
