@@ -12,6 +12,7 @@ import {
   IntegrationCreatorBreadcrumbs,
   IntegrationEditorChooseConnection,
 } from '../../../components';
+import resolvers from '../../../resolvers';
 import { getStartSelectActionHref } from '../../resolversHelpers';
 
 export class StartConnectionPage extends React.Component {
@@ -65,6 +66,7 @@ export class StartConnectionPage extends React.Component {
               )}
             </WithConnections>
           }
+          cancelHref={resolvers.list()}
         />
       </WithClosedNavigation>
     );

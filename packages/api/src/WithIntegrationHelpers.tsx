@@ -20,15 +20,7 @@ export const NEW_INTEGRATION = {
   tags: [],
 } as Integration;
 
-type AddConnection = (
-  integration: Integration,
-  connection: Connection,
-  action: Action,
-  flow: number,
-  position: number,
-  configuredProperties: any
-) => Promise<Integration>;
-type UpdateConnection = (
+type UpdateOrAddConnection = (
   integration: Integration,
   connection: Connection,
   action: Action,
@@ -38,8 +30,9 @@ type UpdateConnection = (
 ) => Promise<Integration>;
 
 export interface IWithIntegrationHelpersChildrenProps {
-  addConnection: AddConnection;
-  updateConnection: UpdateConnection;
+  addConnection: UpdateOrAddConnection;
+  updateConnection: UpdateOrAddConnection;
+  updateOrAddConnection: UpdateOrAddConnection;
   getEmptyIntegration(integration?: Integration): Integration;
   saveIntegration(integration: Integration): Promise<Integration>;
   setName(integration: Integration, name: string): Integration;
@@ -64,6 +57,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     this.saveIntegration = this.saveIntegration.bind(this);
     this.setName = this.setName.bind(this);
     this.updateConnection = this.updateConnection.bind(this);
+    this.updateOrAddConnection = this.updateOrAddConnection.bind(this);
     this.makeLocalStorageId = this.makeLocalStorageId.bind(this);
     this.createDraft = this.createDraft.bind(this);
     this.getDraft = this.getDraft.bind(this);
@@ -177,6 +171,53 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       draft.flows[flow].steps![position] = step;
     });
   }
+  public async updateOrAddConnection(
+    integration: Integration,
+    connection: Connection,
+    action: Action,
+    flow: number,
+    position: number,
+    configuredProperties: any
+  ): Promise<Integration> {
+    const actionDescriptor = await this.getActionDescriptor(
+      connection.id!,
+      action.id!,
+      configuredProperties
+    );
+    return produce(integration, draft => {
+      if (!draft.flows) {
+        draft.flows = [];
+      }
+      if (!draft.flows[flow]) {
+        draft.flows[flow] = {
+          id: key(),
+          name: '',
+          steps: [],
+        };
+      }
+      if (!draft.flows[flow].steps) {
+        draft.flows[flow].steps = [];
+      }
+      const step: Step = {
+        action,
+        configuredProperties,
+        connection,
+        id: draft.flows[flow].id,
+      };
+      if (actionDescriptor) {
+        step.action!.descriptor = actionDescriptor;
+      }
+      step.stepKind = 'endpoint';
+      if (draft.flows[flow].steps![position]) {
+        draft.flows[flow].steps![position] = step;
+      } else {
+        draft.flows[flow].steps!.splice(position, 0, step);
+        draft.tags = Array.from(
+          new Set([...(draft.tags || []), connection.id!])
+        );
+      }
+    });
+  }
 
   public getEmptyIntegration(): Integration {
     return NEW_INTEGRATION;
@@ -267,6 +308,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       setDraft: this.setDraft,
       setName: this.setName,
       updateConnection: this.updateConnection,
+      updateOrAddConnection: this.updateOrAddConnection,
     });
   }
 }

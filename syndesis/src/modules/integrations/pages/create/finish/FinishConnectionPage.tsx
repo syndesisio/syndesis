@@ -14,6 +14,7 @@ import {
   IntegrationCreatorBreadcrumbs,
   IntegrationEditorChooseConnection,
 } from '../../../components';
+import resolvers from '../../../resolvers';
 import { getFinishSelectActionHref } from '../../resolversHelpers';
 
 export interface IFinishConnectionRouteState {
@@ -31,14 +32,7 @@ export class FinishConnectionPage extends React.Component {
             <>
               <PageTitle title={'Choose a Finish Connection'} />
               <IntegrationEditorLayout
-                header={
-                  <IntegrationCreatorBreadcrumbs
-                    step={2}
-                    startConnection={startConnection}
-                    startAction={startAction}
-                    integration={integration}
-                  />
-                }
+                header={<IntegrationCreatorBreadcrumbs step={2} />}
                 sidebar={
                   <IntegrationVerticalFlow disabled={true}>
                     {({ expanded }) => (
@@ -92,6 +86,12 @@ export class FinishConnectionPage extends React.Component {
                     )}
                   </WithConnections>
                 }
+                backHref={resolvers.create.start.configureAction({
+                  connection: startConnection,
+                  actionId: startAction.id!,
+                  integration,
+                })}
+                cancelHref={resolvers.list()}
               />
             </>
           )}

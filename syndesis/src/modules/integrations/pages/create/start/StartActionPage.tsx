@@ -15,6 +15,7 @@ import {
   IntegrationCreatorBreadcrumbs,
   IntegrationEditorChooseAction,
 } from '../../../components';
+import resolvers from '../../../resolvers';
 import { getStartConfigureActionHref } from '../../resolversHelpers';
 
 export interface IStartActionRouteParams {
@@ -94,6 +95,7 @@ export class StartActionPage extends React.Component {
                           }
                           content={
                             <IntegrationEditorChooseAction
+                              connection={data}
                               actions={data.actionsWithFrom.sort((a, b) =>
                                 a.name.localeCompare(b.name)
                               )}
@@ -103,6 +105,8 @@ export class StartActionPage extends React.Component {
                               )}
                             />
                           }
+                          cancelHref={resolvers.list()}
+                          backHref={resolvers.create.start.selectConnection()}
                         />
                       </>
                     )}

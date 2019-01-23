@@ -3,7 +3,6 @@ import { ConnectionOverview, Integration } from '@syndesis/models';
 import { IntegrationEditorLayout, Loader } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../../../../containers';
 import { PageTitle } from '../../../../../../containers/PageTitle';
 import {
@@ -44,28 +43,7 @@ export class SelectActionPage extends React.Component {
                       <>
                         <PageTitle title={'Choose an action'} />
                         <IntegrationEditorLayout
-                          header={
-                            <IntegrationCreatorBreadcrumbs
-                              step={3}
-                              startConnection={
-                                integration.flows![0].steps![0].connection
-                              }
-                              startAction={
-                                integration.flows![0].steps![0].action
-                              }
-                              finishActionId={
-                                integration.flows![0].steps![
-                                  integration.flows![0].steps!.length - 1
-                                ].action!.id!
-                              }
-                              finishConnection={
-                                integration.flows![0].steps![
-                                  integration.flows![0].steps!.length - 1
-                                ].connection
-                              }
-                              integration={integration}
-                            />
-                          }
+                          header={<IntegrationCreatorBreadcrumbs step={3} />}
                           sidebar={
                             <WithIntegrationHelpers>
                               {({ getSteps }) => (
@@ -78,6 +56,7 @@ export class SelectActionPage extends React.Component {
                           }
                           content={
                             <IntegrationEditorChooseAction
+                              connection={connection}
                               actions={(positionAsNumber > 0
                                 ? data.actionsWithTo
                                 : data.actionsWithFrom
@@ -89,16 +68,9 @@ export class SelectActionPage extends React.Component {
                               )}
                             />
                           }
-                          footer={
-                            <Link
-                              to={resolvers.create.configure.index({
-                                integration,
-                              })}
-                              className={'btn btn-default'}
-                            >
-                              Cancel edit connection
-                            </Link>
-                          }
+                          cancelHref={resolvers.create.configure.index({
+                            integration,
+                          })}
                         />
                       </>
                     )}

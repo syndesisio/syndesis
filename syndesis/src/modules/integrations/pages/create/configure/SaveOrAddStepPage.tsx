@@ -3,7 +3,6 @@ import { Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../../../containers';
 import { PageTitle } from '../../../../../containers/PageTitle';
 import {
@@ -68,24 +67,7 @@ export class SaveOrAddStepPage extends React.Component<
           {(_, { integration }) => (
             <IntegrationEditorLayout
               onClick={this.hideSidebarTooltips}
-              header={
-                <IntegrationCreatorBreadcrumbs
-                  step={3}
-                  startConnection={integration.flows![0].steps![0].connection}
-                  startAction={integration.flows![0].steps![0].action}
-                  finishActionId={
-                    integration.flows![0].steps![
-                      integration.flows![0].steps!.length - 1
-                    ].action!.id!
-                  }
-                  finishConnection={
-                    integration.flows![0].steps![
-                      integration.flows![0].steps!.length - 1
-                    ].connection
-                  }
-                  integration={integration}
-                />
-              }
+              header={<IntegrationCreatorBreadcrumbs step={3} />}
               content={
                 <>
                   <PageTitle title={'Save or add step'} />
@@ -93,8 +75,7 @@ export class SaveOrAddStepPage extends React.Component<
                     <h1>Add to Integration</h1>
                     <p>
                       You can continue adding steps and connections to your
-                      integration as well. Once finished you can save the
-                      integration, or save and publish it.
+                      integration as well.
                     </p>
                     <WithIntegrationHelpers>
                       {({ getSteps }) => (
@@ -120,19 +101,18 @@ export class SaveOrAddStepPage extends React.Component<
                   </div>
                 </>
               }
-              footer={
-                <>
-                  <Link to={resolvers.list()} className={'btn btn-default'}>
-                    Cancel
-                  </Link>
-                  &nbsp;&nbsp;
-                  <button className={'btn btn-default'}>Save as draft</button>
-                  &nbsp;
-                  <button className={'btn btn-primary'}>
-                    Save and publish
-                  </button>
-                </>
-              }
+              cancelHref={resolvers.list()}
+              backHref={resolvers.create.finish.configureAction({
+                actionId: integration.flows![0].steps![
+                  integration.flows![0].steps!.length - 1
+                ].action!.id!,
+                finishConnection: integration.flows![0].steps![
+                  integration.flows![0].steps!.length - 1
+                ].connection!,
+                integration,
+                startAction: integration.flows![0].steps![0].action!,
+                startConnection: integration.flows![0].steps![0].connection!,
+              })}
             />
           )}
         </WithRouteData>

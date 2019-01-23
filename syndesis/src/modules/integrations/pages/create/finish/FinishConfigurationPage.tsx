@@ -10,11 +10,11 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { WithClosedNavigation } from '../../../../../containers';
 import { PageTitle } from '../../../../../containers/PageTitle';
+import { IntegrationCreatorBreadcrumbs } from '../../../components';
 import {
-  IntegrationCreatorBreadcrumbs,
-  IntegrationEditorConfigureConnection,
   IOnUpdatedIntegrationProps,
-} from '../../../components';
+  WithConfigurationForm,
+} from '../../../containers';
 import resolvers from '../../../resolvers';
 
 export interface IFinishConfigurationPageRouteParams {
@@ -36,7 +36,7 @@ export class FinishConfigurationPage extends React.Component {
     return (
       <WithClosedNavigation>
         <WithIntegrationHelpers>
-          {({ addConnection, updateConnection }) => (
+          {({ addConnection, getStep, updateOrAddConnection }) => (
             <WithRouteData<
               IFinishConfigurationPageRouteParams,
               IFinishConfigurationPageRouteState
@@ -53,19 +53,23 @@ export class FinishConfigurationPage extends React.Component {
                 { history }
               ) => {
                 const stepAsNumber = parseInt(step, 10);
+                const position = integration.flows![0].steps!.length - 1;
+                const stepObject = getStep(
+                  updatedIntegration || integration,
+                  0,
+                  position
+                );
                 const onUpdatedIntegration = async ({
                   action,
                   moreConfigurationSteps,
                   values,
                 }: IOnUpdatedIntegrationProps) => {
-                  updatedIntegration = await (stepAsNumber === 0
-                    ? addConnection
-                    : updateConnection)(
+                  updatedIntegration = await updateOrAddConnection(
                     updatedIntegration || integration,
                     finishConnection,
                     action,
                     0,
-                    1,
+                    position,
                     values
                   );
                   if (moreConfigurationSteps) {
@@ -89,75 +93,77 @@ export class FinishConfigurationPage extends React.Component {
                   }
                 };
                 return (
-                  <>
-                    <PageTitle title={'Configure the action'} />
-                    <IntegrationEditorLayout
-                      header={
-                        <IntegrationCreatorBreadcrumbs
-                          step={2}
-                          subStep={2}
-                          startConnection={startConnection}
-                          startAction={startAction}
-                          finishConnection={finishConnection}
-                          integration={integration}
-                        />
-                      }
-                      sidebar={
-                        <IntegrationVerticalFlow disabled={true}>
-                          {({ expanded }) => (
-                            <>
-                              <IntegrationFlowStepWithOverview
-                                icon={
-                                  <img
-                                    src={startConnection.icon}
-                                    width={24}
-                                    height={24}
+                  <WithConfigurationForm
+                    connection={finishConnection}
+                    actionId={actionId}
+                    configurationStep={stepAsNumber}
+                    initialValue={stepObject.configuredProperties}
+                    onUpdatedIntegration={onUpdatedIntegration}
+                  >
+                    {({ form, onSubmit, isSubmitting }) => (
+                      <>
+                        <PageTitle title={'Configure the action'} />
+                        <IntegrationEditorLayout
+                          header={
+                            <IntegrationCreatorBreadcrumbs
+                              step={2}
+                              subStep={2}
+                            />
+                          }
+                          sidebar={
+                            <IntegrationVerticalFlow disabled={true}>
+                              {({ expanded }) => (
+                                <>
+                                  <IntegrationFlowStepWithOverview
+                                    icon={
+                                      <img
+                                        src={startConnection.icon}
+                                        width={24}
+                                        height={24}
+                                      />
+                                    }
+                                    i18nTitle={`1. ${startAction.name}`}
+                                    i18nTooltip={`1. ${startAction.name}`}
+                                    active={false}
+                                    showDetails={expanded}
+                                    name={startConnection.connector!.name}
+                                    action={startAction.name}
+                                    dataType={'TODO'}
                                   />
-                                }
-                                i18nTitle={`1. ${startAction.name}`}
-                                i18nTooltip={`1. ${startAction.name}`}
-                                active={false}
-                                showDetails={expanded}
-                                name={startConnection.connector!.name}
-                                action={startAction.name}
-                                dataType={'TODO'}
-                              />
-                              <IntegrationFlowStepGeneric
-                                icon={
-                                  <img
-                                    src={finishConnection.icon}
-                                    width={24}
-                                    height={24}
+                                  <IntegrationFlowStepGeneric
+                                    icon={
+                                      <img
+                                        src={finishConnection.icon}
+                                        width={24}
+                                        height={24}
+                                      />
+                                    }
+                                    i18nTitle={`${
+                                      finishConnection.connector!.name
+                                    }`}
+                                    i18nTooltip={`2. ${finishConnection.name}`}
+                                    active={true}
+                                    showDetails={expanded}
+                                    description={'Configure the action'}
                                   />
-                                }
-                                i18nTitle={`${
-                                  finishConnection.connector!.name
-                                }`}
-                                i18nTooltip={`2. ${finishConnection.name}`}
-                                active={true}
-                                showDetails={expanded}
-                                description={'Configure the action'}
-                              />
-                            </>
-                          )}
-                        </IntegrationVerticalFlow>
-                      }
-                      content={
-                        <IntegrationEditorConfigureConnection
-                          connection={finishConnection}
-                          actionId={actionId}
-                          configurationStep={stepAsNumber}
-                          backLink={resolvers.create.finish.selectAction({
+                                </>
+                              )}
+                            </IntegrationVerticalFlow>
+                          }
+                          content={form}
+                          backHref={resolvers.create.finish.selectAction({
                             finishConnection,
                             integration,
                             startAction,
                             startConnection,
                           })}
-                          onUpdatedIntegration={onUpdatedIntegration}
+                          cancelHref={resolvers.list()}
+                          onNext={onSubmit}
+                          isNextLoading={isSubmitting}
                         />
-                      }
-                    />
-                  </>
+                      </>
+                    )}
+                  </WithConfigurationForm>
                 );
               }}
             </WithRouteData>

@@ -1,10 +1,12 @@
-import { Action } from '@syndesis/models';
+import { Action, ConnectionOverview } from '@syndesis/models';
+import { IntegrationActionSelectorCard } from '@syndesis/ui';
 import * as H from 'history';
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 export interface IIntegrationEditorChooseActionProps {
+  connection: ConnectionOverview;
   actions: Action[];
   getActionHref(action: Action): H.LocationDescriptor;
 }
@@ -20,20 +22,28 @@ export class IntegrationEditorChooseAction extends React.Component<
           <p>Choose an action for the selected connection.</p>
         </div>
         <div className={'container-fluid'}>
-          <ListView>
-            {this.props.actions.map((a, idx) => (
-              <Link
-                to={this.props.getActionHref(a)}
-                style={{
-                  color: 'inherit',
-                  textDecoration: 'none',
-                }}
-                key={idx}
-              >
-                <ListView.Item heading={a.name} description={a.description} />
-              </Link>
-            ))}
-          </ListView>
+          <IntegrationActionSelectorCard
+            content={
+              <ListView>
+                {this.props.actions.map((a, idx) => (
+                  <ListView.Item
+                    key={idx}
+                    heading={a.name}
+                    description={a.description}
+                    actions={
+                      <Link
+                        to={this.props.getActionHref(a)}
+                        className={'btn btn-default'}
+                      >
+                        Select
+                      </Link>
+                    }
+                  />
+                ))}
+              </ListView>
+            }
+            title={this.props.connection.name}
+          />
         </div>
       </>
     );

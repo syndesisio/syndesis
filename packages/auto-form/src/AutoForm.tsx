@@ -40,7 +40,10 @@ export interface IAutoFormState {
    */
   handleSubmit: (e?: any) => void;
   isSubmitting: boolean;
+  isValid: boolean;
   isValidating: boolean;
+  resetForm: (nextValues?: any) => void;
+  submitForm: () => void;
 }
 
 export class AutoForm<T> extends React.Component<
@@ -67,8 +70,11 @@ export class AutoForm<T> extends React.Component<
                 values,
                 touched,
                 errors,
+                isValid,
                 isValidating,
                 isSubmitting,
+                resetForm,
+                submitForm,
               }) =>
                 this.props.children({
                   fields: (
@@ -85,7 +91,10 @@ export class AutoForm<T> extends React.Component<
                   ),
                   handleSubmit,
                   isSubmitting,
+                  isValid,
                   isValidating,
+                  resetForm,
+                  submitForm,
                 })
               }
             </Formik>

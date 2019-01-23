@@ -10,8 +10,14 @@ import {
 import { AutoForm } from '@syndesis/auto-form';
 import { Action, ConnectionOverview } from '@syndesis/models';
 import { IntegrationActionConfigurationCard } from '@syndesis/ui';
-import * as H from 'history';
 import * as React from 'react';
+
+export interface IWithConfigurationFormChildrenProps {
+  form: JSX.Element;
+  isValid: boolean;
+  isSubmitting: boolean;
+  onSubmit(): any;
+}
 
 export interface IOnUpdatedIntegrationProps {
   action: Action;
@@ -19,21 +25,25 @@ export interface IOnUpdatedIntegrationProps {
   values: { [key: string]: string } | null;
 }
 
-export interface IIntegrationEditorConfigureConnection {
+export interface IWithConfigurationFormProps {
   connection: ConnectionOverview;
   actionId: string;
   configurationStep: number;
-  backLink: H.LocationDescriptor;
   initialValue?: { [key: string]: string };
+  children(props: IWithConfigurationFormChildrenProps): any;
   onUpdatedIntegration(props: IOnUpdatedIntegrationProps): Promise<void>;
 }
 
-export class IntegrationEditorConfigureConnection extends React.Component<
-  IIntegrationEditorConfigureConnection
+export class WithConfigurationForm extends React.Component<
+  IWithConfigurationFormProps
 > {
   public static defaultProps = {
     initialValue: {},
   };
+
+  constructor(props: IWithConfigurationFormProps) {
+    super(props);
+  }
 
   public renderConfigurationForm(action: Action): JSX.Element | null {
     try {
@@ -62,17 +72,33 @@ export class IntegrationEditorConfigureConnection extends React.Component<
           onSave={onSave}
           key={this.props.configurationStep}
         >
-          {({ fields, handleSubmit, isSubmitting }) => (
-            <IntegrationActionConfigurationCard
-              backLink={this.props.backLink}
-              content={fields}
-              onSubmit={handleSubmit}
-              title={`${action.name} - ${action.description}`}
-              i18nBackLabel={'< Choose action'}
-              i18nSubmitLabel={moreConfigurationSteps ? 'Continue' : 'Done'}
-              disabled={isSubmitting}
-            />
-          )}
+          {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
+            this.props.children({
+              form: (
+                <>
+                  <div className="container-fluid">
+                    <h1>Configure action</h1>
+                    <p>
+                      Fill in the required information for the selected action.
+                    </p>
+                  </div>
+                  <form
+                    className="form-horizontal required-pf"
+                    role="form"
+                    onSubmit={handleSubmit}
+                  >
+                    <IntegrationActionConfigurationCard
+                      content={fields}
+                      title={`${action.name} - ${action.description}`}
+                    />
+                  </form>
+                </>
+              ),
+              isSubmitting,
+              isValid,
+              onSubmit: submitForm,
+            })
+          }
         </AutoForm>
       );
     } catch (e) {
@@ -81,29 +107,35 @@ export class IntegrationEditorConfigureConnection extends React.Component<
   }
 
   public renderNoPropertiesInfo(action: Action) {
-    const onSave = () => {
+    const onSubmit = () => {
       this.props.onUpdatedIntegration({
         action,
         moreConfigurationSteps: false,
         values: null,
       });
     };
-    return (
-      <IntegrationActionConfigurationCard
-        backLink={this.props.backLink}
-        content={
-          <p className="alert alert-info">
-            <span className="pficon pficon-info" />
-            There are no properties to configure for this action.
-          </p>
-        }
-        onSubmit={onSave}
-        title={`${action.name} - ${action.description}`}
-        i18nBackLabel={'< Choose action'}
-        i18nSubmitLabel={'Done'}
-        disabled={false}
-      />
-    );
+    return this.props.children({
+      form: (
+        <>
+          <div className="container-fluid">
+            <h1>Configure action</h1>
+            <p>Fill in the required information for the selected action.</p>
+          </div>
+          <IntegrationActionConfigurationCard
+            content={
+              <p className="alert alert-info">
+                <span className="pficon pficon-info" />
+                There are no properties to configure for this action.
+              </p>
+            }
+            title={`${action.name} - ${action.description}`}
+          />
+        </>
+      ),
+      isSubmitting: false,
+      isValid: true,
+      onSubmit,
+    });
   }
 
   public render() {
@@ -112,14 +144,8 @@ export class IntegrationEditorConfigureConnection extends React.Component<
       this.props.actionId
     );
     return (
-      <>
-        <div className="container-fluid">
-          <h1>Configure action</h1>
-          <p>Fill in the required information for the selected action.</p>
-        </div>
-        {this.renderConfigurationForm(action) ||
-          this.renderNoPropertiesInfo(action)}
-      </>
+      this.renderConfigurationForm(action) ||
+      this.renderNoPropertiesInfo(action)
     );
   }
 }

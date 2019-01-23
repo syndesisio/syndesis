@@ -3,15 +3,16 @@ import { Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../../../../../containers';
 import { PageTitle } from '../../../../../../containers/PageTitle';
 import {
   IntegrationCreatorBreadcrumbs,
-  IntegrationEditorConfigureConnection,
   IntegrationEditorSidebar,
-  IOnUpdatedIntegrationProps,
 } from '../../../../components';
+import {
+  IOnUpdatedIntegrationProps,
+  WithConfigurationForm,
+} from '../../../../containers';
 import resolvers from '../../../../resolvers';
 
 export interface IConfigureActionRouteParams {
@@ -77,61 +78,44 @@ export class ConfigureActionPage extends React.Component {
                 };
 
                 return (
-                  <>
-                    <PageTitle title={'Configure the action'} />
-                    <IntegrationEditorLayout
-                      header={
-                        <IntegrationCreatorBreadcrumbs
-                          step={3}
-                          startConnection={
-                            integration.flows![0].steps![0].connection
+                  <WithConfigurationForm
+                    connection={stepObject.connection!}
+                    actionId={actionId}
+                    configurationStep={stepAsNumber}
+                    initialValue={stepObject.configuredProperties}
+                    onUpdatedIntegration={onUpdatedIntegration}
+                  >
+                    {({ form, onSubmit, isSubmitting }) => (
+                      <>
+                        <PageTitle title={'Configure the action'} />
+                        <IntegrationEditorLayout
+                          header={<IntegrationCreatorBreadcrumbs step={3} />}
+                          sidebar={
+                            <IntegrationEditorSidebar
+                              steps={getSteps(
+                                updatedIntegration || integration,
+                                0
+                              )}
+                              activeIndex={positionAsNumber}
+                            />
                           }
-                          startAction={integration.flows![0].steps![0].action}
-                          finishActionId={
-                            integration.flows![0].steps![
-                              integration.flows![0].steps!.length - 1
-                            ].action!.id!
-                          }
-                          finishConnection={
-                            integration.flows![0].steps![
-                              integration.flows![0].steps!.length - 1
-                            ].connection
-                          }
-                          integration={integration}
-                        />
-                      }
-                      sidebar={
-                        <IntegrationEditorSidebar
-                          steps={getSteps(updatedIntegration || integration, 0)}
-                          activeIndex={positionAsNumber}
-                        />
-                      }
-                      content={
-                        <IntegrationEditorConfigureConnection
-                          connection={stepObject.connection!}
-                          actionId={actionId}
-                          configurationStep={stepAsNumber}
-                          backLink={resolvers.create.configure.editConnection.selectAction(
+                          content={form}
+                          backHref={resolvers.create.configure.editConnection.selectAction(
                             {
                               connection: stepObject.connection!,
                               integration,
                               position,
                             }
                           )}
-                          initialValue={stepObject.configuredProperties}
-                          onUpdatedIntegration={onUpdatedIntegration}
+                          cancelHref={resolvers.create.configure.index({
+                            integration,
+                          })}
+                          onNext={onSubmit}
+                          isNextLoading={isSubmitting}
                         />
-                      }
-                      footer={
-                        <Link
-                          to={resolvers.create.configure.index({ integration })}
-                          className={'btn btn-default'}
-                        >
-                          Cancel edit connection
-                        </Link>
-                      }
-                    />
-                  </>
+                      </>
+                    )}
+                  </WithConfigurationForm>
                 );
               }}
             </WithRouteData>
