@@ -17,6 +17,8 @@ package io.syndesis.connector.fhir;
 
 import io.syndesis.common.model.integration.Step;
 import org.assertj.core.api.Assertions;
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.junit.Test;
 
@@ -27,38 +29,41 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okXml;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
-public class FhirReadTest extends FhirTestBase {
+public class FhirSearchTest extends FhirTestBase {
 
     @Override
     protected List<Step> createSteps() {
         return Arrays.asList(newSimpleEndpointStep(
             "direct",
             builder -> builder.putConfiguredProperty("name", "start")),
-            newFhirEndpointStep("io.syndesis:fhir-read-connector", builder -> {
+            newFhirEndpointStep("io.syndesis:fhir-search-connector", builder -> {
                 builder.putConfiguredProperty("resourceType", "Patient");
-                builder.putConfiguredProperty("id", "1234");
             }));
     }
 
     @Test
-    public void readWithIdProvidedAsParameterTest() {
-        stubFhirRequest(get(urlEqualTo("/Patient/1234")).willReturn(okXml(toXml(new Patient().setId("1234")))));
+    public void searchTest() {
+        Patient one = new Patient();
+        one.setId("one");
+        one.setGender(Enumerations.AdministrativeGender.UNKNOWN);
+        Patient two = new Patient();
+        two.setId("two");
+        two.setGender(Enumerations.AdministrativeGender.UNKNOWN);
 
-        String patient = template.requestBody("direct:start", "", String.class);
+        Bundle bundle = new Bundle();
+        bundle.getEntry().add(new Bundle.BundleEntryComponent().setResource(one));
+        bundle.getEntry().add(new Bundle.BundleEntryComponent().setResource(two));
 
-        Assertions.assertThat(patient).contains("<id value=\"1234\"/>");
-    }
+        stubFhirRequest(get(urlEqualTo("/Patient?gender=unknown")).willReturn(okXml(toXml(bundle))));
 
-    @Test
-    public void readWithIdProvidedInBodyTest() {
-        stubFhirRequest(get(urlEqualTo("/Patient/4321")).willReturn(okXml(toXml(new Patient().setId("4321")))));
+        FhirResourceQuery query = new FhirResourceQuery();
+        query.setQuery("gender=unknown");
 
-        FhirResourceId id = new FhirResourceId();
-        id.setId("4321");
+        String result = template.requestBody("direct:start", query, String.class);
 
-        String patient = template.requestBody("direct:start", id, String.class);
-
-        Assertions.assertThat(patient).contains("<id value=\"4321\"/>");
+        Assertions.assertThat(result).isEqualTo(
+            "[<Patient xmlns=\"http://hl7.org/fhir\"><id value=\"one\"/><gender value=\"unknown\"/></Patient>, " +
+            "<Patient xmlns=\"http://hl7.org/fhir\"><id value=\"two\"/><gender value=\"unknown\"/></Patient>]");
     }
 
 

@@ -37,10 +37,10 @@ public class FhirResourcesProcessor implements BiConsumer<Path, Path> {
     public void accept(Path inputDir, Path outputDir) {
         try (DirectoryStream<Path> files = Files.newDirectoryStream(inputDir, "*.xsd")){
             for (Path file : files) {
-                String specification = buildSchema(file);
+                String schema = buildSchema(file);
 
                 try (OutputStream fileOut = Files.newOutputStream(outputDir.resolve(file.getFileName()))) {
-                    IOUtils.write(specification, fileOut, StandardCharsets.UTF_8);
+                    IOUtils.write(schema, fileOut, StandardCharsets.UTF_8);
                 }
             }
         } catch (IOException e) {

@@ -16,34 +16,31 @@
 package io.syndesis.connector.fhir.customizer;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
 import io.syndesis.connector.fhir.FhirResourceId;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.component.fhir.internal.FhirApiCollection;
+import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.component.ApiMethod;
 
 import java.util.Map;
 
 public abstract class FhirReadDeleteBaseCustomizer implements ComponentProxyCustomizer {
     protected FhirContext fhirContext;
-    protected String id;
     protected String resourceType;
+    protected String id;
     protected String version;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        String fhirVersion = (String) options.get("fhirVersion");
-        FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
-        fhirContext = new FhirContext(fhirVersionEnum);
+        fhirContext = FhirCustomizerHelper.newFhirContext(options);
 
-        id = (String) options.get("id");
         resourceType = (String) options.get("resourceType");
+        id = (String) options.get("id");
         version = (String) options.get("version");
 
-        options.put("apiName", FhirApiCollection.getCollection().getApiName(getApiMethodClass()).getName());
+        options.put("apiName", FhirCustomizerHelper.getFhirApiName(getApiMethodClass()));
         options.put("methodName", "resourceById");
 
         component.setBeforeProducer(this::beforeProducer);
@@ -61,17 +58,17 @@ public abstract class FhirReadDeleteBaseCustomizer implements ComponentProxyCust
         final Message in = exchange.getIn();
         in.setHeader("CamelFhir.resourceClass", resourceType);
 
-        final FhirResourceId read = in.getBody(FhirResourceId.class);
-        if (read != null) {
-            if (read.getComplexId() != null) {
-                in.setHeader("CamelFhir.id", read.getComplexId());
-            } else {
-                in.setHeader("CamelFhir.stringId", read.getId());
-                in.setHeader("CamelFhir.version", read.getVersion());
+        in.setHeader("CamelFhir.stringId", id);
+        in.setHeader("CamelFhir.version", version);
+
+        final FhirResourceId body = in.getBody(FhirResourceId.class);
+        if (body != null) {
+            if (body.getComplexId() != null) {
+                in.setHeader("CamelFhir.id", body.getComplexId());
+            } else if (ObjectHelper.isNotEmpty(body.getId())) {
+                in.setHeader("CamelFhir.stringId", body.getId());
+                in.setHeader("CamelFhir.version", body.getVersion());
             }
-        } else {
-            in.setHeader("CamelFhir.stringId", id);
-            in.setHeader("CamelFhir.version", version);
         }
     }
 }
