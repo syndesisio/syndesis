@@ -16,6 +16,7 @@
 package io.syndesis.server.endpoint.v1.handler.integration;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
@@ -149,7 +150,7 @@ public class IntegrationSpecificationHandlerTest {
         when(apiGenerator.updateFlowExcerpts(any(Integration.class))).then(ctx -> ctx.getArguments()[0]);
 
         final APIFormData openApiUpdate = new APIFormData();
-        openApiUpdate.setSpecification(new ByteArrayInputStream("updated specification".getBytes()));
+        openApiUpdate.setSpecification(new ByteArrayInputStream("updated specification".getBytes(StandardCharsets.UTF_8)));
 
         handler.updateSpecification("integration-1", openApiUpdate);
 
