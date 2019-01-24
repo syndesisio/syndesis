@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Validator;
-import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import javax.ws.rs.GET;
@@ -36,7 +35,6 @@ import javax.ws.rs.core.UriInfo;
 
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -227,11 +225,6 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         updatedIntegration = apiGenerator.updateFlowExcerpts(updatedIntegration);
 
         getDataManager().update(updatedIntegration);
-    }
-
-    @Path("/{id}/specification")
-    public IntegrationSpecificationHandler specification(@NotNull @PathParam("id") @ApiParam(required = true, example = "integration-id") final String id) {
-        return new IntegrationSpecificationHandler(this);
     }
 
 }

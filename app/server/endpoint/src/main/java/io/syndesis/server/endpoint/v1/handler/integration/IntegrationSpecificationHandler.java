@@ -19,12 +19,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
@@ -37,7 +43,11 @@ import io.syndesis.server.endpoint.v1.handler.api.ApiGeneratorHelper;
 import io.syndesis.server.endpoint.v1.handler.api.ApiHandler;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+import org.springframework.stereotype.Component;
 
+@Api("integrations")
+@Path("/integrations/{id}/specification")
+@Component
 public final class IntegrationSpecificationHandler {
 
     private final APIGenerator apiGenerator;
@@ -55,7 +65,11 @@ public final class IntegrationSpecificationHandler {
     @PUT
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation("For an integration that is generated from a specification updates it so it conforms to the updated specification")
-    public void updateSpecification(@PathParam("id") final String id, @MultipartForm final ApiHandler.APIFormData apiFormData) {
+    @ApiImplicitParams(value = {
+        @ApiImplicitParam(dataType = "file", name = "specification", required = true, paramType = "form", value = "Next revision of the specification")})
+    public void updateSpecification(
+        @NotNull @PathParam("id") @ApiParam(required = true, example = "integration-id", value = "The ID of the integration") final String id,
+        @NotNull @MultipartForm final ApiHandler.APIFormData apiFormData) {
         final Integration existing = integrationHandler.getIntegration(id);
 
         final APIIntegration apiIntegration = ApiGeneratorHelper.generateIntegrationUpdateFrom(existing, apiFormData, dataManager, apiGenerator);
