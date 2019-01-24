@@ -15,6 +15,8 @@
  */
 package io.syndesis.server.runtime.integration;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,15 +28,21 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.server.runtime.BaseITCase;
 
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.core.io.InputStreamResource;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import static io.syndesis.server.runtime.integration.MultipartUtil.MULTIPART;
+import static io.syndesis.server.runtime.integration.MultipartUtil.specification;
+import static io.syndesis.server.runtime.integration.SwaggerHickups.reparse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,19 +50,12 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
 
     private Integration existing;
 
-    private final HttpHeaders multipart;
-
-    public ApiIntegrationUpdateITCase() {
-        multipart = new HttpHeaders();
-        multipart.setContentType(MediaType.MULTIPART_FORM_DATA);
-    }
-
     @Before
     public void generateApiIntegration() {
         final MultiValueMap<Object, Object> data = specification("/io/syndesis/server/runtime/test-swagger.json");
 
         final ResponseEntity<Integration> integrationResponse = post("/api/v1/apis/generator", data, Integration.class, tokenRule.validToken(), HttpStatus.OK,
-            multipart);
+            MULTIPART);
 
         final Integration integration = integrationResponse.getBody();
         final Flow createTaskFlow = integration.findFlowById(integration.getId().get() + ":flows:create-task").get();
@@ -69,10 +70,10 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
     }
 
     @Test
-    public void shouldUpdateApiIntegration() {
+    public void shouldUpdateApiIntegration() throws IOException, JSONException {
         final String integrationId = existing.getId().get();
         put("/api/v1/integrations/" + integrationId + "/specification", specification("/io/syndesis/server/runtime/updated-test-swagger.json"), Void.class,
-            tokenRule.validToken(), HttpStatus.NO_CONTENT, multipart);
+            tokenRule.validToken(), HttpStatus.NO_CONTENT, MULTIPART);
 
         final Integration updated = dataManager.fetch(Integration.class, integrationId);
 
@@ -93,6 +94,16 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
             final String outputSpecification = outputDataShape.getSpecification();
             assertThat(outputSpecification).contains("debug", "task");
         });
+
+        final ResponseEntity<ByteArrayResource> specificationResponse = get("/api/v1/integrations/" + integrationId + "/specification",
+            ByteArrayResource.class);
+
+        assertThat(specificationResponse.getHeaders().getContentType()).isEqualTo(MediaType.valueOf("application/vnd.oai.openapi+json"));
+        assertThat(specificationResponse.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION)).containsOnly("attachment; filename=openapi.json");
+
+        final String givenJson = reparse("io/syndesis/server/runtime/updated-test-swagger.json");
+        final String receivedJson = new String(specificationResponse.getBody().getByteArray(), StandardCharsets.UTF_8);
+        JSONAssert.assertEquals(givenJson, receivedJson, JSONCompareMode.LENIENT);
     }
 
     static Iterable<Flow> replace(final List<Flow> flows, final Flow replacement) {
@@ -108,12 +119,6 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
         }
 
         return ret;
-    }
-
-    static MultiValueMap<Object, Object> specification(final String path) {
-        final LinkedMultiValueMap<Object, Object> data = new LinkedMultiValueMap<>(1);
-        data.add("specification", new InputStreamResource(ApiIntegrationUpdateITCase.class.getResourceAsStream(path)));
-        return data;
     }
 
 }

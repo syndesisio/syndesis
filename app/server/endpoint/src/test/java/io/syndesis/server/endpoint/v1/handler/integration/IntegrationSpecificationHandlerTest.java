@@ -21,8 +21,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
@@ -31,6 +37,7 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
@@ -55,8 +62,23 @@ public class IntegrationSpecificationHandlerTest {
 
     EncryptionComponent encryptionSupport = mock(EncryptionComponent.class);
 
-    IntegrationSpecificationHandler handler = new IntegrationSpecificationHandler(
-        new IntegrationHandler(dataManager, null, null, null, encryptionSupport, apiGenerator));
+    IntegrationSpecificationHandler handler;
+
+    IntegrationResourceManager resourceManager = mock(IntegrationResourceManager.class);
+
+    public IntegrationSpecificationHandlerTest() {
+        handler = new IntegrationSpecificationHandler(
+            new IntegrationHandler(dataManager, null, null, null, encryptionSupport, apiGenerator), resourceManager);
+    }
+
+    @Test
+    public void ifNoSpecificationIsPresentShouldRespondWithNotFound() {
+        when(dataManager.fetch(Integration.class, "integration-id")).thenReturn(new Integration.Builder().build());
+
+        try (Response response = handler.fetch("integration-id")) {
+            assertThat(response.getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
+        }
+    }
 
     @Test
     public void shouldAddNewFlowsNonTrivialCase() {
@@ -152,7 +174,7 @@ public class IntegrationSpecificationHandlerTest {
         final APIFormData openApiUpdate = new APIFormData();
         openApiUpdate.setSpecification(new ByteArrayInputStream("updated specification".getBytes(StandardCharsets.UTF_8)));
 
-        handler.updateSpecification("integration-1", openApiUpdate);
+        handler.update("integration-1", openApiUpdate);
 
         verify(dataManager).store(updatedSpecification, OpenApi.class);
         verify(dataManager).update(ArgumentMatchers.<Integration>argThat(v -> {
@@ -160,6 +182,56 @@ public class IntegrationSpecificationHandlerTest {
             assertThat(v.getVersion()).isEqualTo(2);
             return true;
         }));
+    }
+
+    @Test
+    public void shouldServeSpecifications() {
+        final byte[] specificationBytes = "this is the specification".getBytes(StandardCharsets.UTF_8);
+
+        when(dataManager.fetch(Integration.class, "integration-id")).thenReturn(
+            new Integration.Builder()
+                .addResource(
+                    new ResourceIdentifier.Builder()
+                        .id("resource-id")
+                        .kind(Kind.OpenApi)
+                        .build())
+                .build());
+        when(resourceManager.loadOpenApiDefinition("resource-id"))
+            .thenReturn(Optional.of(new OpenApi.Builder()
+                .putMetadata(HttpHeaders.CONTENT_TYPE, "application/vnd.oai.openapi")
+                .document(specificationBytes)
+                .build()));
+
+        try (Response response = handler.fetch("integration-id")) {
+            assertThat(response.getHeaderString(HttpHeaders.CONTENT_TYPE)).isEqualTo("application/vnd.oai.openapi");
+            assertThat(response.getHeaderString(HttpHeaders.CONTENT_DISPOSITION)).isEqualTo("attachment; filename=openapi.yaml");
+            assertThat((byte[]) response.getEntity()).isEqualTo(specificationBytes);
+        }
+    }
+
+    @Test
+    public void shouldServeSpecificationsWithoutContentTypeMeta() {
+        final byte[] specificationBytes = "this is the specification".getBytes(StandardCharsets.UTF_8);
+
+        when(dataManager.fetch(Integration.class, "integration-id")).thenReturn(
+            new Integration.Builder()
+                .addResource(
+                    new ResourceIdentifier.Builder()
+                        .id("resource-id")
+                        .kind(Kind.OpenApi)
+                        .build())
+                .build());
+        when(resourceManager.loadOpenApiDefinition("resource-id"))
+            .thenReturn(Optional.of(new OpenApi.Builder()
+                .document(specificationBytes)
+                .build()));
+
+        try (Response response = handler.fetch("integration-id")) {
+            assertThat(response.getHeaderString(HttpHeaders.CONTENT_TYPE)).isEqualTo(IntegrationSpecificationHandler.DEFAULT_CONTENT_TYPE);
+            assertThat(response.getHeaderString(HttpHeaders.CONTENT_DISPOSITION))
+                .isEqualTo("attachment; filename=" + IntegrationSpecificationHandler.DEFAULT_FILE_NAME);
+            assertThat((byte[]) response.getEntity()).isEqualTo(specificationBytes);
+        }
     }
 
     @Test
