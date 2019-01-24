@@ -17,56 +17,17 @@ import {
   getCreateAddStepHref,
 } from '../../resolversHelpers';
 
-export interface ISaveOrAddStepPageState {
-  forceSidebarTooltips: boolean;
-}
-
-export interface ISaveOrAddStepRouteState {
+export interface IAddStepRouteState {
   integration: Integration;
 }
 
-export class SaveOrAddStepPage extends React.Component<
-  any,
-  ISaveOrAddStepPageState
-> {
-  public state = {
-    forceSidebarTooltips: false,
-  };
-
-  constructor(props: any) {
-    super(props);
-    this.onAddStep = this.onAddStep.bind(this);
-    this.onAddConnection = this.onAddConnection.bind(this);
-    this.hideSidebarTooltips = this.hideSidebarTooltips.bind(this);
-  }
-
-  public onAddStep(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    this.setState({
-      forceSidebarTooltips: true,
-    });
-  }
-
-  public onAddConnection(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    this.setState({
-      forceSidebarTooltips: true,
-    });
-  }
-
-  public hideSidebarTooltips() {
-    this.setState({
-      forceSidebarTooltips: false,
-    });
-  }
-
+export class AddStepPage extends React.Component {
   public render() {
     return (
       <WithClosedNavigation>
-        <WithRouteData<null, ISaveOrAddStepRouteState>>
+        <WithRouteData<null, IAddStepRouteState>>
           {(_, { integration }) => (
             <IntegrationEditorLayout
-              onClick={this.hideSidebarTooltips}
               header={<IntegrationCreatorBreadcrumbs step={3} />}
               content={
                 <>
@@ -113,7 +74,9 @@ export class SaveOrAddStepPage extends React.Component<
                 startAction: integration.flows![0].steps![0].action!,
                 startConnection: integration.flows![0].steps![0].connection!,
               })}
-              nextHref={'#todo'}
+              nextHref={resolvers.create.configure.saveAndPublish({
+                integration,
+              })}
             />
           )}
         </WithRouteData>

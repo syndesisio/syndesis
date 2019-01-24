@@ -136,7 +136,7 @@ export class IntegrationCreatorBreadcrumbs extends React.Component<
             isDisabled={this.props.step < 4}
             onClick={this.toggleActive}
             step={4}
-            title={'Save and publish'}
+            title={'Create an integration'}
           />
         </ul>
         <ul
@@ -184,7 +184,7 @@ export class IntegrationCreatorBreadcrumbs extends React.Component<
             isAlt={true}
             onClick={this.toggleActive}
             step={4}
-            title={'Save and publish'}
+            title={'Create an integration'}
           />
         </ul>
       </div>

@@ -1,9 +1,11 @@
 import * as addConnection from './addConnection';
+import { AddStepPage } from './AddStepPage';
 import * as editConnection from './editConnection';
-import { SaveOrAddStepPage } from './SaveOrAddStepPage';
+import { SaveIntegrationPage } from './SaveIntegrationPage';
 
 export default {
-  SaveOrAddStepPage,
+  AddStepPage,
+  SaveIntegrationPage,
   addConnection,
   editConnection,
 };

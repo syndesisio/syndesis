@@ -2,7 +2,7 @@
 import { include } from 'named-urls';
 
 const editorRoutes = {
-  index: 'save-or-add-step',
+  index: 'add-step',
   addConnection: include(':position/connection', {
     selectConnection: '',
     selectAction: `:connectionId`,
@@ -17,7 +17,7 @@ const editorRoutes = {
     configureStep: `:stepId`,
   }),
   editStep: ':position/edit-step',
-  saveAsDraft: 'save-as-draft',
+  saveAndPublish: 'save',
 };
 
 export default include('/integrations', {

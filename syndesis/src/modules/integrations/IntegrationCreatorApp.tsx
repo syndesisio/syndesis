@@ -48,7 +48,7 @@ export class IntegrationCreatorApp extends React.Component {
           <Route
             path={routes.create.configure.index}
             exact={true}
-            component={create.configure.SaveOrAddStepPage}
+            component={create.configure.AddStepPage}
           />
           <Route
             path={routes.create.configure.addConnection.selectConnection}
@@ -74,6 +74,11 @@ export class IntegrationCreatorApp extends React.Component {
             path={routes.create.configure.editConnection.configureAction}
             exact={true}
             component={create.configure.editConnection.ConfigureActionPage}
+          />
+          <Route
+            path={routes.create.configure.saveAndPublish}
+            exact={true}
+            component={create.configure.SaveIntegrationPage}
           />
         </Switch>
       </>

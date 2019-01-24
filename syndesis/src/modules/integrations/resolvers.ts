@@ -257,6 +257,14 @@ export default {
           })
         ),
       },
+      saveAndPublish: makeResolver<{ integration: Integration }>(
+        routes.create.configure.saveAndPublish,
+        ({ integration }) => ({
+          state: {
+            integration,
+          },
+        })
+      ),
     },
   },
 };

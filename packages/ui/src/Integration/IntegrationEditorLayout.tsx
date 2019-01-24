@@ -42,8 +42,9 @@ export interface IEditorLayoutProps {
   cancelHref?: H.LocationDescriptor;
   backHref?: H.LocationDescriptor;
   nextHref?: H.LocationDescriptor;
+  isNextDisabled?: boolean;
   isNextLoading?: boolean;
-  [key: string]: any;
+  isLastStep?: boolean;
 }
 
 export const IntegrationEditorLayout: React.FunctionComponent<
@@ -59,14 +60,14 @@ export const IntegrationEditorLayout: React.FunctionComponent<
   backHref,
   nextHref,
   isNextLoading,
-  ...props
+  isNextDisabled,
+  isLastStep = false,
 }: IEditorLayoutProps) => {
   return (
     <div
       className={classnames('wizard-pf-body integration-editor-layout', {
         'has-footer': true,
       })}
-      {...props}
     >
       {header}
       <div className="wizard-pf-row integration-editor-layout__body">
@@ -91,10 +92,16 @@ export const IntegrationEditorLayout: React.FunctionComponent<
           onClick={onNext}
           href={nextHref}
           className={'btn-primary wizard-pf-next'}
-          disabled={isNextLoading}
+          disabled={isNextLoading || isNextDisabled}
         >
           {isNextLoading ? <Loader size={'xs'} inline={true} /> : null}
-          Next <i className="fa fa-angle-right" />
+          {isLastStep ? (
+            'Done'
+          ) : (
+            <>
+              Next <i className="fa fa-angle-right" />
+            </>
+          )}
         </ButtonOrLink>
         <ButtonOrLink
           onClick={onCancel}

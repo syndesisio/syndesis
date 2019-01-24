@@ -10,20 +10,19 @@ export const FormInputComponent = ({
 }) => (
   // TODO replace with PF3/PF4 widget
   <div className="form-group">
-    <label className="col-sm-2 control-label" htmlFor={field.name}>
+    <label className="ontrol-label" htmlFor={field.name}>
       {props.property.displayName}
     </label>
-    <div className="col-sm-10">
-      <input
-        type={type}
-        id={field.name}
-        data-testid={field.name}
-        disabled={isSubmitting}
-        {...field}
-      />
-      {touched[field.name] && errors[field.name] && (
-        <div className="error">{errors[field.name]}</div>
-      )}
-    </div>
+    <input
+      type={type}
+      id={field.name}
+      data-testid={field.name}
+      disabled={isSubmitting}
+      className={'form-control'}
+      {...field}
+    />
+    {touched[field.name] && errors[field.name] && (
+      <div className="error">{errors[field.name]}</div>
+    )}
   </div>
 );

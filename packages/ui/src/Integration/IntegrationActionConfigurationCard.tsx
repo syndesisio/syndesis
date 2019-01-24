@@ -12,7 +12,9 @@ export const IntegrationActionConfigurationCard: React.FunctionComponent<
     <div className="row row-cards-pf">
       <div className="card-pf">
         <div className="card-pf-title">{title}</div>
-        <div className="card-pf-body">{content}</div>
+        <div className="card-pf-body">
+          <div className="container-fluid">{content}</div>
+        </div>
       </div>
     </div>
   </div>
