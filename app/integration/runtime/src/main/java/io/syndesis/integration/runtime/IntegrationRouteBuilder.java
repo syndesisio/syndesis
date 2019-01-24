@@ -145,9 +145,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
         }
 
-        for (int i = 0; i < steps.size(); i++) {
-            final Step step = steps.get(i);
-            final String stepIndex = Integer.toString(i);
+        for (int stepIndex = 0; stepIndex < steps.size(); stepIndex++) {
+            final Step step = steps.get(stepIndex);
+            final Optional<Step> nextStep = stepIndex < steps.size() -1 ? Optional.of(steps.get(stepIndex + 1)) : Optional.empty();
             final String stepId = step.getId().orElseGet(KeyGenerator::createKey);
             final IntegrationStepHandler handler = findHandler(step);
 
@@ -159,53 +159,62 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     throw new IllegalStateException("The handler for step kind " + step.getKind() + " is not a consumer");
                 }
 
-                Optional<ProcessorDefinition<?>> definition = handler.handle(step, null, this, flowIndex, stepIndex);
+                Optional<ProcessorDefinition<?>> definition = handler.handle(step, null, this, flowIndex, String.valueOf(stepIndex));
                 if (definition.isPresent()) {
                     parent = definition.get();
                     parent = configureRouteDefinition(parent, flowName, flowId, stepId);
                     parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
-                    parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                     parent = configureConnectorSplit(step, parent, flowIndex, stepIndex).orElse(parent);
-                    parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+
+                    if (nextStep.map(Step::getStepKind)
+                                .map(kind -> kind.equals(StepKind.foreach)).orElse(false)) {
+                        parent = findHandler(nextStep.get()).handle(nextStep.get(), parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
+                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
+                        parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                        stepIndex++;
+                    } else {
+                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
+                        parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                    }
                 }
             } else {
                 parent = configureRouteDefinition(parent, flowName, flowId, stepId);
 
-                if (StepKind.foreach.equals(step.getStepKind())) {
-                    parent = handler.handle(step, parent, this, flowIndex, stepIndex).orElse(parent);
-                    parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
-                    parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
-                } else if (StepKind.endForeach.equals(step.getStepKind())) {
-                    parent = handler.handle(step, parent, this, flowIndex, stepIndex).orElse(parent);
+                if (StepKind.endForeach.equals(step.getStepKind())) {
+                    parent = handler.handle(step, parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
 
                     if (parent instanceof ExpressionNode) {
                         parent = parent.end();
                         parent = parent.endParent();
                     }
                 } else {
-                    if (i > 0) {
+                    if (stepIndex > 0) {
                         // If parent is not null and this is the first step, a scheduler
                         // has been created as route initiator so don't include the
                         // first step in activity logging.
                         parent = createPipeline(parent, stepId);
                     }
 
-                    parent = handler.handle(step, parent, this, flowIndex, stepIndex).orElse(parent);
+                    parent = handler.handle(step, parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
 
                     if (isConnectorSplitStep(step)) {
-                        if (i > 0) {
-                            if (parent instanceof PipelineDefinition) {
-                                parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
-                                parent = parent.end();
-                            } else if (parent instanceof ExpressionNode) {
-                                parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
-                                parent = parent.endParent();
-                            }
+                        if (stepIndex > 0) {
+                            parent = endParent(parent);
                         }
 
                         parent = configureConnectorSplit(step, parent, flowIndex, stepIndex).orElse(parent);
                         parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                         parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                    } else if (nextStep.map(Step::getStepKind)
+                                       .map(kind -> kind.equals(StepKind.foreach)).orElse(false)) {
+                        if (stepIndex > 0) {
+                            parent = endParent(parent);
+                        }
+
+                        parent = findHandler(nextStep.get()).handle(nextStep.get(), parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
+                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
+                        parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                        stepIndex++;
                     } else {
                         if (parent instanceof PipelineDefinition) {
                             parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
@@ -220,6 +229,18 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 }
             }
         }
+    }
+
+    private ProcessorDefinition<?> endParent(ProcessorDefinition<?> parent) {
+        if (parent instanceof PipelineDefinition) {
+            parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+            parent = parent.end();
+        } else if (parent instanceof ExpressionNode) {
+            parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+            parent = parent.endParent();
+        }
+
+        return parent;
     }
 
     private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, String flowName, String flowId, String stepId) {
@@ -295,7 +316,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return false;
     }
 
-    private Optional<ProcessorDefinition<?>> configureConnectorSplit(Step step, ProcessorDefinition<?> route, String flowIndex, String stepIndex) {
+    private Optional<ProcessorDefinition<?>> configureConnectorSplit(Step step, ProcessorDefinition<?> route, String flowIndex, int stepIndex) {
         if (isConnectorSplitStep(step)) {
             final ConnectorAction action = step.getActionAs(ConnectorAction.class).get();
             final ConnectorDescriptor descriptor = action.getDescriptor();
@@ -312,7 +333,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 route,
                 this,
                 flowIndex,
-                stepIndex);
+                String.valueOf(stepIndex));
         }
 
         return Optional.empty();

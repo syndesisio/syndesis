@@ -177,14 +177,14 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
 
         assertThat(route.getInputs()).hasSize(1);
         assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
-        assertThat(route.getOutputs()).hasSize(3);
+        assertThat(route.getOutputs()).hasSize(2);
         assertThat(getOutput(route, 0)).isInstanceOf(SetHeaderDefinition.class);
-        assertThat(getOutput(route, 1)).isInstanceOf(SetHeaderDefinition.class);
-        assertThat(getOutput(route, 2)).isInstanceOf(SplitDefinition.class);
-        assertThat(getOutput(route, 2).getOutputs()).hasSize(3);
-        assertThat(getOutput(route, 2, 0)).isInstanceOf(ProcessDefinition.class);
-        assertThat(getOutput(route, 2, 1)).isInstanceOf(PipelineDefinition.class);
-        assertThat(getOutput(route, 2, 2)).isInstanceOf(PipelineDefinition.class);
+        assertThat(getOutput(route, 1)).isInstanceOf(SplitDefinition.class);
+        assertThat(getOutput(route, 1).getOutputs()).hasSize(4);
+        assertThat(getOutput(route, 1, 0)).isInstanceOf(SetHeaderDefinition.class);
+        assertThat(getOutput(route, 1, 1)).isInstanceOf(ProcessDefinition.class);
+        assertThat(getOutput(route, 1, 2)).isInstanceOf(PipelineDefinition.class);
+        assertThat(getOutput(route, 1, 3)).isInstanceOf(PipelineDefinition.class);
     }
 
     @Test
