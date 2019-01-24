@@ -9,7 +9,11 @@ import {
   IntegrationsListView,
   ISortType,
 } from '@syndesis/ui';
-import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
+import {
+  getConnectionIcon,
+  WithListViewToolbarHelpers,
+  WithLoader,
+} from '@syndesis/utils';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import { AppContext } from '../../../app';
@@ -217,6 +221,18 @@ export class IntegrationsPage extends React.Component {
                                             monitoringLogUrl={getPodLogUrl(
                                               config,
                                               mi.monitoring
+                                            )}
+                                            startConnectionIcon={getConnectionIcon(
+                                              mi.integration.flows![0].steps![0]
+                                                .connection!,
+                                              process.env.PUBLIC_URL
+                                            )}
+                                            finishConnectionIcon={getConnectionIcon(
+                                              mi.integration.flows![0].steps![
+                                                mi.integration.flows![0].steps!
+                                                  .length - 1
+                                              ].connection!,
+                                              process.env.PUBLIC_URL
                                             )}
                                             key={index}
                                             i18nConfigurationRequired={t(

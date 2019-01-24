@@ -6,6 +6,7 @@ export * from './IntegrationFlowStep';
 export * from './IntegrationFlowStepDetails';
 export * from './IntegrationFlowStepGeneric';
 export * from './IntegrationFlowStepWithOverview';
+export * from './IntegrationIcon';
 export * from './IntegrationProgress';
 export * from './IntegrationStatus';
 export * from './IntegrationStatusDetail';

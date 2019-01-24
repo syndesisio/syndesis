@@ -1,5 +1,6 @@
 import { DropdownKebab, Icon, ListView, MenuItem } from 'patternfly-react';
 import * as React from 'react';
+import { IntegrationIcon } from './IntegrationIcon';
 import { IntegrationStatus } from './IntegrationStatus';
 import { IntegrationStatusDetail } from './IntegrationStatusDetail';
 import { IntegrationState } from './models';
@@ -14,6 +15,8 @@ export interface IIntegrationsListItemProps {
   monitoringCurrentStep?: number;
   monitoringTotalSteps?: number;
   monitoringLogUrl?: string;
+  startConnectionIcon: string;
+  finishConnectionIcon: string;
   i18nConfigurationRequired: string;
   i18nError: string;
   i18nPublished: string;
@@ -31,7 +34,26 @@ export class IntegrationsListItem extends React.Component<
     return (
       <ListView.Item
         actions={
-          <div>
+          <DropdownKebab
+            id={`integration-${this.props.integrationId}-action-menu`}
+            pullRight={true}
+          >
+            <MenuItem>Action 2</MenuItem>
+          </DropdownKebab>
+        }
+        heading={this.props.integrationName}
+        description={
+          this.props.isConfigurationRequired ? (
+            <>
+              <Icon type={'pf'} name={'warning-triangle-o'} />
+              {this.props.i18nConfigurationRequired}
+            </>
+          ) : (
+            ''
+          )
+        }
+        additionalInfo={[
+          <ListView.InfoItem key={1}>
             {this.props.currentState === 'Pending' ? (
               <IntegrationStatusDetail
                 targetState={this.props.targetState}
@@ -52,28 +74,15 @@ export class IntegrationsListItem extends React.Component<
                 i18nError={this.props.i18nError}
               />
             )}
-            <DropdownKebab
-              id={`integration-${this.props.integrationId}-action-menu`}
-              pullRight={true}
-            >
-              <MenuItem>Action 2</MenuItem>
-            </DropdownKebab>
-          </div>
+          </ListView.InfoItem>,
+        ]}
+        leftContent={
+          <IntegrationIcon
+            startConnectionIcon={this.props.startConnectionIcon}
+            finishConnectionIcon={this.props.finishConnectionIcon}
+          />
         }
-        heading={this.props.integrationName}
-        description={
-          this.props.isConfigurationRequired ? (
-            <>
-              <Icon type={'pf'} name={'warning-triangle-o'} />
-              {this.props.i18nConfigurationRequired}
-            </>
-          ) : (
-            ''
-          )
-        }
-        hideCloseIcon={true}
-        leftContent={<ListView.Icon name={'gear'} />}
-        stacked={false}
+        stacked={true}
       />
     );
   }

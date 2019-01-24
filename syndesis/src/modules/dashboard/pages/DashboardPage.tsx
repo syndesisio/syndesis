@@ -28,7 +28,7 @@ import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import { AppContext } from '../../../app';
-import { Connections } from '../../connections/containers/Connections';
+import { Connections } from '../../connections/containers';
 
 export interface IIntegrationCountsByState {
   Error: number;
@@ -192,7 +192,9 @@ export default () => (
                                 error={false}
                                 loading={!hasIntegrations}
                                 loaderChildren={
-                                  <IntegrationsListSkeleton width={500} />
+                                  <IntegrationsListSkeleton
+                                    width={window.innerWidth}
+                                  />
                                 }
                                 errorChildren={<div>TODO</div>}
                               >
@@ -241,6 +243,16 @@ export default () => (
                                             config,
                                             mi.monitoring
                                           )}
+                                          startConnectionIcon={
+                                            mi.integration.flows![0].steps![0]
+                                              .connection!.icon!
+                                          }
+                                          finishConnectionIcon={
+                                            mi.integration.flows![0].steps![
+                                              mi.integration.flows![0].steps!
+                                                .length - 1
+                                            ].connection!.icon!
+                                          }
                                           key={index}
                                           i18nConfigurationRequired={t(
                                             'integrations:ConfigurationRequired'
@@ -348,9 +360,6 @@ export default () => (
                           i18nLinkToConnections={t('linkToConnections')}
                           i18nLinkToIntegrations={t('linkToIntegrations')}
                           i18nTitle={t('title')}
-                          i18nTitleIntegrationUpdates={t(
-                            'titleIntegrationUpdates'
-                          )}
                         />
                       )}
                     </NamespacesConsumer>
