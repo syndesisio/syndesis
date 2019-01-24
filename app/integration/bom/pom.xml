@@ -157,6 +157,12 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-runtime-springboot</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
              <!-- Atlasmap runtime -->
       <dependency>
         <groupId>io.atlasmap</groupId>
