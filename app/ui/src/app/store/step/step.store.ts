@@ -28,6 +28,8 @@ export const SET_DATA = 'setData';
 export const CALL_ROUTE = 'callRoute';
 export const CONDITIONAL_PROCESSING = 'conditionalProcessing';
 export const SPLIT = 'split';
+export const FOREACH = 'foreach';
+export const END_FOREACH = 'endForeach';
 export const LOG = 'log';
 export const TEMPLATE = 'template';
 
@@ -128,7 +130,27 @@ $\{in.body.title\} // Evaluates true when body contains title.
         },
         */
       }
-    }
+    },
+    StepStore.requiresOutputDataShape({
+      id: undefined,
+      connection: undefined,
+      action: undefined,
+      name: 'Foreach',
+      description: 'Process each item in a set of data individually',
+      stepKind: FOREACH,
+      properties: {},
+      configuredProperties: undefined
+    }),
+    StepStore.requiresForeach({
+      id: undefined,
+      connection: undefined,
+      action: undefined,
+      name: 'EndForeach',
+      description: 'End processing items in a foreach',
+      stepKind: END_FOREACH,
+      properties: {},
+      configuredProperties: undefined
+    })
     /*
     {
       id: undefined,
@@ -171,18 +193,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
       description: 'Add conditions and multiple paths for processing data',
       properties: {},
       configuredProperties: undefined,
-    },
-    {
-      id: undefined,
-      connection: undefined,
-      action: undefined,
-      name: 'Split',
-      stepKind: SPLIT,
-      description:
-        'Split received data into data subsets that can be processed individually',
-      properties: {},
-      configuredProperties: undefined,
-    },
+    }
     */
   ];
 
@@ -338,6 +349,17 @@ $\{in.body.title\} // Evaluates true when body contains title.
       subsequentSteps: Array<Step>
     ) => {
       return StepStore.stepsHaveOutputDataShape(previousSteps);
+    };
+    return obj;
+  }
+
+  static requiresForeach(obj: StepKind): StepKind {
+    obj.visible = (
+      position: number,
+      previousSteps: Array<Step>,
+      subsequentSteps: Array<Step>
+    ) => {
+      return previousSteps.filter(s => s.stepKind == FOREACH).length > 0;
     };
     return obj;
   }
