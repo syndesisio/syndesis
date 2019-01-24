@@ -18,7 +18,7 @@ package io.syndesis.connector.support.maven;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.atlasmap.xml.inspect.SchemaInspector;
+import io.atlasmap.xml.inspect.XmlSchemaInspector;
 import io.atlasmap.xml.inspect.XmlInspectionException;
 import io.atlasmap.xml.v2.XmlDocument;
 import org.apache.commons.io.IOUtils;
@@ -121,7 +121,7 @@ public class GenerateResourceInspectionsMojo extends AbstractMojo {
     }
 
     private void generateInspection(Path xsdFile) throws IOException {
-        SchemaInspector inspector = new SchemaInspector();
+        XmlSchemaInspector inspector = new XmlSchemaInspector();
         try {
             inspector.inspect(xsdFile.toFile());
         } catch (XmlInspectionException e) {

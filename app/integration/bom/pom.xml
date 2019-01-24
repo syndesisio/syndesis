@@ -29,7 +29,7 @@
   <properties>
     <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
     <camel.version>2.21.0.fuse-730033</camel.version>
-    <atlasmap.version>1.38.1</atlasmap.version>
+    <atlasmap.version>1.39.0</atlasmap.version>
   </properties>
 
     <!-- Metadata need to publish to central -->
