@@ -75,6 +75,7 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
     private static final String FILTERED_TEST_SERVER_DATA_ID_2 = "filtered-test-server-data-id-2.json";
     private static final String SINGLE_TEST_ENTITY_DATA = "single-test-entity.json";
     private static final String REF_SERVER_PEOPLE_DATA = "ref-server-people-data.json";
+    private static final String TEST_SERVER_DATA_EMPTY = "test-server-data-empty.json";
 
     /**
      * Creates a camel context complete with a properties component that handles
@@ -182,16 +183,6 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             }
         }
     }
-
-
-
-
-
-
-
-    // ***************************
-    //
-    // ***************************
 
     @Test
     public void testAuthenticatedODataRoute() throws Exception {
@@ -727,6 +718,90 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             assertTrue(consumerProperties.size() > 0);
             assertEquals(delayValue, consumerProperties.get(DELAY));
             assertEquals(initialDelayValue, consumerProperties.get(INITIAL_DELAY));
+
+        } finally {
+            context.stop();
+            if (server != null) {
+                server.stop();
+            }
+        }
+    }
+
+    @Test
+    public void testODataRouteAlreadySeen() throws Exception {
+        String backoffIdleThreshold = "1";
+        String backoffMultiplier = "2";
+
+        final CamelContext context = createCamelContext();
+
+        ODataTestServer server = null;
+        try {
+            server = new ODataTestServer();
+            server.start();
+
+            ConnectorAction odataAction = createReadAction();
+            Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, server.serviceUrl())
+                                                            .property(FILTER_ALREADY_SEEN, Boolean.TRUE.toString())
+                                                            .property(BACKOFF_IDLE_THRESHOLD, backoffIdleThreshold)
+                                                            .property(BACKOFF_MULTIPLIER, backoffMultiplier));
+
+            Step odataStep = new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .action(odataAction)
+                .connection(
+                            new Connection.Builder()
+                                .connector(odataConnector)
+                                .build())
+                .putConfiguredProperty(METHOD_NAME, server.methodName())
+                .build();
+
+            Step mockStep = createMockStep();
+            Integration odataIntegration = createIntegration(odataStep, mockStep);
+
+            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+            context.addRoutes(routes);
+            context.start();
+
+            dumpRoutes(context);
+
+            int expectedMsgCount = 3;
+            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
+            result.setExpectedMessageCount(expectedMsgCount);
+            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
+            result.assertIsSatisfied();
+
+            for (int i = 0; i < expectedMsgCount; ++i) {
+                Object body = result.getExchanges().get(i).getIn().getBody();
+                assertTrue(body instanceof String);
+                String json = (String) body;
+
+                if (i == 0) {
+                    //
+                    // Expect all results to be returned in the first polling message
+                    //
+                    String expected = testData(TEST_SERVER_DATA);
+                    JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+                }
+                else {
+                    //
+                    // Subsequent polling messages should be empty
+                    //
+                    String expected = testData(TEST_SERVER_DATA_EMPTY);
+                    JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+                }
+            }
+
+            //
+            // Check backup consumer options carried through to olingo4 component
+            //
+            Olingo4Endpoint olingo4Endpoint = context.getEndpoint("olingo4-olingo4-0-0://read/Products", Olingo4Endpoint.class);
+            assertNotNull(olingo4Endpoint);
+            Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
+            assertNotNull(consumerProperties);
+            assertTrue(consumerProperties.size() > 0);
+            assertEquals(backoffIdleThreshold, consumerProperties.get(BACKOFF_IDLE_THRESHOLD));
+            assertEquals(backoffMultiplier, consumerProperties.get(BACKOFF_MULTIPLIER));
 
         } finally {
             context.stop();
