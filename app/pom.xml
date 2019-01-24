@@ -1185,7 +1185,7 @@
 
       <dependency>
         <groupId>io.syndesis.integration</groupId>
-        <artifactId>integration-routebuilder</artifactId>
+        <artifactId>integration-runtime-springboot</artifactId>
         <version>${project.version}</version>
       </dependency>
 
