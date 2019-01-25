@@ -96,7 +96,7 @@ export class ConnectionsWithToolbar extends React.Component<
                   <Connections
                     error={this.props.error}
                     loading={this.props.loading}
-                    connections={this.props.connections}
+                    connections={filteredAndSortedConnections}
                     getConnectionHref={this.props.getConnectionHref}
                   />
                 </ConnectionsListView>
