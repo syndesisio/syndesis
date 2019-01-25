@@ -12,6 +12,7 @@ import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../../app';
+import resolvers from '../resolvers';
 
 export interface IIntegrationAction {
   href?: H.LocationDescriptor;
@@ -63,7 +64,9 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                         this.props.integrations.map(
                           (mi: IntegrationWithMonitoring, index) => {
                             const editAction: IIntegrationAction = {
-                              href: '#todo',
+                              href: resolvers.integration.edit.index({
+                                integration: mi.integration,
+                              }),
                               label: 'Edit',
                             };
                             const startAction: IIntegrationAction = {

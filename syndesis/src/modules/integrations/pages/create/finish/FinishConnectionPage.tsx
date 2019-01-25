@@ -11,7 +11,7 @@ import * as React from 'react';
 import { WithClosedNavigation } from '../../../../../containers';
 import { PageTitle } from '../../../../../containers/PageTitle';
 import {
-  IntegrationCreatorBreadcrumbs,
+  IntegrationEditorBreadcrumbs,
   IntegrationEditorChooseConnection,
 } from '../../../components';
 import resolvers from '../../../resolvers';
@@ -32,7 +32,7 @@ export class FinishConnectionPage extends React.Component {
             <>
               <PageTitle title={'Choose a Finish Connection'} />
               <IntegrationEditorLayout
-                header={<IntegrationCreatorBreadcrumbs step={2} />}
+                header={<IntegrationEditorBreadcrumbs step={2} />}
                 sidebar={
                   <IntegrationVerticalFlow disabled={true}>
                     {({ expanded }) => (

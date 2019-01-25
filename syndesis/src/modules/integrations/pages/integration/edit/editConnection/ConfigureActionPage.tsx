@@ -59,7 +59,7 @@ export class ConfigureActionPage extends React.Component {
                   );
                   if (moreConfigurationSteps) {
                     history.push(
-                      resolvers.create.configure.addConnection.configureAction({
+                      resolvers.integration.edit.addConnection.configureAction({
                         actionId,
                         connection: stepObject.connection!,
                         integration,
@@ -70,7 +70,7 @@ export class ConfigureActionPage extends React.Component {
                     );
                   } else {
                     history.push(
-                      resolvers.create.configure.index({
+                      resolvers.integration.edit.index({
                         integration: updatedIntegration,
                       })
                     );
@@ -89,7 +89,7 @@ export class ConfigureActionPage extends React.Component {
                       <>
                         <PageTitle title={'Configure the action'} />
                         <IntegrationEditorLayout
-                          header={<IntegrationEditorBreadcrumbs step={3} />}
+                          header={<IntegrationEditorBreadcrumbs step={1} />}
                           sidebar={
                             <IntegrationEditorSidebar
                               steps={getSteps(
@@ -100,14 +100,14 @@ export class ConfigureActionPage extends React.Component {
                             />
                           }
                           content={form}
-                          backHref={resolvers.create.configure.editConnection.selectAction(
+                          backHref={resolvers.integration.edit.editConnection.selectAction(
                             {
                               connection: stepObject.connection!,
                               integration,
                               position,
                             }
                           )}
-                          cancelHref={resolvers.create.configure.index({
+                          cancelHref={resolvers.integration.edit.index({
                             integration,
                           })}
                           onNext={onSubmit}

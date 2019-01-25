@@ -9,7 +9,7 @@ import * as React from 'react';
 import { WithClosedNavigation } from '../../../../../containers';
 import { PageTitle } from '../../../../../containers/PageTitle';
 import {
-  IntegrationCreatorBreadcrumbs,
+  IntegrationEditorBreadcrumbs,
   IntegrationEditorChooseConnection,
 } from '../../../components';
 import resolvers from '../../../resolvers';
@@ -20,7 +20,7 @@ export class StartConnectionPage extends React.Component {
     return (
       <WithClosedNavigation>
         <IntegrationEditorLayout
-          header={<IntegrationCreatorBreadcrumbs step={1} />}
+          header={<IntegrationEditorBreadcrumbs step={1} />}
           sidebar={
             <IntegrationVerticalFlow disabled={true}>
               {({ expanded }) => (

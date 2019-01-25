@@ -267,4 +267,165 @@ export default {
       ),
     },
   },
+  integration: {
+    details: makeResolver<{ integration: Integration }>(
+      routes.integration.details,
+      ({ integration }) => ({
+        params: {
+          integrationId: integration.id,
+        },
+        state: {
+          integration,
+        },
+      })
+    ),
+    edit: {
+      index: makeResolver<{ integration: Integration }>(
+        routes.integration.edit.index,
+        ({ integration }) => ({
+          params: {
+            integrationId: integration.id,
+          },
+          state: {
+            integration,
+          },
+        })
+      ),
+      addConnection: {
+        selectConnection: makeResolver<{
+          position: string;
+          integration: Integration;
+        }>(
+          routes.integration.edit.addConnection.selectConnection,
+          ({ position, integration }) => ({
+            params: {
+              integrationId: integration.id,
+              position,
+            },
+            state: {
+              integration,
+            },
+          })
+        ),
+        selectAction: makeResolver<{
+          position: string;
+          integration: Integration;
+          connection: ConnectionOverview;
+        }>(
+          routes.integration.edit.addConnection.selectAction,
+          ({ connection, position, integration }) => ({
+            params: {
+              integrationId: integration.id,
+              position,
+              connectionId: connection.id,
+            },
+            state: {
+              integration,
+              connection,
+            },
+          })
+        ),
+        configureAction: makeResolver<{
+          connection: ConnectionOverview;
+          actionId: string;
+          step?: number;
+          integration: Integration;
+          updatedIntegration?: Integration;
+          position: string;
+        }>(
+          routes.integration.edit.addConnection.configureAction,
+          ({
+            connection,
+            integration,
+            actionId,
+            step,
+            position,
+            updatedIntegration,
+          }) => ({
+            params: {
+              integrationId: integration.id,
+              connectionId: connection.id,
+              actionId,
+              step,
+              position,
+            },
+            state: {
+              connection,
+              integration,
+              updatedIntegration,
+            },
+          })
+        ),
+      },
+      editConnection: {
+        selectAction: makeResolver<{
+          position: string;
+          integration: Integration;
+          connection: ConnectionOverview;
+        }>(
+          routes.integration.edit.editConnection.selectAction,
+          ({ connection, position, integration }) => ({
+            params: {
+              integrationId: integration.id,
+              position,
+              connectionId: connection.id,
+            },
+            state: {
+              integration,
+              connection,
+            },
+          })
+        ),
+        configureAction: makeResolver<{
+          actionId: string;
+          step?: number;
+          integration: Integration;
+          updatedIntegration?: Integration;
+          position: string;
+        }>(
+          routes.integration.edit.editConnection.configureAction,
+          ({ integration, actionId, step, position, updatedIntegration }) => ({
+            params: {
+              integrationId: integration.id,
+              actionId,
+              step,
+              position,
+            },
+            state: {
+              integration,
+              updatedIntegration,
+            },
+          })
+        ),
+      },
+      addStep: {
+        selectStep: makeResolver<{
+          position: string;
+          integration: Integration;
+        }>(
+          routes.integration.edit.addStep.selectStep,
+          ({ position, integration }) => ({
+            params: {
+              integrationId: integration.id,
+              position,
+            },
+            state: {
+              integration,
+            },
+          })
+        ),
+      },
+      saveAndPublish: makeResolver<{ integration: Integration }>(
+        routes.integration.edit.saveAndPublish,
+        ({ integration }) => ({
+          params: {
+            integrationId: integration.id,
+          },
+          state: {
+            integration,
+          },
+        })
+      ),
+    },
+  },
 };

@@ -97,7 +97,7 @@ export function getCreateConfigureActionHref(
   });
 }
 
-export function getEditConfigureActionHref(
+export function getCreateEditConfigureActionHref(
   position: string,
   integration: Integration,
   action: Action
@@ -109,7 +109,9 @@ export function getEditConfigureActionHref(
   });
 }
 
-export function getConfigureConnectionHrefCallback(integration: Integration) {
+export function getCreateConfigureConnectionHrefCallback(
+  integration: Integration
+) {
   return (stepIdx: number, step: Step) =>
     resolvers.create.configure.editConnection.configureAction({
       actionId: step.action!.id!,
@@ -118,6 +120,76 @@ export function getConfigureConnectionHrefCallback(integration: Integration) {
     });
 }
 
-export function getConfigureStepHrefCallback(integration: Integration) {
+export function getCreateConfigureStepHrefCallback(integration: Integration) {
+  return (stepIdx: number, step: Step) => 'TODO';
+}
+
+export function getEditAddConnectionHref(
+  integration: Integration,
+  position: string
+) {
+  return resolvers.integration.edit.addConnection.selectConnection({
+    integration,
+    position,
+  });
+}
+
+export function getEditAddStepHref(integration: Integration, position: string) {
+  return resolvers.integration.edit.addStep.selectStep({
+    integration,
+    position,
+  });
+}
+
+export function getEditSelectActionHref(
+  position: string,
+  integration: Integration,
+  connection: ConnectionOverview
+) {
+  return resolvers.integration.edit.addConnection.selectAction({
+    connection,
+    integration,
+    position,
+  });
+}
+
+export function getEditConfigureActionHref(
+  position: string,
+  integration: Integration,
+  connection: ConnectionOverview,
+  action: Action
+): H.LocationDescriptor {
+  return resolvers.integration.edit.addConnection.configureAction({
+    actionId: action.id!,
+    connection,
+    integration,
+    position,
+  });
+}
+
+export function getEditEditConfigureActionHref(
+  position: string,
+  integration: Integration,
+  action: Action
+): H.LocationDescriptor {
+  return resolvers.integration.edit.editConnection.configureAction({
+    actionId: action.id!,
+    integration,
+    position,
+  });
+}
+
+export function getEditConfigureConnectionHrefCallback(
+  integration: Integration
+) {
+  return (stepIdx: number, step: Step) =>
+    resolvers.integration.edit.editConnection.configureAction({
+      actionId: step.action!.id!,
+      integration,
+      position: `${stepIdx}`,
+    });
+}
+
+export function getEditConfigureStepHrefCallback(integration: Integration) {
   return (stepIdx: number, step: Step) => 'TODO';
 }

@@ -67,13 +67,13 @@ export class SaveIntegrationPage extends React.Component {
                       submitForm,
                     }) => (
                       <IntegrationEditorLayout
-                        header={<IntegrationEditorBreadcrumbs step={4} />}
+                        header={<IntegrationEditorBreadcrumbs step={2} />}
                         content={
                           <>
-                            <PageTitle title={'Create an integration'} />
+                            <PageTitle title={'Save the integration'} />
                             <div className={'container-fluid'}>
-                              <h1>Create an integration</h1>
-                              <p>Add details about this integration.</p>
+                              <h1>Save the integration</h1>
+                              <p>Update details about this integration.</p>
                               <form
                                 className="form-horizontal required-pf"
                                 role="form"
@@ -93,7 +93,7 @@ export class SaveIntegrationPage extends React.Component {
                           </>
                         }
                         cancelHref={resolvers.list()}
-                        backHref={resolvers.create.configure.index({
+                        backHref={resolvers.integration.edit.index({
                           integration,
                         })}
                         onNext={submitForm}

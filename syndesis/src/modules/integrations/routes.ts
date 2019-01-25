@@ -18,6 +18,7 @@ const editorRoutes = {
   }),
   editStep: ':position/edit-step',
   saveAndPublish: 'save',
+  root: '',
 };
 
 export default include('/integrations', {
@@ -39,5 +40,6 @@ export default include('/integrations', {
   integration: include(':integrationId', {
     details: '',
     edit: include('edit', editorRoutes),
+    root: '',
   }),
 });

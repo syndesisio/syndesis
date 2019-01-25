@@ -11,10 +11,10 @@ import {
 } from '../../../components';
 import resolvers from '../../../resolvers';
 import {
-  getCreateConfigureConnectionHrefCallback,
-  getCreateConfigureStepHrefCallback,
-  getCreateAddConnectionHref,
-  getCreateAddStepHref,
+  getEditConfigureConnectionHrefCallback,
+  getEditConfigureStepHrefCallback,
+  getEditAddConnectionHref,
+  getEditAddStepHref,
 } from '../../resolversHelpers';
 
 export interface IAddStepRouteState {
@@ -28,7 +28,7 @@ export class AddStepPage extends React.Component {
         <WithRouteData<null, IAddStepRouteState>>
           {(_, { integration }) => (
             <IntegrationEditorLayout
-              header={<IntegrationEditorBreadcrumbs step={3} />}
+              header={<IntegrationEditorBreadcrumbs step={1} />}
               content={
                 <>
                   <PageTitle title={'Save or add step'} />
@@ -42,18 +42,18 @@ export class AddStepPage extends React.Component {
                       {({ getSteps }) => (
                         <IntegrationEditorStepAdder
                           steps={getSteps(integration, 0)}
-                          addConnectionHref={getCreateAddConnectionHref.bind(
+                          addConnectionHref={getEditAddConnectionHref.bind(
                             null,
                             integration
                           )}
-                          addStepHref={getCreateAddStepHref.bind(
+                          addStepHref={getEditAddStepHref.bind(
                             null,
                             integration
                           )}
-                          configureConnectionHref={getCreateConfigureConnectionHrefCallback(
+                          configureConnectionHref={getEditConfigureConnectionHrefCallback(
                             integration
                           )}
-                          configureStepHref={getCreateConfigureStepHrefCallback(
+                          configureStepHref={getEditConfigureStepHrefCallback(
                             integration
                           )}
                         />
@@ -63,18 +63,7 @@ export class AddStepPage extends React.Component {
                 </>
               }
               cancelHref={resolvers.list()}
-              backHref={resolvers.create.finish.configureAction({
-                actionId: integration.flows![0].steps![
-                  integration.flows![0].steps!.length - 1
-                ].action!.id!,
-                finishConnection: integration.flows![0].steps![
-                  integration.flows![0].steps!.length - 1
-                ].connection!,
-                integration,
-                startAction: integration.flows![0].steps![0].action!,
-                startConnection: integration.flows![0].steps![0].connection!,
-              })}
-              nextHref={resolvers.create.configure.saveAndPublish({
+              nextHref={resolvers.integration.edit.saveAndPublish({
                 integration,
               })}
             />

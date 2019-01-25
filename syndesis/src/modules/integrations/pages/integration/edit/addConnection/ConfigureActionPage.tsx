@@ -1,5 +1,5 @@
 import { WithIntegrationHelpers } from '@syndesis/api';
-import { Integration } from '@syndesis/models';
+import { ConnectionOverview, Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -22,6 +22,7 @@ export interface IConfigureActionRouteParams {
 }
 
 export interface IConfigureActionRouteState {
+  connection: ConnectionOverview;
   integration: Integration;
   updatedIntegration?: Integration;
 }
@@ -31,14 +32,14 @@ export class ConfigureActionPage extends React.Component {
     return (
       <WithClosedNavigation>
         <WithIntegrationHelpers>
-          {({ getSteps, getStep, updateConnection }) => (
+          {({ addConnection, getStep, getSteps, updateConnection }) => (
             <WithRouteData<
               IConfigureActionRouteParams,
               IConfigureActionRouteState
             >>
               {(
                 { actionId, step = '0', position },
-                { integration, updatedIntegration },
+                { connection, integration, updatedIntegration },
                 { history }
               ) => {
                 const stepAsNumber = parseInt(step, 10);
@@ -49,9 +50,11 @@ export class ConfigureActionPage extends React.Component {
                   moreConfigurationSteps,
                   values,
                 }: IOnUpdatedIntegrationProps) => {
-                  updatedIntegration = await updateConnection(
+                  updatedIntegration = await (stepAsNumber === 0
+                    ? addConnection
+                    : updateConnection)(
                     updatedIntegration || integration,
-                    stepObject.connection!,
+                    connection,
                     action,
                     0,
                     positionAsNumber,
@@ -59,9 +62,9 @@ export class ConfigureActionPage extends React.Component {
                   );
                   if (moreConfigurationSteps) {
                     history.push(
-                      resolvers.create.configure.addConnection.configureAction({
+                      resolvers.integration.edit.addConnection.configureAction({
                         actionId,
-                        connection: stepObject.connection!,
+                        connection,
                         integration,
                         position,
                         step: stepAsNumber + 1,
@@ -70,7 +73,7 @@ export class ConfigureActionPage extends React.Component {
                     );
                   } else {
                     history.push(
-                      resolvers.create.configure.index({
+                      resolvers.integration.edit.index({
                         integration: updatedIntegration,
                       })
                     );
@@ -79,7 +82,7 @@ export class ConfigureActionPage extends React.Component {
 
                 return (
                   <WithConfigurationForm
-                    connection={stepObject.connection!}
+                    connection={connection}
                     actionId={actionId}
                     configurationStep={stepAsNumber}
                     initialValue={stepObject.configuredProperties}
@@ -89,27 +92,41 @@ export class ConfigureActionPage extends React.Component {
                       <>
                         <PageTitle title={'Configure the action'} />
                         <IntegrationEditorLayout
-                          header={<IntegrationEditorBreadcrumbs step={3} />}
+                          header={<IntegrationEditorBreadcrumbs step={1} />}
                           sidebar={
                             <IntegrationEditorSidebar
                               steps={getSteps(
                                 updatedIntegration || integration,
                                 0
                               )}
-                              activeIndex={positionAsNumber}
+                              addAtIndex={
+                                stepAsNumber === 0
+                                  ? positionAsNumber
+                                  : undefined
+                              }
+                              addIcon={
+                                <img
+                                  src={connection.icon}
+                                  width={24}
+                                  height={24}
+                                />
+                              }
+                              addI18nTitle={`${positionAsNumber + 1}. ${
+                                connection.connector!.name
+                              }`}
+                              addI18nTooltip={`${positionAsNumber + 1}. ${
+                                connection.name
+                              }`}
+                              addI18nDescription={'Configure the action'}
                             />
                           }
                           content={form}
-                          backHref={resolvers.create.configure.editConnection.selectAction(
-                            {
-                              connection: stepObject.connection!,
-                              integration,
-                              position,
-                            }
-                          )}
-                          cancelHref={resolvers.create.configure.index({
+                          cancelHref={resolvers.integration.edit.index({
                             integration,
                           })}
+                          backHref={resolvers.integration.edit.addConnection.selectAction(
+                            { position, integration, connection }
+                          )}
                           onNext={onSubmit}
                           isNextLoading={isSubmitting}
                         />

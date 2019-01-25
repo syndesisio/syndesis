@@ -11,7 +11,7 @@ import {
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
-import { getCreateConfigureActionHref } from '../../../resolversHelpers';
+import { getEditConfigureActionHref } from '../../../resolversHelpers';
 
 export interface ISelectActionRouteParams {
   connectionId: string;
@@ -41,7 +41,7 @@ export class SelectActionPage extends React.Component {
                     <>
                       <PageTitle title={'Choose an action'} />
                       <IntegrationEditorLayout
-                        header={<IntegrationEditorBreadcrumbs step={3} />}
+                        header={<IntegrationEditorBreadcrumbs step={1} />}
                         sidebar={
                           <WithIntegrationHelpers>
                             {({ getSteps }) => {
@@ -85,7 +85,7 @@ export class SelectActionPage extends React.Component {
                             actions={data.actionsWithTo.sort((a, b) =>
                               a.name.localeCompare(b.name)
                             )}
-                            getActionHref={getCreateConfigureActionHref.bind(
+                            getActionHref={getEditConfigureActionHref.bind(
                               null,
                               position,
                               integration,
@@ -93,10 +93,10 @@ export class SelectActionPage extends React.Component {
                             )}
                           />
                         }
-                        cancelHref={resolvers.create.configure.index({
+                        cancelHref={resolvers.integration.edit.index({
                           integration,
                         })}
-                        backHref={resolvers.create.configure.addConnection.selectConnection(
+                        backHref={resolvers.integration.edit.addConnection.selectConnection(
                           { position, integration }
                         )}
                       />

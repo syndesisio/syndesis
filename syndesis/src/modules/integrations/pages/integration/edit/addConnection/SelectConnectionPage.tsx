@@ -11,7 +11,7 @@ import {
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
-import { getCreateSelectActionHref } from '../../../resolversHelpers';
+import { getEditSelectActionHref } from '../../../resolversHelpers';
 
 export interface ISelectConnectionRouteParams {
   position: string;
@@ -35,7 +35,7 @@ export class SelectConnectionPage extends React.Component {
             <>
               <PageTitle title={'Choose a connection'} />
               <IntegrationEditorLayout
-                header={<IntegrationEditorBreadcrumbs step={3} />}
+                header={<IntegrationEditorBreadcrumbs step={1} />}
                 sidebar={
                   <WithIntegrationHelpers>
                     {({ getSteps }) => {
@@ -63,7 +63,7 @@ export class SelectConnectionPage extends React.Component {
                         i18nSubtitle={
                           'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
                         }
-                        getConnectionHref={getCreateSelectActionHref.bind(
+                        getConnectionHref={getEditSelectActionHref.bind(
                           null,
                           position,
                           integration
@@ -72,7 +72,7 @@ export class SelectConnectionPage extends React.Component {
                     )}
                   </WithConnections>
                 }
-                cancelHref={resolvers.create.configure.index({ integration })}
+                cancelHref={resolvers.integration.edit.index({ integration })}
               />
             </>
           )}
