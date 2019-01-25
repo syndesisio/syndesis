@@ -101,6 +101,7 @@ public class ContinuousDeliveryProviderImplTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void exportResources() throws Exception {
         final StreamingOutput streamingOutput = provider.exportResources(ENVIRONMENT, false);
         assertThat(streamingOutput, is(notNullValue()));
@@ -110,6 +111,7 @@ public class ContinuousDeliveryProviderImplTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void importResources() throws Exception {
         // export integration
         final StreamingOutput streamingOutput = provider.exportResources(ENVIRONMENT, false);
