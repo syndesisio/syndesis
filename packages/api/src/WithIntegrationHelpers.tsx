@@ -3,6 +3,7 @@ import {
   ActionDescriptor,
   Connection,
   Integration,
+  IntegrationOverview,
   Step,
 } from '@syndesis/models';
 import { key } from '@syndesis/utils';
@@ -41,6 +42,10 @@ export interface IWithIntegrationHelpersChildrenProps {
   getSteps(value: Integration, flow: number): Step[];
   getStep(value: Integration, flow: number, step: number): Step;
   setDraft(id: string, value: Integration): Promise<void>;
+  canPublish(integration: IntegrationOverview): boolean;
+  canActivate(integration: IntegrationOverview): boolean;
+  canEdit(integration: IntegrationOverview): boolean;
+  canDeactivate(integration: IntegrationOverview): boolean;
 }
 
 export interface IWithIntegrationHelpersProps {
@@ -296,9 +301,32 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     }
   }
 
+  public canPublish(integration: IntegrationOverview) {
+    return integration.currentState !== 'Pending';
+  }
+
+  public canActivate(integration: IntegrationOverview) {
+    return (
+      integration.currentState !== 'Pending' &&
+      integration.currentState !== 'Published'
+    );
+  }
+
+  public canEdit(integration: IntegrationOverview) {
+    return integration.currentState !== 'Pending';
+  }
+
+  public canDeactivate(integration: IntegrationOverview) {
+    return integration.currentState !== 'Unpublished';
+  }
+
   public render() {
     return this.props.children({
       addConnection: this.addConnection,
+      canActivate: this.canActivate,
+      canDeactivate: this.canDeactivate,
+      canEdit: this.canEdit,
+      canPublish: this.canPublish,
       createDraft: this.createDraft,
       getDraft: this.getDraft,
       getEmptyIntegration: this.getEmptyIntegration,

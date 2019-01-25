@@ -26,48 +26,60 @@ export class IntegrationEditorChooseConnection extends React.Component<
           <p>{this.props.i18nSubtitle}</p>
         </div>
         <div className={'container-fluid'}>
-          <WithLoader
-            error={this.props.error}
-            loading={this.props.loading}
-            loaderChildren={
-              <IntegrationsListSkeleton
-                width={window.innerWidth}
-                style={{
-                  backgroundColor: '#FFF',
-                  marginTop: 30,
-                }}
-              />
-            }
-            errorChildren={<div>TODO</div>}
-          >
-            {() => (
-              <ListView>
-                {this.props.connections.map((c, idx) => (
+          <ListView>
+            <WithLoader
+              error={this.props.error}
+              loading={this.props.loading}
+              loaderChildren={
+                <>
+                  <div className={'list-group-item'}>
+                    <div>
+                      <IntegrationsListSkeleton />
+                    </div>
+                  </div>
+                  <div className={'list-group-item'}>
+                    <div>
+                      <IntegrationsListSkeleton />
+                    </div>
+                  </div>
+                  <div className={'list-group-item'}>
+                    <div>
+                      <IntegrationsListSkeleton />
+                    </div>
+                  </div>
+                </>
+              }
+              errorChildren={<div>TODO</div>}
+            >
+              {() => (
+                <>
+                  {this.props.connections.map((c, idx) => (
+                    <ListView.Item
+                      key={idx}
+                      heading={c.name}
+                      description={c.description}
+                      leftContent={<img src={c.icon} width={24} height={24} />}
+                      actions={
+                        <Link
+                          to={this.props.getConnectionHref(c)}
+                          className={'btn btn-default'}
+                        >
+                          Select
+                        </Link>
+                      }
+                    />
+                  ))}
                   <ListView.Item
-                    key={idx}
-                    heading={c.name}
-                    description={c.description}
-                    leftContent={<img src={c.icon} width={24} height={24} />}
                     actions={
-                      <Link
-                        to={this.props.getConnectionHref(c)}
-                        className={'btn btn-default'}
-                      >
-                        Select
+                      <Link to={'#'} className={'btn btn-default'}>
+                        Create connection
                       </Link>
                     }
                   />
-                ))}
-                <ListView.Item
-                  actions={
-                    <Link to={'#'} className={'btn btn-default'}>
-                      Create connection
-                    </Link>
-                  }
-                />
-              </ListView>
-            )}
-          </WithLoader>
+                </>
+              )}
+            </WithLoader>
+          </ListView>
         </div>
       </>
     );

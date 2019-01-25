@@ -1,4 +1,4 @@
-import { DropdownKebab, Icon, ListView, MenuItem } from 'patternfly-react';
+import { Icon, ListView } from 'patternfly-react';
 import * as React from 'react';
 import { IntegrationIcon } from './IntegrationIcon';
 import { IntegrationStatus } from './IntegrationStatus';
@@ -17,6 +17,7 @@ export interface IIntegrationsListItemProps {
   monitoringLogUrl?: string;
   startConnectionIcon: string;
   finishConnectionIcon: string;
+  actions: any;
   i18nConfigurationRequired: string;
   i18nError: string;
   i18nPublished: string;
@@ -33,14 +34,7 @@ export class IntegrationsListItem extends React.Component<
   public render() {
     return (
       <ListView.Item
-        actions={
-          <DropdownKebab
-            id={`integration-${this.props.integrationId}-action-menu`}
-            pullRight={true}
-          >
-            <MenuItem>Action 2</MenuItem>
-          </DropdownKebab>
-        }
+        actions={this.props.actions}
         heading={this.props.integrationName}
         description={
           this.props.isConfigurationRequired ? (
