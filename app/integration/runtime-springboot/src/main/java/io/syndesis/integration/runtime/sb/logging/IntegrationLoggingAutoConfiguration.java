@@ -18,8 +18,8 @@ package io.syndesis.integration.runtime.sb.logging;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
+import io.syndesis.integration.runtime.logging.BodyLogger;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.spi.InterceptStrategy;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
@@ -63,6 +63,12 @@ public class IntegrationLoggingAutoConfiguration {
                 // no ops
             }
         };
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(BodyLogger.class)
+    public BodyLogger bodyLogger() {
+        return new BodyLogger.Default();
     }
 
     @Bean

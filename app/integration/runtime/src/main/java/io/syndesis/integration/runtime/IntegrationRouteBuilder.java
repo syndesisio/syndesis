@@ -44,11 +44,11 @@ import io.syndesis.integration.runtime.handlers.DataMapperStepHandler;
 import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.ExpressionFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.ExtensionStepHandler;
+import io.syndesis.integration.runtime.handlers.ForeachStepHandler;
 import io.syndesis.integration.runtime.handlers.HeadersStepHandler;
 import io.syndesis.integration.runtime.handlers.LogStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
-import io.syndesis.integration.runtime.handlers.SplitStepHandler;
 import io.syndesis.integration.runtime.handlers.TemplateStepHandler;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.ActivityTrackingPolicy;
@@ -96,7 +96,8 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         this.stepHandlerList.add(new ExpressionFilterStepHandler());
         this.stepHandlerList.add(new RuleFilterStepHandler());
         this.stepHandlerList.add(new ExtensionStepHandler());
-        this.stepHandlerList.add(new SplitStepHandler());
+        this.stepHandlerList.add(new ForeachStepHandler());
+        this.stepHandlerList.add(new ForeachStepHandler.EndHandler());
         this.stepHandlerList.add(new LogStepHandler());
         this.stepHandlerList.add(new HeadersStepHandler());
         this.stepHandlerList.add(new TemplateStepHandler());
@@ -130,7 +131,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
     }
 
-    private void configureFlow(Flow flow, String flowIndex) throws URISyntaxException {
+    private void configureFlow(Flow flow, final String flowIndex) throws URISyntaxException {
         final List<Step> steps = flow.getSteps();
         final String flowId = flow.getId().orElseGet(KeyGenerator::createKey);
         final String flowName = flow.getName();
@@ -144,9 +145,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
         }
 
-        for (int i = 0; i < steps.size(); i++) {
-            final Step step = steps.get(i);
-            final String stepIndex = Integer.toString(i);
+        for (int stepIndex = 0; stepIndex < steps.size(); stepIndex++) {
+            final Step step = steps.get(stepIndex);
+            final Optional<Step> nextStep = stepIndex < steps.size() -1 ? Optional.of(steps.get(stepIndex + 1)) : Optional.empty();
             final String stepId = step.getId().orElseGet(KeyGenerator::createKey);
             final IntegrationStepHandler handler = findHandler(step);
 
@@ -158,52 +159,88 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     throw new IllegalStateException("The handler for step kind " + step.getKind() + " is not a consumer");
                 }
 
-                Optional<ProcessorDefinition<?>> definition = handler.handle(step, null, this, flowIndex, stepIndex);
+                Optional<ProcessorDefinition<?>> definition = handler.handle(step, null, this, flowIndex, String.valueOf(stepIndex));
                 if (definition.isPresent()) {
                     parent = definition.get();
                     parent = configureRouteDefinition(parent, flowName, flowId, stepId);
                     parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
-                    parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                     parent = configureConnectorSplit(step, parent, flowIndex, stepIndex).orElse(parent);
-                    parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+
+                    if (nextStep.map(Step::getStepKind)
+                                .map(kind -> kind.equals(StepKind.foreach)).orElse(false)) {
+                        parent = findHandler(nextStep.get()).handle(nextStep.get(), parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
+                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
+                        parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                        stepIndex++;
+                    } else {
+                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
+                        parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                    }
                 }
             } else {
                 parent = configureRouteDefinition(parent, flowName, flowId, stepId);
-                if (i > 0) {
-                    // If parent is not null and this is the first step, a scheduler
-                    // has been created as route initiator so d'ont include the
-                    // first step in activity logging.
-                    parent = createPipeline(parent, stepId);
-                }
 
-                parent = handler.handle(step, parent, this, flowIndex, stepIndex).orElse(parent);
+                if (StepKind.endForeach.equals(step.getStepKind())) {
+                    parent = handler.handle(step, parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
 
-                Optional<Step> splitStep = getConnectorSplitAsStep(step);
-                if (splitStep.isPresent()) {
-                    if (i > 0) {
-                        if (parent instanceof PipelineDefinition) {
-                            parent = parent.end();
-                        } else if (parent instanceof ExpressionNode) {
-                            parent = parent.endParent();
-                        }
+                    if (parent instanceof ExpressionNode) {
+                        parent = parent.end();
+                        parent = parent.endParent();
+                    }
+                } else {
+                    if (stepIndex > 0) {
+                        // If parent is not null and this is the first step, a scheduler
+                        // has been created as route initiator so don't include the
+                        // first step in activity logging.
+                        parent = createPipeline(parent, stepId);
                     }
 
-                    parent = new SplitStepHandler().handle(splitStep.get(), parent, this, flowIndex, stepIndex).orElse(parent);
-                    parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
-                    parent = parent.process(new OutMessageCaptureProcessor());
-                } else {
-                    if (parent instanceof PipelineDefinition) {
+                    parent = handler.handle(step, parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
+
+                    if (isConnectorSplitStep(step)) {
+                        if (stepIndex > 0) {
+                            parent = endParent(parent);
+                        }
+
+                        parent = configureConnectorSplit(step, parent, flowIndex, stepIndex).orElse(parent);
+                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                         parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
-                        parent = parent.end();
-                    } else if (parent instanceof ExpressionNode) {
+                    } else if (nextStep.map(Step::getStepKind)
+                                       .map(kind -> kind.equals(StepKind.foreach)).orElse(false)) {
+                        if (stepIndex > 0) {
+                            parent = endParent(parent);
+                        }
+
+                        parent = findHandler(nextStep.get()).handle(nextStep.get(), parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
+                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                         parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
-                        parent = parent.endParent();
+                        stepIndex++;
                     } else {
-                        parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                        if (parent instanceof PipelineDefinition) {
+                            parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                            parent = parent.end();
+                        } else if (parent instanceof ExpressionNode) {
+                            parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                            parent = parent.endParent();
+                        } else {
+                            parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+                        }
                     }
                 }
             }
         }
+    }
+
+    private ProcessorDefinition<?> endParent(ProcessorDefinition<?> parent) {
+        if (parent instanceof PipelineDefinition) {
+            parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+            parent = parent.end();
+        } else if (parent instanceof ExpressionNode) {
+            parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
+            parent = parent.endParent();
+        }
+
+        return parent;
     }
 
     private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, String flowName, String flowId, String stepId) {
@@ -265,44 +302,38 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return null;
     }
 
-    private Optional<Step> getConnectorSplitAsStep(Step step) {
-        if (step.getAction().filter(ConnectorAction.class::isInstance).isPresent()) {
-            final ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
-            final ConnectorDescriptor descriptor = action.getDescriptor();
-
-            if (descriptor.getSplit().isPresent()) {
-                final Split split = descriptor.getSplit().get();
-                final Step.Builder splitBuilder = new Step.Builder().stepKind(StepKind.split);
-
-                split.getLanguage().ifPresent(s -> splitBuilder.putConfiguredProperty("language", s));
-                split.getExpression().ifPresent(s -> splitBuilder.putConfiguredProperty("expression", s));
-
-                return Optional.of(splitBuilder.build());
+    private boolean isConnectorSplitStep(Step step) {
+        Optional<ConnectorAction> connectorAction = step.getActionAs(ConnectorAction.class);
+        if (connectorAction.isPresent()) {
+            final ConnectorDescriptor descriptor = connectorAction.get().getDescriptor();
+            if (step.getConfiguredProperties().getOrDefault("split", "").equals("false")) {
+                return false;
             }
+
+            return descriptor.getSplit().isPresent();
         }
 
-        return Optional.empty();
+        return false;
     }
 
-    private Optional<ProcessorDefinition<?>> configureConnectorSplit(Step step, ProcessorDefinition<?> route, String flowIndex, String stepIndex) {
-        if (step.getAction().filter(ConnectorAction.class::isInstance).isPresent()) {
-            final ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
+    private Optional<ProcessorDefinition<?>> configureConnectorSplit(Step step, ProcessorDefinition<?> route, String flowIndex, int stepIndex) {
+        if (isConnectorSplitStep(step)) {
+            final ConnectorAction action = step.getActionAs(ConnectorAction.class).get();
             final ConnectorDescriptor descriptor = action.getDescriptor();
 
-            if (descriptor.getSplit().isPresent()) {
-                final Split split = descriptor.getSplit().get();
-                final Step.Builder splitBuilder = new Step.Builder().stepKind(StepKind.split);
+            final Split split = descriptor.getSplit().get();
+            final Step.Builder foreachBuilder = new Step.Builder().stepKind(StepKind.foreach);
 
-                split.getLanguage().ifPresent(s -> splitBuilder.putConfiguredProperty("language", s));
-                split.getExpression().ifPresent(s -> splitBuilder.putConfiguredProperty("expression", s));
+            split.getLanguage().ifPresent(s -> foreachBuilder.putConfiguredProperty("language", s));
+            split.getExpression().ifPresent(s -> foreachBuilder.putConfiguredProperty("expression", s));
+            foreachBuilder.putConfiguredProperty("aggregationStrategy", ForeachStepHandler.AggregationOption.original.name());
 
-                return new SplitStepHandler().handle(
-                    splitBuilder.build(),
-                    route,
-                    this,
-                    flowIndex,
-                    stepIndex);
-            }
+            return new ForeachStepHandler().handle(
+                foreachBuilder.build(),
+                route,
+                this,
+                flowIndex,
+                String.valueOf(stepIndex));
         }
 
         return Optional.empty();
@@ -313,7 +344,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             return;
         }
 
-        final StepAction action = step.getAction().filter(StepAction.class::isInstance).map(StepAction.class::cast).get();
+        final StepAction action = step.getActionAs(StepAction.class)
+                                      .orElseThrow(() -> new IllegalArgumentException(
+                                              String.format("Missing step action on step: %s - %s", step.getId(), step.getName())));
 
         if (action.getDescriptor().getKind() == StepAction.Kind.ENDPOINT) {
             final CamelContext context = getContext();
@@ -336,9 +369,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     // Visibility changed for test purpose.
     protected IntegrationStepHandler findHandler(Step step) {
-        for (int i = 0; i < stepHandlerList.size(); i++) {
-            IntegrationStepHandler handler = stepHandlerList.get(i);
-
+        for (IntegrationStepHandler handler : stepHandlerList) {
             if (handler.canHandle(step)) {
                 LOGGER.debug("Step kind: {}, handler: {}", step.getStepKind(), handler.getClass().getName());
                 return handler;

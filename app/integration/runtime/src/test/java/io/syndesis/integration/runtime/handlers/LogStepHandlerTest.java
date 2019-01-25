@@ -68,13 +68,13 @@ public class LogStepHandlerTest {
 
         final Step withBody = new Step.Builder().createFrom(step).putConfiguredProperty("bodyLoggingEnabled", "true")
             .build();
-        assertThat(LogStepHandler.createMessage(withBody)).isEqualTo("Body: [${body}] Log me baby one more time");
+        assertThat(LogStepHandler.createMessage(withBody)).isEqualTo("Body: [${bean:bodyLogger}] Log me baby one more time");
 
         final Step withContextAndBody = new Step.Builder().createFrom(step)
             .putConfiguredProperty("contextLoggingEnabled", "true").putConfiguredProperty("bodyLoggingEnabled", "true")
             .build();
         assertThat(LogStepHandler.createMessage(withContextAndBody))
-            .isEqualTo("Message Context: [${in.headers}] Body: [${body}] Log me baby one more time");
+            .isEqualTo("Message Context: [${in.headers}] Body: [${bean:bodyLogger}] Log me baby one more time");
     }
 
     @Test

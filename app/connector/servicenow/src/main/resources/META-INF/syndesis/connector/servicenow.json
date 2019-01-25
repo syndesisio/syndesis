@@ -75,6 +75,30 @@
                 "secret": false,
                 "tags": [],
                 "type": "string"
+              },
+              "split": {
+                "deprecated": false,
+                "defaultValue": true,
+                "displayName": "Split results",
+                "group": "consumer",
+                "javaType": "boolean",
+                "enum": [
+                  {
+                    "label": "No",
+                    "value": "false"
+                  },
+                  {
+                    "label": "Yes",
+                    "value": "true"
+                  }
+                ],
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "When enabled list of returned entries are automatically split and processed one by one in that integration.",
+                "order": 5,
+                "required": false,
+                "secret": false,
+                "type": "string"
               }
             }
           }

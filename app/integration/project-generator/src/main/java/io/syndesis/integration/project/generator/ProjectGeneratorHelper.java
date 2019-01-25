@@ -194,8 +194,8 @@ public final class ProjectGeneratorHelper {
                 steps.set(TemplateStepLanguage.updateStep(replacement));
             }
 
-            final Flow.Builder replacementFlowBuider = flow.builder().createFrom(flow).steps(replacementSteps);
-            flows.set(replacementFlowBuider.build());
+            final Flow.Builder replacementFlowBuilder = flow.builder().createFrom(flow).steps(replacementSteps);
+            flows.set(replacementFlowBuilder.build());
 
             // Temporary implementation until https://github.com/syndesisio/syndesis/issues/736
             // is fully implemented and schedule options are set on integration.
@@ -211,7 +211,7 @@ public final class ProjectGeneratorHelper {
                     }
 
                     final Scheduler scheduler = new Scheduler.Builder().type(Scheduler.Type.valueOf(type)).expression(expr).build();
-                    final Flow replacementFlow = replacementFlowBuider.scheduler(scheduler).build();
+                    final Flow replacementFlow = replacementFlowBuilder.scheduler(scheduler).build();
 
                     flows.set(replacementFlow);
                 }

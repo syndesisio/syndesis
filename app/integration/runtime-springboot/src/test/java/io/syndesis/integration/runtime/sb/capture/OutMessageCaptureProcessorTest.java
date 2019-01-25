@@ -17,22 +17,20 @@ package io.syndesis.integration.runtime.sb.capture;
 
 import java.util.Map;
 
-import static java.util.Collections.singleton;
-
-import io.syndesis.common.model.integration.Flow;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Scheduler;
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
-import io.syndesis.integration.runtime.sb.IntegrationRuntimeAutoConfiguration;
-import io.syndesis.integration.runtime.sb.IntegrationTestSupport;
 import io.syndesis.common.model.Split;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.action.StepDescriptor;
+import io.syndesis.common.model.integration.Flow;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
+import io.syndesis.integration.runtime.sb.IntegrationRuntimeAutoConfiguration;
+import io.syndesis.integration.runtime.sb.IntegrationTestSupport;
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -50,6 +48,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -135,11 +134,11 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
 
             Exchange exchange1 = result.getExchanges().get(0);
             Map<String, Message> messages = OutMessageCaptureProcessor.getCapturedMessageMap(exchange1);
+            assertThat(messages).hasSize(4);
             assertThat(messages.get("s1").getBody()).isEqualTo("World");
             assertThat(messages.get("s2").getBody()).isEqualTo("Hello World");
             assertThat(messages.get("s3").getBody()).isEqualTo(-862545276);
             assertThat(messages.get("s4").getBody()).isEqualTo(-862545276);
-
         } finally {
             context.stop();
         }
@@ -210,23 +209,101 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
 
             Exchange exchange1 = result.getExchanges().get(0);
             Map<String, Message> messages = OutMessageCaptureProcessor.getCapturedMessageMap(exchange1);
+            assertThat(messages).hasSize(4);
             assertThat(messages.get("s1").getBody()).isEqualTo("World");
             assertThat(messages.get("s2").getBody()).isEqualTo("Hello World");
             assertThat(messages.get("s3").getBody()).isEqualTo(-862545276);
             assertThat(messages.get("s4").getBody()).isEqualTo(-862545276);
-
         } finally {
             context.stop();
         }
     }
 
+    @Test
+    public void testCaptureWithForeach() throws Exception {
+        final CamelContext context = new SpringCamelContext(applicationContext);
+
+        try {
+            final RouteBuilder routes = newIntegrationRouteBuilder(
+                new Step.Builder()
+                    .id("s1")
+                    .stepKind(StepKind.endpoint)
+                    .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                            .componentScheme("direct")
+                            .putConfiguredProperty("name", "expression")
+                            .build())
+                        .build())
+                    .build(),
+                new Step.Builder()
+                    .stepKind(StepKind.foreach)
+                    .build(),
+                new Step.Builder()
+                    .id("s2")
+                    .stepKind(StepKind.extension)
+                    .action(new StepAction.Builder()
+                        .descriptor(new StepDescriptor.Builder()
+                            .kind(StepAction.Kind.BEAN)
+                            .entrypoint(Bean1.class.getName())
+                            .build())
+                        .build())
+                    .build(),
+                new Step.Builder()
+                    .id("s3")
+                    .stepKind(StepKind.extension)
+                    .action(new StepAction.Builder()
+                        .descriptor(new StepDescriptor.Builder()
+                            .kind(StepAction.Kind.BEAN)
+                            .entrypoint(Bean2.class.getName())
+                            .build())
+                        .build())
+                    .build(),
+                new Step.Builder()
+                    .id("s4")
+                    .stepKind(StepKind.endpoint)
+                    .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                            .componentScheme("mock")
+                            .putConfiguredProperty("name", "expression")
+                            .build())
+                        .build())
+                    .build(),
+                new Step.Builder()
+                    .stepKind(StepKind.endForeach)
+                    .build()
+            );
+
+            // Set up the camel context
+            context.addRoutes(routes);
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            final ProducerTemplate template = context.createProducerTemplate();
+            final MockEndpoint result = context.getEndpoint("mock:expression", MockEndpoint.class);
+
+            result.expectedBodiesReceived("-862545276");
+            template.sendBody("direct:expression", "World");
+            result.assertIsSatisfied();
+
+            Exchange exchange1 = result.getExchanges().get(0);
+            Map<String, Message> messages = OutMessageCaptureProcessor.getCapturedMessageMap(exchange1);
+            assertThat(messages).hasSize(4);
+            assertThat(messages.get("s1").getBody()).isEqualTo("World");
+            assertThat(messages.get("s2").getBody()).isEqualTo("Hello World");
+            assertThat(messages.get("s3").getBody()).isEqualTo(-862545276);
+            assertThat(messages.get("s4").getBody()).isEqualTo(-862545276);
+        } finally {
+            context.stop();
+        }
+    }
 
     @Test
     public void testCaptureWithSplitAndSchedule() throws Exception {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
-
             Integration integration = newIntegration(
                 new Step.Builder()
                     .id("s1")
@@ -290,19 +367,110 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
 
             Exchange exchange1 = result.getExchanges().get(0);
             Map<String, Message> messages = OutMessageCaptureProcessor.getCapturedMessageMap(exchange1);
+            assertThat(messages).hasSize(3);
             assertThat(messages.get("s1").getBody()).isEqualTo("Hiram");
             assertThat(messages.get("s2").getBody()).isEqualTo("Hello Hiram");
+            assertThat(messages.get("s3").getBody()).isEqualTo("Hello Hiram");
 
             Exchange exchange2 = result.getExchanges().get(1);
             Map<String, Message> messages2 = OutMessageCaptureProcessor.getCapturedMessageMap(exchange2);
+            assertThat(messages2).hasSize(3);
             assertThat(messages2.get("s1").getBody()).isEqualTo("World");
             assertThat(messages2.get("s2").getBody()).isEqualTo("Hello World");
-
+            assertThat(messages2.get("s3").getBody()).isEqualTo("Hello World");
         } finally {
             context.stop();
         }
     }
 
+    @Test
+    public void testCaptureWithForeachAndSchedule() throws Exception {
+        final CamelContext context = new SpringCamelContext(applicationContext);
+
+        try {
+            Integration integration = newIntegration(
+                new Step.Builder()
+                    .id("s1")
+                    .stepKind(StepKind.endpoint)
+                    .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                            .componentScheme("direct")
+                            .putConfiguredProperty("name", "getdata")
+                            .build())
+                        .build())
+                    .build(),
+                new Step.Builder()
+                    .stepKind(StepKind.foreach)
+                    .build(),
+                new Step.Builder()
+                    .id("s2")
+                    .stepKind(StepKind.extension)
+                    .action(new StepAction.Builder()
+                        .descriptor(new StepDescriptor.Builder()
+                            .kind(StepAction.Kind.BEAN)
+                            .entrypoint(Bean1.class.getName())
+                            .build())
+                        .build())
+                    .build(),
+                new Step.Builder()
+                    .id("s3")
+                    .stepKind(StepKind.endpoint)
+                    .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                            .componentScheme("mock")
+                            .putConfiguredProperty("name", "expression")
+                            .build())
+                        .build())
+                    .build(),
+                new Step.Builder()
+                    .stepKind(StepKind.endForeach)
+                    .build()
+            );
+
+            final Flow flow = integration.getFlows().get(0);
+            final Flow flowWithScheduler = flow.builder()
+                .scheduler(new Scheduler.Builder()
+                    .expression("60s")
+                    .build())
+            .build();
+
+            integration = new Integration.Builder()
+                .createFrom(integration)
+                .flows(singleton(flowWithScheduler))
+                .build();
+
+            IntegrationRouteBuilder routes = newIntegrationRouteBuilder(integration);
+            routes.from("direct:getdata").bean(new Bean3());
+
+            // Set up the camel context
+
+            context.addRoutes(routes);
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            final MockEndpoint result = context.getEndpoint("mock:expression", MockEndpoint.class);
+            result.expectedBodiesReceived("Hello Hiram", "Hello World");
+            result.assertIsSatisfied();
+
+            Exchange exchange1 = result.getExchanges().get(0);
+            Map<String, Message> messages = OutMessageCaptureProcessor.getCapturedMessageMap(exchange1);
+            assertThat(messages).hasSize(3);
+            assertThat(messages.get("s1").getBody()).isEqualTo("Hiram");
+            assertThat(messages.get("s2").getBody()).isEqualTo("Hello Hiram");
+            assertThat(messages.get("s3").getBody()).isEqualTo("Hello Hiram");
+
+            Exchange exchange2 = result.getExchanges().get(1);
+            Map<String, Message> messages2 = OutMessageCaptureProcessor.getCapturedMessageMap(exchange2);
+            assertThat(messages2).hasSize(3);
+            assertThat(messages2.get("s1").getBody()).isEqualTo("World");
+            assertThat(messages2.get("s2").getBody()).isEqualTo("Hello World");
+            assertThat(messages2.get("s3").getBody()).isEqualTo("Hello World");
+        } finally {
+            context.stop();
+        }
+    }
 
     public static class Bean1 {
         @Handler
