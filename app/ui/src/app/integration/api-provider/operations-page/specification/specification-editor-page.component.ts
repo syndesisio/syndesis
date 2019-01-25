@@ -19,6 +19,8 @@ export class ApiProviderSpecificationEditorPage implements OnInit {
 
   specification$: Observable<string>;
 
+  private integrationId: string;
+
   constructor(
     private integrationStore: IntegrationStore,
     private route: ActivatedRoute,
@@ -28,8 +30,8 @@ export class ApiProviderSpecificationEditorPage implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      const id = params.get('integrationId');
-      this.specification$ = this.integrationStore.specification(id);
+      this.integrationId = params.get('integrationId');
+      this.specification$ = this.integrationStore.specification(this.integrationId);
     });
   }
 
@@ -38,7 +40,7 @@ export class ApiProviderSpecificationEditorPage implements OnInit {
   }
 
   updateSpecification(apiDefinition: ApiDefinition) {
-    this.integrationStore.updateSpecification('i-LX0b7-Y8Dwda3p7B9JWz', apiDefinition.spec)
+    this.integrationStore.updateSpecification(this.integrationId, apiDefinition.spec)
       .subscribe(() => this.goToOperations());
   }
 }
