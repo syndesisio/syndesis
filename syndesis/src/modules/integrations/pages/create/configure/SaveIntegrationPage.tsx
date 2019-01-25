@@ -7,7 +7,7 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { WithClosedNavigation } from '../../../../../containers';
 import { PageTitle } from '../../../../../containers/PageTitle';
-import { IntegrationEditorBreadcrumbs } from '../../../components';
+import { IntegrationCreatorBreadcrumbs } from '../../../components';
 import resolvers from '../../../resolvers';
 
 export interface ISaveForm {
@@ -67,7 +67,7 @@ export class SaveIntegrationPage extends React.Component {
                       submitForm,
                     }) => (
                       <IntegrationEditorLayout
-                        header={<IntegrationEditorBreadcrumbs step={4} />}
+                        header={<IntegrationCreatorBreadcrumbs step={4} />}
                         content={
                           <>
                             <PageTitle title={'Create an integration'} />

@@ -6,7 +6,7 @@ import * as React from 'react';
 import { WithClosedNavigation } from '../../../../../containers';
 import { PageTitle } from '../../../../../containers/PageTitle';
 import {
-  IntegrationEditorBreadcrumbs,
+  IntegrationCreatorBreadcrumbs,
   IntegrationEditorStepAdder,
 } from '../../../components';
 import resolvers from '../../../resolvers';
@@ -28,7 +28,7 @@ export class AddStepPage extends React.Component {
         <WithRouteData<null, IAddStepRouteState>>
           {(_, { integration }) => (
             <IntegrationEditorLayout
-              header={<IntegrationEditorBreadcrumbs step={3} />}
+              header={<IntegrationCreatorBreadcrumbs step={3} />}
               content={
                 <>
                   <PageTitle title={'Save or add step'} />

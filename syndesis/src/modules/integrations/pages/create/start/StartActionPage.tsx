@@ -12,7 +12,7 @@ import * as React from 'react';
 import { WithClosedNavigation } from '../../../../../containers';
 import { PageTitle } from '../../../../../containers/PageTitle';
 import {
-  IntegrationEditorBreadcrumbs,
+  IntegrationCreatorBreadcrumbs,
   IntegrationEditorChooseAction,
 } from '../../../components';
 import resolvers from '../../../resolvers';
@@ -46,7 +46,7 @@ export class StartActionPage extends React.Component {
                         <PageTitle title={'Choose an action'} />
                         <IntegrationEditorLayout
                           header={
-                            <IntegrationEditorBreadcrumbs
+                            <IntegrationCreatorBreadcrumbs
                               step={1}
                               subStep={1}
                             />

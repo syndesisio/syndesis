@@ -10,7 +10,7 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { WithClosedNavigation } from '../../../../../containers';
 import { PageTitle } from '../../../../../containers/PageTitle';
-import { IntegrationEditorBreadcrumbs } from '../../../components';
+import { IntegrationCreatorBreadcrumbs } from '../../../components';
 import {
   IOnUpdatedIntegrationProps,
   WithConfigurationForm,
@@ -106,7 +106,7 @@ export class StartConfigurationPage extends React.Component {
                         <PageTitle title={'Configure the action'} />
                         <IntegrationEditorLayout
                           header={
-                            <IntegrationEditorBreadcrumbs
+                            <IntegrationCreatorBreadcrumbs
                               step={1}
                               subStep={2}
                             />
