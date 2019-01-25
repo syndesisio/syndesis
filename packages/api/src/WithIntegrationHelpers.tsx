@@ -240,7 +240,9 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     if (!response.ok) {
       throw new Error(response.statusText);
     }
-    return (await response.json()) as Integration;
+    return !integration.id
+      ? ((await response.json()) as Integration)
+      : Promise.resolve(integration);
   }
 
   public setName(integration: Integration, name: string): Integration {
