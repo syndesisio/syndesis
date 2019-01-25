@@ -106,7 +106,7 @@ public class ContinuousDeliveryProviderImplTest {
         final StreamingOutput streamingOutput = provider.exportResources(ENVIRONMENT, false);
         assertThat(streamingOutput, is(notNullValue()));
 
-        verify(dataManager).fetchAll(any(Integration.class.getClass()), any(Function.class));
+        verify(dataManager).fetchAll(eq(Integration.class), any(Function.class));
         verify(dataManager).update(any(Integration.class));
     }
 
@@ -133,7 +133,7 @@ public class ContinuousDeliveryProviderImplTest {
         provider.importResources(security, formInput);
 
         // assert that integration was recreated
-        verify(dataManager).fetchAll(any(Integration.class.getClass()), any());
+        verify(dataManager).fetchAll(eq(Integration.class), any());
         verify(dataManager, times(2)).update(any(Integration.class));
 
     }
