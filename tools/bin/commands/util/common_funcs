@@ -13,13 +13,27 @@ hasflag() {
     done
 }
 
-isOSX() {
+isMacOs() {
     if [ -z "${OSTYPE}" ]; then
         if [ $(uname) == "Darwin" ]; then
             echo "true"
         fi
     elif [ "${OSTYPE#darwin}" != "${OSTYPE}" ]; then
         echo "true"
+    else
+        echo "false"
+    fi
+}
+
+isWindows() {
+    if [ -z "${OSTYPE}" ]; then
+        if [ $(uname) == "Windows" ]; then
+            echo "true"
+        fi
+    elif [ "${OSTYPE#windows}" != "${OSTYPE}" ]; then
+        echo "true"
+    else
+        echo "false"
     fi
 }
 
@@ -97,6 +111,13 @@ probe_commands() {
           return
       fi
     done
+}
+
+# Syndesis config dir holding state across builds
+syndesis_config_dir() {
+  local dir="$HOME/.syndesis";
+  [ -d $dir ] || mkdir $dir;
+  echo $dir
 }
 
 # ======================================================

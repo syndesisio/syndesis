@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Deploy Camel-K operator
+deploy_camel_k_operator() {
+  local project=${1:-}
+  local extra_opts=""
+  if [ -n "$project" ]; then
+    extra_opts="--namespace $project"
+  fi
+  local kamel=$(get_camel_k_bin)
+  $kamel install --skip-cluster-setup $extra_opts
+}
+
+# Install Camel-K CRD
+install_camel_k_crds() {
+  local kamel=$(get_camel_k_bin)
+  $kamel install --cluster-setup
+}
+
+# Download `kamel` cli
+get_camel_k_bin() {
+  local version=${1:-0.2.0} # TODO: Make this version configurable, or pick the latest
+
+  # If its already downloaded, skip download
+  local config_dir=$(syndesis_config_dir)
+  [ -d $config_dir/bin ] || mkdir $config_dir/bin
+  local kamel_command="$config_dir/bin/kamel-${version}"
+  if [ -e $kamel_command ]; then
+    echo $kamel_command
+    return
+  fi
+
+  # Check for proper operating system
+  local os="linux"
+  if $(isMacOs); then
+    os="mac"
+  elif $(isWindows); then
+    os="windows"
+  fi
+  local download_url="https://github.com/apache/camel-k/releases/download/$version/camel-k-client-$version-$os-64bit.tar.gz"
+  local archive=$(mktemp $config_dir/camel-k-${version}.tar-XXXX)
+  # Download from Camel-K site
+  curl -sL -o $archive $download_url
+  local tmp_dir=$(mktemp -d $config_dir/camel-k-${version}-XXXX)
+  pushd $tmp_dir >/dev/null
+  tar xf $archive
+  rm $archive
+  mv ./kamel $kamel_command
+  popd >/dev/null
+  [ -n "$tmp_dir" ] && [ -d "$tmp_dir" ] && rm -rf $tmp_dir
+  echo $kamel_command
+}

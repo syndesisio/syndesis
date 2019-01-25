@@ -38,12 +38,14 @@ minishift::usage() {
     --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
     --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support            Allow test support endpoint for syndesis-server
+    --camel-k                 Install teh Camel-K operator
 EOT
 }
 
 
 minishift::run() {
     source "$(basedir)/commands/util/openshift_funcs"
+    source "$(basedir)/commands/util/camel_k_funcs"
 
     # Check that mininishift is installed
     which minishift &>/dev/null
@@ -82,7 +84,7 @@ minishift::run() {
         local project=$(readopt --project -p)
         if [ -n "${project}" ]; then
             recreate_project $project "$(hasflag --yes -y)"
-        else 
+        else
             project="$original_project"
         fi
         oc project $project
@@ -92,15 +94,31 @@ minishift::run() {
         local revert_login=$(login_as_admin)
 
         # Install Syndesis CRD globally (if required)
+        echo "Installing Syndesis CRD"
         local result=$(install_syndesis_crd)
         check_error "$result"
+
+        # Install Camel-K CRD globally (if requested)
+        if [ $(hasflag --camel-k) ]; then
+          echo "Installing Camel-K CRDs"
+          result=$(install_camel_k_crds)
+          check_error "$result"
+        fi
 
         # Adapt
         add_user_permissions_for_operator "$user" "true"
 
         # Deploy operator and wait until its up
+        echo "Deploying Syndesis operator"
         result=$(deploy_syndesis_operator "$(oc project -q)")
         check_error "$result"
+
+        # Deploy Camel-K operator if requested
+        if [ $(hasflag --camel-k) ]; then
+          echo "Deploying Camel-K operator"
+          result=$(deploy_camel_k_operator "$(oc project -q)")
+          check_error "$result"
+        fi
 
         # Relogin with original user
         $revert_login

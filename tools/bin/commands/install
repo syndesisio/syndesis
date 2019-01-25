@@ -32,18 +32,25 @@ cat <<"EOT"
     --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
     --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support            Allow test support endpoint for syndesis-server
+    --camel-k                 Install Camel-K operator
 EOT
 }
 
 
 install::run() {
     source "$(basedir)/commands/util/openshift_funcs"
+    source "$(basedir)/commands/util/camel_k_funcs"
 
     local prep_only="false"
     if [ $(hasflag -s --setup) ]; then
         echo "Installing Syndesis CRD"
         local result=$(install_syndesis_crd)
         check_error "$result"
+        if [ $(hasflag --camel-k) ]; then
+          echo "Installing Camel-K CRDs"
+          local result=$(install_camel_k_crds)
+          check_error "$result"
+        fi
         prep_only="true"
     fi
 
@@ -74,12 +81,25 @@ install::run() {
     if [ $? -ne 0 ]; then
         check_error "ERROR: No CRD Syndesis installed or not enough permissions to read them. Please run --setup and/or --grant as cluster-admin. See 'syndesis install --help' for more information."
     fi
+
+    if [ $(hasflag --camel-k) ]; then
+        oc get integration >/dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            check_error "ERROR: Camel-K installation requested but no Camel-K CRDs accessible. Please run --setup --camel-k to register the proper CRDs."
+        fi
+    fi
     set -e
 
     # Deploy operator and wait until its up
     echo "Deploying Syndesis operator"
     result=$(deploy_syndesis_operator "$(oc project -q)")
     check_error "$result"
+
+    if [ $(hasflag --camel-k) ]; then
+        echo "Deploying Camel-K operator"
+        result=$(deploy_camel_k_operator "$(oc project -q)")
+        check_error "$result"
+    fi
 
     if [ $(hasflag --operator-only) ]; then
         exit 0
