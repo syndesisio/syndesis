@@ -16,7 +16,7 @@
 package io.syndesis.connector.fhir.processor;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
-import io.atlasmap.xml.inspect.SchemaInspector;
+import io.atlasmap.xml.inspect.XmlSchemaInspector;
 import io.syndesis.connector.fhir.FhirMetaDataExtension;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -53,7 +53,7 @@ public class FhirResourceProcessorTest {
     public void dstu3SpecificationsShouldBeValid() throws Exception {
         Assertions.assertThat(FhirMetaDataExtension.getResources(FhirVersionEnum.DSTU3)).hasSize(117);
 
-        SchemaInspector inspector = new SchemaInspector();
+        XmlSchemaInspector inspector = new XmlSchemaInspector();
         FhirResourcesProcessor fhirResourcesProcessor = new FhirResourcesProcessor();
 
         List<Exception> errors = new ArrayList<>();
