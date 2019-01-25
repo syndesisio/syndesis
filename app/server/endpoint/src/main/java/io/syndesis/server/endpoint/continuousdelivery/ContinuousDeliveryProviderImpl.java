@@ -190,9 +190,6 @@ public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvide
     @Override
     public ContinuousDeliveryImportResults importResources(SecurityContext sec, ImportFormDataInput formInput) throws IOException {
 
-        // importedAt date to be updated in all imported integrations
-        final Date lastImportedAt = new Date();
-
         if (formInput == null) {
             throw new ClientErrorException("Multipart request is empty", Response.Status.BAD_REQUEST);
         }
@@ -204,14 +201,17 @@ public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvide
         try {
             // actual import data created using the exportResources endpoint above
             final InputStream importFile = formInput.getImportFile();
-            final InputStream paramFile = formInput.getParamsFile();
-
             if (importFile == null) {
                 throw new ClientErrorException("Missing file 'importfile' in multipart request", Response.Status.BAD_REQUEST);
             }
+            // connection properties configuration file
+            final InputStream paramFile = formInput.getParamsFile();
             if (paramFile == null) {
                 throw new ClientErrorException("Missing file 'connectionparamsfile' in multipart request", Response.Status.BAD_REQUEST);
             }
+
+            // importedAt date to be updated in all imported integrations
+            final Date lastImportedAt = new Date();
 
             final Map<String, List<WithResourceId>> resources = handler.importIntegration(sec, importFile);
             final List<WithResourceId> results = new ArrayList<>();
