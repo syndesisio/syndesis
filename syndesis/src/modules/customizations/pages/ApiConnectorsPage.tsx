@@ -7,7 +7,6 @@ import {
   IActiveFilter,
   IFilterType,
   ISortType,
-  NavLinkTab,
 } from '@syndesis/ui';
 import {
   optionalIntValue,
@@ -107,29 +106,6 @@ export default class ApiConnectorsPage extends React.Component {
                 <NamespacesConsumer ns={['customizations', 'shared']}>
                   {t => (
                     <Grid fluid={true}>
-                      <Grid.Row
-                        style={{
-                          borderBottom: '1px solid #d1d1d1',
-                          paddingBottom: 0,
-                        }}
-                      >
-                        <Grid.Col xs={6} md={3}>
-                          <NavLinkTab
-                            disableLink={true}
-                            i18nLinkTitle={t(
-                              'apiConnector.apiConnectorsPageTitle'
-                            )}
-                            toLink={'/customizations/api-connector'}
-                          />
-                        </Grid.Col>
-                        <Grid.Col>
-                          <NavLinkTab
-                            disableLink={false}
-                            i18nLinkTitle={t('extension.extensionsPageTitle')}
-                            toLink={'/customizations/extensions'}
-                          />
-                        </Grid.Col>
-                      </Grid.Row>
                       <Grid.Row>
                         <CustomizationsApiConnectorListView
                           filterTypes={filterTypes}
@@ -174,7 +150,7 @@ export default class ApiConnectorsPage extends React.Component {
                             errorChildren={<div>TODO</div>}
                           >
                             {() =>
-                              data.items
+                              filteredAndSorted
                                 .filter((api: Connector) =>
                                   this.filterUndefinedId(api)
                                 )
