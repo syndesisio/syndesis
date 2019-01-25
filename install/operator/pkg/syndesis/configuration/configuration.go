@@ -48,8 +48,6 @@ const (
 	EnvUpgradeRegistry       SyndesisEnvVar = "UPGRADE_REGISTRY"
 	EnvUpgradeVolumeCapacity SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
 	EnvExposeVia3Scale       SyndesisEnvVar = "CONTROLLERS_EXPOSE_VIA3SCALE"
-
-	EnvGrafanaMemoryLimit SyndesisEnvVar = "GRAFANA_MEMORY_LIMIT"
 )
 
 type SyndesisEnvVarConfig struct {
@@ -86,8 +84,6 @@ var (
 		envPrometheusMemoryLimit,
 		envPrometheusVolumeCapacity,
 
-		envGrafanaMemoryLimit,
-
 		envServerMemoryLimit,
 
 		envMetaMemoryLimit,
@@ -117,8 +113,6 @@ var (
 
 		prometheusMemoryLimitFromEnv,
 		prometheusVolumeCapacityFromEnv,
-
-		grafanaMemoryLimitFromEnv,
 
 		serverMemoryLimitFromEnv,
 
@@ -422,25 +416,6 @@ func envPrometheusVolumeCapacity(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarCon
 func prometheusVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
 	if v, ok := getString(config, EnvPrometheusVolumeCapacity); ok {
 		syndesis.Spec.Components.Prometheus.Resources.VolumeCapacity = v
-	}
-}
-
-// Grafana
-func envGrafanaMemoryLimit(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
-	if limits := syndesis.Spec.Components.Grafana.Resources.Limits.Memory(); limits != nil && limits.Value() > 0 {
-		return &SyndesisEnvVarConfig{
-			Var:   EnvGrafanaMemoryLimit,
-			Value: limits.String(),
-		}
-	}
-	return nil
-}
-func grafanaMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getQuantity(config, EnvGrafanaMemoryLimit); ok {
-		if syndesis.Spec.Components.Grafana.Resources.Limits == nil {
-			syndesis.Spec.Components.Grafana.Resources.Limits = make(v1.ResourceList, 0)
-		}
-		syndesis.Spec.Components.Grafana.Resources.Limits[v1.ResourceMemory] = v
 	}
 }
 

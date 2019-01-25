@@ -60,14 +60,6 @@
       EOF
 
       echo "***** sampledb created"
-
-      echo "***** creating grafana database"
-      psql <<EOF
-        CREATE DATABASE grafana;
-        CREATE USER grafana WITH PASSWORD '$POSTGRESQL_GRAFANA_PASSWORD';
-        GRANT ALL PRIVILEGES ON DATABASE grafana to grafana;
-      EOF
-      echo "***** grafana database created"
     postStart.sh: |
       #!/bin/bash
       /var/lib/pgsql/sampledb/add-sample-db.sh &>  /proc/1/fd/1
@@ -175,8 +167,6 @@
             value: ${POSTGRESQL_DATABASE}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
-          - name: POSTGRESQL_GRAFANA_PASSWORD
-            value: ${POSTGRESQL_GRAFANA_PASSWORD}
           image: ' '
           imagePullPolicy: IfNotPresent
           lifecycle:
