@@ -17,12 +17,17 @@ package io.syndesis.common.model.action;
 
 import java.util.Collections;
 import java.util.List;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Optional;
+
+import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.WithDependencies;
 import io.syndesis.common.model.WithId;
-import org.immutables.value.Value;
+
 import org.apache.commons.lang3.StringUtils;
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorAction.Builder.class)
@@ -51,5 +56,19 @@ public interface ConnectorAction extends Action, WithId<ConnectorAction>, WithDe
     }
 
     class Builder extends ImmutableConnectorAction.Builder {
+    }
+
+    default ConnectorAction.Builder builder() {
+        return new Builder().createFrom(this);
+    }
+
+    @Override
+    default ConnectorAction withInputDataShape(final Optional<DataShape> inputDataShape) {
+        return builder().descriptor(getDescriptor().builder().withInputDataShape(inputDataShape)).build();
+    }
+
+    @Override
+    default ConnectorAction withOutputDataShape(final Optional<DataShape> outputDataShape) {
+        return builder().descriptor(getDescriptor().builder().withOutputDataShape(outputDataShape)).build();
     }
 }

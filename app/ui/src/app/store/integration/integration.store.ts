@@ -1,6 +1,6 @@
 import { filter } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 import { IntegrationService } from '@syndesis/ui/store/integration/integration.service';
 
@@ -48,5 +48,13 @@ export class IntegrationStore extends AbstractStore<
       steps: [start, end]
     } as Flow];
     return integration;
+  }
+
+  specification(integrationId: string): Observable<string> {
+    return this.service.fetchSpecification(integrationId);
+  }
+
+  updateSpecification(integrationId: string, specification: string): Observable<void> {
+    return this.service.updateSpecification(integrationId, specification);
   }
 }

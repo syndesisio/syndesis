@@ -22,21 +22,22 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.WithConfigurationProperties;
+import io.syndesis.common.model.WithKind;
+import io.syndesis.common.model.WithMetadata;
+import io.syndesis.common.model.WithName;
+import io.syndesis.common.model.WithResourceId;
+import io.syndesis.common.model.WithTags;
+import io.syndesis.common.model.connection.ConfigurationProperty;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.syndesis.common.model.DataShape;
-import io.syndesis.common.model.Kind;
-import io.syndesis.common.model.WithConfigurationProperties;
-import io.syndesis.common.model.WithMetadata;
-import io.syndesis.common.model.WithResourceId;
-import io.syndesis.common.model.WithKind;
-import io.syndesis.common.model.WithName;
-import io.syndesis.common.model.WithTags;
-import io.syndesis.common.model.connection.ConfigurationProperty;
 
 @JsonTypeInfo(
     use      = JsonTypeInfo.Id.NAME,
@@ -104,4 +105,8 @@ public interface Action extends WithResourceId, WithKind, WithName, WithTags, Wi
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue))
             : Collections.emptyMap();
     }
+
+    Action withInputDataShape(Optional<DataShape> inputDataShape);
+
+    Action withOutputDataShape(Optional<DataShape> outputDataShape);
 }

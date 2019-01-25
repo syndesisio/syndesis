@@ -75,7 +75,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationHandler.class);
 
-    private final APIGenerator apiGenerator;
+    final APIGenerator apiGenerator;
     private final EncryptionComponent encryptionSupport;
     private final Inspectors inspectors;
     private final OpenShiftService openShiftService;

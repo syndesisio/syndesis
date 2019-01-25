@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.endpoint.v1.handler;
+package io.syndesis.server.endpoint.v1.handler.integration;
 
 import java.security.Principal;
 import java.util.Arrays;
@@ -33,7 +33,6 @@ import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
-import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
 
@@ -58,17 +57,12 @@ public class IntegrationHandlerTest {
     private DataManager dataManager;
     private EncryptionComponent encryptionSupport;
 
-    @Before
-    public void setUp() {
-        dataManager = mock(DataManager.class);
-        Validator validator = mock(Validator.class);
-        openShiftService = mock(OpenShiftService.class);
-        inspectors = mock(Inspectors.class);
-        apiGenerator = mock(APIGenerator.class);
-        when(apiGenerator.updateFlowExcerpts(any(Integration.class))).then(ctx -> ctx.getArguments()[0]);
-        encryptionSupport = mock(EncryptionComponent.class);
-        handler = new IntegrationHandler(dataManager, openShiftService, validator, inspectors, encryptionSupport,
-            apiGenerator);
+    @Test
+    public void filterOptionsNoOutputShape() {
+        DataShape dataShape = dataShape(DataShapeKinds.NONE);
+
+        FilterOptions options = handler.getFilterOptions(dataShape);
+        assertThat(options.getPaths()).isEmpty();
     }
 
     @Test
@@ -81,12 +75,17 @@ public class IntegrationHandlerTest {
         assertThat(options.getPaths()).hasSize(2).contains("paramA", "paramB");
     }
 
-    @Test
-    public void filterOptionsNoOutputShape() {
-        DataShape dataShape = dataShape(DataShapeKinds.NONE);
-
-        FilterOptions options = handler.getFilterOptions(dataShape);
-        assertThat(options.getPaths()).isEmpty();
+    @Before
+    public void setUp() {
+        dataManager = mock(DataManager.class);
+        Validator validator = mock(Validator.class);
+        openShiftService = mock(OpenShiftService.class);
+        inspectors = mock(Inspectors.class);
+        apiGenerator = mock(APIGenerator.class);
+        when(apiGenerator.updateFlowExcerpts(any(Integration.class))).then(ctx -> ctx.getArguments()[0]);
+        encryptionSupport = mock(EncryptionComponent.class);
+        handler = new IntegrationHandler(dataManager, openShiftService, validator, inspectors, encryptionSupport,
+            apiGenerator);
     }
 
     @Test

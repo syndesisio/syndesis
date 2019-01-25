@@ -22,11 +22,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-import org.immutables.value.Value;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithSplit;
 import io.syndesis.common.model.connection.ConfigurationProperty;
+
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorDescriptor.Builder.class)
@@ -89,6 +93,14 @@ public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredPro
 
             return propertyDefinitionSteps(modifiedSteps);
         }
+
+        public ConnectorDescriptor withInputDataShape(final Optional<DataShape> inputDataShape) {
+            return inputDataShape(inputDataShape).build();
+        }
+
+        public ConnectorDescriptor withOutputDataShape(final Optional<DataShape> outputDataShape) {
+            return outputDataShape(outputDataShape).build();
+        }
     }
 
     String getConnectorId();
@@ -105,5 +117,9 @@ public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredPro
     @Value.Default
     default List<String> getConnectorCustomizers() {
         return Collections.emptyList();
+    }
+
+    default ConnectorDescriptor.Builder builder() {
+        return new Builder().createFrom(this);
     }
 }

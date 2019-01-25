@@ -19,11 +19,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.connection.ConfigurationProperty;
+
 import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = StepDescriptor.Builder.class)
@@ -85,6 +89,14 @@ public interface StepDescriptor extends ActionDescriptor, Serializable {
 
             return propertyDefinitionSteps(modifiedSteps);
         }
+
+        public StepDescriptor withInputDataShape(final Optional<DataShape> inputDataShape) {
+            return inputDataShape(inputDataShape).build();
+        }
+
+        public StepDescriptor withOutputDataShape(final Optional<DataShape> outputDataShape) {
+            return outputDataShape(outputDataShape).build();
+        }
     }
 
 
@@ -93,4 +105,8 @@ public interface StepDescriptor extends ActionDescriptor, Serializable {
     String getEntrypoint();
 
     String getResource();
+
+    default StepDescriptor.Builder builder() {
+        return new StepDescriptor.Builder().createFrom(this);
+    }
 }

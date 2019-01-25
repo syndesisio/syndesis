@@ -53,6 +53,12 @@
         ],
         "parameters": [
           {
+            "in": "query",
+            "name": "debug",
+            "description": "Enable debugging",
+            "type": "string"
+          },
+          {
             "in": "body",
             "name": "body",
             "description": "Task to create",
@@ -73,39 +79,6 @@
       }
     },
     "/api/{id}": {
-      "get": {
-        "tags": [
-          "tasks",
-          "fetching"
-        ],
-        "summary": "Fetch task",
-        "description": "Fetches task by given identifier",
-        "operationId": "fetch-task",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "type": "integer",
-            "format": "int64",
-            "description": "Task identifier",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "All is good",
-            "schema": {
-              "$ref": "#/definitions/Task"
-            }
-          },
-          "404": {
-            "description": "No task with provided identifier found"
-          }
-        }
-      },
       "put": {
         "tags": [
           "tasks",
@@ -167,6 +140,28 @@
         "responses": {
           "204": {
             "description": "Task deleted"
+          }
+        }
+      }
+    },
+    "/api/count": {
+      "get": {
+        "tags": [
+          "tasks",
+          "accounting"
+        ],
+        "summary": "Counts tasks",
+        "description": "Returns the number of tasks in the database",
+        "operationId": "count-tasks",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "All is good",
+            "schema": {
+              "type": "integer"
+            }
           }
         }
       }
