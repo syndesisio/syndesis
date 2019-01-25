@@ -55,6 +55,9 @@ import { WindowRef } from '@syndesis/ui/customizations/window-ref';
 import { ApiProviderService } from '@syndesis/ui/integration/api-provider/api-provider.service';
 import { FlowViewMultiFlowComponent } from '@syndesis/ui/integration/edit-page/flow-view/flow-view-multiflow.component';
 import { ApiConnectorGuard } from '@syndesis/ui/integration/api-provider/api-provider.guard';
+import {
+  ApiProviderSpecificationEditorPage
+} from '@syndesis/ui/integration/api-provider/operations-page/specification/specification-editor-page.component';
 
 const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
 const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
@@ -137,6 +140,10 @@ const routes: Routes = [
     path: ':integrationId/:flowId/edit',
     component: IntegrationEditPage,
     children: editIntegrationChildRoutes
+  },
+  {
+    path: ':integrationId/specification',
+    component: ApiProviderSpecificationEditorPage
   }
 ];
 
@@ -191,6 +198,7 @@ const routes: Routes = [
     StepValidateComponent,
     StepEditorComponent,
     StepNameComponent,
+    ApiProviderSpecificationEditorPage
   ],
   providers: [
     CurrentFlowService,
