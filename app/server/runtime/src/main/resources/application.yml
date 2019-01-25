@@ -42,6 +42,10 @@ management:
       enabled: false
   security:
     enabled: true
+  metrics:
+    web:
+      server:
+        auto-time-requests: false
 
 cors:
   allowedOrigins: "*"
@@ -69,6 +73,12 @@ endpoints:
   health:
     sensitive: false
   jsondb:
+    enabled: true
+  metrics:
+    enabled: false
+  prometheus:
+    id: metrics
+    sensitive: false
     enabled: true
 
 dao:
