@@ -227,4 +227,8 @@ public class ODataTestServer extends Server implements ODataConstants {
     public String methodName() {
         return PRODUCTS;
     }
+
+    public int getResultCount() {
+        return Storage.getInstance().getSampleCount();
+    }
 }

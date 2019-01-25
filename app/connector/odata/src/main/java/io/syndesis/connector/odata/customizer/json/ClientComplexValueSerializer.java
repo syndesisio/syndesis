@@ -20,6 +20,7 @@ import java.util.Iterator;
 import org.apache.olingo.client.api.domain.ClientComplexValue;
 import org.apache.olingo.client.api.domain.ClientProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import io.syndesis.common.util.StringConstants;
@@ -29,8 +30,11 @@ public class ClientComplexValueSerializer
 
     private static final long serialVersionUID = 1L;
 
-    public ClientComplexValueSerializer() {
-        this(null);
+    private ObjectMapper objectMapper;
+
+    public ClientComplexValueSerializer(ObjectMapper objectMapper) {
+        this((Class<ClientComplexValue>) null);
+        this.objectMapper = objectMapper;
     }
 
     public ClientComplexValueSerializer(Class<ClientComplexValue> t) {
@@ -44,18 +48,28 @@ public class ClientComplexValueSerializer
 
     @Override
     public void serialize(ClientComplexValue value, JsonGenerator generator, SerializerProvider provider) throws IOException {
-        generator.writeStartObject();
+        generator.writeStartArray();
 
         Iterator<?> iterator = value.iterator();
         while (iterator.hasNext()) {
             Object element = iterator.next();
             if (element instanceof ClientProperty) {
                 ClientProperty property = (ClientProperty) element;
-                generator.writeFieldName(property.getName());
-                generator.writeObject(property);
+                String propertyName = property.getName();
+                String propertyValue = objectMapper.writeValueAsString(property);
+
+                StringBuilder builder = new StringBuilder();
+                builder
+                    .append(OPEN_BRACE)
+                    .append(propertyName)
+                    .append(COLON)
+                    .append(propertyValue)
+                    .append(CLOSE_BRACE);
+
+                generator.writeString(builder.toString());
             }
         }
 
-        generator.writeEndObject();
+        generator.writeEndArray();
     }
 }

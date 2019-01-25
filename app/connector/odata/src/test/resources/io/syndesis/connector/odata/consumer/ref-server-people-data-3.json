@@ -1,0 +1,22 @@
+{
+  "UserName": "ronaldmundy",
+  "FirstName": "Ronald",
+  "LastName": "Mundy",
+  "MiddleName": "",
+  "Gender": "Male",
+  "Age": "",
+  "Emails": [
+    "Ronald@example.com",
+    "Ronald@contoso.com"
+  ],
+  "FavoriteFeature": "Feature1",
+  "Features": [],
+  "AddressInfo": [
+    [
+      "{Address:\"187 Suffolk Ln.\"}",
+      "{City:[\"{Name:\\\"Boise\\\"}\",\"{CountryRegion:\\\"United States\\\"}\",\"{Region:\\\"ID\\\"}\"]}"
+    ]
+  ],
+  "HomeAddress": "",
+  "ResultCount": "20"
+}

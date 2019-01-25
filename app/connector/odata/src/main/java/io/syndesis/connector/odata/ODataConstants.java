@@ -44,6 +44,8 @@ public interface ODataConstants extends StringConstants {
 
     String DELAY = "delay";
 
+    String SPLIT_RESULT = "splitResult";
+
     String BACKOFF_IDLE_THRESHOLD = "backoffIdleThreshold";
 
     String BACKOFF_MULTIPLIER = "backoffMultiplier";
@@ -53,4 +55,6 @@ public interface ODataConstants extends StringConstants {
     String METADATA_ENDPOINT = "/$metadata";
 
     String ENDPOINT_HTTP_HEADERS = "endpointHttpHeaders";
+
+    String RESULT_COUNT = "ResultCount";
 }

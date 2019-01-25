@@ -69,23 +69,11 @@ public class ODataMetaDataTest implements ODataConstants {
             assertThat(meta).isPresent();
 
             Object payload = meta.get().getPayload();
-            assertThat(payload).isInstanceOf(Set.class);
-            Set<Object> payloadSet = (Set<Object>) payload;
-            assertThat(payloadSet.size()).isEqualTo(1);
-            assertThat(payloadSet.iterator().next()).isEqualTo(server.methodName());
+            assertThat(payload).isInstanceOf(ODataMetadata.class);
+            ODataMetadata odataMetadata = (ODataMetadata) payload;
+            assertThat(odataMetadata.getEntityNames().size()).isEqualTo(1);
+            assertThat(odataMetadata.getEntityNames().iterator().next()).isEqualTo(server.methodName());
 
-            assertThat(meta.get().getAttributes()).hasEntrySatisfying(MetaDataExtension.MetaData.JAVA_TYPE, new Condition<Object>() {
-                @Override
-                public boolean matches(Object val) {
-                    return Objects.equals(String.class, val);
-                }
-            });
-            assertThat(meta.get().getAttributes()).hasEntrySatisfying(MetaDataExtension.MetaData.CONTENT_TYPE, new Condition<Object>() {
-                @Override
-                public boolean matches(Object val) {
-                    return Objects.equals("text/plain", val);
-                }
-            });
         } finally {
             server.stop();
         }

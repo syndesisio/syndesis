@@ -170,21 +170,15 @@ public class BaseOlingo4Test implements StringConstants {
              */
 
             MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(1);
-            result.setResultWaitTime(60000);
+            result.setMinimumExpectedMessageCount(1);
             result.assertIsSatisfied();
 
             Object body = result.getExchanges().get(0).getIn().getBody();
-            assertTrue(body instanceof ClientEntitySet);
-            ClientEntitySet cmEntitySet = (ClientEntitySet) body;
+            assertTrue(body instanceof ClientEntity);
+            ClientEntity cmEntity = (ClientEntity) body;
 
-            assertEquals(olEntitySet.getEntities().size(), cmEntitySet.getEntities().size());
-
-            for (int i = 0; i < olEntitySet.getEntities().size(); ++i) {
-                ClientEntity olEntity = olEntitySet.getEntities().get(i);
-                ClientEntity cmEntity = cmEntitySet.getEntities().get(i);
-                assertEquals(olEntity.getProperties(), cmEntity.getProperties());
-            }
+            ClientEntity olEntity = olEntitySet.getEntities().get(0);
+            assertEquals(olEntity.getProperties(), cmEntity.getProperties());
 
         } finally {
             main.stop();
