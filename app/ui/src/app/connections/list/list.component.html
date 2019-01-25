@@ -2,8 +2,14 @@
   <ng-template #content>
     <div class="container-cards-pf connections-list container-fluid">
       <div class="row row-cards-pf cards">
-
-        <syndesis-modal title="{{ 'connections.delete-connection-modal-title' | synI18n }}" type="delete" message="{{ 'connections.delete-connection-modal' | synI18n: selectedForDelete?.name }}">
+        <syndesis-modal
+          title="{{ 'connections.delete-connection-modal-title' | synI18n }}"
+          type="delete"
+          message="{{
+            'connections.delete-connection-modal'
+              | synI18n: selectedForDelete?.name
+          }}"
+        >
         </syndesis-modal>
 
         <ng-container *ngIf="connections && connections.length === 0">
@@ -15,8 +21,10 @@
               <h1>{{ 'connections.create-connection-heading' | synI18n }}</h1>
               <p>{{ 'connections.create-connection-msg' | synI18n }}</p>
               <div class="blank-slate-pf-main-action">
-                <button class="btn btn-primary btn-lg"
-                        [routerLink]="['/connections/create']">
+                <button
+                  class="btn btn-primary btn-lg"
+                  [routerLink]="['/connections/create']"
+                >
                   {{ 'connections.create-connection' | synI18n }}
                 </button>
               </div>
@@ -26,8 +34,10 @@
               <p>{{ 'connections.no-applications-msg' | synI18n }}</p>
               <p>{{ 'connections.no-applications-detail-msg' | synI18n }}</p>
               <div class="blank-slate-pf-main-action">
-                <button class="btn btn-primary"
-                        [routerLink]="['/settings/oauth-clients']">
+                <button
+                  class="btn btn-primary"
+                  [routerLink]="['/settings/oauth-clients']"
+                >
                   {{ 'connections.register-applications' | synI18n }}
                 </button>
               </div>
@@ -36,28 +46,53 @@
         </ng-container>
 
         <ng-container *ngIf="connections && connections.length > 0">
-          <div class="connection col-lg-3 col-md-4 col-sm-6 card" *ngFor="let connection of connections">
-
-            <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select" [class.active]="connection.id === selectedId">
-              <syndesis-card-tech-preview [item]="connection"></syndesis-card-tech-preview>
+          <div
+            class="connection col-lg-3 col-md-4 col-sm-6 card"
+            *ngFor="let connection of connections"
+          >
+            <div
+              class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select"
+              [class.active]="connection.id && connection.id === selectedId"
+            >
+              <syndesis-card-tech-preview
+                [item]="connection"
+              ></syndesis-card-tech-preview>
               <div class="card-pf-body" (click)="onSelect(connection, $event)">
                 <div class="card-pf-heading-kebab">
                   <div *ngIf="showKebab">
-                    <div dropdown class="dropdown dropdown-kebab-pf" placement="bottom">
-                      <button dropdownToggle class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight9" (click)="$event.stopPropagation()">
+                    <div
+                      dropdown
+                      class="dropdown dropdown-kebab-pf"
+                      placement="bottom"
+                    >
+                      <button
+                        dropdownToggle
+                        class="btn btn-link dropdown-toggle"
+                        type="button"
+                        id="dropdownKebabRight9"
+                        (click)="$event.stopPropagation()"
+                      >
                         <span class="fa fa-ellipsis-v"></span>
                       </button>
-                      <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+                      <ul
+                        *dropdownMenu
+                        class="dropdown-menu dropdown-menu-right"
+                        role="menu"
+                      >
                         <li role="menuitem">
-                          <a [routerLink]="['/connections', connection.id]"
-                             class="dropdown-item">
+                          <a
+                            [routerLink]="['/connections', connection.id]"
+                            class="dropdown-item"
+                          >
                             {{ 'shared.view' | synI18n }}
                           </a>
                         </li>
                         <li role="menuitem">
-                          <a [routerLink]="['/connections', connection.id]"
-                             [queryParams]="{ edit: true }"
-                             class="dropdown-item">
+                          <a
+                            [routerLink]="['/connections', connection.id]"
+                            [queryParams]="{ edit: true }"
+                            class="dropdown-item"
+                          >
                             {{ 'shared.edit' | synI18n }}
                           </a>
                         </li>
@@ -67,16 +102,24 @@
                     </li>
                     -->
                         <li *ngIf="!isBeingUsed(connection)">
-                          <a (click)="requestDelete(connection); $event.stopPropagation()" class="dropdown-item">
+                          <a
+                            (click)="
+                              requestDelete(connection);
+                              $event.stopPropagation()
+                            "
+                            class="dropdown-item"
+                          >
                             {{ 'shared.delete' | synI18n }}
                           </a>
                         </li>
-                        <li *ngIf="isBeingUsed(connection)"
-                            class="disabled-menu-item"
-                            [tooltip]="'connections.delete-not-allowed' | synI18n"
-                            placement="bottom"
-                            container="body"
-                            (click)="$event.stopPropagation()">
+                        <li
+                          *ngIf="isBeingUsed(connection)"
+                          class="disabled-menu-item"
+                          [tooltip]="'connections.delete-not-allowed' | synI18n"
+                          placement="bottom"
+                          container="body"
+                          (click)="$event.stopPropagation()"
+                        >
                           {{ 'shared.delete' | synI18n }}
                         </li>
                       </ul>
@@ -87,22 +130,40 @@
                 <!-- Card Icon -->
                 <div class="card-pf-top-element">
                   <span class="card-pf-icon-large image-icon">
-                    <img class="syn-icon-medium"
-                          [ngClass]="{ 'api-provider' : (connection.id == 'api-provider') }"
-                          [src]="connection | synIconPath">
+                    <img
+                      class="syn-icon-medium"
+                      [ngClass]="{
+                        'api-provider': connection.id == 'api-provider'
+                      }"
+                      [src]="connection | synIconPath"
+                    />
                   </span>
                 </div>
 
                 <!-- Card Name -->
-                <h2 class="card-pf-title text-center syn-truncate__ellipsis" (click)="onSelect(connection)" title="{{ connection.name }}">
+                <h2
+                  class="card-pf-title text-center syn-truncate__ellipsis"
+                  (click)="onSelect(connection)"
+                  title="{{ connection.name }}"
+                >
                   {{ connection.name }}
                 </h2>
 
                 <!-- Card Description / Item Overview -->
-                <p class="card-pf-info text-center" title="{{ connection.description }}">
-                  {{ connection.description | truncate : '50' : truncateTrail }}
+                <p
+                  class="card-pf-info text-center"
+                  title="{{ connection.description }}"
+                >
+                  {{ connection.description | truncate: '50':truncateTrail }}
                 </p>
-                <div *ngIf="connection.board?.notices || connection.board?.warnings || connection.board?.errors" class="connection-config-alert">
+                <div
+                  *ngIf="
+                    connection.board?.notices ||
+                    connection.board?.warnings ||
+                    connection.board?.errors
+                  "
+                  class="connection-config-alert"
+                >
                   <div class="alert alert-warning">
                     <span class="pficon pficon-warning-triangle-o"></span>
                     {{ 'shared.configuration-required' | synI18n }}
@@ -113,7 +174,10 @@
           </div>
         </ng-container>
         <ng-container *ngIf="showNewConnection && connections.length > 0">
-          <syndesis-empty-state-card class="col-lg-3 col-md-4 col-sm-6" (click)="onSelect(undefined, $event)">
+          <syndesis-empty-state-card
+            class="col-lg-3 col-md-4 col-sm-6"
+            (click)="onSelect(undefined, $event)"
+          >
             <div class="empty-state-card__body">
               <button class="btn btn-default">
                 {{ 'connections.create-connection' | synI18n }}

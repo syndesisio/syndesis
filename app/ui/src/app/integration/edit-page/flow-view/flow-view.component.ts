@@ -1,13 +1,6 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  ViewChild,
-  ViewChildren
-} from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { PopoverDirective } from 'ngx-bootstrap';
 import {
   CurrentFlowService,
   FlowEvent,
@@ -29,7 +22,6 @@ export class FlowViewComponent implements OnDestroy {
   editingName = false;
   isCollapsed = true;
 
-  @ViewChildren(PopoverDirective) popovers: PopoverDirective[];
   @ViewChild('nameInput') nameInput: ElementRef;
 
   constructor(
@@ -57,17 +49,6 @@ export class FlowViewComponent implements OnDestroy {
   get currentStepKind() {
     return this.flowPageService.getCurrentStepKind(this.route);
   }
-
-  /*
-  get containerClass() {
-    switch (this.flowPageService.getCurrentStepKind(this.route)) {
-      case 'mapper':
-        return true;
-      default:
-        return false;
-    }
-  }
-  */
 
   toggleCollapsed() {
     this.isCollapsed = !this.isCollapsed;
@@ -128,39 +109,20 @@ export class FlowViewComponent implements OnDestroy {
   }
 
   isApiProviderOperationsPage() {
-    return this.router.url.startsWith('/integrations') &&
-      this.router.url.endsWith('/operations');
+    return (
+      this.router.url.startsWith('/integrations') &&
+      this.router.url.endsWith('/operations')
+    );
   }
 
   insertStepAfter(position: number) {
-    this.popovers.forEach(popover => popover.hide());
-
     this.selectedKind = undefined;
-
     this.currentFlowService.events.emit({
       kind: 'integration-insert-step',
       position: position,
       onSave: () => {
         setTimeout(() => {
           this.router.navigate(['step-select', position + 1], {
-            relativeTo: this.route
-          });
-        }, 10);
-      }
-    });
-  }
-
-  insertConnectionAfter(position: number) {
-    this.popovers.forEach(popover => popover.hide());
-
-    this.selectedKind = undefined;
-
-    this.currentFlowService.events.emit({
-      kind: 'integration-insert-connection',
-      position: position,
-      onSave: () => {
-        setTimeout(() => {
-          this.router.navigate(['connection-select', position + 1], {
             relativeTo: this.route
           });
         }, 10);
@@ -184,12 +146,12 @@ export class FlowViewComponent implements OnDestroy {
           onSave: () => {
             setTimeout(() => {
               if (isFirst || isLast) {
-                this.router.navigate(['connection-select', position], {
+                this.router.navigate(['step-select', position], {
                   relativeTo: this.route
                 });
               } else {
                 this.router.navigate(['save-or-add-step'], {
-                  relativeTo: this.route,
+                  relativeTo: this.route
                 });
               }
             }, 10);
@@ -207,46 +169,14 @@ export class FlowViewComponent implements OnDestroy {
     });
   }
 
-  maybeShowPopover(popover: PopoverDirective) {
-    if (
-      this.getMiddleSteps() &&
-      !this.getMiddleSteps().length &&
-      popover &&
-      !popover.isOpen
-    ) {
-      setTimeout(() => {
-        popover.show();
-      }, 10);
-    }
-  }
-
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
       case 'integration-updated':
         this.i = event['integration'];
-        setTimeout(() => this.maybeShowPopover(this.popovers[0]), 50);
-        break;
-      case 'integration-add-step':
-        switch (event['type']) {
-          case 'connection':
-            this.insertConnectionAfter(0);
-            break;
-          case 'step':
-            this.insertStepAfter(0);
-            break;
-          default:
-            break;
-        }
-        break;
-      case 'integration-show-popouts':
-        this.selectedKind = event['type'] || false;
-        this.popovers.forEach(popover => popover.show());
         break;
       case 'integration-delete-prompt':
         this.deletePrompt(event['position']);
         break;
-      case 'integration-connection-select':
-      case 'integration-connection-configure':
       default:
         break;
     }

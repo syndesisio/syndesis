@@ -6,14 +6,21 @@ import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { DataMapperModule } from '@atlasmap/atlasmap-data-mapper';
 
 import { VendorModule } from '@syndesis/ui/vendor';
-import { OpenApiModule, PatternflyUIModule, SyndesisCommonModule } from '@syndesis/ui/common';
+import {
+  OpenApiModule,
+  PatternflyUIModule,
+  SyndesisCommonModule
+} from '@syndesis/ui/common';
 import { ConnectionsModule } from '@syndesis/ui/connections';
 
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { IntegrationListModule } from '@syndesis/ui/integration/list';
 import { IntegrationListPage } from '@syndesis/ui/integration/list-page';
 import { IntegrationImportPageComponent } from '@syndesis/ui/integration/import-page';
-import { INTEGRATION_DETAIL_DIRECTIVES, IntegrationDetailComponent } from '@syndesis/ui/integration/integration_detail';
+import {
+  INTEGRATION_DETAIL_DIRECTIVES,
+  IntegrationDetailComponent
+} from '@syndesis/ui/integration/integration_detail';
 import { IntegrationLogsComponent } from '@syndesis/ui/integration/integration_logs';
 import {
   ApiProviderEffects,
@@ -41,9 +48,8 @@ import {
   IntegrationEditPage,
   IntegrationSaveOrAddStepComponent,
   IntegrationSelectActionComponent,
-  IntegrationSelectConnectionComponent,
+  IntegrationSelectStepComponent,
   IntegrationStepConfigureComponent,
-  IntegrationStepSelectComponent,
   ListActionsComponent,
   StepVisiblePipe,
   TemplaterComponent
@@ -55,9 +61,9 @@ import { WindowRef } from '@syndesis/ui/customizations/window-ref';
 import { ApiProviderService } from '@syndesis/ui/integration/api-provider/api-provider.service';
 import { FlowViewMultiFlowComponent } from '@syndesis/ui/integration/edit-page/flow-view/flow-view-multiflow.component';
 import { ApiConnectorGuard } from '@syndesis/ui/integration/api-provider/api-provider.guard';
-import {
-  ApiProviderSpecificationEditorPage
-} from '@syndesis/ui/integration/api-provider/operations-page/specification/specification-editor-page.component';
+import { ApiProviderSpecificationEditorPage } from './api-provider/operations-page/specification/specification-editor-page.component';
+import { IntegrationResolverService } from './edit-page/integration-resolver.service';
+import { StepsResolverService } from './edit-page/connection-resolver.service';
 
 const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
 const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
@@ -73,8 +79,11 @@ const editIntegrationChildRoutes = [
     component: IntegrationBasicsComponent
   },
   {
-    path: 'connection-select/:position',
-    component: IntegrationSelectConnectionComponent
+    path: 'step-select/:position',
+    component: IntegrationSelectStepComponent,
+    resolve: {
+      steps: StepsResolverService
+    }
   },
   {
     path: 'action-select/:position',
@@ -96,7 +105,6 @@ const editIntegrationChildRoutes = [
     path: 'describe-data/:position/:direction',
     component: IntegrationDescribeDataComponent
   },
-  { path: 'step-select/:position', component: IntegrationStepSelectComponent },
   {
     path: 'step-configure/:position',
     component: IntegrationStepConfigureComponent
@@ -117,12 +125,15 @@ const routes: Routes = [
   },
   {
     path: 'import',
-    component: IntegrationImportPageComponent,
+    component: IntegrationImportPageComponent
   },
   {
     path: 'create',
     component: IntegrationEditPage,
-    children: editIntegrationChildRoutes
+    children: editIntegrationChildRoutes,
+    resolve: {
+      integration: IntegrationResolverService
+    }
   },
   {
     path: ':integrationId',
@@ -131,6 +142,9 @@ const routes: Routes = [
   {
     path: ':integrationId/edit',
     component: IntegrationEditPage,
+    resolve: {
+      integration: IntegrationResolverService
+    }
   },
   {
     path: ':integrationId/operations',
@@ -139,7 +153,10 @@ const routes: Routes = [
   {
     path: ':integrationId/:flowId/edit',
     component: IntegrationEditPage,
-    children: editIntegrationChildRoutes
+    children: editIntegrationChildRoutes,
+    resolve: {
+      integration: IntegrationResolverService
+    }
   },
   {
     path: ':integrationId/specification',
@@ -176,16 +193,14 @@ const routes: Routes = [
     IntegrationBasicsComponent,
     IntegrationDetailComponent,
     IntegrationDescribeDataComponent,
-    IntegrationSelectConnectionComponent,
+    IntegrationSelectStepComponent,
     IntegrationSaveOrAddStepComponent,
-    IntegrationStepSelectComponent,
     IntegrationStepConfigureComponent,
     IntegrationListPage,
     IntegrationImportPageComponent,
     IntegrationLogsComponent,
     IntegrationSaveOrAddStepComponent,
     IntegrationSelectActionComponent,
-    IntegrationSelectConnectionComponent,
     FlowViewComponent,
     FlowViewStepComponent,
     FlowViewMultiFlowComponent,
@@ -205,7 +220,8 @@ const routes: Routes = [
     FlowPageService,
     WindowRef,
     ApiProviderService,
-    ApiConnectorGuard
+    ApiConnectorGuard,
+    StepVisiblePipe
   ]
 })
 export class IntegrationModule {}

@@ -14,7 +14,10 @@ import { BaseEntity } from '@syndesis/ui/platform';
 import { RESTService } from '@syndesis/ui/store/entity/rest.service';
 
 import { log, getCategory } from '@syndesis/ui/logging';
-import { EventsService, ChangeEvent } from '@syndesis/ui/store/entity/events.service';
+import {
+  EventsService,
+  ChangeEvent
+} from '@syndesis/ui/store/entity/events.service';
 
 const category = getCategory('AbstractStore');
 
@@ -147,13 +150,14 @@ export abstract class AbstractStore<
 
   loadOrCreate(id?: string) {
     if (id) {
-      this.load(id);
+      return this.load(id);
     } else {
       // This should happen async too for consistency
       setTimeout(() => {
         this._current.next(this.newInstance());
         this._loading.next(false);
       }, 1);
+      return this._current.pipe(share());
     }
   }
 
@@ -171,7 +175,7 @@ export abstract class AbstractStore<
     this.currentSubscription = this.service.get(id).subscribe(
       entity => {
         setTimeout(() => {
-          this._current.next(this.plain(entity));
+          this._current.next(entity);
           this._loading.next(false);
         }, LOADING_TIME);
       },
@@ -199,7 +203,7 @@ export abstract class AbstractStore<
     const created = new Subject<T>();
     this.service.create(entity).subscribe(
       e => {
-        created.next(this.plain(e));
+        created.next(e);
       },
       error => {
         error = this.massageError(error);
@@ -231,7 +235,7 @@ export abstract class AbstractStore<
         if (Array.isArray(e)) {
           e = entity;
         }
-        updated.next(this.plain(e));
+        updated.next(e);
         this._loading.next(false);
       },
       error => {
@@ -269,7 +273,7 @@ export abstract class AbstractStore<
         if (e === null) {
           e = entity;
         }
-        deleted.next(this.plain(e));
+        deleted.next(e);
       },
       error => {
         error = this.massageError(error);
@@ -317,13 +321,5 @@ export abstract class AbstractStore<
     }
 
     return errorMessage;
-  }
-
-  private plain(entity: T): T {
-    if ('plain' in entity) {
-      return (<any>entity).plain();
-    } else {
-      return entity;
-    }
   }
 }

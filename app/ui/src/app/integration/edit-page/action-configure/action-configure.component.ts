@@ -198,7 +198,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     this.error = undefined;
     const step = this.currentFlowService.getStep(this.position);
     if (!step || !step.connection) {
-      this.router.navigate(['connection-select', this.position], {
+      this.router.navigate(['step-select', this.position], {
         relativeTo: this.route.parent
       });
       return;

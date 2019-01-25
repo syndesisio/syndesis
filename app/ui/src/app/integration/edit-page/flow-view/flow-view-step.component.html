@@ -1,160 +1,227 @@
-<h3 *ngIf="isApiProvider && isApiProviderOperationsPage"
-    class="flow-view-step-title">
+<h3
+  *ngIf="isApiProvider && isApiProviderOperationsPage"
+  class="flow-view-step-title"
+>
   <span>API Provider</span>
   <ng-template #apiProviderFlowInfo>Provided API</ng-template>
-  <i class="fa fa-info-circle"
-     [tooltip]="apiProviderFlowInfo"
-     placement="bottom"></i>
+  <i
+    class="fa fa-info-circle"
+    [tooltip]="apiProviderFlowInfo"
+    placement="bottom"
+  ></i>
 </h3>
-<h3 *ngIf="isApiProvider && !isApiProviderOperationsPage && getFlowName()"
-    class="flow-view-step-title">
+<h3
+  *ngIf="isApiProvider && !isApiProviderOperationsPage && getFlowName()"
+  class="flow-view-step-title"
+>
   <span>{{ getFlowName() }}</span>
   <ng-template #apiProviderFlowInfo>{{ getFlowDescription() }}</ng-template>
-  <i class="fa fa-info-circle"
-     [tooltip]="apiProviderFlowInfo"
-     placement="bottom"></i>
+  <i
+    class="fa fa-info-circle"
+    [tooltip]="apiProviderFlowInfo"
+    placement="bottom"
+  ></i>
 </h3>
-<div *ngIf="step"
-     class="flow-view-step">
-
+<div *ngIf="step" class="flow-view-step">
   <ng-template #dataWarningPopover>
     <div *ngIf="shouldAddDatamapper">
-      <a [routerLink]="" (click)="addDataMapper()">Add a data mapping step</a> before this connection to resolve the difference.
+      <a [routerLink]="" (click)="addDataMapper()">Add a data mapping step</a>
+      before this connection to resolve the difference.
     </div>
     <div *ngIf="previousStepShouldDefineDataShape">
-      <a [routerLink]="" (click)="visitPreviousStepDescribeData()">Define the data type</a> for the previous step to resolve this warning.
+      <a [routerLink]="" (click)="visitPreviousStepDescribeData()"
+        >Define the data type</a
+      >
+      for the previous step to resolve this warning.
     </div>
   </ng-template>
 
   <!-- Icon -->
   <div class="icon-container" (click)="gotoPageFor(step)">
-    <div [ngClass]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
+    <div
+      [ngClass]="
+        'icon ' +
+        getParentActiveClass() +
+        ' ' +
+        getMenuCompleteClass() +
+        ' ' +
+        getConnectionClass()
+      "
       placement="right"
       [tooltip]="stepName"
-      container="body">
-      <i [ngClass]="getIconClass()"
-          *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
-      <img class="syn-icon-small"
-            [ngClass]="{ 'api-provider' : (step.connection.id == 'api-provider') }"
-            *ngIf="step.stepKind === 'endpoint' && step.connection"
-            [src]="(step.action?.id == 'io.syndesis:api-provider-end') ? './../../assets/icons/multi-flow.connection.png' : (step.connection | synIconPath)">
-      <img class="syn-icon-small"
+      container="body"
+    >
+      <i
+        [ngClass]="getIconClass()"
+        *ngIf="step.stepKind === 'endpoint' && !step.connection"
+      ></i>
+      <img
+        class="syn-icon-small"
+        [ngClass]="{ 'api-provider': step.connection.id == 'api-provider' }"
+        *ngIf="step.stepKind === 'endpoint' && step.connection"
+        [src]="
+          step.action?.id == 'io.syndesis:api-provider-end'
+            ? './../../assets/icons/multi-flow.connection.png'
+            : (step.connection | synIconPath)
+        "
+      />
+      <img
+        class="syn-icon-small"
         *ngIf="step.stepKind && step.stepKind !== 'endpoint'"
-        [src]="step | synIconPath">
+        [src]="step | synIconPath"
+      />
     </div>
-    <span class="pficon pficon-warning-triangle-o data-mismatch"
-        *ngIf="shouldAddDatamapper || previousStepShouldDefineDataShape"
-        [popover]="dataWarningPopover"
-        [popoverTitle]="[ previousStepShouldDefineDataShape ? 'Typeless Previous Step' : 'Data Type Mismatch' ]"
-        #datamapperInfoPop="bs-popover"
-        triggers=""
-        placement="right"
-        outsideClick="true"
-        (click)="toggleAddDatamapperInfo(); $event.stopPropagation();"
-        container="body">
-      </span>
+    <span
+      class="pficon pficon-warning-triangle-o data-mismatch"
+      *ngIf="shouldAddDatamapper || previousStepShouldDefineDataShape"
+      [popover]="dataWarningPopover"
+      [popoverTitle]="[
+        previousStepShouldDefineDataShape
+          ? 'Typeless Previous Step'
+          : 'Data Type Mismatch'
+      ]"
+      #datamapperInfoPop="bs-popover"
+      triggers=""
+      placement="right"
+      outsideClick="true"
+      (click)="toggleAddDatamapperInfo(); $event.stopPropagation()"
+      container="body"
+    >
+    </span>
   </div>
 
   <!-- Step Item Wrapper -->
-  <div class="menu"
-       [ngSwitch]="step.stepKind">
-
+  <div class="menu" [ngSwitch]="step.stepKind">
     <!-- Connection Steps -->
-    <div *ngSwitchCase="'endpoint'"
-         [ngClass]="getParentActiveClass()"
-         class="step-container clearfix">
-
+    <div
+      *ngSwitchCase="'endpoint'"
+      [ngClass]="getParentActiveClass()"
+      class="step-container clearfix"
+    >
       <!-- Connection Title -->
-      <div [ngClass]="getParentClass()"
-            (click)="goto('action-configure')"
-            class="col-xs-12">
-
+      <div
+        [ngClass]="getParentClass()"
+        (click)="goto('action-configure')"
+        class="col-xs-12"
+      >
         <div class="step-content">
           <div class="step-name syn-truncate__ellipsis" title="{{ stepName }}">
-              {{ stepIndex + '. ' + stepName }}
+            {{ stepIndex + '. ' + stepName }}
           </div>
 
           <div class="step-icons">
             <!-- Delete Icon -->
-            <i *ngIf="showDelete()"
+            <i
+              *ngIf="showDelete()"
               class="fa fa-lg fa-trash"
               title="Delete this connection"
-              (click)="deletePrompt(); $event.stopPropagation();"></i>
+              (click)="deletePrompt(); $event.stopPropagation()"
+            ></i>
           </div>
         </div>
       </div>
 
       <!-- Connection Sub Pages -->
-      <ul [collapse]="isCollapsed()"
-          class="sub-steps">
-        <li *ngIf="!step.connection"
-            [ngClass]="getSubMenuActiveClass('connection-select')"
-            (click)="goto('connection-select')">
-          <span [ngClass]="getTextClass('connection-select')">Choose a connection</span>
+      <ul [collapse]="isCollapsed()" class="sub-steps">
+        <li
+          *ngIf="!step.connection"
+          [ngClass]="getSubMenuActiveClass('connection-select')"
+          (click)="goto('step-select')"
+        >
+          <span [ngClass]="getTextClass('connection-select')"
+            >Choose a connection</span
+          >
         </li>
-        <li *ngIf="step.connection && !step.action"
-            [ngClass]="getSubMenuActiveClass('action-select')"
-            (click)="goto('action-select')">
-          <span [ngClass]="getTextClass('action-select')">Choose an action</span>
+        <li
+          *ngIf="step.connection && !step.action"
+          [ngClass]="getSubMenuActiveClass('action-select')"
+          (click)="goto('action-select')"
+        >
+          <span [ngClass]="getTextClass('action-select')"
+            >Choose an action</span
+          >
         </li>
-        <ng-container *ngIf="step.action && currentState === 'action-configure'">
-          <ng-template ngFor
-                       let-definition
-                       [ngForOf]="getPropertyDefinitions(step.action)"
-                       let-page="index">
-            <li [ngClass]="getSubMenuActiveClass('action-configure', page)"
-                (click)="goto('action-configure', page)">
-              <span [ngClass]="getTextClass('action-configure', page)">{{ definition.name | capitalize }}</span>
+        <ng-container
+          *ngIf="step.action && currentState === 'action-configure'"
+        >
+          <ng-template
+            ngFor
+            let-definition
+            [ngForOf]="getPropertyDefinitions(step.action)"
+            let-page="index"
+          >
+            <li
+              [ngClass]="getSubMenuActiveClass('action-configure', page)"
+              (click)="goto('action-configure', page)"
+            >
+              <span [ngClass]="getTextClass('action-configure', page)">{{
+                definition.name | capitalize
+              }}</span>
             </li>
           </ng-template>
         </ng-container>
         <ng-container *ngIf="step.action && currentState === 'describe-data'">
           <li [ngClass]="getSubMenuActiveClass('describe-data')">
-            <span [ngClass]="getTextClass('describe-data')">Specify Data Type</span>
+            <span [ngClass]="getTextClass('describe-data')"
+              >Specify Data Type</span
+            >
           </li>
         </ng-container>
       </ul>
-
     </div>
 
     <!-- Default Steps -->
-    <div *ngSwitchDefault
-         [ngClass]="getParentActiveClass()"
-         class="clearfix step-container">
+    <div
+      *ngSwitchDefault
+      [ngClass]="getParentActiveClass()"
+      class="clearfix step-container"
+    >
       <!-- Step Heading -->
-      <div class="col-xs-12" [ngClass]="getParentClass()"
-        (click)="goto('step-configure')">
+      <div
+        class="col-xs-12"
+        [ngClass]="getParentClass()"
+        (click)="goto('step-configure')"
+      >
         <div class="step-content">
           <div class="step-name syn-truncate__ellipsis" title="{{ stepName }}">
             {{ stepIndex + '. ' + stepName }}
           </div>
           <div class="step-icons">
             <!-- Delete Icon -->
-            <i *ngIf="showDelete()"
+            <i
+              *ngIf="showDelete()"
               class="fa fa-lg fa-trash pull-right"
               title="Delete this step"
               [class.add-step-or-connection]="step.stepKind !== 'endpoint'"
-              (click)="deletePrompt(); $event.stopPropagation();"></i>
+              (click)="deletePrompt(); $event.stopPropagation()"
+            ></i>
           </div>
         </div>
       </div>
 
       <!-- Step Sub Pages -->
-      <ul [collapse]="isCollapsed()"
-          class="sub-steps">
-        <li *ngIf="!step.stepKind"
-            [ngClass]="getSubMenuActiveClass('step-select')"
-            (click)="goto('step-select')">
+      <ul [collapse]="isCollapsed()" class="sub-steps">
+        <li
+          *ngIf="!step.stepKind"
+          [ngClass]="getSubMenuActiveClass('step-select')"
+          (click)="goto('step-select')"
+        >
           <span [ngClass]="getTextClass('step-select')">Choose a step</span>
         </li>
-        <li *ngIf="step.stepKind && !step.configuredProperties"
-            [ngClass]="getSubMenuActiveClass('step-configure')"
-            (click)="goto('step-configure')">
-          <span [ngClass]="getTextClass('step-configure')">Configure the step</span>
+        <li
+          *ngIf="step.stepKind && !step.configuredProperties"
+          [ngClass]="getSubMenuActiveClass('step-configure')"
+          (click)="goto('step-configure')"
+        >
+          <span [ngClass]="getTextClass('step-configure')"
+            >Configure the step</span
+          >
         </li>
-        <li *ngIf="step.configuredProperties"
-            [ngClass]="getSubMenuActiveClass('step-configure')"
-            (click)="goto('step-configure')">
+        <li
+          *ngIf="step.configuredProperties"
+          [ngClass]="getSubMenuActiveClass('step-configure')"
+          (click)="goto('step-configure')"
+        >
           <span [ngClass]="getTextClass('step-configure')">Configuration</span>
         </li>
       </ul>
@@ -162,26 +229,33 @@
 
     <div class="step-details">
       <dl>
-        <dt>
-          Name:
-        </dt>
-        <dd class="syn-truncate__ellipsis" title="{{ step.connection?.name || step.name || 'Value not specified' }}">
+        <dt>Name:</dt>
+        <dd
+          class="syn-truncate__ellipsis"
+          title="{{
+            step.connection?.name || step.name || 'Value not specified'
+          }}"
+        >
           {{ step.connection?.name || step.name || 'n/a' }}
         </dd>
       </dl>
       <dl>
-        <dt>
-          Action:
-        </dt>
-        <dd class="syn-truncate__ellipsis" title="{{ step.action?.name || 'Value not specified' }}">
+        <dt>Action:</dt>
+        <dd
+          class="syn-truncate__ellipsis"
+          title="{{ step.action?.name || 'Value not specified' }}"
+        >
           {{ step.action?.name || 'n/a' }}
         </dd>
       </dl>
       <dl>
-        <dt>
-          Data Type:
-        </dt>
-        <dd class="syn-truncate__ellipsis" title="{{ inputDataShapeText || outputDataShapeText || 'Value not specified' }}">
+        <dt>Data Type:</dt>
+        <dd
+          class="syn-truncate__ellipsis"
+          title="{{
+            inputDataShapeText || outputDataShapeText || 'Value not specified'
+          }}"
+        >
           {{ inputDataShapeText || outputDataShapeText || 'n/a' }}
         </dd>
       </dl>

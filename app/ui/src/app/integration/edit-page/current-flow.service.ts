@@ -2,7 +2,6 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import {
-  Connections,
   createStep,
   createConnectionStep,
   DataShape,
@@ -11,7 +10,8 @@ import {
   IntegrationSupportService,
   ActionDescriptor,
   Flow,
-  Flows
+  Flows,
+  StepOrConnection
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { IntegrationStore, DATA_MAPPER, StepStore } from '@syndesis/ui/store';
@@ -38,7 +38,7 @@ import {
   getMiddlePosition,
   getStep,
   isActionShapeless,
-  filterConnectionsByPosition,
+  filterStepsByPosition,
   getStartStep,
   getLastStep,
   getMiddleSteps,
@@ -70,7 +70,6 @@ export class CurrentFlowService {
   public flowId?: string;
 
   private _integration: Integration;
-  private _loaded = false;
 
   constructor(
     private integrationStore: IntegrationStore,
@@ -83,7 +82,6 @@ export class CurrentFlowService {
   cleanup(): void {
     this.flowId = undefined;
     this._integration = undefined;
-    this._loaded = false;
   }
 
   isValid(): boolean {
@@ -93,11 +91,16 @@ export class CurrentFlowService {
 
   /**
    * Returns the connections suitable for the given position in the integration flow
-   * @param connections
+   * @param steps
    * @param position
    */
-  filterConnectionsByPosition(connections: Connections, position: number) {
-    return filterConnectionsByPosition(connections, position);
+  filterStepsByPosition(steps: StepOrConnection[], position: number) {
+    return filterStepsByPosition(
+      this._integration,
+      this.flowId,
+      steps,
+      position
+    );
   }
 
   /**
@@ -333,7 +336,6 @@ export class CurrentFlowService {
   handleEvent(event: FlowEvent): void {
     switch (event.kind) {
       case 'integration-updated': {
-        this._loaded = true;
         setTimeout(() => {
           if (this.isEmpty()) {
             this.events.emit({
@@ -541,7 +543,10 @@ export class CurrentFlowService {
   }
 
   get loaded(): boolean {
-    return this._loaded;
+    return (
+      typeof this._integration !== 'undefined' &&
+      typeof this._integration.flows !== 'undefined'
+    );
   }
 
   get flows(): Flows {
@@ -563,7 +568,6 @@ export class CurrentFlowService {
   }
 
   set integration(i: Integration) {
-    this._loaded = false;
     this._integration = <Integration>i;
     if (!this.flowId) {
       this.flowId = i.flows && i.flows.length > 0 ? i.flows[0].id : undefined;

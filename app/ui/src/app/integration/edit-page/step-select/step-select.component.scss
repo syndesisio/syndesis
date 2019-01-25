@@ -1,4 +1,5 @@
-.list-group-item:hover {
-  background: rgba(214, 238, 250, 0.36);
-  cursor: pointer;
+:host ::ng-deep .card {
+  .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
+    cursor: pointer !important;
+  }
 }

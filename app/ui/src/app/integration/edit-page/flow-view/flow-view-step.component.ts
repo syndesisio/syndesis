@@ -247,7 +247,7 @@ export class FlowViewStepComponent implements OnChanges {
     switch (step.stepKind) {
       case 'endpoint':
         if (!step.connection) {
-          this.goto('connection-select');
+          this.goto('step-select');
           return;
         }
         if (!step.action) {
@@ -271,15 +271,7 @@ export class FlowViewStepComponent implements OnChanges {
         // this means we're actually in this step, so don't change the view
         return;
       }
-      // TODO wonder will there be more choices?
-      switch (this.step.stepKind) {
-        case 'endpoint':
-          page = 'connection-select';
-          break;
-        default:
-          page = 'step-select';
-          break;
-      }
+      page = 'step-select';
     }
     // validate that the step is complete before we move
     const step = this.currentFlowService.getStep(this.currentPosition);

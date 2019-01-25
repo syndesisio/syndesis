@@ -85,7 +85,7 @@ export interface Flow extends WithId {
   name: string;
   description: string;
   metadata: {
-    excerpt: string
+    excerpt: string;
   };
   steps: Array<Step>;
   connections: Array<Connection>;
