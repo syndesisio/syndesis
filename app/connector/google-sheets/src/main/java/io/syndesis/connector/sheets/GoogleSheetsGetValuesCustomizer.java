@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.sheets;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,20 +68,20 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
     private void beforeConsumer(Exchange exchange) throws JsonProcessingException {
         final Message in = exchange.getIn();
 
-        final Map<String, Object> model = new HashMap<>();
-        model.put("spreadsheetId", spreadsheetId);
-
+        final List<String> jsonBeans;
         if (splitResults) {
-            createModelFromSplitValues(model, in);
+            jsonBeans = createModelFromSplitValues(in);
         } else {
-            createModelFromValueRange(model, in);
+            jsonBeans = createModelFromValueRange(in);
         }
 
-        in.setBody(Json.writer().writeValueAsString(model));
+        in.setBody(jsonBeans);
     }
 
-    private void createModelFromValueRange(Map<String, Object> model, Message in) {
+    private List<String> createModelFromValueRange(Message in) throws JsonProcessingException {
+        final List<String> jsonBeans = new ArrayList<>();
         final ValueRange valueRange = in.getBody(ValueRange.class);
+
         if (valueRange != null) {
             if (ObjectHelper.isNotEmpty(valueRange.getRange())) {
                 range = valueRange.getRange();
@@ -92,35 +93,37 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
             }
 
             if (ObjectHelper.equal(RangeCoordinate.DIMENSION_ROWS, majorDimension)) {
-                int rowIndex = rangeCoordinate.getRowStartIndex() + 1;
                 for (List<Object> values : valueRange.getValues()) {
-                    final Map<String, Object> rowModel = new HashMap<>();
+                    final Map<String, Object> model = new HashMap<>();
+                    model.put("spreadsheetId", spreadsheetId);
                     int columnIndex = rangeCoordinate.getColumnStartIndex();
                     for (Object value : values) {
-                        rowModel.put(CellCoordinate.getColumnName(columnIndex), value);
+                        model.put(CellCoordinate.getColumnName(columnIndex), value);
                         columnIndex++;
                     }
-                    model.put(ROW_PREFIX + rowIndex, rowModel);
-                    rowIndex++;
+                    jsonBeans.add(Json.writer().writeValueAsString(model));
                 }
             } else if (ObjectHelper.equal(RangeCoordinate.DIMENSION_COLUMNS, majorDimension)) {
-                int columnIndex = rangeCoordinate.getColumnStartIndex();
                 for (List<Object> values : valueRange.getValues()) {
-                    final Map<String, Object> columnModel = new HashMap<>();
+                    final Map<String, Object> model = new HashMap<>();
+                    model.put("spreadsheetId", spreadsheetId);
                     int rowIndex = rangeCoordinate.getRowStartIndex() + 1;
                     for (Object value : values) {
-                        columnModel.put(ROW_PREFIX + rowIndex, value);
+                        model.put(ROW_PREFIX + rowIndex, value);
                         rowIndex++;
                     }
-                    model.put(CellCoordinate.getColumnName(columnIndex), columnModel);
-                    columnIndex++;
+                    jsonBeans.add(Json.writer().writeValueAsString(model));
                 }
             }
         }
+
+        return jsonBeans;
     }
 
-    private void createModelFromSplitValues(Map<String, Object> model, Message in) {
+    private List<String> createModelFromSplitValues(Message in) throws JsonProcessingException {
+        final List<String> jsonBeans = new ArrayList<>();
         final List<?> values = in.getBody(List.class);
+
         if (values != null) {
             if (ObjectHelper.isNotEmpty(in.getHeader(GoogleSheetsStreamConstants.RANGE))) {
                 range = in.getHeader(GoogleSheetsStreamConstants.RANGE).toString();
@@ -132,24 +135,28 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
             }
 
             if (ObjectHelper.equal(RangeCoordinate.DIMENSION_ROWS, majorDimension)) {
+                final Map<String, Object> model = new HashMap<>();
+                model.put("spreadsheetId", spreadsheetId);
                 int columnIndex = rangeCoordinate.getColumnStartIndex();
-                final Map<String, Object> rowModel = new HashMap<>();
                 for (Object value : values) {
-                    rowModel.put(CellCoordinate.getColumnName(columnIndex), value);
+                    model.put(CellCoordinate.getColumnName(columnIndex), value);
                     columnIndex++;
                 }
+                jsonBeans.add(Json.writer().writeValueAsString(model));
 
-                model.put(ROW_PREFIX, rowModel);
             } else if (ObjectHelper.equal(RangeCoordinate.DIMENSION_COLUMNS, majorDimension)) {
-                final Map<String, Object> columnModel = new HashMap<>();
+                final Map<String, Object> model = new HashMap<>();
+                model.put("spreadsheetId", spreadsheetId);
                 int rowIndex = rangeCoordinate.getRowStartIndex() + 1;
                 for (Object value : values) {
-                    columnModel.put(ROW_PREFIX + rowIndex, value);
+                    model.put(ROW_PREFIX + rowIndex, value);
                     rowIndex++;
                 }
-                model.put("$", columnModel);
+                jsonBeans.add(Json.writer().writeValueAsString(model));
             }
         }
+
+        return jsonBeans;
     }
 
 }
