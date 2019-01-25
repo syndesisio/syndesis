@@ -10,7 +10,7 @@ export const FormInputComponent = ({
 }) => (
   // TODO replace with PF3/PF4 widget
   <div className="form-group">
-    <label className="ontrol-label" htmlFor={field.name}>
+    <label className="control-label" htmlFor={field.name}>
       {props.property.displayName}
     </label>
     <input
