@@ -15,8 +15,11 @@ as the finish connection or as a middle connection.
 * The integration has a start connection.
 * You know the name of the ServiceNow import set that you want to 
 add records to. Your ServiceNow administrator can
-help you identify the appropriate import set. 
-* The ServiceNow import set must have been configured to handle the addition 
+help you identify the appropriate import set. If the import set 
+does not exist, see 
+link:{LinkFuseOnlineConnectorGuide}#create-servicenow-web-service_servicenow[Create ServiceNow web service],
+which implicitly creates an import set. 
+* The ServiceNow import set must be configured to handle the addition 
 of records.
 
 .Procedure
@@ -40,8 +43,10 @@ you want to add records to.
 
 .Results
 * {prodname} adds the connection to the integration. 
-* If a data mapper step is needed before this connection, then 
-in the integration visualization panel, 
+* Typically, a data mapper step is needed before this connection.
+In the integration visualization panel, 
 {prodname} displays 
 image:shared/images/WarningIcon.png[Data Type Mismatch] on the
-connection.
+connection. In most integrations, you need to map a source field 
+to the target field that is used as the correlation field in the 
+ServiceNow table. 
