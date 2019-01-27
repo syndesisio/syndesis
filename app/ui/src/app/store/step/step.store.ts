@@ -97,7 +97,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
       action: undefined,
       name: 'Log',
       stepKind: LOG,
-      description: "Sends a message to the integration's log",
+      description: "Send a message to the integration's log.",
       configuredProperties: undefined,
       properties: {
         contextLoggingEnabled: {
