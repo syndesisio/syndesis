@@ -566,7 +566,7 @@
     "clientId": {
       "componentProperty": true,
       "deprecated": false,
-      "description": "OAuth Consumer Key of the connected app configured in the Salesforce instance setup. Typically a connected app needs to be configured but one can be provided by installing a package.",
+      "description": "The consumer key that Salesforce provides when you create a connected app in Salesforce.",
       "displayName": "Client ID",
       "group": "security",
       "javaType": "java.lang.String",
@@ -583,7 +583,7 @@
     "clientSecret": {
       "componentProperty": true,
       "deprecated": false,
-      "description": "OAuth Consumer Secret of the connected app configured in the Salesforce instance setup.",
+      "description": "The consumer secret that Salesforce provides when you create a connected app in Salesforce.",
       "displayName": "Client Secret",
       "group": "security",
       "javaType": "java.lang.String",
