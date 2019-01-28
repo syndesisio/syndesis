@@ -35,7 +35,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default boolean isEndpointProperty(Entry<String, String> e) {
-        return this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && !this.getProperties().get(e.getKey()).isComponentProperty();
+        return this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && !this.getProperties().get(e.getKey()).componentProperty();
     }
 
     @JsonIgnore
@@ -45,7 +45,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default boolean isComponentProperty(Entry<String, String> e) {
-        return this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && this.getProperties().get(e.getKey()).isComponentProperty();
+        return this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && this.getProperties().get(e.getKey()).componentProperty();
     }
 
     @JsonIgnore
@@ -59,7 +59,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default boolean isSecret(String key) {
-        return this.getProperties() != null && this.getProperties().containsKey(key) && this.getProperties().get(key).isSecret();
+        return this.getProperties() != null && this.getProperties().containsKey(key) && this.getProperties().get(key).secret();
     }
 
     @JsonIgnore
@@ -108,7 +108,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default boolean isRaw(String key) {
-        return this.getProperties() != null && this.getProperties().containsKey(key) && this.getProperties().get(key).isRaw();
+        return this.getProperties() != null && this.getProperties().containsKey(key) && this.getProperties().get(key).raw();
     }
 
     @JsonIgnore

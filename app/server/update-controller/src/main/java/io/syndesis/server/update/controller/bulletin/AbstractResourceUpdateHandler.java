@@ -173,7 +173,7 @@ abstract class AbstractResourceUpdateHandler<T extends WithId<T>> implements Res
         Supplier<LeveledMessage.Builder> supplier, Map<String, ConfigurationProperty> configurationProperties, Map<String, String> configuredProperties) {
 
         for (Map.Entry<String, ConfigurationProperty> entry: configurationProperties.entrySet()) {
-            if (entry.getValue().isRequired() && Strings.isNullOrEmpty(entry.getValue().getDefaultValue()) && !configuredProperties.containsKey(entry.getKey())) {
+            if (entry.getValue().required() && Strings.isNullOrEmpty(entry.getValue().getDefaultValue()) && !configuredProperties.containsKey(entry.getKey())) {
                 return Collections.singletonList(
                     supplier.get()
                         .level(LeveledMessage.Level.WARN)
@@ -197,7 +197,7 @@ abstract class AbstractResourceUpdateHandler<T extends WithId<T>> implements Res
 
             // We have a null value if it was an encrypted property that was
             // imported into a different system.
-            if (entry.getValue().isSecret() && val != null && encryptionComponent.decrypt(val) == null) {
+            if (entry.getValue().secret() && val != null && encryptionComponent.decrypt(val) == null) {
                 return Collections.singletonList(
                     supplier.get()
                         .level(LeveledMessage.Level.WARN)

@@ -19,12 +19,12 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-import org.immutables.value.Value;
-
 import io.syndesis.common.model.Ordered;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.connection.DynamicActionMetadata.ActionPropertySuggestion;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.immutables.value.Value;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
@@ -56,7 +56,20 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
         String getValue();
     }
 
+    default boolean componentProperty() {
+        final Boolean value = getComponentProperty();
+        if (value != null) {
+            return Boolean.TRUE.equals(value);
+        }
+
+        return false;
+    }
+
     Boolean getComponentProperty();
+
+    Optional<String> getConnectorValue();
+
+    String getControlHint();
 
     String getDefaultValue();
 
@@ -64,15 +77,11 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
     String getDescription();
 
-    String getControlHint();
-
-    String getLabelHint();
-
-    String getPlaceholder();
-
     String getDisplayName();
 
     List<PropertyValue> getEnum();
+
+    String getGenerator();
 
     String getGroup();
 
@@ -82,23 +91,22 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
     String getLabel();
 
+    String getLabelHint();
+
+    String getPlaceholder();
+
+    Boolean getRaw();
+
+    List<PropertyRelation> getRelation();
+
     Boolean getRequired();
 
     Boolean getSecret();
 
     String getType();
 
-    Optional<String> getConnectorValue();
-
-    Boolean getRaw();
-
-    List<PropertyRelation> getRelation();
-
-    String getGenerator();
-
-    @JsonIgnore
-    default boolean isComponentProperty() {
-        Boolean value = getComponentProperty();
+    default boolean raw() {
+        final Boolean value = getRaw();
         if (value != null) {
             return Boolean.TRUE.equals(value);
         }
@@ -106,9 +114,8 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
         return false;
     }
 
-    @JsonIgnore
-    default boolean isSecret() {
-        Boolean value = getSecret();
+    default boolean required() {
+        final Boolean value = getRequired();
         if (value != null) {
             return Boolean.TRUE.equals(value);
         }
@@ -116,19 +123,8 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
         return false;
     }
 
-    @JsonIgnore
-    default boolean isRaw() {
-        Boolean value = getRaw();
-        if (value != null) {
-            return Boolean.TRUE.equals(value);
-        }
-
-        return false;
-    }
-
-    @JsonIgnore
-    default boolean isRequired() {
-        Boolean value = getRequired();
+    default boolean secret() {
+        final Boolean value = getSecret();
         if (value != null) {
             return Boolean.TRUE.equals(value);
         }

@@ -62,7 +62,7 @@ public class EncryptionComponent {
             // Let encrypt all the secrets
             for (Map.Entry<String, String> entry : values.entrySet()) {
                 ConfigurationProperty property = properties.get(entry.getKey());
-                if(property==null || !property.isSecret()) {
+                if(property==null || !property.secret()) {
                     continue;
                 }
                 result.put(entry.getKey(), encrypt(entry.getValue()));
