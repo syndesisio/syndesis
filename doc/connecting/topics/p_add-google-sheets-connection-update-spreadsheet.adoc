@@ -1,0 +1,57 @@
+// This module is included in the following assemblies:
+// as_connecting-to-google-sheets.adoc
+
+[id='add-google-sheets-connection-update-spreadsheet_{context}']
+= Update properties of a spreadsheet on your Google Sheets account
+
+In an integration, you can update a Google Sheets spreadsheet properties
+in the middle of the integration or to finish the integration.
+To do this, add a Google Sheets connection to the middle of an integration
+or as the integration's finish connection.
+
+[IMPORTANT]
+====
+In this release, the *Update spreadsheet properties* action requires a spreadsheetId in order to
+identify the target spreadsheet that is updated. In most if not all cases, this means that you must add a Google
+Sheets connection that
+link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_google-sheets[creates] or
+link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-get-spreadsheet_google-sheets[obtains] the spreadsheet that you want to update,
+then add the Google Sheets connection that updates the spreadsheet, and then
+insert a data mapper step between the two Google Sheets connections.
+====
+
+.Prerequisites
+* A Google Sheets connection is available and this connection
+is authorized to access the Google spreadsheet that
+you want to update.
+* You have access to a spreadsheetId on your Google Sheets account that you want to update
+* In the integration, there is an earlier connection to Google Sheets
+and that connection obtains the spreadsheetId that you want to update.
+* You are creating or editing an integration and {prodname} is prompting you
+to add a finish connection or select the connection that you want to add
+in the middle of an integration.
+
+.Procedure
+. Click a Google Sheets connection that is authorized to access
+the spreadsheet that you want to connect to.
+. On the *Choose an Action* page, click *Update spreadsheet properties*.
+. To configure the *Update spreadsheet properties* action:
++
+.. In the *SpreadsheetId* field, enter the identifier of the spreadsheet that you want to update. If you do not have it
+you might want to link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_google-sheets[create] or
+link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_google-sheets[obtain] the spreadsheet that
+you want to update first and map the spreadsheet identifier in the data mapping step.
+.. In the *Title* field, enter the title of the spreadsheet to create.
+.. In the *Time Zone* field, enter the time zone the newly created spreadsheet should follow.
+.. In the *Locale* field, enter the locale of the newly created spreadsheet.
+
+. Click *Done* to add the connection to the integration.
+The connection appears in the integration visualization flow in the
+location where you added it.
+. In the integration visualization flow, hover over the plus sign that is
+just before the connection that you just added and click *Add a step*.
+. Click *Data Mapper*.
+. In the data mapper, you are able to map fields from the Google Sheets connection that
+obtained the spreadsheet to the corresponding field in the Google Sheets connection that updates the spreadsheet (e.g. spreadsheetId).
+In addition to that the spreadsheet properties you can update are represented as fields in the target data shape.
+. In the upper right, click *Done* to add the data mapper step.

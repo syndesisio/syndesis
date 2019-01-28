@@ -1,0 +1,82 @@
+// This module is included in the following assemblies:
+// as_connecting-to-google-sheets.adoc
+
+[id='add-google-sheets-connection-add-charts_{context}']
+= Add charts to a spreadsheet on your Google Sheets account
+
+In an integration, you can add charts to a Google Sheets spreadsheet
+in the middle of the integration or to finish the integration.
+To do this, add a Google Sheets connection to the middle of an integration
+or as the integration's finish connection.
+
+[IMPORTANT]
+====
+In this release, the *Add charts* action supports charts of type *BasicChart* or *PieChart*. Each of these chart types
+provides individual options and fields for creating a new chart in a spreadsheet on your Google Sheets account. The chart options
+must be set on a data mapping step prior to the *Add Charts* action.
+====
+
+[IMPORTANT]
+====
+In this release, the *Add charts* action requires a spreadsheetId in order to
+identify the target spreadsheet that is updated with newly added charts. In most if not all cases, this means that you must add a Google
+Sheets connection that
+link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_google-sheets[creates] or
+link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-get-spreadsheet_google-sheets[obtains] the spreadsheet that you want to add charts to,
+then add the Google Sheets connection that add charts to the spreadsheet, and then
+insert a data mapper step between the two Google Sheets connections.
+====
+
+.Prerequisites
+* A Google Sheets connection is available and this connection
+is authorized to access the Google spreadsheet that
+you want to add charts to.
+* You have access to a spreadsheetId on your Google Sheets account that you want to add charts to
+* In the integration, there is an earlier connection to Google Sheets
+and that connection obtains the spreadsheetId that you want to add charts to.
+* You are creating or editing an integration and {prodname} is prompting you
+to add a finish connection or select the connection that you want to add
+in the middle of an integration.
+
+.Procedure
+. Click a Google Sheets connection that is authorized to access
+the spreadsheet that you want to connect to.
+. On the *Choose an Action* page, click *Add charts*.
+. To configure the *Add charts* action:
++
+.. In the *SpreadsheetId* field, enter the identifier of the spreadsheet that you want to add charts to. If you do not have it
+you might want to link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_google-sheets[create] or
+link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_google-sheets[obtain] the spreadsheet that
+you want to update first and map the spreadsheet identifier in the data mapping step.
+.. In the *Chart Title* field, enter the chart title.
+.. In the *Subtitle* field, enter the subtitle of the chart to add.
+
+. Click *Done* to add the connection to the integration.
+The connection appears in the integration visualization flow in the
+location where you added it.
+. In the integration visualization flow, hover over the plus sign that is
+just before the connection that you just added and click *Add a step*.
+. Click *Data Mapper*.
+. In the data mapper, you are able to map fields from the Google Sheets connection that
+obtained the spreadsheet to the corresponding field in the Google Sheets connection that adds charts to the spreadsheet (e.g. spreadsheetId).
+In addition to that the chart options are represented as fields in the target data shape.
++
+.. To configure a new chart
+... In the *overlayPosition* field, set the cell identifier where the chart is to be placed in the spreadsheet. This field uses the Google Sheets A1 notation. The chart is
+placed at this very specific position in the spreadsheet. In case left empty the chart is added as a completely new sheet in the spreadsheet.
+... In the *spreadsheetId* field, provide a target spreadsheet identifier on your Google Sheets account that the chart is added to. You can map this from previous steps in your integration.
+... In the *title* field, specify the chart title to use when add ing the chart. Do not set this field when providing the subtitle in the connection properties.
+... In the *subtitle* field, set the chart subtitle. Do not set this field when providing the subtitle in the connection properties.
+... In the *sheetId* field, specify the target sheet identifier where the chart will be added to in the spreadsheet on your Google Sheets account.
+... In the *sourceSheetId* field, specify the source sheet identifier where the chart sources are located within the spreadsheet on your Google Sheets account.
+.. To configure a basic chart type
+... In the *type* field, set the basic chart type (one of `BAR`, `LINE`, `AREA`, `COLUMN`). The default is `COLUMN`.
+... In the *axisTitleBottom* field, set the title for the bottom axis.
+... In the *axisTitleLeft* field, set the title for the left axis.
+... In the *domainRange* field, specify the domain range of the chart. This field uses the Google Sheets A1 notation.
+... In the *dataRange* field, specify  the data range defining a single series of data in the chart. This field uses the Google Sheets A1 notation.
+.. To configure a pie chart type
+... In the *legendPosition* field, set position of the generated chart legend (one of `BOTTOM_LEGEND`, `LEFT_LEGEND`, `RIGHT_LEGEND`, `TOP_LEGEND`, `NO_LEGEND`). The default is `LEFT_LEGEND`.
+... In the *domainRange* field, specify the domain range of the chart. This field uses the Google Sheets A1 notation.
+... In the *dataRange* field, specify  the data range defining a single series of data in the chart. This field uses the Google Sheets A1 notation.
+. In the upper right, click *Done* to add the data mapper step.

@@ -67,7 +67,7 @@
         ]
       },
       "id": "io.syndesis:sheets-create-spreadsheet-connector",
-      "name": "Create spreadsheets",
+      "name": "Create spreadsheet",
       "pattern": "To"
     },
     {
@@ -373,7 +373,7 @@
     },
     {
       "actionType": "connector",
-      "description": "Obtain sheet grid data values from a spreadsheet on your the Google Sheets account that this connection is authorized to access.",
+      "description": "Obtain data range values from a spreadsheet on your the Google Sheets account that this connection is authorized to access.",
       "descriptor": {
         "componentScheme": "google-sheets-stream",
         "connectorCustomizers": [
@@ -585,7 +585,7 @@
         ]
       },
       "id": "io.syndesis:sheets-get-spreadsheet-connector",
-      "name": "Get spreadsheets",
+      "name": "Get spreadsheet properties",
       "pattern": "From"
     },
     {

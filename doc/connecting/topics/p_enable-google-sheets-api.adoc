@@ -1,0 +1,58 @@
+// This module is included in the following assemblies:
+// as_connecting-to-google-sheets.adoc
+
+[id='enable-google-sheets-api_{context}']
+= Enable access to the Google Sheets API
+
+To be able to connect to Google Sheets in an integration,
+you must register your {prodname} environment as a Google client application.
+During registration, you enable the Google Sheets API and create credentials that
+{prodname} uses to access Google APIs that you have enabled.
+
+If you already created a connection to Gmail or Google Calendar, then
+{prodname} has the credentials for access to enabled Google
+APIs. To be able to create a Google Sheets connection, you just need to
+enable the Google Sheets API and then copy {prodname} settings from Gmail or Google Calendar
+to Google Sheets.
+
+If you already registered your {prodname} environment as a Google client
+application and during registration you enabled the Google Sheets API, then you do
+not need to follow the procedure provided here. You are ready to
+create a Google Sheets connection.
+
+.Prerequisite
+In the *Settings* page in your {prodname} environment, the Gmail or Google Calendar
+entry displays *Edit* and *Remove*, which
+indicate that {prodname} has the credentials to access
+enabled Google APIs. If *Register* appears in the Gmail or Google Calendar
+entry, then you must
+link:{LinkFuseOnlineConnectorGuide}#register-with-google-sheets_google-sheets[register your {prodname} environment as a Google client application].
+
+.Procedure
+
+. In a browser, go to `https://console.developers.google.com` and do the
+following:
+.. Confirm that you are signed in to the Google account that you used
+to register your {prodname} environment as a Google client. If you
+are not, sign in to that account.
+.. Ensure that the current Google project is the one you used for
+registration. If it is not, change to that project.
+.. You should see the *APIs and Services* dashboard. If you do not, then
+in the upper left, click
+image:images/Hamburger.png[Navigation menu icon] and select
+*APIs and Services* > *Dashboard*.
+.. At the top of the page, click *ENABLE APIS AND SERVICES*.
+.. In the page that appears, in the search field, enter `*Google Sheets*`.
+.. In the search results, click the *Google Sheets* card.
+.. In the *Google Sheets API* page, click *ENABLE*.
+. In the {prodname} *Settings* page, do the following:
+.. Expand the Gmail or Google Calendar entry.
+.. Expand the Google Sheets entry.
+.. Copy the Gmail or Google Calendar client ID to the input field for the Google Sheets
+client ID.
+.. Copy the Gmail or Google Calendar client secret to the input field for the Google Sheets
+client secret.
+.. Click *Save*,and then click *Ok*.
+
+.Result
+You can now create a Google Sheets connection.

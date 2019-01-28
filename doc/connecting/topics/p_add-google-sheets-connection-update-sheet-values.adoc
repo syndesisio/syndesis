@@ -1,0 +1,62 @@
+// This module is included in the following assemblies:
+// as_connecting-to-google-sheets.adoc
+
+[id='add-google-sheets-connection-update-sheet-values_{context}']
+= Update data in a Google Sheets spreadsheet
+
+In an integration, you can update data in a Google Sheets spreadsheet
+in the middle of the integration or to finish the integration.
+To do this, add a Google Sheets connection to the middle of an integration
+or as the integration's finish connection.
+
+[IMPORTANT]
+====
+In this release, the *Update sheet values* action requires a spreadsheetId in order to
+identify the target spreadsheet that this data is written to. In most if not all cases, this means that you must add a Google
+Sheets connection that
+link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_google-sheets[creates] or
+link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-get-spreadsheet_google-sheets[obtains] the spreadsheet that you want to update,
+then add the Google Sheets connection that updates the spreadsheet, and then
+insert a data mapper step between the two Google Sheets connections.
+====
+
+.Prerequisites
+* A Google Sheets connection is available and this connection
+is authorized to access the Google spreadsheet that
+you want to update.
+* You have access to a spreadsheetId on your Google Sheets account that you want to update
+* In the integration, there is an earlier connection to Google Sheets
+and that connection obtains the spreadsheetId that you want to update.
+* You are creating or editing an integration and {prodname} is prompting you
+to add a finish connection or select the connection that you want to add
+in the middle of an integration.
+
+.Procedure
+. Click a Google Sheets connection that is authorized to access
+the spreadsheet that you want to connect to.
+. On the *Choose an Action* page, click *Update sheet values*.
+. To configure the *Update sheet values* action:
++
+.. In the *SpreadsheetId* field, enter the identifier of the spreadsheet that you want to update. If you do not have access to it
+you might want to link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_google-sheets[create] or
+link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_google-sheets[obtain] the spreadsheet that
+you want to update first and map the spreadsheet identifier in a data mapping step later on.
+.. In the *Range* field, specify the target range in the spreadsheet that you want to update. This field uses the Google Sheets
+A1 notation where you specify start and end coordinates including multiple rows and columns.
+.. In the *Major Dimension* field, choose the dimension (one of "ROWS" or "COLUMNS") that indicates which dimension your values apply to first
+when building the set of values to update. Major dimension *ROWS* means that the values hold a collection of rows with each row holding multiple column values.
+Major dimension *COLUMNS* means that the values hold a collection of columns with each column holding multiple row values.
+.. In the *Value Input Option* field, choose how Google Sheets should interpret the input data. Choose one of *Unspecified*, *Raw* or *User entered* (default).
+
+. Click *Done* to add the connection to the integration.
+The connection appears in the integration visualization flow in the
+location where you added it.
+. In the integration visualization flow, hover over the plus sign that is
+just before the connection that you just added and click *Add a step*.
+. Click *Data Mapper*.
+. In the data mapper, you are able to map fields from the Google Sheets connection that
+obtained the spreadsheet to the corresponding field in the Google Sheets connection that updates the spreadsheet (e.g. spreadsheetId).
+In addition to that the values to update are represented with respective fields in the target data shape.
++
+If you change the *Range* or *Major Dimension* field settings in the *Update sheet values* action you will be presented with different mapping options here.
+. In the upper right, click *Done* to add the data mapper step.

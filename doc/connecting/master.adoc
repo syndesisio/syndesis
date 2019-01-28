@@ -11,7 +11,7 @@ include::topics/shared/attributes.adoc[]
 :context: connectors
 
 [id='connecting-to-applications-and-services']
-= Connecting {prodname} to Applications and Services 
+= Connecting {prodname} to Applications and Services
 
 To integrate applications, you create a connection to each application
 or service that you want to integrate. You then create an integration and
@@ -19,7 +19,7 @@ add a connection to it for each integration or service that you want
 to integrate.
 
 {prodname} <<supported-connectors_{context},supports numerous connectors>> that serve
-as templates for creating connections. The following topics provide 
+as templates for creating connections. The following topics provide
 details for creating connections and adding them to integrations:
 
 * <<connecting-to-s3_{context}>>
@@ -29,9 +29,10 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-ftp_{context}>>
 * <<connecting-to-gmail_{context}>>
 * <<connecting-to-google-calendar_{context}>>
+* <<connecting-to-google-sheets{context}>>
 * <<connecting-to-http_{context}>>
 * <<connecting-to-log_{context}>>
-* <<connecting-to-kafka_{context}>> 
+* <<connecting-to-kafka_{context}>>
 * <<connecting-to-mqtt_{context}>>
 * <<connecting-to-rest-apis_{context}>>
 * <<connecting-to-sf_{context}>>
@@ -60,6 +61,8 @@ include::topics/as_connecting-to-ftp.adoc[leveloffset=+1]
 include::topics/as_connecting-to-gmail.adoc[leveloffset=+1]
 
 include::topics/as_connecting-to-google-calendar.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-google-sheets.adoc[leveloffset=+1]
 
 include::topics/as_connecting-to-http.adoc[leveloffset=+1]
 

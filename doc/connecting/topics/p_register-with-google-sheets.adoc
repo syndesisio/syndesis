@@ -1,28 +1,28 @@
 // This module is included in the following assemblies:
-// as_connecting-to-google-calendar.adoc
+// as_connecting-to-google-sheets.adoc
 
-[id='register-with-google-calendar_{context}']
-= Register {prodname} as a Google Calendar client application
+[id='register-with-google-sheets_{context}']
+= Register {prodname} as a Google Sheets client application
 
-In an integration, to be able to connect to Google Calendar,
+In an integration, to be able to connect to Google Sheets,
 you must register your {prodname} environment as a  Google client application.
 During registration, you enable the Google
-Calendar API and create credentials that {prodname} uses to access
+Sheets API and create credentials that {prodname} uses to access
 Google APIs that you have enabled.
 
 With registration in place, you can create any number of Google
-Calendar connections and any number of integrations that connect
-to Google Calendar. While each Google Calendar connection uses the
+Sheets connections and any number of integrations that connect
+to Google Sheets. While each Google Sheets connection uses the
 same registration, each connection can
-access the calendars that belong to a different Google account.
+access the sheets that belong to a different Google account.
 
 [NOTE]
-If you already created a Gmail or Google Sheets connection, then you already
+If you already created a Gmail or Google Calendar connection, then you already
 created the credentials that your {prodname} environment needs to access
 enabled Google APIs. You do not need to follow the procedure documented here.
-To be able to create a Google Calendar connection, you just need to
-link:{LinkFuseOnlineConnectorGuide}#enable-google-calendar-api_google-calendar[enable the Google Calendar API]
-and then copy {prodname} settings from Gmail or Google Sheets to Google Calendar.
+To be able to create a Google Sheets connection, you just need to
+link:{LinkFuseOnlineConnectorGuide}#enable-google-sheets-api_google-sheets[enable the Google Sheets API]
+and then copy {prodname} settings from Gmail or Google Calendar to Google Sheets.
 
 .Procedure
 
@@ -48,11 +48,11 @@ icon in the upper right.
 in the upper left corner, click the
 image:images/Hamburger.png[Navigation menu icon] and select
 *APIs and Services* > *Dashboard*.
-.. Enable the Google Calendar API as follows:
+.. Enable the Google Sheets API as follows:
 ... At the top of the page, click *ENABLE APIS AND SERVICES*.
-... In the page that appears, in the search field, enter `*Google Calendar*`.
-... In the search results, click the *Google Calendar* card.
-... In the *Google Calendar API* page, click *ENABLE*.
+... In the page that appears, in the search field, enter `*Google Sheets*`.
+... In the search results, click the *Google Sheets* card.
+... In the *Google Sheets API* page, click *ENABLE*.
 .. Give your client application a name as follows:
 ... In the page that appears, in the left navigation panel, click
 *Credentials* and then on the right, click *Credentials in APIs & Services*.
@@ -80,8 +80,8 @@ this procedure.
 image:images/copy_icon.png[the Copy icon] to copy the client ID
 to your clipboard.
 
-. Return to the {prodname} *Settings* page, expand the Google Calendar entry,
-and in the Google Calendar *Client ID* field,
+. Return to the {prodname} *Settings* page, expand the Google Sheets entry,
+and in the Google Sheets *Client ID* field,
 paste the consumer client ID that you just copied.
 
 . Return to the Google developers site and to the right of the
@@ -90,18 +90,18 @@ image:images/copy_icon.png[the Copy icon] to copy the client secret to
 your clipboard.
 
 . Return to the {prodname} *Settings* page and do the following:
-.. In the Google Calendar *Client Secret* field, paste the Google Calendar
+.. In the Google Sheets *Client Secret* field, paste the Google Sheets
 client secret that you just copied.
 .. Click *Save*. You should get a *Registration Successful!* notification.
 .. Click *Ok* to collapse the fields.
 
 .Results
-You can now create a Google Calendar connection.
+You can now create a Google Sheets connection.
 
 [IMPORTANT]
 The Google client ID and Google client secret contain token refresh
-information that ensures that  your Google Calendar connections and integrations
-that have Google Calendar connections continuously work correctly.
+information that ensures that your Google Sheets connections and integrations
+that have Google Sheets connections continuously work correctly.
 Consequently, you should *not* obtain new credentials. If you do, then you
-would need to recreate each Google Calendar connection and re-publish each
-integration that uses a Google Calendar connection.
+would need to recreate each Google Sheets connection and re-publish each
+integration that uses a Google Sheets connection.
