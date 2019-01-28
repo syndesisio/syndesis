@@ -18,5 +18,9 @@ package io.syndesis.common.util.cache;
 import java.util.Map;
 
 public interface CacheManager {
-    <K,V > Map<K, V> getCache(String name);
+
+    void evictAll();
+
+    <K, V> Map<K, V> getCache(String name);
+
 }

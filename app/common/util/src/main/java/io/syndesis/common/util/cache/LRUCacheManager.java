@@ -22,21 +22,26 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class LRUCacheManager implements CacheManager {
-    private final int maxElements;
     private final ConcurrentMap<String, Map<?, ?>> maps;
+    private final int maxElements;
 
-    public LRUCacheManager(int maxElements) {
+    public LRUCacheManager(final int maxElements) {
         this.maxElements = maxElements;
-        this.maps = new ConcurrentHashMap<>();
+        maps = new ConcurrentHashMap<>();
+    }
+
+    @Override
+    public void evictAll() {
+        maps.clear();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <K, V> Map<K, V> getCache(String name) {
+    public <K, V> Map<K, V> getCache(final String name) {
         return Map.class.cast(maps.computeIfAbsent(name, this::newCache));
     }
 
-    private <K, V> Map<K, V> newCache(@SuppressWarnings("PMD.UnusedFormalParameter") String name) {
+    private <K, V> Map<K, V> newCache(@SuppressWarnings("PMD.UnusedFormalParameter") final String name) {
         return Collections.synchronizedMap(new LinkedHashMap<K, V>() {
             @Override
             protected boolean removeEldestEntry(final Map.Entry<K, V> eldest) {
