@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,6 @@ import io.syndesis.connector.sheets.model.RangeCoordinate;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
-import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
 import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,9 +47,9 @@ public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCus
     private final String sheetName;
     private final String majorDimension;
     private final List<List<Object>> values;
-    private final String expectedValueModel;
+    private final List<String> expectedValueModel;
 
-    public GoogleSheetsGetValuesCustomizerTest(String range, String sheetName, String majorDimension, List<List<Object>> values, String expectedValueModel) {
+    public GoogleSheetsGetValuesCustomizerTest(String range, String sheetName, String majorDimension, List<List<Object>> values, List<String> expectedValueModel) {
         this.range = range;
         this.sheetName = sheetName;
         this.majorDimension = majorDimension;
@@ -65,13 +65,19 @@ public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCus
                                                             Collections.singletonList("a3"),
                                                             Collections.singletonList("a4"),
                                                             Collections.singletonList("a5")),
-                        "{\"#1\": {\"A\":\"a1\"},\"#2\": {\"A\":\"a2\"}, \"#3\": {\"A\":\"a3\"}, \"#4\": {\"A\":\"a4\"}, \"#5\": {\"A\":\"a5\"},\"spreadsheetId\":\"%s\"}"},
+                        Arrays.asList("{\"spreadsheetId\":\"%s\", \"A\":\"a1\"}",
+                                      "{\"spreadsheetId\":\"%s\", \"A\":\"a2\"}",
+                                      "{\"spreadsheetId\":\"%s\", \"A\":\"a3\"}",
+                                      "{\"spreadsheetId\":\"%s\", \"A\":\"a4\"}",
+                                      "{\"spreadsheetId\":\"%s\", \"A\":\"a5\"}")},
                 { "A1:A5", "Sheet1", RangeCoordinate.DIMENSION_COLUMNS, Collections.singletonList(Arrays.asList("a1", "a2", "a3", "a4", "a5")),
-                        "{\"A\": {\"#1\":\"a1\",\"#2\":\"a2\",\"#3\":\"a3\",\"#4\":\"a4\",\"#5\":\"a5\"},\"spreadsheetId\":\"%s\"}"},
+                        Collections.singletonList("{\"spreadsheetId\":\"%s\", \"#1\":\"a1\",\"#2\":\"a2\",\"#3\":\"a3\",\"#4\":\"a4\",\"#5\":\"a5\"}")},
                 { "A1:B2", "Sheet1", RangeCoordinate.DIMENSION_ROWS, Arrays.asList(Arrays.asList("a1", "b1"), Arrays.asList("a2", "b2")),
-                        "{\"#1\": {\"A\":\"a1\",\"B\":\"b1\"},\"#2\": {\"A\":\"a2\",\"B\":\"b2\"},\"spreadsheetId\":\"%s\"}"},
+                        Arrays.asList("{\"spreadsheetId\":\"%s\", \"A\":\"a1\",\"B\":\"b1\"}",
+                                      "{\"spreadsheetId\":\"%s\", \"A\":\"a2\",\"B\":\"b2\"}")},
                 { "A1:B2", "Sheet1", RangeCoordinate.DIMENSION_COLUMNS, Arrays.asList(Arrays.asList("a1", "a2"), Arrays.asList("b1", "b2")),
-                        "{\"A\": {\"#1\":\"a1\",\"#2\":\"a2\"},\"B\": {\"#1\":\"b1\",\"#2\":\"b2\"},\"spreadsheetId\":\"%s\"}"}
+                        Arrays.asList("{\"spreadsheetId\":\"%s\", \"#1\":\"a1\",\"#2\":\"a2\"}",
+                                      "{\"spreadsheetId\":\"%s\", \"#1\":\"b1\",\"#2\":\"b2\"}")}
         });
     }
 
@@ -91,9 +97,6 @@ public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCus
 
         Exchange inbound = new DefaultExchange(createCamelContext());
 
-        inbound.getIn().setHeader(GoogleSheetsStreamConstants.RANGE_INDEX, 1);
-        inbound.getIn().setHeader(GoogleSheetsStreamConstants.VALUE_INDEX, 1);
-
         ValueRange valueRange = new ValueRange();
         valueRange.setRange(sheetName + "!" + range);
         valueRange.setMajorDimension(majorDimension);
@@ -105,7 +108,12 @@ public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCus
         Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
         Assert.assertEquals("get", options.get("methodName"));
 
-        String model = (String) inbound.getIn().getBody();
-        JSONAssert.assertEquals(String.format(expectedValueModel, getSpreadsheetId()), model, JSONCompareMode.STRICT);
+        @SuppressWarnings("unchecked")
+        List<String> model = inbound.getIn().getBody(List.class);
+        Assert.assertEquals(expectedValueModel.size(), model.size());
+        Iterator<String> modelIterator = model.iterator();
+        for (String expected : expectedValueModel) {
+            JSONAssert.assertEquals(String.format(expected, getSpreadsheetId()), modelIterator.next(), JSONCompareMode.STRICT);
+        }
     }
 }

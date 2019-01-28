@@ -46,8 +46,7 @@ public final class GoogleSheetsMetadataRetrieval extends ComponentMetadataRetrie
 
         if (valueRangeMetaData != null) {
             final ObjectSchema spec = GoogleSheetsMetaDataHelper.createSchema(valueRangeMetaData.getRange(),
-                    Optional.ofNullable(valueRangeMetaData.getMajorDimension()).orElse(RangeCoordinate.DIMENSION_ROWS),
-                    valueRangeMetaData.isSplit());
+                    Optional.ofNullable(valueRangeMetaData.getMajorDimension()).orElse(RangeCoordinate.DIMENSION_ROWS));
 
             try {
                 DataShape.Builder inDataShapeBuilder = new DataShape.Builder().type("VALUE_RANGE_PARAM_IN");
