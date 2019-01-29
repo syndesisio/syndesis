@@ -16,20 +16,20 @@ export const LONGTIME = 'LTS z'; // (9:03:01 AM GMT+1).
 export const FULLTIME = 'LTS zzzz'; // (9:03:01 AM GMT+01:00).
 
 type dateFormats =
-  string |
-  'time' |
-  'short' |
-  'medium' |
-  'long' |
-  'full' |
-  'shortDate' |
-  'mediumDate' |
-  'longDate' |
-  'fullDate' |
-  'shortTime' |
-  'mediumTime' |
-  'longTime' |
-  'fullTime';
+  | string
+  | 'time'
+  | 'short'
+  | 'medium'
+  | 'long'
+  | 'full'
+  | 'shortDate'
+  | 'mediumDate'
+  | 'longDate'
+  | 'fullDate'
+  | 'shortTime'
+  | 'mediumTime'
+  | 'longTime'
+  | 'fullTime';
 
 @Pipe({
   name: 'synDate',
@@ -37,6 +37,9 @@ type dateFormats =
 })
 export class DatePipe implements PipeTransform {
   transform(value: number | string, format: dateFormats = DEFAULT_FORMAT): any {
+    if (typeof value === 'undefined') {
+      return undefined;
+    }
     switch (format) {
       case 'time':
         format = 'YYYY-MM-DD HH:mm:SS A'; // useful for the <time> component
