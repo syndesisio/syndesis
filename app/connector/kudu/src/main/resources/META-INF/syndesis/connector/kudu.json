@@ -2,89 +2,6 @@
   "actions": [
     {
       "actionType": "connector",
-      "description": "Create a table in kudu",
-      "descriptor": {
-        "componentScheme": "kudu",
-        "connectorCustomizers": [
-          "io.syndesis.connector.kudu.KuduCreateTableCustomizer"
-        ],
-        "inputDataShape": {
-          "name": "KuduTable",
-          "kind": "java",
-          "type": "io.syndesis.connector.kudu.model.KuduTable"
-        },
-        "outputDataShape": {
-          "name": "KuduTable",
-          "kind": "java",
-          "type": "io.syndesis.connector.kudu.model.KuduTable"
-        },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify table properties.",
-            "name": "Create a kudu table",
-            "properties": {
-              "name": {
-                "deprecated": false,
-                "displayName": "Name",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "The table name.",
-                "order": "1",
-                "required": true,
-                "secret": false,
-                "type": "string"
-              },
-              "columns": {
-                "deprecated": false,
-                "displayName": "Columns",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Table's columns in the way: column1Name,type;column2Name,type.",
-                "order": "2",
-                "required": true,
-                "secret": false,
-                "type": "string"
-              },
-              "table_options_buckets": {
-                "deprecated": false,
-                "displayName": "Buckets",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Number of buckets to distributes rows to different tablets by hash",
-                "order": "2",
-                "required": false,
-                "secret": false,
-                "type": "string"
-              },
-              "table_options_key": {
-                "deprecated": false,
-                "displayName": "Hashing key",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Name of the key used for hashing",
-                "order": "2",
-                "required": true,
-                "secret": false,
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "id": "kudu-create-table-connector",
-      "name": "Create kudu table",
-      "pattern": "To"
-    },
-    {
-      "actionType": "connector",
       "description": "Insert data into kudu tables",
       "descriptor": {
         "componentScheme": "kudu",
@@ -125,6 +42,49 @@
       "tags": [
         "dynamic"
       ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Scan a kudu table",
+      "descriptor": {
+        "componentScheme": "kudu",
+        "connectorCustomizers": [
+          "io.syndesis.connector.kudu.KuduScanCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Scan a kudu table",
+            "name": "Scan",
+            "properties": {
+              "tableName": {
+                "deprecated": false,
+                "displayName": "Table",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Name of the table to scan",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "kudu-scan-connector",
+      "name": "Scan a kudu table",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
     }
   ],
   "configuredProperties": {},
@@ -158,6 +118,7 @@
     },
     "port": {
       "componentProperty": true,
+      "defaultValue": 7051,
       "deprecated": false,
       "displayName": "Port to establish the connection to",
       "group": "common",
@@ -165,7 +126,7 @@
       "kind": "property",
       "label": "Port",
       "labelHint": "Port where kudu service is listening in the remote port, by default 7051",
-      "order": "1",
+      "order": "2",
       "required": true,
       "secret": false,
       "tags": [],

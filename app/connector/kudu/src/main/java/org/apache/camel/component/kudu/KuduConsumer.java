@@ -16,20 +16,20 @@
 
 package org.apache.camel.component.kudu;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.impl.ScheduledPollConsumer;
+import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.client.KuduClient;
 import org.apache.kudu.client.KuduException;
 import org.apache.kudu.client.KuduScanner;
 import org.apache.kudu.client.KuduTable;
-import org.apache.kudu.client.RowResultIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * The Kudu consumer.
@@ -42,6 +42,7 @@ public class KuduConsumer extends ScheduledPollConsumer {
     public KuduConsumer(KuduEndpoint endpoint, Processor processor) {
         super(endpoint, processor);
         this.endpoint = endpoint;
+        this.connection = endpoint.getKuduClient();
     }
 
     @Override
@@ -49,10 +50,9 @@ public class KuduConsumer extends ScheduledPollConsumer {
         Exchange exchange = endpoint.createExchange();
 
         // create a message body
-        doScan(endpoint.getTableName());
+        KuduScanner scanner = doScan(endpoint.getTableName());
 
-        Date now = new Date();
-        exchange.getIn().setBody("Hello World! The time is " + now);
+        exchange.getIn().setBody(scanner);
 
         try {
             // send message to next processor in the route
@@ -66,19 +66,20 @@ public class KuduConsumer extends ScheduledPollConsumer {
         }
     }
 
-    private void doScan(String tableName) throws KuduException {
+    private KuduScanner doScan(String tableName) throws KuduException {
         KuduTable table = connection.openTable(tableName);
 
         List<String> projectColumns = new ArrayList<>(1);
-        projectColumns.add("value");
+        Iterator<ColumnSchema> columns = table.getSchema().getColumns().iterator();
+
+        while (columns.hasNext()) {
+            projectColumns.add(columns.next().getName());
+        }
+
         KuduScanner scanner = connection.newScannerBuilder(table)
                 .setProjectedColumnNames(projectColumns)
                 .build();
-        while (scanner.hasMoreRows()) {
-            RowResultIterator results = scanner.nextRows();
-            while (results.hasNext()) {
-                LOG.debug("Creating table {}", results.next());
-            }
-        }
+
+        return scanner;
     }
 }

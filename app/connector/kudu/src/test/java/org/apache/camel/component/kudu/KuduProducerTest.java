@@ -33,7 +33,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class KuduProducerTest extends AbstractKuduTest {
 
     private static final String TABLE = "KuduTestTable";
-    private static final String HOST = "localhost";
+    private static final String HOST = "quickstart.cloudera";
     private static final String PORT = "7051";
 
     @EndpointInject(uri = "mock:test")
