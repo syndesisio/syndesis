@@ -22,7 +22,9 @@ public enum StepKind {
     ruleFilter,
     extension,
     mapper,
-    split,
+    @Deprecated split,
+    foreach,
+    endForeach,
     log,
     headers,
     template

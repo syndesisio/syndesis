@@ -36,7 +36,7 @@ public final class GoogleSheetsMetaDataHelper {
         super();
     }
 
-    public static ObjectSchema createSchema(String range, String majorDimension, boolean split) {
+    public static ObjectSchema createSchema(String range, String majorDimension) {
         ObjectSchema spec = new ObjectSchema();
         spec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
         spec.setTitle("VALUE_RANGE");
@@ -45,9 +45,9 @@ public final class GoogleSheetsMetaDataHelper {
 
         RangeCoordinate coordinate = RangeCoordinate.fromRange(range);
         if (ObjectHelper.equal(RangeCoordinate.DIMENSION_ROWS, majorDimension)) {
-            createSchemaFromRowDimension(spec, coordinate, split);
+            createSchemaFromRowDimension(spec, coordinate);
         } else if (ObjectHelper.equal(RangeCoordinate.DIMENSION_COLUMNS, majorDimension)) {
-            createSchemaFromColumnDimension(spec, coordinate, split);
+            createSchemaFromColumnDimension(spec, coordinate);
         }
 
         return spec;
@@ -59,28 +59,10 @@ public final class GoogleSheetsMetaDataHelper {
      *
      * @param spec
      * @param coordinate
-     * @param split
      */
-    private static void createSchemaFromRowDimension(ObjectSchema spec, RangeCoordinate coordinate, boolean split) {
-        if (split) {
-            ObjectSchema rowSpec = new ObjectSchema();
-            rowSpec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
-            rowSpec.setTitle("ROW");
-            for (int i = coordinate.getColumnStartIndex(); i < coordinate.getColumnEndIndex(); i++) {
-                rowSpec.putProperty(CellCoordinate.getColumnName(i), new JsonSchemaFactory().stringSchema());
-            }
-            spec.putProperty("#", rowSpec);
-        } else {
-            for (int rowIndex = coordinate.getRowStartIndex() + 1; rowIndex <= coordinate.getRowEndIndex(); rowIndex++) {
-                ObjectSchema rowSpec = new ObjectSchema();
-                rowSpec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
-                rowSpec.setTitle("ROW_" + rowIndex);
-                for (int i = coordinate.getColumnStartIndex(); i < coordinate.getColumnEndIndex(); i++) {
-                    rowSpec.putProperty(CellCoordinate.getColumnName(i), new JsonSchemaFactory().stringSchema());
-                }
-
-                spec.putProperty("#" + rowIndex, rowSpec);
-            }
+    private static void createSchemaFromRowDimension(ObjectSchema spec, RangeCoordinate coordinate) {
+        for (int i = coordinate.getColumnStartIndex(); i < coordinate.getColumnEndIndex(); i++) {
+            spec.putProperty(CellCoordinate.getColumnName(i), new JsonSchemaFactory().stringSchema());
         }
     }
 
@@ -90,28 +72,10 @@ public final class GoogleSheetsMetaDataHelper {
      *
      * @param spec
      * @param coordinate
-     * @param split
      */
-    private static void createSchemaFromColumnDimension(ObjectSchema spec, RangeCoordinate coordinate, boolean split) {
-        if (split) {
-            ObjectSchema columnSpec = new ObjectSchema();
-            columnSpec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
-            columnSpec.setTitle("COLUMN");
-            for (int i = coordinate.getRowStartIndex() + 1; i <= coordinate.getRowEndIndex(); i++) {
-                columnSpec.putProperty("#" + i, new JsonSchemaFactory().stringSchema());
-            }
-            spec.putProperty("$", columnSpec);
-        } else {
-            for (int columnIndex = coordinate.getColumnStartIndex(); columnIndex < coordinate.getColumnEndIndex(); columnIndex++) {
-                ObjectSchema columnSpec = new ObjectSchema();
-                columnSpec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
-                columnSpec.setTitle(CellCoordinate.getColumnName(columnIndex));
-                for (int i = coordinate.getRowStartIndex() + 1; i <= coordinate.getRowEndIndex(); i++) {
-                    columnSpec.putProperty("#" + i, new JsonSchemaFactory().stringSchema());
-                }
-
-                spec.putProperty(columnSpec.getTitle(), columnSpec);
-            }
+    private static void createSchemaFromColumnDimension(ObjectSchema spec, RangeCoordinate coordinate) {
+        for (int i = coordinate.getRowStartIndex() + 1; i <= coordinate.getRowEndIndex(); i++) {
+            spec.putProperty("#" + i, new JsonSchemaFactory().stringSchema());
         }
     }
 }

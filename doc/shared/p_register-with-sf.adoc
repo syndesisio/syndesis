@@ -1,12 +1,12 @@
-// Module included in the following assemblies:
+/ Module included in the following assemblies:
 // Upstream:
-// tutorials/topics/t2sf_intro.adoc
-// tutorials/topics/sf2db_intro.adoc
-// connecting/topics/connecting_to_sf.adoc
+// tutorials/topics/as_t2sf-intro.adoc
+// tutorials/topics/as_sf2db-intro.adoc
+// connecting/topics/as_connecting-to-sf.adoc
 // Downstream:
-// connecting-fuse-online-to-applications-and-services/topics/connecting_to_sf.adoc
-// fuse-online-sample-integration-tutorials/topics/t2sf_intro.adoc
-// fuse-online-sample-integration-tutorials/topics/sf2db_intro.adoc
+// connecting-fuse-online-to-applications-and-services/upstream/as_connecting-to-sf.adoc
+// fuse-online-sample-integration-tutorials/upstream/as_t2sf-intro.adoc
+// fuse-online-sample-integration-tutorials/upstream/as_sf2db-intro.adoc
 
 [id='register-with-salesforce_{context}']
 = Register {prodname} as a Salesforce client application

@@ -50,8 +50,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class IntegrationRouteBuilderTest extends IntegrationTestSupport {
     @Test
     public void testBuilder() throws Exception {
-        IntegrationRuntimeConfiguration configuration = new IntegrationRuntimeConfiguration();
-        IntegrationRouteBuilder routeBuilder = new IntegrationRouteBuilder(configuration.getConfigurationLocation(), Collections.emptyList());
+        String configurationLocation = "classpath:syndesis/integration/integration.json";
+
+        IntegrationRouteBuilder routeBuilder = new IntegrationRouteBuilder(configurationLocation, Collections.emptyList());
 
         // initialize routes
         routeBuilder.configure();

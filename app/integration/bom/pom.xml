@@ -28,8 +28,8 @@
 
   <properties>
     <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
-    <camel.version>2.21.0.fuse-730029</camel.version>
-    <atlasmap.version>1.38.1</atlasmap.version>
+    <camel.version>2.21.0.fuse-730033</camel.version>
+    <atlasmap.version>1.39.0</atlasmap.version>
   </properties>
 
     <!-- Metadata need to publish to central -->
@@ -154,6 +154,12 @@
       <dependency>
         <groupId>io.syndesis.integration</groupId>
         <artifactId>integration-runtime</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-runtime-springboot</artifactId>
         <version>${project.version}</version>
       </dependency>
 

@@ -60,13 +60,13 @@ public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoo
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
                 { "A1", "Sheet1", RangeCoordinate.DIMENSION_ROWS, Collections.singletonList("a1"),
-                        "{\"#\": {\"A\":\"a1\"},\"spreadsheetId\":\"%s\"}"},
+                        "{\"spreadsheetId\":\"%s\", \"A\":\"a1\"}"},
                 { "A1:A5", "Sheet1", RangeCoordinate.DIMENSION_COLUMNS, Arrays.asList("a1", "a2", "a3", "a4", "a5"),
-                        "{\"$\": {\"#1\":\"a1\",\"#2\":\"a2\",\"#3\":\"a3\",\"#4\":\"a4\",\"#5\":\"a5\"},\"spreadsheetId\":\"%s\"}"},
+                        "{\"spreadsheetId\":\"%s\", \"#1\":\"a1\",\"#2\":\"a2\",\"#3\":\"a3\",\"#4\":\"a4\",\"#5\":\"a5\"}"},
                 { "A1:B2", "Sheet1", RangeCoordinate.DIMENSION_ROWS, Arrays.asList("a1", "b1"),
-                        "{\"#\": {\"A\":\"a1\",\"B\":\"b1\"},\"spreadsheetId\":\"%s\"}"},
+                        "{\"spreadsheetId\":\"%s\", \"A\":\"a1\",\"B\":\"b1\"}"},
                 { "A1:B2", "Sheet1", RangeCoordinate.DIMENSION_COLUMNS, Arrays.asList("a1", "a2"),
-                        "{\"$\": {\"#1\":\"a1\",\"#2\":\"a2\"},\"spreadsheetId\":\"%s\"}"}
+                        "{\"spreadsheetId\":\"%s\", \"#1\":\"a1\",\"#2\":\"a2\"}"}
         });
     }
 
@@ -97,7 +97,9 @@ public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoo
         Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
         Assert.assertEquals("get", options.get("methodName"));
 
-        String model = (String) inbound.getIn().getBody();
-        JSONAssert.assertEquals(String.format(expectedValueModel, getSpreadsheetId()), model, JSONCompareMode.STRICT);
+        @SuppressWarnings("unchecked")
+        List<String> model = inbound.getIn().getBody(List.class);
+        Assert.assertEquals(1, model.size());
+        JSONAssert.assertEquals(String.format(expectedValueModel, getSpreadsheetId()), model.get(0), JSONCompareMode.STRICT);
     }
 }

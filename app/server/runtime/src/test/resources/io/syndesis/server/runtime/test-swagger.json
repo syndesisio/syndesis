@@ -44,6 +44,7 @@
         ],
         "summary": "Create new task",
         "description": "Stores new task in the database",
+        "operationId": "create-task",
         "produces": [
           "application/json"
         ],
@@ -79,6 +80,7 @@
         ],
         "summary": "Fetch task",
         "description": "Fetches task by given identifier",
+        "operationId": "fetch-task",
         "produces": [
           "application/json"
         ],

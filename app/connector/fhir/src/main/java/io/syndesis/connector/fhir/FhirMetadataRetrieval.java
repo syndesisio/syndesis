@@ -69,7 +69,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                     return new SyndesisMetadata(
                         enrichedProperties,
                         new DataShape.Builder().kind(DataShapeKinds.JAVA)//
-                            .type("io.syndesis.connector.fhir.FhirReadMessageModel")
+                            .type("io.syndesis.connector.fhir.FhirResourceId")
                             .description("FHIR " + actionId)
                             .name(actionId).build(),
                         new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA_INSPECTED)//
@@ -77,7 +77,30 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                             .description("FHIR " + type)
                             .specification(specification)
                             .name(type).build());
-                } else {
+                } else if (actionId.contains("delete")) {
+                    return new SyndesisMetadata(
+                        enrichedProperties,
+                        new DataShape.Builder().kind(DataShapeKinds.JAVA)//
+                            .type("io.syndesis.connector.fhir.FhirResourceId")
+                            .description("FHIR " + actionId)
+                            .name(actionId).build(),
+                        new DataShape.Builder().kind(DataShapeKinds.JAVA)//
+                            .type("ca.uhn.fhir.rest.api.MethodOutcome")
+                            .description("FHIR " + actionId)
+                            .name(actionId).build());
+                } else if (actionId.contains("create")) {
+                    return new SyndesisMetadata(
+                        enrichedProperties,
+                        new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA_INSPECTED)//
+                            .type(type)
+                            .description("FHIR " + type)
+                            .specification(specification)
+                            .name(type).build(),
+                        new DataShape.Builder().kind(DataShapeKinds.JAVA)//
+                            .type("ca.uhn.fhir.rest.api.MethodOutcome")
+                            .description("FHIR " + actionId)
+                            .name(actionId).build());
+                } else if (actionId.contains("update")) {
                     return new SyndesisMetadata(
                         enrichedProperties,
                         new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA_INSPECTED)//
@@ -94,7 +117,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                 throw new IllegalStateException(
                     "Error retrieving resource schema for type: " + type, e);
             }
-        } else if (properties.containsKey("resourceType")){
+        } else {
             return SyndesisMetadata.of(
                 Collections.singletonMap("resourceType", resourceTypeResult)
             );

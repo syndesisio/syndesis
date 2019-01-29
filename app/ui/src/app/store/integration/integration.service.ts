@@ -101,6 +101,21 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
     );
   }
 
+  fetchSpecification(id: string): Observable<string> {
+    return this.apiHttpService
+      .setEndpointUrl(`/${this.endpoint}/${id}/specification`)
+      .get({ responseType: 'text'});
+  }
+
+  updateSpecification(id: string, specification: string): Observable<void> {
+    const payload = {};
+    payload['specification'] = specification;
+
+    return this.apiHttpService
+      .setEndpointUrl(`/${this.endpoint}/${id}/specification`)
+      .upload(null, payload, { method: 'PUT'});
+  }
+
   // design time function
   // @ts-ignore
   private forceDetailedState(integration: Integration) {

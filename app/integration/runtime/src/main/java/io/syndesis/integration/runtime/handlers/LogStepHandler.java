@@ -15,15 +15,15 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import org.apache.camel.LoggingLevel;
-import org.apache.camel.model.ProcessorDefinition;
-
 import java.util.Map;
 import java.util.Optional;
+
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
+import org.apache.camel.LoggingLevel;
+import org.apache.camel.model.ProcessorDefinition;
 
 public class LogStepHandler implements IntegrationStepHandler {
 
@@ -51,14 +51,14 @@ public class LogStepHandler implements IntegrationStepHandler {
     static String createMessage(Step l) {
         StringBuilder sb = new StringBuilder(128);
         String customText = getCustomText(l.getConfiguredProperties());
-        Boolean isContextLoggingEnabled = isContextLoggingEnabled(l.getConfiguredProperties());
-        Boolean isBodyLoggingEnabled = isBodyLoggingEnabled(l.getConfiguredProperties());
+        boolean isContextLoggingEnabled = isContextLoggingEnabled(l.getConfiguredProperties());
+        boolean isBodyLoggingEnabled = isBodyLoggingEnabled(l.getConfiguredProperties());
 
         if (isContextLoggingEnabled) {
             sb.append("Message Context: [${in.headers}] ");
         }
         if (isBodyLoggingEnabled) {
-            sb.append("Body: [${body}] ");
+            sb.append("Body: [${bean:bodyLogger}] ");
         }
         if (customText != null &&
                 !customText.isEmpty() &&

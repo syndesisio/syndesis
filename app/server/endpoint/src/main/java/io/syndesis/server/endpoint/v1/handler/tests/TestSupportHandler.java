@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.handler.tests;
 
+import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -36,6 +37,7 @@ import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.ModelData;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.util.cache.CacheManager;
 import io.syndesis.server.dao.manager.DataAccessObject;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
@@ -54,8 +56,14 @@ public class TestSupportHandler {
     @Context
     private HttpServletRequest context;
 
-    public TestSupportHandler(DataManager dataMgr, List<DataAccessObject<?>> daos, OpenShiftService openShiftService) {
+    private final DBI dbi;
+
+    private CacheManager cacheManager;
+
+    public TestSupportHandler(DBI dbi, DataManager dataMgr, CacheManager cacheManager, List<DataAccessObject<?>> daos, OpenShiftService openShiftService) {
+        this.dbi = dbi;
         this.dataMgr = dataMgr;
+        this.cacheManager = cacheManager;
         this.daos = daos.stream().filter(x -> !x.isReadOnly()).collect(Collectors.toList());
         this.openShiftService = openShiftService;
     }
@@ -113,9 +121,14 @@ public class TestSupportHandler {
     }
 
     private void deleteAllDBEntities() {
-        for (DataAccessObject<?> dao : daos) {
-            dataMgr.deleteAll(dao.getType());
-        }
+        dbi.withHandle(h -> {
+            h.execute("TRUNCATE TABLE jsondb");
+            h.execute("TRUNCATE TABLE filestore");
+            h.execute("TRUNCATE TABLE config");
+
+            return null;
+        });
+        cacheManager.evictAll();
     }
 
     @GET

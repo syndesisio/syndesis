@@ -16,12 +16,15 @@
 package io.syndesis.common.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Optional;
+
+import io.syndesis.common.util.json.StringTrimmingConverter;
+
+import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.common.util.json.StringTrimmingConverter;
-import org.immutables.value.Value;
 
 /**
  * Identifies a resource managed by the system.
@@ -30,6 +33,8 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = ResourceIdentifier.Builder.class)
 @SuppressWarnings("immutables")
 public interface ResourceIdentifier extends WithId<ResourceIdentifier>, Serializable {
+
+    Comparator<ResourceIdentifier> LATEST_VERSION = Comparator.comparing(r -> r.getVersion().orElse(0));
 
     /**
      * Refers to the "target" resource kind.

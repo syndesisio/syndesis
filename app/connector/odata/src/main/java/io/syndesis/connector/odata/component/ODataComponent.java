@@ -53,8 +53,13 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
     private String clientCertificate;
     private String keyPredicate;
     private String queryParams;
+    private boolean filterAlreadySeen;
+
+    // Consumer properties
     private long delay = -1;
     private long initialDelay = -1;
+    private int backoffIdleThreshold = -1;
+    private int backoffMultiplier = -1;
 
     ODataComponent(String componentId, String componentScheme) {
         super(componentId, componentScheme);
@@ -116,6 +121,23 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
         this.keyPredicate = keyPredicate;
     }
 
+    public String getQueryParams() {
+        return queryParams;
+    }
+
+    public void setQueryParams(String queryParams) {
+        this.queryParams = queryParams;
+    }
+
+    @SuppressWarnings("PMD")
+    public boolean getFilterAlreadySeen() {
+        return filterAlreadySeen ;
+    }
+
+    public void setFilterAlreadySeen(boolean filterAlreadySeen) {
+        this.filterAlreadySeen = filterAlreadySeen;
+    }
+
     public long getDelay() {
         return delay;
     }
@@ -132,12 +154,20 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
         this.initialDelay = initialDelay;
     }
 
-    public String getQueryParams() {
-        return queryParams;
+    public int getBackoffIdleThreshold() {
+        return backoffIdleThreshold;
     }
 
-    public void setQueryParams(String queryParams) {
-        this.queryParams = queryParams;
+    public void setBackoffIdleThreshold(int backoffIdleThreshold) {
+        this.backoffIdleThreshold = backoffIdleThreshold;
+    }
+
+    public int getBackoffMultiplier() {
+        return backoffMultiplier;
+    }
+
+    public void setBackoffMultiplier(int backoffMultiplier) {
+        this.backoffMultiplier = backoffMultiplier;
     }
 
     private Map<String, Object> bundleOptions() {
@@ -217,6 +247,7 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
         }
 
         configuration.setQueryParams(queryParams);
+        configuration.setFilterAlreadySeen(getFilterAlreadySeen());
 
         component.setConfiguration(configuration);
         return Optional.of(component);
@@ -234,17 +265,25 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
          * of the delegate endpoint since the Olingo4Endpoint swallows
          * properties not explicitly outlined by the olingo4 definition.
          */
-        Map<String, Object> consumerProperties = new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         if (getInitialDelay() > -1) {
-            consumerProperties.put(CONSUMER + DOT + INITIAL_DELAY, Long.toString(getInitialDelay()));
+            properties.put(CONSUMER + DOT + INITIAL_DELAY, Long.toString(getInitialDelay()));
         }
 
         if (getDelay() > -1) {
-            consumerProperties.put(CONSUMER + DOT + DELAY, Long.toString(getDelay()));
+            properties.put(CONSUMER + DOT + DELAY, Long.toString(getDelay()));
         }
 
-        if (! consumerProperties.isEmpty()) {
-            endpoint.configureProperties(consumerProperties);
+        if (getBackoffIdleThreshold() > -1) {
+            properties.put(CONSUMER + DOT + BACKOFF_IDLE_THRESHOLD, Integer.toString(getBackoffIdleThreshold()));
+        }
+
+        if (getBackoffMultiplier() > -1) {
+            properties.put(CONSUMER + DOT + BACKOFF_MULTIPLIER, Integer.toString(getBackoffMultiplier()));
+        }
+
+        if (! properties.isEmpty()) {
+            endpoint.configureProperties(properties);
         }
 
         return endpoint;

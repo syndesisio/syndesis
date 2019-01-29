@@ -17,9 +17,8 @@ package io.syndesis.common.model.integration;
 
 import java.io.Serializable;
 import java.util.Optional;
-import org.immutables.value.Value;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithDependencies;
@@ -28,7 +27,11 @@ import io.syndesis.common.model.WithMetadata;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.extension.Extension;
-import io.syndesis.common.model.integration.Integration.Builder;
+
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = Step.Builder.class)
@@ -61,5 +64,23 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
 
     class Builder extends ImmutableStep.Builder {
         // allow access to ImmutableStep.Builder
+    }
+
+    default Optional<DataShape> inputDataShape() {
+        return getAction().flatMap(a -> a.getInputDataShape());
+    }
+
+    default Optional<DataShape> outputDataShape() {
+        return getAction().flatMap(a -> a.getOutputDataShape());
+    }
+
+    default Step updateInputDataShape(final Optional<DataShape> inputDataShape) {
+        return getAction().map(a -> builder().action(a.withInputDataShape(inputDataShape))).map(b -> b.build())
+            .orElseThrow(() -> new IllegalStateException("Unable to update input data shape of non existing action"));
+    }
+
+    default Step updateOutputDataShape(final Optional<DataShape> outputDataShape) {
+        return getAction().map(a -> builder().action(a.withOutputDataShape(outputDataShape))).map(b -> b.build())
+            .orElseThrow(() -> new IllegalStateException("Unable to update output data shape of non existing action"));
     }
 }

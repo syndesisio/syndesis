@@ -224,11 +224,22 @@ public class SwaggerAPIGenerator implements APIGenerator {
         // TODO: evaluate what can be shrinked (e.g. SwaggerHelper#minimalSwaggerUsedByComponent)
         byte[] updatedSwagger = Json.toString(swagger).getBytes(StandardCharsets.UTF_8);
 
+        // same check SwaggerParser is performing
+        final String specificationContentType;
+        if (specification.trim().startsWith("{")) {
+            // means it's JSON (kinda)
+            specificationContentType = "application/vnd.oai.openapi+json";
+        } else {
+            // YAML
+            specificationContentType = "application/vnd.oai.openapi";
+        }
+
         String apiId = KeyGenerator.createKey();
         OpenApi api = new OpenApi.Builder()
             .id(apiId)
             .name(name)
             .document(updatedSwagger)
+            .putMetadata("Content-Type", specificationContentType)
             .build();
 
         integration.addResource(new ResourceIdentifier.Builder()

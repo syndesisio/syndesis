@@ -15,73 +15,43 @@
  */
 package io.syndesis.integration.runtime.logging;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
-import io.syndesis.integration.runtime.util.JsonSupport;
-import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.LoggingLevel;
+import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.After;
-import org.junit.Before;
+import org.apache.camel.util.ObjectHelper;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-@SuppressWarnings({"PMD.JUnitTestsShouldIncludeAssert", "PMD.AvoidThrowingRawExceptionTypes"})
-public class ActivityLoggingWithSplitTest extends IntegrationTestSupport {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ActivityLoggingWithSplitTest.class);
+public class ActivityLoggingWithSplitTest extends AbstractActivityLoggingTest {
 
-    protected CamelContext context;
-    protected ActivityTracker activityTracker;
-    protected ArrayList<ActivityEvent> activityEvents;
-
-    @Before
-    public void before() throws Exception {
-        activityEvents = new ArrayList<>();
-
-        activityTracker = items -> {
-            try {
-                String json = JsonSupport.toJsonObject(items);
-                ActivityEvent event = Json.reader().forType(ActivityEvent.class).readValue(json);
-
-                activityEvents.add(event);
-            } catch (IOException e) {
-                LOGGER.warn("", e);
-            }
-        };
-
-        context = new DefaultCamelContext();
-        context.setUuidGenerator(KeyGenerator::createKey);
-        context.addLogListener(new IntegrationLoggingListener(activityTracker));
-        context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
-        context.addRoutes(new RouteBuilder() {
+    @Override
+    protected RoutesBuilder createTestRoutes() {
+        return new RouteBuilder() {
             @Override
             public void configure() {
                 from("direct:start")
                     .id("start")
                     .routePolicy(new ActivityTrackingPolicy(activityTracker))
+                    .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
+                    .process(OutMessageCaptureProcessor.INSTANCE)
                     .split()
                         .body()
-                        .process(OutMessageCaptureProcessor.INSTANCE)
                         .pipeline()
-                            .id("log")
+                            .id("step:log")
+                            .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
                             .log(LoggingLevel.INFO, "log", "log", "hi")
                             .process(OutMessageCaptureProcessor.INSTANCE)
                         .end()
                         .pipeline()
-                            .id("rnderr")
+                            .id("step:rnderr")
+                            .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
                             .process().body(String.class, body -> {
                                 if ("error".equals(body)) {
                                     throw new RuntimeException("Bean Error");
@@ -90,42 +60,42 @@ public class ActivityLoggingWithSplitTest extends IntegrationTestSupport {
                             .process(OutMessageCaptureProcessor.INSTANCE)
                         .end()
                         .pipeline()
-                            .id("end")
+                            .id("step:end")
+                            .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
                             .to("mock:end")
                             .process(OutMessageCaptureProcessor.INSTANCE)
                         .end()
                     .end();
             }
-        });
-
-        context.start();
-    }
-
-    @After
-    public void after() throws Exception {
-        context.stop();
+        };
     }
 
     @Test
     public void testLoggingWithSuccessStep() throws Exception {
-
         final MockEndpoint result = context.getEndpoint("mock:end", MockEndpoint.class);
         result.expectedBodiesReceived("Hello", "World");
         context.createProducerTemplate().sendBody("direct:start", new String[]{"Hello", "World"});
         result.assertIsSatisfied();
 
         // There should be 1 exchanges logged.
-        assertEquals(1, activityEvents.stream().map(x -> x.exchange).collect(Collectors.toSet()).size());
+        assertEquals(1, findExchangesLogged().size());
         // There should be 1 "status":"begin"
-        assertEquals(1, activityEvents.stream().map(x -> x.status).filter(x -> "begin".equals(x)).collect(Collectors.toList()).size());
+        assertEquals(1, findActivityEvents(x -> "begin".equals(x.status)).size());
         // There should be 1 "status":"done"
-        assertEquals(1, activityEvents.stream().map(x -> x.status).filter(x -> "done".equals(x)).collect(Collectors.toList()).size());
+        assertEquals(1, findActivityEvents(x -> "done".equals(x.status)).size());
+        // There should be no failed flag on activity with "status":"done"
+        assertEquals("false", findActivityEvent(x -> "done".equals(x.status)).failed);
 
+        // There should be log activities
+        assertEquals(2, findActivityEvents(x -> "log".equals(x.step)).size());
+        assertEquals("hi", findActivityEvent(x -> "log".equals(x.step)).message);
+
+        // There should be step activity tracking events
+        assertEquals(6, findActivityEvents(x -> ObjectHelper.isNotEmpty(x.duration)).size());
     }
 
     @Test
-    public void testLoggingWithErrorStep() throws Exception {
-
+    public void testLoggingWithErrorStep() {
         try {
             context.createProducerTemplate().sendBody("direct:start", new String[]{"Hello", "error"});
             fail("Expected exception");
@@ -134,46 +104,23 @@ public class ActivityLoggingWithSplitTest extends IntegrationTestSupport {
         }
 
         // There should be 1 exchanges logged.
-        assertEquals(1, activityEvents.stream().map(x -> x.exchange).collect(Collectors.toSet()).size());
+        assertEquals(1, findExchangesLogged().size());
         // There should be 1 "status":"begin"
-        assertEquals(1, activityEvents.stream().map(x -> x.status).filter(x -> "begin".equals(x)).collect(Collectors.toList()).size());
+        assertEquals(1, findActivityEvents(x -> "begin".equals(x.status)).size());
         // There should be 1 "status":"done"
-        assertEquals(1, activityEvents.stream().map(x -> x.status).filter(x -> "done".equals(x)).collect(Collectors.toList()).size());
-    }
+        assertEquals(1, findActivityEvents(x -> "done".equals(x.status)).size());
+        // There should be a failed flag on activity with "status":"done"
+        assertEquals("true", findActivityEvent(x -> "done".equals(x.status)).failed);
 
-    // **************
-    // Helpers
-    // **************
+        // There should be log activities
+        assertEquals(2, findActivityEvents(x -> "log".equals(x.step)).size());
+        assertEquals("hi", findActivityEvent(x -> "log".equals(x.step)).message);
 
-    public static class ActivityEvent {
-        public String exchange;
-        public String status;
-        public String step;
-        public String duration;
-        public String messages;
+        // There should be step activity tracking events
+        assertEquals(5, findActivityEvents(x -> ObjectHelper.isNotEmpty(x.duration)).size());
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ActivityEvent that = (ActivityEvent) o;
-
-            if (!exchange.equals(that.exchange)) return false;
-            if (status != null ? !status.equals(that.status) : that.status != null) return false;
-            if (step != null ? !step.equals(that.step) : that.step != null) return false;
-            if (duration != null ? !duration.equals(that.duration) : that.duration != null) return false;
-            return messages != null ? messages.equals(that.messages) : that.messages == null;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = exchange.hashCode();
-            result = 31 * result + (status != null ? status.hashCode() : 0);
-            result = 31 * result + (step != null ? step.hashCode() : 0);
-            result = 31 * result + (duration != null ? duration.hashCode() : 0);
-            result = 31 * result + (messages != null ? messages.hashCode() : 0);
-            return result;
-        }
+        // There should be a failure report activity event
+        assertEquals(1, findActivityEvents(x -> ObjectHelper.isNotEmpty(x.failure)).size());
+        assertTrue(findActivityEvent(x -> ObjectHelper.isNotEmpty(x.failure)).failure.startsWith("java.lang.RuntimeException: Bean Error"));
     }
 }

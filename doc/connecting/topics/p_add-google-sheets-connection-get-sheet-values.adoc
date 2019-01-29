@@ -1,0 +1,57 @@
+// This module is included in the following assemblies:
+// as_connecting-to-google-sheets.adoc
+
+[id='add-google-sheets-connection-get-sheet-values_{context}']
+= Trigger an integration when polling returns Google Sheets spreadsheet data
+
+To trigger execution of an integration upon obtaining value range data from
+a Google Sheets spreadsheet that you specify, add a Google Sheets connection to an integration as
+its start connection. When the integration is running, the Google Sheets
+connection loads data of a specific spreadsheet on your Google Sheets account at intervals that you
+control. When the connection finds some data that comply with the selected Google Sheets *Get sheet values* action, the connection
+passes the data to the next step in the integration.
+
+When a Google Sheets connection returns a range of data representing multiple rows in a spreadsheet,
+{prodname} executes the integration for each returned row.
+For example, if the poll returns a data range of 5 rows then {prodname} executes
+the integration five times.
+
+This split results functionality can be disabled with the *splitResults* option on the Google Sheets *Get sheet values* action.
+
+.Prerequisite
+You created a Google Sheets connection.
+
+.Procedure
+
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a Start Connection* page, click the Google Sheets
+connection that you want to use to start the integration.
+. On the *Choose an Action* page, click the *Get sheet values* action.
+. To configure the *Get sheet values* action:
+.. In the *SpreadsheetId* field, enter the name of a Google sheet that is
+accessible from the Google account that this Google Sheets connection
+is authorized to access.
+.. In the *Range* field, specify the target value range in a spreadsheet to obtain. This field uses the spreadsheet A1 notation
+where coordinates include a column name and a row index. The range holds a start coordinate and an end coordinate to define a set of
+rows and columns to select (e.g. "A1:C10", "A:C").
+.. In the *Major Dimension* field, describes the dimension of the returned values (one of "ROWS" or "COLUMNS") where
+the major dimension indicates which dimension results apply to first when building the set of values returned. Major dimension *ROWS* means that results will
+hold a collection of rows with each row holding multiple column values. Major dimension *COLUMNS* means that results will
+hold a collection of columns with each column holding multiple row values.
+.. In the *Split Results* field, enable or disable the automatic split of returned range values
+representing multiple rows in a spreadsheet. When enabled the connection passes each entry in the data range
+as a separate integration to the next step in the integration. When disabled the complete data range is passed as a collection
+fo values to the next step in the integration.
+.. In the *Delay* field, accept the default of 30 seconds or
+specify how often you want the integration to check the sheets.
+.. In the *Max Results* field, accept the default of *5* or
+indicate the maximum number of events that the connection
+can return for each poll.
+
+. Click *Done* to add this Google Sheets connection as the integration's
+start connection. The connection appears as the
+first step in the integration.
+
+The connection automatically inspects the specified range to obtain. Out of that range value the resulting output data shape is built
+as dynamic data shape. Following up data mapping steps are able to access the output data shape object according to the specified range value and major dimension.

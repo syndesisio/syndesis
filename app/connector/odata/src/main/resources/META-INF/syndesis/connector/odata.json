@@ -59,6 +59,19 @@
                 "secret": false,
                 "type": "string"
               },
+              "filterAlreadySeen": {
+                "deprecated": false,
+                "displayName": "Filter Old Results",
+                "group": "common",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "While repeatedly polling the connection, filter out those results already communicated.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
               "initialDelay": {
                 "defaultValue": 1000,
                 "deprecated": false,
@@ -69,7 +82,7 @@
                 "label": "consumer,scheduler",
                 "labelHint": "Wait amount of time before starting to poll",
                 "optionalPrefix": "consumer.",
-                "order": "4",
+                "order": "5",
                 "required": false,
                 "secret": false,
                 "type": "duration"
@@ -84,10 +97,40 @@
                 "label": "consumer,scheduler",
                 "labelHint": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
                 "optionalPrefix": "consumer.",
-                "order": "5",
+                "order": "6",
                 "required": false,
                 "secret": false,
                 "type": "duration"
+              },
+              "backoffIdleThreshold": {
+                "defaultValue": 1,
+                "deprecated": false,
+                "displayName": "Backoff Idle Threshold",
+                "group": "scheduler",
+                "javaType": "int",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "If no results are returned after (Backoff Threshold) times then polling will become idle for (Backoff Threshold * Backoff Multiplier) seconds",
+                "optionalPrefix": "consumer.",
+                "order": "7",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              },
+              "backoffMultiplier": {
+                "defaultValue": 1,
+                "deprecated": false,
+                "displayName": "Backoff Multiplier",
+                "group": "scheduler",
+                "javaType": "int",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "If no results are returned after (Backoff Threshold) times then polling will become idle for (Backoff Threshold * Backoff Multiplier) seconds",
+                "optionalPrefix": "consumer.",
+                "order": "8",
+                "required": false,
+                "secret": false,
+                "type": "integer"
               }
             }
           }

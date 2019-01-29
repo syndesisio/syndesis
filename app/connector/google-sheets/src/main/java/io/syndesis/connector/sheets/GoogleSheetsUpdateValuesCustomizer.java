@@ -17,11 +17,12 @@ package io.syndesis.connector.sheets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import io.syndesis.common.util.Json;
@@ -73,46 +74,41 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
         return "update";
     }
 
+    @SuppressWarnings("unchecked")
     private void beforeProducer(Exchange exchange) throws IOException {
         final Message in = exchange.getIn();
-        final String model = exchange.getIn().getBody(String.class);
+
+        List<String> jsonBeans = null;
+        if (in.getBody() instanceof List) {
+            jsonBeans = in.getBody(List.class);
+        } else if (in.getBody(String.class) != null) {
+            jsonBeans = Collections.singletonList(in.getBody(String.class));
+        }
 
         ValueRange valueRange = new ValueRange();
         List<List<Object>> values = new ArrayList<>();
 
-        if (ObjectHelper.isNotEmpty(model)) {
-            Map<String, Object> dataShape = Json.reader().forType(Map.class).readValue(model);
+        if (ObjectHelper.isNotEmpty(jsonBeans)) {
+            final ObjectSchema spec = GoogleSheetsMetaDataHelper.createSchema(range, majorDimension);
 
-            if (dataShape.containsKey("spreadsheetId")) {
-                spreadsheetId = Optional.ofNullable(dataShape.remove("spreadsheetId"))
-                                .map(Object::toString)
-                                .orElse(spreadsheetId);
+            for (String json : jsonBeans) {
+                Map<String, Object> dataShape = Json.reader().forType(Map.class).readValue(json);
+
+                if (dataShape.containsKey("spreadsheetId")) {
+                    spreadsheetId = Optional.ofNullable(dataShape.remove("spreadsheetId"))
+                            .map(Object::toString)
+                            .orElse(spreadsheetId);
+                }
+
+                List<Object> rangeValues = new ArrayList<>();
+                spec.getProperties()
+                        .entrySet()
+                        .stream()
+                        .filter(specEntry -> !Arrays.asList("spreadsheetId").contains(specEntry.getKey()))
+                        .forEach(specEntry -> rangeValues.add(dataShape.getOrDefault(specEntry.getKey(), null)));
+
+                values.add(rangeValues);
             }
-
-            final ObjectSchema spec = GoogleSheetsMetaDataHelper.createSchema(range, majorDimension, false);
-
-            spec.getProperties()
-                    .entrySet()
-                    .stream()
-                    .filter(specEntry -> specEntry.getValue() instanceof ObjectSchema)
-                    .forEach(specEntry -> {
-                        ObjectSchema propertySpec = ((ObjectSchema) specEntry.getValue());
-                        List<Object> rangeValues = new ArrayList<>();
-
-                        if (dataShape.containsKey(specEntry.getKey())) {
-                            Object dataShapeEntry = dataShape.get(specEntry.getKey());
-                            if (dataShapeEntry instanceof Map) {
-                                Map<?, ?> properties = (Map) dataShapeEntry;
-                                for (Map.Entry<String, JsonSchema> propertyEntry : propertySpec.getProperties().entrySet()) {
-                                    rangeValues.add(properties.getOrDefault(propertyEntry.getKey(), null));
-                                }
-                            }
-                        } else {
-                            propertySpec.getProperties().forEach((k, v) -> rangeValues.add(null));
-                        }
-
-                        values.add(rangeValues);
-                    });
         }
 
         valueRange.setMajorDimension(majorDimension);

@@ -15,20 +15,14 @@
  */
 package io.syndesis.integration.runtime;
 
+import javax.xml.bind.JAXBException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
-import javax.xml.bind.JAXBException;
-import org.apache.camel.CamelContext;
-import org.apache.camel.model.ModelHelper;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.model.RoutesDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -37,6 +31,14 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.util.StringConstants;
+import io.syndesis.integration.runtime.logging.ActivityTracker;
+import org.apache.camel.CamelContext;
+import org.apache.camel.model.ModelHelper;
+import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.RoutesDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IntegrationTestSupport implements StringConstants {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);
@@ -68,12 +70,20 @@ public class IntegrationTestSupport implements StringConstants {
         dumpRoutes(context, definition);
     }
 
+    protected static IntegrationRouteBuilder newIntegrationRouteBuilder(ActivityTracker activityTracker, Step... steps) {
+        return newIntegrationRouteBuilder(newIntegration(steps), activityTracker);
+    }
+
     protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Step... steps) {
-        return newIntegrationRouteBuilder(newIntegration(steps));
+        return newIntegrationRouteBuilder(null, steps);
     }
 
     protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration) {
-        return new IntegrationRouteBuilder("", Collections.emptyList()) {
+        return newIntegrationRouteBuilder(integration, null);
+    }
+
+    protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration, ActivityTracker activityTracker) {
+        return new IntegrationRouteBuilder("", Collections.emptyList(), activityTracker) {
             @Override
             protected Integration loadIntegration() throws IOException {
                 return integration;

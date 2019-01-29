@@ -122,6 +122,11 @@
       <artifactId>integration-runtime</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis.integration</groupId>
+      <artifactId>integration-runtime-springboot</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>

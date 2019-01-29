@@ -24,10 +24,18 @@ management:
   port: 8080
   security:
     enabled: true
+  metrics:
+    web:
+      server:
+        auto-time-requests: false
 
 endpoints:
   enabled: false
   health:
+    sensitive: false
+    enabled: true
+  prometheus:
+    id: metrics
     sensitive: false
     enabled: true
 
