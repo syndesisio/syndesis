@@ -12,7 +12,7 @@
         "import-extension-help": "To update an extension, click Extensions in the breadcrumbs above, and in the list of extensions, click Update for the appropriate extension.",
         "import-extension-help-block": "Accepted file type: .jar",
         "import-extension-review-title": "{{import}} Review",
-        "import-extension-success-header": "Imported!.",
+        "import-extension-success-header": "Imported!",
         "import-extension-success-message": "Your extension has been imported.",
         "import-extension-update-help": "To update an extension, you must ensure that the new version you are uploading is compatible with the previously uploaded version.",
         "import-extension-upload-error": "Unable to upload this file.",
