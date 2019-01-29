@@ -1,0 +1,32 @@
+// This module is included in the following assemblies:
+// as_connecting-to-google-sheets.adoc
+
+[id='add-google-sheets-connection-create-spreadsheet_{context}']
+= Create a new spreadsheet on your Google Sheets account
+
+In an integration, you can create a new spreadsheet on your Google Sheets account
+in the middle of the integration or to finish the integration.
+To do this, add a Google Sheets connection to the middle of an integration
+or as the integration's finish connection.
+
+.Prerequisite
+You created a Google Sheets connection.
+
+.Procedure
+
+. Click a Google Sheets connection that is authorized to access
+the spreadsheet that you want to connect to.
+. On the *Choose an Action* page, click *Create spreadsheet*.
+. To configure the *Create spreadsheet* action:
++
+.. In the *Title* field, enter the title of the spreadsheet to create.
+.. In the *Time Zone* field, enter the time zone the newly created spreadsheet should follow.
+.. In the *Locale* field, enter the locale of the newly created spreadsheet.
+
+. Click *Done* to add the connection to the integration.
+The connection appears in the integration visualization flow in the
+location where you added it.
+
+The *Create spreadsheet* returns the spreadsheet identifier for the newly created spreadsheet on your Google Sheets account.
+You can use this *SpreadsheetId* field in all following steps in your integration in order to access the newly created spreadsheet
+(e.g. when updating or appending values to that spreadsheet).

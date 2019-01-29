@@ -1,0 +1,38 @@
+// This module is included in the following assemblies:
+// as_connecting-to-google-sheets.adoc
+
+[id='add-google-sheets-connection-get-spreadsheet_{context}']
+= Trigger an integration when polling returns Google Sheets spreadsheet properties
+
+To trigger execution of an integration upon obtaining properties from
+a Google Sheets spreadsheet that you specify, add a Google Sheets connection to an integration as
+its start connection. When the integration is running, the Google Sheets
+connection loads properties of a specific spreadsheet on your Google Sheets account at intervals that you
+control. When the connection finds some data that comply with the selected Google Sheets *Get spreadsheet properties* action, the connection
+passes the data to the next step in the integration.
+
+.Prerequisite
+You created a Google Sheets connection.
+
+.Procedure
+
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a Start Connection* page, click the Google Sheets
+connection that you want to use to start the integration.
+. On the *Choose an Action* page, click the *Get spreadsheet properties* action.
+. To configure the *Get spreadsheet properties* action:
+.. In the *SpreadsheetId* field, enter the name of a Google sheet that is
+accessible from the Google account that this Google Sheets connection
+is authorized to access.
+.. In the *Include grid data* field, enabled or disable the inclusion of the sheet's grid data in the result. In case this option
+is enabled the returned spreadsheet data includes the sheet values as value range objects.
+.. In the *Delay* field, accept the default of 30 seconds or
+specify how often you want the integration to check the sheets.
+
+. Click *Done* to add this Google Sheets connection as the integration's
+start connection. The connection appears as the
+first step in the integration.
+
+The connection automatically inspects the specified range to obtain. Out of that range value the resulting output data shape is built
+as dynamic data shape. Following up data mapping steps are able to access the output data shape object according to the specified range value and major dimension.
