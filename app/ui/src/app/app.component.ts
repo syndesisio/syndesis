@@ -36,14 +36,19 @@ export class AppComponent implements OnInit, AfterViewInit {
   /**
    * Logo with white background.
    */
-  logoWhiteBg = 'assets/images/syndesis-logo-svg-white.svg';
-  iconWhiteBg = 'assets/images/glasses_logo_square.png';
+  // logoWhiteBg = 'assets/images/syndesis-logo-svg-white.svg';
+  // iconWhiteBg = 'assets/images/glasses_logo_square.png';
 
   /**
    * Logo with dark background
    */
-  logoDarkBg = 'assets/images/syndesis-logo-svg-white.svg';
-  iconDarkBg = 'assets/images/glasses_logo_square.png';
+  // logoDarkBg = 'assets/images/syndesis-logo-svg-white.svg';
+  // iconDarkBg = 'assets/images/glasses_logo_square.png';
+
+  /**
+   * Logo and Icon with dark background
+   */
+  logoIconDarkBg = 'assets/images/syndesis_logo_icon_darkbkg.png';
 
   /**
    * @type {Observable<User>}
@@ -106,26 +111,31 @@ export class AppComponent implements OnInit, AfterViewInit {
       'productBuild',
       false
     );
-    this.logoWhiteBg = this.config.getSettings(
+    this.logoIconDarkBg = this.config.getSettings(
       'branding',
-      'logoWhiteBg',
-      'assets/images/syndesis-logo-svg-white.svg'
+      'logoIconDarkBg',
+      'assets/images/syndesis_logo_icon_darkbkg.png'
     );
-    this.logoDarkBg = this.config.getSettings(
-      'branding',
-      'logoDarkBg',
-      'assets/images/syndesis-logo-svg-white.svg'
-    );
-    this.iconDarkBg = this.config.getSettings(
-      'branding',
-      'iconDarkBg',
-      'assets/images/glasses_logo_square.png'
-    );
-    this.iconWhiteBg = this.config.getSettings(
-      'branding',
-      'iconWhiteBg',
-      'assets/images/glasses_logo_square.png'
-    );
+    // this.logoWhiteBg = this.config.getSettings(
+    //   'branding',
+    //   'logoWhiteBg',
+    //   'assets/images/syndesis-logo-svg-white.svg'
+    // );
+    // this.logoDarkBg = this.config.getSettings(
+    //   'branding',
+    //   'logoDarkBg',
+    //   'assets/images/syndesis-logo-svg-white.svg'
+    // );
+    // this.iconDarkBg = this.config.getSettings(
+    //   'branding',
+    //   'iconDarkBg',
+    //   'assets/images/glasses_logo_square.png'
+    // );
+    // this.iconWhiteBg = this.config.getSettings(
+    //   'branding',
+    //   'iconWhiteBg',
+    //   'assets/images/glasses_logo_square.png'
+    // );
     const favicon32 = this.config.getSettings(
       'branding',
       'favicon32',
