@@ -26,7 +26,7 @@ entry displays *Edit* and *Remove*, which
 indicate that {prodname} has the credentials to access
 enabled Google APIs. If *Register* appears in the Gmail or Google Calendar
 entry, then you must
-link:{LinkFuseOnlineConnectorGuide}#register-with-google-sheets_google-sheets[register your {prodname} environment as a Google client application].
+link:{LinkFuseOnlineConnectorGuide}#register-with-google-sheets_sheets[register your {prodname} environment as a Google client application].
 
 .Procedure
 

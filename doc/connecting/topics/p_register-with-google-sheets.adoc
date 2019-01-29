@@ -21,7 +21,7 @@ If you already created a Gmail or Google Calendar connection, then you already
 created the credentials that your {prodname} environment needs to access
 enabled Google APIs. You do not need to follow the procedure documented here.
 To be able to create a Google Sheets connection, you just need to
-link:{LinkFuseOnlineConnectorGuide}#enable-google-sheets-api_google-sheets[enable the Google Sheets API]
+link:{LinkFuseOnlineConnectorGuide}#enable-google-sheets-api_sheets[enable the Google Sheets API]
 and then copy {prodname} settings from Gmail or Google Calendar to Google Sheets.
 
 .Procedure

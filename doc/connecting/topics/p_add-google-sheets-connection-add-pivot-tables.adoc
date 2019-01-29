@@ -21,8 +21,8 @@ must be set on a data mapping step prior to the *Add Charts* action.
 In this release, the *Add pivot tables* action requires a spreadsheetId in order to
 identify the target spreadsheet that is updated with newly added pivot tables. In most if not all cases, this means that you must add a Google
 Sheets connection that
-link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_google-sheets[creates] or
-link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-get-spreadsheet_google-sheets[obtains] the spreadsheet that you want to add pivot tables to,
+link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_sheets[creates] or
+link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-get-spreadsheet_sheets[obtains] the spreadsheet that you want to add pivot tables to,
 then add the Google Sheets connection that add pivot tables to the spreadsheet, and then
 insert a data mapper step between the two Google Sheets connections.
 ====
@@ -45,8 +45,8 @@ the spreadsheet that you want to connect to.
 . To configure the *Add pivot tables* action:
 +
 .. In the *SpreadsheetId* field, enter the identifier of the spreadsheet that you want to add pivot tables to. If you do not have it
-you might want to link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_google-sheets[create] or
-link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_google-sheets[obtain] the spreadsheet that
+you might want to link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_sheets[create] or
+link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_sheets[obtain] the spreadsheet that
 you want to update first and map the spreadsheet identifier in the data mapping step.
 
 . Click *Done* to add the connection to the integration.

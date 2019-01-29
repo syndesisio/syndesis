@@ -29,7 +29,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-ftp_{context}>>
 * <<connecting-to-gmail_{context}>>
 * <<connecting-to-google-calendar_{context}>>
-* <<connecting-to-google-sheets{context}>>
+* <<connecting-to-google-sheets_{context}>>
 * <<connecting-to-http_{context}>>
 * <<connecting-to-log_{context}>>
 * <<connecting-to-kafka_{context}>>

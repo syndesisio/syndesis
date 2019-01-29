@@ -12,7 +12,7 @@ add it to multiple integrations.
 .Prerequisite
 You registered your {prodname} environment as a Google client
 application as described in
-link:{LinkFuseOnlineConnectorGuide}#register-with-google-sheets_google-sheets[Register as a Google Sheets client application].
+link:{LinkFuseOnlineConnectorGuide}#register-with-google-sheets_sheets[Register as a Google Sheets client application].
 
 .Procedure
 
@@ -30,7 +30,7 @@ which takes you to a Google sign-in page.
 If *Connect Google Sheets* does not appear, then your {prodname} environment
 is not registered as a Google client application with the Google Sheets API
 enabled. See
-link:{LinkFuseOnlineConnectorGuide}#register-with-google-sheets_google-sheets[Register as a Google Sheets client application].
+link:{LinkFuseOnlineConnectorGuide}#register-with-google-sheets_sheets[Register as a Google Sheets client application].
 When your environment is not registered with
 Google, then when you try to create a Google Sheets connection, {prodname} displays
 multiple fields that prompt for authorization information. While you can
