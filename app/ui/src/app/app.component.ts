@@ -116,26 +116,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       'logoIconDarkBg',
       'assets/images/syndesis_logo_icon_darkbkg.png'
     );
-    // this.logoWhiteBg = this.config.getSettings(
-    //   'branding',
-    //   'logoWhiteBg',
-    //   'assets/images/syndesis-logo-svg-white.svg'
-    // );
-    // this.logoDarkBg = this.config.getSettings(
-    //   'branding',
-    //   'logoDarkBg',
-    //   'assets/images/syndesis-logo-svg-white.svg'
-    // );
-    // this.iconDarkBg = this.config.getSettings(
-    //   'branding',
-    //   'iconDarkBg',
-    //   'assets/images/glasses_logo_square.png'
-    // );
-    // this.iconWhiteBg = this.config.getSettings(
-    //   'branding',
-    //   'iconWhiteBg',
-    //   'assets/images/glasses_logo_square.png'
-    // );
     const favicon32 = this.config.getSettings(
       'branding',
       'favicon32',
