@@ -162,7 +162,7 @@
         "basePath": {
           "componentProperty": true,
           "deprecated": false,
-          "description": "API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI specification.",
+          "description": "API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI document.",
           "displayName": "Base path",
           "group": "producer",
           "javaType": "java.lang.String",
@@ -287,8 +287,8 @@
         "specification": {
           "componentProperty": true,
           "deprecated": false,
-          "description": "OpenAPI specification of the service",
-          "displayName": "Specification",
+          "description": "OpenAPI document of the service",
+          "displayName": "Document",
           "group": "producer",
           "javaType": "java.lang.String",
           "kind": "property",
@@ -388,7 +388,7 @@
         "basePath": {
           "componentProperty": true,
           "deprecated": false,
-          "description": "API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI specification.",
+          "description": "API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI document.",
           "displayName": "Base path",
           "group": "producer",
           "javaType": "java.lang.String",
@@ -432,8 +432,8 @@
         "specification": {
           "componentProperty": true,
           "deprecated": false,
-          "description": "Upload the OpenAPI 2.0 file for your Custom API Client Connector. Custom API's are RESTful APIs and can be hosted anywhere, as long as a well-documented API specification is available and conforms to OpenAPI standard.",
-          "displayName": "Specification",
+          "description": "Upload the OpenAPI 2.0 file for your Custom API Client Connector. Custom API's are RESTful APIs and can be hosted anywhere, as long as a well-documented API is available and conforms to OpenAPI specification.",
+          "displayName": "Document",
           "group": "producer",
           "javaType": "java.lang.String",
           "kind": "property",

@@ -54,7 +54,7 @@ public interface SwaggerModelInfo {
 
             return JsonSchemaHelper.resolvableNodeForSpecification(json);
         } catch (final IOException e) {
-            throw new IllegalStateException("Unable to parse OpenAPI specification resolved as JSON", e);
+            throw new IllegalStateException("Unable to parse OpenAPI document resolved as JSON", e);
         }
     }
 
