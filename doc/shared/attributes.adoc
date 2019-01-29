@@ -6,39 +6,46 @@
 :numbered:
 
 // Attributes for Fuse on OpenShift
-:cdk-version: 3.4
+:cdk-version: 3.6
 :maven-version: 3.3.x
-:archetype-version: 2.2.0.fuse-000092-redhat-2
-:archetype-catalog: https://maven.repository.redhat.com/earlyaccess/all/io/fabric8/archetypes/archetypes-catalog/{archetype-version}/archetypes-catalog-{archetype-version}-archetype-catalog.xml
-:templates-base-url: https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000081-redhat-4
+:archetype-version: 2.2.0.fuse-720018-redhat-00001
+:archetype-catalog: https://maven.repository.redhat.com/ga/io/fabric8/archetypes/archetypes-catalog/{archetype-version}/archetypes-catalog-{archetype-version}-archetype-catalog.xml
+:templates-base-url: https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-720018-redhat-00001
 
 
 // Attributes converted from DocBook
 :amq: Apache ActiveMQ
 
-:bomversion: 7.0.0.fuse-000027-redhat-1
+// New-style BOM version 
+// RCM: version.redhat-fuse
+:fuseversion: 7.2.0.fuse-720020-redhat-00001
 
 :broker: Red Hat AMQ
 
 :camel: Apache Camel
 
-:camelFullVersion: 2.21.0.fuse-000077-redhat-1
+// RCM: version.camel
+:camelFullVersion: 2.21.0.fuse-720050-redhat-00001
 
 :copy: ©
 
 :cxf: Apache CXF
 
-:cxfFullVersion: 3.1.11.fuse-000243-redhat-1
+// RCM: version.cxf
+:cxfFullVersion: 3.1.11.fuse-720057-redhat-00001
 
 :eapfull: Red Hat JBoss Enterprise Application Platform
 
 :eapname: JBoss EAP
 
-:fabric8Version: 3.0.11.fuse-000039-redhat-1
+// RCM: version.fabric8
+:fabric8Version: 3.0.11.fuse-720027-redhat-00001
 
-:fabric8MavenPluginVersion: 3.5.33.fuse-000067-redhat-1
+// RCM: version.fabric8-maven-plugin
+:fabric8MavenPluginVersion: 3.5.33.fuse-720026-redhat-00001
 
-:fabric8CamelMavenPluginVersion: 2.3.80
+// No RCM version
+:fabric8CamelMavenPluginVersion: 2.3.90
 
 :felix: Apache Felix
 
@@ -46,9 +53,11 @@
 
 :framework: Apache CXF
 
-:fullversion: 7.0.0.fuse-000191-redhat-1
+// RCM: version.fuse-karaf
+:fullversion: 7.2.0.fuse-720035-redhat-00001
 
-:fuseeapversion: 7.0.0.fuse-000085-redhat-1
+// RCM: version.fuse-eap
+:fuseeapversion: 7.2.0.fuse-720018-redhat-00002
 
 :hq: JBoss Operations Network
 
@@ -60,13 +69,17 @@
 
 :karaf: Apache Karaf
 
+// RCM: version.karaf
+:karafMavenPluginVersion: 4.2.0.fuse-720061-redhat-00001
+
 :mdash: —
 
 :nbsp:  
 
 :ndash: –
 
-:prodbuildversion: 000191
+// Build version of Apache Karaf
+:prodbuildversion: 720035
 
 :prodname: Fuse
 
@@ -74,7 +87,13 @@
 
 :productpkg: red_hat_fuse
 
-:productdocsemail: fuinclude::topics/shared/attributes.adoc[]se-docs-support@redhat.com
+:productdocsemail: fuse-docs-support@redhat.com
+
+// Toggle downstream content "on"
+// The 'red-hat-fuse' attribute is used to conditionalize content from the Wildfly Camel upstream project.
+// * Downstream-only content is introduced by ifdef::red-hat-fuse[]
+// * Upstream-only content is introduced by ifndef::red-hat-fuse[]
+:red-hat-fuse:
 
 :reg: ®
 
@@ -84,11 +103,14 @@
 
 :servicemix: Apache ServiceMix
 
-:springBootFullVersion: 1.5.13.RELEASE
+:springBootFullVersion: 1.5.16.RELEASE
 
 :trade: ™
 
-:version: 7.2
+:version: 7.3
+
+// RCM: version.wildfly-camel
+:wildflyCamelVersion: 5.2.0.fuse-720023-redhat-00001
 
 // Include attributes for deep linking
 include::attributes-links.adoc[]
