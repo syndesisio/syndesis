@@ -23,7 +23,7 @@ You must have ServiceNow administrative privileges.
 .. In the *Target table* field, select the ServiceNow table that this service updates. 
 .. Select *Copy fields from target table*. This creates an import set that has 
 the same schema as the target table. The import set is a staging area for updating the target table.
-.. Select *Create transform map*. This enables ServiceNow to copy and transform data from the import set to the target table. 
+.. Select *Create transform map*. This map enables ServiceNow to copy and transform data from the import set to the target table. 
 
 . Click *Create* to create the web service. 
 . In the next display, under *Related Links*, click *Auto Map Matching Fields* to 
@@ -37,7 +37,7 @@ ServiceNow updates that record in the target table rather than creating a new re
 . Select the *Coalesce* checkbox to identify the field that you just selected
 as the correlation field. Without a correlation field, ServiceNow adds each 
 record in the import set to the target table.
-. Update the web service.
+. Click *Update*.
 . Confirm that the transform map was created:
 .. In ServiceNow, search for `transform map`. 
 .. Under *System Import Sets*, click *Transform Maps* to display a list of transform maps. 

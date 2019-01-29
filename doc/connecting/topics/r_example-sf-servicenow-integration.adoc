@@ -13,6 +13,7 @@ cases from Salesforce and adds them as incidents to ServiceNow.
 cases from Salesforce and then updates a corresponding
 incident in ServiceNow. 
 
+.Prerequisite (in ServiceNow)
 For both integrations, a prerequisite is for a ServiceNow
 administrator to create an inbound web service. 
 This implicitly creates a ServiceNow import set, which is required for 
@@ -27,14 +28,15 @@ import set is also *Cases from Salesforce*.
 * Selection of *Create transform map* enables ServiceNow to copy and 
 transform data from the *Cases from Salesforce* import set to the
 *Incidents* target table. 
-* In the import set, the `correlation_Id` field was selected and then the
-*Coalesce* checkbox was selected. This sets the `correlation_Id` field
+* In the import set, the `correlation_Id` field is selected and then the
+*Coalesce* checkbox is selected. This sets the `correlation_Id` field
 as the correlation field in the import set. 
 
+.Procedure overview (in {prodname})
 In {prodname}, you create the Salesforce and ServiceNow connections.
 
 The two integrations are the same except for the action performed
-by the Salesforce connection. This is noted in the following steps.
+by the Salesforce connection, as noted in the following steps.
 To create the integrations, you would perform these steps twice, 
 that is, once to create each integration: 
 
@@ -44,14 +46,16 @@ that is, once to create each integration:
 *On create* action. 
 * To create the integration that obtains updated cases, select the 
 *On update* action. 
-+
-Select the *Case* object for the action to operate on. 
+
+. Select the *Case* object for the action to operate on. 
 This Salesforce connection returns new *Case* objects or 
 updated *Case* objects according to the chosen action.
 
-. Add the ServiceNow connection as the finish connection,
-select the *Create Record* action, and select *Cases from Salesforce* 
+. Add the ServiceNow connection as the finish connection.
+
+. Select the *Create Record* action, and then select *Cases from Salesforce* 
 as the import set that the integration updates. 
++
 This ServiceNow connection adds new or updated Salesforce cases to the
 *Cases from Salesforce* import set. 
 
@@ -61,7 +65,7 @@ This ServiceNow connection adds new or updated Salesforce cases to the
 * Salesforce `subject` to the ServiceNow `short_description`
 * Salesforce `description` to the ServiceNow `description`
 
-Give the integration a name and publish it. For this example, 
+Give the integration a name and then publish it. For this example, 
 the integration names are *On SF Create Case* and *On SF Update Case*. 
 
 When both integrations are
