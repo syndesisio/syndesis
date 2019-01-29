@@ -2,35 +2,41 @@
 // as_connecting-to-servicenow.adoc
 
 [id='create-servicenow-web-service_{context}']
-= Create a ServiceNow inbound web service
+= Create an inbound web service in ServiceNow
 
 In a {prodname} integration, a ServiceNow connection cannot directly 
-update a ServiceNow table. To update a ServiceNow table in an integration, 
-you must create a ServiceNow inbound web service, which creates a ServiceNow 
-import set that is based on the ServiceNow table that you select. A ServiceNow 
-connection updates this import set, and ServiceNow uses the import set to 
-update the corresponding ServiceNow table. 
+update a ServiceNow table. To update ServiceNow data in an integration, 
+a prerequisite is for a ServiceNow administrator to create a ServiceNow 
+inbound web service. This implicitly creates a ServiceNow import set, 
+which is required for an integration to add data to ServiceNow. The 
+import set is based on the ServiceNow target table that the administrator 
+selects when creating the web service. A ServiceNow connection updates 
+this import set, and ServiceNow uses the import set to update the 
+corresponding ServiceNow table.
 
 .Prerequisites
 You must have ServiceNow administrative privileges. 
 
-.Procedure
+.Procedure in ServiceNow
 
 . In ServiceNow, search for `web services`. 
 . In the results, under *System Web Services* > *Inbound*, click *Create New*. 
 . In the *Create Web Service* page, enter the required information, including:
-.. In the *Label* field, specify the display name for the web service. The web service's import set will also have this name. 
+.. In the *Label* field, specify the display name for the web service. 
+The web service's import set will also have this name. 
 .. In the *Target table* field, select the ServiceNow table that this service updates. 
 .. Select *Copy fields from target table*. This creates an import set that has 
-the same schema as the target table. The import set is a staging area for updating the target table.
-.. Select *Create transform map*. This map enables ServiceNow to copy and transform data from the import set to the target table. 
+the same schema as the target table. The import set is a staging area for 
+updating the target table.
+.. Select *Create transform map*. This map enables ServiceNow to copy and 
+transform data from the import set to the target table. 
 
 . Click *Create* to create the web service. 
 . In the next display, under *Related Links*, click *Auto Map Matching Fields* to 
 display a list of fields in the target table that you selected. 
 . Select one target table field to be the correlation (or coalesce) field. 
 +
-When the value of the correlation field of a record in the import set 
+When the value of the correlation field in a record in the import set 
 matches the value of a correlation field in the target table, 
 ServiceNow updates that record in the target table rather than creating a new record. 
 
@@ -43,3 +49,6 @@ record in the import set to the target table.
 .. Under *System Import Sets*, click *Transform Maps* to display a list of transform maps. 
 .. In this list, confirm that there is a transform map whose name is 
 the value that you specified for the label of the web service that you created. 
+
+.Additional resource
+link:https://docs.servicenow.com/bundle/london-platform-administration/page/administer/import-sets/reference/import-sets-landing-page.html[ServiceNow documentation for import sets]

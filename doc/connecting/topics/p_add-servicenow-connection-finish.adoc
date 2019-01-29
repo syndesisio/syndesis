@@ -17,8 +17,8 @@ as the finish connection or as a middle connection.
 add records to. Your ServiceNow administrator can
 help you identify the appropriate import set. If the import set 
 does not exist, see 
-link:{LinkFuseOnlineConnectorGuide}#create-servicenow-web-service_servicenow[Create ServiceNow web service],
-which implicitly creates an import set. 
+link:{LinkFuseOnlineConnectorGuide}#create-servicenow-web-service_servicenow[Create an inbound web service in ServiceNow].
+Creation of an inbound web service implicitly creates an import set. 
 * The ServiceNow import set must be configured to handle the addition 
 of records.
 
