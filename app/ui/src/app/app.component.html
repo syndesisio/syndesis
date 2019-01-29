@@ -6,10 +6,7 @@
 
   <ng-template #brandTemplate>
     <a routerLink="/" class="navbar-brand" role="link">
-      <img *ngIf="iconDarkBg && iconDarkBg !== ''" [class]="productBuild ? 'navbar-brand-icon product' : 'navbar-brand-icon'" [src]="loggedIn ? iconDarkBg : iconWhiteBg"
-        alt="" />
-      <img *ngIf="logoDarkBg" [class]="productBuild ? 'navbar-brand-name product' : 'navbar-brand-name'" [src]="loggedIn ? logoDarkBg : logoWhiteBg"
-        alt="{{ appName }}" />
+      <img *ngIf="logoIconDarkBg" [class]="productBuild ? 'navbar-brand-name product' : 'navbar-brand-name'" [src]="logoIconDarkBg" alt="{{ appName }}" />
     </a>
   </ng-template>
 
