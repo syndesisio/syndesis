@@ -32,19 +32,6 @@ import {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  // TODO icon?
-  /**
-   * Logo with white background.
-   */
-  // logoWhiteBg = 'assets/images/syndesis-logo-svg-white.svg';
-  // iconWhiteBg = 'assets/images/glasses_logo_square.png';
-
-  /**
-   * Logo with dark background
-   */
-  // logoDarkBg = 'assets/images/syndesis-logo-svg-white.svg';
-  // iconDarkBg = 'assets/images/glasses_logo_square.png';
-
   /**
    * Logo and Icon with dark background
    */
