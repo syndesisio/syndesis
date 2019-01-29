@@ -19,6 +19,8 @@ import java.util.Map;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
+import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
@@ -80,6 +82,9 @@ public class FhirVerifierExtension extends DefaultComponentVerifierExtension {
         }
         final String serverUrl = (String) parameters.get("serverUrl");
         final FhirVersionEnum fhirVersion = (FhirVersionEnum) parameters.get("fhirVersion");
+        final String username = (String) parameters.get("username");
+        final String password = (String) parameters.get("password");
+        final String accessToken = (String) parameters.get("accessToken");
 
         LOG.debug("Validating FHIR connection to {} with FHIR version {}", serverUrl, fhirVersion);
 
@@ -87,6 +92,27 @@ public class FhirVerifierExtension extends DefaultComponentVerifierExtension {
             try {
                 FhirContext fhirContext = new FhirContext(fhirVersion);
                 IGenericClient iGenericClient = fhirContext.newRestfulGenericClient(serverUrl);
+
+                if (ObjectHelper.isNotEmpty(username) || ObjectHelper.isNotEmpty(password)) {
+                    if (ObjectHelper.isEmpty(username) || ObjectHelper.isEmpty(password)) {
+                        builder.error(
+                            ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_GROUP_COMBINATION,
+                                "Both username and password must be provided to enable basic authentication")
+                                .parameterKey("username")
+                                .parameterKey("password")
+                                .build());
+                    } else if (ObjectHelper.isNotEmpty(accessToken)) {
+                        builder.error(
+                            ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_GROUP_COMBINATION,
+                                "You must provide either username and password or bearer token to enable authentication")
+                                .parameterKey("accessToken")
+                                .build());
+                    } else {
+                        iGenericClient.registerInterceptor(new BasicAuthInterceptor(username, password));
+                    }
+                } else if (ObjectHelper.isNotEmpty(accessToken)) {
+                    iGenericClient.registerInterceptor(new BearerTokenAuthInterceptor(accessToken));
+                }
                 iGenericClient.forceConformanceCheck();
             } catch (Exception e) {
                 builder.error(

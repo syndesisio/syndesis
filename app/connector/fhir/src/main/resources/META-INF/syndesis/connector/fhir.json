@@ -246,7 +246,7 @@
       "javaType": "java.lang.String",
       "kind": "parameter",
       "labelHint": "The FHIR version to use. Only DSTU3 is currently supported.",
-      "order": "2",
+      "order": "1",
       "required": true,
       "secret": false,
       "type": "string"
@@ -259,9 +259,48 @@
       "javaType": "java.lang.String",
       "kind": "parameter",
       "labelHint": "The base URL of your FHIR server",
-      "order": "1",
+      "order": "2",
       "required": true,
       "secret": false,
+      "type": "string"
+    },
+    "username": {
+      "defaultValue": "",
+      "deprecated": false,
+      "displayName": "FHIR server username",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The username to use for basic authentication",
+      "order": "3",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "password": {
+      "defaultValue": "",
+      "deprecated": false,
+      "displayName": "FHIR server password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The password to use for basic authentication",
+      "order": "4",
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "accessToken": {
+      "defaultValue": "",
+      "deprecated": false,
+      "displayName": "FHIR server bearer token",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The bearer token to use for bearer authentication (as specified in OAuth 2.0)",
+      "order": "5",
+      "required": false,
+      "secret": true,
       "type": "string"
     }
   },
