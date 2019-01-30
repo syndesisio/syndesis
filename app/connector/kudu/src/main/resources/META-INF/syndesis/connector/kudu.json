@@ -22,7 +22,7 @@
               "tableName": {
                 "deprecated": false,
                 "displayName": "Table",
-                "group": "producer",
+                "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "label": "producer",
@@ -65,7 +65,7 @@
               "tableName": {
                 "deprecated": false,
                 "displayName": "Table",
-                "group": "producer",
+                "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "label": "producer",
@@ -74,6 +74,19 @@
                 "required": true,
                 "secret": false,
                 "type": "string"
+              },
+              "schedulerExpression": {
+                "defaultValue": 60000,
+                "deprecated": false,
+                "displayName": "Period",
+                "group": "consumer",
+                "javaType": "long",
+                "kind": "parameter",
+                "labelHint": "Delay between scheduling (executing).",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "duration"
               }
             }
           }
