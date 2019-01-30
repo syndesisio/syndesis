@@ -2,7 +2,7 @@ import { ApplicationRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, of, Subscription } from 'rxjs';
-import { map, switchMap, combineLatest, first } from 'rxjs/operators';
+import { map, switchMap, combineLatest, first, filter } from 'rxjs/operators';
 import {
   Action as PFAction,
   ActionConfig,
@@ -131,12 +131,14 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   draftAction(eventId: string) {
     switch (eventId) {
       case 'publish':
-        this.integrationActionsService.requestAction('publish', <any>this
-          .integration);
+        this.integrationActionsService.requestAction('publish', <any>(
+          this.integration
+        ));
         break;
       case 'edit':
-        this.integrationActionsService.requestAction('edit', <any>this
-          .integration);
+        this.integrationActionsService.requestAction('edit', <any>(
+          this.integration
+        ));
         break;
       default:
         break;
@@ -153,8 +155,9 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
         );
         break;
       case STOP_INTEGRATION:
-        this.integrationActionsService.requestAction('unpublish', <any>this
-          .integration);
+        this.integrationActionsService.requestAction('unpublish', <any>(
+          this.integration
+        ));
         break;
       case PUBLISH:
         {
@@ -164,10 +167,9 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
             name: this.integration.name,
             version: event.deployment.version
           };
-          this.integrationActionsService.requestAction(
-            'publish',
-            <any>integration
-          );
+          this.integrationActionsService.requestAction('publish', <any>(
+            integration
+          ));
         }
         break;
       case CREATE_DRAFT:
@@ -187,16 +189,13 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
         map(integrationState => integrationState.metrics.list),
         // tslint:disable-next-line:deprecation
         combineLatest(
-          this.route.paramMap
-            .pipe(
-              first(params => params.has('integrationId')),
-              map(paramMap => paramMap.get('integrationId'))
-            )
+          this.route.paramMap.pipe(
+            first(params => params.has('integrationId')),
+            map(paramMap => paramMap.get('integrationId'))
+          )
         ),
         switchMap(([integrationMetrics, integrationId]) =>
-          of(
-            integrationMetrics.find(metrics => metrics.id === integrationId)
-          )
+          of(integrationMetrics.find(metrics => metrics.id === integrationId))
         )
       );
 
@@ -227,41 +226,44 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
 
         this.onRefreshMetrics(integrationId);
 
-        this.integrationSubscription = this.integrationStore.resource.subscribe(
-          (integration: IntegrationOverview) => {
-            this.loading = false;
-            this.integration = integration;
-            this.deploymentActionConfigs = {};
-            if (!this.integration.deployments) {
-              return;
-            }
-            for (const deployment of this.integration.deployments) {
-              const actionConfig = {
-                primaryActions: [],
-                moreActions: [],
-                moreActionsVisible: true,
-                moreActionsDisabled: false
-              } as ActionConfig;
-              actionConfig.moreActions.push(replaceDraft);
-              if (deployment.version === integration.deploymentVersion) {
-                if (integration.currentState === PUBLISHED) {
-                  actionConfig.moreActions.push(stopIntegration);
+        this.integrationSubscription = this.integrationStore.resource
+          .pipe(filter(i => typeof i !== 'undefined'))
+          .subscribe(
+            (integration: IntegrationOverview) => {
+              this.loading = false;
+              this.integration = integration;
+              this.deploymentActionConfigs = {};
+              if (!this.integration.deployments) {
+                return;
+              }
+              for (const deployment of this.integration.deployments) {
+                const actionConfig = {
+                  primaryActions: [],
+                  moreActions: [],
+                  moreActionsVisible: true,
+                  moreActionsDisabled: false
+                } as ActionConfig;
+                actionConfig.moreActions.push(replaceDraft);
+                if (deployment.version === integration.deploymentVersion) {
+                  if (integration.currentState === PUBLISHED) {
+                    actionConfig.moreActions.push(stopIntegration);
+                  } else {
+                    actionConfig.moreActions.push(publish);
+                  }
                 } else {
                   actionConfig.moreActions.push(publish);
                 }
-              } else {
-                actionConfig.moreActions.push(publish);
+                this.deploymentActionConfigs[deployment.id] = actionConfig;
               }
-              this.deploymentActionConfigs[deployment.id] = actionConfig;
+            },
+            error => {
+              if (error.status === 404) {
+                this.router.navigate(['..'], { relativeTo: this.route });
+                return;
+              }
+              log.warn('Error loading integration: ' + JSON.stringify(error));
             }
-          },
-          error => {
-            if (error.status === 404) {
-              this.router.navigate(['..'], { relativeTo: this.route });
-              return;
-            }
-            log.warn('Error loading integration: ' + JSON.stringify(error));
-          });
+          );
         this.loading = true;
         this.integrationStore.load(integrationId);
       });
