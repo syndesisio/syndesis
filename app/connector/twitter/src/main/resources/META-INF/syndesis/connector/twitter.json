@@ -139,12 +139,13 @@
     "consumerKey": {
       "componentProperty": true,
       "deprecated": false,
-      "displayName": "Consumer Key",
+      "displayName": "Consumer API Key",
       "group": "security",
       "javaType": "java.lang.String",
       "kind": "property",
       "label": "security",
-      "labelHint": "The consumer key",
+      "order": 1, 
+      "labelHint": "The Consumer API key that Twitter provides when you register a client application.",
       "required": true,
       "secret": true,
       "tags": [
@@ -155,12 +156,13 @@
     "consumerSecret": {
       "componentProperty": true,
       "deprecated": false,
-      "displayName": "Consumer Secret",
+      "displayName": "Consumer API Secret Key",
       "group": "security",
       "javaType": "java.lang.String",
       "kind": "property",
       "label": "security",
-      "labelHint": "The consumer secret",
+      "order": 2, 
+      "labelHint": "The Consumer API secret key that Twitter provides when you register a client application.",
       "required": true,
       "secret": true,
       "tags": [
