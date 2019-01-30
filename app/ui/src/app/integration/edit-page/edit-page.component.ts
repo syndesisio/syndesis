@@ -51,6 +51,7 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
         )
       )
       .subscribe(({ integrationId, flowId, integration }) => {
+        this.currentFlowService.flowId = flowId;
         this.currentFlowService.integration = integration;
         // If the current flow ID isn't in the param map, redirect so it's available
         if (integrationId && !flowId && this.currentFlowService.flowId) {
