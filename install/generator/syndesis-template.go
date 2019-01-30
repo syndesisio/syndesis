@@ -15,7 +15,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"regexp"
 	"sort"
 	"strings"
 
@@ -41,7 +40,6 @@ type supportImages struct {
 	Postgresql       string
 	OAuthProxy       string
 	Prometheus       string
-	Grafana          string
 	PostgresExporter string
 }
 
@@ -60,7 +58,6 @@ type images struct {
 	SyndesisImagesPrefix        string
 	OAuthProxyImagePrefix       string
 	PrometheusImagePrefix       string
-	GrafanaImagePrefix          string
 	PostgresExporterImagePrefix string
 }
 
@@ -70,13 +67,7 @@ type tags struct {
 	OAuthProxy       string
 	Prometheus       string
 	Upgrade          string
-	Grafana          string
 	PostgresExporter string
-}
-
-type Dashboard struct {
-	FileName string
-	Json     string
 }
 
 type Context struct {
@@ -93,7 +84,6 @@ type Context struct {
 	Tags             tags
 	Debug            bool
 	WithOAuthClient  bool
-	Dashboards       []Dashboard
 }
 
 // TODO: Could be added from a local configuration file
@@ -102,13 +92,11 @@ var syndesisContext = Context{
 		SyndesisImagesPrefix:        "syndesis",
 		OAuthProxyImagePrefix:       "openshift",
 		PrometheusImagePrefix:       "prom",
-		GrafanaImagePrefix:          "grafana",
 		PostgresExporterImagePrefix: "wrouesnel",
 		Support: supportImages{
 			Postgresql:       "postgresql",
 			OAuthProxy:       "oauth-proxy",
 			Prometheus:       "prometheus",
-			Grafana:          "grafana",
 			PostgresExporter: "postgres_exporter",
 		},
 		Syndesis: syndesisImages{
@@ -123,7 +111,6 @@ var syndesisContext = Context{
 		Postgresql:       "9.5",
 		OAuthProxy:       "v1.1.0",
 		Prometheus:       "v2.1.0",
-		Grafana:          "5.4.2",
 		PostgresExporter: "v0.4.7",
 	},
 }
@@ -135,13 +122,11 @@ var productContext = Context{
 		SyndesisImagesPrefix:        "fuse7",
 		OAuthProxyImagePrefix:       "openshift",
 		PrometheusImagePrefix:       "prom",
-		GrafanaImagePrefix:          "grafana",
 		PostgresExporterImagePrefix: "wrouesnel",
 		Support: supportImages{
 			Postgresql:       "postgresql",
 			OAuthProxy:       "oauth-proxy",
 			Prometheus:       "prometheus",
-			Grafana:          "grafana",
 			PostgresExporter: "postgres_exporter",
 		},
 		Syndesis: syndesisImages{
@@ -156,7 +141,6 @@ var productContext = Context{
 		Postgresql:       "9.5",
 		OAuthProxy:       "v1.1.0",
 		Prometheus:       "v2.1.0",
-		Grafana:          "5.4.2",
 		PostgresExporter: "v0.4.7",
 	},
 	Registry: "registry.fuse-ignite.openshift.com",
@@ -193,23 +177,6 @@ func install(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	regex := regexp.MustCompile("(?m)^(.*)$")
-	dashboardDir := "../dashboards/"
-	dashboardFiles, err := ioutil.ReadDir(dashboardDir)
-	check(err)
-
-	for _, dashboardFile := range dashboardFiles {
-		if strings.HasSuffix(dashboardFile.Name(), ".json") {
-			json, err := ioutil.ReadFile(dashboardDir + dashboardFile.Name())
-			check(err)
-			dashboard := Dashboard{
-				FileName: dashboardFile.Name(),
-				Json:     regex.ReplaceAllString(string(json), "      $1"),
-			}
-			context.Dashboards = append(context.Dashboards, dashboard)
-		}
-	}
-
 	files, err := ioutil.ReadDir("./")
 	check(err)
 
@@ -224,6 +191,7 @@ func install(cmd *cobra.Command, args []string) {
 			fmt.Print(mustache.Render(string(template), context))
 		}
 	}
+
 }
 
 func check(e error) {

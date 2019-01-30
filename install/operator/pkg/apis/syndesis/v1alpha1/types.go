@@ -88,7 +88,6 @@ type SyndesisStatus struct {
 type ComponentsSpec struct {
 	Db         DbConfiguration         `json:"db,omitempty"`
 	Prometheus PrometheusConfiguration `json:"prometheus,omitempty"`
-	Grafana    GrafanaConfiguration    `json:"grafana,omitempty"`
 	Server     ServerConfiguration     `json:"server,omitempty"`
 	Meta       MetaConfiguration       `json:"meta,omitempty"`
 	Upgrade    UpgradeConfiguration    `json:"upgrade,omitempty"`
@@ -103,10 +102,6 @@ type DbConfiguration struct {
 
 type PrometheusConfiguration struct {
 	Resources ResourcesWithVolume `json:"resources,omitempty"`
-}
-
-type GrafanaConfiguration struct {
-	Resources Resources `json:"resources,omitempty"`
 }
 
 type ServerConfiguration struct {
