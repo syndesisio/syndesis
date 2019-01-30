@@ -1,9 +1,4 @@
-import {
-  EMPTY,
-  Subject,
-  Observable,
-  Subscription
-} from 'rxjs';
+import { EMPTY, Subject, Observable, Subscription } from 'rxjs';
 
 import { tap } from 'rxjs/operators';
 import {
@@ -38,8 +33,7 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
   @Input() viewTemplate: TemplateRef<any>;
   @Input() filterFields: Array<FilterField> = [];
   @Input() filterTags: true;
-
-  toolbarConfig: ToolbarConfig;
+  @Input() toolbarConfig: ToolbarConfig;
 
   private allItems: Array<T> = [];
   private itemsFiltered: Array<T> = [];
@@ -50,33 +44,38 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
   private propertySorter = new ObjectPropertySortPipe();
 
   ngOnInit() {
-    const filterConfig = {
-      fields: [
-        {
-          id: 'name',
-          title: 'Name',
-          placeholder: 'Filter by Name...',
-          type: 'text'
-        }
-      ],
-      appliedFilters: []
-    } as FilterConfig;
-    filterConfig.fields.push(...this.filterFields);
-    const sortConfig = {
-      fields: [
-        {
-          id: 'name',
-          title: 'Name',
-          sortType: 'alpha'
-        }
-      ],
-      isAscending: this.isAscendingSort
-    } as SortConfig;
+    if (!this.toolbarConfig) {
+      const filterConfig = {
+        fields: [
+          {
+            id: 'name',
+            title: 'Name',
+            placeholder: 'Filter by Name...',
+            type: 'text'
+          }
+        ],
+        appliedFilters: []
+      } as FilterConfig;
+      filterConfig.fields.push(...this.filterFields);
+      const sortConfig = {
+        fields: [
+          {
+            id: 'name',
+            title: 'Name',
+            sortType: 'alpha'
+          }
+        ],
+        isAscending: this.isAscendingSort
+      } as SortConfig;
 
-    this.toolbarConfig = {
-      filterConfig: filterConfig,
-      sortConfig: sortConfig
-    } as ToolbarConfig;
+      this.toolbarConfig = {
+        filterConfig: filterConfig,
+        sortConfig: sortConfig
+      } as ToolbarConfig;
+    }
+    if (!this.toolbarConfig.filterConfig.appliedFilters) {
+      this.toolbarConfig.filterConfig.appliedFilters = [];
+    }
 
     this.subscription = this.items
       .pipe(
@@ -86,8 +85,12 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
             return;
           }
           if (items.find(item => item['tags'])) {
-            if (!filterConfig.fields.find(field => field.id === 'tag')) {
-              filterConfig.fields.push({
+            if (
+              !this.toolbarConfig.filterConfig.fields.find(
+                field => field.id === 'tag'
+              )
+            ) {
+              this.toolbarConfig.filterConfig.fields.push({
                 id: 'tag',
                 title: 'Tag',
                 placeholder: 'Filter by tag...',
@@ -95,11 +98,11 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
               });
             }
           } else {
-            const index = filterConfig.fields.findIndex(
+            const index = this.toolbarConfig.filterConfig.fields.findIndex(
               field => field.id === 'tag'
             );
             if (index >= 0) {
-              filterConfig.fields.splice(index, 1);
+              this.toolbarConfig.filterConfig.fields.splice(index, 1);
             }
           }
         }),
@@ -117,11 +120,10 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
       this.toolbarConfig.filterConfig.appliedFilters.reduce(
         (items, filter) =>
           filter.field.id === 'tag'
-            ? items.filter(
-                item =>
-                  Array.isArray(item['tags'])
-                    ? item['tags'].some(tag => tag === filter.query.value)
-                    : false
+            ? items.filter(item =>
+                Array.isArray(item['tags'])
+                  ? item['tags'].some(tag => tag === filter.query.value)
+                  : false
               )
             : this.propertyFilter.transform(items, {
                 filter: filter.value,
@@ -139,6 +141,10 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
     if ($event) {
       this.currentSortFieldId = $event.field.id;
       this.isAscendingSort = $event.isAscending;
+    }
+    if (!this.currentSortFieldId) {
+      this.currentSortFieldId = this.toolbarConfig.sortConfig.fields[0].id;
+      this.isAscendingSort = this.toolbarConfig.sortConfig.isAscending;
     }
     const result = this.propertySorter.transform(this.itemsFiltered, {
       sortField: this.currentSortFieldId || 'name',

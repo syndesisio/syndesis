@@ -2,21 +2,31 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FilterConfig, ListEvent, SortConfig, ToolbarConfig } from 'patternfly-ng';
 import {
-  IntegrationStore
-} from '@syndesis/ui/store';
+  FilterConfig,
+  ListEvent,
+  SortConfig,
+  ToolbarConfig
+} from 'patternfly-ng';
+import { IntegrationStore } from '@syndesis/ui/store';
 import {
   CurrentFlowService,
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
 import { Flow, Integration, Flows } from '@syndesis/ui/platform';
-import { NavigationService, ObjectPropertyFilterConfig, ObjectPropertySortConfig } from '@syndesis/ui/common';
+import {
+  NavigationService,
+  ObjectPropertyFilterConfig,
+  ObjectPropertySortConfig
+} from '@syndesis/ui/common';
 
 @Component({
   selector: 'syndesis-integration-api-provider-operations',
   templateUrl: './integration-api-provider-operations-page.component.html',
-  styleUrls: ['../../integration-common.scss', './integration-api-provider-operations-page.component.scss']
+  styleUrls: [
+    '../../integration-common.scss',
+    './integration-api-provider-operations-page.component.scss'
+  ]
 })
 export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
   integration: Observable<Integration>;
@@ -42,14 +52,14 @@ export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
       fields: [
         {
           id: 'name',
-          title: 'Name',
-          placeholder: 'Filter by Name...',
+          title: 'Operation Name',
+          placeholder: 'Filter by Operation Name...',
           type: 'text'
         },
         {
           id: 'description',
-          title: 'Url',
-          placeholder: 'Filter by Url...',
+          title: 'Method & Name',
+          placeholder: 'Filter by Method & Name...',
           type: 'text'
         }
       ]
@@ -57,17 +67,22 @@ export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
     sortConfig: {
       fields: [
         {
+          id: 'implemented',
+          title: 'Implemented',
+          sortType: 'numeric'
+        },
+        {
           id: 'name',
-          title: 'Name',
+          title: 'Operation Name',
           sortType: 'alpha'
         },
         {
           id: 'description',
-          title: 'Url',
+          title: 'Method & Path',
           sortType: 'alpha'
         }
       ],
-      isAscending: true
+      isAscending: false
     } as SortConfig
   } as ToolbarConfig;
 
@@ -89,18 +104,27 @@ export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
       (i: Integration) => {
         if (i) {
           this.currentFlowService.integration = i;
-          this.flows$.next(this.currentFlowService.flows);
+          this.flows$.next(
+            this.currentFlowService.flows.map(flow => {
+              return {
+                ...flow,
+                implemented: flow.metadata.excerpt.startsWith('501') ? 0 : 1
+              };
+            })
+          );
         }
       }
     );
 
     this.routeSubscription = this.route.paramMap
-      .pipe(map(params => {
-        return {
-          integrationId: params.get('integrationId'),
-          flowId: params.get('flowId')
-        };
-      }))
+      .pipe(
+        map(params => {
+          return {
+            integrationId: params.get('integrationId'),
+            flowId: params.get('flowId')
+          };
+        })
+      )
       .subscribe(params => {
         this.currentFlowService.flowId = params.flowId;
         this.integrationStore.loadOrCreate(params.integrationId);
@@ -119,11 +143,12 @@ export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleClick($event: ListEvent): void {
+  handleClick($event: ListEvent | Flow): void {
+    const item = ($event as ListEvent).item || ($event as Flow);
     this.router.navigate([
       'integrations',
       this.currentFlowService.integration.id,
-      ($event.item as Flow).id,
+      (item as Flow).id,
       'edit'
     ]);
   }
