@@ -1,8 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy
-} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
@@ -11,11 +7,7 @@ import {
   DynamicFormService
 } from '@ng-dynamic-forms/core';
 
-import {
-  DataShape,
-  FormFactoryService,
-  Step
-} from '@syndesis/ui/platform';
+import { DataShape, FormFactoryService, Step } from '@syndesis/ui/platform';
 import { StepStore, DATA_MAPPER, BASIC_FILTER } from '@syndesis/ui/store';
 import {
   CurrentFlowService,
@@ -31,8 +23,7 @@ import {
     './step-configure.component.scss'
   ]
 })
-export class IntegrationStepConfigureComponent
-  implements OnInit, OnDestroy {
+export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
   flowSubscription: Subscription;
   position: number;
   step: Step;
@@ -67,8 +58,14 @@ export class IntegrationStepConfigureComponent
   goBack() {
     const step = this.currentFlowService.getStep(this.position);
     step.stepKind = undefined;
-    step.configuredProperties = undefined;
-    this.flowPageService.goBack(['step-select', this.position], this.route);
+    this.currentFlowService.events.emit({
+      kind: 'integration-set-step',
+      position: this.position,
+      step: step,
+      onSave: () => {
+        this.flowPageService.goBack(['step-select', this.position], this.route);
+      }
+    });
   }
 
   isInvalidInput() {
@@ -104,7 +101,7 @@ export class IntegrationStepConfigureComponent
           onSave: () => {
             this.router.navigate(['save-or-add-step'], {
               queryParams: { validate: true },
-              relativeTo: this.route.parent,
+              relativeTo: this.route.parent
             });
           }
         });
@@ -144,12 +141,19 @@ export class IntegrationStepConfigureComponent
       return;
     }
     this.loading = true;
-    const step = (this.step = <Step>this.currentFlowService.getStep(
-      this.position
+    const step = (this.step = <Step>(
+      this.currentFlowService.getStep(this.position)
     ));
-    // If no Step exists or it's not actually a step, redirect to the Select Step view
+    // If no Step exists redirect to the Select Step view
     if (!step || step.stepKind === 'endpoint') {
-      this.router.navigate(['step-select', this.position], {
+      this.router.navigate(['connection-select', this.position], {
+        relativeTo: this.route.parent
+      });
+      return;
+    }
+    // If there's a step but it's actually an endpoint, redirect to the action select view
+    if (step.stepKind === 'endpoint') {
+      this.router.navigate(['action-select', this.position], {
         relativeTo: this.route.parent
       });
       return;

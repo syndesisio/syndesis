@@ -1,29 +1,9 @@
-<!-- Insert step popover -->
-<ng-template #popTemplate let-position='position' class="asdfasdf">
-  <div class="popover-body">
-    <div *ngIf="showAddStep();" class="syn-nowrap">
-      <a (click)="insertStepAfter(position)">Add a step</a>
-    </div>
-    <div *ngIf="showAddConnection();" class="syn-nowrap">
-      <a (click)="insertConnectionAfter(position)">Add a connection</a>
-    </div>
-  </div>
-</ng-template>
-
 <div class="flow-view">
   <!-- Insert step line -->
-  <ng-template #insertStepTemplate let-position='position'>
-    <div *ngIf="currentState === 'save-or-add-step'"
-         class="step step-insert"
-         (mouseover)="pop.show()"
-         (mouseleave)="pop.hide()">
+  <ng-template #insertStepTemplate let-position="position">
+    <div *ngIf="currentState === 'save-or-add-step'" class="step step-insert">
       <div class="icon-container">
-        <div class="square-icon"
-            [popover]="popTemplate"
-            [popoverContext]="{ position: position }"
-            placement="bottom"
-            #pop="bs-popover"
-            containerClass="flow-view-add-popover">
+        <div class="square-icon" (click)="insertStepAfter(position)">
           <i class="fa fa-plus-square"></i>
         </div>
       </div>
@@ -31,38 +11,46 @@
   </ng-template>
 
   <!-- Delete Modal Container -->
-  <syndesis-modal id="delete-step"
-                  title="{{ 'integrations.edit.delete-step-modal-title' | synI18n }}"
-                  type="delete"
-                  message="{{ 'integrations.edit.delete-step-modal' | synI18n }}">
+  <syndesis-modal
+    id="delete-step"
+    title="{{ 'integrations.edit.delete-step-modal-title' | synI18n }}"
+    type="delete"
+    message="{{ 'integrations.edit.delete-step-modal' | synI18n }}"
+  >
   </syndesis-modal>
 
-  <syndesis-loading [loading]="!loaded()" class="syn-scrollable" [content]="content">
-
+  <syndesis-loading
+    [loading]="!loaded()"
+    class="syn-scrollable"
+    [content]="content"
+  >
     <ng-template #content>
       <!-- Header -->
       <div class="row name">
         <div class="col-md-12">
           <div class="vertical-align">
             <div class="integration-name">
-              <input type="text"
-                    #nameInput
-                    class="form-control integration-name-field"
-                    placeholder="Enter integration name..."
-                    [title]="integrationName"
-                    [(ngModel)]="integrationName"
-                    [readonly]="!editingName"
-                    (blur)="stopEditingName()"
-                    (click)="!editingName && startEditingName()"
-                    (keyup)="$event.keyCode == 13 && stopEditingName()"
-                    size="1">
+              <input
+                type="text"
+                #nameInput
+                class="form-control integration-name-field"
+                placeholder="Enter integration name..."
+                [title]="integrationName"
+                [(ngModel)]="integrationName"
+                [readonly]="!editingName"
+                (blur)="stopEditingName()"
+                (click)="!editingName && startEditingName()"
+                (keyup)="$event.keyCode == 13 && stopEditingName()"
+                size="1"
+              />
             </div>
             <div class="integration-name-edit" *ngIf="!editingName">
               <button
                 aria-label="Edit Integration Name"
                 class="btn btn-link integration-name-edit-btn"
                 type="button"
-                (click)="startEditingName()">
+                (click)="startEditingName()"
+              >
                 <span class="fa fa-pencil"></span>
               </button>
             </div>
@@ -70,47 +58,67 @@
         </div>
       </div>
 
-      <div class="flow-view-container syn-scrollable--body"
-          [ngClass]="{ 'collapsed': isCollapsed }">
-
+      <div
+        class="flow-view-container syn-scrollable--body"
+        [ngClass]="{ collapsed: isCollapsed }"
+      >
         <!-- First Step -->
         <div class="step start">
-          <syndesis-integration-flow-view-step [step]="startConnection()"
-                                               [position]="firstPosition()"
-                                               [currentPosition]="currentPosition"
-                                               [currentState]="currentState"
-                                               [isApiProvider]="isApiProvider()"
-                                               [isApiProviderOperationsPage]="isApiProviderOperationsPage()">
+          <syndesis-integration-flow-view-step
+            [step]="startConnection()"
+            [position]="firstPosition()"
+            [currentPosition]="currentPosition"
+            [currentState]="currentState"
+            [isApiProvider]="isApiProvider()"
+            [isApiProviderOperationsPage]="isApiProviderOperationsPage()"
+          >
           </syndesis-integration-flow-view-step>
         </div>
 
-        <ng-container *ngIf="!(isApiProvider() && isApiProviderOperationsPage()); else apiProvider">
-
+        <ng-container
+          *ngIf="
+            !(isApiProvider() && isApiProviderOperationsPage());
+            else apiProvider
+          "
+        >
           <!-- First Step: Save or Add Step -->
-          <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: 0 }"></ng-container>
+          <ng-container
+            *ngTemplateOutlet="insertStepTemplate; context: { position: 0 }"
+          ></ng-container>
 
           <!-- Middle Steps -->
-          <ng-template ngFor
-                      let-step
-                      [ngForOf]="getMiddleSteps()"
-                      let-position="index">
+          <ng-template
+            ngFor
+            let-step
+            [ngForOf]="getMiddleSteps()"
+            let-position="index"
+          >
             <div class="step">
-              <syndesis-integration-flow-view-step [step]="step"
-                                                    [position]="position + 1"
-                                                    [currentPosition]="currentPosition"
-                                                    [currentState]="currentState"></syndesis-integration-flow-view-step>
+              <syndesis-integration-flow-view-step
+                [step]="step"
+                [position]="position + 1"
+                [currentPosition]="currentPosition"
+                [currentState]="currentState"
+              ></syndesis-integration-flow-view-step>
             </div>
 
             <!-- Middle Steps: Save or Add Step -->
-            <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: (position + 1) }"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="
+                insertStepTemplate;
+                context: { position: position + 1 }
+              "
+            ></ng-container>
           </ng-template>
 
           <!-- Last Step -->
           <div class="step finish">
-            <syndesis-integration-flow-view-step [step]="endConnection()"
-                                                  [position]="lastPosition()"
-                                                  [currentPosition]="currentPosition"
-                                                  [currentState]="currentState"></syndesis-integration-flow-view-step>
+            <syndesis-integration-flow-view-step
+              [step]="endConnection()"
+              [position]="lastPosition()"
+              [currentPosition]="currentPosition"
+              [currentState]="currentState"
+            ></syndesis-integration-flow-view-step>
           </div>
         </ng-container>
 
@@ -124,9 +132,9 @@
     class="btn btn-default toggle-collapsed"
     (click)="toggleCollapsed()"
     [class.collapsed]="isCollapsed"
-    [tooltip]="[ isCollapsed ? 'Expand' : 'Collapse' ]"
+    [tooltip]="[isCollapsed ? 'Expand' : 'Collapse']"
     aria-label="Integration Visualization Pane Details Toggle"
-    placement="right" 
-    container="body">
-  </button>
+    placement="right"
+    container="body"
+  ></button>
 </div>

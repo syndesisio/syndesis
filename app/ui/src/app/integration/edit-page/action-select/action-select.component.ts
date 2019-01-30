@@ -10,15 +10,12 @@ import {
 } from 'rxjs';
 
 import { Actions, Action, Connector, Step } from '@syndesis/ui/platform';
-import { log, getCategory } from '@syndesis/ui/logging';
 import {
   CurrentFlowService,
   FlowEvent,
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
 import { ConnectorStore } from '@syndesis/ui/store';
-
-const category = getCategory('Integrations');
 
 @Component({
   selector: 'syndesis-integration-action-select',
@@ -54,7 +51,6 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
   }
 
   onSelected(action: Action) {
-    log.debug(() => 'Selected action: ' + action.name, category);
     this.currentFlowService.events.emit({
       kind: 'integration-set-action',
       position: this.position,
@@ -68,10 +64,16 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.flowPageService.goBack(
-      ['connection-select', this.position],
-      this.route
-    );
+    const step = this.currentFlowService.getStep(this.position);
+    step.stepKind = undefined;
+    this.currentFlowService.events.emit({
+      kind: 'integration-set-step',
+      position: this.position,
+      step: step,
+      onSave: () => {
+        this.flowPageService.goBack(['step-select', this.position], this.route);
+      }
+    });
   }
 
   loadActions() {
@@ -120,7 +122,7 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
       return;
     }
     if (!step.connection) {
-      this.router.navigate(['connection-select', this.position], {
+      this.router.navigate(['step-select', this.position], {
         relativeTo: this.route.parent
       });
       return;

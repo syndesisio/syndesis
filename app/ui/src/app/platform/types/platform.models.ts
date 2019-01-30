@@ -1,4 +1,6 @@
 import { DynamicFormControlRelationGroup } from '@ng-dynamic-forms/core';
+import { Connection } from './connection/connection.models';
+import { Step } from './integration/integration.models';
 /**
  * StringMap allows to model unboundered hash objects
  */
@@ -207,3 +209,5 @@ export interface ListResultAction extends BaseEntity {
 }
 
 export type ListResultActions = Array<ListResultAction>;
+
+export type StepOrConnection = Connection | Step;

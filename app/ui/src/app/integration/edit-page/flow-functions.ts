@@ -12,7 +12,8 @@ import {
   ActionDescriptorStep,
   StringMap,
   ConfigurationProperty,
-  createConnectionStep
+  createConnectionStep,
+  StepOrConnection
 } from '@syndesis/ui/platform';
 import { ENDPOINT, StepStore } from '@syndesis/ui/store';
 
@@ -136,38 +137,49 @@ export function isActionShapeless(descriptor: ActionDescriptor) {
 
 /**
  * Filters connections based on the supplied position in the step array
- * @param connections
+ * @param steps
  * @param position
  */
-export function filterConnectionsByPosition(
-  connections: Connection[],
+export function filterStepsByPosition(
+  integration: Integration,
+  flowId: string,
+  steps: StepOrConnection[],
   position: number
 ) {
-  if (typeof position === 'undefined' || !connections) {
+  if (typeof position === 'undefined' || !steps) {
     // safety net
-    return connections;
+    return steps;
   }
+  const atEnd = getLastPosition(integration, flowId) === position;
   if (position === 0) {
-    return connections.filter(connection => {
-      if (!connection.connector) {
-        // safety net
+    return steps.filter(step => {
+      // TODO at the moment only endpoints can be at the start
+      if ('stepKind' in step) {
+        return false;
+      }
+      if (!('connector' in step)) {
+        // it's not a connection
         return true;
       }
-      return connection.connector.actions.some(action => {
+      return step.connector.actions.some(action => {
         return action.pattern === 'From';
       });
     });
   }
-  return connections.filter(connection => {
-    if (!connection.connector) {
-      // safety net
+  return steps.filter(step => {
+    // TODO at the moment only endpoints can be at the end
+    if (atEnd && 'stepKind' in step) {
+      return false;
+    }
+    if (!('connector' in step)) {
+      // It's not a connection
       return true;
     }
-    if (connection.connectorId === 'api-provider') {
+    if (step.connectorId === 'api-provider') {
       // api provider can be used only for From actions
       return false;
     }
-    return connection.connector.actions.some(action => {
+    return step.connector.actions.some(action => {
       return action.pattern === 'To';
     });
   });
