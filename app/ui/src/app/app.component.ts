@@ -35,7 +35,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   /**
    * Logo and Icon with dark background
    */
-  logoIconDarkBg = 'assets/images/syndesis_logo_icon_darkbkg.png';
+  logoDarkBg = 'assets/images/syndesis_logo_icon_darkbkg.png';
 
   /**
    * @type {Observable<User>}
@@ -98,9 +98,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       'productBuild',
       false
     );
-    this.logoIconDarkBg = this.config.getSettings(
+    this.logoDarkBg = this.config.getSettings(
       'branding',
-      'logoIconDarkBg',
+      'logoDarkBg',
       'assets/images/syndesis_logo_icon_darkbkg.png'
     );
     const favicon32 = this.config.getSettings(

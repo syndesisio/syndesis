@@ -5,11 +5,8 @@
   "mapperEndpoint": "/mapper/v1",
   "metricsPollingInterval": 5000,
   "branding": {
-    "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
-    "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
+    "logoDarkBg": "assets/images/syndesis_logo_icon_darkbkg.png",
     "productBuild": false,
-    "iconWhiteBg": "assets/images/glasses_logo_square.png",
-    "iconDarkBg": "assets/images/glasses_logo_square.png",
     "appName": "Syndesis",
     "favicon32": "/favicon-32x32.png",
     "favicon16": "/favicon-16x16.png",
