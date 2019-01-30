@@ -1,6 +1,5 @@
 <div class="integrations api-provider">
   <div class="row">
-
     <!-- Sidebar -->
     <div class="wizard-sidebar">
       <syndesis-integration-flow-view></syndesis-integration-flow-view>
@@ -24,14 +23,15 @@
             <div class="toolbar-pf-actions">
               <div class="inline-block">
                 <ol class="breadcrumb">
+                  <li><a [routerLink]="['/']">Home</a></li>
+                  <li><a [routerLink]="['/integrations']">Integrations</a></li>
                   <li>
-                    <a [routerLink]="['/']">Home</a>
-                  </li>
-                  <li>
-                    <a [routerLink]="['/integrations']">Integrations</a>
-                  </li>
-                  <li>
-                    <a [routerLink]="['/integrations', currentFlowService.integration.id]">
+                    <a
+                      [routerLink]="[
+                        '/integrations',
+                        currentFlowService.integration.id
+                      ]"
+                    >
                       {{ currentFlowService.integration.name }}
                     </a>
                   </li>
@@ -39,8 +39,17 @@
                 </ol>
               </div>
               <div class="toolbar-pf-action-right">
-                <button type="button" class="btn btn-default" [routerLink]="['../specification']">
-                    <i class="fa fa-pencil" aria-hidden="true" title="Edit API Definition"></i> Edit API Definition
+                <button
+                  type="button"
+                  class="btn btn-default"
+                  [routerLink]="['../specification']"
+                >
+                  <i
+                    class="fa fa-pencil"
+                    aria-hidden="true"
+                    title="Edit API Definition"
+                  ></i>
+                  Edit API Definition
                 </button>
               </div>
             </div>
@@ -51,34 +60,50 @@
     <div class="syn-scrollable--body">
       <div class="container-fluid">
         <div class="title">
-          <h1>Choose operation</h1>
+          <h1>Operations ({{ (flows$ | async).length }})</h1>
         </div>
-        <p>Click an operation to integrate an integration flow.</p>
+        <p>
+          An integration can have multiple flows. Select an operation to start
+          creating a flow.
+        </p>
 
         <!-- Toolbar -->
-        <syndesis-list-toolbar [items]="flows$"
-                               [filterTags]="false"
-                               [filteredItems]="filteredFlows$">
+        <syndesis-list-toolbar
+          [items]="flows$"
+          [filterTags]="false"
+          [filteredItems]="filteredFlows$"
+          [toolbarConfig]="toolbarConfig"
+        >
         </syndesis-list-toolbar>
 
         <div class="list-view-pf-view operations-list">
-          <pfng-list [items]="filteredFlows$ | async"
-                     [itemTemplate]="itemTemplate"
-                     (onClick)="handleClick($event)">
-            <ng-template #itemTemplate
-                         let-flow="item"
-                         let-index="index">
+          <pfng-list
+            [items]="filteredFlows$ | async"
+            [itemTemplate]="itemTemplate"
+            [actionTemplate]="actionTemplate"
+            (onClick)="handleClick($event)"
+          >
+            <ng-template #itemTemplate let-flow="item" let-index="index">
               <div class="list-pf-content-wrapper">
                 <div class="list-pf-main-content">
-                  <div class="list-pf-title">{{ flow.name }}</div>
-                  <div class="list-pf-description text-overflow-pf">{{ flow.description }}</div>
-                </div>
-                <div class="list-pf-additional-content">
-                  <div>
-                    {{ flow.metadata.excerpt }}
+                  <div class="list-pf-description text-overflow-pf">
+                    {{ flow.description }}
                   </div>
                 </div>
+                <div class="list-pf-title">{{ flow.name }}</div>
               </div>
+            </ng-template>
+            <ng-template #actionTemplate let-flow="item" let-index="index">
+              <span *ngIf="flow.implemented === 1">
+                <button class="btn btn-default" (click)="handleClick(flow)">
+                  Edit Flow
+                </button>
+              </span>
+              <span *ngIf="flow.implemented === 0">
+                <button class="btn btn-primary" (click)="handleClick(flow)">
+                  Create a Flow
+                </button>
+              </span>
             </ng-template>
           </pfng-list>
         </div>
