@@ -7,7 +7,7 @@
 :context: add-client-connector
 
 {prodname} can create a REST API client connector from an OpenAPI
-schema. For information about the content of the OpenAPI schema, 
+document. For information about the content of the OpenAPI document, 
 see 
 link:{LinkFuseOnlineIntegrationGuide}#developing-rest-api-client-connectors_dev-client-connector[Develop REST API client connectors]. 
 

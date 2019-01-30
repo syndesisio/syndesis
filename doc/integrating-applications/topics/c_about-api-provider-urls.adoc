@@ -14,13 +14,13 @@ Examples of REST clients are the `curl` utility, a web browser, the Postman app,
 and other applications that make REST calls. 
 
 
-In an integration, each operation that the OpenAPI schema defines has its own 
+In an integration, each operation that the OpenAPI document defines has its own 
 integration flow. Consequently, each operation can also have its own 
 REST API service URL. Each URL is defined by the base URL 
 and optionally by a subpath. REST API calls that trigger execution of a particular 
 integration flow specify that operation's URL. 
 
-Your OpenAPI schema determines which HTTP verbs (such as 
+Your OpenAPI document determines which HTTP verbs (such as 
 `GET`, `POST`, `DELETE` and so on) you can specify
 in calls to your REST API service URLs. Examples of calls to 
 API provider URLs are in the 
