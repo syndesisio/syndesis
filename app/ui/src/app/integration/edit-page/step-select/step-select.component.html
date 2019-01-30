@@ -3,25 +3,35 @@
     <div class="syn-scrollable">
       <!-- Toolbar -->
       <div class="toolbar syn-toolbar--inverted">
+        <!-- Toolbar: Breadcrumbs -->
         <div class="container-fluid">
-          <!-- Toolbar: Breadcrumbs -->
           <div class="row toolbar-pf">
             <div class="col-sm-12">
               <div class="toolbar-pf-actions">
                 <div class="inline-block">
                   <ol class="breadcrumb">
-                    <li>
-                      <a [routerLink]="['/']">Home</a>
-                    </li>
+                    <li><a [routerLink]="['/']">Home</a></li>
                     <li>
                       <a [routerLink]="['/integrations']">Integrations</a>
                     </li>
                     <li>
-                      <a *ngIf="currentFlowService.integration.id" [routerLink]="['/integrations', currentFlowService.integration.id]">
-                        {{ flowPageService.integrationName }}</a>
-                      <ng-container *ngIf="!currentFlowService.integration.id">New Integration</ng-container>
+                      <a
+                        *ngIf="currentFlowService.integration.id"
+                        [routerLink]="[
+                          '/integrations',
+                          currentFlowService.integration.id
+                        ]"
+                      >
+                        {{ flowPageService.integrationName }}</a
+                      >
+                      <ng-container *ngIf="!currentFlowService.integration.id"
+                        >New Integration</ng-container
+                      >
                     </li>
-                    <li class="active">Choose a Step</li>
+                    <li class="active">
+                      Choose a {{ positionText | capitalize }}
+                      {{ typeText | capitalize }}
+                    </li>
                   </ol>
                 </div>
                 <div class="toolbar-pf-action-right">
@@ -35,28 +45,45 @@
       <div class="syn-scrollable--body">
         <div class="container-fluid">
           <div class="title">
-            <h1>Choose a Step</h1>
+            <h1>
+              {{ 'Choose a ' + positionText + ' ' + typeText | titleize }}
+            </h1>
           </div>
-          <p>A step specifies an operation on the data in the integration. Click one to add it.</p>
-          <syndesis-loading [loading]="loading$ | async" [content]="content">
-            <ng-template #content>
-              <pfng-toolbar [config]="toolbarConfig" (onFilterChange)="onFilterChange($event)" (onFilterFieldSelect)="onFilterFieldSelect($event)"
-                (onSortChange)="onSortChange($event)">
-              </pfng-toolbar>
-              <div *ngIf="steps" class="list-group list-view-pf list-view-pf-view">
-                <div class="step list-group-item" *ngFor="let step of filteredSteps | stepVisible:{position: position}"
-                  title="{{step.name}}" (click)="onSelect(step)" [class.active]="isSelected(step)">
-                  <div class="list-view-pf-main-info">
-                    <div class="list-view-pf-body">
-                      <div class="list-group-item-heading">{{ getName(step) }}</div>
-                      <div class="list-group-item-text">{{ getDescription(step) }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <p *ngIf="atStart">
+            Click the connection that starts the integration. If the connection
+            you need is not available, click Create Connection.
+          </p>
+          <p *ngIf="atEnd">
+            Click the connection that completes the integration. If the
+            connection you need is not available, click Create Connection.
+          </p>
+          <p *ngIf="!atStart && !atEnd">
+            A step specifies an operation on the data in the integration. Click
+            one to add it.
+          </p>
+          <syndesis-list-toolbar
+            [items]="allSteps$"
+            [filteredItems]="filteredSteps$"
+            [viewTemplate]="viewTemplate"
+          >
+            <ng-template #viewTemplate>
+              <button
+                *ngIf="atStart || atEnd"
+                type="button"
+                class="btn btn-default toolbar-pf-action-right"
+                [routerLink]="['/connections/create']"
+              >
+                Create Connection
+              </button>
             </ng-template>
-          </syndesis-loading>
+          </syndesis-list-toolbar>
+          <syndesis-connections-list
+            [connections]="filteredSteps$ | async"
+            [loading]="loading$ | async"
+            (onSelected)="onSelected($event)"
+            [showKebab]="false"
+            [showNewConnection]="atStart || atEnd"
+          ></syndesis-connections-list>
         </div>
       </div>
     </div>

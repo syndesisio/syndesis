@@ -73,12 +73,6 @@ parameters:
   generate: expression
   name: POSTGRESQL_SAMPLEDB_PASSWORD
   required: true
-- description: Password for the PostgreSQL Grafana database user.
-  displayName: PostgreSQL Grafana database Connection Password
-  from: '[a-zA-Z0-9]{16}'
-  generate: expression
-  name: POSTGRESQL_GRAFANA_PASSWORD
-  required: true
 - description: Enables test-support endpoint on backend API
   displayName: Test Support Enabled
   name: TEST_SUPPORT_ENABLED
@@ -119,11 +113,6 @@ parameters:
 - description: Maximum amount of memory the Prometheus container can use.
   displayName: Memory Limit
   name: PROMETHEUS_MEMORY_LIMIT
-  value: 512Mi
-  required: true
-- description: Maximum amount of memory the Grafana container can use.
-  displayName: Memory Limit
-  name: GRAFANA_MEMORY_LIMIT
   value: 512Mi
   required: true
 - description: Volume space available for Meta data, e.g. 512Mi, 2Gi.

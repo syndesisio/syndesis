@@ -70,44 +70,6 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
     }
   }
 
-  addNew(type: string) {
-    this.currentFlowService.events.emit({
-      kind: 'integration-add-step',
-      type: type
-    });
-  }
-
-  showPopouts(type: string) {
-    this.currentFlowService.events.emit({
-      kind: 'integration-show-popouts',
-      type: type
-    });
-  }
-
-  insertStepAfter(position: number) {
-    this.currentFlowService.events.emit({
-      kind: 'integration-insert-step',
-      position: position,
-      onSave: () => {
-        this.router.navigate(['step-select', position + 1], {
-          relativeTo: this.route
-        });
-      }
-    });
-  }
-
-  insertConnectionAfter(position: number) {
-    this.currentFlowService.events.emit({
-      kind: 'integration-insert-connection',
-      position: position,
-      onSave: () => {
-        this.router.navigate(['connection-select', position + 1], {
-          relativeTo: this.route
-        });
-      }
-    });
-  }
-
   startConnection() {
     return this.currentFlowService.getStartStep();
   }
@@ -137,7 +99,7 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
       typeof this.currentFlowService.getStartStep().connection === 'undefined'
     ) {
       this.router.navigate(
-        ['connection-select', this.currentFlowService.getFirstPosition()],
+        ['step-select', this.currentFlowService.getFirstPosition()],
         {
           relativeTo: this.route.parent
         }
@@ -149,7 +111,7 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
       typeof this.currentFlowService.getEndStep().connection === 'undefined'
     ) {
       this.router.navigate(
-        ['connection-select', this.currentFlowService.getLastPosition()],
+        ['step-select', this.currentFlowService.getLastPosition()],
         {
           relativeTo: this.route.parent
         }
@@ -176,10 +138,15 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
           this.currentFlowService.currentFlow.metadata['return-code-edited'] =
             'true';
           lastStep.configuredProperties['httpResponseCode'] = returnCode;
+          // current flow service returns copies of steps nowadays
+          this.currentFlowService.events.emit({
+            kind: 'integration-set-properties',
+            position: this.currentFlowService.getLastPosition(),
+            properties: lastStep.configuredProperties
+          });
         }
       }
     }
-
     this.flowPageService.initialize();
     const validate = this.route.queryParams.pipe(
       map(params => params['validate'] || false)

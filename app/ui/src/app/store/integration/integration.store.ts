@@ -13,7 +13,11 @@ import {
   key
 } from '@syndesis/ui/platform';
 
-import { AbstractStore, EventsService, ChangeEvent } from '@syndesis/ui/store/entity';
+import {
+  AbstractStore,
+  EventsService,
+  ChangeEvent
+} from '@syndesis/ui/store/entity';
 
 @Injectable()
 export class IntegrationStore extends AbstractStore<
@@ -43,10 +47,12 @@ export class IntegrationStore extends AbstractStore<
     const start = createStep();
     const end = createStep();
     start.stepKind = end.stepKind = 'endpoint';
-    integration.flows = [{
-      id: key(),
-      steps: [start, end]
-    } as Flow];
+    integration.flows = [
+      {
+        id: key(),
+        steps: [start, end]
+      } as Flow
+    ];
     return integration;
   }
 

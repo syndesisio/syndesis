@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Extensions,
-  Step,
-  DataShapeKinds
-} from '@syndesis/ui/platform';
+import { Extensions, Step, DataShapeKinds } from '@syndesis/ui/platform';
 
 export interface StepKind extends Step {
   name: string;
@@ -36,16 +32,20 @@ export const TEMPLATE = 'template';
 @Injectable()
 export class StepStore {
   steps: StepKind[] = [
-    StepStore.requiresInputOutputDataShapes({
-      id: undefined,
-      connection: undefined,
-      action: undefined,
-      name: 'Data Mapper',
-      description: 'Map fields from the input type to the output type.',
-      stepKind: DATA_MAPPER,
-      properties: {},
-      configuredProperties: undefined
-    }, true, false),
+    StepStore.requiresInputOutputDataShapes(
+      {
+        id: undefined,
+        connection: undefined,
+        action: undefined,
+        name: 'Data Mapper',
+        description: 'Map fields from the input type to the output type.',
+        stepKind: DATA_MAPPER,
+        properties: {},
+        configuredProperties: undefined
+      },
+      true,
+      false
+    ),
     StepStore.requiresOutputDataShape({
       id: undefined,
       connection: undefined,
@@ -64,7 +64,8 @@ export class StepStore {
       action: undefined,
       name: 'Template',
       stepKind: TEMPLATE,
-      description: 'Upload or create a Freemarker, Mustache or Velocity template to define consistent output data.',
+      description:
+        'Upload or create a Freemarker, Mustache or Velocity template to define consistent output data.',
       configuredProperties: undefined,
       properties: undefined
     }),
@@ -269,9 +270,11 @@ $\{in.body.title\} // Evaluates true when body contains title.
   // Check if we need a custom form handling which stores the parsed
   // properties in customProperties
   isCustomStep(step: Step): boolean {
-    return step.stepKind === BASIC_FILTER ||
-            step.stepKind === DATA_MAPPER ||
-            step.stepKind === TEMPLATE;
+    return (
+      step.stepKind === BASIC_FILTER ||
+      step.stepKind === DATA_MAPPER ||
+      step.stepKind === TEMPLATE
+    );
   }
 
   getDefaultStepDefinition(stepKind: String): Step {
@@ -281,12 +284,13 @@ $\{in.body.title\} // Evaluates true when body contains title.
     // pull out attributes that aren't in the backend model
     const { description, visible, ...step } = this.getStepConfig(stepKind);
     return step;
-}
+  }
 
   static stepsHaveOutputDataShape(steps: Array<Step>): boolean {
     return (
       steps.filter(
         s =>
+          s &&
           s.action &&
           s.action.descriptor.outputDataShape &&
           s.action.descriptor.outputDataShape.kind !== DataShapeKinds.NONE &&
@@ -299,6 +303,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
     return (
       steps.filter(
         s =>
+          s &&
           s.action &&
           s.action.descriptor.inputDataShape &&
           s.action.descriptor.inputDataShape.kind !== DataShapeKinds.NONE &&
@@ -307,7 +312,11 @@ $\{in.body.title\} // Evaluates true when body contains title.
     );
   }
 
-  static requiresInputOutputDataShapes(obj: StepKind, anyPrevious = true, anySubsequent = true): StepKind {
+  static requiresInputOutputDataShapes(
+    obj: StepKind,
+    anyPrevious = true,
+    anySubsequent = true
+  ): StepKind {
     obj.visible = (
       position: number,
       previousSteps: Array<Step>,
@@ -316,29 +325,41 @@ $\{in.body.title\} // Evaluates true when body contains title.
       if (!anyPrevious) {
         // only test the first previous step that has some kind of data shape
         previousSteps = [
-          [].concat(previousSteps)
+          []
+            .concat(previousSteps)
             .reverse()
             .find(s => StepStore.dataShapeExists(s))
         ];
       }
       if (!anySubsequent) {
         // only test the next subsequent step that has a data shape
-        subsequentSteps = [ subsequentSteps
-          .find(s => StepStore.dataShapeExists(s, true))
+        subsequentSteps = [
+          subsequentSteps.find(s => StepStore.dataShapeExists(s, true))
         ];
-
       }
-      return StepStore.stepsHaveOutputDataShape(previousSteps)
-         && StepStore.stepsHaveInputDataShape(subsequentSteps);
+      return (
+        StepStore.stepsHaveOutputDataShape(previousSteps) &&
+        StepStore.stepsHaveInputDataShape(subsequentSteps)
+      );
     };
     return obj;
   }
 
   static dataShapeExists(step: Step, input = false): boolean {
     if (input) {
-      return step && step.action && step.action.descriptor && step.action.descriptor.inputDataShape !== undefined;
+      return (
+        step &&
+        step.action &&
+        step.action.descriptor &&
+        step.action.descriptor.inputDataShape !== undefined
+      );
     } else {
-      return step && step.action && step.action.descriptor && step.action.descriptor.outputDataShape !== undefined;
+      return (
+        step &&
+        step.action &&
+        step.action.descriptor &&
+        step.action.descriptor.outputDataShape !== undefined
+      );
     }
   }
 
@@ -370,5 +391,4 @@ $\{in.body.title\} // Evaluates true when body contains title.
     }
     return this.steps.find(step => step.stepKind === stepKind);
   }
-
 }

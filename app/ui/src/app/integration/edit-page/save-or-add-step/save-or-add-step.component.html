@@ -10,19 +10,37 @@
               <div class="toolbar-pf-actions">
                 <div class="inline-block">
                   <ol class="breadcrumb">
-                    <li>
-                      <a [routerLink]="['/']">Home</a>
-                    </li>
+                    <li><a [routerLink]="['/']">Home</a></li>
                     <li>
                       <a [routerLink]="['/integrations']">Integrations</a>
                     </li>
                     <li>
-                      <a *ngIf="currentFlowService.integration.id" [routerLink]="['/integrations', currentFlowService.integration.id]">
-                        {{ flowPageService.integrationName }}</a>
-                      <ng-container *ngIf="!currentFlowService.integration.id">New Integration</ng-container>
+                      <a
+                        *ngIf="currentFlowService.integration.id"
+                        [routerLink]="[
+                          '/integrations',
+                          currentFlowService.integration.id
+                        ]"
+                      >
+                        {{ flowPageService.integrationName }}</a
+                      >
+                      <ng-container *ngIf="!currentFlowService.integration.id"
+                        >New Integration</ng-container
+                      >
                     </li>
-                    <li *ngIf="currentFlowService.integration?.type === IntegrationType.ApiProvider">
-                      <a [routerLink]="['/integrations', currentFlowService.integration?.id, 'operations']">
+                    <li
+                      *ngIf="
+                        currentFlowService.integration?.type ===
+                        IntegrationType.ApiProvider
+                      "
+                    >
+                      <a
+                        [routerLink]="[
+                          '/integrations',
+                          currentFlowService.integration?.id,
+                          'operations'
+                        ]"
+                      >
                         {{ currentFlowService.currentFlow.name }}
                       </a>
                     </li>
@@ -30,18 +48,59 @@
                   </ol>
                 </div>
                 <div class="toolbar-pf-action-right">
-                  <button class="btn btn-default" (click)="cancel()">Cancel
-                  </button> &nbsp;
-                  <button class="btn btn-default" *ngIf="currentFlowService.integration?.type === IntegrationType.ApiProvider"
-                    [disabled]="flowPageService.saveInProgress || flowPageService.publishInProgress" (click)="save(['/integrations', currentFlowService.integration?.id, 'operations'])">
+                  <button class="btn btn-default" (click)="cancel()">
+                    Cancel
+                  </button>
+                  &nbsp;
+                  <button
+                    class="btn btn-default"
+                    *ngIf="
+                      currentFlowService.integration?.type ===
+                      IntegrationType.ApiProvider
+                    "
+                    [disabled]="
+                      flowPageService.saveInProgress ||
+                      flowPageService.publishInProgress
+                    "
+                    (click)="
+                      save([
+                        '/integrations',
+                        currentFlowService.integration?.id,
+                        'operations'
+                      ])
+                    "
+                  >
                     Go to Operation List
                   </button>
-                  <button class="btn btn-default" (click)="save()" [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress">
-                    <span *ngIf="flowPageService.saveInProgress" class="spinner spinner-sm spinner-inline"></span>
+                  <button
+                    class="btn btn-default"
+                    (click)="save()"
+                    [disabled]="
+                      !flowPageService.canContinue() ||
+                      flowPageService.saveInProgress ||
+                      flowPageService.publishInProgress
+                    "
+                  >
+                    <span
+                      *ngIf="flowPageService.saveInProgress"
+                      class="spinner spinner-sm spinner-inline"
+                    ></span>
                     Save as Draft
                   </button>
-                  <button type="button" class="btn btn-primary" (click)="publish()" [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress">
-                    <span *ngIf="flowPageService.publishInProgress" class="spinner spinner-sm spinner-inline"></span>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="publish()"
+                    [disabled]="
+                      !flowPageService.canContinue() ||
+                      flowPageService.saveInProgress ||
+                      flowPageService.publishInProgress
+                    "
+                  >
+                    <span
+                      *ngIf="flowPageService.publishInProgress"
+                      class="spinner spinner-sm spinner-inline"
+                    ></span>
                     Publish
                   </button>
                 </div>
@@ -55,11 +114,15 @@
         <div class="container-fluid">
           <div *ngIf="errorMessage">
             <div class="alert alert-danger">
-              <button type="button" class="close" (click)="errorMessage = undefined">
+              <button
+                type="button"
+                class="close"
+                (click)="errorMessage = undefined"
+              >
                 <span class="pficon pficon-close"></span>
               </button>
               <span class="pficon pficon-error-circle-o"></span>
-              <p>Error saving integration: </p>
+              <p>Error saving integration:</p>
               <pre>{{ errorMessage }}</pre>
             </div>
           </div>
@@ -67,23 +130,12 @@
             <div class="blank-slate-pf-icon">
               <span class="pficon pficon pficon-add-circle-o"></span>
             </div>
-            <h1>
-              Add to Integration
-            </h1>
-            <p>Now you can add additional connections as well as steps to your integration.</p>
-            <p>You can interact with the left hand panel to continue adding steps and connections to your integration
-              as well.</p>
-            <!-- First Step -->
-            <div class="blank-slate-pf-secondary-action first-step" *ngIf="getMiddleSteps().length === 0">
-              <button type="button" (click)="addNew('step')" class="btn btn-default">Add a Step</button>&nbsp;&nbsp;&nbsp;
-              <button type="button" (click)="addNew('connection')" class="btn btn-default">Add a Connection</button>
-            </div>
-            <!-- Middle Steps -->
-            <div class="blank-slate-pf-secondary-action middle-steps" *ngIf="getMiddleSteps().length !== 0">
-              <button type="button" (click)="showPopouts('step')" class="btn btn-default">Add a Step</button>
-              &nbsp;&nbsp;&nbsp;
-              <button type="button" (click)="showPopouts('connection')" class="btn btn-default">Add a Connection</button>
-            </div>
+            <h1>Add to Integration</h1>
+            <p>Now you can add additional steps to your integration.</p>
+            <p>
+              Interact with the left hand panel to continue adding steps and
+              connections to the integration.
+            </p>
           </div>
         </div>
       </div>

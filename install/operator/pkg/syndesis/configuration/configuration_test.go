@@ -88,15 +88,6 @@ func TestSpecificConfig(t *testing.T) {
 						VolumeCapacity: "7Gi",
 					},
 				},
-				Grafana: v1alpha1.GrafanaConfiguration{
-					Resources: v1alpha1.Resources{
-						ResourceRequirements: v12.ResourceRequirements{
-							Limits: v12.ResourceList{
-								"memory": resource.MustParse("2Gi"),
-							},
-						},
-					},
-				},
 			},
 		},
 	}
@@ -125,6 +116,4 @@ func TestSpecificConfig(t *testing.T) {
 
 	assert.Equal(t, "6Gi", config[string(EnvPrometheusMemoryLimit)])
 	assert.Equal(t, "7Gi", config[string(EnvPrometheusVolumeCapacity)])
-
-	assert.Equal(t, "2Gi", config[string(EnvGrafanaMemoryLimit)])
 }
