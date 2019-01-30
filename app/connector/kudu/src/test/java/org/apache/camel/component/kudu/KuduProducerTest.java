@@ -59,6 +59,14 @@ public class KuduProducerTest extends AbstractKuduTest {
                         )
                         .to("mock:test");
 
+                from("direct:scan")
+                        .to("kudu:scan?host=" + HOST +
+                                "&port=" + PORT +
+                                "&tableName=" + TABLE +
+                                "&operation=scan"
+                        )
+                        .to("mock:test");
+
                 from("direct:insert")
                         .to("kudu:insert?host=" + HOST +
                                 "&port=" + PORT +
@@ -152,6 +160,20 @@ public class KuduProducerTest extends AbstractKuduTest {
         row.put("_float", ThreadLocalRandom.current().nextFloat() * (499 - 100) + 100);
 
         sendBody("direct:data", row);
+
+        errorEndpoint.assertIsSatisfied();
+        successEndpoint.assertIsSatisfied();
+    }
+
+    @Test
+    public void scanTable() throws InterruptedException {
+        deleteTestTable(TABLE, HOST + ":" + PORT);
+        createTestTable(TABLE, HOST + ":" + PORT);
+
+        errorEndpoint.expectedMessageCount(0);
+        successEndpoint.expectedMessageCount(1);
+
+        sendBody("direct:scan", null);
 
         errorEndpoint.assertIsSatisfied();
         successEndpoint.assertIsSatisfied();

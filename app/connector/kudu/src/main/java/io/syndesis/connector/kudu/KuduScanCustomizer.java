@@ -30,15 +30,18 @@ import org.apache.kudu.client.KuduScanner;
 import org.apache.kudu.client.RowResult;
 import org.apache.kudu.client.RowResultIterator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class KuduScanCustomizer implements ComponentProxyCustomizer {
-    Map<String, Object> row;
+    List<Map<String, Object>> resultSet;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        row = new HashMap<>();
+        resultSet = new ArrayList<Map<String, Object>>();
+
         setOptions(options);
         component.setBeforeConsumer(this::beforeConsumer);
     }
@@ -48,46 +51,53 @@ public class KuduScanCustomizer implements ComponentProxyCustomizer {
         options.put("type", KuduDbOperations.SCAN);
     }
 
+
+
     private void beforeConsumer(Exchange exchange) throws KuduException {
         final Message in = exchange.getIn();
         final KuduScanner scanner = in.getBody(KuduScanner.class);
 
         RowResultIterator results = scanner.nextRows();
 
-        RowResult result = results.next();
-        for (int i = 0; i < result.getSchema().getColumnCount(); i++) {
-            String key = result.getSchema().getColumnByIndex(i).getName();
-            Type type = result.getColumnType(i);
+        while (results.hasNext()) {
+            Map<String, Object> row = new HashMap<String, Object>();
+            RowResult result = results.next();
 
-            switch (type.getName()) {
-                case "string":
-                    row.put(key, result.getString(i));
-                    break;
-                case "bool":
-                    row.put(key, result.getBoolean(i));
-                    break;
-                case "int8":
-                case "int16":
-                case "int32":
-                    row.put(key, result.getInt(i));
-                    break;
-                case "int64":
-                    row.put(key, result.getLong(i));
-                    break;
-                case "double":
-                    row.put(key, result.getDouble(i));
-                    break;
-                case "float":
-                    row.put(key, result.getFloat(i));
-                    break;
-                default:
-                    throw new SyndesisServerException("The column schema type " + type.getName()
-                            + " for column " + key
-                            + " is not supported at the moment");
+            for (int i = 0; i < result.getSchema().getColumnCount(); i++) {
+                String key = result.getSchema().getColumnByIndex(i).getName();
+                Type type = result.getColumnType(i);
+
+                switch (type.getName()) {
+                    case "string":
+                        row.put(key, result.getString(i));
+                        break;
+                    case "bool":
+                        row.put(key, result.getBoolean(i));
+                        break;
+                    case "int8":
+                    case "int16":
+                    case "int32":
+                        row.put(key, result.getInt(i));
+                        break;
+                    case "int64":
+                        row.put(key, result.getLong(i));
+                        break;
+                    case "double":
+                        row.put(key, result.getDouble(i));
+                        break;
+                    case "float":
+                        row.put(key, result.getFloat(i));
+                        break;
+                    default:
+                        throw new SyndesisServerException("The column schema type " + type.getName()
+                                + " for column " + key
+                                + " is not supported at the moment");
+                }
             }
+            resultSet.add(row);
         }
 
         Gson gson = new Gson();
-        in.setBody(gson.toJson(row));
+        in.setBody(gson.toJson(resultSet));
     }
 }
