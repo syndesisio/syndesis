@@ -28,7 +28,7 @@ endif::[]
 
 To specify that {prodname} should automatically try to obtain a new 
 access token in the situations described, 
-in the `securityDefinitions` section of the OpenAPI schema, 
+in the `securityDefinitions` section of the OpenAPI document, 
 add the `x-refresh-token-retry-statuses` vendor extension. The setting 
 of this extension is a comma separated list that
 specifies HTTP response status codes. When an access token's 

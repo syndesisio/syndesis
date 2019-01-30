@@ -4,7 +4,7 @@
 [id='create-integration-operation-flows_{context}']
 = Create the integration's operation flows
 
-The OpenAPI schema that defines your REST API service defines
+The OpenAPI document that defines your REST API service defines
 the operations that the service can perform. After you create an API
 provider integration, you can edit the
 integration flow for each operation. 

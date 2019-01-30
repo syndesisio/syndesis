@@ -6,7 +6,7 @@
 
 API provider integrations start with a REST API service that {prodname} 
 makes available. This REST API service is defined by an OpenAPI 2.0
-schema that you provide. 
+document that you provide. 
 
 The benefit of API provider integrations
 is that calls from REST API clients trigger execution of the integration. 
@@ -20,9 +20,9 @@ executes the integration only when the connection to Twitter finds such tweets.
 An API provider integration makes it possible to call a REST API when a 
 particular event occurs. This call
 triggers execution of the integration. To set this up, you upload an OpenAPI 2.0
-schema to {prodname}. {prodname} publishes the API and provides the URL 
+document to {prodname}. {prodname} publishes the API and provides the URL 
 where the service is available. In {prodname}, for each operation that the OpenAPI 
-schema defines, you add connections and steps that process data
+document defines, you add connections and steps that process data
 as required for the particular operation. For example, consider a human 
 resources application that calls a REST API service that {prodname} has 
 made available. Suppose the call invokes the operation that adds a new

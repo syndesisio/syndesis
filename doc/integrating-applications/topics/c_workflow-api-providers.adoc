@@ -8,9 +8,9 @@ In {prodname}, after you click *Create Integration*, the workflow for
 creating an API provider integration is as follows.
 
 . On the *Choose a Start Connection* page, click the *API Provider* card.
-. On the *Start integration with an API call* page, upload a file that
+. On the *Start integration with an API call* page, upload a document that
 contains an OpenAPI 2.0 schema or indicate that you want to 
-create the schema now. If you upload a file, you can review and
+create the schema now. If you upload a document, you can review and
 edit it. If you select *Create from scratch*, {prodname} opens an editor
 that supports creation of OpenAPI schemas. 
 +

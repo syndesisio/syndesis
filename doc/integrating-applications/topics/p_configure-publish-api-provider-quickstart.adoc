@@ -6,7 +6,7 @@
 
 {prodname} provides an API provider quickstart integration that you can 
 import into your {prodname} environment. This quickstart includes 
-an OpenAPI schema for a task management API. After importing
+an OpenAPI document for a task management API. After importing
 the quickstart integration, you configure return codes, and then publish
 the integration. After you complete the procedure described below,
 the Task API integration is running and ready
@@ -17,7 +17,7 @@ test an API provider integration. But it is not a real-world example of
 how useful an API provider integration can be. For a real-world
 example, suppose that you already
 used {prodname} to publish several integrations. You could define an OpenAPI
-schema for triggering execution of those integrations. To do this, you
+document for triggering execution of those integrations. To do this, you
 would edit the integration flow for each OpenAPI operation to be almost the
 same as the integrations you already published. 
 
