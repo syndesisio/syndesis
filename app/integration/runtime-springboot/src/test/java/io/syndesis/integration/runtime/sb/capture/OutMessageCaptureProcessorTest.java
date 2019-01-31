@@ -15,7 +15,17 @@
  */
 package io.syndesis.integration.runtime.sb.capture;
 
+import java.util.ArrayList;
+import java.util.EventObject;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import io.syndesis.common.model.Split;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -39,7 +49,9 @@ import org.apache.camel.Message;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.management.event.ExchangeCompletedEvent;
 import org.apache.camel.spring.SpringCamelContext;
+import org.apache.camel.support.EventNotifierSupport;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -303,6 +315,9 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
     public void testCaptureWithSplitAndSchedule() throws Exception {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
+        ExchangeCompletedNotifier exchangeCompletedNotifier = new ExchangeCompletedNotifier();
+        context.getManagementStrategy().addEventNotifier(exchangeCompletedNotifier);
+
         try {
             Integration integration = newIntegration(
                 new Step.Builder()
@@ -366,6 +381,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
 
             Exchange exchange1 = result.getExchanges().get(0);
+            exchangeCompletedNotifier.waitForCompletion(exchange1);
             Map<String, Message> messages = OutMessageCaptureProcessor.getCapturedMessageMap(exchange1);
             assertThat(messages).hasSize(3);
             assertThat(messages.get("s1").getBody()).isEqualTo("Hiram");
@@ -373,6 +389,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
             assertThat(messages.get("s3").getBody()).isEqualTo("Hello Hiram");
 
             Exchange exchange2 = result.getExchanges().get(1);
+            exchangeCompletedNotifier.waitForCompletion(exchange2);
             Map<String, Message> messages2 = OutMessageCaptureProcessor.getCapturedMessageMap(exchange2);
             assertThat(messages2).hasSize(3);
             assertThat(messages2.get("s1").getBody()).isEqualTo("World");
@@ -386,6 +403,9 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
     @Test
     public void testCaptureWithForeachAndSchedule() throws Exception {
         final CamelContext context = new SpringCamelContext(applicationContext);
+
+        ExchangeCompletedNotifier exchangeCompletedNotifier = new ExchangeCompletedNotifier();
+        context.getManagementStrategy().addEventNotifier(exchangeCompletedNotifier);
 
         try {
             Integration integration = newIntegration(
@@ -455,6 +475,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
 
             Exchange exchange1 = result.getExchanges().get(0);
+            exchangeCompletedNotifier.waitForCompletion(exchange1);
             Map<String, Message> messages = OutMessageCaptureProcessor.getCapturedMessageMap(exchange1);
             assertThat(messages).hasSize(3);
             assertThat(messages.get("s1").getBody()).isEqualTo("Hiram");
@@ -462,6 +483,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
             assertThat(messages.get("s3").getBody()).isEqualTo("Hello Hiram");
 
             Exchange exchange2 = result.getExchanges().get(1);
+            exchangeCompletedNotifier.waitForCompletion(exchange2);
             Map<String, Message> messages2 = OutMessageCaptureProcessor.getCapturedMessageMap(exchange2);
             assertThat(messages2).hasSize(3);
             assertThat(messages2.get("s1").getBody()).isEqualTo("World");
@@ -492,4 +514,40 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
         }
     }
 
+    private class ExchangeCompletedNotifier extends EventNotifierSupport {
+        private List<Exchange> completedExchanges = new ArrayList<>();
+
+        @Override
+        public void notify(EventObject event) throws Exception {
+            if (event instanceof ExchangeCompletedEvent) {
+                completedExchanges.add(((ExchangeCompletedEvent) event).getExchange());
+            }
+        }
+
+        @Override
+        public boolean isEnabled(EventObject event) {
+            return event instanceof ExchangeCompletedEvent;
+        }
+
+        public void waitForCompletion(Exchange exchange) throws InterruptedException, ExecutionException, TimeoutException {
+            waitForCompletion(exchange, 5000L, TimeUnit.MILLISECONDS);
+        }
+
+        public void waitForCompletion(Exchange exchange, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+            CompletableFuture<Exchange> completed = new CompletableFuture<>();
+            ScheduledFuture<?> completedHandle = null;
+
+            try {
+                completedHandle = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+                    if (completedExchanges.parallelStream().anyMatch((completedExchange) -> completedExchange.getExchangeId().equals(exchange.getExchangeId()))) {
+                        completed.complete(exchange);
+                    }
+                }, 0, timeout / 10, unit);
+
+                completed.get(timeout, unit);
+            } finally {
+                Optional.ofNullable(completedHandle).ifPresent((handle) -> handle.cancel(true));
+            }
+        }
+    }
 }

@@ -7,7 +7,7 @@
 :context: rest
 
 In an integration, to connect to a REST API, you must have created a
-connector for that API by uploading an OpenAPI schema that
+connector for that API by uploading an OpenAPI document that
 describes the API. See 
 link:{LinkFuseOnlineIntegrationGuide}#adding-api-connectors_add-client-connector[{NameOfFuseOnlineIntegrationGuide}, Adding  REST API client connectors].
 

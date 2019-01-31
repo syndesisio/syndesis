@@ -16,7 +16,7 @@ SQL database, such as Oracle.
 * A single custom connector for creating connections to a particular application
 or service that you want to integrate. This is a connector extension. 
 +
-NOTE: {prodname} can use an OpenAPI schema to create a connector 
+NOTE: {prodname} can use an OpenAPI document to create a connector 
 for a REST API client. See 
 link:{LinkFuseOnlineIntegrationGuide}#developing-rest-api-client-connectors_custom[Develop a REST API client connector].
 

@@ -32,18 +32,10 @@ import {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  // TODO icon?
   /**
-   * Logo with white background.
+   * Logo and Icon with dark background
    */
-  logoWhiteBg = 'assets/images/syndesis-logo-svg-white.svg';
-  iconWhiteBg = 'assets/images/glasses_logo_square.png';
-
-  /**
-   * Logo with dark background
-   */
-  logoDarkBg = 'assets/images/syndesis-logo-svg-white.svg';
-  iconDarkBg = 'assets/images/glasses_logo_square.png';
+  logoIconDarkBg = 'assets/images/syndesis_logo_icon_darkbkg.png';
 
   /**
    * @type {Observable<User>}
@@ -106,25 +98,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       'productBuild',
       false
     );
-    this.logoWhiteBg = this.config.getSettings(
+    this.logoIconDarkBg = this.config.getSettings(
       'branding',
-      'logoWhiteBg',
-      'assets/images/syndesis-logo-svg-white.svg'
-    );
-    this.logoDarkBg = this.config.getSettings(
-      'branding',
-      'logoDarkBg',
-      'assets/images/syndesis-logo-svg-white.svg'
-    );
-    this.iconDarkBg = this.config.getSettings(
-      'branding',
-      'iconDarkBg',
-      'assets/images/glasses_logo_square.png'
-    );
-    this.iconWhiteBg = this.config.getSettings(
-      'branding',
-      'iconWhiteBg',
-      'assets/images/glasses_logo_square.png'
+      'logoIconDarkBg',
+      'assets/images/syndesis_logo_icon_darkbkg.png'
     );
     const favicon32 = this.config.getSettings(
       'branding',

@@ -32,7 +32,7 @@ for your {prodname} environment. For example:
 Your {prodname} environment provides the To Do app, which has a 
 REST API for accessing a database that contains tasks. In the AMQ to REST 
 API sample integration tutorial, there are instructions for uploading an
-OpenAPI (Swagger) file for the To Do app to create an API client connector. 
+OpenAPI (Swagger) document for the To Do app to create an API client connector. 
 
 . In the *To Do App* display, you should see a notification that a new 
 lead was created in the database. 

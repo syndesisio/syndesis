@@ -20,9 +20,9 @@ it provides instructions for customizing
 and extending {prodname} by leading you through the procedures for:
 
 * Adding a custom data operation by uploading an extension.
-* Adding a custom REST API client connector by uploading an OpenAPI (Swagger) file.
+* Adding a custom REST API client connector by uploading an OpenAPI (Swagger) document.
 
-{prodname} provides the extension file and the OpenAPI file.
+{prodname} provides the extension file and the OpenAPI document.
 
 ifeval::["{location}" == "downstream"]
 .Prerequisite

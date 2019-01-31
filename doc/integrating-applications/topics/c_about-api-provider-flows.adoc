@@ -11,7 +11,7 @@ and finishes integration execution in the same way. In other words,
 the integration has one execution path.
  
 An API provider integration has multiple flows. Each operation that the 
-OpenAPI schema defines has its own flow, which {prodname} automatically 
+OpenAPI document defines has its own flow, which {prodname} automatically 
 creates. For each operation, you can edit its flow by:
    
 * Adding connections to the applications that need to process the data.
