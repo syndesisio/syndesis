@@ -25,12 +25,16 @@ import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
 import org.apache.kudu.client.CreateTableOptions;
+import org.apache.kudu.client.Insert;
 import org.apache.kudu.client.KuduClient;
 import org.apache.kudu.client.KuduException;
+import org.apache.kudu.client.KuduTable;
+import org.apache.kudu.client.PartialRow;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class AbstractKuduTest extends CamelTestSupport {
 
@@ -89,6 +93,27 @@ public class AbstractKuduTest extends CamelTestSupport {
                     new Schema(columns),
                     new CreateTableOptions().setRangePartitionColumns(rangeKeys));
         } catch (Exception e) {
+
+        }
+    }
+
+    protected void insertRowInTestTable(String tableName, String connection) {
+        KuduClient client = new KuduClient.KuduClientBuilder(connection).build();
+
+        try{
+            KuduTable table = client.openTable(tableName);
+
+            Insert insert = table.newInsert();
+            PartialRow row = insert.getRow();
+
+            row.addInt("id", ThreadLocalRandom.current().nextInt(1, 99));
+            row.addString("title", "Mr.");
+            row.addString("name", "Samuel");
+            row.addString("lastname", "Smith");
+            row.addString("address", "4359  Plainfield Avenue");
+
+            client.newSession().apply(insert);
+        } catch (KuduException e) {
 
         }
     }

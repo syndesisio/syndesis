@@ -19,8 +19,10 @@ package org.apache.camel.component.kudu;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultProducer;
 import org.apache.camel.util.ObjectHelper;
+import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.client.CreateTableOptions;
+import org.apache.kudu.client.KuduScanner;
 import org.apache.kudu.client.PartialRow;
 import org.apache.kudu.client.Insert;
 import org.apache.kudu.client.KuduClient;
@@ -29,6 +31,9 @@ import org.apache.kudu.client.KuduTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,6 +67,9 @@ public class KuduProducer extends DefaultProducer {
                 break;
             case KuduDbOperations.CREATE_TABLE:
                 doCreateTable(exchange, table);
+                break;
+            case KuduDbOperations.SCAN:
+                doScan(exchange, table);
                 break;
             default:
                 throw new IllegalArgumentException("The operation " + endpoint.getOperation() + " is not supported");
@@ -109,5 +117,23 @@ public class KuduProducer extends DefaultProducer {
         Schema schema = (Schema) exchange.getIn().getHeader("Schema");
         CreateTableOptions builder = (CreateTableOptions) exchange.getIn().getHeader("TableOptions");
         return connection.createTable(tableName, schema, builder);
+    }
+
+    private KuduScanner doScan(Exchange exchange, String tableName) throws KuduException {
+        KuduTable table = connection.openTable(tableName);
+
+        List<String> projectColumns = new ArrayList<>(1);
+        Iterator<ColumnSchema> columns = table.getSchema().getColumns().iterator();
+
+        while (columns.hasNext()) {
+            projectColumns.add(columns.next().getName());
+        }
+
+        KuduScanner scanner = connection.newScannerBuilder(table)
+                .setProjectedColumnNames(projectColumns)
+                .build();
+
+        exchange.getIn().setBody(scanner);
+        return scanner;
     }
 }

@@ -16,14 +16,39 @@
 
 package io.syndesis.connector.kudu.common;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kudu.client.KuduClient;
 
-public final class KuduSupport {
-    private KuduSupport() {
-    }
+import java.util.HashMap;
+import java.util.Map;
 
+public final class KuduSupport {
     public static KuduClient createConnection(String host, String port) {
         return new KuduClient.KuduClientBuilder(host + ":" + port).build();
+    }
+
+    /**
+     * Convenience method to convert a Camel Map output to a JSON Bean String.
+     *
+     * @param map
+     * @return JSON bean String
+     */
+    public static String toJSONBean(final Map<String, Object> map) {
+        ObjectMapper mapper = new ObjectMapper();
+        final Map<String, Object> data = new HashMap<>(map.size());
+
+        for (final String key : map.keySet()) {
+            if (key.charAt(0) != '#') { // don't include Camel stats
+                data.put(key, map.get(key));
+            }
+        }
+
+        try {
+            return mapper.writeValueAsString(data);
+        } catch (final JsonProcessingException e) {
+            throw new IllegalArgumentException("Unable to serialize to JSON", e);
+        }
     }
 
 }

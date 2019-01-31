@@ -25,15 +25,18 @@ import org.apache.kudu.Type;
 import org.apache.kudu.client.CreateTableOptions;
 import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class KuduProducerTest extends AbstractKuduTest {
 
     private static final String TABLE = "KuduTestTable";
-    private static final String HOST = "localhost";
+    private static final String HOST = "quickstart.cloudera";
     private static final String PORT = "7051";
 
     @EndpointInject(uri = "mock:test")
@@ -56,6 +59,14 @@ public class KuduProducerTest extends AbstractKuduTest {
                                 "&port=" + PORT +
                                 "&tableName=" + TABLE +
                                 "&operation=create_table"
+                        )
+                        .to("mock:test");
+
+                from("direct:scan")
+                        .to("kudu:scan?host=" + HOST +
+                                "&port=" + PORT +
+                                "&tableName=" + TABLE +
+                                "&operation=scan"
                         )
                         .to("mock:test");
 
@@ -152,6 +163,20 @@ public class KuduProducerTest extends AbstractKuduTest {
         row.put("_float", ThreadLocalRandom.current().nextFloat() * (499 - 100) + 100);
 
         sendBody("direct:data", row);
+
+        errorEndpoint.assertIsSatisfied();
+        successEndpoint.assertIsSatisfied();
+    }
+
+    @Ignore
+    public void scanTable() throws InterruptedException {
+        deleteTestTable(TABLE, HOST + ":" + PORT);
+        createTestTable(TABLE, HOST + ":" + PORT);
+
+        errorEndpoint.expectedMessageCount(0);
+        successEndpoint.expectedMessageCount(1);
+
+        sendBody("direct:scan", null);
 
         errorEndpoint.assertIsSatisfied();
         successEndpoint.assertIsSatisfied();
