@@ -25,7 +25,7 @@ import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import { Connections } from '../../connections/containers';
 import { Integrations } from '../../integrations/components';
-import resolvers from '../../integrations/resolvers';
+import resolvers from '../../resolvers';
 
 export interface IIntegrationCountsByState {
   Error: number;
@@ -129,8 +129,8 @@ export default () => (
                 >
                   {t => (
                     <Dashboard
-                      linkToIntegrations={resolvers.list()}
-                      linkToIntegrationCreation={resolvers.create.start.selectConnection()}
+                      linkToIntegrations={resolvers.integrations.list()}
+                      linkToIntegrationCreation={resolvers.integrations.create.start.selectConnection()}
                       linkToConnections={'/connections'}
                       linkToConnectionCreation={'/connections/create'}
                       integrationsOverview={
