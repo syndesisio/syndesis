@@ -15,8 +15,19 @@
  */
 package io.syndesis.server.openshift;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import io.fabric8.kubernetes.api.model.EnvVar;
-import io.fabric8.kubernetes.api.model.HostAlias;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.openshift.api.model.Build;
@@ -27,26 +38,12 @@ import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteSpec;
 import io.fabric8.openshift.api.model.User;
 import io.fabric8.openshift.api.model.UserBuilder;
-import io.fabric8.kubernetes.api.model.HostAlias;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -207,8 +204,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     protected void ensureDeploymentConfig(String name, DeploymentData deploymentData) {
-        List<HostAlias> hostAliases = new ArrayList<HostAlias>();
-        hostAliases.add(new HostAlias(Arrays.asList("quickstart.cloudera"), "192.168.58.100"));
         openShiftClient.deploymentConfigs().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
                 .withName(name)
@@ -238,7 +233,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                         .addToAnnotations("prometheus.io/port", "9779")
                     .endMetadata()
                     .withNewSpec()
-                        .withHostAliases(hostAliases)
                         .addNewContainer()
                         .withImage(deploymentData.getImage())
                         .withImagePullPolicy("Always")
