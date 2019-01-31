@@ -12,13 +12,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 public class KuduScanCustomizerTest extends AbstractKuduCustomizerTestSupport {
     private KuduScanCustomizer customizer;
@@ -48,7 +47,7 @@ public class KuduScanCustomizerTest extends AbstractKuduCustomizerTestSupport {
 
         customizer.customize(getComponent(), options);
 
-        KuduTable table = connection.openTable(TABLE);
+        KuduTable table = connection.openTable("impala::default.syndesis_todo");
 
         List<String> projectColumns = new ArrayList<>(1);
         Iterator<ColumnSchema> columns = table.getSchema().getColumns().iterator();
@@ -68,7 +67,7 @@ public class KuduScanCustomizerTest extends AbstractKuduCustomizerTestSupport {
         String body = (String) inbound.getIn().getBody();
         assertNotNull(body);
 
-        Map<String, Object> map = Json.reader().forType(Map.class).readValue(body);
+        Map<String, Object> map = Json.reader().forType(Array.class).readValue(body);
         assertEquals(46, map.get("id"));
         assertEquals(10, map.get("_integer"));
         assertEquals(556, map.get("_long"));

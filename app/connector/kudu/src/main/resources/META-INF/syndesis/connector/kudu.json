@@ -114,7 +114,8 @@
               }
             }
           }
-        ]
+        ],
+        "split": {}
       },
       "id": "kudu-scan-connector",
       "name": "Scan a kudu table",

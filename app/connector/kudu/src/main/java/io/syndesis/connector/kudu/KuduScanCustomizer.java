@@ -16,7 +16,6 @@
 
 package io.syndesis.connector.kudu;
 
-import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
 import com.google.gson.Gson;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
@@ -36,14 +35,11 @@ import java.util.List;
 import java.util.Map;
 
 public class KuduScanCustomizer implements ComponentProxyCustomizer {
-    List<Map<String, Object>> resultSet;
-
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        resultSet = new ArrayList<Map<String, Object>>();
-
         setOptions(options);
-        component.setBeforeConsumer(this::beforeConsumer);
+        component.setBeforeConsumer(this::processBody);
+        component.setAfterProducer(this::processBody);
     }
 
     private void setOptions(Map<String, Object> options) {
@@ -53,48 +49,51 @@ public class KuduScanCustomizer implements ComponentProxyCustomizer {
 
 
 
-    private void beforeConsumer(Exchange exchange) throws KuduException {
+    private void processBody(Exchange exchange) throws KuduException {
         final Message in = exchange.getIn();
         final KuduScanner scanner = in.getBody(KuduScanner.class);
 
-        RowResultIterator results = scanner.nextRows();
+        List<Map<String, Object>> resultSet = new ArrayList<Map<String, Object>>();
+        while(scanner.hasMoreRows()) {
+            RowResultIterator results = scanner.nextRows();
 
-        while (results.hasNext()) {
-            Map<String, Object> row = new HashMap<String, Object>();
-            RowResult result = results.next();
+            while (results.hasNext()) {
+                Map<String, Object> row = new HashMap<String, Object>();
+                RowResult result = results.next();
 
-            for (int i = 0; i < result.getSchema().getColumnCount(); i++) {
-                String key = result.getSchema().getColumnByIndex(i).getName();
-                Type type = result.getColumnType(i);
+                for (int i = 0; i < result.getSchema().getColumnCount(); i++) {
+                    String key = result.getSchema().getColumnByIndex(i).getName();
+                    Type type = result.getColumnType(i);
 
-                switch (type.getName()) {
-                    case "string":
-                        row.put(key, result.getString(i));
-                        break;
-                    case "bool":
-                        row.put(key, result.getBoolean(i));
-                        break;
-                    case "int8":
-                    case "int16":
-                    case "int32":
-                        row.put(key, result.getInt(i));
-                        break;
-                    case "int64":
-                        row.put(key, result.getLong(i));
-                        break;
-                    case "double":
-                        row.put(key, result.getDouble(i));
-                        break;
-                    case "float":
-                        row.put(key, result.getFloat(i));
-                        break;
-                    default:
-                        throw new SyndesisServerException("The column schema type " + type.getName()
-                                + " for column " + key
-                                + " is not supported at the moment");
+                    switch (type.getName()) {
+                        case "string":
+                            row.put(key, result.getString(i));
+                            break;
+                        case "bool":
+                            row.put(key, result.getBoolean(i));
+                            break;
+                        case "int8":
+                        case "int16":
+                        case "int32":
+                            row.put(key, result.getInt(i));
+                            break;
+                        case "int64":
+                            row.put(key, result.getLong(i));
+                            break;
+                        case "double":
+                            row.put(key, result.getDouble(i));
+                            break;
+                        case "float":
+                            row.put(key, result.getFloat(i));
+                            break;
+                        default:
+                            throw new SyndesisServerException("The column schema type " + type.getName()
+                                    + " for column " + key
+                                    + " is not supported at the moment");
+                    }
                 }
+                resultSet.add(row);
             }
-            resultSet.add(row);
         }
 
         Gson gson = new Gson();
