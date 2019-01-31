@@ -16,8 +16,9 @@
 
 package io.syndesis.connector.kudu;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.connector.kudu.common.KuduSupport;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -47,13 +48,11 @@ public class KuduScanCustomizer implements ComponentProxyCustomizer {
         options.put("type", KuduDbOperations.SCAN);
     }
 
-
-
-    private void processBody(Exchange exchange) throws KuduException {
+    private void processBody(Exchange exchange) throws KuduException, JsonProcessingException {
         final Message in = exchange.getIn();
         final KuduScanner scanner = in.getBody(KuduScanner.class);
 
-        List<Map<String, Object>> resultSet = new ArrayList<Map<String, Object>>();
+        final List<String> answer = new ArrayList<>();
         while(scanner.hasMoreRows()) {
             RowResultIterator results = scanner.nextRows();
 
@@ -92,11 +91,10 @@ public class KuduScanCustomizer implements ComponentProxyCustomizer {
                                     + " is not supported at the moment");
                     }
                 }
-                resultSet.add(row);
+                answer.add(KuduSupport.toJSONBean(row));
             }
         }
 
-        Gson gson = new Gson();
-        in.setBody(gson.toJson(resultSet));
+        in.setBody(answer);
     }
 }

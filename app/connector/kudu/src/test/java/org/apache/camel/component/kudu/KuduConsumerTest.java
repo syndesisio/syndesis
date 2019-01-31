@@ -8,20 +8,16 @@ import org.apache.kudu.client.KuduException;
 import org.apache.kudu.client.KuduScanner;
 import org.apache.kudu.client.RowResult;
 import org.apache.kudu.client.RowResultIterator;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Ignore;
 
 import java.util.List;
 
 public class KuduConsumerTest extends AbstractKuduTest {
-    private static final Logger LOG = LoggerFactory.getLogger(KuduConsumerTest.class);
-    private static final String TABLE = "KuduTestTable";
     private static final String HOST = "quickstart.cloudera";
     private static final String PORT = "7051";
 
     @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
+    protected RouteBuilder createRouteBuilder() {
         return new RouteBuilder() {
             @Override
             public void configure() {
@@ -36,7 +32,7 @@ public class KuduConsumerTest extends AbstractKuduTest {
         };
     }
 
-    @Test
+    @Ignore
     public void insertRow() throws KuduException, InterruptedException {
         MockEndpoint mock = getMockEndpoint("mock:result");
         mock.expectedMessageCount(1);

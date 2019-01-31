@@ -24,8 +24,6 @@ import org.apache.kudu.client.KuduClient;
 import org.apache.kudu.client.KuduException;
 import org.apache.kudu.client.KuduScanner;
 import org.apache.kudu.client.KuduTable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -35,7 +33,6 @@ import java.util.List;
  * The Kudu consumer.
  */
 public class KuduConsumer extends ScheduledPollConsumer {
-    private static final Logger LOG = LoggerFactory.getLogger(KuduConsumer.class);
     private final KuduEndpoint endpoint;
     private KuduClient connection;
 

@@ -25,9 +25,12 @@ import org.apache.kudu.Type;
 import org.apache.kudu.client.CreateTableOptions;
 import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class KuduProducerTest extends AbstractKuduTest {
@@ -165,7 +168,7 @@ public class KuduProducerTest extends AbstractKuduTest {
         successEndpoint.assertIsSatisfied();
     }
 
-    @Test
+    @Ignore
     public void scanTable() throws InterruptedException {
         deleteTestTable(TABLE, HOST + ":" + PORT);
         createTestTable(TABLE, HOST + ":" + PORT);
