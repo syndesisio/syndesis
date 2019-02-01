@@ -41,10 +41,10 @@ import org.apache.camel.processor.aggregate.UseOriginalAggregationStrategy;
 import org.apache.camel.spi.Language;
 import org.apache.camel.util.ObjectHelper;
 
-public class ForeachStepHandler implements IntegrationStepHandler {
+public class SplitAggregateStepHandler implements IntegrationStepHandler {
     @Override
     public boolean canHandle(Step step) {
-        return StepKind.foreach == step.getStepKind() || StepKind.split == step.getStepKind();
+        return StepKind.split == step.getStepKind();
     }
 
     @SuppressWarnings({"PMD.AvoidReassigningParameters", "PMD.AvoidDeeplyNestedIfStmts"})
@@ -56,7 +56,7 @@ public class ForeachStepHandler implements IntegrationStepHandler {
         String expressionDefinition = step.getConfiguredProperties().get("expression");
         AggregationOption aggregation = Optional.ofNullable(step.getConfiguredProperties().get("aggregationStrategy"))
                                                         .map(AggregationOption::valueOf)
-                                                        .orElse(StepKind.split == step.getStepKind() ? AggregationOption.original : AggregationOption.body);
+                                                        .orElse(AggregationOption.body);
 
         if (ObjectHelper.isEmpty(languageName) && ObjectHelper.isEmpty(expressionDefinition)) {
             route = route.split(Builder.body()).aggregationStrategy(aggregation.getStrategy(step.getConfiguredProperties()));
@@ -82,10 +82,10 @@ public class ForeachStepHandler implements IntegrationStepHandler {
         return Optional.of(route);
     }
 
-    public static class EndHandler implements IntegrationStepHandler {
+    public static class AggregateStepHandler implements IntegrationStepHandler {
         @Override
         public boolean canHandle(Step step) {
-            return StepKind.endForeach == step.getStepKind();
+            return StepKind.aggregate == step.getStepKind();
         }
 
         @Override

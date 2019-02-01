@@ -44,7 +44,7 @@ import io.syndesis.integration.runtime.handlers.DataMapperStepHandler;
 import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.ExpressionFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.ExtensionStepHandler;
-import io.syndesis.integration.runtime.handlers.ForeachStepHandler;
+import io.syndesis.integration.runtime.handlers.SplitAggregateStepHandler;
 import io.syndesis.integration.runtime.handlers.HeadersStepHandler;
 import io.syndesis.integration.runtime.handlers.LogStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
@@ -96,8 +96,8 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         this.stepHandlerList.add(new ExpressionFilterStepHandler());
         this.stepHandlerList.add(new RuleFilterStepHandler());
         this.stepHandlerList.add(new ExtensionStepHandler());
-        this.stepHandlerList.add(new ForeachStepHandler());
-        this.stepHandlerList.add(new ForeachStepHandler.EndHandler());
+        this.stepHandlerList.add(new SplitAggregateStepHandler());
+        this.stepHandlerList.add(new SplitAggregateStepHandler.AggregateStepHandler());
         this.stepHandlerList.add(new LogStepHandler());
         this.stepHandlerList.add(new HeadersStepHandler());
         this.stepHandlerList.add(new TemplateStepHandler());
@@ -167,7 +167,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     parent = configureConnectorSplit(step, parent, flowIndex, stepIndex).orElse(parent);
 
                     if (nextStep.map(Step::getStepKind)
-                                .map(kind -> kind.equals(StepKind.foreach)).orElse(false)) {
+                                .map(kind -> kind.equals(StepKind.split)).orElse(false)) {
                         parent = findHandler(nextStep.get()).handle(nextStep.get(), parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
                         parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                         parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
@@ -180,7 +180,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             } else {
                 parent = configureRouteDefinition(parent, flowName, flowId, stepId);
 
-                if (StepKind.endForeach.equals(step.getStepKind())) {
+                if (StepKind.aggregate.equals(step.getStepKind())) {
                     parent = handler.handle(step, parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
 
                     if (parent instanceof ExpressionNode) {
@@ -206,7 +206,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                         parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                         parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
                     } else if (nextStep.map(Step::getStepKind)
-                                       .map(kind -> kind.equals(StepKind.foreach)).orElse(false)) {
+                                       .map(kind -> kind.equals(StepKind.split)).orElse(false)) {
                         if (stepIndex > 0) {
                             parent = endParent(parent);
                         }
@@ -322,14 +322,14 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             final ConnectorDescriptor descriptor = action.getDescriptor();
 
             final Split split = descriptor.getSplit().get();
-            final Step.Builder foreachBuilder = new Step.Builder().stepKind(StepKind.foreach);
+            final Step.Builder splitBuilder = new Step.Builder().stepKind(StepKind.split);
 
-            split.getLanguage().ifPresent(s -> foreachBuilder.putConfiguredProperty("language", s));
-            split.getExpression().ifPresent(s -> foreachBuilder.putConfiguredProperty("expression", s));
-            foreachBuilder.putConfiguredProperty("aggregationStrategy", ForeachStepHandler.AggregationOption.original.name());
+            split.getLanguage().ifPresent(s -> splitBuilder.putConfiguredProperty("language", s));
+            split.getExpression().ifPresent(s -> splitBuilder.putConfiguredProperty("expression", s));
+            splitBuilder.putConfiguredProperty("aggregationStrategy", SplitAggregateStepHandler.AggregationOption.original.name());
 
-            return new ForeachStepHandler().handle(
-                foreachBuilder.build(),
+            return new SplitAggregateStepHandler().handle(
+                splitBuilder.build(),
                 route,
                 this,
                 flowIndex,

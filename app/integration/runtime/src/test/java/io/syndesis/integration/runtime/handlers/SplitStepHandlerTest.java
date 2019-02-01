@@ -116,7 +116,7 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
 
             verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
-            verify(activityTracker, times(4)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
             verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
         } finally {
             context.stop();
@@ -232,7 +232,7 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
 
             verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
-            verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
             verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
         } finally {
             context.stop();

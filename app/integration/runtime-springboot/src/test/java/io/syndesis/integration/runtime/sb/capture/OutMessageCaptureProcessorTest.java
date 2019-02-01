@@ -220,7 +220,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
     }
 
     @Test
-    public void testCaptureWithForeach() throws Exception {
+    public void testCaptureWithSplitAggregate() throws Exception {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
@@ -236,7 +236,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind(StepKind.foreach)
+                    .stepKind(StepKind.split)
                     .build(),
                 new Step.Builder()
                     .id("s2")
@@ -269,7 +269,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind(StepKind.endForeach)
+                    .stepKind(StepKind.aggregate)
                     .build()
             );
 
@@ -380,7 +380,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
     }
 
     @Test
-    public void testCaptureWithForeachAndSchedule() throws Exception {
+    public void testCaptureWithSplitAggregateAndSchedule() throws Exception {
         final CamelContext context = new SpringCamelContext(applicationContext);
 
         try {
@@ -396,7 +396,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind(StepKind.foreach)
+                    .stepKind(StepKind.split)
                     .build(),
                 new Step.Builder()
                     .id("s2")
@@ -419,7 +419,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind(StepKind.endForeach)
+                    .stepKind(StepKind.aggregate)
                     .build()
             );
 
