@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, BehaviorSubject } from 'rxjs';
 
 import {
   createStep,
@@ -54,6 +54,7 @@ import {
   getPreviousStepWithDataShape,
   getSubsequentStepWithDataShape
 } from './flow-functions';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const category = getCategory('CurrentFlow');
 
@@ -66,6 +67,11 @@ function executeEventAction(func: any, ...args: any[]) {
 @Injectable()
 export class CurrentFlowService {
   events = new EventEmitter<FlowEvent>();
+
+  flows$ = new BehaviorSubject<Flow[]>(undefined);
+  currentFlow$ = new BehaviorSubject<Flow>(undefined);
+  integration$ = new BehaviorSubject<Integration>(undefined);
+  loaded$ = new BehaviorSubject<boolean>(false);
 
   public flowId?: string;
 
@@ -354,6 +360,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event.onSave);
+        this.postUpdates();
         break;
       }
       case 'integration-insert-datamapper': {
@@ -365,6 +372,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event.onSave);
+        this.postUpdates();
         break;
       }
       case 'integration-insert-connection': {
@@ -376,6 +384,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event.onSave);
+        this.postUpdates();
         break;
       }
       case 'integration-remove-step': {
@@ -387,6 +396,7 @@ export class CurrentFlowService {
             position
           );
           executeEventAction(event.onSave);
+          this.postUpdates();
         }
         break;
       }
@@ -400,6 +410,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event.onSave);
+        this.postUpdates();
         break;
       }
       case 'integration-set-metadata': {
@@ -414,6 +425,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event.onSave);
+        this.postUpdates();
         break;
       }
       case 'integration-set-properties': {
@@ -427,6 +439,7 @@ export class CurrentFlowService {
           setConfiguredPropertiesOnStep(step, properties),
           position
         );
+        this.postUpdates();
         executeEventAction(event.onSave);
         break;
       }
@@ -443,6 +456,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event.onSave);
+        this.postUpdates();
         break;
       }
       case 'integration-set-descriptor': {
@@ -457,6 +471,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event.onSave);
+        this.postUpdates();
         break;
       }
       case 'integration-set-datashape': {
@@ -472,6 +487,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event['onSave']);
+        this.postUpdates();
         break;
       }
       case 'integration-set-connection': {
@@ -484,6 +500,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event.onSave);
+        this.postUpdates();
         break;
       }
       case 'integration-set-property':
@@ -493,6 +510,7 @@ export class CurrentFlowService {
           event.value
         );
         executeEventAction(event.onSave);
+        this.postUpdates();
         break;
       case 'integration-save': {
         // ensure that all steps have IDs before saving
@@ -538,6 +556,40 @@ export class CurrentFlowService {
     }
   }
 
+  isApiProvider() {
+    try {
+      return this.getStartStep().connection.connectorId === 'api-provider';
+    } catch (e) {
+      // ignore
+    }
+    return false;
+  }
+
+  validateFlowAndMaybeRedirect(route: ActivatedRoute, router: Router) {
+    if (!this.loaded) {
+      return false;
+    }
+    if (
+      !this.getStartStep() ||
+      typeof this.getStartStep().connection === 'undefined'
+    ) {
+      router.navigate(['step-select', this.getFirstPosition()], {
+        relativeTo: route.parent
+      });
+      return false;
+    }
+    if (
+      !this.getEndStep() ||
+      typeof this.getEndStep().connection === 'undefined'
+    ) {
+      router.navigate(['step-select', this.getLastPosition()], {
+        relativeTo: route.parent
+      });
+      return false;
+    }
+    return true;
+  }
+
   getIntegrationClone(): Integration {
     return JSON.parse(JSON.stringify(this.integration));
   }
@@ -572,6 +624,7 @@ export class CurrentFlowService {
     if (!this.flowId) {
       this.flowId = i.flows && i.flows.length > 0 ? i.flows[0].id : undefined;
     }
+    this.postUpdates();
     setTimeout(() => {
       this.events.emit({
         kind: 'integration-updated',
@@ -585,11 +638,21 @@ export class CurrentFlowService {
   }
 
   private flow(id: string): Flow {
+    if (!id) {
+      return undefined;
+    }
     let flow = getFlow(this._integration, id);
     if (flow === undefined) {
       flow = createFlowWithId(id);
       this._integration = setFlow(this._integration, flow);
     }
     return flow;
+  }
+
+  private postUpdates() {
+    this.integration$.next(this.integration);
+    this.flows$.next(this.flows);
+    this.currentFlow$.next(this.currentFlow);
+    this.loaded$.next(this.loaded);
   }
 }

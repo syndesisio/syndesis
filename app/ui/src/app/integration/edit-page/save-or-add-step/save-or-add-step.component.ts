@@ -63,7 +63,10 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
       case 'integration-updated':
-        this.validateFlow();
+        this.currentFlowService.validateFlowAndMaybeRedirect(
+          this.route,
+          this.router
+        );
         break;
       default:
         break;
@@ -88,36 +91,6 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
 
   getMiddleSteps() {
     return this.currentFlowService.getMiddleSteps();
-  }
-
-  validateFlow() {
-    if (!this.currentFlowService.loaded) {
-      return;
-    }
-    if (
-      !this.currentFlowService.getStartStep() ||
-      typeof this.currentFlowService.getStartStep().connection === 'undefined'
-    ) {
-      this.router.navigate(
-        ['step-select', this.currentFlowService.getFirstPosition()],
-        {
-          relativeTo: this.route.parent
-        }
-      );
-      return;
-    }
-    if (
-      !this.currentFlowService.getEndStep() ||
-      typeof this.currentFlowService.getEndStep().connection === 'undefined'
-    ) {
-      this.router.navigate(
-        ['step-select', this.currentFlowService.getLastPosition()],
-        {
-          relativeTo: this.route.parent
-        }
-      );
-      return;
-    }
   }
 
   ngOnInit() {
@@ -152,7 +125,10 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
       map(params => params['validate'] || false)
     );
     if (validate) {
-      this.validateFlow();
+      this.currentFlowService.validateFlowAndMaybeRedirect(
+        this.route,
+        this.router
+      );
     }
   }
 }

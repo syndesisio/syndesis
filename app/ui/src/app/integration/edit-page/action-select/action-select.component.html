@@ -1,37 +1,6 @@
 <syndesis-loading [loading]="!currentFlowService.loaded" [content]="content">
   <ng-template #content>
     <div class="syn-scrollable">
-      <!-- Toolbar -->
-      <div class="toolbar syn-toolbar--inverted">
-        <div class="container-fluid">
-          <!-- Toolbar: Breadcrumbs -->
-          <div class="row toolbar-pf">
-            <div class="col-sm-12">
-              <div class="toolbar-pf-actions">
-                <div class="inline-block">
-                  <ol class="breadcrumb">
-                    <li>
-                      <a [routerLink]="['/']">Home</a>
-                    </li>
-                    <li>
-                      <a [routerLink]="['/integrations']">Integrations</a>
-                    </li>
-                    <li>
-                      <a *ngIf="currentFlowService.integration.id" [routerLink]="['/integrations', currentFlowService.integration.id]">
-                        {{ flowPageService.integrationName }}</a>
-                      <ng-container *ngIf="!currentFlowService.integration.id">New Integration</ng-container>
-                    </li>
-                    <li class="active">Choose Action</li>
-                  </ol>
-                </div>
-                <div class="toolbar-pf-action-right">
-                  <syndesis-cancel-add-step></syndesis-cancel-add-step>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="syn-scrollable--body">
         <div class="container-fluid">
           <div class="title">
@@ -41,9 +10,16 @@
           <div>
             <p>Choose an action for the selected connection.</p>
             <!-- Toolbar -->
-            <syndesis-list-toolbar [items]="actions$" [filteredItems]="filteredActions$"></syndesis-list-toolbar>
+            <syndesis-list-toolbar
+              [items]="actions$"
+              [filteredItems]="filteredActions$"
+            ></syndesis-list-toolbar>
             <!-- Action List -->
-            <syndesis-list-actions [actions]="filteredActions$ | async" [loading]="loading$ | async" (onSelected)="onSelected($event)"></syndesis-list-actions>
+            <syndesis-list-actions
+              [actions]="filteredActions$ | async"
+              [loading]="loading$ | async"
+              (onSelected)="onSelected($event)"
+            ></syndesis-list-actions>
           </div>
         </div>
       </div>

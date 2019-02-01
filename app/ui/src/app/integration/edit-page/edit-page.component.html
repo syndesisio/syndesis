@@ -1,5 +1,33 @@
-<syndesis-loading [loading]="loading | async" [content]="content">
+<syndesis-loading
+  [loading]="!(currentFlowService.loaded$ | async)"
+  [content]="content"
+>
   <ng-template #content>
+    <div class="row">
+      <div class="col-md-12">
+        <ol class="breadcrumb">
+          <li>
+            &lt;&lt;&nbsp;<a [routerLink]="['/integrations']"
+              >All Integrations</a
+            >
+          </li>
+          <li *ngIf="currentFlowService.integration.name">
+            <a
+              [routerLink]="[
+                '/integrations',
+                currentFlowService.integration.id
+              ]"
+              >{{ currentFlowService.integration.name }}</a
+            >
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <syndesis-integration-flow-toolbar></syndesis-integration-flow-toolbar>
+      </div>
+    </div>
     <div class="integrations edit row">
       <!-- Sidebar -->
       <div class="wizard-sidebar">

@@ -25,7 +25,9 @@ import { IntegrationLogsComponent } from '@syndesis/ui/integration/integration_l
 import {
   ApiProviderEffects,
   apiProviderEndpoints,
+  ApiProviderOperationsEditorComponent,
   ApiProviderOperationsComponent,
+  ApiProviderOperationsListComponent,
   apiProviderReducer,
   ApiProviderSpecComponent,
   StepEditorComponent,
@@ -40,6 +42,8 @@ import {
   CurrentFlowService,
   DataMapperHostComponent,
   FlowPageService,
+  FlowPageHeaderComponent,
+  FlowToolbarComponent,
   FlowViewComponent,
   FlowViewStepComponent,
   IntegrationBasicsComponent,
@@ -148,7 +152,25 @@ const routes: Routes = [
   },
   {
     path: ':integrationId/operations',
-    component: ApiProviderOperationsComponent
+    component: ApiProviderOperationsComponent,
+    resolve: {
+      integration: IntegrationResolverService
+    }
+  },
+  {
+    path: ':integrationId/operations/edit',
+    component: ApiProviderOperationsEditorComponent,
+    resolve: {
+      integration: IntegrationResolverService
+    }
+  },
+  {
+    path: ':integrationId/operations/:flowId/edit',
+    component: ApiProviderOperationsEditorComponent,
+    children: editIntegrationChildRoutes,
+    resolve: {
+      integration: IntegrationResolverService
+    }
   },
   {
     path: ':integrationId/:flowId/edit',
@@ -201,6 +223,8 @@ const routes: Routes = [
     IntegrationLogsComponent,
     IntegrationSaveOrAddStepComponent,
     IntegrationSelectActionComponent,
+    FlowPageHeaderComponent,
+    FlowToolbarComponent,
     FlowViewComponent,
     FlowViewStepComponent,
     FlowViewMultiFlowComponent,
@@ -208,6 +232,8 @@ const routes: Routes = [
     StepVisiblePipe,
     CancelAddStepComponent,
     ApiProviderOperationsComponent,
+    ApiProviderOperationsEditorComponent,
+    ApiProviderOperationsListComponent,
     ApiProviderSpecComponent,
     StepUploadComponent,
     StepValidateComponent,

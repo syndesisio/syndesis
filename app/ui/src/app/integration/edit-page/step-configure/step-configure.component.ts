@@ -146,7 +146,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
     ));
     // If no Step exists redirect to the Select Step view
     if (!step || step.stepKind === 'endpoint') {
-      this.router.navigate(['connection-select', this.position], {
+      this.router.navigate(['step-select', this.position], {
         relativeTo: this.route.parent
       });
       return;
