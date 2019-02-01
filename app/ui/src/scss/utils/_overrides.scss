@@ -15,47 +15,37 @@ body.cards-pf {
   margin-bottom: 10px;
 }
 
-// .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.collapsed-nav {
-//   margin-left: 0;
-// }
-
-.pf-c-page__header {
-  position: fixed;
+.pf-c-page {
   display: block;
-  width: 100%;
-  z-index: 300;
+  grid-template-columns: none;
+  grid-template-rows: none;
+  grid-template-areas: none;
 }
 
-.pf-c-page__header-brand {
-  background-color: #363636;
+.pf-c-page__header {
+  grid-area: none;
 }
 
 .pf-c-page__header-tools {
-  background-color: #363636;
+  z-index: 111;
 }
 
-.navbar {
-  a {
-    color: #ffffff;
+.navbar-brand {
+  margin: 6px 0 0 25px;
+  white-space: nowrap;
+  #appLogo {
+    width: 11.7rem;
+    height: auto;
   }
-
-  .navbar-brand {
-    margin: 6px 0 0 25px;
-    white-space: nowrap;
-    #appLogo {
-      width: 11.7rem;
-      height: auto;
-    }
-    .navbar-brand-icon {
-      max-height: 28px;
-      vertical-align: middle;
-    }
-    .navbar-brand-name {
-      max-height: 28px;
-      font-size: 20px;
-      display: inline-block;
-      vertical-align: middle;
-    }
+  .navbar-brand-icon {
+    max-height: 28px;
+    vertical-align: middle;
+  }
+  .navbar-brand-name {
+    max-height: 28px;
+    font-size: 20px;
+    display: inline-block;
+    vertical-align: middle;
   }
 }
 
