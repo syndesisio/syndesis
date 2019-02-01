@@ -15,8 +15,6 @@
  */
 package io.syndesis.connector.sql.customizer;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -42,29 +40,7 @@ public final class SqlStartConnectorCustomizer implements ComponentProxyCustomiz
     }
 
     private void doAfterProducer(Exchange exchange) {
-        final List<String> answer = new ArrayList<>();
-
         final Message in = exchange.getIn();
-        if (in.getBody(List.class) != null) {
-            @SuppressWarnings("unchecked")
-            final List<Map<String, Object>> maps = in.getBody(List.class);
-
-            if (maps != null) {
-                for (Map<String, Object> map: maps) {
-                    final String bean = JSONBeanUtil.toJSONBean(map);
-                    answer.add(bean);
-                }
-            }
-        } else {
-            @SuppressWarnings("unchecked")
-            final Map<String, Object> singleMap = in.getBody(Map.class);
-
-            if (singleMap != null) {
-                final String bean = JSONBeanUtil.toJSONBean(singleMap);
-                answer.add(bean);
-            }
-        }
-
-        in.setBody(answer);
+        in.setBody(JSONBeanUtil.toJSONBeans(in));
     }
 }

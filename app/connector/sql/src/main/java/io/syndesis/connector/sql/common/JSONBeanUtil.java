@@ -17,16 +17,19 @@ package io.syndesis.connector.sql.common;
 
 import java.io.IOException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.springframework.jdbc.core.SqlParameterValue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.camel.Message;
+import org.apache.camel.util.ObjectHelper;
+import org.springframework.jdbc.core.SqlParameterValue;
 
 /**
  * Utility to help with parsing the data from the simple serialized java bean.
@@ -52,7 +55,7 @@ public final class JSONBeanUtil {
      * Convenience method to parse the properties from a simple BeanJSON.
      * Properties can be read by Camel.
      *
-     * @param json simple JSON represenation of a Java Bean used as input Data
+     * @param json simple JSON representation of a Java Bean used as input Data
      *            for the SqlStoredConnector
      * @return Properties representation of the simple JSON bean
      */
@@ -103,6 +106,7 @@ public final class JSONBeanUtil {
         }
         return ret;
     }
+
     /**
      * Convenience method to convert a Camel Map output to a JSON Bean String.
      *
@@ -149,5 +153,37 @@ public final class JSONBeanUtil {
         } catch (final JsonProcessingException e) {
             throw new IllegalArgumentException("Unable to serialize to JSON", e);
         }
+    }
+
+    /**
+     * Converts Camel Map output representing DB result set to a list of JSON Bean Strings.
+     *
+     * @param in
+     * @return
+     */
+    public static List<String> toJSONBeans(Message in) {
+        final List<String> jsonBeans = new ArrayList<>();
+
+        if (in.getBody(List.class) != null) {
+            @SuppressWarnings("unchecked")
+            final List<Map<String, Object>> maps = in.getBody(List.class);
+
+            if (ObjectHelper.isNotEmpty(maps)) {
+                for (Map<String, Object> map : maps) {
+                    final String bean = JSONBeanUtil.toJSONBean(map);
+                    jsonBeans.add(bean);
+                }
+            }
+        } else {
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> singleMap = in.getBody(Map.class);
+
+            if (singleMap != null) {
+                final String bean = JSONBeanUtil.toJSONBean(singleMap);
+                jsonBeans.add(bean);
+            }
+        }
+
+        return jsonBeans;
     }
 }
