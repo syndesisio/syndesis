@@ -8,6 +8,17 @@ interface IRoute {
   state?: any;
 }
 
+// TODO: perhaps move these 2 helper functions in the @syndesis/utils package?
+
+/**
+ * Creates a function that takes a route and some `data` `T` that returns the
+ * reversed URL.
+ * Use `mapper` to write the business logic required to convert the `data` object
+ * to the basic params that can be passed in an url (strings and numbers), and to
+ * set the state object that will be pushed in the history together with the url.
+ * @param route
+ * @param mapper
+ */
 function makeResolver<T>(route: string, mapper: (data: T) => IRoute) {
   return (data: T) => {
     const { params, state } = mapper(data);
@@ -17,10 +28,17 @@ function makeResolver<T>(route: string, mapper: (data: T) => IRoute) {
     };
   };
 }
+
+/**
+ * Creates a function that takes a route and some `data` `T` that returns the
+ * reversed URL.
+ * @param route
+ */
 function makeResolverNoParams(route: string) {
   return () => reverse(route);
 }
 
+// TODO: unit test every single one of these resolvers 😫
 export default {
   list: makeResolverNoParams(routes.list),
   create: {
