@@ -195,7 +195,7 @@ rollback() {
 The following rollback compensation steps
 caused an error
 
-$error
+$errors
 
 The setup is very likely broken now and you
 have to manually fix it.
