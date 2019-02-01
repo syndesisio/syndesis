@@ -16,8 +16,7 @@
 package io.syndesis.server.runtime;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Duration;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -31,7 +30,6 @@ import javax.ws.rs.ext.Provider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.Timer.Sample;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
@@ -63,11 +61,15 @@ public class EndpointMetricsFilter implements ContainerRequestFilter, ContainerR
             throws IOException {
         Sample sample = (Sample) requestContext.getProperty(TIMING_SAMPLE);
         if (sample != null) {
-            List<Tag> tags = new ArrayList<Tag>();
-            tags.add(Tag.of("method", getMethod(requestContext)));
-            tags.add(Tag.of("status", getStatus(responseContext)));
-            tags.add(Tag.of("uri", getUri()));
-            sample.stop(registry.timer("http.server.requests", tags));
+            Timer timer = Timer
+                .builder("http.server.requests")
+                .tag("method", getMethod(requestContext))
+                .tag("status", getStatus(responseContext))
+                .tag("uri", getUri())
+                .publishPercentileHistogram()
+                .maximumExpectedValue(Duration.ofSeconds(10))
+                .register(registry);
+            sample.stop(timer);
         }
     }
 
