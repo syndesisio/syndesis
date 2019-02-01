@@ -3,7 +3,6 @@ import { Connection, Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { WithClosedNavigation } from '../../../../../../containers';
 import { PageTitle } from '../../../../../../containers/PageTitle';
 import {
   IntegrationEditorBreadcrumbs,
@@ -26,58 +25,53 @@ export interface ISelectConnectionRouteState {
 export class SelectConnectionPage extends React.Component {
   public render() {
     return (
-      <WithClosedNavigation>
-        <WithRouteData<
-          ISelectConnectionRouteParams,
-          ISelectConnectionRouteState
-        >>
-          {({ position }, { connection, integration }) => (
-            <>
-              <PageTitle title={'Choose a connection'} />
-              <IntegrationEditorLayout
-                header={<IntegrationEditorBreadcrumbs step={1} />}
-                sidebar={
-                  <WithIntegrationHelpers>
-                    {({ getSteps }) => {
-                      const positionAsNumber = parseInt(position, 10);
-                      return (
-                        <IntegrationEditorSidebar
-                          steps={getSteps(integration, 0)}
-                          addAtIndex={positionAsNumber}
-                          addI18nTitle={`${positionAsNumber + 1}. Start`}
-                          addI18nTooltip={'Start'}
-                          addI18nDescription={'Choose a connection'}
-                        />
-                      );
-                    }}
-                  </WithIntegrationHelpers>
-                }
-                content={
-                  <WithConnections>
-                    {({ data, hasData, error }) => (
-                      <IntegrationEditorChooseConnection
-                        connections={data.connectionsWithToAction}
-                        loading={!hasData}
-                        error={error}
-                        i18nTitle={'Choose a connection'}
-                        i18nSubtitle={
-                          'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
-                        }
-                        getConnectionHref={getEditSelectActionHref.bind(
-                          null,
-                          position,
-                          integration
-                        )}
+      <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
+        {({ position }, { connection, integration }) => (
+          <>
+            <PageTitle title={'Choose a connection'} />
+            <IntegrationEditorLayout
+              header={<IntegrationEditorBreadcrumbs step={1} />}
+              sidebar={
+                <WithIntegrationHelpers>
+                  {({ getSteps }) => {
+                    const positionAsNumber = parseInt(position, 10);
+                    return (
+                      <IntegrationEditorSidebar
+                        steps={getSteps(integration, 0)}
+                        addAtIndex={positionAsNumber}
+                        addI18nTitle={`${positionAsNumber + 1}. Start`}
+                        addI18nTooltip={'Start'}
+                        addI18nDescription={'Choose a connection'}
                       />
-                    )}
-                  </WithConnections>
-                }
-                cancelHref={resolvers.integration.edit.index({ integration })}
-              />
-            </>
-          )}
-        </WithRouteData>
-      </WithClosedNavigation>
+                    );
+                  }}
+                </WithIntegrationHelpers>
+              }
+              content={
+                <WithConnections>
+                  {({ data, hasData, error }) => (
+                    <IntegrationEditorChooseConnection
+                      connections={data.connectionsWithToAction}
+                      loading={!hasData}
+                      error={error}
+                      i18nTitle={'Choose a connection'}
+                      i18nSubtitle={
+                        'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
+                      }
+                      getConnectionHref={getEditSelectActionHref.bind(
+                        null,
+                        position,
+                        integration
+                      )}
+                    />
+                  )}
+                </WithConnections>
+              }
+              cancelHref={resolvers.integration.edit.index({ integration })}
+            />
+          </>
+        )}
+      </WithRouteData>
     );
   }
 }
