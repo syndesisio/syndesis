@@ -33,7 +33,10 @@ import {
   ActionDescriptor,
   Action
 } from '@syndesis/ui/platform';
-import { CurrentFlowService } from '@syndesis/ui/integration/edit-page';
+import {
+  CurrentFlowService,
+  FlowPageService
+} from '@syndesis/ui/integration/edit-page';
 /*
  * Example host component:
  *
@@ -87,6 +90,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
 
   constructor(
     public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
     public configService: ConfigService,
@@ -148,10 +152,12 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.flowPageService.showDone = true;
     this.initialize();
   }
 
   ngOnDestroy() {
+    this.flowPageService.showDone = false;
     if (this.saveMappingHandlerSubscription) {
       this.saveMappingHandlerSubscription.unsubscribe();
     }

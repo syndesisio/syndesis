@@ -47,26 +47,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
     public stepStore: StepStore
-  ) {
-    this.flowSubscription = this.currentFlowService.events.subscribe(
-      (event: FlowEvent) => {
-        this.handleFlowEvent(event);
-      }
-    );
-  }
-
-  goBack() {
-    const step = this.currentFlowService.getStep(this.position);
-    step.stepKind = undefined;
-    this.currentFlowService.events.emit({
-      kind: 'integration-set-step',
-      position: this.position,
-      step: step,
-      onSave: () => {
-        this.flowPageService.goBack(['step-select', this.position], this.route);
-      }
-    });
-  }
+  ) {}
 
   isInvalidInput() {
     if (this.formGroup) {
@@ -75,7 +56,15 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
     return !this.valid;
   }
 
-  continue(data: any) {
+  cancel() {
+    this.flowPageService.maybeRemoveStep(
+      this.router,
+      this.route,
+      this.position
+    );
+  }
+
+  continue(data: any = {}) {
     const step = this.step;
     if (step.stepKind === DATA_MAPPER) {
       this.customProperties = {
@@ -196,12 +185,23 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
       case 'integration-updated':
         this.loadForm();
         break;
+      case 'integration-cancel-clicked':
+        this.cancel();
+        break;
+      case 'integration-done-clicked':
+        this.continue();
+        break;
       default:
         break;
     }
   }
 
   ngOnInit() {
+    this.flowSubscription = this.currentFlowService.events.subscribe(
+      (event: FlowEvent) => {
+        this.handleFlowEvent(event);
+      }
+    );
     this.routeSubscription = this.route.paramMap.subscribe(params => {
       /* totally reset our state just to be safe*/
       this.loading = false;

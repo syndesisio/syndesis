@@ -7,7 +7,6 @@ export * from './flow-functions';
 // subdirectories
 export * from './action-configure';
 export * from './action-select';
-export * from './common';
 export * from './describe-data';
 export * from './step-select';
 export * from './flow-view';

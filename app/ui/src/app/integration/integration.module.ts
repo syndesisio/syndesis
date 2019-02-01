@@ -38,7 +38,6 @@ import {
 
 import {
   BasicFilterComponent,
-  CancelAddStepComponent,
   CurrentFlowService,
   DataMapperHostComponent,
   FlowPageService,
@@ -230,7 +229,6 @@ const routes: Routes = [
     FlowViewMultiFlowComponent,
     ListActionsComponent,
     StepVisiblePipe,
-    CancelAddStepComponent,
     ApiProviderOperationsComponent,
     ApiProviderOperationsEditorComponent,
     ApiProviderOperationsListComponent,

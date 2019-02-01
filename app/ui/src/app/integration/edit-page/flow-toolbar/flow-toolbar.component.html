@@ -8,23 +8,28 @@
         <div class="col-sm-12">
           <div class="toolbar-pf-actions">
             <h1>
-              <span *ngIf="isApiProvider">API Provider Integration: </span
-              ><strong
+              <span *ngIf="isApiProvider">API Provider Integration: </span>
+              <strong
                 ><syndesis-editable-text
                   [value]="currentFlowService.integration.name"
-                  [validationFn]="validateName"
-                  (onSave)="
-                    nameUpdated(currentFlowService.integration.id, $event)
-                  "
-                ></syndesis-editable-text
-              ></strong>
+                  (onSave)="nameUpdated(name)"
+                ></syndesis-editable-text>
+              </strong>
             </h1>
             <div class="toolbar-pf-action-right">
-              <button class="btn btn-default" (click)="cancel()">Cancel</button>
-              &nbsp;
               <button
                 class="btn btn-default"
-                *ngIf="isApiProvider && !hideOperationsButton"
+                (click)="flowPageService.cancel()"
+              >
+                Cancel
+              </button>
+              <button
+                class="btn btn-default"
+                *ngIf="
+                  isApiProvider &&
+                  !hideOperationsButton &&
+                  !flowPageService.showDone
+                "
                 [disabled]="
                   flowPageService.saveInProgress ||
                   flowPageService.publishInProgress
@@ -39,9 +44,8 @@
               >
                 Go to Operation List
               </button>
-              &nbsp;
               <button
-                *ngIf="isApiProvider"
+                *ngIf="isApiProvider && !flowPageService.showDone"
                 type="button"
                 class="btn btn-default"
                 [routerLink]="['../specification']"
@@ -53,12 +57,18 @@
                 ></i>
                 Edit API Definition
               </button>
-              &nbsp;
+              <button
+                class="btn btn-primary"
+                (click)="flowPageService.done()"
+                *ngIf="flowPageService.showDone"
+              >
+                Done
+              </button>
               <button
                 class="btn btn-default"
                 (click)="save()"
+                *ngIf="!flowPageService.showDone"
                 [disabled]="
-                  !flowPageService.canContinue() ||
                   flowPageService.saveInProgress ||
                   flowPageService.publishInProgress
                 "
@@ -73,8 +83,8 @@
                 type="button"
                 class="btn btn-primary"
                 (click)="publish()"
+                *ngIf="!flowPageService.showDone"
                 [disabled]="
-                  !flowPageService.canContinue() ||
                   flowPageService.saveInProgress ||
                   flowPageService.publishInProgress
                 "

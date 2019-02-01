@@ -5,7 +5,8 @@ import { combineLatest, Subscription, BehaviorSubject, of } from 'rxjs';
 import { StepOrConnection } from '@syndesis/ui/platform';
 import {
   CurrentFlowService,
-  FlowPageService
+  FlowPageService,
+  FlowEvent
 } from '@syndesis/ui/integration/edit-page';
 import { StepVisiblePipe } from './step-visible.pipe';
 
@@ -16,6 +17,7 @@ import { StepVisiblePipe } from './step-visible.pipe';
 })
 export class IntegrationSelectStepComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
+  flowSubscription: Subscription;
   allSteps$ = new BehaviorSubject(<StepOrConnection[]>[]);
   filteredSteps$ = new BehaviorSubject(<StepOrConnection[]>[]);
   position: number;
@@ -100,7 +102,31 @@ export class IntegrationSelectStepComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleFlowEvent(event: FlowEvent) {
+    if (event.kind === 'integration-cancel-clicked') {
+      try {
+        if (!this.currentFlowService.integration.id) {
+          // Integration hasn't been saved and we're in the create page flow
+          this.router.navigate(['/integrations']);
+          return;
+        }
+      } catch (err) {
+        // something's gone horribly wrong
+        this.router.navigate(['/integrations']);
+        return;
+      }
+      this.flowPageService.maybeRemoveStep(
+        this.router,
+        this.route,
+        this.position
+      );
+    }
+  }
+
   ngOnInit() {
+    this.flowSubscription = this.currentFlowService.events.subscribe(event =>
+      this.handleFlowEvent(event)
+    );
     this.routeSubscription = combineLatest(
       this.route.paramMap.pipe(first(params => params.has('position'))),
       this.route.data
@@ -132,7 +158,12 @@ export class IntegrationSelectStepComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.routeSubscription.unsubscribe();
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
+    }
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
   }
 
   get positionText() {

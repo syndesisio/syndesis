@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import {
@@ -17,9 +17,10 @@ import { Integration, IntegrationType } from '@syndesis/ui/platform';
     './save-or-add-step.component.scss'
   ]
 })
-export class IntegrationSaveOrAddStepComponent implements OnInit {
+export class IntegrationSaveOrAddStepComponent implements OnInit, OnDestroy {
   integration: Integration;
   IntegrationType = IntegrationType;
+  flowSubscription: any;
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -32,41 +33,21 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
     return this.flowPageService.errorMessage;
   }
 
-  get saveInProgress() {
-    return this.flowPageService.saveInProgress;
-  }
-
-  get publishInProgress() {
-    return this.flowPageService.publishInProgress;
-  }
-
-  cancel() {
-    this.flowPageService.cancel();
-  }
-
-  save(targetRoute) {
-    this.flowPageService.save(this.route, targetRoute);
-  }
-
-  publish() {
-    this.flowPageService.publish(this.route);
-  }
-
   get currentStep() {
     return this.flowPageService.getCurrentStep(this.route);
   }
 
-  goBack() {
-    /* this should be a no-op */
-  }
-
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
-      case 'integration-updated':
-        this.currentFlowService.validateFlowAndMaybeRedirect(
-          this.route,
-          this.router
-        );
+      case 'integration-cancel-clicked':
+        if (this.currentFlowService.integration.id) {
+          this.router.navigate([
+            '/integrations',
+            this.currentFlowService.integration.id
+          ]);
+        } else {
+          this.router.navigate(['/integrations']);
+        }
         break;
       default:
         break;
@@ -94,6 +75,9 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.flowSubscription = this.currentFlowService.events.subscribe(event => {
+      this.handleFlowEvent(event);
+    });
     const lastStep = this.currentFlowService.getEndStep();
     if (
       lastStep &&
@@ -129,6 +113,12 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
         this.route,
         this.router
       );
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
     }
   }
 }

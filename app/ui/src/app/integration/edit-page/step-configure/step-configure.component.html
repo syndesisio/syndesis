@@ -2,29 +2,19 @@
   <ng-template #content>
     <!-- Navigation buttons -->
     <ng-template #controlButtons>
-      <syndesis-cancel-add-step></syndesis-cancel-add-step>
+      <button type="btn btn-default" (click)="flowPageService.cancel()">
+        Cancel
+      </button>
       <button
         type="button"
         class="btn btn-primary"
         [disabled]="isInvalidInput()"
-        (click)="continue()"
+        (click)="flowPageService.done()"
       >
         Done
       </button>
     </ng-template>
     <div class="syn-scrollable" *ngIf="step">
-      <!-- Toolbar -->
-      <div class="row">
-        <div class="col-md-12">
-          <!-- TODO This button needs to move -->
-          <!-- Toolbar: Integration actions -->
-          <div class="toolbar-pf-action-right">
-            <ng-container *ngIf="step.stepKind === 'mapper'">
-              <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
-            </ng-container>
-          </div>
-        </div>
-      </div>
       <!-- Page body -->
       <syndesis-loading
         class="body {{

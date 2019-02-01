@@ -15,7 +15,6 @@ export class FlowToolbarComponent {
   @Input()
   hideOperationsButton = true;
   IntegrationType = IntegrationType;
-  editingName = false;
   @ViewChild('nameInput') nameInput: ElementRef;
 
   constructor(
@@ -32,11 +31,7 @@ export class FlowToolbarComponent {
     return this.flowPageService.publishInProgress;
   }
 
-  get integrationName() {
-    return (this.currentFlowService.integration || { name: '' }).name || '';
-  }
-
-  set integrationName(name: string) {
+  nameUpdated(name: string) {
     this.currentFlowService.events.emit({
       kind: 'integration-set-property',
       property: 'name',
@@ -44,20 +39,7 @@ export class FlowToolbarComponent {
     });
   }
 
-  cancel() {
-    this.flowPageService.cancel();
-  }
-
-  startEditingName() {
-    this.editingName = true;
-    this.nameInput.nativeElement.select();
-  }
-
-  stopEditingName() {
-    this.editingName = false;
-  }
-
-  save(targetRoute) {
+  save(targetRoute: string[]) {
     this.flowPageService.save(
       this.route.firstChild,
       targetRoute || ['..', 'save-or-add-step']
