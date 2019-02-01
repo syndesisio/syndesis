@@ -40,10 +40,6 @@
               "propertyDefinitionSteps": [],
               "configuredProperties": {
                 "name": "proxy"
-              },
-              "split": {
-                "language": "tokenize",
-                "expression": ","
               }
             },
             "tags": [],
@@ -57,6 +53,17 @@
           "dependencies": [],
           "metadata": {
             "step.index": "2"
+          }
+        },
+        {
+          "stepKind": "split",
+          "configuredProperties": {
+              "language": "tokenize",
+              "expression": ","
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "3"
           }
         },
         {
@@ -79,7 +86,7 @@
           },
           "dependencies": [],
           "metadata": {
-            "step.index": "3"
+            "step.index": "4"
           }
         }
       ]

@@ -19,17 +19,18 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
+import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
-import io.syndesis.common.model.integration.Step;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.util.ObjectHelper;
+import org.junit.Assert;
 import org.junit.Test;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
+@SuppressWarnings({"PMD.SignatureDeclareThrowsException"})
 public class SqlStartConnectorTest extends SqlConnectorTestSupport {
 
     // **************************
@@ -70,26 +71,32 @@ public class SqlStartConnectorTest extends SqlConnectorTestSupport {
     @Test
     public void sqlStartConnectorTest() throws Exception {
         MockEndpoint mock = context.getEndpoint("mock:result", MockEndpoint.class);
-        mock.expectedMessageCount(2);
-        mock.expectedMessagesMatches(
-            exchange -> validateProperty(exchange, "ID", "1"),
-            exchange -> validateProperty(exchange, "ID", "2")
-        );
+        mock.expectedMessageCount(1);
 
         ProducerTemplate template = context.createProducerTemplate();
         template.sendBody("direct:start", null);
 
         mock.assertIsSatisfied();
+
+        Exchange exchange = mock.getExchanges().get(0);
+        List<?> body = exchange.getIn().getBody(List.class);
+        List<Properties> jsonBeans = body.stream()
+                .map(Object::toString)
+                .map(JSONBeanUtil::parsePropertiesFromJSONBean)
+                .collect(Collectors.toList());
+
+        validateProperty(jsonBeans, "ID", "1", "2");
+        validateProperty(jsonBeans, "FIRSTNAME", "Joe", "Roger");
+        validateProperty(jsonBeans, "LASTNAME", "Jackson", "Waters");
     }
 
     // **************************
     // Helpers
     // **************************
 
-    private boolean validateProperty(Exchange exchange, String propertyName, String expectedValue) {
-        String body = exchange.getIn().getBody(String.class);
-        Properties props = JSONBeanUtil.parsePropertiesFromJSONBean(body);
-
-        return ObjectHelper.equal(props.getProperty(propertyName), expectedValue);
+    private void validateProperty(List<Properties> jsonBeans, String propertyName, String ... expectedValues) {
+        for (int i = 0; i < expectedValues.length; i++) {
+            Assert.assertEquals(expectedValues[i], jsonBeans.get(i).getProperty(propertyName));
+        }
     }
 }

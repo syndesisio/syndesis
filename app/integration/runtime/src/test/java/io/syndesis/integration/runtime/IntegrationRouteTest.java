@@ -17,7 +17,6 @@ package io.syndesis.integration.runtime;
 
 import java.util.Collections;
 
-import io.syndesis.common.model.Split;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Flow;
@@ -111,7 +110,7 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
     }
 
     @Test
-    public void integrationWithSplitTest() throws Exception {
+    public void integrationWithSplitAggregateTest() throws Exception {
         final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Collections.emptyList()) {
             @Override
             protected Integration loadIntegration() {
@@ -123,9 +122,11 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
                             .descriptor(new ConnectorDescriptor.Builder()
                                 .componentScheme("direct")
                                 .putConfiguredProperty("name", "start")
-                                .split(new Split.Builder().build())
                                 .build())
                             .build())
+                        .build(),
+                    new Step.Builder()
+                        .stepKind(StepKind.split)
                         .build(),
                     new Step.Builder()
                         .id("step-2")
@@ -146,7 +147,10 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
                                 .putConfiguredProperty("name", "result")
                                 .build())
                             .build())
-                        .build());
+                        .build(),
+                    new Step.Builder()
+                            .stepKind(StepKind.aggregate)
+                            .build());
             }
         };
 
@@ -173,67 +177,6 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
     }
 
     @Test
-    public void integrationWithSplitDisabledTest() throws Exception {
-        final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Collections.emptyList()) {
-            @Override
-            protected Integration loadIntegration() {
-                return newIntegration(
-                    new Step.Builder()
-                        .id("step-1")
-                        .stepKind(StepKind.endpoint)
-                        .putConfiguredProperty("split", "false")
-                        .action(new ConnectorAction.Builder()
-                            .descriptor(new ConnectorDescriptor.Builder()
-                                .componentScheme("direct")
-                                .putConfiguredProperty("name", "start")
-                                .split(new Split.Builder().build())
-                                .build())
-                            .build())
-                        .build(),
-                    new Step.Builder()
-                        .id("step-2")
-                        .stepKind(StepKind.endpoint)
-                        .action(new ConnectorAction.Builder()
-                            .descriptor(new ConnectorDescriptor.Builder()
-                                .componentScheme("bean")
-                                .putConfiguredProperty("beanName", "io.syndesis.integration.runtime.IntegrationRouteTest.TestConfiguration")
-                                .build())
-                            .build())
-                        .build(),
-                    new Step.Builder()
-                        .id("step-3")
-                        .stepKind(StepKind.endpoint)
-                        .action(new ConnectorAction.Builder()
-                            .descriptor(new ConnectorDescriptor.Builder()
-                                .componentScheme("mock")
-                                .putConfiguredProperty("name", "result")
-                                .build())
-                            .build())
-                        .build());
-            }
-        };
-
-        // initialize routes
-        routeBuilder.configure();
-
-        dumpRoutes(new DefaultCamelContext(), routeBuilder.getRouteCollection());
-
-        RoutesDefinition routes = routeBuilder.getRouteCollection();
-        assertThat(routes.getRoutes()).hasSize(1);
-
-        RouteDefinition route = routes.getRoutes().get(0);
-
-        assertThat(route.getInputs()).hasSize(1);
-        assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
-        assertThat(route.getOutputs()).hasSize(5);
-        assertThat(getOutput(route, 0)).isInstanceOf(SetHeaderDefinition.class);
-        assertThat(getOutput(route, 1)).isInstanceOf(SetHeaderDefinition.class);
-        assertThat(getOutput(route, 2)).isInstanceOf(ProcessDefinition.class);
-        assertThat(getOutput(route, 3)).isInstanceOf(PipelineDefinition.class);
-        assertThat(getOutput(route, 4)).isInstanceOf(PipelineDefinition.class);
-    }
-
-    @Test
     public void integrationWithSchedulerAndSplitTest() throws Exception {
         final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Collections.emptyList()) {
             @Override
@@ -246,9 +189,11 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
                             .descriptor(new ConnectorDescriptor.Builder()
                                 .componentScheme("log")
                                 .putConfiguredProperty("loggerName", "timer")
-                                .split(new Split.Builder().build())
                                 .build())
                             .build())
+                        .build(),
+                    new Step.Builder()
+                        .stepKind(StepKind.split)
                         .build(),
                     new Step.Builder()
                         .id("step-2")
@@ -259,6 +204,9 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
                                 .putConfiguredProperty("name", "timer")
                                 .build())
                             .build())
+                        .build(),
+                    new Step.Builder()
+                        .stepKind(StepKind.aggregate)
                         .build());
 
                 final Flow flow = integration.getFlows().get(0);
@@ -303,72 +251,4 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
         assertThat(getOutput(route, 2, 2, 2)).isInstanceOf(ProcessDefinition.class);
     }
 
-    @Test
-    public void integrationWithSchedulerAndSplitDisabledTest() throws Exception {
-        final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Collections.emptyList()) {
-            @Override
-            protected Integration loadIntegration() {
-                Integration integration = newIntegration(
-                        new Step.Builder()
-                            .id("step-1")
-                            .stepKind(StepKind.endpoint)
-                            .putConfiguredProperty("split", "false")
-                            .action(new ConnectorAction.Builder()
-                                .descriptor(new ConnectorDescriptor.Builder()
-                                    .componentScheme("log")
-                                    .putConfiguredProperty("loggerName", "timer")
-                                    .split(new Split.Builder().build())
-                                    .build())
-                                .build())
-                            .build(),
-                        new Step.Builder()
-                            .id("step-2")
-                            .stepKind(StepKind.endpoint)
-                            .action(new ConnectorAction.Builder()
-                                .descriptor(new ConnectorDescriptor.Builder()
-                                    .componentScheme("mock")
-                                    .putConfiguredProperty("name", "timer")
-                                    .build())
-                                .build())
-                            .build());
-
-                final Flow flow = integration.getFlows().get(0);
-                final Flow flowWithScheduler = flow.builder()
-                        .scheduler(new Scheduler.Builder()
-                            .type(Scheduler.Type.timer)
-                            .expression("1s")
-                            .build())
-                        .build();
-
-                return new Integration.Builder()
-                        .createFrom(integration)
-                        .flows(singleton(flowWithScheduler))
-                        .build();
-            }
-        };
-
-        // initialize routes
-        routeBuilder.configure();
-
-        dumpRoutes(new DefaultCamelContext(), routeBuilder.getRouteCollection());
-
-        RoutesDefinition routes = routeBuilder.getRouteCollection();
-        assertThat(routes.getRoutes()).hasSize(1);
-
-        RouteDefinition route = routes.getRoutes().get(0);
-
-        assertThat(route.getInputs()).hasSize(1);
-        assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "timer:integration?period=1s");
-        assertThat(route.getOutputs()).hasSize(4);
-        assertThat(getOutput(route, 0)).isInstanceOf(SetHeaderDefinition.class);
-        assertThat(getOutput(route, 1)).isInstanceOf(ToDefinition.class);
-        assertThat(getOutput(route, 1)).hasFieldOrPropertyWithValue("uri", "log:timer");
-        assertThat(getOutput(route, 2)).isInstanceOf(ProcessDefinition.class);
-        assertThat(getOutput(route, 3)).isInstanceOf(PipelineDefinition.class);
-        assertThat(getOutput(route, 3).getOutputs()).hasSize(3);
-        assertThat(getOutput(route, 3, 0)).isInstanceOf(SetHeaderDefinition.class);
-        assertThat(getOutput(route, 3, 1)).isInstanceOf(ToDefinition.class);
-        assertThat(getOutput(route, 3, 1)).hasFieldOrPropertyWithValue("uri", "mock:timer");
-        assertThat(getOutput(route, 3, 2)).isInstanceOf(ProcessDefinition.class);
-    }
 }

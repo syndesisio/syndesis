@@ -40,9 +40,6 @@
               "propertyDefinitionSteps": [],
               "configuredProperties": {
                 "name": "proxy"
-              },
-              "split": {
-
               }
             },
             "tags": [],
@@ -56,6 +53,16 @@
           "dependencies": [],
           "metadata": {
             "step.index": "2"
+          }
+        },
+        {
+          "stepKind": "split",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "3"
           }
         },
         {
@@ -78,7 +85,7 @@
           },
           "dependencies": [],
           "metadata": {
-            "step.index": "3"
+            "step.index": "4"
           }
         }
       ]

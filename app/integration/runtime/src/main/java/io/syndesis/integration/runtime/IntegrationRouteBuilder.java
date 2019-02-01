@@ -27,9 +27,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import io.syndesis.common.model.Split;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
@@ -44,11 +41,11 @@ import io.syndesis.integration.runtime.handlers.DataMapperStepHandler;
 import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.ExpressionFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.ExtensionStepHandler;
-import io.syndesis.integration.runtime.handlers.SplitAggregateStepHandler;
 import io.syndesis.integration.runtime.handlers.HeadersStepHandler;
 import io.syndesis.integration.runtime.handlers.LogStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
+import io.syndesis.integration.runtime.handlers.SplitAggregateStepHandler;
 import io.syndesis.integration.runtime.handlers.TemplateStepHandler;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.ActivityTrackingPolicy;
@@ -164,7 +161,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     parent = definition.get();
                     parent = configureRouteDefinition(parent, flowName, flowId, stepId);
                     parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
-                    parent = configureConnectorSplit(step, parent, flowIndex, stepIndex).orElse(parent);
 
                     if (nextStep.map(Step::getStepKind)
                                 .map(kind -> kind.equals(StepKind.split)).orElse(false)) {
@@ -197,16 +193,8 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
                     parent = handler.handle(step, parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
 
-                    if (isConnectorSplitStep(step)) {
-                        if (stepIndex > 0) {
-                            parent = endParent(parent);
-                        }
-
-                        parent = configureConnectorSplit(step, parent, flowIndex, stepIndex).orElse(parent);
-                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
-                        parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
-                    } else if (nextStep.map(Step::getStepKind)
-                                       .map(kind -> kind.equals(StepKind.split)).orElse(false)) {
+                    if (nextStep.map(Step::getStepKind)
+                                .map(kind -> kind.equals(StepKind.split)).orElse(false)) {
                         if (stepIndex > 0) {
                             parent = endParent(parent);
                         }
@@ -300,43 +288,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
 
         return null;
-    }
-
-    private boolean isConnectorSplitStep(Step step) {
-        Optional<ConnectorAction> connectorAction = step.getActionAs(ConnectorAction.class);
-        if (connectorAction.isPresent()) {
-            final ConnectorDescriptor descriptor = connectorAction.get().getDescriptor();
-            if (step.getConfiguredProperties().getOrDefault("split", "").equals("false")) {
-                return false;
-            }
-
-            return descriptor.getSplit().isPresent();
-        }
-
-        return false;
-    }
-
-    private Optional<ProcessorDefinition<?>> configureConnectorSplit(Step step, ProcessorDefinition<?> route, String flowIndex, int stepIndex) {
-        if (isConnectorSplitStep(step)) {
-            final ConnectorAction action = step.getActionAs(ConnectorAction.class).get();
-            final ConnectorDescriptor descriptor = action.getDescriptor();
-
-            final Split split = descriptor.getSplit().get();
-            final Step.Builder splitBuilder = new Step.Builder().stepKind(StepKind.split);
-
-            split.getLanguage().ifPresent(s -> splitBuilder.putConfiguredProperty("language", s));
-            split.getExpression().ifPresent(s -> splitBuilder.putConfiguredProperty("expression", s));
-            splitBuilder.putConfiguredProperty("aggregationStrategy", SplitAggregateStepHandler.AggregationOption.original.name());
-
-            return new SplitAggregateStepHandler().handle(
-                splitBuilder.build(),
-                route,
-                this,
-                flowIndex,
-                String.valueOf(stepIndex));
-        }
-
-        return Optional.empty();
     }
 
     private void loadFragments(Step step) {

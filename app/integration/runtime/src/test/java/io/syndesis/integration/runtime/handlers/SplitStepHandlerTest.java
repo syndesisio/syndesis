@@ -18,7 +18,6 @@ package io.syndesis.integration.runtime.handlers;
 import java.util.Arrays;
 import java.util.List;
 
-import io.syndesis.common.model.Split;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Step;
@@ -124,62 +123,6 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
     }
 
     @Test
-    public void testSplitBodyImplicit() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
-
-        try {
-            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
-                new Step.Builder()
-                    .stepKind(StepKind.endpoint)
-                    .action(new ConnectorAction.Builder()
-                        .descriptor(new ConnectorDescriptor.Builder()
-                            .componentScheme("direct")
-                            .putConfiguredProperty("name", "expression")
-                            .split(new Split.Builder().build())
-                            .build())
-                        .build())
-                    .build(),
-                new Step.Builder()
-                    .stepKind(StepKind.endpoint)
-                    .action(new ConnectorAction.Builder()
-                        .descriptor(new ConnectorDescriptor.Builder()
-                            .componentScheme("mock")
-                            .putConfiguredProperty("name", "expression")
-                            .build())
-                        .build())
-                    .build()
-            );
-
-            // Set up the camel context
-            context.setUuidGenerator(KeyGenerator::createKey);
-            context.addLogListener(new IntegrationLoggingListener(activityTracker));
-            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
-            context.addRoutes(routes);
-            context.start();
-
-            // Dump routes as XML for troubleshooting
-            dumpRoutes(context);
-
-            final ProducerTemplate template = context.createProducerTemplate();
-            final MockEndpoint result = context.getEndpoint("mock:expression", MockEndpoint.class);
-            final List<String> body = Arrays.asList("a","b","c");
-
-            result.expectedMessageCount(3);
-            result.expectedBodiesReceived(body);
-
-            template.sendBody("direct:expression", body);
-
-            result.assertIsSatisfied();
-
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
-        } finally {
-            context.stop();
-        }
-    }
-
-    @Test
     public void testTokenizeSplitStep() throws Exception {
         final CamelContext context = new DefaultCamelContext();
 
@@ -198,65 +141,6 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
                     .stepKind(StepKind.split)
                     .putConfiguredProperty("language", "tokenize")
                     .putConfiguredProperty("expression", "|")
-                    .build(),
-                new Step.Builder()
-                    .stepKind(StepKind.endpoint)
-                    .action(new ConnectorAction.Builder()
-                        .descriptor(new ConnectorDescriptor.Builder()
-                            .componentScheme("mock")
-                            .putConfiguredProperty("name", "expression")
-                            .build())
-                        .build())
-                    .build()
-            );
-
-            // Set up the camel context
-            context.setUuidGenerator(KeyGenerator::createKey);
-            context.addLogListener(new IntegrationLoggingListener(activityTracker));
-            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
-            context.addRoutes(routes);
-            context.start();
-
-            // Dump routes as XML for troubleshooting
-            dumpRoutes(context);
-
-            final ProducerTemplate template = context.createProducerTemplate();
-            final MockEndpoint result = context.getEndpoint("mock:expression", MockEndpoint.class);
-            final String body = "a|b|c";
-
-            result.expectedMessageCount(3);
-            result.expectedBodiesReceived((Object[])body.split("|"));
-
-            template.sendBody("direct:expression", body);
-
-            result.assertIsSatisfied();
-
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
-            verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
-        } finally {
-            context.stop();
-        }
-    }
-
-    @Test
-    public void testTokenizeImplicitSplit() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
-
-        try {
-            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
-                new Step.Builder()
-                    .stepKind(StepKind.endpoint)
-                    .action(new ConnectorAction.Builder()
-                        .descriptor(new ConnectorDescriptor.Builder()
-                            .componentScheme("direct")
-                            .putConfiguredProperty("name", "expression")
-                            .split(new Split.Builder()
-                                .language("tokenize")
-                                .expression("|")
-                                .build())
-                            .build())
-                        .build())
                     .build(),
                 new Step.Builder()
                     .stepKind(StepKind.endpoint)
