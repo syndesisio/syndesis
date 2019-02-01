@@ -16,12 +16,14 @@
 
 package io.syndesis.integration.runtime.logging;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.converter.stream.InputStreamCache;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
@@ -38,6 +40,8 @@ public class BodyLoggerTest {
     private final Object body;
     private final String logResult;
 
+    private static final Charset CHARSET_UTF8 = Charset.forName("UTF-8");
+
     public BodyLoggerTest(Object body, String logResult) {
         this.body = body;
         this.logResult = logResult;
@@ -50,6 +54,9 @@ public class BodyLoggerTest {
                 { "SimpleBody", "SimpleBody" },
                 { new String[] {"a", "b", "c"}, "[a, b, c]" },
                 { Arrays.asList("a", "b", "c"), "[a, b, c]" },
+                { Arrays.asList(new InputStreamCache("Hello".getBytes(CHARSET_UTF8)), new InputStreamCache("World".getBytes(CHARSET_UTF8))), "[Hello, World]" },
+                { new InputStreamCache[] {new InputStreamCache("Hello".getBytes(CHARSET_UTF8)), new InputStreamCache("World".getBytes(CHARSET_UTF8))}, "[Hello, World]" },
+                { new InputStreamCache("Hello World".getBytes(CHARSET_UTF8)), "Hello World" },
                 { new GroupedExchangeList("a", "b", "c"), "[a, b, c]" }
         });
     }

@@ -17,8 +17,12 @@ package io.syndesis.integration.runtime.logging;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.language.simple.SimpleLanguage;
 import org.apache.camel.util.ObjectHelper;
 
@@ -42,14 +46,27 @@ public interface BodyLogger {
         public String log(Exchange exchange) {
             if (ObjectHelper.isNotEmpty(exchange.getIn().getBody())) {
                 if (exchange.getIn().getBody(List.class) != null) {
-                    return Arrays.toString(exchange.getIn().getBody(List.class).toArray());
+                    List<?> body = exchange.getIn().getBody(List.class);
+                    return Arrays.toString(body.stream()
+                                               .map(entry -> convertToString(exchange, entry))
+                                               .toArray());
                 } else if (exchange.getIn().getBody(Object[].class) != null) {
-                    return Arrays.toString(exchange.getIn().getBody(Object[].class));
+                    return Arrays.toString(Stream.of(exchange.getIn().getBody(Object[].class))
+                                                 .map(entry -> convertToString(exchange, entry))
+                                                 .toArray());
                 }
             }
 
             return SimpleLanguage.expression("${body}")
                                  .evaluate(exchange, String.class);
+        }
+
+        private String convertToString(Exchange exchange, Object o) {
+            CamelContext camelContext = Optional.ofNullable(exchange.getContext())
+                                                .orElseGet(DefaultCamelContext::new);
+
+            return Optional.ofNullable(camelContext.getTypeConverter().tryConvertTo(String.class, exchange, o))
+                           .orElseGet(o::toString);
         }
     }
 }
