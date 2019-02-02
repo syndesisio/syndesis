@@ -24,7 +24,8 @@ import routes from './routes';
  *
  * [1] https://reactjs.org/docs/error-boundaries.html
  *
- * TODO: add an error handler!
+ * @todo add an error handler!
+ * @todo i18n everywhere!
  */
 export class IntegrationCreatorApp extends React.Component {
   public render() {
@@ -35,70 +36,83 @@ export class IntegrationCreatorApp extends React.Component {
           <span>New integration</span>
         </Breadcrumb>
         <Switch>
-          <Route
-            path={routes.create.start.configureAction}
-            exact={true}
-            component={create.start.StartConfigurationPage}
-          />
-          <Route
-            path={routes.create.start.selectAction}
-            exact={true}
-            component={create.start.StartActionPage}
-          />
+          {/* step 1.1 */}
           <Route
             path={routes.create.start.selectConnection}
             exact={true}
             component={create.start.StartConnectionPage}
           />
+          {/* step 1.2 */}
           <Route
-            path={routes.create.finish.configureAction}
+            path={routes.create.start.selectAction}
             exact={true}
-            component={create.finish.FinishConfigurationPage}
+            component={create.start.StartActionPage}
           />
+          {/* step 1.3 */}
           <Route
-            path={routes.create.finish.selectAction}
+            path={routes.create.start.configureAction}
             exact={true}
-            component={create.finish.FinishActionPage}
+            component={create.start.StartConfigurationPage}
           />
+          {/* step 2.1 */}
           <Route
             path={routes.create.finish.selectConnection}
             exact={true}
             component={create.finish.FinishConnectionPage}
           />
+          {/* step 2.2 */}
+          <Route
+            path={routes.create.finish.selectAction}
+            exact={true}
+            component={create.finish.FinishActionPage}
+          />
+          {/* step 2.3 */}
+          <Route
+            path={routes.create.finish.configureAction}
+            exact={true}
+            component={create.finish.FinishConfigurationPage}
+          />
+          {/* step 3: index */}
           <Route
             path={routes.create.configure.index}
             exact={true}
-            component={create.configure.AddStepPage}
+            component={create.configure.main.AddStepPage}
           />
+          {/* step 3: add connection.1 */}
           <Route
             path={routes.create.configure.addConnection.selectConnection}
             exact={true}
             component={create.configure.addConnection.SelectConnectionPage}
           />
+          {/* step 3: add connection.2 */}
           <Route
             path={routes.create.configure.addConnection.selectAction}
             exact={true}
             component={create.configure.addConnection.SelectActionPage}
           />
+          {/* step 3: add connection.3 */}
           <Route
             path={routes.create.configure.addConnection.configureAction}
             exact={true}
             component={create.configure.addConnection.ConfigureActionPage}
           />
-          <Route
-            path={routes.create.configure.editConnection.selectAction}
-            exact={true}
-            component={create.configure.editConnection.SelectActionPage}
-          />
+          {/* step 3: edit connection.1 (when editing we link directly to the configuration step) */}
           <Route
             path={routes.create.configure.editConnection.configureAction}
             exact={true}
             component={create.configure.editConnection.ConfigureActionPage}
           />
+          {/* step 3: edit connection.2 (this is optional and can be reached only from the configuration page) */}
+          <Route
+            path={routes.create.configure.editConnection.selectAction}
+            exact={true}
+            component={create.configure.editConnection.SelectActionPage}
+          />
+          {/* step 4 */}
           <Route
             path={routes.create.configure.saveAndPublish}
             exact={true}
-            component={create.configure.SaveIntegrationPage}
+            component={create.configure.main.SaveIntegrationPage}
           />
         </Switch>
       </WithClosedNavigation>

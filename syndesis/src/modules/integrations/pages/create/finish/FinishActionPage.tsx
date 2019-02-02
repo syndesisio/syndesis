@@ -17,10 +17,23 @@ import {
 import resolvers from '../../../resolvers';
 import { getFinishConfigureActionHref } from '../../resolversHelpers';
 
+/**
+ * @param connectionId - the ID of the connection selected in step 2.1, whose
+ * actions should be shown.
+ */
 export interface IFinishActionRouteParams {
   connectionId: string;
 }
 
+/**
+ * @param startConnection - the connection object selected in step 1.1. Needed
+ * to render the IVP.
+ * @param startAction - the action object selected in step 1.2. Needed to
+ * render the IVP.
+ * @oaram integration - the integration object created in step 1.3.
+ * @param finishConnection - the connection object selected in step 2.1. Needed
+ * to render the IVP.
+ */
 export interface IFinishActionRouteState {
   startConnection: ConnectionOverview;
   startAction: Action;
@@ -28,6 +41,19 @@ export interface IFinishActionRouteState {
   finishConnection: ConnectionOverview;
 }
 
+/**
+ * This page shows the list of actions with a **to** pattern of a connection.
+ * It's supposed to be used for step 2.2 of the creation wizard.
+ *
+ * This component expects some [url params]{@link IFinishActionRouteParams}
+ * and [state]{@link IFinishActionRouteState} to be properly set in
+ * the route object.
+ *
+ * **Warning:** this component will throw an exception if the route state is
+ * undefined.
+ *
+ * @todo DRY the connection icon code
+ */
 export class FinishActionPage extends React.Component {
   public render() {
     return (
@@ -45,7 +71,7 @@ export class FinishActionPage extends React.Component {
                     <IntegrationCreatorBreadcrumbs step={2} subStep={1} />
                   }
                   sidebar={
-                    <IntegrationVerticalFlow disabled={true}>
+                    <IntegrationVerticalFlow>
                       {({ expanded }) => (
                         <>
                           <IntegrationFlowStepWithOverview
@@ -95,7 +121,7 @@ export class FinishActionPage extends React.Component {
                     >
                       {() => (
                         <IntegrationEditorChooseAction
-                          connection={data}
+                          connectionName={data.name}
                           actions={data.actionsWithTo.sort((a, b) =>
                             a.name.localeCompare(b.name)
                           )}

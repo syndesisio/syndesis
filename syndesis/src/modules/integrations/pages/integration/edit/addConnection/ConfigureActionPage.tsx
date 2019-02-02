@@ -14,18 +14,48 @@ import {
 } from '../../../../containers';
 import resolvers from '../../../../resolvers';
 
+/**
+ * @param actionId - the ID of the action selected in the previous step.
+ * @param position - the zero-based position for the new step in the integration
+ * flow.
+ * @param step - the configuration step when configuring a multi-page connection.
+ */
 export interface IConfigureActionRouteParams {
   position: string;
   actionId: string;
   step?: string;
 }
 
+/**
+ * @param integration - the integration object, used to render the IVP.
+ * @param connection - the connection object selected in the previous step. Needed
+ * to render the IVP.
+ * @param updatedIntegration - when creating a link to this page, this should
+ * never be set. It is used by the page itself to pass the partially configured
+ * step when configuring a multi-page connection.
+ */
 export interface IConfigureActionRouteState {
   connection: ConnectionOverview;
   integration: Integration;
   updatedIntegration?: Integration;
 }
 
+/**
+ * This page shows the configuration form for a given action.
+ *
+ * Submitting the form will update the integration object adding a *new* step in
+ * the [position specified in the params]{@link IConfigureActionRouteParams#position}
+ * of the first flow, set up as specified by the form values.
+ *
+ * This component expects some [url params]{@link IConfigureActionRouteParams}
+ * and [state]{@link IConfigureActionRouteState} to be properly set in
+ * the route object.
+ *
+ * **Warning:** this component will throw an exception if the route state is
+ * undefined.
+ *
+ * @todo DRY the connection icon code
+ */
 export class ConfigureActionPage extends React.Component {
   public render() {
     return (
@@ -86,7 +116,7 @@ export class ConfigureActionPage extends React.Component {
                   initialValue={stepObject.configuredProperties}
                   onUpdatedIntegration={onUpdatedIntegration}
                 >
-                  {({ form, onSubmit, isSubmitting }) => (
+                  {({ form, submitForm, isSubmitting }) => (
                     <>
                       <PageTitle title={'Configure the action'} />
                       <IntegrationEditorLayout
@@ -123,7 +153,7 @@ export class ConfigureActionPage extends React.Component {
                         backHref={resolvers.integration.edit.addConnection.selectAction(
                           { position, integration, connection }
                         )}
-                        onNext={onSubmit}
+                        onNext={submitForm}
                         isNextLoading={isSubmitting}
                       />
                     </>

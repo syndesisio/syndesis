@@ -5,19 +5,34 @@ import { Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { PageTitle } from '../../../../../containers/PageTitle';
-import { IntegrationCreatorBreadcrumbs } from '../../../components';
-import resolvers from '../../../resolvers';
+import { PageTitle } from '../../../../../../containers/PageTitle';
+import { IntegrationCreatorBreadcrumbs } from '../../../../components';
+import resolvers from '../../../../resolvers';
 
 export interface ISaveForm {
   name: string;
   description?: string;
 }
 
+/**
+ * @param integration - the integration object coming from step 3.index
+ */
 export interface ISaveIntegrationRouteState {
   integration: Integration;
 }
 
+/**
+ * This page asks for the details of the integration, and saves it.
+ *
+ * This component expects a [state]{@link ISaveIntegrationRouteState} to be
+ * properly set in the route object.
+ *
+ * **Warning:** this component will throw an exception if the route state is
+ * undefined.
+ *
+ * @todo toast notifications.
+ * @todo redirect to the integration detail page once available.
+ */
 export class SaveIntegrationPage extends React.Component {
   public render() {
     return (

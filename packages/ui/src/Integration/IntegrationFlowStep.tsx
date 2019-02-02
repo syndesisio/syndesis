@@ -1,16 +1,27 @@
 import classnames from 'classnames';
-import * as H from 'history';
 import { OverlayTrigger, Tooltip } from 'patternfly-react';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import './IntegrationFlowStep.css';
 
 export interface IIntegrationFlowStepProps {
+  /**
+   * The icon to show. Can be anything but must fit a circle of 55px of diameter.
+   */
   icon: any;
+  /**
+   * Set to true to render the extended details for the step. Usually set to match
+   * the expanded state of the parent container.
+   */
   showDetails: boolean;
+  /**
+   * The text to show on the tooltip that opens when hovering with the mouse on
+   * the icon.
+   */
   i18nTooltip: string;
+  /**
+   * Set to true to set this step as active. This will highlight the icon circle.
+   */
   active?: boolean;
-  href?: H.LocationDescriptor;
 }
 
 export class IntegrationFlowStep extends React.Component<
@@ -24,13 +35,8 @@ export class IntegrationFlowStep extends React.Component<
     const tooltip = (
       <Tooltip id={'integration-flow-step'}>{this.props.i18nTooltip}</Tooltip>
     );
-    const baseIcon = (
+    const icon = (
       <div className={'integration-flow-step__icon'}>{this.props.icon}</div>
-    );
-    const icon = !this.props.href ? (
-      baseIcon
-    ) : (
-      <Link to={this.props.href}>{baseIcon}</Link>
     );
     return (
       <div

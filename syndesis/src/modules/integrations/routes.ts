@@ -1,6 +1,10 @@
 /* tslint:disable:object-literal-sort-keys */
 import { include } from 'named-urls';
 
+/**
+ * Both the integration creator and editor share the same routes when the creator
+ * reaches the third step in the wizard. This object is to keep them DRY.
+ */
 const editorRoutes = {
   index: 'add-step',
   addConnection: include(':position/connection', {

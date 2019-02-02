@@ -1,67 +1,88 @@
 import { Step } from '@syndesis/models';
 import {
-  IntegrationFlowAddStep,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
 } from '@syndesis/ui';
-import * as H from 'history';
 import * as React from 'react';
 
 export interface IIntegrationEditorSidebarProps {
+  /**
+   * the list of steps to render.
+   */
   steps: Step[];
-  canAdd?: boolean;
+  /**
+   * the zero-based index of a configured step that should be highlighted as
+   * active.
+   * This should not be set in conjunction with [addAtIndex]{@link IIntegrationEditorSidebarProps#addAtIndex}
+   */
   activeIndex?: number;
+  /**
+   * the zero-based index where a new step is being added.
+   * This should not be set in conjunction with [activeIndex]{@link IIntegrationEditorSidebarProps#activeIndex}
+   */
   addAtIndex?: number;
+  /**
+   * indicates if the step that is being added is a 'connection' or 'step'.
+   * @todo is it needed?
+   */
   addType?: 'connection' | 'step';
+  /**
+   * the icon to show in the circle of the step that is being added.
+   */
   addIcon?: any;
+  /**
+   * The title of the information table shown for the step that is being added,
+   * in the extended view.
+   */
   addI18nTitle?: string;
+  /**
+   * The text to show on the tooltip that opens when hovering with the mouse on
+   * the icon.
+   */
   addI18nTooltip?: string;
+  /**
+   * The description of the information table shown for the step that is being
+   * added, in the extended view.
+   */
   addI18nDescription?: string;
-  forceTooltips?: boolean;
-  addConnectionHref?(idx: number): H.LocationDescriptor;
-  addStepHref?(idx: number): H.LocationDescriptor;
-  configureConnectionHref?(stepIdx: number, step: Step): H.LocationDescriptor;
-  configureStepHref?(stepIdx: number, step: Step): H.LocationDescriptor;
 }
 
+/**
+ * This component shows the steps of an integration in a vertical fashion. It's
+ * meant to be used as the sidebar of the `IntegrationEditorLayout` component.
+ * Steps are rendered as circles, showing the step's connection icon.
+ *
+ * It offers two visualization, a compact one where just the icons are shown,
+ * and an expanded one where additional information about the step are shown in
+ * a table next to the step's circle.
+ *
+ * It can also show a step that is being added to the integration by providing
+ * its position and some information about the configuration step.
+ *
+ * @see [steps]{@link IIntegrationEditorSidebarProps#steps}
+ * @see [activeIndex]{@link IIntegrationEditorSidebarProps#activeIndex}
+ * @see [addAtIndex]{@link IIntegrationEditorSidebarProps#addAtIndex}
+ * @see [addType]{@link IIntegrationEditorSidebarProps#addType}
+ * @see [addIcon]{@link IIntegrationEditorSidebarProps#addIcon}
+ * @see [addI18nTitle]{@link IIntegrationEditorSidebarProps#addI18nTitle}
+ * @see [addI18nTooltip]{@link IIntegrationEditorSidebarProps#addI18nTooltip}
+ * @see [addI18nDescription]{@link IIntegrationEditorSidebarProps#addI18nDescription}
+ */
 export class IntegrationEditorSidebar extends React.Component<
   IIntegrationEditorSidebarProps
 > {
-  public static defaultProps = {
-    canAdd: false,
-    forceTooltips: false,
-  };
-
   public render() {
     return (
       <IntegrationVerticalFlow>
         {({ expanded }) =>
           this.props.steps.map((s, idx) => {
             const isActive = idx === this.props.activeIndex;
-            const hasAddStep = idx < this.props.steps.length - 1;
-            const hasActiveAddStep = this.props.addAtIndex! - 1 === idx;
+            const hasAddStep =
+              this.props.addAtIndex && idx < this.props.steps.length - 1;
             const isAfterActiveAddStep = this.props.addAtIndex! - 1 < idx;
             const position = isAfterActiveAddStep ? idx + 2 : idx + 1;
-            const addStep = this.props.canAdd ? (
-              <IntegrationFlowAddStep
-                active={hasActiveAddStep}
-                forceTooltip={this.props.forceTooltips}
-                showDetails={expanded}
-                addStepHref={
-                  this.props.addStepHref
-                    ? this.props.addStepHref(position)
-                    : undefined
-                }
-                i18nAddStep={'Add a step'}
-                addConnectionHref={
-                  this.props.addConnectionHref
-                    ? this.props.addConnectionHref(position)
-                    : undefined
-                }
-                i18nAddConnection={'Add a connection'}
-              />
-            ) : null;
+
             const activeAddStep = (
               <IntegrationFlowStepGeneric
                 icon={this.props.addIcon || <i className={'fa fa-plus'} />}
@@ -86,14 +107,9 @@ export class IntegrationEditorSidebar extends React.Component<
                     name={s.connection!.connector!.name}
                     action={s.action!.name}
                     dataType={'TODO'}
-                    href={
-                      this.props.configureConnectionHref
-                        ? this.props.configureConnectionHref(idx, s)
-                        : undefined
-                    }
                   />
                 )}
-                {hasAddStep && (hasActiveAddStep ? activeAddStep : addStep)}
+                {hasAddStep ? activeAddStep : null}
               </React.Fragment>
             );
           })

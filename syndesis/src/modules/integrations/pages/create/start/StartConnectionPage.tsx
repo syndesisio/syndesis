@@ -14,13 +14,20 @@ import {
 import resolvers from '../../../resolvers';
 import { getStartSelectActionHref } from '../../resolversHelpers';
 
+/**
+ * This page shows the list of connections containing actions with a **from**
+ * pattern.
+ * It's supposed to be used for step 1.1 of the creation wizard.
+ *
+ * This component doesn't expect any URL parameter or state.
+ */
 export class StartConnectionPage extends React.Component {
   public render() {
     return (
       <IntegrationEditorLayout
         header={<IntegrationCreatorBreadcrumbs step={1} />}
         sidebar={
-          <IntegrationVerticalFlow disabled={true}>
+          <IntegrationVerticalFlow>
             {({ expanded }) => (
               <>
                 <IntegrationFlowStepGeneric

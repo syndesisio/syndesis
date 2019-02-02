@@ -7,14 +7,46 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 export interface IIntegrationEditorChooseConnection {
+  /**
+   * Set to true if there were errors while loading the data.
+   */
   error: boolean;
+  /**
+   * Set to true if the data is being loaded and show a skeleton loader.
+   */
   loading: boolean;
+  /**
+   * The list of connections to render.
+   */
   connections: ConnectionOverview[];
+  /**
+   * The main title of the content, shown before the connections.
+   */
   i18nTitle: string;
+  /**
+   * The description of the content, shown before the connections.
+   */
   i18nSubtitle: string;
+
+  /**
+   * The callback that's invoked to retrieve the `LocationDescriptor` used to
+   * render the Select button link for each connection rendered.
+   * @param connection
+   */
   getConnectionHref(connection: ConnectionOverview): H.LocationDescriptor;
 }
 
+/**
+ * A component to render a list of connections, to be used in the integration
+ * editor.
+ *
+ * @see [error]{@link IIntegrationEditorChooseConnection#error}
+ * @see [loading]{@link IIntegrationEditorChooseConnection#loading}
+ * @see [connections]{@link IIntegrationEditorChooseConnection#connections}
+ * @see [i18nTitle]{@link IIntegrationEditorChooseConnection#i18nTitle}
+ * @see [i18nSubtitle]{@link IIntegrationEditorChooseConnection#i18nSubtitle}
+ * @see [getConnectionHref]{@link IIntegrationEditorChooseConnection#getConnectionHref}
+ */
 export class IntegrationEditorChooseConnection extends React.Component<
   IIntegrationEditorChooseConnection
 > {

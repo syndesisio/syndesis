@@ -16,12 +16,27 @@ import {
 } from '../../../containers';
 import resolvers from '../../../resolvers';
 
+/**
+ * @param actionId - the ID of the action that should be configured
+ * @param step - the configuration step when configuring a multi-page connection.
+ */
 export interface IFinishConfigurationPageRouteParams {
   actionId: string;
-  connectionId: string;
   step?: string;
 }
 
+/**
+ * @param startConnection - the connection object selected in step 1.1. Needed
+ * to render the IVP.
+ * @param startAction - the action object selected in step 1.2. Needed to
+ * render the IVP.
+ * @oaram integration - the integration object created in step 1.3.
+ * @param finishConnection - the connection object selected in step 2.1. Needed
+ * to render the IVP.
+ * @param updatedIntegration - when creating a link to this page, this should
+ * never be set. It is used by the page itself to pass the partially configured
+ * step when configuring a multi-page connection.
+ */
 export interface IFinishConfigurationPageRouteState {
   startAction: Action;
   startConnection: ConnectionOverview;
@@ -30,6 +45,22 @@ export interface IFinishConfigurationPageRouteState {
   updatedIntegration: Integration;
 }
 
+/**
+ * This page shows the configuration form for a given action. It's supposed to
+ * be used for step 2.3 of the creation wizard.
+ *
+ * Submitting the form will update the integration object with the second step
+ * of the first flow set up as specified by the form values.
+ *
+ * This component expects some [url params]{@link IFinishConfigurationPageRouteParams}
+ * and [state]{@link IFinishConfigurationPageRouteState} to be properly set in
+ * the route object.
+ *
+ * **Warning:** this component will throw an exception if the route state is
+ * undefined.
+ *
+ * @todo DRY the connection icon code
+ */
 export class FinishConfigurationPage extends React.Component {
   public render() {
     return (
@@ -40,7 +71,7 @@ export class FinishConfigurationPage extends React.Component {
             IFinishConfigurationPageRouteState
           >>
             {(
-              { actionId, connectionId, step = '0' },
+              { actionId, step = '0' },
               {
                 startAction,
                 startConnection,
@@ -104,7 +135,7 @@ export class FinishConfigurationPage extends React.Component {
                   initialValue={initialValue}
                   onUpdatedIntegration={onUpdatedIntegration}
                 >
-                  {({ form, onSubmit, isSubmitting }) => (
+                  {({ form, submitForm, isSubmitting }) => (
                     <>
                       <PageTitle title={'Configure the action'} />
                       <IntegrationEditorLayout
@@ -112,7 +143,7 @@ export class FinishConfigurationPage extends React.Component {
                           <IntegrationCreatorBreadcrumbs step={2} subStep={2} />
                         }
                         sidebar={
-                          <IntegrationVerticalFlow disabled={true}>
+                          <IntegrationVerticalFlow>
                             {({ expanded }) => (
                               <>
                                 <IntegrationFlowStepWithOverview
@@ -159,7 +190,7 @@ export class FinishConfigurationPage extends React.Component {
                           startConnection,
                         })}
                         cancelHref={resolvers.list()}
-                        onNext={onSubmit}
+                        onNext={submitForm}
                         isNextLoading={isSubmitting}
                       />
                     </>

@@ -16,12 +16,32 @@ import {
 import resolvers from '../../../resolvers';
 import { getFinishSelectActionHref } from '../../resolversHelpers';
 
+/**
+ * @param startConnection - the connection object selected in step 1.1. Needed
+ * to render the IVP.
+ * @param startAction - the action object selected in step 1.2. Needed to
+ * render the IVP.
+ * @oaram integration - the integration object created in step 1.3.
+ */
 export interface IFinishConnectionRouteState {
   startConnection: ConnectionOverview;
   startAction: Action;
   integration: Integration;
 }
 
+/**
+ * This page shows the list of connections containing actions with a **to**
+ * pattern.
+ * It's supposed to be used for step 2.1 of the creation wizard.
+ *
+ * This component expects some [state]{@link IFinishConnectionRouteState} to be
+ * properly set in the route object.
+ *
+ * **Warning:** this component will throw an exception if the route state is
+ * undefined.
+ *
+ * @todo DRY the connection icon code
+ */
 export class FinishConnectionPage extends React.Component {
   public render() {
     return (
@@ -32,7 +52,7 @@ export class FinishConnectionPage extends React.Component {
             <IntegrationEditorLayout
               header={<IntegrationCreatorBreadcrumbs step={2} />}
               sidebar={
-                <IntegrationVerticalFlow disabled={true}>
+                <IntegrationVerticalFlow>
                   {({ expanded }) => (
                     <>
                       <IntegrationFlowStepWithOverview

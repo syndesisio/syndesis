@@ -1,11 +1,9 @@
 import * as addConnection from './addConnection';
-import { AddStepPage } from './AddStepPage';
 import * as editConnection from './editConnection';
-import { SaveIntegrationPage } from './SaveIntegrationPage';
+import * as main from './main';
 
 export default {
-  AddStepPage,
-  SaveIntegrationPage,
   addConnection,
   editConnection,
+  main,
 };

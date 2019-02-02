@@ -54,6 +54,10 @@ export interface IntegrationFlowStepDetailsProps {
   children(props: IntegrationFlowStepDetailsChildrenProps): any;
 }
 
+/**
+ * A render prop component that provides the right components than can be used
+ * inside a step element of the integration editor sidebar.
+ */
 export class IntegrationFlowStepDetails extends React.Component<
   IntegrationFlowStepDetailsProps
 > {

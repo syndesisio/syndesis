@@ -6,13 +6,52 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 export interface IIntegrationEditorStepAdderProps {
+  /**
+   * the list of steps to render.
+   */
   steps: Step[];
+  /**
+   * a callback to get the `LocationDescriptor` that should be reached when
+   * clicking the Add Connection button
+   * @param idx - the zero-based index where a new connection should be added
+   */
   addConnectionHref(idx: number): H.LocationDescriptor;
+  /**
+   * a callback to get the `LocationDescriptor` that should be reached when
+   * clicking the Add Step button
+   * @param idx - the zero-based index where a new step should be added
+   */
   addStepHref(idx: number): H.LocationDescriptor;
+  /**
+   * a callback to get the `LocationDescriptor` that should be reached when
+   * clicking the Edit Connection button
+   * @param stepIdx - the zero-based index of the integration step that should
+   * be edited
+   * @param step - the integration step object that should be edited
+   */
   configureConnectionHref(stepIdx: number, step: Step): H.LocationDescriptor;
+  /**
+   * a callback to get the `LocationDescriptor` that should be reached when
+   * clicking the Edit Step button
+   * @param stepIdx - the zero-based index of the integration step that should
+   * be edited
+   * @param step - the integration step object that should be edited
+   */
   configureStepHref(stepIdx: number, step: Step): H.LocationDescriptor;
 }
 
+/**
+ * A component to render the steps of an integration with the required action
+ * buttons to add a new step, edit an existing one, etc.
+ *
+ * @see [steps]{@link IIntegrationEditorStepAdderProps#steps}
+ * @see [addConnectionHref]{@link IIntegrationEditorStepAdderProps#addConnectionHref}
+ * @see [addStepHref]{@link IIntegrationEditorStepAdderProps#addStepHref}
+ * @see [configureConnectionHref]{@link IIntegrationEditorStepAdderProps#configureConnectionHref}
+ * @see [configureStepHref]{@link IIntegrationEditorStepAdderProps#configureStepHref}
+ *
+ * @todo add the delete step button
+ */
 export class IntegrationEditorStepAdder extends React.Component<
   IIntegrationEditorStepAdderProps
 > {

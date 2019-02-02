@@ -17,14 +17,39 @@ import {
 import resolvers from '../../../resolvers';
 import { getStartConfigureActionHref } from '../../resolversHelpers';
 
+/**
+ * @param connectionId - the ID of the connection selected in step 1.1, whose
+ * actions should be shown.
+ */
 export interface IStartActionRouteParams {
   connectionId: string;
 }
 
+/**
+ * @param connection - the connection object, whose actions should be shown. If
+ * passed must equal to the [connectionId]{@link IStartActionRouteParams#connectionId}.
+ * This is used to immediately show the list of actions to the user, without
+ * any loader; the backend will be called nonetheless to ensure that we are
+ * working with the latest data available.
+ *
+ * **Warning:** consistency with the connectionID is not verified!
+ *
+ * TODO: maybe we shouldn't hit the backend if we already have the object?
+ */
 export interface IStartActionRouteState {
   connection?: ConnectionOverview;
 }
 
+/**
+ * This page shows the list of actions with a **from** pattern of a connection.
+ * It's supposed to be used for step 1.2 of the creation wizard.
+ *
+ * This component expects some [url params]{@link IStartActionRouteParams}
+ * and [state]{@link IStartActionRouteState} to be properly set in
+ * the route object.
+ *
+ * @todo DRY the connection icon code
+ */
 export class StartActionPage extends React.Component {
   public render() {
     return (
@@ -47,7 +72,7 @@ export class StartActionPage extends React.Component {
                           <IntegrationCreatorBreadcrumbs step={1} subStep={1} />
                         }
                         sidebar={
-                          <IntegrationVerticalFlow disabled={true}>
+                          <IntegrationVerticalFlow>
                             {({ expanded }) => (
                               <>
                                 <IntegrationFlowStepGeneric
@@ -90,7 +115,7 @@ export class StartActionPage extends React.Component {
                         }
                         content={
                           <IntegrationEditorChooseAction
-                            connection={data}
+                            connectionName={data.name}
                             actions={data.actionsWithFrom.sort((a, b) =>
                               a.name.localeCompare(b.name)
                             )}

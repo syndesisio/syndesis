@@ -30,13 +30,14 @@ export interface IIntegrationEditorAppRouteState {
  *
  * [1] https://reactjs.org/docs/error-boundaries.html
  *
- * TODO: add an error handler!
+ * @todo add an error handler!
+ * @todo i18n everywhere!
  */
 export class IntegrationEditorApp extends React.Component {
   public render() {
     return (
       <WithRouteData<null, IIntegrationEditorAppRouteState>>
-        {(_, { integration }, { history }) => (
+        {(_, { integration }) => (
           <WithClosedNavigation>
             <Breadcrumb>
               <Link to={resolvers.list()}>Integrations</Link>
@@ -49,7 +50,7 @@ export class IntegrationEditorApp extends React.Component {
               <Route
                 path={routes.integration.edit.index}
                 exact={true}
-                component={integrationPages.edit.AddStepPage}
+                component={integrationPages.edit.main.AddStepPage}
               />
               <Route
                 path={routes.integration.edit.addConnection.selectConnection}
@@ -87,7 +88,7 @@ export class IntegrationEditorApp extends React.Component {
               <Route
                 path={routes.integration.edit.saveAndPublish}
                 exact={true}
-                component={integrationPages.edit.SaveIntegrationPage}
+                component={integrationPages.edit.main.SaveIntegrationPage}
               />
             </Switch>
           </WithClosedNavigation>

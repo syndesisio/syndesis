@@ -1,14 +1,5 @@
 import * as React from 'react';
 
-export interface IIntegrationEditorBreadcrumbsProps {
-  step: number;
-  subStep?: number;
-}
-
-export interface IIntegrationEditorBreadcrumbsState {
-  active: boolean;
-}
-
 interface IWizardStepProps {
   isActive: boolean;
   isDisabled: boolean;
@@ -71,6 +62,31 @@ const WizardStep: React.FunctionComponent<IWizardStepProps> = ({
   </li>
 );
 
+export interface IIntegrationEditorBreadcrumbsProps {
+  /**
+   * The one-based active step number.
+   */
+  step: number;
+  /**
+   * Optional. The one-based active sub-step number.
+   */
+  subStep?: number;
+}
+
+export interface IIntegrationEditorBreadcrumbsState {
+  /**
+   * Indicates if the user clicked on a step. Used to show
+   * sub-steps when browsing from a mobile device.
+   */
+  active: boolean;
+}
+
+/**
+ * A component to display the PatternFly Wizard Steps specific to the integration
+ * editor flow.
+ * @see [step]{@link IIntegrationEditorBreadcrumbsProps#step}
+ * @see [subStep]{@link IIntegrationEditorBreadcrumbsProps#subStep}
+ */
 export class IntegrationEditorBreadcrumbs extends React.Component<
   IIntegrationEditorBreadcrumbsProps,
   IIntegrationEditorBreadcrumbsState

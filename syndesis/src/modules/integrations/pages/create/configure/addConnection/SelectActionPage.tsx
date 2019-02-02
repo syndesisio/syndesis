@@ -12,16 +12,42 @@ import {
 import resolvers from '../../../../resolvers';
 import { getCreateConfigureActionHref } from '../../../resolversHelpers';
 
+/**
+ * @param connectionId - the ID of the connection selected in step 2.1, whose
+ * actions should be shown.
+ * @param position - the zero-based position for the new step in the integration
+ * flow.
+ */
 export interface ISelectActionRouteParams {
   connectionId: string;
   position: string;
 }
 
+/**
+ * @param integration - the integration object coming from step 3.index, used to
+ * render the IVP.
+ * @param connection - the connection object selected in step 3.add.1. Needed
+ * to render the IVP.
+ */
 export interface ISelectActionRouteState {
   connection: ConnectionOverview;
   integration: Integration;
 }
 
+/**
+ * This page shows the list of actions of a connection containing with a **to**
+ * pattern.
+ * It's supposed to be used for 3.add.2 of the creation wizard.
+ *
+ * This component expects some [params]{@link ISelectActionRouteParams} and
+ * [state]{@link ISelectActionRouteState} to be properly set in the route
+ * object.
+ *
+ * **Warning:** this component will throw an exception if the route state is
+ * undefined.
+ *
+ * @todo DRY the connection icon code
+ */
 export class SelectActionPage extends React.Component {
   public render() {
     return (
@@ -79,7 +105,7 @@ export class SelectActionPage extends React.Component {
                       }
                       content={
                         <IntegrationEditorChooseAction
-                          connection={connection}
+                          connectionName={connection.name}
                           actions={data.actionsWithTo.sort((a, b) =>
                             a.name.localeCompare(b.name)
                           )}
