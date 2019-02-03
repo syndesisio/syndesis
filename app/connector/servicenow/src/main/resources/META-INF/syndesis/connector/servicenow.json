@@ -26,7 +26,7 @@
                 "javaType": "java.lang.Integer",
                 "kind": "parameter",
                 "label": "",
-                "labelHint": "Limit of elements per page",
+                "labelHint": "Maximum number of records that you want the connection to obtain. Recommendation is to enter 1000 or less.",
                 "order": 3,
                 "required": false,
                 "secret": false,
@@ -36,12 +36,12 @@
               "query": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "The query used to filter the result set",
+                "displayName": "Query to filter the result set",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "label": "",
-                "labelHint": "The query used to filter the result set",
+                "labelHint": "If you do not enter a ServiceNow query and the records in the table do not change, the connection obtains the same records every time.",
                 "order": 2,
                 "required": false,
                 "secret": false,
@@ -55,7 +55,7 @@
                 "group": "consumer",
                 "javaType": "long",
                 "kind": "parameter",
-                "labelHint": "Delay between scheduling (executing).",
+                "labelHint": "Elapsed time between polls for records.",
                 "order": 4,
                 "required": false,
                 "secret": false,
@@ -64,12 +64,12 @@
               "table": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "The table name",
+                "displayName": "Table name",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "label": "",
-                "labelHint": "The Table name",
+                "labelHint": "ServiceNow table to obtain records from.",
                 "order": 1,
                 "required": true,
                 "secret": false,
@@ -114,7 +114,7 @@
     },
     {
       "actionType": "connector",
-      "description": "Create a record into a specified staging table and triggers transformation based on predefined transform maps in the import set table.",
+      "description": "Stage a record in a ServiceNow import set to update a table.",
       "descriptor": {
         "connectorCustomizers": [
           "io.syndesis.connector.servicenow.customizers.ServiceNowImportSetCustomizer"
@@ -134,12 +134,12 @@
               "table": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "The Import Set name",
+                "displayName": "Import set",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "label": "",
-                "labelHint": "The Import Set name",
+                "labelHint": "The name of the import set in which to stage records for transformation to the associated table.",
                 "required": true,
                 "secret": false,
                 "tags": [],
@@ -150,7 +150,7 @@
         ]
       },
       "id": "io.syndesis:servicenow-action-create-record",
-      "name": "Create Record",
+      "name": "Add Record",
       "pattern": "To",
       "tags": [
         "dynamic"
