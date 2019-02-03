@@ -7,15 +7,14 @@
 :context: servicenow
 
 An integration can retrieve records from a ServiceNow table or add records to 
-a ServiceNow import set, which ServiceNow uses to update a table. To add 
-records, a prerequisite is for a ServiceNow administrator to create an 
-inbound ServiceNow web service. In an integration, to connect to ServiceNow,
+a ServiceNow import set, which ServiceNow uses to update a table. 
+In an integration, to connect to ServiceNow,
 create a ServiceNow connection and then add that connection to an integration.
 For details, see:
 
 * <<create-servicenow-connection_{context}>>
 * <<add-servicenow-connection-start_{context}>>
-* <<create-servicenow-web-service_{context}>>
+* <<create-servicenow-import-set_{context}>>
 * <<add-servicenow-connection-finish_{context}>>
 * <<example-sf-servicenow-integration_{context}>>
 
@@ -23,7 +22,7 @@ include::p_create-servicenow-connection.adoc[leveloffset=+1]
 
 include::p_add-servicenow-connection-start.adoc[leveloffset=+1]
 
-include::p_create-servicenow-web-service.adoc[leveloffset=+1]
+include::p_create-servicenow-import-set.adoc[leveloffset=+1]
 
 include::p_add-servicenow-connection-finish.adoc[leveloffset=+1]
 

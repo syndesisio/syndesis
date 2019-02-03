@@ -1,14 +1,15 @@
 // This module is included in the following assemblies:
 // as_connecting-to-servicenow.adoc
 
-[id='create-servicenow-web-service_{context}']
-= Create an inbound web service in ServiceNow
+[id='create-servicenow-import-set_{context}']
+= Create an import set in ServiceNow
 
 In a {prodname} integration, a ServiceNow connection cannot directly 
 update a ServiceNow table. To update ServiceNow data in an integration, 
-a prerequisite is for a ServiceNow administrator to create a ServiceNow 
-inbound web service. This implicitly creates a ServiceNow import set, 
-which is required for an integration to add data to ServiceNow. The 
+a prerequisite is an import set that stages updates for a ServiceNow table. 
+Often, the easiest way to create an import set is for
+a ServiceNow administrator to create a ServiceNow 
+inbound web service. This implicitly creates a ServiceNow import set. The 
 import set is based on the ServiceNow target table that the administrator 
 selects when creating the web service. A ServiceNow connection updates 
 this import set, and ServiceNow uses the import set to update the 
