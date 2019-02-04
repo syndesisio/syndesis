@@ -1,0 +1,78 @@
+{
+  "flows": [
+    {
+      "steps": [
+        {
+          "stepKind": "endpoint",
+          "action": {
+            "actionType": "connector",
+            "descriptor": {},
+            "id": "sql-start-connector",
+            "name": "Periodic SQL invocation",
+            "pattern": "From",
+            "tags": [],
+            "dependencies": []
+          },
+          "configuredProperties": {
+            "query": "select * from todo",
+            "schedulerExpression": "60000"
+          },
+          "connection": {},
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "stepKind": "log",
+          "name": "Log",
+          "configuredProperties": {
+            "bodyLoggingEnabled": "true",
+            "contextLoggingEnabled": "false"
+          },
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "stepKind": "mapper",
+          "name": "Data Mapper",
+          "action": {
+            "actionType": "step",
+            "descriptor": {}
+          },
+          "configuredProperties": {
+            "atlasmapping": "{}"
+          },
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "stepKind": "endpoint",
+          "action": {
+            "actionType": "connector",
+            "descriptor": {
+              "componentScheme": "mock",
+              "configuredProperties": {
+                "name": "mockedResult"
+              }
+            },
+            "tags": [],
+            "dependencies": []
+          },
+          "configuredProperties": {
+          }
+        }
+      ]
+    }
+  ],
+  "id": "test-integration",
+  "description": "This is a test integration!",
+  "name": "Test Integration",
+  "tags": [
+    "sql"
+  ],
+  "updatedAt": 0,
+  "createdAt": 0,
+  "version": 1
+}

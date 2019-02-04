@@ -50,4 +50,4 @@ var jsondb = {
     exists: function (path) {
         return internal.jsondb.exists(path);
     }
-}
+};
