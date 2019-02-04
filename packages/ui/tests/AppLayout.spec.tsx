@@ -27,6 +27,9 @@ export default describe('ConnectionCard', () => {
           />,
         ]}
         logoHref={'#test'}
+        showNavigation={false}
+        onNavigationCollapse={() => true}
+        onNavigationExpand={() => true}
       />
     </MemoryRouter>
   );
