@@ -32,7 +32,8 @@ cat <<"EOT"
     --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
     --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support            Allow test support endpoint for syndesis-server
-    --camel-k                 Install Camel-K operator
+    --camel-k <version>       Install Camel-K operator version <version>
+                              (version is optional)
 EOT
 }
 
@@ -48,7 +49,7 @@ install::run() {
         check_error "$result"
         if [ $(hasflag --camel-k) ]; then
           echo "Installing Camel-K CRDs"
-          local result=$(install_camel_k_crds)
+          local result=$(install_camel_k_crds "$(readopt --camel-k)")
           check_error "$result"
         fi
         prep_only="true"
@@ -97,7 +98,7 @@ install::run() {
 
     if [ $(hasflag --camel-k) ]; then
         echo "Deploying Camel-K operator"
-        result=$(deploy_camel_k_operator "$(oc project -q)")
+        result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)")
         check_error "$result"
     fi
 
