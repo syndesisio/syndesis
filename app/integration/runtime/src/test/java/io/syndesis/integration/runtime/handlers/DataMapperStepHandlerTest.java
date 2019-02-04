@@ -25,51 +25,22 @@ import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.PipelineDefinition;
 import org.apache.camel.model.ProcessDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.ToDefinition;
-import org.apache.camel.spring.SpringCamelContext;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DirtiesContext
-@RunWith(SpringRunner.class)
-@SpringBootTest(
-    classes = {
-        DataMapperStepHandlerTest.TestConfiguration.class
-    },
-    properties = {
-        "spring.main.banner-mode = off",
-        "logging.level.io.syndesis.integration.runtime = DEBUG"
-    }
-)
-@TestExecutionListeners(
-    listeners = {
-        DependencyInjectionTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class
-    }
-)
 @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
 public class DataMapperStepHandlerTest extends IntegrationTestSupport {
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Test
     public void testDataMapperStep() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
@@ -134,13 +105,5 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
         } finally {
             context.stop();
         }
-    }
-
-    // ***************************
-    //
-    // ***************************
-
-    @Configuration
-    public static class TestConfiguration {
     }
 }

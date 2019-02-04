@@ -18,25 +18,10 @@ package io.syndesis.integration.runtime.template;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
 import io.syndesis.integration.runtime.handlers.AbstractTemplateStepHandlerTest;
 
-@DirtiesContext
-@RunWith(SpringRunner.class)
-@SpringBootTest(
-    classes = {
-        AbstractTemplateStepHandlerTest.TestConfiguration.class
-    },
-    properties = {
-        "spring.main.banner-mode = off",
-        "logging.level.io.syndesis.integration.runtime = DEBUG"
-    }
-)
 public class FreeMarkerTemplateStepHandlerTest extends AbstractTemplateStepHandlerTest {
 
     @Override

@@ -15,10 +15,6 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Step;
@@ -29,27 +25,22 @@ import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.util.JsonSupport;
-import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.spring.SpringCamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -61,23 +52,9 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@DirtiesContext
-@RunWith(SpringRunner.class)
-@SpringBootTest(
-        classes = {
-                ForeachStepHandlerTest.TestConfiguration.class
-        },
-        properties = {
-                "spring.main.banner-mode = off",
-                "logging.level.io.syndesis.integration.runtime = DEBUG"
-        }
-)
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class ForeachStepHandlerTest extends IntegrationTestSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(ForeachStepHandlerTest.class);
-
-    @Autowired
-    private ApplicationContext applicationContext;
 
     private ActivityTracker activityTracker = Mockito.mock(ActivityTracker.class);
 
@@ -92,7 +69,7 @@ public class ForeachStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testForeach() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -154,7 +131,7 @@ public class ForeachStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testForeachWithTrailingSteps() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -228,7 +205,7 @@ public class ForeachStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testForeachWithTransformation() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = getDefaultCamelContextWithMyBeanInRegistry();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -314,7 +291,7 @@ public class ForeachStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testForeachTokenize() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -378,7 +355,7 @@ public class ForeachStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testForeachWithOriginalAggregationStrategy() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -442,7 +419,7 @@ public class ForeachStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testForeachWithLatestAggregationStrategy() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -505,7 +482,7 @@ public class ForeachStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testForeachScriptAggregationStrategy() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -567,25 +544,6 @@ public class ForeachStepHandlerTest extends IntegrationTestSupport {
             verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
         } finally {
             context.stop();
-        }
-    }
-
-    // ***************************
-    //
-    // ***************************
-
-    @Configuration
-    public static class TestConfiguration {
-        @Bean
-        public SimpleEndpointStepHandlerTest.MyBean myBean() {
-            return new SimpleEndpointStepHandlerTest.MyBean();
-        }
-    }
-
-    public static final class MyBean {
-        @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
-        public String myProcessor(@Body String body) {
-            return body.toUpperCase();
         }
     }
 }

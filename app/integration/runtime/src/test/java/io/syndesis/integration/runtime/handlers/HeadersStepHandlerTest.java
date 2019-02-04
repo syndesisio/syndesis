@@ -25,44 +25,15 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.spring.SpringCamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
-@DirtiesContext
-@RunWith(SpringRunner.class)
-@SpringBootTest(
-    classes = {
-        HeadersStepHandlerTest.TestConfiguration.class
-    },
-    properties = {
-        "spring.main.banner-mode = off",
-        "logging.level.io.syndesis.integration.runtime = DEBUG"
-    }
-)
-@TestExecutionListeners(
-    listeners = {
-        DependencyInjectionTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class
-    }
-)
 @SuppressWarnings("PMD.ExcessiveImports")
 public class HeadersStepHandlerTest extends IntegrationTestSupport {
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Test
     public void testSetHeadersStepHandler() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
@@ -118,7 +89,7 @@ public class HeadersStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testRemoveHeadersStepHandler() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
@@ -175,13 +146,5 @@ public class HeadersStepHandlerTest extends IntegrationTestSupport {
         } finally {
             context.stop();
         }
-    }
-
-    // ***************************
-    //
-    // ***************************
-
-    @Configuration
-    public static class TestConfiguration {
     }
 }

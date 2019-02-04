@@ -29,10 +29,7 @@ import org.apache.camel.Message;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.spring.SpringCamelContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
+import org.apache.camel.impl.DefaultCamelContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -55,8 +52,6 @@ import io.syndesis.integration.runtime.IntegrationTestSupport;
 
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public abstract class AbstractTemplateStepHandlerTest extends IntegrationTestSupport {
-    @Autowired
-    protected ApplicationContext applicationContext;
 
     private DirectEndpoint directEndpoint = new DirectEndpoint();
 
@@ -172,7 +167,7 @@ public abstract class AbstractTemplateStepHandlerTest extends IntegrationTestSup
     }
 
     protected void testTemplateStepBasic(Symbol[] symbols) throws Exception {
-        CamelContext context = new SpringCamelContext(applicationContext);
+        CamelContext context = new DefaultCamelContext();
 
         List<String> testMessages = new ArrayList<>();
         testMessages.add(
@@ -236,7 +231,7 @@ public abstract class AbstractTemplateStepHandlerTest extends IntegrationTestSup
      }
 
     protected void testTemplateStepNoSpacesInSymbolAllowed(Symbol[] symbols) throws Exception {
-        CamelContext context = new SpringCamelContext(applicationContext);
+        CamelContext context = new DefaultCamelContext();
 
         String template = EMPTY_STRING +
             "At " + symbols[0] + ", " + symbols[1] + NEW_LINE +
@@ -292,14 +287,6 @@ public abstract class AbstractTemplateStepHandlerTest extends IntegrationTestSup
         public int hashCode() {
             return Objects.hash(name);
         }
-    }
-
-    // ***************************
-    //
-    // ***************************
-
-    @Configuration
-    public static class TestConfiguration {
     }
 
     private static class DirectEndpoint implements StringConstants {

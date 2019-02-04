@@ -26,26 +26,9 @@ import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.SplitDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DirtiesContext
-@RunWith(SpringRunner.class)
-@SpringBootTest(
-    classes = {
-        IntegrationRouteBuilderTest.TestConfiguration.class,
-    },
-    properties = {
-        "debug = true",
-        "spring.main.banner-mode = off",
-        "logging.level.io.syndesis.integration.runtime = DEBUG"
-    }
-)
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class IntegrationRouteBuilderTest extends IntegrationTestSupport {
     @Test
@@ -84,13 +67,5 @@ public class IntegrationRouteBuilderTest extends IntegrationTestSupport {
         assertThat(getOutput(route, 3, 1, 1, 1)).isInstanceOf(ToDefinition.class);
         assertThat(getOutput(route, 3, 1, 1, 1)).hasFieldOrPropertyWithValue("uri", "mock:expression");
         assertThat(getOutput(route, 3, 1, 1, 2)).isInstanceOf(ProcessDefinition.class);
-    }
-
-    // ***************************
-    //
-    // ***************************
-
-    @Configuration
-    public static class TestConfiguration {
     }
 }

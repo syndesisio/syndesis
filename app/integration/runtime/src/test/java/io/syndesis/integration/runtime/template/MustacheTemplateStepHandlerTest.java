@@ -23,28 +23,13 @@ import java.util.List;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.spring.SpringCamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 import io.syndesis.common.model.integration.step.template.TemplateStepConstants;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
 import io.syndesis.integration.runtime.handlers.AbstractTemplateStepHandlerTest;
 
-@DirtiesContext
-@RunWith(SpringRunner.class)
-@SpringBootTest(
-    classes = {
-        AbstractTemplateStepHandlerTest.TestConfiguration.class
-    },
-    properties = {
-        "spring.main.banner-mode = off",
-        "logging.level.io.syndesis.integration.runtime = DEBUG"
-    }
-)
 public class MustacheTemplateStepHandlerTest extends AbstractTemplateStepHandlerTest implements TemplateStepConstants {
 
     @Override
@@ -78,7 +63,7 @@ public class MustacheTemplateStepHandlerTest extends AbstractTemplateStepHandler
 
     @Test
     public void testTemplateStepDanglingSection() throws Exception {
-        CamelContext context = new SpringCamelContext(applicationContext);
+        CamelContext context = new DefaultCamelContext();
 
         Symbol[] symbols = {
             new Symbol("id", "string"),
@@ -108,7 +93,7 @@ public class MustacheTemplateStepHandlerTest extends AbstractTemplateStepHandler
 
     @Test
     public void testTemplateStepIterate() throws Exception {
-        CamelContext context = new SpringCamelContext(applicationContext);
+        CamelContext context = new DefaultCamelContext();
 
         List<String> testMessages = new ArrayList<>();
         testMessages.add(

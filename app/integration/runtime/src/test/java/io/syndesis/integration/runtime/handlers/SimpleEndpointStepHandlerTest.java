@@ -26,28 +26,15 @@ import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.util.JsonSupport;
-import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.spring.SpringCamelContext;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -59,29 +46,9 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@DirtiesContext
-@RunWith(SpringRunner.class)
-@SpringBootTest(
-    classes = {
-        SimpleEndpointStepHandlerTest.TestConfiguration.class
-    },
-    properties = {
-        "spring.main.banner-mode = off",
-        "logging.level.io.syndesis.integration.runtime = DEBUG"
-    }
-)
-@TestExecutionListeners(
-    listeners = {
-        DependencyInjectionTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class
-    }
-)
 @SuppressWarnings({"PMD.JUnitTestsShouldIncludeAssert", "PMD.UseLocaleWithCaseConversions"})
 public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleEndpointStepHandlerTest.class);
-
-    @Autowired
-    private ApplicationContext applicationContext;
 
     private ActivityTracker activityTracker = Mockito.mock(ActivityTracker.class);
 
@@ -92,11 +59,13 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
             LOGGER.debug(JsonSupport.toJsonObject(invocation.getArguments()));
             return null;
         }).when(activityTracker).track(any());
+
+
     }
 
     @Test
     public void testSimpleEndpointStep() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = getDefaultCamelContextWithMyBeanInRegistry();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -159,7 +128,7 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testSimpleEndpointStepWithSplit() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = getDefaultCamelContextWithMyBeanInRegistry();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -228,7 +197,7 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testSimpleEndpointStepWithSplitDisabled() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = getDefaultCamelContextWithMyBeanInRegistry();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -296,22 +265,4 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
         }
     }
 
-    // ***************************
-    //
-    // ***************************
-
-    @Configuration
-    public static class TestConfiguration {
-        @Bean
-        public MyBean myBean() {
-            return new MyBean();
-        }
-    }
-
-    public static final class MyBean {
-        @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
-        public String myProcessor(@Body String body) {
-            return body.toUpperCase();
-        }
-    }
 }

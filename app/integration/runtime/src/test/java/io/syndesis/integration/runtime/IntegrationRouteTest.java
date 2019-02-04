@@ -35,26 +35,11 @@ import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.SplitDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DirtiesContext
-@RunWith(SpringRunner.class)
-@SpringBootTest(
-    classes = {
-        IntegrationRouteTest.TestConfiguration.class
-    },
-    properties = {
-        "spring.main.banner-mode = off",
-        "logging.level.io.syndesis.integration.runtime = DEBUG"
-    }
-)
 @SuppressWarnings("PMD")
 public class IntegrationRouteTest extends IntegrationTestSupport {
     @Test
@@ -385,13 +370,5 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
         assertThat(getOutput(route, 3, 1)).isInstanceOf(ToDefinition.class);
         assertThat(getOutput(route, 3, 1)).hasFieldOrPropertyWithValue("uri", "mock:timer");
         assertThat(getOutput(route, 3, 2)).isInstanceOf(ProcessDefinition.class);
-    }
-
-    // ***************************
-    //
-    // ***************************
-
-    @Configuration
-    public static class TestConfiguration {
     }
 }
