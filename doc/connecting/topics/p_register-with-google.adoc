@@ -1,31 +1,32 @@
 // This module is included in these assemblies:
-// as_connecting-to-gmail.adoc
+// as_connecting-to-google.adoc
 
-[id='register-with-gmail_{context}']
-= Register {prodname} as a Gmail client application
+[id='register-with-google_{context}']
+= Register {prodname} as a Google client application
 
-In an integration, to be able to connect to Gmail,
+In an integration, to be able to connect to Gmail, Google Calendar, or
+Google Sheets, 
 you must register your {prodname} environment as a Google client application.
-During registration, you enable the Gmail API and create credentials that
-{prodname} uses to access Google APIs that you have enabled.
+During registration, you enable Google APIs and create credentials that
+{prodname} uses to access the Google APIs that you have enabled.
 
-With registration in place, you can create any number of Gmail
-connections and any number of integrations that connect
-to Gmail. While each Gmail connection uses the
-same registration, each connection can
-access the mail for a different Google account.
+With registration in place, you can create any number of connections
+to Gmail, Google Calendar, and Google Sheets. You can create any number of 
+integrations that connect to these Google applications. 
+While each connection to a Google application uses the
+same client ID and client secret, which you obtain during registration, 
+each connection can have the authorization to access
+a different Google account, which you choose. 
 
-[NOTE]
-If you already created a Google Calendar or Google Sheets connection, then you already
-created the credentials that your {prodname} environment needs to access
-enabled Google APIs. You do not need to follow the procedure documented here.
-To be able to create a Gmail connection, you
-just need to
-link:{LinkFuseOnlineConnectorGuide}#enable-gmail-api_gmail[enable the Gmail API].
+This procedure instructs you to enable the Gmail API, the Google Calendar API, 
+and the Google Sheets API. However, you can enable only the API(s) that you 
+need rather than all three APIs. At a later time, if you need to create connections
+to the applications whose APIs you did not enable, you can return here and 
+follow the instructions to enable their APIs. 
 
 .Prerequisite
 You must be able to sign in to the Google account that you want to
-use to register {prodname} as a Gmail client application.
+use to register {prodname} as a Google client application.
 
 .Procedure
 
@@ -47,14 +48,23 @@ If this Google account does not already
 have a project, you must create one. For information about Google projects
 and how you might want to organize your use of projects, click the Google help
 icon in the upper right.
-.. Enable the Gmail API as follows:
-... You should see the *APIs and Services* dashboard. If you do not, then
-in the upper left corner, click the
+.. Enable Google APIs as follows:
+... In the upper left corner, click 
 image:images/Hamburger.png[Navigation menu icon] and select
-*APIs and Services* > *Dashboard*.
-... Click the *Gmail API* card.
-... In the *Gmail API* page, click *ENABLE*.
+*APIs and Services* > *Library*.
+... If necessary, scroll down to see the *G Suite* row of cards. 
+... Click the *Google Calendar API* card, which displays a page that indicates
+that the Google Calendar API is enabled.  
+... Scroll down and click the *Gmail API* card, which displays a page that indicates
+that the Gmail API is enabled.
+... In the upper left corner, click 
+image:images/Hamburger.png[Navigation menu icon] and select
+*APIs and Services* > *Library*.
+... If necessary, scroll down to see the *G Suite* row of cards. 
+... Click the *Google Sheets API* card, which displays a page that indicates
+that the Google Sheets API is enabled.  
 .. Give your client application a name as follows:
+... Click *MANAGE*. 
 ... In the page that appears, in the left navigation panel, click
 *Credentials* and then on the right, click *Credentials in APIs & Services*.
 ... Click the *OAuth consent screen* tab.
@@ -73,37 +83,42 @@ entered for the client application itself. For example, enter
 ... Skip *Authorized JavaScript origins*.
 ... In the *Authorized redirect URIs* field, paste the callback URL
 that you copied from your {prodname} environment at the beginning of
-this procedure.
+this procedure. 
 ... Click *Create* to display the client ID and client secret for your
 {prodname} environment.
 .. To the right of the client ID field, click
 image:images/copy_icon.png[the Copy icon] to copy the client ID
 to your clipboard.
 
-. Return to the {prodname} *Settings* page, expand the Gmail entry, and
-in the Gmail *Client ID* field,
-paste the consumer client ID that you just copied.
+. Return to the {prodname} *Settings* page and do the following: 
+.. Expand the entries for Gmail, Google Calendar, and Google Sheets. 
+.. In the *Client ID* field for each Google application, 
+paste the Google client ID that you just copied.
 
 . Return to the Google developers site and to the right of the
 client secret field, click
 image:images/copy_icon.png[the Copy icon] to copy the client secret to
 your clipboard.
 
-. Return to {prodname} and do the following:
-.. In the *Settings* page, in the
-Gmail *Client Secret* field, paste the Gmail client secret that you
+. Return to the {prodname} *Settings* page and do the following in
+the entry for each Google application: 
+.. In the *Client Secret* field, paste the Google client secret that you
 just copied.
 .. Click *Save*. You should get a *Registration Successful!* notification.
-.. Click *Ok* to collapse the fields.
+.. Click *Ok* to collapse the entry.
 
 .Results
-You can now create a Gmail connection.
+For each Google application API that you enabled, you can create a 
+connection to that application.
+
+All connections from {prodname} to Google applications use the same Google 
+client ID and Google client secret. 
 
 [IMPORTANT]
 The Google client ID and Google client secret contain token refresh
-information that ensures that your Gmail connections, and integrations
-that have Gmail connections continuously work correctly.
+information that ensures that your connections to Google applications, and integrations
+that have connections to Google applications continuously work correctly.
 Consequently, you should *not* obtain new credentials. If you do, then you
-would need to recreate each Gmail connection, replace the old Gmail
-connections with new Gmail connections, and re-publish each
-integration that uses a Gmail connection.
+would need to recreate each Google connection, replace the old
+connections with new connections, and re-publish each
+integration that uses a Google connection.

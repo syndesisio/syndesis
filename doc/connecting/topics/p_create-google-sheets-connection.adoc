@@ -10,9 +10,9 @@ particular Google account. After you create a Google Sheets connection, you can
 add it to multiple integrations.
 
 .Prerequisite
-You registered your {prodname} environment as a Google client
-application as described in
-link:{LinkFuseOnlineConnectorGuide}#register-with-google-sheets_sheets[Register as a Google Sheets client application].
+You 
+link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[registered {prodname} as a Google client application] 
+and enabled the Google Sheets API. 
 
 .Procedure
 
@@ -25,19 +25,17 @@ you use to create one or more connections.
 . In the *Configure Connection* page, click *Connect Google Sheets*,
 which takes you to a Google sign-in page.
 +
-[NOTE]
-====
 If *Connect Google Sheets* does not appear, then your {prodname} environment
 is not registered as a Google client application with the Google Sheets API
 enabled. See
-link:{LinkFuseOnlineConnectorGuide}#register-with-google-sheets_sheets[Register as a Google Sheets client application].
+link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Register with Google].
 When your environment is not registered with
 Google, then when you try to create a Google Sheets connection, {prodname} displays
 multiple fields that prompt for authorization information. While you can
 create a Google Sheets connection by entering values in these fields,
 you should register with Google first, enable the Google Sheets API,
 and then create a Google Sheets connection.
-====
+
 . In the Google sign-in page,
 select the Google account that you want this connection to
 access from {prodname} and click *Next*.

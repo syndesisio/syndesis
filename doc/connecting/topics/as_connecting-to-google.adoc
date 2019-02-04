@@ -1,0 +1,32 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-google_{context}']
+= Connect to Google applications
+:context: google
+
+An integration can connect to Gmail, Google Calendar, and Google Sheets. 
+To create a connection to a Google application, you must register your
+{prodname} environment as a Google client application and enable the 
+Google API for each application that you want integrations to connect to. 
+
+Information and instructions are in the following topics:
+
+* <<register-with-google_{context}>>
+* <<connecting-to-gmail_{context}>>
+* <<connecting-to-google-calendar_{context}>>
+* <<connecting-to-google-sheets_{context}>>
+
+include::p_register-with-google.adoc[leveloffset=+1]
+
+include::as_connecting-to-gmail.adoc[leveloffset=+1]
+
+include::as_connecting-to-google-calendar.adoc[leveloffset=+1]
+
+include::as_connecting-to-google-sheets.adoc[leveloffset=+1]
+
+
+
+
+:context: connectors
