@@ -45,6 +45,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.atlasmap.core.DefaultAtlasConversionService;
 import io.atlasmap.java.inspect.ClassInspectionService;
 import io.atlasmap.java.v2.JavaClass;
+import io.atlasmap.v2.CollectionType;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.Action;
@@ -599,7 +600,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
                 classInspectionService.setConversionService(DefaultAtlasConversionService.getInstance());
 
                 final Class<?> clazz = loader.loadClass(type);
-                final JavaClass c = classInspectionService.inspectClass(loader, clazz);
+                final JavaClass c = classInspectionService.inspectClass(loader, clazz, CollectionType.NONE, null);
                 final ObjectMapper mapper = io.atlasmap.v2.Json.mapper();
 
                 if (inspectionMode == InspectionMode.SPECIFICATION || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
