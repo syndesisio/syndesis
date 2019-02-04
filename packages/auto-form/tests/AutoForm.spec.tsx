@@ -15,6 +15,7 @@ export default describe('AutoForm', () => {
           type: 'text',
         },
       }}
+      initialValue={{}}
       i18nRequiredProperty={'required'}
       onSave={onSave}
     >
