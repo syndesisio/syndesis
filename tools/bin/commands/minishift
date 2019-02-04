@@ -38,7 +38,8 @@ minishift::usage() {
     --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
     --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support            Allow test support endpoint for syndesis-server
-    --camel-k                 Install teh Camel-K operator
+    --camel-k <version>       Install the Camel-K operator with version <version>
+                              (<version> is optional)
 EOT
 }
 
@@ -101,7 +102,7 @@ minishift::run() {
         # Install Camel-K CRD globally (if requested)
         if [ $(hasflag --camel-k) ]; then
           echo "Installing Camel-K CRDs"
-          result=$(install_camel_k_crds)
+          result=$(install_camel_k_crds "$(readopt --camel-k)")
           check_error "$result"
         fi
 
@@ -116,7 +117,7 @@ minishift::run() {
         # Deploy Camel-K operator if requested
         if [ $(hasflag --camel-k) ]; then
           echo "Deploying Camel-K operator"
-          result=$(deploy_camel_k_operator "$(oc project -q)")
+          result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)")
           check_error "$result"
         fi
 

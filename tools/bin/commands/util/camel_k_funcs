@@ -1,25 +1,29 @@
 #!/bin/bash
 
+CAMEL_K_DEFAULT_VERSION="0.2.0"
+
 # Deploy Camel-K operator
 deploy_camel_k_operator() {
-  local project=${1:-}
+  local version=${1:-$CAMEL_K_DEFAULT_VERSION}
+  local project=${2:-}
   local extra_opts=""
   if [ -n "$project" ]; then
     extra_opts="--namespace $project"
   fi
-  local kamel=$(get_camel_k_bin)
+  local kamel=$(get_camel_k_bin "$version")
   $kamel install --skip-cluster-setup $extra_opts
 }
 
 # Install Camel-K CRD
 install_camel_k_crds() {
-  local kamel=$(get_camel_k_bin)
+  local version=${1:-$CAMEL_K_DEFAULT_VERSION}
+  local kamel=$(get_camel_k_bin "$version")
   $kamel install --cluster-setup
 }
 
 # Download `kamel` cli
 get_camel_k_bin() {
-  local version=${1:-0.2.0} # TODO: Make this version configurable, or pick the latest
+  local version=${1:-$CAMEL_K_DEFAULT_VERSION}
 
   # If its already downloaded, skip download
   local config_dir=$(syndesis_config_dir)

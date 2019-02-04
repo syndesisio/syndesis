@@ -7,12 +7,12 @@ build::description() {
 build::usage() {
     cat <<EOT
     -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
-        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade
+        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade, camel-k
         --app-images               Build only application modules with Docker images (ui, server, meta, s2i)
                                    and create images
-        --infra-images             Build only infrastructure modules with Docker images (operator, upgrade) and create images
+        --infra-images             Build only infrastructure modules with Docker images (operator, camel-k, upgrade) and create images
     -m  --module <m1>,<m2>, ..     Build modules
-                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator, upgrade
+                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator, camelk, upgrade
     -d  --dependencies             Build also all project the specified module depends on
         --skip-tests               Skip unit and system test execution
         --skip-checks              Disable all checks
@@ -22,7 +22,7 @@ build::usage() {
         --multi-stage              Multi-stage Dockerfile support for operator build (experimental)
     -p  --project <project>        Specifies the project / namespace to create images
     -e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
-    -l  --local                    If building the operator, use a locally installed go
+    -l  --local                    If building the operators, use a locally installed go
                                    Otherwise run the Go build from a container (either local or Minishift's Docker  daemon)
         --clean-cache              Used for the operator build to remove the local dependency cache.
     -c  --clean                    Run clean builds (mvn clean)
