@@ -57,6 +57,9 @@ public class ActionProcessor extends AbstractProcessor {
     public static final String SYNDESIS_ANNOTATION_CLASS_NAME = "io.syndesis.extension.api.annotations.Action";
     public static final String SYNDESIS_PROPERTY_ANNOTATION_CLASS_NAME = "io.syndesis.extension.api.annotations.ConfigurationProperty";
     public static final String SYNDESIS_PROPERTY_ENUM_ANNOTATION_CLASS_NAME = "io.syndesis.extension.api.annotations.ConfigurationProperty$PropertyEnum";
+    public static final String SYNDESIS_DATA_SHAPE_VARIANT_CLASS_NAME = "io.syndesis.extension.api.annotations.DataShape$Variant";
+    public static final String SYNDESIS_DATA_SHAPE_META_CLASS_NAME = "io.syndesis.extension.api.annotations.DataShape$Meta";
+
     public static final String SYNDESIS_STEP_CLASS_NAME = "io.syndesis.extension.api.Step";
     public static final String CAMEL_HANDLER_ANNOTATION_CLASS_NAME = "org.apache.camel.Handler";
     public static final String CAMEL_ROUTE_BUILDER_CLASS_NAME_ = "org.apache.camel.builder.RouteBuilder";
@@ -66,6 +69,8 @@ public class ActionProcessor extends AbstractProcessor {
     private Class<? extends Annotation> annotationClass;
     private Class<? extends Annotation> propertyAnnotationClass;
     private Class<? extends Annotation> propertyEnumAnnotationClass;
+    private Class<? extends Annotation> dataShapeVariantAnnotationClass;
+    private Class<? extends Annotation> dataShapeMetaAnnotationClass;
     private Class<? extends Annotation> beanAnnotationClass;
     private Class<? extends Annotation> handlerAnnotationClass;
     private Class<? extends Annotation> routeBuilderClass;
@@ -82,6 +87,8 @@ public class ActionProcessor extends AbstractProcessor {
         annotationClass = mandatoryFindClass(SYNDESIS_ANNOTATION_CLASS_NAME);
         propertyAnnotationClass = mandatoryFindClass(SYNDESIS_PROPERTY_ANNOTATION_CLASS_NAME);
         propertyEnumAnnotationClass = mandatoryFindClass(SYNDESIS_PROPERTY_ENUM_ANNOTATION_CLASS_NAME);
+        dataShapeVariantAnnotationClass = mandatoryFindClass(SYNDESIS_DATA_SHAPE_VARIANT_CLASS_NAME);
+        dataShapeMetaAnnotationClass = mandatoryFindClass(SYNDESIS_DATA_SHAPE_META_CLASS_NAME);
         stepClass = findClass(SYNDESIS_STEP_CLASS_NAME);
         beanAnnotationClass = findClass(BEAN_ANNOTATION_CLASS_NAME);
         handlerAnnotationClass = mandatoryFindClass(CAMEL_HANDLER_ANNOTATION_CLASS_NAME);
@@ -311,13 +318,16 @@ public class ActionProcessor extends AbstractProcessor {
             } else if(Object[].class.isInstance(value)) {
                 Object[] array = (Object[]) value;
                 for (int i = 0; i < array.length; i++) {
-                    if (propertyEnumAnnotationClass.isInstance(array[i])) {
-                        Annotation enumAnnotation = (Annotation) array[i];
-                        ObjectNode enumNode = mapper.createObjectNode();
+                    if (propertyEnumAnnotationClass.isInstance(array[i]) ||
+                        dataShapeVariantAnnotationClass.isInstance(array[i]) ||
+                        dataShapeMetaAnnotationClass.isInstance(array[i])) {
 
-                        gatherProperties(enumNode, enumAnnotation);
+                        Annotation annotation = (Annotation) array[i];
+                        ObjectNode node = mapper.createObjectNode();
 
-                        root.withArray(key).add(enumNode);
+                        gatherProperties(node, annotation);
+
+                        root.withArray(key).add(node);
                     }
                 }
             } else {
