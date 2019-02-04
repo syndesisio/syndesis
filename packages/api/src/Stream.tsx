@@ -1,5 +1,5 @@
 import { callFetch } from './callFetch';
-import { IFetchProps, Fetch } from './Fetch';
+import { Fetch, IFetchProps } from './Fetch';
 
 export class Stream extends Fetch<string[]> {
   protected reader: ReadableStreamReader | undefined;

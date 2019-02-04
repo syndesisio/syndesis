@@ -57,6 +57,7 @@
     "@syndesis/models": "*",
     "@syndesis/utils": "*",
     "deepmerge": "^2.2.1",
+    "immer": "^2.0.0",
     "react-fast-compare": "^2.0.2"
   },
   "jest": {

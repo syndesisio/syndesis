@@ -11,7 +11,7 @@ import { AppContext } from '../app';
  * events that will lead to a bad UX.
  */
 export class WithClosedNavigation extends React.Component {
-  static contextType = AppContext;
+  public static contextType = AppContext;
 
   public componentDidMount(): void {
     this.context.hideNavigation();

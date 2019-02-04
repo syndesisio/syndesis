@@ -14,7 +14,7 @@ let lastTimestamp = 0;
  */
 export function key() {
   // first time setup.. initialize the randomness...
-  if (RANDOMNESS.length == 0) {
+  if (RANDOMNESS.length === 0) {
     for (let i = 0; i < 12; i++) {
       RANDOMNESS[i] = Math.floor(Math.random() * 64);
     }
@@ -31,7 +31,7 @@ export function key() {
   if (timestamp === lastTimestamp) {
     for (let i = 0; i < 12; i++) {
       RANDOMNESS[i]++;
-      if (RANDOMNESS[i] == 64) {
+      if (RANDOMNESS[i] === 64) {
         RANDOMNESS[i] = 0; // we need to carry to the next random byte.
       } else {
         break; // done incrementing.

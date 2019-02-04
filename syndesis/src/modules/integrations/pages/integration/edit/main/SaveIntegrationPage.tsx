@@ -1,4 +1,3 @@
-/* tslint:disable:object-literal-sort-key */
 import { WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { Integration } from '@syndesis/models';
@@ -51,15 +50,15 @@ export class SaveIntegrationPage extends React.Component {
                 history.push(resolvers.list());
               };
               const definition: IFormDefinition = {
-                name: {
-                  defaultValue: '',
-                  displayName: 'Name',
-                  required: true,
-                },
                 description: {
                   defaultValue: '',
                   displayName: 'Description',
                   type: 'textarea',
+                },
+                name: {
+                  defaultValue: '',
+                  displayName: 'Name',
+                  required: true,
                 },
               };
               return (

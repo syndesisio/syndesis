@@ -138,8 +138,8 @@ export class FinishActionPage extends React.Component {
                   }
                   backHref={resolvers.create.finish.selectConnection({
                     integration,
-                    startConnection,
                     startAction,
+                    startConnection,
                   })}
                   cancelHref={resolvers.list()}
                 />

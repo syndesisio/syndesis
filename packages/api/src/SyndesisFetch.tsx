@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
-import { IFetchRenderProps, Fetch } from './Fetch';
+import { Fetch, IFetchRenderProps } from './Fetch';
 import { Stream } from './Stream';
 
 export interface ISyndesisFetchProps<T> {
