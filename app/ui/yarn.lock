@@ -211,10 +211,9 @@
     tree-kill "1.2.1"
     webpack-sources "1.3.0"
 
-"@patternfly/patternfly-next@^1.0.155":
-  version "1.0.175"
-  resolved "https://registry.yarnpkg.com/@patternfly/patternfly-next/-/patternfly-next-1.0.175.tgz#47d2ee6448ee7132874290e8bb68bbd5d52e1664"
-  integrity sha512-biz6HjWPit1Oefkvna5IQYEolQXt+VEhl/lTm3a8d9hQU4jdriIdKSuYo/CF1hjYTfsbqUHL47dnkw6Ffq7m5Q==
+"@patternfly/patternfly@^1.0.178":
+  version "1.0.178"
+  resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-1.0.178.tgz#5b520cc6da54f54a7b5a0c449101335cfbff5218"
 
 "@phenomnomnominal/tsquery@^3.0.0":
   version "3.0.0"
