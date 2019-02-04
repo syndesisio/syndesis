@@ -501,7 +501,24 @@ objects:
             - size:
                 usage: "GAUGE"
                 description: "Disk space used by the database"
-
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-db-metrics
+    name: syndesis-db-metrics
+  spec:
+    ports:
+    - port: 9187
+      protocol: TCP
+      name: prometheus
+    selector:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-db-metrics
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -531,9 +548,6 @@ objects:
           syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-db-metrics
-        annotations:
-          prometheus.io/scrape: "true"
-          prometheus.io/port: "9187"
       spec:
         containers:
         - capabilities: {}
@@ -829,6 +843,11 @@ objects:
     - port: 80
       protocol: TCP
       targetPort: 8080
+      name: http
+    - port: 8181
+      protocol: TCP
+      targetPort: 8181
+      name: prometheus
     selector:
       app: syndesis
       syndesis.io/app: syndesis
@@ -1148,6 +1167,11 @@ objects:
     - port: 80
       protocol: TCP
       targetPort: 8080
+      name: http
+    - port: 8181
+      protocol: TCP
+      targetPort: 8181
+      name: prometheus
     selector:
       app: syndesis
       syndesis.io/app: syndesis
