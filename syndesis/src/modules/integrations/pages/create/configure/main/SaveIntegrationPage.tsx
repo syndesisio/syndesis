@@ -44,6 +44,7 @@ export class SaveIntegrationPage extends React.Component {
                 actions: any
               ) => {
                 const updatedIntegration = setName(integration, name);
+                // TODO: set the description
                 await saveIntegration(updatedIntegration);
                 actions.setSubmitting(false);
                 // TODO: toast notification
