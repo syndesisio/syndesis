@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react';
 import { StoryHelper } from '../../.storybook/StoryHelper';
 import { IntegrationDetailHistory } from '../../src';
 
-export const integrationDetailHistoryStory = 'with history';
+export const integrationDetailHistoryStory = 'sample usage';
 
 const stories = storiesOf('Integration/IntegrationDetailHistory', module);
 const storyNotes = '- Verify something here';
