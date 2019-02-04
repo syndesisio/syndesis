@@ -32,13 +32,9 @@ import {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewInit {
-<<<<<<< HEAD
-=======
   helpExpanded = false;
   userMenuExpanded = false;
   menuExpanded = false;
-  // TODO icon?
->>>>>>> feat(masthead): convert masthead to pf4.
   /**
    * Logo and Icon with dark background
    */
