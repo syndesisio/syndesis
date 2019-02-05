@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import {
   CurrentFlowService,
   FlowPageService
 } from '@syndesis/ui/integration/edit-page';
 import { ModalService } from '@syndesis/ui/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'syndesis-integration-flow-view',
   templateUrl: './flow-view.component.html',
   styleUrls: ['./flow-view.component.scss']
 })
-export class FlowViewComponent {
+export class FlowViewComponent implements OnInit, OnDestroy {
   urls: UrlSegment[];
   isCollapsed = true;
+  flowSubscription: Subscription;
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -112,5 +114,25 @@ export class FlowViewComponent {
         });
       }
     });
+  }
+
+  ngOnInit() {
+    this.flowSubscription = this.currentFlowService.events.subscribe(event => {
+      if (event.kind === 'integration-delete-prompt') {
+        this.deletePrompt(event.position);
+      }
+      if (event.kind === 'integration-sidebar-collapse') {
+        this.isCollapsed = true;
+      }
+      if (event.kind === 'integration-sidebar-expand') {
+        this.isCollapsed = false;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
+    }
   }
 }
