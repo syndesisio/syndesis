@@ -13,9 +13,9 @@ import {
   StringMap,
   ConfigurationProperty,
   createConnectionStep,
-  StepOrConnection
+  StepOrConnection,
 } from '@syndesis/ui/platform';
-import { ENDPOINT, StepStore } from '@syndesis/ui/store';
+import { ENDPOINT, StepStore, DATA_MAPPER } from '@syndesis/ui/store';
 
 //
 // Various helper functions that the current flow service uses to build an integration object
@@ -150,7 +150,7 @@ export function filterStepsByPosition(
     // safety net
     return steps;
   }
-  const atEnd = getLastPosition(integration, flowId) === position;
+  // If we're looking at the start of the integration
   if (position === 0) {
     return steps.filter(step => {
       // TODO at the moment only endpoints can be at the start
@@ -166,20 +166,23 @@ export function filterStepsByPosition(
       });
     });
   }
-  return steps.filter(step => {
-    // TODO at the moment only endpoints can be at the end
-    if (atEnd && 'stepKind' in step) {
+  // If we're anyplace else in the integration
+  const atEnd = getLastPosition(integration, flowId) === position;
+  return steps.filter((step: any) => {
+    // Data mapper requires a target data typpe for mapping
+    if (atEnd && (step as Step).stepKind === DATA_MAPPER) {
       return false;
     }
-    if (!('connector' in step)) {
-      // It's not a connection
-      return true;
-    }
-    if (step.connectorId === 'api-provider') {
+    if ((step as Connection).connectorId === 'api-provider') {
       // api provider can be used only for From actions
       return false;
     }
-    return step.connector.actions.some(action => {
+    // All non-connection steps can be shown, except the above
+    if ('stepKind' in step && (step as Step).stepKind !== ENDPOINT) {
+      return true;
+    }
+    // Only show connections that have at least one action that accepts data
+    return (step as Connection).connector.actions.some(action => {
       return action.pattern === 'To';
     });
   });
@@ -242,7 +245,7 @@ export function setDataShapeOnStep(
   const descriptor = { ...action.descriptor, ...{ [prop]: dataShape } };
   return {
     ...step,
-    ...{ action: { ...action, ...{ descriptor: { ...descriptor } } } }
+    ...{ action: { ...action, ...{ descriptor: { ...descriptor } } } },
   };
 }
 
@@ -257,7 +260,7 @@ export function setConfiguredPropertiesOnStep(
 ) {
   return {
     ...step,
-    configuredProperties: stringifyValues(configuredProperties)
+    configuredProperties: stringifyValues(configuredProperties),
   };
 }
 
@@ -295,7 +298,7 @@ export function setDescriptorOnStep(
   if (!step.action) {
     return {
       ...step,
-      action: { actionType: 'step', descriptor } as Action
+      action: { actionType: 'step', descriptor } as Action,
     };
   }
   const propertyDefaults = getPropertyDefaults(
@@ -306,13 +309,13 @@ export function setDescriptorOnStep(
     return {
       configuredProperties: propertyDefaults,
       ...step,
-      action: { ...step.action, descriptor }
+      action: { ...step.action, descriptor },
     };
   }
   // Update the step's configured properties with any defaults in the descriptor
   const configuredProperties = {
     ...(propertyDefaults || {}),
-    ...(step.configuredProperties || {})
+    ...(step.configuredProperties || {}),
   };
   const oldDescriptor = { ...step.action.descriptor };
   const oldInputDataShape = oldDescriptor.inputDataShape;
@@ -337,9 +340,9 @@ export function setDescriptorOnStep(
           : descriptor.inputDataShape,
         outputDataShape: preserveOutput
           ? oldOutputDataShape
-          : descriptor.outputDataShape
-      }
-    }
+          : descriptor.outputDataShape,
+      },
+    },
   };
 }
 
@@ -400,7 +403,7 @@ export function setFlow(integration: Integration, flow: Flow) {
           return flow;
         }
         return f;
-      })
+      }),
     };
   } else {
     return { ...integration, flows: [...integration.flows, flow] };
@@ -524,7 +527,7 @@ export function createStepUsingStore(store: StepStore, stepKind?: string) {
 export function createFlowWithId(id: string) {
   return {
     id: id,
-    steps: [createConnectionStep(), createConnectionStep()]
+    steps: [createConnectionStep(), createConnectionStep()],
   } as Flow;
 }
 
