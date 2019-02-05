@@ -114,6 +114,10 @@ export class IntegrationSaveOrAddStepComponent implements OnInit, OnDestroy {
         this.router
       );
     }
+    // Show the full sidebar 'cause this page doesn't have a lot
+    this.currentFlowService.events.emit({
+      kind: 'integration-sidebar-expand'
+    });
   }
 
   ngOnDestroy() {

@@ -153,6 +153,9 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.flowPageService.showDone = true;
+    this.currentFlowService.events.emit({
+      kind: 'integration-sidebar-collapse'
+    });
     this.initialize();
   }
 
