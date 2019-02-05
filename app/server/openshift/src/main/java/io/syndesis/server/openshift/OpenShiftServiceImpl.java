@@ -107,11 +107,16 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         // May not be exposed (resources not present)
         removeExposure(sName);
 
+        final boolean removedImageStreams = removeImageStreams(sName);
+        final boolean removedDeploymentConfig = removeDeploymentConfig(sName);
+        final boolean removedSecret = removeSecret(sName);
+        final boolean removeBuildConfig = removeBuildConfig(sName);
+
         return
-            removeImageStreams(sName) &&
-            removeDeploymentConfig(sName) &&
-            removeSecret(sName) &&
-            removeBuildConfig(sName);
+            removedImageStreams &&
+            removedDeploymentConfig &&
+            removedSecret &&
+            removeBuildConfig;
     }
 
     @Override
