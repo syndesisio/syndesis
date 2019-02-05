@@ -41,7 +41,7 @@ import io.syndesis.server.endpoint.v1.handler.connection.ConnectionHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationDeploymentHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -96,7 +96,7 @@ public class ContinuousDeliveryProviderImplTest {
                 Collections.singletonList(ENVIRONMENT));
 
         assertThat(continuousDeliveryEnvironment, is(notNullValue()));
-        assertThat(continuousDeliveryEnvironment.get(0).getName(), is(equalTo(ENVIRONMENT)));
+        assertThat(continuousDeliveryEnvironment.keySet(), hasItem(ENVIRONMENT));
 
         verify(dataManager).update(notNull());
     }
