@@ -16,6 +16,7 @@
 package io.syndesis.server.endpoint.continuousdelivery;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.Response;
@@ -36,12 +37,22 @@ import io.syndesis.common.model.monitoring.IntegrationDeploymentStateDetails;
 public class NoopContinuousDeliveryProviderImpl implements ContinuousDeliveryProvider {
 
     @Override
+    public List<String> getReleaseEnvironments() {
+        throw notEnabled();
+    }
+
+    @Override
     public Map<String, ContinuousDeliveryEnvironment> getReleaseTags(String integrationId) {
         throw notEnabled();
     }
 
     @Override
-    public ContinuousDeliveryEnvironment tagForRelease(String integrationId, String environment) {
+    public void deleteReleaseTag(String integrationId, String environment) {
+        throw notEnabled();
+    }
+
+    @Override
+    public Map<String, ContinuousDeliveryEnvironment> tagForRelease(String integrationId, List<String> environments) {
         throw notEnabled();
     }
 

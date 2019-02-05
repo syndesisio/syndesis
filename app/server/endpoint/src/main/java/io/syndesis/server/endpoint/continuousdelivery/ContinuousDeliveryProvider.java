@@ -17,9 +17,11 @@ package io.syndesis.server.endpoint.continuousdelivery;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -46,6 +48,14 @@ import io.syndesis.common.model.monitoring.IntegrationDeploymentStateDetails;
 public interface ContinuousDeliveryProvider {
 
     /**
+     * List all available environments.
+     */
+    @GET
+    @Path("environments/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    List<String> getReleaseEnvironments();
+
+    /**
      * List all tags associated with this integration.
      */
     @GET
@@ -54,13 +64,20 @@ public interface ContinuousDeliveryProvider {
     Map<String, ContinuousDeliveryEnvironment> getReleaseTags(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId);
 
     /**
-     * Tag an integration for release to a target environment.
+     * Delete an environment tag associated with this integration.
+     */
+    @DELETE
+    @Path("releasetags/{id}/{env}")
+    void deleteReleaseTag(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId, @NotNull @PathParam("env") @ApiParam(required = true) String environment);
+
+    /**
+     * Tag an integration for release to target environments.
      */
     @POST
-    @Path("releasetags/{id}/{env}")
+    @Path("releasetags/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    ContinuousDeliveryEnvironment tagForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
-                                                @NotNull @PathParam("env") @ApiParam(required = true) String environment);
+    Map<String, ContinuousDeliveryEnvironment> tagForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
+                                                @NotNull @ApiParam(required = true) List<String> environments);
 
     /**
      * Export integrations to a target environment.

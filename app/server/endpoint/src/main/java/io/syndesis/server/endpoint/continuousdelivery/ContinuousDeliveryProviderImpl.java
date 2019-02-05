@@ -18,11 +18,14 @@ package io.syndesis.server.endpoint.continuousdelivery;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.ws.rs.ClientErrorException;
@@ -66,6 +69,7 @@ public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvide
     private final IntegrationDeploymentHandler deploymentHandler;
     private final ConnectionHandler connectionHandler;
     private final MonitoringProvider monitoringProvider;
+    private final Set<String> environments;
 
     protected ContinuousDeliveryProviderImpl(DataManager dataMgr, IntegrationSupportHandler handler, EncryptionComponent encryptionComponent, IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler, MonitoringProvider monitoringProvider) {
         this.dataMgr = dataMgr;
@@ -74,37 +78,59 @@ public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvide
         this.deploymentHandler = deploymentHandler;
         this.connectionHandler = connectionHandler;
         this.monitoringProvider = monitoringProvider;
+
+        // read all existing environment names
+        this.environments = new CopyOnWriteArraySet<>();
+        dataMgr.fetchAll(Integration.class)
+                .getItems()
+                .forEach(i -> environments.addAll(i.getContinuousDeliveryState().keySet()));
+    }
+
+    @Override
+    public List<String> getReleaseEnvironments() {
+        return Arrays.asList(environments.toArray(new String[environments.size()]));
     }
 
     @Override
     public Map<String, ContinuousDeliveryEnvironment> getReleaseTags(String integrationId) {
-        return getIntegration(integrationId).getContinuousDeliveryState();
+        final Map<String, ContinuousDeliveryEnvironment> result = new HashMap<>(
+                getIntegration(integrationId).getContinuousDeliveryState());
+        getReleaseEnvironments().forEach(e -> result.putIfAbsent(e, null));
+        return result;
     }
 
     @Override
-    public ContinuousDeliveryEnvironment tagForRelease(String integrationId, String environment) {
-        ContinuousDeliveryEnvironment result;
+    public void deleteReleaseTag(String integrationId, String environment) {
+
+        final Integration integration = getIntegration(integrationId);
+        validateParam("environment", environment);
+        final Map<String, ContinuousDeliveryEnvironment> deliveryState = new HashMap<>(integration.getContinuousDeliveryState());
+        if (null == deliveryState.remove(environment)) {
+            throw new ClientErrorException("Missing environment tag " + environment, Response.Status.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public Map<String, ContinuousDeliveryEnvironment> tagForRelease(String integrationId, List<String> environments) {
+        Map<String, ContinuousDeliveryEnvironment> result = new HashMap<>();
         Date lastTaggedAt = new Date();
 
-        validateParam("environment", environment);
+        if (environments == null || environments.isEmpty()) {
+            throw new ClientErrorException("Missing parameter environments", Response.Status.BAD_REQUEST);
+        }
 
         // fetch integration
         final Integration integration = getIntegration(integrationId);
-        if (integration != null) {
-
+        final HashMap<String, ContinuousDeliveryEnvironment> deliveryState = new HashMap<>(integration.getContinuousDeliveryState());
+        for (String environment : environments) {
             // create or update tag
-            final HashMap<String, ContinuousDeliveryEnvironment> deliveryState = new HashMap<>(integration.getContinuousDeliveryState());
-            result = createOrUpdateTag(deliveryState, environment, lastTaggedAt);
-
-            // update json db
-            dataMgr.update(integration.builder().continuousDeliveryState(deliveryState).build());
-
-            LOG.debug("Tagged integration {} for environment {} at {}", integrationId, environment, lastTaggedAt);
-
-        } else {
-            throw new ClientErrorException(String.format("Missing or invalid integration id: %s.", integrationId),
-                    Response.Status.BAD_REQUEST);
+            result.put(environment, createOrUpdateTag(deliveryState, environment, lastTaggedAt));
         }
+
+        // update json db
+        dataMgr.update(integration.builder().continuousDeliveryState(deliveryState).build());
+
+        LOG.debug("Tagged integration {} for environments {} at {}", integrationId, environments, lastTaggedAt);
 
         return result;
     }
