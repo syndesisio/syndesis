@@ -43,8 +43,8 @@ readopt() {
     next=false
     for var in "${ARGS[@]}"; do
         if $next; then
-            local value="${next//^--/}"
-            if [ "$value" != "$next" ]; then
+            local value="${var##-}"
+            if [ "$value" != "$var" ]; then
                # Next is already also option, so we haven't
                # specified a value.
                return
