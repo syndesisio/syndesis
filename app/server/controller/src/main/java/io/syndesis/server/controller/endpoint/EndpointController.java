@@ -23,6 +23,7 @@ import io.syndesis.common.model.integration.IntegrationEndpoint;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.backend.BackendController;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ import java.util.stream.Stream;
  * This class keeps the integration endpoint data aligned with the external state.
  */
 @Service
-public class EndpointController {
+public class EndpointController implements BackendController {
     private static final Logger LOG = LoggerFactory.getLogger(EndpointController.class);
 
     private static final String EVENT_BUS_ID = "integration-endpoint-controller";
@@ -64,6 +65,7 @@ public class EndpointController {
 
     @SuppressWarnings("FutureReturnValueIgnored")
     @PostConstruct
+    @Override
     public void start() {
         if (scheduler == null) {
             scheduler = Executors.newSingleThreadScheduledExecutor(threadFactory("Endpoint Controller"));
@@ -73,10 +75,21 @@ public class EndpointController {
     }
 
     @PreDestroy
+    @Override
     public void stop() {
         if (scheduler != null) {
             eventBus.unsubscribe(EVENT_BUS_ID);
             scheduler.shutdownNow();
+            boolean schedulerShutdown = false;
+            do {
+                try {
+                    schedulerShutdown = scheduler.awaitTermination(10, TimeUnit.SECONDS);
+                } catch (final InterruptedException e) {
+                    LOG.warn("Unable to cleanly stop: {}", e.getMessage());
+                    LOG.debug("Interrupted while stopping", e);
+                }
+            } while (!schedulerShutdown);
+
             scheduler = null;
         }
     }

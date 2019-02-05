@@ -43,6 +43,7 @@ import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.Exceptions;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Labels;
+import io.syndesis.common.util.backend.BackendController;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateChangeHandlerProvider;
@@ -54,7 +55,7 @@ import io.syndesis.server.openshift.OpenShiftService;
  * their current status matches their desired status.
  */
 @Service
-public class IntegrationController {
+public class IntegrationController implements BackendController {
     private static final Logger LOG = LoggerFactory.getLogger(IntegrationController.class);
 
     private static final String EVENT_BUS_ID = "integration-deployment-controller";
@@ -83,6 +84,7 @@ public class IntegrationController {
 
     @PostConstruct
     @SuppressWarnings("FutureReturnValueIgnored")
+    @Override
     public void start() {
         executor = Executors.newSingleThreadExecutor(threadFactory("Integration Controller"));
         scheduler = Executors.newScheduledThreadPool(2, threadFactory("Integration Controller Scheduler"));
@@ -92,11 +94,24 @@ public class IntegrationController {
     }
 
     @PreDestroy
+    @Override
     public void stop() {
         eventBus.unsubscribe(EVENT_BUS_ID);
 
         scheduler.shutdownNow();
         executor.shutdownNow();
+        try {
+            boolean schedulerStopped = false;
+            boolean executorStopped = false;
+
+            do {
+                schedulerStopped = scheduler.awaitTermination(10, TimeUnit.SECONDS);
+                executorStopped = executor.awaitTermination(10, TimeUnit.SECONDS);
+            } while (!schedulerStopped && !executorStopped);
+        } catch (final InterruptedException e) {
+            LOG.warn("Unable to cleanly stop: {}", e.getMessage());
+            LOG.debug("Interrupted while stopping", e);
+        }
     }
 
     @SuppressWarnings("PMD.DoNotUseThreads")
