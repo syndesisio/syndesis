@@ -1,8 +1,8 @@
 import { IntegrationOverview } from '@syndesis/models';
 import * as React from 'react';
-import { IRestState } from './Rest';
+import { IFetchState } from './Fetch';
 import { ServerEventsContext } from './ServerEventsContext';
-import { SyndesisRest } from './SyndesisRest';
+import { SyndesisFetch } from './SyndesisFetch';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
 
@@ -13,7 +13,7 @@ export interface IIntegrationsResponse {
 
 export interface IWithIntegrationsProps {
   disableUpdates?: boolean;
-  children(props: IRestState<IIntegrationsResponse>): any;
+  children(props: IFetchState<IIntegrationsResponse>): any;
 }
 
 export class WithIntegrations extends React.Component<IWithIntegrationsProps> {
@@ -25,7 +25,7 @@ export class WithIntegrations extends React.Component<IWithIntegrationsProps> {
 
   public render() {
     return (
-      <SyndesisRest<IIntegrationsResponse>
+      <SyndesisFetch<IIntegrationsResponse>
         url={'/integrations'}
         defaultValue={{ items: [], totalCount: 0 }}
       >
@@ -47,7 +47,7 @@ export class WithIntegrations extends React.Component<IWithIntegrationsProps> {
             </ServerEventsContext.Consumer>
           )
         }
-      </SyndesisRest>
+      </SyndesisFetch>
     );
   }
 }

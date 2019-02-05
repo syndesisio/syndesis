@@ -38,65 +38,63 @@ export interface IAppBaseProps {
   routes: IAppRoute[];
 }
 
-export class App extends React.Component<IAppBaseProps> {
-  public render() {
-    return (
-      <NamespacesConsumer ns={['app']}>
-        {t => (
-          <WithConfig>
-            {({ config, loading, error }) => (
-              <WithLoader
-                loading={loading}
-                error={error}
-                loaderChildren={<Loader />}
-                errorChildren={<UnrecoverableError />}
-                minWait={1000}
-              >
-                {() => (
-                  <AppContext.Provider
-                    value={{
-                      config: config!,
-                      getPodLogUrl: this.getPodLogUrl,
-                      logout: this.logout,
-                    }}
-                  >
-                    <ApiContext.Provider
-                      value={{
-                        apiUri: `${config!.apiBase}${config!.apiEndpoint}`,
-                        headers: { 'SYNDESIS-XSRF-TOKEN': 'awesome' },
-                      }}
-                    >
-                      <ApiContext.Consumer>
-                        {({ apiUri, headers }) => (
-                          <WithServerEvents apiUri={apiUri} headers={headers}>
-                            {functions => (
-                              <ServerEventsContext.Provider value={functions}>
-                                <AppLayout
-                                  appTitle={'Syndesis'}
-                                  appNav={this.renderAppNav(t)}
-                                  verticalNav={this.renderVerticalNav()}
-                                  pictograph={pictogram}
-                                  typogram={typogram}
-                                  logoHref={'/'}
-                                >
-                                  <React.Fragment>
-                                    <Switch>{this.renderRoutes()}</Switch>
-                                  </React.Fragment>
-                                </AppLayout>
-                              </ServerEventsContext.Provider>
-                            )}
-                          </WithServerEvents>
-                        )}
-                      </ApiContext.Consumer>
-                    </ApiContext.Provider>
-                  </AppContext.Provider>
-                )}
-              </WithLoader>
-            )}
-          </WithConfig>
-        )}
-      </NamespacesConsumer>
-    );
+export interface IAppBaseState {
+  showNavigation: boolean;
+}
+
+export class App extends React.Component<IAppBaseProps, IAppBaseState> {
+  public state = {
+    showNavigation: true,
+  };
+
+  constructor(props: IAppBaseProps) {
+    super(props);
+    this.logout = this.logout.bind(this);
+    this.getPodLogUrl = this.getPodLogUrl.bind(this);
+    this.hideNavigation = this.hideNavigation.bind(this);
+    this.showNavigation = this.showNavigation.bind(this);
+  }
+
+  public logout() {
+    // do nothing
+  }
+
+  public getPodLogUrl(
+    config: IConfigFile,
+    monitoring: IntegrationMonitoring | undefined
+  ): string | undefined {
+    if (
+      !config ||
+      !monitoring ||
+      !monitoring.linkType ||
+      !monitoring.namespace ||
+      !monitoring.podName
+    ) {
+      return undefined;
+    }
+    const baseUrl = `${config.consoleUrl}/project/${
+      monitoring.namespace
+    }/browse/pods/${monitoring.podName}?tab=`;
+    switch (monitoring.linkType) {
+      case 'LOGS':
+        return baseUrl + 'logs';
+      case 'EVENTS':
+        return baseUrl + 'events';
+      default:
+        return undefined;
+    }
+  }
+
+  public hideNavigation(): void {
+    this.setState({
+      showNavigation: false,
+    });
+  }
+
+  public showNavigation(): void {
+    this.setState({
+      showNavigation: true,
+    });
   }
 
   public renderAppNav(t: TranslationFunction) {
@@ -133,33 +131,68 @@ export class App extends React.Component<IAppBaseProps> {
     ));
   }
 
-  public logout = () => {
-    // do nothing
-  };
-
-  public getPodLogUrl = (
-    config: IConfigFile,
-    monitoring: IntegrationMonitoring | undefined
-  ): string | undefined => {
-    if (
-      !config ||
-      !monitoring ||
-      !monitoring.linkType ||
-      !monitoring.namespace ||
-      !monitoring.podName
-    ) {
-      return undefined;
-    }
-    const baseUrl = `${config.consoleUrl}/project/${
-      monitoring.namespace
-    }/browse/pods/${monitoring.podName}?tab=`;
-    switch (monitoring.linkType) {
-      case 'LOGS':
-        return baseUrl + 'logs';
-      case 'EVENTS':
-        return baseUrl + 'events';
-      default:
-        return undefined;
-    }
-  };
+  public render() {
+    return (
+      <NamespacesConsumer ns={['app']}>
+        {t => (
+          <WithConfig>
+            {({ config, loading, error }) => (
+              <WithLoader
+                loading={loading}
+                error={error}
+                loaderChildren={<Loader />}
+                errorChildren={<UnrecoverableError />}
+                minWait={1000}
+              >
+                {() => (
+                  <AppContext.Provider
+                    value={{
+                      config: config!,
+                      getPodLogUrl: this.getPodLogUrl,
+                      hideNavigation: this.hideNavigation,
+                      logout: this.logout,
+                      showNavigation: this.showNavigation,
+                    }}
+                  >
+                    <ApiContext.Provider
+                      value={{
+                        apiUri: `${config!.apiBase}${config!.apiEndpoint}`,
+                        headers: { 'SYNDESIS-XSRF-TOKEN': 'awesome' },
+                      }}
+                    >
+                      <ApiContext.Consumer>
+                        {({ apiUri, headers }) => (
+                          <WithServerEvents apiUri={apiUri} headers={headers}>
+                            {functions => (
+                              <ServerEventsContext.Provider value={functions}>
+                                <AppLayout
+                                  appTitle={'Syndesis'}
+                                  appNav={this.renderAppNav(t)}
+                                  verticalNav={this.renderVerticalNav()}
+                                  pictograph={pictogram}
+                                  typogram={typogram}
+                                  logoHref={'/'}
+                                  showNavigation={this.state.showNavigation}
+                                  onNavigationCollapse={this.hideNavigation}
+                                  onNavigationExpand={this.showNavigation}
+                                >
+                                  <React.Fragment>
+                                    <Switch>{this.renderRoutes()}</Switch>
+                                  </React.Fragment>
+                                </AppLayout>
+                              </ServerEventsContext.Provider>
+                            )}
+                          </WithServerEvents>
+                        )}
+                      </ApiContext.Consumer>
+                    </ApiContext.Provider>
+                  </AppContext.Provider>
+                )}
+              </WithLoader>
+            )}
+          </WithConfig>
+        )}
+      </NamespacesConsumer>
+    );
+  }
 }

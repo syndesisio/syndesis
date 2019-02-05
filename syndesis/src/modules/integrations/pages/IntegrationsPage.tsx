@@ -3,19 +3,16 @@ import { Connection, IntegrationWithMonitoring } from '@syndesis/models';
 import {
   IActiveFilter,
   IFilterType,
-  IListViewToolbarAbstractComponent,
-  IntegrationsList,
-  IntegrationsListItem,
-  IntegrationsListSkeleton,
   IntegrationsListView,
   ISortType,
-  ListViewToolbarAbstractComponent,
 } from '@syndesis/ui';
-import { WithLoader } from '@syndesis/utils';
+import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
-import { AppContext } from '../../../app/AppContext';
+import { PageTitle } from '../../../containers/PageTitle';
 import i18n from '../../../i18n';
+import { Integrations } from '../components';
+import routes from '../routes';
 
 function getFilteredAndSortedIntegrations(
   integrations: IntegrationWithMonitoring[],
@@ -109,141 +106,60 @@ const sortByStatus = {
 
 const sortTypes: ISortType[] = [sortByName, sortByStatus];
 
-export default class IntegrationsPage extends ListViewToolbarAbstractComponent<
-  {},
-  IListViewToolbarAbstractComponent
-> {
-  public state = {
-    activeFilters: [] as IActiveFilter[],
-    currentFilterType: filterByName,
-    currentSortType: sortByName.title,
-    currentValue: '',
-    filterCategory: null,
-    isSortAscending: true,
-  };
-
+export class IntegrationsPage extends React.Component {
   public render() {
     return (
       <WithMonitoredIntegrations>
         {({ data: integrationsData, hasData, error }) => (
           <WithConnections>
-            {({ data: connectionsData }) => {
-              const filteredAndSortedIntegrations = getFilteredAndSortedIntegrations(
-                integrationsData.items,
-                this.state.activeFilters,
-                this.state.currentSortType,
-                this.state.isSortAscending
-              );
-              return (
-                <AppContext.Consumer>
-                  {({ config, getPodLogUrl }) => (
-                    <NamespacesConsumer ns={['integrations', 'shared']}>
-                      {t => (
-                        <IntegrationsListView
-                          linkToIntegrationImport={'/integrations/import'}
-                          linkToIntegrationCreation={'/integrations/create'}
-                          filterTypes={getFilterTypes(connectionsData.items)}
-                          sortTypes={sortTypes}
-                          resultsCount={filteredAndSortedIntegrations.length}
-                          {...this.state}
-                          onUpdateCurrentValue={this.onUpdateCurrentValue}
-                          onValueKeyPress={this.onValueKeyPress}
-                          onFilterAdded={this.onFilterAdded}
-                          onSelectFilterType={this.onSelectFilterType}
-                          onFilterValueSelected={this.onFilterValueSelected}
-                          onRemoveFilter={this.onRemoveFilter}
-                          onClearFilters={this.onClearFilters}
-                          onToggleCurrentSortDirection={
-                            this.onToggleCurrentSortDirection
-                          }
-                          onUpdateCurrentSortType={this.onUpdateCurrentSortType}
-                          i18nImport={t('shared:Import')}
-                          i18nLinkCreateConnection={t(
-                            'shared:linkCreateIntegration'
-                          )}
-                          i18nResultsCount={t('shared:resultsCount', {
-                            count: filteredAndSortedIntegrations.length,
-                          })}
-                        >
-                          <WithLoader
-                            error={error}
-                            loading={!hasData}
-                            loaderChildren={
-                              <IntegrationsListSkeleton
-                                width={800}
-                                style={{
-                                  backgroundColor: '#FFF',
-                                  marginTop: 30,
-                                }}
-                              />
+            {({ data: connectionsData }) => (
+              <NamespacesConsumer ns={['integrations', 'shared']}>
+                {t => (
+                  <WithListViewToolbarHelpers
+                    defaultFilterType={filterByName}
+                    defaultSortType={sortByName}
+                  >
+                    {helpers => {
+                      const filteredAndSortedIntegrations = getFilteredAndSortedIntegrations(
+                        integrationsData.items,
+                        helpers.activeFilters,
+                        helpers.currentSortType,
+                        helpers.isSortAscending
+                      );
+
+                      return (
+                        <>
+                          <PageTitle title={t('shared:Integrations')} />
+                          <IntegrationsListView
+                            linkToIntegrationImport={'/integrations/import'}
+                            linkToIntegrationCreation={
+                              routes.create.start.selectConnection
                             }
-                            errorChildren={<div>TODO</div>}
-                          >
-                            {() => (
-                              <IntegrationsList>
-                                {filteredAndSortedIntegrations.map(
-                                  (mi: IntegrationWithMonitoring, index) => (
-                                    <IntegrationsListItem
-                                      integrationId={mi.integration.id!}
-                                      integrationName={mi.integration.name!}
-                                      currentState={
-                                        mi.integration.currentState!
-                                      }
-                                      targetState={mi.integration.targetState!}
-                                      isConfigurationRequired={
-                                        !!(
-                                          mi.integration!.board!.warnings ||
-                                          mi.integration!.board!.errors ||
-                                          mi.integration!.board!.notices
-                                        )
-                                      }
-                                      monitoringValue={
-                                        mi.monitoring &&
-                                        t(
-                                          'integrations:' +
-                                            mi.monitoring.detailedState.value
-                                        )
-                                      }
-                                      monitoringCurrentStep={
-                                        mi.monitoring &&
-                                        mi.monitoring.detailedState.currentStep
-                                      }
-                                      monitoringTotalSteps={
-                                        mi.monitoring &&
-                                        mi.monitoring.detailedState.totalSteps
-                                      }
-                                      monitoringLogUrl={getPodLogUrl(
-                                        config,
-                                        mi.monitoring
-                                      )}
-                                      key={index}
-                                      i18nConfigurationRequired={t(
-                                        'ConfigurationRequired'
-                                      )}
-                                      i18nError={t('shared:Error')}
-                                      i18nPublished={t('shared:Published')}
-                                      i18nUnpublished={t('shared:Unpublished')}
-                                      i18nProgressPending={t('shared:Pending')}
-                                      i18nProgressStarting={t(
-                                        'integrations:progressStarting'
-                                      )}
-                                      i18nProgressStopping={t(
-                                        'integrations:progressStopping'
-                                      )}
-                                      i18nLogUrlText={t('shared:viewLogs')}
-                                    />
-                                  )
-                                )}
-                              </IntegrationsList>
+                            filterTypes={getFilterTypes(connectionsData.items)}
+                            sortTypes={sortTypes}
+                            resultsCount={filteredAndSortedIntegrations.length}
+                            {...helpers}
+                            i18nImport={t('shared:Import')}
+                            i18nLinkCreateConnection={t(
+                              'shared:linkCreateIntegration'
                             )}
-                          </WithLoader>
-                        </IntegrationsListView>
-                      )}
-                    </NamespacesConsumer>
-                  )}
-                </AppContext.Consumer>
-              );
-            }}
+                            i18nResultsCount={t('shared:resultsCount', {
+                              count: filteredAndSortedIntegrations.length,
+                            })}
+                          >
+                            <Integrations
+                              error={error}
+                              loading={!hasData}
+                              integrations={filteredAndSortedIntegrations}
+                            />
+                          </IntegrationsListView>
+                        </>
+                      );
+                    }}
+                  </WithListViewToolbarHelpers>
+                )}
+              </NamespacesConsumer>
+            )}
           </WithConnections>
         )}
       </WithMonitoredIntegrations>

@@ -25,8 +25,6 @@ export class CustomizationsApiConnectorListView extends React.Component<
   public render() {
     return (
       <>
-        <h2>{this.props.i18nTitle}</h2>
-        <h3>{this.props.i18nDescription}</h3>
         <ListViewToolbar {...this.props}>
           <div className="form-group">
             <OverlayTrigger
@@ -42,30 +40,34 @@ export class CustomizationsApiConnectorListView extends React.Component<
             </OverlayTrigger>
           </div>
         </ListViewToolbar>
-        {this.props.children ? (
-          <ListView>{this.props.children}</ListView>
-        ) : (
-          <EmptyState>
-            <EmptyState.Icon />
-            <EmptyState.Title>
-              {this.props.i18nEmptyStateTitle}
-            </EmptyState.Title>
-            <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
-            <EmptyState.Action>
-              <OverlayTrigger
-                overlay={this.getCreateConnectorTooltip()}
-                placement="top"
-              >
-                <Link
-                  to={this.props.linkCreateApiConnector}
-                  className={'btn btn-primary'}
+        <div className="container-fluid">
+          <h1>{this.props.i18nTitle}</h1>
+          <p>{this.props.i18nDescription}</p>
+          {this.props.children ? (
+            <ListView>{this.props.children}</ListView>
+          ) : (
+            <EmptyState>
+              <EmptyState.Icon />
+              <EmptyState.Title>
+                {this.props.i18nEmptyStateTitle}
+              </EmptyState.Title>
+              <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
+              <EmptyState.Action>
+                <OverlayTrigger
+                  overlay={this.getCreateConnectorTooltip()}
+                  placement="top"
                 >
-                  {this.props.i18nLinkCreateApiConnector}
-                </Link>
-              </OverlayTrigger>
-            </EmptyState.Action>
-          </EmptyState>
-        )}
+                  <Link
+                    to={this.props.linkCreateApiConnector}
+                    className={'btn btn-primary'}
+                  >
+                    {this.props.i18nLinkCreateApiConnector}
+                  </Link>
+                </OverlayTrigger>
+              </EmptyState.Action>
+            </EmptyState>
+          )}
+        </div>
       </>
     );
   }

@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "@syndesis/models": "*",
+    "@syndesis/ui": "*",
     "react-fast-compare": "^2.0.2"
   },
   "jest": {

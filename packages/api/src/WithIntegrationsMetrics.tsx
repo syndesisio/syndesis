@@ -1,12 +1,12 @@
 import { IntegrationMetricsSummary } from '@syndesis/models';
 import * as React from 'react';
-import { IRestState } from './Rest';
-import { SyndesisRest } from './SyndesisRest';
+import { IFetchState } from './Fetch';
+import { SyndesisFetch } from './SyndesisFetch';
 import { WithPolling } from './WithPolling';
 
 export interface IWithIntegrationsMetricsProps {
   disableUpdates?: boolean;
-  children(props: IRestState<IntegrationMetricsSummary>): any;
+  children(props: IFetchState<IntegrationMetricsSummary>): any;
 }
 
 export class WithIntegrationsMetrics extends React.Component<
@@ -14,7 +14,7 @@ export class WithIntegrationsMetrics extends React.Component<
 > {
   public render() {
     return (
-      <SyndesisRest<IntegrationMetricsSummary>
+      <SyndesisFetch<IntegrationMetricsSummary>
         url={'/metrics/integrations'}
         defaultValue={{
           errors: 0, // int64
@@ -37,7 +37,7 @@ export class WithIntegrationsMetrics extends React.Component<
             </WithPolling>
           );
         }}
-      </SyndesisRest>
+      </SyndesisFetch>
     );
   }
 }

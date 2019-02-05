@@ -29,6 +29,6 @@ export function callFetch({
     method,
     mode: 'cors',
     redirect: 'follow',
-    referrer: 'no-referrer',
+    referrerPolicy: 'no-referrer',
   });
 }

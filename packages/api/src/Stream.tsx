@@ -1,10 +1,10 @@
 import { callFetch } from './callFetch';
-import { IRestProps, Rest } from './Rest';
+import { Fetch, IFetchProps } from './Fetch';
 
-export class Stream extends Rest<string[]> {
+export class Stream extends Fetch<string[]> {
   protected reader: ReadableStreamReader | undefined;
 
-  public async componentDidUpdate(prevProps: IRestProps<string[]>) {
+  public async componentDidUpdate(prevProps: IFetchProps<string[]>) {
     if (prevProps.url !== this.props.url) {
       if (this.reader) {
         this.reader.cancel();

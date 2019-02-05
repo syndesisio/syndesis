@@ -1,7 +1,26 @@
+import { IActiveFilter, IFilterType, ISortType } from '@syndesis/ui';
 import * as React from 'react';
-import { IActiveFilter, IFilterType } from '../Shared';
 
-export interface IListViewToolbarAbstractComponent {
+export interface IWithListViewToolbarHelpers
+  extends IWithListViewToolbarHelpersState {
+  onClearFilters(event: React.MouseEvent<HTMLAnchorElement>): void;
+  onFilterAdded(title: string, value: string): void;
+  onFilterValueSelected(filterValue: { id: string; title: string }): void;
+  onRemoveFilter(filter: IActiveFilter): void;
+  onSelectFilterType(filterType: IFilterType): void;
+  onToggleCurrentSortDirection(): void;
+  onUpdateCurrentSortType(sortType: string): void;
+  onUpdateCurrentValue(event: Event): void;
+  onValueKeyPress(keyEvent: KeyboardEvent): void;
+}
+
+export interface IWithListViewToolbarHelpersProps {
+  defaultFilterType: IFilterType;
+  defaultSortType: ISortType;
+  children(props: IWithListViewToolbarHelpers): any;
+}
+
+export interface IWithListViewToolbarHelpersState {
   activeFilters: IActiveFilter[];
   currentFilterType: IFilterType;
   currentSortType: string;
@@ -10,10 +29,22 @@ export interface IListViewToolbarAbstractComponent {
   isSortAscending: boolean;
 }
 
-export abstract class ListViewToolbarAbstractComponent<
-  P,
-  S extends IListViewToolbarAbstractComponent
-> extends React.Component<P, S> {
+export class WithListViewToolbarHelpers extends React.Component<
+  IWithListViewToolbarHelpersProps,
+  IWithListViewToolbarHelpersState
+> {
+  constructor(props: IWithListViewToolbarHelpersProps) {
+    super(props);
+    this.state = {
+      activeFilters: [] as IActiveFilter[],
+      currentFilterType: this.props.defaultFilterType,
+      currentSortType: this.props.defaultSortType.title,
+      currentValue: '',
+      filterCategory: null,
+      isSortAscending: true,
+    };
+  }
+
   public onUpdateCurrentValue = (event: Event) => {
     this.setState({ currentValue: (event.target as HTMLInputElement).value });
   };
@@ -95,4 +126,19 @@ export abstract class ListViewToolbarAbstractComponent<
       });
     }
   };
+
+  public render() {
+    return this.props.children({
+      onClearFilters: this.onClearFilters,
+      onFilterAdded: this.onFilterAdded,
+      onFilterValueSelected: this.onFilterValueSelected,
+      onRemoveFilter: this.onRemoveFilter,
+      onSelectFilterType: this.onSelectFilterType,
+      onToggleCurrentSortDirection: this.onToggleCurrentSortDirection,
+      onUpdateCurrentSortType: this.onUpdateCurrentSortType,
+      onUpdateCurrentValue: this.onUpdateCurrentValue,
+      onValueKeyPress: this.onValueKeyPress,
+      ...this.state,
+    });
+  }
 }

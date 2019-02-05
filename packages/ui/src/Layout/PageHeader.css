@@ -1,0 +1,10 @@
+.page-header {
+  background-color: #fff;
+  margin: 0; /* remove the margin to be able to set the background */
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.page-header > h1:first-child {
+  margin-top: 0;
+}

@@ -1,4 +1,4 @@
-import { Card, CardGrid, Grid } from 'patternfly-react';
+import { CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -23,7 +23,6 @@ export interface IIntegrationsPageProps {
   i18nLinkToConnections: string;
   i18nLinkToIntegrations: string;
   i18nTitle: string;
-  i18nTitleIntegrationUpdates: string;
 }
 
 export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
@@ -70,29 +69,17 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
         </CardGrid>
         <Grid fluid={true}>
           <Grid.Row>
+            <Grid.Col sm={12}>{this.props.topIntegrations}</Grid.Col>
+          </Grid.Row>
+          <Grid.Row>
             <Grid.Col sm={12} md={6}>
-              {this.props.topIntegrations}
+              {this.props.integrationBoard}
             </Grid.Col>
             <Grid.Col sm={12} md={6}>
-              <Grid.Row>
-                <Grid.Col sm={12}>{this.props.integrationBoard}</Grid.Col>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Col sm={12}>
-                  <Card accented={false}>
-                    <Card.Heading>
-                      <Card.Title>
-                        {this.props.i18nTitleIntegrationUpdates}
-                      </Card.Title>
-                    </Card.Heading>
-                    <Card.Body>{this.props.integrationUpdates}</Card.Body>
-                  </Card>
-                </Grid.Col>
-              </Grid.Row>
+              {this.props.integrationUpdates}
             </Grid.Col>
           </Grid.Row>
         </Grid>
-
         <Grid fluid={true} style={{ marginTop: '20px' }}>
           <Grid.Row>
             <Grid.Col sm={12}>
