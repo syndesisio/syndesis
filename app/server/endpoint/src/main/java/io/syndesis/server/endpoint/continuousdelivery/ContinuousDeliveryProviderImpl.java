@@ -88,7 +88,7 @@ public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvide
 
     @Override
     public List<String> getReleaseEnvironments() {
-        return Arrays.asList(environments.toArray(new String[environments.size()]));
+        return Arrays.asList(environments.toArray(new String[0]));
     }
 
     @Override
@@ -128,8 +128,6 @@ public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvide
 
     @Override
     public Map<String, ContinuousDeliveryEnvironment> tagForRelease(String integrationId, List<String> environments) {
-        Map<String, ContinuousDeliveryEnvironment> result = new HashMap<>();
-        Date lastTaggedAt = new Date();
 
         if (environments == null || environments.isEmpty()) {
             throw new ClientErrorException("Missing parameter environments", Response.Status.BAD_REQUEST);
@@ -138,6 +136,9 @@ public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvide
         // fetch integration
         final Integration integration = getIntegration(integrationId);
         final HashMap<String, ContinuousDeliveryEnvironment> deliveryState = new HashMap<>(integration.getContinuousDeliveryState());
+
+        Map<String, ContinuousDeliveryEnvironment> result = new HashMap<>();
+        Date lastTaggedAt = new Date();
         for (String environment : environments) {
             // create or update tag
             result.put(environment, createOrUpdateTag(deliveryState, environment, lastTaggedAt));
