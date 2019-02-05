@@ -32,7 +32,10 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.util.StringConstants;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
+import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.SimpleRegistry;
 import org.apache.camel.model.ModelHelper;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
@@ -44,6 +47,13 @@ public class IntegrationTestSupport implements StringConstants {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);
 
     protected ObjectMapper mapper = new ObjectMapper();
+
+    protected static CamelContext getDefaultCamelContextWithMyBeanInRegistry(){
+        SimpleRegistry sr = new SimpleRegistry();
+        sr.put("myBean", new MyBean());
+        DefaultCamelContext ctx = new DefaultCamelContext(sr);
+        return ctx;
+    }
 
     protected static class DataPair {
         private String key;
@@ -175,5 +185,12 @@ public class IntegrationTestSupport implements StringConstants {
         }
 
         return builder.toString().trim();
+    }
+
+    public static final class MyBean {
+        @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
+        public String myProcessor(@Body String body) {
+            return body.toUpperCase();
+        }
     }
 }

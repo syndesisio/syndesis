@@ -15,8 +15,6 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
-import java.util.Properties;
-
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -30,48 +28,15 @@ import io.syndesis.integration.runtime.IntegrationTestSupport;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.properties.DefaultPropertiesParser;
 import org.apache.camel.component.properties.PropertiesComponent;
-import org.apache.camel.component.properties.PropertiesParser;
 import org.apache.camel.component.twitter.timeline.TwitterTimelineEndpoint;
-import org.apache.camel.spring.SpringCamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.PropertyResolver;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+
+import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DirtiesContext
-@RunWith(SpringRunner.class)
-@SpringBootTest(
-    classes = {
-        ConnectorStepHandlerTest.TestConfiguration.class
-    },
-    properties = {
-        "spring.main.banner-mode = off",
-        "logging.level.io.syndesis.integration.runtime = DEBUG",
-        "flow-0.twitter-timeline-0.accessToken = at",
-        "flow-0.twitter-timeline-0.accessTokenSecret = ats",
-        "flow-0.twitter-timeline-0.consumerKey = ck",
-        "flow-0.twitter-timeline-0.consumerSecret = cs"
-    }
-)
-@TestExecutionListeners(
-    listeners = {
-        DependencyInjectionTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class
-    }
-)
 @SuppressWarnings("PMD.ExcessiveImports")
 public class ConnectorStepHandlerTest extends IntegrationTestSupport {
     private static final ConnectorAction TWITTER_MENTION_ACTION = new ConnectorAction.Builder()
@@ -115,12 +80,22 @@ public class ConnectorStepHandlerTest extends IntegrationTestSupport {
         .addAction(TWITTER_MENTION_ACTION)
         .build();
 
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Test
     public void testConnectorStepHandler() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
+
+        PropertiesComponent propertiesComponent = new PropertiesComponent();
+
+        Properties extra = new Properties();
+        extra.setProperty("flow-0.twitter-timeline-0.accessToken", "at");
+        extra.setProperty("flow-0.twitter-timeline-0.accessTokenSecret", "ats");
+        extra.setProperty("flow-0.twitter-timeline-0.consumerKey", "ck");
+        extra.setProperty("flow-0.twitter-timeline-0.consumerSecret", "cs");
+        propertiesComponent.setOverrideProperties(extra);
+
+        context.addComponent("properties", propertiesComponent);
+
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
@@ -173,30 +148,6 @@ public class ConnectorStepHandlerTest extends IntegrationTestSupport {
             dumpRoutes(context);
         } finally {
             context.stop();
-        }
-    }
-
-    // ***************************
-    //
-    // ***************************
-
-    @Configuration
-    public static class TestConfiguration {
-        @Bean
-        public PropertiesParser propertiesParser(PropertyResolver propertyResolver) {
-            return new DefaultPropertiesParser() {
-                @Override
-                public String parseProperty(String key, String value, Properties properties) {
-                    return propertyResolver.getProperty(key);
-                }
-            };
-        }
-
-        @Bean(destroyMethod = "")
-        public PropertiesComponent properties(PropertiesParser parser) {
-            PropertiesComponent pc = new PropertiesComponent();
-            pc.setPropertiesParser(parser);
-            return pc;
         }
     }
 }

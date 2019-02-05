@@ -18,7 +18,6 @@ package io.syndesis.integration.runtime.handlers;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -31,61 +30,23 @@ import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.properties.DefaultPropertiesParser;
-import org.apache.camel.component.properties.PropertiesComponent;
-import org.apache.camel.component.properties.PropertiesParser;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.PipelineDefinition;
 import org.apache.camel.model.ProcessDefinition;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.ToDefinition;
-import org.apache.camel.spring.SpringCamelContext;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.PropertyResolver;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DirtiesContext
-@RunWith(SpringRunner.class)
-@SpringBootTest(
-    classes = {
-        ExtensionStepHandlerTest.TestConfiguration.class
-    },
-    properties = {
-        "spring.main.banner-mode = off",
-        "logging.level.io.syndesis.integration.runtime = DEBUG",
-        "twitter-timeline-1.accessToken = at",
-        "twitter-timeline-1.accessTokenSecret = ats",
-        "twitter-timeline-1.consumerKey = ck",
-        "twitter-timeline-1.consumerSecret = cs"
-    }
-)
-@TestExecutionListeners(
-    listeners = {
-        DependencyInjectionTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class
-    }
-)
 @SuppressWarnings({"PMD.ExcessiveImports", "PMD.JUnitTestContainsTooManyAsserts"})
 public class ExtensionStepHandlerTest extends IntegrationTestSupport {
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Test
     public void testEndpointExtensionStepHandler() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
@@ -165,7 +126,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testBeanExtensionStepHandler() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
@@ -239,7 +200,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
 
     @Test
     public void testStepExtensionStepHandler() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
@@ -306,30 +267,6 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
             assertThat(route.getOutputs().get(4)).isInstanceOf(PipelineDefinition.class);
         } finally {
             context.stop();
-        }
-    }
-
-    // ***************************
-    //
-    // ***************************
-
-    @Configuration
-    public static class TestConfiguration {
-        @Bean
-        public PropertiesParser propertiesParser(PropertyResolver propertyResolver) {
-            return new DefaultPropertiesParser() {
-                @Override
-                public String parseProperty(String key, String value, Properties properties) {
-                    return propertyResolver.getProperty(key);
-                }
-            };
-        }
-
-        public @Bean(destroyMethod = "")
-        PropertiesComponent properties(PropertiesParser parser) {
-            PropertiesComponent pc = new PropertiesComponent();
-            pc.setPropertiesParser(parser);
-            return pc;
         }
     }
 
