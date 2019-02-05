@@ -68,8 +68,8 @@ public class ContinuousDeliveryProviderImplTest {
     private final ConnectionHandler connectionHandler = mock(ConnectionHandler.class);
     private final MonitoringProvider monitoringProvider = mock(MonitoringProvider.class);
 
-    private final ContinuousDeliveryProvider provider = new ContinuousDeliveryProviderImpl(dataManager, supportHandler,
-            encryptionComponent, deploymentHandler, connectionHandler, monitoringProvider);
+    // initialized after mock objects in setup
+    private ContinuousDeliveryProvider provider;
 
     @Before
     public void setUp() throws Exception {
@@ -82,12 +82,16 @@ public class ContinuousDeliveryProviderImplTest {
                 .build();
 
         when(dataManager.fetch(Integration.class, INTEGRATION_ID)).thenReturn(integration);
+        when(dataManager.fetchAll(eq(Integration.class))).thenReturn(ListResult.of(integration));
         when(dataManager.fetchAll(eq(Integration.class), any())).thenReturn(ListResult.of(integration));
 
         when(supportHandler.export(any())).thenReturn(out -> out.write('b'));
         final HashMap<String, List<WithResourceId>> importResult = new HashMap<>();
         importResult.put(INTEGRATION_ID, Collections.singletonList(integration));
         when(supportHandler.importIntegration(any(), any())).thenReturn(importResult);
+
+        provider = new ContinuousDeliveryProviderImpl(dataManager, supportHandler,
+                encryptionComponent, deploymentHandler, connectionHandler, monitoringProvider);
     }
 
     @Test
