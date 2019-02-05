@@ -30,6 +30,7 @@ import {
 export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   isShapeless: boolean;
   routeSubscription: Subscription;
+  flowSubscription: Subscription;
   position: number;
   page: number;
   lastPage: number;
@@ -323,6 +324,15 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.hasConfiguration = false;
+    this.flowSubscription = this.currentFlowService.events.subscribe(event => {
+      if (event.kind === 'integration-cancel-clicked') {
+        this.flowPageService.maybeRemoveStep(
+          this.router,
+          this.route,
+          this.position
+        );
+      }
+    });
     this.routeSubscription = this.route.paramMap.subscribe(
       (params: ParamMap) => {
         if (!params.has('page')) {
@@ -342,6 +352,11 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.routeSubscription.unsubscribe();
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
+    }
   }
 }

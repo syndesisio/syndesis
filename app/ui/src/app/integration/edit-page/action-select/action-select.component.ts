@@ -40,11 +40,6 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public router: Router
   ) {
-    this.flowSubscription = currentFlowService.events.subscribe(
-      (event: FlowEvent) => {
-        this.handleFlowEvent(event);
-      }
-    );
     this.connector$ = connectorStore.resource;
     this.loading$ = connectorStore.loading;
     connectorStore.clear();
@@ -141,12 +136,24 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
       case 'integration-updated':
         this.loadActions();
         break;
+      case 'integration-cancel-clicked':
+        this.flowPageService.maybeRemoveStep(
+          this.router,
+          this.route,
+          this.position
+        );
+        break;
       default:
         break;
     }
   }
 
   ngOnInit() {
+    this.flowSubscription = this.currentFlowService.events.subscribe(
+      (event: FlowEvent) => {
+        this.handleFlowEvent(event);
+      }
+    );
     this.actionsSubscription = this.actions$.subscribe(_ =>
       this.currentFlowService.events.emit({
         kind: 'integration-action-select',

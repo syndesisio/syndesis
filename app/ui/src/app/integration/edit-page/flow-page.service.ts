@@ -10,6 +10,7 @@ export class FlowPageService {
   errorMessage: any;
   saveInProgress = false;
   publishInProgress = false;
+  showDone = false;
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -20,10 +21,7 @@ export class FlowPageService {
     this.errorMessage = undefined;
     this.saveInProgress = false;
     this.publishInProgress = false;
-  }
-
-  canContinue() {
-    return true;
+    this.showDone = false;
   }
 
   get integrationName() {
@@ -33,14 +31,39 @@ export class FlowPageService {
   }
 
   cancel() {
-    this.initialize();
-    if (this.currentFlowService.integration.id) {
-      this.router.navigate([
-        '/integrations',
-        this.currentFlowService.integration.id
-      ]);
+    this.currentFlowService.events.emit({
+      kind: 'integration-cancel-clicked'
+    });
+  }
+
+  done() {
+    this.currentFlowService.events.emit({
+      kind: 'integration-done-clicked'
+    });
+  }
+
+  maybeRemoveStep(router: Router, route: ActivatedRoute, position: number) {
+    const step = this.currentFlowService.getStep(position);
+    const metadata = step.metadata || {};
+    // An action or step that has no configuration may not have
+    // a configuredProperties but it's technically still configured
+    if (step.configuredProperties || metadata.configured === 'true') {
+      // The step has previously been configured, so discard
+      // any changes but leave the step in the flow
+      router.navigate(['save-or-add-step'], {
+        relativeTo: route.parent
+      });
     } else {
-      this.router.navigate(['/integrations']);
+      // The step hasn't been configured at all, remove the step from the flow
+      this.currentFlowService.events.emit({
+        kind: 'integration-remove-step',
+        position: position,
+        onSave: () => {
+          router.navigate(['save-or-add-step'], {
+            relativeTo: route.parent
+          });
+        }
+      });
     }
   }
 

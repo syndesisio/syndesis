@@ -4,7 +4,8 @@ import { Subscription, combineLatest, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import {
   CurrentFlowService,
-  FlowPageService
+  FlowPageService,
+  FlowEvent
 } from '@syndesis/ui/integration/edit-page';
 import { NavigationService } from '@syndesis/ui/common';
 
@@ -18,6 +19,7 @@ import { NavigationService } from '@syndesis/ui/common';
 })
 export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
+  flowSubscription: Subscription;
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -27,7 +29,23 @@ export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
     public navigationService: NavigationService
   ) {}
 
+  handleFlowEvent(event: FlowEvent) {
+    if (event.kind === 'integration-cancel-clicked') {
+      try {
+        this.router.navigate([
+          '/integrations',
+          this.currentFlowService.integration.id
+        ]);
+      } catch (err) {
+        this.router.navigate(['/integrations']);
+      }
+    }
+  }
+
   ngOnInit() {
+    this.flowSubscription = this.currentFlowService.events.subscribe(event => {
+      this.handleFlowEvent(event);
+    });
     this.routeSubscription = combineLatest(this.route.paramMap, this.route.data)
       .pipe(
         switchMap(([params, data]) => {
@@ -48,6 +66,9 @@ export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
     this.navigationService.show();
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
+    }
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
     }
   }
 }
