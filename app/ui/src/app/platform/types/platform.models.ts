@@ -114,6 +114,7 @@ export interface WithModificationTimestamps {
 export interface ConfigurationProperty extends BaseEntity {
   javaType: string;
   type: string;
+  multiple: boolean;
   defaultValue: string;
   displayName: string;
   description: string;

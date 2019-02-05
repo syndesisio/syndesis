@@ -226,7 +226,8 @@
               [required]="model.required"
               (blur)="onBlur($event)"
               (change)="onValueChange($event)"
-              (focus)="onFocus($event)">
+              (focus)="onFocus($event)"
+              [multiple]="model.multiple">
 
         <option *ngFor="let option of model.options$ | async"
                 [attr.name]="model.name"

@@ -44,7 +44,9 @@ import com.netflix.hystrix.HystrixExecutable;
 import com.netflix.hystrix.HystrixInvokableInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
@@ -61,6 +63,8 @@ public class ConnectionActionHandlerTest {
     @SuppressWarnings("unchecked")
     private final HystrixExecutable<DynamicActionMetadata> metadataCommand = mock(HystrixExecutable.class,
         withSettings().extraInterfaces(HystrixInvokableInfo.class));
+
+    private Map<String, String> metadataCommandParameters;
 
     private final DataShape salesforceContactShape;
 
@@ -122,6 +126,7 @@ public class ConnectionActionHandlerTest {
             @Override
             protected HystrixExecutable<DynamicActionMetadata> createMetadataCommand(final ConnectorAction action,
                 final Map<String, String> parameters) {
+                metadataCommandParameters = parameters;
                 return metadataCommand;
             }
         };
@@ -182,7 +187,7 @@ public class ConnectionActionHandlerTest {
             .inputDataShape(salesforceContactShape)//
             .build();
 
-        final Map<String, String> parameters = new HashMap<>();
+        final Map<String, Object> parameters = new HashMap<>();
         parameters.put("sObjectName", "Contact");
 
         final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters);
@@ -258,5 +263,59 @@ public class ConnectionActionHandlerTest {
         final ConnectorDescriptor descriptor = meta.getValue();
         assertThat(descriptor.getInputDataShape()).contains(ConnectionActionHandler.ANY_SHAPE);
         assertThat(descriptor.getOutputDataShape()).contains(salesforceOutputShape);
+    }
+
+    @Test
+    public void shouldConvertParameterFromIterableWithStringsToCommaDelimitedString() {
+        final DynamicActionMetadata suggestions = new DynamicActionMetadata.Builder()
+            .putProperty("sObjectName", Arrays.asList(DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Account", "Account"),
+                DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
+            .build();
+        when(metadataCommand.execute()).thenReturn(suggestions);
+        when(((HystrixInvokableInfo<?>) metadataCommand).isSuccessfulExecution()).thenReturn(true);
+
+
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("sObjectName", Arrays.asList("Contact", "Account"));
+
+        final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters);
+
+        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
+        assertThat(metadataCommandParameters).containsEntry("sObjectName", "Contact,Account");
+    }
+
+    @Test
+    public void shouldConvertParameterFromArrayOfStringsToCommaDelimitedString() {
+        final DynamicActionMetadata suggestions = new DynamicActionMetadata.Builder()
+            .putProperty("sObjectName", Arrays.asList(DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Account", "Account"),
+                DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
+            .build();
+        when(metadataCommand.execute()).thenReturn(suggestions);
+        when(((HystrixInvokableInfo<?>) metadataCommand).isSuccessfulExecution()).thenReturn(true);
+
+
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("sObjectName", new String[] { "Contact", "Account" });
+
+        final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters);
+
+        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
+        assertThat(metadataCommandParameters).containsEntry("sObjectName", "Contact,Account");
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void shouldFailForUnsupportedParameterType() {
+        final DynamicActionMetadata suggestions = new DynamicActionMetadata.Builder()
+            .putProperty("sObjectName", Arrays.asList(DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Account", "Account"),
+                DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
+            .build();
+        when(metadataCommand.execute()).thenReturn(suggestions);
+        when(((HystrixInvokableInfo<?>) metadataCommand).isSuccessfulExecution()).thenReturn(true);
+
+
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("sObjectName", new Integer[] { 1, 2 });
+
+        handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters);
     }
 }
