@@ -101,7 +101,7 @@ build_operator_local() {
         echo "Running tests"
         go test $TEST_TARGETS
     fi
-    if [ "$do_linux" ] && [ $(isOSX) ]; then
+    if [ "$do_linux" ] && $(isMacOs); then
         echo "Cross-compiling syndesis-operator for Linux"
         GOOS="linux" GOARCH="amd64" CGO_ENABLED=0 go build ./cmd/syndesis-operator
     else

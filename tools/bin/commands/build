@@ -7,12 +7,12 @@ build::description() {
 build::usage() {
     cat <<EOT
     -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
-        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade
+        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade, camel-k
         --app-images               Build only application modules with Docker images (ui, server, meta, s2i)
                                    and create images
-        --infra-images             Build only infrastructure modules with Docker images (operator, upgrade) and create images
+        --infra-images             Build only infrastructure modules with Docker images (operator, camel-k, upgrade) and create images
     -m  --module <m1>,<m2>, ..     Build modules
-                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator, upgrade
+                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator, camelk, upgrade
     -d  --dependencies             Build also all project the specified module depends on
         --skip-tests               Skip unit and system test execution
         --skip-checks              Disable all checks
@@ -22,7 +22,7 @@ build::usage() {
         --multi-stage              Multi-stage Dockerfile support for operator build (experimental)
     -p  --project <project>        Specifies the project / namespace to create images
     -e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
-    -l  --local                    If building the operator, use a locally installed go
+    -l  --local                    If building the operators, use a locally installed go
                                    Otherwise run the Go build from a container (either local or Minishift's Docker  daemon)
         --clean-cache              Used for the operator build to remove the local dependency cache.
     -c  --clean                    Run clean builds (mvn clean)
@@ -64,6 +64,11 @@ build::run() {
     # Build operator if requested
     if $(should_build "operator" "$modules"); then
         do_operator $top_dir
+    fi
+
+    # Build operator if requested
+    if $(should_build "camel-k" "$modules"); then
+        do_camel_k $top_dir
     fi
 
     # Build image for upgrade pod if requested
@@ -174,6 +179,54 @@ do_operator() {
     fi
 }
 
+do_camel_k() {
+    local top_dir=$1
+    echo "=============================================================================="
+    echo "Building camel-k"
+    echo "=============================================================================="
+
+    if [ -z "$GOPATH" ]; then
+        echo "ERROR: \$GOPATH has to be set for camel-k build"
+        exit 1
+    fi
+
+    local camel_k_root=$GOPATH/src/github.com/apache/camel-k
+    if [ ! -e $camel_k_root ]; then
+        echo "ERROR: Can't find $camel_k_root. camel-k image can be build only locally (--local is implied) for camel-k builds)."
+        exit 1
+    fi
+
+    if ! operator-sdk --help 2>&1 >/dev/null; then
+        echo "ERROR: operator-sdk needs to be installed locally for building camel-k"
+        exit 1
+    fi
+
+    pushd $camel_k_root >/dev/null
+
+    local version=$(script/get_version.sh)
+
+    local kamel_dir=~/.syndesis/bin
+    echo "Building $kamel_dir/kamel-$version"
+    [ -d $kamel_dir ] || mkdir -p $kamel_dir
+    go build -o $kamel_dir/kamel-$version ./cmd/kamel/*.go
+    if [ $? != 0 ]; then
+       echo "ERROR: Can't build kamel-$version"
+       exit 1
+    fi
+    [ -f $kamel_dir/kamel-latest ] && rm $kamel_dir/kamel-latest
+
+    echo "Linking $kamel_dir/kamel-$version --> $kamel_dir/kamel-latest"
+    ln -sf $kamel_dir/kamel-$version $kamel_dir/kamel-latest
+
+    local camel_k_image="docker.io/apache/camel-k"
+    echo "Building image $camel_k_image:$version"
+    ./script/images_build.sh
+
+    echo "Tagging $camel_k_image:$version --> $camel_k_image:latest"
+    docker tag $camel_k_image:$version $camel_k_image:latest
+    popd >/dev/null
+}
+
 do_upgrade_pod() {
     local top_dir=$1
     echo "=============================================================================="
@@ -236,14 +289,15 @@ rsync_binary_from_minishift() {
 
 
 # All modules, in the right build order
-ALL_MODULES="common extension integration connector meta server s2i ui test operator upgrade"
+ALL_MODULES="common extension integration connector meta server s2i ui test operator camel-k upgrade"
 MAVEN_MODULES="common extension integration connector meta server s2i ui test"
 APP_IMAGES="ui server meta s2i"
-INFRA_IMAGES="operator upgrade"
+INFRA_IMAGES="operator camel-k upgrade"
 ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES"
 MODULES=(
   "upgrade:server common extension integration connector"
   "operator"
+  "camel-k"
   "ui"
   "common"
   "extension:common"
@@ -264,7 +318,7 @@ extract_modules() {
     fi
 
     if [ "$(hasflag --all-images)" ]; then
-        modules="$modules ui server meta s2i operator"
+        modules="$modules ui server meta s2i operator camel-k"
     fi
 
     if [ "$(hasflag --app-images)" ]; then
