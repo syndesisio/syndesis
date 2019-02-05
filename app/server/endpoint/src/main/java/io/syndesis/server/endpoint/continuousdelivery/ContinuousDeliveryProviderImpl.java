@@ -79,7 +79,7 @@ public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvide
         this.connectionHandler = connectionHandler;
         this.monitoringProvider = monitoringProvider;
 
-        // read all existing environment names
+        // read all existing environment names in a cache
         this.environments = new CopyOnWriteArraySet<>();
         dataMgr.fetchAll(Integration.class)
                 .getItems()
@@ -108,6 +108,22 @@ public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvide
         if (null == deliveryState.remove(environment)) {
             throw new ClientErrorException("Missing environment tag " + environment, Response.Status.NOT_FOUND);
         }
+
+        // update json db
+        dataMgr.update(integration.builder().continuousDeliveryState(deliveryState).build());
+
+        // update cache
+        boolean found = false;
+        final ListResult<Integration> integrations = dataMgr.fetchAll(Integration.class);
+        for (Integration intg : integrations) {
+            if (intg.getContinuousDeliveryState().get(environment) != null) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            environments.remove(environment);
+        }
     }
 
     @Override
@@ -125,6 +141,11 @@ public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvide
         for (String environment : environments) {
             // create or update tag
             result.put(environment, createOrUpdateTag(deliveryState, environment, lastTaggedAt));
+
+            // update cache
+            if (!this.environments.contains(environment)) {
+                this.environments.add(environment);
+            }
         }
 
         // update json db
@@ -263,6 +284,11 @@ public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvide
             if (deploy) {
                 // deploy integrations
                 integrations.forEach(i -> publishIntegration(sec, i));
+            }
+
+            // update cache
+            if (!this.environments.contains(environment)) {
+                this.environments.add(environment);
             }
 
             return new ContinuousDeliveryImportResults.Builder()
