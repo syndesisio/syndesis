@@ -1,10 +1,9 @@
 import { switchMap } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
-import { combineLatest, Observable, Subscription, of } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { combineLatest, Subscription, of } from 'rxjs';
 
 import { NavigationService } from '@syndesis/ui/common';
-import { Integration } from '@syndesis/ui/platform';
 import { CurrentFlowService } from '@syndesis/ui/integration/edit-page/current-flow.service';
 import { FlowPageService } from '@syndesis/ui/integration/edit-page/flow-page.service';
 
@@ -14,13 +13,7 @@ import { FlowPageService } from '@syndesis/ui/integration/edit-page/flow-page.se
   styleUrls: ['./edit-page.component.scss']
 })
 export class IntegrationEditPage implements OnInit, OnDestroy {
-  integration: Observable<Integration>;
-  readonly loading: Observable<boolean>;
-
   routeSubscription: Subscription;
-  urls: UrlSegment[];
-  _canContinue = false;
-  position: number;
 
   constructor(
     public currentFlowService: CurrentFlowService,

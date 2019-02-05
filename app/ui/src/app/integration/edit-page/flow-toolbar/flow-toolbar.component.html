@@ -1,0 +1,94 @@
+<syndesis-loading
+  [loading]="!(currentFlowService.loaded$ | async)"
+  [content]="content"
+>
+  <ng-template #content>
+    <div class="toolbar syn-toolbar">
+      <div class="row toolbar-pf">
+        <div class="col-sm-12">
+          <div class="toolbar-pf-actions">
+            <h1>
+              <span *ngIf="isApiProvider">API Provider Integration: </span
+              ><strong
+                ><syndesis-editable-text
+                  [value]="currentFlowService.integration.name"
+                  [validationFn]="validateName"
+                  (onSave)="
+                    nameUpdated(currentFlowService.integration.id, $event)
+                  "
+                ></syndesis-editable-text
+              ></strong>
+            </h1>
+            <div class="toolbar-pf-action-right">
+              <button class="btn btn-default" (click)="cancel()">Cancel</button>
+              &nbsp;
+              <button
+                class="btn btn-default"
+                *ngIf="isApiProvider && !hideOperationsButton"
+                [disabled]="
+                  flowPageService.saveInProgress ||
+                  flowPageService.publishInProgress
+                "
+                (click)="
+                  save([
+                    '/integrations',
+                    currentFlowService.integration?.id,
+                    'operations'
+                  ])
+                "
+              >
+                Go to Operation List
+              </button>
+              &nbsp;
+              <button
+                *ngIf="isApiProvider"
+                type="button"
+                class="btn btn-default"
+                [routerLink]="['../specification']"
+              >
+                <i
+                  class="fa fa-pencil"
+                  aria-hidden="true"
+                  title="Edit API Definition"
+                ></i>
+                Edit API Definition
+              </button>
+              &nbsp;
+              <button
+                class="btn btn-default"
+                (click)="save()"
+                [disabled]="
+                  !flowPageService.canContinue() ||
+                  flowPageService.saveInProgress ||
+                  flowPageService.publishInProgress
+                "
+              >
+                <span
+                  *ngIf="flowPageService.saveInProgress"
+                  class="spinner spinner-sm spinner-inline"
+                ></span>
+                Save
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="publish()"
+                [disabled]="
+                  !flowPageService.canContinue() ||
+                  flowPageService.saveInProgress ||
+                  flowPageService.publishInProgress
+                "
+              >
+                <span
+                  *ngIf="flowPageService.publishInProgress"
+                  class="spinner spinner-sm spinner-inline"
+                ></span>
+                Publish
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</syndesis-loading>

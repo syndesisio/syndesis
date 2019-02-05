@@ -3,16 +3,31 @@
     <!-- Navigation buttons -->
     <ng-template #controlButtons>
       <syndesis-cancel-add-step></syndesis-cancel-add-step>
-      <button type="button" *ngIf="(lastPage === 0 || page === 0) && !isApiProvider()" class="btn btn-default" (click)="goBack()">
-        <i class="fa fa-chevron-left"></i>
-        Choose Action
+      <button
+        type="button"
+        *ngIf="(lastPage === 0 || page === 0) && !isApiProvider()"
+        class="btn btn-default"
+        (click)="goBack()"
+      >
+        <i class="fa fa-chevron-left"></i> Choose Action
       </button>
-      <button type="button" *ngIf="lastPage > 0 && page !== 0" class="btn btn-default" (click)="previous()">
-        <i class="fa fa-chevron-left"></i>
-        Previous
+      <button
+        type="button"
+        *ngIf="lastPage > 0 && page !== 0"
+        class="btn btn-default"
+        (click)="previous()"
+      >
+        <i class="fa fa-chevron-left"></i> Previous
       </button>
-      <button type="button" class="btn btn-primary" (click)="continue()" [disabled]="maybeDisableDone()">
-        <ng-container *ngIf="!isShapeless && (page >= lastPage || !hasConfiguration)">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="continue()"
+        [disabled]="maybeDisableDone()"
+      >
+        <ng-container
+          *ngIf="!isShapeless && (page >= lastPage || !hasConfiguration)"
+        >
           Done
         </ng-container>
         <ng-container *ngIf="isShapeless || page < lastPage">
@@ -21,36 +36,6 @@
       </button>
     </ng-template>
     <div class="syn-scrollable">
-      <!-- Toolbar -->
-      <div class="toolbar syn-toolbar--inverted">
-        <!-- Toolbar: Breadcrumbs -->
-        <div class="container-fluid">
-          <div class="row toolbar-pf">
-            <div class="col-sm-12">
-              <div class="toolbar-pf-actions">
-                <div class="inline-block">
-                  <ol class="breadcrumb">
-                    <li>
-                      <a [routerLink]="['/']">Home</a>
-                    </li>
-                    <li>
-                      <a [routerLink]="['/integrations']">Integrations</a>
-                    </li>
-                    <li>
-                      <a *ngIf="currentFlowService.integration.id" [routerLink]="['/integrations', currentFlowService.integration.id]">
-                        {{ flowPageService.integrationName }}</a>
-                      <ng-container *ngIf="!currentFlowService.integration.id">New Integration</ng-container>
-                    </li>
-                    <li class="active">Configure {{ action?.name }}</li>
-                  </ol>
-                </div>
-                <div class="toolbar-pf-action-right">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="syn-scrollable--body">
         <div class="container-fluid">
           <div class="title">
@@ -72,18 +57,29 @@
                           </p>
                         </div>
                       </div>
-                      <div *ngIf="!hasConfiguration" class="row control-buttons">
+                      <div
+                        *ngIf="!hasConfiguration"
+                        class="row control-buttons"
+                      >
                         <div class="col-xs-12">
-                          <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                          <ng-container
+                            *ngTemplateOutlet="controlButtons"
+                          ></ng-container>
                         </div>
                       </div>
                     </ng-container>
                     <ng-container *ngIf="hasConfiguration">
                       <form class="form-horizontal" [formGroup]="formGroup">
-                        <syndesis-form-control *ngFor="let controlModel of formModel" [group]="formGroup" [model]="controlModel"></syndesis-form-control>
+                        <syndesis-form-control
+                          *ngFor="let controlModel of formModel"
+                          [group]="formGroup"
+                          [model]="controlModel"
+                        ></syndesis-form-control>
                         <div class="row control-buttons">
                           <div class="col-sm-9 col-sm-offset-3">
-                            <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                            <ng-container
+                              *ngTemplateOutlet="controlButtons"
+                            ></ng-container>
                           </div>
                         </div>
                       </form>

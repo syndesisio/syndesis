@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrentFlowService } from '@syndesis/ui/integration/edit-page/current-flow.service';
-import {
-  Integration
-} from '@syndesis/ui/platform';
+import { Integration } from '@syndesis/ui/platform';
 
 @Injectable()
 export class FlowPageService {
@@ -48,18 +46,33 @@ export class FlowPageService {
 
   goBack(path: Array<string | number | boolean>, route: ActivatedRoute) {
     this.router.navigate(path, {
-      relativeTo: route.parent,
+      relativeTo: route.parent
     });
   }
 
+  /**
+   * Validate the integration and initiate the save process if the integration
+   * is valid, redirect to appropriate pages as needed
+   *
+   * TODO change the function so all target routes are passed in
+   *
+   * @param route
+   * @param targetRoute
+   */
   doSave(route: ActivatedRoute, targetRoute?) {
     this.errorMessage = undefined;
+    if (
+      !this.currentFlowService.validateFlowAndMaybeRedirect(route, this.router)
+    ) {
+      this.initialize();
+      return;
+    }
     if (
       !this.currentFlowService.integration.name ||
       this.currentFlowService.integration.name === ''
     ) {
-      this.router.navigate(['integration-basics'], {
-        relativeTo: route.parent,
+      this.router.navigate(['..', 'integration-basics'], {
+        relativeTo: route
       });
       this.initialize();
       return;
@@ -71,7 +84,7 @@ export class FlowPageService {
         if (this.saveInProgress) {
           this.initialize();
           if (targetRoute) {
-            this.router.navigate(targetRoute);
+            this.router.navigate(targetRoute, { relativeTo: route });
           }
           return;
         }

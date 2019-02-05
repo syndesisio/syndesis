@@ -11,6 +11,8 @@ export * from './common';
 export * from './describe-data';
 export * from './step-select';
 export * from './flow-view';
+export * from './flow-toolbar';
+export * from './flow-page-header';
 export * from './integration-basics';
 export * from './list-actions';
 export * from './save-or-add-step';

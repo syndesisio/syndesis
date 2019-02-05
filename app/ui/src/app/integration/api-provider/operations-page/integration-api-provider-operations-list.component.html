@@ -1,0 +1,49 @@
+<div class="container-fluid">
+  <div class="title">Operations ({{ (flows$ | async).length }})</div>
+  <p *ngIf="showDescription">
+    An integration can have multiple flows. Select an operation to start
+    creating a flow.
+  </p>
+
+  <!-- Toolbar -->
+  <syndesis-list-toolbar
+    *ngIf="showToolbar"
+    [items]="enrichedFlows$"
+    [filterTags]="false"
+    [filteredItems]="filteredFlows$"
+    [toolbarConfig]="toolbarConfig"
+  >
+  </syndesis-list-toolbar>
+
+  <div class="list-view-pf-view operations-list">
+    <pfng-list
+      [items]="flowItems | async"
+      [itemTemplate]="itemTemplate"
+      [actionTemplate]="actionTemplate"
+      (onClick)="handleClick($event)"
+    >
+      <ng-template #itemTemplate let-flow="item" let-index="index">
+        <div class="list-pf-content-wrapper">
+          <div *ngIf="showDescription" class="list-pf-main-content">
+            <div class="list-pf-description text-overflow-pf">
+              {{ flow.description }}
+            </div>
+          </div>
+          <div class="list-pf-title">{{ flow.name }}</div>
+        </div>
+      </ng-template>
+      <ng-template #actionTemplate let-flow="item" let-index="index">
+        <span *ngIf="flow.implemented === 1">
+          <button class="btn btn-default" (click)="handleClick(flow)">
+            Edit Flow
+          </button>
+        </span>
+        <span *ngIf="flow.implemented === 0">
+          <button class="btn btn-primary" (click)="handleClick(flow)">
+            Create a Flow
+          </button>
+        </span>
+      </ng-template>
+    </pfng-list>
+  </div>
+</div>

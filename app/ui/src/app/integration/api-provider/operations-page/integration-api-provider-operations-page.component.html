@@ -1,12 +1,34 @@
-<div class="integrations api-provider">
+<div class="integrations">
   <div class="row">
-    <!-- Sidebar -->
-    <div class="wizard-sidebar">
-      <syndesis-integration-flow-view></syndesis-integration-flow-view>
+    <div class="col-md-12">
+      <ol class="breadcrumb">
+        <li>
+          &lt;&lt;&nbsp;<a [routerLink]="['/integrations']">All Integrations</a>
+        </li>
+        <li *ngIf="(currentFlowService.loaded$ | async)">
+          <a
+            [routerLink]="['/integrations', currentFlowService.integration.id]"
+            >{{ currentFlowService.integration.name }}</a
+          >
+        </li>
+      </ol>
     </div>
+  </div>
 
-    <div class="main-panel wizard-main">
-      <syndesis-loading [loading]="loading | async" [content]="content">
+  <div class="row">
+    <div class="col-md-12">
+      <syndesis-integration-flow-toolbar
+        [isApiProvider]="true"
+      ></syndesis-integration-flow-toolbar>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <syndesis-loading
+        [loading]="!(currentFlowService.loaded$ | async)"
+        [content]="content"
+      >
       </syndesis-loading>
     </div>
   </div>
@@ -14,100 +36,11 @@
 
 <ng-template #content>
   <div class="syn-scrollable">
-    <!-- Toolbar -->
-    <div class="toolbar syn-toolbar--inverted">
-      <div class="container-fluid">
-        <!-- Toolbar: Breadcrumbs -->
-        <div class="row toolbar-pf">
-          <div class="col-sm-12">
-            <div class="toolbar-pf-actions">
-              <div class="inline-block">
-                <ol class="breadcrumb">
-                  <li><a [routerLink]="['/']">Home</a></li>
-                  <li><a [routerLink]="['/integrations']">Integrations</a></li>
-                  <li>
-                    <a
-                      [routerLink]="[
-                        '/integrations',
-                        currentFlowService.integration.id
-                      ]"
-                    >
-                      {{ currentFlowService.integration.name }}
-                    </a>
-                  </li>
-                  <li class="active">Choose operation</li>
-                </ol>
-              </div>
-              <div class="toolbar-pf-action-right">
-                <button
-                  type="button"
-                  class="btn btn-default"
-                  [routerLink]="['../specification']"
-                >
-                  <i
-                    class="fa fa-pencil"
-                    aria-hidden="true"
-                    title="Edit API Definition"
-                  ></i>
-                  Edit API Definition
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="syn-scrollable--body">
-      <div class="container-fluid">
-        <div class="title">
-          <h1>Operations ({{ (flows$ | async).length }})</h1>
-        </div>
-        <p>
-          An integration can have multiple flows. Select an operation to start
-          creating a flow.
-        </p>
-
-        <!-- Toolbar -->
-        <syndesis-list-toolbar
-          [items]="flows$"
-          [filterTags]="false"
-          [filteredItems]="filteredFlows$"
-          [toolbarConfig]="toolbarConfig"
-        >
-        </syndesis-list-toolbar>
-
-        <div class="list-view-pf-view operations-list">
-          <pfng-list
-            [items]="filteredFlows$ | async"
-            [itemTemplate]="itemTemplate"
-            [actionTemplate]="actionTemplate"
-            (onClick)="handleClick($event)"
-          >
-            <ng-template #itemTemplate let-flow="item" let-index="index">
-              <div class="list-pf-content-wrapper">
-                <div class="list-pf-main-content">
-                  <div class="list-pf-description text-overflow-pf">
-                    {{ flow.description }}
-                  </div>
-                </div>
-                <div class="list-pf-title">{{ flow.name }}</div>
-              </div>
-            </ng-template>
-            <ng-template #actionTemplate let-flow="item" let-index="index">
-              <span *ngIf="flow.implemented === 1">
-                <button class="btn btn-default" (click)="handleClick(flow)">
-                  Edit Flow
-                </button>
-              </span>
-              <span *ngIf="flow.implemented === 0">
-                <button class="btn btn-primary" (click)="handleClick(flow)">
-                  Create a Flow
-                </button>
-              </span>
-            </ng-template>
-          </pfng-list>
-        </div>
-      </div>
+      <syndesis-integration-api-provider-operations-list
+        [flows$]="currentFlowService.flows$"
+        [integrationId]="currentFlowService.integration?.id"
+      ></syndesis-integration-api-provider-operations-list>
     </div>
   </div>
 </ng-template>
