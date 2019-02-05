@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
@@ -91,11 +92,11 @@ public class ContinuousDeliveryProviderImplTest {
 
     @Test
     public void tagForRelease() throws Exception {
-        final ContinuousDeliveryEnvironment continuousDeliveryEnvironment = provider.tagForRelease(INTEGRATION_ID,
-                ENVIRONMENT);
+        final Map<String, ContinuousDeliveryEnvironment> continuousDeliveryEnvironment = provider.tagForRelease(INTEGRATION_ID,
+                Collections.singletonList(ENVIRONMENT));
 
         assertThat(continuousDeliveryEnvironment, is(notNullValue()));
-        assertThat(continuousDeliveryEnvironment.getName(), is(equalTo(ENVIRONMENT)));
+        assertThat(continuousDeliveryEnvironment.get(0).getName(), is(equalTo(ENVIRONMENT)));
 
         verify(dataManager).update(notNull());
     }
