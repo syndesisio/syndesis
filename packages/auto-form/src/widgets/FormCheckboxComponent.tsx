@@ -9,19 +9,16 @@ export const FormCheckboxComponent = ({
 }: {
   [name: string]: any;
 }) => (
-    <FormGroup>
-      <Checkbox
-        {...field}
-        id={field.name}
-        checked={field.value}
-        data-testid={field.name}
-        onChange={field.onChange}
-      >
-        {props.property.displayName}
-      </Checkbox>
-      <HelpBlock>{props.property.description}</HelpBlock>
-      {touched[field.name] && errors[field.name] && (
-        <div className="error">{errors[field.name]}</div>
-      )}
-    </FormGroup>
-  );
+  <FormGroup>
+    <Checkbox
+      {...field}
+      id={field.name}
+      checked={field.value}
+      data-testid={field.name}
+      onChange={field.onChange}
+    >
+      {props.property.displayName}
+    </Checkbox>
+    <HelpBlock>{props.property.description}</HelpBlock>
+  </FormGroup>
+);
