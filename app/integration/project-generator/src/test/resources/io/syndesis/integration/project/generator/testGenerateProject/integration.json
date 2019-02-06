@@ -174,21 +174,6 @@
                       "id": "io.syndesis.connector:connector-http-get:${project.version}"
                     }
                   ]
-                },
-                {
-                  "id": "http-post-action",
-                  "descriptor": {
-                    "connectorId": "http",
-                    "camelConnectorGAV": "io.syndesis.connector:connector-http-post:${project.version}",
-                    "camelConnectorPrefix": "http-post-connector"
-                  },
-                  "actionType": "connector",
-                  "dependencies": [
-                    {
-                      "type": "MAVEN",
-                      "id": "io.syndesis.connector:connector-http-post:${project.version}"
-                    }
-                  ]
                 }
               ],
               "properties": {
