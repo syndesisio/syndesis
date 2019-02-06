@@ -51,7 +51,7 @@ public interface ContinuousDeliveryProvider {
      * List all available environments.
      */
     @GET
-    @Path("environments/{id}")
+    @Path("environments")
     @Produces(MediaType.APPLICATION_JSON)
     List<String> getReleaseEnvironments();
 
