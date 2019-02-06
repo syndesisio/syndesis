@@ -7,33 +7,28 @@ import {
 } from 'patternfly-react';
 import * as React from 'react';
 
-export interface IExtensionListItemProps {
-  extensionDescription?: string;
-  extensionIcon?: string;
-  extensionId?: string;
-  extensionName: string;
+export interface IApiConnectorListItemProps {
+  apiConnectorDescription?: string;
+  apiConnectorId: string;
+  apiConnectorName: string;
+  apiConnectorIcon?: string;
   i18nDelete: string;
   i18nDeleteTip?: string;
   i18nDetails: string;
   i18nDetailsTip?: string;
-  i18nExtensionType: string;
-  i18nUpdate: string;
-  i18nUpdateTip?: string;
   i18nUsedByMessage: string;
-  onDelete: (extensionId: string) => void;
+  onDelete: (apiConnectorId: string) => void;
   onDetails: (extensionId: string) => void;
-  onUpdate: (extensionId: string) => void;
   usedBy: number;
 }
 
-export class CustomizationsExtensionListItem extends React.Component<
-  IExtensionListItemProps
+export class ApiConnectorListItem extends React.Component<
+  IApiConnectorListItemProps
 > {
-  public constructor(props: IExtensionListItemProps) {
+  public constructor(props: IApiConnectorListItemProps) {
     super(props);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleDetails = this.handleDetails.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
   }
 
   public getDeleteTooltip() {
@@ -56,32 +51,12 @@ export class CustomizationsExtensionListItem extends React.Component<
     );
   }
 
-  public getUpdateTooltip() {
-    return (
-      <Tooltip id="updateTip">
-        {this.props.i18nUpdateTip
-          ? this.props.i18nUpdateTip
-          : this.props.i18nUpdate}
-      </Tooltip>
-    );
-  }
-
   public handleDelete() {
-    if (this.props.extensionId) {
-      this.props.onDelete(this.props.extensionId);
-    }
+    this.props.onDelete(this.props.apiConnectorId);
   }
 
   public handleDetails() {
-    if (this.props.extensionId) {
-      this.props.onDetails(this.props.extensionId);
-    }
-  }
-
-  public handleUpdate() {
-    if (this.props.extensionId) {
-      this.props.onUpdate(this.props.extensionId);
-    }
+    this.props.onDetails(this.props.apiConnectorId);
   }
 
   public render() {
@@ -94,15 +69,10 @@ export class CustomizationsExtensionListItem extends React.Component<
                 {this.props.i18nDetails}
               </Button>
             </OverlayTrigger>
-            <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
-              <Button bsStyle="default" onClick={this.handleUpdate}>
-                {this.props.i18nUpdate}
-              </Button>
-            </OverlayTrigger>
             <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
               <Button
                 bsStyle="default"
-                disabled={this.props.extensionId && this.props.usedBy !== 0}
+                disabled={this.props.usedBy !== 0}
                 onClick={this.handleDelete}
               >
                 {this.props.i18nDelete}
@@ -112,20 +82,22 @@ export class CustomizationsExtensionListItem extends React.Component<
         }
         additionalInfo={[
           <ListViewInfoItem key={1}>
-            {this.props.i18nExtensionType}
+            {this.props.i18nUsedByMessage}
           </ListViewInfoItem>,
         ]}
         description={
-          this.props.extensionDescription ? this.props.extensionDescription : ''
+          this.props.apiConnectorDescription
+            ? this.props.apiConnectorDescription
+            : ''
         }
-        heading={this.props.extensionName}
+        heading={this.props.apiConnectorName}
         hideCloseIcon={true}
         leftContent={
-          this.props.extensionIcon ? (
+          this.props.apiConnectorIcon ? (
             <div className="blank-slate-pf-icon">
               <img
-                src={this.props.extensionIcon}
-                alt={this.props.extensionName}
+                src={this.props.apiConnectorIcon}
+                alt={this.props.apiConnectorName}
                 width={46}
               />
             </div>

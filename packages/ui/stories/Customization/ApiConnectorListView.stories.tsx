@@ -6,19 +6,13 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import {
-  CustomizationsApiConnectorListItem,
-  CustomizationsApiConnectorListView,
-} from '../../src';
-import { extensionDetailStory } from './CustomizationsExtensionDetail.stories';
+import { ApiConnectorListItem, ApiConnectorListView } from '../../src';
+import { extensionDetailStory } from './ExtensionDetail.stories';
 
-const stories = storiesOf(
-  'Customization/CustomizationsApiConnectorListView',
-  module
-);
+const stories = storiesOf('Customization/ApiConnectorListView', module);
 
 const connectors = [
-  <CustomizationsApiConnectorListItem
+  <ApiConnectorListItem
     apiConnectorId={text('apiConnectorId', 'api-conn-1')}
     apiConnectorDescription={text(
       'apiConnectorDescription',
@@ -35,7 +29,7 @@ const connectors = [
     onDetails={linkTo('Customization', extensionDetailStory)}
     usedBy={0}
   />,
-  <CustomizationsApiConnectorListItem
+  <ApiConnectorListItem
     apiConnectorId={text('apiConnectorId', 'api-conn-2')}
     apiConnectorDescription={text(
       'apiConnectorDescription',
@@ -113,7 +107,7 @@ stories
     'no connectors',
     withNotes(noApiConnectorsTestNotes)(() => (
       <Router>
-        <CustomizationsApiConnectorListView
+        <ApiConnectorListView
           activeFilters={[]}
           currentFilterType={{
             filterType: 'text',
@@ -159,7 +153,7 @@ stories
     'has api connectors',
     withNotes(hasApiConnectorsTestNotes)(() => (
       <Router>
-        <CustomizationsApiConnectorListView
+        <ApiConnectorListView
           activeFilters={[]}
           currentFilterType={{
             filterType: 'text',

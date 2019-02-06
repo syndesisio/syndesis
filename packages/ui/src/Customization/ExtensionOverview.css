@@ -1,0 +1,8 @@
+.property-label {
+  font-weight: bold;
+  text-align: right;
+}
+
+.property-value {
+  text-align: left;
+}

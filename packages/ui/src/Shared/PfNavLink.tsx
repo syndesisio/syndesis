@@ -1,3 +1,4 @@
+import * as H from 'history';
 import * as React from 'react';
 import { Route } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -11,7 +12,7 @@ interface INavLink {
   location?: any;
   strict?: boolean;
   style?: any;
-  to: string | any;
+  to: H.LocationDescriptor;
   label: any;
   children?: any;
 }

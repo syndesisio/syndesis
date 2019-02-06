@@ -19,7 +19,7 @@ export interface IApiConnectorListViewProps extends IListViewToolbarProps {
   linkCreateApiConnector: string;
 }
 
-export class CustomizationsApiConnectorListView extends React.Component<
+export class ApiConnectorListView extends React.Component<
   IApiConnectorListViewProps
 > {
   public render() {
@@ -42,7 +42,9 @@ export class CustomizationsApiConnectorListView extends React.Component<
         </ListViewToolbar>
         <div className="container-fluid">
           <h1>{this.props.i18nTitle}</h1>
-          <p>{this.props.i18nDescription}</p>
+          <div
+            dangerouslySetInnerHTML={{ __html: this.props.i18nDescription }}
+          />
           {this.props.children ? (
             <ListView>{this.props.children}</ListView>
           ) : (
