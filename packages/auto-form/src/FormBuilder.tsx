@@ -177,6 +177,7 @@ export class FormBuilder<T> extends React.Component<
     switch (property.type) {
       case 'number':
         return parseInt(value, 10);
+      case 'boolean':
       case 'checkbox':
         return String(value).toLocaleLowerCase() === 'true';
       default:

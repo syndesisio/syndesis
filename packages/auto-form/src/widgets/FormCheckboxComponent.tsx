@@ -1,3 +1,4 @@
+import { Checkbox, FormGroup, HelpBlock } from 'patternfly-react';
 import * as React from 'react';
 
 export const FormCheckboxComponent = ({
@@ -8,23 +9,19 @@ export const FormCheckboxComponent = ({
 }: {
   [name: string]: any;
 }) => (
-  // TODO replace with PF3/PF4 widget
-  <div className="form-group">
-    <div className="checkbox">
-      <label htmlFor={field.name}>
-        <input
-          type={type}
-          id={field.name}
-          data-testid={field.name}
-          {...field}
-          checked={field.value === 'true'}
-          disabled={isSubmitting}
-        />
+    <FormGroup>
+      <Checkbox
+        {...field}
+        id={field.name}
+        checked={field.value}
+        data-testid={field.name}
+        onChange={field.onChange}
+      >
         {props.property.displayName}
-      </label>
+      </Checkbox>
+      <HelpBlock>{props.property.description}</HelpBlock>
       {touched[field.name] && errors[field.name] && (
         <div className="error">{errors[field.name]}</div>
       )}
-    </div>
-  </div>
-);
+    </FormGroup>
+  );
