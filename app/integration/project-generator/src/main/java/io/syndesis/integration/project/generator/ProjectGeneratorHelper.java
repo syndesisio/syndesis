@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import io.syndesis.common.model.connection.Connection;
@@ -143,6 +144,7 @@ public final class ProjectGeneratorHelper {
         return answer;
     }
 
+    @SuppressWarnings("PMD.ExcessiveMethodLength")
     public static Integration sanitize(Integration integration, IntegrationResourceManager resourceManager) {
         if (integration.getFlows().isEmpty()) {
             return integration;
@@ -171,13 +173,11 @@ public final class ProjectGeneratorHelper {
                         Connector connector = resourceManager.loadConnector(connection.getConnectorId()).orElseThrow(
                             () -> new IllegalArgumentException("Unable to fetch connector: " + connection.getConnectorId())
                         );
-
                         // Add missing connector to connection.
                         Connection newConnection = new Connection.Builder()
                             .createFrom(connection)
                             .connector(connector)
                             .build();
-
                         // Replace with the new 'sanitized' step
                         replacement =
                             new Step.Builder()
@@ -185,6 +185,21 @@ public final class ProjectGeneratorHelper {
                                 .connection(newConnection)
                                 .build();
                     }
+                    // Prune Connector, nix actions. The action in use is on the Step
+                    Connector prunedConnector = new Connector.Builder().createFrom(
+                            replacement.getConnection().get().getConnector().get())
+                       .actions(new ArrayList<>()).build();
+                    // Replace with the new 'pruned' connector
+                    Connection prunedConnection = new Connection.Builder()
+                        .createFrom(connection)
+                        .connector(prunedConnector)
+                        .build();
+                    // Replace with the new 'pruned' step
+                    replacement =
+                        new Step.Builder()
+                            .createFrom(source)
+                            .connection(prunedConnection)
+                            .build();
                 }
 
                 //

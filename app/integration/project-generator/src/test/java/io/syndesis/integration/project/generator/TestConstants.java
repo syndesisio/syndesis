@@ -65,7 +65,6 @@ final class TestConstants {
                     .secret(false)
                     .componentProperty(false)
                     .build())
-            .addAction(PERIODIC_TIMER_ACTION)
             .build();
 
 

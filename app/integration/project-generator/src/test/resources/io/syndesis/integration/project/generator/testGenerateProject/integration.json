@@ -22,23 +22,6 @@
             "connector": {
               "id": "timer",
               "version": 1,
-              "actions": [
-                {
-                  "id": "periodic-timer-action",
-                  "descriptor": {
-                    "connectorId": "timer",
-                    "camelConnectorGAV": "io.syndesis.connector:connector-timer:${project.version}",
-                    "camelConnectorPrefix": "periodic-timer-connector"
-                  },
-                  "actionType": "connector",
-                  "dependencies": [
-                    {
-                      "type": "MAVEN",
-                      "id": "io.syndesis.connector:connector-timer:${project.version}"
-                    }
-                  ]
-                }
-              ],
               "properties": {
                 "period": {
                   "componentProperty": false,
@@ -159,38 +142,6 @@
             "connector": {
               "id": "http",
               "version": 1,
-              "actions": [
-                {
-                  "id": "http-get-action",
-                  "descriptor": {
-                    "connectorId": "http",
-                    "camelConnectorGAV": "io.syndesis.connector:connector-http-get:${project.version}",
-                    "camelConnectorPrefix": "http-get-connector"
-                  },
-                  "actionType": "connector",
-                  "dependencies": [
-                    {
-                      "type": "MAVEN",
-                      "id": "io.syndesis.connector:connector-http-get:${project.version}"
-                    }
-                  ]
-                },
-                {
-                  "id": "http-post-action",
-                  "descriptor": {
-                    "connectorId": "http",
-                    "camelConnectorGAV": "io.syndesis.connector:connector-http-post:${project.version}",
-                    "camelConnectorPrefix": "http-post-connector"
-                  },
-                  "actionType": "connector",
-                  "dependencies": [
-                    {
-                      "type": "MAVEN",
-                      "id": "io.syndesis.connector:connector-http-post:${project.version}"
-                    }
-                  ]
-                }
-              ],
               "properties": {
                 "httpUri": {
                   "componentProperty": false,
