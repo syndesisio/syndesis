@@ -1,10 +1,11 @@
 package action
 
 import (
-	"github.com/operator-framework/operator-sdk/pkg/sdk"
+	"context"
 	"github.com/sirupsen/logrus"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"math"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strconv"
 	"time"
 )
@@ -23,7 +24,7 @@ func (a *UpgradeBackoff) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseUpgradeFailureBackoff)
 }
 
-func (a *UpgradeBackoff) Execute(syndesis *v1alpha1.Syndesis) error {
+func (a *UpgradeBackoff) Execute(client client.Client, syndesis *v1alpha1.Syndesis) error {
 
 	// Check number of attempts to fail fast
 	if syndesis.Status.UpgradeAttempts >= UpgradeMaxAttempts {
@@ -35,7 +36,7 @@ func (a *UpgradeBackoff) Execute(syndesis *v1alpha1.Syndesis) error {
 		target.Status.Description = "Upgrade failed too many times and will not be retried"
 		target.Status.ForceUpgrade = false
 
-		return sdk.Update(target)
+		return client.Update(context.TODO(), target)
 	}
 
 	now := time.Now()
@@ -74,7 +75,7 @@ func (a *UpgradeBackoff) Execute(syndesis *v1alpha1.Syndesis) error {
 		target.Status.Description = "Upgrading from " + currentVersion + " to " + targetVersion + " (attempt " + currentAttemptStr + ")"
 		target.Status.ForceUpgrade = true
 
-		return sdk.Update(target)
+		return client.Update(context.TODO(), target)
 	} else {
 		remaining := math.Round(nextAttempt.Sub(now).Seconds())
 		logrus.Info("Upgrade of Syndesis resource ", syndesis.Name, " will be retried in ", remaining, " seconds")

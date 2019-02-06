@@ -3,7 +3,6 @@ package template
 import (
 	"errors"
 	v1template "github.com/openshift/api/template/v1"
-	"github.com/operator-framework/operator-sdk/pkg/k8sclient"
 	"github.com/sirupsen/logrus"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -18,9 +17,8 @@ type TemplateProcessor struct {
 }
 
 func NewTemplateProcessor(namespace string) (*TemplateProcessor, error) {
-	inConfig := k8sclient.GetKubeConfig()
-
-	config := rest.CopyConfig(inConfig)
+	inConfig := rest.Config{}
+	config := rest.CopyConfig(&inConfig)
 	config.GroupVersion = &schema.GroupVersion{
 		Group:   "template.openshift.io",
 		Version: "v1",

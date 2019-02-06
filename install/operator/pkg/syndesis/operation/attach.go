@@ -1,14 +1,15 @@
 package operation
 
 import (
-	"github.com/operator-framework/operator-sdk/pkg/sdk"
+	"context"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func AttachSyndesisToResource(syndesis *v1alpha1.Syndesis) error {
+func AttachSyndesisToResource(cl client.Client, syndesis *v1alpha1.Syndesis) error {
 
 	resTypes, err := getAllManagedResourceTypes()
 	if err != nil {
@@ -19,11 +20,14 @@ func AttachSyndesisToResource(syndesis *v1alpha1.Syndesis) error {
 	for _, selector := range selectors {
 		for _, metaType := range resTypes {
 
-			options := sdk.WithListOptions(&selector)
+			options := &client.ListOptions{Namespace: syndesis.Namespace}
+			if err := options.SetFieldSelector(selector); err != nil {
+				return err
+			}
 			list := metav1.List{
 				TypeMeta: metaType,
 			}
-			if err := sdk.List(syndesis.Namespace, &list, options); err != nil {
+			if err := cl.List(context.TODO(), options, &list); err != nil {
 				return err
 			}
 
@@ -33,7 +37,7 @@ func AttachSyndesisToResource(syndesis *v1alpha1.Syndesis) error {
 					return err
 				}
 				SetNamespaceAndOwnerReference(res, syndesis)
-				if err := sdk.Update(res); err != nil {
+				if err := cl.Update(context.TODO(), res); err != nil {
 					return err
 				}
 			}
@@ -44,14 +48,10 @@ func AttachSyndesisToResource(syndesis *v1alpha1.Syndesis) error {
 	return nil
 }
 
-func getAllManagerSelectors() []metav1.ListOptions {
-	return []metav1.ListOptions{
-		{
-			LabelSelector: "syndesis.io/app=syndesis,syndesis.io/type=infrastructure",
-		},
-		{
-			LabelSelector: "app=syndesis,syndesis.io/app=todo",
-		},
+func getAllManagerSelectors() []string {
+	return []string {
+		"syndesis.io/app=syndesis,syndesis.io/type=infrastructure",
+		"syndesis.io/app=todo,app=syndesis",
 	}
 }
 

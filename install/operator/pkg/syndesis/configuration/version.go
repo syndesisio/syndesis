@@ -6,6 +6,7 @@ import (
 	templatev1 "github.com/openshift/api/template/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/api/core/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strings"
 )
 
@@ -31,8 +32,8 @@ func GetSyndesisVersionFromOperatorTemplate() (string, error) {
 }
 
 // Retrieves the version of syndesis installed in the namespace.
-func GetSyndesisVersionFromNamespace(namespace string) (string, error) {
-	secret, err := GetSyndesisConfigurationSecret(namespace)
+func GetSyndesisVersionFromNamespace(client client.Client, namespace string) (string, error) {
+	secret, err := GetSyndesisConfigurationSecret(client, namespace)
 	if err != nil {
 		return "", err
 	}

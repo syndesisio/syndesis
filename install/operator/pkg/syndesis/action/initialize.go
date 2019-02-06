@@ -1,10 +1,11 @@
 package action
 
 import (
-	"github.com/operator-framework/operator-sdk/pkg/sdk"
+	"context"
 	"github.com/sirupsen/logrus"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // Initializes a Syndesis resource with no status and starts the installation process
@@ -16,10 +17,10 @@ func (a *Initialize) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 		v1alpha1.SyndesisPhaseNotInstalled)
 }
 
-func (a *Initialize) Execute(syndesis *v1alpha1.Syndesis) error {
+func (a *Initialize) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
 
-	list := v1alpha1.NewSyndesisList()
-	err := sdk.List(syndesis.Namespace, list)
+	list := v1alpha1.SyndesisList{}
+	err := cl.List(context.TODO(), &client.ListOptions{Namespace: syndesis.Namespace}, &list)
 	if err != nil {
 		return err
 	}
@@ -45,5 +46,5 @@ func (a *Initialize) Execute(syndesis *v1alpha1.Syndesis) error {
 		logrus.Info("Syndesis resource ", syndesis.Name, " initialized: installing version ", syndesisVersion)
 	}
 
-	return sdk.Update(target)
+	return cl.Update(context.TODO(), target)
 }

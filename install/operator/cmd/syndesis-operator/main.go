@@ -2,53 +2,94 @@ package main
 
 import (
 	"context"
+	"flag"
+	"fmt"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"os"
 	"runtime"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/legacy"
-
-	// Load Openshift types
-	_ "github.com/syndesisio/syndesis/install/operator/pkg/openshift"
-
-	"github.com/operator-framework/operator-sdk/pkg/sdk"
-	"github.com/operator-framework/operator-sdk/pkg/util/k8sutil"
+	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
+	"github.com/operator-framework/operator-sdk/pkg/leader"
 	sdkVersion "github.com/operator-framework/operator-sdk/version"
-	"github.com/syndesisio/syndesis/install/operator/pkg/stub"
-
-	"flag"
-	"github.com/sirupsen/logrus"
-	configuration "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis"
+	"github.com/syndesisio/syndesis/install/operator/pkg/controller"
+	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
+	"sigs.k8s.io/controller-runtime/pkg/client/config"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
+	"sigs.k8s.io/controller-runtime/pkg/runtime/signals"
 )
 
+var log = logf.Log.WithName("cmd")
+
 func printVersion() {
-	logrus.Infof("Go Version: %s", runtime.Version())
-	logrus.Infof("Go OS/Arch: %s/%s", runtime.GOOS, runtime.GOARCH)
-	logrus.Infof("operator-sdk Version: %v", sdkVersion.Version)
+	log.Info(fmt.Sprintf("Go Version: %s", runtime.Version()))
+	log.Info(fmt.Sprintf("Go OS/Arch: %s/%s", runtime.GOOS, runtime.GOARCH))
+	log.Info(fmt.Sprintf("Version of operator-sdk: %v", sdkVersion.Version))
 }
 
 func main() {
-	printVersion()
+	flag.Parse()
+
+	// The logger instantiated here can be changed to any logger
+	// implementing the logr.Logger interface. This logger will
+	// be propagated through the whole operator, generating
+	// uniform and structured logs.
+	logf.SetLogger(logf.ZapLogger(false))
+
 
 	configuration.TemplateLocation = flag.String("template", "/conf/syndesis-template.yml", "Path to template used for installation")
 	configuration.Registry = flag.String("registry", "docker.io", "Registry to use for loading images like the upgrade pod")
 
-	flag.Parse()
-	logrus.Infof("Using template %s", *configuration.TemplateLocation)
+	log.Info("Using template", "template", *configuration.TemplateLocation)
+	printVersion()
 
-	resource := "syndesis.io/v1alpha1"
-	kind := "Syndesis"
 	namespace, err := k8sutil.GetWatchNamespace()
 	if err != nil {
-		logrus.Fatalf("Failed to get watch namespace: %v", err)
+		log.Error(err, "Failed to get watch namespace")
+		os.Exit(1)
 	}
 
-	resyncPeriod := 5
-	ctx := context.TODO()
+	// Get a config to talk to the apiserver
+	cfg, err := config.GetConfig()
+	if err != nil {
+		log.Error(err, "")
+		os.Exit(1)
+	}
 
-	legacyController := legacy.NewLegacyController(namespace)
-	legacyController.Start(ctx)
+	// Become the leader before proceeding
+	err = leader.Become(context.TODO(), "syndesis-operator-lock")
+	if err != nil {
+		log.Error(err, "")
+		os.Exit(1)
+	}
 
-	logrus.Infof("Watching %s, %s, %s, %d", resource, kind, namespace, resyncPeriod)
-	sdk.Watch(resource, kind, namespace, resyncPeriod)
-	sdk.Handle(stub.NewHandler())
-	sdk.Run(ctx)
+	// Create a new Cmd to provide shared dependencies and start components
+	mgr, err := manager.New(cfg, manager.Options{Namespace: namespace})
+	if err != nil {
+		log.Error(err, "")
+		os.Exit(1)
+	}
+
+	log.Info("Registering Components.")
+
+	// Setup Scheme for all resources
+	if err := apis.AddToScheme(mgr.GetScheme()); err != nil {
+		log.Error(err, "")
+		os.Exit(1)
+	}
+
+	// Setup all Controllers
+	if err := controller.AddToManager(mgr); err != nil {
+		log.Error(err, "")
+		os.Exit(1)
+	}
+
+	log.Info("Starting the Cmd.")
+
+	// Start the Cmd
+	if err := mgr.Start(signals.SetupSignalHandler()); err != nil {
+		log.Error(err, "Manager exited non-zero")
+		os.Exit(1)
+	}
 }
