@@ -50,6 +50,7 @@ import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.syndesis.common.util.DurationConverter;
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.backend.BackendController;
 import io.syndesis.server.jsondb.GetOptions;
 import io.syndesis.server.jsondb.JsonDB;
 import io.syndesis.server.jsondb.impl.JsonRecordSupport;
@@ -62,7 +63,7 @@ import io.syndesis.server.openshift.OpenShiftService;
 @Service
 @ConditionalOnProperty(value = "controllers.dblogging.enabled", havingValue = "true", matchIfMissing = true)
 @SuppressWarnings({"PMD.DoNotUseThreads", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.CyclomaticComplexity", "PMD.GodClass"})
-public class ActivityTrackingController implements Closeable {
+public class ActivityTrackingController implements BackendController, Closeable {
 
     static final String IDLE_THREAD_NAME = "Logs Controller [idle]";
 
@@ -95,12 +96,17 @@ public class ActivityTrackingController implements Closeable {
         this.client = client;
         this.kubernetesSupport = new KubernetesSupport(client);
     }
+    @Override
+    public void start() {
+        open();
+    }
 
     @PostConstruct
     @SuppressWarnings("FutureReturnValueIgnored")
     public void open() {
         scheduler = Executors.newScheduledThreadPool(1, threadFactory("Logs Controller Scheduler"));
         executor =  Executors.newCachedThreadPool(threadFactory("Logs Controller"));
+        stopped.set(false);
         executor.execute(this::processEventQueue);
         scheduler.scheduleWithFixedDelay(this::pollPods, startupDelay.getSeconds(), 5, TimeUnit.SECONDS);
         scheduler.scheduleWithFixedDelay(this::cleanupLogs, startupDelay.toMillis(), cleanUpInterval.toMillis(), TimeUnit.MILLISECONDS);
@@ -202,13 +208,32 @@ public class ActivityTrackingController implements Closeable {
         });
     }
 
+    @Override
+    public void stop() {
+        close();
+    }
 
     @Override
     @PreDestroy
     public void close() {
         stopped.set(true);
+        kubernetesSupport.cancelAllRequests();
         scheduler.shutdownNow();
         executor.shutdown();
+        try {
+            boolean schedulerStopped = false;
+            boolean executorStopped = false;
+
+            do {
+                schedulerStopped = scheduler.awaitTermination(10, TimeUnit.SECONDS);
+                executorStopped = executor.awaitTermination(10, TimeUnit.SECONDS);
+            } while (!schedulerStopped && !executorStopped);
+            scheduler = null;
+            executor = null;
+        } catch (final InterruptedException e) {
+            LOG.warn("Unable to cleanly stop: {}", e.getMessage());
+            LOG.debug("Interrupted while stopping", e);
+        }
     }
 
 

@@ -20,6 +20,7 @@ import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl;
 import io.fabric8.kubernetes.client.utils.HttpClientUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -74,7 +75,7 @@ public class KubernetesSupport {
             String podLogUrl = url.toString();
 
             Thread.currentThread().setName("Logs Controller [running], request: " + podLogUrl);
-            Request request = new Request.Builder().url(new URL(podLogUrl)).get().build();
+            Request request = new Request.Builder().url(new URL(podLogUrl)).get().tag("log-watcher").build();
             OkHttpClient clone = okHttpClient.newBuilder()
                 .readTimeout(readTimeout.toMillis(), TimeUnit.MILLISECONDS)
                 .build();
@@ -116,5 +117,10 @@ public class KubernetesSupport {
 
     public void setReadTimeout(final Duration readTimeout) {
         this.readTimeout = readTimeout;
+    }
+
+    void cancelAllRequests() {
+        final Dispatcher dispatcher = okHttpClient.dispatcher();
+        dispatcher.cancelAll();
     }
 }

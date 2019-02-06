@@ -15,10 +15,12 @@
  */
 package io.syndesis.server.endpoint.v1.handler.tests;
 
-import org.skife.jdbi.v2.DBI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import java.sql.DatabaseMetaData;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -29,18 +31,20 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.ModelData;
 import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.util.backend.BackendController;
 import io.syndesis.common.util.cache.CacheManager;
 import io.syndesis.server.dao.manager.DataAccessObject;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
+
+import org.skife.jdbi.v2.DBI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Path("/test-support")
 @org.springframework.stereotype.Component
@@ -60,10 +64,13 @@ public class TestSupportHandler {
 
     private CacheManager cacheManager;
 
-    public TestSupportHandler(DBI dbi, DataManager dataMgr, CacheManager cacheManager, List<DataAccessObject<?>> daos, OpenShiftService openShiftService) {
+    private Collection<BackendController> controllers;
+
+    public TestSupportHandler(DBI dbi, DataManager dataMgr, CacheManager cacheManager, List<DataAccessObject<?>> daos, OpenShiftService openShiftService, Collection<BackendController> controllers) {
         this.dbi = dbi;
         this.dataMgr = dataMgr;
         this.cacheManager = cacheManager;
+        this.controllers = controllers;
         this.daos = daos.stream().filter(x -> !x.isReadOnly()).collect(Collectors.toList());
         this.openShiftService = openShiftService;
     }
@@ -71,57 +78,50 @@ public class TestSupportHandler {
     @GET
     @Path("/reset-db")
     public void resetDBToDefault() {
-        LOG.warn("user {} is resetting DB", context.getRemoteUser());
+        final String user = context.getRemoteUser();
+        LOG.warn("user {} is resetting DB", user);
         // Deployments must be also deleted because we it is not possible to reach them after deleting DB.
-        List<Integration> integrations = getIntegrations();
+        deleteDeployments();
+        stopControllers();
         deleteAllDBEntities();
-        deleteDeployments(integrations);
+        startControllers();
         dataMgr.resetDeploymentData();
+        LOG.warn("user {} reset the DB", user);
     }
 
     @POST
     @Path("/restore-db")
     @Consumes(MediaType.APPLICATION_JSON)
     public void restoreDB(ModelData<?>... data) {
-        LOG.warn("user {} is restoring db state", context.getRemoteUser());
-        deleteAllDBEntities();
+        final String user = context.getRemoteUser();
+        LOG.warn("user {} is restoring db state", user);
+        resetDBToDefault();
         for (ModelData<?> modelData : data) {
             dataMgr.store(modelData);
         }
-    }
-
-    /**
-     * Gets all integrations.
-     * @return list of integrations
-     */
-    private List<Integration> getIntegrations() {
-        return dataMgr.fetchAll(Integration.class).getItems();
+        LOG.warn("user {} restored db state", user);
     }
 
     @GET
     @Path("/delete-deployments")
     public void deleteDeployments() {
-        LOG.warn("user {} is deleting all integration deploymets", context.getRemoteUser());
-        deleteDeployments(dataMgr.fetchAll(Integration.class).getItems());
-    }
-
-    /**
-     * Delete selected deployments.
-     * @param deployments list of integration to delete
-     */
-    private void deleteDeployments(List<Integration> deployments) {
-        for (Integration i : deployments) {
-            if (openShiftService.exists(i.getName())) {
-                openShiftService.delete(i.getName());
-                LOG.debug("Deleting integration \"{}\"", i.getName());
-            } else {
-                LOG.debug("Skipping integration named \"{}\". No such deployment found.", i.getName());
-            }
+        final String user = context.getRemoteUser();
+        LOG.warn("user {} is deleting all integration deploymets", user);
+        final List<DeploymentConfig> integrationDeployments = openShiftService.getDeploymentsByLabel(Collections.singletonMap(OpenShiftService.INTEGRATION_ID_LABEL, null));
+        for (DeploymentConfig integrationDeployment : integrationDeployments) {
+            final String integrationDeploymentName = integrationDeployment.getMetadata().getName().replaceFirst("^i-", "");
+            LOG.debug("Deleting integration \"{}\"", integrationDeploymentName);
+            openShiftService.delete(integrationDeploymentName);
         }
+        LOG.warn("user {} deleted all integration deploymets", user);
     }
 
     private void deleteAllDBEntities() {
         dbi.withHandle(h -> {
+            final DatabaseMetaData databaseMetaData = h.getConnection().getMetaData();
+            if ("PostgreSQL".equalsIgnoreCase(databaseMetaData.getDatabaseProductName())) {
+                h.execute("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='syndesis' AND pid != pg_backend_pid()");
+            }
             h.execute("TRUNCATE TABLE jsondb");
             h.execute("TRUNCATE TABLE filestore");
             h.execute("TRUNCATE TABLE config");
@@ -129,6 +129,14 @@ public class TestSupportHandler {
             return null;
         });
         cacheManager.evictAll();
+    }
+
+    private void startControllers() {
+        controllers.forEach(BackendController::start);
+    }
+
+    private void stopControllers() {
+        controllers.forEach(BackendController::stop);
     }
 
     @GET
