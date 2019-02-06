@@ -15,16 +15,20 @@
  */
 package io.syndesis.connector.support.maven;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.zip.GZIPOutputStream;
 
 import com.fasterxml.jackson.core.PrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.atlasmap.core.DefaultAtlasConversionService;
 import io.atlasmap.java.inspect.ClassInspectionService;
 import io.atlasmap.java.v2.JavaClass;
@@ -35,13 +39,10 @@ import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.Json;
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -57,39 +58,22 @@ import org.apache.maven.shared.utils.StringUtils;
 public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     private static final String CONNECTORS_META_PATH = "META-INF/syndesis/connector/";
 
-    public enum InspectionMode {
-        RESOURCE,
-        SPECIFICATION,
-        RESOURCE_AND_SPECIFICATION
-    }
-
-    @Component
-    private ArtifactFactory artifactFactory;
-
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
 
     @Parameter(readonly = true, defaultValue = "${project.build.directory}/classes")
     private String output;
 
-    @Parameter(defaultValue = "mapper/v1/java-inspections")
-    private String inspectionsResourceDir;
-
     @Parameter(defaultValue = "${project.build.directory}/classes/META-INF/syndesis")
     private File inspectionsOutputDir;
 
-    @Parameter(defaultValue = "RESOURCE_AND_SPECIFICATION")
-    @SuppressWarnings("PMD.ImmutableField")
-    private InspectionMode inspectionMode = InspectionMode.RESOURCE_AND_SPECIFICATION;
-
     @Override
-    @SuppressWarnings("PMD.CyclomaticComplexity")
     public void execute() throws MojoExecutionException, MojoFailureException {
-        try {
-            if (!inspectionsOutputDir.exists() && !inspectionsOutputDir.mkdirs()) {
-		throw new MojoFailureException("Unable to create output directory at: " + inspectionsOutputDir);
-	    }
+        if (!inspectionsOutputDir.exists() && !inspectionsOutputDir.mkdirs()) {
+            throw new MojoFailureException("Unable to create output directory at: " + inspectionsOutputDir);
+        }
 
+        try {
             File root = new File(output, CONNECTORS_META_PATH);
             if (root.exists()) {
                 File[] files = root.listFiles((dir, name) -> name.endsWith(".json"));
@@ -98,32 +82,12 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                 }
 
                 for (File file: files) {
-                    final Connector connector = Json.reader().forType(Connector.class).readValue(file);
-                    final List<ConnectorAction> actions = new ArrayList<>();
-
-                    for (ConnectorAction action : connector.getActions()) {
-                        Optional<DataShape> inputDataShape = generateInspections(connector, action.getDescriptor().getInputDataShape());
-                        Optional<DataShape> outputDataShape = generateInspections(connector, action.getDescriptor().getOutputDataShape());
-
-                        if (inspectionMode == InspectionMode.SPECIFICATION || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
-                            if (inputDataShape.isPresent() || outputDataShape.isPresent()) {
-                                ConnectorDescriptor.Builder descriptorBuilder = new ConnectorDescriptor.Builder().createFrom(action.getDescriptor());
-
-                                inputDataShape.ifPresent(descriptorBuilder::inputDataShape);
-                                outputDataShape.ifPresent(descriptorBuilder::outputDataShape);
-
-                                actions.add(
-                                    new ConnectorAction.Builder()
-                                        .createFrom(action)
-                                        .descriptor(descriptorBuilder.build())
-                                        .build()
-                                );
-                            } else {
-                                actions.add(action);
-                            }
-                        }
+                    Connector connector = Json.reader().forType(Connector.class).readValue(file);
+                    if (!connector.getId().isPresent()) {
+                        continue;
                     }
 
+                    List<ConnectorAction> actions = generateInspections(connector);
                     if (!actions.isEmpty()) {
                         Json.writer().writeValue(
                             file,
@@ -135,7 +99,6 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                     }
                 }
             }
-
         } catch (ClassNotFoundException | DependencyResolutionRequiredException | IOException e) {
             throw new MojoExecutionException("Unable to generate inspections", e);
         }
@@ -145,70 +108,100 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     // Inspections
     // ****************************************
 
-    @SuppressWarnings("PMD.CyclomaticComplexity")
-    private Optional<DataShape> generateInspections(Connector connector, Optional<DataShape> shape) throws IOException, DependencyResolutionRequiredException, ClassNotFoundException {
-        if (!shape.isPresent() || !connector.getId().isPresent()) {
-            return Optional.empty();
+    private List<ConnectorAction> generateInspections(Connector connector) throws IOException, DependencyResolutionRequiredException, ClassNotFoundException {
+        final List<ConnectorAction> actions = new ArrayList<>();
+
+        for (ConnectorAction action : connector.getActions()) {
+            Optional<DataShape> inputDataShape = action.getDescriptor().getInputDataShape();
+            Optional<DataShape> outputDataShape = action.getDescriptor().getOutputDataShape();
+
+            if (inputDataShape.isPresent()) {
+                inputDataShape = Optional.of(generateInspections(connector, inputDataShape.get()));
+            }
+            if (outputDataShape.isPresent()) {
+                outputDataShape = Optional.of(generateInspections(connector, outputDataShape.get()));
+            }
+
+            if (inputDataShape.isPresent() || outputDataShape.isPresent()) {
+                ConnectorDescriptor descriptor = new ConnectorDescriptor.Builder()
+                    .createFrom(action.getDescriptor())
+                    .inputDataShape(inputDataShape)
+                    .outputDataShape(outputDataShape)
+                    .build();
+
+                action = new ConnectorAction.Builder()
+                    .createFrom(action)
+                    .descriptor(descriptor)
+                    .build();
+            }
+
+            actions.add(action);
         }
 
-        final DataShape given = shape.get();
-        DataShape ret = given;
-
-        if (DataShapeKinds.JAVA == given.getKind() && StringUtils.isNotEmpty(given.getType())) {
-            final String type = given.getType();
-
-
-            File outputFile = new File(inspectionsOutputDir, String.format("%s/%s/%s.json", inspectionsResourceDir, connector.getId().get(), type));
-            if (!outputFile.getParentFile().exists() && outputFile.getParentFile().mkdirs()) {
-                getLog().debug("Directory created:" + outputFile.getParentFile());
-            }
-
-            getLog().info("Generating for connector: " + connector.getId().get() + ", and type: " + type);
-
-            final ClassLoader tccl = Thread.currentThread().getContextClassLoader();
-            final List<String> elements = project.getRuntimeClasspathElements();
-            final URL[] classpath = new URL[elements.size()];
-
-            for (int i = 0; i < elements.size(); i++) {
-                classpath[i] = new File(elements.get(i)).toURI().toURL();
-
-                getLog().debug("Add element to classpath: " + classpath[i]);
-            }
-
-            try (URLClassLoader loader = new URLClassLoader(classpath, tccl)) {
-                ClassInspectionService classInspectionService = new ClassInspectionService();
-                classInspectionService.setConversionService(DefaultAtlasConversionService.getInstance());
-
-                final Class<?> clazz = loader.loadClass(type);
-                final JavaClass c = classInspectionService.inspectClass(loader, clazz, CollectionType.NONE, null);
-                final ObjectMapper mapper = io.atlasmap.v2.Json.mapper();
-
-                if (inspectionMode == InspectionMode.SPECIFICATION || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
-                    getLog().info("Specification for type: " + type + " created");
-                    ret = new DataShape.Builder()
-                                       .createFrom(given)
-                                       .specification(mapper.writer((PrettyPrinter) null).writeValueAsString(c))
-                                       .build();
-
-                }
-
-                if (inspectionMode == InspectionMode.RESOURCE || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
-                    mapper.writeValue(outputFile, c);
-                    getLog().info("Created: " + outputFile);
-                }
-            }
-        }
-
-        return Optional.of(ret);
+        return actions;
     }
 
-    protected Artifact toArtifact(org.apache.maven.model.Dependency dependency) {
-        return artifactFactory.createArtifact(
-            dependency.getGroupId(),
-            dependency.getArtifactId(),
-            dependency.getVersion(),
-            dependency.getScope(),
-            dependency.getType()
-        );
+    private DataShape generateInspections(Connector connector, DataShape shape) throws IOException, DependencyResolutionRequiredException, ClassNotFoundException {
+        if (DataShapeKinds.JAVA != shape.getKind() || StringUtils.isEmpty(shape.getType())) {
+            return shape;
+        }
+
+        getLog().info("Generating inspections for connector: " + connector.getId().get() + ", and type: " + shape.getType());
+
+        final List<String> elements = project.getRuntimeClasspathElements();
+        final URL[] classpath = new URL[elements.size()];
+
+        for (int i = 0; i < elements.size(); i++) {
+            classpath[i] = new File(elements.get(i)).toURI().toURL();
+        }
+
+        return generateInspections(classpath, shape);
+    }
+
+    public static DataShape generateInspections(URL[] classpath, DataShape shape) throws IOException, ClassNotFoundException {
+        JavaClass c = inspect(classpath, shape);
+
+        List<DataShape> variants = new ArrayList<>(shape.getVariants().size());
+        for (DataShape s : shape.getVariants()) {
+            variants.add(generateInspections(classpath, s));
+        }
+
+        String inspection = io.atlasmap.v2.Json.mapper().writer((PrettyPrinter) null).writeValueAsString(c);
+        if (Objects.equals(shape.getMetadata().get("compression"), "true")) {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+            try(GZIPOutputStream os = new GZIPOutputStream(bos)) {
+                os.write(inspection.getBytes(StandardCharsets.UTF_8));
+                os.finish();
+
+                inspection =  Base64.getEncoder().encodeToString(bos.toByteArray());
+            }
+        }
+
+        return new DataShape.Builder()
+            .createFrom(shape)
+            .specification(inspection)
+            .variants(variants)
+            .build();
+    }
+
+    public static JavaClass inspect(URL[] classpath, DataShape shape) throws IOException, ClassNotFoundException {
+        ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+
+        try (URLClassLoader loader = new URLClassLoader(classpath, tccl)) {
+            ClassInspectionService inspector = new ClassInspectionService();
+            inspector.setConversionService(DefaultAtlasConversionService.getInstance());
+
+            Class<?> clazz = loader.loadClass(shape.getType());
+            CollectionType collectionClazz = shape.getCollectionType().map(CollectionType::fromValue).orElse(CollectionType.NONE);
+            String collectionClazzName = shape.getCollectionClassName().orElse(null);
+
+            return inspector.inspectClass(
+                loader,
+                clazz,
+                collectionClazz,
+                collectionClazzName
+            );
+        }
     }
 }

@@ -18,8 +18,8 @@ package io.syndesis.extension.example.log;
 import java.io.IOException;
 
 import com.github.lalyos.jfiglet.FigletFont;
-import io.syndesis.extension.api.annotations.ConfigurationProperty;
 import io.syndesis.extension.api.annotations.Action;
+import io.syndesis.extension.api.annotations.ConfigurationProperty;
 import org.apache.camel.Body;
 import org.apache.camel.Handler;
 import org.apache.camel.util.ObjectHelper;

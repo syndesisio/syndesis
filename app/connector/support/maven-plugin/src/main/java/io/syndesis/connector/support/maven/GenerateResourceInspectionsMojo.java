@@ -15,11 +15,24 @@
  */
 package io.syndesis.connector.support.maven;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.function.BiConsumer;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.atlasmap.xml.inspect.XmlSchemaInspector;
 import io.atlasmap.xml.inspect.XmlInspectionException;
+import io.atlasmap.xml.inspect.XmlSchemaInspector;
 import io.atlasmap.xml.v2.XmlDocument;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,18 +44,6 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.function.BiConsumer;
 
 /**
  * Generates inspections for resources in the given inputDirectory and stores them in the outputDirectory.
@@ -139,7 +140,7 @@ public class GenerateResourceInspectionsMojo extends AbstractMojo {
 
         Path jsonFile = outputDir.resolve(xsdFile.getFileName().toString().replace(".xsd", ".json"));
         try (OutputStream jsonOut = Files.newOutputStream(jsonFile)) {
-            IOUtils.write(inspection, jsonOut);
+            IOUtils.write(inspection, jsonOut, StandardCharsets.UTF_8);
             getLog().info("Generated " + jsonFile);
         }
     }
@@ -165,7 +166,7 @@ public class GenerateResourceInspectionsMojo extends AbstractMojo {
             classpathElements.add( project.getBuild().getTestOutputDirectory() );
             URL urls[] = new URL[classpathElements.size()];
             for (int i = 0; i < classpathElements.size(); ++i) {
-                urls[i] = new File(classpathElements.get(i)).toURL();
+                urls[i] = new File(classpathElements.get(i)).toURI().toURL();
             }
             return new URLClassLoader(urls, this.getClass().getClassLoader());
         } catch ( Exception e ) {

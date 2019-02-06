@@ -16,12 +16,15 @@
 package io.syndesis.common.model;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
-
-import org.immutables.value.Value;
+import java.util.function.Predicate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = DataShape.Builder.class)
@@ -38,12 +41,53 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
 
     String getType();
 
+    /**
+     * The collection type that should be inspected.
+     */
+    Optional<String> getCollectionType();
+
+    /**
+     * The class name that should be inspected.
+     */
+    Optional<String> getCollectionClassName();
+
     String getSpecification();
 
     Optional<byte[]> getExemplar();
 
     @Override
     Map<String, String> getMetadata();
+
+    /**
+     * Holds the variants available for this data shape.
+     *
+     * A variant could be the single element inspection of collection
+     */
+    @Value.Default
+    default List<DataShape> getVariants() {
+        return Collections.emptyList();
+    }
+
+    default Optional<DataShape> findVariant(Predicate<DataShape> predicate) {
+        if (predicate.test(this)) {
+            return Optional.of(this);
+        }
+
+        return getVariants().stream().filter(predicate).findFirst();
+    }
+
+    default Optional<DataShape> findVariantByMeta(String key, String val) {
+        return findVariant(ds -> {
+            if (key == null || val == null) {
+                return false;
+            }
+
+            return Objects.equals(
+                ds.getMetadata().get(key),
+                val
+            );
+        });
+    }
 
     class Builder extends ImmutableDataShape.Builder {
     }

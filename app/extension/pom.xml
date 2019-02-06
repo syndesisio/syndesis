@@ -38,6 +38,7 @@
     <module>bom</module>
     <module>converter</module>
     <module>example/log-step</module>
+    <module>example/simple-action-step</module>
     <module>maven-plugin</module>
   </modules>
 
