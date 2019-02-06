@@ -469,6 +469,9 @@ objects:
           "logging": false
         },
         "branding": {
+          "logoWhiteBg": "",
+          "logoDarkBg": "",
+          "iconWhiteBg": "assets/images/FuseOnlineLogo_Black.svg",
           "logoDarkBg": "assets/images/syndesis_logo_icon_darkbkg.png",
           "appName": "Syndesis",
           "favicon32": "/favicon-32x32.png",
@@ -996,7 +999,6 @@ objects:
       syndesis.io/type: infrastructure
     annotations:
       console.alpha.openshift.io/overview-app-route: "true"
-      haproxy.router.openshift.io/timeout: 60s
     name: syndesis
   spec:
     host: ${ROUTE_HOSTNAME}
