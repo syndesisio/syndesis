@@ -68,12 +68,6 @@ save_junit: &save_junit
       mkdir -p /workspace/junit/
       find . -type f -regextype posix-extended -regex ".*target/.*TESTS?-.*xml" | xargs -i cp --backup --suffix=.xml {} /workspace/junit/
 
-irc_notify_on_failure: &irc_notify_on_failure
-  run:
-    name: "IRC Notify failure to #syndesis"
-    command: bash ./.circleci/send_irc_notification.sh
-    when: on_fail
-
 jobs:
   # UI has no dependencies, just load cache
   ui:
@@ -110,7 +104,6 @@ jobs:
           paths:
           - ~/.m2
       - <<: *push_images
-      - <<: *irc_notify_on_failure
 
   # Connector depends on integration, mount workspace .m2
   connector:
@@ -136,7 +129,6 @@ jobs:
           paths:
           - ~/.m2
       - <<: *save_m2
-      - <<: *irc_notify_on_failure
 
 
   # Meta depends on connectors, mount workspace .m2
@@ -166,7 +158,6 @@ jobs:
           key: syndesis-mvn-meta-{{ checksum "app/meta/pom.xml" }}
           paths:
           - ~/.m2
-      - <<: *irc_notify_on_failure
 
   # Common has no dependencies, just load cache
   common:
@@ -192,7 +183,6 @@ jobs:
           key: syndesis-mvn-common-{{ checksum "app/common/pom.xml" }}
           paths:
           - ~/.m2
-      - <<: *irc_notify_on_failure
 
   # Extension depends on common
   extension:
@@ -218,7 +208,6 @@ jobs:
           key: syndesis-mvn-extension-{{ checksum "app/extension/pom.xml" }}
           paths:
           - ~/.m2
-      - <<: *irc_notify_on_failure
 
   # integration dependes on extension, mount workspace .m2
   integration:
@@ -244,7 +233,6 @@ jobs:
           paths:
           - ~/.m2
       - <<: *save_m2
-      - <<: *irc_notify_on_failure
 
   # S2I image
   s2i:
@@ -270,7 +258,6 @@ jobs:
           key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
           paths:
           - ~/.m2
-      - <<: *irc_notify_on_failure
 
   # "server" depends on common, connector and integration, mount workspace .m2
   server:
@@ -310,7 +297,6 @@ jobs:
           key: syndesis-mvn-server-{{ checksum "app/server/pom.xml" }}
           paths:
           - ~/.m2
-      - <<: *irc_notify_on_failure
 
   operator:
     machine: true
@@ -326,7 +312,6 @@ jobs:
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
-      - <<: *irc_notify_on_failure
 
   upgrade:
     <<: *job_defaults
@@ -354,7 +339,6 @@ jobs:
           command: |
             ./tools/bin/syndesis build --batch-mode --module upgrade --docker
       - <<: *push_images
-      - <<: *irc_notify_on_failure
 
 
   system-test:
@@ -392,7 +376,6 @@ jobs:
           key: syndesis-mvn-tests-{{ checksum "all-poms" }}
           paths:
           - ~/.m2
-      - <<: *irc_notify_on_failure
 
   license-check:
     <<: *job_defaults
@@ -415,7 +398,6 @@ jobs:
           key: syndesis-license-check-{{ checksum "all-poms" }}
           paths:
           - ~/.m2
-      - <<: *irc_notify_on_failure
 
   doc:
     docker:
@@ -431,7 +413,6 @@ jobs:
             git config --global user.email "circleci@syndesis.io"
             git config --global user.name "CircleCI"
             ./tools/bin/syndesis doc --local --html --pdf --gh-pages
-      - <<: *irc_notify_on_failure
 
 workflows:
   version: 2
