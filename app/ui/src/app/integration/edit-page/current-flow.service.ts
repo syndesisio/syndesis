@@ -11,7 +11,7 @@ import {
   ActionDescriptor,
   Flow,
   Flows,
-  StepOrConnection
+  StepOrConnection,
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { IntegrationStore, DATA_MAPPER, StepStore } from '@syndesis/ui/store';
@@ -52,7 +52,7 @@ import {
   getSubsequentConnection,
   getPreviousStepIndexWithDataShape,
   getPreviousStepWithDataShape,
-  getSubsequentStepWithDataShape
+  getSubsequentStepWithDataShape,
 } from './flow-functions';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -345,7 +345,7 @@ export class CurrentFlowService {
         setTimeout(() => {
           if (this.isEmpty()) {
             this.events.emit({
-              kind: 'integration-no-connections'
+              kind: 'integration-no-connections',
             });
           }
         }, 10);
@@ -565,25 +565,33 @@ export class CurrentFlowService {
     return false;
   }
 
+  /**
+   * Examine the state of the current flow and make the user fill in the blanks as needed
+   * @param route
+   * @param router
+   */
   validateFlowAndMaybeRedirect(route: ActivatedRoute, router: Router) {
     if (!this.loaded) {
       return false;
     }
+    const startStep = this.getStartStep();
     if (
-      !this.getStartStep() ||
-      typeof this.getStartStep().connection === 'undefined'
+      typeof startStep === 'undefined' ||
+      typeof startStep.connection === 'undefined'
     ) {
       router.navigate(['step-select', this.getFirstPosition()], {
-        relativeTo: route.parent
+        relativeTo: route.parent,
       });
       return false;
     }
+    const endStep = this.getEndStep();
     if (
-      !this.getEndStep() ||
-      typeof this.getEndStep().connection === 'undefined'
+      typeof endStep === 'undefined' ||
+      (endStep.stepKind === 'endpoint' &&
+        typeof this.getEndStep().connection === 'undefined')
     ) {
       router.navigate(['step-select', this.getLastPosition()], {
-        relativeTo: route.parent
+        relativeTo: route.parent,
       });
       return false;
     }
@@ -628,7 +636,7 @@ export class CurrentFlowService {
     setTimeout(() => {
       this.events.emit({
         kind: 'integration-updated',
-        integration: this.integration
+        integration: this.integration,
       });
     }, 10);
   }

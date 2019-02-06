@@ -1,76 +1,124 @@
 <div class="integrations list">
-
-  <syndesis-modal [title]="modalTitle"
-                  [message]="modalMessage"
-                  [type]="modalType"
-                  [primaryText]="modalPrimaryText">
+  <syndesis-modal
+    [title]="modalTitle"
+    [message]="modalMessage"
+    [type]="modalType"
+    [primaryText]="modalPrimaryText"
+  >
   </syndesis-modal>
 
   <!-- List Container -->
-  <pfng-list [items]="integrations"
-             [config]="listConfig"
-             [itemTemplate]="itemTemplate"
-             [actionTemplate]="actionTemplate"
-             [trackBy]="trackById"
-             (onActionSelect)="integrationActionsService.requestAction($event.id, undefined)"
-             (onClick)="integrationActionsService.requestAction('view', $event.item)">
-    <ng-template #itemTemplate
-                 let-integration="item"
-                 let-index="index">
+  <pfng-list
+    [items]="integrations"
+    [config]="listConfig"
+    [itemTemplate]="itemTemplate"
+    [actionTemplate]="actionTemplate"
+    [trackBy]="trackById"
+    (onActionSelect)="
+      integrationActionsService.requestAction($event.id, undefined)
+    "
+    (onClick)="integrationActionsService.requestAction('view', $event.item)"
+  >
+    <ng-template #itemTemplate let-integration="item" let-index="index">
       <div class="list-view-pf-left integration-icons">
-        <ng-container *ngIf="integration.type === IntegrationType.SingleFlow;else multiflowIntegration">
-          <span *ngIf="integrationActionsService.getStart(integration).connection; let connection">
-            <img class="syn-icon-small" [src]="connection | synIconPath" aria-hidden="true">
+        <ng-container
+          *ngIf="
+            integration.type === IntegrationType.SingleFlow;
+            else multiflowIntegration
+          "
+        >
+          <span
+            *ngIf="integrationActionsService.getStart(integration); let step"
+          >
+            <img
+              class="syn-icon-small"
+              [src]="step | synIconPath"
+              aria-hidden="true"
+            />
           </span>
           <span class="fa fa-angle-right"></span>
-          <span *ngIf="integrationActionsService.getFinish(integration).connection; let connection">
-            <img class="syn-icon-small" [src]="connection | synIconPath" aria-hidden="true">
+          <span
+            *ngIf="integrationActionsService.getFinish(integration); let step"
+          >
+            <img
+              class="syn-icon-small"
+              [src]="step | synIconPath"
+              aria-hidden="true"
+            />
           </span>
         </ng-container>
         <ng-template #multiflowIntegration>
-          <span *ngIf="integrationActionsService.getStart(integration).connection; let connection">
-            <img class="syn-icon-small"
-                [ngClass]="{ 'api-provider' : (connection.id == 'api-provider') }"
-                [src]="connection | synIconPath"
-                aria-hidden="true">
+          <span
+            *ngIf="integrationActionsService.getStart(integration); let step"
+          >
+            <img
+              class="syn-icon-small"
+              [ngClass]="{
+                'api-provider': step.connection.id == 'api-provider'
+              }"
+              [src]="step.connection | synIconPath"
+              aria-hidden="true"
+            />
           </span>
           <span class="fa fa-angle-right"></span>
           <span class="icon">
-            <img class="syn-icon-small" src="./../../assets/icons/multi-flow.connection.png" aria-hidden="true">
+            <img
+              class="syn-icon-small"
+              src="./../../assets/icons/multi-flow.connection.png"
+              aria-hidden="true"
+            />
           </span>
         </ng-template>
       </div>
       <div class="list-pf-content-wrapper">
         <div class="list-pf-main-content integration-content">
-          <div *ngIf="complete"
+          <div
+            *ngIf="complete"
             class="list-pf-title name syn-truncate__ellipsis"
-            title="{{ integration.name }}">{{ integration.name }}</div>
-          <div class="list-pf-description description syn-truncate__ellipsis"
-            title="{{ complete ? integration.description : integration.name }}">
+            title="{{ integration.name }}"
+          >
+            {{ integration.name }}
+          </div>
+          <div
+            class="list-pf-description description syn-truncate__ellipsis"
+            title="{{ complete ? integration.description : integration.name }}"
+          >
             {{ complete ? integration.description : integration.name }}
           </div>
         </div>
         <div class="list-pf-additional-content integration-status">
-          <syndesis-integration-status *ngIf="complete"
-                                       [integration]="integration"></syndesis-integration-status>
-          <span *ngIf="integration.board?.notices || integration.board?.warnings || integration.board?.errors">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            Configuration Required
+          <syndesis-integration-status
+            *ngIf="complete"
+            [integration]="integration"
+          ></syndesis-integration-status>
+          <span
+            *ngIf="
+              integration.board?.notices ||
+              integration.board?.warnings ||
+              integration.board?.errors
+            "
+          >
+            <span class="pficon pficon-warning-triangle-o"></span> Configuration
+            Required
           </span>
           <div class="pass-fail">
-            <ng-template #statTemplate>{{ integration.statusMessage }}</ng-template>
-            <i *ngIf="integration.statusMessage"
-               class="pficon pficon-error-circle-o"
-               [tooltip]="statTemplate"
-               placement="bottom"></i>
+            <ng-template #statTemplate>{{
+              integration.statusMessage
+            }}</ng-template>
+            <i
+              *ngIf="integration.statusMessage"
+              class="pficon pficon-error-circle-o"
+              [tooltip]="statTemplate"
+              placement="bottom"
+            ></i>
           </div>
         </div>
       </div>
     </ng-template>
-    <ng-template #actionTemplate
-                 let-integration="item"
-                 let-index="index">
-      <syndesis-integration-action-menu [integration]="integration"></syndesis-integration-action-menu>
+    <ng-template #actionTemplate let-integration="item" let-index="index">
+      <syndesis-integration-action-menu
+        [integration]="integration"
+      ></syndesis-integration-action-menu>
     </ng-template>
   </pfng-list>
 </div>
