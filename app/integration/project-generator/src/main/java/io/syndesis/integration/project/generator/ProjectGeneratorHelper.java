@@ -24,7 +24,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -42,7 +41,6 @@ import com.github.mustachejava.MustacheFactory;
 
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
-import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Flow;
@@ -187,30 +185,21 @@ public final class ProjectGeneratorHelper {
                                 .connection(newConnection)
                                 .build();
                     }
-                    // Prune Connector, only keep the Action that is in use
-                    List<ConnectorAction> prunedActions = new ArrayList<>();
-                    Connector connector = replacement.getConnection().get().getConnector().get();
-                    if (replacement.getConnection().get().getConnector().get().getActions().size() > 0) {
-                        for (Iterator<ConnectorAction> i = connector.getActions().iterator(); i.hasNext();) {
-                            ConnectorAction action = i.next();
-                            if (action.getId().equals(source.getAction().get().getId())) {
-                                prunedActions.add(action);
-                            }
-                        }
-                        Connector prunedConnector = new Connector.Builder().createFrom(connector)
-                           .actions(prunedActions).build();
-                        // Replace with the new 'pruned' connector
-                        Connection prunedConnection = new Connection.Builder()
-                            .createFrom(connection)
-                            .connector(prunedConnector)
+                    // Prune Connector, nix actions. The action in use is on the Step
+                    Connector prunedConnector = new Connector.Builder().createFrom(
+                            replacement.getConnection().get().getConnector().get())
+                       .actions(new ArrayList<>()).build();
+                    // Replace with the new 'pruned' connector
+                    Connection prunedConnection = new Connection.Builder()
+                        .createFrom(connection)
+                        .connector(prunedConnector)
+                        .build();
+                    // Replace with the new 'pruned' step
+                    replacement =
+                        new Step.Builder()
+                            .createFrom(source)
+                            .connection(prunedConnection)
                             .build();
-                        // Replace with the new 'pruned' step
-                        replacement =
-                            new Step.Builder()
-                                .createFrom(source)
-                                .connection(prunedConnection)
-                                .build();
-                    }
                 }
 
                 //
