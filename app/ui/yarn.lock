@@ -211,9 +211,9 @@
     tree-kill "1.2.1"
     webpack-sources "1.3.0"
 
-"@patternfly/patternfly@^1.0.178":
-  version "1.0.178"
-  resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-1.0.178.tgz#5b520cc6da54f54a7b5a0c449101335cfbff5218"
+"@patternfly/patternfly@^1.0.181":
+  version "1.0.181"
+  resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-1.0.181.tgz#fe1f6a2217ac9729940fd5c8b8b3073441ff1708"
 
 "@phenomnomnominal/tsquery@^3.0.0":
   version "3.0.0"
