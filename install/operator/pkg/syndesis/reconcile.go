@@ -1,13 +1,10 @@
 package syndesis
 
 import (
-	"fmt"
-	"github.com/operator-framework/operator-sdk/pkg/k8sclient"
 	"github.com/operator-framework/operator-sdk/pkg/sdk"
 	"github.com/sirupsen/logrus"
 	api "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var (
@@ -30,10 +27,7 @@ func init() {
 func Reconcile(syndesis *api.Syndesis, deleted bool) error {
 
 	if deleted {
-		if err := deleteOAuthClient(syndesis); err != nil {
-			return err
-		}
-
+		// No specific actions to do on deletion
 		logrus.Info("Syndesis resource ", syndesis.Name, " deleted")
 		return nil
 	}
@@ -61,28 +55,4 @@ func isLatestVersion(syndesis *api.Syndesis) (bool, error) {
 		return false, err
 	}
 	return refreshed.ResourceVersion == syndesis.ResourceVersion, nil
-}
-
-func deleteOAuthClient(syndesis *api.Syndesis) error {
-	resourceClient, _, err := k8sclient.GetResourceClient("oauth.openshift.io/v1", "OAuthClient", "")
-	if err != nil {
-		return fmt.Errorf("failed to get resource client: %v", err)
-	}
-
-	name := "syndesis-" + syndesis.Namespace
-	obj, err := resourceClient.Get(name, metav1.GetOptions{})
-	if err != nil {
-		logrus.Warn("unable to get OAuthClient object named `", name, "` ", err)
-		return nil
-	}
-
-	if obj == nil {
-		return nil
-	}
-
-	if err := resourceClient.Delete(name, nil); err != nil {
-		return err
-	}
-
-	return nil
 }

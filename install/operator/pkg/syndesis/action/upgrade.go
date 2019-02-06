@@ -167,6 +167,9 @@ func completeUpgrade(syndesis *v1alpha1.Syndesis, newVersion string) error {
 
 func (a *Upgrade) getUpgradeResources(syndesis *v1alpha1.Syndesis) ([]runtime.Object, error) {
 	rawResources, err := syndesistemplate.GetUpgradeResources(syndesis, syndesistemplate.UpgradeParams{
+		InstallParams: syndesistemplate.InstallParams{
+			OAuthClientSecret: "-",
+		},
 		UpgradeRegistry: configuration.Registry,
 	})
 
