@@ -5,6 +5,14 @@ import { ModalService } from '@syndesis/ui/common';
 @Component({
   selector: 'api-provider-creation-step-editor',
   templateUrl: './step-editor.component.html',
+  styles: [
+    `
+      .apiprovider-editor {
+        height: calc(100% - 40px);
+        margin: 20px;
+      }
+    `
+  ]
 })
 export class StepEditorComponent implements OnInit, OnDestroy {
   @Input('specification')

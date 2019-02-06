@@ -1,96 +1,42 @@
-<article class="wizard syn-scrollable"
-         onDragStart="return false;"
-         ondragenter="return false;"
-         ondragover="return false;"
-         ondrop="return false;">
-  <div class="syn-scrollable">
-    <!-- Toolbar -->
-    <div class="toolbar syn-toolbar--inverted">
-      <div class="container-fluid">
-        <!-- Toolbar: Breadcrumbs -->
-        <div class="row toolbar-pf">
-          <div class="col-sm-12">
-            <div class="toolbar-pf-actions">
-              <div class="inline-block">
-                <ol class="breadcrumb">
-                  <li>
-                    <a [routerLink]="['/']">{{ 'shared.home' | synI18n }}</a>
-                  </li>
-                  <li>
-                    <a [routerLink]="['/integrations']">{{ 'integrations.integrations' | synI18n }}</a>
-                  </li>
-                  <li>{{ 'integrations.new-integration' | synI18n }}</li>
-                  <li class="active">{{ 'integrations.api-provider.creation-title' | synI18n }}</li>
-                </ol>
-              </div>
-              <div class="toolbar-pf-action-right">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="syn-scrollable--body">
-      <div class="container-fluid">
+<api-provider-creation-step-upload
+  *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.UploadSpecification"
+  [uploadSpecification]="uploadSpecification$ | async"
+  [errors]="validationErrors$ | async"
+  [loading]="loading$ | async"
+  (onUploadSpecificationChange)="onUploadSpecificationChange($event)"
+  (onDone)="onStepDone()"
+  (onCancel)="showCancelModal()">
+</api-provider-creation-step-upload>
 
-        <ng-container *ngIf="(currentActiveStep$ | async) != ApiProviderWizardSteps.IntegrationName; else creationHeader">
-          <div class="title">
-            <h1>{{ 'integrations.api-provider.creation-title' | synI18n }}</h1>
-          </div>
-          <p>{{ 'integrations.api-provider.creation-subtitle' | synI18n }}</p>
-        </ng-container>
+<api-provider-creation-step-validate
+  *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.ReviewApiProvider"
+  [validationResponse]="validationResponse$ | async"
+  [loading]="loading$ | async"
+  (onDone)="onStepDone()"
+  (onCancel)="showCancelModal()"
+  (onEdit)="onEditSpecification()">
+</api-provider-creation-step-validate>
 
-        <ng-template #creationHeader>
-          <div class="title">
-            <h1>{{ 'integrations.api-provider.save-title' | synI18n }}</h1>
-          </div>
-          <p>{{ 'integrations.api-provider.save-subtitle' | synI18n }}</p>
-        </ng-template>
+<api-provider-creation-step-editor
+  *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.EditSpecification"
+  [specification]="(specificationForEditor$ | async)"
+  (onBack)="onBackPressed()"
+  (onCancel)="onBackPressed()"
+  (onSave)="onSpecificationEdited($event)"
+>
+</api-provider-creation-step-editor>
 
-        <section>
-          <api-provider-creation-step-upload
-            *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.UploadSpecification"
-            [uploadSpecification]="uploadSpecification$ | async"
-            [errors]="validationErrors$ | async"
-            [loading]="loading$ | async"
-            (onUploadSpecificationChange)="onUploadSpecificationChange($event)"
-            (onDone)="onStepDone()"
-            (onCancel)="showCancelModal()">
-          </api-provider-creation-step-upload>
-
-          <api-provider-creation-step-validate
-            *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.ReviewApiProvider"
-            [validationResponse]="validationResponse$ | async"
-            [loading]="loading$ | async"
-            (onDone)="onStepDone()"
-            (onCancel)="showCancelModal()"
-            (onEdit)="onEditSpecification()">
-          </api-provider-creation-step-validate>
-
-          <api-provider-creation-step-editor
-            *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.EditSpecification"
-            [specification]="(specificationForEditor$ | async)"
-            (onBack)="onBackPressed()"
-            (onCancel)="onBackPressed()"
-            (onSave)="onSpecificationEdited($event)">
-          </api-provider-creation-step-editor>
-
-          <api-provider-creation-step-name
-            *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.IntegrationName"
-            [loading]="loading$ | async"
-            [name]="(integrationName$ | async)"
-            [description]="integrationDescription$ | async"
-            [creationError]="creationError$ | async"
-            (onNameChange)="updateIntegrationName($event)"
-            (onDescriptionChange)="updateIntegrationDescription($event)"
-            (onSave)="createIntegration()"
-            (onBack)="onBackPressed()">
-          </api-provider-creation-step-name>
-        </section>
-      </div>
-    </div>
-  </div>
-</article>
+<api-provider-creation-step-name
+  *ngIf="(currentActiveStep$ | async) == ApiProviderWizardSteps.IntegrationName"
+  [loading]="loading$ | async"
+  [name]="(integrationName$ | async)"
+  [description]="integrationDescription$ | async"
+  [creationError]="creationError$ | async"
+  (onNameChange)="updateIntegrationName($event)"
+  (onDescriptionChange)="updateIntegrationDescription($event)"
+  (onSave)="createIntegration()"
+  (onBack)="onBackPressed()">
+</api-provider-creation-step-name>
 
 <ng-template #cancelModalTemplate>
   <cancel-confirmation-modal

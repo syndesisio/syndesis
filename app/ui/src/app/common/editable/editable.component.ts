@@ -1,10 +1,10 @@
 import { EventEmitter, Input, Output } from '@angular/core';
 
-export abstract class EditableComponent {
+export abstract class EditableComponent<T> {
   @Input() value;
   @Input() placeholder = 'No value set';
   @Input() validationFn: (value) => string | Promise<string>;
-  @Output() onSave = new EventEmitter<any>();
+  @Output() onSave = new EventEmitter<T>();
   editing: boolean;
   errorMessage: string;
 

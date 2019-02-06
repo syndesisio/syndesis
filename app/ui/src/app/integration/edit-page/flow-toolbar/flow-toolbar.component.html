@@ -3,20 +3,32 @@
   [content]="content"
 >
   <ng-template #content>
-    <div class="toolbar syn-toolbar">
+    <div class="container-fluid">
       <div class="row toolbar-pf">
         <div class="col-sm-12">
           <div class="toolbar-pf-actions">
-            <h1>
-              <span *ngIf="isApiProvider">API Provider Integration: </span>
-              <strong
-                ><syndesis-editable-text
-                  [value]="currentFlowService.integration.name"
-                  (onSave)="nameUpdated(name)"
-                ></syndesis-editable-text>
+            <div class="form-group toolbar-pf-filter">
+              <strong>
+                <span *ngIf="isApiProvider">API Provider Integration</span>
+                <span *ngIf="!isApiProvider">Integration</span>
               </strong>
-            </h1>
+            </div>
+            <div class="form-group" *ngIf="currentFlowService.isSaved()">
+              <label for="integrationName">Name</label>&nbsp;
+              <syndesis-editable-text
+                name="integrationName"
+                [value]="currentFlowService.integration.name"
+                (onSave)="nameUpdated($event)"
+              >
+              </syndesis-editable-text>
+            </div>
             <div class="toolbar-pf-action-right">
+              <a
+                *ngIf="isApiProvider && currentFlowService.isSaved()"
+                [routerLink]="['../specification']"
+              >
+                View/Edit API Definition <i class="fa fa-external-link"></i>
+              </a>
               <button
                 class="btn btn-default"
                 (click)="flowPageService.cancel()"
@@ -43,19 +55,6 @@
                 "
               >
                 Go to Operation List
-              </button>
-              <button
-                *ngIf="isApiProvider && !flowPageService.showDone"
-                type="button"
-                class="btn btn-default"
-                [routerLink]="['../specification']"
-              >
-                <i
-                  class="fa fa-pencil"
-                  aria-hidden="true"
-                  title="Edit API Definition"
-                ></i>
-                Edit API Definition
               </button>
               <button
                 class="btn btn-primary"
