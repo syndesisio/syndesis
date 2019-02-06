@@ -90,7 +90,7 @@
     "@angular-devkit/build-angular": "0.8.8",
     "@angular/compiler-cli": "~6",
     "@angular/language-service": "~6",
-    "@patternfly/patternfly": "^1.0.178",
+    "@patternfly/patternfly": "^1.0.181",
     "@types/bootstrap": "3.3.40",
     "@types/chai-as-promised": "0.0.29",
     "@types/core-js": "0.9.46",
