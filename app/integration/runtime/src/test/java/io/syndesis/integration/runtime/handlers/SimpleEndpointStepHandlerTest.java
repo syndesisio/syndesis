@@ -15,7 +15,6 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
-import io.syndesis.common.model.Split;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Step;
@@ -127,7 +126,7 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
     }
 
     @Test
-    public void testSimpleEndpointStepWithSplit() throws Exception {
+    public void testSimpleEndpointStepWithSplitAggregate() throws Exception {
         final CamelContext context = getDefaultCamelContextWithMyBeanInRegistry();
 
         try {
@@ -148,12 +147,13 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
                             .componentScheme("bean")
                             .putConfiguredProperty("beanName", "myBean")
                             .putConfiguredProperty("method", "myProcessor")
-                            .split(new Split.Builder()
-                                .language("tokenize")
-                                .expression("|")
-                                .build())
                             .build())
                         .build())
+                    .build(),
+                new Step.Builder()
+                    .stepKind(StepKind.split)
+                    .putConfiguredProperty("language", "tokenize")
+                    .putConfiguredProperty("expression", "|")
                     .build(),
                 new Step.Builder()
                     .stepKind(StepKind.endpoint)
@@ -163,6 +163,9 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
                             .putConfiguredProperty("name", "result")
                             .build())
                         .build())
+                    .build(),
+                new Step.Builder()
+                    .stepKind(StepKind.aggregate)
                     .build()
             );
 
@@ -189,76 +192,6 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
 
             verify(activityTracker, times(1)).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
             verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(1)).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
-        } finally {
-            context.stop();
-        }
-    }
-
-    @Test
-    public void testSimpleEndpointStepWithSplitDisabled() throws Exception {
-        final CamelContext context = getDefaultCamelContextWithMyBeanInRegistry();
-
-        try {
-            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
-                    new Step.Builder()
-                        .stepKind(StepKind.endpoint)
-                        .action(new ConnectorAction.Builder()
-                            .descriptor(new ConnectorDescriptor.Builder()
-                                .componentScheme("direct")
-                                .putConfiguredProperty("name", "start")
-                                .build())
-                            .build())
-                        .build(),
-                    new Step.Builder()
-                        .stepKind(StepKind.endpoint)
-                        .putConfiguredProperty("split", "false")
-                        .action(new ConnectorAction.Builder()
-                            .descriptor(new ConnectorDescriptor.Builder()
-                                .componentScheme("bean")
-                                .putConfiguredProperty("beanName", "myBean")
-                                .putConfiguredProperty("method", "myProcessor")
-                                .split(new Split.Builder()
-                                    .language("tokenize")
-                                    .expression("|")
-                                    .build())
-                                .build())
-                            .build())
-                        .build(),
-                    new Step.Builder()
-                        .stepKind(StepKind.endpoint)
-                        .action(new ConnectorAction.Builder()
-                            .descriptor(new ConnectorDescriptor.Builder()
-                                .componentScheme("mock")
-                                .putConfiguredProperty("name", "result")
-                                .build())
-                            .build())
-                        .build()
-            );
-
-            // Set up the camel context
-            context.setUuidGenerator(KeyGenerator::createKey);
-            context.addLogListener(new IntegrationLoggingListener(activityTracker));
-            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
-            context.addRoutes(routes);
-            context.start();
-
-            // Dump routes as XML for troubleshooting
-            dumpRoutes(context);
-
-            final ProducerTemplate template = context.createProducerTemplate();
-            final MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            final String body = "a|b|c";
-            final String expected = body.toUpperCase();
-
-            result.expectedMessageCount(1);
-            result.expectedBodiesReceived(expected);
-            template.sendBody("direct:start", body);
-
-            result.assertIsSatisfied();
-
-            verify(activityTracker, times(1)).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
-            verify(activityTracker, times(2)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
             verify(activityTracker, times(1)).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
         } finally {
             context.stop();

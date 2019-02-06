@@ -15,27 +15,13 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import javax.validation.Validator;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-
-import javax.validation.Validator;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
-import org.junit.Test;
-
-import static io.syndesis.server.endpoint.v1.handler.connection.ConnectionHandlerTest.TestIntegrationBulder.testIntegration;
 
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.Connection;
@@ -48,6 +34,16 @@ import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
+import org.junit.Test;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ConnectionHandlerTest {
 
@@ -208,17 +204,17 @@ public class ConnectionHandlerTest {
         return new Connection.Builder().createFrom(connection).uses(times).build();
     }
 
-    static class TestIntegrationBulder extends Integration.Builder {
-        static TestIntegrationBulder testIntegration() {
-            return new TestIntegrationBulder();
+    private static TestIntegrationBuilder testIntegration() {
+        return new TestIntegrationBuilder();
+    }
+
+    static class TestIntegrationBuilder extends Integration.Builder {
+        TestIntegrationBuilder withFlowConnections(final Connection... connections) {
+            return (TestIntegrationBuilder) addFlow(new Flow.Builder().addConnection(connections).build());
         }
 
-        TestIntegrationBulder withFlowConnections(final Connection... connections) {
-            return (TestIntegrationBulder) addFlow(new Flow.Builder().addConnection(connections).build());
-        }
-
-        TestIntegrationBulder withFlowStepsUsingConnections(final Connection... connections) {
-            return (TestIntegrationBulder) addFlow(
+        TestIntegrationBuilder withFlowStepsUsingConnections(final Connection... connections) {
+            return (TestIntegrationBuilder) addFlow(
                 new Flow.Builder().addAllSteps(Arrays.stream(connections).map(c -> new Step.Builder().connection(c).build()).collect(Collectors.toList())).build());
         }
 

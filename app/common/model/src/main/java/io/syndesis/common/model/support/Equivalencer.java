@@ -17,7 +17,7 @@ package io.syndesis.common.model.support;
 
 import java.util.List;
 import java.util.Optional;
-import io.syndesis.common.model.Split;
+
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -504,8 +504,9 @@ public class Equivalencer implements StringConstants {
      * properties are different. Thus, this should only be used in appropriate
      * situations.
      *
+     * @param parentContext
+     * @param one
      * @param another a {@link Connector} to compare with
-     * @param message
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
     @SuppressWarnings("PMD.NPathComplexity")
@@ -834,15 +835,7 @@ public class Equivalencer implements StringConstants {
             return false;
         }
 
-        //
-        // The json parser appears to create a new empty split object rather than
-        // an empty optional
-        //
-        Split split = one.getSplit().orElse(new Split.Builder().build());
-        Split anotherSplit = another.getSplit().orElse(new Split.Builder().build());
-
         return compare(context,
-                       pair(split, anotherSplit, "split"),
                        pair(one.getConnectorId(), another.getConnectorId(), "connector-id"),
                        pair(one.getCamelConnectorGAV(), another.getCamelConnectorGAV(), "camel-connector-gav"),
                        pair(one.getCamelConnectorPrefix(), another.getCamelConnectorPrefix(), "camel-connector-prefix"),

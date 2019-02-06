@@ -1,0 +1,64 @@
+{
+  "flows": [
+    {
+      "steps": [
+        {
+          "stepKind": "endpoint",
+          "action": {
+            "actionType": "connector",
+            "descriptor": {},
+            "id": "io.syndesis:aws-s3-polling-bucket-connector",
+            "name": "Poll an Amazon S3 Bucket",
+            "pattern": "From",
+            "tags": [],
+            "dependencies": []
+          },
+          "configuredProperties": {
+            "prefix": "Test",
+            "maxMessagesPerPoll": 15
+          },
+          "connection": {},
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "stepKind": "log",
+          "name": "Log",
+          "configuredProperties": {
+            "bodyLoggingEnabled": "true",
+            "contextLoggingEnabled": "false"
+          },
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "stepKind": "endpoint",
+          "action": {
+            "actionType": "connector",
+            "descriptor": {
+              "componentScheme": "mock",
+              "configuredProperties": {
+                "name": "mockedResult"
+              }
+            },
+            "tags": [],
+            "dependencies": []
+          },
+          "configuredProperties": {
+          }
+        }
+      ]
+    }
+  ],
+  "id": "test-integration",
+  "description": "This is a test integration!",
+  "name": "Test Integration",
+  "tags": [
+    "aws-s3"
+  ],
+  "updatedAt": 0,
+  "createdAt": 0,
+  "version": 1
+}

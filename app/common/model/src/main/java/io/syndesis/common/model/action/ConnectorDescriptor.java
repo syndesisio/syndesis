@@ -23,19 +23,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.WithConfiguredProperties;
-import io.syndesis.common.model.WithSplit;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-
 import org.immutables.value.Value;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorDescriptor.Builder.class)
 @SuppressWarnings("immutables")
-public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredProperties, WithSplit, Serializable {
+public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredProperties, Serializable {
 
     final class Builder extends ImmutableConnectorDescriptor.Builder {
 

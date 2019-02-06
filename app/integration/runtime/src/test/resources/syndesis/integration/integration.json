@@ -59,6 +59,15 @@
           "metadata": {
             "step.index": "3"
           }
+        },
+        {
+          "stepKind": "aggregate",
+          "configuredProperties": {
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "4"
+          }
         }
       ]
     }
