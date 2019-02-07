@@ -11,16 +11,13 @@
             <a [routerLink]="['/integrations']">All Integrations</a>
           </li>
         </ol>
-        <syndesis-integration-api-provider-operation-editor-toolbar></syndesis-integration-api-provider-operation-editor-toolbar>
+        <syndesis-integration-api-provider-operation-editor-toolbar
+          [showOperationsButton]="true"
+          [currentFlow]="currentFlowService.currentFlow$ | async"
+          [flows]="currentFlowService.flows$ | async"
+        ></syndesis-integration-api-provider-operation-editor-toolbar>
       </div>
       <div class="content">
-        <syndesis-integration-api-provider-operations-list
-          [flows$]="currentFlowService.flows$"
-          [integrationId]="currentFlowService.integration.id"
-          [showDescription]="false"
-          [showToolbar]="false"
-          class="operations"
-        ></syndesis-integration-api-provider-operations-list>
         <div class="main-panel">
           <syndesis-integration-flow-view
             class="flow"

@@ -2,14 +2,13 @@
   <div class="syn-scrollable--body">
     <div class="container-fluid">
       <div class="title">Operations ({{ (flows$ | async).length }})</div>
-      <p *ngIf="showDescription">
+      <p>
         An integration can have multiple flows. Select an operation to start
         creating a flow.
       </p>
 
       <!-- Toolbar -->
       <syndesis-list-toolbar
-        *ngIf="showToolbar"
         [items]="enrichedFlows$"
         [filterTags]="false"
         [filteredItems]="filteredFlows$"
@@ -19,7 +18,7 @@
 
       <div class="list-view-pf-view operations-list">
         <pfng-list
-          [items]="flowItems | async"
+          [items]="filteredFlows$ | async"
           [itemTemplate]="itemTemplate"
           [actionTemplate]="actionTemplate"
           (onClick)="handleClick($event)"

@@ -6,7 +6,9 @@
         <a [routerLink]="['/integrations']">All Integrations</a>
       </li>
     </ol>
-    <syndesis-integration-api-provider-operation-editor-toolbar></syndesis-integration-api-provider-operation-editor-toolbar>
+    <syndesis-integration-api-provider-operation-editor-toolbar
+      [showOperationsButton]="false"
+    ></syndesis-integration-api-provider-operation-editor-toolbar>
   </div>
   <div class="content">
     <div class="operations">
