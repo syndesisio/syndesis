@@ -18,10 +18,10 @@ add or update data in a spreadsheet, create charts or create pivot tables.
 Details for connecting to Google Sheets are in the following topics:
 
 * <<create-google-sheets-connection_{context}>>
-* <<add-google-sheets-connection-create-spreadsheet_{context}>>
-* <<add-google-sheets-connection-get-spreadsheet_{context}>>
-* <<add-google-sheets-connection-update-spreadsheet_{context}>>
 * <<add-google-sheets-connection-get-sheet-values_{context}>>
+* <<add-google-sheets-connection-get-spreadsheet_{context}>>
+* <<add-google-sheets-connection-create-spreadsheet_{context}>>
+* <<add-google-sheets-connection-update-spreadsheet_{context}>>
 * <<add-google-sheets-connection-update-sheet-values_{context}>>
 * <<add-google-sheets-connection-append-sheet-values_{context}>>
 * <<add-google-sheets-connection-add-charts_{context}>>
@@ -29,13 +29,13 @@ Details for connecting to Google Sheets are in the following topics:
 
 include::p_create-google-sheets-connection.adoc[leveloffset=+1]
 
-include::p_add-google-sheets-connection-create-spreadsheet.adoc[leveloffset=+1]
+include::p_add-google-sheets-connection-get-sheet-values.adoc[leveloffset=+1]
 
 include::p_add-google-sheets-connection-get-spreadsheet.adoc[leveloffset=+1]
 
-include::p_add-google-sheets-connection-update-spreadsheet.adoc[leveloffset=+1]
+include::p_add-google-sheets-connection-create-spreadsheet.adoc[leveloffset=+1]
 
-include::p_add-google-sheets-connection-get-sheet-values.adoc[leveloffset=+1]
+include::p_add-google-sheets-connection-update-spreadsheet.adoc[leveloffset=+1]
 
 include::p_add-google-sheets-connection-update-sheet-values.adoc[leveloffset=+1]
 

@@ -2,7 +2,7 @@
 // as_connecting-to-google-sheets.adoc
 
 [id='add-google-sheets-connection-get-sheet-values_{context}']
-= Trigger an integration when polling returns Google Sheets spreadsheet data
+= Trigger an integration when polling returns spreadsheet data
 
 To trigger execution of an integration upon obtaining value range data from
 a Google Sheets spreadsheet that you specify, add a Google Sheets connection to an integration as
@@ -16,7 +16,8 @@ When a Google Sheets connection returns a range of data representing multiple ro
 For example, if the poll returns a data range of 5 rows then {prodname} executes
 the integration five times.
 
-This split results functionality can be disabled with the *splitResults* option on the Google Sheets *Get sheet values* action.
+This split results functionality can be disabled with the *splitResults* option 
+on the Google Sheets *Get sheet values* action.
 
 .Prerequisite
 You created a Google Sheets connection.

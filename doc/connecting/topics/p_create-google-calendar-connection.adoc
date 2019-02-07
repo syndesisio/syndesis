@@ -5,7 +5,7 @@
 = Create a Google Calendar connection 
 
 When you create a Google Calendar connection, you authorize the connection to access 
-the Google Calendars that are associated with one
+the Google calendars that are associated with one
 particular Google account. After you create a Google Calendar connection, you can 
 add it to multiple integrations.
 
@@ -33,8 +33,7 @@ When your environment is not registered with
 Google, then when you try to create a Google Calendar connection, {prodname} displays
 multiple fields that prompt for authorization information. While you can
 create a Google Calendar connection by entering values in these fields, 
-you should register with Google first, enable the Google Calendar API, 
-and then create a Google Calendar connection. 
+it is not recommended. 
 
 . In the Google sign-in page, 
 select the Google account that you want this connection to

@@ -31,8 +31,8 @@ When you try to create a Gmail connection and your {prodname} environment
 is not registered as a Google client application, then {prodname} displays
 multiple fields that prompt for authorization information. While you can
 create a Gmail connection by entering values in these fields, 
-you should register with Google first, and then create a Gmail connection
-after registration is in place. 
+it is not recommended. 
+
 . In the page that is prompting you to sign in to Gmail, 
 enter the email address of the Google account that you want this connection to
 access from {prodname} and click *Next*. 

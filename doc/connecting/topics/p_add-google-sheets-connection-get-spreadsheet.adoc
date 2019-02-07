@@ -2,7 +2,7 @@
 // as_connecting-to-google-sheets.adoc
 
 [id='add-google-sheets-connection-get-spreadsheet_{context}']
-= Trigger an integration when polling returns Google Sheets spreadsheet properties
+= Trigger an integration when polling returns spreadsheet properties
 
 To trigger execution of an integration upon obtaining properties from
 a Google Sheets spreadsheet that you specify, add a Google Sheets connection to an integration as

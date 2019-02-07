@@ -12,14 +12,15 @@ or as the integration's finish connection.
 [IMPORTANT]
 ====
 In this release, the *Add charts* action supports charts of type *BasicChart* or *PieChart*. Each of these chart types
-provides individual options and fields for creating a new chart in a spreadsheet on your Google Sheets account. The chart options
-must be set on a data mapping step prior to the *Add Charts* action.
+provides individual options and fields for creating a new chart in a spreadsheet on your Google Sheets account. 
+The chart options must be set on a data mapping step prior to the *Add Charts* action.
 ====
 
 [IMPORTANT]
 ====
 In this release, the *Add charts* action requires a spreadsheetId in order to
-identify the target spreadsheet that is updated with newly added charts. In most if not all cases, this means that you must add a Google
+identify the target spreadsheet that is updated with newly added charts. In most if not all cases, 
+this means that you must add a Google
 Sheets connection that
 link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_sheets[creates] or
 link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-get-spreadsheet_sheets[obtains] the spreadsheet that you want to add charts to,

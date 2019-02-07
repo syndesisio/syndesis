@@ -19,13 +19,13 @@ in the middle of an integration.
 
 .Procedure
 . Click a Google Calendar connection that is authorized to access
-the calendar that you want to connect to.   
+the calendar that you want to add an event to. 
 . On the *Choose an Action* page, click the *Create Event* action.
 
 . Configure the *Create Event* action: 
 +
 .. Enter a title for the new event.
-.. Enter the name of the Google Calendar to add the event to. 
+.. Enter the name of the Google calendar to add the event to. 
 .. For the other input parameters, you can enter data or you 
 might want to map values from an event that you obtained in 
 a previous Google Calendar connection. 
