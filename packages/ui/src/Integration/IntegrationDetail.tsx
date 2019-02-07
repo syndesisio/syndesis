@@ -1,4 +1,3 @@
-import { ListView } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationDetailProps {
@@ -12,7 +11,6 @@ export class IntegrationDetail extends React.Component<
   IIntegrationDetailProps
 > {
   public render() {
-    // return <div>Integration Detail Component</div>;
-    return <ListView>{this.props.children}</ListView>;
+    return <div>Integration Detail Component</div>;
   }
 }
