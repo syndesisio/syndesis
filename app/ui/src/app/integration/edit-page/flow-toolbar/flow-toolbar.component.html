@@ -26,6 +26,7 @@
               <a
                 *ngIf="isApiProvider && currentFlowService.isSaved()"
                 [routerLink]="['../specification']"
+                class="btn btn-link"
               >
                 View/Edit API Definition <i class="fa fa-external-link"></i>
               </a>
@@ -34,27 +35,6 @@
                 (click)="flowPageService.cancel()"
               >
                 Cancel
-              </button>
-              <button
-                class="btn btn-default"
-                *ngIf="
-                  isApiProvider &&
-                  !hideOperationsButton &&
-                  !flowPageService.showDone
-                "
-                [disabled]="
-                  flowPageService.saveInProgress ||
-                  flowPageService.publishInProgress
-                "
-                (click)="
-                  save([
-                    '/integrations',
-                    currentFlowService.integration?.id,
-                    'operations'
-                  ])
-                "
-              >
-                Go to Operation List
               </button>
               <button
                 class="btn btn-primary"

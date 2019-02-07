@@ -10,7 +10,20 @@
     flex: 1;
 
     .operations {
+      flex: 0 0 400px;
+    }
+
+    .main-panel {
       flex: 1 1 auto;
+      display: flex;
+
+      .flow {
+        flex: 1 0 auto;
+      }
+
+      .form {
+        flex: 1 1 auto;
+      }
     }
   }
 }

@@ -3,52 +3,34 @@
   [content]="content"
 >
   <ng-template #content>
-    <div class="row">
-      <div class="col-md-12">
-        <ol class="breadcrumb">
+    <div class="integrations edit row">
+      <div class="header">
+        <ol class="syn-breadcrumb">
           <li>
-            &lt;&lt;<a [routerLink]="['/integrations']">All Integrations</a>
-          </li>
-          <li>
-            <a
-              [routerLink]="[
-                '/integrations',
-                currentFlowService.integration.id
-              ]"
-              >{{ currentFlowService.integration.name }}</a
-            >
+            <i class="fa fa-angle-double-left"></i>
+            <a [routerLink]="['/integrations']">All Integrations</a>
           </li>
         </ol>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
         <syndesis-integration-flow-toolbar
           [isApiProvider]="true"
           [hideOperationsButton]="false"
         ></syndesis-integration-flow-toolbar>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-2">
+      <div class="content">
         <syndesis-integration-api-provider-operations-list
           [flows$]="currentFlowService.flows$"
           [integrationId]="currentFlowService.integration.id"
           [showDescription]="false"
           [showToolbar]="false"
+          class="operations"
         ></syndesis-integration-api-provider-operations-list>
-      </div>
-      <div class="col-md-10">
-        <div class="row">
-          <div class="col-md-12">
-            <syndesis-integration-flow-page-header></syndesis-integration-flow-page-header>
+        <div class="main-panel">
+          <syndesis-integration-flow-view
+            class="flow"
+          ></syndesis-integration-flow-view>
+          <div class="form">
+            <router-outlet></router-outlet>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-2">
-            <syndesis-integration-flow-view></syndesis-integration-flow-view>
-          </div>
-          <div class="col-md-10"><router-outlet></router-outlet></div>
         </div>
       </div>
     </div>
