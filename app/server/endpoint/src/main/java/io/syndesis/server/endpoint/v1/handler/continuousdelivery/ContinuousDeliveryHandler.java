@@ -145,7 +145,7 @@ public interface ContinuousDeliveryHandler {
      * DTO for {@link org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput} for importResources.
      */
     class ImportFormDataInput {
-        @FormParam("importfile")
+        @FormParam("data")
         private InputStream importFile;
 
         @FormParam("connectionparamsfile")
