@@ -34,7 +34,6 @@ import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.SplitDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
-import org.springframework.context.annotation.Configuration;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
