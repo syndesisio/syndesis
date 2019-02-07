@@ -9,7 +9,7 @@ import { VendorModule } from '@syndesis/ui/vendor';
 import {
   OpenApiModule,
   PatternflyUIModule,
-  SyndesisCommonModule
+  SyndesisCommonModule,
 } from '@syndesis/ui/common';
 import { ConnectionsModule } from '@syndesis/ui/connections';
 
@@ -19,7 +19,7 @@ import { IntegrationListPage } from '@syndesis/ui/integration/list-page';
 import { IntegrationImportPageComponent } from '@syndesis/ui/integration/import-page';
 import {
   INTEGRATION_DETAIL_DIRECTIVES,
-  IntegrationDetailComponent
+  IntegrationDetailComponent,
 } from '@syndesis/ui/integration/integration_detail';
 import { IntegrationLogsComponent } from '@syndesis/ui/integration/integration_logs';
 import {
@@ -28,12 +28,13 @@ import {
   ApiProviderOperationsEditorComponent,
   ApiProviderOperationsComponent,
   ApiProviderOperationsListComponent,
+  ApiProviderOperationsToolbarComponent,
   apiProviderReducer,
   ApiProviderSpecComponent,
   StepEditorComponent,
   StepNameComponent,
   StepUploadComponent,
-  StepValidateComponent
+  StepValidateComponent,
 } from '@syndesis/ui/integration/api-provider';
 
 import {
@@ -55,7 +56,7 @@ import {
   IntegrationStepConfigureComponent,
   ListActionsComponent,
   StepVisiblePipe,
-  TemplaterComponent
+  TemplaterComponent,
 } from '@syndesis/ui/integration/edit-page';
 import { ApiModule } from '@syndesis/ui/api';
 import { StoreModule } from '@ngrx/store';
@@ -75,114 +76,114 @@ const integrationListModuleFwd = forwardRef(() => IntegrationListModule);
 const editIntegrationChildRoutes = [
   {
     path: 'save-or-add-step',
-    component: IntegrationSaveOrAddStepComponent
+    component: IntegrationSaveOrAddStepComponent,
   },
   {
     path: 'integration-basics',
-    component: IntegrationBasicsComponent
+    component: IntegrationBasicsComponent,
   },
   {
     path: 'step-select/:position',
     component: IntegrationSelectStepComponent,
     resolve: {
-      steps: StepsResolverService
-    }
+      steps: StepsResolverService,
+    },
   },
   {
     path: 'action-select/:position',
-    component: IntegrationSelectActionComponent
+    component: IntegrationSelectActionComponent,
   },
   {
     path: 'action-configure/:position/:page',
-    component: IntegrationConfigureActionComponent
+    component: IntegrationConfigureActionComponent,
   },
   {
     path: 'action-configure/:position',
-    component: IntegrationConfigureActionComponent
+    component: IntegrationConfigureActionComponent,
   },
   {
     path: 'describe-data/:position',
-    redirectTo: 'describe-data/:position/input'
+    redirectTo: 'describe-data/:position/input',
   },
   {
     path: 'describe-data/:position/:direction',
-    component: IntegrationDescribeDataComponent
+    component: IntegrationDescribeDataComponent,
   },
   {
     path: 'step-configure/:position',
-    component: IntegrationStepConfigureComponent
+    component: IntegrationStepConfigureComponent,
   },
   // OpenAPI loader page
   {
     path: 'api-provider/create',
     component: ApiProviderSpecComponent,
-    canActivate: [ApiConnectorGuard]
-  }
+    canActivate: [ApiConnectorGuard],
+  },
 ];
 
 const routes: Routes = [
   {
     path: '',
     component: IntegrationListPage,
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'import',
-    component: IntegrationImportPageComponent
+    component: IntegrationImportPageComponent,
   },
   {
     path: 'create',
     component: IntegrationEditPage,
     children: editIntegrationChildRoutes,
     resolve: {
-      integration: IntegrationResolverService
-    }
+      integration: IntegrationResolverService,
+    },
   },
   {
     path: ':integrationId',
-    component: IntegrationDetailComponent
+    component: IntegrationDetailComponent,
   },
   {
     path: ':integrationId/edit',
     component: IntegrationEditPage,
     resolve: {
-      integration: IntegrationResolverService
-    }
+      integration: IntegrationResolverService,
+    },
   },
   {
     path: ':integrationId/operations',
     component: ApiProviderOperationsComponent,
     resolve: {
-      integration: IntegrationResolverService
-    }
+      integration: IntegrationResolverService,
+    },
   },
   {
     path: ':integrationId/operations/edit',
     component: ApiProviderOperationsEditorComponent,
     resolve: {
-      integration: IntegrationResolverService
-    }
+      integration: IntegrationResolverService,
+    },
   },
   {
     path: ':integrationId/operations/:flowId/edit',
     component: ApiProviderOperationsEditorComponent,
     children: editIntegrationChildRoutes,
     resolve: {
-      integration: IntegrationResolverService
-    }
+      integration: IntegrationResolverService,
+    },
   },
   {
     path: ':integrationId/:flowId/edit',
     component: IntegrationEditPage,
     children: editIntegrationChildRoutes,
     resolve: {
-      integration: IntegrationResolverService
-    }
+      integration: IntegrationResolverService,
+    },
   },
   {
     path: ':integrationId/specification',
-    component: ApiProviderSpecificationEditorPage
-  }
+    component: ApiProviderSpecificationEditorPage,
+  },
 ];
 
 @NgModule({
@@ -202,7 +203,7 @@ const routes: Routes = [
     DataMapperModule,
     integrationSupportModuleFwd,
     integrationListModuleFwd,
-    OpenApiModule
+    OpenApiModule,
   ],
   declarations: [
     ...INTEGRATION_DETAIL_DIRECTIVES,
@@ -232,12 +233,13 @@ const routes: Routes = [
     ApiProviderOperationsComponent,
     ApiProviderOperationsEditorComponent,
     ApiProviderOperationsListComponent,
+    ApiProviderOperationsToolbarComponent,
     ApiProviderSpecComponent,
     StepUploadComponent,
     StepValidateComponent,
     StepEditorComponent,
     StepNameComponent,
-    ApiProviderSpecificationEditorPage
+    ApiProviderSpecificationEditorPage,
   ],
   providers: [
     CurrentFlowService,
@@ -245,7 +247,7 @@ const routes: Routes = [
     WindowRef,
     ApiProviderService,
     ApiConnectorGuard,
-    StepVisiblePipe
-  ]
+    StepVisiblePipe,
+  ],
 })
 export class IntegrationModule {}

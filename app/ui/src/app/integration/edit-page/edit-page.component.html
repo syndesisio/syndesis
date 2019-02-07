@@ -8,32 +8,24 @@
         <ol class="syn-breadcrumb">
           <li>
             <i class="fa fa-angle-double-left"></i>
-            <a [routerLink]="['/integrations']">
-              All Integrations
-            </a>
+            <a [routerLink]="['/integrations']"> All Integrations </a>
           </li>
           <li *ngIf="currentFlowService.integration.name">
             <a
               [routerLink]="[
-              '/integrations',
-              currentFlowService.integration.id
-            ]"
-            >{{ currentFlowService.integration.name }}</a
+                '/integrations',
+                currentFlowService.integration.id
+              ]"
+              >{{ currentFlowService.integration.name }}</a
             >
           </li>
         </ol>
 
-        <syndesis-integration-flow-toolbar
-          [isApiProvider]="currentFlowService.isApiProvider()"
-        >
-        </syndesis-integration-flow-toolbar>
+        <syndesis-integration-flow-toolbar></syndesis-integration-flow-toolbar>
       </div>
       <div class="content">
         <!-- Sidebar -->
-        <div
-          class="wizard-sidebar"
-          *ngIf="!currentFlowService.isApiProvider()"
-        >
+        <div class="wizard-sidebar" *ngIf="!currentFlowService.isApiProvider()">
           <syndesis-integration-flow-view></syndesis-integration-flow-view>
         </div>
         <!-- Add/Edit Integration -->

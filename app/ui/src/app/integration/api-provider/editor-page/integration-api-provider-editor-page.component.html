@@ -11,10 +11,7 @@
             <a [routerLink]="['/integrations']">All Integrations</a>
           </li>
         </ol>
-        <syndesis-integration-flow-toolbar
-          [isApiProvider]="true"
-          [hideOperationsButton]="false"
-        ></syndesis-integration-flow-toolbar>
+        <syndesis-integration-api-provider-operation-editor-toolbar></syndesis-integration-api-provider-operation-editor-toolbar>
       </div>
       <div class="content">
         <syndesis-integration-api-provider-operations-list
@@ -28,9 +25,7 @@
           <syndesis-integration-flow-view
             class="flow"
           ></syndesis-integration-flow-view>
-          <div class="form">
-            <router-outlet></router-outlet>
-          </div>
+          <div class="form"><router-outlet></router-outlet></div>
         </div>
       </div>
     </div>
