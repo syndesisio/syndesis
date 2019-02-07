@@ -56,6 +56,14 @@ public interface ContinuousDeliveryHandler {
     List<String> getReleaseEnvironments();
 
     /**
+     * Rename an environment across all integrations.
+     */
+    @PUT
+    @Path("environments/{env}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    void renameEnvironment(@NotNull @PathParam("env") @ApiParam(required = true) String environment, @NotNull @ApiParam(required = true) String newEnvironment);
+
+    /**
      * List all tags associated with this integration.
      */
     @GET

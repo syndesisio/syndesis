@@ -92,6 +92,43 @@ public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler 
     }
 
     @Override
+    public void renameEnvironment(String environment, String newEnvironment) {
+
+        validateParam("environment", environment);
+        validateParam("newEnvironment", newEnvironment);
+
+        if (this.environments.contains(environment)) {
+
+            // get and update list of integrations with this environment
+            final List<Integration> integrations = dataMgr.fetchAll(Integration.class)
+                    .getItems()
+                    .stream()
+                    .filter(i -> i.getContinuousDeliveryState().containsKey(environment))
+                    .map(i -> {
+                        final Map<String, ContinuousDeliveryEnvironment> state = new HashMap<>(i.getContinuousDeliveryState());
+
+                        state.put(newEnvironment, state.remove(environment)
+                                .builder()
+                                .name(newEnvironment)
+                                .build());
+
+                        return i.builder().continuousDeliveryState(state).build();
+                    })
+                    .collect(Collectors.toList());
+
+            // update environment names
+            integrations.forEach(dataMgr::update);
+
+            // update cache
+            environments.add(newEnvironment);
+            environments.remove(environment);
+
+        } else {
+            throw new ClientErrorException("Missing environment " + environment, Response.Status.BAD_REQUEST);
+        }
+    }
+
+    @Override
     public Map<String, ContinuousDeliveryEnvironment> getReleaseTags(String integrationId) {
         final Map<String, ContinuousDeliveryEnvironment> result = new HashMap<>(
                 getIntegration(integrationId).getContinuousDeliveryState());
