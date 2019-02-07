@@ -19,48 +19,54 @@
               >
               </syndesis-editable-text>
             </div>
-            <button
-              class="btn btn-default"
-              *ngIf="showOperationsButton && !flowPageService.showDone"
-              [disabled]="
-                flowPageService.saveInProgress ||
-                flowPageService.publishInProgress
-              "
-              (click)="
-                save([
-                  '/integrations',
-                  currentFlowService.integration?.id,
-                  'operations'
-                ])
-              "
-            >
-              Go to Operation List
-            </button>
-            <div
-              dropdown
-              class="dropdown"
-              placement="bottom"
-              *ngIf="currentFlow && flows.length > 0"
-            >
-              <span dropdownToggle class="dropdown-toggle" type="button">
-                {{ currentFlow.name }}
-              </span>
-              <ul *dropdownMenu class="dropdown-menu" role="menu">
-                <ng-container *ngFor="let flow of flows">
-                  <li *ngIf="flow.id !== currentFlow.id">
-                    <a
-                      [routerLink]="[
-                        '/integrations',
-                        currentFlowService.integration?.id,
-                        'operations',
-                        flow.id,
-                        'edit'
-                      ]"
-                      >{{ flow.name }}</a
-                    >
-                  </li>
-                </ng-container>
-              </ul>
+            <div class="form-group">
+              <div
+                dropdown
+                class="dropdown btn-group"
+                placement="bottom"
+                *ngIf="currentFlow && flows.length > 0"
+              >
+                <button
+                  dropdownToggle
+                  class="btn btn-default dropdown-toggle"
+                  type="button"
+                >
+                  {{ currentFlow.name }}<span class="caret"></span>
+                </button>
+                <ul *dropdownMenu class="dropdown-menu" role="menu">
+                  <ng-container *ngFor="let flow of flows">
+                    <li *ngIf="flow.id !== currentFlow.id">
+                      <a
+                        [routerLink]="[
+                          '/integrations',
+                          currentFlowService.integration?.id,
+                          'operations',
+                          flow.id,
+                          'edit'
+                        ]"
+                        >{{ flow.name }}</a
+                      >
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
+              <button
+                class="btn btn-default"
+                *ngIf="showOperationsButton && !flowPageService.showDone"
+                [disabled]="
+                  flowPageService.saveInProgress ||
+                  flowPageService.publishInProgress
+                "
+                (click)="
+                  save([
+                    '/integrations',
+                    currentFlowService.integration?.id,
+                    'operations'
+                  ])
+                "
+              >
+                Go to Operation List
+              </button>
             </div>
             <div class="toolbar-pf-action-right">
               <a
