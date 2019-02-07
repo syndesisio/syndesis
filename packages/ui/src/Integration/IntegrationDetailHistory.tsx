@@ -3,6 +3,7 @@ import * as React from 'react';
 
 export interface IIntegrationDetailHistoryProps {
   i18nHistory: string;
+  i18nTitle: string; // temporary
   i18nVersion: string;
   i18nLastPublished: string;
 }
