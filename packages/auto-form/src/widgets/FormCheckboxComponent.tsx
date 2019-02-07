@@ -4,7 +4,6 @@ import * as React from 'react';
 export const FormCheckboxComponent = ({
   field,
   type,
-  form: { touched, errors, isSubmitting },
   ...props
 }: {
   [name: string]: any;

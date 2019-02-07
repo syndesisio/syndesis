@@ -33,7 +33,7 @@ export default describe('AutoForm', () => {
           type: 'boolean',
         },
       }}
-      initialValue={true}
+      initialValue={{}}
       i18nRequiredProperty={'required'}
       onSave={onSave}
     >
