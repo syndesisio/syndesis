@@ -15,21 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import com.netflix.hystrix.HystrixExecutable;
 import com.netflix.hystrix.HystrixInvokableInfo;
 import io.swagger.annotations.Api;
@@ -49,6 +34,22 @@ import io.syndesis.common.util.RandomValueGenerator;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.persistence.EntityNotFoundException;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Api(value = "actions")
 public class ConnectionActionHandler {
@@ -92,7 +93,27 @@ public class ConnectionActionHandler {
         message = "A map of zero or more action property suggestions keyed by the property name"))
     public Response enrichWithMetadata(
         @PathParam("id") @ApiParam(required = true, example = "io.syndesis:salesforce-create-or-update:latest") final String id,
-        final Map<String, String> properties) {
+        final Map<String, Object> props) {
+
+        final Map<String, String> properties = new HashMap<>();
+
+        if (props != null) {
+            for (Entry<String, Object> entry : props.entrySet()) {
+                if (entry.getValue() == null) {
+                    properties.put(entry.getKey(), null);
+                } else if (entry.getValue() instanceof String) {
+                    properties.put(entry.getKey(), (String) entry.getValue());
+                } else if (entry.getValue() instanceof String[]) {
+                    String value = StringUtils.join((String[]) entry.getValue(), ConfigurationProperty.MULTIPLE_SEPARATOR);
+                    properties.put(entry.getKey(), value);
+                } else if (entry.getValue() instanceof Iterable) {
+                    String value = StringUtils.join((Iterable) entry.getValue(), ConfigurationProperty.MULTIPLE_SEPARATOR);
+                    properties.put(entry.getKey(), value);
+                } else {
+                    throw new IllegalArgumentException("Not supported property type " + entry.getValue().getClass());
+                }
+            }
+        }
 
         final ConnectorAction action = actions.stream()//
             .filter(a -> a.idEquals(id))//

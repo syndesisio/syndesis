@@ -251,7 +251,7 @@ export class FormFactoryProviderService extends FormFactoryService {
     return new DynamicSelectModel(
       {
         id: key,
-        multiple: false,
+        multiple: field.multiple || false,
         label: field.displayName || key,
         labelTooltip: this.getLocalizedString(field, 'labelHint'),
         controlTooltip: this.getLocalizedString(field, 'controlHint'),
