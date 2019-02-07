@@ -146,3 +146,6 @@ metrics:
 
 monitoring:
   kind: default
+
+continuousdelivery:
+  enabled: true
