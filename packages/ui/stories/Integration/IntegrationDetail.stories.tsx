@@ -11,16 +11,21 @@ const stories = storiesOf('Integration/IntegrationDetail', module);
 
 const storyNotes = 'Integration Detail';
 
+const textHistory = 'History';
+const textLastPublished = 'Last published';
+const textTitle = 'Integration Detail';
+const textVersion = 'Version';
+
 stories
   .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
   .add(
     integrationDetailStory,
     withNotes(storyNotes)(() => (
       <IntegrationDetail
-        i18nHistory={'History'}
-        i18nLastPublished={'Last published'}
-        i18nVersion={'Version'}
-        i18nTitle={'Integration Detail'}
+        i18nHistory={textHistory}
+        i18nLastPublished={textLastPublished}
+        i18nTitle={textTitle}
+        i18nVersion={textVersion}
       />
     ))
   );
