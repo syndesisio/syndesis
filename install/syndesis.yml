@@ -1349,6 +1349,8 @@ objects:
           enabled: true
       monitoring:
         kind: default
+      continuousdelivery:
+        enabled: true
       features:
         monitoring:
           enabled: true
