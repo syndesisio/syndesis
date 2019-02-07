@@ -37,15 +37,16 @@
     <div class="syn-scrollable">
       <div class="syn-scrollable--body">
         <div class="container-fluid">
-          <div class="title">
-            <h1>{{ step?.connection?.name }}</h1>
-            <h3>{{ action?.name }}</h3>
-          </div>
           <syndesis-loading [loading]="loading" [content]="content">
             <ng-template #content>
-              <p *ngIf="hasConfiguration">{{ descriptor.description }}</p>
               <div class="row row-cards-pf">
                 <div class="card-pf">
+                  <div class="card-pf-heading">
+                    <h1 class="card-pf-title">
+                      {{ step?.connection?.name }} - {{ action?.name }}
+                    </h1>
+                    <p *ngIf="hasConfiguration">{{ descriptor.description }}</p>
+                  </div>
                   <div class="card-pf-body">
                     <ng-container *ngIf="error">
                       <div class="row">
