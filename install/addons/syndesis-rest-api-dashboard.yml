@@ -27,7 +27,7 @@ spec:
       "gnetId": null,
       "graphTooltip": 0,
       "id": 5,
-      "iteration": 1549285648353,
+      "iteration": 1549550334826,
       "links": [],
       "panels": [
         {
@@ -150,7 +150,7 @@ spec:
           "dashLength": 10,
           "dashes": false,
           "datasource": "Prometheus",
-          "fill": 1,
+          "fill": 0,
           "gridPos": {
             "h": 9,
             "w": 12,
@@ -186,12 +186,12 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\",job=\"$job\",uri=\"$uri\"}[5m])) by (le)) * 1000",
+              "expr": "(sum(rate(http_server_requests_seconds_sum{namespace=\"$namespace\",job=\"$job\",uri=\"$uri\"}[5m])) / sum(rate(http_server_requests_seconds_count{namespace=\"$namespace\",job=\"$job\",uri=\"$uri\"}[5m]))) * 1000",
               "format": "time_series",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "99th percentile",
-              "refId": "D"
+              "legendFormat": "average",
+              "refId": "A"
             },
             {
               "expr": "histogram_quantile(0.5, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\",job=\"$job\",uri=\"$uri\"}[5m])) by (le)) * 1000",
@@ -202,12 +202,18 @@ spec:
               "refId": "C"
             },
             {
-              "expr": "(sum(rate(http_server_requests_seconds_sum{namespace=\"$namespace\",job=\"$job\",uri=\"$uri\"}[5m])) / sum(rate(http_server_requests_seconds_count{namespace=\"$namespace\",job=\"$job\",uri=\"$uri\"}[5m]))) * 1000",
+              "expr": "histogram_quantile(0.90, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\",job=\"$job\",uri=\"$uri\"}[5m])) by (le)) * 1000",
               "format": "time_series",
-              "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "average",
-              "refId": "A"
+              "legendFormat": "90th percentile",
+              "refId": "B"
+            },
+            {
+              "expr": "histogram_quantile(1, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\",job=\"$job\",uri=\"$uri\"}[5m])) by (le)) * 1000",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "max",
+              "refId": "E"
             }
           ],
           "thresholds": [],
@@ -373,7 +379,7 @@ spec:
         ]
       },
       "timezone": "",
-      "title": "Syndesis - REST API",
+      "title": "Fuse Online - Infrastructure - REST APIs",
       "uid": "YPnPk0lik",
-      "version": 43
+      "version": 57
     }

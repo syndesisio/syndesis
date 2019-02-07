@@ -1660,7 +1660,7 @@ spec:
         ]
       },
       "timezone": "browser",
-      "title": "Syndesis DB",
+      "title": "Fuse Online - Infrastructure - DB",
       "uid": "wGgaPlciz",
       "version": 1
     }
