@@ -101,7 +101,7 @@ public interface ContinuousDeliveryHandler {
      * Import integrations into a target environment.
      */
     @POST
-    @Path("import")
+    @Path("integrations")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     ContinuousDeliveryImportResults importResources(@Context SecurityContext sec, @NotNull @ApiParam ImportFormDataInput formInput) throws IOException;
