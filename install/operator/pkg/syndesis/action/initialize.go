@@ -2,7 +2,6 @@ package action
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -32,7 +31,7 @@ func (a *Initialize) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) erro
 		target.Status.Phase = v1alpha1.SyndesisPhaseNotInstalled
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonDuplicate
 		target.Status.Description = "Cannot install two Syndesis resources in the same namespace"
-		logrus.Error("Cannot initialize Syndesis resource ", syndesis.Name, ": duplicate")
+		log.Error(nil,"Cannot initialize Syndesis resource because its a duplicate","name", syndesis.Name, "type", "initialize")
 	} else {
 		syndesisVersion, err := configuration.GetSyndesisVersionFromOperatorTemplate()
 		if err != nil {
@@ -43,7 +42,7 @@ func (a *Initialize) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) erro
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		target.Status.Version = syndesisVersion
-		logrus.Info("Syndesis resource ", syndesis.Name, " initialized: installing version ", syndesisVersion)
+		log.Info("Syndesis resource initialized: installing version ", "name", syndesis.Name, "version", syndesisVersion, "type", "initialize")
 	}
 
 	return cl.Update(context.TODO(), target)

@@ -3,13 +3,15 @@ package template
 import (
 	"errors"
 	v1template "github.com/openshift/api/template/v1"
-	"github.com/sirupsen/logrus"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/json"
 	"k8s.io/client-go/rest"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
+
+var log = logf.Log.WithName("template")
 
 type TemplateProcessor struct {
 	namespace  string
@@ -73,7 +75,7 @@ func (p *TemplateProcessor) Process(sourceTemplate *v1template.Template, paramet
 		if v1Temp, ok := templ.(*v1template.Template); ok {
 			return v1Temp.Objects, nil
 		}
-		logrus.Error("Wrong type returned by the server", templ)
+		log.Error(nil,"Wrong type returned by the server", "template", templ)
 		return nil, errors.New("wrong type returned by the server")
 	}
 

@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"github.com/openshift/api/route/v1"
-	"github.com/sirupsen/logrus"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
@@ -29,7 +28,7 @@ func (a *Install) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 func (a *Install) Execute(client client.Client, syndesis *v1alpha1.Syndesis) error {
 
-	logrus.Info("Installing Syndesis resource ", syndesis.Name)
+	log.Info("Installing Syndesis resource", "name", syndesis.Name, "type", "install")
 
 	token, err := installServiceAccount(syndesis)
 	if err != nil {
@@ -95,7 +94,7 @@ func (a *Install) Execute(client client.Client, syndesis *v1alpha1.Syndesis) err
 	target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 	target.Status.Description = ""
 	addRouteAnnotation(target, syndesisRoute)
-	logrus.Info("Syndesis resource ", target.Name, " installed")
+	log.Info("Syndesis resource installed", "name", target.Name, "type", "install")
 
 	return client.Update(context.TODO(), target)
 }

@@ -2,7 +2,6 @@ package action
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -48,7 +47,7 @@ func (a *CheckUpdates) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) er
 		target.Status.UpgradeAttempts = 0
 		target.Status.ForceUpgrade = false
 
-		logrus.Info("Starting upgrade of Syndesis resource ", syndesis.Name, " from version ", namespaceVersion, " to version ", a.operatorVersion)
+		log.Info("Starting upgrade of Syndesis resource", "name", syndesis.Name, "currentVersion", namespaceVersion, "targetVersion", a.operatorVersion, "type", "checkUpdate")
 		return cl.Update(context.TODO(), target)
 	}
 }

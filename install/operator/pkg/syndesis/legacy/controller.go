@@ -2,7 +2,7 @@ package legacy
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -10,6 +10,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"time"
 )
+
+
+var log = logf.Log.WithName("legacy")
 
 const (
 	retryInterval        = 5 * time.Second
@@ -33,11 +36,11 @@ func (c *LegacyController) Start(ctx context.Context, client client.Client) {
 }
 
 func (c *LegacyController) verifyAndCreate(ctx context.Context, client client.Client) {
-	defer logrus.Info("Syndesis legacy installations check completed")
+	defer log.Info("Syndesis legacy installations check completed")
 
 	err := c.doVerifyAndCreate(client)
 	if err != nil {
-		logrus.Error("Unable to check Syndesis legacy installations (will retry again): ", err)
+		log.Error(err, "Unable to check Syndesis legacy installations (will retry again)")
 
 		for {
 			select {
@@ -45,7 +48,7 @@ func (c *LegacyController) verifyAndCreate(ctx context.Context, client client.Cl
 				return
 			case <-time.After(retryInterval):
 				if err := c.doVerifyAndCreate(client); err != nil {
-					logrus.Error("Unable to check Syndesis legacy installations (will retry again): ", err)
+					log.Error(err,"Unable to check Syndesis legacy installations (will retry again)")
 				} else {
 					return
 				}
@@ -58,7 +61,7 @@ func (c *LegacyController) doVerifyAndCreate(cl client.Client) error {
 	if exists, err := c.legacyInstallationExists(cl); err != nil {
 		return err
 	} else if exists {
-		logrus.Info("A legacy Syndesis installations is present in the ", c.namespace, " namespace")
+		log.Info("A legacy Syndesis installations is present", "namespace", c.namespace)
 
 		synd := v1alpha1.Syndesis{
 			TypeMeta: metav1.TypeMeta{
@@ -75,7 +78,7 @@ func (c *LegacyController) doVerifyAndCreate(cl client.Client) error {
 			},
 		}
 
-		logrus.Info("Merging Syndesis legacy configuration into resource ", syndesisResourceName)
+		log.Info("Merging Syndesis legacy configuration into resource ", "resource", syndesisResourceName)
 
 		config, err := configuration.GetSyndesisEnvVarsFromOpenshiftNamespace(cl, c.namespace)
 		if err != nil {
@@ -84,10 +87,10 @@ func (c *LegacyController) doVerifyAndCreate(cl client.Client) error {
 
 		configuration.SetConfigurationFromEnvVars(config, &synd)
 
-		logrus.Info("Creating a new Syndesis resource from legacy installation in the ", c.namespace, " namespace")
+		log.Info("Creating a new Syndesis resource from legacy installation", "namespace",c.namespace)
 		return cl.Create(context.TODO(), &synd)
 	} else {
-		logrus.Info("No legacy Syndesis installations detected in the ", c.namespace, " namespace")
+		log.Info("No legacy Syndesis installations detected", "namespace", c.namespace)
 		return nil
 	}
 }

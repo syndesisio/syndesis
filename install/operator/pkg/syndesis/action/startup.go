@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"github.com/openshift/api/apps/v1"
-	"github.com/sirupsen/logrus"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	corev1 "k8s.io/api/core/v1"
@@ -62,21 +61,21 @@ func (a *Startup) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
 		target.Status.Phase = v1alpha1.SyndesisPhaseInstalled
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		logrus.Info("Syndesis resource ", syndesis.Name, " installed successfully")
+		log.Info("Syndesis resource installed successfully", "name", syndesis.Name, "type", "startup")
 		return cl.Update(context.TODO(), target)
 	} else if failedDeployment != nil {
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1alpha1.SyndesisPhaseStartupFailed
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonDeploymentNotReady
 		target.Status.Description = "Some Syndesis deployments failed to startup within the allowed time frame"
-		logrus.Info("Startup failed for Syndesis resource ", syndesis.Name, ". Deployment ", *failedDeployment, " not ready")
+		log.Info("Startup failed for Syndesis resource. Deployment not ready", "name", syndesis.Name, "deployment", *failedDeployment)
 		return cl.Update(context.TODO(), target)
 	} else {
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1alpha1.SyndesisPhaseStarting
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		logrus.Info("Waiting for Syndesis resource ", syndesis.Name, " to startup")
+		log.Info("Waiting for Syndesis resource to startup", "name", syndesis.Name, "type", "startup")
 		return cl.Update(context.TODO(), target)
 	}
 }

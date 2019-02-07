@@ -9,12 +9,14 @@ import (
 	oauthv1 "github.com/openshift/api/oauth/v1"
 	route "github.com/openshift/api/route/v1"
 	template "github.com/openshift/api/template/v1"
-	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	cgoscheme "k8s.io/client-go/kubernetes/scheme"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
+
+var log = logf.Log.WithName("openshift")
 
 
 func init() {
@@ -59,7 +61,7 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 func doAdd(addToScheme registerFunction, scheme *runtime.Scheme, err error) error {
 	callErr := addToScheme(scheme)
 	if callErr != nil {
-		logrus.Error("Error while registering Openshift types", callErr)
+		log.Error(callErr, "Error while registering Openshift types")
 	}
 
 	if err == nil {

@@ -3,7 +3,6 @@ package action
 import (
 	"context"
 	"errors"
-	"github.com/sirupsen/logrus"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
@@ -66,7 +65,7 @@ func (a *Upgrade) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
 		// Upgrade pod not found or upgrade forced
 
 		if namespaceVersion != targetVersion {
-			logrus.Info("Upgrading syndesis resource ", syndesis.Name, " from version ", namespaceVersion, " to ", targetVersion)
+			log.Info("Upgrading syndesis resource ", "name", syndesis.Name, "currentVersion", namespaceVersion, "targetVersion", targetVersion, "type", "upgrade")
 
 			for _, res := range resources {
 				operation.SetNamespaceAndOwnerReference(res, syndesis)
@@ -91,7 +90,7 @@ func (a *Upgrade) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
 			return cl.Update(context.TODO(), target)
 		} else {
 			// No upgrade pod, no version change: upgraded
-			logrus.Info("Syndesis resource ", syndesis.Name, " already upgraded to version ", targetVersion)
+			log.Info("Syndesis resource already upgraded to version ", "name", syndesis.Name, "targetVersion", targetVersion, "type", "upgrade")
 			return completeUpgrade(cl, syndesis, targetVersion)
 		}
 	} else {
@@ -106,10 +105,10 @@ func (a *Upgrade) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
 			}
 
 			if newNamespaceVersion == targetVersion {
-				logrus.Info("Syndesis resource ", syndesis.Name, " upgraded to version ", targetVersion)
+				log.Info("Syndesis resource upgraded", "name", syndesis.Name, "targetVersion", targetVersion, "type", "upgrade")
 				return completeUpgrade(cl, syndesis, targetVersion)
 			} else {
-				logrus.Warn("Upgrade pod terminated successfully but Syndesis version (", newNamespaceVersion, ") does not reflect target version (", targetVersion, ") for resource ", syndesis.Name, ". Forcing upgrade.")
+				log.Info("Upgrade pod terminated successfully but Syndesis version does not reflect target version. Forcing upgrade", "newVersion", newNamespaceVersion, "targetVersion", targetVersion, "name", syndesis.Name, "type", "upgrade")
 
 				var currentAttemptDescr string
 				if syndesis.Status.UpgradeAttempts > 0 {
@@ -125,7 +124,7 @@ func (a *Upgrade) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
 			}
 		} else if upgradePod.Status.Phase == v1.PodFailed {
 			// Upgrade failed
-			logrus.Warn("Failure while upgrading Syndesis resource ", syndesis.Name, " to version ", targetVersion, ": upgrade pod failure")
+			log.Error(nil,"Failure while upgrading Syndesis resource: upgrade pod failure", "name", syndesis.Name, "targetVersion", targetVersion, "type", "upgrade")
 
 			target := syndesis.DeepCopy()
 			target.Status.Phase = v1alpha1.SyndesisPhaseUpgradeFailureBackoff
@@ -139,7 +138,7 @@ func (a *Upgrade) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
 			return cl.Update(context.TODO(), target)
 		} else {
 			// Still running
-			logrus.Info("Syndesis resource ", syndesis.Name, " is currently being upgraded to version ", targetVersion)
+			log.Info("Syndesis resource is currently being upgraded", "name", syndesis.Name, "targetVersion", targetVersion, "type", "upgrade")
 			return nil
 		}
 

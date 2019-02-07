@@ -3,7 +3,6 @@ package action
 import (
 	"context"
 	"errors"
-	"github.com/sirupsen/logrus"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
@@ -25,7 +24,7 @@ func (a *UpgradeLegacy) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) e
 		return errors.New("another syndesis installation active")
 	}
 
-	logrus.Info("Attaching Syndesis installation to resource ", syndesis.Name)
+	log.Info("Attaching Syndesis installation to resource","name", syndesis.Name, "type", "legacy")
 
 	err := operation.AttachSyndesisToResource(cl, syndesis)
 	if err != nil {
@@ -43,7 +42,7 @@ func (a *UpgradeLegacy) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) e
 	target.Status.Description = ""
 	target.Status.Version = syndesisVersion
 
-	logrus.Info("Syndesis installation attached to resource ", syndesis.Name)
+	log.Info("Syndesis installation attached to resource", "name", syndesis.Name, "type", "legacy")
 	return cl.Update(context.TODO(), target)
 }
 

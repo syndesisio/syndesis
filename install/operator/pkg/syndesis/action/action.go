@@ -7,11 +7,14 @@ import (
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
 const (
 	replaceResourcesIfPresent = true
 )
+
+var log = logf.Log.WithName("action")
 
 type InstallationAction interface {
 	CanExecute(syndesis *v1alpha1.Syndesis) bool

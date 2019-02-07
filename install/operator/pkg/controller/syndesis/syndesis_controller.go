@@ -17,7 +17,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/source"
 )
 
-var log = logf.Log.WithName("controller_syndesis")
+var log = logf.Log.WithName("controller")
 
 var (
 	actionPool []action.InstallationAction
