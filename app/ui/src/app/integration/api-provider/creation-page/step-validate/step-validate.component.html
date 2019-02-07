@@ -1,35 +1,41 @@
-<div class="row row-cards-pf">
-  <div class="card-pf">
-    <div class="card-pf-body">
-      <syndesis-loading
-        [loading]="loading"
-        [content]="validationContent">
-      </syndesis-loading>
+<div class="syn-scrollable">
+  <div class="syn-scrollable--body">
+    <div class="container-fluid">
+      <div class="row row-cards-pf">
+        <div class="card-pf">
+          <div class="card-pf-body">
+            <syndesis-loading
+              [loading]="loading"
+              [content]="validationContent">
+            </syndesis-loading>
 
-      <ng-template #validationContent>
-        <openapi-review
-          [name]="validationResponse.name"
-          [description]="validationResponse.description || 'No description provided'"
-          [warnings]="validationResponse.warnings"
-          [errors]="validationResponse.errors"
-          [actionsSummary]="validationResponse.actionsSummary">
-        </openapi-review>
+            <ng-template #validationContent>
+              <openapi-review
+                [name]="validationResponse.name"
+                [description]="validationResponse.description || 'No description provided'"
+                [warnings]="validationResponse.warnings"
+                [errors]="validationResponse.errors"
+                [actionsSummary]="validationResponse.actionsSummary">
+              </openapi-review>
 
-        <fieldset>
-          <syndesis-button (click)="onEdit.emit()" type="button" theme="default">
-              {{ 'integrations.api-provider.api-review-edit-button' | synI18n }}
-          </syndesis-button>
-        </fieldset>
-        <fieldset>
-          <syndesis-button (click)="onDone.emit()" type="button" theme="primary">
-            {{ 'shared.next' | synI18n }}
-          </syndesis-button>
+              <fieldset>
+                <syndesis-button (click)="onEdit.emit()" type="button" theme="default">
+                    {{ 'integrations.api-provider.api-review-edit-button' | synI18n }}
+                </syndesis-button>
+              </fieldset>
+              <fieldset>
+                <syndesis-button (click)="onDone.emit()" type="button" theme="primary">
+                  {{ 'shared.next' | synI18n }}
+                </syndesis-button>
 
-          <syndesis-button type="button" theme="default" (click)="onCancel.emit()">
-            {{ 'shared.cancel' | synI18n }}
-          </syndesis-button>
-        </fieldset>
-      </ng-template>
+                <syndesis-button type="button" theme="default" (click)="onCancel.emit()">
+                  {{ 'shared.cancel' | synI18n }}
+                </syndesis-button>
+              </fieldset>
+            </ng-template>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -36,4 +36,4 @@ import { EditableComponent } from '@syndesis/ui/common/editable/editable.compone
     </ng-template>
   `
 })
-export class EditableTagsComponent extends EditableComponent {}
+export class EditableTagsComponent extends EditableComponent<string> {}

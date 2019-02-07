@@ -3,39 +3,43 @@
   [content]="content"
 >
   <ng-template #content>
-    <div class="row">
-      <div class="col-md-12">
-        <ol class="breadcrumb">
+    <div class="integrations edit row">
+      <div class="header">
+        <ol class="syn-breadcrumb">
           <li>
-            &lt;&lt;&nbsp;<a [routerLink]="['/integrations']"
-              >All Integrations</a
-            >
+            <i class="fa fa-angle-double-left"></i>
+            <a [routerLink]="['/integrations']">
+              All Integrations
+            </a>
           </li>
           <li *ngIf="currentFlowService.integration.name">
             <a
               [routerLink]="[
-                '/integrations',
-                currentFlowService.integration.id
-              ]"
-              >{{ currentFlowService.integration.name }}</a
+              '/integrations',
+              currentFlowService.integration.id
+            ]"
+            >{{ currentFlowService.integration.name }}</a
             >
           </li>
         </ol>
+
+        <syndesis-integration-flow-toolbar
+          [isApiProvider]="currentFlowService.isApiProvider()"
+        >
+        </syndesis-integration-flow-toolbar>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <syndesis-integration-flow-toolbar></syndesis-integration-flow-toolbar>
-      </div>
-    </div>
-    <div class="integrations edit row">
-      <!-- Sidebar -->
-      <div class="wizard-sidebar">
-        <syndesis-integration-flow-view></syndesis-integration-flow-view>
-      </div>
-      <!-- Add/Edit Integration -->
-      <div class="main-panel {{ getPageContainer() }}">
-        <router-outlet></router-outlet>
+      <div class="content">
+        <!-- Sidebar -->
+        <div
+          class="wizard-sidebar"
+          *ngIf="!currentFlowService.isApiProvider()"
+        >
+          <syndesis-integration-flow-view></syndesis-integration-flow-view>
+        </div>
+        <!-- Add/Edit Integration -->
+        <div class="main-panel {{ getPageContainer() }}">
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
   </ng-template>

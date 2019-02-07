@@ -90,6 +90,14 @@ export class CurrentFlowService {
     this._integration = undefined;
   }
 
+  isSaved(): boolean {
+    /**
+     * TODO: check if this is the proper way to check if the integration has been
+     * saved or not
+     */
+    return !!this.integration.id;
+  }
+
   isValid(): boolean {
     // TODO more validations on the integration
     return this.integration.name && this.integration.name.length > 0;

@@ -26,4 +26,4 @@ import { EditableComponent } from '@syndesis/ui/common/editable/editable.compone
     </ng-template>
   `
 })
-export class EditableTextareaComponent extends EditableComponent {}
+export class EditableTextareaComponent extends EditableComponent<string> {}

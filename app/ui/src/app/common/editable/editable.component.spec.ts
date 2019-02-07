@@ -1,7 +1,7 @@
 import { EditableComponent } from '@syndesis/ui/common/editable/editable.component';
 
 describe('EditableComponent', () => {
-  class MyEditableComponent extends EditableComponent {}
+  class MyEditableComponent extends EditableComponent<string> {}
 
   const VALUE1 = 'value1';
   const VALUE2 = 'value2';

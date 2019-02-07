@@ -4,7 +4,7 @@ import * as YAML from 'yamljs';
 import { WindowRef } from '@syndesis/ui/customizations/window-ref';
 
 @Component({
-  selector: 'openapi-editor',
+  selector: 'openapi-editor, [openapi-editor]',
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss']
 })
