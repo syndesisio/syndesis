@@ -1,8 +1,9 @@
-import * as React from 'react';
+import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
+
 import { StoryHelper } from '../../.storybook/StoryHelper';
 import { IntegrationDetail } from '../../src';
-// import { action } from '@storybook/addon-actions';
 
 export const integrationDetailStory = 'example usage';
 

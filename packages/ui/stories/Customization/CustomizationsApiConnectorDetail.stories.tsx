@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import { StoryHelper } from '../../.storybook/StoryHelper';
 import { CustomizationsApiConnectorDetail } from '../../src';
