@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.endpoint.continuousdelivery;
+package io.syndesis.server.endpoint.v1.handler.continuousdelivery;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -54,9 +54,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Unit test for {@link ContinuousDeliveryProviderImpl}.
+ * Unit test for {@link ContinuousDeliveryHandlerImpl}.
  */
-public class ContinuousDeliveryProviderImplTest {
+public class ContinuousDeliveryHandlerImplTest {
 
     private static final String INTEGRATION_ID = "integration-id";
     private static final String ENVIRONMENT = "environment";
@@ -69,7 +69,7 @@ public class ContinuousDeliveryProviderImplTest {
     private final MonitoringProvider monitoringProvider = mock(MonitoringProvider.class);
 
     // initialized after mock objects in setup
-    private ContinuousDeliveryProvider provider;
+    private ContinuousDeliveryHandler handler;
 
     @Before
     public void setUp() throws Exception {
@@ -90,13 +90,13 @@ public class ContinuousDeliveryProviderImplTest {
         importResult.put(INTEGRATION_ID, Collections.singletonList(integration));
         when(supportHandler.importIntegration(any(), any())).thenReturn(importResult);
 
-        provider = new ContinuousDeliveryProviderImpl(dataManager, supportHandler,
+        handler = new ContinuousDeliveryHandlerImpl(dataManager, supportHandler,
                 encryptionComponent, deploymentHandler, connectionHandler, monitoringProvider);
     }
 
     @Test
     public void tagForRelease() throws Exception {
-        final Map<String, ContinuousDeliveryEnvironment> continuousDeliveryEnvironment = provider.tagForRelease(INTEGRATION_ID,
+        final Map<String, ContinuousDeliveryEnvironment> continuousDeliveryEnvironment = handler.tagForRelease(INTEGRATION_ID,
                 Collections.singletonList(ENVIRONMENT));
 
         assertThat(continuousDeliveryEnvironment, is(notNullValue()));
@@ -108,7 +108,7 @@ public class ContinuousDeliveryProviderImplTest {
     @Test
     @SuppressWarnings("unchecked")
     public void exportResources() throws Exception {
-        final StreamingOutput streamingOutput = provider.exportResources(ENVIRONMENT, false);
+        final StreamingOutput streamingOutput = handler.exportResources(ENVIRONMENT, false);
         assertThat(streamingOutput, is(notNullValue()));
 
         verify(dataManager).fetchAll(eq(Integration.class), any(Function.class));
@@ -119,7 +119,7 @@ public class ContinuousDeliveryProviderImplTest {
     @SuppressWarnings("unchecked")
     public void importResources() throws Exception {
         // export integration
-        final StreamingOutput streamingOutput = provider.exportResources(ENVIRONMENT, false);
+        final StreamingOutput streamingOutput = handler.exportResources(ENVIRONMENT, false);
 
         // import it back
         final SecurityContext security = mock(SecurityContext.class);
@@ -127,7 +127,7 @@ public class ContinuousDeliveryProviderImplTest {
         when(security.getUserPrincipal()).thenReturn(principal);
         when(principal.getName()).thenReturn("user");
 
-        ContinuousDeliveryProvider.ImportFormDataInput formInput = new ContinuousDeliveryProvider.ImportFormDataInput();
+        ContinuousDeliveryHandler.ImportFormDataInput formInput = new ContinuousDeliveryHandler.ImportFormDataInput();
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         streamingOutput.write(bytes);
         formInput.setImportFile(new ByteArrayInputStream(bytes.toByteArray()));
@@ -135,7 +135,7 @@ public class ContinuousDeliveryProviderImplTest {
         formInput.setEnvironment(ENVIRONMENT);
         formInput.setDeploy(Boolean.TRUE);
 
-        provider.importResources(security, formInput);
+        handler.importResources(security, formInput);
 
         // assert that integration was recreated
         verify(dataManager).fetchAll(eq(Integration.class), any());

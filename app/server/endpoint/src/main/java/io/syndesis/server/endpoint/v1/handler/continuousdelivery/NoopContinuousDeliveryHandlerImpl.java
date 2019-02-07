@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.endpoint.continuousdelivery;
+package io.syndesis.server.endpoint.v1.handler.continuousdelivery;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 
@@ -34,60 +33,56 @@ import io.syndesis.common.model.monitoring.IntegrationDeploymentStateDetails;
 
 @Component
 @ConditionalOnProperty(value = "continuousdelivery.enabled", havingValue = "false", matchIfMissing=true)
-public class NoopContinuousDeliveryProviderImpl implements ContinuousDeliveryProvider {
+public class NoopContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler {
 
     @Override
     public List<String> getReleaseEnvironments() {
-        throw notEnabled();
+        return Collections.emptyList();
     }
 
     @Override
     public Map<String, ContinuousDeliveryEnvironment> getReleaseTags(String integrationId) {
-        throw notEnabled();
+        return Collections.emptyMap();
     }
 
     @Override
     public void deleteReleaseTag(String integrationId, String environment) {
-        throw notEnabled();
+        // no-op
     }
 
     @Override
     public Map<String, ContinuousDeliveryEnvironment> tagForRelease(String integrationId, List<String> environments) {
-        throw notEnabled();
+        return Collections.emptyMap();
     }
 
     @Override
     public StreamingOutput exportResources(String environment, boolean exportAll) throws IOException {
-        throw notEnabled();
+        return null;
     }
 
     @Override
     public ContinuousDeliveryImportResults importResources(SecurityContext sec, ImportFormDataInput formInput) throws IOException {
-        throw notEnabled();
+        return null;
     }
 
     @Override
     public ConnectionOverview configureConnection(SecurityContext sec, String name, Map<String, String> properties) throws IOException {
-        throw notEnabled();
+        return null;
     }
 
     @Override
     public IntegrationDeploymentStateDetails getIntegrationState(SecurityContext sec, String integrationId) throws
             IOException {
-        throw notEnabled();
+        return null;
     }
 
     @Override
     public IntegrationDeployment publishIntegration(SecurityContext sec, String integrationId) {
-        throw notEnabled();
+        return null;
     }
 
     @Override
     public void stopIntegration(SecurityContext sec, String integrationId, int version) {
-        throw notEnabled();
-    }
-
-    private ClientErrorException notEnabled() {
-        return new ClientErrorException("Continuous Delivery NOT enabled.", Response.Status.BAD_REQUEST);
+        // no-op
     }
 }

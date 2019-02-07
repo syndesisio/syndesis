@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.endpoint.continuousdelivery;
+package io.syndesis.server.endpoint.v1.handler.continuousdelivery;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,9 +59,9 @@ import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSup
 
 @Component
 @ConditionalOnProperty(value = "continuousdelivery.enabled", havingValue = "true")
-public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvider {
+public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ContinuousDeliveryProviderImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContinuousDeliveryHandlerImpl.class);
 
     private final DataManager dataMgr;
     private final IntegrationSupportHandler handler;
@@ -71,7 +71,7 @@ public class ContinuousDeliveryProviderImpl implements ContinuousDeliveryProvide
     private final MonitoringProvider monitoringProvider;
     private final Set<String> environments;
 
-    protected ContinuousDeliveryProviderImpl(DataManager dataMgr, IntegrationSupportHandler handler, EncryptionComponent encryptionComponent, IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler, MonitoringProvider monitoringProvider) {
+    protected ContinuousDeliveryHandlerImpl(DataManager dataMgr, IntegrationSupportHandler handler, EncryptionComponent encryptionComponent, IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler, MonitoringProvider monitoringProvider) {
         this.dataMgr = dataMgr;
         this.handler = handler;
         this.encryptionComponent = encryptionComponent;

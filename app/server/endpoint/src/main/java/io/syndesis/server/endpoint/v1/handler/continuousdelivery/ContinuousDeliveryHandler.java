@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.endpoint.continuousdelivery;
+package io.syndesis.server.endpoint.v1.handler.continuousdelivery;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,9 +43,9 @@ import io.syndesis.common.model.integration.ContinuousDeliveryImportResults;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.monitoring.IntegrationDeploymentStateDetails;
 
-@Api
-@Path("public/continuousdelivery")
-public interface ContinuousDeliveryProvider {
+@Api("continuous-delivery")
+@Path("/public/continuousdelivery")
+public interface ContinuousDeliveryHandler {
 
     /**
      * List all available environments.
@@ -76,6 +76,7 @@ public interface ContinuousDeliveryProvider {
     @POST
     @Path("releasetags/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     Map<String, ContinuousDeliveryEnvironment> tagForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
                                                 @NotNull @ApiParam(required = true) List<String> environments);
 
