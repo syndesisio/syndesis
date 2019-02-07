@@ -124,7 +124,7 @@ public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler 
             environments.remove(environment);
 
         } else {
-            throw new ClientErrorException("Missing environment " + environment, Response.Status.BAD_REQUEST);
+            throw new ClientErrorException("Missing environment " + environment, Response.Status.NOT_FOUND);
         }
     }
 
@@ -287,12 +287,12 @@ public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler 
             // actual import data created using the exportResources endpoint above
             final InputStream importFile = formInput.getImportFile();
             if (importFile == null) {
-                throw new ClientErrorException("Missing file 'importfile' in multipart request", Response.Status.BAD_REQUEST);
+                throw new ClientErrorException("Missing file 'data' in multipart request", Response.Status.BAD_REQUEST);
             }
             // connection properties configuration file
             final InputStream paramFile = formInput.getParamsFile();
             if (paramFile == null) {
-                throw new ClientErrorException("Missing file 'connectionparamsfile' in multipart request", Response.Status.BAD_REQUEST);
+                throw new ClientErrorException("Missing file 'connectionparams' in multipart request", Response.Status.BAD_REQUEST);
             }
 
             // importedAt date to be updated in all imported integrations
@@ -347,7 +347,7 @@ public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler 
 
         final Connection connection = dataMgr.fetch(Connection.class, connectionId);
         if (connection == null) {
-            throw new ClientErrorException("Missing connection with id " + connectionId, Response.Status.BAD_REQUEST);
+            throw new ClientErrorException("Missing connection with id " + connectionId, Response.Status.NOT_FOUND);
         }
 
         updateConnection(connection, properties);
@@ -368,13 +368,28 @@ public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler 
     }
 
     @Override
-    public void stopIntegration(SecurityContext sec, String integrationId, int version) {
+    public void stopIntegration(SecurityContext sec, String integrationId) {
 
         validateParam("integrationId", integrationId);
         IntegrationDeploymentHandler.TargetStateRequest targetState = new IntegrationDeploymentHandler
                 .TargetStateRequest();
         targetState.targetState = IntegrationDeploymentState.Unpublished;
-        deploymentHandler.updateTargetState(integrationId, version, targetState);
+
+        // find current deployed version
+        final IntegrationDeployment[] deployment = {null};
+        dataMgr.fetchAllByPropertyValue(IntegrationDeployment
+                .class, "integrationId", integrationId)
+                .forEach(d -> {
+                    if (d.getCurrentState() == IntegrationDeploymentState.Published) {
+                        deployment[0] = d;
+                    }
+                });
+
+        if (deployment[0] != null) {
+            deploymentHandler.updateTargetState(integrationId, deployment[0].getVersion(), targetState);
+        } else {
+            throw new ClientErrorException("Integration " + integrationId + " is not published", Response.Status.FORBIDDEN);
+        }
     }
 
     private IntegrationDeployment publishIntegration(SecurityContext sec, Integration i) {
@@ -407,7 +422,7 @@ public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler 
         validateParam("integrationId", integrationId);
         final Integration integration = dataMgr.fetch(Integration.class, integrationId);
         if (integration == null) {
-            throw new ClientErrorException("Missing integration with id " + integrationId, Response.Status.BAD_REQUEST);
+            throw new ClientErrorException("Missing integration with id " + integrationId, Response.Status.NOT_FOUND);
         }
         return integration;
     }

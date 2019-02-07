@@ -92,7 +92,7 @@ public interface ContinuousDeliveryHandler {
      * Export integrations to a target environment.
      */
     @GET
-    @Path("export/{env}/export.zip")
+    @Path("integrations/{env}/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     StreamingOutput exportResources(@NotNull @PathParam("environment") @ApiParam(required = true) String environment,
                            @QueryParam("all") @ApiParam() boolean exportAll) throws IOException;
@@ -127,7 +127,7 @@ public interface ContinuousDeliveryHandler {
     /**
      * Start Integration.
      */
-    @PUT
+    @POST
     @Path("integrations/{id}/deployments")
     @Produces(MediaType.APPLICATION_JSON)
     IntegrationDeployment publishIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId);
@@ -135,11 +135,10 @@ public interface ContinuousDeliveryHandler {
     /**
      * Stop Integration.
      */
-    @POST
-    @Path("integrations/{id}/deployments/{version}")
+    @PUT
+    @Path("integrations/{id}/deployments/stop")
     @Produces(MediaType.APPLICATION_JSON)
-    void stopIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId,
-                                          @NotNull @PathParam("version") @ApiParam(required = true) final int version);
+    void stopIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId);
 
     /**
      * DTO for {@link org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput} for importResources.
@@ -148,7 +147,7 @@ public interface ContinuousDeliveryHandler {
         @FormParam("data")
         private InputStream importFile;
 
-        @FormParam("connectionparamsfile")
+        @FormParam("connectionparams")
         private InputStream paramsFile;
 
         @FormParam("environment")
