@@ -23,7 +23,7 @@ public class RestRouteConfiguration {
                     .description("Returns the OpenAPI specification for this service")
                     .route()
                     .setHeader(Exchange.CONTENT_TYPE, constant("application/vnd.oai.openapi+json"))
-                    .setBody(simple("resource:classpath:openapi.json"));
+                    .setBody(constant("resource:classpath:openapi.json"));
             }
         };
     }
