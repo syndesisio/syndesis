@@ -35,22 +35,14 @@ export class AppComponent implements OnInit, AfterViewInit {
   helpExpanded = false;
   userMenuExpanded = false;
   menuExpanded = false;
-  /**
-   * Logo and Icon with dark background
-   */
-  logoDarkBg = 'assets/images/syndesis_logo_icon_darkbkg.png';
+
+  loggedIn = true;
 
   /**
    * @type {Observable<User>}
    * Observable instance of the active user
    */
   user$: Observable<User>;
-
-  /**
-   * @type {boolean}
-   * Flag used to determine whether or not the user is logged in.
-   */
-  loggedIn = true;
 
   /**
    * @type {string}
@@ -86,7 +78,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private meta: Meta,
     private router: Router,
     @Inject(DOCUMENT) private document: any
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.store.dispatch(new PlatformActions.AppBootstrap());
@@ -100,11 +92,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       'branding',
       'productBuild',
       false
-    );
-    this.logoDarkBg = this.config.getSettings(
-      'branding',
-      'logoDarkBg',
-      'assets/images/syndesis_logo_icon_darkbkg.png'
     );
     const favicon32 = this.config.getSettings(
       'branding',
