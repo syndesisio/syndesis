@@ -42,12 +42,14 @@ All template parameters are required. Most of them have sane defaults, but some 
 | Parameter | Description |
 | --------- | ----------- |
 | **ROUTE_HOSTNAME** | The external hostname to access Syndesis |
+| **PUBLIC_API_ROUTE_HOSTNAME** | The external hostname to access Syndesis public API |
 
 In order to one of the templates described above these parameters must be provided:
 
 ```
 $ oc new-app --template=syndesis -p \
        ROUTE_HOSTNAME=<external hostname>
+       PUBLIC_API_ROUTE_HOSTNAME=<external hostname2>
 ```
 
 Replace _&lt;external hostname&gt;_ with a value that will resolve to the address of the OpenShift router.
