@@ -20,6 +20,9 @@ import static io.syndesis.common.util.IOStreams.readText;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.ServiceLoader;
+import java.util.Set;
 
 /**
  * Utilities for working with class loader resources.
@@ -55,6 +58,18 @@ public final class Resources {
         try (InputStream is = i) {
             return readText(is);
         }
+    }
+
+    public static <T> Set<T> loadServices(Class<T> type, ClassLoader classLoader){
+        Set<T> results = new HashSet<>();
+        for (T result : ServiceLoader.load(type, classLoader)) {
+            results.add(result);
+        }
+        return results;
+    }
+
+    public static <T> Set<T> loadServices(Class<T> type){
+        return loadServices(type, Thread.currentThread().getContextClassLoader());
     }
 
 }

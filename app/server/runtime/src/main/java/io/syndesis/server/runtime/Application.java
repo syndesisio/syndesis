@@ -15,7 +15,6 @@
  */
 package io.syndesis.server.runtime;
 
-import io.syndesis.common.util.MavenProperties;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.endpoint.v1.state.ClientSideStateProperties;
 import io.syndesis.server.endpoint.v1.state.StaticEdition;
@@ -57,7 +56,7 @@ import java.util.List;
         LinkedInAutoConfiguration.class,
         SocialWebAutoConfiguration.class
     })
-@EnableConfigurationProperties({ClientSideStateProperties.class, MavenProperties.class})
+@EnableConfigurationProperties({ClientSideStateProperties.class, SpringMavenProperties.class})
 public class Application extends SpringBootServletInitializer {
 
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);

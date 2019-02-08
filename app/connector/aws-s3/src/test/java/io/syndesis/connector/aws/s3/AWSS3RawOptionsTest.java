@@ -16,34 +16,91 @@
 package io.syndesis.connector.aws.s3;
 
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.integration.Flow;
-import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.connector.support.test.ConnectorTestSupport;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.aws.s3.S3Component;
 import org.apache.camel.component.aws.s3.S3Configuration;
 import org.apache.camel.component.aws.s3.S3Endpoint;
-import org.apache.camel.test.junit4.CamelTestSupport;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class AWSS3RawOptionsTest extends CamelTestSupport {
+public class AWSS3RawOptionsTest extends ConnectorTestSupport {
+    @Override
+    protected List<Step> createSteps() {
+        return Arrays.asList(
+            new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .connection(new Connection.Builder()
+                    .putConfiguredProperty("accessKey", "my-accessKey")
+                    .putConfiguredProperty("secretKey", "my-secretKey")
+                    .putConfiguredProperty("region", "EU_CENTRAL_1")
+                    .putConfiguredProperty("bucketNameOrArn", "my-bucketNameOrArn")
+                    .connector(new Connector.Builder()
+                        .putProperty(
+                            "accessKey",
+                            new ConfigurationProperty.Builder()
+                                .kind("accessKey")
+                                .secret(true)
+                                .raw(true)
+                                .componentProperty(false)
+                                .build())
+                        .putProperty(
+                            "secretKey",
+                            new ConfigurationProperty.Builder()
+                                .kind("secretKey")
+                                .secret(true)
+                                .raw(true)
+                                .componentProperty(false)
+                                .build())
+                        .putProperty(
+                            "region",
+                            new ConfigurationProperty.Builder()
+                                .kind("region")
+                                .secret(false)
+                                .componentProperty(false)
+                                .build())
+                        .putProperty(
+                            "bucketNameOrArn",
+                            new ConfigurationProperty.Builder()
+                                .kind("bucketNameOrArn")
+                                .secret(false)
+                                .componentProperty(false)
+                                .build())
+                        .build())
+                    .build())
+                .action(new ConnectorAction.Builder()
+                    .descriptor(new ConnectorDescriptor.Builder()
+                        .componentScheme("aws-s3")
+                        .build())
+                    .build())
+                .build(),
+        new Step.Builder()
+            .stepKind(StepKind.endpoint)
+            .action(new ConnectorAction.Builder()
+                .descriptor(new ConnectorDescriptor.Builder()
+                    .componentScheme("mock")
+                    .putConfiguredProperty("name", "result")
+                    .build())
+                .build())
+            .build()
+        );
+    }
+
     @Override
     protected CamelContext createCamelContext() throws Exception {
         CamelContext camelContext = super.createCamelContext();
@@ -74,76 +131,6 @@ public class AWSS3RawOptionsTest extends CamelTestSupport {
         properties.setProperty("flow-0.aws-s3-0.secretKey", "my-secretKey");
 
         return properties;
-    }
-
-    @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
-        return new IntegrationRouteBuilder("", Collections.emptyList()) {
-            @Override
-            protected Integration loadIntegration() throws IOException {
-                return new Integration.Builder()
-                        .id("asw-integration")
-                        .name("asw-integration")
-                        .addFlow(new Flow.Builder()
-                            .addStep(new Step.Builder()
-                                .stepKind(StepKind.endpoint)
-                                .connection(new Connection.Builder()
-                                    .putConfiguredProperty("accessKey", "my-accessKey")
-                                    .putConfiguredProperty("secretKey", "my-secretKey")
-                                    .putConfiguredProperty("region", "EU_CENTRAL_1")
-                                    .putConfiguredProperty("bucketNameOrArn", "my-bucketNameOrArn")
-                                    .connector(new Connector.Builder()
-                                        .putProperty(
-                                            "accessKey",
-                                            new ConfigurationProperty.Builder()
-                                                .kind("accessKey")
-                                                .secret(true)
-                                                .raw(true)
-                                                .componentProperty(false)
-                                                .build())
-                                        .putProperty(
-                                            "secretKey",
-                                            new ConfigurationProperty.Builder()
-                                                .kind("secretKey")
-                                                .secret(true)
-                                                .raw(true)
-                                                .componentProperty(false)
-                                                .build())
-                                        .putProperty(
-                                            "region",
-                                            new ConfigurationProperty.Builder()
-                                                .kind("region")
-                                                .secret(false)
-                                                .componentProperty(false)
-                                                .build())
-                                        .putProperty(
-                                            "bucketNameOrArn",
-                                            new ConfigurationProperty.Builder()
-                                                .kind("bucketNameOrArn")
-                                                .secret(false)
-                                                .componentProperty(false)
-                                                .build())
-                                        .build())
-                                    .build())
-                                .action(new ConnectorAction.Builder()
-                                    .descriptor(new ConnectorDescriptor.Builder()
-                                        .componentScheme("aws-s3")
-                                        .build())
-                                    .build())
-                                .build())
-                            .addStep(new Step.Builder()
-                                .stepKind(StepKind.endpoint)
-                                .action(new ConnectorAction.Builder()
-                                    .descriptor(new ConnectorDescriptor.Builder()
-                                        .componentScheme("mock")
-                                        .putConfiguredProperty("name", "result")
-                                        .build())
-                                    .build())
-                                .build())
-                            .build())
-                        .build();
-            }
-        };
     }
 
     @Test

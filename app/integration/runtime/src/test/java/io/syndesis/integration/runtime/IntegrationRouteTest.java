@@ -15,8 +15,6 @@
  */
 package io.syndesis.integration.runtime;
 
-import java.util.Collections;
-
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Flow;
@@ -24,6 +22,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Resources;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.PipelineDefinition;
@@ -42,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class IntegrationRouteTest extends IntegrationTestSupport {
     @Test
     public void integrationWithSchedulerTest() throws Exception {
-        final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Collections.emptyList()) {
+        final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
             @Override
             protected Integration loadIntegration() {
                 Integration integration = newIntegration(
@@ -109,8 +108,8 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
     }
 
     @Test
-    public void integrationWithSplitAggregateTest() throws Exception {
-        final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Collections.emptyList()) {
+    public void integrationWithSplitTest() throws Exception {
+        final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
             @Override
             protected Integration loadIntegration() {
                 return newIntegration(
@@ -177,7 +176,7 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
 
     @Test
     public void integrationWithSchedulerAndSplitTest() throws Exception {
-        final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Collections.emptyList()) {
+        final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
             @Override
             protected Integration loadIntegration() {
                 Integration integration = newIntegration(
@@ -249,5 +248,4 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
         assertThat(getOutput(route, 2, 2, 1)).hasFieldOrPropertyWithValue("uri", "mock:timer");
         assertThat(getOutput(route, 2, 2, 2)).isInstanceOf(ProcessDefinition.class);
     }
-
 }

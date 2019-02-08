@@ -65,7 +65,7 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 
-@EnableConfigurationProperties(MavenProperties.class)
+@EnableConfigurationProperties(SpringMavenProperties.class)
 @SpringBootApplication(
     exclude = {
         DaoConfiguration.class,

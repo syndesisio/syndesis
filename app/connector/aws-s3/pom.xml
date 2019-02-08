@@ -152,6 +152,11 @@
       <artifactId>camel-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-support-test</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

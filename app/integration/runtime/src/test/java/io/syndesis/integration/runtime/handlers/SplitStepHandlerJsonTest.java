@@ -16,10 +16,11 @@
 package io.syndesis.integration.runtime.handlers;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
+import io.syndesis.common.util.Resources;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.IntegrationTestSupport;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
@@ -38,7 +39,7 @@ public class SplitStepHandlerJsonTest extends IntegrationTestSupport {
         try {
             final RouteBuilder routes = new IntegrationRouteBuilder(
                 "classpath:/syndesis/integration/SplitStepHandlerJsonTest.json",
-                Collections.emptyList()
+                Resources.loadServices(IntegrationStepHandler.class)
             );
 
             // Set up the camel context

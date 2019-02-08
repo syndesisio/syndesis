@@ -15,14 +15,6 @@
  */
 package io.syndesis.integration.runtime;
 
-import javax.xml.bind.JAXBException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Collections;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -30,6 +22,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.util.Resources;
 import io.syndesis.common.util.StringConstants;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import org.apache.camel.Body;
@@ -42,6 +35,13 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.xml.bind.JAXBException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class IntegrationTestSupport implements StringConstants {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);
@@ -93,7 +93,7 @@ public class IntegrationTestSupport implements StringConstants {
     }
 
     protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration, ActivityTracker activityTracker) {
-        return new IntegrationRouteBuilder("", Collections.emptyList(), activityTracker) {
+        return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class), activityTracker) {
             @Override
             protected Integration loadIntegration() throws IOException {
                 return integration;

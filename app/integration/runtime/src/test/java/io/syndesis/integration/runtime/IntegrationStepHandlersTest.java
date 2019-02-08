@@ -15,8 +15,7 @@
  */
 package io.syndesis.integration.runtime;
 
-import java.util.Collections;
-
+import io.syndesis.common.util.Resources;
 import io.syndesis.integration.runtime.handlers.ConnectorStepHandler;
 import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
@@ -40,7 +39,7 @@ public class IntegrationStepHandlersTest {
 
     @Test
     public void testHandlerLookup() {
-        IntegrationRouteBuilder builder = new IntegrationRouteBuilder("", Collections.emptyList());
+        IntegrationRouteBuilder builder = new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class));
 
         assertThat(
             builder.findHandler(
