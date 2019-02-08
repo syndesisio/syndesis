@@ -33,10 +33,12 @@ import java.util.stream.StreamSupport;
 import static java.util.Optional.ofNullable;
 
 import io.swagger.models.HttpMethod;
+import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.RefModel;
+import io.swagger.models.Response;
 import io.swagger.models.Swagger;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.parser.SwaggerParser;
@@ -53,6 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -82,6 +85,11 @@ public final class SwaggerHelper {
 
     private static final Pattern JSONDB_DISALLOWED_KEY_CHARS = Pattern.compile("[^ -\"&-\\-0-Z\\^-\u007E\u0080-\u10FFFF]");
 
+    public abstract static class IgnoreResponseSchemaMixin {
+        @JsonIgnore
+        abstract Model getResponseSchema();
+    }
+
     static {
         try {
             final JsonNode swagger20Schema = Json.reader().readTree(Resources.getResourceAsText(SWAGGER_2_0_SCHEMA_FILE));
@@ -89,6 +97,9 @@ public final class SwaggerHelper {
                 .preloadSchema(SWAGGER_IO_V2_SCHEMA_URI, swagger20Schema)
                 .freeze();
             SWAGGER_2_0_SCHEMA = JsonSchemaFactory.newBuilder().setLoadingConfiguration(loadingConfiguration).freeze().getJsonSchema(SWAGGER_IO_V2_SCHEMA_URI);
+
+            // make sure that we don't read or serialize superfluously added `responseSchema` property
+            io.swagger.util.Json.mapper().addMixIn(Response.class, IgnoreResponseSchemaMixin.class);
         } catch (final ProcessingException | IOException ex) {
             throw new IllegalStateException("Unable to load the schema file embedded in the artifact", ex);
         }
@@ -238,7 +249,7 @@ public final class SwaggerHelper {
 
     public static String serialize(final Swagger swagger) {
         try {
-            return Json.writer().writeValueAsString(swagger);
+            return io.swagger.util.Json.mapper().writeValueAsString(swagger);
         } catch (final JsonProcessingException e) {
             throw new IllegalStateException("Unable to serialize OpenAPI document", e);
         }
