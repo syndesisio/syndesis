@@ -1,6 +1,6 @@
 import { addDecorator, configure } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
-import { checkA11y } from '@storybook/addon-a11y';
+// import { checkA11y } from '@storybook/addon-a11y';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withOptions } from '@storybook/addon-options';
 import * as React from 'react';
@@ -95,6 +95,6 @@ addDecorator(
     maxPropsIntoLine: 1,
   })
 );
-addDecorator(checkA11y);
+// addDecorator(checkA11y);
 addDecorator(withKnobs);
 configure(loadStories, module);
