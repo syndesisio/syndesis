@@ -10,7 +10,7 @@
 - apiVersion: authorization.openshift.io/v1
   kind: ClusterRoleBinding
   metadata:
-    name: system:auth-delegator
+    name: syndesis-${OPENSHIFT_PROJECT}-auth-delegator
     labels:
       app: syndesis
       syndesis.io/app: syndesis
