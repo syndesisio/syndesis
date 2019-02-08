@@ -301,19 +301,20 @@ public class ConnectionActionHandlerTest {
         assertThat(metadataCommandParameters).containsEntry("sObjectName", "Contact,Account");
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void shouldFailForUnsupportedParameterType() {
+    @Test
+    public void shouldSupportOtherParameterTypes() {
         final DynamicActionMetadata suggestions = new DynamicActionMetadata.Builder()
-            .putProperty("sObjectName", Arrays.asList(DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Account", "Account"),
-                DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
+            .putProperty("sObjectName", Arrays.asList(DynamicActionMetadata.ActionPropertySuggestion.Builder.of("1", "1"),
+                DynamicActionMetadata.ActionPropertySuggestion.Builder.of("2", "2")))
             .build();
         when(metadataCommand.execute()).thenReturn(suggestions);
         when(((HystrixInvokableInfo<?>) metadataCommand).isSuccessfulExecution()).thenReturn(true);
 
 
         final Map<String, Object> parameters = new HashMap<>();
-        parameters.put("sObjectName", new Integer[] { 1, 2 });
+        parameters.put("sObjectName", 1);
 
         handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters);
+        assertThat(metadataCommandParameters).containsEntry("sObjectName", "1");
     }
 }
