@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'syndesis-integration-api-provider-operations-list',
-  templateUrl: './integration-api-provider-operations-list.component.html',
+  templateUrl: './integration-api-provider-operations-list.component.html'
 })
 export class ApiProviderOperationsListComponent implements OnInit, OnDestroy {
   @Input()

@@ -18,11 +18,25 @@
         ></syndesis-integration-api-provider-operation-editor-toolbar>
       </div>
       <div class="content">
-        <div class="main-panel">
-          <syndesis-integration-flow-view
-            class="flow"
-          ></syndesis-integration-flow-view>
-          <div class="form"><router-outlet></router-outlet></div>
+        <div class="card-pf">
+          <div class="card-pf-heading">
+            <div class="card-pf-title">
+              <integration-api-provider-operation-description
+                [description]="currentFlowService.getCurrentFlowDescription()"
+              ></integration-api-provider-operation-description>
+              {{ currentFlowService.getCurrentFlowName() }}
+            </div>
+          </div>
+          <div class="card-pf-body">
+            <div class="main-panel">
+              <syndesis-integration-flow-view
+                class="flow"
+              ></syndesis-integration-flow-view>
+              <div class="form">
+                <router-outlet></router-outlet>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

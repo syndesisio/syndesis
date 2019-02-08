@@ -8,21 +8,44 @@
   .content {
     display: flex;
     flex: 1;
+    padding: 20px;
 
-    .operations {
-      flex: 0 0 400px;
+    .card-pf {
+      flex: 1;
+      display: flex;
+      flex-flow: column;
+      margin: 0;
+      background: transparent;
+
+      .card-pf-heading {
+        margin-bottom: 0;
+        background: #fff;
+      }
+
+      .card-pf-title {
+        display: flex;
+      }
+
+      .card-pf-body {
+        flex: 1;
+        margin: 0 -20px;
+        padding: 0;
+        overflow: hidden;
+      }
     }
 
     .main-panel {
+      height: 100%;
       flex: 1 1 auto;
       display: flex;
 
       .flow {
-        flex: 1 0 auto;
+        flex: 1 1 0;
+        background: #fff;
       }
 
       .form {
-        flex: 1 1 auto;
+        flex: 1 1 100%;
       }
     }
   }

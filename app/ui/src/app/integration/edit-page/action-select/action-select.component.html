@@ -9,14 +9,14 @@
                 <h1 class="card-pf-title">
                   {{ step?.connection.name }} - Choose an Action
                 </h1>
-              </div>
-              <div class="card-pf-body">
                 <p>Choose an action for the selected connection.</p>
                 <!-- Toolbar -->
                 <syndesis-list-toolbar
                   [items]="actions$"
                   [filteredItems]="filteredActions$"
                 ></syndesis-list-toolbar>
+              </div>
+              <div class="card-pf-body">
                 <!-- Action List -->
                 <syndesis-list-actions
                   [actions]="filteredActions$ | async"

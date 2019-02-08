@@ -9,8 +9,6 @@
                 <h1 class="card-pf-title">
                   {{ 'Choose a ' + positionText + ' ' + typeText | titleize }}
                 </h1>
-              </div>
-              <div class="card-pf-body">
                 <p *ngIf="atStart">
                   Click the connection that starts the integration. If the connection
                   you need is not available, click Create Connection.
@@ -29,16 +27,18 @@
                   [viewTemplate]="viewTemplate"
                 >
                   <ng-template #viewTemplate>
-                    <button
-                      *ngIf="atStart || atEnd"
-                      type="button"
-                      class="btn btn-default toolbar-pf-action-right"
-                      [routerLink]="['/connections/create']"
-                    >
-                      Create Connection
-                    </button>
-                  </ng-template>
+                  <button
+                    *ngIf="atStart || atEnd"
+                    type="button"
+                    class="btn btn-default toolbar-pf-action-right"
+                    [routerLink]="['/connections/create']"
+                  >
+                    Create Connection
+                  </button>
+                </ng-template>
                 </syndesis-list-toolbar>
+              </div>
+              <div class="card-pf-body">
                 <syndesis-connections-list
                   [connections]="filteredSteps$ | async"
                   [loading]="loading$ | async"
