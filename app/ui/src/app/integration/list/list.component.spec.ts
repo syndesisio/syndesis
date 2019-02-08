@@ -1,10 +1,15 @@
 /* tslint:disable:no-unused-variable */
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
-import { ActionModule, ListModule, ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
+import {
+  ActionModule,
+  ListModule,
+  ToastNotificationListModule as NotificationModule,
+} from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';
 import { IntegrationListComponent } from '@syndesis/ui/integration/list/list.component';
@@ -19,6 +24,7 @@ xdescribe('IntegrationsListComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         CommonModule,
+        RouterModule,
         SyndesisCommonModule.forRoot(),
         RouterTestingModule.withRoutes([]),
         ModalModule.forRoot(),
@@ -26,9 +32,9 @@ xdescribe('IntegrationsListComponent', () => {
         SyndesisStoreModule,
         ActionModule,
         ListModule,
-        NotificationModule
+        NotificationModule,
       ],
-      declarations: [IntegrationStatusComponent, IntegrationListComponent]
+      declarations: [IntegrationStatusComponent, IntegrationListComponent],
     }).compileComponents();
   }));
 

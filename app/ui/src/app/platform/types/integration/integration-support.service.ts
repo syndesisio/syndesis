@@ -9,7 +9,8 @@ import {
   IntegrationDeployment,
   IntegrationDeployments,
   IntegrationStatus,
-  IntegrationStatusDetail
+  IntegrationStatusDetail,
+  ContinuousDeliveryEnvironment,
 } from '@syndesis/ui/platform';
 
 @Injectable()
@@ -102,4 +103,22 @@ export abstract class IntegrationSupportService {
   abstract fetchDetailedStatus(id: string): Observable<IntegrationStatusDetail>;
 
   abstract fetchDetailedStatuses(): Observable<IntegrationStatusDetail[]>;
+
+  abstract fetchIntegrationTags(
+    integrationId: string
+  ): Observable<Map<String, ContinuousDeliveryEnvironment>>;
+
+  abstract tagIntegration(
+    integrationId: string,
+    environments: string[]
+  ): Observable<Map<String, ContinuousDeliveryEnvironment>>;
+
+  abstract untagIntegration(
+    integrationId: string,
+    env: string
+  ): Observable<void>;
+
+  abstract renameEnvironment(oldEnv: string, newEnv: string): Observable<void>;
+
+  abstract getEnvironments(): Observable<string[]>;
 }

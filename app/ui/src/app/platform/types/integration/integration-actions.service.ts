@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, TemplateRef } from '@angular/core';
 
 import {
   Integration,
   IntegrationOverview,
   IntegrationDeployment,
   DeploymentOverview,
-  Step
+  Step,
 } from '@syndesis/ui/platform';
 
 @Injectable()
@@ -17,7 +17,8 @@ export abstract class IntegrationActionsService {
   abstract requestAction(
     action: string,
     integration: Integration | IntegrationOverview,
-    deployment?: IntegrationDeployment | DeploymentOverview
+    deployment?: IntegrationDeployment | DeploymentOverview,
+    templates?: Map<string, TemplateRef<any>>
   );
   abstract getStart(integration: Integration): Step;
   abstract getFinish(integration: Integration): Step;

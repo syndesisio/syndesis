@@ -1,5 +1,6 @@
 import { NgModule, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
@@ -7,6 +8,7 @@ import { IntegrationStatusComponent } from '@syndesis/ui/integration/list/status
 import { IntegrationStatusDetailComponent } from '@syndesis/ui/integration/list/status-detail.component';
 import { IntegrationActionMenuComponent } from '@syndesis/ui/integration/list/action-menu.component';
 import { IntegrationListComponent } from '@syndesis/ui/integration/list/list.component';
+import { TagCICDModalComponent } from './tag-cicd-modal.component';
 
 const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
 const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
@@ -14,21 +16,24 @@ const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
 @NgModule({
   imports: [
     CommonModule,
+    RouterModule,
     VendorModule,
     syndesisCommonModuleFwd,
-    integrationSupportModuleFwd
+    integrationSupportModuleFwd,
   ],
   declarations: [
     IntegrationActionMenuComponent,
     IntegrationStatusComponent,
     IntegrationStatusDetailComponent,
-    IntegrationListComponent
+    IntegrationListComponent,
+    TagCICDModalComponent,
   ],
   exports: [
     IntegrationActionMenuComponent,
     IntegrationListComponent,
     IntegrationStatusComponent,
-    IntegrationStatusDetailComponent
-  ]
+    IntegrationStatusDetailComponent,
+    TagCICDModalComponent,
+  ],
 })
 export class IntegrationListModule {}
