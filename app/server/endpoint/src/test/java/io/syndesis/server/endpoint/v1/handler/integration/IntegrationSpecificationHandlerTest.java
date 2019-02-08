@@ -235,6 +235,46 @@ public class IntegrationSpecificationHandlerTest {
     }
 
     @Test
+    public void shouldStoreUpdatedSpecificationForNonFlowChanges() {
+        final Step step = new Step.Builder()
+            .action(new ConnectorAction.Builder()
+                .descriptor(new ConnectorDescriptor.Builder().build())
+                .build())
+            .build();
+
+        final Integration integration = new Integration.Builder()
+            .id("integration-1")
+            .addFlow(new Flow.Builder()
+                .id("integration-1:flows:flow1")
+                .addStep(step, step)
+                .build())
+            .build();
+
+        final byte[] updatedSpecificationDocument = "updated specification".getBytes(StandardCharsets.UTF_8);
+        final OpenApi updatedSpecification = new OpenApi.Builder().document(updatedSpecificationDocument).build();
+        final APIIntegration updatedApiIntegration = new APIIntegration(integration, updatedSpecification);
+
+        when(dataManager.fetch(Connection.class, "api-provider")).thenReturn(new Connection.Builder().connectorId("api-provider-connector").build());
+        when(dataManager.fetch(Connector.class, "api-provider-connector")).thenReturn(new Connector.Builder().build());
+        when(dataManager.fetch(Integration.class, "integration-1")).thenReturn(integration);
+        when(encryptionSupport.encrypt(integration)).thenReturn(integration);
+        when(apiGenerator.generateIntegration(any(String.class), any(ProvidedApiTemplate.class))).thenReturn(updatedApiIntegration);
+        when(apiGenerator.updateFlowExcerpts(any(Integration.class))).then(ctx -> ctx.getArguments()[0]);
+
+        final APIFormData openApiUpdate = new APIFormData();
+        openApiUpdate.setSpecification(new ByteArrayInputStream(updatedSpecificationDocument));
+
+        handler.update("integration-1", openApiUpdate);
+
+        verify(dataManager).store(updatedSpecification, OpenApi.class);
+        verify(dataManager).update(ArgumentMatchers.<Integration>argThat(v -> {
+            assertThat(v).isEqualToIgnoringGivenFields(integration, "version", "updatedAt");
+            assertThat(v.getVersion()).isEqualTo(2);
+            return true;
+        }));
+    }
+
+    @Test
     public void shouldUpdateFlowNameAndDescription() {
         final Step step = new Step.Builder()
             .action(new ConnectorAction.Builder()
