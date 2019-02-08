@@ -58,6 +58,37 @@ $ syndesis minishift --full-reset
 
 ---
 
+=== Running without Kubernetes/OpenShift
+
+For some development tasks you can run Syndesis without running on a Kubernetes/OpenShift cluster. You won't be able to publish integrations, see activities or gather metrics, or any other functionality that requires a running cluster. This is best suited for quick turnaround development of backend APIs together with UI features. You'll need three components running the Syndesis backend, the PostgreSQL database it uses and the UI.
+
+Start by running a PostgreSQL database in a Docker container:
+
+```
+$ docker run -d --rm -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=syndesis postgres
+````
+
+NOTE: the `--rm` option will remove the container once done and all the stored data in the database with it, if you wish to keep the data omit that option
+
+Next run the Syndesis backend, this step requires that you have downloaded all the dependencies and built the backend:
+
+```
+$ syndesis build -f -c --backend # to download dependencies and build the backend
+$ (cd app && ./mvnw -f server/runtime spring-boot:run)
+```
+
+The backend is started once you see the a line containing this in the output:
+```
+Started Application in 28.9 seconds (JVM running for 29.615)
+```
+
+After that UI can be started by running:
+
+```
+$ (cd app/ui && yarn start:local)
+```
+
+You can now access a running instance at https://localhost:4200[https://localhost:4200].
 
 === Day-to-Day
 

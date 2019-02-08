@@ -156,6 +156,17 @@
               <goal>build-info</goal>
             </goals>
           </execution>
+          <execution>
+            <?m2e ignore ?>
+            <id>default-cli</id>
+            <goals>
+               <goal>run</goal>
+            </goals>
+            <phase />
+            <configuration>
+              <jvmArguments>-Dencrypt.key=supersecret -Dcontrollers.dblogging.enabled=false -Dopenshift.enabled=false -Dmetrics.kind=noop -Dfeatures.monitoring.enabled=false</jvmArguments>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 

@@ -8,13 +8,16 @@ if (!config.apiBase) {
 
 const proxyCfg = {
   '/api': {
-    'target': config.apiBase || defaultApiBase,
+    'target': config.backendBase || config.apiBase || defaultApiBase,
     'secure': false,
     'changeOrigin': true,
     'ws': true,
     'headers': {
-      'X-Forwarded-Origin': 'for=127.0.0.1;host=localhost:4200;proto=https'
-    }
+      'X-Forwarded-Origin': 'for=127.0.0.1;host=localhost:4200;proto=https',
+      'X-Forwarded-User': 'user',
+      'X-Forwarded-Access-Token': 'supersecret'
+    },
+    "logLevel": "debug"
   },
   '/auth': {
     'target': config.apiBase || defaultApiBase,
