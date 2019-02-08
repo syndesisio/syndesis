@@ -102,12 +102,12 @@ deploy_syndesis_operator() {
     local project="${1}"
     local operator_installed=$(oc get dc -o name | grep syndesis-operator)
     if [ -n "$operator_installed" ]; then
-        local result=$(delete_openshift_resource "install/operator/deploy/syndesis-operator.yml" "NAMESPACE=$project")
+        local result=$(delete_openshift_resource "install/operator/deploy/syndesis-operator.yml")
         check_error $result
         wait_for_deployments 0 syndesis-operator >/dev/null 2>&1
     fi
 
-    local result=$(create_openshift_resource "install/operator/deploy/syndesis-operator.yml" "NAMESPACE=$project")
+    local result=$(create_openshift_resource "install/operator/deploy/syndesis-operator.yml")
     check_error $result
     if [ $(hasflag --local) ]; then
         patch_for_using_template_from_configmap
@@ -451,11 +451,11 @@ compare_oc_version() {
 
 
 patch_for_using_template_from_configmap() {
-  # we need to include the `syndesis-template.yml` akka `syndesis-privileged.yml` in
+  # we need to include the `syndesis-template.yml` akka `syndesis.yml` in
   # the operator image, this adds a ConfigMap that we mount into the
   # operator container
   oc delete configmap syndesis-template >/dev/null 2>&1
-  oc create configmap syndesis-template --from-file=template=$(appdir "install")/syndesis-privileged.yml
+  oc create configmap syndesis-template --from-file=template=$(appdir "install")/syndesis.yml
   local patch=$(cat <<EOT
   {
     "spec": {

@@ -107,6 +107,42 @@ for more details). Let's create the service account with the correct redirect UR
 $ oc create -f support/serviceaccount-as-oauthclient-restricted.yml
 ```
 
+#### Using service account recognized by OpenShift
+
+In order to bypass the authorization screen you can use OAuth account that is recognized by OpenShift.
+
+First you need to create an `OAuthClient` resource, this can be done using a privileged OpenShift account, by default members of the `system:cluster-admins` are allowed this. You can get a list of the accounts that have this ability by running `oc policy who-can create OAuthClient`.
+
+```yaml
+apiVersion: oauth.openshift.io/v1
+kind: OAuthClient
+grantMethod: auto
+metadata:
+  name: ${CLIENT_ID}
+redirectURIs:
+- https://${ROUTE_HOSTNAME}/oauth/callback
+secret: ${SECRET}
+```
+
+Where `${CLIENT_ID}` is unique string used to distinguish the particular Syndesis installation, `${ROUTE_HOSTNAME}` is the fully qualified hostname configured for the `syndesis` Route and `${SECRET}` is a sequence of random characters used to authenticate Syndesis requests to OpenShift.
+
+Then change the `syndesis-oauthproxy` DeploymentConfig so that the `syndesis-oauthproxy` container arguments reference those that OAuth client ID and secret:
+
+For example:
+```yaml
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: syndesis-oauthproxy
+spec:
+  template:
+    spec:
+      containers:
+      - args:
+        - --client-id=${CLIENT_ID}
+        - --client-secret=${SECRET}
+```
+
 #### Create the template to use
 
 Create the template:
