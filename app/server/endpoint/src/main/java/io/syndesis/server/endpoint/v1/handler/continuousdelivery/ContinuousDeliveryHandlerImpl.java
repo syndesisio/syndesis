@@ -285,14 +285,9 @@ public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler 
 
         try {
             // actual import data created using the exportResources endpoint above
-            final InputStream importFile = formInput.getImportFile();
+            final InputStream importFile = formInput.getData();
             if (importFile == null) {
                 throw new ClientErrorException("Missing file 'data' in multipart request", Response.Status.BAD_REQUEST);
-            }
-            // connection properties configuration file
-            final InputStream paramFile = formInput.getParamsFile();
-            if (paramFile == null) {
-                throw new ClientErrorException("Missing file 'connectionparams' in multipart request", Response.Status.BAD_REQUEST);
             }
 
             // importedAt date to be updated in all imported integrations
@@ -308,16 +303,21 @@ public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler 
             // update importedAt field for imported integrations
             updateCDEnvironments(integrations, environment, b -> b.lastImportedAt(lastImportedAt));
 
-            // update connection fields using paramfile
-            Map<String, Map<String, String>> params = getParams(paramFile);
+            // optional connection properties configuration file
+            final InputStream properties = formInput.getProperties();
+            if (properties != null) {
 
-            final List<Connection> connections = getResourcesOfType(results, Connection.class);
-            connections.forEach(c -> {
-                final Map<String, String> values = params.get(c.getName());
-                if (values != null) {
-                    updateConnection(c, values, lastImportedAt);
-                }
-            });
+                // update connection fields using properties
+                Map<String, Map<String, String>> params = getParams(properties);
+
+                final List<Connection> connections = getResourcesOfType(results, Connection.class);
+                connections.forEach(c -> {
+                    final Map<String, String> values = params.get(c.getName());
+                    if (values != null) {
+                        updateConnection(c, values, lastImportedAt);
+                    }
+                });
+            }
 
             if (deploy) {
                 // deploy integrations
@@ -406,7 +406,7 @@ public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler 
         final Map<String, String> encryptedValues = encryptionComponent.encryptPropertyValues(values,
                 connector.getProperties());
 
-        // update connection parameters
+        // update connection properties
         final HashMap<String, String> map = new HashMap<>(c.getConfiguredProperties());
         map.putAll(encryptedValues);
 

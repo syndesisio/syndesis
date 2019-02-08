@@ -130,8 +130,8 @@ public class ContinuousDeliveryHandlerImplTest {
         ContinuousDeliveryHandler.ImportFormDataInput formInput = new ContinuousDeliveryHandler.ImportFormDataInput();
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         streamingOutput.write(bytes);
-        formInput.setImportFile(new ByteArrayInputStream(bytes.toByteArray()));
-        formInput.setParamsFile(new ByteArrayInputStream("test-connection.prop=value".getBytes("UTF-8")));
+        formInput.setData(new ByteArrayInputStream(bytes.toByteArray()));
+        formInput.setProperties(new ByteArrayInputStream("test-connection.prop=value".getBytes("UTF-8")));
         formInput.setEnvironment(ENVIRONMENT);
         formInput.setDeploy(Boolean.TRUE);
 

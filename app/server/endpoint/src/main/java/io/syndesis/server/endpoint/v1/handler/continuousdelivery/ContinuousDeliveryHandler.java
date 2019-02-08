@@ -67,7 +67,7 @@ public interface ContinuousDeliveryHandler {
      * List all tags associated with this integration.
      */
     @GET
-    @Path("releasetags/{id}")
+    @Path("integrations/{id}/tags")
     @Produces(MediaType.APPLICATION_JSON)
     Map<String, ContinuousDeliveryEnvironment> getReleaseTags(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId);
 
@@ -75,14 +75,14 @@ public interface ContinuousDeliveryHandler {
      * Delete an environment tag associated with this integration.
      */
     @DELETE
-    @Path("releasetags/{id}/{env}")
+    @Path("integrations/{id}/tags/{env}")
     void deleteReleaseTag(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId, @NotNull @PathParam("env") @ApiParam(required = true) String environment);
 
     /**
      * Tag an integration for release to target environments.
      */
     @POST
-    @Path("releasetags/{id}")
+    @Path("integrations/{id}/tags")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     Map<String, ContinuousDeliveryEnvironment> tagForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
@@ -110,7 +110,7 @@ public interface ContinuousDeliveryHandler {
      * Configure a connection.
      */
     @POST
-    @Path("connections/{id}")
+    @Path("connections/{id}/properties")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     ConnectionOverview configureConnection(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam String connectionId, @NotNull @ApiParam Map<String, String> properties) throws IOException;
@@ -145,10 +145,10 @@ public interface ContinuousDeliveryHandler {
      */
     class ImportFormDataInput {
         @FormParam("data")
-        private InputStream importFile;
+        private InputStream data;
 
-        @FormParam("connectionparams")
-        private InputStream paramsFile;
+        @FormParam("properties")
+        private InputStream properties;
 
         @FormParam("environment")
         private String environment;
@@ -156,20 +156,20 @@ public interface ContinuousDeliveryHandler {
         @FormParam("deploy")
         private Boolean deploy;
 
-        public InputStream getImportFile() {
-            return importFile;
+        public InputStream getData() {
+            return data;
         }
 
-        public void setImportFile(InputStream importFile) {
-            this.importFile = importFile;
+        public void setData(InputStream data) {
+            this.data = data;
         }
 
-        public InputStream getParamsFile() {
-            return paramsFile;
+        public InputStream getProperties() {
+            return properties;
         }
 
-        public void setParamsFile(InputStream paramsFile) {
-            this.paramsFile = paramsFile;
+        public void setProperties(InputStream properties) {
+            this.properties = properties;
         }
 
         public String getEnvironment() {
