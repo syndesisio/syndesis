@@ -30,6 +30,11 @@
     - port: 80
       protocol: TCP
       targetPort: 8080
+      name: http
+    - port: 8181
+      protocol: TCP
+      targetPort: 8181
+      name: prometheus
     selector:
       app: syndesis
       syndesis.io/app: syndesis
