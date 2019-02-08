@@ -11,7 +11,7 @@ deploy_camel_k_operator() {
     extra_opts="--namespace $project"
   fi
   local kamel=$(get_camel_k_bin "$version")
-  $kamel install --skip-cluster-setup $extra_opts
+  $kamel install --skip-cluster-setup --context java $extra_opts
 }
 
 # Install Camel-K CRD
