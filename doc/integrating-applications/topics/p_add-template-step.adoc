@@ -39,7 +39,7 @@ at the location where you want to add a template step.
 . In the popup, click *Add a Step*.
 . On the *Choose a Step* page, click *Template*. The
 *Upload Template* page opens.
-. Specify the template type, which is Freemarker, Mustache, or Velosity. 
+. Specify the template type, which is Freemarker, Mustache, or Velocity. 
 
 . To define the template, do one of the following:
 +
