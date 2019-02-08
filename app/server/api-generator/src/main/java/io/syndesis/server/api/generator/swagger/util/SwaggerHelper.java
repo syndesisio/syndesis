@@ -30,19 +30,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static java.util.Optional.ofNullable;
-
 import io.swagger.models.HttpMethod;
-import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.RefModel;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
+import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.parser.SwaggerParser;
 import io.swagger.parser.util.RemoteUrl;
+import io.swagger.util.PropertyDeserializer;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Resources;
@@ -55,9 +54,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.core.util.JsonParserDelegate;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
@@ -66,6 +74,8 @@ import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
+
+import static java.util.Optional.ofNullable;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -85,9 +95,84 @@ public final class SwaggerHelper {
 
     private static final Pattern JSONDB_DISALLOWED_KEY_CHARS = Pattern.compile("[^ -\"&-\\-0-Z\\^-\u007E\u0080-\u10FFFF]");
 
+    @JsonIgnoreProperties("responseSchema")
+    @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
     public abstract static class IgnoreResponseSchemaMixin {
-        @JsonIgnore
-        abstract Model getResponseSchema();
+        // mixin class
+    }
+
+    @JsonDeserialize(using = BaseIntegerProperty.Serializer.class)
+    public static class BaseIntegerProperty extends io.swagger.models.properties.BaseIntegerProperty {
+
+        protected List<Integer> enumValues;
+
+        public BaseIntegerProperty(final io.swagger.models.properties.BaseIntegerProperty property) {
+            access = property.getAccess();
+            allowEmptyValue = property.getAllowEmptyValue();
+            description = property.getDescription();
+            example = property.getExample();
+            exclusiveMaximum = property.getExclusiveMaximum();
+            exclusiveMinimum = property.getExclusiveMinimum();
+            format = property.getFormat();
+            maximum = property.getMaximum();
+            minimum = property.getMinimum();
+            multipleOf = property.getMultipleOf();
+            name = property.getName();
+            position = property.getPosition();
+            readOnly = property.getReadOnly();
+            required = property.getRequired();
+            title = property.getTitle();
+            type = property.getType();
+            vendorExtensions = property.getVendorExtensions();
+            xml = property.getXml();
+        }
+
+        public List<Integer> getEnum() {
+            return enumValues;
+        }
+
+        public void setEnum(final List<Integer> enumValues) {
+            this.enumValues = enumValues;
+        }
+
+        public static final class Serializer extends JsonDeserializer<Property> {
+
+            private final JsonDeserializer<Property> defaultDeserializer = new PropertyDeserializer();
+
+            @Override
+            public Property deserialize(final JsonParser parser, final DeserializationContext context) throws IOException, JsonProcessingException {
+                final CapturingCodec capturingCodec = new CapturingCodec(parser.getCodec());
+
+                final Property property = defaultDeserializer.deserialize(new JsonParserDelegate(parser) {
+                    @Override
+                    public ObjectCodec getCodec() {
+                        return capturingCodec;
+                    }
+                }, context);
+
+                if (!(property instanceof io.swagger.models.properties.BaseIntegerProperty)) {
+                    return property;
+                }
+
+                final JsonNode captured = (JsonNode) capturingCodec.captured();
+
+                final JsonNode enumNode = captured.get("enum");
+                if (enumNode == null || enumNode.isMissingNode() || enumNode.isNull() || !enumNode.isArray()) {
+                    return property;
+                }
+
+                final BaseIntegerProperty integerProperty = new BaseIntegerProperty((io.swagger.models.properties.BaseIntegerProperty) property);
+                integerProperty.enumValues = new ArrayList<>();
+                ((ArrayNode) enumNode).elements().forEachRemaining(value -> {
+                    if (value.isNumber()) {
+                        integerProperty.enumValues.add(value.intValue());
+                    }
+                });
+
+                return integerProperty;
+            }
+
+        }
     }
 
     static {
@@ -100,6 +185,12 @@ public final class SwaggerHelper {
 
             // make sure that we don't read or serialize superfluously added `responseSchema` property
             io.swagger.util.Json.mapper().addMixIn(Response.class, IgnoreResponseSchemaMixin.class);
+
+            // make sure that Jackson is using our own BaseIntegerProperty which supports `enum` property
+            io.swagger.util.Json.mapper().addMixIn(Property.class, BaseIntegerProperty.class);
+
+            // we don't need empty arrays
+            io.swagger.util.Json.mapper().configOverride(List.class).setInclude(JsonInclude.Value.construct(Include.NON_EMPTY, null));
         } catch (final ProcessingException | IOException ex) {
             throw new IllegalStateException("Unable to load the schema file embedded in the artifact", ex);
         }
@@ -335,6 +426,10 @@ public final class SwaggerHelper {
             return new SwaggerModelInfo.Builder().addError(new Violation.Builder().error("error").property("")
                 .message("Unable to load the OpenAPI schema file embedded in the artifact").build()).build();
         }
+    }
+
+    public static ObjectMapper mapper() {
+        return io.swagger.util.Json.mapper();
     }
 
 }

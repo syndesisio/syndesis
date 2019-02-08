@@ -38,6 +38,8 @@ import io.swagger.parser.SwaggerParser;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Json;
+import io.syndesis.server.api.generator.APIValidationContext;
+import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -208,8 +210,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
             } catch (final IOException e) {
                 throw new AssertionError("Unable to parse swagger specification in path as JSON: " + specification, e);
             }
-            final SwaggerParser parser = new SwaggerParser();
-            final Swagger swagger = parser.parse(specificationContent);
+            final Swagger swagger = SwaggerHelper.parse(specificationContent, APIValidationContext.NONE).getModel();
 
             swagger.getPaths().forEach((path, operations) -> {
                 operations.getOperationMap().forEach((method, operation) -> {
