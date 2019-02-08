@@ -223,7 +223,7 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
 
     static SwaggerModelInfo validateUniqueOperationIds(final SwaggerModelInfo info) {
         final Swagger swagger = info.getModel();
-        if (swagger == null) {
+        if (swagger == null || swagger.getPaths() == null) {
             return info;
         }
 
