@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 export interface IIntegrationDetailProps {
+  integrationId: string;
   i18nBtnEdit: string;
   i18nBtnPublish: string;
   i18nDraft: string;

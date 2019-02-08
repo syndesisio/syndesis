@@ -28,6 +28,7 @@ stories
     integrationDetailStory,
     withNotes(storyNotes)(() => (
       <IntegrationDetail
+        integrationId={'integrationId'}
         i18nBtnEdit={textBtnEdit}
         i18nBtnPublish={textBtnPublish}
         i18nDraft={textDraft}
