@@ -66,7 +66,7 @@ Start by running a PostgreSQL database in a Docker container:
 
 ```
 $ docker run -d --rm -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=syndesis postgres
-````
+```
 
 NOTE: the `--rm` option will remove the container once done and all the stored data in the database with it, if you wish to keep the data omit that option
 
