@@ -1,0 +1,47 @@
+// This module is included in the following assemblies:
+// as_connecting-to-google-sheets.adoc
+
+[id='add-google-sheets-connection-get-properties_{context}']
+= Trigger an integration when polling returns spreadsheet properties
+
+To trigger execution of an integration upon obtaining properties from
+a Google Sheets spreadsheet, add a Google Sheets connection to an integration as
+its start connection. When the integration is running, the Google Sheets
+connection polls the spreadsheet at the interval that you specified, 
+obtains the spreadsheet properties, and passes the result to the 
+next step in the integration. 
+
+Properties include the spreadsheet's title, locale, and time zone. 
+Between polls, if there are no changes to the sheet properties, then 
+the next poll returns the same values as the previous poll. 
+
+.Prerequisite
+You created a Google Sheets connection that is authorized to access 
+the spreadsheet that you want to obtain properties from. 
+
+.Procedure
+
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a Start Connection* page, click the Google Sheets
+connection that you want to use to start the integration.
+. On the *Choose an Action* page, click the *Get spreadsheet properties* action.
+. To configure the *Get spreadsheet properties* action:
+.. In the *SpreadsheetId* field, enter the ID of a Google spreadsheet that is
+accessible from the Google account that this Google Sheets connection
+is authorized to access.
++
+To obtain a spreadsheet ID, display the spreadsheet in a browser. 
+The ID is the part of the URL between `d/` and `/edit`. 
+
+.. In the *Include grid data* field, accept *No*, which is the defautl, or 
+select *Yes*. A setting of *No* returns only properties. A setting of
+*Yes* returns properties as well as the data that is in the first sheet 
+of the spreadsheet. 
+
+.. In the *Delay* field, accept the default of 30 seconds or
+specify how often you want the connection to obtain properties.
+
+. Click *Done* to add this Google Sheets connection as the integration's
+start connection. In the integration visualization panel, the connection 
+appears as the first step in the integration.

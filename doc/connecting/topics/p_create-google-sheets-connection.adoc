@@ -6,7 +6,7 @@
 
 When you create a Google Sheets connection, you authorize the connection to access
 the Google Sheets spreadsheets that are associated with one
-particular Google account. After you create a Google Sheets connection, you can
+particular Google account, which you choose. After you create a Google Sheets connection, you can
 add it to multiple integrations.
 
 .Prerequisite
@@ -47,7 +47,7 @@ For example, enter `*Google Sheets Work Connection*`.
 is helpful to know about this connection. For example,
 enter `*Sample Google Sheets connection
 that uses my Google work account.*`
-. In the upper right, click *Create* to see that the connection you
+. In the upper right, click *Create* to see that the connection that you
 created is now available. If you entered the example name, you would
 see that *Google Sheets Work Connection* appears as a connection that you can
 choose to add to an integration.

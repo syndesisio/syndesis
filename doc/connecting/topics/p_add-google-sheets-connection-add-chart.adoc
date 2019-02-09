@@ -1,8 +1,8 @@
 // This module is included in the following assemblies:
 // as_connecting-to-google-sheets.adoc
 
-[id='add-google-sheets-connection-add-charts_{context}']
-= Add charts to a spreadsheet on your Google Sheets account
+[id='add-google-sheets-connection-add-chart_{context}']
+= Add a chart to a sheet 
 
 In an integration, you can add charts to a Google Sheets spreadsheet
 in the middle of the integration or to finish the integration.
@@ -69,12 +69,24 @@ placed at this very specific position in the spreadsheet. In case left empty the
 ... In the *title* field, specify the chart title to use when add ing the chart. Do not set this field when providing the subtitle in the connection properties.
 ... In the *subtitle* field, set the chart subtitle. Do not set this field when providing the subtitle in the connection properties.
 ... In the *sheetId* field, specify the target sheet identifier where the chart will be added to in the spreadsheet on your Google Sheets account.
+
+This is a sheet index from 0 to n. The index of the sheet. If I rearrange the sheets then the indexes change. Sheet Index would be a better name. for example, my chart goes to the sheet with index 2.
+The indexes are in whatever order the connections finds it.
+Specify an integer. 
+
+
+
 ... In the *sourceSheetId* field, specify the source sheet identifier where the chart sources are located within the spreadsheet on your Google Sheets account.
 .. To configure a basic chart type
 ... In the *type* field, set the basic chart type (one of `BAR`, `LINE`, `AREA`, `COLUMN`). The default is `COLUMN`.
 ... In the *axisTitleBottom* field, set the title for the bottom axis.
 ... In the *axisTitleLeft* field, set the title for the left axis.
 ... In the *domainRange* field, specify the domain range of the chart. This field uses the Google Sheets A1 notation.
+
+
+This is the A1 notation. You can say that my chart sources are in this sheet starting from B1 to D10. You specify the source for the chart. The chart api takes the data in this data range and inserts this data into the chart. The domain range, if you place a chart, say you have some categories, like products and I want to have a column where my products are, this is my domain range. While the sales numbers for each product are in the data range. I say that
+
+
 ... In the *dataRange* field, specify  the data range defining a single series of data in the chart. This field uses the Google Sheets A1 notation.
 .. To configure a pie chart type
 ... In the *legendPosition* field, set position of the generated chart legend (one of `BOTTOM_LEGEND`, `LEFT_LEGEND`, `RIGHT_LEGEND`, `TOP_LEGEND`, `NO_LEGEND`). The default is `LEFT_LEGEND`.

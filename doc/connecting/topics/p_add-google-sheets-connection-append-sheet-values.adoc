@@ -2,7 +2,7 @@
 // as_connecting-to-google-sheets.adoc
 
 [id='add-google-sheets-connection-append-sheet-values_{context}']
-= Append data to a Google Sheets spreadsheet
+= Append data to a sheet
 
 In an integration, you can append data in a Google Sheets spreadsheet
 in the middle of the integration or to finish the integration.
@@ -60,3 +60,6 @@ In addition to that the values to append are represented with respective fields 
 +
 If you change the *Range* or *Major Dimension* field settings in the *Append values to a sheet* action you will be presented with different mapping options here.
 . In the upper right, click *Done* to add the data mapper step.
+
+.Result
+Makes use of sheets capability to always append to the bottom. The rule is if there is going to be an overwrite then do not overwirte but append instead. Safely from the sheets API.

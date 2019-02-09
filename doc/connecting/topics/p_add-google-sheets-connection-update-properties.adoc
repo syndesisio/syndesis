@@ -1,8 +1,8 @@
 // This module is included in the following assemblies:
 // as_connecting-to-google-sheets.adoc
 
-[id='add-google-sheets-connection-update-spreadsheet_{context}']
-= Update properties of a spreadsheet on your Google Sheets account
+[id='add-google-sheets-connection-update-properties_{context}']
+= Update spreadsheet properties
 
 In an integration, you can update a Google Sheets spreadsheet properties
 in the middle of the integration or to finish the integration.

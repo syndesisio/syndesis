@@ -1,8 +1,8 @@
 // This module is included in the following assemblies:
 // as_connecting-to-google-sheets.adoc
 
-[id='add-google-sheets-connection-add-pivot-tables_{context}']
-= Add pivot tables to a spreadsheet on your Google Sheets account
+[id='add-google-sheets-connection-add-pivot-table_{context}']
+= Add a pivot table to a sheet
 
 In an integration, you can add pivot tables to a Google Sheets spreadsheet
 in the middle of the integration or to finish the integration.
@@ -89,5 +89,3 @@ right below the source table in the very same sheet in the spreadsheet on your G
 In this release, the *Add pivot table* action is limited to defining a single value group, row pivot group and column pivot group. Support for multiple groups in a single action is about to
 be added within upcoming releases. Though you can use several *Add pivot table* actions in an integration to create multiple groups on the same source.
 ====
-
-
