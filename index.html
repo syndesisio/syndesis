@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-8706-gff6aa7af7,</span>
+<span id="revnumber">version 1.1.3-8708-g4438d79df,</span>
 <span id="revdate">2019-02-09</span>
 </div>
 <div id="toc" class="toc2">
@@ -618,17 +618,25 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_requirements">3.4.1. Requirements</a></li>
 <li><a href="#_first_time_setup">3.4.2. First-Time Setup</a></li>
 <li><a href="#_running_without_kubernetes_openshift">3.4.3. Running without Kubernetes/OpenShift</a></li>
-<li><a href="#_running_tests">3.4.4. Running Tests</a></li>
-<li><a href="#_running_linter">3.4.5. Running Linter</a></li>
-<li><a href="#_code_documentation">3.4.6. Code Documentation</a></li>
-<li><a href="#_technology_stack">3.4.7. Technology Stack</a></li>
+<li><a href="#_day_to_day">3.4.4. Day-to-Day</a></li>
 </ul>
 </li>
-<li><a href="#dev-troubleshooting">3.5. Troubleshooting</a>
+<li><a href="#dev-ui">3.5. UI</a>
 <ul class="sectlevel3">
-<li><a href="#_ui_dependency_issues">3.5.1. UI Dependency Issues</a></li>
-<li><a href="#_vm_trouble">3.5.2. VM Trouble</a></li>
-<li><a href="#_still_having_trouble">3.5.3. Still Having Trouble?</a></li>
+<li><a href="#_install_dependencies">3.5.1. Install Dependencies</a></li>
+<li><a href="#_start_up_the_app">3.5.2. Start up the App</a></li>
+<li><a href="#_open_in_your_browser">3.5.3. Open in Your Browser</a></li>
+<li><a href="#_running_tests">3.5.4. Running Tests</a></li>
+<li><a href="#_running_linter">3.5.5. Running Linter</a></li>
+<li><a href="#_code_documentation">3.5.6. Code Documentation</a></li>
+<li><a href="#_technology_stack">3.5.7. Technology Stack</a></li>
+</ul>
+</li>
+<li><a href="#dev-troubleshooting">3.6. Troubleshooting</a>
+<ul class="sectlevel3">
+<li><a href="#_ui_dependency_issues">3.6.1. UI Dependency Issues</a></li>
+<li><a href="#_vm_trouble">3.6.2. VM Trouble</a></li>
+<li><a href="#_still_having_trouble">3.6.3. Still Having Trouble?</a></li>
 </ul>
 </li>
 </ul>
@@ -2984,173 +2992,206 @@ $ syndesis minishift --full-reset</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>$ docker run -d --rm -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=syndesis postgres
-````
-
-NOTE: the `--rm` option will remove the container once done and all the stored data in the database with it, if you wish to keep the data omit that option
-
-Next run the Syndesis backend, this step requires that you have downloaded all the dependencies and built the backend:</code></pre>
+<pre class="CodeRay highlight"><code>$ docker run -d --rm -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=syndesis postgres</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+the <code>--rm</code> option will remove the container once done and all the stored data in the database with it, if you wish to keep the data omit that option
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>$ syndesis build -f -c --backend # to download dependencies and build the backend
-$ (cd app &amp;&amp; ./mvnw -f server/runtime spring-boot:run)</p>
+<p>Next run the Syndesis backend, this step requires that you have downloaded all the dependencies and built the backend:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>The backend is started once you see the a line containing this in the output:</code></pre>
+<pre class="CodeRay highlight"><code>$ syndesis build -f -c --backend # to download dependencies and build the backend
+$ (cd app &amp;&amp; ./mvnw -f server/runtime spring-boot:run)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Started Application in 28.9 seconds (JVM running for 29.615)</p>
+<p>The backend is started once you see the a line containing this in the output:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>After that UI can be started by running:</code></pre>
+<pre class="CodeRay highlight"><code>Started Application in 28.9 seconds (JVM running for 29.615)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>$ (cd app/ui &amp;&amp; yarn start:local)</p>
+<p>After that UI can be started by running:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>You can now access a running instance at https://localhost:4200[https://localhost:4200].
-
-=== Day-to-Day
-
-This uses an existing Minishift instance.
-
-*NOTE:* If you already followed the First-Time Setup above, you do not need to follow this. The Minishift VM will already have been started. Simply skip to the
-
-*Get the Latest Changes*</code></pre>
+<pre class="CodeRay highlight"><code>$ (cd app/ui &amp;&amp; yarn start:local)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>$ git checkout master
+<p>You can now access a running instance at <a href="https://localhost:4200">https://localhost:4200</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_day_to_day">3.4.4. Day-to-Day</h4>
+<div class="paragraph">
+<p>This uses an existing Minishift instance.</p>
+</div>
+<div class="paragraph">
+<p><strong>NOTE:</strong> If you already followed the First-Time Setup above, you do not need to follow this. The Minishift VM will already have been started. Simply skip to the</p>
+</div>
+<div class="paragraph">
+<p><strong>Get the Latest Changes</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$ git checkout master
 $ git pull upstream master
 $ git checkout &lt;branch&gt;
-$ git rebase master</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>*Start of the Day*
-Make sure Minishift is running.</code></pre>
+$ git rebase master</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>$ minishift status</p>
+<p><strong>Start of the Day</strong>
+Make sure Minishift is running.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>Which should look like:</code></pre>
+<pre class="CodeRay highlight"><code>$ minishift status</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Minishift:  Running
+<p>Which should look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Minishift:  Running
 Profile:    minishift
 OpenShift:  Running (openshift v3.6.0+c4dd4cf)
-DiskUsage:  11% of 17.9G</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>If it isn't, start it with:</code></pre>
+DiskUsage:  11% of 17.9G</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>$ minishift start</p>
+<p>If it isn&#8217;t, start it with:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>*Login into and Set up OpenShift*
-
-This step is required regardless of whether it's a first-time install or not. It logs you in and points OpenShift to use Minishift resources.</code></pre>
+<pre class="CodeRay highlight"><code>$ minishift start</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>$ oc login -u developer
+<p><strong>Login into and Set up OpenShift</strong></p>
+</div>
+<div class="paragraph">
+<p>This step is required regardless of whether it&#8217;s a first-time install or not. It logs you in and points OpenShift to use Minishift resources.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$ oc login -u developer
 $ eval $(minishift oc-env)
-$ eval $(minishift docker-env)</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>The eval's set a number of environment variables, like change the `$PATH` and `$DOCKER_HOST`, so each time you do a Syndesis build it's good to make sure those are invoked.
-
-*End of the Day*</code></pre>
+$ eval $(minishift docker-env)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>$ minishift stop</p>
+<p>The eval&#8217;s set a number of environment variables, like change the <code>$PATH</code> and <code>$DOCKER_HOST</code>, so each time you do a Syndesis build it&#8217;s good to make sure those are invoked.</p>
+</div>
+<div class="paragraph">
+<p><strong>End of the Day</strong></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>*Start the UI App &amp; Open in the Browser*</code></pre>
+<pre class="CodeRay highlight"><code>$ minishift stop</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>$ yarn start:minishift
-$ open <a href="https://$(oc" class="bare">https://$(oc</a> get routes syndesis --template "{{.spec.host}}")</p>
+<p><strong>Start the UI App &amp; Open in the Browser</strong></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>*Resetting the Database*
-
-This step is optional. This command expects Minishift to be running already. It's the `-i docker` that determines the workflow, for Roland it seems to work without that though.
-
-It would clean the database if we increase the schema version, if we don't it remains the same.</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>$ syndesis build -m rest -f -i docker -k</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>Alternatively, you can use the REST API Endpoint: /api/v1/test-support/reset-db
-
-*Connecting to the Database*
-
-You can also port forward the DB's port using `oc port-forward` and then connect to the database using a tool like https://www.pgadmin.org/download/[pgadmin] to view the data.  First get the DB pod's name either from `oc get pods` or from the OpenShift console.  Then use the following command:</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>$ oc port-forward &lt;db pod name&gt; 5432:5432</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>Now start pgadmin and add a new DB server, use `localhost` for the `host` setting.  For the username and password look on the DB pod's `Environment` page in the OpenShift console.
-
-In pgadmin you can see the table by navigating into the tree under `Server Groups &gt; Servers &gt; syndesis &gt; Databases &gt; syndesis &gt; Schemas &gt; public &gt; Tables &gt; jsondb`.  Right click, and then go to `View Data &gt; View All Rows`.
-[[dev-ui]]
-## UI
-
-After you've set up your initial Local Development environment, you're ready to contribute to the UI.
-
-### Install Dependencies
-From the project root directory:</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>$ cd app/ui
-$ yarn install</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>### Start up the App
-*Using Minishift resources (recommended):*</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>$ yarn start:minishift</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>The `yarn start:minishift` command works when it can properly detect your local development machine's IP address. A proxy server inside the minishift deployment will use that IP address to connect back to the development server being run by the yarn command.  If detection of the IP is failing for you, then set the `SYNDESIS_DEV_LOCAL_IP` env variable to your local machine's IP address before running the yarn `yarn start:minishift` command.
-
-### Open in Your Browser
-Open the Syndesis UI in your browser from the command line by running:
-
-```bash
-# on macOS
+<pre class="CodeRay highlight"><code>$ yarn start:minishift
 $ open https://$(oc get routes syndesis --template "{{.spec.host}}")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Resetting the Database</strong></p>
+</div>
+<div class="paragraph">
+<p>This step is optional. This command expects Minishift to be running already. It&#8217;s the <code>-i docker</code> that determines the workflow, for Roland it seems to work without that though.</p>
+</div>
+<div class="paragraph">
+<p>It would clean the database if we increase the schema version, if we don&#8217;t it remains the same.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$ syndesis build -m rest -f -i docker -k</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can use the REST API Endpoint: /api/v1/test-support/reset-db</p>
+</div>
+<div class="paragraph">
+<p><strong>Connecting to the Database</strong></p>
+</div>
+<div class="paragraph">
+<p>You can also port forward the DB&#8217;s port using <code>oc port-forward</code> and then connect to the database using a tool like <a href="https://www.pgadmin.org/download/">pgadmin</a> to view the data.  First get the DB pod&#8217;s name either from <code>oc get pods</code> or from the OpenShift console.  Then use the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$ oc port-forward &lt;db pod name&gt; 5432:5432</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now start pgadmin and add a new DB server, use <code>localhost</code> for the <code>host</code> setting.  For the username and password look on the DB pod&#8217;s <code>Environment</code> page in the OpenShift console.</p>
+</div>
+<div class="paragraph">
+<p>In pgadmin you can see the table by navigating into the tree under <code>Server Groups &gt; Servers &gt; syndesis &gt; Databases &gt; syndesis &gt; Schemas &gt; public &gt; Tables &gt; jsondb</code>.  Right click, and then go to <code>View Data &gt; View All Rows</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="dev-ui">3.5. UI</h3>
+<div class="paragraph">
+<p>After you&#8217;ve set up your initial Local Development environment, you&#8217;re ready to contribute to the UI.</p>
+</div>
+<div class="sect3">
+<h4 id="_install_dependencies">3.5.1. Install Dependencies</h4>
+<div class="paragraph">
+<p>From the project root directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$ cd app/ui
+$ yarn install</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_start_up_the_app">3.5.2. Start up the App</h4>
+<div class="paragraph">
+<p><strong>Using Minishift resources (recommended):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$ yarn start:minishift</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>yarn start:minishift</code> command works when it can properly detect your local development machine&#8217;s IP address. A proxy server inside the minishift deployment will use that IP address to connect back to the development server being run by the yarn command.  If detection of the IP is failing for you, then set the <code>SYNDESIS_DEV_LOCAL_IP</code> env variable to your local machine&#8217;s IP address before running the yarn <code>yarn start:minishift</code> command.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_open_in_your_browser">3.5.3. Open in Your Browser</h4>
+<div class="paragraph">
+<p>Open the Syndesis UI in your browser from the command line by running:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># on macOS
+$ open https://$(oc get routes syndesis --template &quot;{{.spec.host}}&quot;)</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -3182,7 +3223,7 @@ In the event that you have issues with Minishift. Don&#8217;t be surprised if mo
 </div>
 </div>
 <div class="sect3">
-<h4 id="_running_tests">3.4.4. Running Tests</h4>
+<h4 id="_running_tests">3.5.4. Running Tests</h4>
 <div class="paragraph">
 <p>To run tests or lint there are two more commands you can run in separate terminals.</p>
 </div>
@@ -3193,7 +3234,7 @@ In the event that you have issues with Minishift. Don&#8217;t be surprised if mo
 </div>
 </div>
 <div class="sect3">
-<h4 id="_running_linter">3.4.5. Running Linter</h4>
+<h4 id="_running_linter">3.5.5. Running Linter</h4>
 <div class="paragraph">
 <p>If you don&#8217;t, the CI will, and your PR build will likely fail.</p>
 </div>
@@ -3207,7 +3248,7 @@ In the event that you have issues with Minishift. Don&#8217;t be surprised if mo
 </div>
 </div>
 <div class="sect3">
-<h4 id="_code_documentation">3.4.6. Code Documentation</h4>
+<h4 id="_code_documentation">3.5.6. Code Documentation</h4>
 <div class="paragraph">
 <p>We use <a href="https://compodoc.github.io/website/">Compodoc</a> for documentation, or <a href="https://compodoc.github.io/website/guides/comments.html">here</a> to see how to format comments. Files get generated automatically in the <code>/documentation</code> directory. Read the documentation [here](<a href="https://compodoc.github.io/website/guides/getting-started.html" class="bare">https://compodoc.github.io/website/guides/getting-started.html</a>) to see how to properly document features. You can automatically generate and run docs using Yarn:</p>
 </div>
@@ -3221,7 +3262,7 @@ In the event that you have issues with Minishift. Don&#8217;t be surprised if mo
 </div>
 </div>
 <div class="sect3">
-<h4 id="_technology_stack">3.4.7. Technology Stack</h4>
+<h4 id="_technology_stack">3.5.7. Technology Stack</h4>
 <div class="paragraph">
 <p>Included in this stack are the following technologies:</p>
 </div>
@@ -3250,12 +3291,12 @@ In the event that you have issues with Minishift. Don&#8217;t be surprised if mo
 </div>
 </div>
 <div class="sect2">
-<h3 id="dev-troubleshooting">3.5. Troubleshooting</h3>
+<h3 id="dev-troubleshooting">3.6. Troubleshooting</h3>
 <div class="paragraph">
 <p>When things go wrong, you want to try to identify the area that is causing problems (UI, REST API, etc). If it&#8217;s the UI, look for errors in the browser console or the terminal to see if it&#8217;s a dependency issue.</p>
 </div>
 <div class="sect3">
-<h4 id="_ui_dependency_issues">3.5.1. UI Dependency Issues</h4>
+<h4 id="_ui_dependency_issues">3.6.1. UI Dependency Issues</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>$ rm -rf node_modules
@@ -3264,7 +3305,7 @@ $ yarn install</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_vm_trouble">3.5.2. VM Trouble</h4>
+<h4 id="_vm_trouble">3.6.2. VM Trouble</h4>
 <div class="paragraph">
 <p><strong>Not getting latest API changes</strong></p>
 </div>
@@ -3316,7 +3357,7 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 </div>
 <div class="sect3">
-<h4 id="_still_having_trouble">3.5.3. Still Having Trouble?</h4>
+<h4 id="_still_having_trouble">3.6.3. Still Having Trouble?</h4>
 <div class="paragraph">
 <p>Ask on IRC #syndesis</p>
 </div>
@@ -3327,8 +3368,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-8706-gff6aa7af7<br>
-Last updated 2019-02-09 12:02:22 UTC
+Version 1.1.3-8708-g4438d79df<br>
+Last updated 2019-02-09 12:26:19 UTC
 </div>
 </div>
 </body>
