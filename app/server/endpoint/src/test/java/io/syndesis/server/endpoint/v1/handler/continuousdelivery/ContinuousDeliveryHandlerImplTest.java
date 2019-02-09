@@ -48,6 +48,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.notNull;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -70,20 +71,22 @@ public class ContinuousDeliveryHandlerImplTest {
 
     // initialized after mock objects in setup
     private ContinuousDeliveryHandler handler;
+    private Integration integration;
 
     @Before
     public void setUp() throws Exception {
         // prime mock objects
         final HashMap<String, ContinuousDeliveryEnvironment> deliveryState = new HashMap<>();
         deliveryState.put(ENVIRONMENT, ContinuousDeliveryEnvironment.Builder.createFrom(ENVIRONMENT, new Date()));
-        final Integration integration = new Integration.Builder()
+        integration = new Integration.Builder()
                 .id(INTEGRATION_ID)
                 .continuousDeliveryState(deliveryState)
                 .build();
 
-        when(dataManager.fetch(Integration.class, INTEGRATION_ID)).thenReturn(integration);
-        when(dataManager.fetchAll(eq(Integration.class))).thenReturn(ListResult.of(integration));
-        when(dataManager.fetchAll(eq(Integration.class), any())).thenReturn(ListResult.of(integration));
+        doAnswer(invocation -> integration).when(dataManager).fetch(Integration.class, INTEGRATION_ID);
+        doAnswer(invocation -> ListResult.of(integration)).when(dataManager).fetchAll(eq(Integration.class));
+        doAnswer(invocation -> ListResult.of(integration)).when(dataManager).fetchAll(eq(Integration.class), any());
+        doAnswer(invocation -> integration = invocation.getArgument(0)).when(dataManager).update(any(Integration.class));
 
         when(supportHandler.export(any())).thenReturn(out -> out.write('b'));
         final HashMap<String, List<WithResourceId>> importResult = new HashMap<>();
@@ -95,14 +98,54 @@ public class ContinuousDeliveryHandlerImplTest {
     }
 
     @Test
+    public void testGetReleaseEnvironments() throws Exception {
+        final List<String> environments = handler.getReleaseEnvironments();
+
+        assertThat(environments, is(notNullValue()));
+        assertThat(environments, hasItem(ENVIRONMENT));
+
+        verify(dataManager).fetchAll(eq(Integration.class));
+    }
+
+    @Test
     public void tagForRelease() throws Exception {
+        final Date now = new Date();
+        // delay to avoid false positives in Date::after
+        Thread.sleep(1000);
+
         final Map<String, ContinuousDeliveryEnvironment> continuousDeliveryEnvironment = handler.tagForRelease(INTEGRATION_ID,
                 Collections.singletonList(ENVIRONMENT));
 
         assertThat(continuousDeliveryEnvironment, is(notNullValue()));
         assertThat(continuousDeliveryEnvironment.keySet(), hasItem(ENVIRONMENT));
+        assertThat(continuousDeliveryEnvironment.get(ENVIRONMENT).getLastTaggedAt().after(now), is(true));
 
         verify(dataManager).update(notNull());
+        verify(dataManager).fetch(Integration.class, INTEGRATION_ID);
+    }
+
+    @Test
+    public void testGetReleaseTags() {
+        final Map<String, ContinuousDeliveryEnvironment> releaseTags = handler.getReleaseTags(INTEGRATION_ID);
+
+        assertThat(releaseTags, notNullValue());
+        assertThat(releaseTags.keySet(), hasItem(ENVIRONMENT));
+
+        verify(dataManager).fetch(Integration.class, INTEGRATION_ID);
+    }
+
+    @Test
+    public void testDeleteReleaseTag() {
+        handler.deleteReleaseTag(INTEGRATION_ID, ENVIRONMENT);
+
+        final Map<String, ContinuousDeliveryEnvironment> releaseTags = handler.getReleaseTags(INTEGRATION_ID);
+
+        assertThat(releaseTags, notNullValue());
+        // only integration, therefore environment is deleted and map will be empty
+        assertThat(releaseTags.isEmpty(), is(true));
+
+        verify(dataManager, times(2)).fetch(Integration.class, INTEGRATION_ID);
+        verify(dataManager).update(any(Integration.class));
     }
 
     @Test
