@@ -35,10 +35,12 @@ import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.MavenProperties;
+import io.syndesis.common.util.Resources;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.ProjectGenerator;
 import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
 import org.apache.camel.CamelContext;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.test.junit4.CamelTestSupport;
@@ -71,7 +73,7 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
 
     @Override
     protected RoutesBuilder createRouteBuilder() throws Exception {
-        return new IntegrationRouteBuilder("", Collections.emptyList()) {
+        return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
             @Override
             protected Integration loadIntegration() throws IOException {
                 return newIntegration();

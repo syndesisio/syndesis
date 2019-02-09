@@ -15,8 +15,7 @@
  */
 package io.syndesis.integration.runtime;
 
-import java.util.Collections;
-
+import io.syndesis.common.util.Resources;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.PipelineDefinition;
 import org.apache.camel.model.ProcessDefinition;
@@ -35,7 +34,7 @@ public class IntegrationRouteBuilderTest extends IntegrationTestSupport {
     public void testBuilder() throws Exception {
         String configurationLocation = "classpath:syndesis/integration/integration.json";
 
-        IntegrationRouteBuilder routeBuilder = new IntegrationRouteBuilder(configurationLocation, Collections.emptyList());
+        IntegrationRouteBuilder routeBuilder = new IntegrationRouteBuilder(configurationLocation, Resources.loadServices(IntegrationStepHandler.class));
 
         // initialize routes
         routeBuilder.configure();

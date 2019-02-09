@@ -20,8 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Collections;
 import javax.xml.bind.JAXBException;
+
+import io.syndesis.common.util.Resources;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ModelHelper;
 import org.apache.camel.model.ProcessorDefinition;
@@ -74,7 +76,7 @@ public class IntegrationTestSupport implements StringConstants {
     }
 
     protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration) {
-        return new IntegrationRouteBuilder("", Collections.emptyList()) {
+        return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
             @Override
             protected Integration loadIntegration() throws IOException {
                 return integration;

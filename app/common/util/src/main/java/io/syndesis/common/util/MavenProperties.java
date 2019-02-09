@@ -18,11 +18,7 @@ package io.syndesis.common.util;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-@ConfigurationProperties("maven")
 public class MavenProperties {
-
     private final Map<String, String> repositories = new ConcurrentSkipListMap<>();
 
     public MavenProperties() {
@@ -48,3 +44,4 @@ public class MavenProperties {
         return this;
     }
 }
+
