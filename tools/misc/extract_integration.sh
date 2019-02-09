@@ -27,8 +27,6 @@ if [ ! -d $dest ]; then
   exit 1
 fi
 
-pod=$(oc get pods -o name | grep -v -- "-build" | grep $pod | sed -e "s/^pods\///")
-
 oc cp ${pod}:/tmp/src $dest
 
 secret=$(oc get pod $pod -o json | jq -r ".spec.volumes[]|select(.name==\"secret-volume\")|.secret.secretName")
