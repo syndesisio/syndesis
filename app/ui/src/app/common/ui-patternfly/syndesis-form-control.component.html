@@ -226,8 +226,7 @@
               [required]="model.required"
               (blur)="onBlur($event)"
               (change)="onValueChange($event)"
-              (focus)="onFocus($event)"
-              [multiple]="model.multiple">
+              (focus)="onFocus($event)">
 
         <option *ngFor="let option of model.options$ | async"
                 [attr.name]="model.name"
@@ -237,7 +236,32 @@
       </select>
 
 
-      <textarea *ngSwitchCase="8"
+      <!-- SELECT MULTIPLE -->
+      <!-- Duplicated select with hardcoded multiple to workaround the issue with improper handling of [multiple]="model.multiple" -->
+      <select *ngSwitchCase="8"
+              class="form-control"
+              [attr.tabindex]="model.tabIndex"
+              [dynamicId]="bindId && model.id"
+              [formControlName]="model.id"
+              [name]="model.name"
+              [tooltip]="model.controlTooltip"
+              [ngClass]="elementControlClass"
+              [required]="model.required"
+              (blur)="onBlur($event)"
+              (change)="onValueChange($event)"
+              (focus)="onFocus($event)"
+              multiple>
+
+        <option *ngFor="let option of model.options$ | async"
+                [attr.name]="model.name"
+                [disabled]="option.disabled"
+                [ngValue]="option.value">{{ option.label }}</option>
+
+      </select>
+
+
+
+      <textarea *ngSwitchCase="9"
                 class="form-control"
                 [attr.tabindex]="model.tabIndex"
                 [dynamicId]="bindId && model.id"
@@ -261,7 +285,7 @@
       <span *ngIf="showHint" class="help-block" [innerHTML]="model.hint" [ngClass]="getClass('element', 'hint')"></span>
 
       <!-- TIMEPICKER -->
-      <!-- <timepicker *ngSwitchCase="9"
+      <!-- <timepicker *ngSwitchCase="10"
         [arrowkeys]="getAdditional('arrowkeys', true)"
         [dynamicId]="bindId && model.id"
         [formControlName]="model.id"

@@ -20,6 +20,7 @@ import {
   DynamicTemplateDirective,
   DynamicFormLayout,
   DynamicFormLayoutService,
+  DynamicSelectModel,
   DYNAMIC_FORM_CONTROL_TYPE_ARRAY,
   DYNAMIC_FORM_CONTROL_TYPE_CHECKBOX,
   DYNAMIC_FORM_CONTROL_TYPE_CHECKBOX_GROUP,
@@ -40,8 +41,9 @@ export const enum SyndesisFormControlType {
   Input = 5, //'INPUT',
   RadioGroup = 6, //'RADIO_GROUP',
   Select = 7, //'SELECT',
-  TextArea = 8, //'TEXTAREA',
-  TimePicker = 9 //"TIMEPICKER"
+  SelectMultiple = 8, //'SELECT MULTIPLE'
+  TextArea = 9, //'TEXTAREA',
+  TimePicker = 10 //"TIMEPICKER"
 }
 
 @Component({
@@ -127,7 +129,11 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
         return SyndesisFormControlType.RadioGroup;
 
       case DYNAMIC_FORM_CONTROL_TYPE_SELECT:
-        return SyndesisFormControlType.Select;
+        if (model instanceof DynamicSelectModel && model.multiple) {
+          return SyndesisFormControlType.SelectMultiple;
+        } else {
+          return SyndesisFormControlType.Select;
+        }
 
       case DYNAMIC_FORM_CONTROL_TYPE_TEXTAREA:
         return SyndesisFormControlType.TextArea;
