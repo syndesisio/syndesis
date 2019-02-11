@@ -140,6 +140,10 @@
             </configuration>
           </execution>
           <execution>
+            <!-- Generate a sample project with an integration which contains
+                 all defined connectors (as declared in deployment.json)
+                 This project is build later when the Dockerfile is created.
+                 See comments in Dockerfile for more details -->
             <id>rest-builder-image-generator</id>
             <phase>package</phase>
             <goals>
@@ -153,23 +157,6 @@
                 <argument>--to=${basedir}/target/generated-sources/docker/m2/project</argument>
               </arguments>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>src/assembly/repository.xml</descriptor>
-          </descriptors>
-        </configuration>
-        <executions>
-          <execution>
-            <id>make-repository-assembly</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>
@@ -202,7 +189,7 @@
               <!-- Important here, otherwise fmp silently ignores the build config -->
               <skipBuildPom>false</skipBuildPom>
               <verbose>true</verbose>
-              <!-- Only active when running in openshift: -->
+              <!-- Create a plain Docker image -->
               <buildStrategy>docker</buildStrategy>
               <images>
                 <image>
