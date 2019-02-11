@@ -40,9 +40,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
+import static io.syndesis.common.util.Resources.getResourceAsText;
 import static io.syndesis.server.runtime.integration.MultipartUtil.MULTIPART;
 import static io.syndesis.server.runtime.integration.MultipartUtil.specification;
-import static io.syndesis.server.runtime.integration.SwaggerHickups.reparse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -101,7 +101,7 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
         assertThat(specificationResponse.getHeaders().getContentType()).isEqualTo(MediaType.valueOf("application/vnd.oai.openapi+json"));
         assertThat(specificationResponse.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION)).containsOnly("attachment; filename=openapi.json");
 
-        final String givenJson = reparse("io/syndesis/server/runtime/updated-test-swagger.json");
+        final String givenJson = getResourceAsText("io/syndesis/server/runtime/updated-test-swagger.json");
         final String receivedJson = new String(specificationResponse.getBody().getByteArray(), StandardCharsets.UTF_8);
         JSONAssert.assertEquals(givenJson, receivedJson, JSONCompareMode.LENIENT);
     }

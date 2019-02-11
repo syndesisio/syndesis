@@ -18,22 +18,26 @@ package io.syndesis.server.runtime.integration;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import io.swagger.util.Json;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.server.runtime.BaseITCase;
 
 import org.json.JSONException;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompare;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.skyscreamer.jsonassert.JSONCompareResult;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
+import static io.syndesis.common.util.Resources.getResourceAsText;
 import static io.syndesis.server.runtime.integration.MultipartUtil.MULTIPART;
 import static io.syndesis.server.runtime.integration.MultipartUtil.specification;
-import static io.syndesis.server.runtime.integration.SwaggerHickups.reparse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,9 +57,14 @@ public class IntegrationSpecificationITCase extends BaseITCase {
 
         assertThat(specificationResponse.getHeaders().getContentType()).isEqualTo(MediaType.valueOf("application/vnd.oai.openapi+json"));
 
-        final String givenJson = reparse("io/syndesis/server/runtime/test-swagger.json");
+        final String givenJson = getResourceAsText("io/syndesis/server/runtime/test-swagger.json");
         final String receivedJson = new String(specificationResponse.getBody().getByteArray(), StandardCharsets.UTF_8);
-        JSONAssert.assertEquals(givenJson, receivedJson, JSONCompareMode.LENIENT);
+
+        final JSONCompareResult compareResult = JSONCompare.compareJSON(givenJson, receivedJson, JSONCompareMode.NON_EXTENSIBLE);
+        assertThat(compareResult.getFieldMissing()).isEmpty();
+        assertThat(compareResult.getFieldFailures()).isEmpty();
+        assertThat(compareResult.getFieldUnexpected()).as("Backend is allowed to add missing operationId fields, found other differences").hasSize(3)
+            .allSatisfy(failure -> "operationId".equals(failure.getActual()));
     }
 
     @Test
@@ -72,8 +81,16 @@ public class IntegrationSpecificationITCase extends BaseITCase {
             ByteArrayResource.class);
 
         assertThat(specificationResponse.getHeaders().getContentType()).isEqualTo(MediaType.valueOf("application/vnd.oai.openapi"));
-        final String givenJson = reparse("io/syndesis/server/runtime/test-swagger.yaml");
+        final String givenYaml = getResourceAsText("io/syndesis/server/runtime/test-swagger.yaml");
         final String receivedJson = new String(specificationResponse.getBody().getByteArray(), StandardCharsets.UTF_8);
-        JSONAssert.assertEquals(givenJson, receivedJson, JSONCompareMode.LENIENT);
+
+        final Object givenYamlObject = new Yaml(new SafeConstructor()).load(givenYaml);
+        final String givenJson = Json.mapper().writer().writeValueAsString(givenYamlObject);
+
+        final JSONCompareResult compareResult = JSONCompare.compareJSON(givenJson, receivedJson, JSONCompareMode.NON_EXTENSIBLE);
+        assertThat(compareResult.getFieldMissing()).isEmpty();
+        assertThat(compareResult.getFieldFailures()).isEmpty();
+        assertThat(compareResult.getFieldUnexpected()).as("Backend is allowed to add missing operationId fields, found other differences").hasSize(5)
+            .allSatisfy(failure -> "operationId".equals(failure.getActual()));
     }
 }
