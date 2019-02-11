@@ -109,7 +109,7 @@
       <plugin>
         <groupId>io.syndesis.extension</groupId>
         <artifactId>extension-maven-plugin</artifactId>
-        <version>${project.version}</version>
+        <version>${syndesis.version}</version>
         <executions>
           <execution>
             <id>generate-metadata</id>
