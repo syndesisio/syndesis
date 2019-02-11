@@ -216,8 +216,12 @@ public class ActivityTrackingController implements BackendController, Closeable 
     @Override
     @PreDestroy
     public void close() {
-        stopped.set(true);
+        if (stopped.getAndSet(true)) {
+            return;
+        }
+
         kubernetesSupport.cancelAllRequests();
+
         scheduler.shutdownNow();
         executor.shutdown();
         try {
