@@ -1,0 +1,46 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: infrastructure
+    prometheus: application-monitoring
+    role: alert-rules
+  name: syndesis-db-rules
+spec:
+  groups:
+    - name: syndesis-db.rules
+      rules:
+        # Alert for any syndesis-db instance that is down
+        - alert: FuseOnlineDatabaseInstanceDown
+          annotations:
+            message: >-
+              Fuse Online Postgres instance {{$labels.pod}} in namespace {{$labels.namespace}} is down.
+          expr: >
+            sum(pg_up{job="syndesis-db-metrics"}) by(namespace, pod, instance) == 0
+          for: 5m
+          labels:
+            severity: critical
+
+        # Alert for any syndesis-db database that is experiencing a high rate of transaction rollbacks
+        - alert: FuseOnlineDatabaseHighRollbackRate
+          annotations:
+            message: >-
+              Fuse Online Postgres instance {{$labels.pod}} in namespace {{$labels.namespace}} has a high rate of transaction rollbacks.
+          expr: >
+            rate(pg_stat_database_xact_rollback{job="syndesis-db-metrics"}[5m]) / ON(instance, pod, namespace, datname) rate(pg_stat_database_xact_commit{job="syndesis-db-metrics"}[5m]) > 0.02
+          for: 5m
+          labels:
+            severity: warning
+
+        # Alert for any syndesis-db instance that has connection count close to the maximum allowed
+        - alert: FuseOnlineDatabaseHighConnectionCount
+          annotations:
+            message: >-
+              Fuse Online Postgres instance {{$labels.pod}} in namespace {{$labels.namespace}} has {{$value}} active connections, which is more than 90% of the maximum allowed.
+          expr: >
+            sum(pg_stat_database_numbackends{job="syndesis-db-metrics"}) BY (pod, instance, namespace) > on(pod, instance, namespace) (pg_settings_max_connections{job="syndesis-db-metrics"} - pg_settings_superuser_reserved_connections{job="syndesis-db-metrics"}) * 0.90
+          for: 5m
+          labels:
+            severity: warning
