@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.odata;
+package io.syndesis.connector.odata.consumer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import java.util.List;
 import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.component.olingo4.Olingo4Endpoint;
-import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.spring.SpringCamelContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,15 +36,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.connector.odata.component.ODataComponentFactory;
-import io.syndesis.connector.odata.customizer.ODataStartCustomizer;
+import io.syndesis.connector.odata.PropertyBuilder;
 import io.syndesis.connector.odata.server.ODataTestServer;
 import io.syndesis.connector.odata.server.ODataTestServer.Options;
 
@@ -52,7 +50,7 @@ import io.syndesis.connector.odata.server.ODataTestServer.Options;
 @RunWith(SpringRunner.class)
 @SpringBootTest(
     classes = {
-        ODataReadRouteTest.TestConfiguration.class
+        ODataReadRouteNoSplitResultsTest.TestConfiguration.class
     },
     properties = {
         "spring.main.banner-mode = off",
@@ -65,71 +63,13 @@ import io.syndesis.connector.odata.server.ODataTestServer.Options;
         DirtiesContextTestExecutionListener.class
     }
 )
-public class ODataReadRouteTest extends AbstractODataRouteTest {
+public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest {
 
-    private static final int MOCK_TIMEOUT_MILLISECONDS = 3060000;
-
-    private static final String TEST_SERVER_DATA = "test-server-data.json";
-    private static final String TEST_SERVER_DATA_WITH_COUNT = "test-server-data-with-count.json";
-    private static final String FILTERED_TEST_SERVER_DATA_ID_1 = "filtered-test-server-data-id-1.json";
-    private static final String FILTERED_TEST_SERVER_DATA_ID_2 = "filtered-test-server-data-id-2.json";
-    private static final String SINGLE_TEST_ENTITY_DATA = "single-test-entity.json";
-    private static final String REF_SERVER_PEOPLE_DATA = "ref-server-people-data.json";
-    private static final String TEST_SERVER_DATA_EMPTY = "test-server-data-empty.json";
-
-    /**
-     * Creates a camel context complete with a properties component that handles
-     * lookups of secret values such as passwords. Fetches the values from external
-     * properties file.
-     *
-     * @return CamelContext
-     */
-    private CamelContext createCamelContext() {
-        CamelContext ctx = new SpringCamelContext(applicationContext);
-        PropertiesComponent pc = new PropertiesComponent("classpath:odata-test-options.properties");
-        ctx.addComponent("properties", pc);
-        return ctx;
-    }
-
-    private ConnectorAction createReadAction() {
-        ConnectorAction odataAction = new ConnectorAction.Builder()
-            .description("Read a resource from the server")
-             .id("io.syndesis:odata-read-connector")
-             .name("Read")
-             .descriptor(new ConnectorDescriptor.Builder()
-                        .componentScheme("olingo4")
-                        .putConfiguredProperty("apiName", "read")
-                        .addConnectorCustomizer(ODataStartCustomizer.class.getName())
-                        .connectorFactory(ODataComponentFactory.class.getName())
-                        .build())
-            .build();
-        return odataAction;
-    }
-
-    private Step createMockStep() {
-        Step mockStep = new Step.Builder()
-            .stepKind(StepKind.endpoint)
-            .action(new ConnectorAction.Builder()
-                    .descriptor(new ConnectorDescriptor.Builder()
-                                .componentScheme("mock")
-                                .putConfiguredProperty("name", "result")
-                                .build())
-                    .build())
-            .build();
-        return mockStep;
-    }
-
-    /**
-     * Generates a {@link ConfigurationProperty} for the basic password
-     * mimicking the secret operations conducted for real openshift passwords.
-     * The actual password is fetched from the camel context's properties component.
-     * The defaultValue is just a placeholder as it is checked for non-nullability.
-     */
-    private ConfigurationProperty basicPasswordProperty() {
-        return new ConfigurationProperty.Builder()
-              .secret(Boolean.TRUE)
-              .defaultValue(BASIC_PASSWORD)
-              .build();
+    //
+    // Set the split results to false
+    //
+    public ODataReadRouteNoSplitResultsTest() {
+        super(false);
     }
 
     @Test
@@ -165,16 +105,11 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             dumpRoutes(context);
 
             MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(1);
+            result.setExpectedMessageCount(server.getResultCount());
             result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
             result.assertIsSatisfied();
 
-            Object body = result.getExchanges().get(0).getIn().getBody();
-            assertTrue(body instanceof String);
-            String json = (String) body;
-
-            String expected = testData(TEST_SERVER_DATA);
-            JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+            testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
 
         } finally {
             context.stop();
@@ -219,16 +154,11 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             context.start();
 
             MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(1);
+            result.setExpectedMessageCount(server.getResultCount());
             result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
             result.assertIsSatisfied();
 
-            Object body = result.getExchanges().get(0).getIn().getBody();
-            assertTrue(body instanceof String);
-            String json = (String) body;
-
-            String expected = testData(TEST_SERVER_DATA);
-            JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+            testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
 
         } finally {
             context.stop();
@@ -270,15 +200,12 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             context.start();
 
             MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(1);
+            result.setExpectedMessageCount(server.getResultCount());
             result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
             result.assertIsSatisfied();
 
-            Object body = result.getExchanges().get(0).getIn().getBody();
-            assertTrue(body instanceof String);
-            String json = (String) body;
-            String expected = testData(TEST_SERVER_DATA);
-            JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+            testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
+
         } finally {
             context.stop();
             if (server != null) {
@@ -325,16 +252,11 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             context.start();
 
             MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(1);
+            result.setExpectedMessageCount(server.getResultCount());
             result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
             result.assertIsSatisfied();
 
-            Object body = result.getExchanges().get(0).getIn().getBody();
-            assertTrue(body instanceof String);
-            String json = (String) body;
-
-            String expected = testData(TEST_SERVER_DATA);
-            JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+            testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
 
         } finally {
             context.stop();
@@ -383,12 +305,16 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
             result.assertIsSatisfied();
 
-            Object body = result.getExchanges().get(0).getIn().getBody();
-            assertTrue(body instanceof String);
-            String json = (String) body;
+            @SuppressWarnings( "unchecked" )
+            List<String> json = extractJsonFromExchgMsg(result, 0, List.class);
+            assertEquals(20, json.size());
 
-            String expected = testData(REF_SERVER_PEOPLE_DATA);
-            JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+            String expected = testData(REF_SERVER_PEOPLE_DATA_1);
+            JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+            expected = testData(REF_SERVER_PEOPLE_DATA_2);
+            JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
+            expected = testData(REF_SERVER_PEOPLE_DATA_3);
+            JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
 
         } finally {
             context.stop();
@@ -434,12 +360,7 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
             result.assertIsSatisfied();
 
-            Object body = result.getExchanges().get(0).getIn().getBody();
-            assertTrue(body instanceof String);
-            String json = (String) body;
-
-            String expected = testData(FILTERED_TEST_SERVER_DATA_ID_1);
-            JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+            testListResult(result, 0, TEST_SERVER_DATA_1);
 
         } finally {
             context.stop();
@@ -488,11 +409,15 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
             result.assertIsSatisfied();
 
-            Object body = result.getExchanges().get(0).getIn().getBody();
-            assertTrue(body instanceof String);
-            String json = (String) body;
-            String expected = testData(TEST_SERVER_DATA_WITH_COUNT);
-            JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+            @SuppressWarnings( "unchecked" )
+            List<String> json = extractJsonFromExchgMsg(result, 0, List.class);
+            assertEquals(3, json.size());
+            String expected = testData(TEST_SERVER_DATA_1_WITH_COUNT);
+            JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+            expected = testData(TEST_SERVER_DATA_2_WITH_COUNT);
+            JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
+            expected = testData(TEST_SERVER_DATA_3_WITH_COUNT);
+            JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
 
         } finally {
             context.stop();
@@ -537,16 +462,14 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             dumpRoutes(context);
 
             MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(1);
+            result.setExpectedMessageCount(2);
             result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
             result.assertIsSatisfied();
 
-            Object body = result.getExchanges().get(0).getIn().getBody();
-            assertTrue(body instanceof String);
-            String json = (String) body;
-
-            String expected = testData(FILTERED_TEST_SERVER_DATA_ID_2);
-            JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+            //
+            // Descending order in query means these are reversed
+            //
+            testListResult(result, 0, TEST_SERVER_DATA_2, TEST_SERVER_DATA_1);
 
         } finally {
             context.stop();
@@ -595,11 +518,7 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
             result.assertIsSatisfied();
 
-            Object body = result.getExchanges().get(0).getIn().getBody();
-            assertTrue(body instanceof String);
-            String json = (String) body;
-            String expected = testData(SINGLE_TEST_ENTITY_DATA);
-            JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+            testListResult(result, 0, TEST_SERVER_DATA_1);
 
         } finally {
             context.stop();
@@ -648,11 +567,7 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
             result.assertIsSatisfied();
 
-            Object body = result.getExchanges().get(0).getIn().getBody();
-            assertTrue(body instanceof String);
-            String json = (String) body;
-            String expected = testData(SINGLE_TEST_ENTITY_DATA);
-            JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+            testListResult(result, 0, TEST_SERVER_DATA_1);
 
         } finally {
             context.stop();
@@ -700,16 +615,11 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             dumpRoutes(context);
 
             MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(1);
+            result.setExpectedMessageCount(2);
             result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
             result.assertIsSatisfied();
 
-            Object body = result.getExchanges().get(0).getIn().getBody();
-            assertTrue(body instanceof String);
-            String json = (String) body;
-
-            String expected = testData(TEST_SERVER_DATA);
-            JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+            testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
 
             Olingo4Endpoint olingo4Endpoint = context.getEndpoint("olingo4-olingo4-0-0://read/Products", Olingo4Endpoint.class);
             assertNotNull(olingo4Endpoint);
@@ -772,23 +682,24 @@ public class ODataReadRouteTest extends AbstractODataRouteTest {
             result.assertIsSatisfied();
 
             for (int i = 0; i < expectedMsgCount; ++i) {
-                Object body = result.getExchanges().get(i).getIn().getBody();
-                assertTrue(body instanceof String);
-                String json = (String) body;
+                @SuppressWarnings( "unchecked" )
+                List<String> json = extractJsonFromExchgMsg(result, i, List.class);
 
-                if (i == 0) {
-                    //
-                    // Expect all results to be returned in the first polling message
-                    //
-                    String expected = testData(TEST_SERVER_DATA);
-                    JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
-                }
-                else {
-                    //
-                    // Subsequent polling messages should be empty
-                    //
-                    String expected = testData(TEST_SERVER_DATA_EMPTY);
-                    JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+                String expected;
+                switch (i) {
+                    case 0:
+                        expected = testData(TEST_SERVER_DATA_1);
+                        JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+                        expected = testData(TEST_SERVER_DATA_2);
+                        JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
+                        expected = testData(TEST_SERVER_DATA_3);
+                        JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
+                        break;
+                    default:
+                        //
+                        // Subsequent polling messages should be empty
+                        //
+                        assertTrue(json.isEmpty());
                 }
             }
 

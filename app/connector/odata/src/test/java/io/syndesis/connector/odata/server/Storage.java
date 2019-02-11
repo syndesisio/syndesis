@@ -55,6 +55,10 @@ public class Storage {
         initSampleData();
     }
 
+    public int getSampleCount() {
+        return productList.size();
+    }
+
 	/* PUBLIC FACADE */
 
 	public EntityCollection readEntitySetData(EdmEntitySet edmEntitySet)throws ODataApplicationException{

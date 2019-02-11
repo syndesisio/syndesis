@@ -60,6 +60,7 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
     private long initialDelay = -1;
     private int backoffIdleThreshold = -1;
     private int backoffMultiplier = -1;
+    private boolean splitResult;
 
     ODataComponent(String componentId, String componentScheme) {
         super(componentId, componentScheme);
@@ -130,7 +131,7 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
     }
 
     @SuppressWarnings("PMD")
-    public boolean getFilterAlreadySeen() {
+    public boolean isFilterAlreadySeen() {
         return filterAlreadySeen ;
     }
 
@@ -168,6 +169,14 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
 
     public void setBackoffMultiplier(int backoffMultiplier) {
         this.backoffMultiplier = backoffMultiplier;
+    }
+
+    public boolean isSplitResult() {
+        return splitResult;
+    }
+
+    public void setSplitResult(boolean splitResult) {
+        this.splitResult = splitResult;
     }
 
     private Map<String, Object> bundleOptions() {
@@ -247,7 +256,7 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
         }
 
         configuration.setQueryParams(queryParams);
-        configuration.setFilterAlreadySeen(getFilterAlreadySeen());
+        configuration.setFilterAlreadySeen(isFilterAlreadySeen());
 
         component.setConfiguration(configuration);
         return Optional.of(component);
@@ -281,6 +290,11 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
         if (getBackoffMultiplier() > -1) {
             properties.put(CONSUMER + DOT + BACKOFF_MULTIPLIER, Integer.toString(getBackoffMultiplier()));
         }
+
+        //
+        // Mandate that the results are split into individual messages
+        //
+        properties.put(CONSUMER + DOT + SPLIT_RESULT, isSplitResult());
 
         if (! properties.isEmpty()) {
             endpoint.configureProperties(properties);

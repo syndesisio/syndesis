@@ -44,9 +44,6 @@ public class ClientCollectionValueSerializer
 
     @Override
     public void serialize(ClientCollectionValue<?> value, JsonGenerator generator, SerializerProvider provider) throws IOException {
-        generator.writeStartObject();
-
-        generator.writeFieldName("values");
         generator.writeStartArray();
 
         Iterator<?> iterator = value.iterator();
@@ -56,6 +53,5 @@ public class ClientCollectionValueSerializer
         }
 
         generator.writeEndArray();
-        generator.writeEndObject();
     }
 }

@@ -66,8 +66,22 @@
                 "javaType": "java.lang.Boolean",
                 "kind": "parameter",
                 "label": "consumer",
-                "labelHint": "While repeatedly polling the connection, filter out those results already communicated.",
+                "labelHint": "While continuing to monitor the OData service, filter out those results already communicated.",
                 "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
+              "splitResult": {
+                "deprecated": false,
+                "defaultValue": true,
+                "displayName": "Split Results",
+                "group": "consumer",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "When enabled the result set is split into multiple results where each result represents a single OData entity.",
+                "order": "5",
                 "required": false,
                 "secret": false,
                 "type": "boolean"
@@ -82,7 +96,7 @@
                 "label": "consumer,scheduler",
                 "labelHint": "Wait amount of time before starting to poll",
                 "optionalPrefix": "consumer.",
-                "order": "5",
+                "order": "6",
                 "required": false,
                 "secret": false,
                 "type": "duration"
@@ -97,7 +111,7 @@
                 "label": "consumer,scheduler",
                 "labelHint": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
                 "optionalPrefix": "consumer.",
-                "order": "6",
+                "order": "7",
                 "required": false,
                 "secret": false,
                 "type": "duration"
@@ -112,7 +126,7 @@
                 "label": "consumer,scheduler",
                 "labelHint": "If no results are returned after (Backoff Threshold) times then polling will become idle for (Backoff Threshold * Backoff Multiplier) seconds",
                 "optionalPrefix": "consumer.",
-                "order": "7",
+                "order": "8",
                 "required": false,
                 "secret": false,
                 "type": "integer"
@@ -127,7 +141,7 @@
                 "label": "consumer,scheduler",
                 "labelHint": "If no results are returned after (Backoff Threshold) times then polling will become idle for (Backoff Threshold * Backoff Multiplier) seconds",
                 "optionalPrefix": "consumer.",
-                "order": "8",
+                "order": "9",
                 "required": false,
                 "secret": false,
                 "type": "integer"
