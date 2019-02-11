@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.syndesis.extension</groupId>
   <artifactId>maven-plugin-with-data-shape-it</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.0</version>
 
   <distributionManagement>
     <snapshotRepository>
@@ -62,6 +62,7 @@
   </pluginRepositories>
 
   <properties>
+    <syndesis.version>1.6-SNAPSHOT</syndesis.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -73,7 +74,7 @@
       <dependency>
         <groupId>io.syndesis.extension</groupId>
         <artifactId>extension-bom</artifactId>
-        <version>${project.version}</version>
+        <version>${syndesis.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -108,7 +109,7 @@
       <plugin>
         <groupId>io.syndesis.extension</groupId>
         <artifactId>extension-maven-plugin</artifactId>
-        <version>${project.version}</version>
+        <version>${syndesis.version}</version>
         <executions>
           <execution>
             <id>generate-metadata</id>
