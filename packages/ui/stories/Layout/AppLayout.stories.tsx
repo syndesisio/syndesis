@@ -1,7 +1,7 @@
+import { text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import { Icon, Masthead } from 'patternfly-react';
 import * as React from 'react';
-import { text } from '@storybook/addon-knobs';
 import { AppLayout, PfVerticalNavItem } from '../../src';
 
 const stories = storiesOf('Layout/AppLayout', module);
