@@ -26,9 +26,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Optional.ofNullable;
-
-import com.google.common.base.Strings;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
@@ -60,6 +57,10 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Strings;
+
+import static java.util.Optional.ofNullable;
 
 public class SwaggerAPIGenerator implements APIGenerator {
 
@@ -153,15 +154,23 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
                 DataShape startDataShape = dataShapeGenerator.createShapeFromRequest(info.getResolvedJsonGraph(), swagger, operation);
                 Action startAction = template.getStartAction().orElseThrow(() -> new IllegalStateException("cannot find start action"));
-                Action modifiedStartAction = new ConnectorAction.Builder()
+                ConnectorAction.Builder modifiedStartActionBuilder = new ConnectorAction.Builder()
                     .createFrom(startAction)
                     .addTag("locked-action")
                     .descriptor(new ConnectorDescriptor.Builder()
                         .createFrom(startAction.getDescriptor())
                         .outputDataShape(startDataShape)
-                        .build())
-                    .build();
-                Step startStep = new Step.Builder()
+                        .build());
+
+                final String basePath = swagger.getBasePath();
+                if (!Strings.isNullOrEmpty(basePath)) {
+                    // pass the basePath so it gets picked up by EndpointController
+                    modifiedStartActionBuilder.putMetadata("serverBasePath", basePath);
+                }
+
+                Action modifiedStartAction = modifiedStartActionBuilder.build();
+
+                 Step startStep = new Step.Builder()
                     .id(KeyGenerator.createKey())
                     .action(modifiedStartAction)
                     .connection(template.getConnection())
