@@ -1,33 +1,19 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class NavigationService {
-  private jQuery: JQuery;
-  private verticalNavigationHandler: any;
+  collapsed$ = new BehaviorSubject<boolean>(false);
 
-  constructor() {
-    this.jQuery = $.fn;
-  }
-
-  initialize() {
-    if (this.setupVerticalNavigation) {
-      this.verticalNavigationHandler = this.setupVerticalNavigation();
-    }
+  toggle(newValue: boolean) {
+    this.collapsed$.next(newValue);
   }
 
   show() {
-    if (this.verticalNavigationHandler) {
-      this.verticalNavigationHandler.showMenu();
-    }
+    this.toggle(false);
   }
 
   hide() {
-    if (this.verticalNavigationHandler) {
-      this.verticalNavigationHandler.hideMenu();
-    }
-  }
-
-  private get setupVerticalNavigation(): any {
-    return this.jQuery['setupVerticalNavigation'];
+    this.toggle(true);
   }
 }

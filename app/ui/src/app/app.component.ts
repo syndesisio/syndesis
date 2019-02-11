@@ -9,7 +9,7 @@ import {
   UserService,
   User,
   PlatformActions,
-  PlatformState
+  PlatformState,
 } from '@syndesis/ui/platform';
 import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 import { NavigationService } from '@syndesis/ui/common/navigation.service';
@@ -23,13 +23,13 @@ import {
   NavigationEnd,
   NavigationError,
   NavigationStart,
-  Router
+  Router,
 } from '@angular/router';
 
 @Component({
   selector: 'syndesis-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, AfterViewInit {
   helpExpanded = false;
@@ -78,7 +78,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private meta: Meta,
     private router: Router,
     @Inject(DOCUMENT) private document: any
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.store.dispatch(new PlatformActions.AppBootstrap());
@@ -131,6 +131,9 @@ export class AppComponent implements OnInit, AfterViewInit {
         log.debug('NavigationError: ' + value.url);
       }
     });
+    this.navigationService.collapsed$.subscribe(
+      collapsed => (this.menuExpanded = collapsed)
+    );
   }
 
   /**
@@ -213,7 +216,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Expands and contracts the vertical navigation menu.
    */
   hamburgerToggle(): void {
-    this.menuExpanded = !this.menuExpanded;
+    this.navigationService.toggle(!this.menuExpanded);
   }
 
   ngAfterViewInit() {
@@ -228,7 +231,5 @@ export class AppComponent implements OnInit, AfterViewInit {
     $patternFlyCards.find('> .card-pf-footer').matchHeight();
     $patternFlyCards.find('.card-pf-title').matchHeight();
     $patternFlyCards.matchHeight();
-
-    this.navigationService.initialize();
   }
 }
