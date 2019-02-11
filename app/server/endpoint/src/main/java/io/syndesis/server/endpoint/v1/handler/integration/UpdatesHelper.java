@@ -134,7 +134,7 @@ final class UpdatesHelper {
      * When the UI ask for an integration its component (connector, extensions,
      * etc) are updated and moved to their latest version and this work just
      * fine for static actions. For dynamic action (for which metadata is
-     * retrieved from thr syndesis-meta service), this is problematic as the
+     * retrieved from the syndesis-meta service), this is problematic as the
      * action is replaced with its latest version thus all the enriched data are
      * lost.
      *
@@ -193,7 +193,7 @@ final class UpdatesHelper {
                 descriptorBuilder.addPropertyDefinitionStep(b.build());
             }
 
-            return new ConnectorAction.Builder().createFrom(newAction).descriptor(descriptorBuilder.build()).build();
+            return new ConnectorAction.Builder().createFrom(newAction).descriptor(descriptorBuilder.build()).metadata(oldAction.getMetadata()).build();
         }
 
         if (newAction instanceof StepAction) {
@@ -243,7 +243,7 @@ final class UpdatesHelper {
                 descriptorBuilder.addPropertyDefinitionStep(b.build());
             }
 
-            return new StepAction.Builder().createFrom(newAction).descriptor(descriptorBuilder.build()).build();
+            return new StepAction.Builder().createFrom(newAction).descriptor(descriptorBuilder.build()).metadata(oldAction.getMetadata()).build();
         }
 
         return newAction;
