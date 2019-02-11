@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -581,18 +582,11 @@ public class GenerateMetadataMojo extends AbstractMojo {
                                                     .createFrom(dataShape.get())
                                                     .specification(inspection);
 
-                builder.variants(dataShape.get().getVariants()
-                                                 .stream()
-                                                 .map(variant -> {
-                                                     try {
-                                                         return generateInspections(actionId, Optional.of(variant));
-                                                     } catch (Exception e) {
-                                                         return Optional.of(variant);
-                                                     }
-                                                 })
-                                                 .filter(Optional::isPresent)
-                                                 .map(Optional::get)
-                                                 .collect(Collectors.toList()));
+                List<DataShape> inspectedShapes = new ArrayList<>();
+                for (DataShape variant : dataShape.get().getVariants()) {
+                    inspectedShapes.add(generateInspections(actionId, Optional.of(variant)).orElse(variant));
+                }
+                builder.variants(inspectedShapes);
 
                 return Optional.of(builder.compress().build());
             }
