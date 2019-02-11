@@ -22,7 +22,7 @@ import io.syndesis.common.model.integration.StepKind;
 /**
  * @author Christoph Deppisch
  */
-public interface StepMetadataHandler {
+interface StepMetadataHandler {
 
     /**
      * Adapt dynamic meta data for given step descriptor;

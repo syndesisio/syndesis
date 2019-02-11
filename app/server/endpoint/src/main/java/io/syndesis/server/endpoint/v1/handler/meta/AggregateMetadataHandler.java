@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Christoph Deppisch
  */
-public class AggregateMetadataHandler implements StepMetadataHandler {
+class AggregateMetadataHandler implements StepMetadataHandler {
 
     private static final String JSON_SCHEMA_ORG_SCHEMA = "http://json-schema.org/schema#";
 

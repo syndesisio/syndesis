@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Christoph Deppisch
  */
-public class SplitMetadataHandler implements StepMetadataHandler {
+class SplitMetadataHandler implements StepMetadataHandler {
 
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(SplitMetadataHandler.class);

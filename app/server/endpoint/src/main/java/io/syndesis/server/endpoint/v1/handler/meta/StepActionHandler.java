@@ -81,7 +81,7 @@ public class StepActionHandler extends BaseHandler {
     }
 
     private Optional<StepMetadataHandler> findStepMetadataHandler(String kind) {
-        return metadataHandlers.parallelStream()
+        return metadataHandlers.stream()
                 .filter(handler -> handler.canHandle(StepKind.valueOf(kind)))
                 .findFirst();
     }
