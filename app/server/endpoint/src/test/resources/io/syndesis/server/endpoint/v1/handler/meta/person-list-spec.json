@@ -1,0 +1,62 @@
+{
+  "JavaClass": {
+    "jsonType": "io.atlasmap.java.v2.JavaClass",
+    "collectionType": "LIST",
+    "path": "/<>",
+    "fieldType": "COMPLEX",
+    "modifiers": {
+      "modifier": [
+        "PUBLIC"
+      ]
+    },
+    "className": "io.syndesis.server.endpoint.v1.handler.meta.Person",
+    "canonicalClassName": "io.syndesis.server.endpoint.v1.handler.meta.Person",
+    "primitive": false,
+    "synthetic": false,
+    "javaEnumFields": {
+      "javaEnumField": []
+    },
+    "javaFields": {
+      "javaField": [
+        {
+          "jsonType": "io.atlasmap.java.v2.JavaField",
+          "path": "/<>/name",
+          "status": "SUPPORTED",
+          "fieldType": "STRING",
+          "modifiers": {
+            "modifier": []
+          },
+          "name": "name",
+          "className": "java.lang.String",
+          "canonicalClassName": "java.lang.String",
+          "getMethod": "getName",
+          "primitive": false,
+          "synthetic": false
+        },
+        {
+          "jsonType": "io.atlasmap.java.v2.JavaField",
+          "path": "/<>/age",
+          "status": "SUPPORTED",
+          "fieldType": "INTEGER",
+          "modifiers": {
+            "modifier": []
+          },
+          "name": "age",
+          "className": "int",
+          "canonicalClassName": "int",
+          "getMethod": "getAge",
+          "primitive": true,
+          "synthetic": false
+        }
+      ]
+    },
+    "packageName": "io.syndesis.server.endpoint.v1.handler.meta",
+    "annotation" : false,
+    "annonymous" : false,
+    "enumeration" : false,
+    "localClass" : false,
+    "memberClass" : true,
+    "uri" : "atlas:java?className=io.syndesis.server.endpoint.v1.handler.meta.Person",
+    "interface" : false
+  }
+}
