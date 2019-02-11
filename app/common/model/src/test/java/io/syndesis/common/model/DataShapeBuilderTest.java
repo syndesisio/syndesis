@@ -17,13 +17,12 @@
 package io.syndesis.common.model;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.zip.GZIPInputStream;
 
+import io.syndesis.common.util.IOStreams;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -189,22 +188,8 @@ public class DataShapeBuilderTest {
         byte[] data = Base64.getDecoder().decode(compressed);
 
         try (InputStream is = new GZIPInputStream(new ByteArrayInputStream(data))) {
-            Assert.assertEquals(expected, readToString(is));
+            Assert.assertEquals(expected, IOStreams.readText(is));
         }
-    }
-
-    private String readToString(InputStream is) throws IOException {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        byte[] buf = new byte[1024];
-
-        int bytesRead = is.read(buf, 0, buf.length);
-        while (bytesRead != -1) {
-            buffer.write(buf, 0, bytesRead);
-            bytesRead = is.read(buf, 0, buf.length);
-        }
-
-        buffer.flush();
-        return new String(buffer.toByteArray(), StandardCharsets.UTF_8);
     }
 
 }

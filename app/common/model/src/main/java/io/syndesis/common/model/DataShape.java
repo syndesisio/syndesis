@@ -18,7 +18,6 @@ package io.syndesis.common.model;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -33,6 +32,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.common.util.IOStreams;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -105,7 +105,8 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
 
         public Builder decompress() {
             DataShape currentShape = build();
-            if (Objects.equals(currentShape.getMetadata().get(COMPRESSION_METADATA_KEY), "true") && Objects.equals(currentShape.getMetadata().getOrDefault(COMPRESSED_METADATA_KEY, "true"), "true")) {
+            if ("true".equals(currentShape.getMetadata().get(COMPRESSION_METADATA_KEY)) &&
+                    currentShape.getMetadata().getOrDefault(COMPRESSED_METADATA_KEY, "true").equals("true")) {
                 byte[] decoded = Base64.getDecoder().decode(currentShape.getSpecification().getBytes(StandardCharsets.UTF_8));
                 try (ByteArrayInputStream zipped = new ByteArrayInputStream(decoded);
                      GZIPInputStream is = new GZIPInputStream(zipped)) {
@@ -119,11 +120,11 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
                                                .decompress()
                                                .build())
                                       .collect(Collectors.toList()))
-                            .specification(readToString(is));
+                            .specification(IOStreams.readText(is));
                 } catch (IOException e) {
-                    throw new IllegalArgumentException("Failed to decompress data shape", e);
+                    throw new IllegalStateException("Failed to decompress data shape", e);
                 }
-            } else if (currentShape.getVariants().parallelStream().anyMatch(variant -> Objects.equals(variant.getMetadata().get(COMPRESSION_METADATA_KEY), "true"))) {
+            } else if (currentShape.getVariants().stream().anyMatch(variant -> "true".equals(variant.getMetadata().get(COMPRESSION_METADATA_KEY)))) {
                 return new DataShape.Builder()
                         .createFrom(currentShape)
                         .variants(currentShape.getVariants()
@@ -140,7 +141,8 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
 
         public Builder compress() {
             DataShape currentShape = build();
-            if (Objects.equals(currentShape.getMetadata().get(COMPRESSION_METADATA_KEY), "true") && Objects.equals(currentShape.getMetadata().getOrDefault(COMPRESSED_METADATA_KEY, "false"), "false")) {
+            if ("true".equals(currentShape.getMetadata().get(COMPRESSION_METADATA_KEY)) &&
+                    currentShape.getMetadata().getOrDefault(COMPRESSED_METADATA_KEY, "false").equals("false")) {
                 try (ByteArrayOutputStream zipped = new ByteArrayOutputStream();
                      GZIPOutputStream os = new GZIPOutputStream(zipped)) {
                     os.write(currentShape.getSpecification().getBytes(StandardCharsets.UTF_8));
@@ -158,9 +160,9 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
                                       .collect(Collectors.toList()))
                             .specification(Base64.getEncoder().encodeToString(zipped.toByteArray()));
                 } catch (IOException e) {
-                    throw new IllegalArgumentException("Failed to compress data shape", e);
+                    throw new IllegalStateException("Failed to compress data shape", e);
                 }
-            } else if (currentShape.getVariants().parallelStream().anyMatch(variant -> Objects.equals(variant.getMetadata().get(COMPRESSION_METADATA_KEY), "true"))) {
+            } else if (currentShape.getVariants().parallelStream().anyMatch(variant -> "true".equals(variant.getMetadata().get(COMPRESSION_METADATA_KEY)))) {
                 return new DataShape.Builder()
                         .createFrom(currentShape)
                         .variants(currentShape.getVariants()
@@ -173,20 +175,6 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
             }
 
             return this;
-        }
-
-        private static String readToString(InputStream is) throws IOException {
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            byte[] buf = new byte[1024];
-
-            int bytesRead = is.read(buf, 0, buf.length);
-            while (bytesRead != -1) {
-                buffer.write(buf, 0, bytesRead);
-                bytesRead = is.read(buf, 0, buf.length);
-            }
-
-            buffer.flush();
-            return new String(buffer.toByteArray(), StandardCharsets.UTF_8);
         }
     }
 }
