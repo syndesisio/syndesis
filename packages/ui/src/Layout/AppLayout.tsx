@@ -10,8 +10,8 @@ export interface ILayoutBase {
   verticalNav: PfVerticalNavItem[];
   logoHref: string;
   showNavigation: boolean;
-  onNavigationCollapse: void;
-  onNavigationExpand: void;
+  onNavigationCollapse(): void;
+  onNavigationExpand(): void;
 }
 
 export class AppLayout extends React.Component<ILayoutBase> {
