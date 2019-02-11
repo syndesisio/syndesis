@@ -101,8 +101,6 @@ public class ConnectionActionHandler {
             for (Entry<String, Object> entry : props.entrySet()) {
                 if (entry.getValue() == null) {
                     properties.put(entry.getKey(), null);
-                } else if (entry.getValue() instanceof String) {
-                    properties.put(entry.getKey(), (String) entry.getValue());
                 } else if (entry.getValue() instanceof String[]) {
                     String value = StringUtils.join((String[]) entry.getValue(), ConfigurationProperty.MULTIPLE_SEPARATOR);
                     properties.put(entry.getKey(), value);
@@ -110,7 +108,7 @@ public class ConnectionActionHandler {
                     String value = StringUtils.join((Iterable) entry.getValue(), ConfigurationProperty.MULTIPLE_SEPARATOR);
                     properties.put(entry.getKey(), value);
                 } else {
-                    throw new IllegalArgumentException("Not supported property type " + entry.getValue().getClass());
+                    properties.put(entry.getKey(), entry.getValue().toString());
                 }
             }
         }
