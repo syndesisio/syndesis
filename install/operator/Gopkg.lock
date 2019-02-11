@@ -287,8 +287,7 @@
   version = "v3.9.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:1b851071bb379cc9dbf78c98e201e44d5c95ff1c6ca22d0d3120459753080c97"
+  digest = "1:df8e741cd0f86087367f3bcfeb1cf237e96fada71194b6d4cee9412d221ec763"
   name = "github.com/operator-framework/operator-sdk"
   packages = [
     "pkg/k8sutil",
@@ -296,7 +295,8 @@
     "version",
   ]
   pruneopts = "NT"
-  revision = "c5e190576b34667711ec78c5f48599dc7e25aae9"
+  revision = "6754b70169f1b62355516947270e33b9f73d8159"
+  version = "v0.5.0"
 
 [[projects]]
   digest = "1:93b1d84c5fa6d1ea52f4114c37714cddd84d5b78f151b62bb101128dd51399bf"
@@ -836,6 +836,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/go-logr/logr",
     "github.com/openshift/api/apps/v1",
     "github.com/openshift/api/authorization/v1",
     "github.com/openshift/api/build/v1",
@@ -859,8 +860,8 @@
     "k8s.io/apimachinery/pkg/runtime/serializer/versioning",
     "k8s.io/apimachinery/pkg/types",
     "k8s.io/apimachinery/pkg/util/json",
+    "k8s.io/apimachinery/pkg/util/runtime",
     "k8s.io/apimachinery/pkg/util/yaml",
-    "k8s.io/client-go/kubernetes/scheme",
     "k8s.io/client-go/plugin/pkg/client/auth/gcp",
     "k8s.io/client-go/rest",
     "k8s.io/code-generator/cmd/client-gen",

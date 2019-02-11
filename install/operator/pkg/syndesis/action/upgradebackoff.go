@@ -2,12 +2,13 @@ package action
 
 import (
 	"context"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	runtime2 "k8s.io/apimachinery/pkg/runtime"
 	"math"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strconv"
 	"time"
+
+	"k8s.io/apimachinery/pkg/runtime"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 )
 
 const (
@@ -22,22 +23,21 @@ type upgradeBackoff struct {
 }
 
 var (
-	UpgradeBackoffAction =  upgradeBackoff{
+	UpgradeBackoffAction = upgradeBackoff{
 		action{actionLog.WithValues("type", "upgrade-backoff")},
 		"",
 	}
 )
 
-
 func (a *upgradeBackoff) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseUpgradeFailureBackoff)
 }
 
-func (a *upgradeBackoff) Execute(scheme *runtime2.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
+func (a *upgradeBackoff) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error {
 
 	// Check number of attempts to fail fast
 	if syndesis.Status.UpgradeAttempts >= UpgradeMaxAttempts {
-		a.log.Error(nil,"Upgrade of Syndesis resource failed too many times and will not be retried", "name", syndesis.Name)
+		a.log.Error(nil, "Upgrade of Syndesis resource failed too many times and will not be retried", "name", syndesis.Name)
 
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1alpha1.SyndesisPhaseUpgradeFailed

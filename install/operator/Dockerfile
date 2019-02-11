@@ -6,6 +6,9 @@ USER syndesis-operator
 # Use that template for creating the operator
 ADD syndesis-template.yml /conf/syndesis-template.yml
 
+# Add addons directory
+ADD addons /conf/addons
+
 # Add the operator
 ADD syndesis-operator /usr/local/bin/syndesis-operator
 

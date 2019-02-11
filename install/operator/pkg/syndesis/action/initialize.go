@@ -2,10 +2,12 @@ package action
 
 import (
 	"context"
+
+	"k8s.io/apimachinery/pkg/runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
-	runtime2 "k8s.io/apimachinery/pkg/runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // Initializes a Syndesis resource with no status and starts the installation process
@@ -21,7 +23,7 @@ func (a *initialize) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 		v1alpha1.SyndesisPhaseNotInstalled)
 }
 
-func (a *initialize) Execute(scheme *runtime2.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
+func (a *initialize) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error {
 
 	list := v1alpha1.SyndesisList{}
 	err := cl.List(context.TODO(), &client.ListOptions{Namespace: syndesis.Namespace}, &list)
@@ -36,7 +38,7 @@ func (a *initialize) Execute(scheme *runtime2.Scheme, cl client.Client, syndesis
 		target.Status.Phase = v1alpha1.SyndesisPhaseNotInstalled
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonDuplicate
 		target.Status.Description = "Cannot install two Syndesis resources in the same namespace"
-		a.log.Error(nil,"Cannot initialize Syndesis resource because its a duplicate","name", syndesis.Name)
+		a.log.Error(nil, "Cannot initialize Syndesis resource because its a duplicate", "name", syndesis.Name)
 	} else {
 		syndesisVersion, err := configuration.GetSyndesisVersionFromOperatorTemplate(scheme)
 		if err != nil {

@@ -2,13 +2,13 @@ package syndesis
 
 import (
 	"context"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
-	"k8s.io/apimachinery/pkg/types"
 	"reflect"
 
-	syndesisv1alpha1 "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/kubernetes"
+
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
@@ -16,6 +16,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"sigs.k8s.io/controller-runtime/pkg/source"
+
+	syndesisv1alpha1 "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
 )
 
 var log = logf.Log.WithName("controller")
@@ -39,12 +42,24 @@ func init() {
 // Add creates a new Syndesis Controller and adds it to the Manager. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager) error {
-	return add(mgr, newReconciler(mgr))
+	reconciler, err := newReconciler(mgr)
+	if err != nil {
+		return err
+	}
+	return add(mgr, reconciler)
 }
 
 // newReconciler returns a new reconcile.Reconciler
-func newReconciler(mgr manager.Manager) reconcile.Reconciler {
-	return &ReconcileSyndesis{client: mgr.GetClient(), scheme: mgr.GetScheme()}
+func newReconciler(mgr manager.Manager) (reconcile.Reconciler, error) {
+	clientset, err := kubernetes.NewForConfig(mgr.GetConfig())
+	if err != nil {
+		return nil, err
+	}
+	return &ReconcileSyndesis{
+		apis:   clientset,
+		client: mgr.GetClient(),
+		scheme: mgr.GetScheme(),
+	}, nil
 }
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
@@ -71,6 +86,7 @@ type ReconcileSyndesis struct {
 	// This client, initialized using mgr.Client() above, is a split client
 	// that reads objects from the cache and writes to the apiserver
 	client client.Client
+	apis   kubernetes.Interface
 	scheme *runtime.Scheme
 }
 
@@ -107,8 +123,8 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 	for _, a := range actionPool {
 		if a.CanExecute(syndesis) {
 			log.Info("Running action", "action", reflect.TypeOf(a))
-			if err := a.Execute(r.scheme, r.client, syndesis); err != nil {
-				log.Error(err, "Error reconciling","action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
+			if err := a.Execute(r.scheme, action.Client{r.client, r.apis}, syndesis); err != nil {
+				log.Error(err, "Error reconciling", "action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
 				return reconcile.Result{}, err
 			}
 		}

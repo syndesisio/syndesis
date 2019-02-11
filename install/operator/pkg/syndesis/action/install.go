@@ -3,16 +3,21 @@ package action
 import (
 	"context"
 	"errors"
-	"github.com/openshift/api/route/v1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
-	syndesistemplate "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
+
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openshift/api/route/v1"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/addons"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
+	syndesistemplate "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 )
 
 const (
@@ -30,7 +35,7 @@ func (a *install) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling)
 }
 
-func (a *install) Execute(scheme *runtime.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
+func (a *install) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error {
 
 	a.log.Info("Installing Syndesis resource", "name", syndesis.Name)
 
@@ -89,6 +94,24 @@ func (a *install) Execute(scheme *runtime.Scheme, cl client.Client, syndesis *v1
 		err = createOrReplace(cl, res)
 		if err != nil && !k8serrors.IsAlreadyExists(err) {
 			return err
+		}
+	}
+
+	// Install addons
+	if addonsDir := *configuration.AddonsDirLocation; len(addonsDir) > 0 {
+		addons, err := addons.GetAddonsResources(addonsDir)
+		if err != nil {
+			return err
+		}
+		for _, addon := range addons {
+			operation.SetLabel(addon, "syndesis.io/addon-resource", "true")
+
+			operation.SetNamespaceAndOwnerReference(addon, syndesis)
+
+			err = createOrReplace(cl, addon)
+			if err != nil && !k8serrors.IsAlreadyExists(err) {
+				return err
+			}
 		}
 	}
 
