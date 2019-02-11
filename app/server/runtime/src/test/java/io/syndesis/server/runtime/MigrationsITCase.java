@@ -15,14 +15,15 @@
  */
 package io.syndesis.server.runtime;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.concurrent.ExecutionException;
 
-import static io.syndesis.common.util.Json.map;
+import io.syndesis.common.util.Json;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.jsondb.impl.SqlJsonDB;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ResourceLoader;
@@ -33,9 +34,9 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import io.syndesis.common.util.Json;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.jsondb.impl.SqlJsonDB;
+import static io.syndesis.common.util.Json.map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest()
 @ActiveProfiles("test")
@@ -61,15 +62,15 @@ public class MigrationsITCase {
     private StoredSettings storedSettings;
 
     @Test
-    public void shouldPerformMigrations() throws JsonProcessingException {
+    public void shouldPerformMigrations() throws JsonProcessingException, InterruptedException, ExecutionException {
         resetDB();
         Migrations migrations = createMigrations("classpath:test-migrations", 0);
-        migrations.run();
+        migrations.run().get();
 
         jsondb.set("/test", json(map("u10001", map("name", "Hiram Chirino"))));
 
         migrations = createMigrations("classpath:test-migrations", 3);
-        migrations.run();
+        migrations.run().get();
 
         final String json = jsondb.getAsString("/test");
         assertThat(json).isEqualTo("{\"u10001\":{\"name\":\"Hiram Chirino Migrated\"}}");
