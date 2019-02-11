@@ -219,7 +219,8 @@ update_pom_versions() {
     for dir in $(ls -d *); do
       if [ -d $dir ]; then
         pushd $dir
-        $topdir/app/mvnw ${maven_opts} versions:set -DnewVersion=$version -DprocessAllModules=true -DgenerateBackupPoms=false
+        sed -i.bak -e "s/\(<syndesis\.version>\).*\(<\/syndesis\.version>\)/\\1$version\\2/"  pom.xml
+        rm pom.xml.bak
         popd
       fi
     done

@@ -15,9 +15,13 @@
  */
 package io.syndesis.server.runtime;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import javax.annotation.PostConstruct;
 
 import io.syndesis.common.model.Schema;
+import io.syndesis.common.util.thread.Threads;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.jsondb.dao.Migrator;
 import io.syndesis.server.jsondb.impl.SqlJsonDB;
@@ -53,7 +57,11 @@ public class Migrations {
     }
 
     @PostConstruct
-    public void run() {
+    public Future<Void> run() {
+        return Executors.newSingleThreadExecutor(Threads.newThreadFactory("DB migration")).submit(this::performMigrations);
+    }
+
+    Void performMigrations() {
         final String storedVersion = storedSettings.get("model_schema_version");
 
         final int versionInDB;
@@ -81,5 +89,7 @@ public class Migrations {
             LOG.info("DB schema has not changed: {}", getTargetVersion());
         }
         manager.resetDeploymentData();
+
+        return null;
     }
 }
