@@ -15,18 +15,13 @@
  */
 package io.syndesis.connector.support.maven;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.zip.GZIPOutputStream;
 
 import com.fasterxml.jackson.core.PrettyPrinter;
 import io.atlasmap.core.DefaultAtlasConversionService;
@@ -167,21 +162,11 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
         }
 
         String inspection = io.atlasmap.v2.Json.mapper().writer((PrettyPrinter) null).writeValueAsString(c);
-        if (Objects.equals(shape.getMetadata().get("compression"), "true")) {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-            try(GZIPOutputStream os = new GZIPOutputStream(bos)) {
-                os.write(inspection.getBytes(StandardCharsets.UTF_8));
-                os.finish();
-
-                inspection =  Base64.getEncoder().encodeToString(bos.toByteArray());
-            }
-        }
-
         return new DataShape.Builder()
             .createFrom(shape)
             .specification(inspection)
             .variants(variants)
+            .compress()
             .build();
     }
 
