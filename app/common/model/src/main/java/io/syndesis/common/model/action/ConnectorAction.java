@@ -64,11 +64,11 @@ public interface ConnectorAction extends Action, WithId<ConnectorAction>, WithDe
 
     @Override
     default ConnectorAction withInputDataShape(final Optional<DataShape> inputDataShape) {
-        return builder().descriptor(getDescriptor().builder().withInputDataShape(inputDataShape)).build();
+        return builder().descriptor(getDescriptor().builder().withInputDataShape(inputDataShape).build()).build();
     }
 
     @Override
     default ConnectorAction withOutputDataShape(final Optional<DataShape> outputDataShape) {
-        return builder().descriptor(getDescriptor().builder().withOutputDataShape(outputDataShape)).build();
+        return builder().descriptor(getDescriptor().builder().withOutputDataShape(outputDataShape).build()).build();
     }
 }

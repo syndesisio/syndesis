@@ -59,11 +59,11 @@ public interface StepAction extends Action, WithId<StepAction> {
 
     @Override
     default StepAction withInputDataShape(final Optional<DataShape> inputDataShape) {
-        return builder().descriptor(getDescriptor().builder().withInputDataShape(inputDataShape)).build();
+        return builder().descriptor(getDescriptor().builder().withInputDataShape(inputDataShape).build()).build();
     }
 
     @Override
     default StepAction withOutputDataShape(final Optional<DataShape> outputDataShape) {
-        return builder().descriptor(getDescriptor().builder().withOutputDataShape(outputDataShape)).build();
+        return builder().descriptor(getDescriptor().builder().withOutputDataShape(outputDataShape).build()).build();
     }
 }

@@ -15,10 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Validator;
 import javax.validation.groups.ConvertGroup;
@@ -32,6 +28,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.swagger.annotations.Api;
@@ -60,7 +59,6 @@ import io.syndesis.server.endpoint.v1.operations.Updater;
 import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -136,12 +134,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     @Override
     public IntegrationOverview get(final String id) {
-        final DataManager dataManager = getDataManager();
-        final Integration integration = dataManager.fetch(Integration.class, id);
-
-        if (integration == null) {
-            throw new EntityNotFoundException();
-        }
+        final Integration integration = getIntegration(id);
 
         if (integration.isDeleted()) {
             // Not sure if we need to do that for both current and desired
@@ -153,7 +146,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             throw new EntityNotFoundException(String.format("Integration %s has been deleted", integration.getId()));
         }
 
-        return toCurrentIntegrationOverview(integration, dataManager);
+        return toCurrentIntegrationOverview(integration, getDataManager());
     }
 
     @POST
