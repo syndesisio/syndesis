@@ -71,6 +71,7 @@
     <module>runtime</module>
     <module>bom</module>
     <module>project-generator</module>
+    <module>runtime-camelk</module>
     <module>runtime-springboot</module>
   </modules>
 
