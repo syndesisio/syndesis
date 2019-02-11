@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
@@ -111,13 +112,8 @@ public final class IntegrationSpecificationHandler {
         fetch(@NotNull @PathParam("id") @ApiParam(required = true, example = "integration-id", value = "The ID of the integration") final String id) {
         final Integration integration = integrationHandler.getIntegration(id);
 
-        final Optional<ResourceIdentifier> specification = integration.getResources().stream().filter(r -> r.getKind() == Kind.OpenApi)
-            .max(ResourceIdentifier.LATEST_VERSION);
-
-        return specification
-            .flatMap(s -> s.getId()
-                .flatMap(resourceManager::loadOpenApiDefinition)
-                .map(IntegrationSpecificationHandler::createResponseFrom))
+        return specificationFrom(integration)
+            .map(IntegrationSpecificationHandler::createResponseFrom)
             .orElse(NOT_FOUND);
     }
 
@@ -136,8 +132,10 @@ public final class IntegrationSpecificationHandler {
 
         final Integration updated = updateFlowsAndStartAndEndDataShapes(existing, givenIntegration);
 
-        if (existing.getFlows().equals(updated.getFlows())) {
-            // no changes were made to the flows
+        final OpenApi existingApiSpecification = specificationFrom(existing).orElse(null);
+
+        if (Objects.equals(existing.getFlows(), updated.getFlows()) && Objects.equals(existingApiSpecification, apiIntegration.getSpec())) {
+            // no changes were made to the flows or to the specification
             return;
         }
 
@@ -148,6 +146,15 @@ public final class IntegrationSpecificationHandler {
 
         // perform the regular update
         integrationHandler.update(id, updated);
+    }
+
+    Optional<OpenApi> specificationFrom(final Integration integration) {
+        final Optional<ResourceIdentifier> specification = integration.getResources().stream().filter(r -> r.getKind() == Kind.OpenApi)
+            .max(ResourceIdentifier.LATEST_VERSION);
+
+        return specification
+            .flatMap(s -> s.getId()
+                .flatMap(resourceManager::loadOpenApiDefinition));
     }
 
     static Response createResponseFrom(final OpenApi document) {
