@@ -9,29 +9,14 @@ in the middle of the integration or to finish the integration.
 To do this, add a Google Sheets connection to the middle of an integration
 or as the integration's finish connection.
 
-[IMPORTANT]
-====
-In this release, the *Update sheet values* action requires a 
-spreadsheetId in order to
-identify the target spreadsheet that this data is written to. 
-In most if not all cases, this means that you must add a Google
-Sheets connection that
-link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_sheets[creates] or
-link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-get-spreadsheet_sheets[obtains] the spreadsheet that you want to update,
-then add the Google Sheets connection that updates the spreadsheet, and then
-insert a data mapper step between the two Google Sheets connections.
-====
-
 .Prerequisites
 * You created a Google Sheets connection that is authorized to access the 
 Google spreadsheet that you want to update.
 * You have access to the spreadsheet ID for the spreadsheet that you want
-to update. You can obtain this ID manually, or you can map it from a previous
-connection that creates the spreadsheet or obtains values from
-the spreadsheet. 
-* You are creating or editing an integration and {prodname} 
-is prompting you to add the integration's finish 
-connection or to add a middle connection. 
+to update.  
+* You are creating or editing an integration and {prodname} is prompting you
+to choose the finish connection or to select the step that you want to add
+to the middle of the integration.
 
 .Procedure
 . Click a Google Sheets connection that is authorized to access
@@ -42,7 +27,8 @@ the spreadsheet that you want to update.
 .. In the *SpreadsheetId* field, do one of the following: 
 +
 * Enter the ID of the spreadsheet that you want to update. 
-* Leave the field blank. In this case, you must add a data mapper step
+* Leave the field blank. In this case, after you add this connection 
+to the integration, you must add a data mapper step
 before this connection. In the data mapper step, map the spreadsheet ID from 
 a previous connection to this connection. The previous connection must 
 access the spreadsheet that you want to update in this connection.
@@ -51,6 +37,9 @@ access the spreadsheet that you want to update in this connection.
 cells that you want to update. Specify the start and end coordinates, 
 for example, `A1:D4` updates the first 4 columns in the first 4 rows in
 the first sheet in the spreadsheet. 
++
+The default is `A`, which updates the first column in the first sheet 
+in the spreadsheet. 
 
 .. In the *Major Dimension* field, accept *Rows*, which is the default, or
 select *Columns*. *Rows* configures the action to use row objects to update 
@@ -58,7 +47,7 @@ the sheet. Each row object contains a value for each column that you want to upd
 *Columns* configures the action to use column objects to update the sheet. 
 Each column object contains a value for each row that you want to update.  
 
-. In the *Value Input Option* field, indicate how you want Google sheets
+.. In the *Value Input Option* field, indicate how you want Google sheets
 to interpret the data that it receives for updating the sheet. 
 *Unspecified*, which is the default, enables Google Sheets to automatically 
 convert data that it recognizes. For example, if the input data is a date, then 
@@ -70,20 +59,30 @@ which defaults to *User entered*.
 * *Raw* does nothing. Google Sheets inserts the input data as is.
 * *User entered* enables automatic conversion of recognizable data. 
 
-. Click *Done* to add the connection to the integration.
+.. Click *Done* to add the connection to the integration.
 The connection appears in the integration visualization flow in the
 location where you added it.
-. In the integration visualization flow, click the plus sign that is
-just before the connection that you just added.
-. Click the *Data Mapper* card to add a data mapping step to the integration. 
+. If you want to add any other connections to the integration, add 
+them now and then return to these instructions. 
+. After the integration has all desired connections, 
+in the integration visualization flow, click the plus sign that is
+just before the Google Sheets connection that updates sheet values.
+. Click the *Data Mapper* card to add a data mapping step to 
+the integration. 
 
-. In the data mapper, map fields from the Google Sheets connection that
-obtained the spreadsheet to the corresponding fields in the Google Sheets 
-connection that updates the spreadsheet: 
-.. Map the source `spreadsheetId` to the target `spreadsheetId`.
-.. Map the fields from the source spreadsheet to the target spreadsheet. 
+. In the data mapper: 
+
+.. If you did not specify the spreadsheet ID when you configured the 
+*Update sheet values* action, then map a source `spreadsheetId` 
+to the target `spreadsheetId`.
+
+.. Specify the data that you want to use to update the sheet by 
+mapping fields from a source step to the target spreadsheet. For example, 
+you might map fields from another spreadsheet or from a database. 
 +
-If you change the *Range* or *Major Dimension* field settings in 
-the *Update sheet values* action then the data mapper displays 
-different fields according to your changes.
+If you need to, you can edit the Google Sheets connection that updates
+sheet values and change the settings for *Range* or *Major Dimension*. 
+Changing these settings causes the data mapper to display different 
+target fields according to your changes. 
+
 .. In the upper right, click *Done* to add the data mapper step.

@@ -34,11 +34,6 @@ is authorized to access.
 To obtain a spreadsheet ID, display the spreadsheet in a browser. 
 The ID is the part of the URL between `d/` and `/edit`. 
 
-.. In the *Include grid data* field, accept *No*, which is the defautl, or 
-select *Yes*. A setting of *No* returns only properties. A setting of
-*Yes* returns properties as well as the data that is in the first sheet 
-of the spreadsheet. 
-
 .. In the *Delay* field, accept the default of 30 seconds or
 specify how often you want the connection to obtain properties.
 

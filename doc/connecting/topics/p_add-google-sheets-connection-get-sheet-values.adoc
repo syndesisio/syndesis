@@ -4,21 +4,25 @@
 [id='add-google-sheets-connection-get-sheet-values_{context}']
 = Trigger an integration when polling returns spreadsheet data
 
-To trigger execution of an integration upon obtaining data from
-a Google Sheets spreadsheet, add a Google Sheets connection to an integration as
-its start connection. 
-When the integration is running, the Google Sheets connection polls the 
-spreadsheet at the interval that you specified, obtains
-the data that you identified, and
-passes the data to the next step in the integration.
+To trigger execution of an integration upon obtaining data from a
+Google Sheets spreadsheet, add a Google Sheets connection to an integration 
+as its start connection. When the integration is running, the Google Sheets 
+connection polls the spreadsheet at the interval that you specified, obtains
+the data that you identified, and passes the data to the next step in the 
+integration.
+
+To obtain data from a particular sheet in a spreadsheet, you specify the
+sheet name when you configure the *Get sheet values* action for the
+Google Sheets connection. A particular connection can obtain data from
+only one sheet. 
 
 Between polls, if there are no changes to the sheet values that the 
-connection returns, then 
-the next poll returns the same data as the previous poll. 
+connection is configured to return, then 
+the next poll returns the same values as the previous poll. 
 
 .Prerequisite
 You created a Google Sheets connection that is authorized to access 
-the spreadsheet that you want to obtain values from. 
+the spreadsheet that you want to obtain data from. 
 
 .Procedure
 
@@ -77,8 +81,12 @@ you can add to an integration.
 specify how often you want the connection to obtain spreadsheet data.
 
 .. In the *Max Results* field, accept the default of *25* or
-specify the maximum number of objects that the connection
-can return. 
+specify another limit for the minor dimension in the result matrix. 
++
+For example, suppose that the *Major Dimension* is columns and that 
+*Max Results* is 25. The poll returns a column object for each column
+that the range setting includes. Each column object contains no more than 
+25 row values. 
 
 . Click *Done* to add this Google Sheets connection as the integration's
 start connection. In the integration visualization panel, the connection 

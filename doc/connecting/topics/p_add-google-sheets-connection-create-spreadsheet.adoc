@@ -4,18 +4,23 @@
 [id='add-google-sheets-connection-create-spreadsheet_{context}']
 = Create a spreadsheet
 
-In an integration, you can create a new spreadsheet in the middle of
-an integration or to finish an integration. To do this, add a 
-Google Sheets connection to the middle of an integration
-or as the integration's finish connection.
+To create a new spreadsheet in the middle of an integration, 
+add a Google Sheets connection between the start and finish connections. 
+While you can also finish an integration with a Google Sheets 
+connection that creates a spreadsheet, you cannot add data to a 
+new spreadsheet in the same connection. Therefore, when you want to 
+create a spreadsheet and add data to the spreadsheet in the same
+integration, the integration requires two Google Sheets connections.
+One connection creates the spreadsheet and then a subsequent spreadsheet
+adds data to the spreadsheet. 
 
 .Prerequisites
 * You created a Google Sheets connection that is authorized to
 access the Google account in which you want to create the 
 spreadsheet. 
-* You are creating or editing an integration and {prodname} 
-is prompting you to add the integration's finish 
-connection or to add a middle connection. 
+* You are creating or editing an integration and {prodname} is prompting you
+to select the step that you want to add to the middle of the integration,
+or that you want to add to finish the integration. 
 
 .Procedure
 
@@ -26,9 +31,9 @@ the Google account that you want to use to create the spreadsheet.
 +
 .. In the *Title* field, enter the title of the new spreadsheet.
 .. In the *Time Zone* field, enter the time zone that the 
-new spreadsheet should use, for example, `India Standard Time`, `Tokyo`.
+new spreadsheet should use, for example, `India Standard Time`, or `Tokyo`.
 .. In the *Locale* field, enter the locale of the 
-new spreadsheet, for example, `Canada`, `Hong Kong`.
+new spreadsheet, for example, `Canada`, or `Hong Kong`.
 
 . Click *Done* to add the connection to the integration.
 The connection appears in the integration visualization flow in the

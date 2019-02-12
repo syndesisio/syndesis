@@ -4,88 +4,133 @@
 [id='add-google-sheets-connection-add-pivot-table_{context}']
 = Add a pivot table to a sheet
 
-In an integration, you can add pivot tables to a Google Sheets spreadsheet
-in the middle of the integration or to finish the integration.
-To do this, add a Google Sheets connection to the middle of an integration
-or as the integration's finish connection.
+In the middle of an integration, or to finish an integration, 
+you can add a pivot table to a Google Sheets spreadsheet.
+A pivot table lets you aggregate, sort, or apply a function to 
+spreadsheet data and display the results. 
+To add a pivot table, add a Google Sheets connection to the middle of an integration
+or as the integration's finish connection. Then add a data mapping
+step before the connection. In the data mapping step, you set 
+options that determine the location, properties, and content of the 
+pivot table. 
 
-[IMPORTANT]
-====
-In this release, the *Add pivot tables* action supports pivot tables of type *BasicChart* or *PieChart*. Each of these pivot table types
-provides individual options and fields for creating a new pivot table in a spreadsheet on your Google Sheets account. The pivot table options
-must be set on a data mapping step prior to the *Add Charts* action.
-====
+In this release, the *Add pivot table* action is limited to defining 
+one value group, one row pivot group, and one column pivot group. 
+Support for multiple groups in a single action is expected to be 
+added in a future release. As a workaround, you can add multiple
+Google Sheets connections that add pivot tables based on the same
+source spreadsheet. 
 
-[IMPORTANT]
-====
-In this release, the *Add pivot tables* action requires a spreadsheetId in order to
-identify the target spreadsheet that is updated with newly added pivot tables. In most if not all cases, this means that you must add a Google
-Sheets connection that
-link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_sheets[creates] or
-link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-get-spreadsheet_sheets[obtains] the spreadsheet that you want to add pivot tables to,
-then add the Google Sheets connection that add pivot tables to the spreadsheet, and then
-insert a data mapper step between the two Google Sheets connections.
-====
 
 .Prerequisites
-* A Google Sheets connection is available and this connection
-is authorized to access the Google spreadsheet that
-you want to add pivot tables to.
-* You have access to a spreadsheetId on your Google Sheets account that you want to add pivot tables to
-* In the integration, there is an earlier connection to Google Sheets
-and that connection obtains the spreadsheetId that you want to add pivot tables to.
+* You created a Google Sheets connection that is authorized to access
+the Google spreadsheet that you want to add a pivot table to.
+* You have access to the ID for the spreadsheet that contains the source
+data for the pivot table. You have access to the ID for the spreadsheet 
+that you want to add a pivot table to. The source data and the pivot 
+table can be in different spreadsheets or in the same spreadsheet.
 * You are creating or editing an integration and {prodname} is prompting you
-to add a finish connection or select the connection that you want to add
-in the middle of an integration.
+to choose the finish connection or to select the step that you want to add
+to the middle of the integration.
 
 .Procedure
 . Click a Google Sheets connection that is authorized to access
-the spreadsheet that you want to connect to.
+the spreadsheet that you want to add the pivot table to.
 . On the *Choose an Action* page, click *Add pivot tables*.
-. To configure the *Add pivot tables* action:
+. To configure the *Add pivot tables* action, in the 
+*SpreadsheetId* field, do one of the following: 
 +
-.. In the *SpreadsheetId* field, enter the identifier of the spreadsheet that you want to add pivot tables to. If you do not have it
-you might want to link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_sheets[create] or
-link:{LinkFuseOnlineConnectorGuide}#add-google-sheets-connection-create-spreadsheet_sheets[obtain] the spreadsheet that
-you want to update first and map the spreadsheet identifier in the data mapping step.
+* Enter the ID of the spreadsheet that you want to add a pivot table to. 
+* Leave the field blank. In the data mapper step that will be just
+before this connection, map the spreadsheet ID from 
+a previous connection to this connection. The previous connection must 
+access the spreadsheet that you want to add a pivot table to in this connection.
 
 . Click *Done* to add the connection to the integration.
 The connection appears in the integration visualization flow in the
 location where you added it.
-. In the integration visualization flow, hover over the plus sign that is
-just before the connection that you just added and click *Add a step*.
+. If you want to add any other connections to this integration, add them 
+now. Then return to these instructions. 
+. In the integration visualization flow, click the plus sign that is
+just before the connection that adds a pivot table to a sheet.
 . Click *Data Mapper*.
-. In the data mapper, you are able to map fields from the Google Sheets connection that
-obtained the spreadsheet to the corresponding field in the Google Sheets connection that adds pivot tables to the spreadsheet (e.g. spreadsheetId).
-In addition to that the pivot table options are represented as fields in the target data shape.
 +
-.. To configure a new pivot table
-... In the *spreadsheetId* field, provide a target spreadsheet identifier on your Google Sheets account that the pivot table is added to. You can map this from previous steps in your integration.
-... In the *sheetId* field, specify the target sheet identifier where the pivot table will be added to in the spreadsheet on your Google Sheets account.
-... In the *sourceSheetId* field, specify the source sheet identifier where the pivot table sources are located within the spreadsheet on your Google Sheets account.
-... In the *sourceRange* field, specify the source data range with series of data to build the pivot table from. This field uses the Google Sheets A1 notation.
-... In the *valueLayout* field, set the value layout to be used on the pivot table (one of `HORIZONTAL`, `VERTICAL`). The default `HORIZONTAL` defines values are laid out as columns.
-... In the *start* field, enter the cell coordinate where to start the newly created pivot table. This will be the upper left first cell of the pivot table. In case you leave this empty the pivot table it placed
-right below the source table in the very same sheet in the spreadsheet on your Google Sheets account.
-.. To add a value group
-... In the *name* field, specify the value group name
-... In the *function* field, specify a function to apply on the value group (one of `SUM`, `COUNT`, `AVERAGE`, `MAX`, `MIN`, `CUSTOM`). Default is `SUM`. Choose `CUSTOM` when defining a formula.
-... In the *formula* field, enter a custom formula that is applied to the value group. Needs the *function* to specify `CUSTOM`.
-... In the *sourceColumn* field, the column name as coordinate that builds the value group.
-.. To add a row pivot group
-... In the *label* field, enter the pivot group name
-... In the *sortOrder* field, specify a sort order that is applied to the pivot group (one of `ASCENDING`, `DESCENDING`). Default is `ASCENDING`.
-... In the *showTotals* field, enable or disable the display of the totals for this pivot group (choose one of `true` or `false`). Default is `true`.
-... In the *sourceColumn* field, the column name as coordinate that builds the pivot group.
-.. To add a column pivot group
-... In the *label* field, enter the pivot group name
-... In the *sortOrder* field, specify a sort order that is applied to the pivot group (one of `ASCENDING`, `DESCENDING`). Default is `ASCENDING`.
-... In the *showTotals* field, enable or disable the display of the totals for this pivot group (choose one of `true` or `false`). Default is `true`.
-... In the *sourceColumn* field, the column name as coordinate that builds the pivot group.
-. In the upper right, click *Done* to add the data mapper step.
+In the data mapper, map source properties or source fields to the target 
+Google Sheets connection, which is adding a pivot table. The following instructions
+assume that there is a source field or a source property that contains the 
+value that you want to map to each target field. 
++
+If there is no source field or
+property that contains the required value, then create a source property
+in the data mapper by clicking the + sign that is to the right of the 
+*Properties* folder. In the *Create Property* dialog, give the property
+a name that makes it easy to map to the correct target field, for example, 
+specify *`valueLayout`* as the property name. 
+Specify the value that you want the connection to use to create the 
+pivot table. The pivot table's value layout field requires a value of `HORIZONTAL`
+or `VERTICAL` so you might specify `VERTICAL` as the value of the 
+*valueLayout* property. Save the new property. 
 
-[IMPORTANT]
-====
-In this release, the *Add pivot table* action is limited to defining a single value group, row pivot group and column pivot group. Support for multiple groups in a single action is about to
-be added within upcoming releases. Though you can use several *Add pivot table* actions in an integration to create multiple groups on the same source.
-====
+. In the data mapper, configure a new pivot table as follows: 
+
+.. Map a source *spreadsheetId* field to the target *spreadsheetId* field. 
+The connection adds the pivot table to this spreadsheet. 
+
+.. Identify the sheet to add the pivot table to by mapping an integer to the 
+*sheetId* field. This value is the index of the 
+sheet to add the pivot table to. The default is `0`, which adds the pivot
+table to the first sheet in the spreadsheet.  
+.. Identify the sheet that provides the data for generating the pivot table by mapping 
+an integer to the target *sourceSheetId* field. This value is the index 
+of the sheet that provides the data. The default is `0`, which is the 
+first sheet in the spreadsheet. 
+
+.. Set the source data range for generating the pivot table 
+by mapping an A1 notation value to the target *sourceRange* field. 
+.. Set the value layout to be used on the pivot table by mapping to the
+target *valueLayout* field. The value must be `VERTICAL` or `HORIZONTAL`, which
+is the default. `HORIZONTAL` specifies that values are laid out as columns. 
+.. Set the top left cell of the pivot table by mapping an A1 notation
+cell coordinate to the target *start* field. The default is that the 
+pivot table is placed immediately below the source data in the same sheet. 
+
+.. To add a value group, expand *valueGroups* 
+in the target panel, and map values to the 
+fields under *valueGroups*:
+... Map a value group name to the target *name* field.
+... Map a function, which you want to apply to the value group, to the target *function* field. 
+The value must be `SUM`, `COUNT`, `AVERAGE`, `MAX`, `MIN`, or `CUSTOM`. 
+The default is `SUM`. Map `CUSTOM` to *function* when you are defining a formula.
+... Map a custom formula, which you want to apply to the value group, to the target 
+*formula* field if you mapped the `CUSTOM` value to the *function* field. 
+... Map a column name, which is the coordinate that builds the value group, 
+to the target *sourceColumn* field.
+
+.. To add a row pivot group, expand *columnGroups* 
+in the target panel, and map values to the 
+fields under *columnGroups*:
+... Map a row pivot group name to the target *label* field.
+... Map the sort order that you want to apply to the row pivot group to the
+target *sortOrder* field. The value must be `ASCENDING` or `DESCENDING`.
+The default is `ASCENDING`.
+... Map `true` or `false` to the target *showTotals* field. The default 
+is `true`, which enables the display of totals for the row pivot group. 
+... Map a column name, which is the coordinate that builds the row pivot group,
+to the target *sourceColumn* field.
+
+.. To add a column pivot group, expand *rowGroups* 
+in the target panel, and map values to the 
+fields under *rowGroups*:
+... Map a column pivot group name to the target *label* field.
+... Map the sort order that you want to apply to the column pivot group to the
+target *sortOrder* field. The value must be `ASCENDING` or `DESCENDING`.
+The default is `ASCENDING`.
+... Map `true` or `false` to the target *showTotals* field. The default 
+is `true`, which enables the display of totals for the column pivot group. 
+... Map a column name, which is the coordinate that builds the column pivot group,
+to the target *sourceColumn* field. 
+
+.. In the upper right, click *Done* to add the data mapper step.
+
+.Additional resource
+link:https://developers.google.com/sheets/api/guides/pivot-tables[Google developers documentation for pivot tables]
