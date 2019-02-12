@@ -68,7 +68,9 @@ import { ApiConnectorGuard } from '@syndesis/ui/integration/api-provider/api-pro
 import { ApiProviderSpecificationEditorPage } from './api-provider/operations-page/specification/specification-editor-page.component';
 import { IntegrationResolverService } from './edit-page/integration-resolver.service';
 import { StepsResolverService } from './edit-page/connection-resolver.service';
-import { ApiProviderOperationDescriptionComponent } from '@syndesis/ui/integration/api-provider/operations-page/integration-api-provider-operation-description-component';
+import {
+  ApiProviderOperationDescriptionComponent
+} from '@syndesis/ui/integration/api-provider/operations-page/integration-api-provider-operation-description-component';
 
 const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
 const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
