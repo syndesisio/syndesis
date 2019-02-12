@@ -15,7 +15,7 @@
  */
 package io.syndesis.extension.maven.plugin;
 
-import java.io.ByteArrayOutputStream;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -26,21 +26,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.zip.GZIPOutputStream;
-import javax.annotation.Nullable;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -569,7 +566,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private Optional<DataShape> generateInspections(String actionId, Optional<DataShape> dataShape) throws Exception {
+    protected Optional<DataShape> generateInspections(String actionId, Optional<DataShape> dataShape) throws Exception {
         if (dataShape.isPresent()) {
 
             // don't compute inspections if already set
@@ -581,26 +578,17 @@ public class GenerateMetadataMojo extends AbstractMojo {
             Optional<String> specs = generateInspections(actionId, dataShape.get().getKind(), dataShape.get().getType());
             if (specs.isPresent()) {
                 String inspection = specs.get();
-                if (Objects.equals(dataShape.get().getMetadata().get("compression"), "true")) {
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                DataShape.Builder builder = new DataShape.Builder()
+                                                    .createFrom(dataShape.get())
+                                                    .specification(inspection);
 
-                    try(GZIPOutputStream os = new GZIPOutputStream(bos)) {
-                        os.write(inspection.getBytes(StandardCharsets.UTF_8));
-                        os.finish();
-
-                        inspection =  Base64.getEncoder().encodeToString(bos.toByteArray());
-                    }
-                }
-
-                DataShape.Builder builder = new DataShape.Builder();
-                builder.createFrom(dataShape.get());
-                builder.specification(inspection);
-
+                List<DataShape> inspectedShapes = new ArrayList<>();
                 for (DataShape variant : dataShape.get().getVariants()) {
-                    generateInspections(actionId, Optional.of(variant)).ifPresent(builder::addVariant);
+                    inspectedShapes.add(generateInspections(actionId, Optional.of(variant)).orElse(variant));
                 }
+                builder.variants(inspectedShapes);
 
-                return Optional.of(builder.build());
+                return Optional.of(builder.compress().build());
             }
 
             return dataShape;

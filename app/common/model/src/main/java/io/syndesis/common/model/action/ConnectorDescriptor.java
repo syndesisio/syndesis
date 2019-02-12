@@ -91,12 +91,12 @@ public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredPro
             return propertyDefinitionSteps(modifiedSteps);
         }
 
-        public ConnectorDescriptor withInputDataShape(final Optional<DataShape> inputDataShape) {
-            return inputDataShape(inputDataShape).build();
+        public Builder withInputDataShape(final Optional<DataShape> inputDataShape) {
+            return inputDataShape(inputDataShape);
         }
 
-        public ConnectorDescriptor withOutputDataShape(final Optional<DataShape> outputDataShape) {
-            return outputDataShape(outputDataShape).build();
+        public Builder withOutputDataShape(final Optional<DataShape> outputDataShape) {
+            return outputDataShape(outputDataShape);
         }
     }
 

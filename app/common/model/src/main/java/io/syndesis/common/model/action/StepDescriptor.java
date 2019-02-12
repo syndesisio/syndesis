@@ -90,12 +90,12 @@ public interface StepDescriptor extends ActionDescriptor, Serializable {
             return propertyDefinitionSteps(modifiedSteps);
         }
 
-        public StepDescriptor withInputDataShape(final Optional<DataShape> inputDataShape) {
-            return inputDataShape(inputDataShape).build();
+        public StepDescriptor.Builder withInputDataShape(final Optional<DataShape> inputDataShape) {
+            return inputDataShape(inputDataShape);
         }
 
-        public StepDescriptor withOutputDataShape(final Optional<DataShape> outputDataShape) {
-            return outputDataShape(outputDataShape).build();
+        public StepDescriptor.Builder withOutputDataShape(final Optional<DataShape> outputDataShape) {
+            return outputDataShape(outputDataShape);
         }
     }
 

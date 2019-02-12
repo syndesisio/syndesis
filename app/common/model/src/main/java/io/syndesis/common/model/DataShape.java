@@ -15,15 +15,24 @@
  */
 package io.syndesis.common.model;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.common.util.IOStreams;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -90,5 +99,82 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
     }
 
     class Builder extends ImmutableDataShape.Builder {
+
+        public static final String COMPRESSION_METADATA_KEY = "compression";
+        private static final String COMPRESSED_METADATA_KEY = "compressed";
+
+        public Builder decompress() {
+            DataShape currentShape = build();
+            if ("true".equals(currentShape.getMetadata().get(COMPRESSION_METADATA_KEY)) &&
+                    currentShape.getMetadata().getOrDefault(COMPRESSED_METADATA_KEY, "true").equals("true")) {
+                byte[] decoded = Base64.getDecoder().decode(currentShape.getSpecification().getBytes(StandardCharsets.UTF_8));
+                try (ByteArrayInputStream zipped = new ByteArrayInputStream(decoded);
+                     GZIPInputStream is = new GZIPInputStream(zipped)) {
+                    return new DataShape.Builder()
+                            .createFrom(currentShape)
+                            .putMetadata(COMPRESSED_METADATA_KEY, "false")
+                            .variants(currentShape.getVariants()
+                                      .stream()
+                                      .map(variant -> new DataShape.Builder()
+                                               .createFrom(variant)
+                                               .decompress()
+                                               .build())
+                                      .collect(Collectors.toList()))
+                            .specification(IOStreams.readText(is));
+                } catch (IOException e) {
+                    throw new IllegalStateException("Failed to decompress data shape", e);
+                }
+            } else if (currentShape.getVariants().stream().anyMatch(variant -> "true".equals(variant.getMetadata().get(COMPRESSION_METADATA_KEY)))) {
+                return new DataShape.Builder()
+                        .createFrom(currentShape)
+                        .variants(currentShape.getVariants()
+                                .stream()
+                                .map(variant -> new DataShape.Builder()
+                                        .createFrom(variant)
+                                        .decompress()
+                                        .build())
+                                .collect(Collectors.toList()));
+            }
+
+            return this;
+        }
+
+        public Builder compress() {
+            DataShape currentShape = build();
+            if ("true".equals(currentShape.getMetadata().get(COMPRESSION_METADATA_KEY)) &&
+                    currentShape.getMetadata().getOrDefault(COMPRESSED_METADATA_KEY, "false").equals("false")) {
+                try (ByteArrayOutputStream zipped = new ByteArrayOutputStream();
+                     GZIPOutputStream os = new GZIPOutputStream(zipped)) {
+                    os.write(currentShape.getSpecification().getBytes(StandardCharsets.UTF_8));
+                    os.finish();
+
+                    return new DataShape.Builder()
+                            .createFrom(currentShape)
+                            .putMetadata(COMPRESSED_METADATA_KEY, "true")
+                            .variants(currentShape.getVariants()
+                                      .stream()
+                                      .map(variant -> new DataShape.Builder()
+                                               .createFrom(variant)
+                                               .compress()
+                                               .build())
+                                      .collect(Collectors.toList()))
+                            .specification(Base64.getEncoder().encodeToString(zipped.toByteArray()));
+                } catch (IOException e) {
+                    throw new IllegalStateException("Failed to compress data shape", e);
+                }
+            } else if (currentShape.getVariants().parallelStream().anyMatch(variant -> "true".equals(variant.getMetadata().get(COMPRESSION_METADATA_KEY)))) {
+                return new DataShape.Builder()
+                        .createFrom(currentShape)
+                        .variants(currentShape.getVariants()
+                                .stream()
+                                .map(variant -> new DataShape.Builder()
+                                        .createFrom(variant)
+                                        .compress()
+                                        .build())
+                                .collect(Collectors.toList()));
+            }
+
+            return this;
+        }
     }
 }

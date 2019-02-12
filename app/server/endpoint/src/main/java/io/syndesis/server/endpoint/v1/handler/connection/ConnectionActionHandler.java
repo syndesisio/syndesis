@@ -15,6 +15,20 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
+import javax.persistence.EntityNotFoundException;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+
 import com.netflix.hystrix.HystrixExecutable;
 import com.netflix.hystrix.HystrixInvokableInfo;
 import io.swagger.annotations.Api;
@@ -35,21 +49,6 @@ import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import org.apache.commons.lang3.StringUtils;
-
-import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Api(value = "actions")
 public class ConnectionActionHandler {
@@ -79,10 +78,7 @@ public class ConnectionActionHandler {
 
         connectorId = connector.getId().get();
 
-        actions = connector.getActions().stream()//
-            .filter(ConnectorAction.class::isInstance)//
-            .map(ConnectorAction.class::cast)//
-            .collect(Collectors.toList());
+        actions = connector.getActions();
     }
 
     @POST
@@ -132,8 +128,7 @@ public class ConnectionActionHandler {
             return Response.ok().entity(Meta.verbatim(generatedDescriptor)).build();
         }
 
-        final Map<String, String> parameters = encryptionComponent
-            .decrypt(new HashMap<>(Optional.ofNullable(properties).orElseGet(HashMap::new)));
+        final Map<String, String> parameters = encryptionComponent.decrypt(new HashMap<>(properties));
         // put all action parameters with `null` values
         generatedDescriptor.getPropertyDefinitionSteps()
             .forEach(step -> step.getProperties().forEach((k, v) -> parameters.putIfAbsent(k, null)));
@@ -208,24 +203,25 @@ public class ConnectionActionHandler {
         }
 
         final DataShape input = dynamicMetadata.inputShape();
-        if (shouldEnrichDataShape(descriptor.getInputDataShape(), input)) {
+        if (descriptor.getInputDataShape().isPresent() &&
+                shouldEnrichDataShape(descriptor.getInputDataShape().get(), input)) {
             enriched.inputDataShape(input);
         }
 
         final DataShape output = dynamicMetadata.outputShape();
-        if (shouldEnrichDataShape(descriptor.getOutputDataShape(), output)) {
+        if (descriptor.getOutputDataShape().isPresent() &&
+                shouldEnrichDataShape(descriptor.getOutputDataShape().get(), output)) {
             enriched.outputDataShape(output);
         }
 
         return adaptDataShapes(enriched);
     }
 
-    private static boolean isMaleable(final DataShapeKinds kind) {
+    private static boolean isMalleable(final DataShapeKinds kind) {
         return kind != DataShapeKinds.JAVA;
     }
 
-    private static boolean shouldEnrichDataShape(final Optional<DataShape> maybeExistingDataShape, final DataShape received) {
-        return maybeExistingDataShape.isPresent() && isMaleable(maybeExistingDataShape.get().getKind()) && received != null
-            && received.getKind() != null;
+    private static boolean shouldEnrichDataShape(final DataShape existing, final DataShape received) {
+        return isMalleable(existing.getKind()) && received != null && received.getKind() != null;
     }
 }
