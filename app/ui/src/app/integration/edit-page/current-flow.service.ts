@@ -15,7 +15,11 @@ import {
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { IntegrationStore, DATA_MAPPER, StepStore } from '@syndesis/ui/store';
-import { FlowEvent } from '@syndesis/ui/integration/edit-page';
+import {
+  FlowEvent,
+  FlowError,
+  FlowErrorKind,
+} from '@syndesis/ui/integration/edit-page';
 import {
   setIntegrationProperty,
   createStepUsingStore,
@@ -69,6 +73,7 @@ export class CurrentFlowService {
   events = new EventEmitter<FlowEvent>();
 
   flows$ = new BehaviorSubject<Flow[]>(undefined);
+  currentFlowErrors$ = new BehaviorSubject<FlowError[]>([]);
   currentFlow$ = new BehaviorSubject<Flow>(undefined);
   integration$ = new BehaviorSubject<Integration>(undefined);
   loaded$ = new BehaviorSubject<boolean>(false);
@@ -582,15 +587,34 @@ export class CurrentFlowService {
     if (!this.loaded) {
       return false;
     }
+    const validations = this.validate();
+    for (const validation of validations) {
+      switch (validation.kind) {
+        case FlowErrorKind.NO_START_CONNECTION:
+          router.navigate(['step-select', this.getFirstPosition()], {
+            relativeTo: route.parent,
+          });
+          return false;
+        case FlowErrorKind.NO_FINISH_CONNECTION:
+          router.navigate(['step-select', this.getLastPosition()], {
+            relativeTo: route.parent,
+          });
+          return false;
+        default:
+        // this function doesn't need to deal with it
+      }
+    }
+    return true;
+  }
+
+  validate() {
+    const errors: FlowError[] = [];
     const startStep = this.getStartStep();
     if (
       typeof startStep === 'undefined' ||
       typeof startStep.connection === 'undefined'
     ) {
-      router.navigate(['step-select', this.getFirstPosition()], {
-        relativeTo: route.parent,
-      });
-      return false;
+      errors.push({ kind: FlowErrorKind.NO_START_CONNECTION });
     }
     const endStep = this.getEndStep();
     if (
@@ -598,12 +622,9 @@ export class CurrentFlowService {
       (endStep.stepKind === 'endpoint' &&
         typeof this.getEndStep().connection === 'undefined')
     ) {
-      router.navigate(['step-select', this.getLastPosition()], {
-        relativeTo: route.parent,
-      });
-      return false;
+      errors.push({ kind: FlowErrorKind.NO_FINISH_CONNECTION });
     }
-    return true;
+    return errors;
   }
 
   getIntegrationClone(): Integration {
@@ -669,6 +690,7 @@ export class CurrentFlowService {
     this.integration$.next(this.integration);
     this.flows$.next(this.flows);
     this.currentFlow$.next(this.currentFlow);
+    this.currentFlowErrors$.next(this.validate());
     this.loaded$.next(this.loaded);
   }
 }

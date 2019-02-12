@@ -1,10 +1,16 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import {
   ModalService,
   NavigationService,
   OpenApiUploaderValueType,
   OpenApiUploadSpecification,
-  OpenApiValidationErrorMessage
+  OpenApiValidationErrorMessage,
 } from '@syndesis/ui/common';
 import { Store, select } from '@ngrx/store';
 import { Router } from '@angular/router';
@@ -20,19 +26,23 @@ import {
   getApiProviderLoading,
   getApiProviderValidationResponse,
   getApiProviderWizardStep,
-  getApiProviderIntegrationDescription
+  getApiProviderIntegrationDescription,
 } from '@syndesis/ui/integration/api-provider/api-provider.reducer';
 import {
   ApiProviderValidationResponse,
-  ApiProviderWizardSteps
+  ApiProviderWizardSteps,
 } from '@syndesis/ui/integration/api-provider/api-provider.models';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ActionReducerError } from '@syndesis/ui/platform';
+import { CurrentFlowService } from '../../edit-page';
 
 @Component({
   selector: 'syndesis-integration-api-provider-spec',
   templateUrl: './integration-api-provider-creation-page.component.html',
-  styleUrls: ['../../integration-common.scss', './integration-api-provider-creation-page.component.scss']
+  styleUrls: [
+    '../../integration-common.scss',
+    './integration-api-provider-creation-page.component.scss',
+  ],
 })
 export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   ApiProviderWizardSteps = ApiProviderWizardSteps;
@@ -49,6 +59,7 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   specificationTitle$: Observable<string>;
   integrationDescription$: Observable<string>;
   creationError$: Observable<ActionReducerError>;
+  flowSubscription: Subscription;
 
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
   private cancelModalId = 'api-provider-create-cancellation-modal';
@@ -56,10 +67,10 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   constructor(
     private apiProviderStore: Store<ApiProviderStore>,
     private modalService: ModalService,
+    private currentFlowService: CurrentFlowService,
     private nav: NavigationService,
     private router: Router
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.modalService.registerModal(
@@ -67,16 +78,39 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
       this.cancelModalTemplate
     );
 
+    this.flowSubscription = this.currentFlowService.events.subscribe(event => {
+      if (event.kind === 'integration-cancel-clicked') {
+        this.showCancelModal();
+      }
+    });
     this.loading$ = this.apiProviderStore.pipe(select(getApiProviderLoading));
-    this.currentActiveStep$ = this.apiProviderStore.pipe(select(getApiProviderWizardStep));
-    this.uploadSpecification$ = this.apiProviderStore.pipe(select(getApiProviderUploadSpecification));
-    this.validationErrors$ = this.apiProviderStore.pipe(select(getApiProviderValidationError));
-    this.validationResponse$ = this.apiProviderStore.pipe(select(getApiProviderValidationResponse));
-    this.integrationName$ = this.apiProviderStore.pipe(select(getApiProviderIntegrationName));
-    this.specificationForEditor$ = this.apiProviderStore.pipe(select(getApiProviderSpecificationForEditor));
-    this.specificationTitle$ = this.apiProviderStore.pipe(select(getApiProviderSpecificationTitle));
-    this.integrationDescription$ = this.apiProviderStore.pipe(select(getApiProviderIntegrationDescription));
-    this.creationError$ = this.apiProviderStore.pipe(select(getApiProviderCreationError));
+    this.currentActiveStep$ = this.apiProviderStore.pipe(
+      select(getApiProviderWizardStep)
+    );
+    this.uploadSpecification$ = this.apiProviderStore.pipe(
+      select(getApiProviderUploadSpecification)
+    );
+    this.validationErrors$ = this.apiProviderStore.pipe(
+      select(getApiProviderValidationError)
+    );
+    this.validationResponse$ = this.apiProviderStore.pipe(
+      select(getApiProviderValidationResponse)
+    );
+    this.integrationName$ = this.apiProviderStore.pipe(
+      select(getApiProviderIntegrationName)
+    );
+    this.specificationForEditor$ = this.apiProviderStore.pipe(
+      select(getApiProviderSpecificationForEditor)
+    );
+    this.specificationTitle$ = this.apiProviderStore.pipe(
+      select(getApiProviderSpecificationTitle)
+    );
+    this.integrationDescription$ = this.apiProviderStore.pipe(
+      select(getApiProviderIntegrationDescription)
+    );
+    this.creationError$ = this.apiProviderStore.pipe(
+      select(getApiProviderCreationError)
+    );
 
     this.nav.hide();
   }
@@ -106,15 +140,11 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   }
 
   onStepDone() {
-    this.apiProviderStore.dispatch(
-      ApiProviderActions.nextStep()
-    );
+    this.apiProviderStore.dispatch(ApiProviderActions.nextStep());
   }
 
   onEditSpecification() {
-    this.apiProviderStore.dispatch(
-      ApiProviderActions.editSpecification()
-    );
+    this.apiProviderStore.dispatch(ApiProviderActions.editSpecification());
   }
 
   updateIntegrationName(name: string) {
@@ -130,21 +160,20 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   }
 
   createIntegration() {
-    this.apiProviderStore.dispatch(
-      ApiProviderActions.createIntegration()
-    );
+    this.apiProviderStore.dispatch(ApiProviderActions.createIntegration());
   }
 
   /**
    * Called when the back button has been pressed on one of the steps.
    */
   onBackPressed() {
-    this.apiProviderStore.dispatch(
-      ApiProviderActions.previousStep()
-    );
+    this.apiProviderStore.dispatch(ApiProviderActions.previousStep());
   }
 
   ngOnDestroy() {
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
+    }
     this.modalService.unregisterModal(this.cancelModalId);
     this.apiProviderStore.dispatch(ApiProviderActions.createCancel());
     this.nav.show();

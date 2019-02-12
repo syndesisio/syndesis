@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, Input } from '@angular/core';
 import { CurrentFlowService } from '../current-flow.service';
 import { FlowPageService } from '../flow-page.service';
 import { ActivatedRoute } from '@angular/router';
@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['../../integration-common.scss', './flow-toolbar.component.scss'],
 })
 export class FlowToolbarComponent {
+  @Input() hideButtons = false;
   @ViewChild('nameInput') nameInput: ElementRef;
 
   constructor(

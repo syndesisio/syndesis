@@ -33,24 +33,29 @@
                 >
                   {{ currentFlow.name }}<span class="caret"></span>
                 </button>
-                <ul *dropdownMenu class="dropdown-menu operations-menu" role="menu">
-                  <ng-container *ngIf="showOperationsButton && !flowPageService.showDone">
+                <ul
+                  *dropdownMenu
+                  class="dropdown-menu operations-menu"
+                  role="menu"
+                >
+                  <ng-container
+                    *ngIf="showOperationsButton && !flowPageService.showDone"
+                  >
                     <li style="padding: 0 4px;">
                       <button
                         class="btn btn-default"
                         style="width: 100%"
-
                         [disabled]="
-                        flowPageService.saveInProgress ||
-                        flowPageService.publishInProgress
-                      "
+                          flowPageService.saveInProgress ||
+                          flowPageService.publishInProgress
+                        "
                         (click)="
-                        save([
-                          '/integrations',
-                          currentFlowService.integration?.id,
-                          'operations'
-                        ])
-                      "
+                          save([
+                            '/integrations',
+                            currentFlowService.integration?.id,
+                            'operations'
+                          ])
+                        "
                       >
                         Go to Operation List
                       </button>
@@ -68,13 +73,13 @@
                           'edit'
                         ]"
                       >
-                        <strong>{{flow.name}}</strong><br>
+                        <strong>{{ flow.name }}</strong
+                        ><br />
                         <integration-api-provider-operation-description
                           [description]="flow.description"
                           style="display: inline-flex"
                         ></integration-api-provider-operation-description>
-                      </a
-                      >
+                      </a>
                     </li>
                   </ng-container>
                 </ul>
@@ -106,6 +111,7 @@
                 (click)="save()"
                 *ngIf="!flowPageService.showDone"
                 [disabled]="
+                  (currentFlowService.currentFlowErrors$ | async).length ||
                   flowPageService.saveInProgress ||
                   flowPageService.publishInProgress
                 "
@@ -122,6 +128,7 @@
                 (click)="publish()"
                 *ngIf="!flowPageService.showDone"
                 [disabled]="
+                  (currentFlowService.currentFlowErrors$ | async).length ||
                   flowPageService.saveInProgress ||
                   flowPageService.publishInProgress
                 "

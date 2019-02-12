@@ -21,7 +21,9 @@
           </li>
         </ol>
 
-        <syndesis-integration-flow-toolbar></syndesis-integration-flow-toolbar>
+        <syndesis-integration-flow-toolbar
+          [hideButtons]="currentFlowService.isApiProvider()"
+        ></syndesis-integration-flow-toolbar>
       </div>
       <div class="content">
         <!-- Sidebar -->

@@ -19,7 +19,7 @@
               >
               </syndesis-editable-text>
             </div>
-            <div class="toolbar-pf-action-right">
+            <div *ngIf="!hideButtons" class="toolbar-pf-action-right">
               <button
                 class="btn btn-default"
                 (click)="flowPageService.cancel()"
@@ -38,6 +38,7 @@
                 (click)="save()"
                 *ngIf="!flowPageService.showDone"
                 [disabled]="
+                  (currentFlowService.currentFlowErrors$ | async).length ||
                   flowPageService.saveInProgress ||
                   flowPageService.publishInProgress
                 "
@@ -54,6 +55,7 @@
                 (click)="publish()"
                 *ngIf="!flowPageService.showDone"
                 [disabled]="
+                  (currentFlowService.currentFlowErrors$ | async).length ||
                   flowPageService.saveInProgress ||
                   flowPageService.publishInProgress
                 "
