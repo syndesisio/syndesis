@@ -94,7 +94,7 @@ public interface ContinuousDeliveryHandler {
     @GET
     @Path("integrations/{env}/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    StreamingOutput exportResources(@NotNull @PathParam("environment") @ApiParam(required = true) String environment,
+    StreamingOutput exportResources(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
                            @QueryParam("all") @ApiParam() boolean exportAll) throws IOException;
 
     /**

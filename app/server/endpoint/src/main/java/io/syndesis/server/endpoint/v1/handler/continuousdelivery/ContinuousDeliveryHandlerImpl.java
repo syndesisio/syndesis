@@ -224,8 +224,9 @@ public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler 
             // tag all integrations for export
             Date taggedAt = new Date();
             integrations.getItems().forEach(i -> {
-                createOrUpdateTag(i.getContinuousDeliveryState(), environment, taggedAt);
-                dataMgr.update(i);
+                final HashMap<String, ContinuousDeliveryEnvironment> state = new HashMap<>(i.getContinuousDeliveryState());
+                createOrUpdateTag(state, environment, taggedAt);
+                dataMgr.update(i.builder().continuousDeliveryState(state).build());
             });
 
             LOG.debug("Exporting ALL ({}) integrations for environment {} at {} ...", integrations.getItems().size(), environment, taggedAt);
