@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 import io.swagger.models.Swagger;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
-import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
+import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.server.api.generator.swagger.util.XmlSchemaHelper;
 
 import org.dom4j.Document;
@@ -45,7 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(Parameterized.class)
 public class UnifiedXmlDataShapeGeneratorTest {
 
-    private static final ObjectMapper MAPPER = SwaggerHelper.mapper();
+    private static final ObjectMapper MAPPER = OpenApiHelper.mapper();
 
     private static final Map<String, UnifiedXmlDataShapeGenerator.SchemaPrefixAndElement> NO_MORE_SCHEMAS = null;
 

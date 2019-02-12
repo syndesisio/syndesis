@@ -47,6 +47,7 @@ import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.APIValidationContext;
@@ -230,7 +231,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
         }
 
         // TODO: evaluate what can be shrinked (e.g. SwaggerHelper#minimalSwaggerUsedByComponent)
-        byte[] updatedSwagger = SwaggerHelper.serialize(swagger).getBytes(StandardCharsets.UTF_8);
+        byte[] updatedSwagger = OpenApiHelper.serialize(swagger).getBytes(StandardCharsets.UTF_8);
 
         // same check SwaggerParser is performing
         final String specificationContentType;

@@ -20,21 +20,12 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import io.swagger.models.ModelImpl;
-import io.swagger.models.Operation;
-import io.swagger.models.Path;
-import io.swagger.models.Response;
-import io.swagger.models.Swagger;
-import io.swagger.models.properties.IntegerProperty;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.swagger.AbstractSwaggerConnectorTest;
 import io.syndesis.server.api.generator.swagger.SwaggerModelInfo;
 import io.syndesis.server.jsondb.impl.JsonRecordSupport;
 
-import org.json.JSONException;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import static io.syndesis.server.api.generator.swagger.TestHelper.resource;
 
@@ -42,18 +33,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
-
-    @Test
-    public void shouldDeserializeSerializeWithoutLoosingEnumValues() throws JSONException {
-        final String document = "{\"swagger\":\"2.0\",\"definitions\":{\"Test\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"integer\",\"enum\":[1,2,3]}}}}}}}}}";
-        final SwaggerModelInfo info = SwaggerHelper.parse(document, APIValidationContext.CONSUMED_API);
-        final Swagger parsed = info.getModel();
-
-        final String serialized = SwaggerHelper.serialize(parsed);
-
-        JSONAssert.assertEquals(document,
-            serialized, JSONCompareMode.STRICT);
-    }
 
     @Test
     public void shouldSanitizeListOfTags() {
@@ -74,21 +53,6 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
         assertThatCode(() -> JsonRecordSupport.validateKey(sanitized)).doesNotThrowAnyException();
     }
 
-    @Test
-    public void shouldSerializeWithoutAddingResponseSchema() throws JSONException {
-        final Swagger document = new Swagger().path("/api", new Path()
-            .get(new Operation()
-                .response(200, new Response()
-                    .responseSchema(new ModelImpl()
-                        .type("object")
-                        .property("key", new IntegerProperty())))));
-
-        final String serialized = SwaggerHelper.serialize(document);
-
-        JSONAssert.assertEquals(
-            "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"responses\":{\"200\":{\"schema\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"integer\",\"format\":\"int32\"}}}}}}}}}",
-            serialized, JSONCompareMode.STRICT);
-    }
 
     @Test
     public void testThatAllSwaggerFilesAreValid() throws IOException {

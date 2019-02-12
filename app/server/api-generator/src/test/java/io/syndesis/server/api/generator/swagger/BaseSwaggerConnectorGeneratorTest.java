@@ -24,7 +24,6 @@ import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.Parameter;
-import io.swagger.parser.SwaggerParser;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -32,7 +31,7 @@ import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
-import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
+import io.syndesis.common.util.openapi.OpenApiHelper;
 
 import org.junit.Test;
 
@@ -55,7 +54,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
     @Test
     public void shouldCreatePropertyParametersFromPetstoreSwagger() throws IOException {
         final String specification = resource("/swagger/petstore.swagger.json");
-        final Swagger swagger = new SwaggerParser().parse(specification);
+        final Swagger swagger = OpenApiHelper.parse(specification);
 
         final Parameter petIdPathParameter = swagger.getPath("/pet/{petId}").getGet().getParameters().get(0);
 
@@ -237,7 +236,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
 
     private static ConnectorSettings createSettingsFrom(final Swagger swagger) {
         return new ConnectorSettings.Builder()//
-            .putConfiguredProperty("specification", SwaggerHelper.serialize(swagger))//
+            .putConfiguredProperty("specification", OpenApiHelper.serialize(swagger))//
             .build();
     }
 

@@ -61,10 +61,6 @@
       <groupId>io.swagger</groupId>
       <artifactId>swagger-models</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-parser</artifactId>
-    </dependency>
 
     <!-- spring -->
     <dependency>

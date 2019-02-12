@@ -23,10 +23,10 @@ import java.util.Arrays;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
-import io.swagger.parser.SwaggerParser;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.openapi.OpenApiHelper;
 
 import org.apache.commons.io.IOUtils;
 import org.assertj.core.api.SoftAssertions;
@@ -65,8 +65,7 @@ public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
         }
 
         json = (ObjectNode) Json.reader().readTree(specification);
-        final SwaggerParser parser = new SwaggerParser();
-        swagger = parser.parse(specification);
+        swagger = OpenApiHelper.parse(specification);
     }
 
     @Test

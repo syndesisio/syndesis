@@ -37,8 +37,7 @@ import io.swagger.models.parameters.BodyParameter;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Json;
-import io.syndesis.server.api.generator.APIValidationContext;
-import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
+import io.syndesis.common.util.openapi.OpenApiHelper;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -209,7 +208,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
             } catch (final IOException e) {
                 throw new AssertionError("Unable to parse swagger specification in path as JSON: " + specification, e);
             }
-            final Swagger swagger = SwaggerHelper.parse(specificationContent, APIValidationContext.NONE).getModel();
+            final Swagger swagger = OpenApiHelper.parse(specificationContent);
 
             swagger.getPaths().forEach((path, operations) -> {
                 operations.getOperationMap().forEach((method, operation) -> {
