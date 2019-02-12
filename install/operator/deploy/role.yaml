@@ -38,6 +38,17 @@ rules:
   verbs:
   - get
   - create
+  - list
+  - delete
+- apiGroups:
+  - integreatly.org
+  resources:
+  - grafanadashboards
+  verbs:
+  - get
+  - create
+  - list
+  - delete
 - apiGroups:
   - syndesis.io
   resources:
