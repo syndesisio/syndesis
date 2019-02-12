@@ -7,6 +7,8 @@ metadata:
     syndesis.io/type: infrastructure
     prometheus: application-monitoring
     role: alert-rules
+    monitoring-key: middleware
+    application-monitoring: "true"
   name: syndesis-db-rules
 spec:
   groups:
