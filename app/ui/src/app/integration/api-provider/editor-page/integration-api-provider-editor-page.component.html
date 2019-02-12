@@ -24,7 +24,9 @@
               <integration-api-provider-operation-description
                 [description]="currentFlowService.getCurrentFlowDescription()"
               ></integration-api-provider-operation-description>
-              {{ currentFlowService.getCurrentFlowName() }}
+              <span>
+                {{ currentFlowService.getCurrentFlowName() }}
+              </span>
             </div>
           </div>
           <div class="card-pf-body">

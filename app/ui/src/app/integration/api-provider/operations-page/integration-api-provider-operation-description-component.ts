@@ -3,14 +3,20 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'integration-api-provider-operation-description',
   template: `
-    <span class="verb col-sm-3" [attr.data-verb]="description.split(' ')[0]">
+    <span class="verb" [attr.data-verb]="description.split(' ')[0]">
       {{ description.split(' ')[0] }}
     </span>
-    <span class="url col-sm-9">{{ description.split(' ')[1] }}</span>
+    <span class="url">{{ description.split(' ')[1] }}</span>
   `,
   styles: [`
+    :host {
+      display: flex;
+    }
     .verb {
       font-weight: bold;
+      flex-grow: 0;
+      flex-shrink: 1;
+      flex-basis: 30%;
     }
     .verb[data-verb=GET] {
       color: #3C96D4;
@@ -23,6 +29,9 @@ import { Component, Input } from '@angular/core';
     }
     .verb[data-verb=DELETE] {
       color: #D01414;
+    }
+    .url {
+      padding-left: 5%;
     }
   `]
 })

@@ -33,7 +33,30 @@
                 >
                   {{ currentFlow.name }}<span class="caret"></span>
                 </button>
-                <ul *dropdownMenu class="dropdown-menu" role="menu">
+                <ul *dropdownMenu class="dropdown-menu operations-menu" role="menu">
+                  <ng-container *ngIf="showOperationsButton && !flowPageService.showDone">
+                    <li style="padding: 0 4px;">
+                      <button
+                        class="btn btn-default"
+                        style="width: 100%"
+
+                        [disabled]="
+                        flowPageService.saveInProgress ||
+                        flowPageService.publishInProgress
+                      "
+                        (click)="
+                        save([
+                          '/integrations',
+                          currentFlowService.integration?.id,
+                          'operations'
+                        ])
+                      "
+                      >
+                        Go to Operation List
+                      </button>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                  </ng-container>
                   <ng-container *ngFor="let flow of flows">
                     <li *ngIf="flow.id !== currentFlow.id">
                       <a
@@ -44,29 +67,18 @@
                           flow.id,
                           'edit'
                         ]"
-                        >{{ flow.name }}</a
+                      >
+                        <strong>{{flow.name}}</strong><br>
+                        <integration-api-provider-operation-description
+                          [description]="flow.description"
+                          style="display: inline-flex"
+                        ></integration-api-provider-operation-description>
+                      </a
                       >
                     </li>
                   </ng-container>
                 </ul>
               </div>
-              <button
-                class="btn btn-default"
-                *ngIf="showOperationsButton && !flowPageService.showDone"
-                [disabled]="
-                  flowPageService.saveInProgress ||
-                  flowPageService.publishInProgress
-                "
-                (click)="
-                  save([
-                    '/integrations',
-                    currentFlowService.integration?.id,
-                    'operations'
-                  ])
-                "
-              >
-                Go to Operation List
-              </button>
             </div>
             <div class="toolbar-pf-action-right">
               <a

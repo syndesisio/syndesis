@@ -3,3 +3,19 @@
     cursor: pointer !important;
   }
 }
+
+.select-card {
+  padding: 0;
+  background: #ededed;
+  border-top-color: #fff;
+
+  .card-pf-heading {
+    background: #fff;
+    margin: 0;
+    padding: 20px 20px 0;
+
+    .card-pf-title {
+      margin-top: 0;
+    }
+  }
+}

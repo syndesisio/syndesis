@@ -8,7 +8,6 @@
   .content {
     display: flex;
     flex: 1;
-    padding: 20px;
 
     .card-pf {
       flex: 1;
@@ -16,6 +15,8 @@
       flex-flow: column;
       margin: 0;
       background: transparent;
+      border: 0;
+      box-shadow: 0;
 
       .card-pf-heading {
         margin-bottom: 0;
@@ -24,6 +25,12 @@
 
       .card-pf-title {
         display: flex;
+
+        > span {
+          font-weight: bold;
+          flex: 1;
+          padding-left: 20px;
+        }
       }
 
       .card-pf-body {
@@ -46,6 +53,10 @@
 
       .form {
         flex: 1 1 100%;
+
+        /deep/ .blank-slate-pf {
+          border: 0 none;
+        }
       }
     }
   }
