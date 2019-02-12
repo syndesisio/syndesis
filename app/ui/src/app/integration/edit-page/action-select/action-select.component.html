@@ -21,7 +21,7 @@
                 <syndesis-list-actions
                   [actions]="filteredActions$ | async"
                   [loading]="loading$ | async"
-                  (onSelected)="onSelected($event)"
+                  (onSelected)="onSelected($event.item)"
                 ></syndesis-list-actions>
               </div>
             </div>
