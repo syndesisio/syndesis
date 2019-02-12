@@ -1,6 +1,6 @@
 export * from '@syndesis/ui/integration/api-provider/operations-page/integration-api-provider-operations-page.component';
 export * from './operations-page/integration-api-provider-operations-list.component';
-export * from './editor-page/integration-api-provider-editor-page.component';
+export * from './editor-page';
 export * from '@syndesis/ui/integration/api-provider/creation-page/integration-api-provider-creation-page.component';
 export * from '@syndesis/ui/integration/api-provider/creation-page/step-upload/step-upload.component';
 export * from '@syndesis/ui/integration/api-provider/creation-page/step-validate/step-validate.component';

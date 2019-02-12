@@ -1,20 +1,14 @@
-import { Component, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CurrentFlowService } from '../current-flow.service';
 import { FlowPageService } from '../flow-page.service';
-import { IntegrationType } from '@syndesis/ui/platform';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'syndesis-integration-flow-toolbar',
   templateUrl: './flow-toolbar.component.html',
-  styleUrls: ['../../integration-common.scss', './flow-toolbar.component.scss']
+  styleUrls: ['../../integration-common.scss', './flow-toolbar.component.scss'],
 })
 export class FlowToolbarComponent {
-  @Input()
-  isApiProvider = false;
-  @Input()
-  hideOperationsButton = true;
-  IntegrationType = IntegrationType;
   @ViewChild('nameInput') nameInput: ElementRef;
 
   constructor(
@@ -35,7 +29,7 @@ export class FlowToolbarComponent {
     this.currentFlowService.events.emit({
       kind: 'integration-set-property',
       property: 'name',
-      value: name
+      value: name,
     });
   }
 

@@ -1,0 +1,141 @@
+<syndesis-loading
+  [loading]="!(currentFlowService.loaded$ | async)"
+  [content]="content"
+>
+  <ng-template #content>
+    <div class="container-fluid">
+      <div class="row toolbar-pf">
+        <div class="col-sm-12">
+          <div class="toolbar-pf-actions">
+            <div class="form-group toolbar-pf-filter">
+              <strong> <span>API Provider Integration</span> </strong>
+            </div>
+            <div class="form-group" *ngIf="currentFlowService.isSaved()">
+              <label for="integrationName">Name</label>&nbsp;
+              <syndesis-editable-text
+                name="integrationName"
+                [value]="currentFlowService.integration.name"
+                (onSave)="nameUpdated($event)"
+              >
+              </syndesis-editable-text>
+            </div>
+            <div class="form-group">
+              <div
+                dropdown
+                class="dropdown btn-group"
+                placement="bottom"
+                *ngIf="currentFlow && flows.length > 0"
+              >
+                <button
+                  dropdownToggle
+                  class="btn btn-default dropdown-toggle"
+                  type="button"
+                >
+                  {{ currentFlow.name }}<span class="caret"></span>
+                </button>
+                <ul *dropdownMenu class="dropdown-menu operations-menu" role="menu">
+                  <ng-container *ngIf="showOperationsButton && !flowPageService.showDone">
+                    <li style="padding: 0 4px;">
+                      <button
+                        class="btn btn-default"
+                        style="width: 100%"
+
+                        [disabled]="
+                        flowPageService.saveInProgress ||
+                        flowPageService.publishInProgress
+                      "
+                        (click)="
+                        save([
+                          '/integrations',
+                          currentFlowService.integration?.id,
+                          'operations'
+                        ])
+                      "
+                      >
+                        Go to Operation List
+                      </button>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                  </ng-container>
+                  <ng-container *ngFor="let flow of flows">
+                    <li *ngIf="flow.id !== currentFlow.id">
+                      <a
+                        [routerLink]="[
+                          '/integrations',
+                          currentFlowService.integration?.id,
+                          'operations',
+                          flow.id,
+                          'edit'
+                        ]"
+                      >
+                        <strong>{{flow.name}}</strong><br>
+                        <integration-api-provider-operation-description
+                          [description]="flow.description"
+                          style="display: inline-flex"
+                        ></integration-api-provider-operation-description>
+                      </a
+                      >
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
+            </div>
+            <div class="toolbar-pf-action-right">
+              <a
+                *ngIf="currentFlowService.isSaved()"
+                [routerLink]="['../specification']"
+                class="btn btn-link"
+              >
+                View/Edit API Definition <i class="fa fa-external-link"></i>
+              </a>
+              <button
+                class="btn btn-default"
+                (click)="flowPageService.cancel()"
+              >
+                Cancel
+              </button>
+              <button
+                class="btn btn-primary"
+                (click)="flowPageService.done()"
+                *ngIf="flowPageService.showDone"
+              >
+                Done
+              </button>
+              <button
+                class="btn btn-default"
+                (click)="save()"
+                *ngIf="!flowPageService.showDone"
+                [disabled]="
+                  flowPageService.saveInProgress ||
+                  flowPageService.publishInProgress
+                "
+              >
+                <span
+                  *ngIf="flowPageService.saveInProgress"
+                  class="spinner spinner-sm spinner-inline"
+                ></span>
+                Save
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="publish()"
+                *ngIf="!flowPageService.showDone"
+                [disabled]="
+                  flowPageService.saveInProgress ||
+                  flowPageService.publishInProgress
+                "
+              >
+                <span
+                  *ngIf="flowPageService.publishInProgress"
+                  class="spinner spinner-sm spinner-inline"
+                ></span>
+                Publish
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</syndesis-loading>

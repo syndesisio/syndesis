@@ -1,30 +1,17 @@
-<div class="integrations">
-  <div class="row">
-    <div class="col-md-12">
-      <ol class="breadcrumb">
-        <li>
-          &lt;&lt;&nbsp;<a [routerLink]="['/integrations']">All Integrations</a>
-        </li>
-        <li *ngIf="(currentFlowService.loaded$ | async)">
-          <a
-            [routerLink]="['/integrations', currentFlowService.integration.id]"
-            >{{ currentFlowService.integration.name }}</a
-          >
-        </li>
-      </ol>
-    </div>
+<div class="integrations edit row">
+  <div class="header">
+    <ol class="syn-breadcrumb">
+      <li>
+        <i class="fa fa-angle-double-left"></i>
+        <a [routerLink]="['/integrations']">All Integrations</a>
+      </li>
+    </ol>
+    <syndesis-integration-api-provider-operation-editor-toolbar
+      [showOperationsButton]="false"
+    ></syndesis-integration-api-provider-operation-editor-toolbar>
   </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <syndesis-integration-flow-toolbar
-        [isApiProvider]="true"
-      ></syndesis-integration-flow-toolbar>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
+  <div class="content">
+    <div class="operations">
       <syndesis-loading
         [loading]="!(currentFlowService.loaded$ | async)"
         [content]="content"
@@ -35,12 +22,8 @@
 </div>
 
 <ng-template #content>
-  <div class="syn-scrollable">
-    <div class="syn-scrollable--body">
-      <syndesis-integration-api-provider-operations-list
-        [flows$]="currentFlowService.flows$"
-        [integrationId]="currentFlowService.integration?.id"
-      ></syndesis-integration-api-provider-operations-list>
-    </div>
-  </div>
+  <syndesis-integration-api-provider-operations-list
+    [flows$]="currentFlowService.flows$"
+    [integrationId]="currentFlowService.integration?.id"
+  ></syndesis-integration-api-provider-operations-list>
 </ng-template>

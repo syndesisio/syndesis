@@ -1,37 +1,16 @@
 @import 'syndesis-sass';
 
-.integrations.api-provider {
+.integrations.edit {
+  display: flex;
+  flex-flow: column;
   height: 100%;
 
-  .row {
-    height: 100%;
+  .content {
     display: flex;
-    flex-direction: row;
-  }
+    flex: 1;
 
-  .mapper {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .wizard-sidebar {
-    flex: 0 0 auto;
-    background: #fafafa;
-    border-right: 1px solid #d1d1d1;
-    height: 100%;
-  }
-
-  .main-panel {
-    flex: 1 1 auto;
-  }
-
-  .operations-list {
-    margin-bottom: 30px;
-  }
-
-  ::ng-deep {
-    .control-buttons {
-      margin-bottom: 15px;
+    .operations {
+      flex: 1 1 auto;
     }
   }
 }

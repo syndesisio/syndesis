@@ -7,6 +7,9 @@
     display: flex;
     flex-flow: column;
 
+    border-top: 2px solid transparent;
+    box-shadow: 0 1px 1px rgba(3, 3, 3, 0.175);
+
     &__header {
       display: flex;
       justify-content: space-between;
