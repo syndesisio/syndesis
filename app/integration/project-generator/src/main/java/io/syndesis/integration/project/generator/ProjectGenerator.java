@@ -41,7 +41,6 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import io.swagger.models.Swagger;
-import io.swagger.parser.SwaggerParser;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ResourceIdentifier;
@@ -62,6 +61,7 @@ import io.syndesis.common.util.MavenProperties;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.Predicates;
+import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
@@ -372,7 +372,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
         final StringBuilder code = new StringBuilder();
         final byte[] openApiBytes = res.get().getDocument();
-        final Swagger swagger = new SwaggerParser().parse(new String(openApiBytes, StandardCharsets.UTF_8));
+        final Swagger swagger = OpenApiHelper.parse(new String(openApiBytes, StandardCharsets.UTF_8));
 
         RestDslGenerator.toAppendable(ProjectGeneratorHelper.normalizePaths(swagger))
             .withClassName("RestRoute")

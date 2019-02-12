@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SkipNullsTest {
 
     @Value.Immutable
+    @Value.Style(jdkOnly = true)
     public interface TestValue {
         @SkipNulls
         Set<String> noNulls();
