@@ -26,40 +26,22 @@ import io.syndesis.server.controller.integration.online.customizer.ExposureDeplo
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.server.openshift.OpenShiftService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "true", matchIfMissing = true)
-public class OnlineHandlerProvider extends BaseHandler implements StateChangeHandlerProvider {
+@ConditionalOnProperty(value = "controllers.integration", havingValue = "s2i", matchIfMissing = true)
+public class OnlineHandlerProvider implements StateChangeHandlerProvider {
 
-    private final DataManager dataManager;
-    private final IntegrationProjectGenerator projectGenerator;
-    private final ControllersConfigurationProperties properties;
+    private final List<StateChangeHandler> handlers;
 
-    public OnlineHandlerProvider(
-            DataManager dataManager,
-            OpenShiftService openShiftService,
-            IntegrationProjectGenerator projectGenerator,
-            ControllersConfigurationProperties properties) {
-
-        super(openShiftService);
-
-        this.dataManager = dataManager;
-        this.projectGenerator = projectGenerator;
-        this.properties = properties;
+    public OnlineHandlerProvider(@Qualifier("s2i") List<StateChangeHandler> handlers) {
+        this.handlers = handlers;
     }
 
     @Override
     public List<StateChangeHandler> getStatusChangeHandlers() {
-        return Arrays.asList(
-            new PublishHandler(
-                dataManager,
-                openShiftService(),
-                projectGenerator,
-                properties,
-                Collections.singletonList(new ExposureDeploymentDataCustomizer(properties))
-            ),
-            new UnpublishHandler(openShiftService()));
+        return handlers;
     }
 }

@@ -104,6 +104,11 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+    </dependency>
+
     <!-- For test resource -->
     <dependency>
       <groupId>io.swagger</groupId>

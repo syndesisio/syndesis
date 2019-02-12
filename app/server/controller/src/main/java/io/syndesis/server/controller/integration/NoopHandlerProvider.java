@@ -29,7 +29,7 @@ import io.syndesis.server.controller.StateChangeHandlerProvider;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 
 @Component
-@ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "noop")
+@ConditionalOnProperty(value = "controllers.integration", havingValue = "noop")
 public class NoopHandlerProvider implements StateChangeHandler, StateChangeHandlerProvider {
 
     @Override

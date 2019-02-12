@@ -131,5 +131,4 @@ public interface OpenShiftService {
      * @return a Optional containing the URL
      */
     Optional<String> getExposedHost(String name);
-
 }
