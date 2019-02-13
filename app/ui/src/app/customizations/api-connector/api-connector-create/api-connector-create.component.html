@@ -79,7 +79,7 @@
           </syndesis-api-connector-info>
         </div>
 
-        <div class="api-connector-editor syn-scrollable" *ngIf="( showApiEditor$ | async )">
+        <div class="api-connector-editor" *ngIf="( showApiEditor$ | async )">
           <syndesis-api-connector-editor
             [specification]="(specificationForEditor$ | async)"
             (onBack)="onCloseApiEditor()"
