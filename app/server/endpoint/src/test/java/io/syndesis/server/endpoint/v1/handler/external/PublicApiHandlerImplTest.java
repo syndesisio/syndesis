@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.endpoint.v1.handler.continuousdelivery;
+package io.syndesis.server.endpoint.v1.handler.external;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -55,9 +55,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Unit test for {@link ContinuousDeliveryHandlerImpl}.
+ * Unit test for {@link PublicApiHandlerImpl}.
  */
-public class ContinuousDeliveryHandlerImplTest {
+public class PublicApiHandlerImplTest {
 
     private static final String INTEGRATION_ID = "integration-id";
     private static final String ENVIRONMENT = "environment";
@@ -70,7 +70,7 @@ public class ContinuousDeliveryHandlerImplTest {
     private final MonitoringProvider monitoringProvider = mock(MonitoringProvider.class);
 
     // initialized after mock objects in setup
-    private ContinuousDeliveryHandler handler;
+    private PublicApi handler;
     private Integration integration;
 
     @Before
@@ -93,7 +93,7 @@ public class ContinuousDeliveryHandlerImplTest {
         importResult.put(INTEGRATION_ID, Collections.singletonList(integration));
         when(supportHandler.importIntegration(any(), any())).thenReturn(importResult);
 
-        handler = new ContinuousDeliveryHandlerImpl(dataManager, supportHandler,
+        handler = new PublicApiHandlerImpl(dataManager, supportHandler,
                 encryptionComponent, deploymentHandler, connectionHandler, monitoringProvider);
     }
 
@@ -170,7 +170,7 @@ public class ContinuousDeliveryHandlerImplTest {
         when(security.getUserPrincipal()).thenReturn(principal);
         when(principal.getName()).thenReturn("user");
 
-        ContinuousDeliveryHandler.ImportFormDataInput formInput = new ContinuousDeliveryHandler.ImportFormDataInput();
+        PublicApi.ImportFormDataInput formInput = new PublicApi.ImportFormDataInput();
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         streamingOutput.write(bytes);
         formInput.setData(new ByteArrayInputStream(bytes.toByteArray()));

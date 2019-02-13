@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.endpoint.v1.handler.continuousdelivery;
+package io.syndesis.server.endpoint.v1.handler.external;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,10 +58,10 @@ import io.syndesis.server.endpoint.v1.handler.integration.IntegrationDeploymentH
 import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
 
 @Component
-@ConditionalOnProperty(value = "continuousdelivery.enabled", havingValue = "true")
-public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler {
+@ConditionalOnProperty(value = "features.public-api.enabled", havingValue = "true")
+public class PublicApiHandlerImpl implements PublicApi {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ContinuousDeliveryHandlerImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PublicApiHandlerImpl.class);
 
     private final DataManager dataMgr;
     private final IntegrationSupportHandler handler;
@@ -71,7 +71,7 @@ public class ContinuousDeliveryHandlerImpl implements ContinuousDeliveryHandler 
     private final MonitoringProvider monitoringProvider;
     private final Set<String> environments;
 
-    protected ContinuousDeliveryHandlerImpl(DataManager dataMgr, IntegrationSupportHandler handler, EncryptionComponent encryptionComponent, IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler, MonitoringProvider monitoringProvider) {
+    protected PublicApiHandlerImpl(DataManager dataMgr, IntegrationSupportHandler handler, EncryptionComponent encryptionComponent, IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler, MonitoringProvider monitoringProvider) {
         this.dataMgr = dataMgr;
         this.handler = handler;
         this.encryptionComponent = encryptionComponent;

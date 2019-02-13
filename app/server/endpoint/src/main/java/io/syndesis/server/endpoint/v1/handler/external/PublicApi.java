@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.endpoint.v1.handler.continuousdelivery;
+package io.syndesis.server.endpoint.v1.handler.external;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,9 +43,9 @@ import io.syndesis.common.model.integration.ContinuousDeliveryImportResults;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.monitoring.IntegrationDeploymentStateDetails;
 
-@Api("continuous-delivery")
-@Path("/public/continuousdelivery")
-public interface ContinuousDeliveryHandler {
+@Api("public-api")
+@Path("/public")
+public interface PublicApi {
 
     /**
      * List all available environments.
