@@ -1,26 +1,26 @@
+import {
+  ControlLabel,
+  FormControl,
+  FormGroup,
+  HelpBlock,
+} from 'patternfly-react';
 import * as React from 'react';
 
 export const FormTextAreaComponent = ({
   field,
-  form: { touched, errors, isSubmitting },
+  form: { isSubmitting },
   ...props
 }: {
   [name: string]: any;
 }) => (
-  // TODO replace with PF3/PF4 widget
-  <div className="form-group">
-    <label className="control-label" htmlFor={field.name}>
-      {props.property.displayName}
-    </label>
-    <textarea
-      id={field.name}
-      data-testid={field.name}
-      disabled={isSubmitting}
-      className={'form-control'}
+  <FormGroup controlId={field.name} validationState={props.validationState}>
+    <ControlLabel>{props.property.displayName}</ControlLabel>
+    <FormControl
       {...field}
+      data-testid={field.name}
+      disabled={isSubmitting || props.property.disabled}
+      componentClass="textarea"
     />
-    {touched[field.name] && errors[field.name] && (
-      <div className="error">{errors[field.name]}</div>
-    )}
-  </div>
+    <HelpBlock>{props.property.description}</HelpBlock>
+  </FormGroup>
 );
