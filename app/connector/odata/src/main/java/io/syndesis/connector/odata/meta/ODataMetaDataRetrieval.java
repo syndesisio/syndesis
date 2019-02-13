@@ -57,7 +57,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
                 odataMetadata.getEntityNames().stream().forEach(
                     t -> resourcesResult.add(new PropertyPair(t, t))
                 );
-                enrichedProperties.put(METHOD_NAME, resourcesResult);
+                enrichedProperties.put(RESOURCE_PATH, resourcesResult);
             }
 
             ObjectSchema entitySchema = new ObjectSchema();

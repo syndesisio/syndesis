@@ -44,9 +44,9 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
      * this way rather than using the options map directly.
      *
      * Note 2:
-     * apiName not included as not required here but required later in the options map.
+     * methodName not included as not required here but required later in the options map.
      */
-    private String methodName;
+    private String resourcePath;
     private String serviceUri;
     private String basicUserName;
     private String basicPassword;
@@ -66,13 +66,13 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
         super(componentId, componentScheme);
     }
 
-    public String getMethodName() {
-        return methodName;
+    public String getResourcePath() {
+        return resourcePath;
     }
 
 
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
+    public void setResourcePath(String resourcePath) {
+        this.resourcePath = resourcePath;
     }
 
 
@@ -182,7 +182,7 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
     private Map<String, Object> bundleOptions() {
         PropertyBuilder<Object> builder = new PropertyBuilder<Object>();
         return builder
-            .propertyIfNotNull(METHOD_NAME, getMethodName())
+            .propertyIfNotNull(RESOURCE_PATH, getResourcePath())
             .propertyIfNotNull(SERVICE_URI, getServiceUri())
             .propertyIfNotNull(BASIC_USER_NAME, getBasicUserName())
             .propertyIfNotNull(BASIC_PASSWORD, getBasicPassword())
@@ -197,6 +197,11 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
     protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
         Olingo4Component component = new Olingo4Component(getCamelContext());
         Olingo4AppEndpointConfiguration configuration = new Olingo4AppEndpointConfiguration();
+
+        Object methodName = options.get(METHOD_NAME);
+        if (methodName != null) {
+            configuration.setMethodName(methodName.toString());
+        }
 
         //
         // Ensure at least a blank map exists for this property
@@ -221,7 +226,7 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
         // in 2.24.0 by setting it directly on the configuration. Can modify
         // this when component dependencies are upgraded.
         //
-        String methodName = getMethodName();
+        String resourcePath = getResourcePath();
         if (getKeyPredicate() != null) {
             String keyPredicate = getKeyPredicate();
             if (! keyPredicate.startsWith(OPEN_BRACKET)) {
@@ -231,9 +236,9 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
                 keyPredicate = keyPredicate + CLOSE_BRACKET;
             }
 
-            methodName = methodName + keyPredicate;
+            resourcePath = resourcePath + keyPredicate;
         }
-        options.put(METHOD_NAME, methodName);
+        configuration.setResourcePath(resourcePath);
 
         //
         // Modify the query parameters into the expected map

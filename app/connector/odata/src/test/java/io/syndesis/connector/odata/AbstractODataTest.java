@@ -57,7 +57,7 @@ public abstract class AbstractODataTest implements ODataConstants {
 
     protected static final int MOCK_TIMEOUT_MILLISECONDS = 60000;
 
-    protected static final String OLINGO4_READ_ENDPOINT = "olingo4-olingo4-0-0://read/Products";
+    protected static final String OLINGO4_READ_ENDPOINT = "olingo4-olingo4-0-0://read";
 
     @Autowired
     protected ApplicationContext applicationContext;

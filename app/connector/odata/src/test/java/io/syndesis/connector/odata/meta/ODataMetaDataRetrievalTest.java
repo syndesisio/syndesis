@@ -60,12 +60,12 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         CamelContext context = new DefaultCamelContext();
         ODataMetaDataRetrieval retrieval = new ODataMetaDataRetrieval();
 
-        String methodName = "Products";
+        String resourcePath = "Products";
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(API_NAME, "read");
+        parameters.put(METHOD_NAME, "read");
         parameters.put(SERVICE_URI, defaultTestServer.serviceUrl());
-        parameters.put(METHOD_NAME, methodName);
+        parameters.put(RESOURCE_PATH, resourcePath);
 
         String componentId = "odata";
         String actionId = "io.syndesis:odata-read-connector";
@@ -80,13 +80,13 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         // The method names are important for collecting prior
         // to the filling in of the integration step (values such as resource etc...)
         //
-        List<PropertyPair> resourcePaths = properties.get(METHOD_NAME);
+        List<PropertyPair> resourcePaths = properties.get(RESOURCE_PATH);
         assertNotNull(resourcePaths);
         assertFalse(resourcePaths.isEmpty());
 
         PropertyPair pair = resourcePaths.get(0);
         assertNotNull(pair);
-        assertEquals(methodName, pair.getValue());
+        assertEquals(resourcePath, pair.getValue());
 
         //
         // The out data shape is defined after the integration step has

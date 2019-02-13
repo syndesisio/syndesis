@@ -94,7 +94,7 @@ public abstract class AbstractODataReadRouteTest extends AbstractODataTest {
              .name("Read")
              .descriptor(new ConnectorDescriptor.Builder()
                         .componentScheme("olingo4")
-                        .putConfiguredProperty("apiName", "read")
+                        .putConfiguredProperty(METHOD_NAME, "read")
                         .addConnectorCustomizer(ODataStartCustomizer.class.getName())
                         .connectorFactory(ODataComponentFactory.class.getName())
                         .outputDataShape(new DataShape.Builder()
@@ -116,9 +116,9 @@ public abstract class AbstractODataReadRouteTest extends AbstractODataTest {
         return odataStepBuilder;
     }
 
-    protected Step createODataStep(Connector odataConnector, String methodName) {
+    protected Step createODataStep(Connector odataConnector, String resourcePath) {
         return odataStepBuilder(odataConnector)
-                                        .putConfiguredProperty(METHOD_NAME, methodName)
+                                        .putConfiguredProperty(RESOURCE_PATH, resourcePath)
                                         .build();
     }
 

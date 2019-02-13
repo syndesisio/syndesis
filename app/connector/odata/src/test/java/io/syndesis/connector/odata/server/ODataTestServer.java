@@ -224,7 +224,7 @@ public class ODataTestServer extends Server implements ODataConstants {
         return serverBaseUrl(this) + PRODUCTS_SVC;
     }
 
-    public String methodName() {
+    public String resourcePath() {
         return PRODUCTS;
     }
 

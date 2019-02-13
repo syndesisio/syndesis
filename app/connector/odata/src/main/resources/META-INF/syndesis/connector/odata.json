@@ -5,7 +5,7 @@
       "description": "Read a resource from the server",
       "descriptor": {
         "configuredProperties": {
-          "apiName": "read"
+          "methodName": "read"
         },
         "connectorCustomizers": [
           "io.syndesis.connector.odata.customizer.ODataStartCustomizer"
@@ -107,7 +107,7 @@
                 "secret": false,
                 "type": "string"
               },
-              "methodName": {
+              "resourcePath": {
                 "deprecated": false,
                 "displayName": "Resource Collection",
                 "group": "common",

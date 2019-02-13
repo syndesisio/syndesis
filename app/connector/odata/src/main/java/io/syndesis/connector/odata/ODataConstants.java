@@ -22,9 +22,9 @@ public interface ODataConstants extends StringConstants {
 
     String SERVICE_URI = "serviceUri";
 
-    String API_NAME = "apiName";
-
     String METHOD_NAME = "methodName";
+
+    String RESOURCE_PATH = "resourcePath";
 
     String KEY_PREDICATE = "keyPredicate";
 

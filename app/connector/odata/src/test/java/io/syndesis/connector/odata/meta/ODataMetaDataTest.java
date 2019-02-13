@@ -61,7 +61,7 @@ public class ODataMetaDataTest extends AbstractODataTest {
         assertThat(payload).isInstanceOf(ODataMetadata.class);
         ODataMetadata odataMetadata = (ODataMetadata) payload;
         assertThat(odataMetadata.getEntityNames().size()).isEqualTo(1);
-        assertThat(odataMetadata.getEntityNames().iterator().next()).isEqualTo(defaultTestServer.methodName());
+        assertThat(odataMetadata.getEntityNames().iterator().next()).isEqualTo(defaultTestServer.resourcePath());
     }
 
     @Test

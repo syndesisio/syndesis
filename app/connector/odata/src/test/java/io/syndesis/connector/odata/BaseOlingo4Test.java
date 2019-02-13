@@ -71,8 +71,8 @@ public class BaseOlingo4Test extends AbstractODataTest {
 
     @Test
     public void testExpectations() throws Exception {
-        URI httpURI = URI.create(defaultTestServer.serviceUrl() + FORWARD_SLASH + defaultTestServer.methodName());
-        String camelURI = "olingo4://read/" + defaultTestServer.methodName();
+        URI httpURI = URI.create(defaultTestServer.serviceUrl() + FORWARD_SLASH + defaultTestServer.resourcePath());
+        String camelURI = "olingo4://read/" + defaultTestServer.resourcePath();
 
         //
         // Create own main class to allow for setting the context

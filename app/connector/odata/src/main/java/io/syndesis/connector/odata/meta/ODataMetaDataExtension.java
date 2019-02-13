@@ -79,11 +79,11 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
 
             //
             // Will only happen after the step has been completed when
-            // the resource path, inc. the methodName, has been populated
+            // the resource path, inc. the resourcePath, has been populated
             //
-            String methodName = (String) parameters.get(ODataConstants.METHOD_NAME);
-            if (methodName != null) {
-                extractEdmMetadata(odataMetadata, edm, methodName);
+            String resourcePath = (String) parameters.get(ODataConstants.RESOURCE_PATH);
+            if (resourcePath != null) {
+                extractEdmMetadata(odataMetadata, edm, resourcePath);
             }
 
         } catch (Exception e) {
@@ -93,16 +93,16 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
         return odataMetadata;
     }
 
-    private void extractEdmMetadata(ODataMetadata odataMetadata, Edm edm, String methodName) {
-        if (methodName == null) {
+    private void extractEdmMetadata(ODataMetadata odataMetadata, Edm edm, String resourcePath) {
+        if (resourcePath == null) {
             LOG.warn("No method name with which to query OData service.");
             return;
         }
 
         EdmEntityContainer entityContainer = edm.getEntityContainer();
-        EdmEntitySet entitySet = entityContainer.getEntitySet(methodName);
+        EdmEntitySet entitySet = entityContainer.getEntitySet(resourcePath);
         if (entitySet == null) {
-            LOG.warn("No entity set associated with the selected api name: {}.", methodName);
+            LOG.warn("No entity set associated with the selected api name: {}.", resourcePath);
             return;
         }
 
