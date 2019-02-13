@@ -5,17 +5,18 @@ import * as React from 'react';
 
 import { StoryHelper } from '../../.storybook/StoryHelper';
 import { IntegrationDetail } from '../../src';
+import { array } from 'prop-types';
 
 const stories = storiesOf('Integration/IntegrationDetail', module);
 
 const integrationDetailStory = 'sample integration detail page';
 const storyNotes = 'Integration Detail';
 
-const integrationId = '';
-const integrationDescription = '';
-const integrationName = '';
-const integrationStatus = '';
-const integrationVersion = '';
+const integrationId = 'i-LUF4Pfwxo4Wcrbyt7YIz';
+const integrationDescription = 'A test integration.';
+const integrationName = 'Student API';
+const integrationStatus = 'Published';
+const integrationVersion = '1';
 
 const textBtnEdit = 'Edit';
 const textBtnPublish = 'Publish';
