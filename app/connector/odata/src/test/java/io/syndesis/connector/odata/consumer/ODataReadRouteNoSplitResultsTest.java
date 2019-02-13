@@ -20,11 +20,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import java.util.List;
 import java.util.Map;
-import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.component.olingo4.Olingo4Endpoint;
 import org.apache.camel.spring.SpringCamelContext;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -35,7 +35,6 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
@@ -44,7 +43,6 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.odata.PropertyBuilder;
 import io.syndesis.connector.odata.server.ODataTestServer;
-import io.syndesis.connector.odata.server.ODataTestServer.Options;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
@@ -68,657 +66,348 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
     //
     // Set the split results to false
     //
-    public ODataReadRouteNoSplitResultsTest() {
+    public ODataReadRouteNoSplitResultsTest() throws Exception {
         super(false);
     }
 
     @Test
     public void testSimpleODataRoute() throws Exception {
-        final CamelContext context = createCamelContext();
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl()));
 
-        ODataTestServer server = null;
-        try {
-            server = new ODataTestServer();
-            server.start();
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-            ConnectorAction odataAction = createReadAction();
-            Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, server.serviceUrl()));
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(defaultTestServer.getResultCount());
 
-            Step odataStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .action(odataAction)
-                .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-                .putConfiguredProperty(METHOD_NAME, server.methodName())
-                .build();
+        context.start();
 
-            Step mockStep = createMockStep();
-            Integration odataIntegration = createIntegration(odataStep, mockStep);
-
-            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
-            context.addRoutes(routes);
-            context.start();
-
-            dumpRoutes(context);
-
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(server.getResultCount());
-            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
-            result.assertIsSatisfied();
-
-            testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
-
-        } finally {
-            context.stop();
-            if (server != null) {
-                server.stop();
-            }
-        }
+        result.assertIsSatisfied();
+        testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
     }
 
     @Test
     public void testAuthenticatedODataRoute() throws Exception {
-        final CamelContext context = createCamelContext();
-        ODataTestServer server = null;
-        try {
-            server = new ODataTestServer(Options.AUTH_USER);
-            server.start();
-
-            ConnectorAction odataAction = createReadAction();
-            Connector odataConnector = createODataConnector(
+        Connector odataConnector = createODataConnector(
                                                         new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, server.serviceUrl())
+                                                            .property(SERVICE_URI, authTestServer.serviceUrl())
                                                             .property(BASIC_USER_NAME, ODataTestServer.USER),
                                                         new PropertyBuilder<ConfigurationProperty>()
                                                             .property(BASIC_PASSWORD, basicPasswordProperty())
                                                         );
 
-            Step odataStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .action(odataAction)
-                .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-                .putConfiguredProperty(METHOD_NAME, server.methodName())
-                .build();
+        Step odataStep = createODataStep(odataConnector, authTestServer.methodName());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-            Step mockStep = createMockStep();
-            Integration odataIntegration = createIntegration(odataStep, mockStep);
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(authTestServer.getResultCount());
 
-            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
-            context.addRoutes(routes);
-            context.start();
+        context.start();
 
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(server.getResultCount());
-            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
-            result.assertIsSatisfied();
-
-            testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
-
-        } finally {
-            context.stop();
-            if (server != null) {
-                server.stop();
-            }
-        }
+        result.assertIsSatisfied();
+        testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
     }
 
     @Test
     public void testSSLODataRoute() throws Exception {
-        final CamelContext context = createCamelContext();
-
-        ODataTestServer server = null;
-        try {
-            server = new ODataTestServer(Options.SSL);
-            server.start();
-
-            ConnectorAction odataAction = createReadAction();
-            Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, server.serviceUrl())
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, sslTestServer.serviceUrl())
                                                             .property(CLIENT_CERTIFICATE, ODataTestServer.serverCertificate()));
 
-            Step odataStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .action(odataAction)
-                .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-                .putConfiguredProperty(METHOD_NAME, server.methodName())
-                .build();
+        Step odataStep = createODataStep(odataConnector, sslTestServer.methodName());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-            Step mockStep = createMockStep();
-            Integration odataIntegration = createIntegration(odataStep, mockStep);
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(sslTestServer.getResultCount());
 
-            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
-            context.addRoutes(routes);
-            context.start();
+        context.start();
 
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(server.getResultCount());
-            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
-            result.assertIsSatisfied();
-
-            testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
-
-        } finally {
-            context.stop();
-            if (server != null) {
-                server.stop();
-            }
-        }
+        result.assertIsSatisfied();
+        testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
     }
 
     @Test
     public void testSSLAuthenticatedODataRoute() throws Exception {
-        final CamelContext context = createCamelContext();
-
-        ODataTestServer server = null;
-        try {
-            server = new ODataTestServer(Options.SSL, Options.AUTH_USER);
-            server.start();
-
-            ConnectorAction odataAction = createReadAction();
-
-            Connector odataConnector = createODataConnector(
+        Connector odataConnector = createODataConnector(
                                                             new PropertyBuilder<String>()
-                                                                .property(SERVICE_URI, server.serviceUrl())
+                                                                .property(SERVICE_URI, sslAuthTestServer.serviceUrl())
                                                                 .property(CLIENT_CERTIFICATE, ODataTestServer.serverCertificate())
                                                                 .property(BASIC_USER_NAME, ODataTestServer.USER),
                                                             new PropertyBuilder<ConfigurationProperty>()
                                                                 .property(BASIC_PASSWORD, basicPasswordProperty())
                                                             );
 
-            Step odataStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .action(odataAction)
-                .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-                .putConfiguredProperty(METHOD_NAME, server.methodName())
-                .build();
+        Step odataStep = createODataStep(odataConnector, sslAuthTestServer.methodName());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-            Step mockStep = createMockStep();
-            Integration odataIntegration = createIntegration(odataStep, mockStep);
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(sslAuthTestServer.getResultCount());
 
-            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
-            context.addRoutes(routes);
-            context.start();
+        context.start();
 
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(server.getResultCount());
-            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
-            result.assertIsSatisfied();
-
-            testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
-
-        } finally {
-            context.stop();
-            if (server != null) {
-                server.stop();
-            }
-        }
+        result.assertIsSatisfied();
+        testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
     }
 
     @Test
+    @Ignore("Run manually as not strictly required")
     public void testReferenceODataRoute() throws Exception {
         String serviceUri = "https://services.odata.org/TripPinRESTierService";
         String methodName = "People";
         String queryParam = "$count=true";
 
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        context = new SpringCamelContext(applicationContext);
 
-        try {
-            ConnectorAction odataAction = createReadAction();
-            Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
                                                             .property(SERVICE_URI, serviceUri)
                                                             .property(QUERY_PARAMS, queryParam)
                                                             .property(CLIENT_CERTIFICATE, ODataTestServer.referenceServiceCertificate()));
 
-            Step odataStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .action(odataAction)
-                .connection(
+        Step odataStep = new Step.Builder()
+            .stepKind(StepKind.endpoint)
+            .action(readAction)
+            .connection(
                             new Connection.Builder()
                                 .connector(odataConnector)
                                 .build())
-                .putConfiguredProperty(METHOD_NAME, methodName)
-                .build();
+            .putConfiguredProperty(METHOD_NAME, methodName)
+            .build();
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-            Step mockStep = createMockStep();
-            Integration odataIntegration = createIntegration(odataStep, mockStep);
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(1);
 
-            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
-            context.addRoutes(routes);
-            context.start();
+        context.start();
 
-            dumpRoutes(context);
+        result.assertIsSatisfied();
 
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(1);
-            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
-            result.assertIsSatisfied();
+        @SuppressWarnings( "unchecked" )
+        List<String> json = extractJsonFromExchgMsg(result, 0, List.class);
+        assertEquals(20, json.size());
 
-            @SuppressWarnings( "unchecked" )
-            List<String> json = extractJsonFromExchgMsg(result, 0, List.class);
-            assertEquals(20, json.size());
-
-            String expected = testData(REF_SERVER_PEOPLE_DATA_1);
-            JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
-            expected = testData(REF_SERVER_PEOPLE_DATA_2);
-            JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
-            expected = testData(REF_SERVER_PEOPLE_DATA_3);
-            JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
-
-        } finally {
-            context.stop();
-        }
+        String expected = testData(REF_SERVER_PEOPLE_DATA_1);
+        JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+        expected = testData(REF_SERVER_PEOPLE_DATA_2);
+        JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
+        expected = testData(REF_SERVER_PEOPLE_DATA_3);
+        JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
     }
 
     @Test
     public void testODataRouteWithSimpleQuery() throws Exception {
-        final CamelContext context = createCamelContext();
         String queryParams = "$filter=ID eq 1";
-
-        ODataTestServer server = null;
-        try {
-            server = new ODataTestServer();
-            server.start();
-
-            ConnectorAction odataAction = createReadAction();
-            Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, server.serviceUrl())
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
                                                             .property(QUERY_PARAMS, queryParams));
 
-            Step odataStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .action(odataAction)
-                .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-                .putConfiguredProperty(METHOD_NAME, server.methodName())
-                .build();
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-            Step mockStep = createMockStep();
-            Integration odataIntegration = createIntegration(odataStep, mockStep);
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(1);
 
-            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
-            context.addRoutes(routes);
-            context.start();
+        context.start();
 
-            dumpRoutes(context);
-
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(1);
-            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
-            result.assertIsSatisfied();
-
-            testListResult(result, 0, TEST_SERVER_DATA_1);
-
-        } finally {
-            context.stop();
-            if (server != null) {
-                server.stop();
-            }
-        }
+        result.assertIsSatisfied();
+        testListResult(result, 0, TEST_SERVER_DATA_1);
     }
 
     @Test
     public void testODataRouteWithCountQuery() throws Exception {
-        final CamelContext context = createCamelContext();
         String queryParams = "$count=true";
-
-        ODataTestServer server = null;
-        try {
-            server = new ODataTestServer();
-            server.start();
-
-            ConnectorAction odataAction = createReadAction();
-            Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, server.serviceUrl())
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
                                                             .property(QUERY_PARAMS, queryParams));
 
-            Step odataStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .action(odataAction)
-                .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-                .putConfiguredProperty(METHOD_NAME, server.methodName())
-                .build();
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-            Step mockStep = createMockStep();
-            Integration odataIntegration = createIntegration(odataStep, mockStep);
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(1);
 
-            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
-            context.addRoutes(routes);
-            context.start();
+        context.start();
 
-            dumpRoutes(context);
+        result.assertIsSatisfied();
 
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(1);
-            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
-            result.assertIsSatisfied();
-
-            @SuppressWarnings( "unchecked" )
-            List<String> json = extractJsonFromExchgMsg(result, 0, List.class);
-            assertEquals(3, json.size());
-            String expected = testData(TEST_SERVER_DATA_1_WITH_COUNT);
-            JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
-            expected = testData(TEST_SERVER_DATA_2_WITH_COUNT);
-            JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
-            expected = testData(TEST_SERVER_DATA_3_WITH_COUNT);
-            JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
-
-        } finally {
-            context.stop();
-            if (server != null) {
-                server.stop();
-            }
-        }
+        @SuppressWarnings( "unchecked" )
+        List<String> json = extractJsonFromExchgMsg(result, 0, List.class);
+        assertEquals(3, json.size());
+        String expected = testData(TEST_SERVER_DATA_1_WITH_COUNT);
+        JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+        expected = testData(TEST_SERVER_DATA_2_WITH_COUNT);
+        JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
+        expected = testData(TEST_SERVER_DATA_3_WITH_COUNT);
+        JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
     }
 
     @Test
     public void testODataRouteWithMoreComplexQuery() throws Exception {
-        final CamelContext context = createCamelContext();
         String queryParams = "$filter=ID le 2&$orderby=ID desc";
-
-        ODataTestServer server = null;
-        try {
-            server = new ODataTestServer();
-            server.start();
-
-            ConnectorAction odataAction = createReadAction();
-            Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, server.serviceUrl())
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
                                                             .property(QUERY_PARAMS, queryParams));
 
-            Step odataStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .action(odataAction)
-                .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-                .putConfiguredProperty(METHOD_NAME, server.methodName())
-                .build();
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-            Step mockStep = createMockStep();
-            Integration odataIntegration = createIntegration(odataStep, mockStep);
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(2);
 
-            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
-            context.addRoutes(routes);
-            context.start();
+        context.start();
 
-            dumpRoutes(context);
+        result.assertIsSatisfied();
 
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(2);
-            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
-            result.assertIsSatisfied();
-
-            //
-            // Descending order in query means these are reversed
-            //
-            testListResult(result, 0, TEST_SERVER_DATA_2, TEST_SERVER_DATA_1);
-
-        } finally {
-            context.stop();
-            if (server != null) {
-                server.stop();
-            }
-        }
+        //
+        // Descending order in query means these are reversed
+        //
+        testListResult(result, 0, TEST_SERVER_DATA_2, TEST_SERVER_DATA_1);
     }
 
     @Test
     public void testODataRouteWithKeyPredicate() throws Exception {
-        final CamelContext context = createCamelContext();
         String keyPredicate = "1";
-
-        ODataTestServer server = null;
-        try {
-            server = new ODataTestServer();
-            server.start();
-
-            ConnectorAction odataAction = createReadAction();
-            Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, server.serviceUrl())
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
                                                             .property(KEY_PREDICATE, keyPredicate));
 
-            Step odataStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .action(odataAction)
-                .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-                .putConfiguredProperty(METHOD_NAME, server.methodName())
-                .build();
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-            Step mockStep = createMockStep();
-            Integration odataIntegration = createIntegration(odataStep, mockStep);
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(1);
 
-            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
-            context.addRoutes(routes);
-            context.start();
+        context.start();
 
-            dumpRoutes(context);
-
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(1);
-            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
-            result.assertIsSatisfied();
-
-            testListResult(result, 0, TEST_SERVER_DATA_1);
-
-        } finally {
-            context.stop();
-            if (server != null) {
-                server.stop();
-            }
-        }
+        result.assertIsSatisfied();
+        testListResult(result, 0, TEST_SERVER_DATA_1);
     }
 
     @Test
     public void testODataRouteWithKeyPredicateWithBrackets() throws Exception {
-        final CamelContext context = createCamelContext();
         String keyPredicate = "(1)";
-
-        ODataTestServer server = null;
-        try {
-            server = new ODataTestServer();
-            server.start();
-
-            ConnectorAction odataAction = createReadAction();
-            Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, server.serviceUrl())
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
                                                             .property(KEY_PREDICATE, keyPredicate));
 
-            Step odataStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .action(odataAction)
-                .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-                .putConfiguredProperty(METHOD_NAME, server.methodName())
-                .build();
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-            Step mockStep = createMockStep();
-            Integration odataIntegration = createIntegration(odataStep, mockStep);
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(1);
 
-            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
-            context.addRoutes(routes);
-            context.start();
+        context.start();
 
-            dumpRoutes(context);
-
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(1);
-            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
-            result.assertIsSatisfied();
-
-            testListResult(result, 0, TEST_SERVER_DATA_1);
-
-        } finally {
-            context.stop();
-            if (server != null) {
-                server.stop();
-            }
-        }
+        result.assertIsSatisfied();
+        testListResult(result, 0, TEST_SERVER_DATA_1);
     }
 
     @Test
     public void testODataRouteWithConsumerDelayProperties() throws Exception {
-        String initialDelayValue = "5000";
-        String delayValue = "30000";
+        String initialDelayValue = "500";
+        String delayValue = "1000";
 
-        final CamelContext context = createCamelContext();
-
-        ODataTestServer server = null;
-        try {
-            server = new ODataTestServer();
-            server.start();
-
-            ConnectorAction odataAction = createReadAction();
-            Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, server.serviceUrl())
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
                                                             .property(INITIAL_DELAY, initialDelayValue)
                                                             .property(DELAY, delayValue));
 
-            Step odataStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .action(odataAction)
-                .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-                .putConfiguredProperty(METHOD_NAME, server.methodName())
-                .build();
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-            Step mockStep = createMockStep();
-            Integration odataIntegration = createIntegration(odataStep, mockStep);
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(2);
 
-            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
-            context.addRoutes(routes);
-            context.start();
+        context.start();
 
-            dumpRoutes(context);
+        result.assertIsSatisfied();
+        testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
 
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(2);
-            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
-            result.assertIsSatisfied();
-
-            testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
-
-            Olingo4Endpoint olingo4Endpoint = context.getEndpoint("olingo4-olingo4-0-0://read/Products", Olingo4Endpoint.class);
-            assertNotNull(olingo4Endpoint);
-            Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
-            assertNotNull(consumerProperties);
-            assertTrue(consumerProperties.size() > 0);
-            assertEquals(delayValue, consumerProperties.get(DELAY));
-            assertEquals(initialDelayValue, consumerProperties.get(INITIAL_DELAY));
-
-        } finally {
-            context.stop();
-            if (server != null) {
-                server.stop();
-            }
-        }
+        Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_ENDPOINT, Olingo4Endpoint.class);
+        assertNotNull(olingo4Endpoint);
+        Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
+        assertNotNull(consumerProperties);
+        assertTrue(consumerProperties.size() > 0);
+        assertEquals(delayValue, consumerProperties.get(DELAY));
+        assertEquals(initialDelayValue, consumerProperties.get(INITIAL_DELAY));
     }
 
     @Test
     public void testODataRouteAlreadySeen() throws Exception {
         String backoffIdleThreshold = "1";
-        String backoffMultiplier = "2";
-
-        final CamelContext context = createCamelContext();
-
-        ODataTestServer server = null;
-        try {
-            server = new ODataTestServer();
-            server.start();
-
-            ConnectorAction odataAction = createReadAction();
-            Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, server.serviceUrl())
+        String backoffMultiplier = "1";
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
                                                             .property(FILTER_ALREADY_SEEN, Boolean.TRUE.toString())
                                                             .property(BACKOFF_IDLE_THRESHOLD, backoffIdleThreshold)
                                                             .property(BACKOFF_MULTIPLIER, backoffMultiplier));
 
-            Step odataStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .action(odataAction)
-                .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-                .putConfiguredProperty(METHOD_NAME, server.methodName())
-                .build();
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-            Step mockStep = createMockStep();
-            Integration odataIntegration = createIntegration(odataStep, mockStep);
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        int expectedMsgCount = defaultTestServer.getResultCount();
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(expectedMsgCount);
 
-            RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
-            context.addRoutes(routes);
-            context.start();
+        context.start();
 
-            dumpRoutes(context);
+        result.assertIsSatisfied();
 
-            int expectedMsgCount = 3;
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(expectedMsgCount);
-            result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
-            result.assertIsSatisfied();
+        for (int i = 0; i < expectedMsgCount; ++i) {
+            @SuppressWarnings( "unchecked" )
+            List<String> json = extractJsonFromExchgMsg(result, i, List.class);
 
-            for (int i = 0; i < expectedMsgCount; ++i) {
-                @SuppressWarnings( "unchecked" )
-                List<String> json = extractJsonFromExchgMsg(result, i, List.class);
-
-                String expected;
-                switch (i) {
-                    case 0:
-                        expected = testData(TEST_SERVER_DATA_1);
-                        JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
-                        expected = testData(TEST_SERVER_DATA_2);
-                        JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
-                        expected = testData(TEST_SERVER_DATA_3);
-                        JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
-                        break;
-                    default:
-                        //
-                        // Subsequent polling messages should be empty
-                        //
-                        assertTrue(json.isEmpty());
-                }
-            }
-
-            //
-            // Check backup consumer options carried through to olingo4 component
-            //
-            Olingo4Endpoint olingo4Endpoint = context.getEndpoint("olingo4-olingo4-0-0://read/Products", Olingo4Endpoint.class);
-            assertNotNull(olingo4Endpoint);
-            Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
-            assertNotNull(consumerProperties);
-            assertTrue(consumerProperties.size() > 0);
-            assertEquals(backoffIdleThreshold, consumerProperties.get(BACKOFF_IDLE_THRESHOLD));
-            assertEquals(backoffMultiplier, consumerProperties.get(BACKOFF_MULTIPLIER));
-
-        } finally {
-            context.stop();
-            if (server != null) {
-                server.stop();
+            String expected;
+            switch (i) {
+                case 0:
+                    expected = testData(TEST_SERVER_DATA_1);
+                    JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+                    expected = testData(TEST_SERVER_DATA_2);
+                    JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
+                    expected = testData(TEST_SERVER_DATA_3);
+                    JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
+                    break;
+                default:
+                    //
+                    // Subsequent polling messages should be empty
+                    //
+                    assertTrue(json.isEmpty());
             }
         }
+
+        //
+        // Check backup consumer options carried through to olingo4 component
+        //
+        Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_ENDPOINT, Olingo4Endpoint.class);
+        assertNotNull(olingo4Endpoint);
+        Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
+        assertNotNull(consumerProperties);
+        assertTrue(consumerProperties.size() > 0);
+        assertEquals(backoffIdleThreshold, consumerProperties.get(BACKOFF_IDLE_THRESHOLD));
+        assertEquals(backoffMultiplier, consumerProperties.get(BACKOFF_MULTIPLIER));
     }
 }

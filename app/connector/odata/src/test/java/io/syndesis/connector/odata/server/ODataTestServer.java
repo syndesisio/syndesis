@@ -204,14 +204,14 @@ public class ODataTestServer extends Server implements ODataConstants {
         if (sslContext == null) {
             // HTTP
             ServerConnector http = new ServerConnector(this);
-            http.setPort(8090);
+            http.setPort(0); // Finds next available port
             this.addConnector(http);
         }
         else {
             // HTTPS
             HttpConfiguration httpConfiguration = new HttpConfiguration();
             httpConfiguration.setSecureScheme("https");
-            httpConfiguration.setSecurePort(8091);
+            httpConfiguration.setSecurePort(0); // Finds next available port
 
             final SslContextFactory sslContextFactory = new SslContextFactory();
             sslContextFactory.setSslContext(sslContext);
