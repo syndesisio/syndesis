@@ -39,6 +39,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Component
 @Qualifier("camel-k")
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "camel-k")
@@ -94,7 +96,7 @@ public class CamelKPublishHandler extends BaseHandler implements StateChangeHand
         ObjectWriter writer = Json.writer();
         try {
 
-            return new String(writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(integration), Charset.defaultCharset());
+            return new String(writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(integration), UTF_8);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Cannot convert integration " + integration.getName() + " to JSON: " + e,e);
         }
