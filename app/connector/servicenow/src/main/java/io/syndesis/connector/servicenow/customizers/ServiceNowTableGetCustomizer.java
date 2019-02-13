@@ -61,8 +61,8 @@ public class ServiceNowTableGetCustomizer implements ComponentProxyCustomizer {
     }
 
     //
-    // we need to set heades with the support of a customizer as there's
-    // no yet a way to mark a property as header value.
+    // we need to set headers with the support of a customizer as there's
+    // not yet a way to mark a property as header value.
     //
     // https://github.com/syndesisio/syndesis/issues/2819
     //
