@@ -19,13 +19,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.util.Labels;
 import io.syndesis.common.util.Names;
 import io.syndesis.server.dao.IntegrationDao;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

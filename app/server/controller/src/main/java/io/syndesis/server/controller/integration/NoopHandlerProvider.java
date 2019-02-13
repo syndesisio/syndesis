@@ -21,12 +21,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateChangeHandlerProvider;
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "noop")

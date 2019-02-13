@@ -698,7 +698,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
                         break;
                     case 1:
                         expected = testData(TEST_SERVER_DATA_2);
-                        JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+                         JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
                         break;
                     case 2:
                         expected = testData(TEST_SERVER_DATA_3);
