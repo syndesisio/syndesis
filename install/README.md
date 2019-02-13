@@ -191,7 +191,7 @@ $ oc create -f support/syndesis-public-oauth-proxy.yml
 You can now use the template `syndesis-public-oauthproxy` and the ServiceAccount created above to deploy Syndesis public API:
 
 ```bash
-$ oc new-app --template=syndesis \
+$ oc new-app --template=syndesis-public-oauthproxy \
     -p PUBLIC_API_ROUTE_HOSTNAME=<EXTERNAL_HOSTNAME> \
     -p OPENSHIFT_PROJECT=$(oc project -q) \
     -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \
