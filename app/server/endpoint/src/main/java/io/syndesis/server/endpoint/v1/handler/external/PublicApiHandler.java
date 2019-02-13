@@ -28,8 +28,21 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
@@ -39,6 +52,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.connection.Connection;
@@ -57,11 +72,13 @@ import io.syndesis.server.endpoint.v1.handler.connection.ConnectionHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationDeploymentHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
 
+@Api("public-api")
+@Path("/public")
 @Component
 @ConditionalOnProperty(value = "features.public-api.enabled", havingValue = "true")
-public class PublicApiHandlerImpl implements PublicApi {
+public class PublicApiHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PublicApiHandlerImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PublicApiHandler.class);
 
     private final DataManager dataMgr;
     private final IntegrationSupportHandler handler;
@@ -71,7 +88,7 @@ public class PublicApiHandlerImpl implements PublicApi {
     private final MonitoringProvider monitoringProvider;
     private final Set<String> environments;
 
-    protected PublicApiHandlerImpl(DataManager dataMgr, IntegrationSupportHandler handler, EncryptionComponent encryptionComponent, IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler, MonitoringProvider monitoringProvider) {
+    protected PublicApiHandler(DataManager dataMgr, IntegrationSupportHandler handler, EncryptionComponent encryptionComponent, IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler, MonitoringProvider monitoringProvider) {
         this.dataMgr = dataMgr;
         this.handler = handler;
         this.encryptionComponent = encryptionComponent;
@@ -86,13 +103,24 @@ public class PublicApiHandlerImpl implements PublicApi {
                 .forEach(i -> environments.addAll(i.getContinuousDeliveryState().keySet()));
     }
 
-    @Override
+    /**
+     * List all available environments.
+     */
+    @GET
+    @Path("environments")
+    @Produces(MediaType.APPLICATION_JSON)
     public List<String> getReleaseEnvironments() {
         return Arrays.asList(environments.toArray(new String[0]));
     }
 
-    @Override
-    public void renameEnvironment(String environment, String newEnvironment) {
+    /**
+     * Rename an environment across all integrations.
+     */
+    @PUT
+    @Path("environments/{env}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void renameEnvironment(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
+                                  @NotNull @ApiParam(required = true) String newEnvironment) {
 
         validateParam("environment", environment);
         validateParam("newEnvironment", newEnvironment);
@@ -128,16 +156,25 @@ public class PublicApiHandlerImpl implements PublicApi {
         }
     }
 
-    @Override
-    public Map<String, ContinuousDeliveryEnvironment> getReleaseTags(String integrationId) {
+    /**
+     * List all tags associated with this integration.
+     */
+    @GET
+    @Path("integrations/{id}/tags")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, ContinuousDeliveryEnvironment> getReleaseTags(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId) {
         final Map<String, ContinuousDeliveryEnvironment> result = new HashMap<>(
                 getIntegration(integrationId).getContinuousDeliveryState());
         getReleaseEnvironments().forEach(e -> result.putIfAbsent(e, null));
         return result;
     }
 
-    @Override
-    public void deleteReleaseTag(String integrationId, String environment) {
+    /**
+     * Delete an environment tag associated with this integration.
+     */
+    @DELETE
+    @Path("integrations/{id}/tags/{env}")
+    public void deleteReleaseTag(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId, @NotNull @PathParam("env") @ApiParam(required = true) String environment) {
 
         final Integration integration = getIntegration(integrationId);
         validateParam("environment", environment);
@@ -163,8 +200,15 @@ public class PublicApiHandlerImpl implements PublicApi {
         }
     }
 
-    @Override
-    public Map<String, ContinuousDeliveryEnvironment> tagForRelease(String integrationId, List<String> environments) {
+    /**
+     * Tag an integration for release to target environments.
+     */
+    @POST
+    @Path("integrations/{id}/tags")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    Map<String, ContinuousDeliveryEnvironment> tagForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
+                                                             @NotNull @ApiParam(required = true) List<String> environments) {
 
         if (environments == null || environments.isEmpty()) {
             throw new ClientErrorException("Missing parameter environments", Response.Status.BAD_REQUEST);
@@ -207,8 +251,14 @@ public class PublicApiHandlerImpl implements PublicApi {
         return result;
     }
 
-    @Override
-    public StreamingOutput exportResources(String environment, boolean exportAll) throws IOException {
+    /**
+     * Export integrations to a target environment.
+     */
+    @GET
+    @Path("integrations/{env}/export.zip")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    StreamingOutput exportResources(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
+                                    @QueryParam("all") @ApiParam() boolean exportAll) throws IOException {
 
         // validate environment
         validateParam("environment", environment);
@@ -273,8 +323,15 @@ public class PublicApiHandlerImpl implements PublicApi {
         }
     }
 
-    @Override
-    public ContinuousDeliveryImportResults importResources(SecurityContext sec, ImportFormDataInput formInput) throws IOException {
+    /**
+     * Import integrations into a target environment.
+     */
+    @POST
+    @Path("integrations")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    ContinuousDeliveryImportResults importResources(@Context SecurityContext sec,
+                                                    @NotNull @ApiParam ImportFormDataInput formInput) throws IOException {
 
         if (formInput == null) {
             throw new ClientErrorException("Multipart request is empty", Response.Status.BAD_REQUEST);
@@ -341,8 +398,15 @@ public class PublicApiHandlerImpl implements PublicApi {
         }
     }
 
-    @Override
-    public ConnectionOverview configureConnection(SecurityContext sec, String connectionId, Map<String, String> properties) throws IOException {
+    /**
+     * Configure a connection.
+     */
+    @POST
+    @Path("connections/{id}/properties")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    ConnectionOverview configureConnection(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam String connectionId,
+                                           @NotNull @ApiParam Map<String, String> properties) throws IOException {
 
         validateParam("connectionId", connectionId);
 
@@ -355,21 +419,36 @@ public class PublicApiHandlerImpl implements PublicApi {
         return connectionHandler.get(connectionId);
     }
 
-    @Override
-    public IntegrationDeploymentStateDetails getIntegrationState(SecurityContext sec, String integrationId) throws
-            IOException {
+    /**
+     * Get Integration state.
+     */
+    @GET
+    @Path("integrations/{id}/state")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    IntegrationDeploymentStateDetails getIntegrationState(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam String integrationId) throws IOException {
         validateParam("integrationId", integrationId);
         return monitoringProvider.getIntegrationStateDetails(integrationId);
     }
 
-    @Override
-    public IntegrationDeployment publishIntegration(SecurityContext sec, String integrationId) {
+    /**
+     * Start Integration.
+     */
+    @POST
+    @Path("integrations/{id}/deployments")
+    @Produces(MediaType.APPLICATION_JSON)
+    IntegrationDeployment publishIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
         final Integration integration = getIntegration(integrationId);
         return publishIntegration(sec, integration);
     }
 
-    @Override
-    public void stopIntegration(SecurityContext sec, String integrationId) {
+    /**
+     * Stop Integration.
+     */
+    @PUT
+    @Path("integrations/{id}/deployments/stop")
+    @Produces(MediaType.APPLICATION_JSON)
+    void stopIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
 
         validateParam("integrationId", integrationId);
         IntegrationDeploymentHandler.TargetStateRequest targetState = new IntegrationDeploymentHandler
@@ -471,5 +550,54 @@ public class PublicApiHandlerImpl implements PublicApi {
         final Map<String, ContinuousDeliveryEnvironment> map = new HashMap<>(integration.getContinuousDeliveryState());
         map.put(environment, operator.apply(map.get(environment).builder()).build());
         dataMgr.update(integration.builder().continuousDeliveryState(map).build());
+    }
+
+    /**
+     * DTO for {@link org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput} for importResources.
+     */
+    public static class ImportFormDataInput {
+        @FormParam("data")
+        private InputStream data;
+
+        @FormParam("properties")
+        private InputStream properties;
+
+        @FormParam("environment")
+        private String environment;
+
+        @FormParam("deploy")
+        private Boolean deploy;
+
+        public InputStream getData() {
+            return data;
+        }
+
+        public void setData(InputStream data) {
+            this.data = data;
+        }
+
+        public InputStream getProperties() {
+            return properties;
+        }
+
+        public void setProperties(InputStream properties) {
+            this.properties = properties;
+        }
+
+        public String getEnvironment() {
+            return environment;
+        }
+
+        public void setEnvironment(String environment) {
+            this.environment = environment;
+        }
+
+        public Boolean getDeploy() {
+            return deploy;
+        }
+
+        public void setDeploy(Boolean deploy) {
+            this.deploy = deploy;
+        }
     }
 }

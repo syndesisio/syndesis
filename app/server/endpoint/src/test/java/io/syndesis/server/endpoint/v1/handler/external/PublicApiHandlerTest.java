@@ -55,9 +55,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Unit test for {@link PublicApiHandlerImpl}.
+ * Unit test for {@link PublicApiHandler}.
  */
-public class PublicApiHandlerImplTest {
+public class PublicApiHandlerTest {
 
     private static final String INTEGRATION_ID = "integration-id";
     private static final String ENVIRONMENT = "environment";
@@ -70,7 +70,7 @@ public class PublicApiHandlerImplTest {
     private final MonitoringProvider monitoringProvider = mock(MonitoringProvider.class);
 
     // initialized after mock objects in setup
-    private PublicApi handler;
+    private PublicApiHandler handler;
     private Integration integration;
 
     @Before
@@ -93,7 +93,7 @@ public class PublicApiHandlerImplTest {
         importResult.put(INTEGRATION_ID, Collections.singletonList(integration));
         when(supportHandler.importIntegration(any(), any())).thenReturn(importResult);
 
-        handler = new PublicApiHandlerImpl(dataManager, supportHandler,
+        handler = new PublicApiHandler(dataManager, supportHandler,
                 encryptionComponent, deploymentHandler, connectionHandler, monitoringProvider);
     }
 
@@ -170,7 +170,7 @@ public class PublicApiHandlerImplTest {
         when(security.getUserPrincipal()).thenReturn(principal);
         when(principal.getName()).thenReturn("user");
 
-        PublicApi.ImportFormDataInput formInput = new PublicApi.ImportFormDataInput();
+        PublicApiHandler.ImportFormDataInput formInput = new PublicApiHandler.ImportFormDataInput();
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         streamingOutput.write(bytes);
         formInput.setData(new ByteArrayInputStream(bytes.toByteArray()));
