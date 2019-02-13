@@ -17,12 +17,14 @@ package io.syndesis.connector.sheets;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import io.syndesis.common.util.Json;
@@ -89,7 +91,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
         List<List<Object>> values = new ArrayList<>();
 
         if (ObjectHelper.isNotEmpty(jsonBeans)) {
-            final ObjectSchema spec = GoogleSheetsMetaDataHelper.createSchema(range, majorDimension);
+            final ObjectSchema spec = getItemSchema(GoogleSheetsMetaDataHelper.createSchema(range, majorDimension));
 
             for (String json : jsonBeans) {
                 Map<String, Object> dataShape = Json.reader().forType(Map.class).readValue(json);
@@ -104,7 +106,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
                 spec.getProperties()
                         .entrySet()
                         .stream()
-                        .filter(specEntry -> !Arrays.asList("spreadsheetId").contains(specEntry.getKey()))
+                        .filter(specEntry -> !Objects.equals("spreadsheetId", specEntry.getKey()))
                         .forEach(specEntry -> rangeValues.add(dataShape.getOrDefault(specEntry.getKey(), null)));
 
                 values.add(rangeValues);
@@ -119,5 +121,23 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
         in.setHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION, majorDimension);
         in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values", valueRange);
         in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption", valueInputOption);
+    }
+
+    private ObjectSchema getItemSchema(JsonSchema spec) {
+        ObjectSchema itemSpec = null;
+        if (spec.isObjectSchema()) {
+            itemSpec = (ObjectSchema) spec;
+        } else if (spec.isArraySchema()) {
+            ArraySchema.Items arrayItems = spec.asArraySchema().getItems();
+            if (arrayItems.isSingleItems() && arrayItems.asSingleItems().getSchema().isObjectSchema()) {
+                itemSpec = (ObjectSchema) arrayItems.asSingleItems().getSchema();
+            }
+        }
+
+        if (itemSpec == null) {
+            throw new IllegalStateException(String.format("Unsupported json schema type '%s' - expected object schema or single item array schema", spec.getType()));
+        }
+
+        return itemSpec;
     }
 }
