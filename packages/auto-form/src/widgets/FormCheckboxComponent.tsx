@@ -1,29 +1,23 @@
+import { Checkbox, FormGroup, HelpBlock } from 'patternfly-react';
 import * as React from 'react';
+import { IFormControl } from '../models';
 
 export const FormCheckboxComponent = ({
   field,
-  type,
-  form: { touched, errors },
+  form: { isSubmitting },
   ...props
-}: {
-  [name: string]: any;
-}) => (
-  // TODO replace with PF3/PF4 widget
-  <div className="form-group">
-    <label className="col-sm-2 control-label" htmlFor={field.name}>
+}: IFormControl) => (
+  <FormGroup validationState={props.validationState}>
+    <Checkbox
+      {...field}
+      id={field.name}
+      checked={field.value}
+      data-testid={field.name}
+      disabled={isSubmitting || props.property.disabled}
+      onChange={field.onChange}
+    >
       {props.property.displayName}
-    </label>
-    <div className="col-sm-10">
-      <input
-        type={type}
-        id={field.name}
-        data-testid={field.name}
-        {...field}
-        checked={field.value}
-      />
-      {touched[field.name] && errors[field.name] && (
-        <div className="error">{errors[field.name]}</div>
-      )}
-    </div>
-  </div>
+    </Checkbox>
+    <HelpBlock>{props.property.description}</HelpBlock>
+  </FormGroup>
 );

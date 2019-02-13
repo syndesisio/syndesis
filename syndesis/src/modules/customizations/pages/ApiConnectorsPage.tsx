@@ -6,12 +6,13 @@ import {
   CustomizationsApiConnectorListView,
   IActiveFilter,
   IFilterType,
-  IListViewToolbarAbstractComponent,
   ISortType,
-  ListViewToolbarAbstractComponent,
-  NavLinkTab,
 } from '@syndesis/ui';
-import { optionalIntValue, WithLoader } from '@syndesis/utils';
+import {
+  optionalIntValue,
+  WithListViewToolbarHelpers,
+  WithLoader,
+} from '@syndesis/utils';
 import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
@@ -60,19 +61,7 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export default class ApiConnectorsPage extends ListViewToolbarAbstractComponent<
-  {},
-  IListViewToolbarAbstractComponent
-> {
-  public state = {
-    activeFilters: [] as IActiveFilter[],
-    currentFilterType: filterByName,
-    currentSortType: sortByName.title,
-    currentValue: '',
-    filterCategory: null,
-    isSortAscending: true,
-  };
-
+export default class ApiConnectorsPage extends React.Component {
   public filterUndefinedId(api: Connector): boolean {
     return api.id !== undefined;
   }
@@ -100,122 +89,102 @@ export default class ApiConnectorsPage extends ListViewToolbarAbstractComponent<
   public render() {
     return (
       <WithApiConnectors>
-        {({ data, hasData, error }) => {
-          const filteredAndSorted = getFilteredAndSortedApiConnectors(
-            data.items,
-            this.state.activeFilters,
-            this.state.currentSortType,
-            this.state.isSortAscending
-          );
+        {({ data, hasData, error }) => (
+          <WithListViewToolbarHelpers
+            defaultFilterType={filterByName}
+            defaultSortType={sortByName}
+          >
+            {helpers => {
+              const filteredAndSorted = getFilteredAndSortedApiConnectors(
+                data.items,
+                helpers.activeFilters,
+                helpers.currentSortType,
+                helpers.isSortAscending
+              );
 
-          return (
-            <NamespacesConsumer ns={['customizations', 'shared']}>
-              {t => (
-                <Grid fluid={true}>
-                  <Grid.Row
-                    style={{
-                      borderBottom: '1px solid #d1d1d1',
-                      paddingBottom: 0,
-                    }}
-                  >
-                    <Grid.Col xs={6} md={3}>
-                      <NavLinkTab
-                        disableLink={true}
-                        i18nLinkTitle={t('apiConnector.apiConnectorsPageTitle')}
-                        toLink={'/customizations/api-connector'}
-                      />
-                    </Grid.Col>
-                    <Grid.Col>
-                      <NavLinkTab
-                        disableLink={false}
-                        i18nLinkTitle={t('extension.extensionsPageTitle')}
-                        toLink={'/customizations/extensions'}
-                      />
-                    </Grid.Col>
-                  </Grid.Row>
-                  <Grid.Row>
-                    <CustomizationsApiConnectorListView
-                      filterTypes={filterTypes}
-                      sortTypes={sortTypes}
-                      {...this.state}
-                      linkCreateApiConnector={
-                        '/customizations/api-connector/create/swagger-connector'
-                      }
-                      resultsCount={filteredAndSorted.length}
-                      onUpdateCurrentValue={this.onUpdateCurrentValue}
-                      onValueKeyPress={this.onValueKeyPress}
-                      onFilterAdded={this.onFilterAdded}
-                      onSelectFilterType={this.onSelectFilterType}
-                      onFilterValueSelected={this.onFilterValueSelected}
-                      onRemoveFilter={this.onRemoveFilter}
-                      onClearFilters={this.onClearFilters}
-                      onToggleCurrentSortDirection={
-                        this.onToggleCurrentSortDirection
-                      }
-                      onUpdateCurrentSortType={this.onUpdateCurrentSortType}
-                      i18nDescription={t(
-                        'apiConnector.apiConnectorsPageDescription'
-                      )}
-                      i18nEmptyStateInfo={t('apiConnector.emptyStateInfo')}
-                      i18nEmptyStateTitle={t('apiConnector.CreateApiConnector')}
-                      i18nLinkCreateApiConnector={t(
-                        'apiConnector.CreateApiConnector'
-                      )}
-                      i18nLinkCreateApiConnectorTip={t(
-                        'apiConnector.createApiConnectorTip'
-                      )}
-                      i18nName={t('shared:Name')}
-                      i18nResultsCount={t('shared:resultsCount', {
-                        count: filteredAndSorted.length,
-                      })}
-                      i18nTitle={t('apiConnector.apiConnectorsPageTitle')}
-                    >
-                      <WithLoader
-                        error={error}
-                        loading={!hasData}
-                        loaderChildren={
-                          <CustomizationsApiConnectorListSkeleton
-                            width={800}
-                            style={{
-                              backgroundColor: '#FFF',
-                              marginTop: 30,
-                            }}
-                          />
-                        }
-                        errorChildren={<div>TODO</div>}
-                      >
-                        {() =>
-                          data.items
-                            .filter((api: Connector) =>
-                              this.filterUndefinedId(api)
-                            )
-                            .map((api: Connector, index: number) => (
-                              <CustomizationsApiConnectorListItem
-                                key={index}
-                                apiConnectorId={api.id as string}
-                                apiConnectorDescription={api.description}
-                                apiConnectorIcon={api.icon}
-                                apiConnectorName={api.name}
-                                i18nDelete={t('shared:Delete')}
-                                i18nDetails={t('shared:Details')}
-                                i18nDetailsTip={t(
-                                  'apiConnector.detailsApiConnectorTip'
-                                )}
-                                i18nUsedByMessage={this.getUsedByMessage(api)}
-                                onDelete={this.handleDelete}
-                                onDetails={this.handleDetails}
-                                usedBy={optionalIntValue(api.uses)}
+              return (
+                <NamespacesConsumer ns={['customizations', 'shared']}>
+                  {t => (
+                    <Grid fluid={true}>
+                      <Grid.Row>
+                        <CustomizationsApiConnectorListView
+                          filterTypes={filterTypes}
+                          sortTypes={sortTypes}
+                          {...this.state}
+                          linkCreateApiConnector={
+                            '/customizations/api-connector/create/swagger-connector'
+                          }
+                          resultsCount={filteredAndSorted.length}
+                          {...helpers}
+                          i18nDescription={t(
+                            'apiConnector.apiConnectorsPageDescription'
+                          )}
+                          i18nEmptyStateInfo={t('apiConnector.emptyStateInfo')}
+                          i18nEmptyStateTitle={t(
+                            'apiConnector.CreateApiConnector'
+                          )}
+                          i18nLinkCreateApiConnector={t(
+                            'apiConnector.CreateApiConnector'
+                          )}
+                          i18nLinkCreateApiConnectorTip={t(
+                            'apiConnector.createApiConnectorTip'
+                          )}
+                          i18nName={t('shared:Name')}
+                          i18nResultsCount={t('shared:resultsCount', {
+                            count: filteredAndSorted.length,
+                          })}
+                          i18nTitle={t('apiConnector.apiConnectorsPageTitle')}
+                        >
+                          <WithLoader
+                            error={error}
+                            loading={!hasData}
+                            loaderChildren={
+                              <CustomizationsApiConnectorListSkeleton
+                                width={800}
+                                style={{
+                                  backgroundColor: '#FFF',
+                                  marginTop: 30,
+                                }}
                               />
-                            ))
-                        }
-                      </WithLoader>
-                    </CustomizationsApiConnectorListView>
-                  </Grid.Row>
-                </Grid>
-              )}
-            </NamespacesConsumer>
-          );
-        }}
+                            }
+                            errorChildren={<div>TODO</div>}
+                          >
+                            {() =>
+                              filteredAndSorted
+                                .filter((api: Connector) =>
+                                  this.filterUndefinedId(api)
+                                )
+                                .map((api: Connector, index: number) => (
+                                  <CustomizationsApiConnectorListItem
+                                    key={index}
+                                    apiConnectorId={api.id as string}
+                                    apiConnectorDescription={api.description}
+                                    apiConnectorIcon={api.icon}
+                                    apiConnectorName={api.name}
+                                    i18nDelete={t('shared:Delete')}
+                                    i18nDetails={t('shared:Details')}
+                                    i18nDetailsTip={t(
+                                      'apiConnector.detailsApiConnectorTip'
+                                    )}
+                                    i18nUsedByMessage={this.getUsedByMessage(
+                                      api
+                                    )}
+                                    onDelete={this.handleDelete}
+                                    onDetails={this.handleDetails}
+                                    usedBy={optionalIntValue(api.uses)}
+                                  />
+                                ))
+                            }
+                          </WithLoader>
+                        </CustomizationsApiConnectorListView>
+                      </Grid.Row>
+                    </Grid>
+                  )}
+                </NamespacesConsumer>
+              );
+            }}
+          </WithListViewToolbarHelpers>
+        )}
       </WithApiConnectors>
     );
   }

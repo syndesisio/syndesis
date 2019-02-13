@@ -9,6 +9,8 @@ export interface IAppContext {
     monitoring: IntegrationMonitoring | undefined
   ) => string | undefined;
   logout(): void;
+  hideNavigation(): void;
+  showNavigation(): void;
 }
 
 export const AppContextDefaultValue = {} as IAppContext;

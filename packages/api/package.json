@@ -25,7 +25,7 @@
     "jest-cli": "^23.6.0",
     "jest-dom": "^2.1.1",
     "microbundle": "^0.7.0",
-    "patternfly-react": "^2.22.3",
+    "patternfly-react": "^2.29.2",
     "react": "^16.6.0",
     "react-docgen-typescript-loader": "^3.0.0",
     "react-dom": "^16.6.0",
@@ -48,14 +48,16 @@
     "storybook": "start-storybook -p 9001"
   },
   "peerDependencies": {
-    "patternfly-react": "^2.22.3",
+    "patternfly-react": "^2.29.2",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "typescript": "^3.1.6"
   },
   "dependencies": {
     "@syndesis/models": "*",
+    "@syndesis/utils": "*",
     "deepmerge": "^2.2.1",
+    "immer": "^2.0.0",
     "react-fast-compare": "^2.0.2"
   },
   "jest": {

@@ -4,9 +4,9 @@ import {
   IntegrationWithMonitoring,
 } from '@syndesis/models';
 import * as React from 'react';
-import { IRestState } from './Rest';
+import { IFetchState } from './Fetch';
 import { ServerEventsContext } from './ServerEventsContext';
-import { SyndesisRest } from './SyndesisRest';
+import { SyndesisFetch } from './SyndesisFetch';
 import { WithChangeListener } from './WithChangeListener';
 import { IIntegrationsResponse, WithIntegrations } from './WithIntegrations';
 import { IChangeEvent } from './WithServerEvents';
@@ -18,7 +18,7 @@ export interface IMonitoredIntegrationsResponse {
 
 export interface IWithMonitoredIntegrationsProps {
   disableUpdates?: boolean;
-  children(props: IRestState<IMonitoredIntegrationsResponse>): any;
+  children(props: IFetchState<IMonitoredIntegrationsResponse>): any;
 }
 
 export class WithMonitoredIntegrations extends React.Component<
@@ -32,7 +32,7 @@ export class WithMonitoredIntegrations extends React.Component<
   }
   public getMonitoredIntegrations(
     integrations: IIntegrationsResponse,
-    response: IRestState<IntegrationMonitoring[]>
+    response: IFetchState<IntegrationMonitoring[]>
   ) {
     return {
       items: integrations.items.map(
@@ -50,7 +50,7 @@ export class WithMonitoredIntegrations extends React.Component<
     return (
       <WithIntegrations disableUpdates={this.props.disableUpdates}>
         {({ data: integrations, ...props }) => (
-          <SyndesisRest<IntegrationMonitoring[]>
+          <SyndesisFetch<IntegrationMonitoring[]>
             url={'/monitoring/integrations'}
             defaultValue={[]}
           >
@@ -83,7 +83,7 @@ export class WithMonitoredIntegrations extends React.Component<
                 </ServerEventsContext.Consumer>
               );
             }}
-          </SyndesisRest>
+          </SyndesisFetch>
         )}
       </WithIntegrations>
     );

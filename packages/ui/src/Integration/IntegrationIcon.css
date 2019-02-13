@@ -1,0 +1,13 @@
+.integration-icon {
+  display: flex;
+  align-items: center;
+}
+
+.integration-icon__icon {
+  width: 35px;
+  height: 35px;
+}
+.integration-icon__divider {
+  margin: 0 10px;
+  font-size: 18px;
+}

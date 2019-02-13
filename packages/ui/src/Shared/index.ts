@@ -1,5 +1,4 @@
 export * from './ListViewToolbar';
-export * from './ListViewToolbarAbstractComponent';
 export * from './Loader';
 export * from './LogViewer';
 export * from './NavLinkTab';

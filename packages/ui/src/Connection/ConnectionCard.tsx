@@ -1,28 +1,40 @@
-import { Card, EmptyState } from 'patternfly-react';
+import * as H from 'history';
+import { Card } from 'patternfly-react';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+
+import './ConnectionCard.css';
 
 export interface IConnectionProps {
   name: string;
   description: string;
   icon: string;
+  href: H.LocationDescriptor;
 }
 
 export class ConnectionCard extends React.PureComponent<IConnectionProps> {
   public render() {
     return (
-      <Card matchHeight={true}>
-        <Card.Body>
-          <EmptyState>
-            <div className="blank-slate-pf-icon">
-              <img src={this.props.icon} alt={this.props.name} width={46} />
+      <Link to={this.props.href} className={'connection-card'}>
+        <Card matchHeight={true}>
+          <Card.Body>
+            <div className={'connection-card__content'}>
+              <div className="connection-card__icon">
+                <img src={this.props.icon} alt={this.props.name} width={46} />
+              </div>
+              <div
+                className="connection-card__title h2"
+                data-testid="connection-card-title"
+              >
+                {this.props.name}
+              </div>
+              <p className="connection-card__description">
+                {this.props.description}
+              </p>
             </div>
-            <EmptyState.Title>
-              <span data-testid="connection-card-title">{this.props.name}</span>
-            </EmptyState.Title>
-            <EmptyState.Info>{this.props.description}</EmptyState.Info>
-          </EmptyState>
-        </Card.Body>
-      </Card>
+          </Card.Body>
+        </Card>
+      </Link>
     );
   }
 }

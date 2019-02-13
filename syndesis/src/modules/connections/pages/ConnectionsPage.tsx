@@ -1,150 +1,33 @@
 import { WithConnections } from '@syndesis/api';
 import { Connection } from '@syndesis/models';
-import {
-  ConnectionCard,
-  ConnectionsGrid,
-  ConnectionsGridCell,
-  ConnectionSkeleton,
-  ConnectionsListView,
-  IActiveFilter,
-  IFilterType,
-  IListViewToolbarAbstractComponent,
-  ISortType,
-  ListViewToolbarAbstractComponent,
-} from '@syndesis/ui';
-import { getConnectionIcon, WithLoader } from '@syndesis/utils';
+import { WithRouter } from '@syndesis/utils';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
-import i18n from '../../../i18n';
+import { ConnectionsWithToolbar } from '../containers/ConnectionsWithToolbar';
 
-function getFilteredAndSortedConnections(
-  connections: Connection[],
-  activeFilters: IActiveFilter[],
-  currentSortType: string,
-  isSortAscending: boolean
-) {
-  let filteredAndSortedConnections = connections;
-  activeFilters.forEach((filter: IActiveFilter) => {
-    const valueToLower = filter.value.toLowerCase();
-    filteredAndSortedConnections = filteredAndSortedConnections.filter(
-      (c: Connection) => c.name.toLowerCase().includes(valueToLower)
-    );
-  });
-
-  filteredAndSortedConnections = filteredAndSortedConnections.sort(
-    (miA, miB) => {
-      const left = isSortAscending ? miA : miB;
-      const right = isSortAscending ? miB : miA;
-      return left.name.localeCompare(right.name);
-    }
-  );
-
-  return filteredAndSortedConnections;
+export function getConnectionHref(
+  baseUrl: string,
+  connection: Connection
+): string {
+  return `${baseUrl}/${connection.id}`;
 }
 
-const filterByName = {
-  filterType: 'text',
-  id: 'name',
-  placeholder: i18n.t('shared:filterByNamePlaceholder'),
-  title: i18n.t('shared:Name'),
-} as IFilterType;
-
-const filterTypes = [filterByName];
-
-const sortByName = {
-  id: 'name',
-  isNumeric: false,
-  title: i18n.t('shared:Name'),
-} as ISortType;
-
-const sortTypes: ISortType[] = [sortByName];
-
-export default class ConnectionsPage extends ListViewToolbarAbstractComponent<
-  {},
-  IListViewToolbarAbstractComponent
-> {
-  public state = {
-    activeFilters: [] as IActiveFilter[],
-    currentFilterType: filterByName,
-    currentSortType: sortByName.title,
-    currentValue: '',
-    filterCategory: null,
-    isSortAscending: true,
-  };
-
+export default class ConnectionsPage extends React.Component {
   public render() {
     return (
-      <WithConnections>
-        {({ data, hasData, error }) => {
-          const filteredAndSortedConnections = getFilteredAndSortedConnections(
-            data.items,
-            this.state.activeFilters,
-            this.state.currentSortType,
-            this.state.isSortAscending
-          );
-
-          return (
-            <NamespacesConsumer ns={['shared']}>
-              {t => (
-                <ConnectionsListView
-                  linkToConnectionCreate={'/connections/create'}
-                  filterTypes={filterTypes}
-                  sortTypes={sortTypes}
-                  resultsCount={filteredAndSortedConnections.length}
-                  {...this.state}
-                  onUpdateCurrentValue={this.onUpdateCurrentValue}
-                  onValueKeyPress={this.onValueKeyPress}
-                  onFilterAdded={this.onFilterAdded}
-                  onSelectFilterType={this.onSelectFilterType}
-                  onFilterValueSelected={this.onFilterValueSelected}
-                  onRemoveFilter={this.onRemoveFilter}
-                  onClearFilters={this.onClearFilters}
-                  onToggleCurrentSortDirection={
-                    this.onToggleCurrentSortDirection
-                  }
-                  onUpdateCurrentSortType={this.onUpdateCurrentSortType}
-                  i18nLinkCreateConnection={t('shared:linkCreateConnection')}
-                  i18nResultsCount={t('shared:resultsCount', {
-                    count: filteredAndSortedConnections.length,
-                  })}
-                >
-                  <ConnectionsGrid>
-                    <WithLoader
-                      error={error}
-                      loading={!hasData}
-                      loaderChildren={
-                        <>
-                          {new Array(5).fill(0).map((_, index) => (
-                            <ConnectionsGridCell key={index}>
-                              <ConnectionSkeleton />
-                            </ConnectionsGridCell>
-                          ))}
-                        </>
-                      }
-                      errorChildren={<div>TODO</div>}
-                    >
-                      {() =>
-                        data.items.map((c, index) => (
-                          <ConnectionsGridCell key={index}>
-                            <ConnectionCard
-                              name={c.name}
-                              description={c.description || ''}
-                              icon={getConnectionIcon(
-                                c,
-                                process.env.PUBLIC_URL
-                              )}
-                            />
-                          </ConnectionsGridCell>
-                        ))
-                      }
-                    </WithLoader>
-                  </ConnectionsGrid>
-                </ConnectionsListView>
-              )}
-            </NamespacesConsumer>
-          );
-        }}
-      </WithConnections>
+      <WithRouter>
+        {({ match }) => (
+          <WithConnections>
+            {({ data, hasData, error }) => (
+              <ConnectionsWithToolbar
+                error={error}
+                loading={!hasData}
+                connections={data.connectionsForDisplay}
+                getConnectionHref={getConnectionHref.bind(null, match.url)}
+              />
+            )}
+          </WithConnections>
+        )}
+      </WithRouter>
     );
   }
 }

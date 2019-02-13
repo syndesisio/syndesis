@@ -1,3 +1,4 @@
+import * as H from 'history';
 import {
   Button,
   EmptyState,
@@ -22,7 +23,7 @@ export interface IVirtsListViewProps extends IListViewToolbarProps {
   i18nName: string;
   i18nNameFilterPlaceholder: string;
   i18nTitle: string;
-  linkCreateHRef: string;
+  linkCreateHRef: H.LocationDescriptor;
   onCreate: (name: string) => void;
   onImport: (name: string) => void;
 }

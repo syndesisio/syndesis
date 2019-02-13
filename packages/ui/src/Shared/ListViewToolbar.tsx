@@ -1,5 +1,6 @@
 import { Filter, FormControl, Sort, Toolbar } from 'patternfly-react';
 import * as React from 'react';
+import './ListViewToolbar.css';
 
 export interface IFilterValue {
   id: string;

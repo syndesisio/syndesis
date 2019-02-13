@@ -9,13 +9,20 @@ export interface ILayoutBase {
   appNav: any;
   verticalNav: PfVerticalNavItem[];
   logoHref: string;
+  showNavigation: boolean;
+  onNavigationCollapse(): void;
+  onNavigationExpand(): void;
 }
 
 export class AppLayout extends React.Component<ILayoutBase> {
   public render() {
     return (
       <React.Fragment>
-        <VerticalNav sessionKey={'mainNav'}>
+        <VerticalNav
+          navCollapsed={!this.props.showNavigation}
+          onCollapse={this.props.onNavigationCollapse}
+          onExpand={this.props.onNavigationExpand}
+        >
           <VerticalNav.Masthead
             iconImg={this.props.pictograph}
             titleImg={this.props.typogram}

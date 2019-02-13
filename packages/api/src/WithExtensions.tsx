@@ -1,8 +1,8 @@
 import { Extension } from '@syndesis/models';
 import * as React from 'react';
-import { IRestState } from './Rest';
+import { IFetchState } from './Fetch';
 import { ServerEventsContext } from './ServerEventsContext';
-import { SyndesisRest } from './SyndesisRest';
+import { SyndesisFetch } from './SyndesisFetch';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
 
@@ -13,7 +13,7 @@ export interface IExtensionsResponse {
 
 export interface IWithExtensionsProps {
   disableUpdates?: boolean;
-  children(props: IRestState<IExtensionsResponse>): any;
+  children(props: IFetchState<IExtensionsResponse>): any;
 }
 
 export class WithExtensions extends React.Component<IWithExtensionsProps> {
@@ -23,7 +23,7 @@ export class WithExtensions extends React.Component<IWithExtensionsProps> {
 
   public render() {
     return (
-      <SyndesisRest<IExtensionsResponse>
+      <SyndesisFetch<IExtensionsResponse>
         url={'/extensions'}
         defaultValue={{ items: [], totalCount: 0 }}
       >
@@ -45,7 +45,7 @@ export class WithExtensions extends React.Component<IWithExtensionsProps> {
             </ServerEventsContext.Consumer>
           )
         }
-      </SyndesisRest>
+      </SyndesisFetch>
     );
   }
 }
