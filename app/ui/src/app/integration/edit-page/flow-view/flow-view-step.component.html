@@ -12,6 +12,10 @@
     </div>
   </ng-template>
 
+  <ng-template #splitWarningPopover>
+    Add an aggregate step to aggregate or group data after a split step.
+  </ng-template>
+
   <!-- Icon -->
   <div class="icon-container" (click)="gotoPageFor(step)">
     <div
@@ -56,6 +60,20 @@
           ? 'Typeless Previous Step'
           : 'Data Type Mismatch'
       ]"
+      #datamapperInfoPop="bs-popover"
+      triggers=""
+      placement="right"
+      outsideClick="true"
+      (click)="toggleAddDatamapperInfo(); $event.stopPropagation()"
+      container="body"
+    >
+    </span>
+
+    <span
+      class="pficon pficon-info step-suggestion"
+      *ngIf="isUnclosedSplit"
+      [popover]="splitWarningPopover"
+      popoverTitle="Step suggestion"
       #datamapperInfoPop="bs-popover"
       triggers=""
       placement="right"
