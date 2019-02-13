@@ -30,7 +30,7 @@ export class IntegrationDetail extends React.Component<
       <>
         <div className="container-fluid">
           <h1>{this.props.integrationName}</h1>
-          <div>this.props.i18nTextTitle}</div>
+          <div>{this.props.i18nTextTitle}</div>
         </div>
         <div className="container-fluid">
           <h2>{this.props.i18nTextHistory}</h2>
