@@ -179,7 +179,7 @@ func (a *Upgrade) getUpgradeResources(syndesis *v1alpha1.Syndesis) ([]runtime.Ob
 
 	resources := make([]runtime.Object, 0)
 	for _, obj := range rawResources {
-		res, err := util.LoadKubernetesResource(obj.Raw)
+		res, err := util.LoadResourceFromYaml(obj.Raw)
 		if err != nil {
 			return nil, err
 		}

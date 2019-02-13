@@ -67,7 +67,7 @@ func (p *TemplateProcessor) Process(sourceTemplate *v1template.Template, paramet
 			return nil, err
 		}
 
-		templ, err := util.LoadKubernetesResource(data)
+		templ, err := util.LoadResourceFromYaml(data)
 		if err != nil {
 			return nil, err
 		}

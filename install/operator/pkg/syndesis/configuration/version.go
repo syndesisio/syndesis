@@ -13,7 +13,7 @@ import (
 // Each operator instance is bound to a single version currently that can be retrieved from this method.
 func GetSyndesisVersionFromOperatorTemplate() (string, error) {
 
-	templateRes, err := util.LoadKubernetesResourceFromFile(*TemplateLocation)
+	templateRes, err := util.LoadResourceFromFile(*TemplateLocation)
 	if err != nil {
 		return "", err
 	}
@@ -62,7 +62,7 @@ func GetSyndesisVersion(secret *v1.Secret) (string, error) {
 
 func findConfigSecret(template *templatev1.Template) (*v1.Secret, error) {
 	for _, object := range template.Objects {
-		res, err := util.LoadKubernetesResource(object.Raw)
+		res, err := util.LoadResourceFromYaml(object.Raw)
 		if err != nil {
 			return nil, err
 		}

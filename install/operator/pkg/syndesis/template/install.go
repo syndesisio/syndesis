@@ -22,7 +22,7 @@ func GetInstallResourcesAsRuntimeObjects(syndesis *v1alpha1.Syndesis, params Ins
 	objects := make([]runtime.Object, 0)
 
 	for _, rawObj := range rawExtensions {
-		res, err := util.LoadKubernetesResource(rawObj.Raw)
+		res, err := util.LoadResourceFromYaml(rawObj.Raw)
 		if err != nil {
 			return nil, err
 		}
@@ -33,7 +33,7 @@ func GetInstallResourcesAsRuntimeObjects(syndesis *v1alpha1.Syndesis, params Ins
 }
 
 func GetInstallResources(syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.RawExtension, error) {
-	res, err := util.LoadKubernetesResourceFromFile(*configuration.TemplateLocation)
+	res, err := util.LoadResourceFromFile(*configuration.TemplateLocation)
 	if err != nil {
 		return nil, err
 	}

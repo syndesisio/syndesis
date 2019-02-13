@@ -7,7 +7,7 @@ import (
 )
 
 func TestLoadResources(t *testing.T) {
-	object, err := LoadKubernetesResourceFromFile("../../test/resources/dep.json")
+	object, err := LoadResourceFromFile("../../test/resources/dep.json")
 	assert.Nil(t, err)
 
 	assert.NotNil(t, object)
@@ -17,7 +17,7 @@ func TestLoadResources(t *testing.T) {
 }
 
 func TestLoadYamlResources(t *testing.T) {
-	object, err := LoadKubernetesResourceFromFile("../../test/resources/dep.yml")
+	object, err := LoadResourceFromFile("../../test/resources/dep.yml")
 	assert.Nil(t, err)
 
 	assert.NotNil(t, object)

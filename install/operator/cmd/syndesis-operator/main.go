@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"os"
 	"runtime"
@@ -29,7 +30,6 @@ func printVersion() {
 }
 
 func main() {
-	flag.Parse()
 
 	// The logger instantiated here can be changed to any logger
 	// implementing the logr.Logger interface. This logger will
@@ -37,9 +37,10 @@ func main() {
 	// uniform and structured logs.
 	logf.SetLogger(logf.ZapLogger(false))
 
-
 	configuration.TemplateLocation = flag.String("template", "/conf/syndesis-template.yml", "Path to template used for installation")
 	configuration.Registry = flag.String("registry", "docker.io", "Registry to use for loading images like the upgrade pod")
+
+	flag.Parse()
 
 	log.Info("Using template", "template", *configuration.TemplateLocation)
 	printVersion()
@@ -75,6 +76,11 @@ func main() {
 
 	// Setup Scheme for all resources
 	if err := apis.AddToScheme(mgr.GetScheme()); err != nil {
+		log.Error(err, "")
+		os.Exit(1)
+	}
+
+	if err := openshift.AddToScheme(mgr.GetScheme()); err != nil {
 		log.Error(err, "")
 		os.Exit(1)
 	}

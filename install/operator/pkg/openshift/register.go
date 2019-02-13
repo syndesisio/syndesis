@@ -9,6 +9,7 @@ import (
 	oauthv1 "github.com/openshift/api/oauth/v1"
 	route "github.com/openshift/api/route/v1"
 	template "github.com/openshift/api/template/v1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -20,12 +21,21 @@ var log = logf.Log.WithName("openshift")
 
 
 func init() {
+	util.RegisterInScheme(registerInScheme)
+}
+
+func registerInScheme(scheme *runtime.Scheme) {
+
 	// Add the standard kubernetes [GVK:Types] type registry
 	// e.g (v1,Pods):&v1.Pod{}
-	scheme := runtime.NewScheme()
+	log.Info("Registering schemes")
 	metav1.AddToGroupVersion(scheme, schema.GroupVersion{Version: "v1"})
-	cgoscheme.AddToScheme(scheme)
-	addKnownTypes(scheme)
+	if err := cgoscheme.AddToScheme(scheme); err != nil {
+		log.Error(err, "Cannot register kubernetes scheme")
+	}
+	if err := addKnownTypes(scheme); err != nil {
+		log.Error(err, "Cannot add custom schemes")
+	}
 }
 
 var (

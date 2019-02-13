@@ -44,7 +44,7 @@ func (a *Startup) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
 	ready := true
 	var failedDeployment *string
 	for _, o := range list.Items {
-		if deplObj, err := util.LoadKubernetesResource(o.Raw); err != nil {
+		if deplObj, err := util.LoadResourceFromYaml(o.Raw); err != nil {
 			return err
 		} else if depl, ok := deplObj.(*v1.DeploymentConfig); ok {
 			if depl.Spec.Replicas != depl.Status.ReadyReplicas {

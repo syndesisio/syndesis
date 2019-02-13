@@ -43,7 +43,7 @@ func GetUpgradeResources(syndesis *v1alpha1.Syndesis, params UpgradeParams) ([]r
 
 func findUpgradeTemplate(list []runtime.RawExtension) (*templatev1.Template, error) {
 	for _, object := range list {
-		res, err := util.LoadKubernetesResource(object.Raw)
+		res, err := util.LoadResourceFromYaml(object.Raw)
 		if err != nil {
 			return nil, err
 		}

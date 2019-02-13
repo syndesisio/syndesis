@@ -32,7 +32,7 @@ func AttachSyndesisToResource(cl client.Client, syndesis *v1alpha1.Syndesis) err
 			}
 
 			for _, obj := range list.Items {
-				res, err := util.LoadKubernetesResource(obj.Raw)
+				res, err := util.LoadResourceFromYaml(obj.Raw)
 				if err != nil {
 					return err
 				}

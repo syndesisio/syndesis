@@ -10,7 +10,7 @@ import (
 
 func GetDeclaredResourceTypes() ([]metav1.TypeMeta, error) {
 	types := make(map[metav1.TypeMeta]bool)
-	res, err := util.LoadKubernetesResourceFromFile(*configuration.TemplateLocation)
+	res, err := util.LoadResourceFromFile(*configuration.TemplateLocation)
 	if err != nil {
 		return nil, err
 	}
