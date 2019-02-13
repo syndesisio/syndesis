@@ -10,10 +10,18 @@ const stories = storiesOf('Integration/IntegrationDetail', module);
 const integrationDetailStory = 'sample integration detail page';
 const storyNotes = 'Integration Detail';
 
+const integrationId = '';
+const integrationDescription = '';
+const integrationName = '';
+const integrationStatus = '';
+const integrationVersion = '';
+
 const textBtnEdit = 'Edit';
 const textBtnPublish = 'Publish';
 const textDraft = 'Draft';
 const textHistory = 'History';
+const textHistoryMenuReplaceDraft = 'Replace Draft';
+const textHistoryMenuUnpublish = 'Unpublish';
 const textLastPublished = 'Last published';
 const textNoDescription = 'No description set...';
 const textTabActivity = 'Activity';
@@ -29,17 +37,23 @@ stories
     withNotes(storyNotes)(() => (
       <IntegrationDetail
         integrationId={'integrationId'}
-        i18nBtnEdit={textBtnEdit}
-        i18nBtnPublish={textBtnPublish}
-        i18nDraft={textDraft}
-        i18nHistory={textHistory}
-        i18nLastPublished={textLastPublished}
-        i18nNoDescription={textNoDescription}
-        i18nTabActivity={textTabActivity}
-        i18nTabDetails={textTabDetails}
-        i18nTableMetrics={textTabMetrics}
-        i18nTitle={textTitle}
-        i18nVersion={textVersion}
+        integrationName={''}
+        integrationDescription={''}
+        integrationStatus={''}
+        integrationVersion={'integrationVersion'}
+        i18nTextBtnEdit={textBtnEdit}
+        i18nTextBtnPublish={textBtnPublish}
+        i18nTextDraft={textDraft}
+        i18nTextHistory={textHistory}
+        i18nTextHistoryMenuReplaceDraft={textHistoryMenuReplaceDraft}
+        i18nTextHistoryMenuUnpublish={textHistoryMenuUnpublish}
+        i18nTextLastPublished={textLastPublished}
+        i18nTextNoDescription={textNoDescription}
+        i18nTextTabActivity={textTabActivity}
+        i18nTextTabDetails={textTabDetails}
+        i18nTextTableMetrics={textTabMetrics}
+        i18nTextTitle={textTitle}
+        i18nTextVersion={textVersion}
       />
     ))
   );
