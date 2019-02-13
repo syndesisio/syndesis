@@ -4,12 +4,15 @@ import * as React from 'react';
 export interface IIntegrationDetailProps {
   integrationId: string;
   integrationDescription?: string;
+  integrationExternalUrl?: string;
   integrationName: string;
   integrationStatus: string;
   integrationVersion: string;
   i18nTextBtnEdit: string;
   i18nTextBtnPublish: string;
+  i18nTextCopyToClipboard: string;
   i18nTextDraft: string;
+  i18nTextExternalUrl?: string;
   i18nTextHistory: string;
   i18nTextHistoryMenuReplaceDraft: string;
   i18nTextHistoryMenuUnpublish: string;

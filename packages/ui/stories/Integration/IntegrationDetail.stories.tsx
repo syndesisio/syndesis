@@ -11,13 +11,17 @@ const storyNotes = 'Integration Detail';
 
 const integrationId = 'i-LUF4Pfwxo4Wcrbyt7YIz';
 const integrationDescription = 'A test integration.';
+const integrationExternalUrl =
+  'https://i-swagger-connections-syndesis-staging.b6ff.rh-idev.openshiftapps.com';
 const integrationName = 'Student API';
 const integrationStatus = 'Published';
 const integrationVersion = '1';
 
 const textBtnEdit = 'Edit';
 const textBtnPublish = 'Publish';
+const textCopyToClipboard = 'Copy to Clipboard';
 const textDraft = 'Draft';
+const textExternalUrl = 'External URL';
 const textHistory = 'History';
 const textHistoryMenuReplaceDraft = 'Replace Draft';
 const textHistoryMenuUnpublish = 'Unpublish';
@@ -41,11 +45,16 @@ stories
           'integrationDescription',
           integrationDescription
         )}
+        integrationExternalUrl={
+          (text('integrationExternalUrl'), integrationExternalUrl)
+        }
         integrationStatus={text('integrationStatus', integrationStatus)}
         integrationVersion={text('integrationVersion', integrationVersion)}
         i18nTextBtnEdit={textBtnEdit}
         i18nTextBtnPublish={textBtnPublish}
+        i18nTextCopyToClipboard={textCopyToClipboard}
         i18nTextDraft={textDraft}
+        i18nTextExternalUrl={textExternalUrl}
         i18nTextHistory={textHistory}
         i18nTextHistoryMenuReplaceDraft={textHistoryMenuReplaceDraft}
         i18nTextHistoryMenuUnpublish={textHistoryMenuUnpublish}
