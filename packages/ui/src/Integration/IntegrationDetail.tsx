@@ -19,6 +19,13 @@ export class IntegrationDetail extends React.Component<
   IIntegrationDetailProps
 > {
   public render() {
-    return <div>Integration Detail Component</div>;
+    return (
+      <>
+        <div className="container-fluid">
+          <h1>{this.props.i18nTitle}</h1>
+          <div>Integration Detail Component</div>
+        </div>
+      </>
+    );
   }
 }
