@@ -12,7 +12,7 @@ export const fieldObj = {
   value: '',
   disabled: false,
   onChange: () => {},
-  validationState: '',
+  validationState: null,
 };
 
 stories.add('FormTextAreaComponent', () => {
