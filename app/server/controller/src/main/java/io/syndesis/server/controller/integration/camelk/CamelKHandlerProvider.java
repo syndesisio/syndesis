@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "camel-k")
 public class CamelKHandlerProvider implements StateChangeHandlerProvider {
 
-    final private List<StateChangeHandler> handlers;
+    private final List<StateChangeHandler> handlers;
 
     protected CamelKHandlerProvider(@Qualifier("camel-k") List <StateChangeHandler> handlers) {
         this.handlers = Collections.unmodifiableList(handlers);
