@@ -159,7 +159,7 @@ public abstract class AbstractODataTest extends IntegrationTestSupport implement
         Integration odataIntegration = new Integration.Builder()
             .id("i-LTS2tYXwF8odCm87k6gz")
             .name("MyODataInt")
-            .addTag("log", "odata")
+            .addTags("log", "odata")
             .addFlow(flowBuilder.build())
             .build();
         return odataIntegration;

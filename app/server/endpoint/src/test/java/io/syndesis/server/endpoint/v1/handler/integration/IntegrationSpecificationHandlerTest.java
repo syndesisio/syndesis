@@ -88,12 +88,12 @@ public class IntegrationSpecificationHandlerTest {
                 .build())
             .build();
 
-        final Flow flow1 = new Flow.Builder().id("flow1").addStep(step, step).build();
-        final Flow flow2 = new Flow.Builder().id("flow2").addStep(step, step).build();
-        final Flow flow3 = new Flow.Builder().id("flow3").addStep(step, step).build();
+        final Flow flow1 = new Flow.Builder().id("flow1").addSteps(step, step).build();
+        final Flow flow2 = new Flow.Builder().id("flow2").addSteps(step, step).build();
+        final Flow flow3 = new Flow.Builder().id("flow3").addSteps(step, step).build();
 
-        final Integration existing = new Integration.Builder().addFlow(flow1, flow3).build();
-        final Integration given = new Integration.Builder().addFlow(flow1, flow2, flow3).build();
+        final Integration existing = new Integration.Builder().addFlows(flow1, flow3).build();
+        final Integration given = new Integration.Builder().addFlows(flow1, flow2, flow3).build();
 
         final Integration updated = IntegrationSpecificationHandler.updateFlowsAndStartAndEndDataShapes(existing, given);
 
@@ -108,7 +108,7 @@ public class IntegrationSpecificationHandlerTest {
                 .build())
             .build();
 
-        final Flow flow = new Flow.Builder().id("flow1").addStep(step, step).build();
+        final Flow flow = new Flow.Builder().id("flow1").addSteps(step, step).build();
 
         final Integration existing = new Integration.Builder().build();
         final Integration given = new Integration.Builder().addFlow(flow).build();
@@ -126,10 +126,10 @@ public class IntegrationSpecificationHandlerTest {
                 .build())
             .build();
 
-        final Flow existingFlow1 = new Flow.Builder().id("flow1").addStep(step, step).build();
-        final Flow existingFlow2 = new Flow.Builder().id("flow2").addStep(step, step).build();
+        final Flow existingFlow1 = new Flow.Builder().id("flow1").addSteps(step, step).build();
+        final Flow existingFlow2 = new Flow.Builder().id("flow2").addSteps(step, step).build();
 
-        final Integration existing = new Integration.Builder().addFlow(existingFlow1, existingFlow2).build();
+        final Integration existing = new Integration.Builder().addFlows(existingFlow1, existingFlow2).build();
         final Integration given = new Integration.Builder().addFlow(existingFlow2).build();
 
         final Integration updated = IntegrationSpecificationHandler.updateFlowsAndStartAndEndDataShapes(existing, given);
@@ -145,7 +145,7 @@ public class IntegrationSpecificationHandlerTest {
                 .build())
             .build();
 
-        final Flow existingFlow = new Flow.Builder().id("flow1").addStep(step, step).build();
+        final Flow existingFlow = new Flow.Builder().id("flow1").addSteps(step, step).build();
 
         final Integration existing = new Integration.Builder().addFlow(existingFlow).build();
         final Integration given = new Integration.Builder().build();
@@ -246,7 +246,7 @@ public class IntegrationSpecificationHandlerTest {
             .id("integration-1")
             .addFlow(new Flow.Builder()
                 .id("integration-1:flows:flow1")
-                .addStep(step, step)
+                .addSteps(step, step)
                 .build())
             .build();
 
@@ -282,8 +282,8 @@ public class IntegrationSpecificationHandlerTest {
                 .build())
             .build();
 
-        final Flow flow = new Flow.Builder().id("flow1").name("name").description("description").addStep(step, step).build();
-        final Flow flowUpdated = new Flow.Builder().id("flow1").name("updated name").description("updated description").addStep(step, step).build();
+        final Flow flow = new Flow.Builder().id("flow1").name("name").description("description").addSteps(step, step).build();
+        final Flow flowUpdated = new Flow.Builder().id("flow1").name("updated name").description("updated description").addSteps(step, step).build();
 
         final Integration existing = new Integration.Builder().addFlow(flow).build();
         final Integration given = new Integration.Builder().addFlow(flowUpdated).build();
@@ -330,7 +330,7 @@ public class IntegrationSpecificationHandlerTest {
                 .build())
             .build();
 
-        final Flow existingFlow = new Flow.Builder().id("flow1").addStep(startStep, stepWithShapes, endStep).build();
+        final Flow existingFlow = new Flow.Builder().id("flow1").addSteps(startStep, stepWithShapes, endStep).build();
         final Integration existing = new Integration.Builder().addFlow(existingFlow).build();
 
         final DataShape givenStartShape = new DataShape.Builder()
@@ -377,7 +377,7 @@ public class IntegrationSpecificationHandlerTest {
                 .build())
             .build();
 
-        final Flow flow = new Flow.Builder().id("flow1").addStep(step, step).build();
+        final Flow flow = new Flow.Builder().id("flow1").addSteps(step, step).build();
 
         final Integration existing = new Integration.Builder().addFlow(flow).build();
         final Integration given = new Integration.Builder().addFlow(flow).build();

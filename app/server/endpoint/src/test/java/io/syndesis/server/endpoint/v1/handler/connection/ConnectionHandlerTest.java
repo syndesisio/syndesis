@@ -174,7 +174,7 @@ public class ConnectionHandlerTest {
     @Test
     @SuppressWarnings("unchecked")
     public void overviewListShouldAugmentWithConnectionUsageNoIntegrations() {
-        ListResult<Connection> connectionResult = new ListResult.Builder<Connection>().addItem(c1, c2, c3).build();
+        ListResult<Connection> connectionResult = new ListResult.Builder<Connection>().addItems(c1, c2, c3).build();
 
         when(dataManager.fetchAll(eq(Connection.class), any())).thenReturn(connectionResult);
         when(dataManager.fetchAll(Integration.class)).thenReturn(new ListResult.Builder<Integration>().build());
@@ -210,7 +210,7 @@ public class ConnectionHandlerTest {
 
     static class TestIntegrationBuilder extends Integration.Builder {
         TestIntegrationBuilder withFlowConnections(final Connection... connections) {
-            return (TestIntegrationBuilder) addFlow(new Flow.Builder().addConnection(connections).build());
+            return (TestIntegrationBuilder) addFlow(new Flow.Builder().addConnections(connections).build());
         }
 
         TestIntegrationBuilder withFlowStepsUsingConnections(final Connection... connections) {
