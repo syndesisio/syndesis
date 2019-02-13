@@ -1,3 +1,4 @@
+import { EmptyState, ListView } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationDetailProps {
@@ -24,6 +25,16 @@ export class IntegrationDetail extends React.Component<
         <div className="container-fluid">
           <h1>{this.props.i18nTitle}</h1>
           <div>Integration Detail Component</div>
+        </div>
+        <div className="container-fluid">
+          <h2>{this.props.i18nHistory}</h2>
+          {this.props.children ? (
+            <ListView>{this.props.children}</ListView>
+          ) : (
+            <EmptyState>
+              <p>No History</p>
+            </EmptyState>
+          )}
         </div>
       </>
     );
