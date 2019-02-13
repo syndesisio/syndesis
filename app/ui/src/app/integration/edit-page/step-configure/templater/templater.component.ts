@@ -8,29 +8,28 @@ import {
   OnInit,
   AfterViewInit,
   OnDestroy,
-  HostListener
+  HostListener,
 } from '@angular/core';
-import {
-  Subscription
-} from 'rxjs';
+import { Subscription } from 'rxjs';
 import {
   I18NService,
   DataShape,
   DataShapeKinds,
   ActionDescriptor,
   Action,
-  IntegrationSupportService
+  IntegrationSupportService,
 } from '@syndesis/ui/platform';
-import { CurrentFlowService } from '@syndesis/ui/integration/edit-page';
 import {
-  FileLikeObject,
-  FileUploader
-} from '@syndesis/ui/vendor';
+  CurrentFlowService,
+  INTEGRATION_SET_ACTION,
+  INTEGRATION_SET_DATASHAPE,
+} from '@syndesis/ui/integration/edit-page';
+import { FileLikeObject, FileUploader } from '@syndesis/ui/vendor';
 import {
   TemplateSymbol,
   MustacheModeLint,
   VelocityLint,
-  FreemarkerModeLint
+  FreemarkerModeLint,
 } from './codemirror';
 
 @Component({
@@ -38,10 +37,9 @@ import {
   templateUrl: './templater.component.html',
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./templater.component.scss'],
-  providers: [MustacheModeLint, VelocityLint, FreemarkerModeLint]
+  providers: [MustacheModeLint, VelocityLint, FreemarkerModeLint],
 })
 export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
-
   @Input() configuredProperties: any;
   @Input() valid: boolean;
   @Input() dataShape: DataShape;
@@ -74,7 +72,7 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
     tabSize: 2,
     showCursorWhenSelecting: true,
     gutters: ['CodeMirror-lint-markers'],
-    lint: true
+    lint: true,
   };
 
   //
@@ -88,11 +86,14 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private parseFunction: (text: string) => TemplateSymbol[];
 
-  constructor(private i18NService: I18NService, public currentFlowService: CurrentFlowService,
-              public integrationSupportService: IntegrationSupportService,
-              private mustacheModeLint: MustacheModeLint,
-              private velocityLint: VelocityLint,
-              private freemarkerModeLint: FreemarkerModeLint) {}
+  constructor(
+    private i18NService: I18NService,
+    public currentFlowService: CurrentFlowService,
+    public integrationSupportService: IntegrationSupportService,
+    private mustacheModeLint: MustacheModeLint,
+    private velocityLint: VelocityLint,
+    private freemarkerModeLint: FreemarkerModeLint
+  ) {}
 
   @HostListener('document:dragenter', ['$event'])
   onDocumentDragEnter(event: Event) {
@@ -106,7 +107,9 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
     //
     // Initialise the out data shape specification
     //
-    this.outShapeSpec = this.createSpecification([new TemplateSymbol('message', 'string')]);
+    this.outShapeSpec = this.createSpecification([
+      new TemplateSymbol('message', 'string'),
+    ]);
 
     //
     // Initialise the values
@@ -181,11 +184,10 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
         //
         symbols = this.extractTemplateSymbols();
         if (symbols.length === 0) {
-          this.validationErrors.push({message: 'No symbols present'});
+          this.validationErrors.push({ message: 'No symbols present' });
         }
-
       } catch (exception) {
-        this.validationErrors.push({message: exception.message});
+        this.validationErrors.push({ message: exception.message });
       }
 
       this.valid = this.validationErrors.length === 0;
@@ -204,7 +206,7 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
     // will always match
     //
     this.currentFlowService.events.emit({
-      kind: 'integration-set-action',
+      kind: INTEGRATION_SET_ACTION,
       position: this.position,
       stepKind: 'template',
       action: {
@@ -214,10 +216,10 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
           outputDataShape: {
             kind: DataShapeKinds.JSON_SCHEMA,
             name: 'Template JSON Schema',
-            specification: this.outShapeSpec
-          }
-        } as ActionDescriptor
-      } as Action
+            specification: this.outShapeSpec,
+          },
+        } as ActionDescriptor,
+      } as Action,
     });
 
     const inShapeSpec = this.createSpecification(symbols);
@@ -232,38 +234,36 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
     // into an object with a single property of 'message'.
     //
     this.currentFlowService.events.emit({
-      kind: 'integration-set-datashape',
+      kind: INTEGRATION_SET_DATASHAPE,
       position: this.position,
       isInput: true,
       dataShape: {
         kind: DataShapeKinds.JSON_SCHEMA,
         name: 'Template JSON Schema',
-        specification: inShapeSpec
-      } as DataShape
+        specification: inShapeSpec,
+      } as DataShape,
     });
 
     const formattedProperties: any = {
       template: this.templateContent,
-      language: this.templateLanguage
+      language: this.templateLanguage,
     };
 
     this.configuredPropertiesChange.emit(formattedProperties);
   }
 
   private initUploader() {
-    this.uploader = new FileUploader(
-      {
-        maxFileSize: 1024
-      }
-    );
+    this.uploader = new FileUploader({
+      maxFileSize: 1024,
+    });
 
     this.uploader.onAfterAddingFile = () => {
       // successfully added file so clear out failed message
       this.invalidFileMsg = null;
 
       // since more than one file may have been dropped, clear out all but last one
-      if ( this.uploader.queue.length > 1 ) {
-        this.uploader.queue.splice( 0, 1 );
+      if (this.uploader.queue.length > 1) {
+        this.uploader.queue.splice(0, 1);
       }
 
       // pop off file from queue to set file and clear queue
@@ -271,17 +271,18 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const reader = new FileReader();
       reader.onload = () => {
-        this.templateContent = reader.result;
+        this.templateContent = reader.result as string;
       };
 
       reader.readAsText(fileToUpload);
     };
 
-    this.uploader.onWhenAddingFileFailed = (
-      file: FileLikeObject
-    ): any => {
+    this.uploader.onWhenAddingFileFailed = (file: FileLikeObject): any => {
       // occurs when not a *.json file
-      this.invalidFileMsg = this.i18NService.localize('integrations.steps.templater-upload-invalid-file', [file.name]);
+      this.invalidFileMsg = this.i18NService.localize(
+        'integrations.steps.templater-upload-invalid-file',
+        [file.name]
+      );
       this.uploader.clearQueue();
     };
   }
@@ -320,7 +321,7 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
    * Updates the mode and linting language of the editor
    */
   private changeEditorLanguage() {
-    if (! this.templateEditor) {
+    if (!this.templateEditor) {
       return;
     }
 
@@ -390,10 +391,10 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
     const spec: any = {
       type: 'object',
       $schema: 'http://json-schema.org/schema#',
-      title: 'Template JSON Schema'
+      title: 'Template JSON Schema',
     };
 
-    if (symbols.length === 0)  {
+    if (symbols.length === 0) {
       return spec;
     }
 
@@ -401,7 +402,7 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
     for (const symbol of symbols) {
       properties[symbol.getId()] = {
         description: 'Identifier for the symbol ' + symbol.getId(),
-        type: symbol.getType()
+        type: symbol.getType(),
       };
     }
     spec.properties = properties;

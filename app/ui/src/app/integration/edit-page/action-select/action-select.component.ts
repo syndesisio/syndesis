@@ -6,21 +6,28 @@ import {
   EMPTY,
   Subject,
   BehaviorSubject,
-  Subscription
+  Subscription,
 } from 'rxjs';
 
 import { Actions, Action, Connector, Step } from '@syndesis/ui/platform';
 import {
   CurrentFlowService,
   FlowEvent,
-  FlowPageService
+  FlowPageService,
+  INTEGRATION_UPDATED,
+  INTEGRATION_SET_STEP,
+  INTEGRATION_SET_ACTION,
+  INTEGRATION_CANCEL_CLICKED,
 } from '@syndesis/ui/integration/edit-page';
 import { ConnectorStore } from '@syndesis/ui/store';
 
 @Component({
   selector: 'syndesis-integration-action-select',
   templateUrl: 'action-select.component.html',
-  styleUrls: ['../../integration-common.scss', './action-select.component.scss']
+  styleUrls: [
+    '../../integration-common.scss',
+    './action-select.component.scss',
+  ],
 })
 export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
   flowSubscription: Subscription;
@@ -29,7 +36,6 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
   connector$: Observable<Connector>;
   loading$: Observable<boolean>;
   routeSubscription: Subscription;
-  actionsSubscription: Subscription;
   position: number;
   step: Step;
 
@@ -47,14 +53,14 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
 
   onSelected(action: Action) {
     this.currentFlowService.events.emit({
-      kind: 'integration-set-action',
+      kind: INTEGRATION_SET_ACTION,
       position: this.position,
       action: action,
       onSave: () => {
         this.router.navigate(['action-configure', this.position], {
-          relativeTo: this.route.parent
+          relativeTo: this.route.parent,
         });
-      }
+      },
     });
   }
 
@@ -62,12 +68,12 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
     const step = this.currentFlowService.getStep(this.position);
     step.stepKind = undefined;
     this.currentFlowService.events.emit({
-      kind: 'integration-set-step',
+      kind: INTEGRATION_SET_STEP,
       position: this.position,
       step: step,
       onSave: () => {
         this.flowPageService.goBack(['step-select', this.position], this.route);
-      }
+      },
     });
   }
 
@@ -80,7 +86,7 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
       this.actions$ = this.connector$.pipe(
         filter(connector => connector !== undefined),
         switchMap(connector => [
-          connector.actions.filter(action => action.pattern === 'From')
+          connector.actions.filter(action => action.pattern === 'From'),
         ])
       );
     }
@@ -91,7 +97,7 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
       this.actions$ = this.connector$.pipe(
         filter(connector => connector !== undefined),
         switchMap(connector => [
-          connector.actions.filter(action => action.pattern === 'To')
+          connector.actions.filter(action => action.pattern === 'To'),
         ])
       );
     }
@@ -104,7 +110,7 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
         switchMap(connector => [
           connector.actions.filter(
             action => action.pattern === 'To' || action.pattern === 'Pipe'
-          )
+          ),
         ])
       );
     }
@@ -112,19 +118,19 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
     if (!step) {
       /* Safety net */
       this.router.navigate(['save-or-add-step'], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
       return;
     }
     if (!step.connection) {
       this.router.navigate(['step-select', this.position], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
       return;
     }
     if (step.action) {
       this.router.navigate(['action-configure', this.position], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
       return;
     }
@@ -133,10 +139,10 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
 
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
-      case 'integration-updated':
+      case INTEGRATION_UPDATED:
         this.loadActions();
         break;
-      case 'integration-cancel-clicked':
+      case INTEGRATION_CANCEL_CLICKED:
         this.flowPageService.maybeRemoveStep(
           this.router,
           this.route,
@@ -154,12 +160,6 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
         this.handleFlowEvent(event);
       }
     );
-    this.actionsSubscription = this.actions$.subscribe(_ =>
-      this.currentFlowService.events.emit({
-        kind: 'integration-action-select',
-        position: this.position
-      })
-    );
     this.route.paramMap.subscribe(params => {
       this.position = +params.get('position');
       this.loadActions();
@@ -167,7 +167,7 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
     this.connector$.subscribe(connector => {
       if (connector && connector.id === 'api-provider') {
         this.router.navigate(['api-provider', 'create'], {
-          relativeTo: this.route.parent
+          relativeTo: this.route.parent,
         });
       }
     });
@@ -176,9 +176,6 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.flowSubscription) {
       this.flowSubscription.unsubscribe();
-    }
-    if (this.actionsSubscription) {
-      this.actionsSubscription.unsubscribe();
     }
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();

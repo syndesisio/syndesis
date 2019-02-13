@@ -5,7 +5,7 @@ import {
   OnDestroy,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -21,7 +21,7 @@ import {
   DocumentManagementService,
   MappingManagementService,
   MappingSerializer,
-  DataMapperAppComponent
+  DataMapperAppComponent,
 } from '@atlasmap/atlasmap-data-mapper';
 
 import { ConfigService } from '@syndesis/ui/config.service';
@@ -31,12 +31,14 @@ import {
   IntegrationSupportService,
   Step,
   ActionDescriptor,
-  Action
+  Action,
 } from '@syndesis/ui/platform';
 import {
   CurrentFlowService,
-  FlowPageService
+  FlowPageService,
+  INTEGRATION_SET_ACTION,
 } from '@syndesis/ui/integration/edit-page';
+import { INTEGRATION_SIDEBAR_COLLAPSE } from '../../edit-page.models';
 /*
  * Example host component:
  *
@@ -58,7 +60,7 @@ const MAPPING_KEY = 'atlasmapping';
         /* TODO probably a better way to set this height to the viewport */
         height: calc(100vh - 140px);
       }
-    `
+    `,
   ],
   providers: [
     // @FIXME - This overrides the provider singletons from this point on down the component subtree,
@@ -67,8 +69,8 @@ const MAPPING_KEY = 'atlasmapping';
     InitializationService,
     MappingManagementService,
     ErrorHandlerService,
-    DocumentManagementService
-  ]
+    DocumentManagementService,
+  ],
 })
 export class DataMapperHostComponent implements OnInit, OnDestroy {
   outstandingTasks = 1;
@@ -154,7 +156,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.flowPageService.showDone = true;
     this.currentFlowService.events.emit({
-      kind: 'integration-sidebar-collapse'
+      kind: INTEGRATION_SIDEBAR_COLLAPSE,
     });
     this.initialize();
   }
@@ -189,7 +191,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
       'debugClassPathServiceCalls',
       'debugValidationServiceCalls',
       'debugFieldActionServiceCalls',
-      'debugDocumentParsing'
+      'debugDocumentParsing',
     ];
     for (const debugConfigKey of debugConfigKeys) {
       let debugKeyValue = false;
@@ -285,7 +287,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     }
     this.addInitializationTask();
     this.currentFlowService.events.emit({
-      kind: 'integration-set-action',
+      kind: INTEGRATION_SET_ACTION,
       position: this.position,
       stepKind: 'mapper',
       action: {
@@ -293,20 +295,20 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
         descriptor: {
           inputDataShape: {
             kind: DataShapeKinds.ANY,
-            name: 'All preceding outputs'
+            name: 'All preceding outputs',
           },
           outputDataShape: {
             kind: inputDataShape.kind,
             type: inputDataShape.type,
             name: 'Data Mapper (' + inputDataShape.name + ')',
             description: inputDataShape.description,
-            specification: inputDataShape.specification
-          }
-        } as ActionDescriptor
+            specification: inputDataShape.specification,
+          },
+        } as ActionDescriptor,
       } as Action,
       onSave: () => {
         this.removeInitializationTask();
-      }
+      },
     });
     return true;
   }
@@ -361,7 +363,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
         DataShapeKinds.JSON_SCHEMA,
         DataShapeKinds.XML_INSTANCE,
         DataShapeKinds.XML_SCHEMA,
-        DataShapeKinds.XML_SCHEMA_INSPECTED
+        DataShapeKinds.XML_SCHEMA_INSPECTED,
       ].indexOf(dataShape.kind) > -1
     );
   }

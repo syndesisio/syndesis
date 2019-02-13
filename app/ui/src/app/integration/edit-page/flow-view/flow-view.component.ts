@@ -2,7 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import {
   CurrentFlowService,
-  FlowPageService
+  FlowPageService,
+  INTEGRATION_INSERT_STEP,
+  INTEGRATION_REMOVE_STEP,
 } from '@syndesis/ui/integration/edit-page';
 import { ModalService } from '@syndesis/ui/common';
 import { Subscription } from 'rxjs';
@@ -10,7 +12,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'syndesis-integration-flow-view',
   templateUrl: './flow-view.component.html',
-  styleUrls: ['./flow-view.component.scss']
+  styleUrls: ['./flow-view.component.scss'],
 })
 export class FlowViewComponent implements OnInit, OnDestroy {
   urls: UrlSegment[];
@@ -78,15 +80,15 @@ export class FlowViewComponent implements OnInit, OnDestroy {
 
   insertStepAfter(position: number) {
     this.currentFlowService.events.emit({
-      kind: 'integration-insert-step',
+      kind: INTEGRATION_INSERT_STEP,
       position: position,
       onSave: () => {
         setTimeout(() => {
           this.router.navigate(['step-select', position + 1], {
-            relativeTo: this.route
+            relativeTo: this.route,
           });
         }, 10);
-      }
+      },
     });
   }
 
@@ -96,21 +98,21 @@ export class FlowViewComponent implements OnInit, OnDestroy {
         const isFirst = position === this.currentFlowService.getFirstPosition();
         const isLast = position === this.currentFlowService.getLastPosition();
         this.currentFlowService.events.emit({
-          kind: 'integration-remove-step',
+          kind: INTEGRATION_REMOVE_STEP,
           position: position,
           onSave: () => {
             setTimeout(() => {
               if (isFirst || isLast) {
                 this.router.navigate(['step-select', position], {
-                  relativeTo: this.route
+                  relativeTo: this.route,
                 });
               } else {
                 this.router.navigate(['save-or-add-step'], {
-                  relativeTo: this.route
+                  relativeTo: this.route,
                 });
               }
             }, 10);
-          }
+          },
         });
       }
     });

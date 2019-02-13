@@ -3,6 +3,12 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrentFlowService } from '@syndesis/ui/integration/edit-page/current-flow.service';
 import { Integration } from '@syndesis/ui/platform';
+import {
+  INTEGRATION_REMOVE_STEP,
+  INTEGRATION_SAVE,
+  INTEGRATION_CANCEL_CLICKED,
+  INTEGRATION_DONE_CLICKED,
+} from './edit-page.models';
 
 @Injectable()
 export class FlowPageService {
@@ -32,13 +38,13 @@ export class FlowPageService {
 
   cancel() {
     this.currentFlowService.events.emit({
-      kind: 'integration-cancel-clicked'
+      kind: INTEGRATION_CANCEL_CLICKED,
     });
   }
 
   done() {
     this.currentFlowService.events.emit({
-      kind: 'integration-done-clicked'
+      kind: INTEGRATION_DONE_CLICKED,
     });
   }
 
@@ -51,25 +57,25 @@ export class FlowPageService {
       // The step has previously been configured, so discard
       // any changes but leave the step in the flow
       router.navigate(['save-or-add-step'], {
-        relativeTo: route.parent
+        relativeTo: route.parent,
       });
     } else {
       // The step hasn't been configured at all, remove the step from the flow
       this.currentFlowService.events.emit({
-        kind: 'integration-remove-step',
+        kind: INTEGRATION_REMOVE_STEP,
         position: position,
         onSave: () => {
           router.navigate(['save-or-add-step'], {
-            relativeTo: route.parent
+            relativeTo: route.parent,
           });
-        }
+        },
       });
     }
   }
 
   goBack(path: Array<string | number | boolean>, route: ActivatedRoute) {
     this.router.navigate(path, {
-      relativeTo: route.parent
+      relativeTo: route.parent,
     });
   }
 
@@ -95,13 +101,13 @@ export class FlowPageService {
       this.currentFlowService.integration.name === ''
     ) {
       this.router.navigate(['..', 'integration-basics'], {
-        relativeTo: route
+        relativeTo: route,
       });
       this.initialize();
       return;
     }
     this.currentFlowService.events.emit({
-      kind: 'integration-save',
+      kind: INTEGRATION_SAVE,
       publish: this.publishInProgress,
       action: (i: Integration) => {
         if (this.saveInProgress) {
@@ -124,7 +130,7 @@ export class FlowPageService {
         if (this.publishInProgress) {
           this.publishInProgress = false;
         }
-      }
+      },
     });
   }
 

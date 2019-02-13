@@ -3,7 +3,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
-  DynamicFormService
+  DynamicFormService,
 } from '@ng-dynamic-forms/core';
 import { Subscription } from 'rxjs';
 
@@ -12,11 +12,16 @@ import {
   FormFactoryService,
   Action,
   Step,
-  IntegrationSupportService
+  IntegrationSupportService,
 } from '@syndesis/ui/platform';
 import {
   CurrentFlowService,
-  FlowPageService
+  FlowPageService,
+  INTEGRATION_SET_STEP,
+  INTEGRATION_SET_METADATA,
+  INTEGRATION_SET_PROPERTIES,
+  INTEGRATION_SET_DESCRIPTOR,
+  INTEGRATION_CANCEL_CLICKED,
 } from '@syndesis/ui/integration/edit-page';
 
 @Component({
@@ -24,8 +29,8 @@ import {
   templateUrl: 'action-configure.component.html',
   styleUrls: [
     '../../integration-common.scss',
-    './action-configure.component.scss'
-  ]
+    './action-configure.component.scss',
+  ],
 })
 export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   isShapeless: boolean;
@@ -65,14 +70,14 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       this.position
     );
     this.currentFlowService.events.emit({
-      kind: 'integration-set-step',
+      kind: INTEGRATION_SET_STEP,
       position: this.position,
       step,
       onSave: () =>
         this.flowPageService.goBack(
           ['action-select', this.position],
           this.route
-        )
+        ),
     });
   }
 
@@ -87,7 +92,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   previous(data: any = undefined) {
     data = this.buildData(data);
     this.currentFlowService.events.emit({
-      kind: 'integration-set-properties',
+      kind: INTEGRATION_SET_PROPERTIES,
       position: this.position,
       properties: data,
       onSave: () => {
@@ -95,18 +100,18 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
           /* All done configuring this action... */
           this.router.navigate(['save-or-add-step'], {
             queryParams: { validate: true },
-            relativeTo: this.route.parent
+            relativeTo: this.route.parent,
           });
         } else {
           /* Go to the previous configuration page... */
           this.router.navigate(
             ['action-configure', this.position, this.page - 1],
             {
-              relativeTo: this.route.parent
+              relativeTo: this.route.parent,
             }
           );
         }
-      }
+      },
     });
   }
 
@@ -120,14 +125,14 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       direction = 'input';
     }
     this.currentFlowService.events.emit({
-      kind: 'integration-set-metadata',
+      kind: INTEGRATION_SET_METADATA,
       position: this.position,
       metadata: { configured: 'true' },
       onSave: () => {
         this.router.navigate(['describe-data', this.position, direction], {
-          relativeTo: this.route.parent
+          relativeTo: this.route.parent,
         });
-      }
+      },
     });
   }
 
@@ -136,7 +141,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     this.error = undefined;
     const configuredProperties = this.buildData({});
     this.currentFlowService.events.emit({
-      kind: 'integration-set-properties',
+      kind: INTEGRATION_SET_PROPERTIES,
       position: this.position,
       properties: configuredProperties,
       onSave: () => {
@@ -155,13 +160,13 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
               .toPromise()
               .then((descriptor: ActionDescriptor) => {
                 this.currentFlowService.events.emit({
-                  kind: 'integration-set-descriptor',
+                  kind: INTEGRATION_SET_DESCRIPTOR,
                   position: this.position,
                   descriptor,
                   onSave: () => {
                     /* All done... */
                     this.finishUp();
-                  }
+                  },
                 });
               })
               .catch(error => {
@@ -177,11 +182,11 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
           this.router.navigate(
             ['action-configure', this.position, this.page + 1],
             {
-              relativeTo: this.route.parent
+              relativeTo: this.route.parent,
             }
           );
         }
-      }
+      },
     });
   }
 
@@ -191,7 +196,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     this.error = {
       class: 'alert alert-warning',
       icon: 'pficon pficon-warning-triangle-o',
-      message: message || error.message || error.userMsg || error.developerMsg
+      message: message || error.message || error.userMsg || error.developerMsg,
     };
   }
 
@@ -200,13 +205,13 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     const step = this.currentFlowService.getStep(this.position);
     if (!step || !step.connection) {
       this.router.navigate(['step-select', this.position], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
       return;
     }
     if (!step.action) {
       this.router.navigate(['action-select', this.position], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
       return;
     }
@@ -222,12 +227,12 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       .toPromise()
       .then((descriptor: ActionDescriptor) => {
         this.currentFlowService.events.emit({
-          kind: 'integration-set-descriptor',
+          kind: INTEGRATION_SET_DESCRIPTOR,
           position: this.position,
           descriptor,
           onSave: () => {
             this.initialize(position, page, descriptor);
-          }
+          },
         });
       })
       .catch(error => {
@@ -253,7 +258,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       this.error = {
         class: 'alert alert-info',
         icon: 'pficon pficon-info',
-        message: 'There are no properties to configure for this action.'
+        message: 'There are no properties to configure for this action.',
       };
       const metadata = this.step.metadata || {};
       if (!metadata.configured) {
@@ -281,10 +286,6 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     );
     this.formGroup = this.formService.createFormGroup(this.formModel);
     setTimeout(() => {
-      this.currentFlowService.events.emit({
-        kind: 'integration-action-configure',
-        position: this.position
-      });
       this.loading = false;
     }, 30);
   }
@@ -325,7 +326,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.hasConfiguration = false;
     this.flowSubscription = this.currentFlowService.events.subscribe(event => {
-      if (event.kind === 'integration-cancel-clicked') {
+      if (event.kind === INTEGRATION_CANCEL_CLICKED) {
         this.flowPageService.maybeRemoveStep(
           this.router,
           this.route,
@@ -337,7 +338,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       (params: ParamMap) => {
         if (!params.has('page')) {
           this.router.navigate(['0'], {
-            relativeTo: this.route
+            relativeTo: this.route,
           });
           return;
         }

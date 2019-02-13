@@ -5,17 +5,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   FlowEvent,
   CurrentFlowService,
-  FlowPageService
+  FlowPageService,
+  INTEGRATION_SET_PROPERTIES,
+  INTEGRATION_CANCEL_CLICKED,
 } from '@syndesis/ui/integration/edit-page';
 import { Integration, IntegrationType } from '@syndesis/ui/platform';
+import { INTEGRATION_SIDEBAR_EXPAND } from '../edit-page.models';
 
 @Component({
   selector: 'syndesis-integration-save-or-add-step',
   templateUrl: 'save-or-add-step.component.html',
   styleUrls: [
     '../../integration-common.scss',
-    './save-or-add-step.component.scss'
-  ]
+    './save-or-add-step.component.scss',
+  ],
 })
 export class IntegrationSaveOrAddStepComponent implements OnInit, OnDestroy {
   integration: Integration;
@@ -39,11 +42,11 @@ export class IntegrationSaveOrAddStepComponent implements OnInit, OnDestroy {
 
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
-      case 'integration-cancel-clicked':
+      case INTEGRATION_CANCEL_CLICKED:
         if (this.currentFlowService.integration.id) {
           this.router.navigate([
             '/integrations',
-            this.currentFlowService.integration.id
+            this.currentFlowService.integration.id,
           ]);
         } else {
           this.router.navigate(['/integrations']);
@@ -97,9 +100,9 @@ export class IntegrationSaveOrAddStepComponent implements OnInit, OnDestroy {
           lastStep.configuredProperties['httpResponseCode'] = returnCode;
           // current flow service returns copies of steps nowadays
           this.currentFlowService.events.emit({
-            kind: 'integration-set-properties',
+            kind: INTEGRATION_SET_PROPERTIES,
             position: this.currentFlowService.getLastPosition(),
-            properties: lastStep.configuredProperties
+            properties: lastStep.configuredProperties,
           });
         }
       }
@@ -116,7 +119,7 @@ export class IntegrationSaveOrAddStepComponent implements OnInit, OnDestroy {
     }
     // Show the full sidebar 'cause this page doesn't have a lot
     this.currentFlowService.events.emit({
-      kind: 'integration-sidebar-expand'
+      kind: INTEGRATION_SIDEBAR_EXPAND,
     });
   }
 
