@@ -3,7 +3,7 @@ import * as React from 'react';
 
 export interface IIntegrationDetailProps {
   integrationId: string;
-  integrationDescription: string;
+  integrationDescription?: string;
   integrationName: string;
   integrationStatus: string;
   integrationVersion: string;

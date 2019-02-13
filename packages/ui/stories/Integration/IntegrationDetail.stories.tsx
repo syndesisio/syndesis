@@ -7,8 +7,6 @@ import { StoryHelper } from '../../.storybook/StoryHelper';
 import { IntegrationDetail } from '../../src';
 
 const stories = storiesOf('Integration/IntegrationDetail', module);
-
-const integrationDetailStory = 'sample integration detail page';
 const storyNotes = 'Integration Detail';
 
 const integrationId = 'i-LUF4Pfwxo4Wcrbyt7YIz';
@@ -34,7 +32,7 @@ const textVersion = 'Version';
 stories
   .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
   .add(
-    integrationDetailStory,
+    'unpublished',
     withNotes(storyNotes)(() => (
       <IntegrationDetail
         integrationId={text('integrationId', integrationId)}
@@ -44,6 +42,35 @@ stories
           integrationDescription
         )}
         integrationStatus={text('integrationStatus', integrationStatus)}
+        integrationVersion={text('integrationVersion', integrationVersion)}
+        i18nTextBtnEdit={textBtnEdit}
+        i18nTextBtnPublish={textBtnPublish}
+        i18nTextDraft={textDraft}
+        i18nTextHistory={textHistory}
+        i18nTextHistoryMenuReplaceDraft={textHistoryMenuReplaceDraft}
+        i18nTextHistoryMenuUnpublish={textHistoryMenuUnpublish}
+        i18nTextLastPublished={textLastPublished}
+        i18nTextNoDescription={textNoDescription}
+        i18nTextTabActivity={textTabActivity}
+        i18nTextTabDetails={textTabDetails}
+        i18nTextTableMetrics={textTabMetrics}
+        i18nTextTitle={textTitle}
+        i18nTextVersion={textVersion}
+      />
+    ))
+  )
+
+  .add(
+    'unpublished',
+    withNotes(storyNotes)(() => (
+      <IntegrationDetail
+        integrationId={text('integrationId', integrationId)}
+        integrationName={text('integrationName', integrationName)}
+        integrationDescription={text(
+          'integrationDescription',
+          integrationDescription
+        )}
+        integrationStatus={text('integrationStatus', 'Unpublished')}
         integrationVersion={text('integrationVersion', integrationVersion)}
         i18nTextBtnEdit={textBtnEdit}
         i18nTextBtnPublish={textBtnPublish}
