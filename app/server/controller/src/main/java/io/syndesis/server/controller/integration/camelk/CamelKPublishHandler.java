@@ -45,17 +45,14 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "camel-k")
 public class CamelKPublishHandler extends BaseHandler implements StateChangeHandler {
 
-    private final IntegrationPublishValidator validator;
     private final IntegrationResourceManager resourceManager;
 
     public CamelKPublishHandler(OpenShiftService openShiftService,
                                 IntegrationDao iDao,
                                 IntegrationDeploymentDao idDao,
                                 IntegrationPublishValidator validator,
-                                IntegrationResourceManager resourceManager,
-                                IntegrationProjectGenerator projectGenerator) {
+                                IntegrationResourceManager resourceManager) {
         super(openShiftService, iDao, idDao, validator);
-        this.validator = validator;
         this.resourceManager = resourceManager;
     }
 
@@ -112,18 +109,21 @@ public class CamelKPublishHandler extends BaseHandler implements StateChangeHand
     private boolean isBuildStarted(IntegrationDeployment integrationDeployment) {
         // TODO: Check if Camel-K resource has the appropriate status
         // return openShiftService().isBuildStarted(integrationDeployment.getSpec().getName());
+        logInfo(integrationDeployment, "isBuildStarted");
         return true;
     }
 
     private boolean isBuildFailed(IntegrationDeployment integrationDeployment) {
         // TODO: Check if Camel-K resource has the appropriate status
         // return openShiftService().isBuildFailed(integrationDeployment.getSpec().getName());
+        logInfo(integrationDeployment, "isBuildFailed");
         return false;
     }
 
     private boolean isReady(IntegrationDeployment integrationDeployment) {
         // TODO: Check if Camel-K resource has the appropriate status
         // return openShiftService().isDeploymentReady(integrationDeployment.getSpec().getName());
+        logInfo(integrationDeployment, "isReady");
         return false;
     }
 

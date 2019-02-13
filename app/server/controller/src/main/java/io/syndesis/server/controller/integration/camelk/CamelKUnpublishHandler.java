@@ -56,6 +56,6 @@ public class CamelKUnpublishHandler extends BaseHandler implements StateChangeHa
 
     @Override
     public void execute(IntegrationDeployment integrationDeployment, Consumer<StateUpdate> updates) {
-
+        logInfo(integrationDeployment,"Unpublish called");
     }
 }
