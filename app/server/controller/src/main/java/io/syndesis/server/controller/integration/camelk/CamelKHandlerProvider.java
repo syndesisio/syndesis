@@ -13,33 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.controller.integration;
+package io.syndesis.server.controller.integration.camelk;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateChangeHandlerProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnProperty(value = "controllers.integration", havingValue = "noop")
-public class NoopHandlerProvider implements StateChangeHandler, StateChangeHandlerProvider {
+@ConditionalOnProperty(value = "controllers.integration", havingValue = "camel-k")
+public class CamelKHandlerProvider implements StateChangeHandlerProvider {
 
-    @Override
-    public Set<IntegrationDeploymentState> getTriggerStates() {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            IntegrationDeploymentState.Published,
-            IntegrationDeploymentState.Unpublished)));
+    private final List<StateChangeHandler> handlers;
+
+    protected CamelKHandlerProvider(@Qualifier("camel-k") List <StateChangeHandler> handlers) {
+        this.handlers = Collections.unmodifiableList(handlers);
     }
 
     @Override
     public List<StateChangeHandler> getStatusChangeHandlers() {
-        return Collections.singletonList(this);
+        return handlers;
     }
 }

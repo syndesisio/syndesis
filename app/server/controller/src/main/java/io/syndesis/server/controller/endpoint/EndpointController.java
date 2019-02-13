@@ -15,6 +15,17 @@
  */
 package io.syndesis.server.controller.endpoint;
 
+import java.io.IOException;
+import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.integration.Integration;
@@ -30,16 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import java.io.IOException;
-import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 /**
  * This class keeps the integration endpoint data aligned with the external state.

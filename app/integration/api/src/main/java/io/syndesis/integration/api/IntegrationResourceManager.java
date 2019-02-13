@@ -19,7 +19,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,9 +34,13 @@ import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.ConnectionBase;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.openapi.OpenApi;
+import org.apache.commons.lang3.StringUtils;
 
 public interface IntegrationResourceManager {
 
@@ -88,6 +95,109 @@ public interface IntegrationResourceManager {
      */
     default Collection<Dependency> collectDependencies(Integration integration) {
         return collectDependencies(integration.getFlows().stream().flatMap(flow -> flow.getSteps().stream()).collect(Collectors.toList()), true);
+    }
+
+    @SuppressWarnings("PMD.ExcessiveMethodLength")
+    default Integration sanitize(Integration integration) {
+        if (integration.getFlows().isEmpty()) {
+            return integration;
+        }
+
+        final List<Flow> replacementFlows = new ArrayList<>(integration.getFlows());
+        final ListIterator<Flow> flows = replacementFlows.listIterator();
+        while (flows.hasNext()) {
+            final Flow flow = flows.next();
+            if (flow.getSteps().isEmpty()) {
+                continue;
+            }
+
+            final List<Step> replacementSteps = new ArrayList<>(flow.getSteps());
+            final ListIterator<Step> steps = replacementSteps.listIterator();
+
+            while (steps.hasNext()) {
+                final Step source = steps.next();
+
+                Step replacement = source;
+                if (source.getConnection().isPresent()) {
+                    final Connection connection = source.getConnection().get();
+
+                    // If connector is not set, fetch it from data source and update connection
+                    if (!connection.getConnector().isPresent()) {
+                        Connector connector = loadConnector(connection.getConnectorId()).orElseThrow(
+                            () -> new IllegalArgumentException("Unable to fetch connector: " + connection.getConnectorId())
+                        );
+                        // Add missing connector to connection.
+                        Connection newConnection = new Connection.Builder()
+                            .createFrom(connection)
+                            .connector(connector)
+                            .build();
+                        // Replace with the new 'sanitized' step
+                        replacement =
+                            new Step.Builder()
+                                .createFrom(source)
+                                .connection(newConnection)
+                                .build();
+                    }
+                    // Prune Connector, nix actions. The action in use is on the Step
+                    Connector prunedConnector = new Connector.Builder().createFrom(
+                            replacement.getConnection().get().getConnector().get())
+                       .actions(new ArrayList<>()).build();
+                    // Replace with the new 'pruned' connector
+                    Connection prunedConnection = new Connection.Builder()
+                        .createFrom(connection)
+                        .connector(prunedConnector)
+                        .build();
+                    // Replace with the new 'pruned' step
+                    replacement =
+                        new Step.Builder()
+                            .createFrom(source)
+                            .connection(prunedConnection)
+                            .build();
+                }
+
+                //
+                // If a template step then update it to ensure it
+                // has the correct dependencies
+                //
+                steps.set(TemplateStepLanguage.updateStep(replacement));
+            }
+
+            final Flow.Builder replacementFlowBuilder = flow.builder().createFrom(flow).steps(replacementSteps);
+            flows.set(replacementFlowBuilder.build());
+
+            // Temporary implementation until https://github.com/syndesisio/syndesis/issues/736
+            // is fully implemented and schedule options are set on integration.
+            if (!flow.getScheduler().isPresent()) {
+                final Step firstStep = replacementSteps.get(0);
+                final Map<String, String> properties = new HashMap<>(firstStep.getConfiguredProperties());
+                String type = properties.remove("schedulerType");
+                final String expr = properties.remove("schedulerExpression");
+
+                if (StringUtils.isNotEmpty(expr)) {
+                    if (StringUtils.isEmpty(type)) {
+                        type = "timer";
+                    }
+
+                    final Scheduler scheduler = new Scheduler.Builder().type(Scheduler.Type.valueOf(type)).expression(expr).build();
+                    final Flow replacementFlow = replacementFlowBuilder.scheduler(scheduler).build();
+
+                    flows.set(replacementFlow);
+                }
+
+                // Replace first step so underlying connector won't fail uri param
+                // validation if schedule options were set.
+                steps.set(
+                    new Step.Builder()
+                        .createFrom(firstStep)
+                        .configuredProperties(properties)
+                        .build()
+                );
+            }
+        }
+
+        return new Integration.Builder().createFrom(integration)
+            .flows(replacementFlows)
+            .build();
     }
 
     /**

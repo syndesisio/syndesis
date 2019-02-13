@@ -15,11 +15,11 @@
  */
 package io.syndesis.server.controller;
 
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
 
 public class StateUpdate {
 

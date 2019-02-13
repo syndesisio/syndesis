@@ -21,9 +21,12 @@ import io.syndesis.common.model.integration.Integration;
 
 public interface IntegrationDao extends DataAccessObject<Integration> {
 
+    void updateVersion(String id, int version);
+
     @Override
     default Class<Integration> getType() {
         return Integration.class;
     }
+
 
 }

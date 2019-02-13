@@ -15,14 +15,6 @@
  */
 package io.syndesis.server.controller.integration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +26,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Kind;
@@ -49,6 +44,10 @@ import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateChangeHandlerProvider;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * This class tracks changes to Integrations and attempts to process them so that
@@ -70,7 +69,8 @@ public class IntegrationController implements BackendController {
     private ScheduledExecutorService scheduler;
 
     @Autowired
-    public IntegrationController(OpenShiftService openShiftService,DataManager dataManager, EventBus eventBus, StateChangeHandlerProvider handlerFactory, ControllersConfigurationProperties properties) {
+    public IntegrationController(OpenShiftService openShiftService, DataManager dataManager, EventBus eventBus,
+                                 StateChangeHandlerProvider handlerFactory, ControllersConfigurationProperties properties) {
         this.openShiftService = openShiftService;
         this.dataManager = dataManager;
         this.eventBus = eventBus;
@@ -122,7 +122,7 @@ public class IntegrationController implements BackendController {
     private EventBus.Subscription getChangeEventSubscription() {
         return (event, data) -> {
             // Never do anything that could block in this callback!
-            if (event!=null && "change-event".equals(event)) {
+            if ("change-event".equals(event)) {
                 try {
                     ChangeEvent changeEvent = Json.reader().forType(ChangeEvent.class).readValue(data);
                     if (changeEvent != null) {
@@ -210,7 +210,7 @@ public class IntegrationController implements BackendController {
 
             try {
                 final String integrationId = integrationDeployment.getIntegrationId().get();
-                LOG.info("Integration {} : Start processing integration: {}, version: {} with handler:{}", integrationId, integrationId, integrationDeployment.getVersion(), handler.getClass().getSimpleName());
+                LOG.info("Integration {} : Start processing integration: {}, version: {} with handler: {}", integrationId, integrationId, integrationDeployment.getVersion(), handler.getClass().getSimpleName());
                 handler.execute(integrationDeployment, update->{
                     if (LOG.isInfoEnabled()) {
                         LOG.info("{} : Setting status to {}{}",

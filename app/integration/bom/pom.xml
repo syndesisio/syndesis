@@ -319,6 +319,39 @@
     </dependencies>
   </dependencyManagement>
 
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <inherited>true</inherited>
+          <configuration>
+            <header>license/syndesis-license.txt</header>
+            <skipExistingHeaders>false</skipExistingHeaders>
+            <concurrencyFactor>1</concurrencyFactor>
+            <mapping combine.children="append">
+              <provides>SCRIPT_STYLE</provides>
+              <assemble>SCRIPT_STYLE</assemble>
+              <xsd>XML_PREFIX</xsd>
+            </mapping>
+            <includes>
+              <include>**/src/**</include>
+              <include>**/pom.xml</include>
+            </includes>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>io.syndesis</groupId>
+              <artifactId>syndesis-parent</artifactId>
+              <classifier>tools</classifier>
+              <version>${project.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
   <profiles>
     <profile>
       <id>release</id>

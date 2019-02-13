@@ -28,7 +28,6 @@ import io.fabric8.openshift.api.model.UserBuilder;
 
 public class OpenShiftServiceNoOp implements OpenShiftService {
 
-
     @Override
     public String build(String name, DeploymentData data, InputStream tarInputStream) {
         // Empty no-op just for testing
