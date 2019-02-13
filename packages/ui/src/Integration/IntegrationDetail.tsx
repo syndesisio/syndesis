@@ -8,8 +8,6 @@ export interface IIntegrationDetailProps {
   i18nDraft: string;
   i18nHistory: string;
   i18nHistoryDraft: string;
-  i18nHistoryDraftBtnEdit: string;
-  i18nHistoryDraftBtnPublish: string;
   i18nHistoryLastPublished: string;
   i18nHistoryMenuReplaceDraft: string;
   i18nHistoryMenuUnpublish: string;
