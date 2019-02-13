@@ -5,7 +5,6 @@ import * as React from 'react';
 
 import { StoryHelper } from '../../.storybook/StoryHelper';
 import { IntegrationDetail } from '../../src';
-import { array } from 'prop-types';
 
 const stories = storiesOf('Integration/IntegrationDetail', module);
 
