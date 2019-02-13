@@ -22,11 +22,11 @@ export const integrationEndpoints: Endpoints = {
   deployment: '/integrations/{id}/deployments/{version}',
 
   // CI/CD related APIs
-  environments: '/public/continuousdelivery/environments',
-  renameEnvironment: '/public/continuousdelivery/environments/{env}',
-  tags: '/public/continuousdelivery/integrations/{integrationId}/tags',
+  environments: '/public/environments',
+  renameEnvironment: '/public/environments/{env}',
+  tags: '/public/integrations/{integrationId}/tags',
   deleteTag:
-    '/public/continuousdelivery/integrations/{integrationId}/tags/{env}',
+    '/public/integrations/{integrationId}/tags/{env}',
 
   pom: '/integration-support/generate/pom.xml',
   export: '/integration-support/export.zip',
