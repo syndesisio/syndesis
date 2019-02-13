@@ -1,3 +1,4 @@
+import { text } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
@@ -36,11 +37,14 @@ stories
     integrationDetailStory,
     withNotes(storyNotes)(() => (
       <IntegrationDetail
-        integrationId={'integrationId'}
-        integrationName={''}
-        integrationDescription={''}
-        integrationStatus={''}
-        integrationVersion={'integrationVersion'}
+        integrationId={text('integrationId', integrationId)}
+        integrationName={text('integrationName', integrationName)}
+        integrationDescription={text(
+          'integrationDescription',
+          integrationDescription
+        )}
+        integrationStatus={text('integrationStatus', integrationStatus)}
+        integrationVersion={text('integrationVersion', integrationVersion)}
         i18nTextBtnEdit={textBtnEdit}
         i18nTextBtnPublish={textBtnPublish}
         i18nTextDraft={textDraft}
