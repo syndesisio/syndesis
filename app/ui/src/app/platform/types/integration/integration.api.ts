@@ -21,6 +21,13 @@ export const integrationEndpoints: Endpoints = {
   deployments: '/integrations/{id}/deployments',
   deployment: '/integrations/{id}/deployments/{version}',
 
+  // CI/CD related APIs
+  environments: '/public/environments',
+  renameEnvironment: '/public/environments/{env}',
+  tags: '/public/integrations/{integrationId}/tags',
+  deleteTag:
+    '/public/integrations/{integrationId}/tags/{env}',
+
   pom: '/integration-support/generate/pom.xml',
   export: '/integration-support/export.zip',
   import: '/integration-support/import',
@@ -28,5 +35,5 @@ export const integrationEndpoints: Endpoints = {
   activity: '/activity/integrations/{integrationId}',
   supportData: '/support/downloadSupportZip',
   // TODO this path should be driven by config.json also does this belong here
-  javaInspection: '/../../mapper/v1/java-inspections/{connectorId}/{type}.json'
+  javaInspection: '/../../mapper/v1/java-inspections/{connectorId}/{type}.json',
 };

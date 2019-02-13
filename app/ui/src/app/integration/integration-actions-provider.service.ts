@@ -1,5 +1,5 @@
 import { switchMap, take } from 'rxjs/operators';
-import { ApplicationRef, Injectable } from '@angular/core';
+import { ApplicationRef, Injectable, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Integration,
@@ -13,7 +13,7 @@ import {
   I18NService,
   PENDING,
   UNPUBLISHED,
-  PUBLISHED
+  PUBLISHED,
 } from '@syndesis/ui/platform';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
@@ -49,7 +49,10 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   }
 
   canActivate(integration: Integration) {
-    return integration.currentState !== PENDING && integration.currentState !== PUBLISHED;
+    return (
+      integration.currentState !== PENDING &&
+      integration.currentState !== PUBLISHED
+    );
   }
 
   canEdit(integration: Integration) {
@@ -65,19 +68,31 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   requestAction(
     action: string,
     integration: Integration | IntegrationOverview,
-    deployment?: IntegrationDeployment | DeploymentOverview
+    deployment?: IntegrationDeployment | DeploymentOverview,
+    templates?: Map<string, TemplateRef<any>>
   ) {
-    let request, header, message, danger, reason;
+    let request, header, message, danger, reason, templateId;
     switch (action) {
       case 'createIntegration':
         return this.router.navigate(['/integrations/create']);
       case 'view':
         return this.router.navigate(['/integrations', integration.id]);
       case 'edit':
-        if ((integration as Integration).type && (integration as Integration).type === IntegrationType.ApiProvider) {
-          return this.router.navigate(['/integrations', integration.id, 'operations']);
+        if (
+          (integration as Integration).type &&
+          (integration as Integration).type === IntegrationType.ApiProvider
+        ) {
+          return this.router.navigate([
+            '/integrations',
+            integration.id,
+            'operations',
+          ]);
         } else {
-          return this.router.navigate(['/integrations', integration.id, 'edit']);
+          return this.router.navigate([
+            '/integrations',
+            integration.id,
+            'edit',
+          ]);
         }
       case 'export':
         return this.integrationSupportService
@@ -114,29 +129,38 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         reason = this.i18NService.localize('delete-integration-reason');
         request = this.requestDelete(integration);
         break;
-      default:
+      case 'cicd':
+        templateId = 'cicdWrapper';
+        this.modalService.registerModal(templateId, templates[templateId]);
+        request = this.modalService.show(templateId);
         break;
+      default:
+        throw new Error('Unknown action - ' + action);
     }
-    return request.then(
-      modal =>
-        modal.result
-          ? this.doAction(action, integration, deployment)
-              .then(_ =>
-                this.notificationService.popNotification({
-                  type: NotificationType.SUCCESS,
-                  header,
-                  message
-                })
-              )
-              .catch(error =>
-                this.notificationService.popNotification({
-                  type: NotificationType.DANGER,
-                  header: danger,
-                  message: `${reason}: ${error}`
-                })
-              )
-              .then(_ => this.application.tick())
-          : false
+    return request.then(modal =>
+      modal.result
+        ? this.doAction(action, integration, deployment)
+            .then(_ =>
+              this.notificationService.popNotification({
+                type: NotificationType.SUCCESS,
+                header,
+                message,
+              })
+            )
+            .catch(error =>
+              this.notificationService.popNotification({
+                type: NotificationType.DANGER,
+                header: danger,
+                message: `${reason}: ${error}`,
+              })
+            )
+            .then(_ => {
+              if (templateId) {
+                this.modalService.unregisterModal(templateId);
+              }
+              this.application.tick();
+            })
+        : false
     );
   }
 
@@ -269,7 +293,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
       .pipe(
         switchMap(_deployment => {
           return this.store.patch(_deployment.integrationId, {
-            steps: _deployment.spec.steps
+            steps: _deployment.spec.steps,
           });
         })
       )
@@ -279,11 +303,15 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   //-----  Icons ------------------->>
 
   getStart(integration: Integration) {
-    return integration.flows.length > 0 && integration.flows[0].steps.length > 0 ? integration.flows[0].steps[0] : ({} as Step);
+    return integration.flows.length > 0 && integration.flows[0].steps.length > 0
+      ? integration.flows[0].steps[0]
+      : ({} as Step);
   }
 
   getFinish(integration: Integration) {
-    return integration.flows.length > 0 && integration.flows[0].steps.length > 0 ? integration.flows[0].steps.slice(-1)[0] : ({} as Step);
+    return integration.flows.length > 0 && integration.flows[0].steps.length > 0
+      ? integration.flows[0].steps.slice(-1)[0]
+      : ({} as Step);
   }
 
   //-----  Modal ------------------->>
@@ -299,7 +327,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     switch (action) {
       case 'replaceDraft':
         this.modalMessage = this.i18NService.localize('update-draft-modal', [
-          this.selectedIntegration.name
+          this.selectedIntegration.name,
         ]);
         this.modalType = '';
         break;
@@ -309,8 +337,12 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
           [this.selectedIntegration.name]
         );
         this.modalType = '';
-        this.modalTitle = this.i18NService.localize('publish-integration-modal-title');
-        this.modalPrimaryText = this.i18NService.localize('publish-integration-modal-primary-text');
+        this.modalTitle = this.i18NService.localize(
+          'publish-integration-modal-title'
+        );
+        this.modalPrimaryText = this.i18NService.localize(
+          'publish-integration-modal-primary-text'
+        );
         break;
       case 'unpublish':
         this.modalMessage = this.i18NService.localize(
@@ -318,8 +350,12 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
           [this.selectedIntegration.name]
         );
         this.modalType = '';
-        this.modalTitle = this.i18NService.localize('unpublish-integration-modal-title');
-        this.modalPrimaryText = this.i18NService.localize('unpublish-integration-modal-primary-text');
+        this.modalTitle = this.i18NService.localize(
+          'unpublish-integration-modal-title'
+        );
+        this.modalPrimaryText = this.i18NService.localize(
+          'unpublish-integration-modal-primary-text'
+        );
         break;
       default:
         this.modalMessage = this.i18NService.localize(
@@ -327,7 +363,9 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
           [this.selectedIntegration.name]
         );
         this.modalType = 'delete';
-        this.modalTitle = this.i18NService.localize('delete-integration-modal-title');
+        this.modalTitle = this.i18NService.localize(
+          'delete-integration-modal-title'
+        );
     }
   }
 }

@@ -42,12 +42,14 @@ All template parameters are required. Most of them have sane defaults, but some 
 | Parameter | Description |
 | --------- | ----------- |
 | **ROUTE_HOSTNAME** | The external hostname to access Syndesis |
+| **PUBLIC_API_ROUTE_HOSTNAME** | The external hostname to access Syndesis public API |
 
 In order to one of the templates described above these parameters must be provided:
 
 ```
 $ oc new-app --template=syndesis -p \
        ROUTE_HOSTNAME=<external hostname>
+       PUBLIC_API_ROUTE_HOSTNAME=<external hostname2>
 ```
 
 Replace _&lt;external hostname&gt;_ with a value that will resolve to the address of the OpenShift router.
@@ -173,3 +175,27 @@ Optionally you can add a parameter `OPENSHIFT_CONSOLE_URL` which should be the b
 #### Log in
 
 You should now be able to log in at `https://<EXTERNAL_HOSTNAME>`.
+
+#### Create template for public API endpoint
+
+Syndesis also provides a public API useful for external user defined Continuous Delivery pipelines for tagging and exporting/importing integrations across Syndesis clusters. 
+
+Create the template:
+
+```bash
+$ oc create -f support/syndesis-public-oauth-proxy.yml
+```
+
+#### Create the new app for public API endpoint
+
+You can now use the template `syndesis-public-oauthproxy` and the ServiceAccount created above to deploy Syndesis public API:
+
+```bash
+$ oc new-app --template=syndesis-public-oauthproxy \
+    -p PUBLIC_API_ROUTE_HOSTNAME=<EXTERNAL_HOSTNAME> \
+    -p OPENSHIFT_PROJECT=$(oc project -q) \
+    -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \
+    -p SAR_PROJECT=$(oc project -q)
+```
+
+Replace `EXTERNAL_HOSTNAME` appropriately with your public Syndesis address (something like `public-syndesis.127.0.0.1.nip.io` works great if you are using `oc cluster up` locally).

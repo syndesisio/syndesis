@@ -1,0 +1,15 @@
+.tag-cicd-modal {
+  .modal-body {
+    flex-direction: column;
+    justify-content: center;
+    & > * {
+      width: 100%;
+    }
+    & > .list-group {
+      border-top: none;
+    }
+    & .fa.fa-pencil {
+      font-size: inherit;
+    }
+  }
+}

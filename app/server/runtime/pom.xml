@@ -271,6 +271,7 @@
                   <locations>
                     <location>io.syndesis.server.endpoint.v1.handler.extension</location>
                     <location>io.syndesis.server.endpoint.v1.handler.integration.support</location>
+                    <location>io.syndesis.server.endpoint.v1.handler.external</location>
                   </locations>
                   <info>
                     <title>Syndesis Supported API</title>
