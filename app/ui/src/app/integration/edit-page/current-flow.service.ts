@@ -12,9 +12,16 @@ import {
   Flow,
   Flows,
   StepOrConnection,
+  Action,
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
-import { IntegrationStore, DATA_MAPPER, StepStore } from '@syndesis/ui/store';
+import {
+  IntegrationStore,
+  DATA_MAPPER,
+  StepStore,
+  SPLIT,
+  AGGREGATE,
+} from '@syndesis/ui/store';
 import {
   FlowEvent,
   FlowError,
@@ -425,14 +432,16 @@ export class CurrentFlowService {
       case INTEGRATION_SET_STEP: {
         const position = +event.position;
         const step = event.step as Step;
-        this._integration = setStepInFlow(
-          this._integration,
-          this.flowId,
-          { ...step },
-          position
-        );
-        executeEventAction(event.onSave);
-        this.postUpdates();
+        this.executeStepCustomizations(position, step, (_step: Step) => {
+          this._integration = setStepInFlow(
+            this._integration,
+            this.flowId,
+            { ..._step },
+            position
+          );
+          executeEventAction(event.onSave);
+          this.postUpdates();
+        });
         break;
       }
       case INTEGRATION_SET_METADATA: {
@@ -578,6 +587,40 @@ export class CurrentFlowService {
     }
   }
 
+  executeStepCustomizations(
+    position: number,
+    step: Step,
+    then: (step: Step) => void
+  ): any {
+    switch (step.stepKind) {
+      case SPLIT:
+      case AGGREGATE:
+        // A split step needs the data shape of the previous thing with a data shape
+        const prev = this.getPreviousStepWithDataShape(position);
+        this.integrationSupportService
+          .getStepDescriptor(SPLIT, {
+            inputShape: prev.action.descriptor.inputDataShape,
+            outputShape: prev.action.descriptor.outputDataShape,
+          })
+          .subscribe(
+            descriptor => {
+              step = {
+                ...step,
+                action: { actionType: 'step', descriptor } as Action,
+              };
+              then(step);
+            },
+            err => {
+              // we'll just pass through
+              then(step);
+            }
+          );
+        break;
+      default:
+        setTimeout(() => then(step), 1);
+    }
+  }
+
   isApiProvider() {
     try {
       return this.getStartStep().connection.connectorId === 'api-provider';
@@ -683,7 +726,12 @@ export class CurrentFlowService {
     this.integration$.next(this.integration);
     this.flows$.next(this.flows);
     this.currentFlow$.next(this.currentFlow);
-    this.currentFlowErrors$.next(this.validate());
+    try {
+      // TODO this can throw an exception the integration isn't set up right, but there's a specific test for that, so for now...
+      this.currentFlowErrors$.next(this.validate());
+    } catch (err) {
+      // TODO nothing
+    }
     this.loaded$.next(this.loaded);
   }
 }

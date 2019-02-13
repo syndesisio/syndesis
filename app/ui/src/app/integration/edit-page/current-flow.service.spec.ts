@@ -8,7 +8,7 @@ import {
   Integration,
   Step,
   Flow,
-  createConnectionStep
+  createConnectionStep,
 } from '@syndesis/ui/platform';
 import { CoreModule } from '@syndesis/ui/core';
 import { ApiModule } from '@syndesis/ui/api';
@@ -18,7 +18,7 @@ import {
   EventsService,
   IntegrationStore,
   IntegrationService,
-  StepStore
+  StepStore,
 } from '@syndesis/ui/store';
 import { CurrentFlowService } from '@syndesis/ui/integration/edit-page';
 import { ConfigService } from '@syndesis/ui/config.service';
@@ -29,7 +29,7 @@ describe('CurrentFlow', () => {
       imports: [
         ApiModule.forRoot(),
         CoreModule.forRoot(),
-        IntegrationSupportModule
+        IntegrationSupportModule,
       ],
       providers: [
         CurrentFlowService,
@@ -37,8 +37,8 @@ describe('CurrentFlow', () => {
         IntegrationService,
         EventsService,
         ConfigService,
-        StepStore
-      ]
+        StepStore,
+      ],
     });
     inject([CurrentFlowService], c => (c.flowId = 'flow1'));
   });
@@ -52,8 +52,8 @@ describe('CurrentFlow', () => {
       connections: <Connection[]>[],
       steps: <Step[]>[],
       metadata: {
-        excerpt: 'flow11'
-      }
+        excerpt: 'flow11',
+      },
     };
     rc.flows = [flow];
 

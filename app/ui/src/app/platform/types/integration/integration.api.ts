@@ -11,6 +11,7 @@ export const integrationEndpoints: Endpoints = {
   metadata: '/connections/{connectionId}/actions/{actionId}',
   // TODO should this go into the integration service
   filterOptions: '/integrations/filters/options',
+  getStepDescriptor: '/steps/{kind}/descriptor',
 
   overviews: '/integration-support/overviews',
   overview: '/integrations/{id}/overview',
@@ -25,8 +26,7 @@ export const integrationEndpoints: Endpoints = {
   environments: '/public/environments',
   renameEnvironment: '/public/environments/{env}',
   tags: '/public/integrations/{integrationId}/tags',
-  deleteTag:
-    '/public/integrations/{integrationId}/tags/{env}',
+  deleteTag: '/public/integrations/{integrationId}/tags/{env}',
 
   pom: '/integration-support/generate/pom.xml',
   export: '/integration-support/export.zip',

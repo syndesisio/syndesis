@@ -17,6 +17,8 @@ import {
   PUBLISHED,
   IntegrationStatusDetail,
   ContinuousDeliveryEnvironment,
+  DescriptorRequest,
+  ActionDescriptor,
 } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
 
@@ -209,5 +211,14 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.environments)
       .get();
+  }
+
+  getStepDescriptor(
+    kind: string,
+    dataShapes: DescriptorRequest
+  ): Observable<ActionDescriptor> {
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.getStepDescriptor, { kind })
+      .post(dataShapes);
   }
 }
