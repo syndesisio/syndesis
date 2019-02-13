@@ -32,14 +32,11 @@ import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Json;
-import io.syndesis.connector.odata.ODataConstants;
-import io.syndesis.connector.odata.server.ODataTestServer;
+import io.syndesis.connector.odata.AbstractODataTest;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 
-public class ODataMetaDataRetrievalTest implements ODataConstants {
-
-    private CamelContext context;
+public class ODataMetaDataRetrievalTest extends AbstractODataTest {
 
     @Before
     public void setup() throws Exception {
@@ -61,65 +58,58 @@ public class ODataMetaDataRetrievalTest implements ODataConstants {
         CamelContext context = new DefaultCamelContext();
         ODataMetaDataRetrieval retrieval = new ODataMetaDataRetrieval();
 
-        final ODataTestServer server = new ODataTestServer();
-        server.start();
+        String methodName = "Products";
 
-        String methodValue = "Products";
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(API_NAME, "read");
+        parameters.put(SERVICE_URI, defaultTestServer.serviceUrl());
+        parameters.put(METHOD_NAME, methodName);
 
-        try {
-            Map<String, Object> parameters = new HashMap<>();
-            parameters.put(API_NAME, "read");
-            parameters.put(SERVICE_URI, server.serviceUrl());
-            parameters.put(METHOD_NAME, methodValue);
+        String componentId = "odata";
+        String actionId = "io.syndesis:odata-read-connector";
 
-            String componentId = "odata";
-            String actionId = "io.syndesis:odata-read-connector";
+        SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
+        assertNotNull(metadata);
 
-            SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
-            assertNotNull(metadata);
+        Map<String, List<PropertyPair>> properties = metadata.properties;
+        assertFalse(properties.isEmpty());
 
-            Map<String, List<PropertyPair>> properties = metadata.properties;
-            assertFalse(properties.isEmpty());
+        //
+        // The method names are important for collecting prior
+        // to the filling in of the integration step (values such as resource etc...)
+        //
+        List<PropertyPair> resourcePaths = properties.get(METHOD_NAME);
+        assertNotNull(resourcePaths);
+        assertFalse(resourcePaths.isEmpty());
 
-            //
-            // The method names are important for collecting prior
-            // to the filling in of the integration step (values such as resource etc...)
-            //
-            List<PropertyPair> methodNames = properties.get(METHOD_NAME);
-            assertNotNull(methodNames);
-            assertFalse(methodNames.isEmpty());
+        PropertyPair pair = resourcePaths.get(0);
+        assertNotNull(pair);
+        assertEquals(methodName, pair.getValue());
 
-            PropertyPair pair = methodNames.get(0);
-            assertNotNull(pair);
-            assertEquals(methodValue, pair.getValue());
+        //
+        // The out data shape is defined after the integration step has
+        // been populated and should be a dynamic json-schema based
+        // on the contents of the OData Edm metadata object.
+        //
+        DataShape outputShape = metadata.outputShape;
+        assertNotNull(outputShape);
 
-            //
-            // The out data shape is defined after the integration step has
-            // been populated and should be a dynamic json-schema based
-            // on the contents of the OData Edm metadata object.
-            //
-            DataShape outputShape = metadata.outputShape;
-            assertNotNull(outputShape);
+        assertEquals(DataShapeKinds.JSON_SCHEMA, outputShape.getKind());
+        assertNotNull(outputShape.getSpecification());
 
-            assertEquals(DataShapeKinds.JSON_SCHEMA, outputShape.getKind());
-            assertNotNull(outputShape.getSpecification());
-
-            ObjectSchema schema = Json.copyObjectMapperConfiguration().readValue(
+        ObjectSchema schema = Json.copyObjectMapperConfiguration().readValue(
                                                                              outputShape.getSpecification(), ObjectSchema.class);
-            Map<String, JsonSchema> propSchemaMap = schema.getProperties();
-            assertNotNull(propSchemaMap);
+        Map<String, JsonSchema> propSchemaMap = schema.getProperties();
+        assertNotNull(propSchemaMap);
 
-            JsonSchema descSchema = propSchemaMap.get("Description");
-            assertNotNull(descSchema);
-            assertNotNull(propSchemaMap.get("ID"));
-            assertNotNull(propSchemaMap.get("Name"));
+        JsonSchema descSchema = propSchemaMap.get("Description");
+        assertNotNull(descSchema);
+        assertNotNull(propSchemaMap.get("ID"));
+        assertNotNull(propSchemaMap.get("Name"));
 
-            JsonFormatTypes descType = descSchema.getType();
-            assertNotNull(descType);
-            assertEquals(JsonFormatTypes.STRING, descType);
-            assertEquals(false, descSchema.getRequired());
-        } finally {
-            server.stop();
-        }
+        JsonFormatTypes descType = descSchema.getType();
+        assertNotNull(descType);
+        assertEquals(JsonFormatTypes.STRING, descType);
+        assertEquals(false, descSchema.getRequired());
     }
 }

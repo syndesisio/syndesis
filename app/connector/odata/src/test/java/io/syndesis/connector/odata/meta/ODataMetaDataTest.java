@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.assertj.core.api.Condition;
@@ -29,13 +28,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import io.syndesis.connector.odata.ODataConstants;
-import io.syndesis.connector.odata.meta.ODataMetaDataExtension;
-import io.syndesis.connector.odata.server.ODataTestServer;
+import io.syndesis.connector.odata.AbstractODataTest;
 
-public class ODataMetaDataTest implements ODataConstants {
-
-    private CamelContext context;
+public class ODataMetaDataTest extends AbstractODataTest {
 
     @Before
     public void setup() throws Exception {
@@ -52,37 +47,26 @@ public class ODataMetaDataTest implements ODataConstants {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
     @Test
     public void testMetaDataExtensionRetrieval() throws Exception {
-        CamelContext context = new DefaultCamelContext();
         ODataMetaDataExtension extension = new ODataMetaDataExtension(context);
 
-        final ODataTestServer server = new ODataTestServer();
-        server.start();
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(SERVICE_URI, defaultTestServer.serviceUrl());
 
-        try {
-            Map<String, Object> parameters = new HashMap<>();
-            parameters.put(SERVICE_URI, server.serviceUrl());
+        Optional<MetaDataExtension.MetaData> meta = extension.meta(parameters);
+        assertThat(meta).isPresent();
 
-            Optional<MetaDataExtension.MetaData> meta = extension.meta(parameters);
-            assertThat(meta).isPresent();
-
-            Object payload = meta.get().getPayload();
-            assertThat(payload).isInstanceOf(ODataMetadata.class);
-            ODataMetadata odataMetadata = (ODataMetadata) payload;
-            assertThat(odataMetadata.getEntityNames().size()).isEqualTo(1);
-            assertThat(odataMetadata.getEntityNames().iterator().next()).isEqualTo(server.methodName());
-
-        } finally {
-            server.stop();
-        }
+        Object payload = meta.get().getPayload();
+        assertThat(payload).isInstanceOf(ODataMetadata.class);
+        ODataMetadata odataMetadata = (ODataMetadata) payload;
+        assertThat(odataMetadata.getEntityNames().size()).isEqualTo(1);
+        assertThat(odataMetadata.getEntityNames().iterator().next()).isEqualTo(defaultTestServer.methodName());
     }
 
     @Test
     @Ignore("Useful for manual testing but cannot guarantee access to odata service")
     public void testMetaDataExtensionOnRealServer() throws Exception {
-        CamelContext context = new DefaultCamelContext();
         ODataMetaDataExtension extension = new ODataMetaDataExtension(context);
 
         Map<String, Object> parameters = new HashMap<>();
