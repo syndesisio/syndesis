@@ -36,7 +36,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.syndesis.connector.odata.customizer.json.ClientCollectionValueSerializer;
 import io.syndesis.connector.odata.customizer.json.ClientComplexValueSerializer;
@@ -64,7 +63,6 @@ import io.syndesis.connector.odata.customizer.json.ClientPropertySerializer;
 )
 public class ODataSerializerTest extends AbstractODataTest {
 
-    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final String TEST_COLLECTION = "test-collection.json";
     private static final String TEST_COMPLEX = "test-complex.json";
 

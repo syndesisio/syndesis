@@ -16,7 +16,10 @@
 package io.syndesis.connector.odata.customizer.json;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import org.apache.olingo.client.api.domain.ClientPrimitiveValue;
+import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeException;
+import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
@@ -40,8 +43,33 @@ public class ClientPrimitiveValueSerializer
         return ClientPrimitiveValue.class;
     }
 
+    @SuppressWarnings("PMD.MissingBreakInSwitch")
     @Override
     public void serialize(ClientPrimitiveValue value, JsonGenerator generator, SerializerProvider provider) throws IOException {
-        generator.writeString(value.toString());
+        try {
+            EdmPrimitiveTypeKind typeKind = value.getTypeKind();
+            switch (typeKind) {
+                case Boolean:
+                    generator.writeBoolean(value.toCastValue(Boolean.class));
+                    break;
+                case Decimal:
+                    generator.writeNumber(value.toCastValue(BigDecimal.class));
+                    break;
+                case Double:
+                    generator.writeNumber(value.toCastValue(Double.class));
+                    break;
+                case Single:
+                case Int16:
+                case Int32:
+                case Int64:
+                    generator.writeNumber(value.toCastValue(Integer.class));
+                    break;
+                case String:
+                default:
+                    generator.writeString(value.toString());
+            }
+        } catch (EdmPrimitiveTypeException e) {
+            generator.writeString(value.toString());
+        }
     }
 }

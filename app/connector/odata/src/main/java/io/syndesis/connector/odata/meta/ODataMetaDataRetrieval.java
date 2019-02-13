@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
 import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
+import com.fasterxml.jackson.module.jsonSchema.types.ContainerTypeSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
@@ -39,12 +39,14 @@ import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 
 public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implements ODataConstants {
 
+    private JsonSchemaFactory factory = new JsonSchemaFactory();
+
     @Override
     protected MetaDataExtension resolveMetaDataExtension(CamelContext context, Class<? extends MetaDataExtension> metaDataExtensionClass, String componentId, String actionId) {
         return new ODataMetaDataExtension(context);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "PMD"})
     @Override
     protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
             ODataMetadata odataMetadata = (ODataMetadata) metadata.getPayload();
@@ -62,9 +64,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
 
             ObjectSchema entitySchema = new ObjectSchema();
             entitySchema.setTitle("ODATA_ENTITY_PROPERTIES");
-            ArraySchema collectionSchema = new ArraySchema();
-            collectionSchema.set$schema("http://json-schema.org/schema#");
-            collectionSchema.setItemsSchema(entitySchema);
+            entitySchema.set$schema("http://json-schema.org/schema#");
 
             if (odataMetadata.hasEntityProperties()) {
                 for (PropertyMetadata entityProperty : odataMetadata.getEntityProperties()) {
@@ -84,38 +84,108 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
             //
             // Do things differently depending on which action is being sought
             //
-            if (actionId.endsWith("odata-read-connector" )) {
+            if (actionId.endsWith(Methods.READ.connectorId())) {
+                //
+                // READ
+                // - In has NO shape
+                // - Out has the json entity schema
+                //
                 inDataShapeBuilder.kind(DataShapeKinds.NONE);
-
                 outDataShapeBuilder.type(entitySchema.getTitle());
                 if (entitySchema.getProperties().isEmpty()) {
                     outDataShapeBuilder.kind(DataShapeKinds.NONE);
                 } else {
-                    final String specification;
-                    try {
-                        specification = Json.writer().writeValueAsString(collectionSchema);
-                    } catch (JsonProcessingException e) {
-                        throw new IllegalStateException("Unable to serialize schema", e);
-                    }
-                    outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
-                            .name("Entity Schema")
-                            .description("Schema of OData result entities")
-                            .putMetadata("variant", "collection")
-                            .specification(specification);
+                    ArraySchema collectionSchema = new ArraySchema();
+                    collectionSchema.set$schema("http://json-schema.org/schema#");
+                    collectionSchema.setItemsSchema(entitySchema);
+                    applySchemaSpecification(collectionSchema, outDataShapeBuilder);
                 }
 
                 inDataShape = inDataShapeBuilder.build();
                 outDataShape = outDataShapeBuilder.build();
-            } else {
-                    throw new UnsupportedOperationException();
+            } else if(actionId.endsWith(Methods.CREATE.connectorId())) {
+                //
+                // CREATE
+                // - In has the json entity schema
+                // - Out has the same json entity schema (since create returns the new entity)
+                //
+                inDataShapeBuilder.type(entitySchema.getTitle());
+                outDataShapeBuilder.type(entitySchema.getTitle());
+                if (entitySchema.getProperties().isEmpty()) {
+                    inDataShapeBuilder.kind(DataShapeKinds.NONE);
+                    outDataShapeBuilder.kind(DataShapeKinds.NONE);
+                } else {
+                    applySchemaSpecification(entitySchema,  inDataShapeBuilder);
+                    applySchemaSpecification(entitySchema, outDataShapeBuilder);
+                }
+
+                inDataShape = inDataShapeBuilder.build();
+                outDataShape = outDataShapeBuilder.build();
+            } else if (actionId.endsWith(Methods.DELETE.connectorId())) {
+                //
+                // DELETE
+                // - In has the java object ODataDeleteResource
+                // - Out has the json instance representing a status outcome
+                //
+                inDataShape = inDataShapeBuilder
+                    .kind(DataShapeKinds.JAVA)
+                    .type(String.class.getName())
+                    .description("OData " + actionId)
+                    .name(actionId).build();
+                outDataShape = outDataShapeBuilder
+                    .kind(DataShapeKinds.JSON_INSTANCE)
+                    .description("OData " + actionId)
+                    .name(actionId).build();
+            } else if (actionId.endsWith(Methods.PATCH.connectorId())) {
+                //
+                // PATCH
+                // - In has the json entity schema
+                // - Out has the json instance representing a status outcome
+                //
+
+                //
+                // Need to add a KEY_PREDICATE to the json schema to allow identification
+                // of the entity to be patched.
+                //
+                entitySchema.putProperty(KEY_PREDICATE, factory.stringSchema());
+
+                inDataShapeBuilder.type(entitySchema.getTitle());
+                if (entitySchema.getProperties().isEmpty()) {
+                    inDataShapeBuilder.kind(DataShapeKinds.NONE);
+                } else {
+                    applySchemaSpecification(entitySchema,  inDataShapeBuilder);
+                }
+
+                inDataShape = inDataShapeBuilder.build();
+                outDataShape = outDataShapeBuilder
+                    .kind(DataShapeKinds.JSON_INSTANCE)
+                    .description("OData " + actionId)
+                    .name(actionId).build();
             }
 
             return new SyndesisMetadata(enrichedProperties, inDataShape, outDataShape);
     }
 
+    private void applySchemaSpecification(ContainerTypeSchema schema, DataShape.Builder dataShapeBuilder) {
+        final String specification;
+        try {
+            specification = Json.writer().writeValueAsString(schema);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException("Unable to serialize schema", e);
+        }
+
+        dataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
+                .name("Entity Schema")
+                .description("Schema of OData result entities")
+                .specification(specification);
+
+        if (schema instanceof ArraySchema) {
+            dataShapeBuilder.putMetadata("variant", "collection");
+        }
+    }
+
     @SuppressWarnings("PMD")
     private JsonSchema schemaFor(PropertyMetadata propertyMetadata) {
-        JsonSchemaFactory factory = new JsonSchemaFactory();
         JsonSchema schema;
 
         TypeClass type = propertyMetadata.getType();

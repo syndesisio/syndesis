@@ -37,6 +37,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.PropertyResolver;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -54,6 +55,8 @@ import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 
 public abstract class AbstractODataTest implements ODataConstants {
+
+    protected final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     protected static final int MOCK_TIMEOUT_MILLISECONDS = 60000;
 

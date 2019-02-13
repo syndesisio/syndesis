@@ -36,11 +36,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.odata.PropertyBuilder;
 import io.syndesis.connector.odata.server.ODataTestServer;
 
@@ -183,15 +181,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
                                                             .property(QUERY_PARAMS, queryParam)
                                                             .property(CLIENT_CERTIFICATE, ODataTestServer.referenceServiceCertificate()));
 
-        Step odataStep = new Step.Builder()
-            .stepKind(StepKind.endpoint)
-            .action(readAction)
-            .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-            .putConfiguredProperty(RESOURCE_PATH, resourcePath)
-            .build();
+        Step odataStep = createODataStep(odataConnector, resourcePath);
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);

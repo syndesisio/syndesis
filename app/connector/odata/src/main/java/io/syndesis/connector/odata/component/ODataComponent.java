@@ -192,16 +192,18 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
             .build();
     }
 
-    @SuppressWarnings("PMD.UseStringBufferForStringAppends")
+    @SuppressWarnings("PMD")
     @Override
     protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
         Olingo4Component component = new Olingo4Component(getCamelContext());
         Olingo4AppEndpointConfiguration configuration = new Olingo4AppEndpointConfiguration();
 
         Object methodName = options.get(METHOD_NAME);
-        if (methodName != null) {
-            configuration.setMethodName(methodName.toString());
+        if (methodName == null) {
+            throw new IllegalStateException("No method specified for odata component");
         }
+
+        configuration.setMethodName(methodName.toString());
 
         //
         // Ensure at least a blank map exists for this property
@@ -221,13 +223,47 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
             configuration.setServiceUri(getServiceUri());
         }
 
+        configureResourcePath(configuration);
+
+        Methods method = Methods.getValueOf(configuration.getMethodName());
+        if (Methods.READ.equals(method)) {
+            //
+            // Modify the query parameters into the expected map
+            //
+            Map<String, String> queryParams = new HashMap<>();
+            if (getQueryParams() != null) {
+                String queryString = getQueryParams();
+                String[] clauses = queryString.split(AMPERSAND, -1);
+                if (clauses.length >= 1) {
+                    for (String clause : clauses) {
+                        String[] parts = clause.split(EQUALS, -1);
+                        if (parts.length == 2) {
+                            queryParams.put(parts[0], parts[1]);
+                        } else if (parts.length < 2) {
+                            queryParams.put(parts[0], EMPTY_STRING);
+                        }
+                        // A clause with more than 1 '=' would be invalid
+                    }
+                }
+            }
+
+            configuration.setQueryParams(queryParams);
+            configuration.setFilterAlreadySeen(isFilterAlreadySeen());
+        }
+
+        component.setConfiguration(configuration);
+        return Optional.of(component);
+    }
+
+    @SuppressWarnings("PMD.UseStringBufferForStringAppends")
+    private void configureResourcePath(Olingo4AppEndpointConfiguration configuration) {
         //
         // keyPredicate is not supported properly in 2.21.0 but is handled
         // in 2.24.0 by setting it directly on the configuration. Can modify
         // this when component dependencies are upgraded.
         //
         String resourcePath = getResourcePath();
-        if (getKeyPredicate() != null) {
+        if (! resourcePath.contains(OPEN_BRACKET) && getKeyPredicate() != null) {
             String keyPredicate = getKeyPredicate();
             if (! keyPredicate.startsWith(OPEN_BRACKET)) {
                 keyPredicate = OPEN_BRACKET + keyPredicate;
@@ -239,32 +275,6 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
             resourcePath = resourcePath + keyPredicate;
         }
         configuration.setResourcePath(resourcePath);
-
-        //
-        // Modify the query parameters into the expected map
-        //
-        Map<String, String> queryParams = new HashMap<>();
-        if (getQueryParams() != null) {
-            String queryString = getQueryParams();
-            String[] clauses = queryString.split(AMPERSAND, -1);
-            if (clauses.length >= 1) {
-                for (String clause : clauses) {
-                    String[] parts = clause.split(EQUALS, -1);
-                    if (parts.length == 2) {
-                        queryParams.put(parts[0], parts[1]);
-                    } else if (parts.length < 2) {
-                        queryParams.put(parts[0], EMPTY_STRING);
-                    }
-                    // A clause with more than 1 '=' would be invalid
-                }
-            }
-        }
-
-        configuration.setQueryParams(queryParams);
-        configuration.setFilterAlreadySeen(isFilterAlreadySeen());
-
-        component.setConfiguration(configuration);
-        return Optional.of(component);
     }
 
     @Override
@@ -274,35 +284,37 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
 
         Endpoint endpoint = super.createDelegateEndpoint(definition, scheme, options);
 
-        /**
-         * Need to apply these consumer properties after the creation
-         * of the delegate endpoint since the Olingo4Endpoint swallows
-         * properties not explicitly outlined by the olingo4 definition.
-         */
-        Map<String, Object> properties = new HashMap<>();
-        if (getInitialDelay() > -1) {
-            properties.put(CONSUMER + DOT + INITIAL_DELAY, Long.toString(getInitialDelay()));
-        }
+        Methods method = Methods.getValueOf(options.get(METHOD_NAME));
+        if (Methods.READ.equals(method)) {
+            /**
+             * Need to apply these consumer properties after the creation
+             * of the delegate endpoint since the Olingo4Endpoint swallows
+             * properties not explicitly outlined by the olingo4 definition.
+             */
+            Map<String, Object> properties = new HashMap<>();
+            if (getInitialDelay() > -1) {
+                properties.put(CONSUMER + DOT + INITIAL_DELAY, Long.toString(getInitialDelay()));
+            }
 
-        if (getDelay() > -1) {
-            properties.put(CONSUMER + DOT + DELAY, Long.toString(getDelay()));
-        }
+            if (getDelay() > -1) {
+                properties.put(CONSUMER + DOT + DELAY, Long.toString(getDelay()));
+            }
 
-        if (getBackoffIdleThreshold() > -1) {
-            properties.put(CONSUMER + DOT + BACKOFF_IDLE_THRESHOLD, Integer.toString(getBackoffIdleThreshold()));
-        }
+            if (getBackoffIdleThreshold() > -1) {
+                properties.put(CONSUMER + DOT + BACKOFF_IDLE_THRESHOLD, Integer.toString(getBackoffIdleThreshold()));
+            }
 
-        if (getBackoffMultiplier() > -1) {
-            properties.put(CONSUMER + DOT + BACKOFF_MULTIPLIER, Integer.toString(getBackoffMultiplier()));
-        }
+            if (getBackoffMultiplier() > -1) {
+                properties.put(CONSUMER + DOT + BACKOFF_MULTIPLIER, Integer.toString(getBackoffMultiplier()));
+            }
 
-        //
-        // Mandate that the results are split into individual messages
-        //
-        properties.put(CONSUMER + DOT + SPLIT_RESULT, isSplitResult());
-
-        if (! properties.isEmpty()) {
-            endpoint.configureProperties(properties);
+            //
+            // Mandate that the results are split into individual messages
+            //
+            properties.put(CONSUMER + DOT + SPLIT_RESULT, isSplitResult());
+            if (! properties.isEmpty()) {
+                endpoint.configureProperties(properties);
+            }
         }
 
         return endpoint;

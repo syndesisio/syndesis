@@ -8,7 +8,7 @@
           "methodName": "read"
         },
         "connectorCustomizers": [
-          "io.syndesis.connector.odata.customizer.ODataStartCustomizer"
+          "io.syndesis.connector.odata.customizer.ODataReadCustomizer"
         ],
         "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
         "inputDataShape": {
@@ -18,8 +18,8 @@
           "kind": "json-schema"
         },
         "propertyDefinitionSteps": [
-          {
-            "description": "Enhance the service url with a resource path",
+        {
+            "description": "Enhance the service url with a resource path and query",
             "name": "Resource Path and Query Options",
             "properties": {
               "backoffIdleThreshold": {
@@ -69,6 +69,7 @@
               },
               "filterAlreadySeen": {
                 "deprecated": false,
+                "defaultValue": "true",
                 "displayName": "Filter Old Results",
                 "group": "common",
                 "javaType": "java.lang.Boolean",
@@ -101,7 +102,7 @@
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
-                "labelHint": "Parameter to refine the collection to a single entity, eg. People(<i><b>UserName='Bob'</i></b>) or Categories(<i><b>1</b></i>)",
+                "labelHint": "Parameter to refine the collection to a single entity, eg. People(<i><b>UserName='Bob'</i></b>) or Categories(<i><b>1</b></i>). Note: the property must be a key.",
                 "order": "2",
                 "required": false,
                 "secret": false,
@@ -153,6 +154,142 @@
       "id": "io.syndesis:odata-read-connector",
       "name": "Read",
       "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Delete an entity from a server resource",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "delete"
+        },
+        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
+        "connectorCustomizers": [
+          "io.syndesis.connector.odata.customizer.ODataDeleteCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "type": "java.lang.String"
+        },
+        "outputDataShape": {
+          "kind": "json-instance"
+        },
+        "propertyDefinitionSteps": [
+        {
+            "description": "Provide the resource information from which to remove data",
+            "name": "Resource Path",
+            "properties": {
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be modified, eg. an <i><b>EntitySetName</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:odata-delete-connector",
+      "name": "Delete",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Create an entity on a server resource",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "create"
+        },
+        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
+        "connectorCustomizers": [
+          "io.syndesis.connector.odata.customizer.ODataCreateCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+        {
+            "description": "Provide the resource on which to create data",
+            "name": "Resource Path",
+            "properties": {
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be modified, eg. an <i><b>EntitySetName</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:odata-create-connector",
+      "name": "Create",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Update an entity on a server resource",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "patch"
+        },
+        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
+        "connectorCustomizers": [
+          "io.syndesis.connector.odata.customizer.ODataPatchCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Provide the resource on which to update the data",
+            "name": "Resource Path",
+            "properties": {
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be modified, eg. an <i><b>EntitySetName</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:odata-patch-connector",
+      "name": "Update",
+      "pattern": "To",
       "tags": [
         "dynamic"
       ]
