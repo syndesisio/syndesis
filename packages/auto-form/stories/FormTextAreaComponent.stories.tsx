@@ -5,32 +5,22 @@ import { FormTextAreaComponent } from '../src/widgets/FormTextAreaComponent';
 
 const stories = storiesOf('Textarea', module);
 
-export const fieldObj = {
-  name: 'brokerCertificate',
-  displayName: 'Broker Certificate',
-  description: 'AMQ Broker X.509 PEM Certificate',
-  value: '',
-  disabled: false,
-  onChange: () => {},
-  validationState: null,
-};
-
-stories.add('FormTextAreaComponent', () => {
+stories.add('Basic Textarea', () => {
   return (
     <FormTextAreaComponent
       field={{
-        name: fieldObj.name,
-        value: text('Value', fieldObj.value),
-        onChange: fieldObj.onChange,
+        name: 'brokerCertificate',
+        value: text('Value', ''),
+        onChange: () => {},
       }}
       form={{ isSubmitting: false }}
       property={{
-        disabled: boolean('Disabled', fieldObj.disabled),
-        displayName: fieldObj.displayName,
-        description: fieldObj.description,
+        disabled: boolean('Disabled', false),
+        displayName: text('Label', 'Broker Certificate'),
+        description: text('Description', 'AMQ Broker X.509 PEM Certificate'),
       }}
       validationState={select('Validation State', [
-        fieldObj.validationState,
+        null,
         'success',
         'warning',
         'error',

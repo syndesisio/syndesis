@@ -14,6 +14,9 @@ export interface IFormErrors {
 export interface IFormField {
   name: string;
   value?: any;
+  defaultValue?: any;
+  min?: number;
+  max?: number;
   onChange?: () => void;
 }
 
@@ -33,7 +36,8 @@ export interface IFormikFormProp {
 }
 
 export interface IFormControl {
-  [name: string]: any;
+  name?: string;
+  type?: string;
   field: IFormField;
   form: IFormikFormProp;
   property: IFormProperty;
