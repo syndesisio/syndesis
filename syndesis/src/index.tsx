@@ -8,6 +8,7 @@ import './index.css';
 import { ConnectionsModule } from './modules/connections';
 import { CustomizationsModule } from './modules/customizations';
 import { DashboardModule } from './modules/dashboard';
+import { DataModule } from './modules/data';
 import { IntegrationsModule } from './modules/integrations';
 import registerServiceWorker from './registerServiceWorker';
 
@@ -42,6 +43,12 @@ ReactDOM.render(
                 icon: 'fa fa-cube',
                 label: t('Customizations'),
                 to: '/customizations',
+              },
+              {
+                component: DataModule,
+                icon: 'fa fa-database',
+                label: t('Data'),
+                to: '/data',
               },
               // {
               // component: TODO,
