@@ -26,6 +26,7 @@ import {
   FlowEvent,
   FlowError,
   FlowErrorKind,
+  getNextAggregateStep,
   INTEGRATION_UPDATED,
   INTEGRATION_INSERT_STEP,
   INTEGRATION_INSERT_DATAMAPPER,
@@ -657,6 +658,14 @@ export class CurrentFlowService {
       }
     }
     return true;
+  }
+
+  /**
+   * Finds the closest step of type 'Aggregate' after the provided position.
+   * @param position
+   */
+  getNextAggregateStep(position: number): Step | undefined {
+    return getNextAggregateStep(this.integration, this.flowId, position);
   }
 
   validate() {

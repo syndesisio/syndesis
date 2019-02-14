@@ -142,6 +142,20 @@
     }
   }
 
+  .step-suggestion {
+    position: absolute;
+    background: #0088ce;
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+    top: 0;
+    right: 0;
+
+    &::before {
+      color: $color-pf-white;
+    }
+  }
+
   ////////////////////////////////////////////////////////////////////////////////
   // SIDEBAR: RIGHT HAND (PROGRESS MENU)
   ////////////////////////////////////////////////////////////////////////////////

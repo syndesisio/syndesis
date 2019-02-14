@@ -9,6 +9,7 @@ import {
   INTEGRATION_INSERT_DATAMAPPER,
 } from '@syndesis/ui/integration/edit-page';
 import { INTEGRATION_DELETE_PROMPT } from '../edit-page.models';
+import { SPLIT } from '@syndesis/ui/store';
 
 @Component({
   selector: 'syndesis-integration-flow-view-step',
@@ -39,6 +40,7 @@ export class FlowViewStepComponent implements OnChanges {
   outputDataShapeText: string;
   previousStepShouldDefineDataShape = false;
   shouldAddDatamapper = false;
+  isUnclosedSplit = false;
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -325,6 +327,12 @@ export class FlowViewStepComponent implements OnChanges {
     this.stepName = this.getStepName(this.step);
     this.previousStepShouldDefineDataShape = false;
     this.shouldAddDatamapper = false;
+
+    this.isUnclosedSplit = this.step.stepKind === SPLIT &&
+      this.currentFlowService.getNextAggregateStep(
+        this.position
+      ) === undefined;
+
     if (!this.step || !this.step.action || !this.step.action.descriptor) {
       return;
     }

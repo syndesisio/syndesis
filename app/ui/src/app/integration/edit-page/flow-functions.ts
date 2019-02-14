@@ -15,7 +15,7 @@ import {
   createConnectionStep,
   StepOrConnection,
 } from '@syndesis/ui/platform';
-import { ENDPOINT, StepStore, DATA_MAPPER } from '@syndesis/ui/store';
+import { ENDPOINT, StepStore, DATA_MAPPER, AGGREGATE } from '@syndesis/ui/store';
 import { FlowError, FlowErrorKind } from './edit-page.models';
 
 //
@@ -870,4 +870,22 @@ export function validateFlow(
     errors.push({ kind: FlowErrorKind.NO_FINISH_CONNECTION });
   }
   return errors;
+}
+
+/**
+ * Finds the closest step of type 'Aggregate' after the provided position.
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getNextAggregateStep(
+  integration: Integration,
+  flowId: string,
+  position: number
+): Step | undefined {
+  const steps = getSubsequentSteps(integration, flowId, position);
+  if (steps && steps.length) {
+    return steps.filter(s => s.stepKind === AGGREGATE)[0];
+  }
+  return undefined;
 }
