@@ -187,7 +187,7 @@
               },
               "range": {
                 "deprecated": false,
-                "defaultValue": "A1",
+                "defaultValue": "A:A",
                 "displayName": "Range",
                 "group": "producer",
                 "javaType": "java.lang.String",
@@ -296,7 +296,7 @@
               },
               "range": {
                 "deprecated": false,
-                "defaultValue": "A1",
+                "defaultValue": "A:A",
                 "displayName": "Range",
                 "group": "producer",
                 "javaType": "java.lang.String",
@@ -420,7 +420,7 @@
                 "type": "duration"
               },
               "range": {
-                "defaultValue": "A1:A10",
+                "defaultValue": "A:A",
                 "deprecated": false,
                 "displayName": "Range",
                 "group": "producer",
