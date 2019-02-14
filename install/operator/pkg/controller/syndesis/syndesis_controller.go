@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
 	"k8s.io/apimachinery/pkg/types"
+	"reflect"
 
 	syndesisv1alpha1 "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -25,13 +26,13 @@ var (
 
 func init() {
 	actionPool = append(actionPool,
-		&action.UpgradeLegacy{},
-		&action.Initialize{},
-		&action.Install{},
-		&action.Startup{},
-		&action.CheckUpdates{},
-		&action.Upgrade{},
-		&action.UpgradeBackoff{},
+		&action.UpgradeLegacy,
+		&action.InitializeAction,
+		&action.InstallAction,
+		&action.StartupAction,
+		&action.CheckUpdatesAction,
+		&action.UpgradeAction,
+		&action.UpgradeBackoffAction,
 	)
 }
 
@@ -92,18 +93,22 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 			return reconcile.Result{}, nil
 		}
 		// Error reading the object - requeue the request.
+		log.Error(err, "Cannot read object", request.NamespacedName)
 		return reconcile.Result{}, err
 	}
 
 	// Don't want to do anything if the syndesis resource has been updated in the meantime
 	// This happens when a processing takes more tha the resync period
 	if latest, err := r.isLatestVersion(syndesis); err != nil || !latest {
+		log.Error(err, "Cannot get latest version")
 		return reconcile.Result{}, err
 	}
 
 	for _, a := range actionPool {
 		if a.CanExecute(syndesis) {
-			if err := a.Execute(r.client, syndesis); err != nil {
+			log.Info("Running action", "action", reflect.TypeOf(a))
+			if err := a.Execute(r.scheme, r.client, syndesis); err != nil {
+				log.Error(err, "Error reconciling","action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
 				return reconcile.Result{}, err
 			}
 		}

@@ -20,15 +20,19 @@ const (
 )
 
 // Install syndesis into the namespace, taking resources from the bundled template.
-type Install struct{}
+type install action
 
-func (a *Install) CanExecute(syndesis *v1alpha1.Syndesis) bool {
+var (
+	InstallAction = install{actionLog.WithValues("type", "install")}
+)
+
+func (a *install) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling)
 }
 
-func (a *Install) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
+func (a *install) Execute(scheme *runtime.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
 
-	log.Info("Installing Syndesis resource", "name", syndesis.Name, "type", "install")
+	a.log.Info("Installing Syndesis resource", "name", syndesis.Name)
 
 	token, err := installServiceAccount(cl, syndesis)
 	if err != nil {
@@ -45,7 +49,7 @@ func (a *Install) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
 		syndesis.Spec.RouteHostName = "dummy"
 	}
 
-	list, err := syndesistemplate.GetInstallResourcesAsRuntimeObjects(syndesis, syndesistemplate.InstallParams{
+	list, err := syndesistemplate.GetInstallResourcesAsRuntimeObjects(scheme, syndesis, syndesistemplate.InstallParams{
 		OAuthClientSecret: token,
 	})
 	if err != nil {
@@ -69,7 +73,7 @@ func (a *Install) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
 		}
 
 		// Recreate the list of resources to inject the route hostname
-		list, err = syndesistemplate.GetInstallResourcesAsRuntimeObjects(syndesis, syndesistemplate.InstallParams{
+		list, err = syndesistemplate.GetInstallResourcesAsRuntimeObjects(scheme, syndesis, syndesistemplate.InstallParams{
 			OAuthClientSecret: token,
 		})
 	}
@@ -94,7 +98,7 @@ func (a *Install) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
 	target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 	target.Status.Description = ""
 	addRouteAnnotation(target, syndesisRoute)
-	log.Info("Syndesis resource installed", "name", target.Name, "type", "install")
+	a.log.Info("Syndesis resource installed", "name", target.Name)
 
 	return cl.Update(context.TODO(), target)
 }

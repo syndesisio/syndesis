@@ -8,7 +8,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	apps "github.com/openshift/api/apps/v1"
 	"io/ioutil"
 	"k8s.io/apimachinery/pkg/util/yaml"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
@@ -16,33 +15,16 @@ import (
 )
 
 
-var (
-	// scheme tracks the type registry for the sdk
-	// This scheme is used to decode json data into the correct Go type based on the object's GVK
-	// All types that the operator watches must be added to this scheme
-	scheme = runtime.NewScheme()
-)
-
 var log = logf.Log.WithName("resources")
 
-func init() {
-	if err := apps.AddToScheme(scheme); err != nil {
-		log.Error(err, "Cann't register openshift apps to scheme")
-	}
-}
-
-func RegisterInScheme(registerFunc func(*runtime.Scheme)) {
-	registerFunc(scheme)
-}
-
-func NewObjectKey(name string, namespace string) (client.ObjectKey) {
+func NewObjectKey(name string, namespace string) client.ObjectKey {
 	return client.ObjectKey{
 		Name: name,
 		Namespace: namespace,
 	}
 }
 
-func LoadResourceFromFile(path string) (runtime.Object, error) {
+func LoadResourceFromFile(scheme *runtime.Scheme, path string) (runtime.Object, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -53,7 +35,7 @@ func LoadResourceFromFile(path string) (runtime.Object, error) {
 		return nil, err
 	}
 
-	return LoadResourceFromYaml(data)
+	return LoadResourceFromYaml(scheme, data)
 }
 
 // LoadRawResourceFromYaml loads a k8s resource from a yaml definition without making assumptions on the underlying type
@@ -73,7 +55,7 @@ func LoadRawResourceFromYaml(data string) (runtime.Object, error) {
 }
 
 
-func LoadResourceFromYaml(source []byte) (runtime.Object, error) {
+func LoadResourceFromYaml(scheme *runtime.Scheme,  source []byte) (runtime.Object, error) {
 	jsonSource, err := yaml.ToJSON(source)
 	if err != nil {
 		return nil, err

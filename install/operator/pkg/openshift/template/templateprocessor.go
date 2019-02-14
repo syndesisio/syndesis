@@ -8,6 +8,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/json"
 	"k8s.io/client-go/rest"
+	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
@@ -16,11 +17,15 @@ var log = logf.Log.WithName("template")
 type TemplateProcessor struct {
 	namespace  string
 	restClient *rest.RESTClient
+	scheme *runtime.Scheme
 }
 
-func NewTemplateProcessor(namespace string) (*TemplateProcessor, error) {
-	inConfig := rest.Config{}
-	config := rest.CopyConfig(&inConfig)
+func NewTemplateProcessor(scheme *runtime.Scheme, namespace string) (*TemplateProcessor, error) {
+	inConfig, err := config.GetConfig()
+	if err != nil {
+		return nil, err
+	}
+	config := rest.CopyConfig(inConfig)
 	config.GroupVersion = &schema.GroupVersion{
 		Group:   "template.openshift.io",
 		Version: "v1",
@@ -43,6 +48,7 @@ func NewTemplateProcessor(namespace string) (*TemplateProcessor, error) {
 	return &TemplateProcessor{
 		namespace:  namespace,
 		restClient: restClient,
+		scheme: scheme,
 	}, nil
 }
 
@@ -61,25 +67,25 @@ func (p *TemplateProcessor) Process(sourceTemplate *v1template.Template, paramet
 		Resource("processedtemplates").
 		Do()
 
-	if result.Error() == nil {
-		data, err := result.Raw()
-		if err != nil {
-			return nil, err
-		}
-
-		templ, err := util.LoadResourceFromYaml(data)
-		if err != nil {
-			return nil, err
-		}
-
-		if v1Temp, ok := templ.(*v1template.Template); ok {
-			return v1Temp.Objects, nil
-		}
-		log.Error(nil,"Wrong type returned by the server", "template", templ)
-		return nil, errors.New("wrong type returned by the server")
+	if result.Error() != nil {
+		return nil, result.Error()
 	}
 
-	return nil, result.Error()
+	data, err := result.Raw()
+	if err != nil {
+		return nil, err
+	}
+
+	templ, err := util.LoadResourceFromYaml(p.scheme, data)
+	if err != nil {
+		return nil, err
+	}
+
+	if v1Temp, ok := templ.(*v1template.Template); ok {
+		return v1Temp.Objects, nil
+	}
+	log.Error(nil,"Wrong type returned by the server", "template", templ)
+	return nil, errors.New("wrong type returned by the server")
 }
 
 func (p *TemplateProcessor) fillInParameters(template *v1template.Template, parameters map[string]string) {

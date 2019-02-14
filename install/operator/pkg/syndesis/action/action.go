@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+	"github.com/go-logr/logr"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -14,12 +15,17 @@ const (
 	replaceResourcesIfPresent = true
 )
 
-var log = logf.Log.WithName("action")
+type action struct {
+	log logr.Logger
+}
+
+var actionLog = logf.Log.WithName("action").WithValues("type", )
 
 type InstallationAction interface {
+
 	CanExecute(syndesis *v1alpha1.Syndesis) bool
 
-	Execute(client client.Client, syndesis *v1alpha1.Syndesis) error
+	Execute(scheme *runtime.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error
 }
 
 type updateFunction func(runtime.Object)

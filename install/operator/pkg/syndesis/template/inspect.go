@@ -6,11 +6,12 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
-func GetDeclaredResourceTypes() ([]metav1.TypeMeta, error) {
+func GetDeclaredResourceTypes(scheme *runtime.Scheme) ([]metav1.TypeMeta, error) {
 	types := make(map[metav1.TypeMeta]bool)
-	res, err := util.LoadResourceFromFile(*configuration.TemplateLocation)
+	res, err := util.LoadResourceFromFile(scheme, *configuration.TemplateLocation)
 	if err != nil {
 		return nil, err
 	}

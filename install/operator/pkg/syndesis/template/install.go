@@ -13,8 +13,8 @@ type InstallParams struct {
 	OAuthClientSecret string
 }
 
-func GetInstallResourcesAsRuntimeObjects(syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.Object, error) {
-	rawExtensions, err := GetInstallResources(syndesis, params)
+func GetInstallResourcesAsRuntimeObjects(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.Object, error) {
+	rawExtensions, err := GetInstallResources(scheme, syndesis, params)
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func GetInstallResourcesAsRuntimeObjects(syndesis *v1alpha1.Syndesis, params Ins
 	objects := make([]runtime.Object, 0)
 
 	for _, rawObj := range rawExtensions {
-		res, err := util.LoadResourceFromYaml(rawObj.Raw)
+		res, err := util.LoadResourceFromYaml(scheme, rawObj.Raw)
 		if err != nil {
 			return nil, err
 		}
@@ -32,14 +32,14 @@ func GetInstallResourcesAsRuntimeObjects(syndesis *v1alpha1.Syndesis, params Ins
 	return objects, nil
 }
 
-func GetInstallResources(syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.RawExtension, error) {
-	res, err := util.LoadResourceFromFile(*configuration.TemplateLocation)
+func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.RawExtension, error) {
+	res, err := util.LoadResourceFromFile(scheme, *configuration.TemplateLocation)
 	if err != nil {
 		return nil, err
 	}
 
 	templ := res.(*v1.Template)
-	processor, err := template.NewTemplateProcessor(syndesis.Namespace)
+	processor, err := template.NewTemplateProcessor(scheme, syndesis.Namespace)
 	if err != nil {
 		return nil, err
 	}

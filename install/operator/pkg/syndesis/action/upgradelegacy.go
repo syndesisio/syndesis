@@ -6,17 +6,25 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
+	runtime2 "k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // Upgrade a legacy Syndesis installation (installed with template) using the operator.
-type UpgradeLegacy struct{}
+type upgradeLegacy action
 
-func (a *UpgradeLegacy) CanExecute(syndesis *v1alpha1.Syndesis) bool {
+
+var (
+	UpgradeLegacy =  upgradeLegacy{
+		actionLog.WithValues("type", "upgrade-legacy"),
+	}
+)
+
+func (a *upgradeLegacy) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseUpgradingLegacy)
 }
 
-func (a *UpgradeLegacy) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) error {
+func (a *upgradeLegacy) Execute(scheme *runtime2.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
 	// Checking that there's only one installation to avoid stealing resources
 	if anotherInstallation, err := isAnotherActiveInstallationPresent(cl, syndesis); err != nil {
 		return err
@@ -24,9 +32,9 @@ func (a *UpgradeLegacy) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) e
 		return errors.New("another syndesis installation active")
 	}
 
-	log.Info("Attaching Syndesis installation to resource","name", syndesis.Name, "type", "legacy")
+	a.log.Info("Attaching Syndesis installation to resource","name", syndesis.Name)
 
-	err := operation.AttachSyndesisToResource(cl, syndesis)
+	err := operation.AttachSyndesisToResource(scheme, cl, syndesis)
 	if err != nil {
 		return err
 	}
@@ -42,7 +50,7 @@ func (a *UpgradeLegacy) Execute(cl client.Client, syndesis *v1alpha1.Syndesis) e
 	target.Status.Description = ""
 	target.Status.Version = syndesisVersion
 
-	log.Info("Syndesis installation attached to resource", "name", syndesis.Name, "type", "legacy")
+	a.log.Info("Syndesis installation attached to resource", "name", syndesis.Name)
 	return cl.Update(context.TODO(), target)
 }
 

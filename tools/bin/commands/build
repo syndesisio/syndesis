@@ -172,7 +172,7 @@ do_operator() {
         return
     fi
 
-    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$(hasflag -f --flash)"
+    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$(hasflag -f --flash --skip-tests)"
 
     if [ "$(hasflag -i --image --docker)" ]; then
         create_operator_image "$operator_dir" "$(hasflag --docker)"

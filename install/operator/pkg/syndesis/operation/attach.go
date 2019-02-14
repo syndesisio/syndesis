@@ -6,12 +6,13 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func AttachSyndesisToResource(cl client.Client, syndesis *v1alpha1.Syndesis) error {
+func AttachSyndesisToResource(scheme *runtime.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
 
-	resTypes, err := getAllManagedResourceTypes()
+	resTypes, err := getAllManagedResourceTypes(scheme)
 	if err != nil {
 		return err
 	}
@@ -32,7 +33,7 @@ func AttachSyndesisToResource(cl client.Client, syndesis *v1alpha1.Syndesis) err
 			}
 
 			for _, obj := range list.Items {
-				res, err := util.LoadResourceFromYaml(obj.Raw)
+				res, err := util.LoadResourceFromYaml(scheme, obj.Raw)
 				if err != nil {
 					return err
 				}
@@ -55,8 +56,8 @@ func getAllManagerSelectors() []string {
 	}
 }
 
-func getAllManagedResourceTypes() ([]metav1.TypeMeta, error) {
-	metas, err := template.GetDeclaredResourceTypes()
+func getAllManagedResourceTypes(scheme *runtime.Scheme) ([]metav1.TypeMeta, error) {
+	metas, err := template.GetDeclaredResourceTypes(scheme)
 	if err != nil {
 		return nil, err
 	}

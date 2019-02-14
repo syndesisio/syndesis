@@ -74,16 +74,14 @@ func main() {
 
 	log.Info("Registering Components.")
 
-	// Setup Scheme for all resources
+	// Setup Scheme for all own CR resources
 	if err := apis.AddToScheme(mgr.GetScheme()); err != nil {
 		log.Error(err, "")
 		os.Exit(1)
 	}
 
-	if err := openshift.AddToScheme(mgr.GetScheme()); err != nil {
-		log.Error(err, "")
-		os.Exit(1)
-	}
+	// Add OpenShift schema
+	openshift.AddToScheme(mgr.GetScheme())
 
 	// Setup all Controllers
 	if err := controller.AddToManager(mgr); err != nil {

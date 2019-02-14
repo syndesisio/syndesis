@@ -129,9 +129,9 @@ build_operator() {
     local do_skip_tests="${4:-}"
 
     if [ "${do_local}" ]; then
-        build_operator_local $do_skip_tests $do_linux
+        build_operator_local "$do_skip_tests" "$do_linux"
     else
-        build_operator_docker $operator_dir $do_skip_tests
+        build_operator_docker "$operator_dir" "$do_skip_tests"
     fi
 }
 
