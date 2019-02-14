@@ -45,7 +45,7 @@ func (a *upgradeBackoff) Execute(scheme *runtime2.Scheme, cl client.Client, synd
 		target.Status.Description = "Upgrade failed too many times and will not be retried"
 		target.Status.ForceUpgrade = false
 
-		return cl.Update(context.TODO(), target)
+		return cl.Status().Update(context.TODO(), target)
 	}
 
 	now := time.Now()
@@ -84,7 +84,7 @@ func (a *upgradeBackoff) Execute(scheme *runtime2.Scheme, cl client.Client, synd
 		target.Status.Description = "Upgrading from " + currentVersion + " to " + targetVersion + " (attempt " + currentAttemptStr + ")"
 		target.Status.ForceUpgrade = true
 
-		return cl.Update(context.TODO(), target)
+		return cl.Status().Update(context.TODO(), target)
 	} else {
 		remaining := math.Round(nextAttempt.Sub(now).Seconds())
 		a.log.Info("Upgrade of Syndesis resource will be retried", "name", syndesis.Name, "retryAfterSeconds", remaining)

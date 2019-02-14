@@ -50,5 +50,5 @@ func (a *initialize) Execute(scheme *runtime2.Scheme, cl client.Client, syndesis
 		a.log.Info("Syndesis resource initialized: installing version ", "name", syndesis.Name, "version", syndesisVersion)
 	}
 
-	return cl.Update(context.TODO(), target)
+	return cl.Status().Update(context.TODO(), target)
 }

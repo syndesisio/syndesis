@@ -64,21 +64,21 @@ func (a *startup) Execute(scheme *runtime2.Scheme, cl client.Client, syndesis *v
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		a.log.Info("Syndesis resource installed successfully", "name", syndesis.Name)
-		return cl.Update(context.TODO(), target)
+		return cl.Status().Update(context.TODO(), target)
 	} else if failedDeployment != nil {
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1alpha1.SyndesisPhaseStartupFailed
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonDeploymentNotReady
 		target.Status.Description = "Some Syndesis deployments failed to startup within the allowed time frame"
 		a.log.Info("Startup failed for Syndesis resource. Deployment not ready", "name", syndesis.Name, "deployment", *failedDeployment)
-		return cl.Update(context.TODO(), target)
+		return cl.Status().Update(context.TODO(), target)
 	} else {
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1alpha1.SyndesisPhaseStarting
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		a.log.Info("Waiting for Syndesis resource to startup", "name", syndesis.Name)
-		return cl.Update(context.TODO(), target)
+		return cl.Status().Update(context.TODO(), target)
 	}
 }
 

@@ -51,7 +51,7 @@ func (a *upgradeLegacy) Execute(scheme *runtime2.Scheme, cl client.Client, synde
 	target.Status.Version = syndesisVersion
 
 	a.log.Info("Syndesis installation attached to resource", "name", syndesis.Name)
-	return cl.Update(context.TODO(), target)
+	return cl.Status().Update(context.TODO(), target)
 }
 
 func isAnotherActiveInstallationPresent(cl client.Client, syndesis *v1alpha1.Syndesis) (bool, error) {

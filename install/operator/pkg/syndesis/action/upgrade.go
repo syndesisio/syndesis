@@ -93,7 +93,7 @@ func (a *upgrade) Execute(scheme *runtime.Scheme, cl client.Client, syndesis *v1
 			target.Status.TargetVersion = targetVersion
 			target.Status.Description = "Upgrading from " + namespaceVersion + " to " + targetVersion + currentAttemptDescr
 
-			return cl.Update(context.TODO(), target)
+			return cl.Status().Update(context.TODO(), target)
 		} else {
 			// No upgrade pod, no version change: upgraded
 			a.log.Info("Syndesis resource already upgraded to version ", "name", syndesis.Name, "targetVersion", targetVersion)
@@ -126,7 +126,7 @@ func (a *upgrade) Execute(scheme *runtime.Scheme, cl client.Client, syndesis *v1
 				target.Status.TargetVersion = targetVersion
 				target.Status.Description = "Upgrading from " + namespaceVersion + " to " + targetVersion + currentAttemptDescr
 
-				return cl.Update(context.TODO(), target)
+				return cl.Status().Update(context.TODO(), target)
 			}
 		} else if upgradePod.Status.Phase == v1.PodFailed {
 			// Upgrade failed
@@ -141,7 +141,7 @@ func (a *upgrade) Execute(scheme *runtime.Scheme, cl client.Client, syndesis *v1
 			}
 			target.Status.UpgradeAttempts = target.Status.UpgradeAttempts + 1
 
-			return cl.Update(context.TODO(), target)
+			return cl.Status().Update(context.TODO(), target)
 		} else {
 			// Still running
 			a.log.Info("Syndesis resource is currently being upgraded", "name", syndesis.Name, "targetVersion", targetVersion)
@@ -168,7 +168,7 @@ func completeUpgrade(scheme *runtime.Scheme, cl client.Client, syndesis *v1alpha
 	target.Status.UpgradeAttempts = 0
 	target.Status.ForceUpgrade = false
 
-	return cl.Update(context.TODO(), target)
+	return cl.Status().Update(context.TODO(), target)
 }
 
 func (a *upgrade) getUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis) ([]runtime.Object, error) {

@@ -54,6 +54,6 @@ func (a *checkUpdates) Execute(scheme *runtime2.Scheme, cl client.Client, syndes
 		target.Status.ForceUpgrade = false
 
 		a.log.Info("Starting upgrade of Syndesis resource", "name", syndesis.Name, "currentVersion", namespaceVersion, "targetVersion", a.operatorVersion, "type", "checkUpdate")
-		return cl.Update(context.TODO(), target)
+		return cl.Status().Update(context.TODO(), target)
 	}
 }
