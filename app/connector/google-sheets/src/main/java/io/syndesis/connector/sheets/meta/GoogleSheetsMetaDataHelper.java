@@ -16,7 +16,9 @@
 
 package io.syndesis.connector.sheets.meta;
 
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
+import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import io.syndesis.connector.sheets.model.CellCoordinate;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
@@ -36,11 +38,14 @@ public final class GoogleSheetsMetaDataHelper {
         super();
     }
 
-    public static ObjectSchema createSchema(String range, String majorDimension) {
-        ObjectSchema spec = new ObjectSchema();
-        spec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
-        spec.setTitle("VALUE_RANGE");
+    public static JsonSchema createSchema(String range, String majorDimension) {
+        return createSchema(range, majorDimension, false);
+    }
 
+    public static JsonSchema createSchema(String range, String majorDimension, boolean split) {
+        ObjectSchema spec = new ObjectSchema();
+
+        spec.setTitle("VALUE_RANGE");
         spec.putProperty("spreadsheetId", new JsonSchemaFactory().stringSchema());
 
         RangeCoordinate coordinate = RangeCoordinate.fromRange(range);
@@ -50,7 +55,15 @@ public final class GoogleSheetsMetaDataHelper {
             createSchemaFromColumnDimension(spec, coordinate);
         }
 
-        return spec;
+        if (split) {
+            spec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
+            return spec;
+        } else {
+            ArraySchema arraySpec = new ArraySchema();
+            arraySpec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
+            arraySpec.setItemsSchema(spec);
+            return arraySpec;
+        }
     }
 
     /**
