@@ -33,6 +33,7 @@ import org.junit.Rule;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -75,7 +76,7 @@ public abstract class FhirTestBase extends ConnectorTestSupport {
     @Before
     public void stubFhirServerMetadata() throws IOException {
         try (InputStream metadataResponseIn = FhirReadTest.class.getResourceAsStream("metadata_response.xml")) {
-            String metadataResponse = IOUtils.toString(metadataResponseIn);
+            String metadataResponse = IOUtils.toString(metadataResponseIn, StandardCharsets.UTF_8);
             fhirServer.stubFor(get(urlEqualTo("/metadata")).willReturn(okXml(metadataResponse)));
         }
     }

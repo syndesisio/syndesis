@@ -439,8 +439,8 @@ public class JsonDBTest {
         @SuppressWarnings("unchecked")
         List<Map<?, ?>> items = new ArrayList<>(mapper.readValue(json, LinkedHashMap.class).values());
         assertThat(items).hasSize(2);
-        assertThat((items.get(0)).get("name")).isEqualTo("Hiram Chirino");
-        assertThat((items.get(1)).get("name")).isEqualTo("Ana Chirino");
+        assertThat(items.get(0).get("name")).isEqualTo("Hiram Chirino");
+        assertThat(items.get(1).get("name")).isEqualTo("Ana Chirino");
     }
 
     @Test

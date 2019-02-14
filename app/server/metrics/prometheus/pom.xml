@@ -97,13 +97,13 @@
     </dependency>
 
     <dependency>
-      <groupId>org.immutables</groupId>
-      <artifactId>value</artifactId>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
     </dependency>
 
     <dependency>
@@ -144,6 +144,11 @@
     <dependency>
       <groupId>org.jboss.spec.javax.ws.rs</groupId>
       <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
     </dependency>
 
 

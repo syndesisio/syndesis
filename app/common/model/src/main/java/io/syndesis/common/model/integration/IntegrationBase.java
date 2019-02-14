@@ -15,7 +15,6 @@
  */
 package io.syndesis.common.model.integration;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-public interface IntegrationBase extends WithProperties, WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, WithSteps, ToJson, Serializable, WithResources {
+public interface IntegrationBase extends WithProperties, WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, WithSteps, ToJson, WithResources {
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Value.Default

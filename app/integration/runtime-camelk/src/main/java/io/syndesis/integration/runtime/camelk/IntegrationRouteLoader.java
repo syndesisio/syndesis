@@ -37,8 +37,8 @@ public class IntegrationRouteLoader implements RoutesLoader {
     private ActivityTracker activityTracker;
     private Set<IntegrationStepHandler> integrationStepHandlers;
 
-    public IntegrationRouteLoader(){
-
+    IntegrationRouteLoader(){
+        // access for test
     }
 
     public IntegrationRouteLoader(ActivityTracker activityTracker, Set<IntegrationStepHandler> integrationStepHandlers) {

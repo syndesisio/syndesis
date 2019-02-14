@@ -102,7 +102,7 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
         EdmEntityContainer entityContainer = edm.getEntityContainer();
         EdmEntitySet entitySet = entityContainer.getEntitySet(methodName);
         if (entitySet == null) {
-            LOG.warn("No entity set associated with the selected api name: " + methodName + ".");
+            LOG.warn("No entity set associated with the selected api name: {}.", methodName);
             return;
         }
 

@@ -137,7 +137,7 @@ public class SupportUtilTest {
         List<Object> capturedArgument = argumentCaptor.getAllValues();
 
         for(Object obj : capturedArgument){
-            assertTrue(!( ((LoggingEvent)obj).getFormattedMessage().contains("Error adding resource") ));
+            assertTrue(!((LoggingEvent)obj).getFormattedMessage().contains("Error adding resource"));
         }
     }
 

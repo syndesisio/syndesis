@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class KuduConsumer extends ScheduledPollConsumer {
     private final KuduEndpoint endpoint;
-    private KuduClient connection;
+    private final KuduClient connection;
 
     public KuduConsumer(KuduEndpoint endpoint, Processor processor) {
         super(endpoint, processor);

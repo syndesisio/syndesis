@@ -110,8 +110,6 @@ public class KuduMetadataRetrieval extends ComponentMetadataRetrieval {
 
             while (columns.hasNext()) {
                 ColumnSchema column = columns.next();
-                column.getName();
-                column.getType();
 
                 switch (column.getType().getName()) {
                     case "string":

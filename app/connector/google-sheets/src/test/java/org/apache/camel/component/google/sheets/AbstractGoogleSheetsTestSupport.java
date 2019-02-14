@@ -76,7 +76,7 @@ public class AbstractGoogleSheetsTestSupport extends CamelTestSupport {
     private void createTestSpreadsheet() {
         Spreadsheet spreadsheet = new Spreadsheet();
         SpreadsheetProperties spreadsheetProperties = new SpreadsheetProperties();
-        spreadsheetProperties.setTitle("camel-sheets-" + Math.abs(new Random().nextInt()));
+        spreadsheetProperties.setTitle("camel-sheets-" + new Random().nextInt(Integer.MAX_VALUE));
 
         spreadsheet.setProperties(spreadsheetProperties);
 

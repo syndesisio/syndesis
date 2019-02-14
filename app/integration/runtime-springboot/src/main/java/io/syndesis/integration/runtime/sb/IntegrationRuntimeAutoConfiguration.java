@@ -78,7 +78,10 @@ public class IntegrationRuntimeAutoConfiguration {
                 for (IntegrationStepHandler handler : ServiceLoader.load(IntegrationStepHandler.class, Thread.currentThread().getContextClassLoader())) {
                     handlers.add(handler);
                 }
-                LOGGER.info("ServiceLoader loaded IntegrationStepHandlers: {}", handlers.size()-integrationStepHandlers.size());
+
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("ServiceLoader loaded IntegrationStepHandlers: {}", handlers.size()-integrationStepHandlers.size());
+                }
 
                 // IntegrationRouteBuilder automatically add known handlers to
                 // the list of provided ones, know handlers have priority

@@ -96,7 +96,7 @@ public enum Olingo4AppApiMethod implements ApiMethod {
         arg("responseHandler", org.apache.camel.component.olingo4.api.Olingo4ResponseHandler.class));
 
 
-    private final ApiMethod apiMethod;
+    private final transient ApiMethod apiMethod;
 
     private Olingo4AppApiMethod(Class<?> resultType, String name, ApiMethodArg... args) {
         this.apiMethod = new ApiMethodImpl(Olingo4App.class, resultType, name, args);

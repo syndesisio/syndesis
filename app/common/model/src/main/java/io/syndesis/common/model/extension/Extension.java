@@ -15,7 +15,6 @@
  */
 package io.syndesis.common.model.extension;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +50,7 @@ import io.syndesis.common.util.IndexedProperty;
     @IndexedProperty("status")
 })
 @SuppressWarnings("immutables")
-public interface Extension extends WithId<Extension>, WithActions<Action>, WithName, WithTags, WithProperties, WithDependencies, WithMetadata, Serializable {
+public interface Extension extends WithId<Extension>, WithActions<Action>, WithName, WithTags, WithProperties, WithDependencies, WithMetadata {
 
     enum Status {
         Draft,

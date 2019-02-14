@@ -227,7 +227,7 @@ public class IntegrationController implements BackendController {
                         .currentState(update.getState())
                         .stepsDone(update.getStepsPerformed())
                         .build();
-                    if (!(updated.equals(current))) {
+                    if (!updated.equals(current)) {
                         dataManager.update(updated.builder().updatedAt(System.currentTimeMillis()).build());
                     }
                 });

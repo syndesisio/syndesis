@@ -89,8 +89,9 @@ public final class JSONBeanUtil {
         }
 
         final Map<String,SqlParameterValue> ret = new HashMap<>();
-        for (String key : parsed.keySet()) {
-            Object value = parsed.get(key);
+        for (Map.Entry<String, String> entry : parsed.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
 
             Integer jdbcType = null;
             if (jdbcTypeMap != null) {
@@ -102,7 +103,7 @@ public final class JSONBeanUtil {
             }
 
             SqlParameterValue sqlParam = new SqlParameterValue(jdbcType, value);
-            ret.put(key,sqlParam);
+            ret.put(key, sqlParam);
         }
         return ret;
     }
@@ -142,9 +143,11 @@ public final class JSONBeanUtil {
      */
     public static String toJSONBean(final Map<String, Object> map) {
         final Map<String, Object> data = new HashMap<>(map.size());
-        for (final String key : map.keySet()) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            final String key = entry.getKey();
+            final Object value = entry.getValue();
             if (key.charAt(0) != '#') { // don't include Camel stats
-                data.put(key, map.get(key));
+                data.put(key, value);
             }
         }
 

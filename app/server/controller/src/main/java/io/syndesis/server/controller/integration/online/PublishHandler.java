@@ -15,6 +15,19 @@
  */
 package io.syndesis.server.controller.integration.online;
 
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.util.Labels;
+import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
+import io.syndesis.server.controller.ControllersConfigurationProperties;
+import io.syndesis.server.controller.StateChangeHandler;
+import io.syndesis.server.controller.StateUpdate;
+import io.syndesis.server.controller.integration.online.customizer.DeploymentDataCustomizer;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.openshift.DeploymentData;
+import io.syndesis.server.openshift.OpenShiftService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -24,21 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
-import io.syndesis.server.controller.ControllersConfigurationProperties;
-import io.syndesis.server.controller.StateChangeHandler;
-import io.syndesis.server.controller.StateUpdate;
-import io.syndesis.common.util.Labels;
-import io.syndesis.common.util.SyndesisServerException;
-import io.syndesis.server.controller.integration.online.customizer.DeploymentDataCustomizer;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.integration.api.IntegrationProjectGenerator;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
-import io.syndesis.server.openshift.DeploymentData;
-import io.syndesis.server.openshift.DeploymentData.Builder;
-import io.syndesis.server.openshift.OpenShiftService;
 
 public class PublishHandler extends BaseHandler implements StateChangeHandler {
 
@@ -140,7 +138,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
 
         String integrationId = integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId"));
         String version = Integer.toString(integrationDeployment.getVersion());
-        final Builder deploymentDataBuilder = DeploymentData.builder()
+        final DeploymentData.Builder deploymentDataBuilder = DeploymentData.builder()
             .withVersion(integrationDeployment.getVersion())
             .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationId))
             .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)

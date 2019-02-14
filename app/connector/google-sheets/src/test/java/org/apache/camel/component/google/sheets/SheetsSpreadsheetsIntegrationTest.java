@@ -46,7 +46,7 @@ public class SheetsSpreadsheetsIntegrationTest extends AbstractGoogleSheetsTestS
 
     @Test
     public void testCreate() throws Exception {
-        String title = "camel-sheets-" + Math.abs(new Random().nextInt());
+        String title = "camel-sheets-" + new Random().nextInt(Integer.MAX_VALUE);
         Spreadsheet sheetToCreate = new Spreadsheet();
         SpreadsheetProperties sheetProperties = new SpreadsheetProperties();
         sheetProperties.setTitle(title);

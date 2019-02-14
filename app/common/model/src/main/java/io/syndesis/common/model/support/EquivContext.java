@@ -28,7 +28,7 @@ class EquivContext {
 
     private String fail;
 
-    private final ArrayList<EquivContext> children = new ArrayList<>();
+    private final List<EquivContext> children = new ArrayList<>();
 
     private String a;
 

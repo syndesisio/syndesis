@@ -172,7 +172,7 @@ public class PublishingStateMonitor implements StateHandler {
         return new IntegrationDeploymentStateDetails.Builder()
             .id(compositeId)
             .integrationId(integrationId)
-            .deploymentVersion(Integer.valueOf(version))
+            .deploymentVersion(Integer.parseInt(version))
             .detailedState(detailedState)
             .namespace(client.getNamespace())
             .podName(Optional.ofNullable(podName))

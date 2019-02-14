@@ -84,6 +84,8 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
                 builder.error(
                     ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Unable to connect to Kafka broker")
                         .parameterKey("brokers")
+                        .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e)
+                        .detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())
                         .build()
                 );
             }

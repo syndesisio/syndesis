@@ -342,9 +342,6 @@
   <rule ref="rulesets/java/migrating.xml/IntegerInstantiation">
     <priority>4</priority>
   </rule>
-  <rule ref="rulesets/java/j2ee.xml/DoNotUseThreads">
-    <priority>5</priority>
-  </rule>
   <rule ref="rulesets/java/clone.xml/CloneMethodMustImplementCloneable">
     <priority>3</priority>
   </rule>

@@ -75,10 +75,6 @@ public class SqlMetadataAdapterTest {
 
             connection = DriverManager.getConnection(url,user,password);
             String databaseProductName = connection.getMetaData().getDatabaseProductName();
-            Map<String,Object> parameters = new HashMap<>();
-            for (final String name: properties.stringPropertyNames()) {
-                parameters.put(name.substring(name.indexOf('.') + 1), properties.getProperty(name));
-            }
             if (databaseProductName.equalsIgnoreCase(DatabaseProduct.APACHE_DERBY.nameWithSpaces())) {
                 try (Statement stmt = connection.createStatement()) {
                     stmt.execute(DERBY_DEMO_OUT_SQL);

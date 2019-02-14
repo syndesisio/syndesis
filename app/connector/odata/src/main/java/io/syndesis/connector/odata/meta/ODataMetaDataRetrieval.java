@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
 import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
@@ -45,7 +47,6 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
     @SuppressWarnings("unchecked")
     @Override
     protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
-        try {
             ODataMetadata odataMetadata = (ODataMetadata) metadata.getPayload();
             Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
             DataShape inDataShape = null;
@@ -90,11 +91,17 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
                 if (entitySchema.getProperties().isEmpty()) {
                     outDataShapeBuilder.kind(DataShapeKinds.NONE);
                 } else {
+                    final String specification;
+                    try {
+                        specification = Json.writer().writeValueAsString(collectionSchema);
+                    } catch (JsonProcessingException e) {
+                        throw new IllegalStateException("Unable to serialize schema", e);
+                    }
                     outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                             .name("Entity Schema")
                             .description("Schema of OData result entities")
                             .putMetadata("variant", "collection")
-                            .specification(Json.writer().writeValueAsString(collectionSchema));
+                            .specification(specification);
                 }
 
                 inDataShape = inDataShapeBuilder.build();
@@ -104,9 +111,6 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
             }
 
             return new SyndesisMetadata(enrichedProperties, inDataShape, outDataShape);
-        } catch ( Exception e) {
-            return SyndesisMetadata.EMPTY;
-        }
     }
 
     @SuppressWarnings("PMD")

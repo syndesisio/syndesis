@@ -65,7 +65,7 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
     }
 
     private class EventProcessor extends DelegateAsyncProcessor {
-        public EventProcessor(Processor processor) {
+        EventProcessor(Processor processor) {
             super(processor);
         }
 

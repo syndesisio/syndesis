@@ -45,7 +45,7 @@ public class SqlStatementParser {
     private String schema;
     private final SqlStatementMetaData statementInfo;
     private List<String> sqlArray = new ArrayList<>();
-    private List<String> sqlArrayUpperCase = new ArrayList<>();
+    private final List<String> sqlArrayUpperCase = new ArrayList<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlStatementParser.class);
 
     public SqlStatementParser(Connection connection, String sql) {
@@ -273,22 +273,6 @@ public class SqlStatementParser {
                 params.add(param);
             }
             i++;
-        }
-        return params;
-    }
-
-    List<SqlParam> findOutputColumnsInSelectStatement() {
-        boolean isParam = true;
-        List<SqlParam> params = new ArrayList<>();
-        for (String word: sqlArray) {
-            if (isParam && !"SELECT".equalsIgnoreCase(word) && !"DISTINCT".equalsIgnoreCase(word)) {
-                SqlParam param = new SqlParam(word);
-                param.setColumn(word);
-            }
-            if ("FROM".equalsIgnoreCase(word)) {
-                isParam = false;
-                break;
-            }
         }
         return params;
     }

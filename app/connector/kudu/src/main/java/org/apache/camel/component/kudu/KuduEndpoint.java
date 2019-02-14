@@ -78,7 +78,7 @@ public class KuduEndpoint extends DefaultEndpoint {
         try {
             kuduClient.shutdown();
         } catch (Exception e) {
-            LOG.error("Error -> " + e.getMessage());
+            LOG.error("Unable to shutdown kudu client", e);
         }
 
         super.doStop();

@@ -25,7 +25,6 @@ import java.util.Map;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Integration.Builder;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.StringConstants;
@@ -144,7 +143,7 @@ public class TemplateStepLanguage {
      * @return the update integration
      */
     public static Integration updateIntegration(Integration integration) {
-        Builder integrationBuilder = integration.builder();
+        Integration.Builder integrationBuilder = integration.builder();
 
         List<Flow> replacementFlows = new ArrayList<>(integration.getFlows());
         ListIterator<Flow> flows = replacementFlows.listIterator();

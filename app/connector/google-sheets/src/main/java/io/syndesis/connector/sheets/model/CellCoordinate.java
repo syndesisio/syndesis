@@ -105,7 +105,7 @@ public class CellCoordinate {
             .collect(Collectors.joining());
 
         if (ObjectHelper.isNotEmpty(index)) {
-            return Integer.valueOf(index) - 1;
+            return Integer.parseInt(index) - 1;
         }
 
         return 0;

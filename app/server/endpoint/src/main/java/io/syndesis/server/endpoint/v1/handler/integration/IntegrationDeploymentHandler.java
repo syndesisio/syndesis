@@ -60,7 +60,15 @@ public final class IntegrationDeploymentHandler extends BaseHandler {
     private final UserConfigurationProperties properties;
 
     public static class TargetStateRequest {
-        public IntegrationDeploymentState targetState;
+        private IntegrationDeploymentState targetState;
+
+        public IntegrationDeploymentState getTargetState() {
+            return targetState;
+        }
+
+        public void setTargetState(IntegrationDeploymentState targetState) {
+            this.targetState = targetState;
+        }
     }
 
     @Autowired
@@ -133,7 +141,7 @@ public final class IntegrationDeploymentHandler extends BaseHandler {
         final IntegrationDeployment current = dataManager.fetch(IntegrationDeployment.class, compositeId);
 
         final IntegrationDeployment updated = new IntegrationDeployment.Builder().createFrom(current)
-            .targetState(request.targetState).build();
+            .targetState(request.getTargetState()).build();
         dataManager.update(updated);
     }
 
