@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, Input } from '@angular/core';
 import { CurrentFlowService } from '../current-flow.service';
 import { FlowPageService } from '../flow-page.service';
 import { ActivatedRoute } from '@angular/router';
+import { INTEGRATION_SET_PROPERTY } from '../edit-page.models';
 
 @Component({
   selector: 'syndesis-integration-flow-toolbar',
@@ -28,7 +29,7 @@ export class FlowToolbarComponent {
 
   nameUpdated(name: string) {
     this.currentFlowService.events.emit({
-      kind: 'integration-set-property',
+      kind: INTEGRATION_SET_PROPERTY,
       property: 'name',
       value: name,
     });

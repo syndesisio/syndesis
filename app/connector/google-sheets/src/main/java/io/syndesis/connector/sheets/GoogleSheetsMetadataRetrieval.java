@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Json;
@@ -45,36 +45,51 @@ public final class GoogleSheetsMetadataRetrieval extends ComponentMetadataRetrie
         final GoogleValueRangeMetaData valueRangeMetaData = (GoogleValueRangeMetaData) metadata.getPayload();
 
         if (valueRangeMetaData != null) {
-            final ObjectSchema spec = GoogleSheetsMetaDataHelper.createSchema(valueRangeMetaData.getRange(),
-                    Optional.ofNullable(valueRangeMetaData.getMajorDimension()).orElse(RangeCoordinate.DIMENSION_ROWS));
+            final JsonSchema spec = GoogleSheetsMetaDataHelper.createSchema(valueRangeMetaData.getRange(),
+                    Optional.ofNullable(valueRangeMetaData.getMajorDimension()).orElse(RangeCoordinate.DIMENSION_ROWS),
+                    valueRangeMetaData.isSplit());
 
             try {
-                DataShape.Builder inDataShapeBuilder = new DataShape.Builder().type("VALUE_RANGE_PARAM_IN");
+                DataShape.Builder inputShapeBuilder = new DataShape.Builder().type("VALUE_RANGE_PARAM_IN");
                 if (ObjectHelper.isEqualToAny(actionId, SHEETS_UPDATE_VALUES_ACTION, SHEETS_APPEND_VALUES_ACTION)) {
-                    inDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
+                    inputShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                             .name("ValueRange Parameter")
                             .description(String.format("Parameters of range [%s]", valueRangeMetaData.getRange()))
                             .specification(Json.writer().writeValueAsString(spec));
+
+                    applyMetadata(inputShapeBuilder, spec);
                 } else {
-                    inDataShapeBuilder.kind(DataShapeKinds.NONE);
+                    inputShapeBuilder.kind(DataShapeKinds.NONE);
                 }
 
-                DataShape.Builder outDataShapeBuilder = new DataShape.Builder().type("VALUE_RANGE_PARAM_OUT");
+                DataShape.Builder outputShapeBuilder = new DataShape.Builder().type("VALUE_RANGE_PARAM_OUT");
                 if (ObjectHelper.equal(actionId, SHEETS_GET_VALUES_ACTION)) {
-                    outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
+                    outputShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                             .name("ValueRange Result")
                             .description(String.format("Results of range [%s]", valueRangeMetaData.getRange()))
                             .specification(Json.writer().writeValueAsString(spec));
+
+                    applyMetadata(outputShapeBuilder, spec);
                 } else {
-                    outDataShapeBuilder.kind(DataShapeKinds.NONE);
+                    outputShapeBuilder.kind(DataShapeKinds.NONE);
                 }
 
-                return SyndesisMetadata.of(inDataShapeBuilder.build(), outDataShapeBuilder.build());
+                return SyndesisMetadata.of(inputShapeBuilder.build(), outputShapeBuilder.build());
             } catch (JsonProcessingException e) {
                 throw new IllegalStateException(e);
             }
         } else {
             return SyndesisMetadata.EMPTY;
+        }
+    }
+
+    private void applyMetadata(DataShape.Builder builder, JsonSchema spec) {
+        if (spec.isObjectSchema()) {
+            builder.putMetadata("variant", "element");
+        }
+
+        if (spec.isArraySchema()) {
+            builder.putMetadata("variant", "collection");
         }
     }
 

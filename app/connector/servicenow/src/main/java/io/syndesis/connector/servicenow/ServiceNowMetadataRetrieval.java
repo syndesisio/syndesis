@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Json;
@@ -112,20 +113,24 @@ final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieval {
     private SyndesisMetadata adaptTableDefinitionMetadata(String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
         try {
             final Object table = properties.get("table");
-            final String schema = Json.writer().writeValueAsString(metadata.getPayload());
+            final ObjectNode schema = (ObjectNode) metadata.getPayload();
 
-            DataShape shape = new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)
+            DataShape.Builder shapeBuilder = new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)
                 .type("servicenow." + table)
-                .name("ServiceNow Import Set (" + table + ")")
-                .name("ServiceNow Import Set (" + table + ")")
-                .specification(schema)
-                .build();
+                .name("ServiceNow Import Set (" + table + ")");
 
             if (ObjectHelper.equal("io.syndesis:servicenow-action-retrieve-record", actionId)) {
-                return SyndesisMetadata.outOnly(shape);
+                ObjectNode collectionSchema = schema.objectNode();
+                collectionSchema.put("$schema", "http://json-schema.org/schema#");
+                collectionSchema.put("type", "array");
+                collectionSchema.set("items", schema);
+
+                shapeBuilder.specification(Json.writer().writeValueAsString(collectionSchema));
+                return SyndesisMetadata.outOnly(shapeBuilder.build());
             }
             if (ObjectHelper.equal("io.syndesis:servicenow-action-create-record", actionId)) {
-                return SyndesisMetadata.inOnly(shape);
+                shapeBuilder.specification(Json.writer().writeValueAsString(schema));
+                return SyndesisMetadata.inOnly(shapeBuilder.build());
             }
         } catch (Exception e) {
             throw new IllegalStateException(e);

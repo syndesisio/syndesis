@@ -12,7 +12,7 @@
           "kind": "json-schema"
         },
         "outputDataShape": {
-          "kind": "json-schema"
+          "kind": "none"
         },
         "propertyDefinitionSteps": [
           {

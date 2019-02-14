@@ -6,14 +6,17 @@ import { StepOrConnection } from '@syndesis/ui/platform';
 import {
   CurrentFlowService,
   FlowPageService,
-  FlowEvent
+  FlowEvent,
+  INTEGRATION_SET_STEP,
+  INTEGRATION_SET_CONNECTION,
+  INTEGRATION_CANCEL_CLICKED,
 } from '@syndesis/ui/integration/edit-page';
 import { StepVisiblePipe } from './step-visible.pipe';
 
 @Component({
   selector: 'syndesis-integration-step-select',
   templateUrl: 'step-select.component.html',
-  styleUrls: ['../../integration-common.scss', './step-select.component.scss']
+  styleUrls: ['../../integration-common.scss', './step-select.component.scss'],
 })
 export class IntegrationSelectStepComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
@@ -46,15 +49,15 @@ export class IntegrationSelectStepComponent implements OnInit, OnDestroy {
       // the user picked a connection
       // TODO keep any config if the user picked the same connection
       this.currentFlowService.events.emit({
-        kind: 'integration-set-connection',
+        kind: INTEGRATION_SET_CONNECTION,
         position: this.position,
         connection: { ...step },
         onSave: () => {
           this.router.navigate(['action-select', this.position], {
             relativeTo: this.route.parent,
-            replaceUrl: true
+            replaceUrl: true,
           });
-        }
+        },
       });
       return;
     }
@@ -65,14 +68,14 @@ export class IntegrationSelectStepComponent implements OnInit, OnDestroy {
       step = { ...step, ..._step };
     }
     this.currentFlowService.events.emit({
-      kind: 'integration-set-step',
+      kind: INTEGRATION_SET_STEP,
       position: this.position,
       step: { ...step },
       onSave: () => {
         this.router.navigate(['step-configure', this.position], {
-          relativeTo: this.route.parent
+          relativeTo: this.route.parent,
         });
-      }
+      },
     });
   }
 
@@ -83,27 +86,27 @@ export class IntegrationSelectStepComponent implements OnInit, OnDestroy {
     if (!step) {
       /* Safety net */
       this.router.navigate(['save-or-add-step'], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
       return;
     }
     // The step we've loaded is a connection, go to the action select page
     if (step.stepKind === 'endpoint' && step.connection) {
       this.router.navigate(['action-select', this.position], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
       return;
     }
     if (typeof step.stepKind !== 'undefined' && step.stepKind !== 'endpoint') {
       // The step isn't a connection, go to the step configure page
       this.router.navigate(['step-configure', this.position], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
     }
   }
 
   handleFlowEvent(event: FlowEvent) {
-    if (event.kind === 'integration-cancel-clicked') {
+    if (event.kind === INTEGRATION_CANCEL_CLICKED) {
       try {
         if (!this.currentFlowService.integration.id) {
           // Integration hasn't been saved and we're in the create page flow
@@ -135,7 +138,7 @@ export class IntegrationSelectStepComponent implements OnInit, OnDestroy {
         switchMap(([params, data]) =>
           of({
             position: +params.get('position') as number,
-            steps: data.steps
+            steps: data.steps,
           })
         )
       )
@@ -146,7 +149,7 @@ export class IntegrationSelectStepComponent implements OnInit, OnDestroy {
         this.atEnd = position === this.currentFlowService.getLastPosition();
         // Filter steps based on where we are
         const visibleSteps = this.stepVisiblePipe.transform(steps, {
-          position
+          position,
         }) as StepOrConnection[];
         // Update the view
         this.allSteps$.next(

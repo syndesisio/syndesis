@@ -1350,6 +1350,8 @@ objects:
       features:
         monitoring:
           enabled: true
+        public-api:
+          enabled: true
       openshift:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}

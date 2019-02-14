@@ -22,6 +22,8 @@ features:
     enabled: true
   monitoring:
     enabled: true
+  public-api:
+    enabled: true
 
 server:
   compression:

@@ -32,13 +32,9 @@ import org.apache.olingo.client.api.communication.response.ODataRetrieveResponse
 import org.apache.olingo.client.api.domain.ClientEntity;
 import org.apache.olingo.client.api.domain.ClientEntitySet;
 import org.apache.olingo.client.core.ODataClientFactory;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import io.syndesis.common.util.StringConstants;
-import io.syndesis.connector.odata.server.ODataTestServer;
 
-public class BaseOlingo4Test implements StringConstants {
+public class BaseOlingo4Test extends AbstractODataTest {
 
     private static class MyRouteBuilder extends RouteBuilder {
 
@@ -73,23 +69,10 @@ public class BaseOlingo4Test implements StringConstants {
         }
     }
 
-    private ODataTestServer server;
-
-    @Before
-    public void setup() throws Exception {
-        server = new ODataTestServer();
-        server.start();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        server.stop();
-    }
-
     @Test
     public void testExpectations() throws Exception {
-        URI httpURI = URI.create(server.serviceUrl() + "/Products");
-        String camelURI = "olingo4://read/Products";
+        URI httpURI = URI.create(defaultTestServer.serviceUrl() + FORWARD_SLASH + defaultTestServer.methodName());
+        String camelURI = "olingo4://read/" + defaultTestServer.methodName();
 
         //
         // Create own main class to allow for setting the context
@@ -111,7 +94,7 @@ public class BaseOlingo4Test implements StringConstants {
         // workaround the no serviceUri problem.
         //
         Olingo4AppEndpointConfiguration configuration = new Olingo4AppEndpointConfiguration();
-        configuration.setServiceUri(server.serviceUrl());
+        configuration.setServiceUri(defaultTestServer.serviceUrl());
 
         //
         // Apply empty values to these properties so they are

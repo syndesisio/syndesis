@@ -34,7 +34,10 @@ import {
 } from '@syndesis/ui/integration/api-provider/api-provider.models';
 import { Observable, Subscription } from 'rxjs';
 import { ActionReducerError } from '@syndesis/ui/platform';
-import { CurrentFlowService } from '../../edit-page';
+import {
+  CurrentFlowService,
+  INTEGRATION_CANCEL_CLICKED,
+} from '../../edit-page';
 
 @Component({
   selector: 'syndesis-integration-api-provider-spec',
@@ -79,7 +82,7 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     );
 
     this.flowSubscription = this.currentFlowService.events.subscribe(event => {
-      if (event.kind === 'integration-cancel-clicked') {
+      if (event.kind === INTEGRATION_CANCEL_CLICKED) {
         this.showCancelModal();
       }
     });

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
-  DynamicFormService
+  DynamicFormService,
 } from '@ng-dynamic-forms/core';
 
 import { DataShape, FormFactoryService, Step } from '@syndesis/ui/platform';
@@ -12,7 +12,12 @@ import { StepStore, DATA_MAPPER, BASIC_FILTER } from '@syndesis/ui/store';
 import {
   CurrentFlowService,
   FlowEvent,
-  FlowPageService
+  FlowPageService,
+  INTEGRATION_UPDATED,
+  INTEGRATION_SET_METADATA,
+  INTEGRATION_SET_PROPERTIES,
+  INTEGRATION_CANCEL_CLICKED,
+  INTEGRATION_DONE_CLICKED,
 } from '@syndesis/ui/integration/edit-page';
 
 @Component({
@@ -20,8 +25,8 @@ import {
   templateUrl: './step-configure.component.html',
   styleUrls: [
     '../../integration-common.scss',
-    './step-configure.component.scss'
-  ]
+    './step-configure.component.scss',
+  ],
 })
 export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
   flowSubscription: Subscription;
@@ -68,7 +73,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
     const step = this.step;
     if (step.stepKind === DATA_MAPPER) {
       this.customProperties = {
-        atlasmapping: this.mappings
+        atlasmapping: this.mappings,
       };
     }
     if (this.stepStore.isCustomStep(step)) {
@@ -77,24 +82,24 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
       data = this.formGroup ? this.formGroup.value : {};
     }
     this.currentFlowService.events.emit({
-      kind: 'integration-set-properties',
+      kind: INTEGRATION_SET_PROPERTIES,
       position: this.position,
       properties: this.formFactory.sanitizeValues({ ...data }, this.formConfig),
       onSave: () => {
         // flag that this step is configured too for consistency
         // with how connections are configured
         this.currentFlowService.events.emit({
-          kind: 'integration-set-metadata',
+          kind: INTEGRATION_SET_METADATA,
           position: this.position,
           metadata: { configured: 'true' },
           onSave: () => {
             this.router.navigate(['save-or-add-step'], {
               queryParams: { validate: true },
-              relativeTo: this.route.parent
+              relativeTo: this.route.parent,
             });
-          }
+          },
         });
-      }
+      },
     });
   }
 
@@ -136,14 +141,14 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
     // If no Step exists redirect to the Select Step view
     if (!step || step.stepKind === 'endpoint') {
       this.router.navigate(['step-select', this.position], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
       return;
     }
     // If there's a step but it's actually an endpoint, redirect to the action select view
     if (step.stepKind === 'endpoint') {
       this.router.navigate(['action-select', this.position], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
       return;
     }
@@ -182,13 +187,13 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
 
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
-      case 'integration-updated':
+      case INTEGRATION_UPDATED:
         this.loadForm();
         break;
-      case 'integration-cancel-clicked':
+      case INTEGRATION_CANCEL_CLICKED:
         this.cancel();
         break;
-      case 'integration-done-clicked':
+      case INTEGRATION_DONE_CLICKED:
         this.continue();
         break;
       default:

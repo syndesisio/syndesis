@@ -54,7 +54,7 @@ public class ConnectionsITCase extends BaseITCase {
             .id("tags-connection-test")
             .connectorId("http")
             .name("tags-connection-test")
-            .addTag("", " ", "taggy")
+            .addTags("", " ", "taggy")
             .build();
 
         final ResponseEntity<Connection> got = post("/api/v1/connections", connection, Connection.class,

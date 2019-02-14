@@ -15,7 +15,10 @@ import {
   integrationEndpoints,
   UNPUBLISHED,
   PUBLISHED,
-  IntegrationStatusDetail
+  IntegrationStatusDetail,
+  ContinuousDeliveryEnvironment,
+  DescriptorRequest,
+  ActionDescriptor,
 } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
 
@@ -57,10 +60,10 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.updateState, {
         id: integration.id,
-        version: integration.version
+        version: integration.version,
       })
       .post({
-        targetState: UNPUBLISHED
+        targetState: UNPUBLISHED,
       });
   }
 
@@ -72,7 +75,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.updateState, { id, version })
       .post({
-        targetState: status
+        targetState: status,
       });
   }
 
@@ -117,7 +120,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.metadata, {
         connectionId: connection.id,
-        actionId: action.id
+        actionId: action.id,
       })
       .post(configuredProperties);
   }
@@ -129,7 +132,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.javaInspection, {
         connectorId,
-        type
+        type,
       })
       .get();
   }
@@ -173,5 +176,49 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.integrationStatusDetails)
       .get<IntegrationStatusDetail[]>();
+  }
+
+  fetchIntegrationTags(
+    integrationId: string
+  ): Observable<Map<String, ContinuousDeliveryEnvironment>> {
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.tags, { integrationId })
+      .get<any>();
+  }
+
+  tagIntegration(
+    integrationId: string,
+    environments: string[]
+  ): Observable<Map<String, ContinuousDeliveryEnvironment>> {
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.tags, { integrationId })
+      .post<any>({ environments });
+  }
+
+  untagIntegration(integrationId: string, env: string): Observable<void> {
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.deleteTag, { integrationId, env })
+      .delete();
+  }
+
+  renameEnvironment(oldEnv: string, newEnv: string): Observable<void> {
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.renameEnvironment, { env: oldEnv })
+      .put({ newEnvironment: newEnv });
+  }
+
+  getEnvironments(): Observable<string[]> {
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.environments)
+      .get();
+  }
+
+  getStepDescriptor(
+    kind: string,
+    dataShapes: DescriptorRequest
+  ): Observable<ActionDescriptor> {
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.getStepDescriptor, { kind })
+      .post(dataShapes);
   }
 }

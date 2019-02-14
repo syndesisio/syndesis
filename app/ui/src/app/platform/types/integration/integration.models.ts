@@ -8,8 +8,9 @@ import {
   key,
   WithLeveledMessages,
   StringMap,
-  WithId
+  WithId,
 } from '@syndesis/ui/platform';
+import { DataShape } from '../platform.models';
 
 export class Step implements BaseEntity {
   id?: string;
@@ -43,7 +44,7 @@ export type IntegrationStatus =
 export enum IntegrationType {
   SingleFlow = 'SingleFlow',
   ApiProvider = 'ApiProvider',
-  MultiFlow = 'MultiFlow'
+  MultiFlow = 'MultiFlow',
 }
 
 export interface IntegrationOverview extends BaseEntity, WithLeveledMessages {
@@ -128,14 +129,14 @@ export interface DeploymentOverview extends BaseEntity {
 
 export enum ConsoleLinkType {
   Events = 'EVENTS',
-  Logs = 'LOGS'
+  Logs = 'LOGS',
 }
 
 export enum DetailedStatus {
   Assembling = 'ASSEMBLING',
   Building = 'BUILDING',
   Deploying = 'DEPLOYNG',
-  Starting = 'STARTING'
+  Starting = 'STARTING',
 }
 
 export interface DetailedState {
@@ -223,4 +224,16 @@ export interface IntegrationState
     summary: IntegrationMetrics;
     list: Array<IntegrationMetrics>;
   };
+}
+
+export interface ContinuousDeliveryEnvironment {
+  releaseTag: string;
+  lastTaggedAt: number;
+  lastExportedat: number;
+  lastImportedAt: number;
+}
+
+export interface DescriptorRequest {
+  inputShape: DataShape;
+  outputShape: DataShape;
 }

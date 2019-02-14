@@ -27,9 +27,9 @@ public class APISummaryTest {
     @Test
     public void testConnectorSummary() {
         APISummary summary = new APISummary.Builder().createFrom(
-            new Connector.Builder().addAction(
-                new ConnectorAction.Builder().addTag("1", "2", "3").build(),
-                new ConnectorAction.Builder().addTag("2", "3", "4").build(),
+            new Connector.Builder().addActions(
+                new ConnectorAction.Builder().addTags("1", "2", "3").build(),
+                new ConnectorAction.Builder().addTags("2", "3", "4").build(),
                 new ConnectorAction.Builder().addTag("2").build(),
                 new ConnectorAction.Builder().build()
             ).build()

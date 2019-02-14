@@ -62,7 +62,7 @@ import io.syndesis.connector.odata.customizer.json.ClientPropertySerializer;
         DirtiesContextTestExecutionListener.class
     }
 )
-public class ODataSerializerTest extends AbstractODataRouteTest {
+public class ODataSerializerTest extends AbstractODataTest {
 
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final String TEST_COLLECTION = "test-collection.json";

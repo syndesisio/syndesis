@@ -153,7 +153,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/filters/options")
     public FilterOptions getFilterOptions(final DataShape dataShape) {
-        final FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
+        final FilterOptions.Builder builder = new FilterOptions.Builder().addOps(Op.DEFAULT_OPTS);
 
         final List<String> paths = inspectors.getPaths(dataShape.getKind().toString(), dataShape.getType(),
             dataShape.getSpecification(), dataShape.getExemplar());
@@ -165,7 +165,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/filters/options")
     public FilterOptions getGlobalFilterOptions() {
-        return new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS).build();
+        return new FilterOptions.Builder().addOps(Op.DEFAULT_OPTS).build();
     }
 
     public Integration getIntegration(final String id) {

@@ -5,13 +5,16 @@ import { PopoverDirective } from 'ngx-bootstrap';
 import { Action, Step, DataShape, DataShapeKinds } from '@syndesis/ui/platform';
 import {
   CurrentFlowService,
-  FlowPageService
+  FlowPageService,
+  INTEGRATION_INSERT_DATAMAPPER,
 } from '@syndesis/ui/integration/edit-page';
+import { INTEGRATION_DELETE_PROMPT } from '../edit-page.models';
+import { SPLIT } from '@syndesis/ui/store';
 
 @Component({
   selector: 'syndesis-integration-flow-view-step',
   templateUrl: './flow-view-step.component.html',
-  styleUrls: ['./flow-view-step.component.scss']
+  styleUrls: ['./flow-view-step.component.scss'],
 })
 export class FlowViewStepComponent implements OnChanges {
   stepIndex: number;
@@ -37,6 +40,7 @@ export class FlowViewStepComponent implements OnChanges {
   outputDataShapeText: string;
   previousStepShouldDefineDataShape = false;
   shouldAddDatamapper = false;
+  isUnclosedSplit = false;
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -93,8 +97,8 @@ export class FlowViewStepComponent implements OnChanges {
 
   deletePrompt() {
     this.currentFlowService.events.emit({
-      kind: 'integration-delete-prompt',
-      position: this.getPosition()
+      kind: INTEGRATION_DELETE_PROMPT,
+      position: this.getPosition(),
     });
   }
 
@@ -284,7 +288,7 @@ export class FlowViewStepComponent implements OnChanges {
       route.push(index);
     }
     this.router.navigate(route, {
-      relativeTo: this.route
+      relativeTo: this.route,
     });
   }
 
@@ -298,7 +302,7 @@ export class FlowViewStepComponent implements OnChanges {
       this.position
     );
     this.router.navigate(['describe-data', index, 'output'], {
-      relativeTo: this.route
+      relativeTo: this.route,
     });
   }
 
@@ -306,15 +310,15 @@ export class FlowViewStepComponent implements OnChanges {
     this.datamapperInfoPop.hide();
     const position = this.getPosition();
     this.currentFlowService.events.emit({
-      kind: 'integration-insert-datamapper',
+      kind: INTEGRATION_INSERT_DATAMAPPER,
       position: position,
       onSave: () => {
         setTimeout(() => {
           this.router.navigate(['step-configure', position], {
-            relativeTo: this.route
+            relativeTo: this.route,
           });
         }, 10);
-      }
+      },
     });
   }
 
@@ -323,6 +327,12 @@ export class FlowViewStepComponent implements OnChanges {
     this.stepName = this.getStepName(this.step);
     this.previousStepShouldDefineDataShape = false;
     this.shouldAddDatamapper = false;
+
+    this.isUnclosedSplit = this.step.stepKind === SPLIT &&
+      this.currentFlowService.getNextAggregateStep(
+        this.position
+      ) === undefined;
+
     if (!this.step || !this.step.action || !this.step.action.descriptor) {
       return;
     }

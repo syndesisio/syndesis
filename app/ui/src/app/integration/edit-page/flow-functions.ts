@@ -15,7 +15,8 @@ import {
   createConnectionStep,
   StepOrConnection,
 } from '@syndesis/ui/platform';
-import { ENDPOINT, StepStore, DATA_MAPPER } from '@syndesis/ui/store';
+import { ENDPOINT, StepStore, DATA_MAPPER, AGGREGATE } from '@syndesis/ui/store';
+import { FlowError, FlowErrorKind } from './edit-page.models';
 
 //
 // Various helper functions that the current flow service uses to build an integration object
@@ -833,6 +834,58 @@ export function getSubsequentStepWithDataShape(
   const steps = getSubsequentStepsWithDataShape(integration, flowId, position);
   if (steps && steps.length) {
     return steps[0].step;
+  }
+  return undefined;
+}
+
+/**
+ * Inspects the indicated flow by ID and returns an array of possible issues with it
+ * @param integration
+ * @param flowId
+ */
+export function validateFlow(
+  integration: Integration,
+  flowId: string
+): FlowError[] {
+  const errors: FlowError[] = [];
+  if (!flowId) {
+    throw new Error('Invalid flow ID specified');
+  }
+  if (!integration) {
+    throw new Error('Invalid integration object given');
+  }
+  const startStep = getStartStep(integration, flowId);
+  if (
+    typeof startStep === 'undefined' ||
+    typeof startStep.connection === 'undefined'
+  ) {
+    errors.push({ kind: FlowErrorKind.NO_START_CONNECTION });
+  }
+  const endStep = getLastStep(integration, flowId);
+  if (
+    typeof endStep === 'undefined' ||
+    (endStep.stepKind === 'endpoint' &&
+      typeof endStep.connection === 'undefined')
+  ) {
+    errors.push({ kind: FlowErrorKind.NO_FINISH_CONNECTION });
+  }
+  return errors;
+}
+
+/**
+ * Finds the closest step of type 'Aggregate' after the provided position.
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getNextAggregateStep(
+  integration: Integration,
+  flowId: string,
+  position: number
+): Step | undefined {
+  const steps = getSubsequentSteps(integration, flowId, position);
+  if (steps && steps.length) {
+    return steps.filter(s => s.stepKind === AGGREGATE)[0];
   }
   return undefined;
 }
