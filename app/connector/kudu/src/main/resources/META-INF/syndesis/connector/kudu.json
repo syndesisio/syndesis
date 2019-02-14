@@ -144,5 +144,8 @@
       "tags": [],
       "type": "string"
     }
-  }
+  },
+  "tags": [
+    "verifier"
+  ]
 }
