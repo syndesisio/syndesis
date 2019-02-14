@@ -3,10 +3,11 @@ package configuration
 import (
 	"errors"
 	"strings"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func GetSyndesisEnvVarsFromOpenshiftNamespace(namespace string) (map[string]string, error) {
-	secret, err := GetSyndesisConfigurationSecret(namespace)
+func GetSyndesisEnvVarsFromOpenshiftNamespace(client client.Client, namespace string) (map[string]string, error) {
+	secret, err := GetSyndesisConfigurationSecret(client, namespace)
 	if err != nil {
 		return nil, err
 	}

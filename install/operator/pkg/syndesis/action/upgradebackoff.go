@@ -1,10 +1,11 @@
 package action
 
 import (
-	"github.com/operator-framework/operator-sdk/pkg/sdk"
-	"github.com/sirupsen/logrus"
+	"context"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	runtime2 "k8s.io/apimachinery/pkg/runtime"
 	"math"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strconv"
 	"time"
 )
@@ -15,19 +16,28 @@ const (
 )
 
 // After a failure, waits a exponential amount of time, then retries
-type UpgradeBackoff struct {
+type upgradeBackoff struct {
+	action
 	operatorVersion string
 }
 
-func (a *UpgradeBackoff) CanExecute(syndesis *v1alpha1.Syndesis) bool {
+var (
+	UpgradeBackoffAction =  upgradeBackoff{
+		action{actionLog.WithValues("type", "upgrade-backoff")},
+		"",
+	}
+)
+
+
+func (a *upgradeBackoff) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseUpgradeFailureBackoff)
 }
 
-func (a *UpgradeBackoff) Execute(syndesis *v1alpha1.Syndesis) error {
+func (a *upgradeBackoff) Execute(scheme *runtime2.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
 
 	// Check number of attempts to fail fast
 	if syndesis.Status.UpgradeAttempts >= UpgradeMaxAttempts {
-		logrus.Info("Upgrade of Syndesis resource ", syndesis.Name, " failed too many times and will not be retried")
+		a.log.Error(nil,"Upgrade of Syndesis resource failed too many times and will not be retried", "name", syndesis.Name)
 
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1alpha1.SyndesisPhaseUpgradeFailed
@@ -35,7 +45,7 @@ func (a *UpgradeBackoff) Execute(syndesis *v1alpha1.Syndesis) error {
 		target.Status.Description = "Upgrade failed too many times and will not be retried"
 		target.Status.ForceUpgrade = false
 
-		return sdk.Update(target)
+		return cl.Status().Update(context.TODO(), target)
 	}
 
 	now := time.Now()
@@ -62,7 +72,7 @@ func (a *UpgradeBackoff) Execute(syndesis *v1alpha1.Syndesis) error {
 	nextAttempt := lastFailure.Add(delay)
 
 	if now.After(nextAttempt) {
-		logrus.Info("Restarting upgrade process for Syndesis resource ", syndesis.Name)
+		a.log.Info("Restarting upgrade process for Syndesis resource", "name", syndesis.Name)
 
 		currentVersion := syndesis.Status.Version
 		targetVersion := syndesis.Status.TargetVersion
@@ -74,10 +84,10 @@ func (a *UpgradeBackoff) Execute(syndesis *v1alpha1.Syndesis) error {
 		target.Status.Description = "Upgrading from " + currentVersion + " to " + targetVersion + " (attempt " + currentAttemptStr + ")"
 		target.Status.ForceUpgrade = true
 
-		return sdk.Update(target)
+		return cl.Status().Update(context.TODO(), target)
 	} else {
 		remaining := math.Round(nextAttempt.Sub(now).Seconds())
-		logrus.Info("Upgrade of Syndesis resource ", syndesis.Name, " will be retried in ", remaining, " seconds")
+		a.log.Info("Upgrade of Syndesis resource will be retried", "name", syndesis.Name, "retryAfterSeconds", remaining)
 		return nil
 	}
 }

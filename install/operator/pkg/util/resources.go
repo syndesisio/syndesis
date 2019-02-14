@@ -1,16 +1,30 @@
 package util
 
 import (
-	"github.com/operator-framework/operator-sdk/pkg/util/k8sutil"
+	"encoding/json"
+	"fmt"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/serializer"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"io/ioutil"
 	"k8s.io/apimachinery/pkg/util/yaml"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"strings"
 )
 
-func LoadKubernetesResourceFromFile(path string) (runtime.Object, error) {
+
+var log = logf.Log.WithName("resources")
+
+func NewObjectKey(name string, namespace string) client.ObjectKey {
+	return client.ObjectKey{
+		Name: name,
+		Namespace: namespace,
+	}
+}
+
+func LoadResourceFromFile(scheme *runtime.Scheme, path string) (runtime.Object, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -21,18 +35,54 @@ func LoadKubernetesResourceFromFile(path string) (runtime.Object, error) {
 		return nil, err
 	}
 
-	return LoadKubernetesResource(data)
+	return LoadResourceFromYaml(scheme, data)
 }
 
-func LoadKubernetesResource(jsonData []byte) (runtime.Object, error) {
-	u := unstructured.Unstructured{}
-	err := u.UnmarshalJSON(jsonData)
+// LoadRawResourceFromYaml loads a k8s resource from a yaml definition without making assumptions on the underlying type
+func LoadRawResourceFromYaml(data string) (runtime.Object, error) {
+	source := []byte(data)
+	jsonSource, err := yaml.ToJSON(source)
 	if err != nil {
 		return nil, err
 	}
+	var objmap map[string]interface{}
+	if err = json.Unmarshal(jsonSource, &objmap); err != nil {
+		return nil, err
+	}
+	return &unstructured.Unstructured{
+		Object: objmap,
+	}, nil
+}
 
-	obj := k8sutil.RuntimeObjectFromUnstructured(&u)
-	return obj, nil
+
+func LoadResourceFromYaml(scheme *runtime.Scheme,  source []byte) (runtime.Object, error) {
+	jsonSource, err := yaml.ToJSON(source)
+	if err != nil {
+		return nil, err
+	}
+	u := unstructured.Unstructured{}
+	err = u.UnmarshalJSON(jsonSource)
+	if err != nil {
+		return nil, err
+	}
+	return RuntimeObjectFromUnstructured(scheme, &u)
+}
+
+// RuntimeObjectFromUnstructured converts an unstructured to a runtime object
+func RuntimeObjectFromUnstructured(scheme *runtime.Scheme,u *unstructured.Unstructured) (runtime.Object, error) {
+	gvk := u.GroupVersionKind()
+	codecs := serializer.NewCodecFactory(scheme)
+	decoder := codecs.UniversalDecoder(gvk.GroupVersion())
+
+	b, err := u.MarshalJSON()
+	if err != nil {
+		return nil, fmt.Errorf("error running MarshalJSON on unstructured object: %v", err)
+	}
+	ro, _, err := decoder.Decode(b, &gvk, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode json data with gvk(%v): %v", gvk.String(), err)
+	}
+	return ro, nil
 }
 
 func jsonIfYaml(source []byte, filename string) ([]byte, error) {

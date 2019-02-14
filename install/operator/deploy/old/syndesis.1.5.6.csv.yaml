@@ -1,0 +1,129 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  name: syndesis.v1.5.4
+spec:
+  displayName: "Syndesis"
+  description: |
+    **Syndesis** is low-code platform for easily defining and running integrations
+    It allows a seamless for creating integrations to connect systems in a graphical fashion.
+    Such defined integration can be deployed and operator on OpenShift as the runtime
+    platform.
+  keywords: ['eai', 'camel', 'fuse']
+  version: "1.5.4"
+  maturity: alpha
+  maintainers:
+  - name: Syndesis Community
+    email: info@syndesis.io
+  providers:
+    name: Red Hat, Inc.
+  links:
+  - name: Project page
+    url: https://syndesis.io
+  - name: Source repository
+    url: https://github.com/syndesisio/syndesis
+  customresourcedefinitions:
+    owned:
+    - name: syndesises.syndesis.io
+      version: v1alpha1
+      displayName: Syndesis
+      description: Camel in the cloud
+      kind: Syndesis
+      specDescriptors:
+        - displayName: Integration Limit
+          description: Specify how many integrations are allowed for this installation
+          path: integration.limit
+          x-descriptors:
+            - 'urn:alm:descriptor:com.tectonic.ui:label'
+  install:
+    strategy: deployment
+    spec:
+      deployments:
+        - name: syndesis-operator
+          spec:
+            strategy:
+              type: Recreate
+            replicas: 1
+            selector:
+              matchLabels:
+                syndesis.io/app: syndesis
+                syndesis.io/type: operator
+                syndesis.io/component: syndesis-operator
+            template:
+              metadata:
+                labels:
+                  syndesis.io/app: syndesis
+                  syndesis.io/type: operator
+                  syndesis.io/component: syndesis-operator
+              spec:
+                serviceAccountName: syndesis-operator
+                containers:
+                - name: syndesis-operator
+                  image: syndesis/syndesis-operator:1.5.6
+                  imagePullPolicy: IfNotPresent
+                  env:
+                  - name: WATCH_NAMESPACE
+                    valueFrom:
+                      fieldRef:
+                        fieldPath: metadata.namespace
+      permissions:
+      - serviceAccountName: syndesis-operator
+        rules:
+        - apiGroups:
+          - syndesis.io
+          resources:
+          - syndesises
+          - syndesises/finalizers
+          verbs: [ get, list, create, update, delete, deletecollection, watch ]
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - endpoints
+          - persistentvolumeclaims
+          - configmaps
+          - secrets
+          - serviceaccounts
+          verbs: [ get, list, create, update, delete, deletecollection, watch]
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs: [ get, list ]
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - rolebindings
+          verbs: [ get, list, create, update, delete, deletecollection, watch]
+        - apiGroups:
+          - template.openshift.io
+          resources:
+          - processedtemplates
+          verbs: [ get, list, create, update, delete, deletecollection, watch]
+        - apiGroups:
+          - image.openshift.io
+          resources:
+          - imagestreams
+          verbs: [ get, list, create, update, delete, deletecollection, watch]
+        - apiGroups:
+          - apps.openshift.io
+          resources:
+          - deploymentconfigs
+          verbs: [ get, list, create, update, delete, deletecollection, watch]
+        - apiGroups:
+          - build.openshift.io
+          resources:
+          - buildconfigs
+          verbs: [ get, list, create, update, delete, deletecollection, watch]
+        - apiGroups:
+          - authorization.openshift.io
+          resources:
+          - rolebindings
+          verbs: [ get, list, create, update, delete, deletecollection, watch]
+        - apiGroups:
+          - route.openshift.io
+          resources:
+          - routes
+          - routes/custom-host
+          verbs: [ get, list, create, update, delete, deletecollection, watch]

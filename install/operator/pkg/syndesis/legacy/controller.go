@@ -2,14 +2,17 @@ package legacy
 
 import (
 	"context"
-	"github.com/operator-framework/operator-sdk/pkg/sdk"
-	"github.com/sirupsen/logrus"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"time"
 )
+
+
+var log = logf.Log.WithName("legacy")
 
 const (
 	retryInterval        = 5 * time.Second
@@ -28,24 +31,24 @@ func NewLegacyController(namespace string) *LegacyController {
 	}
 }
 
-func (c *LegacyController) Start(ctx context.Context) {
-	go c.verifyAndCreate(ctx)
+func (c *LegacyController) Start(ctx context.Context, client client.Client) {
+	go c.verifyAndCreate(ctx, client)
 }
 
-func (c *LegacyController) verifyAndCreate(ctx context.Context) {
-	defer logrus.Info("Syndesis legacy installations check completed")
+func (c *LegacyController) verifyAndCreate(ctx context.Context, client client.Client) {
+	defer log.Info("Syndesis legacy installations check completed")
 
-	err := c.doVerifyAndCreate()
+	err := c.doVerifyAndCreate(client)
 	if err != nil {
-		logrus.Error("Unable to check Syndesis legacy installations (will retry again): ", err)
+		log.Error(err, "Unable to check Syndesis legacy installations (will retry again)")
 
 		for {
 			select {
 			case <-ctx.Done():
 				return
 			case <-time.After(retryInterval):
-				if err := c.doVerifyAndCreate(); err != nil {
-					logrus.Error("Unable to check Syndesis legacy installations (will retry again): ", err)
+				if err := c.doVerifyAndCreate(client); err != nil {
+					log.Error(err,"Unable to check Syndesis legacy installations (will retry again)")
 				} else {
 					return
 				}
@@ -54,11 +57,11 @@ func (c *LegacyController) verifyAndCreate(ctx context.Context) {
 	}
 }
 
-func (c *LegacyController) doVerifyAndCreate() error {
-	if exists, err := c.legacyInstallationExists(); err != nil {
+func (c *LegacyController) doVerifyAndCreate(cl client.Client) error {
+	if exists, err := c.legacyInstallationExists(cl); err != nil {
 		return err
 	} else if exists {
-		logrus.Info("A legacy Syndesis installations is present in the ", c.namespace, " namespace")
+		log.Info("A legacy Syndesis installations is present", "namespace", c.namespace)
 
 		synd := v1alpha1.Syndesis{
 			TypeMeta: metav1.TypeMeta{
@@ -75,26 +78,26 @@ func (c *LegacyController) doVerifyAndCreate() error {
 			},
 		}
 
-		logrus.Info("Merging Syndesis legacy configuration into resource ", syndesisResourceName)
+		log.Info("Merging Syndesis legacy configuration into resource ", "resource", syndesisResourceName)
 
-		config, err := configuration.GetSyndesisEnvVarsFromOpenshiftNamespace(c.namespace)
+		config, err := configuration.GetSyndesisEnvVarsFromOpenshiftNamespace(cl, c.namespace)
 		if err != nil {
 			return nil
 		}
 
 		configuration.SetConfigurationFromEnvVars(config, &synd)
 
-		logrus.Info("Creating a new Syndesis resource from legacy installation in the ", c.namespace, " namespace")
-		return sdk.Create(&synd)
+		log.Info("Creating a new Syndesis resource from legacy installation", "namespace",c.namespace)
+		return cl.Create(context.TODO(), &synd)
 	} else {
-		logrus.Info("No legacy Syndesis installations detected in the ", c.namespace, " namespace")
+		log.Info("No legacy Syndesis installations detected", "namespace", c.namespace)
 		return nil
 	}
 }
 
-func (c *LegacyController) legacyInstallationExists() (bool, error) {
+func (c *LegacyController) legacyInstallationExists(cl client.Client) (bool, error) {
 	// There exists a Syndesis configuration
-	v, err := configuration.GetSyndesisVersionFromNamespace(c.namespace)
+	v, err := configuration.GetSyndesisVersionFromNamespace(cl, c.namespace)
 	if err != nil && k8serrors.IsNotFound(err) {
 		return false, nil
 	} else if err != nil || v == "" {
@@ -102,8 +105,8 @@ func (c *LegacyController) legacyInstallationExists() (bool, error) {
 	}
 
 	// There's not any Syndesis resource
-	lst := v1alpha1.NewSyndesisList()
-	err = sdk.List(c.namespace, lst)
+	lst := v1alpha1.SyndesisList{}
+	err = cl.List(context.TODO(), &client.ListOptions{}, &lst)
 	if err != nil || len(lst.Items) > 0 {
 		return false, err
 	}

@@ -1,22 +1,31 @@
 package action
 
 import (
-	"github.com/operator-framework/operator-sdk/pkg/sdk"
+	"context"
+	"github.com/go-logr/logr"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
 const (
 	replaceResourcesIfPresent = true
 )
 
+type action struct {
+	log logr.Logger
+}
+
+var actionLog = logf.Log.WithName("action").WithValues("type", )
+
 type InstallationAction interface {
+
 	CanExecute(syndesis *v1alpha1.Syndesis) bool
 
-	Execute(syndesis *v1alpha1.Syndesis) error
+	Execute(scheme *runtime.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error
 }
 
 type updateFunction func(runtime.Object)
@@ -35,18 +44,18 @@ func syndesisPhaseIs(syndesis *v1alpha1.Syndesis, statuses ...v1alpha1.SyndesisP
 	return false
 }
 
-func createOrReplace(res runtime.Object) error {
-	return createOrReplaceForce(res, false)
+func createOrReplace(client client.Client, res runtime.Object) error {
+	return createOrReplaceForce(client, res, false)
 }
 
-func createOrReplaceForce(res runtime.Object, force bool) error {
-	if err := sdk.Create(res); err != nil && k8serrors.IsAlreadyExists(err) {
+func createOrReplaceForce(client client.Client, res runtime.Object, force bool) error {
+	if err := client.Create(context.TODO(), res); err != nil && k8serrors.IsAlreadyExists(err) {
 		if force || canResourceBeReplaced(res) {
-			err = sdk.Delete(res, sdk.WithDeleteOptions(&metav1.DeleteOptions{}))
+			err = client.Delete(context.TODO(), res)
 			if err != nil {
 				return err
 			}
-			return sdk.Create(res)
+			return client.Create(context.TODO(), res)
 		} else {
 			return nil
 		}
@@ -55,19 +64,23 @@ func createOrReplaceForce(res runtime.Object, force bool) error {
 	}
 }
 
-func updateOnLatestRevision(res runtime.Object, change updateFunction) error {
+func updateOnLatestRevision(cl client.Client, res runtime.Object, change updateFunction) error {
 	change(res)
-	err := sdk.Update(res)
+	err := cl.Update(context.TODO(), res)
 	if err != nil && k8serrors.IsConflict(err) {
 		attempts := 1
 		for attempts <= 5 && err != nil && k8serrors.IsConflict(err) {
-			err = sdk.Get(res)
+			var key client.ObjectKey
+			if key, err = client.ObjectKeyFromObject(res); err != nil {
+				return err
+			}
+			err = cl.Get(context.TODO(), key, res)
 			if err != nil {
 				return err
 			}
 
 			change(res)
-			err = sdk.Update(res)
+			err = cl.Update(context.TODO(), res)
 			attempts++
 		}
 	}

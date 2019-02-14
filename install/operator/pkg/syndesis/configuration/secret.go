@@ -1,10 +1,11 @@
 package configuration
 
 import (
-	"github.com/operator-framework/operator-sdk/pkg/sdk"
+	"context"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const (
@@ -13,8 +14,8 @@ const (
 	SyndesisGlobalConfigParamsProperty  = "params"
 )
 
-func IsSyndesisConfigurationSecretPresent(namespace string) (bool, error) {
-	if _, err := GetSyndesisConfigurationSecret(namespace); err != nil && errors.IsNotFound(err) {
+func IsSyndesisConfigurationSecretPresent(client client.Client, namespace string) (bool, error) {
+	if _, err := GetSyndesisConfigurationSecret(client, namespace); err != nil && errors.IsNotFound(err) {
 		return false, nil
 	} else if err != nil {
 		return false, err
@@ -23,18 +24,9 @@ func IsSyndesisConfigurationSecretPresent(namespace string) (bool, error) {
 	}
 }
 
-func GetSyndesisConfigurationSecret(namespace string) (*v1.Secret, error) {
-	secret := v1.Secret{
-		TypeMeta: metav1.TypeMeta{
-			APIVersion: "v1",
-			Kind:       "Secret",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: namespace,
-			Name:      SyndesisGlobalConfigSecret,
-		},
-	}
-	if err := sdk.Get(&secret); err != nil {
+func GetSyndesisConfigurationSecret(client client.Client, namespace string) (*v1.Secret, error) {
+	secret := v1.Secret{}
+	if err := client.Get(context.TODO(), util.NewObjectKey(SyndesisGlobalConfigSecret, namespace), &secret); err != nil {
 		return nil, err
 	}
 	return &secret, nil

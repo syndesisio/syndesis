@@ -19,17 +19,17 @@ type UpgradeParams struct {
 	UpgradeRegistry *string
 }
 
-func GetUpgradeResources(syndesis *v1alpha1.Syndesis, params UpgradeParams) ([]runtime.RawExtension, error) {
-	resources, err := GetInstallResources(syndesis, params.InstallParams)
+func GetUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params UpgradeParams) ([]runtime.RawExtension, error) {
+	resources, err := GetInstallResources(scheme, syndesis, params.InstallParams)
 	if err != nil {
 		return nil, err
 	}
 
-	upgrateTempl, err := findUpgradeTemplate(resources)
+	upgrateTempl, err := findUpgradeTemplate(scheme, resources)
 	if err != nil {
 		return nil, err
 	}
-	processor, err := template.NewTemplateProcessor(syndesis.Namespace)
+	processor, err := template.NewTemplateProcessor(scheme, syndesis.Namespace)
 	if err != nil {
 		return nil, err
 	}
@@ -41,9 +41,9 @@ func GetUpgradeResources(syndesis *v1alpha1.Syndesis, params UpgradeParams) ([]r
 	return processor.Process(upgrateTempl, paramMap)
 }
 
-func findUpgradeTemplate(list []runtime.RawExtension) (*templatev1.Template, error) {
+func findUpgradeTemplate(scheme *runtime.Scheme, list []runtime.RawExtension) (*templatev1.Template, error) {
 	for _, object := range list {
-		res, err := util.LoadKubernetesResource(object.Raw)
+		res, err := util.LoadResourceFromYaml(scheme, object.Raw)
 		if err != nil {
 			return nil, err
 		}

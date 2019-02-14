@@ -1,40 +1,23 @@
 package serviceaccount
 
 import (
+	"context"
 	"errors"
-	"github.com/operator-framework/operator-sdk/pkg/sdk"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func GetServiceAccountToken(serviceAccountName string, namespace string) (string, error) {
+func GetServiceAccountToken(client client.Client, saName string, namespace string) (string, error) {
 
-	sa := corev1.ServiceAccount{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       "ServiceAccount",
-			APIVersion: "v1",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      serviceAccountName,
-			Namespace: namespace,
-		},
-	}
-	if err := sdk.Get(&sa); err != nil {
+	sa := corev1.ServiceAccount{}
+	if err := client.Get(context.TODO(), util.NewObjectKey(saName, namespace), &sa); err != nil {
 		return "", err
 	}
 
 	for _, reference := range sa.Secrets {
-		secret := corev1.Secret{
-			TypeMeta: metav1.TypeMeta{
-				Kind:       "Secret",
-				APIVersion: "v1",
-			},
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      reference.Name,
-				Namespace: namespace,
-			},
-		}
-		if err := sdk.Get(&secret); err != nil {
+		secret := corev1.Secret{}
+		if err := client.Get(context.TODO(), util.NewObjectKey(reference.Name, namespace), &secret); err != nil {
 			return "", err
 		}
 
