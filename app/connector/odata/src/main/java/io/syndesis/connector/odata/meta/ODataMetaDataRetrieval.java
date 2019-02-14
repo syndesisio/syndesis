@@ -61,7 +61,9 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
 
             ObjectSchema entitySchema = new ObjectSchema();
             entitySchema.setTitle("ODATA_ENTITY_PROPERTIES");
-            entitySchema.set$schema("http://json-schema.org/schema#");
+            ArraySchema collectionSchema = new ArraySchema();
+            collectionSchema.set$schema("http://json-schema.org/schema#");
+            collectionSchema.setItemsSchema(entitySchema);
 
             if (odataMetadata.hasEntityProperties()) {
                 for (PropertyMetadata entityProperty : odataMetadata.getEntityProperties()) {
@@ -91,7 +93,8 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
                     outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                             .name("Entity Schema")
                             .description("Schema of OData result entities")
-                            .specification(Json.writer().writeValueAsString(entitySchema));
+                            .putMetadata("variant", "collection")
+                            .specification(Json.writer().writeValueAsString(collectionSchema));
                 }
 
                 inDataShape = inDataShapeBuilder.build();

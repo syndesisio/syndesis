@@ -15,26 +15,28 @@
  */
 package io.syndesis.connector.odata.meta;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.camel.CamelContext;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
+import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Json;
 import io.syndesis.connector.odata.AbstractODataTest;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
+import org.apache.camel.CamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 public class ODataMetaDataRetrievalTest extends AbstractODataTest {
 
@@ -97,9 +99,9 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         assertEquals(DataShapeKinds.JSON_SCHEMA, outputShape.getKind());
         assertNotNull(outputShape.getSpecification());
 
-        ObjectSchema schema = Json.copyObjectMapperConfiguration().readValue(
-                                                                             outputShape.getSpecification(), ObjectSchema.class);
-        Map<String, JsonSchema> propSchemaMap = schema.getProperties();
+        ArraySchema schema = Json.copyObjectMapperConfiguration().readValue(
+                                            outputShape.getSpecification(), ArraySchema.class);
+        Map<String, JsonSchema> propSchemaMap = schema.getItems().asSingleItems().getSchema().asObjectSchema().getProperties();
         assertNotNull(propSchemaMap);
 
         JsonSchema descSchema = propSchemaMap.get("Description");
