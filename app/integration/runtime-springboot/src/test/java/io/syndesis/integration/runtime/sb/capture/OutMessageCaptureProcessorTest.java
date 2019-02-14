@@ -15,6 +15,7 @@
  */
 package io.syndesis.integration.runtime.sb.capture;
 
+import java.util.Collections;
 import java.util.Map;
 
 import io.syndesis.common.model.action.ConnectorAction;
@@ -160,6 +161,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
+                    .id("s-split")
                     .stepKind(StepKind.split)
                     .build(),
                 new Step.Builder()
@@ -193,6 +195,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
+                    .id("s-aggregate")
                     .stepKind(StepKind.aggregate)
                     .build()
             );
@@ -213,11 +216,12 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
 
             Exchange exchange1 = result.getExchanges().get(0);
             Map<String, Message> messages = OutMessageCaptureProcessor.getCapturedMessageMap(exchange1);
-            assertThat(messages).hasSize(4);
-            assertThat(messages.get("s1").getBody()).isEqualTo("World");
+            assertThat(messages).hasSize(5);
+            assertThat(messages.get("s-split").getBody()).isEqualTo("World");
             assertThat(messages.get("s2").getBody()).isEqualTo("Hello World");
             assertThat(messages.get("s3").getBody()).isEqualTo(-862545276);
             assertThat(messages.get("s4").getBody()).isEqualTo(-862545276);
+            assertThat(messages.get("s-aggregate").getBody()).isEqualTo(Collections.singletonList(-862545276));
         } finally {
             context.stop();
         }
@@ -240,6 +244,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
+                    .id("s-split")
                     .stepKind(StepKind.split)
                     .build(),
                 new Step.Builder()
@@ -263,6 +268,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
+                    .id("s-aggregate")
                     .stepKind(StepKind.aggregate)
                     .build()
             );
@@ -296,12 +302,12 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
 
             Exchange exchange1 = result.getExchanges().get(0);
             Map<String, Message> messages = OutMessageCaptureProcessor.getCapturedMessageMap(exchange1);
-            assertThat(messages.get("s1").getBody()).isEqualTo("Hiram");
+            assertThat(messages.get("s-split").getBody()).isEqualTo("Hiram");
             assertThat(messages.get("s2").getBody()).isEqualTo("Hello Hiram");
 
             Exchange exchange2 = result.getExchanges().get(1);
             Map<String, Message> messages2 = OutMessageCaptureProcessor.getCapturedMessageMap(exchange2);
-            assertThat(messages2.get("s1").getBody()).isEqualTo("World");
+            assertThat(messages2.get("s-split").getBody()).isEqualTo("World");
             assertThat(messages2.get("s2").getBody()).isEqualTo("Hello World");
         } finally {
             context.stop();

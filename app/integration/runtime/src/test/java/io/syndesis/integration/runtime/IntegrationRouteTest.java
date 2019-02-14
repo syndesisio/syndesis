@@ -164,7 +164,7 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
 
         assertThat(route.getInputs()).hasSize(1);
         assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
-        assertThat(route.getOutputs()).hasSize(2);
+        assertThat(route.getOutputs()).hasSize(4);
         assertThat(getOutput(route, 0)).isInstanceOf(SetHeaderDefinition.class);
         assertThat(getOutput(route, 1)).isInstanceOf(SplitDefinition.class);
         assertThat(getOutput(route, 1).getOutputs()).hasSize(4);
@@ -172,6 +172,8 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
         assertThat(getOutput(route, 1, 1)).isInstanceOf(ProcessDefinition.class);
         assertThat(getOutput(route, 1, 2)).isInstanceOf(PipelineDefinition.class);
         assertThat(getOutput(route, 1, 3)).isInstanceOf(PipelineDefinition.class);
+        assertThat(getOutput(route, 2)).isInstanceOf(SetHeaderDefinition.class);
+        assertThat(getOutput(route, 3)).isInstanceOf(ProcessDefinition.class);
     }
 
     @Test
@@ -234,7 +236,7 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
 
         assertThat(route.getInputs()).hasSize(1);
         assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "timer:integration?period=1s");
-        assertThat(route.getOutputs()).hasSize(3);
+        assertThat(route.getOutputs()).hasSize(5);
         assertThat(getOutput(route, 0)).isInstanceOf(SetHeaderDefinition.class);
         assertThat(getOutput(route, 1)).isInstanceOf(ToDefinition.class);
         assertThat(getOutput(route, 2)).isInstanceOf(SplitDefinition.class);
@@ -247,5 +249,7 @@ public class IntegrationRouteTest extends IntegrationTestSupport {
         assertThat(getOutput(route, 2, 2, 1)).isInstanceOf(ToDefinition.class);
         assertThat(getOutput(route, 2, 2, 1)).hasFieldOrPropertyWithValue("uri", "mock:timer");
         assertThat(getOutput(route, 2, 2, 2)).isInstanceOf(ProcessDefinition.class);
+        assertThat(getOutput(route, 3)).isInstanceOf(SetHeaderDefinition.class);
+        assertThat(getOutput(route, 4)).isInstanceOf(ProcessDefinition.class);
     }
 }
