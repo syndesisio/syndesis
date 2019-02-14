@@ -539,6 +539,31 @@
       </build>
     </profile>
 
+    <profile>
+      <id>autofix</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerId>javac-with-errorprone</compilerId>
+              <forceJavacCompilerUse>true</forceJavacCompilerUse>
+              <compilerArgs>
+                <!-- partialy duplicated from above, no way to combine.self not helping here -->
+                <arg>-XepDisableWarningsInGeneratedCode</arg>
+                <arg>-XepExcludedPaths:.*/generated-sources/.*</arg>
+                <!-- temporary disable until https://github.com/google/error-prone/issues/780 is resolved -->
+                <arg>-Xep:ParameterName:OFF</arg>
+                <!-- configuration to patch in fixes -->
+                <arg>-XepPatchChecks:BadImport,DeadException,DefaultCharset,MissingOverride,UnnecessaryParentheses</arg>
+                <arg>-XepPatchLocation:IN_PLACE</arg>
+              </compilerArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
   <build>
