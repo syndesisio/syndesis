@@ -19,6 +19,7 @@ spec:
           annotations:
             message: >-
               Fuse Online Postgres instance {{$labels.pod}} in namespace {{$labels.namespace}} is down.
+            sop_url: https://github.com/syndesisio/syndesis/blob/master/doc/managing_environments/topics/alerting_sop.adoc#fuseonlinedatabaseinstancedown
           expr: >
             sum(pg_up{job="syndesis-db-metrics"}) by(namespace, pod, instance) == 0
           for: 5m

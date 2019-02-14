@@ -1,0 +1,119 @@
+[id='alerting-standard-operating-procedures']
+= Standard Operating Procedures
+
+== Syndesis Infrastructure - Database Alerts
+
+=== FuseOnlineDatabaseInstanceDown
+
+*Alert name*
+
+FuseOnlineDatabaseHighRollbackRate
+
+*Description*
+
+The syndesis-db pod is not running or is not serving requests.
+
+**Process steps**
+
+1) Log in to the OpenShift cluster.
+
+2) Switch to project namespace identified in the alert message.
+
+3) The alert message contains the name of the pod that triggered the alerting event. Use this pod name in the 'oc' client commands that follow.
+
+4) If the syndesis-db pod is still running, capture logs for analysis.
+
+[source,bash,options="nowrap"]
+----
+oc logs syndesis-db-1-7nwh9 > syndesis-db.log
+----
+
+5) Capture a snapshot of the 'Fuse Online - Infrastructure - DB' Grafana dashboard. The metrics can be useful for identifying errors and performance bottlenecks.
+
+6) Start or restart syndesis-db.
+
+== Syndesis Infrastructure - REST API Alerts
+
+=== FuseOnlineRestApiHighEndpointErrorRate
+
+*Alert name*
+
+FuseOnlineRestApiHighEndpointErrorRate
+
+*Description*
+
+Fires when a REST API endpoint has a high rate of HTTP 5XX responses.
+
+**Process steps**
+
+1) Log in to cluster.
+
+2) Switch to project namespace identified in the alert message.
+
+3) The alert message contains the name of the pod that triggered the alerting event. Use this pod name in the 'oc' client commands that follow.
+
+[source,bash,options="nowrap"]
+----
+oc get pod -l syndesis.io/component=syndesis-server
+----
+
+4) Capture application logs for analysis.
+
+[source,bash,options="nowrap"]
+----
+oc logs syndesis-server-9-kxt2g > syndesis-server.log
+----
+
+5) Capture a snapshot of the 'Fuse Online - Infrastructure - REST APIs' Grafana dashboard. The metrics can be useful for identifying errors and performance bottlenecks.
+
+6) If necessary, recreate the syndesis-server pod to restore service.
+
+[source,bash,options="nowrap"]
+----
+oc delete pod syndesis-server-9-kxt2g
+----
+
+=== FuseOnlineRestApiHighEndpointLatency
+
+*Alert name*
+
+FuseOnlineRestApiHighEndpointLatency
+
+*Description*
+
+Fires when a REST API endpoint is experiencing high request latency of > 1 second responses.
+
+**Process steps**
+
+1) Log in to cluster.
+
+2) Switch to project namespace identified in the alert message.
+
+3) The alert message contains the name of the pod that triggered the alerting event. Use this pod name in the 'oc' client commands that follow.
+
+[source,bash,options="nowrap"]
+----
+oc get pod -l syndesis.io/component=syndesis-server
+----
+
+4) Perform a heap dump and capture application logs for analysis.
+
+[source,bash,options="nowrap"]
+----
+oc exec syndesis-server-9-kxt2g -- jcmd 1 GC.heap_dump /tmp/heapdump.hprof
+oc rsync syndesis-server-9-kxt2g:/tmp/heapdump.hprof .
+oc exec syndesis-server-9-kxt2g -- rm -f /tmp/heapdump.hprof
+
+oc exec syndesis-server-9-kxt2g -- jcmd 1 GC.class_histogram > class_histogram.log
+oc exec syndesis-server-9-kxt2g -- jstat -gcutil 1 > gcstats.log
+oc logs syndesis-server-9-kxt2g > syndesis-server.log
+----
+
+5) Capture a snapshot of the 'Fuse Online - Infrastructure - REST APIs' Grafana dashboard. The metrics can be useful for identifying errors and performance bottlenecks.
+
+6) If necessary, recreate the syndesis-server pod to restore service.
+
+[source,bash,options="nowrap"]
+----
+oc delete pod syndesis-server-9-kxt2g
+----
