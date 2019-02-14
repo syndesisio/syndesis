@@ -1,7 +1,0 @@
-apiVersion: syndesis.io/v1alpha1
-kind: Syndesis
-metadata:
-  name: example-syndesis
-spec:
-  # Add fields here
-  size: 3
