@@ -1,3 +1,4 @@
+import { ListViewItem } from 'patternfly-react';
 import { text } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
@@ -33,10 +34,21 @@ const textTabMetrics = 'Metrics';
 const textTitle = 'Integration Detail';
 const textVersion = 'Version';
 
+const historyItems = [
+  <ListViewItem
+    key={1}
+    i18nTextBtnEdit={textBtnEdit}
+    i18nTextBtnPublish={textBtnPublish}
+    i18nTextHistoryMenuReplaceDraft={textHistoryMenuReplaceDraft}
+    i18nTextHistoryMenuUnpublish={textHistoryMenuUnpublish}
+    i18nTextLastPublished={textLastPublished}
+  />,
+];
+
 stories
   .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
   .add(
-    'unpublished',
+    'published',
     withNotes(storyNotes)(() => (
       <IntegrationDetail
         integrationId={text('integrationId', integrationId)}
@@ -50,6 +62,7 @@ stories
         }
         integrationStatus={text('integrationStatus', integrationStatus)}
         integrationVersion={text('integrationVersion', integrationVersion)}
+        children={historyItems}
         i18nTextBtnEdit={textBtnEdit}
         i18nTextBtnPublish={textBtnPublish}
         i18nTextCopyToClipboard={textCopyToClipboard}
@@ -81,6 +94,7 @@ stories
         )}
         integrationStatus={text('integrationStatus', 'Unpublished')}
         integrationVersion={text('integrationVersion', integrationVersion)}
+        children={historyItems}
         i18nTextBtnEdit={textBtnEdit}
         i18nTextBtnPublish={textBtnPublish}
         i18nTextDraft={textDraft}
