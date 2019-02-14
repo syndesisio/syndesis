@@ -5,7 +5,8 @@ import { switchMap } from 'rxjs/operators';
 import {
   CurrentFlowService,
   FlowPageService,
-  FlowEvent
+  FlowEvent,
+  INTEGRATION_CANCEL_CLICKED,
 } from '@syndesis/ui/integration/edit-page';
 import { NavigationService } from '@syndesis/ui/common';
 
@@ -14,8 +15,8 @@ import { NavigationService } from '@syndesis/ui/common';
   templateUrl: './integration-api-provider-operations-page.component.html',
   styleUrls: [
     '../../integration-common.scss',
-    './integration-api-provider-operations-page.component.scss'
-  ]
+    './integration-api-provider-operations-page.component.scss',
+  ],
 })
 export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
@@ -30,11 +31,11 @@ export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
   ) {}
 
   handleFlowEvent(event: FlowEvent) {
-    if (event.kind === 'integration-cancel-clicked') {
+    if (event.kind === INTEGRATION_CANCEL_CLICKED) {
       try {
         this.router.navigate([
           '/integrations',
-          this.currentFlowService.integration.id
+          this.currentFlowService.integration.id,
         ]);
       } catch (err) {
         this.router.navigate(['/integrations']);
@@ -51,7 +52,7 @@ export class ApiProviderOperationsComponent implements OnInit, OnDestroy {
         switchMap(([params, data]) => {
           return of({
             flowId: params.get('flowId'),
-            integration: data.integration
+            integration: data.integration,
           });
         })
       )

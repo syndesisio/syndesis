@@ -12,13 +12,34 @@ import {
   Flow,
   Flows,
   StepOrConnection,
+  Action,
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
-import { IntegrationStore, DATA_MAPPER, StepStore } from '@syndesis/ui/store';
+import {
+  IntegrationStore,
+  DATA_MAPPER,
+  StepStore,
+  SPLIT,
+  AGGREGATE,
+} from '@syndesis/ui/store';
 import {
   FlowEvent,
   FlowError,
   FlowErrorKind,
+  INTEGRATION_UPDATED,
+  INTEGRATION_INSERT_STEP,
+  INTEGRATION_INSERT_DATAMAPPER,
+  INTEGRATION_INSERT_CONNECTION,
+  INTEGRATION_REMOVE_STEP,
+  INTEGRATION_SET_STEP,
+  INTEGRATION_SET_METADATA,
+  INTEGRATION_SET_PROPERTIES,
+  INTEGRATION_SET_ACTION,
+  INTEGRATION_SET_DESCRIPTOR,
+  INTEGRATION_SET_PROPERTY,
+  INTEGRATION_SAVE,
+  INTEGRATION_SET_DATASHAPE,
+  INTEGRATION_SET_CONNECTION,
 } from '@syndesis/ui/integration/edit-page';
 import {
   setIntegrationProperty,
@@ -57,6 +78,7 @@ import {
   getPreviousStepIndexWithDataShape,
   getPreviousStepWithDataShape,
   getSubsequentStepWithDataShape,
+  validateFlow,
 } from './flow-functions';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -354,17 +376,11 @@ export class CurrentFlowService {
 
   handleEvent(event: FlowEvent): void {
     switch (event.kind) {
-      case 'integration-updated': {
-        setTimeout(() => {
-          if (this.isEmpty()) {
-            this.events.emit({
-              kind: 'integration-no-connections',
-            });
-          }
-        }, 10);
+      case INTEGRATION_UPDATED: {
+        // Nothing to do
         break;
       }
-      case 'integration-insert-step': {
+      case INTEGRATION_INSERT_STEP: {
         const position = +event.position;
         this._integration = insertStepIntoFlowAfter(
           this._integration,
@@ -376,7 +392,7 @@ export class CurrentFlowService {
         this.postUpdates();
         break;
       }
-      case 'integration-insert-datamapper': {
+      case INTEGRATION_INSERT_DATAMAPPER: {
         const position = +event.position;
         this._integration = insertStepIntoFlowBefore(
           this._integration,
@@ -388,7 +404,7 @@ export class CurrentFlowService {
         this.postUpdates();
         break;
       }
-      case 'integration-insert-connection': {
+      case INTEGRATION_INSERT_CONNECTION: {
         const position = +event.position;
         this._integration = insertStepIntoFlowAfter(
           this._integration,
@@ -400,7 +416,7 @@ export class CurrentFlowService {
         this.postUpdates();
         break;
       }
-      case 'integration-remove-step': {
+      case INTEGRATION_REMOVE_STEP: {
         {
           const position = +event.position;
           this._integration = removeStepFromFlow(
@@ -413,20 +429,22 @@ export class CurrentFlowService {
         }
         break;
       }
-      case 'integration-set-step': {
+      case INTEGRATION_SET_STEP: {
         const position = +event.position;
         const step = event.step as Step;
-        this._integration = setStepInFlow(
-          this._integration,
-          this.flowId,
-          { ...step },
-          position
-        );
-        executeEventAction(event.onSave);
-        this.postUpdates();
+        this.executeStepCustomizations(position, step, (_step: Step) => {
+          this._integration = setStepInFlow(
+            this._integration,
+            this.flowId,
+            { ..._step },
+            position
+          );
+          executeEventAction(event.onSave);
+          this.postUpdates();
+        });
         break;
       }
-      case 'integration-set-metadata': {
+      case INTEGRATION_SET_METADATA: {
         const position = +event.position;
         const metadata = event.metadata;
         const step =
@@ -441,7 +459,7 @@ export class CurrentFlowService {
         this.postUpdates();
         break;
       }
-      case 'integration-set-properties': {
+      case INTEGRATION_SET_PROPERTIES: {
         const position = +event.position;
         const properties = event.properties;
         const step =
@@ -456,7 +474,7 @@ export class CurrentFlowService {
         executeEventAction(event.onSave);
         break;
       }
-      case 'integration-set-action': {
+      case INTEGRATION_SET_ACTION: {
         const position = +event.position;
         const action = event.action;
         const stepKind = event.stepKind;
@@ -472,7 +490,7 @@ export class CurrentFlowService {
         this.postUpdates();
         break;
       }
-      case 'integration-set-descriptor': {
+      case INTEGRATION_SET_DESCRIPTOR: {
         const position = +event.position;
         const descriptor = event.descriptor;
         const step =
@@ -487,7 +505,7 @@ export class CurrentFlowService {
         this.postUpdates();
         break;
       }
-      case 'integration-set-datashape': {
+      case INTEGRATION_SET_DATASHAPE: {
         const position = +event.position;
         const dataShape = event.dataShape as DataShape;
         const isInput = event.isInput;
@@ -503,7 +521,7 @@ export class CurrentFlowService {
         this.postUpdates();
         break;
       }
-      case 'integration-set-connection': {
+      case INTEGRATION_SET_CONNECTION: {
         const position = +event.position;
         const connection = event.connection;
         this._integration = setStepInFlow(
@@ -516,7 +534,7 @@ export class CurrentFlowService {
         this.postUpdates();
         break;
       }
-      case 'integration-set-property':
+      case INTEGRATION_SET_PROPERTY:
         this._integration = setIntegrationProperty(
           this._integration,
           event.property,
@@ -525,7 +543,7 @@ export class CurrentFlowService {
         executeEventAction(event.onSave);
         this.postUpdates();
         break;
-      case 'integration-save': {
+      case INTEGRATION_SAVE: {
         // ensure that all steps have IDs before saving
         const integration = prepareIntegrationForSaving(
           this.getIntegrationClone()
@@ -569,6 +587,40 @@ export class CurrentFlowService {
     }
   }
 
+  executeStepCustomizations(
+    position: number,
+    step: Step,
+    then: (step: Step) => void
+  ): any {
+    switch (step.stepKind) {
+      case SPLIT:
+      case AGGREGATE:
+        // A split step needs the data shape of the previous thing with a data shape
+        const prev = this.getPreviousStepWithDataShape(position);
+        this.integrationSupportService
+          .getStepDescriptor(SPLIT, {
+            inputShape: prev.action.descriptor.inputDataShape,
+            outputShape: prev.action.descriptor.outputDataShape,
+          })
+          .subscribe(
+            descriptor => {
+              step = {
+                ...step,
+                action: { actionType: 'step', descriptor } as Action,
+              };
+              then(step);
+            },
+            err => {
+              // we'll just pass through
+              then(step);
+            }
+          );
+        break;
+      default:
+        setTimeout(() => then(step), 1);
+    }
+  }
+
   isApiProvider() {
     try {
       return this.getStartStep().connection.connectorId === 'api-provider';
@@ -584,7 +636,7 @@ export class CurrentFlowService {
    * @param router
    */
   validateFlowAndMaybeRedirect(route: ActivatedRoute, router: Router) {
-    if (!this.loaded) {
+    if (!this.loaded || !this.flowId) {
       return false;
     }
     const validations = this.validate();
@@ -608,23 +660,7 @@ export class CurrentFlowService {
   }
 
   validate() {
-    const errors: FlowError[] = [];
-    const startStep = this.getStartStep();
-    if (
-      typeof startStep === 'undefined' ||
-      typeof startStep.connection === 'undefined'
-    ) {
-      errors.push({ kind: FlowErrorKind.NO_START_CONNECTION });
-    }
-    const endStep = this.getEndStep();
-    if (
-      typeof endStep === 'undefined' ||
-      (endStep.stepKind === 'endpoint' &&
-        typeof this.getEndStep().connection === 'undefined')
-    ) {
-      errors.push({ kind: FlowErrorKind.NO_FINISH_CONNECTION });
-    }
-    return errors;
+    return validateFlow(this._integration, this.flowId);
   }
 
   getIntegrationClone(): Integration {
@@ -664,7 +700,7 @@ export class CurrentFlowService {
     this.postUpdates();
     setTimeout(() => {
       this.events.emit({
-        kind: 'integration-updated',
+        kind: INTEGRATION_UPDATED,
         integration: this.integration,
       });
     }, 10);
@@ -690,7 +726,12 @@ export class CurrentFlowService {
     this.integration$.next(this.integration);
     this.flows$.next(this.flows);
     this.currentFlow$.next(this.currentFlow);
-    this.currentFlowErrors$.next(this.validate());
+    try {
+      // TODO this can throw an exception the integration isn't set up right, but there's a specific test for that, so for now...
+      this.currentFlowErrors$.next(this.validate());
+    } catch (err) {
+      // TODO nothing
+    }
     this.loaded$.next(this.loaded);
   }
 }

@@ -16,6 +16,7 @@ import {
   StepOrConnection,
 } from '@syndesis/ui/platform';
 import { ENDPOINT, StepStore, DATA_MAPPER } from '@syndesis/ui/store';
+import { FlowError, FlowErrorKind } from './edit-page.models';
 
 //
 // Various helper functions that the current flow service uses to build an integration object
@@ -835,4 +836,38 @@ export function getSubsequentStepWithDataShape(
     return steps[0].step;
   }
   return undefined;
+}
+
+/**
+ * Inspects the indicated flow by ID and returns an array of possible issues with it
+ * @param integration
+ * @param flowId
+ */
+export function validateFlow(
+  integration: Integration,
+  flowId: string
+): FlowError[] {
+  const errors: FlowError[] = [];
+  if (!flowId) {
+    throw new Error('Invalid flow ID specified');
+  }
+  if (!integration) {
+    throw new Error('Invalid integration object given');
+  }
+  const startStep = getStartStep(integration, flowId);
+  if (
+    typeof startStep === 'undefined' ||
+    typeof startStep.connection === 'undefined'
+  ) {
+    errors.push({ kind: FlowErrorKind.NO_START_CONNECTION });
+  }
+  const endStep = getLastStep(integration, flowId);
+  if (
+    typeof endStep === 'undefined' ||
+    (endStep.stepKind === 'endpoint' &&
+      typeof endStep.connection === 'undefined')
+  ) {
+    errors.push({ kind: FlowErrorKind.NO_FINISH_CONNECTION });
+  }
+  return errors;
 }

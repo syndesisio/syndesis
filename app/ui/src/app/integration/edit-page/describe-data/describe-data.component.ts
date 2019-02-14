@@ -3,24 +3,26 @@ import { Subscription } from 'rxjs';
 import {
   CurrentFlowService,
   FlowPageService,
-  FlowEvent
+  FlowEvent,
+  INTEGRATION_SET_DATASHAPE,
+  INTEGRATION_UPDATED,
 } from '@syndesis/ui/integration/edit-page';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import {
   Step,
   FormFactoryService,
   StringMap,
-  DataShapeKinds
+  DataShapeKinds,
 } from '@syndesis/ui/platform';
 import {
   DynamicFormService,
-  DynamicFormControlModel
+  DynamicFormControlModel,
 } from '@ng-dynamic-forms/core';
 import { FormGroup } from '@angular/forms';
 
 enum DataShapeDirection {
   INPUT = 'input',
-  OUTPUT = 'output'
+  OUTPUT = 'output',
 }
 
 const PROPERTY_RELATION = [
@@ -29,9 +31,9 @@ const PROPERTY_RELATION = [
     connective: 'OR',
     when: [
       { id: 'kind', value: DataShapeKinds.ANY },
-      { id: 'kind', value: DataShapeKinds.NONE }
-    ]
-  }
+      { id: 'kind', value: DataShapeKinds.NONE },
+    ],
+  },
 ];
 
 const DESCRIBE_DATA_FORM_CONFIG = {
@@ -42,52 +44,52 @@ const DESCRIBE_DATA_FORM_CONFIG = {
     enum: [
       {
         label: 'Type specification not required',
-        value: DataShapeKinds.ANY
+        value: DataShapeKinds.ANY,
       },
       {
         label: 'JSON Schema',
-        value: DataShapeKinds.JSON_SCHEMA
+        value: DataShapeKinds.JSON_SCHEMA,
       },
       {
         label: 'JSON Instance',
-        value: DataShapeKinds.JSON_INSTANCE
+        value: DataShapeKinds.JSON_INSTANCE,
       },
       {
         label: 'XML Schema',
-        value: DataShapeKinds.XML_SCHEMA
+        value: DataShapeKinds.XML_SCHEMA,
       },
       {
         label: 'XML Instance',
-        value: DataShapeKinds.XML_INSTANCE
-      }
+        value: DataShapeKinds.XML_INSTANCE,
+      },
     ],
-    controlHint: 'integrations.edit.describe-data.select-type'
+    controlHint: 'integrations.edit.describe-data.select-type',
   },
   specification: {
     type: 'textarea',
     displayName: 'Definition',
     rows: 10,
     relation: PROPERTY_RELATION,
-    labelHint: 'integrations.edit.describe-data.definition'
+    labelHint: 'integrations.edit.describe-data.definition',
   },
   name: {
     type: 'string',
     displayName: 'Data Type Name',
     relation: PROPERTY_RELATION,
-    controlHint: 'integrations.edit.describe-data.name'
+    controlHint: 'integrations.edit.describe-data.name',
   },
   description: {
     type: 'string',
     displayName: 'Data Type Description',
     relation: PROPERTY_RELATION,
-    controlHint: 'integrations.edit.describe-data.description'
-  }
+    controlHint: 'integrations.edit.describe-data.description',
+  },
 };
 
 @Component({
   selector: 'syndesis-integration-describe-data',
   templateUrl: 'describe-data.component.html',
-  styleUrls: ['../../integration-common.scss']
+  styleUrls: ['../../integration-common.scss'],
 })
 export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
   buttonText = 'Next';
@@ -118,7 +120,7 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
   finishUp() {
     this.router.navigate(['save-or-add-step'], {
       queryParams: { validate: true },
-      relativeTo: this.route.parent
+      relativeTo: this.route.parent,
     });
   }
 
@@ -160,7 +162,7 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
         ? DataShapeDirection.OUTPUT
         : DataShapeDirection.INPUT;
     this.router.navigate(['describe-data', this.position, nextDirection], {
-      relativeTo: this.route.parent
+      relativeTo: this.route.parent,
     });
   }
 
@@ -186,15 +188,15 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
       }
       dataShape.metadata = {
         ...dataShape.metadata,
-        ...{ userDefined: 'true' }
+        ...{ userDefined: 'true' },
       };
       this.currentFlowService.events.emit({
-        kind: 'integration-set-datashape',
+        kind: INTEGRATION_SET_DATASHAPE,
         isInput: this.direction === DataShapeDirection.INPUT,
         dataShape,
         onSave: () => {
           this.validateDataShapes();
-        }
+        },
       });
     } else {
       this.validateDataShapes();
@@ -211,7 +213,7 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
     const step = this.currentFlowService.getStep(this.position);
     if (!step.action) {
       this.router.navigate(['action-select', this.position], {
-        relativeTo: this.route.parent
+        relativeTo: this.route.parent,
       });
       return;
     }
@@ -229,7 +231,7 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
         kind: dataShape.kind,
         name: dataShape.name,
         description: dataShape.description,
-        specification: dataShape.specification
+        specification: dataShape.specification,
       } as StringMap<string>;
       this.userDefined = true;
       this.formModel = this.formFactoryService.createFormModel(
@@ -254,7 +256,7 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
     );
     this.flowSubscription = this.currentFlowService.events.subscribe(
       (flowEvent: FlowEvent) => {
-        if (flowEvent.kind === 'integration-updated') {
+        if (flowEvent.kind === INTEGRATION_UPDATED) {
           this.initialize();
         }
       }

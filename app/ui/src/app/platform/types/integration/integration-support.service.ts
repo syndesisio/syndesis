@@ -11,6 +11,8 @@ import {
   IntegrationStatus,
   IntegrationStatusDetail,
   ContinuousDeliveryEnvironment,
+  DescriptorRequest,
+  ActionDescriptor,
 } from '@syndesis/ui/platform';
 
 @Injectable()
@@ -121,4 +123,9 @@ export abstract class IntegrationSupportService {
   abstract renameEnvironment(oldEnv: string, newEnv: string): Observable<void>;
 
   abstract getEnvironments(): Observable<string[]>;
+
+  abstract getStepDescriptor(
+    kind: string,
+    dataShapes: DescriptorRequest
+  ): Observable<ActionDescriptor>;
 }

@@ -5,13 +5,15 @@ import { PopoverDirective } from 'ngx-bootstrap';
 import { Action, Step, DataShape, DataShapeKinds } from '@syndesis/ui/platform';
 import {
   CurrentFlowService,
-  FlowPageService
+  FlowPageService,
+  INTEGRATION_INSERT_DATAMAPPER,
 } from '@syndesis/ui/integration/edit-page';
+import { INTEGRATION_DELETE_PROMPT } from '../edit-page.models';
 
 @Component({
   selector: 'syndesis-integration-flow-view-step',
   templateUrl: './flow-view-step.component.html',
-  styleUrls: ['./flow-view-step.component.scss']
+  styleUrls: ['./flow-view-step.component.scss'],
 })
 export class FlowViewStepComponent implements OnChanges {
   stepIndex: number;
@@ -93,8 +95,8 @@ export class FlowViewStepComponent implements OnChanges {
 
   deletePrompt() {
     this.currentFlowService.events.emit({
-      kind: 'integration-delete-prompt',
-      position: this.getPosition()
+      kind: INTEGRATION_DELETE_PROMPT,
+      position: this.getPosition(),
     });
   }
 
@@ -284,7 +286,7 @@ export class FlowViewStepComponent implements OnChanges {
       route.push(index);
     }
     this.router.navigate(route, {
-      relativeTo: this.route
+      relativeTo: this.route,
     });
   }
 
@@ -298,7 +300,7 @@ export class FlowViewStepComponent implements OnChanges {
       this.position
     );
     this.router.navigate(['describe-data', index, 'output'], {
-      relativeTo: this.route
+      relativeTo: this.route,
     });
   }
 
@@ -306,15 +308,15 @@ export class FlowViewStepComponent implements OnChanges {
     this.datamapperInfoPop.hide();
     const position = this.getPosition();
     this.currentFlowService.events.emit({
-      kind: 'integration-insert-datamapper',
+      kind: INTEGRATION_INSERT_DATAMAPPER,
       position: position,
       onSave: () => {
         setTimeout(() => {
           this.router.navigate(['step-configure', position], {
-            relativeTo: this.route
+            relativeTo: this.route,
           });
         }, 10);
-      }
+      },
     });
   }
 

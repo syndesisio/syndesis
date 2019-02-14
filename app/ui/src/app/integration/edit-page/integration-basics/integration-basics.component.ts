@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   CurrentFlowService,
-  FlowPageService
+  FlowPageService,
+  INTEGRATION_SET_PROPERTY,
 } from '@syndesis/ui/integration/edit-page';
 
 @Component({
@@ -10,8 +11,8 @@ import {
   templateUrl: 'integration-basics.component.html',
   styleUrls: [
     '../../integration-common.scss',
-    './integration-basics.component.scss'
-  ]
+    './integration-basics.component.scss',
+  ],
 })
 export class IntegrationBasicsComponent implements OnInit {
   constructor(
@@ -63,9 +64,9 @@ export class IntegrationBasicsComponent implements OnInit {
 
   set name(name: string) {
     this.currentFlowService.events.emit({
-      kind: 'integration-set-property',
+      kind: INTEGRATION_SET_PROPERTY,
       property: 'name',
-      value: name
+      value: name,
     });
   }
 
@@ -75,9 +76,9 @@ export class IntegrationBasicsComponent implements OnInit {
 
   set description(description: string) {
     this.currentFlowService.events.emit({
-      kind: 'integration-set-property',
+      kind: INTEGRATION_SET_PROPERTY,
       property: 'description',
-      value: description
+      value: description,
     });
   }
 
@@ -92,9 +93,9 @@ export class IntegrationBasicsComponent implements OnInit {
   set tags(tags: string) {
     const _tags = tags.split(',').map(str => str.trim());
     this.currentFlowService.events.emit({
-      kind: 'integration-set-property',
+      kind: INTEGRATION_SET_PROPERTY,
       property: 'tags',
-      value: _tags
+      value: _tags,
     });
   }
 
