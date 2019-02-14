@@ -598,7 +598,7 @@ export class CurrentFlowService {
         // A split step needs the data shape of the previous thing with a data shape
         const prev = this.getPreviousStepWithDataShape(position);
         this.integrationSupportService
-          .getStepDescriptor(SPLIT, {
+          .getStepDescriptor(step.stepKind, {
             inputShape: prev.action.descriptor.inputDataShape,
             outputShape: prev.action.descriptor.outputDataShape,
           })
