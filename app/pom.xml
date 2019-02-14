@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.basepom</groupId>
     <artifactId>basepom-oss</artifactId>
-    <version>25</version>
+    <version>27</version>
   </parent>
 
   <groupId>io.syndesis</groupId>
@@ -113,7 +113,6 @@
     <json-schema-core.version>1.2.8</json-schema-core.version>
     <json-schema-validator.version>2.2.8</json-schema-validator.version>
     <junit.version>4.12</junit.version>
-    <spotbugs.version>3.1.5</spotbugs.version>
 
     <spring-security.version>4.2.6.RELEASE</spring-security.version>
     <resteasy.version>3.6.1.Final</resteasy.version>
@@ -647,12 +646,6 @@
         </plugin>
 
         <plugin>
-          <groupId>com.github.spotbugs</groupId>
-          <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>${spotbugs.version}</version>
-        </plugin>
-
-        <plugin>
           <groupId>org.basepom.maven</groupId>
           <artifactId>duplicate-finder-maven-plugin</artifactId>
           <version>1.3.0</version>
@@ -942,19 +935,15 @@
       </plugin>
 
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>default</id>
-            <phase />
-          </execution>
-        </executions>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <inherited>false</inherited>
       </plugin>
 
       <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <inherited>false</inherited>
       </plugin>
 
     </plugins>
@@ -1743,13 +1732,13 @@
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
-        <version>${dep.findbugs.version}</version>
+        <version>3.0.2</version>
       </dependency>
 
       <dependency>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-annotations</artifactId>
-        <version>${spotbugs.version}</version>
+        <version>${dep.plugin.spotbugs.version}</version>
         <scope>provided</scope>
       </dependency>
 
