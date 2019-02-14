@@ -24,20 +24,8 @@ import (
 var log = logf.Log.WithName("controller")
 
 var (
-	actionPool []action.InstallationAction
+	actions []action.SyndesisOperatorAction
 )
-
-func init() {
-	actionPool = append(actionPool,
-		&action.UpgradeLegacy,
-		&action.InitializeAction,
-		&action.InstallAction,
-		&action.StartupAction,
-		&action.CheckUpdatesAction,
-		&action.UpgradeAction,
-		&action.UpgradeBackoffAction,
-	)
-}
 
 // Add creates a new Syndesis Controller and adds it to the Manager. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
@@ -76,6 +64,7 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 		return err
 	}
 
+	actions = action.NewOperatorActions(mgr)
 	return nil
 }
 
@@ -100,7 +89,10 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 
 	// Fetch the Syndesis syndesis
 	syndesis := &syndesisv1alpha1.Syndesis{}
-	err := r.client.Get(context.TODO(), request.NamespacedName, syndesis)
+
+	ctx := context.TODO()
+
+	err := r.client.Get(ctx, request.NamespacedName, syndesis)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			// Request object not found, could have been deleted after reconcile request.
@@ -115,16 +107,16 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 
 	// Don't want to do anything if the syndesis resource has been updated in the meantime
 	// This happens when a processing takes more tha the resync period
-	if latest, err := r.isLatestVersion(syndesis); err != nil || !latest {
+	if latest, err := r.isLatestVersion(ctx, syndesis); err != nil || !latest {
 		log.Error(err, "Cannot get latest version")
 		return reconcile.Result{}, err
 	}
 
-	for _, a := range actionPool {
+	for _, a := range actions {
 		if a.CanExecute(syndesis) {
 			log.Info("Running action", "action", reflect.TypeOf(a))
-			if err := a.Execute(r.scheme, action.Client{r.client, r.apis}, syndesis); err != nil {
-				log.Error(err, "Error reconciling", "action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
+			if err := a.Execute(ctx, syndesis); err != nil {
+				log.Error(err, "Error reconciling","action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
 				return reconcile.Result{}, err
 			}
 		}
@@ -133,9 +125,9 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 	return reconcile.Result{}, nil
 }
 
-func (r *ReconcileSyndesis) isLatestVersion(syndesis *syndesisv1alpha1.Syndesis) (bool, error) {
+func (r *ReconcileSyndesis) isLatestVersion(ctx context.Context, syndesis *syndesisv1alpha1.Syndesis) (bool, error) {
 	refreshed := syndesis.DeepCopy()
-	if err := r.client.Get(context.TODO(), types.NamespacedName{Name: refreshed.Name, Namespace: refreshed.Namespace}, refreshed); err != nil {
+	if err := r.client.Get(ctx, types.NamespacedName{Name: refreshed.Name, Namespace: refreshed.Namespace}, refreshed); err != nil {
 		return false, err
 	}
 	return refreshed.ResourceVersion == syndesis.ResourceVersion, nil

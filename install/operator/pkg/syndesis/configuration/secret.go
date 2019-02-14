@@ -14,8 +14,8 @@ const (
 	SyndesisGlobalConfigParamsProperty  = "params"
 )
 
-func IsSyndesisConfigurationSecretPresent(client client.Client, namespace string) (bool, error) {
-	if _, err := GetSyndesisConfigurationSecret(client, namespace); err != nil && errors.IsNotFound(err) {
+func IsSyndesisConfigurationSecretPresent(ctx context.Context, client client.Client, namespace string) (bool, error) {
+	if _, err := GetSyndesisConfigurationSecret(ctx, client, namespace); err != nil && errors.IsNotFound(err) {
 		return false, nil
 	} else if err != nil {
 		return false, err
@@ -24,9 +24,9 @@ func IsSyndesisConfigurationSecretPresent(client client.Client, namespace string
 	}
 }
 
-func GetSyndesisConfigurationSecret(client client.Client, namespace string) (*v1.Secret, error) {
+func GetSyndesisConfigurationSecret(ctx context.Context, client client.Client, namespace string) (*v1.Secret, error) {
 	secret := v1.Secret{}
-	if err := client.Get(context.TODO(), util.NewObjectKey(SyndesisGlobalConfigSecret, namespace), &secret); err != nil {
+	if err := client.Get(ctx, util.NewObjectKey(SyndesisGlobalConfigSecret, namespace), &secret); err != nil {
 		return nil, err
 	}
 	return &secret, nil

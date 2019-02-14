@@ -10,7 +10,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func AttachSyndesisToResource(scheme *runtime.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
+func AttachSyndesisToResource(ctx context.Context, scheme *runtime.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
 
 	resTypes, err := getAllManagedResourceTypes(scheme)
 	if err != nil {
@@ -28,7 +28,7 @@ func AttachSyndesisToResource(scheme *runtime.Scheme, cl client.Client, syndesis
 			list := metav1.List{
 				TypeMeta: metaType,
 			}
-			if err := cl.List(context.TODO(), options, &list); err != nil {
+			if err := cl.List(ctx, options, &list); err != nil {
 				return err
 			}
 
@@ -38,7 +38,7 @@ func AttachSyndesisToResource(scheme *runtime.Scheme, cl client.Client, syndesis
 					return err
 				}
 				SetNamespaceAndOwnerReference(res, syndesis)
-				if err := cl.Update(context.TODO(), res); err != nil {
+				if err := cl.Update(ctx, res); err != nil {
 					return err
 				}
 			}

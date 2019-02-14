@@ -7,27 +7,30 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
 // Waits for all pods to startup, then mark Syndesis as "Running".
-type startup action
+type startupAction struct {
+	baseAction
+}
 
-var (
-	StartupAction = startup{
-		actionLog.WithValues("type", "startup"),
+func newStartupAction(mgr manager.Manager) SyndesisOperatorAction {
+	return &startupAction{
+		newBaseAction(mgr,"startup"),
 	}
-)
+}
 
-func (a *startup) CanExecute(syndesis *v1alpha1.Syndesis) bool {
+func (a *startupAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
 		v1alpha1.SyndesisPhaseStarting,
 		v1alpha1.SyndesisPhaseStartupFailed)
 }
 
-func (a *startup) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error {
-	list := v1.DeploymentConfigList{
+func (a *startupAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
+
+	list := v1.DeploymentConfigList {
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "DeploymentConfig",
 			APIVersion: "apps.openshift.io/v1",
@@ -38,7 +41,7 @@ func (a *startup) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.
 		return err
 	}
 
-	if err := cl.List(context.TODO(), &listOptions, &list); err != nil {
+	if err := a.client.List(ctx, &listOptions, &list); err != nil {
 		return err
 	}
 
@@ -64,21 +67,21 @@ func (a *startup) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		a.log.Info("Syndesis resource installed successfully", "name", syndesis.Name)
-		return cl.Status().Update(context.TODO(), target)
+		return a.client.Status().Update(ctx, target)
 	} else if failedDeployment != nil {
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1alpha1.SyndesisPhaseStartupFailed
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonDeploymentNotReady
 		target.Status.Description = "Some Syndesis deployments failed to startup within the allowed time frame"
 		a.log.Info("Startup failed for Syndesis resource. Deployment not ready", "name", syndesis.Name, "deployment", *failedDeployment)
-		return cl.Status().Update(context.TODO(), target)
+		return a.client.Status().Update(ctx, target)
 	} else {
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1alpha1.SyndesisPhaseStarting
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		a.log.Info("Waiting for Syndesis resource to startup", "name", syndesis.Name)
-		return cl.Status().Update(context.TODO(), target)
+		return a.client.Status().Update(ctx, target)
 	}
 }
 

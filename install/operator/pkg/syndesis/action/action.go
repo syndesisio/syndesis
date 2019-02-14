@@ -9,6 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
@@ -22,19 +23,38 @@ type Client struct {
 	kubernetes.Interface
 }
 
-type action struct {
+type baseAction struct {
 	log logr.Logger
+	client client.Client
+	scheme *runtime.Scheme
 }
 
-var actionLog = logf.Log.WithName("action").WithValues("type", )
+var actionLog = logf.Log.WithName("action")
 
-type InstallationAction interface {
+type SyndesisOperatorAction interface {
 	CanExecute(syndesis *v1alpha1.Syndesis) bool
-
-	Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error
+	Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error
 }
 
-type updateFunction func(runtime.Object)
+func NewOperatorActions(mgr manager.Manager) []SyndesisOperatorAction {
+	return []SyndesisOperatorAction{
+		newCheckUpdatesAction(mgr),
+		newInitializeAction(mgr),
+		newInstallAction(mgr),
+		newStartupAction(mgr),
+		newUpgradeAction(mgr),
+		newUpgradeBackoffAction(mgr),
+		newUpgradeLegacyAction(mgr),
+	}
+}
+
+func newBaseAction(mgr manager.Manager, typeS string) baseAction {
+	return baseAction{
+		actionLog.WithValues("type", typeS),
+		mgr.GetClient(),
+		mgr.GetScheme(),
+	}
+}
 
 func syndesisPhaseIs(syndesis *v1alpha1.Syndesis, statuses ...v1alpha1.SyndesisPhase) bool {
 	if syndesis == nil {
@@ -50,18 +70,18 @@ func syndesisPhaseIs(syndesis *v1alpha1.Syndesis, statuses ...v1alpha1.SyndesisP
 	return false
 }
 
-func createOrReplace(client client.Client, res runtime.Object) error {
-	return createOrReplaceForce(client, res, false)
+func createOrReplace(ctx context.Context, client client.Client, res runtime.Object) error {
+	return createOrReplaceForce(ctx, client, res, false)
 }
 
-func createOrReplaceForce(client client.Client, res runtime.Object, force bool) error {
-	if err := client.Create(context.TODO(), res); err != nil && k8serrors.IsAlreadyExists(err) {
+func createOrReplaceForce(ctx context.Context, client client.Client, res runtime.Object, force bool) error {
+	if err := client.Create(ctx, res); err != nil && k8serrors.IsAlreadyExists(err) {
 		if force || canResourceBeReplaced(res) {
-			err = client.Delete(context.TODO(), res)
+			err = client.Delete(ctx, res)
 			if err != nil {
 				return err
 			}
-			return client.Create(context.TODO(), res)
+			return client.Create(ctx, res)
 		} else {
 			return nil
 		}
@@ -70,9 +90,11 @@ func createOrReplaceForce(client client.Client, res runtime.Object, force bool) 
 	}
 }
 
-func updateOnLatestRevision(cl client.Client, res runtime.Object, change updateFunction) error {
+type updateFunction func(runtime.Object)
+
+func updateOnLatestRevision(ctx context.Context, cl client.Client, res runtime.Object, change updateFunction) error {
 	change(res)
-	err := cl.Update(context.TODO(), res)
+	err := cl.Update(ctx, res)
 	if err != nil && k8serrors.IsConflict(err) {
 		attempts := 1
 		for attempts <= 5 && err != nil && k8serrors.IsConflict(err) {
@@ -80,13 +102,13 @@ func updateOnLatestRevision(cl client.Client, res runtime.Object, change updateF
 			if key, err = client.ObjectKeyFromObject(res); err != nil {
 				return err
 			}
-			err = cl.Get(context.TODO(), key, res)
+			err = cl.Get(ctx, key, res)
 			if err != nil {
 				return err
 			}
 
 			change(res)
-			err = cl.Update(context.TODO(), res)
+			err = cl.Update(ctx, res)
 			attempts++
 		}
 	}

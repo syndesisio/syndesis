@@ -2,7 +2,9 @@ package action
 
 import (
 	"context"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"math"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"strconv"
 	"time"
 
@@ -17,23 +19,23 @@ const (
 )
 
 // After a failure, waits a exponential amount of time, then retries
-type upgradeBackoff struct {
-	action
+type upgradeBackoffAction struct {
+	baseAction
 	operatorVersion string
 }
 
-var (
-	UpgradeBackoffAction = upgradeBackoff{
-		action{actionLog.WithValues("type", "upgrade-backoff")},
+func newUpgradeBackoffAction(mgr manager.Manager) SyndesisOperatorAction {
+	return &upgradeBackoffAction{
+		newBaseAction(mgr,"upgrade-backoff"),
 		"",
 	}
-)
+}
 
-func (a *upgradeBackoff) CanExecute(syndesis *v1alpha1.Syndesis) bool {
+func (a *upgradeBackoffAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseUpgradeFailureBackoff)
 }
 
-func (a *upgradeBackoff) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error {
+func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 
 	// Check number of attempts to fail fast
 	if syndesis.Status.UpgradeAttempts >= UpgradeMaxAttempts {
@@ -45,7 +47,7 @@ func (a *upgradeBackoff) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1
 		target.Status.Description = "Upgrade failed too many times and will not be retried"
 		target.Status.ForceUpgrade = false
 
-		return cl.Status().Update(context.TODO(), target)
+		return a.client.Status().Update(ctx, target)
 	}
 
 	now := time.Now()
@@ -84,7 +86,7 @@ func (a *upgradeBackoff) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1
 		target.Status.Description = "Upgrading from " + currentVersion + " to " + targetVersion + " (attempt " + currentAttemptStr + ")"
 		target.Status.ForceUpgrade = true
 
-		return cl.Status().Update(context.TODO(), target)
+		return a.client.Status().Update(ctx, target)
 	} else {
 		remaining := math.Round(nextAttempt.Sub(now).Seconds())
 		a.log.Info("Upgrade of Syndesis resource will be retried", "name", syndesis.Name, "retryAfterSeconds", remaining)

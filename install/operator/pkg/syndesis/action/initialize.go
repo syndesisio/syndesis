@@ -3,30 +3,34 @@ package action
 import (
 	"context"
 
-	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
 // Initializes a Syndesis resource with no status and starts the installation process
-type initialize action
+type initializeAction struct {
+	baseAction
+}
 
-var (
-	InitializeAction = initialize{actionLog.WithValues("type", "initialize")}
-)
+func newInitializeAction(mgr manager.Manager) SyndesisOperatorAction {
+	return &initializeAction{
+		newBaseAction(mgr,"initialize"),
+	}
+}
 
-func (a *initialize) CanExecute(syndesis *v1alpha1.Syndesis) bool {
+func (a *initializeAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
 		v1alpha1.SyndesisPhaseMissing,
 		v1alpha1.SyndesisPhaseNotInstalled)
 }
 
-func (a *initialize) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error {
+func (a *initializeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 
 	list := v1alpha1.SyndesisList{}
-	err := cl.List(context.TODO(), &client.ListOptions{Namespace: syndesis.Namespace}, &list)
+	err := a.client.List(ctx, &client.ListOptions{Namespace: syndesis.Namespace}, &list)
 	if err != nil {
 		return err
 	}
@@ -40,7 +44,7 @@ func (a *initialize) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alph
 		target.Status.Description = "Cannot install two Syndesis resources in the same namespace"
 		a.log.Error(nil, "Cannot initialize Syndesis resource because its a duplicate", "name", syndesis.Name)
 	} else {
-		syndesisVersion, err := configuration.GetSyndesisVersionFromOperatorTemplate(scheme)
+		syndesisVersion, err := configuration.GetSyndesisVersionFromOperatorTemplate(a.scheme)
 		if err != nil {
 			return err
 		}
@@ -49,8 +53,8 @@ func (a *initialize) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alph
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		target.Status.Version = syndesisVersion
-		a.log.Info("Syndesis resource initialized: installing version ", "name", syndesis.Name, "version", syndesisVersion)
+		a.log.Info("Syndesis resource initialized", "name", syndesis.Name, "version", syndesisVersion)
 	}
 
-	return cl.Status().Update(context.TODO(), target)
+	return a.client.Status().Update(ctx, target)
 }

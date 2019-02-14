@@ -38,7 +38,7 @@ func (c *LegacyController) Start(ctx context.Context, client client.Client) {
 func (c *LegacyController) verifyAndCreate(ctx context.Context, client client.Client) {
 	defer log.Info("Syndesis legacy installations check completed")
 
-	err := c.doVerifyAndCreate(client)
+	err := c.doVerifyAndCreate(ctx, client)
 	if err != nil {
 		log.Error(err, "Unable to check Syndesis legacy installations (will retry again)")
 
@@ -47,7 +47,7 @@ func (c *LegacyController) verifyAndCreate(ctx context.Context, client client.Cl
 			case <-ctx.Done():
 				return
 			case <-time.After(retryInterval):
-				if err := c.doVerifyAndCreate(client); err != nil {
+				if err := c.doVerifyAndCreate(ctx, client); err != nil {
 					log.Error(err,"Unable to check Syndesis legacy installations (will retry again)")
 				} else {
 					return
@@ -57,12 +57,11 @@ func (c *LegacyController) verifyAndCreate(ctx context.Context, client client.Cl
 	}
 }
 
-func (c *LegacyController) doVerifyAndCreate(cl client.Client) error {
-	if exists, err := c.legacyInstallationExists(cl); err != nil {
+func (c *LegacyController) doVerifyAndCreate(ctx context.Context, cl client.Client) error {
+	if exists, err := c.legacyInstallationExists(ctx, cl); err != nil {
 		return err
 	} else if exists {
 		log.Info("A legacy Syndesis installations is present", "namespace", c.namespace)
-
 		synd := v1alpha1.Syndesis{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "Syndesis",
@@ -80,7 +79,7 @@ func (c *LegacyController) doVerifyAndCreate(cl client.Client) error {
 
 		log.Info("Merging Syndesis legacy configuration into resource ", "resource", syndesisResourceName)
 
-		config, err := configuration.GetSyndesisEnvVarsFromOpenshiftNamespace(cl, c.namespace)
+		config, err := configuration.GetSyndesisEnvVarsFromOpenshiftNamespace(ctx, cl, c.namespace)
 		if err != nil {
 			return nil
 		}
@@ -88,16 +87,16 @@ func (c *LegacyController) doVerifyAndCreate(cl client.Client) error {
 		configuration.SetConfigurationFromEnvVars(config, &synd)
 
 		log.Info("Creating a new Syndesis resource from legacy installation", "namespace",c.namespace)
-		return cl.Create(context.TODO(), &synd)
+		return cl.Create(ctx, &synd)
 	} else {
 		log.Info("No legacy Syndesis installations detected", "namespace", c.namespace)
 		return nil
 	}
 }
 
-func (c *LegacyController) legacyInstallationExists(cl client.Client) (bool, error) {
+func (c *LegacyController) legacyInstallationExists(ctx context.Context, cl client.Client) (bool, error) {
 	// There exists a Syndesis configuration
-	v, err := configuration.GetSyndesisVersionFromNamespace(cl, c.namespace)
+	v, err := configuration.GetSyndesisVersionFromNamespace(ctx, cl, c.namespace)
 	if err != nil && k8serrors.IsNotFound(err) {
 		return false, nil
 	} else if err != nil || v == "" {
@@ -106,7 +105,7 @@ func (c *LegacyController) legacyInstallationExists(cl client.Client) (bool, err
 
 	// There's not any Syndesis resource
 	lst := v1alpha1.SyndesisList{}
-	err = cl.List(context.TODO(), &client.ListOptions{}, &lst)
+	err = cl.List(ctx, &client.ListOptions{}, &lst)
 	if err != nil || len(lst.Items) > 0 {
 		return false, err
 	}

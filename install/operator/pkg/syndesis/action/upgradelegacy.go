@@ -10,24 +10,28 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
 // Upgrade a legacy Syndesis installation (installed with template) using the operator.
-type upgradeLegacy action
+type upgradeLegacyAction struct {
+	baseAction
+}
 
-var (
-	UpgradeLegacy = upgradeLegacy{
-		actionLog.WithValues("type", "upgrade-legacy"),
+func newUpgradeLegacyAction(mgr manager.Manager) SyndesisOperatorAction {
+	return &upgradeLegacyAction{
+		newBaseAction(mgr,"upgrade-legacy"),
 	}
-)
+}
 
-func (a *upgradeLegacy) CanExecute(syndesis *v1alpha1.Syndesis) bool {
+func (a *upgradeLegacyAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseUpgradingLegacy)
 }
 
-func (a *upgradeLegacy) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error {
+func (a *upgradeLegacyAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	// Checking that there's only one installation to avoid stealing resources
-	if anotherInstallation, err := isAnotherActiveInstallationPresent(cl, syndesis); err != nil {
+	if anotherInstallation, err := a.isAnotherActiveInstallationPresent(ctx, syndesis); err != nil {
 		return err
 	} else if anotherInstallation {
 		return errors.New("another syndesis installation active")
@@ -35,12 +39,12 @@ func (a *upgradeLegacy) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1a
 
 	a.log.Info("Attaching Syndesis installation to resource", "name", syndesis.Name)
 
-	err := operation.AttachSyndesisToResource(scheme, cl, syndesis)
+	err := operation.AttachSyndesisToResource(ctx, a.scheme, a.client, syndesis)
 	if err != nil {
 		return err
 	}
 
-	syndesisVersion, err := configuration.GetSyndesisVersionFromNamespace(cl, syndesis.Namespace)
+	syndesisVersion, err := configuration.GetSyndesisVersionFromNamespace(ctx, a.client, syndesis.Namespace)
 	if err != nil {
 		return err
 	}
@@ -52,12 +56,12 @@ func (a *upgradeLegacy) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1a
 	target.Status.Version = syndesisVersion
 
 	a.log.Info("Syndesis installation attached to resource", "name", syndesis.Name)
-	return cl.Status().Update(context.TODO(), target)
+	return a.client.Status().Update(ctx, target)
 }
 
-func isAnotherActiveInstallationPresent(cl client.Client, syndesis *v1alpha1.Syndesis) (bool, error) {
+func (a *upgradeLegacyAction) isAnotherActiveInstallationPresent(ctx context.Context, syndesis *v1alpha1.Syndesis) (bool, error) {
 	lst := v1alpha1.SyndesisList{}
-	err := cl.List(context.TODO(), &client.ListOptions{Namespace: syndesis.Namespace}, &lst)
+	err := a.client.List(ctx, &client.ListOptions{Namespace: syndesis.Namespace}, &lst)
 	if err != nil {
 		return false, err
 	}
