@@ -17,6 +17,7 @@
 package io.syndesis.server.endpoint.v1.handler.meta;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
@@ -47,52 +48,99 @@ class AggregateMetadataHandler implements StepMetadataHandler {
     @Override
     public DynamicActionMetadata handle(DynamicActionMetadata metadata) {
         try {
+            DataShape outputShape = metadata.outputShape();
+            DataShape inputShape = metadata.inputShape();
+
             if (metadata.outputShape() != null) {
-                DataShape dataShape = new DataShape.Builder()
-                                                .createFrom(metadata.outputShape())
-                                                .decompress()
-                                                .build();
-
-                Optional<DataShape> collectionShape = dataShape.findVariantByMeta("variant", "collection");
-
-                if (collectionShape.isPresent()) {
-                    return new DynamicActionMetadata.Builder()
-                            .createFrom(metadata)
-                            .outputShape(collectionShape.get())
-                            .build();
-                }
-
-                DataShape singleElementShape = dataShape.findVariantByMeta("variant", "element").orElse(dataShape);
-
-                if (singleElementShape.getKind().equals(DataShapeKinds.JSON_SCHEMA)) {
-                    String specification = dataShape.getSpecification();
-                    JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
-
-                    ArraySchema collectionSchema = new ArraySchema();
-                    collectionSchema.set$schema(Optional.ofNullable(schema.get$schema()).orElse(JSON_SCHEMA_ORG_SCHEMA));
-                    collectionSchema.setItemsSchema(schema);
-                    schema.set$schema(null);
-
-                    return new DynamicActionMetadata.Builder()
-                                .createFrom(metadata)
-                                .outputShape(new DataShape.Builder().createFrom(singleElementShape)
-                                                                    .specification(Json.writer().writeValueAsString(collectionSchema))
-                                                                    .build())
-                                .build();
-                } else if (singleElementShape.getKind().equals(DataShapeKinds.JSON_INSTANCE)) {
-                    String specification = dataShape.getSpecification();
-                    return new DynamicActionMetadata.Builder()
-                            .createFrom(metadata)
-                            .outputShape(new DataShape.Builder().createFrom(singleElementShape)
-                                                                .specification("[" + specification + "]")
-                                                                .build())
-                            .build();
-                }
+                outputShape = adaptOutputShape(new DataShape.Builder()
+                                                        .createFrom(metadata.outputShape())
+                                                        .decompress()
+                                                        .build());
             }
+
+            if (metadata.inputShape() != null) {
+                inputShape = adaptInputShape(new DataShape.Builder()
+                                                        .createFrom(metadata.inputShape())
+                                                        .decompress()
+                                                        .build());
+            }
+
+            return new DynamicActionMetadata.Builder()
+                    .createFrom(metadata)
+                    .inputShape(inputShape)
+                    .outputShape(outputShape)
+                    .build();
         } catch (IOException e) {
             LOG.warn("Unable to read output data shape on dynamic meta data inspection", e);
         }
 
         return metadata;
+    }
+
+    DataShape adaptInputShape(DataShape dataShape) throws IOException {
+        Optional<DataShape> singleElementShape = dataShape.findVariantByMeta("variant", "element");
+
+        if (singleElementShape.isPresent()) {
+            return singleElementShape.get();
+        }
+
+        DataShape collectionShape = dataShape.findVariantByMeta("variant", "collection").orElse(dataShape);
+
+        if (collectionShape.getKind().equals(DataShapeKinds.JSON_SCHEMA)) {
+            String specification = dataShape.getSpecification();
+            JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
+
+            if (schema.isArraySchema()) {
+                ArraySchema.Items items = ((ArraySchema) schema).getItems();
+                JsonSchema itemSchema = items.asSingleItems().getSchema();
+                itemSchema.set$schema(schema.get$schema());
+                if (items.isSingleItems()) {
+                    return new DataShape.Builder().createFrom(collectionShape)
+                                                        .specification(Json.writer().writeValueAsString(itemSchema))
+                                                        .build();
+                }
+            }
+        } else if (collectionShape.getKind().equals(DataShapeKinds.JSON_INSTANCE)) {
+            String specification = dataShape.getSpecification();
+            List<Object> items = Json.reader().forType(List.class).readValue(specification);
+            if (!items.isEmpty()) {
+                return new DataShape.Builder().createFrom(collectionShape)
+                                                        .specification(Json.writer().writeValueAsString(items.get(0)))
+                                                        .build();
+            }
+        }
+
+        return dataShape;
+    }
+
+    DataShape adaptOutputShape(DataShape dataShape) throws IOException {
+        Optional<DataShape> collectionShape = dataShape.findVariantByMeta("variant", "collection");
+
+        if (collectionShape.isPresent()) {
+            return collectionShape.get();
+        }
+
+        DataShape singleElementShape = dataShape.findVariantByMeta("variant", "element").orElse(dataShape);
+
+        if (singleElementShape.getKind().equals(DataShapeKinds.JSON_SCHEMA)) {
+            String specification = dataShape.getSpecification();
+            JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
+
+            ArraySchema collectionSchema = new ArraySchema();
+            collectionSchema.set$schema(Optional.ofNullable(schema.get$schema()).orElse(JSON_SCHEMA_ORG_SCHEMA));
+            collectionSchema.setItemsSchema(schema);
+            schema.set$schema(null);
+
+            return new DataShape.Builder().createFrom(singleElementShape)
+                                            .specification(Json.writer().writeValueAsString(collectionSchema))
+                                            .build();
+        } else if (singleElementShape.getKind().equals(DataShapeKinds.JSON_INSTANCE)) {
+            String specification = dataShape.getSpecification();
+            return new DataShape.Builder().createFrom(singleElementShape)
+                                            .specification("[" + specification + "]")
+                                            .build();
+        }
+
+        return dataShape;
     }
 }

@@ -598,9 +598,11 @@ export class CurrentFlowService {
       case AGGREGATE:
         // A split step needs the data shape of the previous thing with a data shape
         const prev = this.getPreviousStepWithDataShape(position);
+        const subsequent = this.getSubsequentStepWithDataShape(position);
+        const subsequentDataShape = subsequent !== undefined ? subsequent.action.descriptor.inputDataShape : undefined;
         this.integrationSupportService
           .getStepDescriptor(step.stepKind, {
-            inputShape: prev.action.descriptor.inputDataShape,
+            inputShape: step.stepKind === AGGREGATE ? subsequentDataShape : prev.action.descriptor.inputDataShape,
             outputShape: prev.action.descriptor.outputDataShape,
           })
           .subscribe(
