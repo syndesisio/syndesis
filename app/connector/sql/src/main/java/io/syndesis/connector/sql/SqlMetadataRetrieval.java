@@ -46,6 +46,9 @@ import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 
 @SuppressWarnings("PMD.GodClass")
 public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
+
+    private static final String JSON_SCHEMA_ORG_SCHEMA = "http://json-schema.org/schema#";
+
     static final String PROCEDURE_NAME = "procedureName";
     static final String PROCEDURE_TEMPLATE = "template";
     static final String PATTERN = "Pattern";
@@ -84,7 +87,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
 
             // build the input and output schemas
             final ObjectSchema builderIn = new ObjectSchema();
-            builderIn.set$schema("http://json-schema.org/schema#");
+            builderIn.set$schema(JSON_SCHEMA_ORG_SCHEMA);
             builderIn.setTitle("SQL_PARAM_IN");
             for (SqlParam inParam: sqlStatementMetaData.getInParams()) {
                 builderIn.putProperty(inParam.getName(), schemaFor(inParam.getJdbcType()));
@@ -92,10 +95,12 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
 
             final ObjectSchema builderOut = new ObjectSchema();
             builderOut.setTitle("SQL_PARAM_OUT");
-            builderOut.set$schema("http://json-schema.org/schema#");
             for (SqlParam outParam: sqlStatementMetaData.getOutParams()) {
                 builderOut.putProperty(outParam.getName(), schemaFor(outParam.getJdbcType()));
             }
+            final ArraySchema outputSpec = new ArraySchema();
+            outputSpec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
+            outputSpec.setItemsSchema(builderOut);
 
             try {
                 DataShape.Builder inDataShapeBuilder = new DataShape.Builder().type(builderIn.getTitle());
@@ -103,9 +108,9 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
                     inDataShapeBuilder.kind(DataShapeKinds.NONE);
                 } else {
                     inDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
-                    .name("SQL Parameter")
-                    .description(String.format("Parameters of SQL [%s]", sqlStatementMetaData.getSqlStatement()))
-                    .specification(Json.writer().writeValueAsString(builderIn));
+                        .name("SQL Parameter")
+                        .description(String.format("Parameters of SQL [%s]", sqlStatementMetaData.getSqlStatement()))
+                        .specification(Json.writer().writeValueAsString(builderIn));
                 }
                 DataShape.Builder outDataShapeBuilder = new DataShape.Builder().type(builderOut.getTitle());
                 if (builderOut.getProperties().isEmpty()) {
@@ -113,8 +118,9 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
                 } else {
                     outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                         .name("SQL Result")
-                    .description(String.format("Result of SQL [%s]", sqlStatementMetaData.getSqlStatement()))
-                    .specification(Json.writer().writeValueAsString(builderOut));
+                        .description(String.format("Result of SQL [%s]", sqlStatementMetaData.getSqlStatement()))
+                        .putMetadata("variant", "collection")
+                        .specification(Json.writer().writeValueAsString(outputSpec));
                 }
 
                 return new SyndesisMetadata(enrichedProperties,
@@ -145,12 +151,12 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
 
             // build the input and output schemas
             final ObjectSchema builderIn = new ObjectSchema();
-            builderIn.set$schema("http://json-schema.org/schema#");
+            builderIn.set$schema(JSON_SCHEMA_ORG_SCHEMA);
             builderIn.setTitle(procedureName + "_IN");
 
             final ObjectSchema builderOut = new ObjectSchema();
             builderOut.setTitle(procedureName + "_OUT");
-            builderOut.set$schema("http://json-schema.org/schema#");
+            builderOut.set$schema(JSON_SCHEMA_ORG_SCHEMA);
 
             if (storedProcedure.getColumnList() != null && !storedProcedure.getColumnList().isEmpty()) {
                 for (final StoredProcedureColumn column : storedProcedure.getColumnList()) {
@@ -180,6 +186,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
                     outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                         .name(procedureName + " Return")
                         .description(String.format("Return value of Stored Procedure '%s'", procedureName))
+                        .putMetadata("variant", "element")
                         .specification(Json.writer().writeValueAsString(builderOut));
                 }
 

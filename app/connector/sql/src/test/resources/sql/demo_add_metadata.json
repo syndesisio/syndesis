@@ -11,6 +11,9 @@
     "type" : "DEMO_ADD_OUT",
     "name" : "DEMO_ADD Return",
     "description" : "Return value of Stored Procedure 'DEMO_ADD'",
+    "metadata": {
+      "variant": "element"
+    },
     "specification" : "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"DEMO_ADD_OUT\",\"properties\":{\"C\":{\"type\":\"integer\",\"required\":true}}}"
   },
   "properties" : {
