@@ -22,9 +22,9 @@ rules:
 - apiGroups:
   - syndesis.io
   resources:
-  - syndesises
-  - syndesises/finalizers
-  verbs: [ get, list, create, update, delete, deletecollection, watch ]
+  - '*'
+  verbs:
+  - '*'
 - apiGroups:
   - ""
   resources:
