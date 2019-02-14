@@ -20,7 +20,7 @@
 
   <groupId>io.syndesis.extension</groupId>
   <artifactId>extension-example-simple-action-step</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6.1-20190214</version>
 
   <name>Extension :: Example :: Simple Action Step</name>
   <description>Syndesis :: ${project.name}</description>
