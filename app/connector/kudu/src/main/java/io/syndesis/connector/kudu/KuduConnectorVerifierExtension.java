@@ -16,7 +16,6 @@
 
 package io.syndesis.connector.kudu;
 
-import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.connector.kudu.common.KuduSupport;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
@@ -38,17 +37,6 @@ public class KuduConnectorVerifierExtension extends DefaultComponentVerifierExte
                 .error(ResultErrorHelper.requiresOption("host", parameters))
                 .error(ResultErrorHelper.requiresOption("port", parameters));
 
-        if (builder.build().getErrors().isEmpty()) {
-            try (KuduClient c = KuduSupport.createConnection(parameters.get("host").toString(), parameters.get("port").toString());){
-                if(c == null) {
-                    throw new SyndesisServerException("Unable to stablish connection");
-                }
-            } catch (Exception e) {
-                ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(
-                        VerificationError.StandardCode.EXCEPTION, e.getMessage());
-                builder.error(errorBuilder.build());
-            }
-        }
         return builder.build();
     }
 
@@ -61,10 +49,8 @@ public class KuduConnectorVerifierExtension extends DefaultComponentVerifierExte
 
     private void verifyConnection(ResultBuilder builder, Map<String, Object> parameters) {
         try {
-            KuduClient c = KuduSupport.createConnection(parameters.get("host").toString(), parameters.get("port").toString());
-            if(c == null) {
-                throw new SyndesisServerException("Unable to stablish connection");
-            }
+            KuduClient c = KuduSupport.createConnection(parameters);
+            c.getTablesList();
         } catch (Exception e) {
             ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(
                     VerificationError.StandardCode.EXCEPTION, e.getMessage());
