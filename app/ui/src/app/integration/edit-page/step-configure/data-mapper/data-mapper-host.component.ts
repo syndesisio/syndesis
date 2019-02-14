@@ -42,7 +42,7 @@ import {
   INTEGRATION_SIDEBAR_COLLAPSE,
   IndexedStep,
 } from '../../edit-page.models';
-import { SPLIT } from '@syndesis/ui/store';
+import { SPLIT, AGGREGATE } from '@syndesis/ui/store';
 /*
  * Example host component:
  *
@@ -213,11 +213,12 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
 
   // Narrow down the previous steps to a subset based on any "scope" introduced by other steps
   private restrictPreviousStepArrayScope(
-    previousSteps: IndexedStep[]
+    previousSteps: IndexedStep[],
+    stepKind
   ): IndexedStep[] {
     const splitIndex = previousSteps
       .reverse()
-      .findIndex(s => s.step.stepKind === SPLIT);
+      .findIndex(s => s.step.stepKind === stepKind);
     if (splitIndex === -1) {
       return previousSteps.reverse();
     } else {
@@ -228,7 +229,11 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   private populateSourceDocuments(): boolean {
     // Fetch the previous steps with data shapes, but observe any "scope" created by a previous split step
     const previousSteps = this.restrictPreviousStepArrayScope(
-      this.currentFlowService.getPreviousStepsWithDataShape(this.position)
+      this.restrictPreviousStepArrayScope(
+        this.currentFlowService.getPreviousStepsWithDataShape(this.position),
+        SPLIT
+      ),
+      AGGREGATE
     );
     if (!previousSteps || previousSteps.length === 0) {
       this.cfg.errorService.error(
