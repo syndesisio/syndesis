@@ -88,7 +88,11 @@
             <div class="toolbar-pf-action-right">
               <a
                 *ngIf="currentFlowService.isSaved()"
-                [routerLink]="['../specification']"
+                [routerLink]="[
+                  '/integrations',
+                  (currentFlowService.integration$ | async)?.id,
+                  'specification'
+                ]"
                 class="btn btn-link"
               >
                 View/Edit API Definition <i class="fa fa-external-link"></i>
