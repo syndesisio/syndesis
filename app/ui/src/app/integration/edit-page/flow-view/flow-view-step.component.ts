@@ -418,19 +418,23 @@ export class FlowViewStepComponent implements OnChanges {
   }
 
   private getDataShapeText(dataShape: DataShape) {
-    if (dataShape.name) {
-      return dataShape.name;
-    }
+    const isCollection =
+      dataShape.metadata && dataShape.metadata.variant === 'collection';
+    let answer = dataShape.name;
     if (dataShape.kind) {
       if (DataShapeKinds.ANY === dataShape.kind) {
-        return 'ANY';
+        answer = 'ANY';
       } else if (DataShapeKinds.NONE === dataShape.kind) {
-        return undefined;
+        answer = undefined;
       } else if (!dataShape.type) {
-        return dataShape.kind;
+        answer = dataShape.kind;
       }
     }
-    return dataShape.type;
+    // TODO "split" currently appears to have variant set but maybe it shouldn't
+    if (answer && isCollection && this.step.stepKind !== SPLIT) {
+      answer = answer + ' (Collection)';
+    }
+    return answer;
   }
 
   private isSameDataShape(one: DataShape, other: DataShape): boolean {
