@@ -36,7 +36,7 @@ export class IntegrationDetail extends React.Component<
           <div>{this.props.i18nTextTitle}</div>
           <div>{this.props.integrationDescription}</div>
         </div>
-        <div className="container-fluid">
+        <div className="container-fluid history">
           <h2>{this.props.i18nTextHistory}</h2>
           {this.props.children ? (
             <ListView>{this.props.children}</ListView>

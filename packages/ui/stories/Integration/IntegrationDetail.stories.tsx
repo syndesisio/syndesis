@@ -1,4 +1,4 @@
-import { ListViewItem } from 'patternfly-react';
+import { DropdownKebab, Grid, ListViewItem, MenuItem } from 'patternfly-react';
 import { text } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
@@ -35,14 +35,54 @@ const textTitle = 'Integration Detail';
 const textVersion = 'Version';
 
 const historyItems = [
-  <ListViewItem
-    key={1}
-    i18nTextBtnEdit={textBtnEdit}
-    i18nTextBtnPublish={textBtnPublish}
-    i18nTextHistoryMenuReplaceDraft={textHistoryMenuReplaceDraft}
-    i18nTextHistoryMenuUnpublish={textHistoryMenuUnpublish}
-    i18nTextLastPublished={textLastPublished}
-  />,
+  <Grid fluid={true} key={1}>
+    <Grid.Row className="show-grid">
+      <Grid.Col xs={12} md={2}>
+        {<span>{text('i18nTextHistory', textHistory)}:</span>}
+      </Grid.Col>
+      <Grid.Col xs={6} md={10}>
+        <ListViewItem
+          key={1}
+          heading={
+            <span>
+              {<span>{text('i18nTextVersion', textVersion)}:</span>}{' '}
+              {text('integrationVersion', integrationVersion)}
+            </span>
+          }
+          actions={
+            <div>
+              <DropdownKebab id="action2kebab" pullRight={true}>
+                <MenuItem>
+                  {text(
+                    'i18nTextHistoryMenuReplaceDraft',
+                    textHistoryMenuReplaceDraft
+                  )}
+                </MenuItem>
+                <MenuItem>
+                  {text(
+                    'i18nTextHistoryMenuUnpublish',
+                    textHistoryMenuUnpublish
+                  )}
+                </MenuItem>
+              </DropdownKebab>
+            </div>
+          }
+          description={
+            <span>{text('i18nTextLastPublished', textLastPublished)}</span>
+          }
+          stacked={false}
+          i18nTextBtnEdit={text('', textBtnEdit)}
+          i18nTextBtnPublish={text('', textBtnPublish)}
+          i18nTextHistoryMenuReplaceDraft={text(
+            '',
+            textHistoryMenuReplaceDraft
+          )}
+          i18nTextHistoryMenuUnpublish={text('', textHistoryMenuUnpublish)}
+          i18nTextLastPublished={text('', textLastPublished)}
+        />
+      </Grid.Col>
+    </Grid.Row>
+  </Grid>,
 ];
 
 stories
@@ -51,6 +91,7 @@ stories
     'published',
     withNotes(storyNotes)(() => (
       <IntegrationDetail
+        children={historyItems}
         integrationId={text('integrationId', integrationId)}
         integrationName={text('integrationName', integrationName)}
         integrationDescription={text(
@@ -62,7 +103,6 @@ stories
         }
         integrationStatus={text('integrationStatus', integrationStatus)}
         integrationVersion={text('integrationVersion', integrationVersion)}
-        children={historyItems}
         i18nTextBtnEdit={textBtnEdit}
         i18nTextBtnPublish={textBtnPublish}
         i18nTextCopyToClipboard={textCopyToClipboard}
@@ -86,6 +126,7 @@ stories
     'unpublished',
     withNotes(storyNotes)(() => (
       <IntegrationDetail
+        children={historyItems}
         integrationId={text('integrationId', integrationId)}
         integrationName={text('integrationName', integrationName)}
         integrationDescription={text(
@@ -94,7 +135,6 @@ stories
         )}
         integrationStatus={text('integrationStatus', 'Unpublished')}
         integrationVersion={text('integrationVersion', integrationVersion)}
-        children={historyItems}
         i18nTextBtnEdit={textBtnEdit}
         i18nTextBtnPublish={textBtnPublish}
         i18nTextDraft={textDraft}
