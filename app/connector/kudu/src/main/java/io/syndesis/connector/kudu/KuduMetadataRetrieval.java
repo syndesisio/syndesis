@@ -16,8 +16,12 @@
 
 package io.syndesis.connector.kudu;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
+import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
@@ -35,9 +39,6 @@ import org.apache.kudu.client.KuduClient;
 import org.apache.kudu.client.KuduException;
 import org.apache.kudu.client.KuduTable;
 
-import java.util.Iterator;
-import java.util.Map;
-
 public class KuduMetadataRetrieval extends ComponentMetadataRetrieval {
     private static final String JSON_SCHEMA_ORG_SCHEMA = "http://json-schema.org/schema#";
     private static final String KUDU_INSERT_ACTION = "kudu-insert-connector";
@@ -53,7 +54,7 @@ public class KuduMetadataRetrieval extends ComponentMetadataRetrieval {
 
             try {
                 DataShape.Builder inDataShapeBuilder = new DataShape.Builder().type("KUDU_TABLE_IN");
-                if (ObjectHelper.isEqualToAny(actionId, KUDU_INSERT_ACTION, KUDU_SCAN_ACTION)) {
+                if (ObjectHelper.equal(actionId, KUDU_INSERT_ACTION)) {
                     inDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                             .name("Kudu table")
                             .description(String.format("Columns for table [%s]", kuduMetaData.getTableName()))
@@ -63,11 +64,15 @@ public class KuduMetadataRetrieval extends ComponentMetadataRetrieval {
                 }
 
                 DataShape.Builder outDataShapeBuilder = new DataShape.Builder().type("KUDU_TABLE_OUT");
-                if (ObjectHelper.isEqualToAny(actionId, KUDU_INSERT_ACTION, KUDU_SCAN_ACTION)) {
+                if (ObjectHelper.equal(actionId, KUDU_SCAN_ACTION)) {
                     outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                             .name("Kudu table")
-                            .description(String.format("Columns for table [%s]", kuduMetaData.getTableName()))
-                            .specification(Json.writer().writeValueAsString(spec));
+                            .description(String.format("Columns for table [%s]", kuduMetaData.getTableName()));
+
+                    ArraySchema collectionSpec = new ArraySchema();
+                    collectionSpec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
+                    collectionSpec.setItemsSchema(spec);
+                    outDataShapeBuilder.specification(Json.writer().writeValueAsString(collectionSpec));
                 } else {
                     outDataShapeBuilder.kind(DataShapeKinds.NONE);
                 }

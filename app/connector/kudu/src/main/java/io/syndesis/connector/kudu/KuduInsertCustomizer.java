@@ -16,6 +16,10 @@
 
 package io.syndesis.connector.kudu;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import io.syndesis.common.util.Json;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
@@ -24,17 +28,10 @@ import org.apache.camel.Message;
 import org.apache.camel.component.kudu.KuduDbOperations;
 import org.apache.camel.util.ObjectHelper;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 public class KuduInsertCustomizer implements ComponentProxyCustomizer {
-
-    private Map<String, Object> row;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        row = new HashMap<>();
         setOptions(options);
         component.setBeforeProducer(this::beforeProducer);
         component.setAfterProducer(this::afterProducer);
@@ -50,11 +47,10 @@ public class KuduInsertCustomizer implements ComponentProxyCustomizer {
         final String body = in.getBody(String.class);
 
         if (ObjectHelper.isNotEmpty(body)) {
-            Map<String, Object> dataShape = Json.reader().forType(Map.class).readValue(body);
-            row = dataShape;
+            in.setBody(Json.reader().forType(Map.class).readValue(body));
+        } else {
+            in.setBody(new HashMap<>());
         }
-
-        in.setBody(row);
     }
 
     private void afterProducer(Exchange exchange) {
