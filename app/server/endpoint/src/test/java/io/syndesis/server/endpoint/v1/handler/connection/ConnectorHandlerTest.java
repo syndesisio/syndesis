@@ -143,7 +143,7 @@ public class ConnectorHandlerTest {
         final Integration deployment3 = newIntegration(Collections.singletonList(step2));
 
         when(dataManager.fetchAll(Integration.class))
-            .thenReturn(new ListResult.Builder<Integration>().addItem(deployment1, deployment2, deployment3).build());
+            .thenReturn(new ListResult.Builder<Integration>().addItems(deployment1, deployment2, deployment3).build());
 
         final List<Connector> augmented = handler.augmentedWithUsage(Arrays.asList(connector1, connector2, connector3));
 

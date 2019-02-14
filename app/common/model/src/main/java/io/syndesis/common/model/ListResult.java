@@ -73,7 +73,7 @@ public interface ListResult<T> extends Iterable<T> {
 
     @SafeVarargs
     static <T> ListResult<T> of(T... items) {
-        return new Builder<T>().addItem(items).totalCount(items.length).build();
+        return new Builder<T>().addItems(items).totalCount(items.length).build();
     }
 
     static <T> Collector<T, Builder<T>, Builder<T>> collector() {

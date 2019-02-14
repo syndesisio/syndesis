@@ -143,7 +143,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @Path(value = "/{connectorId}/actions/{actionId}/filters/options")
     public FilterOptions getFilterOptions(@PathParam("connectorId") @ApiParam(required = true) final String connectorId,
                                           @PathParam("actionId") @ApiParam(required = true) final String actionId) {
-        final FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
+        final FilterOptions.Builder builder = new FilterOptions.Builder().addOps(Op.DEFAULT_OPTS);
         final Connector connector = getDataManager().fetch(Connector.class, connectorId);
 
         if (connector == null) {
