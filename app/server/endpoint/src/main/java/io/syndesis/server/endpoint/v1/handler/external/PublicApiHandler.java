@@ -207,7 +207,7 @@ public class PublicApiHandler {
     @Path("integrations/{id}/tags")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Map<String, ContinuousDeliveryEnvironment> tagForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
+    public Map<String, ContinuousDeliveryEnvironment> tagForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
                                                              @NotNull @ApiParam(required = true) List<String> environments) {
 
         if (environments == null || environments.isEmpty()) {
@@ -257,8 +257,8 @@ public class PublicApiHandler {
     @GET
     @Path("integrations/{env}/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    StreamingOutput exportResources(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
-                                    @QueryParam("all") @ApiParam() boolean exportAll) throws IOException {
+    public StreamingOutput exportResources(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
+                                    @QueryParam("all") @ApiParam boolean exportAll) throws IOException {
 
         // validate environment
         validateParam("environment", environment);
@@ -330,8 +330,8 @@ public class PublicApiHandler {
     @Path("integrations")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    ContinuousDeliveryImportResults importResources(@Context SecurityContext sec,
-                                                    @NotNull @ApiParam ImportFormDataInput formInput) throws IOException {
+    public ContinuousDeliveryImportResults importResources(@Context SecurityContext sec,
+                                                    @NotNull @ApiParam(required = true) ImportFormDataInput formInput) throws IOException {
 
         if (formInput == null) {
             throw new ClientErrorException("Multipart request is empty", Response.Status.BAD_REQUEST);
@@ -405,8 +405,8 @@ public class PublicApiHandler {
     @Path("connections/{id}/properties")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    ConnectionOverview configureConnection(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam String connectionId,
-                                           @NotNull @ApiParam Map<String, String> properties) throws IOException {
+    public ConnectionOverview configureConnection(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) String connectionId,
+                                           @NotNull @ApiParam(required = true) Map<String, String> properties) throws IOException {
 
         validateParam("connectionId", connectionId);
 
@@ -426,7 +426,7 @@ public class PublicApiHandler {
     @Path("integrations/{id}/state")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    IntegrationDeploymentStateDetails getIntegrationState(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam String integrationId) throws IOException {
+    public IntegrationDeploymentStateDetails getIntegrationState(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) String integrationId) throws IOException {
         validateParam("integrationId", integrationId);
         return monitoringProvider.getIntegrationStateDetails(integrationId);
     }
@@ -437,7 +437,7 @@ public class PublicApiHandler {
     @POST
     @Path("integrations/{id}/deployments")
     @Produces(MediaType.APPLICATION_JSON)
-    IntegrationDeployment publishIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
+    public IntegrationDeployment publishIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
         final Integration integration = getIntegration(integrationId);
         return publishIntegration(sec, integration);
     }
@@ -448,7 +448,7 @@ public class PublicApiHandler {
     @PUT
     @Path("integrations/{id}/deployments/stop")
     @Produces(MediaType.APPLICATION_JSON)
-    void stopIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
+    public void stopIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
 
         validateParam("integrationId", integrationId);
         IntegrationDeploymentHandler.TargetStateRequest targetState = new IntegrationDeploymentHandler
