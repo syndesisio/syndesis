@@ -1,32 +1,32 @@
+import {
+  ControlLabel,
+  FormControl,
+  FormGroup,
+  HelpBlock,
+} from 'patternfly-react';
 import * as React from 'react';
+import { IFormControl } from '../models';
 
 export const FormSelectComponent = ({
   field,
-  form: { touched, errors, isSubmitting },
+  form: { isSubmitting },
   ...props
-}: {
-  [name: string]: any;
-}) => (
-  // TODO replace with PF3/PF4 widget
-  <div className="form-group">
-    <label className="control-label" htmlFor={field.name}>
-      {props.property.displayName}
-    </label>
-    <select
-      id={field.name}
-      data-testid={field.name}
-      disabled={isSubmitting}
-      className={'form-control'}
+}: IFormControl) => (
+  <FormGroup controlId={field.name} validationState={props.validationState}>
+    <ControlLabel>{props.property.displayName}</ControlLabel>
+    <FormControl
       {...field}
+      data-testid={field.name}
+      disabled={isSubmitting || props.property.disabled}
+      componentClass="select"
     >
-      {props.property.enum.map((opt: any) => (
-        <option key={opt.value} value={opt.value}>
-          {opt.label}
-        </option>
-      ))}
-    </select>
-    {touched[field.name] && errors[field.name] && (
-      <div className="error">{errors[field.name]}</div>
-    )}
-  </div>
+      {props.property.enum &&
+        props.property.enum.map((opt: any) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+    </FormControl>
+    <HelpBlock>{props.property.description}</HelpBlock>
+  </FormGroup>
 );

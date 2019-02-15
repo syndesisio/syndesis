@@ -14,7 +14,6 @@ export const FormCheckboxComponent = ({
       checked={field.value}
       data-testid={field.name}
       disabled={isSubmitting || props.property.disabled}
-      onChange={field.onChange}
     >
       {props.property.displayName}
     </Checkbox>
