@@ -17,34 +17,51 @@ spec:
             "datasource": "-- Grafana --",
             "enable": true,
             "hide": true,
-            "iconColor": "rgba(0, 211, 255, 1)",
+            "iconColor": "#6ed0e0",
+            "limit": 100,
             "name": "Annotations & Alerts",
+            "showIn": 0,
+            "tags": [],
             "type": "dashboard"
           }
         ]
       },
       "description": "",
       "editable": true,
-      "gnetId": 455,
-      "graphTooltip": 0,
-      "id": 7,
-      "iteration": 1549033779471,
+      "gnetId": 3300,
+      "graphTooltip": 1,
+      "id": 9,
+      "iteration": 1550144280707,
       "links": [],
       "panels": [
+        {
+          "content": "<h1><b><font color=#e68a00><center>$version</center></font></b></h1>",
+          "description": "",
+          "gridPos": {
+            "h": 2,
+            "w": 2,
+            "x": 0,
+            "y": 0
+          },
+          "id": 65,
+          "links": [],
+          "mode": "html",
+          "title": "Version",
+          "type": "text"
+        },
         {
           "cacheTimeout": null,
           "colorBackground": false,
           "colorValue": false,
           "colors": [
-            "rgba(245, 54, 54, 0.9)",
+            "#299c46",
             "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
+            "#d44a3a"
           ],
           "datasource": "Prometheus",
           "decimals": 0,
-          "editable": true,
-          "error": false,
-          "format": "none",
+          "description": "",
+          "format": "short",
           "gauge": {
             "maxValue": 100,
             "minValue": 0,
@@ -53,15 +70,13 @@ spec:
             "thresholdMarkers": true
           },
           "gridPos": {
-            "h": 4,
-            "w": 24,
-            "x": 0,
+            "h": 2,
+            "w": 3,
+            "x": 2,
             "y": 0
           },
-          "height": "55px",
-          "id": 11,
+          "id": 86,
           "interval": null,
-          "isNew": true,
           "links": [],
           "mappingType": 1,
           "mappingTypes": [
@@ -90,68 +105,23 @@ spec:
           ],
           "sparkline": {
             "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": true,
+            "full": false,
             "lineColor": "rgb(31, 120, 193)",
-            "show": true
+            "show": false
           },
           "tableColumn": "",
           "targets": [
             {
-              "dsType": "prometheus",
-              "expr": "sum(irate(pg_stat_database_xact_commit{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])) + sum(irate(pg_stat_database_xact_rollback{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "expr": "max_over_time(pg_settings_max_connections{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_settings_max_connections{job=\"$job\",namespace=\"$namespace\"}[5m])",
               "format": "time_series",
-              "groupBy": [
-                {
-                  "params": [
-                    "$interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "intervalFactor": 2,
-              "measurement": "postgresql",
-              "policy": "default",
-              "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "xact_commit"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  },
-                  {
-                    "params": [
-                      "10s"
-                    ],
-                    "type": "non_negative_derivative"
-                  }
-                ]
-              ],
-              "step": 1800,
-              "tags": [
-                {
-                  "key": "host",
-                  "operator": "=~",
-                  "value": "/^$host$/"
-                }
-              ]
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
             }
           ],
           "thresholds": "",
-          "title": "Queries per second",
-          "transparent": true,
+          "title": "Max Connections",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -164,54 +134,518 @@ spec:
           "valueName": "current"
         },
         {
-          "aliasColors": {},
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "description": "",
+          "format": "bytes",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 4,
+            "x": 5,
+            "y": 0
+          },
+          "id": 67,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "max_over_time(pg_settings_shared_buffers_bytes{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_settings_shared_buffers_bytes{job=\"$job\",namespace=\"$namespace\"}[5m]) ",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "title": "Shared Buffers",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "description": "",
+          "format": "bytes",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 4,
+            "x": 9,
+            "y": 0
+          },
+          "id": 68,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "max_over_time(pg_settings_wal_buffers_bytes{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_settings_wal_buffers_bytes{job=\"$job\",namespace=\"$namespace\"}[5m])",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "title": "Disk-Page Buffers",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "description": "",
+          "format": "bytes",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 4,
+            "x": 13,
+            "y": 0
+          },
+          "id": 69,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "max_over_time(pg_settings_work_mem_bytes{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_settings_work_mem_bytes{job=\"$job\",namespace=\"$namespace\"}[5m])",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "title": "Memory Size for each Sort",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "description": "",
+          "format": "bytes",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 3,
+            "x": 17,
+            "y": 0
+          },
+          "id": 70,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "max_over_time(pg_settings_effective_cache_size_bytes{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_settings_effective_cache_size_bytes{job=\"$job\",namespace=\"$namespace\"}[5m])",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "title": "Disk Cache Size",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "#d44a3a",
+            "rgba(237, 129, 40, 0.89)",
+            "#299c46"
+          ],
+          "datasource": "Prometheus",
+          "description": "",
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 2,
+            "x": 20,
+            "y": 0
+          },
+          "id": 85,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": true
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "max_over_time(pg_settings_autovacuum{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_settings_autovacuum{job=\"$job\",namespace=\"$namespace\"}[5m])",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "0,1",
+          "title": "Autovacuum",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            },
+            {
+              "op": "=",
+              "text": "NO",
+              "value": "0"
+            },
+            {
+              "op": "=",
+              "text": "YES",
+              "value": "1"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 2
+          },
+          "id": 74,
+          "panels": [],
+          "title": "Connections",
+          "type": "row"
+        },
+        {
+          "aliasColors": {
+            "Total ": "#bf1b00"
+          },
           "bars": false,
           "dashLength": 10,
           "dashes": false,
           "datasource": "Prometheus",
-          "fill": 1,
+          "decimals": 0,
+          "fill": 2,
           "gridPos": {
-            "h": 7,
+            "h": 8,
             "w": 12,
             "x": 0,
-            "y": 4
+            "y": 3
           },
-          "id": 15,
+          "id": 23,
           "legend": {
-            "avg": false,
+            "alignAsTable": true,
+            "avg": true,
             "current": false,
-            "max": false,
-            "min": false,
+            "hideZero": false,
+            "max": true,
+            "min": true,
             "show": true,
+            "sort": "avg",
+            "sortDesc": true,
             "total": false,
-            "values": false
+            "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
-          "seriesOverrides": [],
+          "seriesOverrides": [
+            {
+              "alias": "Total",
+              "color": "#bf1b00",
+              "fill": 0
+            }
+          ],
           "spaceLength": 10,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
-              "expr": "pg_database_size{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}",
+              "expr": "sum(max_over_time(pg_stat_activity_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\",datname=~\"$db\"}[$interval]) or\nmax_over_time(pg_stat_activity_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\",datname=~\"$db\"}[5m])) by (state)",
               "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
               "intervalFactor": 1,
-              "legendFormat": "{{datname}} database size",
+              "legendFormat": "{{state}}",
               "refId": "A"
+            },
+            {
+              "expr": "sum(max_over_time(pg_stat_activity_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\",datname=~\"$db\"}[$interval]) or\nmax_over_time(pg_stat_activity_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\",datname=~\"$db\"}[5m]))",
+              "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Total",
+              "metric": "pg",
+              "refId": "C",
+              "step": 2
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "Database Size",
+          "title": "PostgreSQL Connections",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -227,7 +661,116 @@ spec:
           },
           "yaxes": [
             {
-              "format": "decbytes",
+              "decimals": 0,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {
+            "Maximum commections": "#bf1b00"
+          },
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 0,
+          "fill": 2,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 3
+          },
+          "id": 34,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [
+            {
+              "alias": "Maximum connections",
+              "color": "#bf1b00",
+              "fill": 0
+            }
+          ],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "max_over_time(pg_stat_database_numbackends{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or \nmax_over_time(pg_stat_database_numbackends{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{datname}}",
+              "refId": "A"
+            },
+            {
+              "expr": "max_over_time(pg_settings_max_connections{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or \nmax_over_time(pg_settings_max_connections{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Maximum connections",
+              "refId": "B"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Active Connections",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": 0,
+              "format": "short",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -240,7 +783,141 @@ spec:
               "logBase": 1,
               "max": null,
               "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 11
+          },
+          "id": 76,
+          "panels": [],
+          "title": "Tuples",
+          "type": "row"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 2,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 12
+          },
+          "id": 36,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(pg_stat_database_tup_fetched{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or \nsum(irate(pg_stat_database_tup_fetched{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Fetched",
+              "refId": "A"
+            },
+            {
+              "expr": "sum(rate(pg_stat_database_tup_returned{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_tup_returned{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Returned",
+              "refId": "B"
+            },
+            {
+              "expr": "sum(rate(pg_stat_database_tup_inserted{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_tup_inserted{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Inserted",
+              "refId": "C"
+            },
+            {
+              "expr": "sum(rate(pg_stat_database_tup_updated{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_tup_updated{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Updated",
+              "refId": "D"
+            },
+            {
+              "expr": "sum(rate(pg_stat_database_tup_deleted{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_tup_deleted{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Deleted",
+              "refId": "E"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Tuples",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
               "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
             }
           ],
           "yaxis": {
@@ -254,26 +931,674 @@ spec:
           "dashLength": 10,
           "dashes": false,
           "datasource": "Prometheus",
+          "decimals": 2,
+          "fill": 2,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 12
+          },
+          "id": 24,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(pg_stat_database_tup_returned{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_tup_returned{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Rows returned by queries",
+              "refId": "A",
+              "step": 2
+            },
+            {
+              "expr": "sum(rate(pg_stat_database_tup_fetched{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_tup_fetched{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Rows fetched by queries",
+              "refId": "B",
+              "step": 2
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Read Tuple Activity",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "ops",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "fill": 2,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 20
+          },
+          "id": 25,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(pg_stat_database_tup_inserted{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[1m])) or\nsum(irate(pg_stat_database_tup_inserted{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Rows inserted by queries",
+              "metric": "pg_stat_database_tup",
+              "refId": "C",
+              "step": 2
+            },
+            {
+              "expr": "sum(rate(pg_stat_database_tup_updated{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_tup_updated{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Rows updated by queries",
+              "metric": "pg_stat_database_tup",
+              "refId": "D",
+              "step": 2
+            },
+            {
+              "expr": "sum(rate(pg_stat_database_tup_deleted{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_tup_deleted{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Rows deleted by queries",
+              "metric": "pg_stat_database_tup",
+              "refId": "E",
+              "step": 2
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Tuples Changed per $interval",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "ops",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 28
+          },
+          "id": 78,
+          "panels": [],
+          "title": "Transactions",
+          "type": "row"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "fill": 2,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 29
+          },
+          "id": 26,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(pg_stat_database_xact_commit{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or \nsum(irate(pg_stat_database_xact_commit{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Commits",
+              "metric": "pg_stat_database_xact_commit",
+              "refId": "A",
+              "step": 2
+            },
+            {
+              "expr": "sum(rate(pg_stat_database_xact_rollback{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_xact_rollback{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Rollbacks",
+              "metric": "pg_stat_database_xact_commit",
+              "refId": "B",
+              "step": 2
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Transactions",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "ops",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "fill": 2,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 29
+          },
+          "id": 18,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "max_over_time(pg_stat_activity_max_tx_duration{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_stat_activity_max_tx_duration{job=\"$job\",namespace=\"$namespace\"}[5m])",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{state}}",
+              "metric": "pg_stat_activity_max_tx_duration",
+              "refId": "A",
+              "step": 2
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Duration of Transactions",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "s",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "s",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 37
+          },
+          "id": 80,
+          "panels": [],
+          "title": "Temp Files",
+          "type": "row"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 0,
+          "fill": 1,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 38
+          },
+          "id": 48,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": true,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "max_over_time(pg_stat_database_temp_files{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or \nmax_over_time(pg_stat_database_temp_files{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{datname}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Number of Temp Files",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": 0,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "fill": 1,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 38
+          },
+          "id": 49,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [
+            {
+              "alias": "increase *",
+              "bars": true,
+              "lines": false
+            }
+          ],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "max_over_time(pg_stat_database_temp_bytes{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or \nmax_over_time(pg_stat_database_temp_bytes{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{datname}}",
+              "refId": "A"
+            },
+            {
+              "expr": "rate(pg_stat_database_temp_bytes{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or\nirate(pg_stat_database_temp_bytes{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "format": "time_series",
+              "hide": true,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "increase {{datname}}",
+              "refId": "B"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Size of Temp Files",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": 2,
+              "format": "bytes",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 46
+          },
+          "id": 82,
+          "panels": [],
+          "title": "Conflicts & Locks",
+          "type": "row"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 2,
           "editable": true,
           "error": false,
           "fill": 1,
           "grid": {},
           "gridPos": {
-            "h": 7,
+            "h": 8,
             "w": 12,
-            "x": 12,
-            "y": 4
+            "x": 0,
+            "y": 47
           },
           "id": 3,
-          "isNew": true,
           "legend": {
-            "avg": false,
+            "alignAsTable": true,
+            "avg": true,
             "current": false,
-            "max": false,
-            "min": false,
+            "max": true,
+            "min": true,
             "show": true,
+            "sort": "avg",
+            "sortDesc": true,
             "total": false,
-            "values": false
+            "values": true
           },
           "lines": true,
           "linewidth": 2,
@@ -291,7 +1616,7 @@ spec:
             {
               "alias": "conflicts",
               "dsType": "prometheus",
-              "expr": "sum(rate(pg_stat_database_deadlocks{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "expr": "sum(rate(pg_stat_database_deadlocks{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or \nsum(irate(pg_stat_database_deadlocks{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
               "format": "time_series",
               "groupBy": [
                 {
@@ -307,7 +1632,8 @@ spec:
                   "type": "fill"
                 }
               ],
-              "intervalFactor": 2,
+              "interval": "$interval",
+              "intervalFactor": 1,
               "legendFormat": "Deadlocks",
               "measurement": "postgresql",
               "policy": "default",
@@ -331,7 +1657,7 @@ spec:
                   }
                 ]
               ],
-              "step": 240,
+              "step": 2,
               "tags": [
                 {
                   "key": "host",
@@ -343,7 +1669,7 @@ spec:
             {
               "alias": "deadlocks",
               "dsType": "prometheus",
-              "expr": "sum(rate(pg_stat_database_conflicts{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "expr": "sum(rate(pg_stat_database_conflicts{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or \nsum(irate(pg_stat_database_conflicts{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
               "format": "time_series",
               "groupBy": [
                 {
@@ -359,7 +1685,8 @@ spec:
                   "type": "fill"
                 }
               ],
-              "intervalFactor": 2,
+              "interval": "$interval",
+              "intervalFactor": 1,
               "legendFormat": "Conflicts",
               "measurement": "postgresql",
               "policy": "default",
@@ -383,7 +1710,7 @@ spec:
                   }
                 ]
               ],
-              "step": 240,
+              "step": 2,
               "tags": [
                 {
                   "key": "host",
@@ -397,7 +1724,7 @@ spec:
           "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "Database Conflicts / Deadlocks",
+          "title": "Conflicts/Deadlocks",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -414,7 +1741,7 @@ spec:
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "ops",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -427,7 +1754,7 @@ spec:
               "logBase": 1,
               "max": null,
               "min": null,
-              "show": true
+              "show": false
             }
           ],
           "yaxis": {
@@ -441,381 +1768,29 @@ spec:
           "dashLength": 10,
           "dashes": false,
           "datasource": "Prometheus",
+          "decimals": 0,
           "editable": true,
           "error": false,
-          "fill": 1,
+          "fill": 2,
           "grid": {},
           "gridPos": {
-            "h": 7,
+            "h": 8,
             "w": 12,
-            "x": 0,
-            "y": 11
+            "x": 12,
+            "y": 47
           },
-          "id": 1,
-          "isNew": true,
+          "id": 61,
           "legend": {
             "alignAsTable": true,
             "avg": true,
             "current": false,
             "max": true,
             "min": true,
-            "rightSide": true,
             "show": true,
+            "sort": "avg",
+            "sortDesc": true,
             "total": false,
             "values": true
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "alias": "fetched",
-              "dsType": "prometheus",
-              "expr": "sum(irate(pg_stat_database_tup_fetched{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
-              "format": "time_series",
-              "groupBy": [
-                {
-                  "params": [
-                    "$interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "intervalFactor": 2,
-              "legendFormat": "Fetched",
-              "measurement": "postgresql",
-              "policy": "default",
-              "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "tup_fetched"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  },
-                  {
-                    "params": [
-                      "10s"
-                    ],
-                    "type": "non_negative_derivative"
-                  }
-                ]
-              ],
-              "step": 120,
-              "tags": [
-                {
-                  "key": "host",
-                  "operator": "=~",
-                  "value": "/^$host$/"
-                }
-              ]
-            },
-            {
-              "alias": "fetched",
-              "dsType": "prometheus",
-              "expr": "sum(irate(pg_stat_database_tup_returned{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
-              "format": "time_series",
-              "groupBy": [
-                {
-                  "params": [
-                    "$interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "intervalFactor": 2,
-              "legendFormat": "Returned",
-              "measurement": "postgresql",
-              "policy": "default",
-              "refId": "B",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "tup_fetched"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  },
-                  {
-                    "params": [
-                      "10s"
-                    ],
-                    "type": "non_negative_derivative"
-                  }
-                ]
-              ],
-              "step": 120,
-              "tags": [
-                {
-                  "key": "host",
-                  "operator": "=~",
-                  "value": "/^$host$/"
-                }
-              ]
-            },
-            {
-              "alias": "fetched",
-              "dsType": "prometheus",
-              "expr": "sum(irate(pg_stat_database_tup_inserted{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
-              "format": "time_series",
-              "groupBy": [
-                {
-                  "params": [
-                    "$interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "intervalFactor": 2,
-              "legendFormat": "Inserted",
-              "measurement": "postgresql",
-              "policy": "default",
-              "refId": "C",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "tup_fetched"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  },
-                  {
-                    "params": [
-                      "10s"
-                    ],
-                    "type": "non_negative_derivative"
-                  }
-                ]
-              ],
-              "step": 120,
-              "tags": [
-                {
-                  "key": "host",
-                  "operator": "=~",
-                  "value": "/^$host$/"
-                }
-              ]
-            },
-            {
-              "alias": "fetched",
-              "dsType": "prometheus",
-              "expr": "sum(irate(pg_stat_database_tup_updated{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
-              "format": "time_series",
-              "groupBy": [
-                {
-                  "params": [
-                    "$interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "intervalFactor": 2,
-              "legendFormat": "Updated",
-              "measurement": "postgresql",
-              "policy": "default",
-              "refId": "D",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "tup_fetched"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  },
-                  {
-                    "params": [
-                      "10s"
-                    ],
-                    "type": "non_negative_derivative"
-                  }
-                ]
-              ],
-              "step": 120,
-              "tags": [
-                {
-                  "key": "host",
-                  "operator": "=~",
-                  "value": "/^$host$/"
-                }
-              ]
-            },
-            {
-              "alias": "fetched",
-              "dsType": "prometheus",
-              "expr": "sum(irate(pg_stat_database_tup_deleted{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
-              "format": "time_series",
-              "groupBy": [
-                {
-                  "params": [
-                    "$interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "intervalFactor": 2,
-              "legendFormat": "Deleted",
-              "measurement": "postgresql",
-              "policy": "default",
-              "refId": "E",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "tup_fetched"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  },
-                  {
-                    "params": [
-                      "10s"
-                    ],
-                    "type": "non_negative_derivative"
-                  }
-                ]
-              ],
-              "step": 120,
-              "tags": [
-                {
-                  "key": "host",
-                  "operator": "=~",
-                  "value": "/^$host$/"
-                }
-              ]
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "Rows fetched / inserted / updated / deleted",
-          "tooltip": {
-            "msResolution": true,
-            "shared": true,
-            "sort": 0,
-            "value_type": "cumulative"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "Prometheus",
-          "editable": true,
-          "error": false,
-          "fill": 1,
-          "grid": {},
-          "gridPos": {
-            "h": 7,
-            "w": 12,
-            "x": 12,
-            "y": 11
-          },
-          "id": 13,
-          "isNew": true,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
           },
           "lines": true,
           "linewidth": 2,
@@ -831,20 +1806,64 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "pg_stat_database_numbackends{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}",
+              "alias": "conflicts",
+              "dsType": "prometheus",
+              "expr": "max_over_time(pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
               "format": "time_series",
-              "hide": false,
-              "intervalFactor": 2,
-              "legendFormat": "{{datname}} active connections",
+              "groupBy": [
+                {
+                  "params": [
+                    "$interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{mode}} - {{datname}}",
+              "measurement": "postgresql",
+              "policy": "default",
               "refId": "A",
-              "step": 240
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "conflicts"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  },
+                  {
+                    "params": [],
+                    "type": "difference"
+                  }
+                ]
+              ],
+              "step": 2,
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=~",
+                  "value": "/^$host$/"
+                }
+              ]
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "Active connections",
+          "title": "Number of Locks",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -861,11 +1880,12 @@ spec:
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
               "max": null,
-              "min": null,
+              "min": "0",
               "show": true
             },
             {
@@ -874,6 +1894,124 @@ spec:
               "logBase": 1,
               "max": null,
               "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 55
+          },
+          "id": 84,
+          "panels": [],
+          "title": "Buffers & Blocks Operations",
+          "type": "row"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "fill": 2,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 56
+          },
+          "id": 50,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [
+            {
+              "alias": "/Write */",
+              "yaxis": 2
+            }
+          ],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "rate(pg_stat_database_blk_read_time{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or\nirate(pg_stat_database_blk_read_time{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Read {{datname}}",
+              "refId": "A"
+            },
+            {
+              "expr": "rate(pg_stat_database_blk_write_time{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or\nirate(pg_stat_database_blk_write_time{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Write {{datname}}",
+              "refId": "B"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Operations with Blocks",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": 0,
+              "format": "rps",
+              "label": "",
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "decimals": 0,
+              "format": "wps",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
               "show": true
             }
           ],
@@ -888,33 +2026,34 @@ spec:
           "dashLength": 10,
           "dashes": false,
           "datasource": "Prometheus",
-          "decimals": 1,
+          "decimals": 2,
           "editable": true,
           "error": false,
-          "fill": 1,
+          "fill": 2,
           "grid": {},
           "gridPos": {
-            "h": 7,
+            "h": 8,
             "w": 12,
-            "x": 0,
-            "y": 18
+            "x": 12,
+            "y": 56
           },
           "id": 2,
-          "isNew": true,
           "legend": {
             "alignAsTable": true,
             "avg": true,
             "current": false,
-            "hideZero": true,
+            "hideZero": false,
             "max": true,
             "min": true,
             "rightSide": false,
             "show": true,
+            "sort": "avg",
+            "sortDesc": true,
             "total": false,
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "connected",
           "percentage": false,
@@ -929,7 +2068,7 @@ spec:
             {
               "alias": "Buffers Allocated",
               "dsType": "prometheus",
-              "expr": "irate(pg_stat_bgwriter_buffers_alloc[5m])",
+              "expr": "rate(pg_stat_bgwriter_buffers_alloc{job=\"$job\",namespace=\"$namespace\"}[$interval]) or \nirate(pg_stat_bgwriter_buffers_alloc{job=\"$job\",namespace=\"$namespace\"}[5m])",
               "format": "time_series",
               "groupBy": [
                 {
@@ -945,8 +2084,9 @@ spec:
                   "type": "fill"
                 }
               ],
-              "intervalFactor": 2,
-              "legendFormat": "buffers_alloc",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Allocated",
               "measurement": "postgresql",
               "policy": "default",
               "refId": "A",
@@ -969,7 +2109,7 @@ spec:
                   }
                 ]
               ],
-              "step": 240,
+              "step": 2,
               "tags": [
                 {
                   "key": "host",
@@ -981,7 +2121,7 @@ spec:
             {
               "alias": "Buffers Allocated",
               "dsType": "prometheus",
-              "expr": "irate(pg_stat_bgwriter_buffers_backend_fsync[5m])",
+              "expr": "rate(pg_stat_bgwriter_buffers_backend_fsync{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nirate(pg_stat_bgwriter_buffers_backend_fsync{job=\"$job\",namespace=\"$namespace\"}[5m])",
               "format": "time_series",
               "groupBy": [
                 {
@@ -997,8 +2137,9 @@ spec:
                   "type": "fill"
                 }
               ],
-              "intervalFactor": 2,
-              "legendFormat": "buffers_backend_fsync",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Fsync calls by a backend",
               "measurement": "postgresql",
               "policy": "default",
               "refId": "B",
@@ -1021,7 +2162,7 @@ spec:
                   }
                 ]
               ],
-              "step": 240,
+              "step": 2,
               "tags": [
                 {
                   "key": "host",
@@ -1033,7 +2174,7 @@ spec:
             {
               "alias": "Buffers Allocated",
               "dsType": "prometheus",
-              "expr": "irate(pg_stat_bgwriter_buffers_backend[5m])",
+              "expr": "rate(pg_stat_bgwriter_buffers_backend{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nirate(pg_stat_bgwriter_buffers_backend{job=\"$job\",namespace=\"$namespace\"}[5m])",
               "format": "time_series",
               "groupBy": [
                 {
@@ -1049,8 +2190,9 @@ spec:
                   "type": "fill"
                 }
               ],
-              "intervalFactor": 2,
-              "legendFormat": "buffers_backend",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Written directly by a backend",
               "measurement": "postgresql",
               "policy": "default",
               "refId": "C",
@@ -1073,7 +2215,7 @@ spec:
                   }
                 ]
               ],
-              "step": 240,
+              "step": 2,
               "tags": [
                 {
                   "key": "host",
@@ -1085,7 +2227,7 @@ spec:
             {
               "alias": "Buffers Allocated",
               "dsType": "prometheus",
-              "expr": "irate(pg_stat_bgwriter_buffers_clean[5m])",
+              "expr": "rate(pg_stat_bgwriter_buffers_clean{job=\"$job\",namespace=\"$namespace\"}[$interval]) or \nirate(pg_stat_bgwriter_buffers_clean{job=\"$job\",namespace=\"$namespace\"}[5m])",
               "format": "time_series",
               "groupBy": [
                 {
@@ -1101,8 +2243,9 @@ spec:
                   "type": "fill"
                 }
               ],
-              "intervalFactor": 2,
-              "legendFormat": "buffers_clean",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Written by the background writer",
               "measurement": "postgresql",
               "policy": "default",
               "refId": "D",
@@ -1125,7 +2268,7 @@ spec:
                   }
                 ]
               ],
-              "step": 240,
+              "step": 2,
               "tags": [
                 {
                   "key": "host",
@@ -1137,7 +2280,7 @@ spec:
             {
               "alias": "Buffers Allocated",
               "dsType": "prometheus",
-              "expr": "irate(pg_stat_bgwriter_buffers_checkpoint[5m])",
+              "expr": "rate(pg_stat_bgwriter_buffers_checkpoint{job=\"$job\",namespace=\"$namespace\"}[5m]) or\nirate(pg_stat_bgwriter_buffers_checkpoint{job=\"$job\",namespace=\"$namespace\"}[5m])",
               "format": "time_series",
               "groupBy": [
                 {
@@ -1153,8 +2296,9 @@ spec:
                   "type": "fill"
                 }
               ],
-              "intervalFactor": 2,
-              "legendFormat": "buffers_checkpoint",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Written during checkpoints",
               "measurement": "postgresql",
               "policy": "default",
               "refId": "E",
@@ -1177,7 +2321,7 @@ spec:
                   }
                 ]
               ],
-              "step": 240,
+              "step": 2,
               "tags": [
                 {
                   "key": "host",
@@ -1191,7 +2335,7 @@ spec:
           "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "Database buffers",
+          "title": "Buffers",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -1221,6 +2365,153 @@ spec:
               "logBase": 1,
               "max": null,
               "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 64
+          },
+          "id": 72,
+          "panels": [],
+          "title": "Others",
+          "type": "row"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 0,
+          "description": "Based on pg_stat_database_conflicts view",
+          "fill": 2,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 65
+          },
+          "id": 28,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(pg_stat_database_conflicts_confl_bufferpin{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_conflicts_confl_bufferpin{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Pinned buffers",
+              "metric": "pg_stat_database_conflicts_confl_bufferpin",
+              "refId": "A",
+              "step": 2
+            },
+            {
+              "expr": "sum(rate(pg_stat_database_conflicts_confl_deadlock{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_conflicts_confl_deadlock{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Deadlocks",
+              "metric": "pg_stat_database_conflicts_confl_bufferpin",
+              "refId": "B",
+              "step": 2
+            },
+            {
+              "expr": "sum(rate(pg_stat_database_conflicts_confl_lock{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_conflicts_confl_lock{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Lock timeouts",
+              "metric": "pg_stat_database_conflicts_confl_bufferpin",
+              "refId": "C",
+              "step": 2
+            },
+            {
+              "expr": "sum(rate(pg_stat_database_conflicts_confl_snapshot{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_conflicts_confl_snapshot{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Old snapshots",
+              "metric": "pg_stat_database_conflicts_confl_bufferpin",
+              "refId": "D",
+              "step": 2
+            },
+            {
+              "expr": "sum(rate(pg_stat_database_conflicts_confl_tablespace{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or\nsum(irate(pg_stat_database_conflicts_confl_tablespace{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Dropped tablespaces ",
+              "metric": "pg_stat_database_conflicts_confl_bufferpin",
+              "refId": "E",
+              "step": 2
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Canceled Queries",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": 0,
+              "format": "ops",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
               "show": true
             }
           ],
@@ -1235,54 +2526,59 @@ spec:
           "dashLength": 10,
           "dashes": false,
           "datasource": "Prometheus",
+          "decimals": 2,
           "editable": true,
           "error": false,
-          "fill": 1,
+          "fill": 2,
           "grid": {},
           "gridPos": {
-            "h": 7,
+            "h": 8,
             "w": 12,
             "x": 12,
-            "y": 18
+            "y": 65
           },
-          "id": 12,
-          "isNew": true,
+          "id": 14,
           "legend": {
-            "avg": false,
+            "alignAsTable": true,
+            "avg": true,
             "current": false,
-            "max": false,
-            "min": false,
+            "max": true,
+            "min": true,
             "show": true,
+            "sort": "avg",
+            "sortDesc": true,
             "total": false,
-            "values": false
+            "values": true
           },
           "lines": true,
           "linewidth": 2,
           "links": [],
+          "minSpan": 4,
           "nullPointMode": "connected",
           "percentage": true,
           "pointradius": 1,
           "points": false,
           "renderer": "flot",
+          "repeat": null,
           "seriesOverrides": [],
           "spaceLength": 10,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
-              "expr": "round(100*sum(pg_stat_database_blks_hit{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}) / (sum(pg_stat_database_blks_hit{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}) + sum(pg_stat_database_blks_read{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"})),0.1)",
+              "expr": "sum(pg_stat_database_blks_hit{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}) by (datname) /\n(sum(pg_stat_database_blks_hit{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}) by (datname) + \nsum(pg_stat_database_blks_read{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}) by (datname))",
               "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "Cache hit rate",
-              "refId": "A",
-              "step": 240
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "Cache hit rate {{datname}}",
+              "refId": "B"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "Database cache hit ratio",
+          "title": "Cache Hit Ratio",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -1299,21 +2595,20 @@ spec:
           },
           "yaxes": [
             {
-              "decimals": null,
-              "format": "percent",
+              "format": "percentunit",
               "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
+              "max": "1",
+              "min": "0",
               "show": true
             },
             {
-              "format": "short",
-              "label": null,
+              "format": "percent",
+              "label": "",
               "logBase": 1,
               "max": null,
               "min": null,
-              "show": true
+              "show": false
             }
           ],
           "yaxis": {
@@ -1327,25 +2622,30 @@ spec:
           "dashLength": 10,
           "dashes": false,
           "datasource": "Prometheus",
-          "fill": 1,
+          "fill": 2,
           "gridPos": {
-            "h": 9,
+            "h": 8,
             "w": 12,
             "x": 0,
-            "y": 25
+            "y": 73
           },
-          "id": 17,
+          "id": 22,
           "legend": {
-            "avg": false,
+            "alignAsTable": true,
+            "avg": true,
             "current": false,
-            "max": false,
-            "min": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "max": true,
+            "min": true,
             "show": true,
+            "sort": "avg",
+            "sortDesc": true,
             "total": false,
-            "values": false
+            "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
@@ -1358,67 +2658,33 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\",mode=\"accessexclusivelock\"} != 0",
+              "expr": "rate(pg_stat_bgwriter_checkpoint_sync_time{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nirate(pg_stat_bgwriter_checkpoint_sync_time{job=\"$job\",namespace=\"$namespace\"}[5m])",
               "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
               "intervalFactor": 1,
-              "legendFormat": "{{$db}} Access exclusive locks",
-              "refId": "A"
+              "legendFormat": "Files Synchronization to disk",
+              "metric": "pg_stat_bgwriter_checkpoint_sync_time",
+              "refId": "A",
+              "step": 2
             },
             {
-              "expr": "pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\",mode=\"accesssharelock\"} != 0",
+              "expr": "rate(pg_stat_bgwriter_checkpoint_write_time{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nirate(pg_stat_bgwriter_checkpoint_write_time{job=\"$job\",namespace=\"$namespace\"}[5m])",
               "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
               "intervalFactor": 1,
-              "legendFormat": "{{$db}} Access shared locks",
-              "refId": "B"
-            },
-            {
-              "expr": "pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\",mode=\"exclusivelock\"} != 0",
-              "format": "time_series",
-              "intervalFactor": 1,
-              "legendFormat": "{{$db}} Exclusive locks",
-              "refId": "C"
-            },
-            {
-              "expr": "pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\",mode=\"rowexclusivelock\"} != 0",
-              "format": "time_series",
-              "intervalFactor": 1,
-              "legendFormat": "{{$db}}  Row exclusive locks",
-              "refId": "D"
-            },
-            {
-              "expr": "pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\",mode=\"rowsharelock\"} != 0",
-              "format": "time_series",
-              "intervalFactor": 1,
-              "legendFormat": "{{$db}}  Row shared locks",
-              "refId": "E"
-            },
-            {
-              "expr": "pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\",mode=\"sharelock\"} != 0",
-              "format": "time_series",
-              "intervalFactor": 1,
-              "legendFormat": "{{$db}} Shared locks",
-              "refId": "F"
-            },
-            {
-              "expr": "pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\",mode=\"sharerowexclusivelock\"} != 0",
-              "format": "time_series",
-              "intervalFactor": 1,
-              "legendFormat": "{{$db}} Shared row exclusive locks",
-              "refId": "G"
-            },
-            {
-              "expr": "pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\",mode=\"shareupdateexclusivelock\"} != 0",
-              "format": "time_series",
-              "intervalFactor": 1,
-              "legendFormat": "{{$db}} Shared update exclusive locks",
-              "refId": "H"
+              "legendFormat": "Written Files to disk",
+              "metric": "pg_stat_bgwriter_checkpoint_write_time",
+              "refId": "B",
+              "step": 2
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "Database locks",
+          "title": "Checkpoint stats",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -1434,20 +2700,20 @@ spec:
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "ops",
               "label": null,
               "logBase": 1,
               "max": null,
-              "min": null,
+              "min": "0",
               "show": true
             },
             {
-              "format": "short",
+              "format": "ms",
               "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
-              "show": true
+              "show": false
             }
           ],
           "yaxis": {
@@ -1461,25 +2727,30 @@ spec:
           "dashLength": 10,
           "dashes": false,
           "datasource": "Prometheus",
-          "fill": 1,
+          "fill": 2,
           "gridPos": {
-            "h": 9,
+            "h": 8,
             "w": 12,
             "x": 12,
-            "y": 25
+            "y": 73
           },
-          "id": 18,
+          "id": 87,
           "legend": {
-            "avg": false,
+            "alignAsTable": true,
+            "avg": true,
             "current": false,
-            "max": false,
-            "min": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "max": true,
+            "min": true,
             "show": true,
+            "sort": "avg",
+            "sortDesc": true,
             "total": false,
-            "values": false
+            "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
@@ -1492,25 +2763,22 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(pg_stat_database_xact_commit{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[1m]))",
+              "expr": "max_over_time(pg_database_size{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_database_size{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
               "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
               "intervalFactor": 1,
-              "legendFormat": "Transactions committed",
-              "refId": "A"
-            },
-            {
-              "expr": "sum(rate(pg_stat_database_xact_rollback{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[1m]))",
-              "format": "time_series",
-              "intervalFactor": 1,
-              "legendFormat": "Transactions rolled back",
-              "refId": "B"
+              "legendFormat": "Database size {{datname}}",
+              "metric": "pg_stat_bgwriter_checkpoint_sync_time",
+              "refId": "A",
+              "step": 2
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "Database transactions",
+          "title": "Database size",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -1526,7 +2794,7 @@ spec:
           },
           "yaxes": [
             {
-              "format": "none",
+              "format": "decbytes",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -1534,12 +2802,12 @@ spec:
               "show": true
             },
             {
-              "format": "short",
+              "format": "ms",
               "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
-              "show": true
+              "show": false
             }
           ],
           "yaxis": {
@@ -1555,26 +2823,62 @@ spec:
       "templating": {
         "list": [
           {
-            "allValue": ".*",
-            "current": {},
-            "datasource": "Prometheus",
-            "definition": "label_values(pg_up{service=\"$job\"}, namespace)",
+            "auto": true,
+            "auto_count": 200,
+            "auto_min": "1s",
+            "current": {
+              "text": "auto",
+              "value": "$__auto_interval_interval"
+            },
             "hide": 0,
-            "includeAll": false,
-            "label": "Namespace",
-            "multi": false,
-            "name": "namespace",
-            "options": [],
-            "query": "label_values(pg_up{service=\"$job\"}, namespace)",
-            "refresh": 1,
-            "regex": "",
+            "label": "Interval",
+            "name": "interval",
+            "options": [
+              {
+                "selected": true,
+                "text": "auto",
+                "value": "$__auto_interval_interval"
+              },
+              {
+                "selected": false,
+                "text": "1s",
+                "value": "1s"
+              },
+              {
+                "selected": false,
+                "text": "5s",
+                "value": "5s"
+              },
+              {
+                "selected": false,
+                "text": "1m",
+                "value": "1m"
+              },
+              {
+                "selected": false,
+                "text": "5m",
+                "value": "5m"
+              },
+              {
+                "selected": false,
+                "text": "1h",
+                "value": "1h"
+              },
+              {
+                "selected": false,
+                "text": "6h",
+                "value": "6h"
+              },
+              {
+                "selected": false,
+                "text": "1d",
+                "value": "1d"
+              }
+            ],
+            "query": "1s,5s,1m,5m,1h,6h,1d",
+            "refresh": 2,
             "skipUrlSync": false,
-            "sort": 1,
-            "tagValuesQuery": "",
-            "tags": [],
-            "tagsQuery": "",
-            "type": "query",
-            "useTags": false
+            "type": "interval"
           },
           {
             "allValue": "(syndesis|sampledb)",
@@ -1610,6 +2914,28 @@ spec:
             "type": "custom"
           },
           {
+            "allValue": null,
+            "current": {},
+            "datasource": "Prometheus",
+            "definition": "",
+            "hide": 2,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "version",
+            "options": [],
+            "query": "label_values(pg_static,version)",
+            "refresh": 2,
+            "regex": "/ ([0-9\\.]+)/",
+            "skipUrlSync": false,
+            "sort": 2,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
             "current": {
               "text": "syndesis-db-metrics",
               "value": "syndesis-db-metrics"
@@ -1627,6 +2953,28 @@ spec:
             "query": "syndesis-db-metrics",
             "skipUrlSync": false,
             "type": "constant"
+          },
+          {
+            "allValue": ".*",
+            "current": {},
+            "datasource": "Prometheus",
+            "definition": "label_values(pg_up{service=\"$job\"}, namespace)",
+            "hide": 0,
+            "includeAll": false,
+            "label": "Namespace",
+            "multi": false,
+            "name": "namespace",
+            "options": [],
+            "query": "label_values(pg_up{service=\"$job\"}, namespace)",
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
           }
         ]
       },
@@ -1635,6 +2983,7 @@ spec:
         "to": "now"
       },
       "timepicker": {
+        "hidden": false,
         "refresh_intervals": [
           "5s",
           "10s",
@@ -1661,6 +3010,6 @@ spec:
       },
       "timezone": "browser",
       "title": "Fuse Online - Infrastructure - DB",
-      "uid": "wGgaPlciz",
+      "uid": "AzfHN99lqp",
       "version": 1
     }
