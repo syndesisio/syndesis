@@ -9,7 +9,7 @@ import {
   UserService,
   User,
   PlatformActions,
-  PlatformState
+  PlatformState,
 } from '@syndesis/ui/platform';
 import { ModalService } from '@syndesis/ui/common/modal/modal.service';
 import { NavigationService } from '@syndesis/ui/common/navigation.service';
@@ -23,31 +23,26 @@ import {
   NavigationEnd,
   NavigationError,
   NavigationStart,
-  Router
+  Router,
 } from '@angular/router';
 
 @Component({
   selector: 'syndesis-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  /**
-   * Logo and Icon with dark background
-   */
-  logoDarkBg = 'assets/images/syndesis_logo_icon_darkbkg.png';
+  helpExpanded = false;
+  userMenuExpanded = false;
+  menuExpanded = false;
+
+  loggedIn = true;
 
   /**
    * @type {Observable<User>}
    * Observable instance of the active user
    */
   user$: Observable<User>;
-
-  /**
-   * @type {boolean}
-   * Flag used to determine whether or not the user is logged in.
-   */
-  loggedIn = true;
 
   /**
    * @type {string}
@@ -83,7 +78,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private meta: Meta,
     private router: Router,
     @Inject(DOCUMENT) private document: any
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.store.dispatch(new PlatformActions.AppBootstrap());
@@ -97,11 +92,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       'branding',
       'productBuild',
       false
-    );
-    this.logoDarkBg = this.config.getSettings(
-      'branding',
-      'logoDarkBg',
-      'assets/images/syndesis_logo_icon_darkbkg.png'
     );
     const favicon32 = this.config.getSettings(
       'branding',
@@ -141,6 +131,9 @@ export class AppComponent implements OnInit, AfterViewInit {
         log.debug('NavigationError: ' + value.url);
       }
     });
+    this.navigationService.collapsed$.subscribe(
+      collapsed => (this.menuExpanded = collapsed)
+    );
   }
 
   /**
@@ -205,6 +198,27 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.notificationService.remove($event.notification);
   }
 
+  /**
+   * Expands the help dropdown menu within the masthead.
+   */
+  expandHelpDropdown(): void {
+    this.helpExpanded = this.helpExpanded ? false : true;
+  }
+
+  /**
+   * Expands the logout dropdown menu within the masthead.
+   */
+  userMenuDropdown(): void {
+    this.userMenuExpanded = this.userMenuExpanded ? false : true;
+  }
+
+  /**
+   * Expands and contracts the vertical navigation menu.
+   */
+  hamburgerToggle(): void {
+    this.navigationService.toggle(!this.menuExpanded);
+  }
+
   ngAfterViewInit() {
     /**
      * On document ready, invoke jQuery's matchHeight method to adjust card height across app based
@@ -217,7 +231,5 @@ export class AppComponent implements OnInit, AfterViewInit {
     $patternFlyCards.find('> .card-pf-footer').matchHeight();
     $patternFlyCards.find('.card-pf-title').matchHeight();
     $patternFlyCards.matchHeight();
-
-    this.navigationService.initialize();
   }
 }

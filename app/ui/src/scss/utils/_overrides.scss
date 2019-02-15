@@ -1,3 +1,4 @@
+@import '@patternfly/patternfly/sass-utilities/_all.scss';
 /// Common CSS overrides for UI normalization and styles referred to generic (PF/component-agnostic) items
 html,
 body {
@@ -15,31 +16,87 @@ body.cards-pf {
   margin-bottom: 10px;
 }
 
-.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.collapsed-nav {
+.pf-c-page {
+  display: block;
+  grid-template-columns: none;
+  grid-template-rows: none;
+  grid-template-areas: none;
+}
+
+.pf-c-page__header {
+  background-color: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 76px;
+  z-index: 300;
+  grid-area: none;
+}
+.pf-c-page__main {
+  z-index: 100;
+  .pf-c-page__main-section {
+    background-color: #ededed;
+    margin-top: 76px;
+    overflow: auto;
+  }
+}
+
+.pf-c-page__header-tools {
+  z-index: 111;
+}
+
+.navbar-brand {
+  margin: 6px 0 0 25px;
+  white-space: nowrap;
+  #appLogo {
+    width: 11.7rem;
+    height: auto;
+  }
+  .navbar-brand-icon {
+    max-height: 28px;
+    vertical-align: middle;
+  }
+  .navbar-brand-name {
+    max-height: 28px;
+    font-size: 20px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+.pf-c-page__main.collapsed-nav {
   margin-left: 0;
 }
 
-.navbar {
-  a {
-    color: #ffffff;
+.pf-c-page__main {
+  margin-left: 290px;
+}
+
+@media screen and (max-width: 767px) {
+  .nav-pf-vertical {
+    display: none;
+
+    &[role="navigation"].collapsed {
+      display: block;
+
+      .list-group-item > a {
+        .list-group-item-value {
+          display: block;
+        }
+      }
+    }
   }
 
-  .navbar-brand {
-    margin: 6px 0 0 25px;
-    white-space: nowrap;
-    #appLogo {
-      width: 11.7rem;
-      height: auto;
-    }
-    .navbar-brand-icon {
-      max-height: 28px;
-      vertical-align: middle;
-    }
-    .navbar-brand-name {
-      max-height: 28px;
-      font-size: 20px;
-      display: inline-block;
-      vertical-align: middle;
+  .pf-c-page__main {
+    margin-left: 0;
+  }
+}
+
+.pf-c-page__header-tools {
+  .pf-m-mobile {
+    @media screen and (min-width: $pf-global--breakpoint--md) {
+      display: none;
     }
   }
 }
@@ -119,7 +176,6 @@ body.cards-pf {
     }
   }
 }
-
 
 // Improve layout/responsiveness of default wizard status bar
 .wizard-pf-steps {

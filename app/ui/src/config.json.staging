@@ -5,7 +5,6 @@
   "mapperEndpoint": "/mapper/v1",
   "metricsPollingInterval": 5000,
   "branding": {
-    "logoDarkBg": "assets/images/syndesis_logo_icon_darkbkg.png",
     "productBuild": false,
     "appName": "Syndesis",
     "favicon32": "/favicon-32x32.png",

@@ -121,6 +121,7 @@ parameters:
 - description: Volume space available for Meta data, e.g. 512Mi, 2Gi.
   displayName: Meta Volume Capacity
   name: META_VOLUME_CAPACITY
+  required: true
   value: 1Gi
   required: true
 - description: Maximum amount of memory the syndesis-meta service might use.
@@ -496,24 +497,7 @@ objects:
             - size:
                 usage: "GAUGE"
                 description: "Disk space used by the database"
-- apiVersion: v1
-  kind: Service
-  metadata:
-    labels:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/type: infrastructure
-      syndesis.io/component: syndesis-db-metrics
-    name: syndesis-db-metrics
-  spec:
-    ports:
-    - port: 9187
-      protocol: TCP
-      name: prometheus
-    selector:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/component: syndesis-db-metrics
+
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -543,6 +527,9 @@ objects:
           syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-db-metrics
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "9187"
       spec:
         containers:
         - capabilities: {}
@@ -838,11 +825,6 @@ objects:
     - port: 80
       protocol: TCP
       targetPort: 8080
-      name: http
-    - port: 8181
-      protocol: TCP
-      targetPort: 8181
-      name: prometheus
     selector:
       app: syndesis
       syndesis.io/app: syndesis
@@ -1059,7 +1041,7 @@ objects:
           image: ' '
           args:
             - --provider=openshift
-            - --client-id=system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
+            - --client-id=syndesis-${OPENSHIFT_PROJECT}
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
             - --upstream=http://syndesis-server/api/
             - --upstream=http://syndesis-server/mapper/
@@ -1113,7 +1095,7 @@ objects:
               memory: 200Mi
             requests:
               memory: 20Mi
-        serviceAccountName: syndesis-oauth-client
+
         volumes:
         - name: syndesis-oauthproxy-tls
           secret:
@@ -1130,6 +1112,14 @@ objects:
       type: ImageChange
 
     - type: ConfigChange
+- apiVersion: oauth.openshift.io/v1
+  grantMethod: auto
+  kind: OAuthClient
+  metadata:
+    name: syndesis-${OPENSHIFT_PROJECT}
+  redirectURIs:
+  - https://${ROUTE_HOSTNAME}/oauth/callback
+  secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
@@ -1162,11 +1152,6 @@ objects:
     - port: 80
       protocol: TCP
       targetPort: 8080
-      name: http
-    - port: 8181
-      protocol: TCP
-      targetPort: 8181
-      name: prometheus
     selector:
       app: syndesis
       syndesis.io/app: syndesis
@@ -1345,8 +1330,6 @@ objects:
       features:
         monitoring:
           enabled: true
-        public-api:
-          enabled: true
       openshift:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
@@ -1361,39 +1344,6 @@ objects:
         maxIntegrationsPerUser: ${MAX_INTEGRATIONS_PER_USER}
         maxDeploymentsPerUser: ${MAX_INTEGRATIONS_PER_USER}
         integrationStateCheckInterval: ${INTEGRATION_STATE_CHECK_INTERVAL}
-# Access to Camel-K resources
-- kind: Role
-  apiVersion: rbac.authorization.k8s.io/v1beta1
-  metadata:
-    name: camel-k
-    labels:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/type: infrastructure
-      syndesis.io/component: syndesis-server
-  rules:
-  - apiGroups:
-    - camel.apache.org
-    resources:
-    - "*"
-    verbs:
-    - "*"
-- kind: RoleBinding
-  apiVersion: rbac.authorization.k8s.io/v1beta1
-  metadata:
-    name: camel-k
-    labels:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/type: infrastructure
-      syndesis.io/component: syndesis-server
-  subjects:
-  - kind: ServiceAccount
-    name: syndesis-server
-  roleRef:
-    kind: Role
-    name: camel-k
-    apiGroup: rbac.authorization.k8s.io
 - apiVersion: v1
   kind: Service
   metadata:
@@ -1530,6 +1480,7 @@ objects:
             ports:
               - containerPort: 8080
                 name: http
+            resources: {}
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
         dnsPolicy: ClusterFirst
