@@ -285,7 +285,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
         int counter = 0;
         String newId = baseId;
         while (alreadyUsedOperationIds.contains(newId)) {
-            newId = baseId + "-" + (++counter);
+            newId = baseId + "-" + ++counter;
         }
         return newId;
     }

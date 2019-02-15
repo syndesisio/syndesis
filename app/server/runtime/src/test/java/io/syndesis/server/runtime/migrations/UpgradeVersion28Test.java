@@ -66,7 +66,7 @@ public class UpgradeVersion28Test {
         Assert.assertEquals(4, integrationIds.size());
         Integration integration = Json.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(0)));
         Assert.assertEquals(6, integration.getFlows().get(0).getSteps().size());
-        Assert.assertEquals(StepKind.endpoint, (integration.getFlows().get(0).getSteps().get(0).getStepKind()));
+        Assert.assertEquals(StepKind.endpoint, integration.getFlows().get(0).getSteps().get(0).getStepKind());
         Assert.assertEquals(StepKind.split, integration.getFlows().get(0).getSteps().get(1).getStepKind());
         Assert.assertEquals(StepKind.log, integration.getFlows().get(0).getSteps().get(2).getStepKind());
         Assert.assertEquals(StepKind.mapper, integration.getFlows().get(0).getSteps().get(3).getStepKind());
@@ -82,7 +82,7 @@ public class UpgradeVersion28Test {
 
         integration = Json.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(2)));
         Assert.assertEquals(5, integration.getFlows().get(0).getSteps().size());
-        Assert.assertEquals(StepKind.endpoint, (integration.getFlows().get(0).getSteps().get(0).getStepKind()));
+        Assert.assertEquals(StepKind.endpoint, integration.getFlows().get(0).getSteps().get(0).getStepKind());
         Assert.assertEquals(StepKind.split, integration.getFlows().get(0).getSteps().get(1).getStepKind());
         Assert.assertEquals(StepKind.mapper, integration.getFlows().get(0).getSteps().get(2).getStepKind());
         Assert.assertEquals(StepKind.endpoint, integration.getFlows().get(0).getSteps().get(3).getStepKind());
@@ -90,7 +90,7 @@ public class UpgradeVersion28Test {
 
         integration = Json.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(3)));
         Assert.assertEquals(5, integration.getFlows().get(0).getSteps().size());
-        Assert.assertEquals(StepKind.endpoint, (integration.getFlows().get(0).getSteps().get(0).getStepKind()));
+        Assert.assertEquals(StepKind.endpoint, integration.getFlows().get(0).getSteps().get(0).getStepKind());
         Assert.assertEquals(StepKind.split, integration.getFlows().get(0).getSteps().get(1).getStepKind());
         Assert.assertEquals(StepKind.log, integration.getFlows().get(0).getSteps().get(2).getStepKind());
         Assert.assertEquals(StepKind.endpoint, integration.getFlows().get(0).getSteps().get(3).getStepKind());

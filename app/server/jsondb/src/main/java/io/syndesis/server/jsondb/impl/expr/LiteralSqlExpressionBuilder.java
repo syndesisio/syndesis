@@ -42,9 +42,9 @@ class LiteralSqlExpressionBuilder extends SqlExpressionBuilder {
         binds.add(query -> {
             if( value == null  ) {
                 query.bind("f" + b1, String.valueOf(NULL_VALUE_PREFIX));
-            } else if( value == Boolean.FALSE ) {
+            } else if( Boolean.FALSE.equals(value) ) {
                 query.bind("f" + b1, String.valueOf(FALSE_VALUE_PREFIX));
-            } else if( value == Boolean.TRUE ) {
+            } else if( Boolean.TRUE.equals(value) ) {
                 query.bind("f" + b1, String.valueOf(TRUE_VALUE_PREFIX));
             } else if( value.getClass() == String.class ) {
                 query.bind("f" + b1, STRING_VALUE_PREFIX+value.toString());

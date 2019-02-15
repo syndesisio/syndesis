@@ -246,7 +246,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
     @SuppressWarnings("unchecked")
     private <T> Map<String, Long> getTopIntegrations() {
-        HttpQuery queryTotalMessages = new HttpQuery.Builder().from(createInstantHttpQuery(METRIC_TOTAL, OPERATOR_TOPK))
+        HttpQuery queryTotalMessages = new HttpQuery.Builder().createFrom(createInstantHttpQuery(METRIC_TOTAL, OPERATOR_TOPK))
                 .addAggregationOperatorParameters(Integer.toString(topIntegrationsCount))
                 .addByLabels(integrationIdLabel)
                 .build();
@@ -256,21 +256,21 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     }
 
     private HttpQuery createSummaryHttpQuery(String integrationId, String metric, String aggregationOperator) {
-        return new HttpQuery.Builder().from(createInstantHttpQuery(integrationId, metric, aggregationOperator))
+        return new HttpQuery.Builder().createFrom(createInstantHttpQuery(integrationId, metric, aggregationOperator))
                 .function(FUNCTION_MAX_OVER_TIME)
                 .range(metricsHistoryRange)
                 .build();
     }
 
     private HttpQuery createSummaryHttpQuery(String metric, String aggregationOperator) {
-        return new HttpQuery.Builder().from(createInstantHttpQuery(metric, aggregationOperator))
+        return new HttpQuery.Builder().createFrom(createInstantHttpQuery(metric, aggregationOperator))
                 .function(FUNCTION_MAX_OVER_TIME)
                 .range(metricsHistoryRange)
                 .build();
     }
 
     private HttpQuery createInstantHttpQuery(String integrationId, String metric, String aggregationOperator) {
-        return new HttpQuery.Builder().from(createInstantHttpQuery(metric, aggregationOperator))
+        return new HttpQuery.Builder().createFrom(createInstantHttpQuery(metric, aggregationOperator))
                 .addLabelValues(integrationId, this.integrationIdLabel)
                 .build();
     }

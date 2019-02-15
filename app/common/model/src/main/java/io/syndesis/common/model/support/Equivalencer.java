@@ -818,8 +818,9 @@ public class Equivalencer implements StringConstants {
      * @param another a {@link ConnectorDescriptor} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
+    @SuppressWarnings("PMD.CompareObjectsWithEquals")
     public boolean equivalent(EquivContext parentContext, ConnectorDescriptor one, ConnectorDescriptor another) {
-        if (this == another) {
+        if (one == another) {
             return true;
         }
 

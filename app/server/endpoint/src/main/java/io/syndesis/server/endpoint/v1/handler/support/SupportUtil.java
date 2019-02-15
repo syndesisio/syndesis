@@ -106,9 +106,6 @@ public class SupportUtil {
             zipFile = File.createTempFile("syndesis.", ".zip");
         } catch (IOException e) {
             LOG.error("Error creating Support zip file", e);
-            if(zipFile!=null) {
-                zipFile.delete();
-            }
             throw new WebApplicationException(e, 500);
         }
 
@@ -119,8 +116,8 @@ public class SupportUtil {
             LOG.info("Created Support file: {}", zipFile);
         } catch (IOException e) {
             LOG.error("Error producing Support zip file", e);
-            if(zipFile!=null) {
-                zipFile.delete();
+            if(zipFile!=null && !zipFile.delete()) {
+                zipFile.deleteOnExit();
             }
             throw new WebApplicationException(e, 500);
         }
@@ -212,8 +209,8 @@ public class SupportUtil {
             FileUtils.copyFile(file, os);
             os.closeEntry();
         } finally {
-            if(file!=null) {
-                file.delete();
+            if(file!=null && !file.delete()) {
+                file.deleteOnExit();
             }
         }
 

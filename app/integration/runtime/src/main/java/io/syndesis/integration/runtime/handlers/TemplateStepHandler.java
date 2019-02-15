@@ -160,7 +160,7 @@ public class TemplateStepHandler implements IntegrationStepHandler, StringConsta
                 Object value = map.remove(key);
                 if (key.startsWith(BODY_PREFIX)) {
                     key = key.substring(BODY_PREFIX.length());
-                    LOGGER.debug("Refactored Key: " + key);
+                    LOGGER.debug("Refactored Key: {}", key);
                 }
 
                 map.put(key, value);
@@ -171,7 +171,7 @@ public class TemplateStepHandler implements IntegrationStepHandler, StringConsta
         @Override
         public void process(Exchange exchange) throws Exception {
             Object body = exchange.getIn().getBody();
-            LOGGER.debug("Exchange In Body: " + body.toString());
+            LOGGER.debug("Exchange In Body: {}", body);
 
             try {
                 // Map the json body to a Map
@@ -199,7 +199,7 @@ public class TemplateStepHandler implements IntegrationStepHandler, StringConsta
         @Override
         public void process(Exchange exchange) throws Exception {
             Object body = exchange.getIn().getBody();
-            LOGGER.debug("Exchange In Body: " + body.toString());
+            LOGGER.debug("Exchange In Body: {}", body);
 
             try {
                 ObjectNode node = MAPPER.createObjectNode();
@@ -207,7 +207,7 @@ public class TemplateStepHandler implements IntegrationStepHandler, StringConsta
                 String newBody = MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(node);
                 exchange.getIn().setBody(newBody);
 
-                LOGGER.debug("New Exchange In Body: " + newBody);
+                LOGGER.debug("New Exchange In Body: {}", newBody);
             } catch (Exception ex) {
                 throw new IllegalStateException("Failed to post-process the TemplateStep's message into JSON", ex);
             }

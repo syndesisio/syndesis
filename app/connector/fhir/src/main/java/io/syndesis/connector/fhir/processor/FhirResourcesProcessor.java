@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,7 +40,7 @@ public class FhirResourcesProcessor implements BiConsumer<Path, Path> {
                 String specification = buildSchema(file);
 
                 try (OutputStream fileOut = Files.newOutputStream(outputDir.resolve(file.getFileName()))) {
-                    IOUtils.write(specification, fileOut);
+                    IOUtils.write(specification, fileOut, StandardCharsets.UTF_8);
                 }
             }
         } catch (IOException e) {
@@ -51,15 +52,21 @@ public class FhirResourcesProcessor implements BiConsumer<Path, Path> {
     String buildSchema(Path file) throws IOException {
         String specification;
         try (InputStream fileIn = Files.newInputStream(file)) {
-            specification = IOUtils.toString(fileIn);
+            specification = IOUtils.toString(fileIn, StandardCharsets.UTF_8);
         }
+
+        final Path parent = file.getParent();
+        if (parent == null) {
+            throw new IllegalArgumentException(file + " needs to be within a directory");
+        }
+
         String fhirBaseTemplate;
-        try (InputStream baseIn = Files.newInputStream(file.getParent().resolve("fhir-base-template.xml"))) {
-            fhirBaseTemplate = IOUtils.toString(baseIn);
+        try (InputStream baseIn = Files.newInputStream(parent.resolve("fhir-base-template.xml"))) {
+            fhirBaseTemplate = IOUtils.toString(baseIn, StandardCharsets.UTF_8);
         }
         String fhirCommonTemplate;
-        try (InputStream commonIn = Files.newInputStream(file.getParent().resolve("fhir-common-template.xml"))) {
-            fhirCommonTemplate = IOUtils.toString(commonIn);
+        try (InputStream commonIn = Files.newInputStream(parent.resolve("fhir-common-template.xml"))) {
+            fhirCommonTemplate = IOUtils.toString(commonIn, StandardCharsets.UTF_8);
         }
 
         Pattern pattern = Pattern.compile("<xs:element name=\"(\\w+)\" type=\"(\\w+)\">");

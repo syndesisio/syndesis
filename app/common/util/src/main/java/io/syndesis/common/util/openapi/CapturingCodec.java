@@ -33,12 +33,8 @@ final class CapturingCodec extends ObjectCodec {
 
     private final ObjectCodec delegate;
 
-    public CapturingCodec(final ObjectCodec delegate) {
+    CapturingCodec(final ObjectCodec delegate) {
         this.delegate = delegate;
-    }
-
-    public Object captured() {
-        return captured;
     }
 
     @Override
@@ -143,5 +139,9 @@ final class CapturingCodec extends ObjectCodec {
     public void writeValue(final JsonGenerator gen, final Object value) throws IOException {
         delegate.writeValue(gen, value);
         captured = value;
+    }
+
+    Object captured() {
+        return captured;
     }
 }

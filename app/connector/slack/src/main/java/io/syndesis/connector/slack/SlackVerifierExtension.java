@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.component.extension.ComponentVerifierExtension.VerificationError;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
@@ -124,7 +125,10 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
                     builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid token").parameterKey("token").build());
                 }
             } catch (Exception e) {
-                builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid token").parameterKey("token").build());
+                builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid token").parameterKey("token")
+                    .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e)
+                    .detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())
+                    .build());
             }
 
         }

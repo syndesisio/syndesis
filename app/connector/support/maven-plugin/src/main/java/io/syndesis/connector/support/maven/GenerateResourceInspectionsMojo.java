@@ -18,6 +18,7 @@ package io.syndesis.connector.support.maven;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
@@ -29,13 +30,13 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.atlasmap.xml.inspect.XmlInspectionException;
 import io.atlasmap.xml.inspect.XmlSchemaInspector;
 import io.atlasmap.xml.v2.XmlDocument;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -131,14 +132,20 @@ public class GenerateResourceInspectionsMojo extends AbstractMojo {
         XmlDocument xmlDocument = inspector.getXmlDocument();
         String inspection;
         try {
-            inspection = mapper.writer((PrettyPrinter) null).writeValueAsString(xmlDocument);
+            inspection = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(xmlDocument);
         } catch (JsonProcessingException e) {
             throw new IOException("Cannot serialize inspected " + xsdFile + " to json", e);
         }
 
         Files.delete(xsdFile);
 
-        Path jsonFile = outputDir.resolve(xsdFile.getFileName().toString().replace(".xsd", ".json"));
+        final Path xsdFileName = xsdFile.getFileName();
+        if (xsdFileName == null) {
+            throw new IllegalArgumentException("Given path doesn't point to a file: " + xsdFile);
+        }
+
+        final String jsonFileName = xsdFileName.toString().replace(".xsd", ".json");
+        Path jsonFile = outputDir.resolve(jsonFileName);
         try (OutputStream jsonOut = Files.newOutputStream(jsonFile)) {
             IOUtils.write(inspection, jsonOut, StandardCharsets.UTF_8);
             getLog().info("Generated " + jsonFile);
@@ -147,31 +154,26 @@ public class GenerateResourceInspectionsMojo extends AbstractMojo {
 
     @SuppressWarnings("unchecked")
     private BiConsumer<Path, Path> newResourcesProcessor() throws MojoExecutionException {
-        if (!StringUtils.isBlank(resourcesProcessorClass)) {
-            try {
-                Class<?> aClass = getClassLoader(project).loadClass(resourcesProcessorClass);
-                return (BiConsumer<Path, Path>) aClass.getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
-                throw new MojoExecutionException("Failed to instantiate resourcesProcessorClass: " + resourcesProcessorClass, e);
-            }
-        } else {
+        if (StringUtils.isBlank(resourcesProcessorClass)) {
             return null;
+        }
+
+        try {
+            Class<?> aClass = getClassLoader(project).loadClass(resourcesProcessorClass);
+            return (BiConsumer<Path, Path>) aClass.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new MojoExecutionException("Failed to instantiate resourcesProcessorClass: " + resourcesProcessorClass, e);
         }
     }
 
-    private ClassLoader getClassLoader(MavenProject project) {
-        try {
-            List<String> classpathElements = project.getCompileClasspathElements();
-            classpathElements.add( project.getBuild().getOutputDirectory() );
-            classpathElements.add( project.getBuild().getTestOutputDirectory() );
-            URL urls[] = new URL[classpathElements.size()];
-            for (int i = 0; i < classpathElements.size(); ++i) {
-                urls[i] = new File(classpathElements.get(i)).toURI().toURL();
-            }
-            return new URLClassLoader(urls, this.getClass().getClassLoader());
-        } catch ( Exception e ) {
-            getLog().debug( "Cannot get the classloader." );
-            return this.getClass().getClassLoader();
+    private ClassLoader getClassLoader(MavenProject project) throws DependencyResolutionRequiredException, MalformedURLException {
+        List<String> classpathElements = project.getCompileClasspathElements();
+        classpathElements.add( project.getBuild().getOutputDirectory() );
+        classpathElements.add( project.getBuild().getTestOutputDirectory() );
+        URL urls[] = new URL[classpathElements.size()];
+        for (int i = 0; i < classpathElements.size(); ++i) {
+            urls[i] = new File(classpathElements.get(i)).toURI().toURL();
         }
+        return new URLClassLoader(urls, this.getClass().getClassLoader());
     }
 }

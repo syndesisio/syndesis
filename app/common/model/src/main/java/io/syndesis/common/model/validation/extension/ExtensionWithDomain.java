@@ -29,8 +29,6 @@ import io.syndesis.common.model.validation.TargetWithDomain;
 
 public class ExtensionWithDomain extends TargetWithDomain<Extension> implements Extension {
 
-    private static final long serialVersionUID = 1L;
-
     public ExtensionWithDomain(Extension target, Collection<Extension> domain) {
         super(target, domain);
     }

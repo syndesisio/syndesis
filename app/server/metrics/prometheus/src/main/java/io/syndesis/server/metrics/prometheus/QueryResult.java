@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  * @author dhirajb
  */
 @Value.Immutable
+@SuppressWarnings("immutables")
 @JsonDeserialize(builder = QueryResult.Builder.class)
 public interface QueryResult extends Serializable {
 

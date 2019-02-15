@@ -19,6 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -171,22 +174,37 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     }
 
     public static JavaClass inspect(URL[] classpath, DataShape shape) throws IOException, ClassNotFoundException {
-        ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+        final ClassLoader tccl = Thread.currentThread().getContextClassLoader();
 
-        try (URLClassLoader loader = new URLClassLoader(classpath, tccl)) {
-            ClassInspectionService inspector = new ClassInspectionService();
-            inspector.setConversionService(DefaultAtlasConversionService.getInstance());
+        try {
+            return AccessController.doPrivileged((PrivilegedExceptionAction<JavaClass>) () -> {
+                try (URLClassLoader loader = new URLClassLoader(classpath, tccl)) {
+                    ClassInspectionService inspector = new ClassInspectionService();
+                    inspector.setConversionService(DefaultAtlasConversionService.getInstance());
 
-            Class<?> clazz = loader.loadClass(shape.getType());
-            CollectionType collectionClazz = shape.getCollectionType().map(CollectionType::fromValue).orElse(CollectionType.NONE);
-            String collectionClazzName = shape.getCollectionClassName().orElse(null);
+                    Class<?> clazz = loader.loadClass(shape.getType());
+                    CollectionType collectionClazz = shape.getCollectionType().map(CollectionType::fromValue).orElse(CollectionType.NONE);
+                    String collectionClazzName = shape.getCollectionClassName().orElse(null);
 
-            return inspector.inspectClass(
-                loader,
-                clazz,
-                collectionClazz,
-                collectionClazzName
-            );
+                    return inspector.inspectClass(
+                        loader,
+                        clazz,
+                        collectionClazz,
+                        collectionClazzName
+                    );
+                }
+            });
+        } catch (PrivilegedActionException e) {
+            final Throwable cause = e.getCause();
+            if (cause instanceof IOException) {
+                throw (IOException) cause;
+            }
+
+            if (cause instanceof ClassNotFoundException) {
+                throw (ClassNotFoundException) cause;
+            }
+
+            throw new IllegalStateException(e);
         }
     }
 }

@@ -21,6 +21,7 @@ import java.sql.JDBCType;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import lombok.Data;
@@ -66,7 +67,7 @@ public class SqlParam {
     }
 
     public static class SqlSampleValue {
-        public static final List<String> ARRAY_VALUE = Arrays.asList("1","2","3");
+        public static final List<String> ARRAY_VALUE = Collections.unmodifiableList(Arrays.asList("1","2","3"));
         public static final byte[] BINARY_VALUE = {1,2,3};
         public static final String STRING_VALUE = "abc";
         public static final Character CHAR_VALUE = 'a';

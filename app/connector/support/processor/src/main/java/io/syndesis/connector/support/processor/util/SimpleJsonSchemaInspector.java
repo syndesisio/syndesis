@@ -27,7 +27,11 @@ import java.util.Set;
  * Utility class to inspect the content of JSON schema objects, useful when parsing the full schema is not a viable option.
  * This should not be affected by incompatibilities between draft-03 and draft-04.
  */
-public class SimpleJsonSchemaInspector {
+public final class SimpleJsonSchemaInspector {
+
+    private SimpleJsonSchemaInspector() {
+        // utility class
+    }
 
     public static Optional<String> getId(JsonNode node) {
         return Optional.ofNullable(node)

@@ -25,7 +25,7 @@ import org.apache.olingo.client.api.domain.ClientEntitySet;
 
 public class Olingo4Index {
 
-    private Set<Integer> resultIndex = new HashSet<>();
+    private final Set<Integer> resultIndex = new HashSet<>();
 
     private Object filter(Object o) {
         if (resultIndex.contains(o.hashCode())) {

@@ -156,7 +156,7 @@ public class IntegrationDeploymentHandlerTest {
     @Test
     public void shouldUpdateIntegrationDeploymentTargetState() {
         final TargetStateRequest targetState = new TargetStateRequest();
-        targetState.targetState = IntegrationDeploymentState.Published;
+        targetState.setTargetState(IntegrationDeploymentState.Published);
 
         final IntegrationDeployment existing = deployment(0);
 

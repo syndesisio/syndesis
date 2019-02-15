@@ -28,9 +28,9 @@ import io.syndesis.common.model.WithId;
  */
 public abstract class TargetWithDomain<T extends WithId<T>> implements WithId<T> {
 
-    private T target;
+    private final T target;
 
-    private Collection<T> domain;
+    private final Collection<T> domain;
 
     public TargetWithDomain(T target, Collection<T> domain) {
         this.target = target;

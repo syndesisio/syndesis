@@ -31,7 +31,6 @@ import org.apache.camel.util.component.AbstractApiComponent;
 import org.apache.camel.util.jsse.SSLContextParameters;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 
 /**
@@ -128,10 +127,9 @@ public class Olingo4Component extends AbstractApiComponent<Olingo4ApiName, Oling
     }
 
     private Olingo4AppWrapper createOlingo4App(Olingo4Configuration configuration) {
-
-        Object clientBuilder = configuration.getHttpAsyncClientBuilder();
+        HttpAsyncClientBuilder clientBuilder = configuration.getHttpAsyncClientBuilder();
         if (clientBuilder == null) {
-            HttpAsyncClientBuilder asyncClientBuilder = HttpAsyncClientBuilder.create();
+            clientBuilder = HttpAsyncClientBuilder.create();
 
             // apply simple configuration properties
             final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
@@ -144,7 +142,7 @@ public class Olingo4Component extends AbstractApiComponent<Olingo4ApiName, Oling
             }
 
             // set default request config
-            asyncClientBuilder.setDefaultRequestConfig(requestConfigBuilder.build());
+            clientBuilder.setDefaultRequestConfig(requestConfigBuilder.build());
 
             SSLContextParameters sslContextParameters = configuration.getSslContextParameters();
             if (sslContextParameters == null) {
@@ -156,7 +154,7 @@ public class Olingo4Component extends AbstractApiComponent<Olingo4ApiName, Oling
                 sslContextParameters = new SSLContextParameters();
             }
             try {
-                asyncClientBuilder.setSSLContext(sslContextParameters.createSSLContext(getCamelContext()));
+                clientBuilder.setSSLContext(sslContextParameters.createSSLContext(getCamelContext()));
             } catch (GeneralSecurityException e) {
                 throw ObjectHelper.wrapRuntimeCamelException(e);
             } catch (IOException e) {
@@ -164,12 +162,7 @@ public class Olingo4Component extends AbstractApiComponent<Olingo4ApiName, Oling
             }
         }
 
-        Olingo4AppImpl olingo4App;
-        if (clientBuilder == null || clientBuilder instanceof HttpAsyncClientBuilder) {
-            olingo4App = new Olingo4AppImpl(configuration.getServiceUri(), (HttpAsyncClientBuilder)clientBuilder);
-        } else {
-            olingo4App = new Olingo4AppImpl(configuration.getServiceUri(), (HttpClientBuilder)clientBuilder);
-        }
+        Olingo4AppImpl olingo4App = new Olingo4AppImpl(configuration.getServiceUri(), clientBuilder);
         apiProxy = new Olingo4AppWrapper(olingo4App);
         apiProxy.getOlingo4App().setContentType(configuration.getContentType());
         apiProxy.getOlingo4App().setHttpHeaders(configuration.getHttpHeaders());

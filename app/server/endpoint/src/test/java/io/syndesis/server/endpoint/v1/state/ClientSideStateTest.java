@@ -31,6 +31,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.core.NewCookie;
 
+import io.syndesis.common.util.immutable.ImmutablesStyle;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import org.immutables.value.Value.Immutable;
@@ -77,6 +79,7 @@ public class ClientSideStateTest {
     private static final Function<Object, byte[]> SIMPLE_SERIALIZATION = o -> ((String) o).getBytes(StandardCharsets.UTF_8);
 
     @Immutable
+    @ImmutablesStyle
     @JsonDeserialize(builder = ImmutableData.Builder.class)
     public interface Data {
         int getInteger();

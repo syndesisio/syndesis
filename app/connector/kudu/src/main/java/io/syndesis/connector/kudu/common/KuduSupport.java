@@ -25,6 +25,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class KuduSupport {
+
+    private KuduSupport() {
+        // utility class
+    }
+
     public static KuduClient createConnection(Map<String, Object> options) {
 
         if(ObjectHelper.isNotEmpty(options.get("host")) && ObjectHelper.isNotEmpty(options.get("port"))) {
@@ -53,9 +58,11 @@ public final class KuduSupport {
         ObjectMapper mapper = new ObjectMapper();
         final Map<String, Object> data = new HashMap<>(map.size());
 
-        for (final String key : map.keySet()) {
+        for (final Map.Entry<String, Object> entry : map.entrySet()) {
+            final String key = entry.getKey();
+            final Object value = entry.getValue();
             if (key.charAt(0) != '#') { // don't include Camel stats
-                data.put(key, map.get(key));
+                data.put(key, value);
             }
         }
 

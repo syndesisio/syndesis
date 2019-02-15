@@ -15,7 +15,6 @@
  */
 package io.syndesis.common.model.connection;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -31,7 +30,7 @@ import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.environment.Organization;
 
 public interface ConnectionBase
-    extends WithResourceId, WithTags, WithName, WithConfiguredProperties, WithMetadata, ToJson, Serializable {
+    extends WithResourceId, WithTags, WithName, WithConfiguredProperties, WithMetadata, ToJson {
 
     Optional<Organization> getOrganization();
 

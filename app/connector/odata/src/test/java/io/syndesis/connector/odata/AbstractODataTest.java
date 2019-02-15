@@ -41,7 +41,6 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Flow;
-import io.syndesis.common.model.integration.Flow.Builder;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
@@ -151,7 +150,7 @@ public abstract class AbstractODataTest extends IntegrationTestSupport implement
 
     protected Integration createIntegration(Step... steps) {
 
-        Builder flowBuilder = new Flow.Builder();
+        Flow.Builder flowBuilder = new Flow.Builder();
         for (Step step : steps) {
             flowBuilder.addStep(step);
         }

@@ -43,7 +43,11 @@ public class KuduCreateTableCustomizer implements ComponentProxyCustomizer {
     }
 
     private void setOptions(Map<String, Object> options) {
-        if(options != null && !options.isEmpty()) {
+        if (options == null) {
+            return;
+        }
+
+        if (!options.isEmpty()) {
             String[] columns = ((String) options.get("columns")).split(";", -1);
             KuduTable.ColumnSchema[] columnSchemas = new KuduTable.ColumnSchema[columns.length];
 

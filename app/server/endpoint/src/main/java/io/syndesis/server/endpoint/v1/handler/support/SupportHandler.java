@@ -73,8 +73,8 @@ public class SupportHandler extends BaseHandler {
                 try {
                     FileUtils.copyFile(zipFile, output);
                 } finally {
-                    if(zipFile!=null) {
-                        zipFile.delete();
+                    if(zipFile!=null && !zipFile.delete()) {
+                        zipFile.deleteOnExit();
                     }
                 }
             }

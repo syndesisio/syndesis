@@ -64,8 +64,10 @@ public class AggregateStepHandler implements IntegrationStepHandler {
         private final StrategyConfigurer<AggregationStrategy> configurer;
 
         @Immutable
+        @com.google.errorprone.annotations.Immutable
         interface StrategySupplier<T extends AggregationStrategy> extends Supplier<T> {}
         @Immutable
+        @com.google.errorprone.annotations.Immutable
         interface StrategyConfigurer<T extends AggregationStrategy> extends BiFunction<T, Map<String, String>, T> {}
 
         AggregationOption(StrategySupplier<AggregationStrategy> strategySupplier) {

@@ -63,7 +63,8 @@ import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.extension.converter.ExtensionConverter;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.handler.ArtifactHandler;
+import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -98,9 +99,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
         RESOURCE_AND_SPECIFICATION
     }
 
-    @SuppressWarnings("deprecation")
     @Component
-    private ArtifactFactory artifactFactory;
+    private ArtifactHandlerManager artifactHandlerManager;
 
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
@@ -686,12 +686,13 @@ public class GenerateMetadataMojo extends AbstractMojo {
     // ****************************************
 
     protected Artifact toArtifact(Dependency dependency) {
-        return artifactFactory.createArtifact(
-            dependency.getGroupId(),
+        final ArtifactHandler artifactHandler = artifactHandlerManager.getArtifactHandler(dependency.getType());
+        return new DefaultArtifact(dependency.getGroupId(),
             dependency.getArtifactId(),
             dependency.getVersion(),
             dependency.getScope(),
-            dependency.getType()
-        );
+            dependency.getType(),
+            dependency.getClassifier(),
+            artifactHandler);
     }
 }

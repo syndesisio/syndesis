@@ -43,12 +43,11 @@ public class KuduProducer extends DefaultProducer {
 
     private static final Logger LOG = LoggerFactory.getLogger(KuduProducer.class);
 
-    private KuduEndpoint endpoint;
-    private KuduClient connection;
+    private final KuduEndpoint endpoint;
+    private final KuduClient connection;
 
     public KuduProducer(KuduEndpoint endpoint) {
         super(endpoint);
-        this.endpoint = endpoint;
 
         if (ObjectHelper.isEmpty(endpoint.getKuduClient())) {
             throw new IllegalArgumentException("Can't create a producer when the database connection is null");

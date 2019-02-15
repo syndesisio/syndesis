@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public final class DatabaseMetaDataHelper {
 
     private DatabaseMetaDataHelper() {
@@ -154,7 +156,7 @@ public final class DatabaseMetaDataHelper {
 
     }
 
-    @SuppressWarnings("OBL_UNSATISFIED_OBLIGATION")
+    @SuppressFBWarnings("OBL_UNSATISFIED_OBLIGATION")
     /* default */ static List<SqlParam> getOutputColumnInfo(final Connection connection,
             final String sqlSelectStatement) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();

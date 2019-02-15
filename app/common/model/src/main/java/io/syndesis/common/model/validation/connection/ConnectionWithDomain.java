@@ -28,8 +28,6 @@ import io.syndesis.common.model.validation.TargetWithDomain;
 
 public class ConnectionWithDomain extends TargetWithDomain<Connection> implements Connection {
 
-    private static final long serialVersionUID = 1L;
-
     public ConnectionWithDomain(Connection target, Collection<Connection> domain) {
         super(target, domain);
     }

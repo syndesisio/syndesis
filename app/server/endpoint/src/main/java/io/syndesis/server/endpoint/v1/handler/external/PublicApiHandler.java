@@ -453,7 +453,7 @@ public class PublicApiHandler {
         validateParam("integrationId", integrationId);
         IntegrationDeploymentHandler.TargetStateRequest targetState = new IntegrationDeploymentHandler
                 .TargetStateRequest();
-        targetState.targetState = IntegrationDeploymentState.Unpublished;
+        targetState.setTargetState(IntegrationDeploymentState.Unpublished);
 
         // find current deployed version
         final IntegrationDeployment[] deployment = {null};

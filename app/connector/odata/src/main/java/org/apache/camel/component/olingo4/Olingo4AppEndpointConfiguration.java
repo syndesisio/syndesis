@@ -21,6 +21,7 @@ package org.apache.camel.component.olingo4;
 
 import org.apache.camel.spi.UriParam;
 import org.apache.camel.spi.UriParams;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * Camel EndpointConfiguration for org.apache.camel.component.olingo4.api.Olingo4App
@@ -103,5 +104,35 @@ public final class Olingo4AppEndpointConfiguration extends Olingo4Configuration 
 
     public void setResponseHandler(org.apache.camel.component.olingo4.api.Olingo4ResponseHandler<?> responseHandler) {
         this.responseHandler = responseHandler;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .appendSuper(super.hashCode())
+            .append(data)
+            .append(edm)
+            .append(endpointHttpHeaders)
+            .append(keyPredicate)
+            .append(queryParams)
+            .append(resourcePath)
+            .append(responseHandler)
+            .hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Olingo4AppEndpointConfiguration) {
+            Olingo4AppEndpointConfiguration other = (Olingo4AppEndpointConfiguration) obj;
+            return super.equals(obj)
+                && data == null ? other.data == null : data.equals(other.data)
+                && edm == null ? other.edm == null : edm.equals(other.edm)
+                && endpointHttpHeaders == null ? other.endpointHttpHeaders == null : endpointHttpHeaders.equals(other.endpointHttpHeaders)
+                && keyPredicate == null ? other.keyPredicate == null : keyPredicate.equals(other.keyPredicate)
+                && queryParams == null ? other.queryParams == null : queryParams.equals(other.queryParams)
+                && resourcePath == null ? other.resourcePath == null : resourcePath.equals(other.resourcePath)
+                && responseHandler == null ? other.responseHandler == null : responseHandler.equals(other.responseHandler);
+        }
+        return false;
     }
 }

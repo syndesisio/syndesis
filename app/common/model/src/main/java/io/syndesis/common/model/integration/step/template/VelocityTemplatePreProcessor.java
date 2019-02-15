@@ -39,7 +39,7 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
     private static final String SET_LITERAL = "#set(";
 
     // Record velocity-only symbols to ignore them since they don't require a prefix
-    private List<String> vOnlySymbols = new ArrayList<>();
+    private final List<String> vOnlySymbols = new ArrayList<>();
 
     // Flag if the symbol is a declaration for a velocity-only symbol
     private boolean vSymbolDeclaration;

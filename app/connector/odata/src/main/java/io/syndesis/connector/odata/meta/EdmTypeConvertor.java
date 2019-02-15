@@ -70,7 +70,9 @@ public class EdmTypeConvertor {
             case "TimeOfDay":
                 return property(String.class);
             default:
-                LOG.warn("The primitive edm type '" + type.getName() + "' is not supported. Returning as string");
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("The primitive edm type '{}' is not supported. Returning as string", type.getName());
+                }
                 return property(String.class);
         }
     }
