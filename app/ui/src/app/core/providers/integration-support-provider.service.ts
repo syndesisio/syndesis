@@ -21,6 +21,7 @@ import {
   ActionDescriptor,
 } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class IntegrationSupportProviderService extends IntegrationSupportService {
@@ -209,7 +210,11 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
       .setEndpointUrl(integrationEndpoints.renameEnvironment, {
         env: encodeURIComponent(oldEnv),
       })
-      .put(newEnv);
+      .put(newEnv, {
+        headers: new HttpHeaders({
+          'Content-type': 'application/json'
+        })
+      });
   }
 
   getEnvironments(): Observable<string[]> {
