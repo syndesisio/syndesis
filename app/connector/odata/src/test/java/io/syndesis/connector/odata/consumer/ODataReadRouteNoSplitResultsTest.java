@@ -81,7 +81,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
-        result.setExpectedMessageCount(defaultTestServer.getResultCount());
+        result.setMinimumExpectedMessageCount(defaultTestServer.getResultCount());
 
         context.start();
 
@@ -105,7 +105,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
-        result.setExpectedMessageCount(authTestServer.getResultCount());
+        result.setMinimumExpectedMessageCount(authTestServer.getResultCount());
 
         context.start();
 
@@ -125,7 +125,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
-        result.setExpectedMessageCount(sslTestServer.getResultCount());
+        result.setMinimumExpectedMessageCount(sslTestServer.getResultCount());
 
         context.start();
 
@@ -150,7 +150,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
-        result.setExpectedMessageCount(sslAuthTestServer.getResultCount());
+        result.setMinimumExpectedMessageCount(sslAuthTestServer.getResultCount());
 
         context.start();
 
@@ -186,7 +186,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
-        result.setExpectedMessageCount(1);
+        result.setMinimumExpectedMessageCount(1);
 
         context.start();
 
@@ -217,7 +217,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
-        result.setExpectedMessageCount(1);
+        result.setMinimumExpectedMessageCount(1);
 
         context.start();
 
@@ -238,7 +238,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
-        result.setExpectedMessageCount(1);
+        result.setMinimumExpectedMessageCount(1);
 
         context.start();
 
@@ -268,7 +268,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
-        result.setExpectedMessageCount(2);
+        result.setMinimumExpectedMessageCount(2);
 
         context.start();
 
@@ -293,7 +293,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
-        result.setExpectedMessageCount(1);
+        result.setMinimumExpectedMessageCount(1);
 
         context.start();
 
@@ -314,7 +314,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
-        result.setExpectedMessageCount(1);
+        result.setMinimumExpectedMessageCount(1);
 
         context.start();
 
@@ -338,7 +338,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
-        result.setExpectedMessageCount(2);
+        result.setMinimumExpectedMessageCount(2);
 
         context.start();
 
@@ -371,7 +371,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         context.addRoutes(routes);
         int expectedMsgCount = defaultTestServer.getResultCount();
         MockEndpoint result = initMockEndpoint();
-        result.setExpectedMessageCount(expectedMsgCount);
+        result.setMinimumExpectedMessageCount(expectedMsgCount);
 
         context.start();
 
