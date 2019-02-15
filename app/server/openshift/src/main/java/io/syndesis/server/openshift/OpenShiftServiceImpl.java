@@ -15,21 +15,15 @@
  */
 package io.syndesis.server.openshift;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
+import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.EnvVar;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
 import io.fabric8.kubernetes.api.model.Quantity;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.client.KubernetesClientException;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.Resource;
 import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
@@ -41,9 +35,20 @@ import io.fabric8.openshift.api.model.UserBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -499,4 +504,35 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .map(RouteSpec::getHost);
     }
 
+    @Override
+    public List<HasMetadata> createOrReplaceCRD(InputStream crdYamlStream){
+       return openShiftClient.load(crdYamlStream).createOrReplace();
+    }
+
+    @Override
+    public CustomResourceDefinition createOrReplaceCRD(CustomResourceDefinition crd){
+        return openShiftClient.customResourceDefinitions().createOrReplace(crd);
+    }
+
+    @Override
+    public Optional<CustomResourceDefinition> getCRD(String crdName){
+        CustomResourceDefinition result = openShiftClient.customResourceDefinitions().withName(crdName).get();
+        return result != null ? Optional.of(result) : Optional.empty();
+    }
+
+    @Override
+    @SuppressWarnings({"unchecked"})
+    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> T createOrReplaceCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, T customResource){
+       return getCRDClient(crd, resourceType, resourceListType, doneableResourceType).inNamespace(config.getNamespace()).createOrReplace(customResource);
+    }
+
+    @Override
+    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> Resource<T, D> getCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, String customResourceName){
+        return getCRDClient(crd, resourceType, resourceListType, doneableResourceType).inNamespace(config.getNamespace()).withName(customResourceName);
+
+    }
+
+    private <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> MixedOperation<T, L, D, Resource<T, D>> getCRDClient(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType) {
+        return openShiftClient.customResource(crd, resourceType, resourceListType, doneableResourceType);
+    }
 }
