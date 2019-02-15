@@ -37,12 +37,93 @@ const textVersion = 'Version';
 const historyItems = [
   <Grid fluid={true} key={1}>
     <Grid.Row className="show-grid">
-      <Grid.Col xs={12} md={2}>
-        {<span>{text('i18nTextHistory', textHistory)}:</span>}
+      <Grid.Col xs={2} md={2}>
+        {<span>{text('i18nTextDraft', textDraft)}:</span>}
       </Grid.Col>
-      <Grid.Col xs={6} md={10}>
+      <Grid.Col xs={10} md={10}>
         <ListViewItem
           key={1}
+          heading={<i>{text('i18nTextDraft', textDraft)}</i>}
+          actions={
+            <div>
+              <DropdownKebab id="action2kebab" pullRight={true}>
+                <MenuItem>
+                  {text(
+                    'i18nTextHistoryMenuReplaceDraft',
+                    textHistoryMenuReplaceDraft
+                  )}
+                </MenuItem>
+                <MenuItem>
+                  {text(
+                    'i18nTextHistoryMenuUnpublish',
+                    textHistoryMenuUnpublish
+                  )}
+                </MenuItem>
+              </DropdownKebab>
+            </div>
+          }
+          description={
+            <span>{text('i18nTextLastPublished', textLastPublished)}</span>
+          }
+          stacked={false}
+          i18nTextBtnEdit={text('', textBtnEdit)}
+          i18nTextBtnPublish={text('', textBtnPublish)}
+          i18nTextHistoryMenuReplaceDraft={text(
+            '',
+            textHistoryMenuReplaceDraft
+          )}
+          i18nTextHistoryMenuUnpublish={text('', textHistoryMenuUnpublish)}
+          i18nTextLastPublished={text('', textLastPublished)}
+        />
+      </Grid.Col>
+    </Grid.Row>
+
+    <Grid.Row className="show-grid">
+      <Grid.Col xs={2} md={2}>
+        {<span>{text('i18nTextHistory', textHistory)}:</span>}
+      </Grid.Col>
+      <Grid.Col xs={10} md={10}>
+        <ListViewItem
+          key={1}
+          heading={
+            <span>
+              {<span>{text('i18nTextVersion', textVersion)}:</span>}{' '}
+              {text('integrationVersion', integrationVersion)}
+            </span>
+          }
+          actions={
+            <div>
+              <DropdownKebab id="action2kebab" pullRight={true}>
+                <MenuItem>
+                  {text(
+                    'i18nTextHistoryMenuReplaceDraft',
+                    textHistoryMenuReplaceDraft
+                  )}
+                </MenuItem>
+                <MenuItem>
+                  {text(
+                    'i18nTextHistoryMenuUnpublish',
+                    textHistoryMenuUnpublish
+                  )}
+                </MenuItem>
+              </DropdownKebab>
+            </div>
+          }
+          description={
+            <span>{text('i18nTextLastPublished', textLastPublished)}</span>
+          }
+          stacked={false}
+          i18nTextBtnEdit={text('', textBtnEdit)}
+          i18nTextBtnPublish={text('', textBtnPublish)}
+          i18nTextHistoryMenuReplaceDraft={text(
+            '',
+            textHistoryMenuReplaceDraft
+          )}
+          i18nTextHistoryMenuUnpublish={text('', textHistoryMenuUnpublish)}
+          i18nTextLastPublished={text('', textLastPublished)}
+        />
+        <ListViewItem
+          key={2}
           heading={
             <span>
               {<span>{text('i18nTextVersion', textVersion)}:</span>}{' '}
