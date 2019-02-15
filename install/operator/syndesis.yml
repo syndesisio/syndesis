@@ -132,7 +132,6 @@ parameters:
 - description: Volume space available for Meta data, e.g. 512Mi, 2Gi.
   displayName: Meta Volume Capacity
   name: META_VOLUME_CAPACITY
-  required: true
   value: 1Gi
   required: true
 - description: Maximum amount of memory the syndesis-meta service might use.
@@ -1515,7 +1514,6 @@ objects:
             ports:
               - containerPort: 8080
                 name: http
-            resources: {}
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
         dnsPolicy: ClusterFirst
