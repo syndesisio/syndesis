@@ -499,12 +499,9 @@ public class PublicApiHandler {
     }
 
     private <T extends WithId<T> & WithName> T getResource(Class<T> resourceClass, String nameOrId) {
-        // try fetching by name first
-        T resource = dataMgr.fetchByPropertyValue(resourceClass, "name", nameOrId).orElse(null);
-        if (resource == null) {
-            // then try fetching by id
-            resource = dataMgr.fetch(resourceClass, nameOrId);
-        }
+        // try fetching by name first, then by id
+        final T resource = dataMgr.fetchByPropertyValue(resourceClass, "name", nameOrId)
+                .orElse(dataMgr.fetch(resourceClass, nameOrId));
         if (resource == null) {
             throw new ClientErrorException(
                     String.format("Missing %s with name/id %s", Kind.from(resourceClass).getModelName(), nameOrId),
