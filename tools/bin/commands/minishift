@@ -40,6 +40,8 @@ minishift::usage() {
     --test-support            Allow test support endpoint for syndesis-server
     --camel-k <version>       Install the Camel-K operator with version <version>
                               (version is optional)
+    --camel-k-options "opts"  Options used when installing the camel-k operator.
+                              Use quotes and start with a space before appending the options.
 EOT
 }
 
@@ -117,7 +119,7 @@ minishift::run() {
         # Deploy Camel-K operator if requested
         if [ $(hasflag --camel-k) ]; then
           echo "Deploying Camel-K operator"
-          result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)")
+          result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)" "$(readopt --camel-k-options)")
           check_error "$result"
         fi
 
