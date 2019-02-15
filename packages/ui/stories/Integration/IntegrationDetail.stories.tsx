@@ -1,4 +1,10 @@
-import { DropdownKebab, Grid, ListViewItem, MenuItem } from 'patternfly-react';
+import {
+  Button,
+  DropdownKebab,
+  Grid,
+  ListViewItem,
+  MenuItem,
+} from 'patternfly-react';
 import { text } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
@@ -46,6 +52,7 @@ const historyItems = [
           heading={<i>{text('i18nTextDraft', textDraft)}</i>}
           actions={
             <div>
+              <Button>Action 1</Button>
               <DropdownKebab id="action2kebab" pullRight={true}>
                 <MenuItem>
                   {text(
@@ -61,9 +68,6 @@ const historyItems = [
                 </MenuItem>
               </DropdownKebab>
             </div>
-          }
-          description={
-            <span>{text('i18nTextLastPublished', textLastPublished)}</span>
           }
           stacked={false}
           i18nTextBtnEdit={text('', textBtnEdit)}
