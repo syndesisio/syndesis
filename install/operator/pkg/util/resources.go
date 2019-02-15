@@ -3,15 +3,16 @@ package util
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"strings"
+
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
+	"k8s.io/apimachinery/pkg/util/yaml"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	"io/ioutil"
-	"k8s.io/apimachinery/pkg/util/yaml"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
-	"strings"
 )
 
 
@@ -83,6 +84,33 @@ func RuntimeObjectFromUnstructured(scheme *runtime.Scheme,u *unstructured.Unstru
 		return nil, fmt.Errorf("failed to decode json data with gvk(%v): %v", gvk.String(), err)
 	}
 	return ro, nil
+}
+
+func LoadUnstructuredObjectFromFile(path string) (*unstructured.Unstructured, error) {
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	data, err = jsonIfYaml(data, path)
+	if err != nil {
+		return nil, err
+	}
+
+	uo, err := LoadUnstructuredObject(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return uo, nil
+}
+
+func LoadUnstructuredObject(data []byte) (*unstructured.Unstructured, error) {
+	var uo unstructured.Unstructured
+	if err := json.Unmarshal(data, &uo.Object); err != nil {
+		return nil, err
+	}
+	return &uo, nil
 }
 
 func jsonIfYaml(source []byte, filename string) ([]byte, error) {

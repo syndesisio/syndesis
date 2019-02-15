@@ -3,19 +3,24 @@ package action
 import (
 	"context"
 	"errors"
+	"strconv"
+	"strings"
+	"time"
+
+	"k8s.io/api/core/v1"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/addons"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	syndesistemplate "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	"k8s.io/api/core/v1"
-	k8serrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-	"strconv"
-	"strings"
-	"time"
 )
 
 const (
@@ -29,21 +34,32 @@ type upgrade struct {
 }
 
 var (
-	UpgradeAction =  upgrade{action{actionLog.WithValues("type", "install")},""}
+	UpgradeAction = upgrade{action{actionLog.WithValues("type", "install")}, ""}
 )
-
 
 func (a upgrade) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseUpgrading)
 }
 
-func (a *upgrade) Execute(scheme *runtime.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
+func (a *upgrade) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error {
 	if a.operatorVersion == "" {
 		operatorVersion, err := configuration.GetSyndesisVersionFromOperatorTemplate(scheme)
 		if err != nil {
 			return err
 		}
 		a.operatorVersion = operatorVersion
+	}
+
+	// Delete previously installed addons resources
+	addonResources, err := a.getAddonsResources(cl, syndesis)
+	if err != nil {
+		return err
+	}
+	for _, addonResource := range addonResources {
+		err := cl.Delete(context.TODO(), &addonResource)
+		if err != nil {
+			return err
+		}
 	}
 
 	namespaceVersion, err := configuration.GetSyndesisVersionFromNamespace(cl, syndesis.Namespace)
@@ -79,6 +95,24 @@ func (a *upgrade) Execute(scheme *runtime.Scheme, cl client.Client, syndesis *v1
 				err = createOrReplaceForce(cl, res, true)
 				if err != nil {
 					return err
+				}
+			}
+
+			// Install addons
+			if addonsDir := *configuration.AddonsDirLocation; len(addonsDir) > 0 {
+				addons, err := addons.GetAddonsResources(addonsDir)
+				if err != nil {
+					return err
+				}
+				for _, addon := range addons {
+					operation.SetLabel(addon, "syndesis.io/addon-resource", "true")
+
+					operation.SetNamespaceAndOwnerReference(addon, syndesis)
+
+					err = createOrReplaceForce(cl, addon, true)
+					if err != nil {
+						return err
+					}
 				}
 			}
 
@@ -130,7 +164,7 @@ func (a *upgrade) Execute(scheme *runtime.Scheme, cl client.Client, syndesis *v1
 			}
 		} else if upgradePod.Status.Phase == v1.PodFailed {
 			// Upgrade failed
-			a.log.Error(nil,"Failure while upgrading Syndesis resource: upgrade pod failure", "name", syndesis.Name, "targetVersion", targetVersion)
+			a.log.Error(nil, "Failure while upgrading Syndesis resource: upgrade pod failure", "name", syndesis.Name, "targetVersion", targetVersion)
 
 			target := syndesis.DeepCopy()
 			target.Status.Phase = v1alpha1.SyndesisPhaseUpgradeFailureBackoff
@@ -208,10 +242,71 @@ func (a *upgrade) findUpgradePod(resources []runtime.Object) (*v1.Pod, error) {
 
 func (a *upgrade) getUpgradePodFromNamespace(cl client.Client, podTemplate *v1.Pod, syndesis *v1alpha1.Syndesis) (*v1.Pod, error) {
 	pod := v1.Pod{}
-	key := client.ObjectKey {
+	key := client.ObjectKey{
 		Namespace: syndesis.Namespace,
 		Name:      podTemplate.Name,
 	}
 	err := cl.Get(context.TODO(), key, &pod)
 	return &pod, err
+}
+
+func (a *upgrade) getAddonsResources(cl Client, syndesis *v1alpha1.Syndesis) ([]unstructured.Unstructured, error) {
+	types, err := getTypes(cl)
+	if err != nil {
+		return nil, err
+	}
+
+	selector, err := labels.Parse("syndesis.io/addon-resource=true")
+	if err != nil {
+		return nil, err
+	}
+
+	res := make([]unstructured.Unstructured, 0)
+	for _, t := range types {
+		options := client.ListOptions{
+			Namespace:     syndesis.Namespace,
+			LabelSelector: selector,
+			Raw: &metav1.ListOptions{
+				TypeMeta: t,
+			},
+		}
+		list := unstructured.UnstructuredList{
+			Object: map[string]interface{}{
+				"apiVersion": t.APIVersion,
+				"kind":       t.Kind,
+			},
+		}
+		if err := cl.List(context.TODO(), &options, &list); err != nil {
+			if k8serrors.IsNotFound(err) ||
+				k8serrors.IsForbidden(err) ||
+				k8serrors.IsMethodNotSupported(err) {
+				continue
+			}
+			return nil, err
+		}
+		for _, item := range list.Items {
+			res = append(res, item)
+		}
+	}
+
+	return res, nil
+}
+
+func getTypes(client Client) ([]metav1.TypeMeta, error) {
+	resources, err := client.Discovery().ServerPreferredNamespacedResources()
+	if err != nil {
+		return nil, err
+	}
+
+	types := make([]metav1.TypeMeta, 0)
+	for _, resource := range resources {
+		for _, r := range resource.APIResources {
+			types = append(types, metav1.TypeMeta{
+				Kind:       r.Kind,
+				APIVersion: resource.GroupVersion,
+			})
+		}
+	}
+
+	return types, nil
 }

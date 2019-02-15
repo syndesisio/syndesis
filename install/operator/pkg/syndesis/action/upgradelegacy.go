@@ -3,19 +3,20 @@ package action
 import (
 	"context"
 	"errors"
+
+	"k8s.io/apimachinery/pkg/runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
-	runtime2 "k8s.io/apimachinery/pkg/runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // Upgrade a legacy Syndesis installation (installed with template) using the operator.
 type upgradeLegacy action
 
-
 var (
-	UpgradeLegacy =  upgradeLegacy{
+	UpgradeLegacy = upgradeLegacy{
 		actionLog.WithValues("type", "upgrade-legacy"),
 	}
 )
@@ -24,7 +25,7 @@ func (a *upgradeLegacy) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseUpgradingLegacy)
 }
 
-func (a *upgradeLegacy) Execute(scheme *runtime2.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
+func (a *upgradeLegacy) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error {
 	// Checking that there's only one installation to avoid stealing resources
 	if anotherInstallation, err := isAnotherActiveInstallationPresent(cl, syndesis); err != nil {
 		return err
@@ -32,7 +33,7 @@ func (a *upgradeLegacy) Execute(scheme *runtime2.Scheme, cl client.Client, synde
 		return errors.New("another syndesis installation active")
 	}
 
-	a.log.Info("Attaching Syndesis installation to resource","name", syndesis.Name)
+	a.log.Info("Attaching Syndesis installation to resource", "name", syndesis.Name)
 
 	err := operation.AttachSyndesisToResource(scheme, cl, syndesis)
 	if err != nil {

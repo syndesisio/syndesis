@@ -7,12 +7,13 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	runtime2 "k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // Waits for all pods to startup, then mark Syndesis as "Running".
 type startup action
+
 var (
 	StartupAction = startup{
 		actionLog.WithValues("type", "startup"),
@@ -25,15 +26,14 @@ func (a *startup) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 		v1alpha1.SyndesisPhaseStartupFailed)
 }
 
-func (a *startup) Execute(scheme *runtime2.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
-
-	list := v1.DeploymentConfigList {
+func (a *startup) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error {
+	list := v1.DeploymentConfigList{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "DeploymentConfig",
 			APIVersion: "apps.openshift.io/v1",
 		},
 	}
-	listOptions := client.ListOptions{ Namespace: syndesis.Namespace }
+	listOptions := client.ListOptions{Namespace: syndesis.Namespace}
 	if err := listOptions.SetLabelSelector("syndesis.io/app=syndesis,syndesis.io/type=infrastructure"); err != nil {
 		return err
 	}

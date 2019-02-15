@@ -2,10 +2,11 @@ package action
 
 import (
 	"context"
+
+	"k8s.io/apimachinery/pkg/runtime"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
-	runtime2 "k8s.io/apimachinery/pkg/runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // Checks if the syndesis installation should be upgraded and move to the "Upgrading" status.
@@ -24,8 +25,7 @@ func (a *checkUpdates) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 		v1alpha1.SyndesisPhaseStartupFailed)
 }
 
-func (a *checkUpdates) Execute(scheme *runtime2.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error {
-
+func (a *checkUpdates) Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error {
 	if a.operatorVersion == "" {
 		operatorVersion, err := configuration.GetSyndesisVersionFromOperatorTemplate(scheme)
 		if err != nil {

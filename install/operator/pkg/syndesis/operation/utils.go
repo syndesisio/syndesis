@@ -19,3 +19,14 @@ func SetNamespaceAndOwnerReference(resource interface{}, syndesis *v1alpha1.Synd
 		})
 	}
 }
+
+func SetLabel(resource interface{}, key string, value string) {
+	if obj, ok := resource.(metav1.Object); ok {
+		labels := obj.GetLabels()
+		if labels == nil {
+			labels = map[string]string{}
+		}
+		labels[key] = value
+		obj.SetLabels(labels)
+	}
+}

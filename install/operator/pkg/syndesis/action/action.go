@@ -7,6 +7,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/kubernetes"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
@@ -15,6 +16,12 @@ const (
 	replaceResourcesIfPresent = true
 )
 
+// Client is an abstraction for a k8s client
+type Client struct {
+	client.Client
+	kubernetes.Interface
+}
+
 type action struct {
 	log logr.Logger
 }
@@ -22,10 +29,9 @@ type action struct {
 var actionLog = logf.Log.WithName("action").WithValues("type", )
 
 type InstallationAction interface {
-
 	CanExecute(syndesis *v1alpha1.Syndesis) bool
 
-	Execute(scheme *runtime.Scheme, cl client.Client, syndesis *v1alpha1.Syndesis) error
+	Execute(scheme *runtime.Scheme, cl Client, syndesis *v1alpha1.Syndesis) error
 }
 
 type updateFunction func(runtime.Object)

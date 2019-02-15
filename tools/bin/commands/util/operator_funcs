@@ -195,6 +195,8 @@ prepare_multistage_docker_context() {
     done
     cp $operator_dir/../syndesis.yml ${dir}/syndesis-template.yml
 
+    cp -R $operator_dir/../addons/ ${dir}/addons/
+
     echo $dir
 }
 
@@ -204,6 +206,7 @@ prepare_docker_context() {
 
     cp $operator_dir/Dockerfile $operator_dir/syndesis-operator ${dir}/
     cp $operator_dir/../syndesis.yml ${dir}/syndesis-template.yml
+    cp -R $operator_dir/../addons/ ${dir}/addons/
 
     echo $dir
 }

@@ -12,9 +12,12 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	"github.com/operator-framework/operator-sdk/pkg/leader"
 	sdkVersion "github.com/operator-framework/operator-sdk/version"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis"
 	"github.com/syndesisio/syndesis/install/operator/pkg/controller"
+
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
+
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
@@ -38,6 +41,7 @@ func main() {
 	logf.SetLogger(logf.ZapLogger(false))
 
 	configuration.TemplateLocation = flag.String("template", "/conf/syndesis-template.yml", "Path to template used for installation")
+	configuration.AddonsDirLocation = flag.String("addons", "", "Path to the addons directory used for installation")
 	configuration.Registry = flag.String("registry", "docker.io", "Registry to use for loading images like the upgrade pod")
 
 	flag.Parse()
