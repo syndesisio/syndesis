@@ -1,4 +1,5 @@
 import { NgModule, forwardRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { VendorModule } from '@syndesis/ui/vendor';
@@ -18,6 +19,7 @@ const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
     CommonModule,
     RouterModule,
     VendorModule,
+    FormsModule,
     syndesisCommonModuleFwd,
     integrationSupportModuleFwd,
   ],

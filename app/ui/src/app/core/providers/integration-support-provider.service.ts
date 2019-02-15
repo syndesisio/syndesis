@@ -192,19 +192,24 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   ): Observable<Map<String, ContinuousDeliveryEnvironment>> {
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.tags, { integrationId })
-      .post<any>({ environments });
+      .post<any>(environments);
   }
 
   untagIntegration(integrationId: string, env: string): Observable<void> {
     return this.apiHttpService
-      .setEndpointUrl(integrationEndpoints.deleteTag, { integrationId, env })
+      .setEndpointUrl(integrationEndpoints.deleteTag, {
+        integrationId,
+        env: encodeURIComponent(env),
+      })
       .delete();
   }
 
   renameEnvironment(oldEnv: string, newEnv: string): Observable<void> {
     return this.apiHttpService
-      .setEndpointUrl(integrationEndpoints.renameEnvironment, { env: oldEnv })
-      .put({ newEnvironment: newEnv });
+      .setEndpointUrl(integrationEndpoints.renameEnvironment, {
+        env: encodeURIComponent(oldEnv),
+      })
+      .put(newEnv);
   }
 
   getEnvironments(): Observable<string[]> {

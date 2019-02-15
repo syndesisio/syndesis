@@ -4,6 +4,14 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { of, Observable, forkJoin } from 'rxjs';
 import { ModalService } from '@syndesis/ui/common';
 
+export interface EnvironmentListItem {
+  name: string;
+  oldName?: string;
+  isNew: boolean;
+  tagged: boolean;
+  editing: boolean;
+}
+
 @Component({
   selector: 'syndesis-integration-tag-cicd-modal',
   templateUrl: './tag-cicd-modal.component.html',
@@ -12,6 +20,9 @@ import { ModalService } from '@syndesis/ui/common';
 export class TagCICDModalComponent implements OnInit, OnDestroy {
   @Input()
   integration: Integration;
+  environments: EnvironmentListItem[];
+  loaded = false;
+  removalCandidate: EnvironmentListItem;
 
   data$: Observable<any>;
 
@@ -26,51 +37,144 @@ export class TagCICDModalComponent implements OnInit, OnDestroy {
     this.modalService.hide('cicdWrapper', false);
   }
 
-  save() {
-    this.modalService.hide('cicdWrapper', true);
-    // TODO post changes made in the dialog here
+  postUpdate(fetch = false) {
+    const sub = this.integrationSupportService
+      .tagIntegration(
+        this.integration.id,
+        this.environments.filter(e => e.tagged).map(e => e.name)
+      )
+      .subscribe(
+        response => {
+          if (fetch) {
+            this.fetchData();
+          }
+          sub.unsubscribe();
+        },
+        error => {
+          if (fetch) {
+            this.fetchData();
+          }
+          sub.unsubscribe();
+        }
+      );
   }
 
-  ngOnInit(): void {
-    /*
-    // posting a tag to an integration
-    this.integrationSupportService
-      .tagIntegration(this.integration.id, ['foo'])
-      .subscribe(resp => {
-        console.log('Got: ', resp);
-      });
-    */
+  save() {
+    this.modalService.hide('cicdWrapper', true);
+    this.postUpdate();
+  }
+
+  add() {
+    this.postUpdate(true);
+  }
+
+  canSave() {
+    if (!this.environments || !this.environments.length) {
+      return false;
+    }
+    return this.environments.findIndex(e => e.isNew && e.name === '') === -1;
+  }
+
+  cancelRemove() {
+    this.removalCandidate = undefined;
+  }
+
+  remove() {
+    if (!this.removalCandidate) {
+      return;
+    }
+    const sub = this.integrationSupportService
+      .untagIntegration(this.integration.id, this.removalCandidate.name)
+      .subscribe(
+        _ => {
+          this.fetchData();
+          sub.unsubscribe();
+        },
+        _ => {
+          this.fetchData();
+          sub.unsubscribe();
+        }
+      );
+  }
+
+  promptRemove(environment: EnvironmentListItem) {
+    this.removalCandidate = environment;
+  }
+
+  edit(environment: EnvironmentListItem) {
+    environment.editing = true;
+  }
+
+  rename(environment: EnvironmentListItem) {
+    if (!environment.oldName) {
+      return;
+    }
+    const sub = this.integrationSupportService
+      .renameEnvironment(environment.oldName, environment.name)
+      .subscribe(
+        _ => {
+          this.fetchData();
+          sub.unsubscribe();
+        },
+        _ => {
+          this.fetchData();
+          sub.unsubscribe();
+        }
+      );
+  }
+
+  addNew() {
+    this.environments.push({
+      name: '',
+      tagged: true,
+      editing: false,
+      isNew: true,
+    });
+  }
+
+  fetchData() {
+    this.removalCandidate = undefined;
+    this.loaded = false;
+    this.environments = [];
     // Fetch the environments this integration is tagged with
     // and also fetch all available environments, combining
     // the result into one object for the view
-    this.data$ = forkJoin(
+    const dataSubscription = forkJoin(
       this.integrationSupportService
         .fetchIntegrationTags(this.integration.id)
         .pipe(catchError(_ => of({}))),
       this.integrationSupportService.getEnvironments()
-    ).pipe(
-      switchMap(([tags, environments]) => {
-        // TODO the real invocation, dummy data below
-        return of({ tags, environments });
+    )
+      .pipe(
+        switchMap(([tags, environments]) => {
+          return of({ tags, environments });
+        })
+      )
+      .subscribe(({ tags, environments }) => {
+        this.environments = [
+          ...environments.map(e => ({
+            name: e,
+            oldName: e,
+            tagged: typeof tags[e] !== 'undefined',
+            tag: tags[e],
+            editing: false,
+            isNew: false,
+          })),
+          ...(this.environments || []),
+        ];
+        if (!this.environments.length) {
+          this.addNew();
+        }
+        this.loaded = true;
+        dataSubscription.unsubscribe();
+      });
+  }
 
-        /* TODO remove dummy data when this is finished
-        return of({
-          tags: {
-            foo: {
-              releaseTag: 'blah',
-              lastTaggedAt: 523423423423,
-              lastExportedAt: 213451234213,
-              lastImportedAt: 1234522342,
-            },
-          },
-          environments: ['foo', 'bar', 'blah'],
-        });
-        */
-      })
-    );
+  ngOnInit(): void {
+    this.fetchData();
   }
 
   ngOnDestroy(): void {
-    // stuff
+    // TODO
   }
 }
