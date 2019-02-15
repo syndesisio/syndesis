@@ -54,7 +54,10 @@ import org.springframework.stereotype.Component;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
+import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.ConnectionOverview;
@@ -224,10 +227,8 @@ public class PublicApiHandler {
             // create or update tag
             result.put(environment, createOrUpdateTag(deliveryState, environment, lastTaggedAt));
 
-            // update cache
-            if (!this.environments.contains(environment)) {
-                this.environments.add(environment);
-            }
+            // update cache if necessary
+            this.environments.add(environment);
         }
 
         // update json db
@@ -331,7 +332,7 @@ public class PublicApiHandler {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public ContinuousDeliveryImportResults importResources(@Context SecurityContext sec,
-                                                    @NotNull @ApiParam(required = true) ImportFormDataInput formInput) throws IOException {
+                                                    @NotNull @ApiParam(required = true) ImportFormDataInput formInput) {
 
         if (formInput == null) {
             throw new ClientErrorException("Multipart request is empty", Response.Status.BAD_REQUEST);
@@ -382,10 +383,8 @@ public class PublicApiHandler {
                 integrations.forEach(i -> publishIntegration(sec, i));
             }
 
-            // update cache
-            if (!this.environments.contains(environment)) {
-                this.environments.add(environment);
-            }
+            // update cache if needed
+            this.environments.add(environment);
 
             return new ContinuousDeliveryImportResults.Builder()
                     .lastImportedAt(lastImportedAt)
@@ -406,14 +405,10 @@ public class PublicApiHandler {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public ConnectionOverview configureConnection(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) String connectionId,
-                                           @NotNull @ApiParam(required = true) Map<String, String> properties) throws IOException {
+                                           @NotNull @ApiParam(required = true) Map<String, String> properties) {
 
         validateParam("connectionId", connectionId);
-
-        final Connection connection = dataMgr.fetch(Connection.class, connectionId);
-        if (connection == null) {
-            throw new ClientErrorException("Missing connection with id " + connectionId, Response.Status.NOT_FOUND);
-        }
+        final Connection connection = getResource(Connection.class, connectionId);
 
         updateConnection(connection, properties);
         return connectionHandler.get(connectionId);
@@ -426,7 +421,7 @@ public class PublicApiHandler {
     @Path("integrations/{id}/state")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public IntegrationDeploymentStateDetails getIntegrationState(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) String integrationId) throws IOException {
+    public IntegrationDeploymentStateDetails getIntegrationState(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) String integrationId) {
         validateParam("integrationId", integrationId);
         return monitoringProvider.getIntegrationStateDetails(integrationId);
     }
@@ -472,8 +467,8 @@ public class PublicApiHandler {
         }
     }
 
-    private IntegrationDeployment publishIntegration(SecurityContext sec, Integration i) {
-        return deploymentHandler.update(sec, i.getId().get());
+    private IntegrationDeployment publishIntegration(SecurityContext sec, Integration integration) {
+        return deploymentHandler.update(sec, integration.getId().get());
     }
 
     private void updateConnection(Connection c, Map<String, String> values) {
@@ -500,11 +495,22 @@ public class PublicApiHandler {
 
     private Integration getIntegration(String integrationId) {
         validateParam("integrationId", integrationId);
-        final Integration integration = dataMgr.fetch(Integration.class, integrationId);
-        if (integration == null) {
-            throw new ClientErrorException("Missing integration with id " + integrationId, Response.Status.NOT_FOUND);
+        return getResource(Integration.class, integrationId);
+    }
+
+    private <T extends WithId<T> & WithName> T getResource(Class<T> resourceClass, String nameOrId) {
+        // try fetching by name first
+        T resource = dataMgr.fetchByPropertyValue(resourceClass, "name", nameOrId).orElse(null);
+        if (resource == null) {
+            // then try fetching by id
+            resource = dataMgr.fetch(resourceClass, nameOrId);
         }
-        return integration;
+        if (resource == null) {
+            throw new ClientErrorException(
+                    String.format("Missing %s with name/id %s", Kind.from(resourceClass).getModelName(), nameOrId),
+                    Response.Status.NOT_FOUND);
+        }
+        return resource;
     }
 
     private Map<String, Map<String, String>> getParams(InputStream paramFile) throws IOException {

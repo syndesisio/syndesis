@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
@@ -60,7 +61,9 @@ import static org.mockito.Mockito.when;
 public class PublicApiHandlerTest {
 
     private static final String INTEGRATION_ID = "integration-id";
+    private static final String INTEGRATION_NAME = "integration-name";
     private static final String ENVIRONMENT = "environment";
+    private static final String NAME_PROPERTY = "name";
 
     private final DataManager dataManager = mock(DataManager.class);
     private final IntegrationSupportHandler supportHandler = mock(IntegrationSupportHandler.class);
@@ -80,10 +83,13 @@ public class PublicApiHandlerTest {
         deliveryState.put(ENVIRONMENT, ContinuousDeliveryEnvironment.Builder.createFrom(ENVIRONMENT, new Date()));
         integration = new Integration.Builder()
                 .id(INTEGRATION_ID)
+                .name(INTEGRATION_NAME)
                 .continuousDeliveryState(deliveryState)
                 .build();
 
         doAnswer(invocation -> integration).when(dataManager).fetch(Integration.class, INTEGRATION_ID);
+        doAnswer(invocation -> Optional.of(integration)).when(dataManager).fetchByPropertyValue(Integration.class,
+                NAME_PROPERTY, INTEGRATION_NAME);
         doAnswer(invocation -> ListResult.of(integration)).when(dataManager).fetchAll(eq(Integration.class));
         doAnswer(invocation -> ListResult.of(integration)).when(dataManager).fetchAll(eq(Integration.class), any());
         doAnswer(invocation -> integration = invocation.getArgument(0)).when(dataManager).update(any(Integration.class));
@@ -122,6 +128,23 @@ public class PublicApiHandlerTest {
 
         verify(dataManager).update(notNull());
         verify(dataManager).fetch(Integration.class, INTEGRATION_ID);
+    }
+
+    @Test
+    public void tagForReleaseByName() throws Exception {
+        final Date now = new Date();
+        // delay to avoid false positives in Date::after
+        Thread.sleep(1000);
+
+        final Map<String, ContinuousDeliveryEnvironment> continuousDeliveryEnvironment = handler.tagForRelease(INTEGRATION_NAME,
+                Collections.singletonList(ENVIRONMENT));
+
+        assertThat(continuousDeliveryEnvironment, is(notNullValue()));
+        assertThat(continuousDeliveryEnvironment.keySet(), hasItem(ENVIRONMENT));
+        assertThat(continuousDeliveryEnvironment.get(ENVIRONMENT).getLastTaggedAt().after(now), is(true));
+
+        verify(dataManager).update(notNull());
+        verify(dataManager).fetchByPropertyValue(Integration.class, NAME_PROPERTY, INTEGRATION_NAME);
     }
 
     @Test
