@@ -120,25 +120,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 					}
 				}
 			}
-
-			// Install addons
-			if addonsDir := *configuration.AddonsDirLocation; len(addonsDir) > 0 {
-				addons, err := addons.GetAddonsResources(addonsDir)
-				if err != nil {
-					return err
-				}
-				for _, addon := range addons {
-					operation.SetLabel(addon, "syndesis.io/addon-resource", "true")
-
-					operation.SetNamespaceAndOwnerReference(addon, syndesis)
-
-					err = createOrReplaceForce(ctx, a.client, addon, true)
-					if err != nil {
-						return err
-					}
-				}
-			}
-
+			
 			var currentAttemptDescr string
 			if syndesis.Status.UpgradeAttempts > 0 {
 				currentAttemptDescr = " (attempt " + strconv.Itoa(int(syndesis.Status.UpgradeAttempts+1)) + ")"
