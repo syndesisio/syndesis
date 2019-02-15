@@ -19,6 +19,7 @@ spec:
           annotations:
             message: >-
               Fuse Online service {{$labels.service}} in pod {{$labels.pod}}, namespace {{$labels.namespace}}, has an error rate (response code >= 500) of {{$value}} errors per second on endpoint '{{$labels.method}} {{$labels.uri}}'.
+            sop_url: https://github.com/syndesisio/syndesis/blob/master/doc/managing_environments/topics/alerting_sop.adoc#fuseonlinerestapihighendpointerrorrate
           expr: >
             (sum(rate(http_server_requests_seconds_count{status=~"5..", job=~"syndesis-server|syndesis-meta"}[5m])) by (job,pod,namespace,method,uri,service)) /
             (sum(rate(http_server_requests_seconds_count{job=~"syndesis-server|syndesis-meta"}[5m])) by (job,pod,namespace,method,uri,service)) > 0.1
@@ -31,6 +32,7 @@ spec:
           annotations:
             message: >-
               Fuse Online service {{$labels.service}} in pod {{$labels.pod}}, namespace {{$labels.namespace}}, has high latency for endpoint '{{$labels.method}} {{$labels.uri}}'.
+            sop_url: https://github.com/syndesisio/syndesis/blob/master/doc/managing_environments/topics/alerting_sop.adoc#fuseonlinerestapihighendpointlatency
           expr: >
             histogram_quantile(0.9, rate(http_server_requests_seconds_bucket{job=~"syndesis-server|syndesis-meta"}[5m])) > 1.0
           for: 5m
