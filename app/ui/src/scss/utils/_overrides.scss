@@ -1,3 +1,4 @@
+@import '@patternfly/patternfly/sass-utilities/_all.scss';
 /// Common CSS overrides for UI normalization and styles referred to generic (PF/component-agnostic) items
 html,
 body {
@@ -23,8 +24,10 @@ body.cards-pf {
 }
 
 .pf-c-page__header {
-  background-color: #363636;
+  background-color: transparent;
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   min-height: 76px;
   z-index: 300;
@@ -35,15 +38,11 @@ body.cards-pf {
   .pf-c-page__main-section {
     background-color: #ededed;
     margin-top: 76px;
+    overflow: auto;
   }
 }
 
-.pf-c-page__header-brand {
-  //background-color: #363636;
-}
-
 .pf-c-page__header-tools {
-  //background-color: #363636;
   z-index: 111;
 }
 
@@ -72,6 +71,34 @@ body.cards-pf {
 
 .pf-c-page__main {
   margin-left: 290px;
+}
+
+@media screen and (max-width: 767px) {
+  .nav-pf-vertical {
+    display: none;
+
+    &[role="navigation"].collapsed {
+      display: block;
+
+      .list-group-item > a {
+        .list-group-item-value {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .pf-c-page__main {
+    margin-left: 0;
+  }
+}
+
+.pf-c-page__header-tools {
+  .pf-m-mobile {
+    @media screen and (min-width: $pf-global--breakpoint--md) {
+      display: none;
+    }
+  }
 }
 
 /// Patternfly Tabbed Nav overrides (which also override ngx-bootstrap's tab style)
@@ -149,7 +176,6 @@ body.cards-pf {
     }
   }
 }
-
 
 // Improve layout/responsiveness of default wizard status bar
 .wizard-pf-steps {

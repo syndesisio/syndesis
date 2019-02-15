@@ -212,8 +212,9 @@
     webpack-sources "1.3.0"
 
 "@patternfly/patternfly@^1.0.181":
-  version "1.0.181"
-  resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-1.0.181.tgz#fe1f6a2217ac9729940fd5c8b8b3073441ff1708"
+  version "1.0.196"
+  resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-1.0.196.tgz#5445ce7e359a53d98c05f5f53b66dc3940830c98"
+  integrity sha512-fHC+kxw2MPDtvDz+stJGvR+CEqa59fD/gTpavSkjGFVsp5h8kN0WeVPiQK7lx/Rf5IPL0d/szABWg38YDwQzGQ==
 
 "@phenomnomnominal/tsquery@^3.0.0":
   version "3.0.0"

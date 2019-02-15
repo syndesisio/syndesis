@@ -78,7 +78,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private meta: Meta,
     private router: Router,
     @Inject(DOCUMENT) private document: any
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.store.dispatch(new PlatformActions.AppBootstrap());
