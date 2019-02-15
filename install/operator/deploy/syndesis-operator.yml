@@ -92,6 +92,21 @@ rules:
   - "*"
   verbs:
   - "*"
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - alertmanagers
+  - prometheuses
+  - servicemonitors
+  - prometheusrules
+  verbs:
+  - "*"
+- apiGroups:
+  - integreatly.org
+  resources:
+  - grafanadashboards
+  verbs:
+  - "*"
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
