@@ -10,6 +10,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	"k8s.io/client-go/kubernetes"
+
 	"github.com/openshift/api/route/v1"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
@@ -18,11 +20,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	syndesistemplate "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
-	corev1 "k8s.io/api/core/v1"
-	k8serrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
@@ -36,9 +33,9 @@ type installAction struct {
 }
 
 
-func newInstallAction(mgr manager.Manager) SyndesisOperatorAction {
+func newInstallAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
 	return &installAction{
-		newBaseAction(mgr,"install"),
+		newBaseAction(mgr, api,"install"),
 	}
 }
 
@@ -119,7 +116,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 
 			operation.SetNamespaceAndOwnerReference(addon, syndesis)
 
-			err = createOrReplace(cl, addon)
+			err = createOrReplace(ctx, a.client, addon)
 			if err != nil && !k8serrors.IsAlreadyExists(err) {
 				return err
 			}

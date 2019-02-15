@@ -4,13 +4,13 @@ import (
 	"context"
 	"errors"
 
-	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"k8s.io/client-go/kubernetes"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
@@ -19,9 +19,9 @@ type upgradeLegacyAction struct {
 	baseAction
 }
 
-func newUpgradeLegacyAction(mgr manager.Manager) SyndesisOperatorAction {
+func newUpgradeLegacyAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
 	return &upgradeLegacyAction{
-		newBaseAction(mgr,"upgrade-legacy"),
+		newBaseAction(mgr, api,"upgrade-legacy"),
 	}
 }
 

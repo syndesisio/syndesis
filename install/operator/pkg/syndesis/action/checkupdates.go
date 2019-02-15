@@ -3,7 +3,7 @@ package action
 import (
 	"context"
 
-	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/kubernetes"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
@@ -16,9 +16,9 @@ type checkUpdatesAction struct {
 	operatorVersion string
 }
 
-func newCheckUpdatesAction(mgr manager.Manager) SyndesisOperatorAction {
+func newCheckUpdatesAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
 	return checkUpdatesAction{
-		newBaseAction(mgr,"check-updates"),
+		newBaseAction(mgr, api, "check-updates"),
 		"",
 	}
 }
@@ -30,7 +30,6 @@ func (a checkUpdatesAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 }
 
 func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
-
 	if a.operatorVersion == "" {
 		operatorVersion, err := configuration.GetSyndesisVersionFromOperatorTemplate(a.scheme)
 		if err != nil {

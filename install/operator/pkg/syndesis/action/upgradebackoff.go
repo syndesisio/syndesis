@@ -3,14 +3,11 @@ package action
 import (
 	"context"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"k8s.io/client-go/kubernetes"
 	"math"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"strconv"
 	"time"
-
-	"k8s.io/apimachinery/pkg/runtime"
-
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 )
 
 const (
@@ -24,9 +21,9 @@ type upgradeBackoffAction struct {
 	operatorVersion string
 }
 
-func newUpgradeBackoffAction(mgr manager.Manager) SyndesisOperatorAction {
+func newUpgradeBackoffAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
 	return &upgradeBackoffAction{
-		newBaseAction(mgr,"upgrade-backoff"),
+		newBaseAction(mgr,api,"upgrade-backoff"),
 		"",
 	}
 }

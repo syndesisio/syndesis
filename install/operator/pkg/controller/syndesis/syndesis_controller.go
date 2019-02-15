@@ -38,7 +38,7 @@ func Add(mgr manager.Manager) error {
 }
 
 // newReconciler returns a new reconcile.Reconciler
-func newReconciler(mgr manager.Manager) (reconcile.Reconciler, error) {
+func newReconciler(mgr manager.Manager) (*ReconcileSyndesis, error) {
 	clientset, err := kubernetes.NewForConfig(mgr.GetConfig())
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func newReconciler(mgr manager.Manager) (reconcile.Reconciler, error) {
 }
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
-func add(mgr manager.Manager, r reconcile.Reconciler) error {
+func add(mgr manager.Manager, r *ReconcileSyndesis) error {
 	// Create a new controller
 	c, err := controller.New("syndesis-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
@@ -64,7 +64,7 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 		return err
 	}
 
-	actions = action.NewOperatorActions(mgr)
+	actions = action.NewOperatorActions(mgr, r.apis)
 	return nil
 }
 

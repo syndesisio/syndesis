@@ -13,11 +13,16 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/kubernetes"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/addons"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
+	syndesistemplate "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
-	"strconv"
-	"strings"
-	"time"
 )
 
 const (
@@ -30,9 +35,9 @@ type upgradeAction struct {
 	operatorVersion string
 }
 
-func newUpgradeAction(mgr manager.Manager) SyndesisOperatorAction {
+func newUpgradeAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
 	return &upgradeAction{
-		newBaseAction(mgr,"upgrade"),
+		newBaseAction(mgr,api, "upgrade"),
 		"",
 	}
 }
@@ -51,12 +56,12 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	}
 
 	// Delete previously installed addons resources
-	addonResources, err := a.getAddonsResources(cl, syndesis)
+	addonResources, err := a.getAddonsResources(ctx, syndesis)
 	if err != nil {
 		return err
 	}
 	for _, addonResource := range addonResources {
-		err := cl.Delete(context.TODO(), &addonResource)
+		err := a.client.Delete(ctx, &addonResource)
 		if err != nil {
 			return err
 		}
@@ -109,7 +114,25 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 
 					operation.SetNamespaceAndOwnerReference(addon, syndesis)
 
-					err = createOrReplaceForce(cl, addon, true)
+					err = createOrReplaceForce(ctx, a.client, addon, true)
+					if err != nil {
+						return err
+					}
+				}
+			}
+
+			// Install addons
+			if addonsDir := *configuration.AddonsDirLocation; len(addonsDir) > 0 {
+				addons, err := addons.GetAddonsResources(addonsDir)
+				if err != nil {
+					return err
+				}
+				for _, addon := range addons {
+					operation.SetLabel(addon, "syndesis.io/addon-resource", "true")
+
+					operation.SetNamespaceAndOwnerReference(addon, syndesis)
+
+					err = createOrReplaceForce(ctx, a.client, addon, true)
 					if err != nil {
 						return err
 					}
@@ -250,8 +273,8 @@ func (a *upgradeAction) getUpgradePodFromNamespace(ctx context.Context,  podTemp
 	return &pod, err
 }
 
-func (a *upgrade) getAddonsResources(cl Client, syndesis *v1alpha1.Syndesis) ([]unstructured.Unstructured, error) {
-	types, err := getTypes(cl)
+func (a *upgradeAction) getAddonsResources(ctx context.Context, syndesis *v1alpha1.Syndesis) ([]unstructured.Unstructured, error) {
+	types, err := getTypes(a.api)
 	if err != nil {
 		return nil, err
 	}
@@ -276,7 +299,7 @@ func (a *upgrade) getAddonsResources(cl Client, syndesis *v1alpha1.Syndesis) ([]
 				"kind":       t.Kind,
 			},
 		}
-		if err := cl.List(context.TODO(), &options, &list); err != nil {
+		if err := a.client.List(ctx, &options, &list); err != nil {
 			if k8serrors.IsNotFound(err) ||
 				k8serrors.IsForbidden(err) ||
 				k8serrors.IsMethodNotSupported(err) {
@@ -292,8 +315,8 @@ func (a *upgrade) getAddonsResources(cl Client, syndesis *v1alpha1.Syndesis) ([]
 	return res, nil
 }
 
-func getTypes(client Client) ([]metav1.TypeMeta, error) {
-	resources, err := client.Discovery().ServerPreferredNamespacedResources()
+func getTypes(api kubernetes.Interface) ([]metav1.TypeMeta, error) {
+	resources, err := api.Discovery().ServerPreferredNamespacedResources()
 	if err != nil {
 		return nil, err
 	}

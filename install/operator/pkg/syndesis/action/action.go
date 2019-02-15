@@ -27,6 +27,8 @@ type baseAction struct {
 	log logr.Logger
 	client client.Client
 	scheme *runtime.Scheme
+	api kubernetes.Interface
+
 }
 
 var actionLog = logf.Log.WithName("action")
@@ -36,23 +38,24 @@ type SyndesisOperatorAction interface {
 	Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error
 }
 
-func NewOperatorActions(mgr manager.Manager) []SyndesisOperatorAction {
+func NewOperatorActions(mgr manager.Manager, api kubernetes.Interface) []SyndesisOperatorAction {
 	return []SyndesisOperatorAction{
-		newCheckUpdatesAction(mgr),
-		newInitializeAction(mgr),
-		newInstallAction(mgr),
-		newStartupAction(mgr),
-		newUpgradeAction(mgr),
-		newUpgradeBackoffAction(mgr),
-		newUpgradeLegacyAction(mgr),
+		newCheckUpdatesAction(mgr, api),
+		newInitializeAction(mgr, api),
+		newInstallAction(mgr, api),
+		newStartupAction(mgr, api),
+		newUpgradeAction(mgr, api),
+		newUpgradeBackoffAction(mgr, api),
+		newUpgradeLegacyAction(mgr, api),
 	}
 }
 
-func newBaseAction(mgr manager.Manager, typeS string) baseAction {
+func newBaseAction(mgr manager.Manager, api kubernetes.Interface, typeS string) baseAction {
 	return baseAction{
 		actionLog.WithValues("type", typeS),
 		mgr.GetClient(),
 		mgr.GetScheme(),
+		api,
 	}
 }
 

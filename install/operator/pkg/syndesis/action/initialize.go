@@ -5,6 +5,8 @@ import (
 
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	"k8s.io/client-go/kubernetes"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -15,9 +17,9 @@ type initializeAction struct {
 	baseAction
 }
 
-func newInitializeAction(mgr manager.Manager) SyndesisOperatorAction {
+func newInitializeAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
 	return &initializeAction{
-		newBaseAction(mgr,"initialize"),
+		newBaseAction(mgr, api, "initialize"),
 	}
 }
 
