@@ -7,7 +7,6 @@
   "consoleUrl": "https://192.168.64.2:8443/console",
   "project": "syndesis",
   "branding": {
-    "logoDarkBg": "assets/images/syndesis_logo_icon_darkbkg.png",
     "productBuild": false,
     "appName": "Syndesis",
     "favicon32": "/favicon-32x32.png",

@@ -15,33 +15,63 @@ body.cards-pf {
   margin-bottom: 10px;
 }
 
-.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.collapsed-nav {
+.pf-c-page {
+  display: block;
+  grid-template-columns: none;
+  grid-template-rows: none;
+  grid-template-areas: none;
+}
+
+.pf-c-page__header {
+  background-color: #363636;
+  position: fixed;
+  width: 100%;
+  min-height: 76px;
+  z-index: 300;
+  grid-area: none;
+}
+.pf-c-page__main {
+  z-index: 100;
+  .pf-c-page__main-section {
+    background-color: #ededed;
+    margin-top: 76px;
+  }
+}
+
+.pf-c-page__header-brand {
+  //background-color: #363636;
+}
+
+.pf-c-page__header-tools {
+  //background-color: #363636;
+  z-index: 111;
+}
+
+.navbar-brand {
+  margin: 6px 0 0 25px;
+  white-space: nowrap;
+  #appLogo {
+    width: 11.7rem;
+    height: auto;
+  }
+  .navbar-brand-icon {
+    max-height: 28px;
+    vertical-align: middle;
+  }
+  .navbar-brand-name {
+    max-height: 28px;
+    font-size: 20px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+.pf-c-page__main.collapsed-nav {
   margin-left: 0;
 }
 
-.navbar {
-  a {
-    color: #ffffff;
-  }
-
-  .navbar-brand {
-    margin: 6px 0 0 25px;
-    white-space: nowrap;
-    #appLogo {
-      width: 11.7rem;
-      height: auto;
-    }
-    .navbar-brand-icon {
-      max-height: 28px;
-      vertical-align: middle;
-    }
-    .navbar-brand-name {
-      max-height: 28px;
-      font-size: 20px;
-      display: inline-block;
-      vertical-align: middle;
-    }
-  }
+.pf-c-page__main {
+  margin-left: 290px;
 }
 
 /// Patternfly Tabbed Nav overrides (which also override ngx-bootstrap's tab style)
