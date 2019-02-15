@@ -6,7 +6,7 @@ import {
   ConnectionsGridCell,
   ConnectionSkeleton,
 } from '@syndesis/ui';
-import { getConnectionIcon, WithLoader, WithRouter } from '@syndesis/utils';
+import { WithLoader, WithRouter } from '@syndesis/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -43,16 +43,16 @@ export default class VirtualizationsPage extends React.Component {
                     data.items.map((c, index) => (
                       <ConnectionsGridCell key={index}>
                         <Link
-                          to={`${match.url}/${c.id}`}
+                          to={`${match.url}/${c.keng_id}`}
                           style={{
                             color: 'inherit',
                             textDecoration: 'none',
                           }}
                         >
                           <ConnectionCard
-                            name={c.name}
-                            description={c.description || ''}
-                            icon={getConnectionIcon(c, process.env.PUBLIC_URL)}
+                            name={c.keng_id}
+                            description={c.tko_description || ''}
+                            icon={'connection.png'}
                             href={getConnectionHref.bind(null, match.url)}
                           />
                         </Link>
