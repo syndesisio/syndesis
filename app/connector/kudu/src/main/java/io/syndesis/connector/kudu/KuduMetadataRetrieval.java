@@ -16,6 +16,7 @@
 
 package io.syndesis.connector.kudu;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -98,7 +99,10 @@ public class KuduMetadataRetrieval extends ComponentMetadataRetrieval {
         spec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
         spec.setTitle("KUDU_INSERT");
 
-        KuduClient client = KuduSupport.createConnection(kuduMetaData.getHost(), kuduMetaData.getPort());
+        Map<String, Object> options = new HashMap<>();
+        options.put("host", kuduMetaData.getHost());
+        options.put("port", kuduMetaData.getPort());
+        KuduClient client = KuduSupport.createConnection(options);
 
         try {
             KuduTable table = client.openTable(kuduMetaData.getTableName());

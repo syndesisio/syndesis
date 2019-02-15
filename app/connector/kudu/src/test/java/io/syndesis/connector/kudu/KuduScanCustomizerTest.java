@@ -43,7 +43,11 @@ public class KuduScanCustomizerTest extends AbstractKuduCustomizerTestSupport {
     @Before
     public void setupCustomizer() {
         this.customizer = new KuduScanCustomizer();
-        connection = KuduSupport.createConnection(HOST, PORT);
+        Map<String, Object> options = new HashMap<>();
+        options.put("host", HOST);
+        options.put("port", PORT);
+
+        connection = KuduSupport.createConnection(options);
     }
 
     @After

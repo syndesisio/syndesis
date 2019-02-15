@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    io.syndesis.connector.kudu.KuduVerifierAutoconfiguration,\
     io.syndesis.connector.kudu.KuduMetaDataAutoConfiguration
