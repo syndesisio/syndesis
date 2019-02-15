@@ -15,6 +15,18 @@
  */
 package io.syndesis.integration.runtime;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
@@ -41,18 +53,6 @@ import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.ResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * A Camel {@link RouteBuilder} which maps an Integration to Camel routes
@@ -142,7 +142,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     if (nextStep.map(Step::getStepKind)
                                 .map(kind -> kind.equals(StepKind.split)).orElse(false)) {
                         parent = findHandler(nextStep.get()).handle(nextStep.get(), parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
-                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
+                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(nextStep.get().getId().orElseGet(KeyGenerator::createKey)));
                         parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
                         stepIndex++;
                     } else {
@@ -160,6 +160,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                         parent = parent.end();
                         parent = parent.endParent();
                     }
+
+                    parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
+                    parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
                 } else {
                     if (stepIndex > 0) {
                         // If parent is not null and this is the first step, a scheduler
@@ -177,7 +180,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                         }
 
                         parent = findHandler(nextStep.get()).handle(nextStep.get(), parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
-                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
+                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(nextStep.get().getId().orElseGet(KeyGenerator::createKey)));
                         parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
                         stepIndex++;
                     } else {
