@@ -34,6 +34,7 @@ cat <<"EOT"
     --test-support            Allow test support endpoint for syndesis-server
     --camel-k <version>       Install camel-k operator version <version>
                               (version is optional)
+    --camel-k-options "opts"  Options used when installing the camel-k operator
 EOT
 }
 
@@ -98,7 +99,7 @@ install::run() {
 
     if [ $(hasflag --camel-k) ]; then
         echo "Deploying Camel-K operator"
-        result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)")
+        result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)" "$(readopt --camel-k-options)")
         check_error "$result"
     fi
 

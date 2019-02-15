@@ -6,9 +6,13 @@ CAMEL_K_DEFAULT_VERSION="0.2.0"
 deploy_camel_k_operator() {
   local version=${1:-$CAMEL_K_DEFAULT_VERSION}
   local project=${2:-}
+  local opts=${3:-}
   local extra_opts=""
   if [ -n "$project" ]; then
     extra_opts="--namespace $project"
+  fi
+  if [ -n "$opts" ]; then
+    extra_opts="$extra_opts $opts"
   fi
   local kamel=$(get_camel_k_bin "$version")
   $kamel install --skip-cluster-setup --context jvm $extra_opts

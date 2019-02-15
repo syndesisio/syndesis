@@ -22,9 +22,9 @@ rules:
 - apiGroups:
   - syndesis.io
   resources:
-  - '*'
+  - "*"
   verbs:
-  - '*'
+  - "*"
 - apiGroups:
   - ""
   resources:
@@ -35,7 +35,8 @@ rules:
   - configmaps
   - secrets
   - serviceaccounts
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
+  verbs:
+  - "*"
 - apiGroups:
   - ""
   resources:
@@ -45,38 +46,57 @@ rules:
   - rbac.authorization.k8s.io
   resources:
   - rolebindings
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
+  verbs:
+  - "*"
 - apiGroups:
   - template.openshift.io
   resources:
   - processedtemplates
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
+  verbs:
+  - "*"
 - apiGroups:
   - image.openshift.io
   resources:
   - imagestreams
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
+  verbs:
+  - "*"
 - apiGroups:
   - apps.openshift.io
   resources:
   - deploymentconfigs
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
+  verbs:
+  - "*"
 - apiGroups:
   - build.openshift.io
   resources:
   - buildconfigs
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
+  verbs:
+  - "*"
 - apiGroups:
   - authorization.openshift.io
   resources:
   - rolebindings
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
+  verbs:
+  - "*"
 - apiGroups:
   - route.openshift.io
   resources:
   - routes
   - routes/custom-host
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
+  verbs:
+  - "*"
+- apiGroups:
+  - roles.rbac.authorization.k8s.io
+  resources:
+  - roles
+  verbs:
+  - "*"
+- apiGroups:
+  - camel.apache.org
+  resources:
+  - "*"
+  verbs:
+  - "*"
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1

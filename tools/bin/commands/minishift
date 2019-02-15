@@ -117,7 +117,7 @@ minishift::run() {
         # Deploy Camel-K operator if requested
         if [ $(hasflag --camel-k) ]; then
           echo "Deploying Camel-K operator"
-          result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)")
+          result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)" "$(readopt --camel-k-options)")
           check_error "$result"
         fi
 
