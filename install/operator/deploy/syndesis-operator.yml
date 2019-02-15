@@ -45,6 +45,7 @@ rules:
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
+  - roles
   - rolebindings
   verbs:
   - "*"
@@ -83,12 +84,6 @@ rules:
   resources:
   - routes
   - routes/custom-host
-  verbs:
-  - "*"
-- apiGroups:
-  - roles.rbac.authorization.k8s.io
-  resources:
-  - roles
   verbs:
   - "*"
 - apiGroups:
