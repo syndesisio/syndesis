@@ -104,6 +104,26 @@ public class SqlMetaDataTest {
     }
 
     @Test
+    public void parseInsertAutoIncrPK() throws SQLException {
+        try (Statement stmt = db.connection.createStatement()) {
+            final String createTable = "CREATE TABLE NAME4 (id2 INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), firstName VARCHAR(255), " + "lastName VARCHAR(255))";
+            stmt.executeUpdate(createTable);
+            stmt.executeUpdate("INSERT INTO NAME4 (FIRSTNAME, LASTNAME) VALUES ('Joe', 'Jackson')");
+            stmt.executeUpdate("INSERT INTO NAME4 (FIRSTNAME, LASTNAME) VALUES ('Roger', 'Waters')");
+        }
+
+        final String sqlStatement = "INSERT INTO NAME4 (FIRSTNAME, LASTNAME) VALUES (:#first, :#last)";
+        final SqlStatementParser parser = new SqlStatementParser(db.connection, sqlStatement);
+        final SqlStatementMetaData info = parser.parse();
+
+        final List<SqlParam> paramList = DatabaseMetaDataHelper.getJDBCInfoByColumnNames(db.connection.getMetaData(), null, null, "NAME4",
+            info.getInParams());
+        Assert.assertEquals("VARCHAR", paramList.get(0).getJdbcType().getName());
+        Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
+
+    }
+
+    @Test
     public void parseSelect() throws SQLException {
         final Statement stmt = db.connection.createStatement();
         final String createTable = "CREATE TABLE NAME (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + "lastName VARCHAR(255))";

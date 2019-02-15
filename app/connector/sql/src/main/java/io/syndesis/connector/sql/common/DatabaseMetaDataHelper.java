@@ -116,6 +116,22 @@ public final class DatabaseMetaDataHelper {
         return paramList;
     }
 
+    static List<SqlParam> getAutoIncrementColumnList(final DatabaseMetaData meta, String catalog,
+            String schema, String tableName) throws SQLException {
+        List<SqlParam> outParams = new ArrayList<>();
+        List<ColumnMetaData> cList = getColumnMetaData(meta, catalog, schema, tableName, null, -1);
+        for (ColumnMetaData columnMetaData : cList) {
+            if (columnMetaData.isAutoIncrement()) {
+                SqlParam sqlParam = new SqlParam();
+                sqlParam.setName(columnMetaData.getName());
+                sqlParam.setJdbcType(columnMetaData.getType());
+                outParams.add(sqlParam);
+                break; //SQL only allows one per table, so we're done.
+            }
+        }
+        return outParams;
+    }
+
     static List<SqlParam> getJDBCInfoByColumnOrder(final DatabaseMetaData meta, String catalog,
             String schema, String tableName, final List<SqlParam> params) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
@@ -146,7 +162,7 @@ public final class DatabaseMetaDataHelper {
                     columnList = convert(columnMeta);
                 }
             }
-            if (columnList.size() < expectedSize) {
+            if (expectedSize >= 0 && columnList.size() < expectedSize) {
                 String msg = String.format("Invalid SQL, the number of columns (%s) should match the number of number of input parameters (%s)",
                         columnList.size(), expectedSize);
                 throw new SQLException(msg);
@@ -181,6 +197,10 @@ public final class DatabaseMetaDataHelper {
             ColumnMetaData columnMetaData = new ColumnMetaData();
             columnMetaData.setName(resultSet.getString("COLUMN_NAME"));
             columnMetaData.setType(JDBCType.valueOf(resultSet.getInt("DATA_TYPE")));
+            String autoIncString = resultSet.getString("IS_AUTOINCREMENT");
+            if ("YES".equalsIgnoreCase(autoIncString)) {
+                columnMetaData.setAutoIncrement(true);
+            }
             columnMetaData.setPosition(position++);
             list.add(columnMetaData);
         }

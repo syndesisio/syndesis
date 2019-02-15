@@ -153,6 +153,13 @@ public class SqlStatementParser {
                                 meta, null, schema, tableNameInsert, inputParams));
             }
         }
+        List<SqlParam> autoIncrementParamList = DatabaseMetaDataHelper.getAutoIncrementColumnList(
+                meta, null, schema, tableNameInsert);
+        if (! autoIncrementParamList.isEmpty()) {
+            statementInfo.setOutParams(autoIncrementParamList);
+            //SQL only supports one auto increment column
+            statementInfo.setAutoIncrementColumnName(autoIncrementParamList.get(0).getName());
+        }
     }
 
     private void parseUpdate(DatabaseMetaData meta) throws SQLException  {

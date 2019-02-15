@@ -25,5 +25,6 @@ public class ColumnMetaData {
     private String name;
     private JDBCType type;
     private int position;
+    private boolean isAutoIncrement;
 
 }

@@ -71,13 +71,13 @@ public class JSONBeanUtilTest {
         final ObjectMapper mapper = new ObjectMapper();
         final SimpleOutputBean bean = new SimpleOutputBean();
         bean.setC(50);
-        final String jsonBeanExcpected = mapper.writeValueAsString(bean);
+        final String jsonBeanExpected = mapper.writeValueAsString(bean);
 
         final Map<String, Object> map = new HashMap<>();
         map.put("c", 50);
         map.put("#update-count-1", 0);
         final String jsonBeanActual = JSONBeanUtil.toJSONBean(map);
-        Assert.assertEquals(jsonBeanExcpected, jsonBeanActual);
+        Assert.assertEquals(jsonBeanExpected, jsonBeanActual);
     }
 
     @Test
