@@ -88,10 +88,6 @@
     justify-content: center;
     position: relative;
 
-    &:not(.not-connection) + .data-mismatch {
-      transform: translate(25%, -25%);
-    }
-
     .connection-icon {
       height: 24px;
       margin-top: 1px;
@@ -128,31 +124,25 @@
     }
   }
 
-  .data-mismatch {
+  .step-badge {
     position: absolute;
-    background: #ec7a08;
     border-radius: 50%;
     padding: 5px;
     cursor: pointer;
     top: 0;
     right: 0;
+    transform: translate(25%, -25%);
 
     &::before {
       color: $color-pf-white;
     }
-  }
 
-  .step-suggestion {
-    position: absolute;
-    background: #0088ce;
-    border-radius: 50%;
-    padding: 5px;
-    cursor: pointer;
-    top: 0;
-    right: 0;
+    &.step-suggestion {
+      background: #0088ce;
+    }
 
-    &::before {
-      color: $color-pf-white;
+    &.data-mismatch {
+      background: #ec7a08;
     }
   }
 

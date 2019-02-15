@@ -52,7 +52,7 @@
       />
     </div>
     <span
-      class="pficon pficon-warning-triangle-o data-mismatch"
+      class="pficon pficon-warning-triangle-o step-badge data-mismatch"
       *ngIf="shouldAddDatamapper || previousStepShouldDefineDataShape"
       [popover]="dataWarningPopover"
       [popoverTitle]="[
@@ -70,7 +70,7 @@
     </span>
 
     <span
-      class="pficon pficon-info step-suggestion"
+      class="pficon pficon-info step-badge step-suggestion"
       *ngIf="isUnclosedSplit"
       [popover]="splitWarningPopover"
       popoverTitle="Step suggestion"
