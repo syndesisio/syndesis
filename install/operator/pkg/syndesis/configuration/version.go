@@ -2,6 +2,7 @@
 package configuration
 
 import (
+	"context"
 	"errors"
 	templatev1 "github.com/openshift/api/template/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -33,8 +34,8 @@ func GetSyndesisVersionFromOperatorTemplate(scheme *runtime.Scheme) (string, err
 }
 
 // Retrieves the version of syndesis installed in the namespace.
-func GetSyndesisVersionFromNamespace(client client.Client, namespace string) (string, error) {
-	secret, err := GetSyndesisConfigurationSecret(client, namespace)
+func GetSyndesisVersionFromNamespace(ctx context.Context, client client.Client, namespace string) (string, error) {
+	secret, err := GetSyndesisConfigurationSecret(ctx, client, namespace)
 	if err != nil {
 		return "", err
 	}

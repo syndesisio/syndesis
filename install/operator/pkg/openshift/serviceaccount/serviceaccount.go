@@ -8,16 +8,16 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func GetServiceAccountToken(client client.Client, saName string, namespace string) (string, error) {
+func GetServiceAccountToken(ctx context.Context, client client.Client, saName string, namespace string) (string, error) {
 
 	sa := corev1.ServiceAccount{}
-	if err := client.Get(context.TODO(), util.NewObjectKey(saName, namespace), &sa); err != nil {
+	if err := client.Get(ctx, util.NewObjectKey(saName, namespace), &sa); err != nil {
 		return "", err
 	}
 
 	for _, reference := range sa.Secrets {
 		secret := corev1.Secret{}
-		if err := client.Get(context.TODO(), util.NewObjectKey(reference.Name, namespace), &secret); err != nil {
+		if err := client.Get(ctx, util.NewObjectKey(reference.Name, namespace), &secret); err != nil {
 			return "", err
 		}
 
