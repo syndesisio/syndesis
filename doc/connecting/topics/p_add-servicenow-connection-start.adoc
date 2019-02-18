@@ -27,9 +27,9 @@ you want to use to start the integration.
 obtain records from a ServiceNow table that you select. 
 . Configure the *Retrieve Record* action: 
 
-.. Click in *The table name* field and select the table that you want
+.. Click in the *Table name* field and select the table that you want
 to obtain records from. 
-.. In *The query used to filter the result set* field, enter a ServiceNow
+.. In the *Query to filter the result set* field, enter a ServiceNow
 query. For example, consider the `state=1^impact=2` query on a table
 that keeps records about incidents. This query returns records for  new
 incidents (`state=1`) that have a medium impact (`impact=2`). 
