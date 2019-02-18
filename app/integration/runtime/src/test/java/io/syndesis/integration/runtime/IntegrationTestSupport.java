@@ -170,23 +170,6 @@ public class IntegrationTestSupport implements StringConstants {
         return json;
     }
 
-    /**
-     * @param inStream
-     * @return a string representation of the content of the given stream
-     * @throws IOException
-     */
-    public static String streamToString(InputStream inStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
-        StringBuilder builder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            builder.append(line);
-            builder.append(NEW_LINE);
-        }
-
-        return builder.toString().trim();
-    }
-
     public static final class MyBean {
         @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
         public String myProcessor(@Body String body) {
