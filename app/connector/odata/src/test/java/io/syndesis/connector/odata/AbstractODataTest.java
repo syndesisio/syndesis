@@ -17,8 +17,10 @@ package io.syndesis.connector.odata;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Properties;
 import org.apache.camel.CamelContext;
@@ -44,11 +46,14 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Resources;
 import io.syndesis.connector.odata.server.ODataTestServer;
 import io.syndesis.connector.odata.server.ODataTestServer.Options;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
+import io.syndesis.integration.runtime.logging.ActivityTracker;
 
-public abstract class AbstractODataTest extends IntegrationTestSupport implements ODataConstants {
+public abstract class AbstractODataTest implements ODataConstants {
 
     protected static final int MOCK_TIMEOUT_MILLISECONDS = 60000;
 
@@ -110,6 +115,23 @@ public abstract class AbstractODataTest extends IntegrationTestSupport implement
         }
     }
 
+    /**
+     * @param inStream
+     * @return a string representation of the content of the given stream
+     * @throws IOException
+     */
+    public static String streamToString(InputStream inStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+        StringBuilder builder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            builder.append(line);
+            builder.append(NEW_LINE);
+        }
+
+        return builder.toString().trim();
+    }
+
     protected Connector createODataConnector(PropertyBuilder<String> configurePropBuilder,
                                                                                        PropertyBuilder<ConfigurationProperty> propBuilder) {
         Connector.Builder builder = new Connector.Builder()
@@ -162,6 +184,19 @@ public abstract class AbstractODataTest extends IntegrationTestSupport implement
             .addFlow(flowBuilder.build())
             .build();
         return odataIntegration;
+    }
+
+    protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration) {
+        return newIntegrationRouteBuilder(integration, null);
+    }
+
+    protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration, ActivityTracker activityTracker) {
+        return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class), activityTracker) {
+            @Override
+            protected Integration loadIntegration() throws IOException {
+                return integration;
+            }
+        };
     }
 
     protected String testData(String fileName) throws IOException {
