@@ -540,30 +540,6 @@
                 "secret": false,
                 "type": "string"
               },
-              "includeGridData": {
-                "deprecated": false,
-                "defaultValue": false,
-                "displayName": "Include grid data",
-                "group": "producer",
-                "javaType": "boolean",
-                "enum": [
-                  {
-                    "label": "No",
-                    "value": "false"
-                  },
-                  {
-                    "label": "Yes",
-                    "value": "true"
-                  }
-                ],
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Should include grid data in result.",
-                "order": "2",
-                "required": false,
-                "secret": false,
-                "type": "string"
-              },
               "delay": {
                 "componentProperty": false,
                 "defaultValue": 30000,
@@ -574,7 +550,7 @@
                 "kind": "parameter",
                 "label": "consumer,scheduler",
                 "labelHint": "Time interval between polls for value changes.",
-                "order": "3",
+                "order": "2",
                 "required": false,
                 "secret": false,
                 "tags": [],
