@@ -15,17 +15,39 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonNode;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Json;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.Processor;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.util.ObjectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataMapperStepHandler implements IntegrationStepHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DataMapperStepHandler.class);
+
+    private static final String ATLASMAP_MODEL_VERSION = "v2";
+    static final String ATLASMAP_JSON_DATA_SOURCE = "io.atlasmap.json." + ATLASMAP_MODEL_VERSION + ".JsonDataSource";
+
     @Override
     public boolean canHandle(Step step) {
         return StepKind.mapper == step.getStepKind();
@@ -35,8 +57,122 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
     public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String flowIndex, String stepIndex) {
         ObjectHelper.notNull(route, "route");
 
-        return Optional.of(
-            route.toF("atlas:mapping-flow-%s-step-%s.json?encoding=UTF-8&sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP, flowIndex, stepIndex)
-        );
+        List<Map<String, Object>> dataSources = getAtlasmapDataSources(step.getConfiguredProperties());
+
+        addJsonTypeSourceProcessor(route, dataSources);
+        route.toF("atlas:mapping-flow-%s-step-%s.json?encoding=UTF-8&sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP, flowIndex, stepIndex);
+        addJsonTypeTargetProcessor(route, dataSources);
+
+        return Optional.of(route);
+    }
+
+    /**
+     * In case atlas mapping definition contains Json typed source documents we need to make sure to convert those from list to Json array Strings before passing those
+     * source documents to the mapper.
+     * @param route
+     * @param dataSources
+     * @return
+     */
+    private void addJsonTypeSourceProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
+        List<String> jsonTypeSourceIds = dataSources.stream()
+                                                    .filter(s -> ATLASMAP_JSON_DATA_SOURCE.equals(s.get("jsonType")) && "SOURCE".equals(s.get("dataSourceType")))
+                                                    .filter(s -> ObjectHelper.isNotEmpty(s.get("id")))
+                                                    .map(s -> s.get("id").toString())
+                                                    .collect(Collectors.toList());
+
+        if (ObjectHelper.isNotEmpty(jsonTypeSourceIds)) {
+            route.process(new JsonTypeSourceProcessor(jsonTypeSourceIds));
+        }
+    }
+
+    /**
+     * In case mapping definition has Json typed target document we need to make sure to convert the output. This is because mapper provides Json target collection as Json array String representation.
+     * We prefer to use list objects where each element is a Json Object String.
+     * @param route
+     * @param dataSources
+     * @return
+     */
+    private void addJsonTypeTargetProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
+        boolean isJsonTypeTarget = dataSources.stream()
+                .anyMatch(s -> ATLASMAP_JSON_DATA_SOURCE.equals(s.get("jsonType")) && "TARGET".equals(s.get("dataSourceType")));
+
+        if (isJsonTypeTarget) {
+            route.process(new JsonTypeTargetProcessor());
+        }
+    }
+
+    /**
+     * Reads atlas mapping definition from configured step properties and extracts all data source elements.
+     * @param configuredProperties
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    private List<Map<String, Object>> getAtlasmapDataSources(Map<String, String> configuredProperties) {
+        List<Map<String, Object>> sources = new ArrayList<>();
+
+        try {
+            Map<String, Object> atlasMapping = Json.reader().forType(Map.class).readValue(configuredProperties.getOrDefault("atlasmapping", "{}"));
+            atlasMapping = (Map<String, Object>) atlasMapping.getOrDefault("AtlasMapping", new HashMap<>());
+            sources = (List<Map<String, Object>>) atlasMapping.getOrDefault("dataSource", Collections.emptyList());
+        } catch (IOException | ClassCastException e) {
+            LOG.warn("Failed to read atlas mapping definition from configured properties", e);
+        }
+
+        return sources;
+    }
+
+    /**
+     * Processor converts all Json collection typed entries in captured out messages to a
+     * Json array String representation. See {@link OutMessageCaptureProcessor}
+     */
+    static class JsonTypeSourceProcessor implements Processor {
+        final List<String> jsonTypeSourceIds;
+
+        JsonTypeSourceProcessor(List<String> jsonTypeSourceIds) {
+            this.jsonTypeSourceIds = jsonTypeSourceIds;
+        }
+
+        @Override
+        public void process(Exchange exchange) throws Exception {
+            for (String sourceId : jsonTypeSourceIds) {
+                Message message = OutMessageCaptureProcessor.getCapturedMessageMap(exchange).get(sourceId);
+
+                if (message == null && jsonTypeSourceIds.size() == 1) {
+                    message = exchange.hasOut() ? exchange.getOut() : exchange.getIn();
+                }
+
+                if (message != null && message.getBody() instanceof List) {
+                    List<?> jsonBeans = message.getBody(List.class);
+                    message.setBody("[" + jsonBeans.stream().map(Object::toString).collect(Collectors.joining(",")) + "]");
+                }
+            }
+        }
+    }
+
+    /**
+     * Processor converts Atlasmap target Json array String representation to list of Json bean strings.
+     */
+    static class JsonTypeTargetProcessor implements Processor {
+        @Override
+        public void process(Exchange exchange) throws Exception {
+            final Message message = exchange.hasOut() ? exchange.getOut() : exchange.getIn();
+
+            if (message != null && message.getBody(String.class) != null) {
+                try {
+                    JsonNode json = Json.reader().readTree(message.getBody(String.class));
+                    if (json.isArray()) {
+                        List<String> jsonBeans = new ArrayList<>();
+                        Iterator<JsonNode> it = json.elements();
+                        while (it.hasNext()) {
+                            jsonBeans.add(Json.writer().writeValueAsString(it.next()));
+                        }
+
+                        message.setBody(jsonBeans);
+                    }
+                } catch (JsonParseException e) {
+                    LOG.warn("Unable to convert json array type String to required format", e);
+                }
+            }
+        }
     }
 }
