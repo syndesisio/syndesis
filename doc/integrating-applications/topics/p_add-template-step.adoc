@@ -20,11 +20,11 @@ If an integration includes a template step then it is most likely the only
 template step in the integration. However, more than one template step in an
 integration is allowed.
 
-In this release, {prodname} supports only
-https://mustache.github.io[Mustache] templates. It is expected that
-https://velocity.apache.org[Velocity] and
-https://freemarker.apache.org[Freemarker] templates will be supported
-in a future release.
+{prodname} supports 
+link:https://freemarker.apache.org[Freemarker], 
+link:https://mustache.github.io[Mustache], and
+link:https://velocity.apache.org[Velocity] templates. 
+
 
 .Prerequisites
 * You must be creating or editing an integration.
@@ -38,8 +38,8 @@ image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
 at the location where you want to add a template step.
 . In the popup, click *Add a Step*.
 . On the *Choose a Step* page, click *Template*. The
-*Upload Template* page opens and prompts you to choose how you want to define
-the template.
+*Upload Template* page opens.
+. Specify the template type, which is Freemarker, Mustache, or Velocity. 
 
 . To define the template, do one of the following:
 +
@@ -53,7 +53,7 @@ In the previous release, you were required to prefix each
 placeholder with `body.`. This is no longer necessary, and
 `.` in a placeholder is not allowed. The
 editor displays a syntax error if you specify`.` in a placeholder.
-Here is an example of a valid template:
+Here is an example of a valid Mustache template:
 
 +
 ----
@@ -110,5 +110,4 @@ source field to the *text* target field.
 
 .Additional resources
 
-* For details about mapping fields, see link:{LinkFuseOnlineIntegrationGuide}#mapping-data_map[Map integration data to fields for the next connection in the integration].
-* https://mustache.github.io/mustache.5.html[Mustache Manual]
+For details about mapping fields, see link:{LinkFuseOnlineIntegrationGuide}#mapping-data_map[Map integration data to fields for the next connection in the integration].
