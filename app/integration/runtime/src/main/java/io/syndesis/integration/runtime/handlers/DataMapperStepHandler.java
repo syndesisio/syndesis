@@ -41,7 +41,6 @@ import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("PMD.AvoidReassigningParameters")
 public class DataMapperStepHandler implements IntegrationStepHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataMapperStepHandler.class);
@@ -60,9 +59,9 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
 
         List<Map<String, Object>> dataSources = getAtlasmapDataSources(step.getConfiguredProperties());
 
-        route = handleJsonTypeSourceProcessor(route, dataSources).orElse(route);
-        route = route.toF("atlas:mapping-flow-%s-step-%s.json?encoding=UTF-8&sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP, flowIndex, stepIndex);
-        route = handleJsonTypeTargetProcessor(route, dataSources).orElse(route);
+        addJsonTypeSourceProcessor(route, dataSources);
+        route.toF("atlas:mapping-flow-%s-step-%s.json?encoding=UTF-8&sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP, flowIndex, stepIndex);
+        addJsonTypeTargetProcessor(route, dataSources);
 
         return Optional.of(route);
     }
@@ -74,17 +73,15 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
      * @param dataSources
      * @return
      */
-    private Optional<ProcessorDefinition<?>> handleJsonTypeSourceProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
+    private void addJsonTypeSourceProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
         List<String> jsonTypeSourceIds = dataSources.stream()
                                                     .filter(s -> ATLASMAP_JSON_DATA_SOURCE.equals(s.get("jsonType")) && "SOURCE".equals(s.get("dataSourceType")))
                                                     .map(s -> Optional.ofNullable(s.get("id")).map(Object::toString).orElse(""))
                                                     .collect(Collectors.toList());
 
         if (ObjectHelper.isNotEmpty(jsonTypeSourceIds)) {
-            return Optional.of(route.process(new JsonTypeSourceProcessor(jsonTypeSourceIds)));
+            route.process(new JsonTypeSourceProcessor(jsonTypeSourceIds));
         }
-
-        return Optional.empty();
     }
 
     /**
@@ -94,16 +91,13 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
      * @param dataSources
      * @return
      */
-    private Optional<ProcessorDefinition<?>> handleJsonTypeTargetProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
+    private void addJsonTypeTargetProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
         boolean isJsonTypeTarget = dataSources.stream()
                 .anyMatch(s -> ATLASMAP_JSON_DATA_SOURCE.equals(s.get("jsonType")) && "TARGET".equals(s.get("dataSourceType")));
 
         if (isJsonTypeTarget) {
-            return Optional.of(route.process(new JsonTypeTargetProcessor()));
+            route.process(new JsonTypeTargetProcessor());
         }
-
-        return Optional.empty();
-
     }
 
     /**
