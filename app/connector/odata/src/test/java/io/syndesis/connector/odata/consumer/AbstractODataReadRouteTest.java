@@ -17,6 +17,9 @@ package io.syndesis.connector.odata.consumer;
 
 import org.junit.After;
 import org.junit.Before;
+
+import java.io.IOException;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -24,25 +27,29 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Resources;
 import io.syndesis.connector.odata.AbstractODataTest;
 import io.syndesis.connector.odata.PropertyBuilder;
 import io.syndesis.connector.odata.component.ODataComponentFactory;
 import io.syndesis.connector.odata.customizer.ODataStartCustomizer;
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
 
 public abstract class AbstractODataReadRouteTest extends AbstractODataTest {
 
-    protected static final String TEST_SERVER_DATA_1 = "test-server-data-1.json";
-    protected static final String TEST_SERVER_DATA_2 = "test-server-data-2.json";
-    protected static final String TEST_SERVER_DATA_3 = "test-server-data-3.json";
-    protected static final String TEST_SERVER_DATA_1_WITH_COUNT = "test-server-data-1-with-count.json";
-    protected static final String TEST_SERVER_DATA_2_WITH_COUNT = "test-server-data-2-with-count.json";
-    protected static final String TEST_SERVER_DATA_3_WITH_COUNT = "test-server-data-3-with-count.json";
-    protected static final String REF_SERVER_PEOPLE_DATA_1 = "ref-server-people-data-1.json";
-    protected static final String REF_SERVER_PEOPLE_DATA_2 = "ref-server-people-data-2.json";
-    protected static final String REF_SERVER_PEOPLE_DATA_3 = "ref-server-people-data-3.json";
-    protected static final String TEST_SERVER_DATA_EMPTY = "test-server-data-empty.json";
+    protected static final String TEST_SERVER_DATA_1 = "io/syndesis/connector/odata/consumer/test-server-data-1.json";
+    protected static final String TEST_SERVER_DATA_2 = "io/syndesis/connector/odata/consumer/test-server-data-2.json";
+    protected static final String TEST_SERVER_DATA_3 = "io/syndesis/connector/odata/consumer/test-server-data-3.json";
+    protected static final String TEST_SERVER_DATA_1_WITH_COUNT = "io/syndesis/connector/odata/consumer/test-server-data-1-with-count.json";
+    protected static final String TEST_SERVER_DATA_2_WITH_COUNT = "io/syndesis/connector/odata/consumer/test-server-data-2-with-count.json";
+    protected static final String TEST_SERVER_DATA_3_WITH_COUNT = "io/syndesis/connector/odata/consumer/test-server-data-3-with-count.json";
+    protected static final String REF_SERVER_PEOPLE_DATA_1 = "io/syndesis/connector/odata/consumer/ref-server-people-data-1.json";
+    protected static final String REF_SERVER_PEOPLE_DATA_2 = "io/syndesis/connector/odata/consumer/ref-server-people-data-2.json";
+    protected static final String REF_SERVER_PEOPLE_DATA_3 = "io/syndesis/connector/odata/consumer/ref-server-people-data-3.json";
+    protected static final String TEST_SERVER_DATA_EMPTY = "io/syndesis/connector/odata/consumer/test-server-data-empty.json";
 
     private final boolean splitResult;
 
@@ -134,4 +141,14 @@ public abstract class AbstractODataReadRouteTest extends AbstractODataTest {
               .defaultValue(BASIC_PASSWORD)
               .build();
     }
+
+    static IntegrationRouteBuilder createRouteBuilder(final Integration odataIntegration) {
+        return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
+            @Override
+            protected Integration loadIntegration() throws IOException {
+                return odataIntegration;
+            }
+        };
+    }
+
 }

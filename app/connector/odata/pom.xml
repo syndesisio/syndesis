@@ -44,12 +44,6 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>io.syndesis.integration</groupId>
-        <artifactId>integration-runtime</artifactId>
-        <version>${project.version}</version>
-        <classifier>tests</classifier>
-      </dependency>
-      <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
         <version>4.5.3</version>
@@ -227,12 +221,6 @@
     <dependency>
       <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-runtime</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.syndesis.integration</groupId>
-      <artifactId>integration-runtime</artifactId>
-      <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -17,8 +17,6 @@ package io.syndesis.connector.odata;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 import org.apache.camel.CamelContext;
@@ -44,11 +42,11 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Resources;
 import io.syndesis.connector.odata.server.ODataTestServer;
 import io.syndesis.connector.odata.server.ODataTestServer.Options;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 
-public abstract class AbstractODataTest extends IntegrationTestSupport implements ODataConstants {
+public abstract class AbstractODataTest implements ODataConstants {
 
     protected static final int MOCK_TIMEOUT_MILLISECONDS = 60000;
 
@@ -164,12 +162,6 @@ public abstract class AbstractODataTest extends IntegrationTestSupport implement
         return odataIntegration;
     }
 
-    protected String testData(String fileName) throws IOException {
-        InputStream in = this.getClass().getResourceAsStream(fileName);
-        String expected = streamToString(in);
-        return expected;
-    }
-
     protected Step createMockStep() {
         Step mockStep = new Step.Builder()
             .stepKind(StepKind.endpoint)
@@ -203,7 +195,7 @@ public abstract class AbstractODataTest extends IntegrationTestSupport implement
 
     protected void testResult(MockEndpoint result, int exchangeIdx, String testDataFile) throws Exception {
         String json = extractJsonFromExchgMsg(result, exchangeIdx);
-        String expected = testData(testDataFile);
+        String expected = Resources.getResourceAsText(testDataFile);
         JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
     }
 
@@ -212,7 +204,7 @@ public abstract class AbstractODataTest extends IntegrationTestSupport implement
         List<String> json = extractJsonFromExchgMsg(result, exchangeIdx, List.class);
         assertEquals(testDataFiles.length, json.size());
         for (int i = 0; i < testDataFiles.length; ++i) {
-            String expected = testData(testDataFiles[i]);
+            String expected = Resources.getResourceAsText(testDataFiles[i]);
             JSONAssert.assertEquals(expected, json.get(i), JSONCompareMode.LENIENT);
         }
     }

@@ -38,6 +38,8 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import io.syndesis.common.util.Resources;
 import io.syndesis.connector.odata.customizer.json.ClientCollectionValueSerializer;
 import io.syndesis.connector.odata.customizer.json.ClientComplexValueSerializer;
 import io.syndesis.connector.odata.customizer.json.ClientEntitySerializer;
@@ -65,8 +67,8 @@ import io.syndesis.connector.odata.customizer.json.ClientPropertySerializer;
 public class ODataSerializerTest extends AbstractODataTest {
 
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final String TEST_COLLECTION = "test-collection.json";
-    private static final String TEST_COMPLEX = "test-complex.json";
+    private static final String TEST_COLLECTION = "io/syndesis/connector/odata/test-collection.json";
+    private static final String TEST_COMPLEX = "io/syndesis/connector/odata/test-complex.json";
 
     @BeforeClass
     public static void setupClass() {
@@ -84,7 +86,7 @@ public class ODataSerializerTest extends AbstractODataTest {
 
     private void checkEntity(ClientEntity entity, String testDataFile) throws Exception {
         String json = OBJECT_MAPPER.writeValueAsString(entity);
-        String expected = testData(testDataFile);
+        String expected = Resources.getResourceAsText(testDataFile);
         JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
     }
 

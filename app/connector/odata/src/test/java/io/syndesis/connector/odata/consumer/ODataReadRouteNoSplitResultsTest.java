@@ -18,6 +18,7 @@ package io.syndesis.connector.odata.consumer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 import java.util.Map;
 import org.apache.camel.builder.RouteBuilder;
@@ -41,6 +42,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Resources;
 import io.syndesis.connector.odata.PropertyBuilder;
 import io.syndesis.connector.odata.server.ODataTestServer;
 
@@ -76,9 +78,9 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
                                                             .property(SERVICE_URI, defaultTestServer.serviceUrl()));
 
         Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
-        Integration odataIntegration = createIntegration(odataStep, mockStep);
+        final Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        RouteBuilder routes = createRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(defaultTestServer.getResultCount());
@@ -102,7 +104,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         Step odataStep = createODataStep(odataConnector, authTestServer.methodName());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        RouteBuilder routes = createRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(authTestServer.getResultCount());
@@ -122,7 +124,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         Step odataStep = createODataStep(odataConnector, sslTestServer.methodName());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        RouteBuilder routes = createRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(sslTestServer.getResultCount());
@@ -147,7 +149,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         Step odataStep = createODataStep(odataConnector, sslAuthTestServer.methodName());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        RouteBuilder routes = createRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(sslAuthTestServer.getResultCount());
@@ -183,7 +185,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
             .build();
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        RouteBuilder routes = createRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(1);
@@ -196,11 +198,11 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         List<String> json = extractJsonFromExchgMsg(result, 0, List.class);
         assertEquals(20, json.size());
 
-        String expected = testData(REF_SERVER_PEOPLE_DATA_1);
+        String expected = Resources.getResourceAsText(REF_SERVER_PEOPLE_DATA_1);
         JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
-        expected = testData(REF_SERVER_PEOPLE_DATA_2);
+        expected = Resources.getResourceAsText(REF_SERVER_PEOPLE_DATA_2);
         JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
-        expected = testData(REF_SERVER_PEOPLE_DATA_3);
+        expected = Resources.getResourceAsText(REF_SERVER_PEOPLE_DATA_3);
         JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
     }
 
@@ -214,7 +216,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        RouteBuilder routes = createRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(1);
@@ -235,7 +237,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        RouteBuilder routes = createRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(1);
@@ -247,11 +249,11 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         @SuppressWarnings( "unchecked" )
         List<String> json = extractJsonFromExchgMsg(result, 0, List.class);
         assertEquals(3, json.size());
-        String expected = testData(TEST_SERVER_DATA_1_WITH_COUNT);
+        String expected = Resources.getResourceAsText(TEST_SERVER_DATA_1_WITH_COUNT);
         JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
-        expected = testData(TEST_SERVER_DATA_2_WITH_COUNT);
+        expected = Resources.getResourceAsText(TEST_SERVER_DATA_2_WITH_COUNT);
         JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
-        expected = testData(TEST_SERVER_DATA_3_WITH_COUNT);
+        expected = Resources.getResourceAsText(TEST_SERVER_DATA_3_WITH_COUNT);
         JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
     }
 
@@ -265,7 +267,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        RouteBuilder routes = createRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(2);
@@ -290,7 +292,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        RouteBuilder routes = createRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(1);
@@ -311,7 +313,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        RouteBuilder routes = createRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(1);
@@ -335,7 +337,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        RouteBuilder routes = createRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(2);
@@ -367,7 +369,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        RouteBuilder routes = createRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         int expectedMsgCount = defaultTestServer.getResultCount();
         MockEndpoint result = initMockEndpoint();
@@ -384,11 +386,11 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
             String expected;
             switch (i) {
                 case 0:
-                    expected = testData(TEST_SERVER_DATA_1);
+                    expected = Resources.getResourceAsText(TEST_SERVER_DATA_1);
                     JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
-                    expected = testData(TEST_SERVER_DATA_2);
+                    expected = Resources.getResourceAsText(TEST_SERVER_DATA_2);
                     JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
-                    expected = testData(TEST_SERVER_DATA_3);
+                    expected = Resources.getResourceAsText(TEST_SERVER_DATA_3);
                     JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
                     break;
                 default:
@@ -410,4 +412,5 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         assertEquals(backoffIdleThreshold, consumerProperties.get(BACKOFF_IDLE_THRESHOLD));
         assertEquals(backoffMultiplier, consumerProperties.get(BACKOFF_MULTIPLIER));
     }
+
 }
