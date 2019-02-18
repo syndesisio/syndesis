@@ -90,7 +90,7 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
         GooglePivotTable model = new GooglePivotTable();
         model.setSpreadsheetId(getSpreadsheetId());
         model.setSourceSheetId(0);
-        model.setSheetId(1);
+        model.setSheetId(0);
 
         model.setSourceRange("A1:G10");
 
@@ -124,7 +124,7 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
 
         UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
 
-        Assert.assertEquals(Integer.valueOf(1), updateCellsRequest.getStart().getSheetId());
+        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
         Assert.assertEquals(Integer.valueOf(8), updateCellsRequest.getStart().getColumnIndex());
         Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getRowIndex());
 
@@ -155,6 +155,194 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
         Assert.assertEquals(1, pivotTable.getValues().size());
         Assert.assertEquals("SUM", pivotTable.getValues().get(0).getSummarizeFunction());
         Assert.assertEquals(Integer.valueOf(3), pivotTable.getValues().get(0).getSourceColumnOffset());
+    }
 
+    @Test
+    public void testDivergingSourceAndTargetSheets() throws Exception {
+        customizer.customize(getComponent(), new HashMap<>());
+
+        Exchange inbound = new DefaultExchange(createCamelContext());
+
+        GooglePivotTable model = new GooglePivotTable();
+        model.setSpreadsheetId(getSpreadsheetId());
+        model.setSourceSheetId(0);
+        model.setSheetId(1);
+
+        model.setSourceRange("A1:D10");
+        model.setValueGroups(Collections.singletonList(sampleValueGroup()));
+
+        inbound.getIn().setBody(model);
+        getComponent().getBeforeProducer().process(inbound);
+
+        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+
+        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
+        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+
+        UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
+
+        Assert.assertEquals(Integer.valueOf(1), updateCellsRequest.getStart().getSheetId());
+        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getColumnIndex());
+        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getRowIndex());
+
+        PivotTable pivotTable = updateCellsRequest.getRows().get(0).getValues().get(0).getPivotTable();
+        assertSampleValueGroup(pivotTable);
+    }
+
+    @Test
+    public void testDivergingSourceAndTargetSheetsWithExplicitStart() throws Exception {
+        customizer.customize(getComponent(), new HashMap<>());
+
+        Exchange inbound = new DefaultExchange(createCamelContext());
+
+        GooglePivotTable model = new GooglePivotTable();
+        model.setStart("E10");
+        model.setSpreadsheetId(getSpreadsheetId());
+        model.setSourceSheetId(1);
+        model.setSheetId(0);
+
+        model.setSourceRange("A1:D10");
+        model.setValueGroups(Collections.singletonList(sampleValueGroup()));
+
+        inbound.getIn().setBody(model);
+        getComponent().getBeforeProducer().process(inbound);
+
+        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+
+        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
+        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+
+        UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
+
+        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
+        Assert.assertEquals(Integer.valueOf(4), updateCellsRequest.getStart().getColumnIndex());
+        Assert.assertEquals(Integer.valueOf(9), updateCellsRequest.getStart().getRowIndex());
+
+        PivotTable pivotTable = updateCellsRequest.getRows().get(0).getValues().get(0).getPivotTable();
+        assertSampleValueGroup(pivotTable);
+    }
+
+    @Test
+    public void testExplicitPivotTableStart() throws Exception {
+        customizer.customize(getComponent(), new HashMap<>());
+
+        Exchange inbound = new DefaultExchange(createCamelContext());
+
+        GooglePivotTable model = new GooglePivotTable();
+        model.setStart("C12");
+        model.setSpreadsheetId(getSpreadsheetId());
+
+        model.setSourceRange("A1:D10");
+        model.setValueGroups(Collections.singletonList(sampleValueGroup()));
+
+        inbound.getIn().setBody(model);
+        getComponent().getBeforeProducer().process(inbound);
+
+        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+
+        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
+        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+
+        UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
+
+        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
+        Assert.assertEquals(Integer.valueOf(2), updateCellsRequest.getStart().getColumnIndex());
+        Assert.assertEquals(Integer.valueOf(11), updateCellsRequest.getStart().getRowIndex());
+
+        PivotTable pivotTable = updateCellsRequest.getRows().get(0).getValues().get(0).getPivotTable();
+        assertSampleValueGroup(pivotTable);
+    }
+
+    @Test
+    public void testCustomValueGroupFunction() throws Exception {
+        customizer.customize(getComponent(), new HashMap<>());
+
+        Exchange inbound = new DefaultExchange(createCamelContext());
+
+        GooglePivotTable model = new GooglePivotTable();
+        model.setStart("C12");
+        model.setSpreadsheetId(getSpreadsheetId());
+
+        model.setSourceRange("A1:D10");
+
+        GooglePivotTable.ValueGroup valueGroup = new GooglePivotTable.ValueGroup();
+        valueGroup.setSourceColumn("E");
+        valueGroup.setFunction("AVERAGE");
+        model.setValueGroups(Collections.singletonList(valueGroup));
+
+        inbound.getIn().setBody(model);
+        getComponent().getBeforeProducer().process(inbound);
+
+        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+
+        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
+        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+
+        UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
+
+        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
+        Assert.assertEquals(Integer.valueOf(2), updateCellsRequest.getStart().getColumnIndex());
+        Assert.assertEquals(Integer.valueOf(11), updateCellsRequest.getStart().getRowIndex());
+
+        PivotTable pivotTable = updateCellsRequest.getRows().get(0).getValues().get(0).getPivotTable();
+
+        Assert.assertEquals(1, pivotTable.getValues().size());
+        Assert.assertEquals("AVERAGE", pivotTable.getValues().get(0).getSummarizeFunction());
+        Assert.assertEquals(Integer.valueOf(4), pivotTable.getValues().get(0).getSourceColumnOffset());
+    }
+
+    @Test
+    public void testCustomValueGroupFormula() throws Exception {
+        customizer.customize(getComponent(), new HashMap<>());
+
+        Exchange inbound = new DefaultExchange(createCamelContext());
+
+        GooglePivotTable model = new GooglePivotTable();
+        model.setSpreadsheetId(getSpreadsheetId());
+
+        model.setSourceRange("A1:D10");
+
+        GooglePivotTable.ValueGroup valueGroup = new GooglePivotTable.ValueGroup();
+        valueGroup.setSourceColumn("A");
+        valueGroup.setFormula("=Cost*SUM(Quantity)");
+        model.setValueGroups(Collections.singletonList(valueGroup));
+
+        inbound.getIn().setBody(model);
+        getComponent().getBeforeProducer().process(inbound);
+
+        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+
+        BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
+        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+
+        UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
+
+        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
+        Assert.assertEquals(Integer.valueOf(5), updateCellsRequest.getStart().getColumnIndex());
+        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getRowIndex());
+
+        PivotTable pivotTable = updateCellsRequest.getRows().get(0).getValues().get(0).getPivotTable();
+
+        Assert.assertEquals(1, pivotTable.getValues().size());
+        Assert.assertEquals("CUSTOM", pivotTable.getValues().get(0).getSummarizeFunction());
+        Assert.assertEquals("=Cost*SUM(Quantity)", pivotTable.getValues().get(0).getFormula());
+        Assert.assertNull(pivotTable.getValues().get(0).getSourceColumnOffset());
+    }
+
+    private GooglePivotTable.ValueGroup sampleValueGroup() {
+        GooglePivotTable.ValueGroup valueGroup = new GooglePivotTable.ValueGroup();
+        valueGroup.setSourceColumn("C");
+        return valueGroup;
+    }
+
+    private void assertSampleValueGroup(PivotTable pivotTable) {
+        Assert.assertEquals(1, pivotTable.getValues().size());
+        Assert.assertEquals("SUM", pivotTable.getValues().get(0).getSummarizeFunction());
+        Assert.assertEquals(Integer.valueOf(2), pivotTable.getValues().get(0).getSourceColumnOffset());
     }
 }

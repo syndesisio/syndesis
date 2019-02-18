@@ -117,13 +117,17 @@ public class GoogleSheetsAddPivotTableCustomizer implements ComponentProxyCustom
                                     .map(GooglePivotTable::getSheetId)
                                     .orElse(0);
 
+        Integer sourceSheetId = Optional.ofNullable(model)
+                                    .map(GooglePivotTable::getSourceSheetId)
+                                    .orElse(sheetId);
+
         if (model != null && model.getStart() != null) {
             CellCoordinate start = CellCoordinate.fromCellId(model.getStart());
             return new GridCoordinate()
                     .setSheetId(sheetId)
                     .setColumnIndex(start.getColumnIndex())
                     .setRowIndex(start.getRowIndex());
-        } else if (pivotTable.getSource() != null) {
+        } else if (pivotTable.getSource() != null && sheetId.equals(sourceSheetId)) {
             return new GridCoordinate()
                     .setSheetId(sheetId)
                     .setColumnIndex(pivotTable.getSource().getEndColumnIndex() + 1)
