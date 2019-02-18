@@ -76,7 +76,8 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
     private void addJsonTypeSourceProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
         List<String> jsonTypeSourceIds = dataSources.stream()
                                                     .filter(s -> ATLASMAP_JSON_DATA_SOURCE.equals(s.get("jsonType")) && "SOURCE".equals(s.get("dataSourceType")))
-                                                    .map(s -> Optional.ofNullable(s.get("id")).map(Object::toString).orElse(""))
+                                                    .filter(s -> ObjectHelper.isNotEmpty(s.get("id")))
+                                                    .map(s -> s.get("id").toString())
                                                     .collect(Collectors.toList());
 
         if (ObjectHelper.isNotEmpty(jsonTypeSourceIds)) {
