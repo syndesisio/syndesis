@@ -17,14 +17,14 @@ package io.syndesis.server.controller.integration.camelk;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateUpdate;
-import io.syndesis.server.controller.integration.BaseHandler;
 import io.syndesis.server.controller.integration.IntegrationPublishValidator;
+import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
+import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
 import io.syndesis.server.dao.IntegrationDao;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
 import io.syndesis.server.openshift.OpenShiftService;
@@ -35,13 +35,14 @@ import org.springframework.stereotype.Component;
 @Component
 @Qualifier("camel-k")
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "camel-k")
-public class CamelKUnpublishHandler extends BaseHandler implements StateChangeHandler {
+public class CamelKUnpublishHandler extends BaseCamelKHandler implements StateChangeHandler {
 
-    protected CamelKUnpublishHandler(OpenShiftService osService,
-                                     IntegrationDao iDao,
-                                     IntegrationDeploymentDao idDao,
-                                     IntegrationPublishValidator validator) {
-        super(osService, iDao, idDao, validator);
+    protected CamelKUnpublishHandler(
+            OpenShiftService openShiftService,
+            IntegrationDao iDao,
+            IntegrationDeploymentDao idDao,
+            IntegrationPublishValidator validator) {
+        super(openShiftService, iDao, idDao, validator);
     }
 
     @Override
@@ -49,15 +50,32 @@ public class CamelKUnpublishHandler extends BaseHandler implements StateChangeHa
         return Collections.singleton(IntegrationDeploymentState.Unpublished);
     }
 
+    @SuppressWarnings({"unchecked"})
     @Override
     public StateUpdate execute(IntegrationDeployment integrationDeployment) {
-        //TODO: implement
-        return null;
-    }
+        //
+        // Validation
+        //
 
-    @Override
-    public void execute(IntegrationDeployment integrationDeployment, Consumer<StateUpdate> updates) {
-        //TODO: implement
-        logInfo(integrationDeployment,"Unpublish called, but not yet implemented");
+        if (!integrationDeployment.getUserId().isPresent()) {
+            throw new IllegalStateException("Couldn't find the user of the integration");
+        }
+        if (!integrationDeployment.getIntegrationId().isPresent()) {
+            throw new IllegalStateException("IntegrationDeployment should have an integrationId");
+        }
+
+        io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition crd = getCustomResourceDefinition();
+        io.syndesis.server.controller.integration.camelk.crd.Integration cr = CamelKSupport.getIntegrationCR(getOpenShiftService(), crd, integrationDeployment);
+
+        boolean deleted = getOpenShiftService().deleteCR(
+            crd,
+            io.syndesis.server.controller.integration.camelk.crd.Integration.class,
+            IntegrationList.class,
+            DoneableIntegration.class,
+            cr);
+
+        return deleted
+            ? new StateUpdate(IntegrationDeploymentState.Unpublished, Collections.emptyMap())
+            : new StateUpdate(CamelKSupport.getState(cr), Collections.emptyMap());
     }
 }

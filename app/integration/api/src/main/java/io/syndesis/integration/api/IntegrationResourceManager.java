@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.syndesis.common.model.Dependency;
-import io.syndesis.common.model.WithDependencies;
 import io.syndesis.common.model.Dependency.Type;
+import io.syndesis.common.model.WithDependencies;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.ConnectionBase;
 import io.syndesis.common.model.connection.Connector;
@@ -40,6 +40,7 @@ import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.common.util.SuppressFBWarnings;
 import org.apache.commons.lang3.StringUtils;
 
 public interface IntegrationResourceManager {
@@ -97,6 +98,7 @@ public interface IntegrationResourceManager {
         return collectDependencies(integration.getFlows().stream().flatMap(flow -> flow.getSteps().stream()).collect(Collectors.toList()), true);
     }
 
+    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
     @SuppressWarnings("PMD.ExcessiveMethodLength")
     default Integration sanitize(Integration integration) {
         if (integration.getFlows().isEmpty()) {
@@ -139,13 +141,17 @@ public interface IntegrationResourceManager {
                                 .build();
                     }
                     // Prune Connector, nix actions. The action in use is on the Step
-                    Connector prunedConnector = new Connector.Builder().createFrom(
-                            replacement.getConnection().get().getConnector().get())
-                       .actions(new ArrayList<>()).build();
+                    Connector prunedConnector = new Connector.Builder()
+                        .createFrom(replacement.getConnection().get().getConnector().get())
+                        .actions(new ArrayList<>())
+                        .icon(null)
+                        .build();
+
                     // Replace with the new 'pruned' connector
                     Connection prunedConnection = new Connection.Builder()
                         .createFrom(connection)
                         .connector(prunedConnector)
+                        .icon(null)
                         .build();
                     // Replace with the new 'pruned' step
                     replacement =

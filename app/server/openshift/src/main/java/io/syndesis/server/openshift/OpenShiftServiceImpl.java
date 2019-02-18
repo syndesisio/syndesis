@@ -15,11 +15,24 @@
  */
 package io.syndesis.server.openshift;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesResourceList;
 import io.fabric8.kubernetes.api.model.Quantity;
+import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.dsl.MixedOperation;
@@ -37,18 +50,6 @@ import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -520,10 +521,17 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return result != null ? Optional.of(result) : Optional.empty();
     }
 
+
+    @Override
+    @SuppressWarnings({"unchecked"})
+    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> boolean deleteCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, T customResource){
+        return getCRDClient(crd, resourceType, resourceListType, doneableResourceType).inNamespace(config.getNamespace()).delete(customResource);
+    }
+
     @Override
     @SuppressWarnings({"unchecked"})
     public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> T createOrReplaceCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, T customResource){
-       return getCRDClient(crd, resourceType, resourceListType, doneableResourceType).inNamespace(config.getNamespace()).createOrReplace(customResource);
+        return getCRDClient(crd, resourceType, resourceListType, doneableResourceType).inNamespace(config.getNamespace()).createOrReplace(customResource);
     }
 
     @Override
@@ -534,5 +542,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     private <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> MixedOperation<T, L, D, Resource<T, D>> getCRDClient(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType) {
         return openShiftClient.customResource(crd, resourceType, resourceListType, doneableResourceType);
+    }
+
+    @Override
+    public void createOrReplaceSecret(Secret secret) {
+        openShiftClient.secrets().createOrReplace(secret);
     }
 }

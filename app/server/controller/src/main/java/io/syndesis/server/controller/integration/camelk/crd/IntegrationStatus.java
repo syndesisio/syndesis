@@ -15,12 +15,12 @@
  */
 package io.syndesis.server.controller.integration.camelk.crd;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.immutables.value.Value;
-
-import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.List;
+import javax.annotation.Nullable;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationStatus.Builder.class)
@@ -35,6 +35,8 @@ public interface IntegrationStatus extends Serializable {
     //    Context          string           `json:"context,omitempty"`
     //    GeneratedSources []SourceSpec     `json:"generatedSources,omitempty"`
     //    Failure          *Failure         `json:"failure,omitempty"`
+    //    CamelVersion     string           `json:"camelVersion,omitempty"`
+    //    RuntimeVersion   string           `json:"runtimeVersion,omitempty"`
 
     @Nullable
     String getPhase();
@@ -48,6 +50,10 @@ public interface IntegrationStatus extends Serializable {
     List<SourceSpec> getGeneratedSources();
     @Nullable
     Failure getFailure();
+    @Nullable
+    String getCamelVersion();
+    @Nullable
+    String getRuntimeVersion();
 
     class Builder extends ImmutableIntegrationStatus.Builder {
     }

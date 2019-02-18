@@ -76,6 +76,7 @@
 
     <!-- Global camel version used everywhere -->
     <camel.version>2.21.0.fuse-730054</camel.version>
+    <camel-k.version>0.2.1</camel-k.version>
 
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
     <dep.plugin.pmd.version>3.10.0</dep.plugin.pmd.version>
@@ -620,6 +621,7 @@
               <exclude>extension/**/src/it/**/verify.groovy</exclude>
               <!-- excludes as it is copied from upstream camel component and nneds to be moved back to caml -->
               <exclude>connector/servicenow/src/main/java/io/syndesis/connector/servicenow/ServiceNowMetaDataExtension.java</exclude>
+              <exclude>integration/runtime-camelk/src/main/resources/META-INF/catalog/**</exclude>
             </excludes>
           </configuration>
           <dependencies>
@@ -2204,8 +2206,17 @@
       <id>mrrc-redhat</id>
       <url>https://maven.repository.redhat.com/ga</url>
     </repository>
+    <repository>
+      <id>apache.snapshots</id>
+      <url>https://repository.apache.org/content/repositories/snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
   </repositories>
-
 
   <pluginRepositories>
     <pluginRepository>
@@ -2219,6 +2230,16 @@
       <id>redhat.ga</id>
       <name>Red Hat General Availability Repository</name>
       <url>https://maven.repository.redhat.com/ga</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>apache.snapshots</id>
+      <url>https://repository.apache.org/content/repositories/snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </pluginRepository>
   </pluginRepositories>
 

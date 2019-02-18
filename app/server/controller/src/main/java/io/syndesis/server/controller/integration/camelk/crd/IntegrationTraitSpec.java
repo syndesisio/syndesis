@@ -15,10 +15,11 @@
  */
 package io.syndesis.server.controller.integration.camelk.crd;
 
+import java.util.Collections;
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
-
-import java.util.Map;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationTraitSpec.Builder.class)
@@ -28,7 +29,11 @@ public interface IntegrationTraitSpec {
 //    type IntegrationTraitSpec struct {
 //        Configuration map[string]string `json:"configuration,omitempty"`
 //    }
-    Map<String,String> getConfiguration();
+
+    @Value.Default
+    default Map<String,String> getConfiguration() {
+        return Collections.emptyMap();
+    }
 
     class Builder extends ImmutableIntegrationTraitSpec.Builder {
     }

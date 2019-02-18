@@ -15,12 +15,13 @@
  */
 package io.syndesis.server.controller.integration.camelk.crd;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.immutables.value.Value;
-
-import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationSpec.Builder.class)
@@ -40,16 +41,42 @@ public interface IntegrationSpec {
 //        ServiceAccountName string                          `json:"serviceAccountName,omitempty"`
     @Nullable
     Integer getReplicas();
-    List<SourceSpec> getSources();
-    List<ResourceSpec> getResources();
+
+    @Value.Default
+    default List<SourceSpec> getSources() {
+        return Collections.emptyList();
+    }
+    @Value.Default
+    default List<ResourceSpec> getResources() {
+        return Collections.emptyList();
+    }
+
     @Nullable
     String getContext();
-    List<String> getDependencies();
+
+    @Value.Default
+    default List<String> getDependencies() {
+        return Collections.emptyList();
+    }
+
     @Nullable
     String getProfile();
-    Map<String,IntegrationTraitSpec> getTraits();
-    List<ConfigurationSpec> getConfiguration();
-    List<String> getRepositories();
+
+    @Value.Default
+    default Map<String,IntegrationTraitSpec> getTraits() {
+        return Collections.emptyMap();
+    }
+
+    @Value.Default
+    default List<ConfigurationSpec> getConfiguration() {
+        return Collections.emptyList();
+    }
+
+    @Value.Default
+    default List<String> getRepositories(){
+        return Collections.emptyList();
+    }
+
     @Nullable
     String getServiceAccountName();
 

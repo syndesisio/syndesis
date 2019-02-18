@@ -66,7 +66,7 @@ public class IntegrationPublishValidator {
         return null;
     }
 
-        /**
+    /**
      * Count the deployments of the owner of the specified integration.
      *
      * @param deployment The specified IntegrationDeployment.

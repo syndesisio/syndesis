@@ -15,19 +15,20 @@
  */
 package io.syndesis.server.openshift;
 
-import io.fabric8.kubernetes.api.model.Doneable;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesResourceList;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
-import io.fabric8.kubernetes.client.dsl.Resource;
-import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.fabric8.openshift.api.model.User;
-
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+
+import io.fabric8.kubernetes.api.model.Doneable;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
+import io.fabric8.kubernetes.api.model.Secret;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
+import io.fabric8.kubernetes.client.dsl.Resource;
+import io.fabric8.openshift.api.model.DeploymentConfig;
+import io.fabric8.openshift.api.model.User;
 
 public interface OpenShiftService {
 
@@ -162,6 +163,20 @@ public interface OpenShiftService {
     Optional<CustomResourceDefinition> getCRD(String crdName);
 
     /**
+     * Delete the given CR.
+     *
+     * @param <T>   The Kubernetes resource type.
+     * @param <L>   The list variant of the Kubernetes resource type.
+     * @param <D>   The doneable variant of the Kubernetes resource type.
+     * @param crd the {@link CustomResourceDefinition}
+     * @param resourceType the type of T
+     * @param resourceListType the type of L
+     * @param doneableResourceType the type of D
+     * @param customResource the {@link io.fabric8.kubernetes.client.CustomResource} myst be of type T
+     */
+    <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> boolean deleteCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, T customResource);
+
+    /**
      * The entry point to client operations.
      * @param <T>   The Kubernetes resource type.
      * @param <L>   The list variant of the Kubernetes resource type.
@@ -187,4 +202,5 @@ public interface OpenShiftService {
      */
     <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> Resource<T, D> getCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, String customResourceName);
 
+    void createOrReplaceSecret(Secret secret);
 }

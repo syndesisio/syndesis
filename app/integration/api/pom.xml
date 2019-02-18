@@ -35,6 +35,10 @@
       <artifactId>common-model</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-util</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
     </dependency>

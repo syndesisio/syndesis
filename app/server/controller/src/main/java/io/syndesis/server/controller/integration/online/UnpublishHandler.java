@@ -29,7 +29,6 @@ import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.util.Labels;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateUpdate;
-import io.syndesis.server.controller.integration.BaseHandler;
 import io.syndesis.server.controller.integration.IntegrationPublishValidator;
 import io.syndesis.server.dao.IntegrationDao;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
@@ -43,7 +42,7 @@ import org.springframework.stereotype.Component;
 @Qualifier("s2i")
 @Component()
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "s2i", matchIfMissing = true)
-public class UnpublishHandler extends BaseHandler implements StateChangeHandler {
+public class UnpublishHandler extends BaseOnlineHandler implements StateChangeHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(UnpublishHandler.class);
 

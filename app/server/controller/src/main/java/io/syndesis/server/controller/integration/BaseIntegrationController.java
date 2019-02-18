@@ -16,8 +16,6 @@
 package io.syndesis.server.controller.integration;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,9 +25,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.integration.IntegrationDeployment;
@@ -37,7 +32,6 @@ import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.Exceptions;
 import io.syndesis.common.util.Json;
-import io.syndesis.common.util.Labels;
 import io.syndesis.common.util.backend.BackendController;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.StateChangeHandler;
@@ -46,16 +40,13 @@ import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * This class tracks changes to Integrations and attempts to process them so that
  * their current status matches their desired status.
  */
-@Service
-public class IntegrationController implements BackendController {
-    private static final Logger LOG = LoggerFactory.getLogger(IntegrationController.class);
+public abstract class BaseIntegrationController implements BackendController {
+    private static final Logger LOG = LoggerFactory.getLogger(BaseIntegrationController.class);
 
     private static final String EVENT_BUS_ID = "integration-deployment-controller";
     private final OpenShiftService openShiftService;
@@ -68,9 +59,8 @@ public class IntegrationController implements BackendController {
     private ExecutorService executor;
     private ScheduledExecutorService scheduler;
 
-    @Autowired
-    public IntegrationController(OpenShiftService openShiftService, DataManager dataManager, EventBus eventBus,
-                                 StateChangeHandlerProvider handlerFactory, ControllersConfigurationProperties properties) {
+    protected BaseIntegrationController(OpenShiftService openShiftService, DataManager dataManager, EventBus eventBus,
+                                     StateChangeHandlerProvider handlerFactory, ControllersConfigurationProperties properties) {
         this.openShiftService = openShiftService;
         this.dataManager = dataManager;
         this.eventBus = eventBus;
@@ -82,10 +72,24 @@ public class IntegrationController implements BackendController {
         this.properties = properties;
     }
 
-    @PostConstruct
+    protected OpenShiftService getOpenShiftService() {
+        return openShiftService;
+    }
+
+    protected DataManager getDataManager() {
+        return dataManager;
+    }
+
+    protected EventBus getEventBus() {
+        return eventBus;
+    }
+
+    protected ControllersConfigurationProperties getProperties() {
+        return properties;
+    }
+
     @SuppressWarnings("FutureReturnValueIgnored")
-    @Override
-    public void start() {
+    protected void doStart() {
         executor = Executors.newSingleThreadExecutor(threadFactory("Integration Controller"));
         scheduler = Executors.newScheduledThreadPool(2, threadFactory("Integration Controller Scheduler"));
 
@@ -93,9 +97,7 @@ public class IntegrationController implements BackendController {
         eventBus.subscribe(EVENT_BUS_ID, getChangeEventSubscription());
     }
 
-    @PreDestroy
-    @Override
-    public void stop() {
+    protected void doStop() {
         eventBus.unsubscribe(EVENT_BUS_ID);
 
         scheduler.shutdownNow();
@@ -142,7 +144,7 @@ public class IntegrationController implements BackendController {
         };
     }
 
-    private void checkIntegrationStatusIfNotAlreadyInProgress(String id) {
+    protected void checkIntegrationStatusIfNotAlreadyInProgress(String id) {
         executor.execute(() -> {
             IntegrationDeployment integrationDeployment = dataManager.fetch(IntegrationDeployment.class, id);
             if( integrationDeployment != null) {
@@ -163,10 +165,9 @@ public class IntegrationController implements BackendController {
 
     private void scanIntegrationsForWork() {
         LOG.info("Checking integrations for their status.");
-        executor.execute(() -> {
-            dataManager.fetchIds(IntegrationDeployment.class).forEach(id -> {
-                checkIntegrationStatusIfNotAlreadyInProgress(id);});
-        });
+        executor.execute(
+            () -> dataManager.fetchIds(IntegrationDeployment.class).forEach(this::checkIntegrationStatusIfNotAlreadyInProgress)
+        );
     }
 
     private void checkIntegrationStatus(IntegrationDeployment integrationDeployment) {
@@ -279,17 +280,7 @@ public class IntegrationController implements BackendController {
     }
 
 
-    private IntegrationDeploymentState determineState(IntegrationDeployment integrationDeployment) {
-        Map<String, String> labels = new HashMap<>();
-        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationDeployment.getIntegrationId().get()));
-        labels.put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, String.valueOf(integrationDeployment.getVersion()));
-
-        if (!openShiftService.exists(integrationDeployment.getSpec().getName()) || !openShiftService.isScaled(integrationDeployment.getSpec().getName(), 1, labels)) {
-            return IntegrationDeploymentState.Unpublished;
-        } else {
-            return IntegrationDeploymentState.Published;
-        }
-    }
+    protected abstract IntegrationDeploymentState determineState(IntegrationDeployment integrationDeployment);
 
     /**
      * Re-conciliates the state of the deployment between the database and Openshift.
@@ -303,7 +294,7 @@ public class IntegrationController implements BackendController {
         if (actualState == IntegrationDeploymentState.Unpublished && actualState != integrationDeployment.getCurrentState()) {
             return integrationDeployment.unpublished();
         } else {
-          return integrationDeployment.withCurrentState(actualState);
+            return integrationDeployment.withCurrentState(actualState);
         }
     }
 }

@@ -15,25 +15,6 @@
  */
 package io.syndesis.server.controller.integration.online;
 
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
-import io.syndesis.common.util.Labels;
-import io.syndesis.common.util.SyndesisServerException;
-import io.syndesis.integration.api.IntegrationProjectGenerator;
-import io.syndesis.server.controller.StateChangeHandler;
-import io.syndesis.server.controller.StateUpdate;
-import io.syndesis.server.controller.integration.BaseHandler;
-import io.syndesis.server.controller.integration.IntegrationPublishValidator;
-import io.syndesis.server.controller.integration.online.customizer.DeploymentDataCustomizer;
-import io.syndesis.server.dao.IntegrationDao;
-import io.syndesis.server.dao.IntegrationDeploymentDao;
-import io.syndesis.server.openshift.DeploymentData;
-import io.syndesis.server.openshift.OpenShiftService;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -44,10 +25,28 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.util.Labels;
+import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
+import io.syndesis.server.controller.StateChangeHandler;
+import io.syndesis.server.controller.StateUpdate;
+import io.syndesis.server.controller.integration.IntegrationPublishValidator;
+import io.syndesis.server.controller.integration.online.customizer.DeploymentDataCustomizer;
+import io.syndesis.server.dao.IntegrationDao;
+import io.syndesis.server.dao.IntegrationDeploymentDao;
+import io.syndesis.server.openshift.DeploymentData;
+import io.syndesis.server.openshift.OpenShiftService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
+
 @Qualifier("s2i")
 @Component()
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "s2i", matchIfMissing = true)
-public class PublishHandler extends BaseHandler implements StateChangeHandler {
+public class PublishHandler extends BaseOnlineHandler implements StateChangeHandler {
 
     private final IntegrationProjectGenerator projectGenerator;
     private final List<DeploymentDataCustomizer> customizers;
