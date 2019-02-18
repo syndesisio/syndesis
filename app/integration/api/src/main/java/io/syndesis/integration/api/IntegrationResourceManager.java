@@ -28,6 +28,7 @@ import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.WithDependencies;
 import io.syndesis.common.model.Dependency.Type;
 import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.ConnectionBase;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.integration.Integration;
@@ -119,14 +120,11 @@ public interface IntegrationResourceManager {
             dependencies.addAll(lookedUpConnectorDependencies);
 
             // Custom Icon
-            if (step.getConnection().isPresent() &&
-                step.getConnection().get().getConnector().isPresent() &&
-                step.getConnection().get().getConnector().get().getIcon() != null) {
-                String iconId = step.getConnection().get().getConnector().get().getIcon();
-                if (iconId.startsWith("db:")) {
-                    dependencies.add(Dependency.from(Type.ICON, iconId));
-                }
-            }
+            step.getConnection().
+                flatMap(ConnectionBase::getConnector).
+                flatMap(ctr -> Optional.ofNullable(ctr.getIcon())).
+                filter(icon -> icon.startsWith("db:")).
+                ifPresent(icon -> dependencies.add(Dependency.from(Type.ICON, icon)));
 
             // Connector extension
             Stream.concat(connectorDependencies.stream(), lookedUpConnectorDependencies.stream())
