@@ -278,8 +278,10 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     );
     // The first step could be this datamapper step itself if it's not the first visit,
     // as DataShape is added by the following event
-    const targetPair =
-      step.id === subsequents[0].step.id ? subsequents[1] : subsequents[0];
+    let targetPair = subsequents[0];
+    if (targetPair.step.id === step.id) {
+      targetPair = subsequents[1];
+    }
     if (!targetPair) {
       this.cfg.errorService.error(
         'No target data type was found. Data Mapper step can only be added before data type aware step.',
