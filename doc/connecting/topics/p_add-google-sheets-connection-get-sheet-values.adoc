@@ -40,7 +40,7 @@ To obtain a spreadsheet ID, display the spreadsheet in a browser.
 The ID is the part of the URL between `d/` and `/edit`. 
 
 .. In the *Range* field, enter Google A1 notation that identifies 
-the data that you want to obtain. 
+the data that you want to obtain. The default is *A:A*.
 +
 For example, suppose that you want all data from a spreadsheet that
 has one sheet with 4 columns. Specify `A:D`. Or, to obtain data from

@@ -37,7 +37,7 @@ access the spreadsheet that you want to append data to in this connection.
 .. In the *Range* field, use Google A1 notation to specify the spreadsheet
 range that you want to append data to. Specify the start and end coordinates, 
 for example, `A3:D3` appends data to the first sheet, after the third
-row for 4 columns. The default is `A`, which appends data to the first
+row for 4 columns. The default is `A:A`, which appends data to the first
 column in the first sheet in the spreadsheet. 
 +
 The connection never overwrites data. The connection starts appending

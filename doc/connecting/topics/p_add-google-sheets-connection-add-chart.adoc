@@ -70,11 +70,14 @@ property that contains the required value, then create a source property
 in the data mapper by clicking the + sign that is to the right of the 
 *Properties* folder. In the *Create Property* dialog, give the property
 a name that makes it easy to map to the correct target field, for example, 
-specify *`overlayPosition`* as the property name. 
-Specify the value that you want the connection to use to create the 
-chart. The chart's overlay position field requires A1 notation so you would
-specify something like `D4` as the value of the *overlayPosition* source
-property. Save the new property.
+specify *`overlayPosition`* as the property name. For the property value,
+specify the value that 
+you want the connection to use to create the chart. The chart’s overlay 
+position field requires A1 notation that identifies a cell. That is, 
+it specifies a start position but an end position specification is not 
+required, and it is ignored if it is present. For example, 
+specify something like `D4` as the value of the *overlayPosition* 
+source property. Save the new property.
 +
 When you configured the *Add charts* action, you might have specified
 a value for the spreadsheet ID, the chart title, and/or the chart subtitle. 
@@ -83,11 +86,14 @@ If you did, then do not map a value to that field.
 . To add a chart to a sheet, map source properties or fields to 
 target fields as follows: 
 +
-.. Set the location of the chart by mapping an A1 notation value 
-to the *overlayPosition* target field. The mapped
-value identifies the cell where Google Sheets places the chart. This cell 
-is the upper left corner of the chart display. The default is that
-Google Sheets creates a new sheet and places the chart in A1. 
+.. Set the location of the chart by mapping an A1 notation value that 
+identifies a cell to the *overlayPosition* target field. An end position 
+is not required and it is ignored if present. The mapped value identifies 
+the cell where Google Sheets places the chart. This cell is the upper 
+left corner of the chart display. If you do not map a value to 
+the *overlayPosition* field, the default behavior is that Google Sheets 
+creates a new sheet and places the chart in A1.
+ 
 .. Map a source *spreadsheetId* field to the target *spreadsheetId* field. 
 The connection adds the chart to this spreadsheet. 
 .. Set a chart title by mapping to the target *title* field. The connection inserts

@@ -38,7 +38,7 @@ cells that you want to update. Specify the start and end coordinates,
 for example, `A1:D4` updates the first 4 columns in the first 4 rows in
 the first sheet in the spreadsheet. 
 +
-The default is `A`, which updates the first column in the first sheet 
+The default is `A:A`, which updates the first column in the first sheet 
 in the spreadsheet. 
 
 .. In the *Major Dimension* field, accept *Rows*, which is the default, or

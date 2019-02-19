@@ -87,12 +87,18 @@ first sheet in the spreadsheet.
 
 .. Set the source data range for generating the pivot table 
 by mapping an A1 notation value to the target *sourceRange* field. 
+For example, *A2:D5*. 
 .. Set the value layout to be used on the pivot table by mapping to the
 target *valueLayout* field. The value must be `VERTICAL` or `HORIZONTAL`, which
 is the default. `HORIZONTAL` specifies that values are laid out as columns. 
 .. Set the top left cell of the pivot table by mapping an A1 notation
-cell coordinate to the target *start* field. The default is that the 
-pivot table is placed immediately below the source data in the same sheet. 
+cell coordinate to the target *start* field. 
+When the connection adds the pivot table to the sheet that contains 
+the source data, if you do not map a value to the *start* field, 
+the default is that the top left cell of the pivot table is the cell 
+that is in the first row of the source data range and in the first 
+empty column after the source data range. When the source data is 
+in one sheet and the pivot table will be in another sheet, the default is *A1*. 
 
 .. To add a value group, expand *valueGroups* 
 in the target panel, and map values to the 

@@ -20,8 +20,8 @@ expected to change in a future release.
 
 .Prerequisites
 * A Google Calendar connection is available and this connection
-is authorized to access the Google calendar that has the 
-event that you want to get.
+is authorized to access the Google calendar that has the event that
+that you want to get.
 
 * You are creating or editing an integration and {prodname} is prompting you 
 to select the connection that you want to add
