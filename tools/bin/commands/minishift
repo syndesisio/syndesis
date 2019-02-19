@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEFAULT_OPENSHIFT_VERSION="v3.10.0"
+DEFAULT_OPENSHIFT_VERSION="v3.11.0"
 DEFAULT_CPUS="2"
 DEFAULT_DISK_SIZE="20GB"
 DEFAULT_RAM="4912"
@@ -14,7 +14,7 @@ minishift::usage() {
     --install                 Install templates to a running Minishift.
 -p  --project                 Install into this project. Delete this project if it already exists.
                               By default, install into the current project (without deleting)
--c  --context                 Install into this context. Default is 'minishift'
+    --profile <profile>       Use the given minishift profile
     --reset                   Reset and initialize the minishift installation by
                               'minishift delete && minishift start'.
     --full-reset              Full reset and initialie by
@@ -54,8 +54,15 @@ minishift::run() {
     which minishift &>/dev/null
     if [ $? -ne 0 ]; then
         echo "ERROR: No 'minishift' found in path."
-        echo "Please insall Minishift from https://github.com/MiniShift/minishift"
+        echo "Please install Minishift from https://github.com/MiniShift/minishift"
         exit 1
+    fi
+
+    local profile=$(readopt --profile)
+    if [ -n "${profile}" ]; then
+        # Switch to profile
+        echo "Using profile $profile"
+        minishift profile set $profile
     fi
 
     if [ $(hasflag --full-reset) ] || [ $(hasflag --reset) ]; then
@@ -73,23 +80,30 @@ minishift::run() {
 
     if [ $(hasflag --install) ]; then
 
-        local context=$(readopt --context -c)
-        if [ -z "${context}" ]; then
-            #recreate_context $context
-            context=$(minishift profile list |grep '\(Active\)'|awk '{print $2}')
-            context=${context:-minishift}
+        # Switch to the proper context
+        local profile=$(readopt --profile)
+        if [ -n "${profile}" ]; then
+          # Switch to context
+          echo "Using context/profile $context"
+          oc config use-context $context
         fi
 
-        # Switch to minishift to be safe when deleting projects
+        # Pick the proper project
         local original_project="$(oc project -q)"
-        oc config use-context $context
-
         local project=$(readopt --project -p)
         if [ -n "${project}" ]; then
             recreate_project $project "$(hasflag --yes -y)"
         else
             local project="$original_project"
         fi
+
+        # Adapt namespace of profile to the selected
+        # project if a profile is used
+        if [ -n "$profile" ]; then
+            oc config set-context "$profile" --namespace="$project"
+        fi
+
+        echo "Switching to project \"$project\""
         oc project $project
 
         # Login as admin to install CRDs
@@ -124,6 +138,8 @@ minishift::run() {
         fi
 
         # Relogin with original user
+        echo "Switching to project \"$project\""
+        oc project $project >/dev/null 2>&1
         $revert_login
 
         if [ $(hasflag --operator-only) ]; then
@@ -156,13 +172,14 @@ login_as_admin() {
     local token=$(extract_current_token)
     local project=$(oc project -q)
 
+    # Login in as admin
     oc login -u system:admin >/dev/null 2>&1
-    oc project "$project" >/dev/null 2>&1
 
+    # Return the command to use to revert to the initial user
     if [ -n "${token}" ]; then
-        echo "oc login -u ${user} -p $token && oc project $project"
+        echo "oc login -u ${user} -p $token"
     else
-        echo "oc login -u ${user} && oc project $project"
+        echo "oc login -u ${user}"
     fi
 }
 
