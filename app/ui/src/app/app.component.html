@@ -121,6 +121,7 @@
                     class="pf-c-dropdown__menu-item">{{ 'contactus' | synI18n }}
                   </a>
                 </li>
+                <li class="pf-c-dropdown__separator pf-m-mobile" role="separator"></li>
                 <li class="pf-m-mobile">
                   <a
                     (click)="logout()"
@@ -144,7 +145,7 @@
                 {{ ( user$ | async)?.username }}
               </button>
               <ul
-                class="pf-c-dropdown__menu"
+                class="pf-c-dropdown__menu pf-m-align-right"
                 aria-labelledby="userMenuDropdownButton"
                 *ngIf="userMenuExpanded">
                 <li>

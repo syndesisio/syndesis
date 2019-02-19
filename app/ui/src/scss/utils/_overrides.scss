@@ -73,6 +73,10 @@ body.cards-pf {
   margin-left: 290px;
 }
 
+.nav-pf-vertical .list-group-item > a {
+  padding-left: 32px;
+}
+
 @media screen and (max-width: 767px) {
   .nav-pf-vertical {
     display: none;
@@ -81,6 +85,8 @@ body.cards-pf {
       display: block;
 
       .list-group-item > a {
+        padding-left: 20px;
+
         .list-group-item-value {
           display: block;
         }
