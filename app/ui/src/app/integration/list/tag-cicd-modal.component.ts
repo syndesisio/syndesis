@@ -105,8 +105,14 @@ export class TagCICDModalComponent implements OnInit, OnDestroy {
     environment.editing = true;
   }
 
+  cancelRename(environment: EnvironmentListItem) {
+    environment.name = environment.oldName;
+    environment.editing = false;
+  }
+
   rename(environment: EnvironmentListItem) {
-    if (!environment.oldName) {
+    if (!environment.oldName || environment.oldName === environment.name) {
+      // TODO some kind of error?
       return;
     }
     const sub = this.integrationSupportService
