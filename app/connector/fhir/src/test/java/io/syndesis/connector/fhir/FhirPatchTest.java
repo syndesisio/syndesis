@@ -15,50 +15,40 @@
  */
 package io.syndesis.connector.fhir;
 
+import ca.uhn.fhir.rest.api.MethodOutcome;
 import io.syndesis.common.model.integration.Step;
-import org.assertj.core.api.Assertions;
+import org.hl7.fhir.dstu3.model.HumanName;
+import org.hl7.fhir.dstu3.model.OperationOutcome;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okXml;
+import static com.github.tomakehurst.wiremock.client.WireMock.patch;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
-public class FhirReadTest extends FhirTestBase {
+public class FhirPatchTest extends FhirTestBase {
 
     @Override
     protected List<Step> createSteps() {
         return Arrays.asList(newSimpleEndpointStep(
             "direct",
             builder -> builder.putConfiguredProperty("name", "start")),
-            newFhirEndpointStep("io.syndesis:fhir-read-connector", builder -> {
+            newFhirEndpointStep("io.syndesis:fhir-patch-connector", builder -> {
                 builder.putConfiguredProperty("resourceType", "Patient");
-                builder.putConfiguredProperty("id", "1234");
+                builder.putConfiguredProperty("id", "1");
             }));
     }
 
     @Test
-    public void readWithIdProvidedAsParameterTest() {
-        stubFhirRequest(get(urlEqualTo("/Patient/1234")).willReturn(okXml(toXml(new Patient().setId("1234")))));
+    public void patchTest() {
+        stubFhirRequest(patch(urlEqualTo("/Patient/1")).willReturn(okXml(toXml(new OperationOutcome()))));
 
-        String patient = template.requestBody("direct:start", "", String.class);
-
-        Assertions.assertThat(patient).contains("<id value=\"1234\"/>");
-    }
-
-    @Test
-    public void readWithIdProvidedInBodyTest() {
-        stubFhirRequest(get(urlEqualTo("/Patient/4321")).willReturn(okXml(toXml(new Patient().setId("4321")))));
-
-        FhirResourceId id = new FhirResourceId();
-        id.setId("4321");
-
-        String patient = template.requestBody("direct:start", id, String.class);
-
-        Assertions.assertThat(patient).contains("<id value=\"4321\"/>");
+        template.requestBody("direct:start",
+            "[{\"op\":\"replace\", \"path\":\"active\", \"value\":true}]", MethodOutcome.class);
     }
 
 

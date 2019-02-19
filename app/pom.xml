@@ -1986,6 +1986,12 @@
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-xml-model</artifactId>
         <version>${atlasmap.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>

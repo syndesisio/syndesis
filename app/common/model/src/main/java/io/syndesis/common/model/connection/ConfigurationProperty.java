@@ -100,8 +100,6 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
     String getPlaceholder();
 
-    Boolean getMultiple();
-
     Boolean getRaw();
 
     List<PropertyRelation> getRelation();
@@ -111,6 +109,8 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
     Boolean getSecret();
 
     String getType();
+
+    Boolean getMultiple();
 
     default boolean raw() {
         final Boolean value = getRaw();

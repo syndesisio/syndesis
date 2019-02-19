@@ -34,6 +34,8 @@ import org.junit.Rule;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -116,6 +118,14 @@ public abstract class FhirTestBase extends ConnectorTestSupport {
     protected String toXml(IBaseResource object) {
         String result = fhirContext.newXmlParser().encodeResourceToString(object);
         return result;
+    }
+
+    protected List<String> toXmls(IBaseResource... objects) {
+        List<String> results = new ArrayList<>();
+        for (IBaseResource object: objects) {
+            results.add(toXml(object));
+        }
+        return results;
     }
 
     public StubMapping stubFhirRequest(MappingBuilder mappingBuilder) {

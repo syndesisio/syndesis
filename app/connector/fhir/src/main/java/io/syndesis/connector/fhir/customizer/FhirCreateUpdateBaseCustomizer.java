@@ -19,7 +19,6 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.component.fhir.internal.FhirApiCollection;
 import org.apache.camel.util.component.ApiMethod;
 
 import java.util.Map;
@@ -28,7 +27,7 @@ public abstract class FhirCreateUpdateBaseCustomizer implements ComponentProxyCu
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        options.put("apiName", FhirApiCollection.getCollection().getApiName(getApiMethodClass()).getName());
+        options.put("apiName", FhirCustomizerHelper.getFhirApiName(getApiMethodClass()));
         options.put("methodName", "resource");
 
         component.setBeforeProducer(this::beforeProducer);
