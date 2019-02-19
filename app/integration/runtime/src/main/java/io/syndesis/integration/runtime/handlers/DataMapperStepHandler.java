@@ -74,14 +74,18 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
      * @return
      */
     private void addJsonTypeSourceProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
-        List<String> jsonTypeSourceIds = dataSources.stream()
-                                                    .filter(s -> ATLASMAP_JSON_DATA_SOURCE.equals(s.get("jsonType")) && "SOURCE".equals(s.get("dataSourceType")))
-                                                    .filter(s -> ObjectHelper.isNotEmpty(s.get("id")))
-                                                    .map(s -> s.get("id").toString())
-                                                    .collect(Collectors.toList());
+        List<Map<String, Object>> sourceDocuments = dataSources.stream()
+                                            .filter(s -> "SOURCE".equals(s.get("dataSourceType")))
+                                            .collect(Collectors.toList());
+
+        List<String> jsonTypeSourceIds = sourceDocuments.stream()
+                                            .filter(s -> ATLASMAP_JSON_DATA_SOURCE.equals(s.get("jsonType")))
+                                            .filter(s -> ObjectHelper.isNotEmpty(s.get("id")))
+                                            .map(s -> s.get("id").toString())
+                                            .collect(Collectors.toList());
 
         if (ObjectHelper.isNotEmpty(jsonTypeSourceIds)) {
-            route.process(new JsonTypeSourceProcessor(jsonTypeSourceIds));
+            route.process(new JsonTypeSourceProcessor(jsonTypeSourceIds, sourceDocuments.size()));
         }
     }
 
@@ -126,14 +130,22 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
      * Json array String representation. See {@link OutMessageCaptureProcessor}
      */
     static class JsonTypeSourceProcessor implements Processor {
+        final int overallSourceDocCount;
         final List<String> jsonTypeSourceIds;
 
-        JsonTypeSourceProcessor(List<String> jsonTypeSourceIds) {
+        JsonTypeSourceProcessor(List<String> jsonTypeSourceIds, int overallSourceDocCount) {
             this.jsonTypeSourceIds = jsonTypeSourceIds;
+            this.overallSourceDocCount = overallSourceDocCount;
         }
 
         @Override
         public void process(Exchange exchange) throws Exception {
+            // When only on single source document is provided Atlasmap will always use the current exchange message as source document.
+            if (overallSourceDocCount == 1) {
+                Message message = exchange.hasOut() ? exchange.getOut() : exchange.getIn();
+                convertMessageJsonTypeBody(message);
+            }
+
             for (String sourceId : jsonTypeSourceIds) {
                 Message message = OutMessageCaptureProcessor.getCapturedMessageMap(exchange).get(sourceId);
 
@@ -141,10 +153,18 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
                     message = exchange.hasOut() ? exchange.getOut() : exchange.getIn();
                 }
 
-                if (message != null && message.getBody() instanceof List) {
-                    List<?> jsonBeans = message.getBody(List.class);
-                    message.setBody("[" + jsonBeans.stream().map(Object::toString).collect(Collectors.joining(",")) + "]");
-                }
+                convertMessageJsonTypeBody(message);
+            }
+        }
+
+        /**
+         * Convert list typed message body to Json array String representation.
+         * @param message
+         */
+        private void convertMessageJsonTypeBody(Message message) {
+            if (message != null && message.getBody() instanceof List) {
+                List<?> jsonBeans = message.getBody(List.class);
+                message.setBody("[" + jsonBeans.stream().map(Object::toString).collect(Collectors.joining(",")) + "]");
             }
         }
     }
