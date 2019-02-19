@@ -5,6 +5,7 @@
       "connections": {},
       "customizations": {},
       "dashboard": {},
+      "data": {},
       "integrations": {}
     },
     "shared": {
@@ -36,7 +37,9 @@
       "Total": "Totale",
       "Unpublished": "Fermato",
       "Update": "Aggiornare",
-      "viewLogs": "Visualizza i registri"
+      "viewLogs": "Visualizza i registri",
+      "Virtualization": "Virtualization",
+      "Virtualizations": "Virtualizations"
     }
   }
 }

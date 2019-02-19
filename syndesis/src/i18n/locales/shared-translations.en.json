@@ -5,6 +5,7 @@
       "connections": {},
       "customizations": {},
       "dashboard": {},
+      "data": {},
       "integrations": {}
     },
     "shared": {
@@ -12,6 +13,8 @@
       "Connections": "Connections",
       "Connector": "Connector",
       "Customizations": "Customizations",
+      "DataVirtualization": "Data Virtualization",
+      "DataVirtualizations": "Data Virtualizations",
       "Delete": "Delete",
       "Description": "Description",
       "Details": "Details",

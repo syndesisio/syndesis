@@ -6,6 +6,8 @@ import customizationsEn from '../../modules/customizations/locales/customization
 import customizationsIt from '../../modules/customizations/locales/customizations-translations.it.json';
 import dashboardEn from '../../modules/dashboard/locales/dashboard-translations.en.json';
 import dashboardIt from '../../modules/dashboard/locales/dashboard-translations.it.json';
+import dataEn from '../../modules/data/locales/data-translations.en.json';
+import dataIt from '../../modules/data/locales/data-translations.it.json';
 import integrationsEn from '../../modules/integrations/locales/integrations-translations.en.json';
 import integrationsIt from '../../modules/integrations/locales/integrations-translations.it.json';
 import en from './shared-translations.en.json';
@@ -26,6 +28,10 @@ it.it.modules.customizations = customizationsIt;
 // dashboard
 en.en.modules.dashboard = dashboardEn;
 it.it.modules.dashboard = dashboardIt;
+
+// data
+en.en.modules.data = dataEn;
+it.it.modules.data = dataIt;
 
 // integrations
 en.en.modules.integrations = integrationsEn;

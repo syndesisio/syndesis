@@ -61,8 +61,10 @@ export class VirtListView extends React.Component<IVirtsListViewProps> {
   public render() {
     return (
       <>
-        <h2>{this.props.i18nTitle}</h2>
-        <h3>{this.props.i18nDescription}</h3>
+        <div className="container-fluid">
+          <h2>{this.props.i18nTitle}</h2>
+          <h3>{this.props.i18nDescription}</h3>
+        </div>
         <ListViewToolbar {...this.props}>
           <div className="form-group">
             <OverlayTrigger
@@ -70,7 +72,7 @@ export class VirtListView extends React.Component<IVirtsListViewProps> {
               placement="top"
             >
               <Button
-                psStyle="default"
+                psstyle="default"
                 to={this.props.i18nImport}
                 onClick={this.handleImport}
               >

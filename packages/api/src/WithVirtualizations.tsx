@@ -11,11 +11,7 @@ export function getVirtualizationsForDisplay(
 }
 
 export interface IVirtualizationsResponse {
-  readonly connectionsForDisplay: RestDataService[];
-  readonly connectionsWithToAction: RestDataService[];
-  readonly connectionsWithFromAction: RestDataService[];
   readonly items: RestDataService[];
-  readonly totalCount: number;
 }
 
 export interface IWithVirtualizationsProps {
@@ -33,20 +29,12 @@ export class WithVirtualizations extends React.Component<
   public render() {
     return (
       <DVFetch<IVirtualizationsResponse>
-        url={'/vdb-builder/v1/workspace/dataservices'}
+        url={'workspace/dataservices'}
         defaultValue={{
-          connectionsForDisplay: [],
-          connectionsWithFromAction: [],
-          connectionsWithToAction: [],
           items: [],
-          totalCount: 0,
         }}
       >
-        {({ read, response }) => {
-          if (this.props.disableUpdates) {
-            return this.props.children(response);
-          }
-        }}
+        {({ read, response }) => this.props.children(response)}
       </DVFetch>
     );
   }

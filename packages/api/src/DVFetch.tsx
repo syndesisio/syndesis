@@ -18,10 +18,12 @@ export class DVFetch<T> extends React.Component<IDVFetchProps<T>> {
 
     return (
       <ApiContext.Consumer>
-        {({ apiUri, headers }) => (
-          <Fetch baseUrl={apiUri} url={url} headers={headers} {...props} />
+        {({ apiUri, dvApiUri, headers }) => (
+          <Fetch baseUrl={dvApiUri} url={url} headers={headers} {...props} />
         )}
       </ApiContext.Consumer>
     );
   }
+
+  public parse() {}
 }
