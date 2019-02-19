@@ -70,11 +70,20 @@
                       </button>
                       <button
                         *ngIf="environment.editing"
-                        class="btn btn-primary"
+                        class="btn btn-primary form-control-pf-save"
                         type="button"
                         (click)="rename(environment)"
+                        [disabled]="environment.name === environment.oldName"
                       >
-                        {{ 'save' | synI18n }}
+                        <i class="glyphicon glyphicon-ok"></i>
+                      </button>
+                      <button
+                        *ngIf="environment.editing"
+                        class="btn btn-default form-control-pf-cancel"
+                        type="button"
+                        (click)="cancelRename(environment)"
+                      >
+                        <i class="glyphicon glyphicon-remove"></i>
                       </button>
                     </div>
                   </div>
