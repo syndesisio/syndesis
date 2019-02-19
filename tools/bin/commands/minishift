@@ -14,7 +14,6 @@ minishift::usage() {
     --install                 Install templates to a running Minishift.
 -p  --project                 Install into this project. Delete this project if it already exists.
                               By default, install into the current project (without deleting)
--c  --context                 Install into this context. Default is 'minishift'
     --profile <profile>       Use the given minishift profile
     --reset                   Reset and initialize the minishift installation by
                               'minishift delete && minishift start'.
@@ -81,25 +80,29 @@ minishift::run() {
 
     if [ $(hasflag --install) ]; then
 
-        local context=$(readopt --context -c)
-        if [ -n "${context}" ]; then
-          context="$(readopt --profile)"
-        fi
-        if [ -n "${context}" ]; then
+        # Switch to the proper context
+        local profile=$(readopt --profile)
+        if [ -n "${profile}" ]; then
           # Switch to context
-          echo "Using context $context"
+          echo "Using context/profile $context"
           oc config use-context $context
         fi
 
-        # Switch to minishift to be safe when deleting projects
+        # Pick the proper project
         local original_project="$(oc project -q)"
-
         local project=$(readopt --project -p)
         if [ -n "${project}" ]; then
             recreate_project $project "$(hasflag --yes -y)"
         else
             local project="$original_project"
         fi
+
+        # Adapt namespace of profile to the selected
+        # project if a profile is used
+        if [ -n "$profile" ]; then
+            oc config set-context "$profile" --namespace="$project"
+        fi
+
         echo "Switching to project \"$project\""
         oc project $project
 
@@ -135,9 +138,9 @@ minishift::run() {
         fi
 
         # Relogin with original user
-        $revert_login
         echo "Switching to project \"$project\""
         oc project $project >/dev/null 2>&1
+        $revert_login
 
         if [ $(hasflag --operator-only) ]; then
             echo "Deployed operator."
@@ -169,9 +172,10 @@ login_as_admin() {
     local token=$(extract_current_token)
     local project=$(oc project -q)
 
+    # Login in as admin
     oc login -u system:admin >/dev/null 2>&1
-    oc project "$project" >/dev/null 2>&1
 
+    # Return the command to use to revert to the initial user
     if [ -n "${token}" ]; then
         echo "oc login -u ${user} -p $token"
     else
