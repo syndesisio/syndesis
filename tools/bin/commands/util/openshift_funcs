@@ -90,7 +90,7 @@ install_syndesis_crd() {
         return
     fi
 
-    local crd_installed=$(oc get crd -o name | grep syndesises.syndesis.io)
+    local crd_installed=$(oc get crd -o name | grep syndeses.syndesis.io)
     if [ -z "$crd_installed" ]; then
         local result=$(create_openshift_resource "install/operator/deploy/syndesis-crd.yml")
         check_error $result
@@ -239,16 +239,17 @@ rules:
 - apiGroups:
   - syndesis.io
   resources:
-  - syndesises
-  - syndesises/finalizers
-  verbs: [ get, list, create, update, delete, deletecollection, watch ]
+  - syndeses
+  - syndeses/finalizers
+  verbs:
+  - "*"
 - apiGroups:
   - route.openshift.io
   resources:
   - routes/custom-host
-  verbs: [ get, list, create, update, delete, deletecollection, watch ]
+  verbs:
+  - "*"
 ---
-
 EOT
         if [ $? -ne 0 ]; then
             echo "ERROR: Can not install role 'syndesis-extra-permissions'. Are you running as cluster-admin ?"
