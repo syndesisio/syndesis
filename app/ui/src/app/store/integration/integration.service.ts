@@ -6,7 +6,7 @@ import {
   Integrations,
   IntegrationStatusDetail,
   IntegrationSupportService,
-  IntegrationType
+  IntegrationType,
 } from '@syndesis/ui/platform';
 import { forkJoin, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -16,19 +16,22 @@ import { ConfigService } from '@syndesis/ui/config.service';
 
 function getFlowsCount(integration: Integration) {
   return integration.type === IntegrationType.ApiProvider
-    ? integration.flows.filter(flow => flow.metadata.excerpt !== '501 Not Implemented').length
+    ? integration.flows.filter(
+        flow => flow.metadata.excerpt !== '501 Not Implemented'
+      ).length
     : integration.flows.length;
 }
 
 function transform(integration: Integration): Integration {
   if (integration.flows.length > 1) {
-    if (integration.tags.indexOf('api-provider') >= 0) {
-      integration.type = IntegrationType.ApiProvider;
-    } else {
-      integration.type = IntegrationType.MultiFlow;
-    }
+    // Multiflow isn't a thing we support but may as well flag it
+    integration.type = IntegrationType.MultiFlow;
   } else {
     integration.type = IntegrationType.SingleFlow;
+  }
+  // We can override this here as you can have a single-operation API
+  if (integration.tags.indexOf('api-provider') >= 0) {
+    integration.type = IntegrationType.ApiProvider;
   }
   integration.getFlowsCount = getFlowsCount.bind(null, integration);
   return integration;
@@ -36,22 +39,30 @@ function transform(integration: Integration): Integration {
 
 @Injectable()
 export class IntegrationService extends RESTService<Integration, Integrations> {
-  constructor(apiHttpService: ApiHttpService,
-              configService: ConfigService,
-              protected integrationSupportService: IntegrationSupportService) {
-    super(apiHttpService, 'integrations', 'integration', configService, transform);
+  constructor(
+    apiHttpService: ApiHttpService,
+    configService: ConfigService,
+    protected integrationSupportService: IntegrationSupportService
+  ) {
+    super(
+      apiHttpService,
+      'integrations',
+      'integration',
+      configService,
+      transform
+    );
   }
 
   get(id: string): Observable<Integration> {
     return forkJoin<Integration, IntegrationStatusDetail>([
       super.get(id) as Observable<Integration>,
       this.integrationSupportService.fetchDetailedStatus(id).pipe(
-        catchError( err => {
+        catchError(err => {
           // Fall back to showing the coarse status
           log.warn('error fetching detailed status: ', err);
           return undefined;
         })
-      ) as Observable<IntegrationStatusDetail>
+      ) as Observable<IntegrationStatusDetail>,
     ]).pipe(
       map(results => {
         const integration = results[0];
@@ -69,18 +80,20 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
     return forkJoin<Integrations, IntegrationStatusDetail[]>([
       super.list(),
       this.integrationSupportService.fetchDetailedStatuses().pipe(
-        catchError( err => {
+        catchError(err => {
           // Fall back to showing the coarse status
           log.warn('error fetching detailed statuses: ', err);
           return [];
         })
-      )
+      ),
     ]).pipe(
-      map( results => {
-        const integrations = <Integrations> results[0];
-        const statuses = <IntegrationStatusDetail[]> results [1];
-        statuses.forEach( status => {
-          const integration = integrations.find(i => i.id === status.integrationId);
+      map(results => {
+        const integrations = <Integrations>results[0];
+        const statuses = <IntegrationStatusDetail[]>results[1];
+        statuses.forEach(status => {
+          const integration = integrations.find(
+            i => i.id === status.integrationId
+          );
           if (integration) {
             integration.statusDetail = status;
           }
@@ -104,7 +117,7 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
   fetchSpecification(id: string): Observable<string> {
     return this.apiHttpService
       .setEndpointUrl(`/${this.endpoint}/${id}/specification`)
-      .get({ responseType: 'text'});
+      .get({ responseType: 'text' });
   }
 
   updateSpecification(id: string, specification: string): Observable<void> {
@@ -113,7 +126,7 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
 
     return this.apiHttpService
       .setEndpointUrl(`/${this.endpoint}/${id}/specification`)
-      .upload(null, payload, { method: 'PUT'});
+      .upload(null, payload, { method: 'PUT' });
   }
 
   // design time function
@@ -124,11 +137,10 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
       detailedState: {
         value: 'ASSEMBLING',
         currentStep: 2,
-        totalSteps: 4
+        totalSteps: 4,
       } as DetailedState,
       logsUrl: 'https://www.google.com',
     } as IntegrationStatusDetail;
     return integration;
   }
-
 }
