@@ -140,7 +140,7 @@ install_syndesis_crd() {
         return
     fi
 
-    local crd_installed=$(oc get crd -o name | grep syndesises.syndesis.io)
+    local crd_installed=$(oc get crd -o name | grep syndeses.syndesis.io)
     if [ -z "$crd_installed" ]; then
         local result=$(create_openshift_resource "install/operator/deploy/syndesis-crd.yml")
         check_error $result
@@ -184,8 +184,8 @@ rules:
 - apiGroups:
   - syndesis.io
   resources:
-  - syndesises
-  - syndesises/finalizers
+  - syndeses
+  - syndeses/finalizers
   verbs: [ get, list, create, update, delete, deletecollection, watch ]
 - apiGroups:
   - route.openshift.io

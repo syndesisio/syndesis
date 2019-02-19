@@ -24,7 +24,7 @@ spec:
     url: https://github.com/syndesisio/syndesis
   customresourcedefinitions:
     owned:
-    - name: syndesises.syndesis.io
+    - name: syndeses.syndesis.io
       version: v1alpha1
       displayName: Syndesis
       description: Camel in the cloud
@@ -72,8 +72,8 @@ spec:
         - apiGroups:
           - syndesis.io
           resources:
-          - syndesises
-          - syndesises/finalizers
+          - syndeses
+          - syndeses/finalizers
           verbs: [ get, list, create, update, delete, deletecollection, watch ]
         - apiGroups:
           - ""

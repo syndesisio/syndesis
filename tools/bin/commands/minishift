@@ -160,9 +160,9 @@ login_as_admin() {
     oc project "$project" >/dev/null 2>&1
 
     if [ -n "${token}" ]; then
-        echo "oc login -u ${user} -p $token"
+        echo "oc login -u ${user} -p $token && oc project $project"
     else
-        echo "oc login -u ${user}"
+        echo "oc login -u ${user} && oc project $project"
     fi
 }
 
