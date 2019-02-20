@@ -19,8 +19,10 @@
               >
               </syndesis-editable-text>
             </div>
-            <div class="form-group">
+            <div class="form-group" *ngIf="showOperationsButton">
+              <label for="operationsDropDown">Operations</label>&nbsp;
               <div
+                id="operationsDropDown"
                 dropdown
                 class="dropdown btn-group"
                 placement="bottom"
@@ -38,30 +40,26 @@
                   class="dropdown-menu operations-menu"
                   role="menu"
                 >
-                  <ng-container
-                    *ngIf="showOperationsButton && !flowPageService.showDone"
-                  >
-                    <li style="padding: 0 4px;">
-                      <button
-                        class="btn btn-default"
-                        style="width: 100%"
-                        [disabled]="
-                          flowPageService.saveInProgress ||
-                          flowPageService.publishInProgress
-                        "
-                        (click)="
-                          save([
-                            '/integrations',
-                            currentFlowService.integration?.id,
-                            'operations'
-                          ])
-                        "
-                      >
-                        Go to Operation List
-                      </button>
-                    </li>
-                    <li role="separator" class="divider"></li>
-                  </ng-container>
+                  <li style="padding: 0 4px;">
+                    <button
+                      class="btn btn-default"
+                      style="width: 100%"
+                      [disabled]="
+                        flowPageService.saveInProgress ||
+                        flowPageService.publishInProgress
+                      "
+                      (click)="
+                        save([
+                          '/integrations',
+                          currentFlowService.integration?.id,
+                          'operations'
+                        ])
+                      "
+                    >
+                      Go to Operation List
+                    </button>
+                  </li>
+                  <li role="separator" class="divider"></li>
                   <ng-container *ngFor="let flow of flows">
                     <li *ngIf="flow.id !== currentFlow.id">
                       <a
