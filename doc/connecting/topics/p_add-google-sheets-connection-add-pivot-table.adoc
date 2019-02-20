@@ -7,7 +7,7 @@
 In the middle of an integration, or to finish an integration, 
 you can add a pivot table to a Google Sheets spreadsheet.
 A pivot table lets you aggregate, sort, or apply a function to 
-spreadsheet data and display the results. 
+spreadsheet data and display the results in the same spreadsheet. 
 To add a pivot table, add a Google Sheets connection to the middle of an integration
 or as the integration's finish connection. Then add a data mapping
 step before the connection. In the data mapping step, you set 
@@ -74,17 +74,19 @@ or `VERTICAL` so you might specify `VERTICAL` as the value of the
 . In the data mapper, configure a new pivot table as follows: 
 
 .. Map a source *spreadsheetId* field to the target *spreadsheetId* field. 
-The connection adds the pivot table to this spreadsheet. 
-
+The connection uses source data in this spreadsheet to add the pivot 
+table to a sheet in this same spreadsheet. The source data and the pivot 
+table can be in two different sheets in the same spreadsheet but they
+cannot be in two different spreadsheets. 
 .. Identify the sheet to add the pivot table to by mapping an integer to the 
 *sheetId* field. This value is the index of the 
 sheet to add the pivot table to. The default is `0`, which adds the pivot
 table to the first sheet in the spreadsheet.  
 .. Identify the sheet that provides the data for generating the pivot table by mapping 
 an integer to the target *sourceSheetId* field. This value is the index 
-of the sheet that provides the data. The default is `0`, which is the 
-first sheet in the spreadsheet. 
-
+of the sheet that provides the data.  If you do not map a value to *sourceSheetId*, 
+the connection uses the *sheetId* value, or `0` if no value is mapped
+to *sheetId*. 
 .. Set the source data range for generating the pivot table 
 by mapping an A1 notation value to the target *sourceRange* field. 
 For example, *A2:D5*. 
