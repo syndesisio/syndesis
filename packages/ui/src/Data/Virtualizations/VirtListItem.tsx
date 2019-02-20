@@ -136,7 +136,7 @@ export class VirtListItem extends React.Component<IVirtListItemProps> {
         }
         hideCloseIcon={true}
         leftContent={
-          this.props.icon ? <ListViewIcon name={'database'} /> : null
+          this.props.icon ? this.props.icon : <ListViewIcon name={'database'} />
         }
         stacked={true}
       />

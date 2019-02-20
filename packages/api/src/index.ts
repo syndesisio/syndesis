@@ -2,7 +2,6 @@ export * from './ApiContext';
 export * from './SyndesisFetch';
 export * from './callFetch';
 export * from './DVFetch';
-export * from './callDVFetch';
 export * from './Fetch';
 export * from './ServerEventsContext';
 export * from './Stream';
