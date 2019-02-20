@@ -1,3 +1,4 @@
+import { Button, ListViewInfoItem, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationDetailHistoryListViewItemProps {
@@ -14,6 +15,18 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
   IIntegrationDetailHistoryListViewItemProps
 > {
   public render() {
-    return <div>IntegrationDetailHistoryListViewItem component.</div>;
+    return (
+      <ListViewItem
+        actions={<div className="form-group">Placeholder</div>}
+        additionalInfo={[
+          <ListViewInfoItem key={1}>Used by message</ListViewInfoItem>,
+        ]}
+        description={'Description'}
+        heading="Name"
+        hideCloseIcon={true}
+        leftContent={null}
+        stacked={false}
+      />
+    );
   }
 }
