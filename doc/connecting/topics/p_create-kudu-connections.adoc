@@ -5,12 +5,12 @@
 = Create a connection to an Apache Kudu data store
 
 In an integration, to obtain records from or add records to
-a Kudu data store, create a connection to the Kudu master host
+a Kudu table, create a connection to a Kudu master host
 and then add that connection to an integration.
 
 .Prerequisite
 
-* You must know the IP address for the Kudu master host that you want
+* You must know the IP address or the hostname for the Kudu master host that you want
 to connect to. 
 * You must know the port that Kudu is listening on. 
 
@@ -22,15 +22,15 @@ display any available connections.
 connectors.  
 . Click the *Apache Kudu* connector.
 . To configure the connection:
-.. In the *Address of Kudu master host* field, enter the IP address 
-of the Kudu master host.
+.. In the *Address of Kudu master host* field, enter the 
+hostname or the IP address of the Kudu master host.
 .. In the *Port to establish connection to* field, enter the
-port that Kudu is listening on. 
+port that Kudu is listening on. The default is `7051`. 
 
 . Click *Next*.
 . In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
-For example, you might enter `Kudu North.
+For example, you might enter `Kudu North`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. 
 . In the upper right, click *Create* to see that the connection you 

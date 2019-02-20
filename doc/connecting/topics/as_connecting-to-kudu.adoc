@@ -8,21 +8,18 @@
 
 Apache Kudu is a columnar storage manager developed for the Apache Hadoop platform. 
 A {prodname} integration can connect to a Kudu data store to obtain
-records, create a table, or add a record to a table. 
+records from a table or to add records to a table. 
 Details are in the following topics:
 
-* <<create-kudu-connections_{context}>>
-* <<add-kudu-connection-start_{context}>>
-* <<add-kudu-connection-add-table_{context}>>
-* <<add-kudu-connection-add-record_{context}>>
+* xref:create-kudu-connections_{context}[]
+* xref:add-kudu-connection-get-records_{context}[]
+* xref:add-kudu-connection-add-records_{context}[]
 
 include::p_create-kudu-connections.adoc[leveloffset=+1]
 
-include::p_add-kudu-connection-start.adoc[leveloffset=+1]
+include::p_add-kudu-connection-get-records.adoc[leveloffset=+1]
 
-include::p_add-kudu-connection-add-table.adoc[leveloffset=+1]
-
-include::p_add-kudu-connection-add-record.adoc[leveloffset=+1]
+include::p_add-kudu-connection-add-records.adoc[leveloffset=+1]
 
 
 :context: connectors
