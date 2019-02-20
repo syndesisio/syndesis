@@ -6,6 +6,10 @@
     "emptyStateInfoMessage": "There are no virtualizations available. Please click on the button below to import one.",
     "emptyStateTitle": "$t(virtualization.createDataVirtualization)",
     "virtualizationsPageDescription": "Syndesis creates and manages data virtualizations to expose as data source connections.",
-    "virtualizationsPageTitle": "$t(shared:DataVirtualizations)"
+    "virtualizationsPageTitle": "$t(shared:DataVirtualizations)",
+    "publishedDataVirtualization": "Published",
+    "draftDataVirtualizationTip": "The data virtualization is in Draft state",
+    "editDataVirtualizationTip": "Edit the data virtualization",
+    "publishedDataVirtualizationTip": "The data virtualization is in Published state"
   }
 }

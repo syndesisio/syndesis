@@ -1,4 +1,15 @@
 {
-  "i18nCreateDataVirt": "Creare la virtualizzazione dei dati",
-  "i18nCreateDataVirtTip": "Creare una nuova virtualizzazione dei dati"
+  "virtualization": {
+    "createDataVirtualization": "Create $t(shared:DataVirtualization)",
+    "createDataVirtualizationTip": "Create a data virtualization",
+    "importVirtualizationTip": "Import a data virtualization",
+    "emptyStateInfoMessage": "There are no virtualizations available. Please click on the button below to import one.",
+    "emptyStateTitle": "$t(virtualization.createDataVirtualization)",
+    "virtualizationsPageDescription": "Syndesis creates and manages data virtualizations to expose as data source connections.",
+    "virtualizationsPageTitle": "$t(shared:DataVirtualizations)",
+    "publishedDataVirtualization": "Published",
+    "draftDataVirtualizationTip": "The data virtualization is in Draft state",
+    "editDataVirtualizationTip": "Edit the data virtualization",
+    "publishedDataVirtualizationTip": "The data virtualization is in Published state"
+  }
 }

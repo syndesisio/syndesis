@@ -4,19 +4,8 @@ import { DVFetch } from './DVFetch';
 import { IFetchState } from './Fetch';
 import { IChangeEvent } from './WithServerEvents';
 
-export function getVirtualizationsForDisplay(
-  virtualizations: RestDataService[]
-) {
-  return virtualizations;
-}
-
-export interface IVirtualizationsResponse {
-  readonly items: RestDataService[];
-}
-
 export interface IWithVirtualizationsProps {
-  disableUpdates?: boolean;
-  children(props: IFetchState<IVirtualizationsResponse>): any;
+  children(props: IFetchState<RestDataService[]>): any;
 }
 
 export class WithVirtualizations extends React.Component<
@@ -28,11 +17,9 @@ export class WithVirtualizations extends React.Component<
 
   public render() {
     return (
-      <DVFetch<IVirtualizationsResponse>
+      <DVFetch<RestDataService[]>
         url={'workspace/dataservices'}
-        defaultValue={{
-          items: [],
-        }}
+        defaultValue={[]}
       >
         {({ read, response }) => this.props.children(response)}
       </DVFetch>
