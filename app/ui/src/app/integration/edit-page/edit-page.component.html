@@ -38,3 +38,13 @@
     </div>
   </ng-template>
 </syndesis-loading>
+
+<syndesis-modal
+  id="leave-editor-prompt"
+  title="{{ 'integrations.leave-editor-title' | synI18n }}"
+  message="{{
+    'integrations.leave-editor-message'
+      | synI18n: (currentFlowService.integration$ | async).name || ''
+  }}"
+>
+</syndesis-modal>

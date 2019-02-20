@@ -87,6 +87,8 @@
       "cicd": "CI/CD",
       "cicd-thing": "Mark {{0}} for continuous integration/continuous deployment",
       "edit-integration": "{{edit}} {{integrations.integration}}",
+      "leave-editor-message": "Are you sure you want to exit editing <strong>{{0}}</strong> integration?",
+      "leave-editor-title": "Unsaved Changes",
       "publish-thing": "{{integrations.publish}} {{0}}",
       "unpublish-thing": "{{integrations.unpublish}} {{0}}",
       "publish": "Start",

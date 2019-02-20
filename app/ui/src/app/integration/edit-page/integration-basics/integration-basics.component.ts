@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   CurrentFlowService,
@@ -14,7 +14,7 @@ import {
     './integration-basics.component.scss',
   ],
 })
-export class IntegrationBasicsComponent implements OnInit {
+export class IntegrationBasicsComponent implements OnInit, OnDestroy {
   constructor(
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
@@ -101,5 +101,10 @@ export class IntegrationBasicsComponent implements OnInit {
 
   ngOnInit() {
     this.flowPageService.initialize();
+    this.flowPageService.showCancel = false;
+  }
+
+  ngOnDestroy() {
+    this.flowPageService.showCancel = true;
   }
 }

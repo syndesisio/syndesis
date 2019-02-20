@@ -100,6 +100,7 @@ export class CurrentFlowService {
   currentFlow$ = new BehaviorSubject<Flow>(undefined);
   integration$ = new BehaviorSubject<Integration>(undefined);
   loaded$ = new BehaviorSubject<boolean>(false);
+  dirty$ = new BehaviorSubject<boolean>(false);
 
   public flowId?: string;
 
@@ -426,6 +427,7 @@ export class CurrentFlowService {
             position
           );
           executeEventAction(event.onSave);
+          this.dirty$.next(true);
           this.postUpdates();
         }
         break;
@@ -441,6 +443,7 @@ export class CurrentFlowService {
             position
           );
           executeEventAction(event.onSave);
+          this.dirty$.next(true);
           this.postUpdates();
         });
         break;
@@ -457,6 +460,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event.onSave);
+        this.dirty$.next(true);
         this.postUpdates();
         break;
       }
@@ -472,6 +476,7 @@ export class CurrentFlowService {
           position
         );
         this.postUpdates();
+        this.dirty$.next(true);
         executeEventAction(event.onSave);
         break;
       }
@@ -488,6 +493,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event.onSave);
+        this.dirty$.next(true);
         this.postUpdates();
         break;
       }
@@ -503,6 +509,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event.onSave);
+        this.dirty$.next(true);
         this.postUpdates();
         break;
       }
@@ -519,6 +526,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event['onSave']);
+        this.dirty$.next(true);
         this.postUpdates();
         break;
       }
@@ -532,6 +540,7 @@ export class CurrentFlowService {
           position
         );
         executeEventAction(event.onSave);
+        this.dirty$.next(true);
         this.postUpdates();
         break;
       }
@@ -541,6 +550,7 @@ export class CurrentFlowService {
           event.property,
           event.value
         );
+        this.dirty$.next(true);
         executeEventAction(event.onSave);
         this.postUpdates();
         break;
@@ -550,6 +560,7 @@ export class CurrentFlowService {
           this.getIntegrationClone()
         );
         const finishUp = (i: Integration, subscription: Subscription) => {
+          this.dirty$.next(false);
           executeEventAction(event.action, i);
           sub.unsubscribe();
         };
@@ -599,10 +610,16 @@ export class CurrentFlowService {
         // A split step needs the data shape of the previous thing with a data shape
         const prev = this.getPreviousStepWithDataShape(position);
         const subsequent = this.getSubsequentStepWithDataShape(position);
-        const subsequentDataShape = subsequent !== undefined ? subsequent.action.descriptor.inputDataShape : undefined;
+        const subsequentDataShape =
+          subsequent !== undefined
+            ? subsequent.action.descriptor.inputDataShape
+            : undefined;
         this.integrationSupportService
           .getStepDescriptor(step.stepKind, {
-            inputShape: step.stepKind === AGGREGATE ? subsequentDataShape : prev.action.descriptor.inputDataShape,
+            inputShape:
+              step.stepKind === AGGREGATE
+                ? subsequentDataShape
+                : prev.action.descriptor.inputDataShape,
             outputShape: prev.action.descriptor.outputDataShape,
           })
           .subscribe(

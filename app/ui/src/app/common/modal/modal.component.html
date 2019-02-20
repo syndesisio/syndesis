@@ -1,40 +1,40 @@
 <ng-template #template>
   <div class="modal-header">
-    <button type="button"
-            class="close"
-            aria-hidden="true"
-            (click)="cancel()">
+    <button type="button" class="close" aria-hidden="true" (click)="cancel()">
       <span class="pficon pficon-close"></span>
     </button>
-    <h4 class="modal-title">{{ title }}</h4>
+    <h4 class="modal-title" [innerHTML]="title"></h4>
   </div>
   <div class="modal-body">
-    <span *ngIf="type == 'delete'" aria-hidden="true" class="pficon pficon-error-circle-o"></span>
+    <span
+      *ngIf="type == 'delete'"
+      aria-hidden="true"
+      class="pficon pficon-error-circle-o"
+    ></span>
     <div>
-      <p *ngIf="lead" class="lead">{{ lead }}</p>
-      <p>{{ message }}</p>
-      <ng-template *ngIf="body"
-                   [ngTemplateOutlet]="body"
-                   [ngTemplateOutletContext]="{ modal: this }"></ng-template>
+      <p *ngIf="lead" class="lead" [innerHTML="lead"></p>
+      <p [innerHTML]="message"></p>
+      <ng-template
+        *ngIf="body"
+        [ngTemplateOutlet]="body"
+        [ngTemplateOutletContext]="{ modal: this }"
+      ></ng-template>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button"
-            class="btn btn-default"
-            (click)="cancel()">
+    <button type="button" class="btn btn-default" (click)="cancel()">
       Cancel
     </button>
 
-    <button *ngIf="type == 'delete'"
-            type="button"
-            class="btn btn-danger"
-            (click)="ok()">
-        {{ 'delete-modal-primary-text' | synI18n }}
+    <button
+      *ngIf="type == 'delete'"
+      type="button"
+      class="btn btn-danger"
+      (click)="ok()"
+    >
+      {{ 'delete-modal-primary-text' | synI18n }}
     </button>
-    <button *ngIf="!type"
-            type="button"
-            class="btn btn-primary"
-            (click)="ok()">
+    <button *ngIf="!type" type="button" class="btn btn-primary" (click)="ok()">
       {{ primaryText || 'OK' }}
     </button>
   </div>

@@ -17,6 +17,7 @@ export class FlowPageService {
   saveInProgress = false;
   publishInProgress = false;
   showDone = false;
+  showCancel = true;
 
   constructor(
     public currentFlowService: CurrentFlowService,

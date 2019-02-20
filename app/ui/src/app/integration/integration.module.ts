@@ -68,9 +68,9 @@ import { ApiConnectorGuard } from '@syndesis/ui/integration/api-provider/api-pro
 import { ApiProviderSpecificationEditorPage } from './api-provider/operations-page/specification/specification-editor-page.component';
 import { IntegrationResolverService } from './edit-page/integration-resolver.service';
 import { StepsResolverService } from './edit-page/connection-resolver.service';
-import {
-  ApiProviderOperationDescriptionComponent
-} from '@syndesis/ui/integration/api-provider/operations-page/integration-api-provider-operation-description-component';
+// tslint:disable-next-line:max-line-length
+import { ApiProviderOperationDescriptionComponent } from './api-provider/operations-page/integration-api-provider-operation-description-component';
+import { CanDeactivateGuard } from '@syndesis/ui/platform';
 
 const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
 const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
@@ -141,6 +141,7 @@ const routes: Routes = [
     resolve: {
       integration: IntegrationResolverService,
     },
+    canDeactivate: [CanDeactivateGuard],
   },
   {
     path: ':integrationId',
@@ -174,6 +175,7 @@ const routes: Routes = [
     resolve: {
       integration: IntegrationResolverService,
     },
+    canDeactivate: [CanDeactivateGuard],
   },
   {
     path: ':integrationId/:flowId/edit',
@@ -182,6 +184,7 @@ const routes: Routes = [
     resolve: {
       integration: IntegrationResolverService,
     },
+    canDeactivate: [CanDeactivateGuard],
   },
   {
     path: ':integrationId/specification',
