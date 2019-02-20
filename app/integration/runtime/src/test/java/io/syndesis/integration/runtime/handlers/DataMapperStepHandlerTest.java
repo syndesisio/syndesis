@@ -230,9 +230,19 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
     @Test
     public void testJsonTypeSourceProcessingOnExchange() throws Exception {
         Exchange exchange = new DefaultExchange(camelContext);
+        exchange.getIn().setBody(Arrays.asList("{\"name\": \"Bert\", \"age\": 31}", "{\"name\": \"Stuart\", \"age\": 30}"));
+
+        new DataMapperStepHandler.JsonTypeSourceProcessor(Collections.singletonList("m1"), 1).process(exchange);
+
+        assertThat(exchange.getIn().getBody(String.class)).isEqualTo("[{\"name\": \"Bert\", \"age\": 31},{\"name\": \"Stuart\", \"age\": 30}]");
+    }
+
+    @Test
+    public void testJsonTypeSourceProcessingOnExchangeMutipleSourceDocs() throws Exception {
+        Exchange exchange = new DefaultExchange(camelContext);
         exchange.getIn().setBody(Arrays.asList("{\"name\": \"Howard\", \"age\": 29}", "{\"name\": \"Sheldon\", \"age\": 30}"));
 
-        new DataMapperStepHandler.JsonTypeSourceProcessor(Collections.singletonList("m1")).process(exchange);
+        new DataMapperStepHandler.JsonTypeSourceProcessor(Collections.singletonList("m1"), 3).process(exchange);
 
         assertThat(exchange.getIn().getBody(String.class)).isEqualTo("[{\"name\": \"Howard\", \"age\": 29},{\"name\": \"Sheldon\", \"age\": 30}]");
     }
@@ -242,7 +252,7 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.getIn().setBody("{\"name\": \"Leonard\", \"age\": 30}");
 
-        new DataMapperStepHandler.JsonTypeSourceProcessor(Collections.singletonList("m1")).process(exchange);
+        new DataMapperStepHandler.JsonTypeSourceProcessor(Collections.singletonList("m1"), 1).process(exchange);
 
         assertThat(exchange.getIn().getBody(String.class)).isEqualTo("{\"name\": \"Leonard\", \"age\": 30}");
     }
@@ -262,7 +272,7 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
 
         exchange.setProperty(OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP, captured);
 
-        new DataMapperStepHandler.JsonTypeSourceProcessor(Arrays.asList("m1", "m2")).process(exchange);
+        new DataMapperStepHandler.JsonTypeSourceProcessor(Arrays.asList("m1", "m2"), 2).process(exchange);
 
         assertThat(captured.get("m1").getBody(String.class)).isEqualTo("[{\"name\": \"Howard\", \"age\": 29},{\"name\": \"Sheldon\", \"age\": 30}]");
         assertThat(captured.get("m2").getBody(String.class)).isEqualTo("{\"something\": \"else\"}");
@@ -279,7 +289,7 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
 
         exchange.setProperty(OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP, captured);
 
-        new DataMapperStepHandler.JsonTypeSourceProcessor(Arrays.asList("m1", "m2_missing", "m3_missing")).process(exchange);
+        new DataMapperStepHandler.JsonTypeSourceProcessor(Arrays.asList("m1", "m2_missing", "m3_missing"), 3).process(exchange);
 
         assertThat(captured.get("m1").getBody(String.class)).isEqualTo("[{\"name\": \"Amy\", \"age\": 29}]");
     }
