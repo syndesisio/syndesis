@@ -92,6 +92,12 @@ export class FlowViewStepComponent implements OnChanges {
     if (this.currentState !== 'save-or-add-step') {
       return false;
     }
+    if (
+      (this.currentFlowService.isApiProvider() && this.position === 0) ||
+      this.currentFlowService.atEnd(this.position)
+    ) {
+      return false;
+    }
     return true;
   }
 
@@ -328,10 +334,9 @@ export class FlowViewStepComponent implements OnChanges {
     this.previousStepShouldDefineDataShape = false;
     this.shouldAddDatamapper = false;
 
-    this.isUnclosedSplit = this.step.stepKind === SPLIT &&
-      this.currentFlowService.getNextAggregateStep(
-        this.position
-      ) === undefined;
+    this.isUnclosedSplit =
+      this.step.stepKind === SPLIT &&
+      this.currentFlowService.getNextAggregateStep(this.position) === undefined;
 
     if (!this.step || !this.step.action || !this.step.action.descriptor) {
       return;
