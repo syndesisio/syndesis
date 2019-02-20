@@ -1,3 +1,5 @@
+exclude: ui/\.yarn/releases/.*
+repos:
 - repo: git://github.com/pre-commit/pre-commit-hooks.git
   sha: v1.2.3
   hooks:
