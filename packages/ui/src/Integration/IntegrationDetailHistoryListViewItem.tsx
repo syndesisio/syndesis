@@ -1,4 +1,4 @@
-import { Button, ListViewInfoItem, ListViewItem } from 'patternfly-react';
+import { ListViewInfoItem, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationDetailHistoryListViewItemProps {
