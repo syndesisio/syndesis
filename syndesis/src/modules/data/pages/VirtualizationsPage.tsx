@@ -1,18 +1,18 @@
 import { WithVirtualizations } from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
+import {
+  IActiveFilter,
+  IFilterType,
+  ISortType,
+  VirtListItem,
+  VirtListSkeleton,
+  VirtListView,
+} from '@syndesis/ui';
+import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as H from 'history';
 import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
-import {
-  VirtListView,
-  VirtListSkeleton,
-  VirtListItem,
-  IActiveFilter,
-  IFilterType,
-  ISortType,
-} from '@syndesis/ui';
-import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import i18n from '../../../i18n';
 
 function getFilteredAndSortedVirts(
@@ -78,22 +78,27 @@ export default class VirtualizationsPage extends React.Component {
   }
 
   public handleDeleteVirtualization() {
+    // TODO: implement handleCreateVirtualization
     alert('Delete virtualization ');
   }
 
   public handleEditVirtualization() {
+    // TODO: implement handleEditVirtualization
     alert('Edit virtualization ');
   }
 
   public handleExportVirtualization() {
+    // TODO: implement handleExportVirtualization
     alert('Export virtualization ');
   }
 
   public handleUnpublishVirtualization() {
+    // TODO: implement handleUnpublishVirtualization
     alert('Unpublish virtualization ');
   }
 
   public handlePublishVirtualization() {
+    // TODO: implement handlePublishVirtualization
     alert('Publish virtualization ');
   }
 
@@ -206,6 +211,7 @@ export default class VirtualizationsPage extends React.Component {
                                       this.handleUnpublishVirtualization
                                     }
                                     onPublish={this.handlePublishVirtualization}
+                                    // TODO: modify komodo service call to add published state
                                     isPublished={false}
                                   />
                                 )

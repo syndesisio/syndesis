@@ -24,6 +24,4 @@ export class DVFetch<T> extends React.Component<IDVFetchProps<T>> {
       </ApiContext.Consumer>
     );
   }
-
-  public parse() {}
 }
