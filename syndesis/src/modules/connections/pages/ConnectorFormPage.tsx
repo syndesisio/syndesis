@@ -9,7 +9,7 @@ export interface IConnectorFormPageRouteParams {
 }
 
 export interface IConnectorFormPageRouteState {
-  connector: Connector;
+  connector?: Connector;
 }
 
 export default class ConnectorFormPage extends React.Component {
