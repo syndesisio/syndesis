@@ -908,9 +908,9 @@ public class AWSS3DeleteObjectCustomizer implements ComponentProxyCustomizer {
 +
 Defines the class implementing https://github.com/syndesisio/syndesis/blob/master/app/integration/component-proxy/src/main/java/io/syndesis/integration/component/proxy/ComponentProxyFactory.java[ComponentProxyFactory] used to create and/or configure the underling component/endpoint.  It can be set on _action_ or global level with the _action_ one having precedence.
 +
-To customize the behavior of the https://github.com/syndesisio/syndesis/blob/master/app/integration/component-proxy/src/main/java/io/syndesis/integration/component/proxy/ComponentProxyComponent.java[ComponentProxyComponent] you can override on of the following methods:
+To customize the behavior of the https://github.com/syndesisio/syndesis/blob/master/app/integration/component-proxy/src/main/java/io/syndesis/integration/component/proxy/ComponentProxyComponent.java[ComponentProxyComponent] you can override the following methods:
 +
-- **createDelegateComponent**
+** **createDelegateComponent**
 +
 This method is invoked when a the proxy starts and it is used to eventually create a dedicated instance of the component with scheme defined by the options _componentScheme_.
 +
@@ -919,15 +919,15 @@ This method is invoked when a the proxy starts and it is used to eventually crea
 The default behavior of this method is to determine if any of the connector/action options applies at component level and if the same option cannot be applied at endpoint level and only in this case, it creates a custom component instance configured according to the applicable options.
 ====
 +
-- **configureDelegateComponent**
+** **configureDelegateComponent**
 +
 This method is invoked only if a custom component instance has been created to configure additional behavior of the delegated component instance.
 +
-- **createDelegateEndpoint**
+** **createDelegateEndpoint**
 +
 This method is invoked when the proxy creates the endpoint and by default creates the endpoint using camel catalog facilities.
 +
-- **configureDelegateEndpoint**
+** **configureDelegateEndpoint**
 +
 This method is invoked after the delegated endpoint has been created to configure additional behavior of the delegated endpoint instance, as example:
 +
