@@ -343,8 +343,9 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
                     if (mapping != null) {
                         final String resource = "mapping-flow-" + f + "-step-"  + s + ".json";
-
                         addTarEntry(tos, "src/main/resources/" + resource, mapping.getBytes(StandardCharsets.UTF_8));
+                    } else {
+                        throw new IllegalStateException("Missing configured property for data mapper mapping definition");
                     }
                 }
             }
