@@ -63,11 +63,32 @@ items:
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
-      syndesis.io/component: kudu
+      syndesis.io/component: syndesis-kudu
     sessionAffinity: None
     type: ClusterIP
   status:
     loadBalancer: {}
+
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-kudu
+    name: kudu
+  spec:
+    path: /
+    port:
+      targetPort: 8051
+    tls:
+      insecureEdgeTerminationPolicy: Allow
+      termination: edge
+    to:
+      kind: Service
+      name: syndesis-kudu
+      weight: 100
 
 - apiVersion: v1
   kind: PersistentVolumeClaim
@@ -149,8 +170,14 @@ items:
             name: master-http
             protocol: TCP
           livenessProbe:
+            initialDelaySeconds: 20
+            httpGet:
+              path: /
+              port: 8051
+          readinessProbe:
             initialDelaySeconds: 120
-            tcpSocket:
+            httpGet:
+              path: /
               port: 8051
           volumeMounts:
           - mountPath: /var/lib/kudu/master
