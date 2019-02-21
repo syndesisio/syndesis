@@ -18,9 +18,13 @@ package io.syndesis.integration.runtime.util;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
@@ -29,11 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static io.syndesis.integration.runtime.util.JsonSimplePredicate.convertSimpleToOGNLForMaps;
-
 import static org.assertj.core.api.Assertions.assertThat;
-
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 
 @RunWith(JUnitParamsRunner.class)
 public class JsonSimplePredicateTest {
@@ -58,6 +58,7 @@ public class JsonSimplePredicateTest {
 
     @Test
     @Parameters({"body.prop, body[prop]", //
+        "body.size(), body.size()", //
         "body[3], body[3]", //
         "body[3].prop, body[3][prop]", //
         "body.fr_op.gl$op.ml0op[3], body[fr_op][gl\\$op][ml0op][3]"})
@@ -92,6 +93,21 @@ public class JsonSimplePredicateTest {
     public void shouldFilterOnJsonStrings(final String payload, final boolean expected) {
         final JsonSimplePredicate predicate = new JsonSimplePredicate("${body.prop} == 1", CONTEXT);
         assertThat(predicate.matches(exchangeWith(payload))).isEqualTo(expected);
+    }
+
+    @Test
+    @Parameters({"[], false", "[{\"prop\": 1}], true", "[{\"prop\": 2}], false"})
+    public void shouldFilterOnJsonArrayStrings(final String payload, final boolean expected) {
+        final JsonSimplePredicate predicate = new JsonSimplePredicate("${body.size()} == 1 && ${body[0].prop} == 1", CONTEXT);
+        assertThat(predicate.matches(exchangeWith(payload))).isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldFilterOnListOfJsonStrings() {
+        final JsonSimplePredicate predicate = new JsonSimplePredicate("${body[0].prop} == 1", CONTEXT);
+        assertThat(predicate.matches(exchangeWith(Collections.emptyList()))).isEqualTo(false);
+        assertThat(predicate.matches(exchangeWith(Arrays.asList("{\"prop\": 1}", "{\"prop\": 2}")))).isEqualTo(true);
+        assertThat(predicate.matches(exchangeWith(Arrays.asList("{\"prop\": 3}", "{\"prop\": 4}")))).isEqualTo(false);
     }
 
     private static Exchange exchangeWith(final Object body) {
