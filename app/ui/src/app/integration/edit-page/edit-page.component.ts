@@ -1,18 +1,20 @@
 import { switchMap } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, Subscription, of } from 'rxjs';
+import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
+import { combineLatest, Subscription, of, Observable, from } from 'rxjs';
 
-import { NavigationService } from '@syndesis/ui/common';
+import { NavigationService, ModalService } from '@syndesis/ui/common';
 import { CurrentFlowService } from '@syndesis/ui/integration/edit-page/current-flow.service';
 import { FlowPageService } from '@syndesis/ui/integration/edit-page/flow-page.service';
+import { CanComponentDeactivate } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-edit-page',
   templateUrl: './edit-page.component.html',
-  styleUrls: ['./edit-page.component.scss']
+  styleUrls: ['./edit-page.component.scss'],
 })
-export class IntegrationEditPage implements OnInit, OnDestroy {
+export class IntegrationEditPage
+  implements OnInit, OnDestroy, CanComponentDeactivate {
   routeSubscription: Subscription;
 
   constructor(
@@ -20,7 +22,8 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
-    public navigationService: NavigationService
+    public navigationService: NavigationService,
+    private modalService: ModalService
   ) {}
 
   getPageContainer() {
@@ -39,7 +42,7 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
           of({
             integrationId: params.get('integrationId'),
             flowId: params.get('flowId'),
-            integration: data.integration
+            integration: data.integration,
           })
         )
       )
@@ -49,7 +52,7 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
         // If the current flow ID isn't in the param map, redirect so it's available
         if (integrationId && !flowId && this.currentFlowService.flowId) {
           this.router.navigate(['..', this.currentFlowService.flowId, 'edit'], {
-            relativeTo: this.route
+            relativeTo: this.route,
           });
           return;
         }
@@ -61,7 +64,7 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
         if (!currentChildPage) {
           this.router.navigate(['save-or-add-step'], {
             queryParams: { validate: true },
-            relativeTo: this.route
+            relativeTo: this.route,
           });
         }
       });
@@ -74,5 +77,23 @@ export class IntegrationEditPage implements OnInit, OnDestroy {
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
     }
+  }
+
+  canDeactivate(
+    nextState: RouterStateSnapshot
+  ): boolean | Observable<boolean> | Promise<boolean> {
+    return this.currentFlowService.dirty$.pipe(
+      switchMap(dirty => {
+        if (dirty) {
+          return from(
+            this.modalService
+              .show('leave-editor-prompt')
+              .then(modal => modal.result)
+          );
+        } else {
+          return of(true);
+        }
+      })
+    );
   }
 }

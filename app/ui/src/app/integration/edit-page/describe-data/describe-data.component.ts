@@ -19,6 +19,7 @@ import {
   DynamicFormControlModel,
 } from '@ng-dynamic-forms/core';
 import { FormGroup } from '@angular/forms';
+import { INTEGRATION_CANCEL_CLICKED } from '../edit-page.models';
 
 enum DataShapeDirection {
   INPUT = 'input',
@@ -258,6 +259,11 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
       (flowEvent: FlowEvent) => {
         if (flowEvent.kind === INTEGRATION_UPDATED) {
           this.initialize();
+        }
+        if (flowEvent.kind === INTEGRATION_CANCEL_CLICKED) {
+          this.router.navigate(['action-configure', this.position], {
+            relativeTo: this.route.parent,
+          });
         }
       }
     );
