@@ -48,3 +48,4 @@ node_modules
 target
 ui/bin
 ui/node
+*~
