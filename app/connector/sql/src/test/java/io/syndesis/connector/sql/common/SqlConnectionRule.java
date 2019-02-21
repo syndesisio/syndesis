@@ -65,14 +65,14 @@ public final class SqlConnectionRule extends ExternalResource {
                 //ignore
             }
             try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate("CREATE TABLE name0 (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + "lastName VARCHAR(255))");
+                stmt.executeUpdate("CREATE TABLE NAME0 (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + "lastName VARCHAR(255))");
                 stmt.executeUpdate("CREATE TABLE ADDRESS0 (id INTEGER PRIMARY KEY, Address VARCHAR(255), " + "lastName VARCHAR(255))");
             }
         } catch (final SQLException e) {
             throw new AssertionError("Exception during database startup.", e);
         }
 
-        schema = DatabaseMetaDataHelper.getDefaultSchema(connection.getMetaData().getDatabaseProductName(), user);
+        schema = new DbMetaDataHelper(connection).getDefaultSchema(user);
     }
 
 }

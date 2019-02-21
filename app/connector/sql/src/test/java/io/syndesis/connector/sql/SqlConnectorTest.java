@@ -30,6 +30,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 import org.junit.Assert;
@@ -53,7 +54,30 @@ public class SqlConnectorTest extends SqlConnectorTestSupport {
 
     @Override
     protected List<String> setupStatements() {
-        return Collections.singletonList("CREATE TABLE ADDRESS (ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 2, INCREMENT BY 1), street VARCHAR(255), number INTEGER)");
+        String dbProductName = null;
+        try {
+            dbProductName = db.connection.getMetaData().getDatabaseProductName();
+        } catch (SQLException e) {
+            Assert.assertFalse(true);
+            e.printStackTrace();
+        }
+        if (DbEnum.POSTGRESQL.equals(DbEnum.fromName(dbProductName))) {
+            return Collections.singletonList("CREATE TABLE ADDRESS ("
+                    + "ID SERIAL PRIMARY KEY, "
+                    + "street VARCHAR(255), nummer INTEGER)");
+        } else if (DbEnum.MYSQL.equals(DbEnum.fromName(dbProductName))) {
+            return Collections.singletonList("CREATE TABLE ADDRESS ("
+                    + "ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
+                    + "street VARCHAR(255), nummer INTEGER)");
+        } else if (DbEnum.APACHE_DERBY.equals(DbEnum.fromName(dbProductName))) {
+            return Collections.singletonList("CREATE TABLE ADDRESS (ID INTEGER NOT NULL "
+                    + "GENERATED ALWAYS AS IDENTITY (START WITH 2, INCREMENT BY 1), "
+                    + "street VARCHAR(255), number INTEGER)");
+        } else {
+            return Collections.singletonList("CREATE TABLE ADDRESS ("
+                    + "ID NUMBER GENERATED ALWAYS AS IDENTITY, "
+                    + "street VARCHAR(255), nummer INTEGER)");
+        }
     }
 
     @Override

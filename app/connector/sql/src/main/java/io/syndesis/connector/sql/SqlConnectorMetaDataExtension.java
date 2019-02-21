@@ -16,13 +16,12 @@
 package io.syndesis.connector.sql;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
 
 import io.syndesis.common.util.SyndesisServerException;
-import io.syndesis.connector.sql.common.DatabaseMetaDataHelper;
+import io.syndesis.connector.sql.common.DbMetaDataHelper;
 import io.syndesis.connector.sql.common.SqlStatementMetaData;
 import io.syndesis.connector.sql.common.SqlStatementParser;
 import org.apache.camel.CamelContext;
@@ -44,8 +43,8 @@ public class SqlConnectorMetaDataExtension extends AbstractMetaDataExtension {
 
         if (sqlStatement != null) {
             try (Connection connection = SqlSupport.createConnection(properties)) {
-                final DatabaseMetaData meta = connection.getMetaData();
-                final String defaultSchema = DatabaseMetaDataHelper.getDefaultSchema(meta.getDatabaseProductName(), String.valueOf(properties.get("user")));
+                DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
+                final String defaultSchema = dbHelper.getDefaultSchema(String.valueOf(properties.get("user")));
                 final String schemaPattern = (String) properties.getOrDefault("schema-pattern", defaultSchema);
                 final SqlStatementParser parser = new SqlStatementParser(connection, schemaPattern, sqlStatement);
                 final SqlStatementMetaData sqlStatementMetaData = parseStatement(parser);

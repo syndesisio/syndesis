@@ -19,26 +19,31 @@ import java.util.Locale;
 
 /**
  * Enumeration of Database products we have tested, and for which we ship
- * drivers for. One caviat is the Oracle Driver which cannot be shipped due to
+ * drivers for. One caveat is the Oracle Driver which cannot be shipped due to
  * restrictions on its license.
  *
  * @since 09/11/17
  * @author kstam
  *
  */
-public enum DatabaseProduct {
-    APACHE_DERBY, ORACLE, POSTGRESQL, MYSQL;
+public enum DbEnum {
+    APACHE_DERBY("APACHE DERBY"),
+    ORACLE("ORACLE"),
+    POSTGRESQL("POSTGRESQL"),
+    MYSQL("MYSQL"),
+    STANDARD("STANDARD");
 
-    /**
-     * Can be used to convert '_' to ' ' in the enum name.
-     *
-     * @return name of the enum.
-     */
-    public String nameWithSpaces() {
-        return name().replaceAll("_", " ");
+    private final String name;
+
+    DbEnum(String name) {
+        this.name = name;
     }
 
-    public static DatabaseProduct fromName(String databaseProductName) {
-        return valueOf(databaseProductName.toUpperCase(Locale.US).replaceAll(" ", "_"));
+    public String getName() {
+        return name;
+    }
+
+    public static DbEnum fromName(final String dbProductName) {
+        return valueOf(dbProductName.toUpperCase(Locale.US).replaceAll(" ", "_"));
     }
 }
