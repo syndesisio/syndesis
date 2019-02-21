@@ -5,6 +5,7 @@
       "connections": {},
       "customizations": {},
       "dashboard": {},
+      "data": {},
       "integrations": {}
     },
     "shared": {
@@ -15,7 +16,9 @@
       "Delete": "Elimina",
       "Description": "Descrizione",
       "Details": "Dettagli",
+      "Draft": "Draft",
       "Error": "Errore",
+      "Export": "Export",
       "Extension": "Estensione",
       "Extensions": "Estensioni",
       "filterByNamePlaceholder": "Filtra per Nome",
@@ -28,15 +31,19 @@
       "Name": "Nome",
       "nameFilterPlaceholder": "Filtra per Nome...",
       "Pending": "Pendente",
+      "Publish": "Publish",
       "Published": "Funzionante",
       "resultsCount": "{{count}} Risultati",
       "Settings": "Impostazioni",
       "Status": "Stato",
       "Step": "Passo",
       "Total": "Totale",
+      "Unpublish": "Unpublish",
       "Unpublished": "Fermato",
       "Update": "Aggiornare",
-      "viewLogs": "Visualizza i registri"
+      "viewLogs": "Visualizza i registri",
+      "Virtualization": "Virtualization",
+      "Virtualizations": "Virtualizations"
     }
   }
 }

@@ -157,6 +157,7 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
                     <ApiContext.Provider
                       value={{
                         apiUri: `${config!.apiBase}${config!.apiEndpoint}`,
+                        dvApiUri: `${config!.apiBase}${config!.datavirt.dvUrl}`,
                         headers: { 'SYNDESIS-XSRF-TOKEN': 'awesome' },
                       }}
                     >

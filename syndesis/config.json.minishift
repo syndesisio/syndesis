@@ -41,6 +41,9 @@
     "debugFieldActionServiceCalls": false,
     "debugDocumentParsing": false
   },
+  "datavirt": {
+    "dvUrl": "/vdb-builder/v1/"
+  },
   "features" : {
     "logging": false
   }

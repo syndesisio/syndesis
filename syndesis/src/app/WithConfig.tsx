@@ -13,6 +13,9 @@ export interface IConfigFile {
     baseJSONInspectionServiceUrl: string;
     disableMappingPreviewMode: boolean;
   };
+  datavirt: {
+    dvUrl: string;
+  };
   features: {
     logging: boolean;
   };

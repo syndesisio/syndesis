@@ -1,6 +1,8 @@
 export * from './ApiContext';
 export * from './SyndesisFetch';
 export * from './callFetch';
+export * from './DVFetch';
+export * from './callDVFetch';
 export * from './Fetch';
 export * from './ServerEventsContext';
 export * from './Stream';
@@ -17,3 +19,4 @@ export * from './WithPolling';
 export * from './WithChangeListener';
 export * from './WithServerEvents';
 export * from './integrationHelpers';
+export * from './WithVirtualizations';

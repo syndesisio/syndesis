@@ -24,6 +24,9 @@ export const WithConfig = ({ children }: mockIWithConfigProps) => {
         baseXMLInspectionServiceUrl: '/api/v1/atlas/xml/',
         disableMappingPreviewMode: false,
       },
+      datavirt: {
+        dvUrl: '/vdb-builder/v1/',
+      },
       features: {
         logging: false,
       },
