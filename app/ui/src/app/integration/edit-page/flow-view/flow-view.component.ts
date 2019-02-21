@@ -8,6 +8,12 @@ import {
 } from '@syndesis/ui/integration/edit-page';
 import { ModalService } from '@syndesis/ui/common';
 import { Subscription } from 'rxjs';
+import {
+  INTEGRATION_DELETE_PROMPT,
+  INTEGRATION_SIDEBAR_COLLAPSE,
+  INTEGRATION_SIDEBAR_EXPAND,
+  FlowEvent,
+} from '../edit-page.models';
 
 @Component({
   selector: 'syndesis-integration-flow-view',
@@ -16,7 +22,7 @@ import { Subscription } from 'rxjs';
 })
 export class FlowViewComponent implements OnInit, OnDestroy {
   urls: UrlSegment[];
-  isCollapsed = true;
+  isCollapsed = false;
   flowSubscription: Subscription;
 
   constructor(
@@ -119,17 +125,24 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.flowSubscription = this.currentFlowService.events.subscribe(event => {
-      if (event.kind === 'integration-delete-prompt') {
-        this.deletePrompt(event.position);
+    this.flowSubscription = this.currentFlowService.events.subscribe(
+      (event: FlowEvent) => {
+        switch (event.kind) {
+          case INTEGRATION_DELETE_PROMPT:
+            this.deletePrompt(event.position);
+            break;
+
+          case INTEGRATION_SIDEBAR_COLLAPSE:
+            this.isCollapsed = true;
+            break;
+
+          case INTEGRATION_SIDEBAR_EXPAND:
+            this.isCollapsed = false;
+            break;
+          default:
+        }
       }
-      if (event.kind === 'integration-sidebar-collapse') {
-        this.isCollapsed = true;
-      }
-      if (event.kind === 'integration-sidebar-expand') {
-        this.isCollapsed = false;
-      }
-    });
+    );
   }
 
   ngOnDestroy() {

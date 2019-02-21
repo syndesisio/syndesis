@@ -93,8 +93,8 @@ export class FlowViewStepComponent implements OnChanges {
       return false;
     }
     if (
-      (this.currentFlowService.isApiProvider() && this.position === 0) ||
-      this.currentFlowService.atEnd(this.position)
+      this.currentFlowService.isApiProvider() &&
+      (this.position === 0 || this.currentFlowService.atEnd(this.position))
     ) {
       return false;
     }
