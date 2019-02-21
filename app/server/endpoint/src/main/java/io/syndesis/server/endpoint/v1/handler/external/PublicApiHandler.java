@@ -128,6 +128,11 @@ public class PublicApiHandler {
         validateParam("environment", environment);
         validateParam("newEnvironment", newEnvironment);
 
+        // ignore request if names are the same
+        if (environment.equals(newEnvironment)) {
+            return;
+        }
+
         if (this.environments.contains(environment)) {
 
             // get and update list of integrations with this environment
