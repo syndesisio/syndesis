@@ -38,6 +38,7 @@ import io.swagger.models.RefModel;
 import io.swagger.models.Swagger;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.parser.util.RemoteUrl;
+import io.swagger.parser.util.SwaggerDeserializationResult;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Resources;
@@ -61,6 +62,7 @@ import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.google.common.base.Joiner;
 
 import static java.util.Optional.ofNullable;
 
@@ -219,12 +221,15 @@ public final class SwaggerHelper {
                 .build();
         }
 
-        final Swagger swagger = OpenApiHelper.parse(specification);
+        final SwaggerDeserializationResult parsed = OpenApiHelper.parseWithResult(resolvedSpecification);
+        final Swagger swagger = parsed.getSwagger();
         if (swagger == null) {
             LOG.debug("Unable to read OpenAPI document\n{}\n", specification);
             return resultBuilder
-                .addError(new Violation.Builder().error("error").property("").message("Unable to read OpenAPI document from: "
-                    + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse("")).build())
+                .addError(new Violation.Builder().error("error").property("").message("Unable to read OpenAPI document from: '"
+                    + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse("")
+                    + "': "
+                    + Joiner.on(',').join(parsed.getMessages())).build())
                 .build();
         }
 

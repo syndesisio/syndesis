@@ -21,10 +21,12 @@ import java.util.function.Predicate;
 
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.server.api.generator.APIIntegration;
+import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import org.junit.Test;
 
@@ -47,6 +49,39 @@ public class SwaggerAPIGeneratorTest {
         assertThat(flows).filteredOn(idEndsWith("-1")).first().hasFieldOrPropertyWithValue("name", "Receiving GET request on /hi");
         assertThat(flows).filteredOn(idEndsWith("-2")).first().hasFieldOrPropertyWithValue("name", "post operation");
         assertThat(flows).filteredOn(idEndsWith("-3")).first().hasFieldOrPropertyWithValue("name", "Receiving PUT request on /hi");
+    }
+
+    @Test
+    public void infoShouldHandleNullSpecifications() {
+        final SwaggerAPIGenerator generator = new SwaggerAPIGenerator();
+
+        final APISummary summary = generator.info(null, APIValidationContext.NONE);
+
+        assertThat(summary).isNotNull();
+        assertThat(summary.getErrors()).hasSize(1).allSatisfy(v -> assertThat(v.message()).startsWith("Unable to resolve OpenAPI document from"));
+        assertThat(summary.getWarnings()).isEmpty();
+    }
+
+    @Test
+    public void infoShouldHandleNullModels() {
+        final SwaggerAPIGenerator generator = new SwaggerAPIGenerator();
+
+        final APISummary summary = generator.info("invalid", APIValidationContext.NONE);
+
+        assertThat(summary).isNotNull();
+        assertThat(summary.getErrors()).hasSize(1).allSatisfy(v -> assertThat(v.message()).startsWith("Unable to read OpenAPI document from"));
+        assertThat(summary.getWarnings()).isEmpty();
+    }
+
+    @Test
+    public void infoShouldHandleNullPaths() {
+        final SwaggerAPIGenerator generator = new SwaggerAPIGenerator();
+
+        final APISummary summary = generator.info("{\"swagger\": \"2.0\"}", APIValidationContext.NONE);
+
+        assertThat(summary).isNotNull();
+        assertThat(summary.getErrors()).isEmpty();
+        assertThat(summary.getWarnings()).isEmpty();
     }
 
     private static Predicate<Flow> idEndsWith(String end) {

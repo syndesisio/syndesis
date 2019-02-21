@@ -24,7 +24,7 @@ export class OpenApiReviewComponent {
   @Input('actionsSummary')
   set validatorData(value: OpenApiValidationActionsSummary) {
     this.actionsSummary = value;
-    const actionCountByTags = this.actionsSummary.actionCountByTags || {};
+    const actionCountByTags = this.actionsSummary && this.actionsSummary.actionCountByTags || {};
     this.importedActions = Object.keys(actionCountByTags).map(key => ({
       tag: key,
       count: +actionCountByTags[key]

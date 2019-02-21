@@ -27,6 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.swagger.models.HttpMethod;
+import io.swagger.models.Info;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
@@ -46,7 +47,6 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
@@ -56,8 +56,6 @@ import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
@@ -65,9 +63,8 @@ import static java.util.Optional.ofNullable;
 
 public class SwaggerAPIGenerator implements APIGenerator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SwaggerAPIGenerator.class);
-
     private static final String EXCERPT_METADATA_KEY = "excerpt";
+
     private static final String DEFAULT_RETURN_CODE_METADATA_KEY = "default-return-code";
 
     private final DataShapeGenerator dataShapeGenerator;
@@ -79,44 +76,29 @@ public class SwaggerAPIGenerator implements APIGenerator {
     @Override
     public APISummary info(String specification, APIValidationContext validation) {
         final SwaggerModelInfo swaggerInfo = SwaggerHelper.parse(specification, validation);
-        try {
-            // No matter if the validation fails, try to process the swagger
-            final Map<String, Path> paths = swaggerInfo.getModel().getPaths();
 
-            final AtomicInteger total = new AtomicInteger(0);
-
-            final Map<String, Integer> tagCounts = paths.entrySet().stream()//
-                .flatMap(p -> p.getValue().getOperations().stream())//
-                .peek(o -> total.incrementAndGet())//
-                .flatMap(o -> SwaggerHelper.sanitizeTags(o.getTags()))//
-                .collect(//
-                    Collectors.groupingBy(//
-                        Function.identity(), //
-                        Collectors.reducing(0, (e) -> 1, Integer::sum)//
-                    ));
-
-            final ActionsSummary actionsSummary = new ActionsSummary.Builder()//
-                .totalActions(total.intValue())//
-                .actionCountByTags(tagCounts)//
-                .build();
-
-            return new APISummary.Builder()//
-                .name(swaggerInfo.getModel().getInfo().getTitle())//
-                .description(swaggerInfo.getModel().getInfo().getDescription())//
-                .actionsSummary(actionsSummary)//
-                .errors(swaggerInfo.getErrors())//
-                .warnings(swaggerInfo.getWarnings())//
-                .putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification())// needed if the user wants to change it
-                .build();
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception ex) {
-            if (!swaggerInfo.getErrors().isEmpty()) {
-                // Just log and return the validation errors if any
-                LOG.error("An error occurred while trying to validate a API", ex);
-                return new APISummary.Builder().errors(swaggerInfo.getErrors()).warnings(swaggerInfo.getWarnings()).build();
-            }
-
-            throw SyndesisServerException.launderThrowable("An error occurred while trying to validate a API", ex);
+        final Swagger model = swaggerInfo.getModel();
+        if (model == null) {
+            return new APISummary.Builder().errors(swaggerInfo.getErrors()).warnings(swaggerInfo.getWarnings()).build();
         }
+
+        final Map<String, Path> paths = model.getPaths();
+
+        final ActionsSummary actionsSummary = determineSummaryFrom(paths);
+
+        final Info info = model.getInfo();
+        final String title = ofNullable(info).map(Info::getTitle).orElse("unspecified");
+        final String description = ofNullable(info).map(Info::getDescription).orElse("unspecified");
+
+        return new APISummary.Builder()//
+            .name(title)//
+            .description(description)//
+            .actionsSummary(actionsSummary)//
+            .errors(swaggerInfo.getErrors())//
+            .warnings(swaggerInfo.getWarnings())//
+            // needed if the user wants to change it
+            .putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification())
+            .build();
     }
 
     @Override
@@ -334,4 +316,26 @@ public class SwaggerAPIGenerator implements APIGenerator {
         return httpCodeDescription.orElse(code);
     }
 
+    static ActionsSummary determineSummaryFrom(final Map<String, Path> paths) {
+        if (paths == null || paths.isEmpty()) {
+            return new ActionsSummary.Builder().build();
+        }
+
+        final AtomicInteger total = new AtomicInteger(0);
+
+        final Map<String, Integer> tagCounts = paths.entrySet().stream()//
+            .flatMap(p -> p.getValue().getOperations().stream())//
+            .peek(o -> total.incrementAndGet())//
+            .flatMap(o -> SwaggerHelper.sanitizeTags(o.getTags()))//
+            .collect(//
+                Collectors.groupingBy(//
+                    Function.identity(), //
+                    Collectors.reducing(0, (e) -> 1, Integer::sum)//
+                ));
+
+        return new ActionsSummary.Builder()//
+            .totalActions(total.intValue())//
+            .actionCountByTags(tagCounts)//
+            .build();
+    }
 }
