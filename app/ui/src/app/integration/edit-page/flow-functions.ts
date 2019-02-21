@@ -15,7 +15,16 @@ import {
   createConnectionStep,
   StepOrConnection,
 } from '@syndesis/ui/platform';
-import { ENDPOINT, StepStore, DATA_MAPPER, AGGREGATE } from '@syndesis/ui/store';
+import {
+  ENDPOINT,
+  StepStore,
+  DATA_MAPPER,
+  AGGREGATE,
+  BASIC_FILTER,
+  ADVANCED_FILTER,
+  SPLIT,
+  TEMPLATE,
+} from '@syndesis/ui/store';
 import { FlowError, FlowErrorKind } from './edit-page.models';
 
 //
@@ -167,12 +176,21 @@ export function filterStepsByPosition(
       });
     });
   }
-  // If we're anyplace else in the integration
+  // If we're any place else in the integration
   const atEnd = getLastPosition(integration, flowId) === position;
   return steps.filter((step: any) => {
-    // Data mapper requires a target data typpe for mapping
-    if (atEnd && (step as Step).stepKind === DATA_MAPPER) {
-      return false;
+    if (atEnd) {
+      // Several step kinds aren't usable at the end of a flow
+      switch ((step as Step).stepKind) {
+        case DATA_MAPPER:
+        case BASIC_FILTER:
+        case ADVANCED_FILTER:
+        case SPLIT:
+        case AGGREGATE:
+        case TEMPLATE:
+          return false;
+        default:
+      }
     }
     if ((step as Connection).connectorId === 'api-provider') {
       // api provider can be used only for From actions
