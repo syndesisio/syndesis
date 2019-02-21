@@ -10,14 +10,21 @@ const stories = storiesOf(
   module
 );
 
+const integrationVersion = '1';
 const i18nTextBtnPublish = 'string';
+
+const i18nTextTitle = 'Title';
+const i18nTextVersion = 'Version';
 
 stories
   .add(
     'published',
     withNotes('Verify there is no Publish button')(() => (
       <IntegrationDetailHistoryListViewItem
-        i18nTextBtnEdit={text('i18nTextBtnPublish', i18nTextBtnPublish)}
+        integrationVersion={text('integrationVersion', integrationVersion)}
+        i18nTextTitle={text('i18nTextTitle', i18nTextTitle)}
+        i18nTextVersion={text('i18nTextVersion', i18nTextVersion)}
+        i18nTextBtnPublish={text('i18nTextBtnPublish', i18nTextBtnPublish)}
       />
     ))
   )
@@ -25,7 +32,10 @@ stories
     'unpublished',
     withNotes('Verify there is a Draft button')(() => (
       <IntegrationDetailHistoryListViewItem
-        i18nTextBtnEdit={text('i18nTextBtnPublish', i18nTextBtnPublish)}
+        integrationVersion={text('integrationVersion', integrationVersion)}
+        i18nTextTitle={text('i18nTextTitle', i18nTextTitle)}
+        i18nTextVersion={text('i18nTextVersion', i18nTextVersion)}
+        i18nTextBtnPublish={text('i18nTextBtnPublish', i18nTextBtnPublish)}
       />
     ))
   );
