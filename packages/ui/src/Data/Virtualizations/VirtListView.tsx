@@ -72,7 +72,7 @@ export class VirtListView extends React.Component<IVirtsListViewProps> {
               placement="top"
             >
               <Button
-                psstyle="default"
+                bsStyle="default"
                 to={this.props.i18nImport}
                 onClick={this.handleImport}
               >
