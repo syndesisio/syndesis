@@ -84,7 +84,7 @@ export interface ApiConnectorState extends BaseReducerModel {
   showApiEditor: boolean;
   uploadSpecification: OpenApiUploadSpecification;
   validationResponse?: ApiConnectorValidationResponse;
-  validationErrors?: OpenApiValidationError;
+  validationErrors?: OpenApiValidationError[];
   creationError?: ActionReducerError;
   specificationForEditor: string;
 }

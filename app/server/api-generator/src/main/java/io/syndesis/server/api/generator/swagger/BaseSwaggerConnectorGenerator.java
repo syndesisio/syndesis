@@ -17,6 +17,7 @@ package io.syndesis.server.api.generator.swagger;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,16 +52,12 @@ import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
-import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.swagger.util.OperationDescription;
 import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 import io.syndesis.server.api.generator.util.ActionComparator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -84,8 +81,6 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
     static final String URL_EXTENSION = "x-syndesis-swagger-url";
 
-    private static final Logger LOG = LoggerFactory.getLogger(BaseSwaggerConnectorGenerator.class);
-
     @Override
     public final Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Connector connector = basicConnector(connectorTemplate, connectorSettings);
@@ -96,14 +91,31 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
     @Override
     public final APISummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final SwaggerModelInfo swaggerInfo = parseSpecification(connectorSettings, APIValidationContext.CONSUMED_API);
-        try {
-            // No matter if the validation fails, try to process the swagger
-            final Connector connector = basicConnector(connectorTemplate, connectorSettings);
-            final Map<String, Path> paths = swaggerInfo.getModel().getPaths();
 
-            final AtomicInteger total = new AtomicInteger(0);
+        final Swagger model = swaggerInfo.getModel();
+        if (model == null) {
+            final APISummary.Builder summaryBuilder = new APISummary.Builder()
+                .errors(swaggerInfo.getErrors())
+                .warnings(swaggerInfo.getWarnings());
 
-            final Map<String, Integer> tagCounts = paths.entrySet().stream()//
+            if (swaggerInfo.getResolvedSpecification() != null) {
+                summaryBuilder.putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification());
+            }
+
+            return summaryBuilder.build();
+        }
+
+        // No matter if the validation fails, try to process the swagger
+        final Connector connector = basicConnector(connectorTemplate, connectorSettings);
+        final Map<String, Path> paths = model.getPaths();
+
+        final AtomicInteger total = new AtomicInteger(0);
+
+        final Map<String, Integer> tagCounts;
+        if (paths == null) {
+            tagCounts = Collections.emptyMap();
+        } else {
+            tagCounts = paths.entrySet().stream()//
                 .flatMap(p -> p.getValue().getOperations().stream())//
                 .peek(o -> total.incrementAndGet())//
                 .flatMap(o -> SwaggerHelper.sanitizeTags(o.getTags()).distinct())//
@@ -112,28 +124,20 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                         Function.identity(), //
                         Collectors.reducing(0, (e) -> 1, Integer::sum)//
                     ));
-
-            final ActionsSummary actionsSummary = new ActionsSummary.Builder()//
-                .totalActions(total.intValue())//
-                .actionCountByTags(tagCounts)//
-                .build();
-
-            return new APISummary.Builder()//
-                .createFrom(connector)//
-                .actionsSummary(actionsSummary)//
-                .errors(swaggerInfo.getErrors())//
-                .warnings(swaggerInfo.getWarnings())//
-                .putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification())//
-                .build();
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception ex) {
-            if (!swaggerInfo.getErrors().isEmpty()) {
-                // Just log and return the validation errors if any
-                LOG.error("An error occurred while trying to create an OpenAPI connector", ex);
-                return new APISummary.Builder().errors(swaggerInfo.getErrors()).warnings(swaggerInfo.getWarnings()).build();
-            }
-
-            throw SyndesisServerException.launderThrowable("An error occurred while trying to create an OpenAPI connector", ex);
         }
+
+        final ActionsSummary actionsSummary = new ActionsSummary.Builder()//
+            .totalActions(total.intValue())//
+            .actionCountByTags(tagCounts)//
+            .build();
+
+        return new APISummary.Builder()//
+            .createFrom(connector)//
+            .actionsSummary(actionsSummary)//
+            .errors(swaggerInfo.getErrors())//
+            .warnings(swaggerInfo.getWarnings())//
+            .putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification())//
+            .build();
     }
 
     abstract ConnectorDescriptor.Builder createDescriptor(ObjectNode json, Swagger swagger, Operation operation);
