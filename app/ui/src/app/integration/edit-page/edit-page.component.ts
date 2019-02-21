@@ -82,18 +82,21 @@ export class IntegrationEditPage
   canDeactivate(
     nextState: RouterStateSnapshot
   ): boolean | Observable<boolean> | Promise<boolean> {
-    return this.currentFlowService.dirty$.pipe(
-      switchMap(dirty => {
-        if (dirty) {
-          return from(
-            this.modalService
-              .show('leave-editor-prompt')
-              .then(modal => modal.result)
-          );
-        } else {
-          return of(true);
-        }
-      })
+    return (
+      nextState.url.endsWith('operations') ||
+      this.currentFlowService.dirty$.pipe(
+        switchMap(dirty => {
+          if (dirty) {
+            return from(
+              this.modalService
+                .show('leave-editor-prompt')
+                .then(modal => modal.result)
+            );
+          } else {
+            return of(true);
+          }
+        })
+      )
     );
   }
 }
