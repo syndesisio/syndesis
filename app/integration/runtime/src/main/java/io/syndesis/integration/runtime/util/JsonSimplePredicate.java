@@ -15,9 +15,9 @@
  */
 package io.syndesis.integration.runtime.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,11 +25,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import io.syndesis.common.util.IOStreams;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -47,8 +49,6 @@ import org.slf4j.LoggerFactory;
  * applying
  */
 public final class JsonSimplePredicate implements Predicate {
-    private static final List<String> COLLECTION_PATHS = Collections.singletonList("size()");
-
     private static final Pattern SIMPLE_EXPRESSION = Pattern.compile("\\$\\{([^}]+)\\}");
 
     private static final Logger LOG = LoggerFactory.getLogger(JsonSimplePredicate.class);
@@ -100,10 +100,15 @@ public final class JsonSimplePredicate implements Predicate {
                 return predicate.matches(exchange);
             }
 
+            ResetAfterCloseInputStream resetAfterCloseInputStream = new ResetAfterCloseInputStream(stream);
+            if (exchange.getIn().getBody() instanceof InputStream) {
+                exchange.getIn().setBody(resetAfterCloseInputStream);
+            }
+
             // If it is a JSON document, suppose that this is a document which
             // needs to be parsed as JSON, therefore we set a map instead of the
             // string
-            final JsonNode json = mapper.readTree(stream);
+            final JsonNode json = mapper.readTree(resetAfterCloseInputStream);
 
             if (json != null) {
                 if (json.isArray()) {
@@ -190,9 +195,45 @@ public final class JsonSimplePredicate implements Predicate {
     }
 
     private static boolean isCollectionPath(String expression) {
-        return COLLECTION_PATHS.stream()
+        String[] collectionPaths = new String[] { "size()" };
+
+        return Stream.of(collectionPaths)
                 .map(path -> "body." + path)
                 .anyMatch(path -> path.equals(expression));
     }
 
+    /**
+     * Input stream being able to reset on close in order to ensure exchange processing can consume stream content
+     * one more time.
+     */
+    private static class ResetAfterCloseInputStream extends InputStream {
+        private final byte[] sourceBytes;
+        private ByteArrayInputStream delegate;
+
+        ResetAfterCloseInputStream(InputStream inputStream) throws IOException {
+            sourceBytes = IOStreams.readBytes(inputStream);
+            delegate = new ByteArrayInputStream(sourceBytes);
+        }
+
+        @Override
+        public void close() throws IOException {
+            delegate.close();
+            delegate = new ByteArrayInputStream(sourceBytes);
+        }
+
+        @Override
+        public int read() {
+            return delegate.read();
+        }
+
+        @Override
+        public int read(byte[] b) throws IOException {
+            return delegate.read(b);
+        }
+
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException {
+            return delegate.read(b, off, len);
+        }
+    }
 }

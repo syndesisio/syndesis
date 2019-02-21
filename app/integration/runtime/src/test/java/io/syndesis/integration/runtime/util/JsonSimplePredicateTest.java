@@ -16,6 +16,7 @@
 package io.syndesis.integration.runtime.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.syndesis.common.util.IOStreams;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.camel.Exchange;
@@ -78,14 +80,19 @@ public class JsonSimplePredicateTest {
     @Test
     public void shouldFilterByDefaultForNonJsonInput() {
         final JsonSimplePredicate predicate = new JsonSimplePredicate("${body} == 1", CONTEXT);
+        assertThat(predicate.matches(exchangeWith("1"))).isEqualTo(true);
         assertThat(predicate.matches(exchangeWith("wat"))).isEqualTo(false);
     }
 
     @Test
     @Parameters({"{}, false", "{\"prop\": 1}, true", "{\"prop\": 2}, false"})
-    public void shouldFilterInputStreams(final String payload, final boolean expected) {
+    public void shouldFilterInputStreams(final String payload, final boolean expected) throws IOException {
+        SingleReadInputStream inputStream = new SingleReadInputStream(payload);
+        Exchange exchange = exchangeWith(inputStream);
         final JsonSimplePredicate predicate = new JsonSimplePredicate("${body.prop} == 1", CONTEXT);
-        assertThat(predicate.matches(exchangeWith(stream(payload)))).isEqualTo(expected);
+        assertThat(predicate.matches(exchange)).isEqualTo(expected);
+        assertThat(inputStream.isClosed()).isTrue();
+        assertThat(IOStreams.readText(exchange.getIn().getBody(InputStream.class))).isEqualTo(payload);
     }
 
     @Test
@@ -119,7 +126,31 @@ public class JsonSimplePredicateTest {
         return exchange;
     }
 
-    private static InputStream stream(final String data) {
-        return new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
+    private static class SingleReadInputStream extends InputStream {
+        private boolean closed = false;
+        private final InputStream delegate;
+
+        SingleReadInputStream(String data) {
+            this.delegate = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
+        }
+
+        @Override
+        public void close() throws IOException {
+            super.close();
+            closed = true;
+        }
+
+        @Override
+        public int read() throws IOException {
+            if (closed) {
+                throw new IllegalStateException("Read after close");
+            }
+
+            return delegate.read();
+        }
+
+        public boolean isClosed() {
+            return closed;
+        }
     }
 }
