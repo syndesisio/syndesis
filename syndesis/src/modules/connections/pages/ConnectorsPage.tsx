@@ -6,9 +6,9 @@ import {
   ConnectionsGridCell,
   ConnectionSkeleton,
 } from '@syndesis/ui';
-import { getConnectionIcon, WithLoader, WithRouter } from '@syndesis/utils';
+import { getConnectionIcon, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import resolvers from '../resolvers';
 
 export function getConnectionHref(
   baseUrl: string,
@@ -20,51 +20,42 @@ export function getConnectionHref(
 export default class ConnectorsPage extends React.Component {
   public render() {
     return (
-      <WithRouter>
-        {({ match }) => (
-          <WithConnectors>
-            {({ data, hasData, error }) => (
-              <ConnectionsGrid>
-                <WithLoader
-                  error={error}
-                  loading={!hasData}
-                  loaderChildren={
-                    <>
-                      {new Array(5).fill(0).map((_, index) => (
-                        <ConnectionsGridCell key={index}>
-                          <ConnectionSkeleton />
-                        </ConnectionsGridCell>
-                      ))}
-                    </>
-                  }
-                  errorChildren={<div>TODO</div>}
-                >
-                  {() =>
-                    data.items.map((c, index) => (
-                      <ConnectionsGridCell key={index}>
-                        <Link
-                          to={`${match.url}/${c.id}`}
-                          style={{
-                            color: 'inherit',
-                            textDecoration: 'none',
-                          }}
-                        >
-                          <ConnectionCard
-                            name={c.name}
-                            description={c.description || ''}
-                            icon={getConnectionIcon(c, process.env.PUBLIC_URL)}
-                            href={getConnectionHref.bind(null, match.url)}
-                          />
-                        </Link>
-                      </ConnectionsGridCell>
-                    ))
-                  }
-                </WithLoader>
-              </ConnectionsGrid>
-            )}
-          </WithConnectors>
+      <WithConnectors>
+        {({ data, hasData, error }) => (
+          <ConnectionsGrid>
+            <WithLoader
+              error={error}
+              loading={!hasData}
+              loaderChildren={
+                <>
+                  {new Array(5).fill(0).map((_, index) => (
+                    <ConnectionsGridCell key={index}>
+                      <ConnectionSkeleton />
+                    </ConnectionsGridCell>
+                  ))}
+                </>
+              }
+              errorChildren={<div>TODO</div>}
+            >
+              {() =>
+                data.items.map((connector, index) => (
+                  <ConnectionsGridCell key={index}>
+                    <ConnectionCard
+                      name={connector.name}
+                      description={connector.description || ''}
+                      icon={getConnectionIcon(
+                        connector,
+                        process.env.PUBLIC_URL
+                      )}
+                      href={resolvers.create.configureConnector({ connector })}
+                    />
+                  </ConnectionsGridCell>
+                ))
+              }
+            </WithLoader>
+          </ConnectionsGrid>
         )}
-      </WithRouter>
+      </WithConnectors>
     );
   }
 }
