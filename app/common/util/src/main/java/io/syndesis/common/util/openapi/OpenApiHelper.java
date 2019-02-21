@@ -22,6 +22,7 @@ import java.util.List;
 import io.swagger.models.Swagger;
 import io.swagger.models.properties.Property;
 import io.swagger.parser.SwaggerParser;
+import io.swagger.parser.util.SwaggerDeserializationResult;
 import io.swagger.util.PropertyDeserializer;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -142,6 +143,10 @@ public final class OpenApiHelper {
 
     public static Swagger parse(final String specification) {
         return SWAGGER_PARSER.parse(specification);
+    }
+
+    public static SwaggerDeserializationResult parseWithResult(final String specification) {
+        return SWAGGER_PARSER.readWithInfo(specification);
     }
 
     public static String serialize(final Swagger swagger) {

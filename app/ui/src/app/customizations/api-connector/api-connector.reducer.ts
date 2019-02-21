@@ -4,7 +4,8 @@ import { PlatformState } from '@syndesis/ui/platform';
 import {
   ApiConnectorState,
   ApiConnectorWizardStep,
-  CustomApiConnectorRequest
+  CustomApiConnectorRequest,
+  ApiConnectorData
 } from '@syndesis/ui/customizations/api-connector/api-connector.models';
 import {
   ApiConnectorActions,
@@ -214,10 +215,8 @@ export function apiConnectorReducer(
           properties: action.payload.properties,
           warnings: action.payload.warnings,
           errors: action.payload.errors,
-          name: action.payload.name ? action.payload.name
-                                    : action.configuredProperties.specification.info.title,
-          description: action.payload.description ? action.payload.description
-                                                  : action.configuredProperties.specification.info.description
+          name: action.payload.name,
+          description: action.payload.description
         },
         loading: false,
         hasErrors: false,
@@ -227,11 +226,13 @@ export function apiConnectorReducer(
     }
 
     case ApiConnectorActions.VALIDATE_SWAGGER_FAIL: {
+      const response = action.payload as ApiConnectorData;
       return {
         ...state,
+        wizardStep: ApiConnectorWizardStep.UploadSwagger,
         loading: false,
         hasErrors: true,
-        errors: [action.payload]
+        validationErrors: response.errors
       };
     }
 
@@ -413,7 +414,7 @@ export const getApiConnectorUploadSpecification = createSelector(
 
 export const getApiConnectorValidationError = createSelector(
   getApiConnectorState,
-  (state: ApiConnectorState): OpenApiValidationErrorMessage[] => state.validationErrors && state.validationErrors.errors
+  (state: ApiConnectorState): OpenApiValidationErrorMessage[] => state.validationErrors
 );
 
 export const getApiConnectorWizardStep = createSelector(

@@ -85,7 +85,7 @@ export class ApiConnectorEffects {
           .validateCustomConnectorInfo(request)
           .pipe(
             map(response => ({
-              type: ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE,
+              type: response.errors ? ApiConnectorActions.VALIDATE_SWAGGER_FAIL : ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE,
               payload: response
             })),
             catchError(error =>
