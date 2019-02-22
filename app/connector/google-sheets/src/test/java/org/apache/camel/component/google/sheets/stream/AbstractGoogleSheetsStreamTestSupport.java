@@ -21,6 +21,7 @@ import com.google.api.services.sheets.v4.Sheets;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.google.sheets.AbstractGoogleSheetsTestSupport;
 import org.apache.camel.component.google.sheets.BatchGoogleSheetsClientFactory;
+import org.apache.camel.component.google.sheets.server.GoogleSheetsApiTestServerRule;
 import org.apache.camel.util.IntrospectionSupport;
 
 /**
@@ -42,13 +43,13 @@ public class AbstractGoogleSheetsStreamTestSupport extends AbstractGoogleSheetsT
         component.setClientFactory(new BatchGoogleSheetsClientFactory(
                 new NetHttpTransport.Builder()
                         .trustCertificatesFromJavaKeyStore(
-                                getClass().getResourceAsStream("/" + GOOGLE_API_SERVER_KEYSTORE),
-                                GOOGLE_API_SERVER_KEYSTORE_PASSWORD)
+                                getClass().getResourceAsStream("/" + GoogleSheetsApiTestServerRule.SERVER_KEYSTORE),
+                                GoogleSheetsApiTestServerRule.SERVER_KEYSTORE_PASSWORD)
                         .build(),
                 new JacksonFactory()) {
             @Override
             protected void configure(Sheets.Builder clientBuilder) {
-                clientBuilder.setRootUrl(String.format("https://localhost:%s/", getGoogleApiTestServer().getHttpServer().getPort()));
+                clientBuilder.setRootUrl(String.format("https://localhost:%s/", googleSheetsApiTestServerRule.getServerPort()));
             }
         });
         component.setConfiguration(configuration);
