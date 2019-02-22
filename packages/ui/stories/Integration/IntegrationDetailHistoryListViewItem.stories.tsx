@@ -13,7 +13,6 @@ const stories = storiesOf(
 const integrationPublished = {
   id: 'i-LYmlhVFB6pKKaBQVSyez',
   version: 1,
-  createdAt: 1550261346722,
   updatedAt: 1550261344272,
   currentState: 'Unpublished',
   targetState: 'Unpublished',
@@ -24,7 +23,6 @@ const integrationPublished = {
 const integrationUnpublished = {
   id: 'i-LYmlhVFB6pKKaBQVSyez',
   version: 1,
-  createdAt: 1550261346722,
   updatedAt: 1550261344272,
   currentState: 'Unpublished',
   targetState: 'Unpublished',
@@ -55,9 +53,6 @@ stories
           'integrationVersion',
           integrationPublished.version
         )}
-        i18nTextBtnEdit={text('i18nTextBtnEdit', i18nTextBtnEdit)}
-        i18nTextBtnPublish={text('i18nTextBtnPublish', i18nTextBtnPublish)}
-        i18nTextDraft={text('i18nTextDraft', i18nTextDraft)}
         i18nTextHistoryMenuReplaceDraft={text(
           'i18nTextHistoryMenuReplaceDraft',
           i18nTextHistoryMenuReplaceDraft
@@ -76,7 +71,7 @@ stories
     ))
   )
   .add(
-    'unpublished',
+    'draft, no published history',
     withNotes('Verify there is a Publish button')(() => (
       <IntegrationDetailHistoryListViewItem
         integrationIsDraft={integrationUnpublished.isDraft}
@@ -91,16 +86,7 @@ stories
           'i18nTextHistoryMenuReplaceDraft',
           i18nTextHistoryMenuReplaceDraft
         )}
-        i18nTextHistoryMenuUnpublish={text(
-          'i18nTextHistoryMenuUnpublish',
-          i18nTextHistoryMenuUnpublish
-        )}
-        i18nTextLastPublished={text(
-          'i18nTextLastPublished',
-          i18nTextLastPublished
-        )}
         i18nTextTitle={text('i18nTextTitle', i18nTextTitle)}
-        i18nTextVersion={text('i18nTextVersion', i18nTextVersion)}
       />
     ))
   );

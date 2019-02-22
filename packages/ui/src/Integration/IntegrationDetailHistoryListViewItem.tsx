@@ -9,9 +9,7 @@ import {
 import * as React from 'react';
 
 export interface IIntegrationDetailHistoryListViewItemProps {
-  integrationCreatedAt?: Date;
   integrationIsDraft?: boolean;
-  integrationName?: string;
   integrationUpdatedAt?: Date;
   integrationVersion?: number;
   i18nTextBtnEdit?: string;
@@ -21,7 +19,6 @@ export interface IIntegrationDetailHistoryListViewItemProps {
   i18nTextHistoryMenuReplaceDraft?: string;
   i18nTextHistoryMenuUnpublish?: string;
   i18nTextLastPublished?: string;
-  i18nTextNoDescription?: string;
   i18nTextTitle?: string;
   i18nTextVersion?: string;
 }
