@@ -77,7 +77,7 @@ stories
   )
   .add(
     'unpublished',
-    withNotes('Verify there is a Draft button')(() => (
+    withNotes('Verify there is a Publish button')(() => (
       <IntegrationDetailHistoryListViewItem
         integrationIsDraft={integrationUnpublished.isDraft}
         integrationVersion={text(
