@@ -59,19 +59,25 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
               </DropdownKebab>
             )
           }
-          additionalInfo={[
-            <ListViewInfoItem key={1}>
-              {this.props.i18nTextLastPublished}
-              {this.props.integrationUpdatedAt}
-            </ListViewInfoItem>,
-          ]}
+          additionalInfo={
+            !this.props.integrationIsDraft
+              ? [
+                  <ListViewInfoItem key={1}>
+                    {this.props.i18nTextLastPublished}
+                    {this.props.integrationUpdatedAt}
+                  </ListViewInfoItem>,
+                ]
+              : null
+          }
           leftContent={
-            <ListView.Icon
-              type="pf"
-              name="ok"
-              size="xs"
-              className="list-view-pf-icon-success"
-            />
+            !this.props.integrationIsDraft ? (
+              <ListView.Icon
+                type="pf"
+                name="ok"
+                size="xs"
+                className="list-view-pf-icon-success"
+              />
+            ) : null
           }
           stacked={false}
           i18nTextBtnEdit={this.props.i18nTextBtnEdit}
