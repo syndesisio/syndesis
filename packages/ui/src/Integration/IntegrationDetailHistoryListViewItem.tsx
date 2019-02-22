@@ -35,10 +35,14 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
         <ListViewItem
           key={1}
           heading={
-            <span>
-              {<span>{this.props.i18nTextVersion}:</span>}{' '}
-              {this.props.integrationVersion}
-            </span>
+            this.props.integrationIsDraft ? (
+              <>{this.props.i18nTextDraft}</>
+            ) : (
+              <span>
+                {<span>{this.props.i18nTextVersion}:</span>}{' '}
+                {this.props.integrationVersion}
+              </span>
+            )
           }
           actions={
             this.props.integrationIsDraft ? (
