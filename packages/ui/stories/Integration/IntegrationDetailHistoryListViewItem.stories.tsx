@@ -10,16 +10,27 @@ const stories = storiesOf(
   module
 );
 
-/***
-const integrationId = 'i-LUF4Pfwxo4Wcrbyt7YIz';
-const integrationDescription = 'A test integration.';
-const integrationExternalUrl =
-  'https://i-swagger-connections-syndesis-staging.b6ff.rh-idev.openshiftapps.com';
-const integrationName = 'Student API';
-const integrationStatus = 'Published';
-***/
-const integrationVersion = '1';
-const integrationDate = 'Feb 21, 2019, 09:16:39';
+const integrationPublished = {
+  id: 'i-LYmlhVFB6pKKaBQVSyez',
+  version: 1,
+  createdAt: 1550261346722,
+  updatedAt: 1550261344272,
+  currentState: 'Unpublished',
+  targetState: 'Unpublished',
+  name: 'aaa',
+  isDraft: false,
+};
+
+const integrationUnpublished = {
+  id: 'i-LYmlhVFB6pKKaBQVSyez',
+  version: 1,
+  createdAt: 1550261346722,
+  updatedAt: 1550261344272,
+  currentState: 'Unpublished',
+  targetState: 'Unpublished',
+  name: 'aaa',
+  isDraft: true,
+};
 
 const i18nTextBtnEdit = 'Edit';
 const i18nTextBtnPublish = 'Publish';
@@ -35,8 +46,14 @@ stories
     'published',
     withNotes('Verify there is no Publish button')(() => (
       <IntegrationDetailHistoryListViewItem
-        integrationDate={text('integrationDate', integrationDate)}
-        integrationVersion={text('integrationVersion', integrationVersion)}
+        integrationUpdatedAt={text(
+          'integrationUpdatedAt',
+          integrationPublished.updatedAt
+        )}
+        integrationVersion={text(
+          'integrationVersion',
+          integrationPublished.version
+        )}
         i18nTextBtnEdit={text('i18nTextBtnEdit', i18nTextBtnEdit)}
         i18nTextBtnPublish={text('i18nTextBtnPublish', i18nTextBtnPublish)}
         i18nTextDraft={text('i18nTextDraft', i18nTextDraft)}
@@ -61,7 +78,10 @@ stories
     'unpublished',
     withNotes('Verify there is a Draft button')(() => (
       <IntegrationDetailHistoryListViewItem
-        integrationVersion={text('integrationVersion', integrationVersion)}
+        integrationVersion={text(
+          'integrationVersion',
+          integrationUnpublished.version
+        )}
         i18nTextBtnEdit={text('i18nTextBtnEdit', i18nTextBtnEdit)}
         i18nTextBtnPublish={text('i18nTextBtnPublish', i18nTextBtnPublish)}
         i18nTextDraft={text('i18nTextDraft', i18nTextDraft)}

@@ -9,8 +9,11 @@ import {
 import * as React from 'react';
 
 export interface IIntegrationDetailHistoryListViewItemProps {
-  integrationDate?: string;
-  integrationVersion?: string;
+  integrationCreatedAt?: Date;
+  integrationIsDraft?: boolean;
+  integrationName?: string;
+  integrationUpdatedAt?: Date;
+  integrationVersion?: number;
   i18nTextBtnEdit?: string;
   i18nTextBtnPublish?: string;
   i18nTextDraft?: string;
@@ -51,7 +54,7 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
           additionalInfo={[
             <ListViewInfoItem key={1}>
               {this.props.i18nTextLastPublished}
-              {this.props.integrationDate}
+              {this.props.integrationUpdatedAt}
             </ListViewInfoItem>,
           ]}
           leftContent={
