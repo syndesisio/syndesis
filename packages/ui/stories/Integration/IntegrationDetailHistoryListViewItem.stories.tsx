@@ -19,13 +19,14 @@ const integrationName = 'Student API';
 const integrationStatus = 'Published';
 ***/
 const integrationVersion = '1';
+const integrationDate = 'Feb 21, 2019, 09:16:39';
 
 const i18nTextBtnEdit = 'Edit';
 const i18nTextBtnPublish = 'Publish';
 const i18nTextDraft = 'Draft';
 const i18nTextHistoryMenuReplaceDraft = 'Replace Draft';
 const i18nTextHistoryMenuUnpublish = 'Unpublish';
-const i18nTextLastPublished = 'Last published';
+const i18nTextLastPublished = 'Last published on ';
 const i18nTextTitle = 'Integration Detail';
 const i18nTextVersion = 'Version';
 
@@ -34,6 +35,7 @@ stories
     'published',
     withNotes('Verify there is no Publish button')(() => (
       <IntegrationDetailHistoryListViewItem
+        integrationDate={text('integrationDate', integrationDate)}
         integrationVersion={text('integrationVersion', integrationVersion)}
         i18nTextBtnEdit={text('i18nTextBtnEdit', i18nTextBtnEdit)}
         i18nTextBtnPublish={text('i18nTextBtnPublish', i18nTextBtnPublish)}
