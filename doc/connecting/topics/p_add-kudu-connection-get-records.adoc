@@ -1,0 +1,51 @@
+// This module is included in the following assemblies:
+// as_connecting-to-kudu.adoc
+
+[id='add-kudu-connection-get-records_{context}']
+= Trigger an integration when scanning returns records from a Kudu table
+
+To trigger execution of an integration upon obtaining data from a 
+Kudu table, add a Kudu connection to an integration as its start 
+connection. When the integration is running, the Kudu connection 
+scans the table that you specified at the interval that you specified, 
+obtains all records in the table, and passes a collection of the
+records to the next step in the integration.
+
+A Kudu connection can obtain data from only one table.
+Between scans, if there are no changes to the data in the table that
+the connection scans, then the next scan returns the same data 
+as the previous scan.
+
+.Prerequisite
+* You created a Kudu connection. 
+* The table that you want to obtain records from exists. 
+
+.Procedure
+
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a Start Connection* page, click the Kudu connection that
+you want to use to start the integration. 
+. On the *Choose an Action* page, click the *Scan a Kudu table* action.
+. In the *Table* field, enter the name of the table that you want to
+obtain records from. 
+. In the *Period* field, accept the default of one minute, or enter
+the interval at which you want the connection to scan the table and
+return the records that are in the table. 
+. Click *Done*. 
+
+.Result
+The connection appears in the integration flow as the 
+integration's start connection. 
+
+.Next steps
+Add the integration's finish connection and any other connections
+that you want to include in the integration. 
+When the integration contains all the connections that are needed, 
+consider whether you need to split the collection of records that
+the Kudu connection returns. If you want to execute integration steps 
+for each record that you obtained from the Kudu table, then after the
+Kudu connection, add a Split step. Also, 
+you probably need to follow the Kudu connection with a data 
+mapping step that maps data obtained from Kudu to fields in
+subsequent connections in the integration. 
