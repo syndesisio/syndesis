@@ -34,6 +34,39 @@ var migrationHelper = {
         }
 
         return this.implicitSplitSteps.indexOf(step.action.id) !== -1;
+    },
+    getInputShape: function (step) {
+        if (step &&
+            step.action &&
+            step.action.descriptor &&
+            step.action.descriptor.inputDataShape) {
+            return step.action.descriptor.inputDataShape;
+        } else {
+            return this.noShape();
+        }
+    },
+    getOutputShape: function (step) {
+        if (step &&
+            step.action &&
+            step.action.descriptor &&
+            step.action.descriptor.outputDataShape) {
+            return step.action.descriptor.outputDataShape;
+        } else {
+            return this.anyShape();
+        }
+    },
+    anyShape: function () {
+        return {
+            "kind": "any"
+        };
+    },
+    noShape: function () {
+        return {
+            "kind": "none"
+        };
+    },
+    createKey: function () {
+        return Packages.io.syndesis.common.util.KeyGenerator.createKey();
     }
 };
 
@@ -53,13 +86,21 @@ if (integrations) {
                 if (migrationHelper.shouldMigrate(step)) {
                     var nextStep = steps[1];
                     if (nextStep && nextStep.stepKind !== 'split') {
-                        console.log("Migrating integration '" + integrationId + "' - adding auto split/aggregate steps");
+                        console.log("Migrating integration '" + integrationId + "' - adding explicit split step");
 
                         steps.splice(1, 0, {
+                            "id": step.id ? step.id : migrationHelper.createKey(),
                             "stepKind": "split",
                             "name": "Split",
                             "metadata": {
                                 "configured": "true"
+                            },
+                            "action": {
+                                "actionType": "step",
+                                "descriptor": {
+                                    "inputDataShape": migrationHelper.getInputShape(step),
+                                    "outputDataShape": migrationHelper.getOutputShape(step),
+                                }
                             },
                             "configuredProperties": {
                                 "expression": "${body}",
@@ -67,14 +108,9 @@ if (integrations) {
                             },
                         });
 
-                        steps.push({
-                            "stepKind": "aggregate",
-                            "name": "Aggregate",
-                            "metadata": {
-                                "configured": "true"
-                            },
-                            "configuredProperties": {},
-                        });
+                        if (step.id) {
+                            step.id = migrationHelper.createKey();
+                        }
 
                         migrated++;
                     }

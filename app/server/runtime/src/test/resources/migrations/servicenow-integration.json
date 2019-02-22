@@ -3,10 +3,19 @@
     {
       "steps": [
         {
+          "id": "step-service-now-start",
           "stepKind": "endpoint",
           "action": {
             "actionType": "connector",
-            "descriptor": {},
+            "descriptor": {
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape" : {
+                "kind" : "json-schema",
+                "specification" : "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"properties\":{\"ID\":{\"type\":\"integer\",\"required\":true}}}"
+              }
+            },
             "id": "io.syndesis:servicenow-action-retrieve-record",
             "name": "Retrieve Record",
             "pattern": "From",
@@ -25,6 +34,7 @@
           }
         },
         {
+          "id": "step-2",
           "stepKind": "mapper",
           "name": "Data Mapper",
           "action": {
@@ -39,6 +49,7 @@
           }
         },
         {
+          "id": "step-3",
           "stepKind": "endpoint",
           "action": {
             "actionType": "connector",

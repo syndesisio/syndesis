@@ -3,6 +3,7 @@
     {
       "steps": [
         {
+          "id": "step-1",
           "stepKind": "endpoint",
           "action": {
             "id": "io.syndesis:timer-action",
@@ -26,6 +27,7 @@
           }
         },
         {
+          "id": "step-2",
           "stepKind": "endpoint",
           "action": {
             "id": "io.syndesis:log-action",
