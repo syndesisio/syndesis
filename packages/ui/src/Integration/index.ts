@@ -1,5 +1,6 @@
 export * from './IntegrationActionConfigurationCard';
 export * from './IntegrationActionSelectorCard';
+export * from './IntegrationDetailHistoryListViewItem';
 export * from './IntegrationEditorLayout';
 export * from './IntegrationFlowAddStep';
 export * from './IntegrationFlowStep';
