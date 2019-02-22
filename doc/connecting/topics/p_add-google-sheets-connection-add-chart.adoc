@@ -95,7 +95,10 @@ the *overlayPosition* field, the default behavior is that Google Sheets
 creates a new sheet and places the chart in A1.
  
 .. Map a source *spreadsheetId* field to the target *spreadsheetId* field. 
-The connection adds the chart to this spreadsheet. 
+The connection uses source data in this spreadsheet to add the chart
+to a sheet in this same spreadsheet. The source data and the chart
+can be in two different sheets in the same spreadsheet but they
+cannot be in two different spreadsheets.  
 .. Set a chart title by mapping to the target *title* field. The connection inserts
 this string as the title of the chart.
 .. Set a chart subtitle by mapping to the target *subtitle* field. The connection inserts
@@ -112,7 +115,8 @@ first sheet in the spreadsheet.
 You can add a basic chart or a pie chart. Follow one of the following
 sets of instructions according to the kind of chart that you want to add.
 .. To add basic chart, in the target panel, expand the *basicChart* folder
-and map source fields to target fields that are in the *basicChart* folder::
+and map source fields to target fields that are in the *basicChart* folder:
+
 ... Set the chart type (`BAR`, `LINE`, `AREA`, or `COLUMN`) by mapping 
 to the target *type* field. The default is `COLUMN`.
 ... Set the title for the bottom axis of the chart by mapping to the 
@@ -121,17 +125,22 @@ target *axisTitleBottom* field.
 target *axisTitleLeft* field.
 ... Set the high level category of information that the chart shows by
 mapping to the target *domainRange* field. 
-This field uses the Google Sheets A1 notation. For example, suppose that the 
-first column in a source sheet provides a list of products, and you want 
-the chart to provide some data for each product. 
-The setting of *domainRange* would be something like `A1:A6`. 
+This field uses the Google Sheets A1 notation. For example, suppose that the first 
+column in a source sheet provides a list of 5 products in `A2` through `A6` , 
+and you want the chart to provide some data for each product. In this column, 
+the first cell (`A1`) must contain a label, such as  `Products`. 
+The setting of *domainRange* would be `A1:A6`. The chart will contain 
+the data that is in `A2` through `A6`. The chart does not display the label.
+ 
 ... Identify the location of the source data that the chart shows by mapping to the 
-target *dataRange* field. This field uses the Google Sheets A1 notation.
-A chart can provide only one series of data. For 
-example, suppose that the second column in a source sheet shows the 
-number sold for each product that is listed in the first column and this is
-the data that you want the chart to show. The 
-setting of *dataRange* would be something like `B1:B6`. 
+target *dataRange* field. This field uses the Google Sheets A1 notation. 
+A chart can provide only one series of data. Continuing with the *domainRange* 
+example, suppose that the second column in a source sheet shows the number 
+sold for each of the 5 products that are listed in the first column and 
+this is the data that you want the chart to show. In this column, 
+the first cell (`B1`) must contain a label, such as  `Number Sold`. 
+The setting of *dataRange* would be `B1:B6`. The chart will contain 
+the data that is in `B2` through `B6`. The chart does not display the label.   
 
 .. To add a pie chart, in the target panel, expand the *pieChart* folder
 and map source fields to target fields that are in the *pieChart* folder:
@@ -140,8 +149,21 @@ and map source fields to target fields that are in the *pieChart* folder:
 The value must be `BOTTOM_LEGEND`, `LEFT_LEGEND`, 
 `RIGHT_LEGEND`, `TOP_LEGEND`, or `NO_LEGEND`.
 ... Set the high level category of information that the pie chart shows 
-by mapping to the target *domainRange* field. This field uses the Google Sheets A1 notation.
+by mapping to the target *domainRange* field. 
+This field uses the Google Sheets A1 notation. For example, suppose that the first 
+column in a source sheet provides a list of 5 products in `A2` through `A6` , 
+and you want the chart to provide some data for each product. In this column, 
+the first cell (`A1`) must contain a label, such as  `Products`. 
+The setting of *domainRange* would be `A1:A6`. The chart will contain 
+the data that is in `A2` through `A6`. The chart does not display the label.
 ... Identify the location of the source data that the chart shows by 
 mapping to the target  *dataRange* field. This field uses the Google Sheets 
-A1 notation. A chart can provide only one series of data. 
+A1 notation. A chart can provide only one series of data. Continuing with the *domainRange* 
+example, suppose that the second column in a source sheet shows the number 
+sold for each of the 5 products that are listed in the first column and 
+this is the data that you want the chart to show. In this column, 
+the first cell (`B1`) must contain a label, such as  `Number Sold`. 
+The setting of *dataRange* would be B1:B6. The chart will contain 
+the data that is in `B2` through `B6`. The chart does not display the label.   
+
 .. In the upper right, click *Done* to add the data mapper step.

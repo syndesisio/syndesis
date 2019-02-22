@@ -26,9 +26,7 @@ source spreadsheet.
 * You created a Google Sheets connection that is authorized to access
 the Google spreadsheet that you want to add a pivot table to.
 * You have access to the ID for the spreadsheet that contains the source
-data for the pivot table. You have access to the ID for the spreadsheet 
-that you want to add a pivot table to. The source data and the pivot 
-table can be in different spreadsheets or in the same spreadsheet.
+data for the pivot table. 
 * You are creating or editing an integration and {prodname} is prompting you
 to choose the finish connection or to select the step that you want to add
 to the middle of the integration.
