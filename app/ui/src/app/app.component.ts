@@ -78,7 +78,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private meta: Meta,
     private router: Router,
     @Inject(DOCUMENT) private document: any
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.store.dispatch(new PlatformActions.AppBootstrap());
@@ -131,8 +131,9 @@ export class AppComponent implements OnInit, AfterViewInit {
         log.debug('NavigationError: ' + value.url);
       }
     });
-    this.navigationService.collapsed$.subscribe(
-      collapsed => (this.menuExpanded = collapsed)
+    this.navigationService.collapsed$.subscribe(collapsed =>
+      // This apparently can get triggered at a bad time for angular
+      setTimeout(() => (this.menuExpanded = collapsed), 1)
     );
   }
 

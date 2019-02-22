@@ -52,9 +52,9 @@ export class FlowPageService {
   maybeRemoveStep(router: Router, route: ActivatedRoute, position: number) {
     const step = this.currentFlowService.getStep(position);
     const metadata = step.metadata || {};
-    // An action or step that has no configuration may not have
-    // a configuredProperties but it's technically still configured
-    if (step.configuredProperties || metadata.configured === 'true') {
+    // Even if a step has a configured properties object, the user may
+    // not have completed configuring the step
+    if (metadata.configured === 'true') {
       // The step has previously been configured, so discard
       // any changes but leave the step in the flow
       router.navigate(['save-or-add-step'], {
