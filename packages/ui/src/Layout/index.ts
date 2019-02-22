@@ -7,3 +7,5 @@ export * from './PfNavLink';
 export * from './PfVerticalNavItem';
 export * from './TabBar';
 export * from './TabBarItem';
+export * from './WizardStep';
+export * from './WizardSteps';

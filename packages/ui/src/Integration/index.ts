@@ -4,7 +4,7 @@ export * from './IntegrationDetailHistoryListView';
 export * from './IntegrationDetailHistoryListViewItem';
 export * from './IntegrationEditorActionsListItem';
 export * from './IntegrationEditorChooseAction';
-export * from './IntegrationEditorConnectionsList';
+export * from './IntegrationEditorChooseConnection';
 export * from './IntegrationEditorConnectionsListItem';
 export * from './IntegrationEditorStepsList';
 export * from './IntegrationEditorStepsListItem';

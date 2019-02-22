@@ -1,16 +1,20 @@
 import { WithConnections, WithIntegrationHelpers } from '@syndesis/api';
 import { Integration } from '@syndesis/models';
-import { IntegrationEditorLayout } from '@syndesis/ui';
-import { WithRouteData } from '@syndesis/utils';
+import {
+  IntegrationEditorChooseConnection,
+  IntegrationEditorConnectionsListItem,
+  IntegrationEditorLayout,
+  IntegrationsListSkeleton,
+} from '@syndesis/ui';
+import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { PageTitle } from '../../../../../../containers/PageTitle';
 import {
   IntegrationCreatorBreadcrumbs,
-  IntegrationEditorChooseConnection,
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
-import { getCreateSelectActionHref } from '../../../resolversHelpers';
 
 /**
  * @param position - the zero-based position for the new step in the integration
@@ -69,19 +73,59 @@ export class SelectConnectionPage extends React.Component {
                 <WithConnections>
                   {({ data, hasData, error }) => (
                     <IntegrationEditorChooseConnection
-                      connections={data.connectionsWithToAction}
-                      loading={!hasData}
-                      error={error}
                       i18nTitle={'Choose a connection'}
                       i18nSubtitle={
                         'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
                       }
-                      getConnectionHref={getCreateSelectActionHref.bind(
-                        null,
-                        position,
-                        integration
-                      )}
-                    />
+                    >
+                      <WithLoader
+                        error={error}
+                        loading={!hasData}
+                        loaderChildren={<IntegrationsListSkeleton />}
+                        errorChildren={<div>TODO</div>}
+                      >
+                        {() => (
+                          <>
+                            {data.connectionsWithToAction.map((c, idx) => (
+                              <IntegrationEditorConnectionsListItem
+                                key={idx}
+                                integrationName={c.name}
+                                integrationDescription={
+                                  c.description || 'No description available.'
+                                }
+                                icon={
+                                  <img src={c.icon} width={24} height={24} />
+                                }
+                                actions={
+                                  <Link
+                                    to={resolvers.create.configure.addConnection.selectAction(
+                                      {
+                                        connection: c,
+                                        integration,
+                                        position,
+                                      }
+                                    )}
+                                    className={'btn btn-default'}
+                                  >
+                                    Select
+                                  </Link>
+                                }
+                              />
+                            ))}
+                            <IntegrationEditorConnectionsListItem
+                              integrationName={''}
+                              integrationDescription={''}
+                              icon={''}
+                              actions={
+                                <Link to={'#'} className={'btn btn-default'}>
+                                  Create connection
+                                </Link>
+                              }
+                            />
+                          </>
+                        )}
+                      </WithLoader>
+                    </IntegrationEditorChooseConnection>
                   )}
                 </WithConnections>
               }

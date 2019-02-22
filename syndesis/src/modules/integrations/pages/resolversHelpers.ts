@@ -1,29 +1,5 @@
-import {
-  Action,
-  ConnectionOverview,
-  Integration,
-  Step,
-} from '@syndesis/models';
-import * as H from 'history';
+import { Integration, Step } from '@syndesis/models';
 import resolvers from '../resolvers';
-
-export function getStartSelectActionHref(connection: ConnectionOverview) {
-  return resolvers.create.start.selectAction({ connection });
-}
-
-export function getFinishSelectActionHref(
-  startConnection: ConnectionOverview,
-  startAction: Action,
-  integration: Integration,
-  connection: ConnectionOverview
-): H.LocationDescriptor {
-  return resolvers.create.finish.selectAction({
-    finishConnection: connection,
-    integration,
-    startAction,
-    startConnection,
-  });
-}
 
 export function getCreateAddConnectionHref(
   integration: Integration,
@@ -40,18 +16,6 @@ export function getCreateAddStepHref(
   position: string
 ) {
   return resolvers.create.configure.addStep.selectStep({
-    integration,
-    position,
-  });
-}
-
-export function getCreateSelectActionHref(
-  position: string,
-  integration: Integration,
-  connection: ConnectionOverview
-) {
-  return resolvers.create.configure.addConnection.selectAction({
-    connection,
     integration,
     position,
   });
@@ -84,18 +48,6 @@ export function getEditAddConnectionHref(
 
 export function getEditAddStepHref(integration: Integration, position: string) {
   return resolvers.integration.edit.addStep.selectStep({
-    integration,
-    position,
-  });
-}
-
-export function getEditSelectActionHref(
-  position: string,
-  integration: Integration,
-  connection: ConnectionOverview
-) {
-  return resolvers.integration.edit.addConnection.selectAction({
-    connection,
     integration,
     position,
   });

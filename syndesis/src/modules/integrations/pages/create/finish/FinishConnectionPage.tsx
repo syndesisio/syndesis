@@ -1,20 +1,20 @@
 import { WithConnections } from '@syndesis/api';
 import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import {
+  IntegrationEditorChooseConnection,
+  IntegrationEditorConnectionsListItem,
   IntegrationEditorLayout,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
+  IntegrationsListSkeleton,
   IntegrationVerticalFlow,
 } from '@syndesis/ui';
-import { WithRouteData } from '@syndesis/utils';
+import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { PageTitle } from '../../../../../containers/PageTitle';
-import {
-  IntegrationCreatorBreadcrumbs,
-  IntegrationEditorChooseConnection,
-} from '../../../components';
+import { IntegrationCreatorBreadcrumbs } from '../../../components';
 import resolvers from '../../../resolvers';
-import { getFinishSelectActionHref } from '../../resolversHelpers';
 
 /**
  * @param startConnection - the connection object selected in step 1.1. Needed
@@ -91,16 +91,54 @@ export class FinishConnectionPage extends React.Component {
                       i18nSubtitle={
                         'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
                       }
-                      connections={data.connectionsWithToAction}
-                      loading={!hasData}
-                      error={error}
-                      getConnectionHref={getFinishSelectActionHref.bind(
-                        null,
-                        startConnection,
-                        startAction,
-                        integration
-                      )}
-                    />
+                    >
+                      <WithLoader
+                        error={error}
+                        loading={!hasData}
+                        loaderChildren={<IntegrationsListSkeleton />}
+                        errorChildren={<div>TODO</div>}
+                      >
+                        {() => (
+                          <>
+                            {data.connectionsWithToAction.map((c, idx) => (
+                              <IntegrationEditorConnectionsListItem
+                                key={idx}
+                                integrationName={c.name}
+                                integrationDescription={
+                                  c.description || 'No description available.'
+                                }
+                                icon={
+                                  <img src={c.icon} width={24} height={24} />
+                                }
+                                actions={
+                                  <Link
+                                    to={resolvers.create.finish.selectAction({
+                                      finishConnection: c,
+                                      integration,
+                                      startAction,
+                                      startConnection,
+                                    })}
+                                    className={'btn btn-default'}
+                                  >
+                                    Select
+                                  </Link>
+                                }
+                              />
+                            ))}
+                            <IntegrationEditorConnectionsListItem
+                              integrationName={''}
+                              integrationDescription={''}
+                              icon={''}
+                              actions={
+                                <Link to={'#'} className={'btn btn-default'}>
+                                  Create connection
+                                </Link>
+                              }
+                            />
+                          </>
+                        )}
+                      </WithLoader>
+                    </IntegrationEditorChooseConnection>
                   )}
                 </WithConnections>
               }
