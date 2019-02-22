@@ -1,6 +1,6 @@
 import { WithIntegrationHelpers } from '@syndesis/api';
 import { Integration } from '@syndesis/models';
-import { IntegrationEditorLayout } from '@syndesis/ui';
+import { Container, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../../containers/PageTitle';
@@ -43,7 +43,7 @@ export class AddStepPage extends React.Component {
             content={
               <>
                 <PageTitle title={'Save or add step'} />
-                <div className={'container-fluid'}>
+                <Container>
                   <h1>Add to Integration</h1>
                   <p>
                     You can continue adding steps and connections to your
@@ -70,7 +70,7 @@ export class AddStepPage extends React.Component {
                       />
                     )}
                   </WithIntegrationHelpers>
-                </div>
+                </Container>
               </>
             }
             cancelHref={resolvers.list()}

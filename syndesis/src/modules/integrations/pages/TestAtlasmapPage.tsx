@@ -3,7 +3,7 @@ import {
   DocumentType,
   InspectionType,
 } from '@syndesis/atlasmap-adapter';
-import { Breadcrumb } from '@syndesis/ui';
+import { Breadcrumb, Container } from '@syndesis/ui';
 import * as React from 'react';
 
 export interface ITestAtlasmapPageState {
@@ -37,7 +37,7 @@ export class TestAtlasmapPage extends React.Component<
   public render() {
     return (
       <>
-        <div className="container-fluid">
+        <Container>
           <div className="toolbar-pf row">
             <div className="col-sm-12">
               <div className="toolbar-pf-actions">
@@ -69,7 +69,7 @@ export class TestAtlasmapPage extends React.Component<
               </div>
             </div>
           </div>
-        </div>
+        </Container>
         <div
           style={{
             display: 'flex',

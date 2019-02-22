@@ -9,7 +9,7 @@ import {
 } from '@syndesis/api';
 import { AutoForm } from '@syndesis/auto-form';
 import { Action, ConnectionOverview } from '@syndesis/models';
-import { IntegrationActionConfigurationCard } from '@syndesis/ui';
+import { Container, IntegrationActionConfigurationCard } from '@syndesis/ui';
 import * as React from 'react';
 
 export interface IWithConfigurationFormChildrenProps {
@@ -144,12 +144,12 @@ export class WithConfigurationForm extends React.Component<
             this.props.children({
               form: (
                 <>
-                  <div className="container-fluid">
+                  <Container>
                     <h1>Configure action</h1>
                     <p>
                       Fill in the required information for the selected action.
                     </p>
-                  </div>
+                  </Container>
                   <form
                     className="form-horizontal required-pf"
                     role="form"
@@ -185,10 +185,10 @@ export class WithConfigurationForm extends React.Component<
     return this.props.children({
       form: (
         <>
-          <div className="container-fluid">
+          <Container>
             <h1>Configure action</h1>
             <p>Fill in the required information for the selected action.</p>
-          </div>
+          </Container>
           <IntegrationActionConfigurationCard
             content={
               <p className="alert alert-info">

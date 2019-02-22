@@ -1,7 +1,7 @@
 import { WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { Integration } from '@syndesis/models';
-import { IntegrationEditorLayout } from '@syndesis/ui';
+import { Container, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../../containers/PageTitle';
@@ -84,7 +84,7 @@ export class SaveIntegrationPage extends React.Component {
                       content={
                         <>
                           <PageTitle title={'Save the integration'} />
-                          <div className={'container-fluid'}>
+                          <Container>
                             <h1>Save the integration</h1>
                             <p>Update details about this integration.</p>
                             <form
@@ -95,14 +95,12 @@ export class SaveIntegrationPage extends React.Component {
                               <div className="row row-cards-pf">
                                 <div className="card-pf">
                                   <div className="card-pf-body">
-                                    <div className="container-fluid">
-                                      {fields}
-                                    </div>
+                                    <Container>{fields}</Container>
                                   </div>
                                 </div>
                               </div>
                             </form>
-                          </div>
+                          </Container>
                         </>
                       }
                       cancelHref={resolvers.list()}

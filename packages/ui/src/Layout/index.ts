@@ -1,6 +1,7 @@
 export * from './AppLayout';
 export * from './AppTopMenu';
 export * from './Breadcrumb';
+export * from './Container';
 export * from './Loader';
 export * from './PageHeader';
 export * from './PfNavLink';
