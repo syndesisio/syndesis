@@ -47,7 +47,7 @@
               "node_modules/patternfly/dist/css/patternfly.css",
               "node_modules/patternfly/dist/css/patternfly-additions.css",
               "node_modules/patternfly-ng/dist/css/patternfly-ng.min.css",
-              "node_modules/@patternfly/patternfly/patternfly-base.css",
+              "src/scss/patternfly-base-alacarte.scss",
               "node_modules/@patternfly/patternfly/components/Page/page.css",
               "node_modules/@patternfly/patternfly/components/BackgroundImage/background-image.css",
               "node_modules/@patternfly/patternfly/components/Dropdown/dropdown.css",

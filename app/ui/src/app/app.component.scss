@@ -7,11 +7,16 @@ main {
 }
 
 .pf-c-page {
-  .nav-pf-vertical .list-group-item > a,
-  .nav-pf-vertical .list-group-item.active > a,
-  .nav-pf-vertical .list-group-item:hover > a {
-    font-weight: inherit;
-    text-decoration: none;
+  .nav-pf-vertical .list-group-item {
+    a {
+      font-weight: 400;
+    }
+    &:hover,
+    &.active {
+      a {
+        font-weight: 600;
+      }
+    }
   }
 
   #appLogo {
