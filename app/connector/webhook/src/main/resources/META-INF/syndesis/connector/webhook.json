@@ -6,8 +6,8 @@
       "descriptor": {
         "componentScheme": "servlet",
         "configuredProperties": {
-          "httpMethodRestrict": "GET,POST",
-          "headerFilterStrategy": "syndesisHeaderStrategy"
+          "headerFilterStrategy": "syndesisHeaderStrategy",
+          "httpMethodRestrict": "GET,POST"
         },
         "connectorCustomizers": [
           "io.syndesis.connector.webhook.WebhookConnectorCustomizer"

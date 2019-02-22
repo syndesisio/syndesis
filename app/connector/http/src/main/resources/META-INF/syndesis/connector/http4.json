@@ -177,6 +177,9 @@
     }
   ],
   "componentScheme": "http4",
+  "configuredProperties": {
+    "headerFilterStrategy": "syndesisHeaderStrategy"
+  },
   "dependencies": [
     {
       "id": "@project.groupId@:@project.artifactId@:@project.version@",
@@ -200,9 +203,6 @@
       "secret": false,
       "type": "string"
     }
-  },
-  "configuredProperties": {
-    "headerFilterStrategy": "syndesisHeaderStrategy"
   },
   "tags": [
     "verifier"

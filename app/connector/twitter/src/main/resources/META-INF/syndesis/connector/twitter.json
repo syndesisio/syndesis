@@ -144,8 +144,8 @@
       "javaType": "java.lang.String",
       "kind": "property",
       "label": "security",
-      "order": 1,
       "labelHint": "The Consumer API key that Twitter provides when you register a client application.",
+      "order": 1,
       "required": true,
       "secret": true,
       "tags": [
@@ -161,8 +161,8 @@
       "javaType": "java.lang.String",
       "kind": "property",
       "label": "security",
-      "order": 2,
       "labelHint": "The Consumer API secret key that Twitter provides when you register a client application.",
+      "order": 2,
       "required": true,
       "secret": true,
       "tags": [

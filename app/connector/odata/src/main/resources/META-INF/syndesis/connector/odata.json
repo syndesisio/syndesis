@@ -7,10 +7,10 @@
         "configuredProperties": {
           "apiName": "read"
         },
-        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
         "connectorCustomizers": [
           "io.syndesis.connector.odata.customizer.ODataStartCustomizer"
         ],
+        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
         "inputDataShape": {
           "kind": "any"
         },
@@ -18,104 +18,10 @@
           "kind": "json-schema"
         },
         "propertyDefinitionSteps": [
-        {
+          {
             "description": "Enhance the service url with a resource path",
             "name": "Resource Path and Query Options",
             "properties": {
-              "methodName": {
-                "deprecated": false,
-                "displayName": "Resource Collection",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource collection to be queried, eg. an <i><b>EntitySetName</b></i> or <i><b>EntityFunctionImportCall</b></i>",
-                "order": "1",
-                "required": true,
-                "secret": false,
-                "type": "string"
-              },
-              "keyPredicate": {
-                "deprecated": false,
-                "displayName": "Entity Key Predicate",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "Parameter to refine the collection to a single entity, eg. People(<i><b>UserName='Bob'</i></b>) or Categories(<i><b>1</b></i>)",
-                "order": "2",
-                "required": false,
-                "secret": false,
-                "type": "string"
-              },
-              "queryParams": {
-                "deprecated": false,
-                "displayName": "Query Options",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "consumer",
-                "labelHint": "Enter the full query to be applied to the collection in OData query syntax.",
-                "order": "3",
-                "required": false,
-                "secret": false,
-                "type": "string"
-              },
-              "filterAlreadySeen": {
-                "deprecated": false,
-                "displayName": "Filter Old Results",
-                "group": "common",
-                "javaType": "java.lang.Boolean",
-                "kind": "parameter",
-                "label": "consumer",
-                "labelHint": "While continuing to monitor the OData service, filter out those results already communicated.",
-                "order": "4",
-                "required": false,
-                "secret": false,
-                "type": "boolean"
-              },
-              "splitResult": {
-                "deprecated": false,
-                "defaultValue": true,
-                "displayName": "Split Results",
-                "group": "consumer",
-                "javaType": "java.lang.Boolean",
-                "kind": "parameter",
-                "label": "consumer",
-                "labelHint": "When enabled the result set is split into multiple results where each result represents a single OData entity.",
-                "order": "5",
-                "required": false,
-                "secret": false,
-                "type": "boolean"
-              },
-              "initialDelay": {
-                "defaultValue": 1000,
-                "deprecated": false,
-                "displayName": "Interval before polling starts",
-                "group": "consumer",
-                "javaType": "java.lang.Integer",
-                "kind": "parameter",
-                "label": "consumer,scheduler",
-                "labelHint": "Wait amount of time before starting to poll",
-                "optionalPrefix": "consumer.",
-                "order": "6",
-                "required": false,
-                "secret": false,
-                "type": "duration"
-              },
-              "delay": {
-                "defaultValue": 30000,
-                "deprecated": false,
-                "displayName": "Delay",
-                "group": "scheduler",
-                "javaType": "long",
-                "kind": "parameter",
-                "label": "consumer,scheduler",
-                "labelHint": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
-                "optionalPrefix": "consumer.",
-                "order": "7",
-                "required": false,
-                "secret": false,
-                "type": "duration"
-              },
               "backoffIdleThreshold": {
                 "defaultValue": 1,
                 "deprecated": false,
@@ -145,6 +51,100 @@
                 "required": false,
                 "secret": false,
                 "type": "integer"
+              },
+              "delay": {
+                "defaultValue": 30000,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
+                "optionalPrefix": "consumer.",
+                "order": "7",
+                "required": false,
+                "secret": false,
+                "type": "duration"
+              },
+              "filterAlreadySeen": {
+                "deprecated": false,
+                "displayName": "Filter Old Results",
+                "group": "common",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "While continuing to monitor the OData service, filter out those results already communicated.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
+              "initialDelay": {
+                "defaultValue": 1000,
+                "deprecated": false,
+                "displayName": "Interval before polling starts",
+                "group": "consumer",
+                "javaType": "java.lang.Integer",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Wait amount of time before starting to poll",
+                "optionalPrefix": "consumer.",
+                "order": "6",
+                "required": false,
+                "secret": false,
+                "type": "duration"
+              },
+              "keyPredicate": {
+                "deprecated": false,
+                "displayName": "Entity Key Predicate",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Parameter to refine the collection to a single entity, eg. People(<i><b>UserName='Bob'</i></b>) or Categories(<i><b>1</b></i>)",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "methodName": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be queried, eg. an <i><b>EntitySetName</b></i> or <i><b>EntityFunctionImportCall</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "queryParams": {
+                "deprecated": false,
+                "displayName": "Query Options",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Enter the full query to be applied to the collection in OData query syntax.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "splitResult": {
+                "defaultValue": true,
+                "deprecated": false,
+                "displayName": "Split Results",
+                "group": "consumer",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "When enabled the result set is split into multiple results where each result represents a single OData entity.",
+                "order": "5",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
               }
             }
           }
@@ -171,32 +171,6 @@
   "id": "odata",
   "name": "OData",
   "properties": {
-    "serviceUri": {
-      "deprecated": false,
-      "displayName": "Service Root URL",
-      "group": "common",
-      "javaType": "java.lang.String",
-      "kind": "parameter",
-      "labelHint": "The service root URL of your OData server",
-      "order": "1",
-      "required": true,
-      "secret": false,
-      "type": "string"
-    },
-      "basicUserName": {
-      "componentProperty": true,
-      "deprecated": false,
-      "displayName": "User Name",
-      "group": "security",
-      "javaType": "java.lang.String",
-      "kind": "parameter",
-      "label": "common,security",
-      "labelHint": "Specify a user name for basic authentication of the odata service url, if required.",
-      "order": "2",
-      "required": false,
-      "secret": false,
-      "type": "string"
-    },
     "basicPassword": {
       "componentProperty": true,
       "deprecated": false,
@@ -211,27 +185,16 @@
       "secret": true,
       "type": "string"
     },
-    "skipCertificateCheck": {
+    "basicUserName": {
       "componentProperty": true,
-      "defaultValue": "false",
       "deprecated": false,
-      "displayName": "Check Certificate",
-      "enum": [
-        {
-          "label": "Disable",
-          "value": "true"
-        },
-        {
-          "label": "Enable",
-          "value": "false"
-        }
-      ],
+      "displayName": "User Name",
       "group": "security",
       "javaType": "java.lang.String",
-      "kind": "property",
+      "kind": "parameter",
       "label": "common,security",
-      "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
-      "order": "4",
+      "labelHint": "Specify a user name for basic authentication of the odata service url, if required.",
+      "order": "2",
       "required": false,
       "secret": false,
       "type": "string"
@@ -260,6 +223,43 @@
       "required": false,
       "secret": false,
       "type": "textarea"
+    },
+    "serviceUri": {
+      "deprecated": false,
+      "displayName": "Service Root URL",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The service root URL of your OData server",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "skipCertificateCheck": {
+      "componentProperty": true,
+      "defaultValue": "false",
+      "deprecated": false,
+      "displayName": "Check Certificate",
+      "enum": [
+        {
+          "label": "Disable",
+          "value": "true"
+        },
+        {
+          "label": "Enable",
+          "value": "false"
+        }
+      ],
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
+      "order": "4",
+      "required": false,
+      "secret": false,
+      "type": "string"
     }
   },
   "tags": [
