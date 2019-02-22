@@ -32,25 +32,7 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                     <WithLoader
                       error={this.props.error}
                       loading={this.props.loading}
-                      loaderChildren={
-                        <>
-                          <div className={'list-group-item'}>
-                            <div>
-                              <IntegrationsListSkeleton />
-                            </div>
-                          </div>
-                          <div className={'list-group-item'}>
-                            <div>
-                              <IntegrationsListSkeleton />
-                            </div>
-                          </div>
-                          <div className={'list-group-item'}>
-                            <div>
-                              <IntegrationsListSkeleton />
-                            </div>
-                          </div>
-                        </>
-                      }
+                      loaderChildren={<IntegrationsListSkeleton />}
                       errorChildren={<div>TODO</div>}
                     >
                       {() =>
