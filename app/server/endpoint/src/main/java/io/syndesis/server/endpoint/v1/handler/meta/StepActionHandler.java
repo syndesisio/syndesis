@@ -72,7 +72,11 @@ public class StepActionHandler extends BaseHandler {
         final Meta<StepDescriptor> metaResult;
         if (metadataHandler.isPresent()) {
             final DynamicActionMetadata enrichedMetadata = metadataHandler.get().handle(metadata);
-            metaResult = Meta.verbatim(applyMetadata(enrichedMetadata));
+            if (enrichedMetadata.equals(DynamicActionMetadata.NOTHING)) {
+                metaResult = Meta.verbatim(applyMetadata(metadata));
+            } else {
+                metaResult = Meta.verbatim(applyMetadata(enrichedMetadata));
+            }
         } else {
             metaResult = Meta.verbatim(applyMetadata(metadata));
         }

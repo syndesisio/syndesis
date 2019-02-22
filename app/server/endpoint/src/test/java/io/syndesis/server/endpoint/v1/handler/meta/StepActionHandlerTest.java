@@ -155,6 +155,29 @@ public class StepActionHandlerTest {
     }
 
     @Test
+    public void shouldPreserveShapesForUnsupportedShapeKind() {
+        DataShape xmlSchape = new DataShape.Builder()
+                .kind(DataShapeKinds.XML_SCHEMA_INSPECTED)
+                .specification("</>")
+                .putMetadata("something", "else")
+                .build();
+
+        final DynamicActionMetadata givenMetadata = new DynamicActionMetadata.Builder()
+                .inputShape(xmlSchape)
+                .outputShape(xmlSchape)
+                .build();
+
+        final Response response = handler.enrichStepMetadata(StepKind.split.name(), givenMetadata);
+
+        @SuppressWarnings("unchecked")
+        final Meta<StepDescriptor> meta = (Meta<StepDescriptor>) response.getEntity();
+
+        final StepDescriptor descriptor = meta.getValue();
+        assertThat(descriptor.getInputDataShape()).contains(xmlSchape);
+        assertThat(descriptor.getOutputDataShape()).contains(xmlSchape);
+    }
+
+    @Test
     public void shouldPreserveShapesForUnsupportedStepKind() {
         final DynamicActionMetadata givenMetadata = new DynamicActionMetadata.Builder()
                 .inputShape(dummyShape())
