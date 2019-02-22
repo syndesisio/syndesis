@@ -46,6 +46,7 @@ stories
     'published',
     withNotes('Verify there is no Publish button')(() => (
       <IntegrationDetailHistoryListViewItem
+        integrationIsDraft={integrationPublished.isDraft}
         integrationUpdatedAt={text(
           'integrationUpdatedAt',
           integrationPublished.updatedAt
@@ -78,6 +79,7 @@ stories
     'unpublished',
     withNotes('Verify there is a Draft button')(() => (
       <IntegrationDetailHistoryListViewItem
+        integrationIsDraft={integrationUnpublished.isDraft}
         integrationVersion={text(
           'integrationVersion',
           integrationUnpublished.version
