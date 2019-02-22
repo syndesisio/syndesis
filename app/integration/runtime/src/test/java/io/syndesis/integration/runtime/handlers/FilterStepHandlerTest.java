@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -140,28 +142,28 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
-                new Step.Builder()
-                    .stepKind(StepKind.endpoint)
-                    .action(new ConnectorAction.Builder()
-                        .descriptor(new ConnectorDescriptor.Builder()
-                            .componentScheme("direct")
-                            .putConfiguredProperty("name", "start")
-                            .build())
-                        .build())
-                    .build(),
-                new Step.Builder()
-                    .stepKind(StepKind.expressionFilter)
-                    .putConfiguredProperty("filter", "${body.name} == 'James'")
-                    .build(),
-                new Step.Builder()
-                    .stepKind(StepKind.endpoint)
-                    .action(new ConnectorAction.Builder()
-                        .descriptor(new ConnectorDescriptor.Builder()
-                            .componentScheme("mock")
-                            .putConfiguredProperty("name", "result")
-                            .build())
-                        .build())
-                    .build()
+                    new Step.Builder()
+                            .stepKind(StepKind.endpoint)
+                            .action(new ConnectorAction.Builder()
+                                    .descriptor(new ConnectorDescriptor.Builder()
+                                            .componentScheme("direct")
+                                            .putConfiguredProperty("name", "start")
+                                            .build())
+                                    .build())
+                            .build(),
+                    new Step.Builder()
+                            .stepKind(StepKind.expressionFilter)
+                            .putConfiguredProperty("filter", "${body.name} == 'James'")
+                            .build(),
+                    new Step.Builder()
+                            .stepKind(StepKind.endpoint)
+                            .action(new ConnectorAction.Builder()
+                                    .descriptor(new ConnectorDescriptor.Builder()
+                                            .componentScheme("mock")
+                                            .putConfiguredProperty("name", "result")
+                                            .build())
+                                    .build())
+                            .build()
             );
 
             // Set up the camel context
@@ -174,8 +176,8 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             // Dump routes as XML for troubleshooting
             dumpRoutes(context);
 
-            final List<String> matchingMessages = Collections.singletonList("{ \"name\": \"James\" }");
-            final List<String> notMatchingMessages = Collections.singletonList("{ \"name\": \"Jimmi\" }");
+            final List<String> matchingMessages = Collections.singletonList(buildPersonJson("James"));
+            final List<String> notMatchingMessages = Collections.singletonList(buildPersonJson("Jimmi"));
             final ProducerTemplate template = context.createProducerTemplate();
             final MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
 
@@ -193,6 +195,72 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
             verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
             verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+        } finally {
+            context.stop();
+        }
+    }
+
+    @Test
+    public void testExpressionFilterStepOnArray() throws Exception {
+        final CamelContext context = new DefaultCamelContext();
+
+        try {
+            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
+                    new Step.Builder()
+                            .stepKind(StepKind.endpoint)
+                            .action(new ConnectorAction.Builder()
+                                    .descriptor(new ConnectorDescriptor.Builder()
+                                            .componentScheme("direct")
+                                            .putConfiguredProperty("name", "start")
+                                            .build())
+                                    .build())
+                            .build(),
+                    new Step.Builder()
+                            .stepKind(StepKind.expressionFilter)
+                            .putConfiguredProperty("filter", "${body.size()} > 0 && ${body[0].name} == 'James'")
+                            .build(),
+                    new Step.Builder()
+                            .stepKind(StepKind.endpoint)
+                            .action(new ConnectorAction.Builder()
+                                    .descriptor(new ConnectorDescriptor.Builder()
+                                            .componentScheme("mock")
+                                            .putConfiguredProperty("name", "result")
+                                            .build())
+                                    .build())
+                            .build()
+            );
+
+            // Set up the camel context
+            context.setUuidGenerator(KeyGenerator::createKey);
+            context.addLogListener(new IntegrationLoggingListener(activityTracker));
+            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
+            context.addRoutes(routes);
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            final List<String> matchingMessages = Collections.singletonList(buildPersonJsonArray("James"));
+            final List<String> notMatchingMessages = Arrays.asList(buildPersonJsonArray(),
+                                                                   buildPersonJsonArray("Jimmi"));
+            final ProducerTemplate template = context.createProducerTemplate();
+            final MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
+
+            List<String> allMessages = new ArrayList<>();
+            allMessages.addAll(matchingMessages);
+            allMessages.addAll(notMatchingMessages);
+
+            result.expectedBodiesReceived(matchingMessages);
+
+            for (Object body : allMessages) {
+                template.sendBody("direct:start", body);
+            }
+
+            result.assertIsSatisfied();
+
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(4)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
             verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
         } finally {
             context.stop();
@@ -256,8 +324,8 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             // Dump routes as XML for troubleshooting
             dumpRoutes(context);
 
-            final List<String> matchingMessages = Arrays.asList("{ \"name\": \"James\" }", "{ \"name\": \"Roland\" }");
-            final List<String> notMatchingMessages = Collections.singletonList("{ \"name\": \"Jimmi\" }");
+            final List<String> matchingMessages = Arrays.asList(buildPersonJson("James"), buildPersonJson("Roland"));
+            final List<String> notMatchingMessages = Collections.singletonList(buildPersonJson("Jimmi"));
             final ProducerTemplate template = context.createProducerTemplate();
             final MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
 
@@ -323,8 +391,8 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
             // Dump routes as XML for troubleshooting
             dumpRoutes(context);
 
-            final List<String> matchingMessages = Arrays.asList("{ \"user\": { \"name\": \"James\" } }", "{  \"user\": { \"name\": \"Roland\" } }");
-            final List<String> notMatchingMessages = Collections.singletonList("{ \"user\": { \"name\": \"Jimmi\" } }");
+            final List<String> matchingMessages = Arrays.asList(buildUserJson("James"), buildUserJson("Roland"));
+            final List<String> notMatchingMessages = Collections.singletonList(buildUserJson("Jimmi"));
             final ProducerTemplate template = context.createProducerTemplate();
             final MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
 
@@ -342,6 +410,76 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
             verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
             verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+        } finally {
+            context.stop();
+        }
+    }
+
+    @Test
+    public void testRuleFilterStepWithJsonArrayPath() throws Exception {
+        final CamelContext context = new DefaultCamelContext();
+
+        try {
+            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
+                    new Step.Builder()
+                            .stepKind(StepKind.endpoint)
+                            .action(new ConnectorAction.Builder()
+                                    .descriptor(new ConnectorDescriptor.Builder()
+                                            .componentScheme("direct")
+                                            .putConfiguredProperty("name", "start")
+                                            .build())
+                                    .build())
+                            .build(),
+                    new Step.Builder()
+                            .stepKind(StepKind.ruleFilter)
+                            .putConfiguredProperty("type", "rule")
+                            .putConfiguredProperty("predicate", "AND")
+                            .putConfiguredProperty("rules", "[{\"path\":\"size()\",\"op\":\"==\",\"value\":\"2\"}, {\"path\":\"[0].user.name\",\"op\":\"==\",\"value\":\"James\"}, {\"path\":\"[1].user.name\",\"op\":\"==\",\"value\":\"Roland\"}]")
+                            .build(),
+                    new Step.Builder()
+                            .stepKind(StepKind.endpoint)
+                            .action(new ConnectorAction.Builder()
+                                    .descriptor(new ConnectorDescriptor.Builder()
+                                            .componentScheme("mock")
+                                            .putConfiguredProperty("name", "result")
+                                            .build())
+                                    .build())
+                            .build()
+            );
+
+            // Set up the camel context
+            context.setUuidGenerator(KeyGenerator::createKey);
+            context.addLogListener(new IntegrationLoggingListener(activityTracker));
+            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
+            context.addRoutes(routes);
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            final List<String> matchingMessages = Collections.singletonList(buildUserJsonArray("James", "Roland"));
+            final List<String> notMatchingMessages = Arrays.asList(buildUserJsonArray(),
+                                                                    buildUserJsonArray("Jimmi"),
+                                                                    buildUserJsonArray("Jimmi", "Roland"),
+                                                                    buildUserJsonArray("James", "Roland", "Jimmi"));
+            final ProducerTemplate template = context.createProducerTemplate();
+            final MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
+
+            List<String> allMessages = new ArrayList<>();
+            allMessages.addAll(matchingMessages);
+            allMessages.addAll(notMatchingMessages);
+
+            result.expectedBodiesReceived(matchingMessages);
+
+            for (Object body : allMessages) {
+                template.sendBody("direct:start", body);
+            }
+
+            result.assertIsSatisfied();
+
+            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
             verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
         } finally {
             context.stop();
@@ -413,6 +551,26 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
         } finally {
             context.stop();
         }
+    }
+
+    private String buildPersonJson(String name) {
+        return "{ \"name\": \"" + name + "\" }";
+    }
+
+    private String buildPersonJsonArray(String ... names) {
+        return "[" + Stream.of(names)
+                        .map(this::buildPersonJson)
+                        .collect(Collectors.joining(",")) + "]";
+    }
+
+    private String buildUserJson(String ... names) {
+        return Stream.of(names)
+                .map(name -> "{ \"user\": " + buildPersonJson(name) + " }")
+                .collect(Collectors.joining(","));
+    }
+
+    private String buildUserJsonArray(String ... names) {
+        return "[" + buildUserJson(names) + "]";
     }
 
     // ***************************

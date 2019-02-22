@@ -25,8 +25,8 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -39,12 +39,14 @@ public class JsonSchemaInspector implements Inspector {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    static final List<String> COLLECTION_PATHS = Collections.singletonList("size()");
+
     @Override
     public List<String> getPaths(final String kind, final String type, final String specification,
         final Optional<byte[]> exemplar) {
-        final ObjectSchema schema;
+        final JsonSchema schema;
         try {
-            schema = MAPPER.readerFor(ObjectSchema.class).readValue(specification);
+            schema = MAPPER.readerFor(JsonSchema.class).readValue(specification);
         } catch (final IOException e) {
             LOG.warn(
                 "Unable to parse the given JSON schema, increase log level to DEBUG to see the schema being parsed");
@@ -53,10 +55,29 @@ public class JsonSchemaInspector implements Inspector {
             return Collections.emptyList();
         }
 
-        final Map<String, JsonSchema> properties = schema.getProperties();
-
+        String context = null;
         final List<String> paths = new ArrayList<>();
-        fetchPaths(null, paths, properties);
+        ObjectSchema objectSchema;
+        if (schema.isObjectSchema()) {
+            objectSchema = schema.asObjectSchema();
+        } else if (schema.isArraySchema()) {
+            ArraySchema arraySchema = schema.asArraySchema();
+            if (arraySchema.getItems().isSingleItems()) {
+                objectSchema = arraySchema.getItems().asSingleItems().getSchema().asObjectSchema();
+            } else {
+                throw new IllegalStateException("Unexpected array schema type - expected single item schema");
+            }
+            // add collection specific paths
+            paths.addAll(COLLECTION_PATHS);
+            context = "[]";
+        } else {
+            throw new IllegalStateException(String.format("Unexpected schema type %s - expected object or array schema", schema.getType()));
+        }
+
+        if (objectSchema != null) {
+            final Map<String, JsonSchema> properties = objectSchema.getProperties();
+            fetchPaths(context, paths, properties);
+        }
 
         return paths;
     }
