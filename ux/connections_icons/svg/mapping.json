@@ -154,5 +154,9 @@
   {
     "connectorId": "telegram",
     "icon": "connectionicons_Telegram.svg"
+  },
+  {
+    "connectorId": "sheets",
+    "icon": "connectionicons_googlesheets.svg"
   }
 ]
