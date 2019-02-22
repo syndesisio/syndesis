@@ -13,11 +13,9 @@ import {
   WithListViewToolbarHelpers,
   WithLoader,
 } from '@syndesis/utils';
-import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import i18n from '../../../i18n';
-import CustomizationsNavBar from '../components/CustomizationsNavBar';
 import routes from '../routes';
 
 function getFilteredAndSortedApiConnectors(
@@ -107,85 +105,72 @@ export default class ApiConnectorsPage extends React.Component {
               return (
                 <NamespacesConsumer ns={['customizations', 'shared']}>
                   {t => (
-                    <>
-                      <CustomizationsNavBar />
-                      <Grid fluid={true}>
-                        <Grid.Row>
-                          <ApiConnectorListView
-                            filterTypes={filterTypes}
-                            sortTypes={sortTypes}
-                            {...this.state}
-                            linkCreateApiConnector={
-                              routes.apiConnectors.create.upload
-                            }
-                            resultsCount={filteredAndSorted.length}
-                            {...helpers}
-                            i18nDescription={t(
-                              'apiConnector.apiConnectorsPageDescription'
-                            )}
-                            i18nEmptyStateInfo={t(
-                              'apiConnector.emptyStateInfo'
-                            )}
-                            i18nEmptyStateTitle={t(
-                              'apiConnector.CreateApiConnector'
-                            )}
-                            i18nLinkCreateApiConnector={t(
-                              'apiConnector.CreateApiConnector'
-                            )}
-                            i18nLinkCreateApiConnectorTip={t(
-                              'apiConnector.createApiConnectorTip'
-                            )}
-                            i18nName={t('shared:Name')}
-                            i18nResultsCount={t('shared:resultsCount', {
-                              count: filteredAndSorted.length,
-                            })}
-                            i18nTitle={t('apiConnector.apiConnectorsPageTitle')}
-                          >
-                            <WithLoader
-                              error={error}
-                              loading={!hasData}
-                              loaderChildren={
-                                <ApiConnectorListSkeleton
-                                  width={800}
-                                  style={{
-                                    backgroundColor: '#FFF',
-                                    marginTop: 30,
-                                  }}
-                                />
-                              }
-                              errorChildren={<div>TODO</div>}
-                            >
-                              {() =>
-                                filteredAndSorted
-                                  .filter((api: Connector) =>
-                                    this.filterUndefinedId(api)
-                                  )
-                                  .map((api: Connector, index: number) => (
-                                    <ApiConnectorListItem
-                                      key={index}
-                                      apiConnectorId={api.id as string}
-                                      apiConnectorDescription={api.description}
-                                      apiConnectorIcon={api.icon}
-                                      apiConnectorName={api.name}
-                                      i18nDelete={t('shared:Delete')}
-                                      i18nDetails={t('shared:Details')}
-                                      i18nDetailsTip={t(
-                                        'apiConnector.detailsApiConnectorTip'
-                                      )}
-                                      i18nUsedByMessage={this.getUsedByMessage(
-                                        api
-                                      )}
-                                      onDelete={this.handleDelete}
-                                      onDetails={this.handleDetails}
-                                      usedBy={optionalIntValue(api.uses)}
-                                    />
-                                  ))
-                              }
-                            </WithLoader>
-                          </ApiConnectorListView>
-                        </Grid.Row>
-                      </Grid>
-                    </>
+                    <ApiConnectorListView
+                      filterTypes={filterTypes}
+                      sortTypes={sortTypes}
+                      {...this.state}
+                      linkCreateApiConnector={
+                        routes.apiConnectors.create.upload
+                      }
+                      resultsCount={filteredAndSorted.length}
+                      {...helpers}
+                      i18nDescription={t(
+                        'apiConnector.apiConnectorsPageDescription'
+                      )}
+                      i18nEmptyStateInfo={t('apiConnector.emptyStateInfo')}
+                      i18nEmptyStateTitle={t('apiConnector.CreateApiConnector')}
+                      i18nLinkCreateApiConnector={t(
+                        'apiConnector.CreateApiConnector'
+                      )}
+                      i18nLinkCreateApiConnectorTip={t(
+                        'apiConnector.createApiConnectorTip'
+                      )}
+                      i18nName={t('shared:Name')}
+                      i18nResultsCount={t('shared:resultsCount', {
+                        count: filteredAndSorted.length,
+                      })}
+                      i18nTitle={t('apiConnector.apiConnectorsPageTitle')}
+                    >
+                      <WithLoader
+                        error={error}
+                        loading={!hasData}
+                        loaderChildren={
+                          <ApiConnectorListSkeleton
+                            width={800}
+                            style={{
+                              backgroundColor: '#FFF',
+                              marginTop: 30,
+                            }}
+                          />
+                        }
+                        errorChildren={<div>TODO</div>}
+                      >
+                        {() =>
+                          filteredAndSorted
+                            .filter((api: Connector) =>
+                              this.filterUndefinedId(api)
+                            )
+                            .map((api: Connector, index: number) => (
+                              <ApiConnectorListItem
+                                key={index}
+                                apiConnectorId={api.id as string}
+                                apiConnectorDescription={api.description}
+                                apiConnectorIcon={api.icon}
+                                apiConnectorName={api.name}
+                                i18nDelete={t('shared:Delete')}
+                                i18nDetails={t('shared:Details')}
+                                i18nDetailsTip={t(
+                                  'apiConnector.detailsApiConnectorTip'
+                                )}
+                                i18nUsedByMessage={this.getUsedByMessage(api)}
+                                onDelete={this.handleDelete}
+                                onDetails={this.handleDetails}
+                                usedBy={optionalIntValue(api.uses)}
+                              />
+                            ))
+                        }
+                      </WithLoader>
+                    </ApiConnectorListView>
                   )}
                 </NamespacesConsumer>
               );

@@ -1,6 +1,6 @@
 import { Connector } from '@syndesis/models';
+import { Loader } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
-import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { WithConnectorCreationForm } from '../containers';
 
@@ -25,7 +25,7 @@ export default class ConnectorFormPage extends React.Component {
               <div className={'container-fluid'}>
                 {loading || error ? (
                   loading ? (
-                    <Spinner loading={true} size={'lg'} />
+                    <Loader size={'lg'} />
                   ) : (
                     <p>
                       Connector not found. Perhaps we could build a form from

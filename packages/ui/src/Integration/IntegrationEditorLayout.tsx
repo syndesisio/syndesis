@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import * as H from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Loader } from '../Shared';
+import { Loader } from '../Layout';
 import './IntegrationEditorLayout.css';
 
 interface IButtonOrLinkProps {

@@ -3,7 +3,7 @@ import {
   DocumentType,
   InspectionType,
 } from '@syndesis/atlasmap-adapter';
-import { Breadcrumb, Button } from 'patternfly-react';
+import { Breadcrumb } from '@syndesis/ui';
 import * as React from 'react';
 
 export interface ITestAtlasmapPageState {
@@ -42,24 +42,28 @@ export class TestAtlasmapPage extends React.Component<
             <div className="col-sm-12">
               <div className="toolbar-pf-actions">
                 <div className="form-group">
-                  <Breadcrumb style={{ marginBottom: 0 }}>
-                    <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    <Breadcrumb.Item>Library</Breadcrumb.Item>
-                    <Breadcrumb.Item active={true}>Data</Breadcrumb.Item>
+                  <Breadcrumb>
+                    <span>Home</span>
+                    <span>Library</span>
+                    <span>Data</span>
                   </Breadcrumb>
                 </div>
                 <div className="toolbar-pf-action-right">
                   <div className="form-group" style={{ marginTop: '5px' }}>
-                    <Button>Cancel</Button>
-                    <Button
+                    <button className={'btn btn-default'}>Cancel</button>
+                    <button
+                      className={'btn btn-default'}
                       disabled={!this.state.mappings}
                       onClick={this.onReset}
                     >
                       Reset
-                    </Button>
-                    <Button bsStyle={'success'} disabled={!this.state.mappings}>
+                    </button>
+                    <button
+                      className={'btn btn-primary success'}
+                      disabled={!this.state.mappings}
+                    >
                       Save
-                    </Button>
+                    </button>
                   </div>
                 </div>
               </div>

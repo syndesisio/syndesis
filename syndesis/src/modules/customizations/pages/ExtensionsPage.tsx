@@ -9,7 +9,6 @@ import {
   ISortType,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
-import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import i18n from '../../../i18n';
@@ -129,104 +128,83 @@ export default class ExtensionsPage extends React.Component {
                   {t => (
                     <>
                       <CustomizationsNavBar />
-                      <Grid fluid={true}>
-                        <Grid.Row>
-                          <ExtensionListView
-                            filterTypes={filterTypes}
-                            sortTypes={sortTypes}
-                            {...this.state}
-                            linkImportExtension={resolvers.extensions.import()}
-                            resultsCount={filteredAndSorted.length}
-                            {...helpers}
-                            i18nDescription={t(
-                              'extension.extensionsPageDescription'
-                            )}
-                            i18nEmptyStateInfo={t(
-                              'extension.emptyStateInfoMessage'
-                            )}
-                            i18nEmptyStateTitle={t('extension.emptyStateTitle')}
-                            i18nLinkImportExtension={t(
-                              'extension.ImportExtension'
-                            )}
-                            i18nLinkImportExtensionTip={t(
-                              'extension.importExtensionTip'
-                            )}
-                            i18nName={t('shared:Name')}
-                            i18nNameFilterPlaceholder={t(
-                              'shared:nameFilterPlaceholder'
-                            )}
-                            i18nResultsCount={t('shared:resultsCount', {
-                              count: filteredAndSorted.length,
-                            })}
-                            i18nTitle={t('extension.extensionsPageTitle')}
-                          >
-                            <WithLoader
-                              error={error}
-                              loading={!hasData}
-                              loaderChildren={
-                                <ExtensionListSkeleton
-                                  width={800}
-                                  style={{
-                                    backgroundColor: '#FFF',
-                                    marginTop: 30,
-                                  }}
+                      <ExtensionListView
+                        filterTypes={filterTypes}
+                        sortTypes={sortTypes}
+                        {...this.state}
+                        linkImportExtension={resolvers.extensions.import()}
+                        resultsCount={filteredAndSorted.length}
+                        {...helpers}
+                        i18nDescription={t('extension.extensionsPageDescription')}
+                        i18nEmptyStateInfo={t('extension.emptyStateInfoMessage')}
+                        i18nEmptyStateTitle={t('extension.emptyStateTitle')}
+                        i18nLinkImportExtension={t('extension.ImportExtension')}
+                        i18nLinkImportExtensionTip={t(
+                          'extension.importExtensionTip'
+                        )}
+                        i18nName={t('shared:Name')}
+                        i18nNameFilterPlaceholder={t(
+                          'shared:nameFilterPlaceholder'
+                        )}
+                        i18nResultsCount={t('shared:resultsCount', {
+                          count: filteredAndSorted.length,
+                        })}
+                        i18nTitle={t('extension.extensionsPageTitle')}
+                      >
+                        <WithLoader
+                          error={error}
+                          loading={!hasData}
+                          loaderChildren={
+                            <ExtensionListSkeleton
+                              width={800}
+                              style={{
+                                backgroundColor: '#FFF',
+                                marginTop: 30,
+                              }}
+                            />
+                          }
+                          errorChildren={<div>TODO</div>}
+                        >
+                          {() =>
+                            filteredAndSorted
+                              .filter((extension: Extension) =>
+                                this.filterUndefinedId(extension)
+                              )
+                              .map((extension: Extension, index: number) => (
+                                <ExtensionListItem
+                                  key={index}
+                                  extensionDescription={extension.description}
+                                  extensionIcon={extension.icon}
+                                  extensionId={extension.id}
+                                  extensionName={extension.name}
+                                  i18nDelete={t('shared:Delete')}
+                                  i18nDeleteTip={t(
+                                    'extension.deleteExtensionTip'
+                                  )}
+                                  i18nDetails={t('shared:Details')}
+                                  i18nDetailsTip={t(
+                                    'extension.detailsExtensionTip'
+                                  )}
+                                  i18nExtensionType={this.getTypeName(extension)}
+                                  i18nUpdate={t('shared:Update')}
+                                  i18nUpdateTip={t(
+                                    'extension.updateExtensionTip'
+                                  )}
+                                  i18nUsedByMessage={this.getUsedByMessage(
+                                    extension
+                                  )}
+                                  onDelete={this.handleDelete}
+                                  onDetails={this.handleDetails}
+                                  onUpdate={this.handleUpdate}
+                                  usedBy={
+                                    // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
+                                    extension.uses as number
+                                  }
                                 />
-                              }
-                              errorChildren={<div>TODO</div>}
-                            >
-                              {() =>
-                                filteredAndSorted
-                                  .filter((extension: Extension) =>
-                                    this.filterUndefinedId(extension)
-                                  )
-                                  .map(
-                                    (extension: Extension, index: number) => (
-                                      <ExtensionListItem
-                                        key={index}
-                                        detailsPageLink={resolvers.extensions.extension(
-                                          { extension }
-                                        )}
-                                        extensionDescription={
-                                          extension.description
-                                        }
-                                        extensionExtensionId={
-                                          extension.extensionId!
-                                        }
-                                        extensionIcon={extension.icon}
-                                        extensionId={extension.id!}
-                                        extensionName={extension.name}
-                                        i18nDelete={t('shared:Delete')}
-                                        i18nDeleteTip={t(
-                                          'extension.deleteExtensionTip'
-                                        )}
-                                        i18nDetails={t('shared:Details')}
-                                        i18nDetailsTip={t(
-                                          'extension.detailsExtensionTip'
-                                        )}
-                                        i18nExtensionType={this.getTypeName(
-                                          extension
-                                        )}
-                                        i18nUpdate={t('shared:Update')}
-                                        i18nUpdateTip={t(
-                                          'extension.updateExtensionTip'
-                                        )}
-                                        i18nUsedByMessage={this.getUsedByMessage(
-                                          extension
-                                        )}
-                                        onDelete={this.handleDelete}
-                                        onUpdate={this.handleUpdate}
-                                        usedBy={
-                                          // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
-                                          extension.uses as number
-                                        }
-                                      />
-                                    )
-                                  )
-                              }
-                            </WithLoader>
-                          </ExtensionListView>
-                        </Grid.Row>
-                      </Grid>
+                              ))
+                          }
+                        </WithLoader>
+                      </ExtensionListView>
                     </>
                   )}
                 </NamespacesConsumer>

@@ -1,8 +1,11 @@
 import { ConnectionOverview } from '@syndesis/models';
 import { IntegrationsListSkeleton } from '@syndesis/ui';
+import {
+  IntegrationEditorConnectionsList,
+  IntegrationEditorConnectionsListItem,
+} from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as H from 'history';
-import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -58,7 +61,7 @@ export class IntegrationEditorChooseConnection extends React.Component<
           <p>{this.props.i18nSubtitle}</p>
         </div>
         <div className={'container-fluid'}>
-          <ListView>
+          <IntegrationEditorConnectionsList>
             <WithLoader
               error={this.props.error}
               loading={this.props.loading}
@@ -86,11 +89,13 @@ export class IntegrationEditorChooseConnection extends React.Component<
               {() => (
                 <>
                   {this.props.connections.map((c, idx) => (
-                    <ListView.Item
+                    <IntegrationEditorConnectionsListItem
                       key={idx}
-                      heading={c.name}
-                      description={c.description}
-                      leftContent={<img src={c.icon} width={24} height={24} />}
+                      integrationName={c.name}
+                      integrationDescription={
+                        c.description || 'No description available.'
+                      }
+                      icon={<img src={c.icon} width={24} height={24} />}
                       actions={
                         <Link
                           to={this.props.getConnectionHref(c)}
@@ -101,7 +106,10 @@ export class IntegrationEditorChooseConnection extends React.Component<
                       }
                     />
                   ))}
-                  <ListView.Item
+                  <IntegrationEditorConnectionsListItem
+                    integrationName={''}
+                    integrationDescription={''}
+                    icon={''}
                     actions={
                       <Link to={'#'} className={'btn btn-default'}>
                         Create connection
@@ -111,7 +119,7 @@ export class IntegrationEditorChooseConnection extends React.Component<
                 </>
               )}
             </WithLoader>
-          </ListView>
+          </IntegrationEditorConnectionsList>
         </div>
       </>
     );

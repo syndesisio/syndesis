@@ -1,6 +1,9 @@
 import { Action } from '@syndesis/models';
+import {
+  IntegrationEditorActionsList,
+  IntegrationEditorActionsListItem,
+} from '@syndesis/ui';
 import * as H from 'history';
-import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -43,12 +46,14 @@ export class IntegrationEditorChooseAction extends React.Component<
           <p>Choose an action for the selected connectionName.</p>
         </div>
         <div className={'container-fluid'}>
-          <ListView>
+          <IntegrationEditorActionsList>
             {this.props.actions.map((a, idx) => (
-              <ListView.Item
+              <IntegrationEditorActionsListItem
                 key={idx}
-                heading={a.name}
-                description={a.description}
+                integrationName={a.name}
+                integrationDescription={
+                  a.description || 'No description available.'
+                }
                 actions={
                   <Link
                     to={this.props.getActionHref(a)}
@@ -59,7 +64,7 @@ export class IntegrationEditorChooseAction extends React.Component<
                 }
               />
             ))}
-          </ListView>
+          </IntegrationEditorActionsList>
         </div>
       </>
     );
