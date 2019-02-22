@@ -39,6 +39,7 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
           }
           actions={
             <div>
+              <Button>Action 1</Button>
               <DropdownKebab id="action2kebab" pullRight={true}>
                 <MenuItem>
                   {this.props.i18nTextHistoryMenuReplaceDraft}
