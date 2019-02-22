@@ -11,16 +11,6 @@ export function getStartSelectActionHref(connection: ConnectionOverview) {
   return resolvers.create.start.selectAction({ connection });
 }
 
-export function getStartConfigureActionHref(
-  connection: ConnectionOverview,
-  action: Action
-): H.LocationDescriptor {
-  return resolvers.create.start.configureAction({
-    actionId: action.id!,
-    connection,
-  });
-}
-
 export function getFinishSelectActionHref(
   startConnection: ConnectionOverview,
   startAction: Action,
@@ -29,22 +19,6 @@ export function getFinishSelectActionHref(
 ): H.LocationDescriptor {
   return resolvers.create.finish.selectAction({
     finishConnection: connection,
-    integration,
-    startAction,
-    startConnection,
-  });
-}
-
-export function getFinishConfigureActionHref(
-  startConnection: ConnectionOverview,
-  startAction: Action,
-  finishConnection: ConnectionOverview,
-  integration: Integration,
-  action: Action
-): H.LocationDescriptor {
-  return resolvers.create.finish.configureAction({
-    actionId: action.id!,
-    finishConnection,
     integration,
     startAction,
     startConnection,
@@ -78,32 +52,6 @@ export function getCreateSelectActionHref(
 ) {
   return resolvers.create.configure.addConnection.selectAction({
     connection,
-    integration,
-    position,
-  });
-}
-
-export function getCreateConfigureActionHref(
-  position: string,
-  integration: Integration,
-  connection: ConnectionOverview,
-  action: Action
-): H.LocationDescriptor {
-  return resolvers.create.configure.addConnection.configureAction({
-    actionId: action.id!,
-    connection,
-    integration,
-    position,
-  });
-}
-
-export function getCreateEditConfigureActionHref(
-  position: string,
-  integration: Integration,
-  action: Action
-): H.LocationDescriptor {
-  return resolvers.create.configure.editConnection.configureAction({
-    actionId: action.id!,
     integration,
     position,
   });
@@ -148,32 +96,6 @@ export function getEditSelectActionHref(
 ) {
   return resolvers.integration.edit.addConnection.selectAction({
     connection,
-    integration,
-    position,
-  });
-}
-
-export function getEditConfigureActionHref(
-  position: string,
-  integration: Integration,
-  connection: ConnectionOverview,
-  action: Action
-): H.LocationDescriptor {
-  return resolvers.integration.edit.addConnection.configureAction({
-    actionId: action.id!,
-    connection,
-    integration,
-    position,
-  });
-}
-
-export function getEditEditConfigureActionHref(
-  position: string,
-  integration: Integration,
-  action: Action
-): H.LocationDescriptor {
-  return resolvers.integration.edit.editConnection.configureAction({
-    actionId: action.id!,
     integration,
     position,
   });

@@ -1,16 +1,20 @@
 import { WithConnection, WithIntegrationHelpers } from '@syndesis/api';
 import { ConnectionOverview, Integration } from '@syndesis/models';
-import { IntegrationEditorLayout, Loader } from '@syndesis/ui';
+import {
+  IntegrationEditorActionsListItem,
+  IntegrationEditorChooseAction,
+  IntegrationEditorLayout,
+  Loader,
+} from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { PageTitle } from '../../../../../../containers/PageTitle';
 import {
   IntegrationCreatorBreadcrumbs,
-  IntegrationEditorChooseAction,
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
-import { getCreateEditConfigureActionHref } from '../../../resolversHelpers';
 
 /**
  * @param connectionId - the ID of the connection coming from step 3.edit.1.,
@@ -77,17 +81,40 @@ export class SelectActionPage extends React.Component {
                         }
                         content={
                           <IntegrationEditorChooseAction
-                            connectionName={connection.name}
-                            actions={(positionAsNumber > 0
+                            i18nTitle={`${connection.name} - Choose Action`}
+                            i18nSubtitle={
+                              'Choose an action for the selected connectionName.'
+                            }
+                          >
+                            {(positionAsNumber > 0
                               ? data.actionsWithTo
                               : data.actionsWithFrom
-                            ).sort((a, b) => a.name.localeCompare(b.name))}
-                            getActionHref={getCreateEditConfigureActionHref.bind(
-                              null,
-                              position,
-                              integration
-                            )}
-                          />
+                            )
+                              .sort((a, b) => a.name.localeCompare(b.name))
+                              .map((a, idx) => (
+                                <IntegrationEditorActionsListItem
+                                  key={idx}
+                                  integrationName={a.name}
+                                  integrationDescription={
+                                    a.description || 'No description available.'
+                                  }
+                                  actions={
+                                    <Link
+                                      to={resolvers.create.configure.editConnection.configureAction(
+                                        {
+                                          actionId: a.id!,
+                                          integration,
+                                          position,
+                                        }
+                                      )}
+                                      className={'btn btn-default'}
+                                    >
+                                      Select
+                                    </Link>
+                                  }
+                                />
+                              ))}
+                          </IntegrationEditorChooseAction>
                         }
                         cancelHref={resolvers.create.configure.index({
                           integration,
