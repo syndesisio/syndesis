@@ -22,8 +22,8 @@ export interface IIntegrationDetailHistoryListViewItemProps {
   i18nTextHistoryMenuUnpublish?: string;
   i18nTextLastPublished?: string;
   i18nTextNoDescription?: string;
-  i18nTextTitle: string;
-  i18nTextVersion: string;
+  i18nTextTitle?: string;
+  i18nTextVersion?: string;
 }
 
 export class IntegrationDetailHistoryListViewItem extends React.Component<
@@ -80,15 +80,6 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
             ) : null
           }
           stacked={false}
-          i18nTextBtnEdit={this.props.i18nTextBtnEdit}
-          i18nTextBtnPublish={this.props.i18nTextBtnPublish}
-          i18nTextHistoryMenuReplaceDraft={
-            this.props.i18nTextHistoryMenuReplaceDraft
-          }
-          i18nTextHistoryMenuUnpublish={this.props.i18nTextHistoryMenuUnpublish}
-          i18nTextLastPublished={this.props.i18nTextLastPublished}
-          i18nTextTitle={this.props.i18nTextTitle}
-          i18nTextVersion={this.props.i18nTextVersion}
         />
       </>
     );
