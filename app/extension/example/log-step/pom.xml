@@ -20,7 +20,7 @@
 
   <groupId>io.syndesis.extension</groupId>
   <artifactId>extension-example-log-step</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6.1-20190224</version>
 
   <name>Extension :: Example :: Log Step</name>
   <description>Syndesis :: ${project.name}</description>
