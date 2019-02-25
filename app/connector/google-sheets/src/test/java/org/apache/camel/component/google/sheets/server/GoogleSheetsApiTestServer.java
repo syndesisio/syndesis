@@ -94,6 +94,7 @@ public class GoogleSheetsApiTestServer {
      */
     public void reset() {
         if (runner != null) {
+            runner.purgeEndpoints(action -> action.endpoint(httpServer));
             runner.stop();
         }
     }
@@ -108,14 +109,6 @@ public class GoogleSheetsApiTestServer {
 
     public void afterPropertiesSet() throws Exception {
         httpServer.afterPropertiesSet();
-    }
-
-    /**
-     * Specifies the test runner.
-     * @param runner
-     */
-    public void setRunner(TestRunner runner) {
-        this.runner = runner;
     }
 
     public TestRunner getRunner() {

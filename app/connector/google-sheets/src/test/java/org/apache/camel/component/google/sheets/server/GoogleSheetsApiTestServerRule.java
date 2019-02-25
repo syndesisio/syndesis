@@ -26,6 +26,7 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.SocketUtils;
 
 import static org.apache.camel.component.google.sheets.server.GoogleSheetsApiTestServerAssert.assertThatGoogleApi;
@@ -48,7 +49,8 @@ public class GoogleSheetsApiTestServerRule implements TestRule {
             googleApiTestServer = new GoogleSheetsApiTestServer.Builder(CitrusEndpoints.http()
                     .server()
                     .port(serverPort)
-                    .timeout(5000)
+                    .timeout(15000)
+                    .defaultStatus(HttpStatus.REQUEST_TIMEOUT)
                     .autoStart(true))
                     .keyStorePath(new ClassPathResource(SERVER_KEYSTORE).getFile().toPath())
                     .keyStorePassword(SERVER_KEYSTORE_PASSWORD)
