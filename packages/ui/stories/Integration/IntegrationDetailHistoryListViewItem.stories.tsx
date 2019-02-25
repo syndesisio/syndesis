@@ -11,26 +11,19 @@ const stories = storiesOf(
 );
 
 const integrationPublished = {
-  id: 'i-LYmlhVFB6pKKaBQVSyez',
   version: 1,
   updatedAt: 1550261344272,
-  currentState: 'Unpublished',
-  targetState: 'Unpublished',
-  name: 'aaa',
-  isDraft: false,
 };
 
 const i18nTextHistoryMenuReplaceDraft = 'Replace Draft';
 const i18nTextHistoryMenuUnpublish = 'Unpublish';
 const i18nTextLastPublished = 'Last published on ';
-const i18nTextTitle = 'Integration Detail';
 const i18nTextVersion = 'Version';
 
 stories.add(
   'published',
   withNotes('Verify there is a list of history items')(() => (
     <IntegrationDetailHistoryListViewItem
-      integrationIsDraft={integrationPublished.isDraft}
       integrationUpdatedAt={text(
         'integrationUpdatedAt',
         integrationPublished.updatedAt
@@ -51,7 +44,6 @@ stories.add(
         'i18nTextLastPublished',
         i18nTextLastPublished
       )}
-      i18nTextTitle={text('i18nTextTitle', i18nTextTitle)}
       i18nTextVersion={text('i18nTextVersion', i18nTextVersion)}
     />
   ))
