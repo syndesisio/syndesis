@@ -15,7 +15,7 @@ const i18nTextHistory = 'History';
 
 stories.add(
   'has history',
-  withNotes('Verify there is a Publish button')(() => (
+  withNotes('Verify there is a list of history items')(() => (
     <IntegrationDetailHistoryListView
       i18nTextDraft={text('i18nTextDraft', i18nTextDraft)}
       i18nTextHistory={text('i18nTextHistory', i18nTextHistory)}
