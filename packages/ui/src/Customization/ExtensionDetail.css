@@ -1,19 +1,15 @@
-.extension-group:not(:last-child) {
-  margin-bottom: 35px;
-}
-
-.extension-id {
+.extension-detail__extensionId {
   font-size: 0.5em;
   margin-left: 10px;
 }
 
-.extension-title {
+.extension-detail__extensionTitle {
   margin: 0;
 }
 
-/* .section-heading {
+/* .extension-detail__sectionHeading {
 } */
 
-button + button {
+.extension-detail__titleButtons button + button {
   margin-left: 4px;
 }

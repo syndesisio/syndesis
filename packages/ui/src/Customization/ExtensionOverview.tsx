@@ -54,36 +54,36 @@ export class ExtensionOverview extends React.Component<
     return (
       <Grid>
         <Grid.Row>
-          <Grid.Col xs={2} className="property-label">
+          <Grid.Col xs={2} className="extension-overview__propertyLabel">
             {this.props.i18nName}
           </Grid.Col>
-          <Grid.Col className="property-value">
+          <Grid.Col className="extension-overview__propertyValue">
             {this.props.extensionName}
           </Grid.Col>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Col xs={2} className="property-label">
+          <Grid.Col xs={2} className="extension-overview__propertyLabel">
             {this.props.i18nDescription}
           </Grid.Col>
-          <Grid.Col className="property-value">
+          <Grid.Col className="extension-overview__propertyValue">
             {this.props.extensionDescription
               ? this.props.extensionDescription
               : null}
           </Grid.Col>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Col xs={2} className="property-label">
+          <Grid.Col xs={2} className="extension-overview__propertyLabel">
             {this.props.i18nType}
           </Grid.Col>
-          <Grid.Col className="property-value">
+          <Grid.Col className="extension-overview__propertyValue">
             {this.props.i18nTypeMessage}
           </Grid.Col>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Col xs={2} className="property-label">
+          <Grid.Col xs={2} className="extension-overview__propertyLabel">
             {this.props.i18nLastUpdate}
           </Grid.Col>
-          <Grid.Col className="property-value">
+          <Grid.Col className="extension-overview__propertyValue">
             {this.props.i18nLastUpdateDate
               ? this.props.i18nLastUpdateDate
               : null}

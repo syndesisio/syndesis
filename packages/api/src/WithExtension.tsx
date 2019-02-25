@@ -26,7 +26,7 @@ export class WithExtension extends React.Component<IWithExtensionProps> {
         }}
         initialValue={this.props.initialValue}
       >
-        {({ read, response }) =>
+        {({ response }) =>
           this.props.children({
             ...response,
             data: {

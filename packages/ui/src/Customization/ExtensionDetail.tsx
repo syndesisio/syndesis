@@ -56,13 +56,13 @@ export class ExtensionDetail extends React.Component<IExtensionDetailProps> {
         <CardHeading>
           <CardTitle>
             <Row>
-              <h1 className={'col-sm-8 extension-title'}>
+              <h1 className={'col-sm-8 extension-detail__extensionTitle'}>
                 {this.props.extensionName}
-                <span className={'extension-id'}>
+                <span className={'extension-detail__extensionId'}>
                   {this.props.i18nIdMessage}
                 </span>
               </h1>
-              <div className="col-sm-4 text-right">
+              <div className="col-sm-4 text-right extension-detail__titleButtons">
                 <OverlayTrigger
                   overlay={this.getUpdateTooltip()}
                   placement="top"
@@ -88,15 +88,15 @@ export class ExtensionDetail extends React.Component<IExtensionDetailProps> {
           </CardTitle>
         </CardHeading>
         <CardBody>
-          <h3 className="section-heading">
+          <h3 className="extension-detail__sectionHeading">
             {this.props.i18nOverviewSectionTitle}
           </h3>
           {this.props.overviewSection}
-          <h3 className="section-heading">
+          <h3 className="extension-detail__sectionHeading">
             {this.props.i18nSupportsSectionTitle}
           </h3>
           {this.props.supportsSection}
-          <h3 className="section-heading">
+          <h3 className="extension-detail__sectionHeading">
             {this.props.i18nUsageSectionTitle}
           </h3>
           {this.props.integrationsSection}

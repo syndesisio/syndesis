@@ -1,8 +1,8 @@
-.property-label {
+.extension-overview__propertyLabel {
   font-weight: bold;
   text-align: right;
 }
 
-.property-value {
+.extension-overview__propertyValue {
   text-align: left;
 }
