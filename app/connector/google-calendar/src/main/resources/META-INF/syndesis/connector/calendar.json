@@ -9,13 +9,13 @@
           "io.syndesis.connector.calendar.GoogleCalendarSendEventCustomizer"
         ],
         "inputDataShape": {
-          "name": "CalendarEvent",
           "kind": "java",
+          "name": "CalendarEvent",
           "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "outputDataShape": {
-          "name": "CalendarEvent",
           "kind": "java",
+          "name": "CalendarEvent",
           "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "propertyDefinitionSteps": [
@@ -160,13 +160,13 @@
           "io.syndesis.connector.calendar.GoogleCalendarUpdateEventCustomizer"
         ],
         "inputDataShape": {
-          "name": "CalendarEvent",
           "kind": "java",
+          "name": "CalendarEvent",
           "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "outputDataShape": {
-          "name": "CalendarEvent",
           "kind": "java",
+          "name": "CalendarEvent",
           "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "propertyDefinitionSteps": [
@@ -327,8 +327,8 @@
           "kind": "none"
         },
         "outputDataShape": {
-          "name": "CalendarEvent",
           "kind": "java",
+          "name": "CalendarEvent",
           "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "propertyDefinitionSteps": [
@@ -385,8 +385,8 @@
           "kind": "none"
         },
         "outputDataShape": {
-          "name": "CalendarEvent",
           "kind": "java",
+          "name": "CalendarEvent",
           "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
         },
         "propertyDefinitionSteps": [

@@ -7,6 +7,7 @@
         "componentScheme": "irc",
         "configuredProperties": {
           "autoRejoin": true,
+          "commandTimeout": 15000,
           "onJoin": false,
           "onKick": false,
           "onMode": false,
@@ -14,8 +15,7 @@
           "onPart": false,
           "onPrivmsg": true,
           "onQuit": false,
-          "onTopic": false,
-          "commandTimeout": 15000
+          "onTopic": false
         },
         "inputDataShape": {
           "kind": "any"
@@ -28,24 +28,24 @@
             "description": "Specify the channels to join",
             "name": "Specify IRC channels",
             "properties": {
-             "nickname": {
-                "description": "Nickname for IRC connector user",
-                "displayName": "Nickname",
-                "javaType": "string",
-                "kind": "parameter",
-                "labelHint": "Desired nickname for the integration user",
-                "required": true,
-                "secret": false,
-                "tags": [],
-                "type": "string"
-              },
-               "channels": {
+              "channels": {
                 "description": "IRC channels to join",
                 "displayName": "Channels",
                 "javaType": "string",
                 "kind": "path",
                 "labelHint": "If the integration should connect to the IRC channels, you can specify multiple channels delimited by comma",
                 "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              },
+              "nickname": {
+                "description": "Nickname for IRC connector user",
+                "displayName": "Nickname",
+                "javaType": "string",
+                "kind": "parameter",
+                "labelHint": "Desired nickname for the integration user",
+                "required": true,
                 "secret": false,
                 "tags": [],
                 "type": "string"
@@ -76,6 +76,7 @@
         "componentScheme": "irc",
         "configuredProperties": {
           "autoRejoin": true,
+          "commandTimeout": 15000,
           "onJoin": false,
           "onKick": false,
           "onMode": false,
@@ -83,8 +84,7 @@
           "onPart": false,
           "onPrivmsg": false,
           "onQuit": false,
-          "onTopic": false,
-          "commandTimeout": 15000
+          "onTopic": false
         },
         "inputDataShape": {
           "kind": "any"
@@ -97,22 +97,22 @@
             "description": "Specify the channels to join",
             "name": "Specify IRC channels",
             "properties": {
-             "nickname": {
-                "description": "Nickname for IRC connector user",
-                "displayName": "Nickname",
-                "javaType": "string",
-                "kind": "parameter",
-                "labelHint": "Desired nickname for the integration user",
-                "required": true,
-                "secret": false,
-                "type": "string"
-              },
-               "channels": {
+              "channels": {
                 "description": "IRC channels to join",
                 "displayName": "Channels",
                 "javaType": "string",
                 "kind": "path",
                 "labelHint": "You can specify multiple channels delimited by comma",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "nickname": {
+                "description": "Nickname for IRC connector user",
+                "displayName": "Nickname",
+                "javaType": "string",
+                "kind": "parameter",
+                "labelHint": "Desired nickname for the integration user",
                 "required": true,
                 "secret": false,
                 "type": "string"
@@ -145,6 +145,8 @@
   ],
   "description": "Send and receive messages to/from an IRC chat",
   "icon": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjAiIHk9IjAiIHZpZXdCb3g9IjAgMCAzMDAgMzAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48c3R5bGU+LnN0MzV7ZmlsbDojNmM0MTk5fTwvc3R5bGU+PHBhdGggY2xhc3M9InN0MzUiIGQ9Ik0xNTUuMiAxLjFjLTE3My03LjUtMjMyLjkgMjE2LjctNC4zIDIzOC43bC0yMSA1OS4yczEyMS40LTY1IDE1MS43LTExMkMzMTguMiAxMzAuNCAzMDMuOCA3LjYgMTU1LjIgMS4xek0yMTkgMTQwLjhjNS42IDAgMTAuMiA0LjUgMTAuMiAxMC4ycy00LjUgMTAuMi0xMC4yIDEwLjJoLTMwLjN2MzEuMmMwIDUuNi00LjUgMTAuMi0xMC4yIDEwLjItNS42IDAtMTAuMi00LjUtMTAuMi0xMC4ydi0zMS4yaC0zNi43djMxLjJjMCA1LjYtNC41IDEwLjItMTAuMiAxMC4yLTUuNiAwLTEwLjItNC41LTEwLjItMTAuMnYtMzEuMkg4MWMtNS42IDAtMTAuMi00LjUtMTAuMi0xMC4yczQuNS0xMC4yIDEwLjItMTAuMmgzMC4zdi0zNUg4MWMtNS42IDAtMTAuMi00LjUtMTAuMi0xMC4yIDAtNS42IDQuNS0xMC4yIDEwLjItMTAuMmgzMC4zdi0zMWMwLTUuNiA0LjUtMTAuMiAxMC4yLTEwLjIgNS42IDAgMTAuMiA0LjUgMTAuMiAxMC4ydjMxLjJoMzYuN1Y1NC40YzAtNS42IDQuNS0xMC4yIDEwLjItMTAuMiA1LjYgMCAxMC4yIDQuNSAxMC4yIDEwLjJ2MzEuMkgyMTljNS42IDAgMTAuMiA0LjUgMTAuMiAxMC4yIDAgNS42LTQuNSAxMC4yLTEwLjIgMTAuMmgtMzAuM3YzNUgyMTl6Ii8+PHBhdGggY2xhc3M9InN0MzUiIGQ9Ik0xMzEuNyAxMDUuOWgzNi43djM1aC0zNi43eiIvPjwvc3ZnPg==",
+  "id": "irc",
+  "name": "IRC",
   "properties": {
     "hostname": {
       "componentProperty": true,
@@ -192,8 +194,6 @@
       "type": "int"
     }
   },
-  "id": "irc",
-  "name": "IRC",
   "tags": [
     "verifier"
   ]

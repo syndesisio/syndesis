@@ -19,17 +19,6 @@
             "description": "Specify the resource id and type to read",
             "name": "Read resource from the server",
             "properties": {
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
-                "required": false,
-                "secret": false,
-                "type": "select"
-              },
               "containedResourceTypes": {
                 "deprecated": false,
                 "displayName": "Contained Resource Types",
@@ -37,10 +26,10 @@
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "labelHint": "The resource types, which may be included within a resource",
+                "multiple": true,
                 "required": false,
                 "secret": false,
-                "type": "select",
-                "multiple": true
+                "type": "select"
               },
               "id": {
                 "deprecated": false,
@@ -52,6 +41,17 @@
                 "required": false,
                 "secret": false,
                 "type": "string"
+              },
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
+                "required": false,
+                "secret": false,
+                "type": "select"
               },
               "version": {
                 "deprecated": false,
@@ -94,17 +94,6 @@
             "description": "Specify the resource type and the query, e.g. \"given=Vincent&family=Freeman\"",
             "name": "Search for resources on the server",
             "properties": {
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type to query",
-                "required": false,
-                "secret": false,
-                "type": "select"
-              },
               "query": {
                 "deprecated": false,
                 "displayName": "Query",
@@ -115,6 +104,17 @@
                 "required": false,
                 "secret": false,
                 "type": "string"
+              },
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type to query",
+                "required": false,
+                "secret": false,
+                "type": "select"
               }
             }
           }
@@ -147,17 +147,6 @@
             "description": "Specify the resource id and type to delete",
             "name": "Delete resource from the server",
             "properties": {
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type, e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
-                "required": false,
-                "secret": false,
-                "type": "String"
-              },
               "id": {
                 "deprecated": false,
                 "displayName": "Resource Id",
@@ -168,6 +157,17 @@
                 "required": false,
                 "secret": false,
                 "type": "string"
+              },
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type, e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
+                "required": false,
+                "secret": false,
+                "type": "String"
               },
               "version": {
                 "deprecated": false,
@@ -211,6 +211,18 @@
             "description": "Specify the resource to update or create",
             "name": "Update all fields or create a resource with defined ID on the server",
             "properties": {
+              "containedResourceTypes": {
+                "deprecated": false,
+                "displayName": "Contained Resource Types",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource types, which may be included within a resource",
+                "multiple": true,
+                "required": false,
+                "secret": false,
+                "type": "select"
+              },
               "resourceType": {
                 "deprecated": false,
                 "displayName": "Resource Type",
@@ -221,18 +233,6 @@
                 "required": false,
                 "secret": false,
                 "type": "String"
-              },
-              "containedResourceTypes": {
-                "deprecated": false,
-                "displayName": "Contained Resource Types",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource types, which may be included within a resource",
-                "required": false,
-                "secret": false,
-                "type": "select",
-                "multiple": true
               }
             }
           }
@@ -265,17 +265,6 @@
             "description": "Specify the JSON patch to execute",
             "name": "Update selected fields in a resource on the server",
             "properties": {
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type to query",
-                "required": true,
-                "secret": false,
-                "type": "select"
-              },
               "id": {
                 "deprecated": false,
                 "displayName": "Resource Id",
@@ -288,6 +277,7 @@
                 "type": "String"
               },
               "operationNumber": {
+                "defaultValue": 1,
                 "deprecated": false,
                 "displayName": "Number Of Operations",
                 "group": "common",
@@ -296,8 +286,7 @@
                 "labelHint": "The number of operations to be defined in the patch.",
                 "required": true,
                 "secret": false,
-                "type": "number",
-                "defaultValue": 1
+                "type": "number"
               },
               "patch": {
                 "deprecated": false,
@@ -309,6 +298,17 @@
                 "required": false,
                 "secret": false,
                 "type": "textarea"
+              },
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type to query",
+                "required": true,
+                "secret": false,
+                "type": "select"
               }
             }
           }
@@ -341,6 +341,18 @@
             "description": "Specify the resource to create",
             "name": "Create a resource on the server (with auto-generated ID)",
             "properties": {
+              "containedResourceTypes": {
+                "deprecated": false,
+                "displayName": "Contained Resource Types",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource types, which may be included within a resource",
+                "multiple": true,
+                "required": false,
+                "secret": false,
+                "type": "select"
+              },
               "resourceType": {
                 "deprecated": false,
                 "displayName": "Resource Type",
@@ -351,18 +363,6 @@
                 "required": false,
                 "secret": false,
                 "type": "String"
-              },
-              "containedResourceTypes": {
-                "deprecated": false,
-                "displayName": "Contained Resource Types",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource types, which may be included within a resource",
-                "required": false,
-                "secret": false,
-                "type": "select",
-                "multiple": true
               }
             }
           }
@@ -401,10 +401,10 @@
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "labelHint": "The resource types to include in a transaction",
+                "multiple": "true",
                 "required": true,
                 "secret": false,
-                "type": "select",
-                "multiple": "true"
+                "type": "select"
               }
             }
           }
@@ -431,6 +431,19 @@
   "id": "fhir",
   "name": "FHIR",
   "properties": {
+    "accessToken": {
+      "defaultValue": "",
+      "deprecated": false,
+      "displayName": "FHIR server bearer token",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The bearer token to use for bearer authentication (as specified in OAuth 2.0)",
+      "order": "5",
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
     "fhirVersion": {
       "defaultValue": "DSTU3",
       "deprecated": false,
@@ -448,6 +461,19 @@
       "order": "1",
       "required": true,
       "secret": false,
+      "type": "string"
+    },
+    "password": {
+      "defaultValue": "",
+      "deprecated": false,
+      "displayName": "FHIR server password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The password to use for basic authentication",
+      "order": "4",
+      "required": false,
+      "secret": true,
       "type": "string"
     },
     "serverUrl": {
@@ -474,32 +500,6 @@
       "order": "3",
       "required": false,
       "secret": false,
-      "type": "string"
-    },
-    "password": {
-      "defaultValue": "",
-      "deprecated": false,
-      "displayName": "FHIR server password",
-      "group": "security",
-      "javaType": "java.lang.String",
-      "kind": "parameter",
-      "labelHint": "The password to use for basic authentication",
-      "order": "4",
-      "required": false,
-      "secret": true,
-      "type": "string"
-    },
-    "accessToken": {
-      "defaultValue": "",
-      "deprecated": false,
-      "displayName": "FHIR server bearer token",
-      "group": "security",
-      "javaType": "java.lang.String",
-      "kind": "parameter",
-      "labelHint": "The bearer token to use for bearer authentication (as specified in OAuth 2.0)",
-      "order": "5",
-      "required": false,
-      "secret": true,
       "type": "string"
     }
   },
