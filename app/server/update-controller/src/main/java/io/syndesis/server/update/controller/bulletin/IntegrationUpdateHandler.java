@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.update.controller.bulletin;
 
+import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,7 +26,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import javax.validation.Validator;
+
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.action.Action;
@@ -90,7 +91,7 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
             LeveledMessage.Code differenceCode) {
 
         // There's no connection with the given id so this means
-        // that the connection has been deleted or is is not present
+        // that the connection has been deleted or it is not present
         if (dbConnection == null) {
             messages.add(
                 supplier.get()
@@ -304,7 +305,8 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                         final Connection connection = step.getConnection().get();
                         Connection dbConnection = getDataManager().fetch(Connection.class, connection.getId().get());
 
-                        if (Kind.Integration.equals(event.getKind().map(Kind::from).orElse(null))) {
+                        if (dbConnection != null &&
+                                Kind.Integration.equals(event.getKind().map(Kind::from).orElse(null))) {
                             /*
                              * An integration event will create, delete or update it. This has an impact on associated connections
                              * in that their augmented properties, ie. those appended by the
