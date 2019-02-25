@@ -1,6 +1,7 @@
 import { WithConnections, WithIntegrationHelpers } from '@syndesis/api';
 import { Integration } from '@syndesis/models';
 import {
+  ButtonLink,
   IntegrationEditorChooseConnection,
   IntegrationEditorConnectionsListItem,
   IntegrationEditorLayout,
@@ -8,7 +9,6 @@ import {
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { PageTitle } from '../../../../../../containers/PageTitle';
 import {
   IntegrationEditorBreadcrumbs,
@@ -96,18 +96,17 @@ export class SelectConnectionPage extends React.Component {
                                   <img src={c.icon} width={24} height={24} />
                                 }
                                 actions={
-                                  <Link
-                                    to={resolvers.integration.edit.addConnection.selectAction(
+                                  <ButtonLink
+                                    href={resolvers.integration.edit.addConnection.selectAction(
                                       {
                                         connection: c,
                                         integration,
                                         position,
                                       }
                                     )}
-                                    className={'btn btn-default'}
                                   >
                                     Select
-                                  </Link>
+                                  </ButtonLink>
                                 }
                               />
                             ))}
@@ -116,9 +115,9 @@ export class SelectConnectionPage extends React.Component {
                               integrationDescription={''}
                               icon={''}
                               actions={
-                                <Link to={'#'} className={'btn btn-default'}>
+                                <ButtonLink href={'#'}>
                                   Create connection
-                                </Link>
+                                </ButtonLink>
                               }
                             />
                           </>

@@ -3,7 +3,7 @@ import {
   DocumentType,
   InspectionType,
 } from '@syndesis/atlasmap-adapter';
-import { Breadcrumb, Container } from '@syndesis/ui';
+import { Breadcrumb, ButtonLink, Container } from '@syndesis/ui';
 import * as React from 'react';
 
 export interface ITestAtlasmapPageState {
@@ -50,20 +50,16 @@ export class TestAtlasmapPage extends React.Component<
                 </div>
                 <div className="toolbar-pf-action-right">
                   <div className="form-group" style={{ marginTop: '5px' }}>
-                    <button className={'btn btn-default'}>Cancel</button>
-                    <button
-                      className={'btn btn-default'}
+                    <ButtonLink>Cancel</ButtonLink>
+                    <ButtonLink
                       disabled={!this.state.mappings}
                       onClick={this.onReset}
                     >
                       Reset
-                    </button>
-                    <button
-                      className={'btn btn-primary success'}
-                      disabled={!this.state.mappings}
-                    >
+                    </ButtonLink>
+                    <ButtonLink as={'success'} disabled={!this.state.mappings}>
                       Save
-                    </button>
+                    </ButtonLink>
                   </div>
                 </div>
               </div>

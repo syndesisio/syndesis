@@ -1,6 +1,7 @@
 import { WithConnection, WithIntegrationHelpers } from '@syndesis/api';
 import { ConnectionOverview, Integration } from '@syndesis/models';
 import {
+  ButtonLink,
   IntegrationEditorActionsListItem,
   IntegrationEditorChooseAction,
   IntegrationEditorLayout,
@@ -8,7 +9,6 @@ import {
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { PageTitle } from '../../../../../../containers/PageTitle';
 import {
   IntegrationCreatorBreadcrumbs,
@@ -99,18 +99,17 @@ export class SelectActionPage extends React.Component {
                                     a.description || 'No description available.'
                                   }
                                   actions={
-                                    <Link
-                                      to={resolvers.create.configure.editConnection.configureAction(
+                                    <ButtonLink
+                                      href={resolvers.create.configure.editConnection.configureAction(
                                         {
                                           actionId: a.id!,
                                           integration,
                                           position,
                                         }
                                       )}
-                                      className={'btn btn-default'}
                                     >
                                       Select
-                                    </Link>
+                                    </ButtonLink>
                                   }
                                 />
                               ))}

@@ -1,5 +1,6 @@
 export * from './AppLayout';
 export * from './AppTopMenu';
+export * from './ButtonLink';
 export * from './Breadcrumb';
 export * from './Container';
 export * from './Loader';

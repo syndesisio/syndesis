@@ -1,36 +1,8 @@
 import classnames from 'classnames';
 import * as H from 'history';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { Loader } from '../Layout';
+import { ButtonLink, Loader } from '../Layout';
 import './IntegrationEditorLayout.css';
-
-interface IButtonOrLinkProps {
-  onClick?: (e: React.MouseEvent<any>) => void;
-  href?: H.LocationDescriptor;
-  className: string;
-  disabled?: boolean;
-}
-const ButtonOrLink: React.FunctionComponent<IButtonOrLinkProps> = ({
-  onClick,
-  href,
-  className,
-  disabled,
-  children,
-}) =>
-  href ? (
-    <Link to={href} onClick={onClick} className={`btn ${className}`}>
-      {children}
-    </Link>
-  ) : (
-    <button
-      onClick={onClick}
-      className={`btn ${className}`}
-      disabled={disabled || (!onClick && !href)}
-    >
-      {children}
-    </button>
-  );
 
 /**
  * @param header - a PatternFly Wizard Steps component.
@@ -117,17 +89,18 @@ export const IntegrationEditorLayout: React.FunctionComponent<
         </div>
       </div>
       <div className="wizard-pf-footer integration-editor-layout__footer">
-        <ButtonOrLink
+        <ButtonLink
           onClick={onBack}
           href={backHref}
           className={'btn-default wizard-pf-back'}
         >
           <i className="fa fa-angle-left" /> Back
-        </ButtonOrLink>
-        <ButtonOrLink
+        </ButtonLink>
+        <ButtonLink
           onClick={onNext}
           href={nextHref}
-          className={'btn-primary wizard-pf-next'}
+          as={'primary'}
+          className={'wizard-pf-next'}
           disabled={isNextLoading || isNextDisabled}
         >
           {isNextLoading ? <Loader size={'xs'} inline={true} /> : null}
@@ -138,14 +111,14 @@ export const IntegrationEditorLayout: React.FunctionComponent<
               Next <i className="fa fa-angle-right" />
             </>
           )}
-        </ButtonOrLink>
-        <ButtonOrLink
+        </ButtonLink>
+        <ButtonLink
           onClick={onCancel}
           href={cancelHref}
-          className={'btn-default wizard-pf-cancel'}
+          className={'wizard-pf-cancel'}
         >
           Cancel
-        </ButtonOrLink>
+        </ButtonLink>
       </div>
     </div>
   );

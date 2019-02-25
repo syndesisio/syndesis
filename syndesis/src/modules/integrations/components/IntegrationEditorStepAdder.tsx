@@ -1,12 +1,12 @@
 import { Step } from '@syndesis/models';
 import {
+  ButtonLink,
   IntegrationEditorStepsList,
   IntegrationEditorStepsListItem,
   IntegrationFlowAddStep,
 } from '@syndesis/ui';
 import * as H from 'history';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 export interface IIntegrationEditorStepAdderProps {
   /**
@@ -70,15 +70,14 @@ export class IntegrationEditorStepAdder extends React.Component<
                 icon={<img src={s.connection!.icon} width={24} height={24} />}
                 actions={
                   <>
-                    <Link
-                      to={this.props.configureConnectionHref(idx, s)}
-                      className={'btn btn-default'}
+                    <ButtonLink
+                      href={this.props.configureConnectionHref(idx, s)}
                     >
                       Configure
-                    </Link>
-                    <Link to={'#'} className={'btn btn-danger'}>
+                    </ButtonLink>
+                    <ButtonLink href={'#'} as={'danger'}>
                       <i className="fa fa-trash" />
-                    </Link>
+                    </ButtonLink>
                   </>
                 }
               />

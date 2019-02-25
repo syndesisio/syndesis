@@ -1,5 +1,6 @@
 import { WithConnections } from '@syndesis/api';
 import {
+  ButtonLink,
   IntegrationEditorChooseConnection,
   IntegrationEditorConnectionsListItem,
   IntegrationEditorLayout,
@@ -10,7 +11,6 @@ import {
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { PageTitle } from '../../../../../containers/PageTitle';
 import { IntegrationCreatorBreadcrumbs } from '../../../components';
 import resolvers from '../../../resolvers';
@@ -81,14 +81,13 @@ export class StartConnectionPage extends React.Component {
                             }
                             icon={<img src={c.icon} width={24} height={24} />}
                             actions={
-                              <Link
-                                to={resolvers.create.start.selectAction({
+                              <ButtonLink
+                                href={resolvers.create.start.selectAction({
                                   connection: c,
                                 })}
-                                className={'btn btn-default'}
                               >
                                 Select
-                              </Link>
+                              </ButtonLink>
                             }
                           />
                         ))}
@@ -97,9 +96,9 @@ export class StartConnectionPage extends React.Component {
                           integrationDescription={''}
                           icon={''}
                           actions={
-                            <Link to={'#'} className={'btn btn-default'}>
+                            <ButtonLink href={'#'}>
                               Create connection
-                            </Link>
+                            </ButtonLink>
                           }
                         />
                       </>

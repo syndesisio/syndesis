@@ -1,6 +1,7 @@
 import { WithConnection } from '@syndesis/api';
 import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import {
+  ButtonLink,
   IntegrationEditorActionsListItem,
   IntegrationEditorChooseAction,
   IntegrationEditorLayout,
@@ -11,7 +12,6 @@ import {
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { PageTitle } from '../../../../../containers/PageTitle';
 import { IntegrationCreatorBreadcrumbs } from '../../../components';
 import resolvers from '../../../resolvers';
@@ -135,8 +135,8 @@ export class FinishActionPage extends React.Component {
                                   a.description || 'No description available.'
                                 }
                                 actions={
-                                  <Link
-                                    to={resolvers.create.finish.configureAction(
+                                  <ButtonLink
+                                    href={resolvers.create.finish.configureAction(
                                       {
                                         actionId: a.id!,
                                         finishConnection,
@@ -145,10 +145,9 @@ export class FinishActionPage extends React.Component {
                                         startConnection,
                                       }
                                     )}
-                                    className={'btn btn-default'}
                                   >
                                     Select
-                                  </Link>
+                                  </ButtonLink>
                                 }
                               />
                             ))}
