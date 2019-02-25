@@ -279,7 +279,8 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     // The first step could be this datamapper step itself if it's not the first visit,
     // as DataShape is added by the following event
     let targetPair = subsequents[0];
-    if (targetPair.step.id === step.id) {
+    if (targetPair.step.id === step.id &&
+        targetPair.step.stepKind === step.stepKind) {
       targetPair = subsequents[1];
     }
     if (!targetPair) {
