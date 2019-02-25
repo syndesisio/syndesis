@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { VendorModule } from '@syndesis/ui/vendor';
 import { TagInputModule } from 'ngx-chips';
+import { ClickOutsideModule } from 'ng-click-outside';
 import { ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap-data-mapper';
 
@@ -21,6 +22,7 @@ import { ERROR_HANDLER_PROVIDERS } from '@syndesis/ui/error-handler';
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    ClickOutsideModule,
     FormsModule,
     ReactiveFormsModule,
     SyndesisCommonModule.forRoot(),

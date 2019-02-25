@@ -141,7 +141,9 @@
                 id="userMenuDropdownButton"
                 class="pf-c-dropdown__toggle pf-m-plain"
                 aria-expanded="false"
-                (click)="userMenuDropdown()">
+                (click)="userMenuDropdown()"
+                (clickOutside)="userMenuDropdown()"
+                [attachOutsideOnClick]=true>
                 {{ ( user$ | async)?.username }}
               </button>
               <ul
