@@ -15,7 +15,11 @@
  */
 package io.syndesis.connector.sheets;
 
-import com.google.api.services.sheets.v4.model.SheetProperties;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
 import io.syndesis.connector.sheets.model.GoogleSheet;
@@ -27,8 +31,6 @@ import org.apache.camel.Message;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
 import org.apache.camel.util.ObjectHelper;
-
-import java.util.Map;
 
 public class GoogleSheetsGetSpreadsheetCustomizer implements ComponentProxyCustomizer {
 
@@ -61,14 +63,20 @@ public class GoogleSheetsGetSpreadsheetCustomizer implements ComponentProxyCusto
                 model.setLocale(spreadsheetProperties.getLocale());
             }
 
+            List<GoogleSheet> sheets = new ArrayList<>();
             if (ObjectHelper.isNotEmpty(spreadsheet.getSheets())) {
-                SheetProperties sheetProperties = spreadsheet.getSheets().get(0).getProperties();
-                GoogleSheet sheet = new GoogleSheet();
-                sheet.setSheetId(sheetProperties.getSheetId());
-                sheet.setIndex(sheetProperties.getIndex());
-                sheet.setTitle(sheetProperties.getTitle());
-                model.setSheet(sheet);
+                spreadsheet.getSheets().stream()
+                        .map(Sheet::getProperties)
+                        .forEach(props -> {
+                            GoogleSheet sheet = new GoogleSheet();
+                            sheet.setSheetId(props.getSheetId());
+                            sheet.setIndex(props.getIndex());
+                            sheet.setTitle(props.getTitle());
+                            sheets.add(sheet);
+                        });
+
             }
+            model.setSheets(sheets);
         }
 
         in.setBody(model);

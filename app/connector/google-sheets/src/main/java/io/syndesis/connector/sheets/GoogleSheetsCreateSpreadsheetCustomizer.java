@@ -15,7 +15,8 @@
  */
 package io.syndesis.connector.sheets;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.api.services.sheets.v4.model.Sheet;
@@ -81,13 +82,18 @@ public class GoogleSheetsCreateSpreadsheetCustomizer implements ComponentProxyCu
 
         spreadsheet.setProperties(spreadsheetProperties);
 
-        if (model != null && model.getSheet() != null) {
-            Sheet sheet = new Sheet();
-            SheetProperties sheetProperties = new SheetProperties();
-            sheetProperties.setTitle(model.getSheet().getTitle());
-            sheet.setProperties(sheetProperties);
-
-            spreadsheet.setSheets(Collections.singletonList(sheet));
+        if (model != null && ObjectHelper.isNotEmpty(model.getSheets())) {
+            List<Sheet> sheets = new ArrayList<>();
+            for (GoogleSheet sheetModel : model.getSheets()) {
+                Sheet sheet = new Sheet();
+                SheetProperties sheetProperties = new SheetProperties();
+                sheetProperties.setSheetId(sheetModel.getSheetId());
+                sheetProperties.setIndex(sheetModel.getIndex());
+                sheetProperties.setTitle(sheetModel.getTitle());
+                sheet.setProperties(sheetProperties);
+                sheets.add(sheet);
+            }
+            spreadsheet.setSheets(sheets);
         }
 
         in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "content", spreadsheet);
@@ -110,14 +116,20 @@ public class GoogleSheetsCreateSpreadsheetCustomizer implements ComponentProxyCu
                 model.setLocale(spreadsheetProperties.getLocale());
             }
 
+            List<GoogleSheet> sheets = new ArrayList<>();
             if (ObjectHelper.isNotEmpty(spreadsheet.getSheets())) {
-                SheetProperties sheetProperties = spreadsheet.getSheets().get(0).getProperties();
-                GoogleSheet sheet = new GoogleSheet();
-                sheet.setSheetId(sheetProperties.getSheetId());
-                sheet.setIndex(sheetProperties.getIndex());
-                sheet.setTitle(sheetProperties.getTitle());
-                model.setSheet(sheet);
+                spreadsheet.getSheets().stream()
+                        .map(Sheet::getProperties)
+                        .forEach(props -> {
+                            GoogleSheet sheet = new GoogleSheet();
+                            sheet.setSheetId(props.getSheetId());
+                            sheet.setIndex(props.getIndex());
+                            sheet.setTitle(props.getTitle());
+                            sheets.add(sheet);
+                        });
+
             }
+            model.setSheets(sheets);
         }
 
         in.setBody(model);

@@ -22,6 +22,7 @@ import java.util.Map;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetResponse;
 import com.google.api.services.sheets.v4.model.Request;
+import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
 import com.google.api.services.sheets.v4.model.UpdateSheetPropertiesRequest;
@@ -95,11 +96,17 @@ public class GoogleSheetsUpdateSpreadsheetCustomizer implements ComponentProxyCu
             batchUpdateRequest.getRequests().add(new Request().setUpdateSpreadsheetProperties(updatePropertiesRequest));
         }
 
-        if (model != null && model.getSheet() != null) {
-            UpdateSheetPropertiesRequest updateSheetPropertiesRequest = new UpdateSheetPropertiesRequest();
-            updateSheetPropertiesRequest.setProperties(new SheetProperties().setTitle(model.getSheet().getTitle()));
-            updateSheetPropertiesRequest.setFields("title");
-            batchUpdateRequest.getRequests().add(new Request().setUpdateSheetProperties(updateSheetPropertiesRequest));
+        if (model != null && ObjectHelper.isNotEmpty(model.getSheets())) {
+            for (GoogleSheet sheet : model.getSheets()) {
+                UpdateSheetPropertiesRequest updateSheetPropertiesRequest = new UpdateSheetPropertiesRequest();
+                SheetProperties properties = new SheetProperties();
+                properties.setSheetId(sheet.getSheetId());
+                properties.setIndex(sheet.getIndex());
+                properties.setTitle(sheet.getTitle());
+                updateSheetPropertiesRequest.setProperties(properties);
+                updateSheetPropertiesRequest.setFields("title");
+                batchUpdateRequest.getRequests().add(new Request().setUpdateSheetProperties(updateSheetPropertiesRequest));
+            }
         }
 
         in.setHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID, spreadsheetId);
@@ -122,14 +129,20 @@ public class GoogleSheetsUpdateSpreadsheetCustomizer implements ComponentProxyCu
                 model.setLocale(spreadsheetProperties.getLocale());
             }
 
+            List<GoogleSheet> sheets = new ArrayList<>();
             if (ObjectHelper.isNotEmpty(batchUpdateResponse.getUpdatedSpreadsheet().getSheets())) {
-                SheetProperties sheetProperties = batchUpdateResponse.getUpdatedSpreadsheet().getSheets().get(0).getProperties();
-                GoogleSheet sheet = new GoogleSheet();
-                sheet.setSheetId(sheetProperties.getSheetId());
-                sheet.setIndex(sheetProperties.getIndex());
-                sheet.setTitle(sheetProperties.getTitle());
-                model.setSheet(sheet);
+                batchUpdateResponse.getUpdatedSpreadsheet().getSheets().stream()
+                        .map(Sheet::getProperties)
+                        .forEach(props -> {
+                            GoogleSheet sheet = new GoogleSheet();
+                            sheet.setSheetId(props.getSheetId());
+                            sheet.setIndex(props.getIndex());
+                            sheet.setTitle(props.getTitle());
+                            sheets.add(sheet);
+                        });
+
             }
+            model.setSheets(sheets);
         }
 
         in.setBody(model);

@@ -15,6 +15,8 @@
  */
 package io.syndesis.connector.sheets.model;
 
+import java.util.List;
+
 public class GoogleSpreadsheet {
 
     private String spreadsheetId;
@@ -24,7 +26,7 @@ public class GoogleSpreadsheet {
 
     private String url;
 
-    private GoogleSheet sheet;
+    private List<GoogleSheet> sheets;
 
     public String getSpreadsheetId() {
         return spreadsheetId;
@@ -91,22 +93,22 @@ public class GoogleSpreadsheet {
         this.locale = locale;
     }
 
-    public GoogleSheet getSheet() {
-        return sheet;
+    public List<GoogleSheet> getSheets() {
+        return sheets;
     }
 
     /**
-     * Specifies the sheet.
+     * Specifies the sheets.
      *
-     * @param sheet
+     * @param sheets
      */
-    public void setSheet(GoogleSheet sheet) {
-        this.sheet = sheet;
+    public void setSheets(List<GoogleSheet> sheets) {
+        this.sheets = sheets;
     }
 
     @Override
     public String toString() {
-        return String.format("%s [spreadsheetId=%s, title=%s, url=%s, sheet=%s]", GoogleSpreadsheet.class.getSimpleName(), spreadsheetId, title, url, sheet);
+        return String.format("%s [spreadsheetId=%s, title=%s, url=%s, sheets=%s]", GoogleSpreadsheet.class.getSimpleName(), spreadsheetId, title, url, sheets);
     }
 
 }

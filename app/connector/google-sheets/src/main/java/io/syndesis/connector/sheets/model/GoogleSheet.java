@@ -18,11 +18,11 @@ package io.syndesis.connector.sheets.model;
 
 public class GoogleSheet {
 
-    private int index;
-    private int sheetId;
+    private Integer index;
+    private Integer sheetId;
     private String title;
 
-    public int getIndex() {
+    public Integer getIndex() {
         return index;
     }
 
@@ -31,11 +31,11 @@ public class GoogleSheet {
      *
      * @param index
      */
-    public void setIndex(int index) {
+    public void setIndex(Integer index) {
         this.index = index;
     }
 
-    public int getSheetId() {
+    public Integer getSheetId() {
         return sheetId;
     }
 
@@ -44,7 +44,7 @@ public class GoogleSheet {
      *
      * @param sheetId
      */
-    public void setSheetId(int sheetId) {
+    public void setSheetId(Integer sheetId) {
         this.sheetId = sheetId;
     }
 
@@ -63,6 +63,6 @@ public class GoogleSheet {
 
     @Override
     public String toString() {
-        return String.format("%s [sheet=%s, index=%s, title=%s]", GoogleSheet.class.getSimpleName(), sheetId, index, title);
+        return String.format("%s [sheetId=%s, index=%s, title=%s]", GoogleSheet.class.getSimpleName(), sheetId, index, title);
     }
 }
