@@ -131,8 +131,8 @@ export default () => (
                     <Dashboard
                       linkToIntegrations={resolvers.integrations.list()}
                       linkToIntegrationCreation={resolvers.integrations.create.start.selectConnection()}
-                      linkToConnections={'/connections'}
-                      linkToConnectionCreation={'/connections/create'}
+                      linkToConnections={resolvers.connections.connections()}
+                      linkToConnectionCreation={resolvers.connections.create.selectConnector()}
                       integrationsOverview={
                         <AggregatedMetricCard
                           title={t('titleTotalIntegrations', {

@@ -3,29 +3,24 @@ import { Route, Switch } from 'react-router';
 import ConnectionsPage from './pages/ConnectionsPage';
 import ConnectorFormPage from './pages/ConnectorFormPage';
 import ConnectorsPage from './pages/ConnectorsPage';
+import routes from './routes';
 
-export interface IConnectionsAppProps {
-  baseurl: string;
-}
-
-export default class ConnectionsApp extends React.Component<
-  IConnectionsAppProps
-> {
+export default class ConnectionsApp extends React.Component {
   public render() {
     return (
       <Switch>
         <Route
-          path={this.props.baseurl}
+          path={routes.connections}
           exact={true}
           component={ConnectionsPage}
         />
         <Route
-          path={`${this.props.baseurl}/create`}
+          path={routes.create.selectConnector}
           exact={true}
           component={ConnectorsPage}
         />
         <Route
-          path={`${this.props.baseurl}/create/:connectorId`}
+          path={routes.create.configureConnector}
           exact={true}
           component={ConnectorFormPage}
         />

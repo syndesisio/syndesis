@@ -9,6 +9,7 @@ import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import i18n from '../../../i18n';
+import resolvers from '../resolvers';
 import { Connections, IConnectionsProps } from './Connections';
 
 function getFilteredAndSortedConnections(
@@ -82,7 +83,7 @@ export class ConnectionsWithToolbar extends React.Component<
 
               return (
                 <ConnectionsListView
-                  linkToConnectionCreate={'/connections/create'}
+                  linkToConnectionCreate={resolvers.create.selectConnector()}
                   filterTypes={filterTypes}
                   sortTypes={sortTypes}
                   resultsCount={filteredAndSortedConnections.length}
