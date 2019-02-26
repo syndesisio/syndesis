@@ -158,5 +158,13 @@
   {
     "connectorId": "sheets",
     "icon": "connectionicons_googlesheets.svg"
+  },
+  {
+    "stepId": "aggregate",
+    "icon": "stepicons_aggregate.svg"
+  },
+  {
+    "stepId": "split",
+    "icon": "stepicons_split.svg"
   }
 ]
