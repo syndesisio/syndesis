@@ -61,7 +61,7 @@
             "properties": {
               "cron": {
                 "componentProperty": false,
-                "defaultValue": "0+0/1+*+*+*+?",
+                "defaultValue": "0 0/1 * * * ?",
                 "deprecated": false,
                 "description": "A cron Expression, for example the expression for every minute is 0 0/1 * * * ?",
                 "displayName": "Cron Expression",

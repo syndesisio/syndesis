@@ -15,8 +15,10 @@
  */
 package io.syndesis.common.util;
 
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
@@ -58,6 +60,10 @@ public final class Json {
      */
     public static ObjectReader reader() {
         return OBJECT_READER;
+    }
+
+    public static <T> T readFromStream(final InputStream stream, final Class<T> type) throws IOException {
+        return OBJECT_MAPPER.readValue(stream, type);
     }
 
     /**
