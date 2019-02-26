@@ -12,7 +12,7 @@ const stories = storiesOf(
 
 const integrationPublished = {
   version: 1,
-  updatedAt: 1550261344272,
+  updatedAt: 'Feb 24, 2019, 04:27:49',
 };
 
 const i18nTextHistoryMenuReplaceDraft = 'Replace Draft';

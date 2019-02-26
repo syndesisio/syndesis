@@ -25,20 +25,20 @@ const i18nTextVersion = 'Version';
 const integrationPublished = {
   id: 'i-LYmlhVFB6pKKaBQVSyez',
   version: 1,
-  updatedAt: 1550261344272,
+  updatedAt: 'Feb 24, 2019, 04:27:49',
   currentState: 'Unpublished',
   targetState: 'Unpublished',
-  name: 'aaa',
+  name: 'Test Published Integration',
   isDraft: false,
 };
 
 const integrationUnpublished = {
   id: 'i-LYmlhVFB6pKKaBQVSyez',
   version: 1,
-  updatedAt: 1550261344272,
+  updatedAt: 'Feb 25, 2019, 11:42:21',
   currentState: 'Unpublished',
   targetState: 'Unpublished',
-  name: 'aaa',
+  name: 'Test Unpublished Integration',
   isDraft: true,
 };
 

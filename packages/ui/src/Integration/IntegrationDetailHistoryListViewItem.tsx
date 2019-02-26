@@ -8,7 +8,7 @@ import {
 import * as React from 'react';
 
 export interface IIntegrationDetailHistoryListViewItemProps {
-  integrationUpdatedAt: Date;
+  integrationUpdatedAt: string;
   integrationVersion: number;
   i18nTextHistoryMenuReplaceDraft?: string;
   i18nTextHistoryMenuUnpublish?: string;
