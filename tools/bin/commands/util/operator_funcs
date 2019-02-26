@@ -176,7 +176,7 @@ create_operator_image() {
     fi
 
     local arch=$(mktemp -t syndesis-operator-docker-XXXX.tgz)
-    tar zcvf $arch Dockerfile syndesis-operator syndesis-template.yml
+    tar zcvf $arch Dockerfile syndesis-operator syndesis-template.yml addons
     trap "rm $arch" EXIT
 
     oc start-build --from-archive=$arch syndesis-operator
