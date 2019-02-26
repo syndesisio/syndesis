@@ -8,8 +8,9 @@ const SVGO = require('svgo');
 const DEPLOYMENT_JSON = '../../../app/server/dao/src/main/resources/io/syndesis/server/dao/deployment.json';
 const CONNECTORS_PATH = '../../../app/connector';
 const SCHEMA_JAVA = '../../../app/common/model/src/main/java/io/syndesis/common/model/Schema.java';
+const STEP_ICON_ASSET_PATH = '../../../app/ui/src/assets/icons/steps';
 
-const CONNECTORS = jsonfile.readFileSync('mapping.json');
+const MAPPINGS = jsonfile.readFileSync('mapping.json');
 
 const svgo = new SVGO({
   quiet: true
@@ -17,29 +18,34 @@ const svgo = new SVGO({
 
 function optimize(file) {
   const data = fs.readFileSync(file);
-  return svgo.optimize(data).then(optimized => ({
-    id: CONNECTORS.find(c => c.icon == file).connectorId,
-    icon: 'data:image/svg+xml;base64,' + Buffer.from(optimized.data).toString('base64')
-  }));
+  return svgo.optimize(data).then(optimized => {
+    const mapping = MAPPINGS.find(c => c.icon == file);
+    return {
+      id: mapping.connectorId || mapping.stepId,
+      name: path.basename(file),
+      icon: 'data:image/svg+xml;base64,' + Buffer.from(optimized.data).toString('base64'),
+      raw: optimized.data
+    };
+  });
 }
 
 const svgs = readDir.readSync('.', ['*.svg']);
 
-const missingSvgs = CONNECTORS.map(c => c.icon).filter(svg => svgs.indexOf(svg) < 0);
+const missingSvgs = MAPPINGS.map(c => c.icon).filter(svg => svgs.indexOf(svg) < 0);
 if (missingSvgs.length != 0) {
   console.log("No SVG icon found for:");
   missingSvgs.forEach(e => console.log(e));
   return;
 }
 
-const missingMappings = svgs.filter(file => !(CONNECTORS.find(c => c.icon == file)));
+const missingMappings = svgs.filter(file => !(MAPPINGS.find(c => c.icon == file)));
 if (missingMappings.length != 0) {
   console.log("No mapping.json entry found for:");
   missingMappings.forEach(e => console.log(e));
   return;
 }
 
-Promise.all(CONNECTORS.filter(c => !c.ignore).map(c => {
+Promise.all(MAPPINGS.filter(c => !c.ignore).map(c => {
   return optimize(c.icon);
 })).then(optimized => {
   jsonfile.readFile(DEPLOYMENT_JSON)
@@ -83,4 +89,7 @@ Promise.all(CONNECTORS.filter(c => !c.ignore).map(c => {
           )
         })
     });
+
+    optimized.filter(o => /^step/.test(o.name))
+      .forEach(o => fs.writeFileSync(path.join(STEP_ICON_ASSET_PATH, o.name.replace(/[^_]+_/, '')), o.raw))
 });
