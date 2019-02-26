@@ -98,15 +98,15 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
         batchUpdateRequest.getRequests().add(new Request().setAddChart(addChartRequest));
 
         ChartSpec chartSpec = createChartSpec();
-        EmbeddedChart embeddedChart = createEmbeddedChart(model, chartSpec);
-        addChartRequest.setChart(embeddedChart);
-
         if (model != null) {
+            addChartRequest.setChart(createEmbeddedChart(model, chartSpec));
             if (model.getBasicChart() != null) {
                 addBasicChart(chartSpec, model);
             } else if (model.getPieChart() != null) {
                 addPieChart(chartSpec, model);
             }
+        } else {
+            addChartRequest.setChart(createEmptyChart(chartSpec));
         }
 
         in.setHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID, spreadsheetId);
@@ -124,19 +124,33 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
         return chartSpec;
     }
 
+    private EmbeddedChart createEmptyChart(ChartSpec chartSpec) {
+        EmbeddedChart embeddedChart = new EmbeddedChart();
+        EmbeddedObjectPosition position = new EmbeddedObjectPosition();
+        position.setNewSheet(true);
+        embeddedChart.setPosition(position);
+        embeddedChart.setSpec(chartSpec);
+
+        return embeddedChart;
+    }
+
     private EmbeddedChart createEmbeddedChart(GoogleChart model, ChartSpec chartSpec) {
+        Integer sourceSheetId = Optional.ofNullable(model.getSourceSheetId())
+                                    .orElse(0);
+
+        Integer sheetId = Optional.ofNullable(model.getSheetId())
+                                  .orElse(sourceSheetId);
+
         EmbeddedChart embeddedChart = new EmbeddedChart();
 
         EmbeddedObjectPosition position = new EmbeddedObjectPosition();
 
-        if (model != null && ObjectHelper.isNotEmpty(model.getOverlayPosition())) {
+        if (ObjectHelper.isNotEmpty(model.getOverlayPosition())) {
             CellCoordinate cellCoordinate = CellCoordinate.fromCellId(model.getOverlayPosition());
             position.setOverlayPosition(new OverlayPosition().setAnchorCell(new GridCoordinate()
-                                                                                .setSheetId(Optional.ofNullable(model.getSheetId()).orElse(0))
+                                                                                .setSheetId(sheetId)
                                                                                 .setColumnIndex(cellCoordinate.getColumnIndex())
                                                                                 .setRowIndex(cellCoordinate.getRowIndex())));
-        } else if (model != null && ObjectHelper.isNotEmpty(model.getSheetId())) {
-            position.setSheetId(model.getSheetId());
         } else {
             position.setNewSheet(true);
         }
@@ -148,16 +162,21 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
     }
 
     private void addPieChart(ChartSpec chartSpec, GoogleChart model) {
-        Integer defaultSheetId = Optional.ofNullable(model.getSheetId()).orElse(0);
+        Integer sheetId = Optional.ofNullable(model.getSheetId())
+                                  .orElse(0);
+
+        Integer sourceSheetId = Optional.ofNullable(model.getSourceSheetId())
+                                        .orElse(sheetId);
+
         GoogleChart.PieChart pieChart = model.getPieChart();
 
         PieChartSpec pieChartSpec = new PieChartSpec();
         pieChartSpec.setLegendPosition(pieChart.getLegendPosition());
-        pieChartSpec.setDomain(new ChartData().setSourceRange(getDomainSourceRange(Optional.ofNullable(model.getSourceSheetId()).orElse(defaultSheetId), pieChart.getDomainRange())));
+        pieChartSpec.setDomain(new ChartData().setSourceRange(getDomainSourceRange(sourceSheetId, pieChart.getDomainRange())));
 
         ChartSourceRange sourceRange = new ChartSourceRange();
         GridRange gridRange = new GridRange();
-        gridRange.setSheetId(Optional.ofNullable(model.getSourceSheetId()).orElse(defaultSheetId));
+        gridRange.setSheetId(sourceSheetId);
         RangeCoordinate coordinates = RangeCoordinate.fromRange(pieChart.getDataRange());
         gridRange.setStartRowIndex(coordinates.getRowStartIndex());
         gridRange.setEndRowIndex(coordinates.getRowEndIndex());
@@ -171,6 +190,12 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
     }
 
     private void addBasicChart(ChartSpec chartSpec, GoogleChart model) {
+        Integer sheetId = Optional.ofNullable(model.getSheetId())
+                .orElse(0);
+
+        Integer sourceSheetId = Optional.ofNullable(model.getSourceSheetId())
+                .orElse(sheetId);
+
         GoogleChart.BasicChart basicChart = model.getBasicChart();
 
         BasicChartSpec basicChartSpec = new BasicChartSpec();
@@ -189,9 +214,7 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
 
         BasicChartDomain chartDomain = new BasicChartDomain();
 
-        Integer defaultSheetId = Optional.ofNullable(model.getSheetId()).orElse(0);
-
-        chartDomain.setDomain(new ChartData().setSourceRange(getDomainSourceRange(Optional.ofNullable(model.getSourceSheetId()).orElse(defaultSheetId), basicChart.getDomainRange())));
+        chartDomain.setDomain(new ChartData().setSourceRange(getDomainSourceRange(sourceSheetId, basicChart.getDomainRange())));
         basicChartSpec.setDomains(Collections.singletonList(chartDomain));
         basicChartSpec.setChartType(basicChart.getType());
 
@@ -200,7 +223,7 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
         Stream.of(dataRange.split(",", -1)).forEach(range -> {
             ChartSourceRange sourceRange = new ChartSourceRange();
             GridRange gridRange = new GridRange();
-            gridRange.setSheetId(Optional.ofNullable(model.getSourceSheetId()).orElse(defaultSheetId));
+            gridRange.setSheetId(sourceSheetId);
             RangeCoordinate coordinate = RangeCoordinate.fromRange(range);
             gridRange.setStartRowIndex(coordinate.getRowStartIndex());
             gridRange.setEndRowIndex(coordinate.getRowEndIndex());
