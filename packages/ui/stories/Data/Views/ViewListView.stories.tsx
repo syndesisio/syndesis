@@ -22,7 +22,7 @@ const deleteTip1 = 'Delete ' + viewName1 + ' view';
 const deleteTip2 = 'Delete ' + viewName2 + ' view';
 const deleteActionText = 'Delete View';
 
-const Views = [
+const viewItems = [
   <ViewListItem
     key="viewListItem1"
     viewName={text('name', viewName1)}
@@ -79,15 +79,15 @@ const hasViewsTestNotes =
   '"\n' +
   '- Verify empty state component does not show\n' +
   '- Verify results message shows ' +
-  Views.length +
+  viewItems.length +
   ' results\n' +
   '- Verify ' +
-  Views.length +
-  ' View list items are displayed\n';
-'- Verify clicking the Edit button prints "' +
+  viewItems.length +
+  ' View list items are displayed\n' +
+  '- Verify clicking the Edit button prints "' +
   editActionText +
-  '" in the ACTION LOGGER\n';
-'- Verify selecting Delete in the kebab menu prints "' +
+  '" in the ACTION LOGGER\n' +
+  '- Verify selecting Delete in the kebab menu prints "' +
   deleteActionText +
   '" in the ACTION LOGGER';
 
@@ -165,6 +165,7 @@ stories
           )}
           i18nResultsCount={text('i18nResultsCount', '0 Results')}
           onImportView={action(importActionText)}
+          children={[]}
         />
       </Router>
     ))
@@ -211,9 +212,12 @@ stories
             'i18nNameFilterPlaceholder',
             'Filter by Name...'
           )}
-          i18nResultsCount={text('i18nResultsCount', Views.length + ' Results')}
+          i18nResultsCount={text(
+            'i18nResultsCount',
+            viewItems.length + ' Results'
+          )}
           onImportView={action(importActionText)}
-          children={Views}
+          children={viewItems}
         />
       </Router>
     ))

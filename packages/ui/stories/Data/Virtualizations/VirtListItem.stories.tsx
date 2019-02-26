@@ -1,5 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
+import { text } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
@@ -24,7 +25,7 @@ const unpublishText = 'Unpublish';
 const publishText = 'Publish';
 
 const publishedVirtNotes =
-  '- Verify virtualization icon is showing on the left\n' +
+  '- Verify the custom virtualization icon is showing on the left\n' +
   '- Verify virtualization name is "' +
   virtName +
   '"\n' +
@@ -52,6 +53,9 @@ const publishedVirtNotes =
   '- Verify the dropdown menu contains "' +
   unpublishText +
   '"\n' +
+  '[ ACTION ] Select KNOBS tab and delete all text in the icon area\n' +
+  '-- >  Verify the custom virtualization icon changes to the default' +
+  '\n' +
   '[ ACTION ] Select KNOBS tab and uncheck the "' +
   publishedText +
   '" checkbox\n' +
@@ -67,7 +71,7 @@ const publishedVirtNotes =
   '"\n' +
   '-- >  Verify the dropdown menu contains "' +
   publishText +
-  '"';
+  '"\n';
 
 stories.add(
   'sample virtualization item',
@@ -77,7 +81,7 @@ stories.add(
       virtDescription={virtDescription}
       i18nDraft={draftText}
       i18nDraftTip={draftTip}
-      icon={virtIconData}
+      icon={text('icon', virtIconData)}
       i18nEdit={editText}
       i18nEditTip={editTip}
       i18nPublished={publishedText}

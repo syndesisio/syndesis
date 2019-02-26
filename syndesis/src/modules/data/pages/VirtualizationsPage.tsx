@@ -14,6 +14,7 @@ import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import i18n from '../../../i18n';
+import resolvers from '../resolvers';
 
 function getFilteredAndSortedVirts(
   virts: RestDataService[],
@@ -161,7 +162,7 @@ export default class VirtualizationsPage extends React.Component {
                           i18nTitle={t(
                             'virtualization.virtualizationsPageTitle'
                           )}
-                          linkCreateHRef={'/data/create'}
+                          linkCreateHRef={resolvers.virtualizations.create()}
                           onCreate={this.handleCreateVirt}
                           onImport={this.handleImportVirt}
                         >
