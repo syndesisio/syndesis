@@ -58,5 +58,5 @@ func (a *initializeAction) Execute(ctx context.Context, syndesis *v1alpha1.Synde
 		a.log.Info("Syndesis resource initialized", "name", syndesis.Name, "version", syndesisVersion)
 	}
 
-	return a.client.Status().Update(ctx, target)
+	return a.client.Update(ctx, target)
 }

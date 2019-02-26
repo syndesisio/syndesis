@@ -1,15 +1,17 @@
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: syndeses.syndesis.io
+  name: syndesises.syndesis.io
 spec:
   group: syndesis.io
   names:
     kind: Syndesis
     listKind: SyndesisList
-    plural: syndeses
+    plural: syndesises
+# Use "syndeses" when upgrading the CRD version
     singular: syndesis
   scope: Namespaced
   version: v1alpha1
-  subresources:
-    status: {}
+# Enable when upgrading the CRD version
+ # subresources:
+ #   status: {}

@@ -58,6 +58,6 @@ func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1alpha1.Synd
 		target.Status.ForceUpgrade = false
 
 		a.log.Info("Starting upgrade of Syndesis resource", "name", syndesis.Name, "currentVersion", namespaceVersion, "targetVersion", a.operatorVersion, "type", "checkUpdate")
-		return a.client.Status().Update(ctx, target)
+		return a.client.Update(ctx, target)
 	}
 }

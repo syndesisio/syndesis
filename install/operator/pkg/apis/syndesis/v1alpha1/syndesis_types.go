@@ -126,7 +126,7 @@ const (
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// Syndesis is the Schema for the syndeses API
+// Syndesis is the Schema for the syndesises API
 // +k8s:openapi-gen=true
 type Syndesis struct {
 	metav1.TypeMeta   `json:",inline"`

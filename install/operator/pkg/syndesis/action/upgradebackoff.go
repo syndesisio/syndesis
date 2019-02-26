@@ -44,7 +44,7 @@ func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1alpha1.S
 		target.Status.Description = "Upgrade failed too many times and will not be retried"
 		target.Status.ForceUpgrade = false
 
-		return a.client.Status().Update(ctx, target)
+		return a.client.Update(ctx, target)
 	}
 
 	now := time.Now()
@@ -83,7 +83,7 @@ func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1alpha1.S
 		target.Status.Description = "Upgrading from " + currentVersion + " to " + targetVersion + " (attempt " + currentAttemptStr + ")"
 		target.Status.ForceUpgrade = true
 
-		return a.client.Status().Update(ctx, target)
+		return a.client.Update(ctx, target)
 	} else {
 		remaining := math.Round(nextAttempt.Sub(now).Seconds())
 		a.log.Info("Upgrade of Syndesis resource will be retried", "name", syndesis.Name, "retryAfterSeconds", remaining)
