@@ -2,6 +2,7 @@ import { CoreModule } from '@syndesis/ui/core/core.module';
 import { async, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ToastNotificationListModule as NotificationModule } from 'patternfly-ng';
+import { ClickOutsideModule } from 'ng-click-outside';
 import { StoreModule as NgRxStoreModule } from '@ngrx/store';
 
 import { AppComponent } from '@syndesis/ui/app.component';
@@ -24,6 +25,7 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule.forRoot(),
+        ClickOutsideModule,
         SyndesisStoreModule,
         SyndesisCommonModule.forRoot(),
         RouterTestingModule.withRoutes([]),
