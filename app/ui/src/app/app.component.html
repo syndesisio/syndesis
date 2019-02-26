@@ -71,7 +71,9 @@
               id="helpDropdownButton"
               class="pf-c-dropdown__toggle pf-m-plain"
               aria-expanded="false"
-              (click)="expandHelpDropdown()">
+              (click)="expandHelpDropdown()"
+              (clickOutside)="expandHelpDropdown()"
+              [attachOutsideOnClick]=true>
               <i class="pf-icon pf-icon-help pf-m-user pf-screen-reader" aria-hidden="true"></i>
               <i class="fas fa-ellipsis-v pf-m-mobile" aria-hidden="true"></i>
             </button>
