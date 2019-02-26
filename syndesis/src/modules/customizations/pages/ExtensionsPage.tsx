@@ -8,11 +8,7 @@ import {
   IFilterType,
   ISortType,
 } from '@syndesis/ui';
-import {
-  optionalIntValue,
-  WithListViewToolbarHelpers,
-  WithLoader,
-} from '@syndesis/utils';
+import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
@@ -87,7 +83,8 @@ export default class ExtensionsPage extends React.Component {
   }
 
   public getUsedByMessage(extension: Extension): string {
-    const numUsedBy = optionalIntValue(extension.uses);
+    // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
+    const numUsedBy = extension.uses as number;
 
     if (numUsedBy === 1) {
       return i18n.t('customizations:usedByOne');
@@ -218,9 +215,10 @@ export default class ExtensionsPage extends React.Component {
                                         )}
                                         onDelete={this.handleDelete}
                                         onUpdate={this.handleUpdate}
-                                        usedBy={optionalIntValue(
-                                          extension.uses
-                                        )}
+                                        usedBy={
+                                          // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
+                                          extension.uses as number
+                                        }
                                       />
                                     )
                                   )

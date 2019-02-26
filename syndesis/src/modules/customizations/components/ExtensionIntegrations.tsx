@@ -87,7 +87,7 @@ export default class ExtensionIntegrations extends React.Component<
                     <Row>
                       <div className="col-xs-offset-1 col-xs-11">
                         <p>{this.props.i18nUsageMessage}</p>
-                        {data.items && data.items.length !== 0 ? (
+                        {data.length !== 0 ? (
                           <Table.PfProvider
                             striped={true}
                             bordered={true}
@@ -95,7 +95,7 @@ export default class ExtensionIntegrations extends React.Component<
                             columns={this.getColumns()}
                           >
                             <Table.Header />
-                            <Table.Body rows={data.items} rowKey="name" />
+                            <Table.Body rows={data} rowKey="name" />
                           </Table.PfProvider>
                         ) : null}
                       </div>

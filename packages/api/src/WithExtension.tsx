@@ -26,14 +26,7 @@ export class WithExtension extends React.Component<IWithExtensionProps> {
         }}
         initialValue={this.props.initialValue}
       >
-        {({ response }) =>
-          this.props.children({
-            ...response,
-            data: {
-              ...response.data,
-            },
-          })
-        }
+        {({ response }) => this.props.children(response)}
       </SyndesisFetch>
     );
   }

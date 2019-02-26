@@ -1,5 +1,5 @@
 import { WithExtension } from '@syndesis/api';
-import { Action, Extension, OptionalInt } from '@syndesis/models';
+import { Action, Extension } from '@syndesis/models';
 import {
   Breadcrumb,
   ExtensionDetail,
@@ -8,7 +8,7 @@ import {
   IAction,
   Loader,
 } from '@syndesis/ui';
-import { optionalIntValue, WithLoader, WithRouteData } from '@syndesis/utils';
+import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -52,13 +52,13 @@ export default class ExtensionDetailsPage extends React.Component {
     return i18n.t('customizations:extension.unknownExtensionType');
   }
 
-  public getUsageMessage(uses?: OptionalInt): string {
-    if (optionalIntValue(uses) === 1) {
+  public getUsageMessage(uses: number): string {
+    if (uses === 1) {
       return i18n.t('customizations:usedByOne');
     }
 
     return i18n.t('customizations:usedByMulti', {
-      count: optionalIntValue(uses),
+      count: uses,
     });
   }
 
@@ -109,7 +109,8 @@ export default class ExtensionDetailsPage extends React.Component {
                           </Breadcrumb>
                           <ExtensionDetail
                             extensionName={data.name}
-                            extensionUses={optionalIntValue(data.uses)}
+                            // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
+                            extensionUses={data.uses as number}
                             i18nDelete={t('shared:Delete')}
                             i18nDeleteTip={t('extension.deleteExtensionTip')}
                             i18nIdMessage={t('extension.idMessage', {
@@ -136,7 +137,8 @@ export default class ExtensionDetailsPage extends React.Component {
                                 i18nDescription={t('shared:Description')}
                                 i18nName={t('shared:Name')}
                                 i18nUsageMessage={this.getUsageMessage(
-                                  data.uses
+                                  // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
+                                  data.uses as number
                                 )}
                                 onSelectIntegration={
                                   this.handleIntegrationSelected

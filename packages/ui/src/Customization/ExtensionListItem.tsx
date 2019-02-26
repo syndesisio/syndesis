@@ -113,6 +113,9 @@ export class ExtensionListItem extends React.Component<
           <ListViewInfoItem key={1}>
             {this.props.i18nExtensionType}
           </ListViewInfoItem>,
+          <ListViewInfoItem key={2}>
+            {this.props.i18nUsedByMessage}
+          </ListViewInfoItem>,
         ]}
         description={
           this.props.extensionDescription ? this.props.extensionDescription : ''

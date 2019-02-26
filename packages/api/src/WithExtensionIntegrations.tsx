@@ -6,15 +6,10 @@ import { SyndesisFetch } from './SyndesisFetch';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
 
-export interface IExtensionIntegrationsResponse {
-  items: IntegrationOverview[];
-  totalCount: number;
-}
-
 export interface IWithExtensionIntegrationsProps {
   extensionId: string;
   disableUpdates?: boolean;
-  children(props: IFetchState<IExtensionIntegrationsResponse>): any;
+  children(props: IFetchState<IntegrationOverview[]>): any;
 }
 
 /**
@@ -33,9 +28,9 @@ export class WithExtensionIntegrations extends React.Component<
 
   public render() {
     return (
-      <SyndesisFetch<IExtensionIntegrationsResponse>
+      <SyndesisFetch<IntegrationOverview[]>
         url={`/extensions/${this.props.extensionId}/integrations`}
-        defaultValue={{ items: [], totalCount: 0 }}
+        defaultValue={[]}
       >
         {({ read, response }) =>
           this.props.disableUpdates ? (
