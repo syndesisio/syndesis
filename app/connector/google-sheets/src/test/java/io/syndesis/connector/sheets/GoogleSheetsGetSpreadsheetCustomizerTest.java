@@ -16,6 +16,10 @@
 
 package io.syndesis.connector.sheets;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
@@ -28,10 +32,6 @@ import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class GoogleSheetsGetSpreadsheetCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
@@ -80,9 +80,10 @@ public class GoogleSheetsGetSpreadsheetCustomizerTest extends AbstractGoogleShee
         Assert.assertEquals("America/New_York", model.getTimeZone());
         Assert.assertEquals("en", model.getLocale());
 
-        Assert.assertEquals("Sheet1", model.getSheet().getTitle());
-        Assert.assertEquals(1, model.getSheet().getSheetId());
-        Assert.assertEquals(1, model.getSheet().getIndex());
+        Assert.assertEquals(1, model.getSheets().size());
+        Assert.assertEquals("Sheet1", model.getSheets().get(0).getTitle());
+        Assert.assertEquals(Integer.valueOf(1), model.getSheets().get(0).getSheetId());
+        Assert.assertEquals(Integer.valueOf(1), model.getSheets().get(0).getIndex());
     }
 
 }

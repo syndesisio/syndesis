@@ -87,7 +87,7 @@ public class GoogleSheetsCreateSpreadsheetCustomizerTest extends AbstractGoogleS
         sheetModel.setSheetId(1);
         sheetModel.setIndex(1);
 
-        model.setSheet(sheetModel);
+        model.setSheets(Collections.singletonList(sheetModel));
 
         inbound.getIn().setBody(model);
         getComponent().getBeforeProducer().process(inbound);
@@ -135,9 +135,10 @@ public class GoogleSheetsCreateSpreadsheetCustomizerTest extends AbstractGoogleS
         Assert.assertEquals("America/New_York", model.getTimeZone());
         Assert.assertEquals("en", model.getLocale());
 
-        Assert.assertEquals("Sheet1", model.getSheet().getTitle());
-        Assert.assertEquals(1, model.getSheet().getSheetId());
-        Assert.assertEquals(1, model.getSheet().getIndex());
+        Assert.assertEquals(1, model.getSheets().size());
+        Assert.assertEquals("Sheet1", model.getSheets().get(0).getTitle());
+        Assert.assertEquals(Integer.valueOf(1), model.getSheets().get(0).getSheetId());
+        Assert.assertEquals(Integer.valueOf(1), model.getSheets().get(0).getIndex());
     }
 
 }
