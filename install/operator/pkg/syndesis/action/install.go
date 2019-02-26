@@ -131,7 +131,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	addRouteAnnotation(target, syndesisRoute)
 	a.log.Info("Syndesis resource installed", "name", target.Name)
 
-	return a.client.Status().Update(ctx, target)
+	return a.client.Update(ctx, target)
 }
 
 func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis) (string, error) {

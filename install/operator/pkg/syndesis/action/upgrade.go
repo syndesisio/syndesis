@@ -120,7 +120,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 					}
 				}
 			}
-			
+
 			var currentAttemptDescr string
 			if syndesis.Status.UpgradeAttempts > 0 {
 				currentAttemptDescr = " (attempt " + strconv.Itoa(int(syndesis.Status.UpgradeAttempts+1)) + ")"
@@ -132,7 +132,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			target.Status.TargetVersion = targetVersion
 			target.Status.Description = "Upgrading from " + namespaceVersion + " to " + targetVersion + currentAttemptDescr
 
-			return a.client.Status().Update(ctx, target)
+			return a.client.Update(ctx, target)
 		} else {
 			// No upgrade pod, no version change: upgraded
 			a.log.Info("Syndesis resource already upgraded to version ", "name", syndesis.Name, "targetVersion", targetVersion)
@@ -165,7 +165,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 				target.Status.TargetVersion = targetVersion
 				target.Status.Description = "Upgrading from " + namespaceVersion + " to " + targetVersion + currentAttemptDescr
 
-				return a.client.Status().Update(ctx, target)
+				return a.client.Update(ctx, target)
 			}
 		} else if upgradePod.Status.Phase == v1.PodFailed {
 			// Upgrade failed
@@ -180,7 +180,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			}
 			target.Status.UpgradeAttempts = target.Status.UpgradeAttempts + 1
 
-			return a.client.Status().Update(ctx, target)
+			return a.client.Update(ctx, target)
 		} else {
 			// Still running
 			a.log.Info("Syndesis resource is currently being upgraded", "name", syndesis.Name, "targetVersion", targetVersion)
@@ -207,7 +207,7 @@ func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1alpha1.
 	target.Status.UpgradeAttempts = 0
 	target.Status.ForceUpgrade = false
 
-	return a.client.Status().Update(ctx, target)
+	return a.client.Update(ctx, target)
 }
 
 func (a *upgradeAction) getUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis) ([]runtime.Object, error) {

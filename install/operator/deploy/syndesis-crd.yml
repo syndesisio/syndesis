@@ -8,8 +8,10 @@ spec:
     kind: Syndesis
     listKind: SyndesisList
     plural: syndesises
+# Use "syndeses" when upgrading the CRD version
     singular: syndesis
   scope: Namespaced
   version: v1alpha1
-  subresources:
-    status: {}
+# Enable when upgrading the CRD version
+ # subresources:
+ #   status: {}

@@ -56,7 +56,7 @@ func (a *upgradeLegacyAction) Execute(ctx context.Context, syndesis *v1alpha1.Sy
 	target.Status.Version = syndesisVersion
 
 	a.log.Info("Syndesis installation attached to resource", "name", syndesis.Name)
-	return a.client.Status().Update(ctx, target)
+	return a.client.Update(ctx, target)
 }
 
 func (a *upgradeLegacyAction) isAnotherActiveInstallationPresent(ctx context.Context, syndesis *v1alpha1.Syndesis) (bool, error) {
