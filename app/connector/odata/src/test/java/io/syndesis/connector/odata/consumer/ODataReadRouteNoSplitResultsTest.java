@@ -36,11 +36,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.odata.PropertyBuilder;
 import io.syndesis.connector.odata.server.ODataTestServer;
 
@@ -75,7 +73,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
                                                             .property(SERVICE_URI, defaultTestServer.serviceUrl()));
 
-        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
@@ -99,7 +97,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
                                                             .property(BASIC_PASSWORD, basicPasswordProperty())
                                                         );
 
-        Step odataStep = createODataStep(odataConnector, authTestServer.methodName());
+        Step odataStep = createODataStep(odataConnector, authTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
@@ -119,7 +117,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
                                                             .property(SERVICE_URI, sslTestServer.serviceUrl())
                                                             .property(CLIENT_CERTIFICATE, ODataTestServer.serverCertificate()));
 
-        Step odataStep = createODataStep(odataConnector, sslTestServer.methodName());
+        Step odataStep = createODataStep(odataConnector, sslTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
@@ -144,7 +142,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
                                                                 .property(BASIC_PASSWORD, basicPasswordProperty())
                                                             );
 
-        Step odataStep = createODataStep(odataConnector, sslAuthTestServer.methodName());
+        Step odataStep = createODataStep(odataConnector, sslAuthTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
@@ -162,7 +160,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
     @Ignore("Run manually as not strictly required")
     public void testReferenceODataRoute() throws Exception {
         String serviceUri = "https://services.odata.org/TripPinRESTierService";
-        String methodName = "People";
+        String resourcePath = "People";
         String queryParam = "$count=true";
 
         context = new SpringCamelContext(applicationContext);
@@ -172,15 +170,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
                                                             .property(QUERY_PARAMS, queryParam)
                                                             .property(CLIENT_CERTIFICATE, ODataTestServer.referenceServiceCertificate()));
 
-        Step odataStep = new Step.Builder()
-            .stepKind(StepKind.endpoint)
-            .action(readAction)
-            .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build())
-            .putConfiguredProperty(METHOD_NAME, methodName)
-            .build();
+        Step odataStep = createODataStep(odataConnector, resourcePath);
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
@@ -211,7 +201,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
                                                             .property(SERVICE_URI, defaultTestServer.serviceUrl())
                                                             .property(QUERY_PARAMS, queryParams));
 
-        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
@@ -232,7 +222,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
                                                             .property(SERVICE_URI, defaultTestServer.serviceUrl())
                                                             .property(QUERY_PARAMS, queryParams));
 
-        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
@@ -262,7 +252,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
                                                             .property(SERVICE_URI, defaultTestServer.serviceUrl())
                                                             .property(QUERY_PARAMS, queryParams));
 
-        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
@@ -287,7 +277,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
                                                             .property(SERVICE_URI, defaultTestServer.serviceUrl())
                                                             .property(KEY_PREDICATE, keyPredicate));
 
-        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
@@ -308,7 +298,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
                                                             .property(SERVICE_URI, defaultTestServer.serviceUrl())
                                                             .property(KEY_PREDICATE, keyPredicate));
 
-        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
@@ -332,7 +322,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
                                                             .property(INITIAL_DELAY, initialDelayValue)
                                                             .property(DELAY, delayValue));
 
-        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
@@ -364,7 +354,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
                                                             .property(BACKOFF_IDLE_THRESHOLD, backoffIdleThreshold)
                                                             .property(BACKOFF_MULTIPLIER, backoffMultiplier));
 
-        Step odataStep = createODataStep(odataConnector, defaultTestServer.methodName());
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);

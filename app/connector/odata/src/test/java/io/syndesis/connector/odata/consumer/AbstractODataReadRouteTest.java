@@ -15,23 +15,18 @@
  */
 package io.syndesis.connector.odata.consumer;
 
-import org.junit.After;
-import org.junit.Before;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.connector.odata.AbstractODataTest;
+import io.syndesis.connector.odata.AbstractODataRouteTest;
 import io.syndesis.connector.odata.PropertyBuilder;
 import io.syndesis.connector.odata.component.ODataComponentFactory;
-import io.syndesis.connector.odata.customizer.ODataStartCustomizer;
+import io.syndesis.connector.odata.customizer.ODataReadCustomizer;
 
-public abstract class AbstractODataReadRouteTest extends AbstractODataTest {
+public abstract class AbstractODataReadRouteTest extends AbstractODataRouteTest {
 
     protected static final String TEST_SERVER_DATA_1 = "test-server-data-1.json";
     protected static final String TEST_SERVER_DATA_2 = "test-server-data-2.json";
@@ -46,28 +41,9 @@ public abstract class AbstractODataReadRouteTest extends AbstractODataTest {
 
     private final boolean splitResult;
 
-    protected final ConnectorAction readAction;
-
-    protected final Step mockStep;
-
     public AbstractODataReadRouteTest(boolean splitResult) throws Exception {
         super();
         this.splitResult = splitResult;
-        readAction = createReadAction();
-        mockStep = createMockStep();
-    }
-
-    @Before
-    public void setup() throws Exception {
-        context = createCamelContext();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        if (context != null) {
-            context.stop();
-            context = null;
-        }
     }
 
     protected boolean isSplitResult() {
@@ -81,21 +57,21 @@ public abstract class AbstractODataReadRouteTest extends AbstractODataTest {
     }
 
     @Override
-    protected Connector createODataConnector(PropertyBuilder<String> configurePropBuilder,
-                                             PropertyBuilder<ConfigurationProperty> propBuilder) {
+    protected Connector createODataConnector(PropertyBuilder<String> configurePropBuilder, PropertyBuilder<ConfigurationProperty> propBuilder) {
         configurePropBuilder.property(SPLIT_RESULT, Boolean.toString(isSplitResult()));
         return super.createODataConnector(configurePropBuilder, propBuilder);
     }
 
-    protected ConnectorAction createReadAction() throws Exception {
+    @Override
+    protected ConnectorAction createConnectorAction() throws Exception {
         ConnectorAction odataAction = new ConnectorAction.Builder()
             .description("Read a resource from the server")
              .id("io.syndesis:odata-read-connector")
              .name("Read")
              .descriptor(new ConnectorDescriptor.Builder()
                         .componentScheme("olingo4")
-                        .putConfiguredProperty("apiName", "read")
-                        .addConnectorCustomizer(ODataStartCustomizer.class.getName())
+                        .putConfiguredProperty(METHOD_NAME, Methods.READ.id())
+                        .addConnectorCustomizer(ODataReadCustomizer.class.getName())
                         .connectorFactory(ODataComponentFactory.class.getName())
                         .outputDataShape(new DataShape.Builder()
                                          .kind(DataShapeKinds.JSON_INSTANCE)
@@ -103,35 +79,5 @@ public abstract class AbstractODataReadRouteTest extends AbstractODataTest {
                         .build())
             .build();
         return odataAction;
-    }
-
-    protected Step.Builder odataStepBuilder(Connector odataConnector) {
-        Step.Builder odataStepBuilder = new Step.Builder()
-            .stepKind(StepKind.endpoint)
-            .action(readAction)
-            .connection(
-                            new Connection.Builder()
-                                .connector(odataConnector)
-                                .build());
-        return odataStepBuilder;
-    }
-
-    protected Step createODataStep(Connector odataConnector, String methodName) {
-        return odataStepBuilder(odataConnector)
-                                        .putConfiguredProperty(METHOD_NAME, methodName)
-                                        .build();
-    }
-
-    /**
-     * Generates a {@link ConfigurationProperty} for the basic password
-     * mimicking the secret operations conducted for real openshift passwords.
-     * The actual password is fetched from the camel context's properties component.
-     * The defaultValue is just a placeholder as it is checked for non-nullability.
-     */
-    protected ConfigurationProperty basicPasswordProperty() {
-        return new ConfigurationProperty.Builder()
-              .secret(Boolean.TRUE)
-              .defaultValue(BASIC_PASSWORD)
-              .build();
     }
 }

@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.odata;
 
+import java.util.Locale;
 import io.syndesis.common.util.StringConstants;
 
 @SuppressWarnings("PMD.ConstantsInInterface")
@@ -22,9 +23,11 @@ public interface ODataConstants extends StringConstants {
 
     String SERVICE_URI = "serviceUri";
 
-    String API_NAME = "apiName";
-
     String METHOD_NAME = "methodName";
+
+    String RESOURCE_PATH = "resourcePath";
+
+    String DATA = "data";
 
     String KEY_PREDICATE = "keyPredicate";
 
@@ -57,4 +60,29 @@ public interface ODataConstants extends StringConstants {
     String ENDPOINT_HTTP_HEADERS = "endpointHttpHeaders";
 
     String RESULT_COUNT = "ResultCount";
+
+    enum Methods {
+        READ,
+        DELETE,
+        CREATE,
+        PATCH;
+
+        public static Methods getValueOf(String name) {
+            for (Methods method : Methods.values()) {
+                if (method.name().equalsIgnoreCase(name)) {
+                    return method;
+                }
+            }
+
+            return Methods.READ;
+        }
+
+        public String id() {
+            return name().toLowerCase(Locale.ENGLISH);
+        }
+
+        public String connectorId() {
+            return "odata" + HYPHEN + id() + HYPHEN + "connector";
+        }
+    }
 }

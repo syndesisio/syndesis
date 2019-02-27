@@ -18,6 +18,7 @@ package io.syndesis.connector.odata.server;
 import static org.junit.Assert.assertNotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.security.KeyStore;
@@ -31,6 +32,12 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import org.apache.http.ssl.SSLContexts;
+import org.apache.olingo.client.api.ODataClient;
+import org.apache.olingo.client.api.communication.response.ODataRetrieveResponse;
+import org.apache.olingo.client.api.domain.ClientEntity;
+import org.apache.olingo.client.api.domain.ClientEntitySet;
+import org.apache.olingo.client.api.domain.ClientEntitySetIterator;
+import org.apache.olingo.client.core.ODataClientFactory;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
@@ -46,17 +53,26 @@ import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.util.component.LifeCycle;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import io.syndesis.connector.odata.ODataConstants;
 
 public class ODataTestServer extends Server implements ODataConstants {
 
     public enum Options {
         AUTH_USER,
-        SSL
+        SSL,
+        HTTP_PORT,
+        HTTPS_PORT
     }
 
     public static final String USER_PASSWORD = "user1234!";
     public static final String USER = "user";
+
+    private static final Logger LOG = LoggerFactory.getLogger(ODataTestServer.class);
+
+    private static final String HTTP_PROPERTY = ODataTestServer.class.getSimpleName() + DOT + "httpPort";
+    private static final String HTTPS_PROPERTY = ODataTestServer.class.getSimpleName() + DOT + "httpsPort";
 
     private static final char[] KEYPASS_AND_STOREPASS_VALUE = "redhat".toCharArray();
     private static final String CERTIFICATE = "certs/server-cert.pem";
@@ -99,6 +115,9 @@ public class ODataTestServer extends Server implements ODataConstants {
 
     private List<Options> optionsList;
 
+    private int httpPort;
+    private int httpsPort;
+
     public ODataTestServer(Options... options) throws Exception {
         super();
         this.optionsList = Arrays.asList(options);
@@ -116,6 +135,14 @@ public class ODataTestServer extends Server implements ODataConstants {
             password = KEYPASS_AND_STOREPASS_VALUE;
         }
 
+        if (optionsList.contains(Options.HTTP_PORT)) {
+            httpPort = extractPort(HTTP_PROPERTY);
+        }
+
+        if (optionsList.contains(Options.HTTPS_PORT)) {
+            httpsPort = extractPort(HTTPS_PROPERTY);
+        }
+
         this.addLifeCycleListener(new AbstractLifeCycleListener() {
 
             @Override
@@ -126,6 +153,25 @@ public class ODataTestServer extends Server implements ODataConstants {
         });
 
         initServer(sslContext, userName, password);
+    }
+
+    private int extractPort(String property) {
+        String portProperty = System.getProperty(property);
+        if (portProperty == null) {
+            LOG.warn("Server port option requested but no port specified using property {}. "
+                                    + "Falling back to default of finding next random port",
+                                        property);
+            return 0;
+        }
+
+        try {
+            return Integer.parseInt(portProperty);
+        } catch (NumberFormatException ex) {
+            LOG.error("Cannot format the port from the property {}. "
+                                    + "Falling back to default of finding next random port",
+                                      property);
+            return 0;
+        }
     }
 
     private String serverBaseUrl(Server server) {
@@ -204,14 +250,14 @@ public class ODataTestServer extends Server implements ODataConstants {
         if (sslContext == null) {
             // HTTP
             ServerConnector http = new ServerConnector(this);
-            http.setPort(0); // Finds next available port
+            http.setPort(httpPort); // Finds next available port if still 0
             this.addConnector(http);
         }
         else {
             // HTTPS
             HttpConfiguration httpConfiguration = new HttpConfiguration();
             httpConfiguration.setSecureScheme("https");
-            httpConfiguration.setSecurePort(0); // Finds next available port
+            httpConfiguration.setSecurePort(httpsPort); // Finds next available port if still 0
 
             final SslContextFactory sslContextFactory = new SslContextFactory();
             sslContextFactory.setSslContext(sslContext);
@@ -224,11 +270,51 @@ public class ODataTestServer extends Server implements ODataConstants {
         return serverBaseUrl(this) + PRODUCTS_SVC;
     }
 
-    public String methodName() {
+    public String resourcePath() {
         return PRODUCTS;
     }
 
     public int getResultCount() {
-        return Storage.getInstance().getSampleCount();
+        return Storage.getInstance().getCount();
+    }
+
+    public ClientEntitySetIterator<ClientEntitySet, ClientEntity> getData() {
+        ODataClient client = ODataClientFactory.getClient();
+        URI customersUri = client.newURIBuilder(serviceUrl())
+                                                      .appendEntitySetSegment(resourcePath()).build();
+
+        ODataRetrieveResponse<ClientEntitySetIterator<ClientEntitySet, ClientEntity>> response
+            = client.getRetrieveRequestFactory().getEntitySetIteratorRequest(customersUri).execute();
+
+        return response.getBody();
+    }
+
+    public ClientEntity getData(String keyPredicate) {
+        String resourcePath = resourcePath() + OPEN_BRACKET + keyPredicate + CLOSE_BRACKET;
+
+        ODataClient client = ODataClientFactory.getClient();
+        URI customersUri = client.newURIBuilder(serviceUrl())
+                                                      .appendEntitySetSegment(resourcePath).build();
+
+        ODataRetrieveResponse<ClientEntity> response
+            = client.getRetrieveRequestFactory().getEntityRequest(customersUri).execute();
+
+        return response.getBody();
+    }
+
+    public void reset() {
+        Storage.getInstance().reload();
+    }
+
+    /**
+     * Run our own OData Server
+     *
+     * @param args
+     */
+    public static void main(String... args) throws Exception {
+       ODataTestServer server = new ODataTestServer(Options.HTTP_PORT);
+       server.start();
+
+       LOG.info("Server running with service url: {}", server.serviceUrl());
     }
 }

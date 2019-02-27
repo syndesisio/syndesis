@@ -15,14 +15,11 @@
  */
 package io.syndesis.connector.odata.customizer;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
-import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.olingo.client.api.domain.ClientEntity;
 import org.apache.olingo.client.api.domain.ClientEntitySet;
@@ -30,6 +27,7 @@ import org.apache.olingo.client.api.domain.ClientItem;
 import org.apache.olingo.client.api.domain.ClientValue;
 import org.apache.olingo.client.core.domain.ClientPrimitiveValueImpl;
 import org.apache.olingo.client.core.domain.ClientPropertyImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -40,12 +38,11 @@ import io.syndesis.connector.odata.customizer.json.ClientEntitySerializer;
 import io.syndesis.connector.odata.customizer.json.ClientEnumValueSerializer;
 import io.syndesis.connector.odata.customizer.json.ClientPrimitiveValueSerializer;
 import io.syndesis.connector.odata.customizer.json.ClientPropertySerializer;
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
-public class ODataStartCustomizer implements ComponentProxyCustomizer, CamelContextAware, ODataConstants {
+public abstract class AbstractODataCustomizer implements ComponentProxyCustomizer, CamelContextAware, ODataConstants {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     static {
         SimpleModule module =
@@ -72,13 +69,7 @@ public class ODataStartCustomizer implements ComponentProxyCustomizer, CamelCont
         return this.camelContext;
     }
 
-    @Override
-    public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        component.setBeforeConsumer(this::beforeConsumer);
-    }
-
-    private void beforeConsumer(Exchange exchange) throws IOException {
-        Message in = exchange.getIn();
+    protected void convertMessageToJson(Message in) throws JsonProcessingException {
         if (in.getBody(ClientItem.class) == null) {
             in.setBody(Collections.emptyList());
             return;
