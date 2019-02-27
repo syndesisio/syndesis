@@ -1,18 +1,19 @@
 import { WithConnections } from '@syndesis/api';
 import {
+  ButtonLink,
+  IntegrationEditorChooseConnection,
+  IntegrationEditorConnectionsListItem,
   IntegrationEditorLayout,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
+  IntegrationsListSkeleton,
   IntegrationVerticalFlow,
 } from '@syndesis/ui';
+import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../containers/PageTitle';
-import {
-  IntegrationCreatorBreadcrumbs,
-  IntegrationEditorChooseConnection,
-} from '../../../components';
+import { IntegrationCreatorBreadcrumbs } from '../../../components';
 import resolvers from '../../../resolvers';
-import { getStartSelectActionHref } from '../../resolversHelpers';
 
 /**
  * This page shows the list of connections containing actions with a **from**
@@ -58,15 +59,52 @@ export class StartConnectionPage extends React.Component {
               <>
                 <PageTitle title={'New Integration'} />
                 <IntegrationEditorChooseConnection
-                  connections={data.connectionsWithFromAction}
-                  loading={!hasData}
-                  error={error}
                   i18nTitle={'Choose a Start Connection'}
                   i18nSubtitle={
                     'Click the connection that starts the integration. If the connection you need is not available, click Create Connection.'
                   }
-                  getConnectionHref={getStartSelectActionHref}
-                />
+                >
+                  <WithLoader
+                    error={error}
+                    loading={!hasData}
+                    loaderChildren={<IntegrationsListSkeleton />}
+                    errorChildren={<div>TODO</div>}
+                  >
+                    {() => (
+                      <>
+                        {data.connectionsWithFromAction.map((c, idx) => (
+                          <IntegrationEditorConnectionsListItem
+                            key={idx}
+                            integrationName={c.name}
+                            integrationDescription={
+                              c.description || 'No description available.'
+                            }
+                            icon={<img src={c.icon} width={24} height={24} />}
+                            actions={
+                              <ButtonLink
+                                href={resolvers.create.start.selectAction({
+                                  connection: c,
+                                })}
+                              >
+                                Select
+                              </ButtonLink>
+                            }
+                          />
+                        ))}
+                        <IntegrationEditorConnectionsListItem
+                          integrationName={''}
+                          integrationDescription={''}
+                          icon={''}
+                          actions={
+                            <ButtonLink href={'#'}>
+                              Create connection
+                            </ButtonLink>
+                          }
+                        />
+                      </>
+                    )}
+                  </WithLoader>
+                </IntegrationEditorChooseConnection>
               </>
             )}
           </WithConnections>

@@ -52,16 +52,6 @@ export default class ExtensionDetailsPage extends React.Component {
     return i18n.t('customizations:extension.unknownExtensionType');
   }
 
-  public getUsageMessage(uses: number): string {
-    if (uses === 1) {
-      return i18n.t('customizations:usedByOne');
-    }
-
-    return i18n.t('customizations:usedByMulti', {
-      count: uses,
-    });
-  }
-
   public handleDelete(): void {
     alert('TODO: Delete extension');
   }
@@ -134,12 +124,10 @@ export default class ExtensionDetailsPage extends React.Component {
                             integrationsSection={
                               <ExtensionIntegrations
                                 extensionId={data.id!}
-                                i18nDescription={t('shared:Description')}
-                                i18nName={t('shared:Name')}
-                                i18nUsageMessage={this.getUsageMessage(
+                                uses={
                                   // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
                                   data.uses as number
-                                )}
+                                }
                                 onSelectIntegration={
                                   this.handleIntegrationSelected
                                 }

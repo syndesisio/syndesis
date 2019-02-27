@@ -1,0 +1,25 @@
+@import url('~patternfly/dist/css/patternfly.css');
+@import url('~patternfly/dist/css/patternfly-additions.css');
+@import url('~patternfly-react/dist/css/patternfly-react.css');
+
+.layout-pf body {
+  min-height: 100vh;
+  display: flex;
+}
+
+#root {
+  flex: 1;
+  display: flex;
+}
+
+.layout-pf.layout-pf-with-secondary-horizontal-nav body {
+  padding-top: 110px;
+}
+
+.navbar-pf .navbar-utility > li > button {
+  padding: 9px 10px;
+}
+
+.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical {
+  flex: 1;
+}

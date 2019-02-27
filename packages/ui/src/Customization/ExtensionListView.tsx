@@ -5,7 +5,7 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { ButtonLink, Container } from '../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
 
 export interface IExtensionListViewProps extends IListViewToolbarProps {
@@ -39,16 +39,13 @@ export class ExtensionListView extends React.Component<
         <ListViewToolbar {...this.props}>
           <div className="form-group">
             <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
-              <Link
-                to={this.props.linkImportExtension}
-                className={'btn btn-primary'}
-              >
+              <ButtonLink href={this.props.linkImportExtension} as={'primary'}>
                 {this.props.i18nLinkImportExtension}
-              </Link>
+              </ButtonLink>
             </OverlayTrigger>
           </div>
         </ListViewToolbar>
-        <div className="container-fluid">
+        <Container>
           <h1>{this.props.i18nTitle}</h1>
           <div
             dangerouslySetInnerHTML={{ __html: this.props.i18nDescription }}
@@ -67,17 +64,17 @@ export class ExtensionListView extends React.Component<
                   overlay={this.getImportTooltip()}
                   placement="top"
                 >
-                  <Link
-                    to={this.props.linkImportExtension}
-                    className={'btn btn-primary'}
+                  <ButtonLink
+                    href={this.props.linkImportExtension}
+                    as={'primary'}
                   >
                     {this.props.i18nLinkImportExtension}
-                  </Link>
+                  </ButtonLink>
                 </OverlayTrigger>
               </EmptyState.Action>
             </EmptyState>
           )}
-        </div>
+        </Container>
       </>
     );
   }

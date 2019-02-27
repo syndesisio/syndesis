@@ -7,7 +7,7 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { ButtonLink, Container } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
 
 export interface IVirtsListViewProps extends IListViewToolbarProps {
@@ -61,10 +61,10 @@ export class VirtListView extends React.Component<IVirtsListViewProps> {
   public render() {
     return (
       <>
-        <div className="container-fluid">
+        <Container>
           <h2>{this.props.i18nTitle}</h2>
           <h3>{this.props.i18nDescription}</h3>
-        </div>
+        </Container>
         <ListViewToolbar {...this.props}>
           <div className="form-group">
             <OverlayTrigger
@@ -83,12 +83,9 @@ export class VirtListView extends React.Component<IVirtsListViewProps> {
               overlay={this.getCreateVirtTooltip()}
               placement="top"
             >
-              <Link
-                to={this.props.linkCreateHRef}
-                className={'btn btn-primary'}
-              >
+              <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
                 {this.props.i18nLinkCreateVirt}
-              </Link>
+              </ButtonLink>
             </OverlayTrigger>
           </div>
         </ListViewToolbar>
@@ -106,12 +103,9 @@ export class VirtListView extends React.Component<IVirtsListViewProps> {
                 overlay={this.getCreateVirtTooltip()}
                 placement="top"
               >
-                <Link
-                  to={this.props.linkCreateHRef}
-                  className={'btn btn-primary'}
-                >
+                <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
                   {this.props.i18nLinkCreateVirt}
-                </Link>
+                </ButtonLink>
               </OverlayTrigger>
             </EmptyState.Action>
           </EmptyState>

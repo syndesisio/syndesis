@@ -9,7 +9,10 @@ import {
 } from '@syndesis/api';
 import { AutoForm } from '@syndesis/auto-form';
 import { Action, ConnectionOverview } from '@syndesis/models';
-import { IntegrationActionConfigurationCard } from '@syndesis/ui';
+import {
+  IntegrationEditorForm,
+  IntegrationEditorNothingToConfigure,
+} from '@syndesis/ui';
 import * as React from 'react';
 
 export interface IWithConfigurationFormChildrenProps {
@@ -143,24 +146,16 @@ export class WithConfigurationForm extends React.Component<
           {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
             this.props.children({
               form: (
-                <>
-                  <div className="container-fluid">
-                    <h1>Configure action</h1>
-                    <p>
-                      Fill in the required information for the selected action.
-                    </p>
-                  </div>
-                  <form
-                    className="form-horizontal required-pf"
-                    role="form"
-                    onSubmit={handleSubmit}
-                  >
-                    <IntegrationActionConfigurationCard
-                      content={fields}
-                      title={`${action.name} - ${action.description}`}
-                    />
-                  </form>
-                </>
+                <IntegrationEditorForm
+                  i18nTitle={'Configure action'}
+                  i18nSubtitle={
+                    'Fill in the required information for the selected action.'
+                  }
+                  i18nFormTitle={`${action.name} - ${action.description}`}
+                  handleSubmit={handleSubmit}
+                >
+                  {fields}
+                </IntegrationEditorForm>
               ),
               isSubmitting,
               isValid,
@@ -184,21 +179,13 @@ export class WithConfigurationForm extends React.Component<
     };
     return this.props.children({
       form: (
-        <>
-          <div className="container-fluid">
-            <h1>Configure action</h1>
-            <p>Fill in the required information for the selected action.</p>
-          </div>
-          <IntegrationActionConfigurationCard
-            content={
-              <p className="alert alert-info">
-                <span className="pficon pficon-info" />
-                There are no properties to configure for this action.
-              </p>
-            }
-            title={`${action.name} - ${action.description}`}
-          />
-        </>
+        <IntegrationEditorNothingToConfigure
+          i18nTitle={'Configure action'}
+          i18nSubtitle={
+            'Fill in the required information for the selected action.'
+          }
+          i18nAlert={'There are no properties to configure for this action.'}
+        />
       ),
       isSubmitting: false,
       isValid: true,

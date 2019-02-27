@@ -1,5 +1,4 @@
-import { PfNavLink } from '@syndesis/ui';
-import { Nav } from 'patternfly-react';
+import { Container, TabBar, TabBarItem } from '@syndesis/ui';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import routes from '../routes';
@@ -18,24 +17,22 @@ export default class CustomizationsNavBar extends React.Component {
     return (
       <NamespacesConsumer ns={['customizations', 'shared']}>
         {t => (
-          <Nav
-            bsClass="nav nav-tabs nav-tabs-pf"
+          <Container
             style={{
               background: '#fff',
             }}
           >
-            <PfNavLink
-              label={t('apiConnector.apiConnectorsPageTitle')}
-              to={routes.apiConnectors.list}
-              style={{
-                marginLeft: 20,
-              }}
-            />
-            <PfNavLink
-              label={t('extension.extensionsPageTitle')}
-              to={routes.extensions.list}
-            />
-          </Nav>
+            <TabBar>
+              <TabBarItem
+                label={t('apiConnector.apiConnectorsPageTitle')}
+                to={routes.apiConnectors.list}
+              />
+              <TabBarItem
+                label={t('extension.extensionsPageTitle')}
+                to={routes.extensions.list}
+              />
+            </TabBar>
+          </Container>
         )}
       </NamespacesConsumer>
     );

@@ -1,6 +1,9 @@
 import { WithConnection } from '@syndesis/api';
 import { ConnectionOverview } from '@syndesis/models';
 import {
+  ButtonLink,
+  IntegrationEditorActionsListItem,
+  IntegrationEditorChooseAction,
   IntegrationEditorLayout,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
@@ -10,12 +13,8 @@ import {
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../containers/PageTitle';
-import {
-  IntegrationCreatorBreadcrumbs,
-  IntegrationEditorChooseAction,
-} from '../../../components';
+import { IntegrationCreatorBreadcrumbs } from '../../../components';
 import resolvers from '../../../resolvers';
-import { getStartConfigureActionHref } from '../../resolversHelpers';
 
 /**
  * @param connectionId - the ID of the connection selected in step 1.1, whose
@@ -115,15 +114,35 @@ export class StartActionPage extends React.Component {
                         }
                         content={
                           <IntegrationEditorChooseAction
-                            connectionName={data.name}
-                            actions={data.actionsWithFrom.sort((a, b) =>
-                              a.name.localeCompare(b.name)
-                            )}
-                            getActionHref={getStartConfigureActionHref.bind(
-                              null,
-                              data
-                            )}
-                          />
+                            i18nTitle={`${data.name} - Choose Action`}
+                            i18nSubtitle={
+                              'Choose an action for the selected connectionName.'
+                            }
+                          >
+                            {data.actionsWithFrom
+                              .sort((a, b) => a.name.localeCompare(b.name))
+                              .map((a, idx) => (
+                                <IntegrationEditorActionsListItem
+                                  key={idx}
+                                  integrationName={a.name}
+                                  integrationDescription={
+                                    a.description || 'No description available.'
+                                  }
+                                  actions={
+                                    <ButtonLink
+                                      href={resolvers.create.start.configureAction(
+                                        {
+                                          actionId: a.id!,
+                                          connection: data,
+                                        }
+                                      )}
+                                    >
+                                      Select
+                                    </ButtonLink>
+                                  }
+                                />
+                              ))}
+                          </IntegrationEditorChooseAction>
                         }
                         cancelHref={resolvers.list()}
                         backHref={resolvers.create.start.selectConnection()}

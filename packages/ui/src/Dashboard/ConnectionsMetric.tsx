@@ -2,7 +2,6 @@ import { Card } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IConnectionsMetricProps {
-  count: number;
   i18nTitle: string;
 }
 

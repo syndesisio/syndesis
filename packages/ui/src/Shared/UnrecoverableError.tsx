@@ -1,5 +1,6 @@
 import { EmptyState } from 'patternfly-react';
 import * as React from 'react';
+import { ButtonLink } from '../Layout';
 
 export const UnrecoverableError = () => (
   <EmptyState>
@@ -10,9 +11,9 @@ export const UnrecoverableError = () => (
     </EmptyState.Info>
     <EmptyState.Help>Please check your internet connection.</EmptyState.Help>
     <EmptyState.Action>
-      <a href={'.'} className={'btn btn-lg btn-primary'}>
+      <ButtonLink href={'.'} as={'primary'} size={'lg'}>
         Refresh
-      </a>
+      </ButtonLink>
     </EmptyState.Action>
   </EmptyState>
 );

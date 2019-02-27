@@ -12,7 +12,15 @@
       "**/*.json"
     ]
   },
+  "rulesDirectory": ["node_modules/tslint-microsoft-contrib"],
   "rules": {
-    "no-implicit-dependencies": true
+    "no-implicit-dependencies": true,
+    "react-unused-props-and-state": [
+      true,
+      {
+        "props-interface-regex": "Props$",
+        "state-interface-regex": "^(?!Route)State$"
+      }
+    ]
   }
 }

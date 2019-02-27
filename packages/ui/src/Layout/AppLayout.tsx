@@ -1,6 +1,6 @@
 import { Masthead, VerticalNav } from 'patternfly-react';
 import * as React from 'react';
-import { PfVerticalNavItem } from '../Shared';
+import { PfVerticalNavItem } from '../Layout';
 
 export interface ILayoutBase {
   appTitle: string;

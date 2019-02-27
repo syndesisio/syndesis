@@ -6,7 +6,7 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { ButtonLink } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
 
 export interface IViewsListViewProps extends IListViewToolbarProps {
@@ -44,12 +44,9 @@ export class ViewListView extends React.Component<IViewsListViewProps> {
               overlay={this.getCreateViewTooltip()}
               placement="top"
             >
-              <Link
-                to={this.props.linkCreateView}
-                className={'btn btn-primary'}
-              >
+              <ButtonLink href={this.props.linkCreateView} as={'primary'}>
                 {this.props.i18nLinkCreateView}
-              </Link>
+              </ButtonLink>
             </OverlayTrigger>
           </div>
         </ListViewToolbar>
@@ -67,12 +64,9 @@ export class ViewListView extends React.Component<IViewsListViewProps> {
                 overlay={this.getCreateViewTooltip()}
                 placement="top"
               >
-                <Link
-                  to={this.props.linkCreateView}
-                  className={'btn btn-primary'}
-                >
+                <ButtonLink href={this.props.linkCreateView} as={'primary'}>
                   {this.props.i18nLinkCreateView}
-                </Link>
+                </ButtonLink>
               </OverlayTrigger>
             </EmptyState.Action>
           </EmptyState>

@@ -1,24 +1,17 @@
 import { WithIntegrationHelpers } from '@syndesis/api';
 import { IntegrationWithMonitoring } from '@syndesis/models';
 import {
+  IIntegrationAction,
   IntegrationsList,
   IntegrationsListItem,
+  IntegrationsListItemActions,
   IntegrationsListSkeleton,
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
-import * as H from 'history';
-import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { AppContext } from '../../../app';
 import resolvers from '../resolvers';
-
-export interface IIntegrationAction {
-  href?: H.LocationDescriptor;
-  onClick?: (e: React.MouseEvent<any>) => any;
-  label: string | JSX.Element;
-}
 
 export interface IIntegrationsProps {
   error: boolean;
@@ -39,25 +32,7 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                     <WithLoader
                       error={this.props.error}
                       loading={this.props.loading}
-                      loaderChildren={
-                        <>
-                          <div className={'list-group-item'}>
-                            <div>
-                              <IntegrationsListSkeleton />
-                            </div>
-                          </div>
-                          <div className={'list-group-item'}>
-                            <div>
-                              <IntegrationsListSkeleton />
-                            </div>
-                          </div>
-                          <div className={'list-group-item'}>
-                            <div>
-                              <IntegrationsListSkeleton />
-                            </div>
-                          </div>
-                        </>
-                      }
+                      loaderChildren={<IntegrationsListSkeleton />}
                       errorChildren={<div>TODO</div>}
                     >
                       {() =>
@@ -100,7 +75,6 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                             return (
                               <IntegrationsListItem
                                 key={index}
-                                integrationId={mi.integration.id!}
                                 integrationName={mi.integration.name}
                                 currentState={mi.integration!.currentState!}
                                 targetState={mi.integration!.targetState!}
@@ -140,44 +114,10 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                                   ].connection!.icon!
                                 }
                                 actions={
-                                  <>
-                                    <Link
-                                      to={'#todo'}
-                                      className={'btn btn-default'}
-                                    >
-                                      View
-                                    </Link>
-                                    <DropdownKebab
-                                      id={`integration-${
-                                        mi.integration!.id
-                                      }-action-menu`}
-                                      pullRight={true}
-                                    >
-                                      {actions.map((a, idx) => (
-                                        <li role={'presentation'} key={idx}>
-                                          {a.href ? (
-                                            <Link
-                                              to={a.href}
-                                              onClick={a.onClick}
-                                              role={'menuitem'}
-                                              tabIndex={idx + 1}
-                                            >
-                                              {a.label}
-                                            </Link>
-                                          ) : (
-                                            <a
-                                              href={'javascript:void(0)'}
-                                              onClick={a.onClick}
-                                              role={'menuitem'}
-                                              tabIndex={idx + 1}
-                                            >
-                                              {a.label}
-                                            </a>
-                                          )}
-                                        </li>
-                                      ))}
-                                    </DropdownKebab>
-                                  </>
+                                  <IntegrationsListItemActions
+                                    integrationId={mi.integration!.id!}
+                                    actions={actions}
+                                  />
                                 }
                                 i18nConfigurationRequired={t(
                                   'integrations:ConfigurationRequired'

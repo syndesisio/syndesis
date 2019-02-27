@@ -1,3 +1,5 @@
+import './index.css';
+
 export * from './Connection';
 export * from './Customization';
 export * from './Dashboard';

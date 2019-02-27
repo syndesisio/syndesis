@@ -13,14 +13,13 @@ import {
   ConnectionsMetric,
   Dashboard,
   IntegrationBoard,
-  IntegrationStatus,
   RecentUpdatesCard,
+  RecentUpdatesItem,
   RecentUpdatesSkeleton,
   TopIntegrationsCard,
   UptimeMetric,
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
-import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import { Connections } from '../../connections/containers';
@@ -147,7 +146,6 @@ export default () => (
                       }
                       connectionsOverview={
                         <ConnectionsMetric
-                          count={connectionsData.totalCount}
                           i18nTitle={t('titleTotalConnections', {
                             count: connectionsData.totalCount,
                           })}
@@ -223,22 +221,15 @@ export default () => (
                           >
                             {() =>
                               recentlyUpdatedIntegrations.map(i => (
-                                <Grid.Row key={i.id}>
-                                  <Grid.Col sm={5}>{i.name}</Grid.Col>
-                                  <Grid.Col sm={3}>
-                                    <IntegrationStatus
-                                      currentState={i.currentState}
-                                      i18nError={t('shared:Error')}
-                                      i18nPublished={t('shared:Published')}
-                                      i18nUnpublished={t('shared:Unpublished')}
-                                    />
-                                  </Grid.Col>
-                                  <Grid.Col sm={4}>
-                                    {new Date(
-                                      i.updatedAt! || i.createdAt!
-                                    ).toLocaleString()}
-                                  </Grid.Col>
-                                </Grid.Row>
+                                <RecentUpdatesItem
+                                  key={i.id}
+                                  integrationName={i.name}
+                                  integrationCurrentState={i.currentState!}
+                                  integrationDate={i.updatedAt! || i.createdAt!}
+                                  i18nError={t('shared:Error')}
+                                  i18nPublished={t('shared:Published')}
+                                  i18nUnpublished={t('shared:Unpublished')}
+                                />
                               ))
                             }
                           </WithLoader>

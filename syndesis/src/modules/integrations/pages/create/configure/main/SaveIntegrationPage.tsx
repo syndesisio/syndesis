@@ -1,7 +1,7 @@
 import { WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { Integration } from '@syndesis/models';
-import { IntegrationEditorLayout } from '@syndesis/ui';
+import { IntegrationEditorForm, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../../containers/PageTitle';
@@ -84,25 +84,13 @@ export class SaveIntegrationPage extends React.Component {
                       content={
                         <>
                           <PageTitle title={'Create an integration'} />
-                          <div className={'container-fluid'}>
-                            <h1>Create an integration</h1>
-                            <p>Add details about this integration.</p>
-                            <form
-                              className="form-horizontal required-pf"
-                              role="form"
-                              onSubmit={handleSubmit}
-                            >
-                              <div className="row row-cards-pf">
-                                <div className="card-pf">
-                                  <div className="card-pf-body">
-                                    <div className="container-fluid">
-                                      {fields}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </form>
-                          </div>
+                          <IntegrationEditorForm
+                            i18nTitle={'Create an integration'}
+                            i18nSubtitle={'Add details about this integration.'}
+                            handleSubmit={handleSubmit}
+                          >
+                            {fields}
+                          </IntegrationEditorForm>
                         </>
                       }
                       cancelHref={resolvers.list()}

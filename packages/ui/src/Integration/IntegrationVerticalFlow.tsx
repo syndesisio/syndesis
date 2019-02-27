@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import * as React from 'react';
-
+import { ButtonLink } from '../Layout';
 import './IntegrationVerticalFlow.css';
 
 export interface IIntegrationVerticalFlowProps {
@@ -59,7 +59,7 @@ export class IntegrationVerticalFlow extends React.Component<
           {this.props.children(this.state)}
         </div>
         <div className="integration-vertical-flow__expand">
-          <button className="btn btn-default" onClick={this.toggleExpanded} />
+          <ButtonLink onClick={this.toggleExpanded} />
         </div>
       </div>
     );

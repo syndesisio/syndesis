@@ -1,6 +1,9 @@
 import { WithConnection } from '@syndesis/api';
 import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import {
+  ButtonLink,
+  IntegrationEditorActionsListItem,
+  IntegrationEditorChooseAction,
   IntegrationEditorLayout,
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
@@ -10,12 +13,8 @@ import {
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../containers/PageTitle';
-import {
-  IntegrationCreatorBreadcrumbs,
-  IntegrationEditorChooseAction,
-} from '../../../components';
+import { IntegrationCreatorBreadcrumbs } from '../../../components';
 import resolvers from '../../../resolvers';
-import { getFinishConfigureActionHref } from '../../resolversHelpers';
 
 /**
  * @param connectionId - the ID of the connection selected in step 2.1, whose
@@ -121,18 +120,38 @@ export class FinishActionPage extends React.Component {
                     >
                       {() => (
                         <IntegrationEditorChooseAction
-                          connectionName={data.name}
-                          actions={data.actionsWithTo.sort((a, b) =>
-                            a.name.localeCompare(b.name)
-                          )}
-                          getActionHref={getFinishConfigureActionHref.bind(
-                            null,
-                            startConnection,
-                            startAction,
-                            finishConnection,
-                            integration
-                          )}
-                        />
+                          i18nTitle={`${data.name} - Choose Action`}
+                          i18nSubtitle={
+                            'Choose an action for the selected connectionName.'
+                          }
+                        >
+                          {data.actionsWithTo
+                            .sort((a, b) => a.name.localeCompare(b.name))
+                            .map((a, idx) => (
+                              <IntegrationEditorActionsListItem
+                                key={idx}
+                                integrationName={a.name}
+                                integrationDescription={
+                                  a.description || 'No description available.'
+                                }
+                                actions={
+                                  <ButtonLink
+                                    href={resolvers.create.finish.configureAction(
+                                      {
+                                        actionId: a.id!,
+                                        finishConnection,
+                                        integration,
+                                        startAction,
+                                        startConnection,
+                                      }
+                                    )}
+                                  >
+                                    Select
+                                  </ButtonLink>
+                                }
+                              />
+                            ))}
+                        </IntegrationEditorChooseAction>
                       )}
                     </WithLoader>
                   }

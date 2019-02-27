@@ -7,12 +7,11 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { ButtonLink } from '../Layout';
 
 export interface IExtensionListItemProps {
   detailsPageLink: H.LocationDescriptor;
   extensionDescription?: string;
-  extensionExtensionId: string;
   extensionIcon?: string;
   extensionId: string;
   extensionName: string;
@@ -86,12 +85,9 @@ export class ExtensionListItem extends React.Component<
         actions={
           <div className="form-group">
             <OverlayTrigger overlay={this.getDetailsTooltip()} placement="top">
-              <Link
-                to={this.props.detailsPageLink}
-                className={'btn btn-primary'}
-              >
+              <ButtonLink href={this.props.detailsPageLink} as={'primary'}>
                 {this.props.i18nDetails}
-              </Link>
+              </ButtonLink>
             </OverlayTrigger>
             <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
               <Button bsStyle="default" onClick={this.handleUpdate}>

@@ -1,3 +1,5 @@
+// tslint:disable react-unused-props-and-state
+// remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
 import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 
@@ -6,7 +8,9 @@ export interface IVirtListSkeletonProps {
   style?: any;
 }
 
-export const VirtListSkeleton = ({ width, style }: IVirtListSkeletonProps) => (
+export const VirtListSkeleton: React.FunctionComponent<
+  IVirtListSkeletonProps
+> = ({ width, style }) => (
   <ContentLoader
     height={356}
     width={width}

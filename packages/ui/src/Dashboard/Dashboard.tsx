@@ -1,7 +1,7 @@
 import { CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
+import { ButtonLink, Container } from '../Layout';
 import './Dashboard.css';
 
 export interface IIntegrationsPageProps {
@@ -28,7 +28,7 @@ export interface IIntegrationsPageProps {
 export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
   public render() {
     return (
-      <div className={'container-fluid'}>
+      <Container>
         <Grid fluid={true}>
           <Grid.Row>
             <Grid.Col sm={12}>
@@ -37,15 +37,15 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                   {this.props.i18nTitle}
                 </h1>
                 <div className="Dashboard-header__actions">
-                  <Link to={this.props.linkToIntegrations}>
+                  <ButtonLink href={this.props.linkToIntegrations}>
                     {this.props.i18nLinkToIntegrations}
-                  </Link>
-                  <Link
-                    to={this.props.linkToIntegrationCreation}
-                    className={'btn btn-primary'}
+                  </ButtonLink>
+                  <ButtonLink
+                    href={this.props.linkToIntegrationCreation}
+                    as={'primary'}
                   >
                     {this.props.i18nLinkCreateIntegration}
-                  </Link>
+                  </ButtonLink>
                 </div>
               </div>
             </Grid.Col>
@@ -91,12 +91,12 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                   <Link to={this.props.linkToConnections}>
                     {this.props.i18nLinkToConnections}
                   </Link>
-                  <Link
-                    to={this.props.linkToConnectionCreation}
-                    className={'btn btn-primary'}
+                  <ButtonLink
+                    href={this.props.linkToConnectionCreation}
+                    as={'primary'}
                   >
                     {this.props.i18nLinkCreateConnection}
-                  </Link>
+                  </ButtonLink>
                 </div>
               </div>
             </Grid.Col>
@@ -105,7 +105,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
         <CardGrid fluid={true} matchHeight={true}>
           <CardGrid.Row>{this.props.connections}</CardGrid.Row>
         </CardGrid>
-      </div>
+      </Container>
     );
   }
 }

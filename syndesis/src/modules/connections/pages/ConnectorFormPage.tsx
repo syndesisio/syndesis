@@ -1,6 +1,6 @@
 import { Connector } from '@syndesis/models';
+import { Container, Loader } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
-import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { WithConnectorCreationForm } from '../containers';
 
@@ -22,10 +22,10 @@ export default class ConnectorFormPage extends React.Component {
         {({ connectorId }, { connector }) => (
           <WithConnectorCreationForm connectorId={connectorId}>
             {({ CreationForm, loading, error }) => (
-              <div className={'container-fluid'}>
+              <Container>
                 {loading || error ? (
                   loading ? (
-                    <Spinner loading={true} size={'lg'} />
+                    <Loader size={'lg'} />
                   ) : (
                     <p>
                       Connector not found. Perhaps we could build a form from
@@ -35,7 +35,7 @@ export default class ConnectorFormPage extends React.Component {
                 ) : (
                   <CreationForm />
                 )}
-              </div>
+              </Container>
             )}
           </WithConnectorCreationForm>
         )}

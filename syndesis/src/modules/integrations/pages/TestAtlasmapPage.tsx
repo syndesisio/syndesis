@@ -3,7 +3,7 @@ import {
   DocumentType,
   InspectionType,
 } from '@syndesis/atlasmap-adapter';
-import { Breadcrumb, Button } from 'patternfly-react';
+import { Breadcrumb, ButtonLink, Container } from '@syndesis/ui';
 import * as React from 'react';
 
 export interface ITestAtlasmapPageState {
@@ -37,35 +37,35 @@ export class TestAtlasmapPage extends React.Component<
   public render() {
     return (
       <>
-        <div className="container-fluid">
+        <Container>
           <div className="toolbar-pf row">
             <div className="col-sm-12">
               <div className="toolbar-pf-actions">
                 <div className="form-group">
-                  <Breadcrumb style={{ marginBottom: 0 }}>
-                    <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    <Breadcrumb.Item>Library</Breadcrumb.Item>
-                    <Breadcrumb.Item active={true}>Data</Breadcrumb.Item>
+                  <Breadcrumb>
+                    <span>Home</span>
+                    <span>Library</span>
+                    <span>Data</span>
                   </Breadcrumb>
                 </div>
                 <div className="toolbar-pf-action-right">
                   <div className="form-group" style={{ marginTop: '5px' }}>
-                    <Button>Cancel</Button>
-                    <Button
+                    <ButtonLink>Cancel</ButtonLink>
+                    <ButtonLink
                       disabled={!this.state.mappings}
                       onClick={this.onReset}
                     >
                       Reset
-                    </Button>
-                    <Button bsStyle={'success'} disabled={!this.state.mappings}>
+                    </ButtonLink>
+                    <ButtonLink as={'success'} disabled={!this.state.mappings}>
                       Save
-                    </Button>
+                    </ButtonLink>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </Container>
         <div
           style={{
             display: 'flex',

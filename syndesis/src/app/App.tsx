@@ -6,6 +6,7 @@ import {
 import { IntegrationMonitoring } from '@syndesis/models';
 import {
   AppLayout,
+  AppTopMenu,
   Loader,
   PfNavLink,
   PfVerticalNavItem,
@@ -13,7 +14,6 @@ import {
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import { TranslationFunction } from 'i18next';
-import { Icon, Masthead } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
@@ -99,16 +99,9 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
 
   public renderAppNav(t: TranslationFunction) {
     return (
-      <Masthead.Dropdown
-        id="app-user-dropdown"
-        title={[
-          <span className="dropdown-title" key="dropdown-title">
-            <Icon type={'fa'} name={'user'} /> developer
-          </span>,
-        ]}
-      >
+      <AppTopMenu username={'developer'}>
         <PfNavLink to={'/logout'} label={t('Logout')} />
-      </Masthead.Dropdown>
+      </AppTopMenu>
     );
   }
 

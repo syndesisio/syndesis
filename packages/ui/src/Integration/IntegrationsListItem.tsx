@@ -6,7 +6,6 @@ import { IntegrationStatusDetail } from './IntegrationStatusDetail';
 import { IntegrationState } from './models';
 
 export interface IIntegrationsListItemProps {
-  integrationId: string;
   integrationName: string;
   currentState: IntegrationState;
   targetState: IntegrationState;

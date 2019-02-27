@@ -5,7 +5,7 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { ButtonLink, Container } from '../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
 
 export interface IApiConnectorListViewProps extends IListViewToolbarProps {
@@ -31,16 +31,16 @@ export class ApiConnectorListView extends React.Component<
               overlay={this.getCreateConnectorTooltip()}
               placement="top"
             >
-              <Link
-                to={this.props.linkCreateApiConnector}
-                className={'btn btn-primary'}
+              <ButtonLink
+                href={this.props.linkCreateApiConnector}
+                as={'primary'}
               >
                 {this.props.i18nLinkCreateApiConnector}
-              </Link>
+              </ButtonLink>
             </OverlayTrigger>
           </div>
         </ListViewToolbar>
-        <div className="container-fluid">
+        <Container>
           <h1>{this.props.i18nTitle}</h1>
           <div
             dangerouslySetInnerHTML={{ __html: this.props.i18nDescription }}
@@ -59,17 +59,17 @@ export class ApiConnectorListView extends React.Component<
                   overlay={this.getCreateConnectorTooltip()}
                   placement="top"
                 >
-                  <Link
-                    to={this.props.linkCreateApiConnector}
-                    className={'btn btn-primary'}
+                  <ButtonLink
+                    href={this.props.linkCreateApiConnector}
+                    as={'primary'}
                   >
                     {this.props.i18nLinkCreateApiConnector}
-                  </Link>
+                  </ButtonLink>
                 </OverlayTrigger>
               </EmptyState.Action>
             </EmptyState>
           )}
-        </div>
+        </Container>
       </>
     );
   }

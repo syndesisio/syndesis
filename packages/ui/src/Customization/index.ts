@@ -7,6 +7,7 @@ export * from './ApiConnectorListSkeleton';
 export * from './ApiConnectorListView';
 export * from './ExtensionDetail';
 export * from './ExtensionImport';
+export * from './ExtensionIntegrationsTable';
 export * from './ExtensionListItem';
 export * from './ExtensionListSkeleton';
 export * from './ExtensionListView';

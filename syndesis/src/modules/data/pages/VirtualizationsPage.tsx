@@ -10,7 +10,6 @@ import {
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as H from 'history';
-import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import i18n from '../../../i18n';
@@ -122,106 +121,94 @@ export default class VirtualizationsPage extends React.Component {
               return (
                 <NamespacesConsumer ns={['data', 'shared']}>
                   {t => (
-                    <Grid fluid={true}>
-                      <Grid.Row>
-                        <VirtListView
-                          filterTypes={filterTypes}
-                          sortTypes={sortTypes}
-                          {...this.state}
-                          resultsCount={filteredAndSorted.length}
-                          {...helpers}
-                          i18nCreateDataVirt={t(
-                            'virtualization.createDataVirtualization'
-                          )}
-                          i18nCreateDataVirtTip={t(
-                            'virtualization.createDataVirtualizationTip'
-                          )}
-                          i18nDescription={t(
-                            'virtualization.virtualizationsPageDescription'
-                          )}
-                          i18nEmptyStateInfo={t(
-                            'virtualization.emptyStateInfoMessage'
-                          )}
-                          i18nEmptyStateTitle={t(
-                            'virtualization.emptyStateTitle'
-                          )}
-                          i18nImport={t('shared:Import')}
-                          i18nImportTip={t(
-                            'virtualization.importVirtualizationTip'
-                          )}
-                          i18nLinkCreateVirt={t(
-                            'virtualization.createDataVirtualization'
-                          )}
-                          i18nName={t('shared:Name')}
-                          i18nNameFilterPlaceholder={t(
-                            'shared:nameFilterPlaceholder'
-                          )}
-                          i18nResultsCount={t('shared:resultsCount', {
-                            count: filteredAndSorted.length,
-                          })}
-                          i18nTitle={t(
-                            'virtualization.virtualizationsPageTitle'
-                          )}
-                          linkCreateHRef={resolvers.virtualizations.create()}
-                          onCreate={this.handleCreateVirt}
-                          onImport={this.handleImportVirt}
-                        >
-                          <WithLoader
-                            error={error}
-                            loading={!hasData}
-                            loaderChildren={
-                              <VirtListSkeleton
-                                width={800}
-                                style={{
-                                  backgroundColor: '#FFF',
-                                  marginTop: 30,
-                                }}
+                    <VirtListView
+                      filterTypes={filterTypes}
+                      sortTypes={sortTypes}
+                      {...this.state}
+                      resultsCount={filteredAndSorted.length}
+                      {...helpers}
+                      i18nCreateDataVirt={t(
+                        'virtualization.createDataVirtualization'
+                      )}
+                      i18nCreateDataVirtTip={t(
+                        'virtualization.createDataVirtualizationTip'
+                      )}
+                      i18nDescription={t(
+                        'virtualization.virtualizationsPageDescription'
+                      )}
+                      i18nEmptyStateInfo={t(
+                        'virtualization.emptyStateInfoMessage'
+                      )}
+                      i18nEmptyStateTitle={t('virtualization.emptyStateTitle')}
+                      i18nImport={t('shared:Import')}
+                      i18nImportTip={t(
+                        'virtualization.importVirtualizationTip'
+                      )}
+                      i18nLinkCreateVirt={t(
+                        'virtualization.createDataVirtualization'
+                      )}
+                      i18nName={t('shared:Name')}
+                      i18nNameFilterPlaceholder={t(
+                        'shared:nameFilterPlaceholder'
+                      )}
+                      i18nResultsCount={t('shared:resultsCount', {
+                        count: filteredAndSorted.length,
+                      })}
+                      i18nTitle={t('virtualization.virtualizationsPageTitle')}
+                      linkCreateHRef={resolvers.virtualizations.create()}
+                      onCreate={this.handleCreateVirt}
+                      onImport={this.handleImportVirt}
+                    >
+                      <WithLoader
+                        error={error}
+                        loading={!hasData}
+                        loaderChildren={
+                          <VirtListSkeleton
+                            width={800}
+                            style={{
+                              backgroundColor: '#FFF',
+                              marginTop: 30,
+                            }}
+                          />
+                        }
+                        errorChildren={<div>TODO</div>}
+                      >
+                        {() =>
+                          filteredAndSorted.map(
+                            (virt: RestDataService, index: number) => (
+                              <VirtListItem
+                                key={index}
+                                virtName={virt.keng__id}
+                                virtDescription={virt.tko__description}
+                                i18nDraft={t('shared:Draft')}
+                                i18nDraftTip={t(
+                                  'virtualization.draftDataVirtualizationTip'
+                                )}
+                                i18nEdit={t('shared:Edit')}
+                                i18nEditTip={t(
+                                  'virtualization.editDataVirtualizationTip'
+                                )}
+                                i18nPublished={t(
+                                  'virtualization.publishedDataVirtualization'
+                                )}
+                                i18nPublishedTip={t(
+                                  'virtualization.publishedDataVirtualizationTip'
+                                )}
+                                i18nUnpublish={t('shared:Unpublish')}
+                                i18nPublish={t('shared:Publish')}
+                                onDelete={this.handleDeleteVirtualization}
+                                onEdit={this.handleEditVirtualization}
+                                onExport={this.handleExportVirtualization}
+                                onUnpublish={this.handleUnpublishVirtualization}
+                                onPublish={this.handlePublishVirtualization}
+                                // TODO: modify komodo service call to add published state
+                                isPublished={false}
                               />
-                            }
-                            errorChildren={<div>TODO</div>}
-                          >
-                            {() =>
-                              filteredAndSorted.map(
-                                (virt: RestDataService, index: number) => (
-                                  <VirtListItem
-                                    key={index}
-                                    virtName={virt.keng__id}
-                                    virtDescription={virt.tko__description}
-                                    i18nDraft={t('shared:Draft')}
-                                    i18nDraftTip={t(
-                                      'virtualization.draftDataVirtualizationTip'
-                                    )}
-                                    i18nEdit={t('shared:Edit')}
-                                    i18nEditTip={t(
-                                      'virtualization.editDataVirtualizationTip'
-                                    )}
-                                    i18nPublished={t(
-                                      'virtualization.publishedDataVirtualization'
-                                    )}
-                                    i18nPublishedTip={t(
-                                      'virtualization.publishedDataVirtualizationTip'
-                                    )}
-                                    i18nDelete={t('shared:Delete')}
-                                    i18nExport={t('shared:Export')}
-                                    i18nUnpublish={t('shared:Unpublish')}
-                                    i18nPublish={t('shared:Publish')}
-                                    onDelete={this.handleDeleteVirtualization}
-                                    onEdit={this.handleEditVirtualization}
-                                    onExport={this.handleExportVirtualization}
-                                    onUnpublish={
-                                      this.handleUnpublishVirtualization
-                                    }
-                                    onPublish={this.handlePublishVirtualization}
-                                    // TODO: modify komodo service call to add published state
-                                    isPublished={false}
-                                  />
-                                )
-                              )
-                            }
-                          </WithLoader>
-                        </VirtListView>
-                      </Grid.Row>
-                    </Grid>
+                            )
+                          )
+                        }
+                      </WithLoader>
+                    </VirtListView>
                   )}
                 </NamespacesConsumer>
               );

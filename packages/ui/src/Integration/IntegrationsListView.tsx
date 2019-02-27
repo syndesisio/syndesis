@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { ButtonLink, Container } from '../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
 
 export interface IIntegrationsListViewProps extends IListViewToolbarProps {
@@ -17,21 +17,18 @@ export class IntegrationsListView extends React.Component<
       <>
         <ListViewToolbar {...this.props}>
           <div className="form-group">
-            <Link
-              to={this.props.linkToIntegrationImport}
-              className={'btn btn-default'}
-            >
+            <ButtonLink href={this.props.linkToIntegrationImport}>
               {this.props.i18nImport}
-            </Link>
-            <Link
-              to={this.props.linkToIntegrationCreation}
-              className={'btn btn-primary'}
+            </ButtonLink>
+            <ButtonLink
+              href={this.props.linkToIntegrationCreation}
+              as={'primary'}
             >
               {this.props.i18nLinkCreateConnection}
-            </Link>
+            </ButtonLink>
           </div>
         </ListViewToolbar>
-        <div className={'container-fluid'}>{this.props.children}</div>
+        <Container>{this.props.children}</Container>
       </>
     );
   }

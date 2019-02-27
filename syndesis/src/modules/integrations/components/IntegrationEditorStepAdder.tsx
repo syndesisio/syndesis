@@ -1,9 +1,12 @@
 import { Step } from '@syndesis/models';
-import { IntegrationFlowAddStep } from '@syndesis/ui';
+import {
+  ButtonLink,
+  IntegrationEditorStepsList,
+  IntegrationEditorStepsListItem,
+  IntegrationFlowAddStep,
+} from '@syndesis/ui';
 import * as H from 'history';
-import { ListView } from 'patternfly-react';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 export interface IIntegrationEditorStepAdderProps {
   /**
@@ -37,6 +40,7 @@ export interface IIntegrationEditorStepAdderProps {
    * be edited
    * @param step - the integration step object that should be edited
    */
+  // tslint:disable-next-line:react-unused-props-and-state
   configureStepHref(stepIdx: number, step: Step): H.LocationDescriptor;
 }
 
@@ -57,29 +61,24 @@ export class IntegrationEditorStepAdder extends React.Component<
 > {
   public render() {
     return (
-      <ListView style={{ background: 'transparent' }}>
+      <IntegrationEditorStepsList>
         {this.props.steps.map((s, idx) => {
           return (
             <React.Fragment key={idx}>
-              <ListView.Item
-                heading={s.connection!.connector!.name}
-                description={s.action!.name}
-                hideCloseIcon={true}
-                leftContent={
-                  <img src={s.connection!.icon} width={24} height={24} />
-                }
-                stacked={true}
+              <IntegrationEditorStepsListItem
+                stepName={s.connection!.connector!.name}
+                stepDescription={s.action!.name}
+                icon={<img src={s.connection!.icon} width={24} height={24} />}
                 actions={
                   <>
-                    <Link
-                      to={this.props.configureConnectionHref(idx, s)}
-                      className={'btn btn-default'}
+                    <ButtonLink
+                      href={this.props.configureConnectionHref(idx, s)}
                     >
                       Configure
-                    </Link>
-                    <Link to={'#'} className={'btn btn-danger'}>
+                    </ButtonLink>
+                    <ButtonLink href={'#'} as={'danger'}>
                       <i className="fa fa-trash" />
-                    </Link>
+                    </ButtonLink>
                   </>
                 }
               />
@@ -96,7 +95,7 @@ export class IntegrationEditorStepAdder extends React.Component<
             </React.Fragment>
           );
         })}
-      </ListView>
+      </IntegrationEditorStepsList>
     );
   }
 }
