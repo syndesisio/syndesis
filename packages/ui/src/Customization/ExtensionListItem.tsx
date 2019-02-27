@@ -12,7 +12,6 @@ import { Link } from 'react-router-dom';
 export interface IExtensionListItemProps {
   detailsPageLink: H.LocationDescriptor;
   extensionDescription?: string;
-  extensionExtensionId: string;
   extensionIcon?: string;
   extensionId: string;
   extensionName: string;

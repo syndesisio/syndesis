@@ -135,8 +135,12 @@ export default class ExtensionsPage extends React.Component {
                         linkImportExtension={resolvers.extensions.import()}
                         resultsCount={filteredAndSorted.length}
                         {...helpers}
-                        i18nDescription={t('extension.extensionsPageDescription')}
-                        i18nEmptyStateInfo={t('extension.emptyStateInfoMessage')}
+                        i18nDescription={t(
+                          'extension.extensionsPageDescription'
+                        )}
+                        i18nEmptyStateInfo={t(
+                          'extension.emptyStateInfoMessage'
+                        )}
                         i18nEmptyStateTitle={t('extension.emptyStateTitle')}
                         i18nLinkImportExtension={t('extension.ImportExtension')}
                         i18nLinkImportExtensionTip={t(
@@ -173,9 +177,12 @@ export default class ExtensionsPage extends React.Component {
                               .map((extension: Extension, index: number) => (
                                 <ExtensionListItem
                                   key={index}
+                                  detailsPageLink={resolvers.extensions.extension(
+                                    { extension }
+                                  )}
                                   extensionDescription={extension.description}
                                   extensionIcon={extension.icon}
-                                  extensionId={extension.id}
+                                  extensionId={extension.id!}
                                   extensionName={extension.name}
                                   i18nDelete={t('shared:Delete')}
                                   i18nDeleteTip={t(
@@ -185,7 +192,9 @@ export default class ExtensionsPage extends React.Component {
                                   i18nDetailsTip={t(
                                     'extension.detailsExtensionTip'
                                   )}
-                                  i18nExtensionType={this.getTypeName(extension)}
+                                  i18nExtensionType={this.getTypeName(
+                                    extension
+                                  )}
                                   i18nUpdate={t('shared:Update')}
                                   i18nUpdateTip={t(
                                     'extension.updateExtensionTip'
@@ -194,7 +203,6 @@ export default class ExtensionsPage extends React.Component {
                                     extension
                                   )}
                                   onDelete={this.handleDelete}
-                                  onDetails={this.handleDetails}
                                   onUpdate={this.handleUpdate}
                                   usedBy={
                                     // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
