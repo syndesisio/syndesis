@@ -1,3 +1,5 @@
+// tslint:disable react-unused-props-and-state
+// remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
 import classnames from 'classnames';
 import * as H from 'history';
 import * as React from 'react';
@@ -29,7 +31,7 @@ import './IntegrationEditorLayout.css';
  * @param isLastStep - if set to true, it changes the Next button label to
  * 'Done'.
  */
-export interface IEditorLayoutProps {
+export interface IIntegrationEditorLayoutProps {
   header: JSX.Element;
   sidebar?: JSX.Element;
   content: JSX.Element;
@@ -56,7 +58,7 @@ export interface IEditorLayoutProps {
  * We should really find a smarter way to handle this.
  */
 export const IntegrationEditorLayout: React.FunctionComponent<
-  IEditorLayoutProps
+  IIntegrationEditorLayoutProps
 > = ({
   header,
   sidebar,
@@ -70,7 +72,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<
   isNextLoading,
   isNextDisabled,
   isLastStep = false,
-}: IEditorLayoutProps) => {
+}: IIntegrationEditorLayoutProps) => {
   return (
     <div
       className={classnames('wizard-pf-body integration-editor-layout', {

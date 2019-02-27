@@ -146,7 +146,6 @@ export default () => (
                       }
                       connectionsOverview={
                         <ConnectionsMetric
-                          count={connectionsData.totalCount}
                           i18nTitle={t('titleTotalConnections', {
                             count: connectionsData.totalCount,
                           })}

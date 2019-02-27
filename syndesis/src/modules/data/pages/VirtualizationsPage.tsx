@@ -194,8 +194,6 @@ export default class VirtualizationsPage extends React.Component {
                                 i18nPublishedTip={t(
                                   'virtualization.publishedDataVirtualizationTip'
                                 )}
-                                i18nDelete={t('shared:Delete')}
-                                i18nExport={t('shared:Export')}
                                 i18nUnpublish={t('shared:Unpublish')}
                                 i18nPublish={t('shared:Publish')}
                                 onDelete={this.handleDeleteVirtualization}

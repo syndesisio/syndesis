@@ -1,9 +1,7 @@
+// tslint:disable react-unused-props-and-state
+// remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
 import { Breadcrumb as PfBreadcrumb } from 'patternfly-react';
 import * as React from 'react';
-
-export interface IBreadcrumbProps {
-  children: React.ReactNode;
-}
 
 /**
  * A component to show breadcrumbs. All its children will be wrapped in a tag
@@ -12,9 +10,7 @@ export interface IBreadcrumbProps {
  *
  * It's suggested to use only anchors or spans as children node.
  */
-export const Breadcrumb: React.FunctionComponent<IBreadcrumbProps> = ({
-  children,
-}) => (
+export const Breadcrumb: React.FunctionComponent = ({ children }) => (
   <PfBreadcrumb
     style={{
       background: '#fff',

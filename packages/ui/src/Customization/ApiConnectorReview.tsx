@@ -1,12 +1,6 @@
 import * as React from 'react';
 
-export interface IApiConnectorReviewProps {
-  tbd?: string;
-}
-
-export class ApiConnectorReview extends React.Component<
-  IApiConnectorReviewProps
-> {
+export class ApiConnectorReview extends React.Component {
   public render() {
     return <div>ApiConnectorReview content goes here</div>;
   }

@@ -37,7 +37,7 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
                 <div className="container-fluid">
                   <p className="alert alert-info">
                     <span className="pficon pficon-info" />
-                    There are no properties to configure for this action.
+                    {this.props.i18nAlert}
                   </p>
                 </div>
               </div>

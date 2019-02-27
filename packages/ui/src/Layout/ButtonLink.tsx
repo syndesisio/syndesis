@@ -1,3 +1,5 @@
+// tslint:disable react-unused-props-and-state
+// remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
 import classnames from 'classnames';
 import * as H from 'history';
 import * as React from 'react';

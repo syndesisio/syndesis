@@ -19,8 +19,6 @@ export interface IVirtListItemProps {
   i18nEditTip?: string;
   i18nPublished: string;
   i18nPublishedTip: string;
-  i18nDelete: string;
-  i18nExport: string;
   i18nUnpublish: string;
   i18nPublish: string;
   isPublished: boolean;

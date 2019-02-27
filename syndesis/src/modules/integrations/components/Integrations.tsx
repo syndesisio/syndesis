@@ -75,7 +75,6 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                             return (
                               <IntegrationsListItem
                                 key={index}
-                                integrationId={mi.integration.id!}
                                 integrationName={mi.integration.name}
                                 currentState={mi.integration!.currentState!}
                                 targetState={mi.integration!.targetState!}
