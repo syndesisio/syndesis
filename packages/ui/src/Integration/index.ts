@@ -19,7 +19,7 @@ export * from './IntegrationIcon';
 export * from './IntegrationProgress';
 export * from './IntegrationStatus';
 export * from './IntegrationStatusDetail';
-// export * from './IntegrationStepsHorizontalView';
+export * from './IntegrationStepsHorizontalView';
 export * from './IntegrationVerticalFlow';
 export * from './IntegrationsList';
 export * from './IntegrationsListItem';
