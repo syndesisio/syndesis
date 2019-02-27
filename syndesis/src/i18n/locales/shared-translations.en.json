@@ -40,10 +40,22 @@
       "Status": "Status",
       "Step": "Step",
       "Total": "Total",
+      "Type": "Type",
       "Unpublish": "Unpublish",
       "Unpublished": "Stopped",
       "Update": "Update",
-      "viewLogs": "View Logs"
+      "viewLogs": "View Logs",
+      "links": {
+        "contactus": "//access.redhat.com/support/cases/#/case/new",
+        "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/integrating_applications_with_fuse_online",
+        "connectorsguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/connecting_fuse_online_to_applications_and_services/",
+        "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/fuse_online_sample_integration_tutorials/",
+        "oauth-access": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/integrating_applications_with_fuse_online/#obtaining-authorization-to-access-applications"
+      },
+      "project": {
+        "name": "Syndesis",
+        "version": "7.1"
+      }
     }
   }
 }

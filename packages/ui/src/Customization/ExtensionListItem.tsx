@@ -1,3 +1,4 @@
+import * as H from 'history';
 import {
   Button,
   ListViewInfoItem,
@@ -6,29 +7,35 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
-export interface IApiConnectorListItemProps {
-  apiConnectorDescription?: string;
-  apiConnectorId: string;
-  apiConnectorName: string;
-  apiConnectorIcon?: string;
+export interface IExtensionListItemProps {
+  detailsPageLink: H.LocationDescriptor;
+  extensionDescription?: string;
+  extensionExtensionId: string;
+  extensionIcon?: string;
+  extensionId: string;
+  extensionName: string;
   i18nDelete: string;
   i18nDeleteTip?: string;
   i18nDetails: string;
   i18nDetailsTip?: string;
+  i18nExtensionType: string;
+  i18nUpdate: string;
+  i18nUpdateTip?: string;
   i18nUsedByMessage: string;
-  onDelete: (apiConnectorId: string) => void;
-  onDetails: (extensionId: string) => void;
+  onDelete: (extensionId: string) => void;
+  onUpdate: (extensionId: string) => void;
   usedBy: number;
 }
 
-export class CustomizationsApiConnectorListItem extends React.Component<
-  IApiConnectorListItemProps
+export class ExtensionListItem extends React.Component<
+  IExtensionListItemProps
 > {
-  public constructor(props: IApiConnectorListItemProps) {
+  public constructor(props: IExtensionListItemProps) {
     super(props);
     this.handleDelete = this.handleDelete.bind(this);
-    this.handleDetails = this.handleDetails.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
   }
 
   public getDeleteTooltip() {
@@ -51,12 +58,26 @@ export class CustomizationsApiConnectorListItem extends React.Component<
     );
   }
 
-  public handleDelete() {
-    this.props.onDelete(this.props.apiConnectorId);
+  public getUpdateTooltip() {
+    return (
+      <Tooltip id="updateTip">
+        {this.props.i18nUpdateTip
+          ? this.props.i18nUpdateTip
+          : this.props.i18nUpdate}
+      </Tooltip>
+    );
   }
 
-  public handleDetails() {
-    this.props.onDetails(this.props.apiConnectorId);
+  public handleDelete() {
+    if (this.props.extensionId) {
+      this.props.onDelete(this.props.extensionId);
+    }
+  }
+
+  public handleUpdate() {
+    if (this.props.extensionId) {
+      this.props.onUpdate(this.props.extensionId);
+    }
   }
 
   public render() {
@@ -65,8 +86,16 @@ export class CustomizationsApiConnectorListItem extends React.Component<
         actions={
           <div className="form-group">
             <OverlayTrigger overlay={this.getDetailsTooltip()} placement="top">
-              <Button bsStyle="default" onClick={this.handleDetails}>
+              <Link
+                to={this.props.detailsPageLink}
+                className={'btn btn-primary'}
+              >
                 {this.props.i18nDetails}
+              </Link>
+            </OverlayTrigger>
+            <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
+              <Button bsStyle="default" onClick={this.handleUpdate}>
+                {this.props.i18nUpdate}
               </Button>
             </OverlayTrigger>
             <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
@@ -82,22 +111,23 @@ export class CustomizationsApiConnectorListItem extends React.Component<
         }
         additionalInfo={[
           <ListViewInfoItem key={1}>
+            {this.props.i18nExtensionType}
+          </ListViewInfoItem>,
+          <ListViewInfoItem key={2}>
             {this.props.i18nUsedByMessage}
           </ListViewInfoItem>,
         ]}
         description={
-          this.props.apiConnectorDescription
-            ? this.props.apiConnectorDescription
-            : ''
+          this.props.extensionDescription ? this.props.extensionDescription : ''
         }
-        heading={this.props.apiConnectorName}
+        heading={this.props.extensionName}
         hideCloseIcon={true}
         leftContent={
-          this.props.apiConnectorIcon ? (
+          this.props.extensionIcon ? (
             <div className="blank-slate-pf-icon">
               <img
-                src={this.props.apiConnectorIcon}
-                alt={this.props.apiConnectorName}
+                src={this.props.extensionIcon}
+                alt={this.props.extensionName}
                 width={46}
               />
             </div>

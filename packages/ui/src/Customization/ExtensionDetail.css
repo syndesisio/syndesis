@@ -1,0 +1,15 @@
+.extension-detail__extensionId {
+  font-size: 0.5em;
+  margin-left: 10px;
+}
+
+.extension-detail__extensionTitle {
+  margin: 0;
+}
+
+/* .extension-detail__sectionHeading {
+} */
+
+.extension-detail__titleButtons button + button {
+  margin-left: 4px;
+}

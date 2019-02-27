@@ -6,11 +6,8 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { StoryHelper } from '../../.storybook/StoryHelper';
-import {
-  CustomizationsExtensionListItem,
-  CustomizationsExtensionListView,
-} from '../../src';
-import { extensionImportStory } from './CustomizationsExtensionImport.stories';
+import { ExtensionListItem, ExtensionListView } from '../../src';
+import { extensionImportStory } from './ExtensionImport.stories';
 
 const description =
   'Extensions provide custom features for use in integrations. Find out more at Syndesis Help.';
@@ -19,8 +16,10 @@ const importTip = 'Import extension from your filesystem';
 const title = 'Extensions';
 
 const extensions = [
-  <CustomizationsExtensionListItem
+  <ExtensionListItem
+    detailsPageLink={'/extensions/id-0'}
     extensionDescription="id-0 description goes here"
+    extensionExtensionId={'io.syndesis.extensions:syndesis-extension-id-0'}
     extensionId={'id-0'}
     extensionName={'id-0 name'}
     i18nDelete={'Delete'}
@@ -29,11 +28,12 @@ const extensions = [
     i18nUpdate={'Update'}
     i18nUsedByMessage={'Used by 0 integration(s)'}
     onDelete={action('Delete id-0')}
-    onDetails={action('Details id-1')}
     onUpdate={action('Update id-0')}
     usedBy={0}
   />,
-  <CustomizationsExtensionListItem
+  <ExtensionListItem
+    detailsPageLink={'/extensions/id-1'}
+    extensionExtensionId={'io.syndesis.extensions:syndesis-extension-id-1'}
     extensionId={'id-1'}
     extensionName={'id-1 name'}
     i18nDelete={'Delete'}
@@ -42,11 +42,12 @@ const extensions = [
     i18nUpdate={'Update'}
     i18nUsedByMessage={'Used by 1 integration(s)'}
     onDelete={action('Delete id-1')}
-    onDetails={action('Details id-1')}
     onUpdate={action('Update id-1')}
     usedBy={1}
   />,
-  <CustomizationsExtensionListItem
+  <ExtensionListItem
+    detailsPageLink={'/extensions/id-2'}
+    extensionExtensionId={'io.syndesis.extensions:syndesis-extension-id-2'}
     extensionId={'id-2'}
     extensionName={'id-2 name'}
     i18nDelete={'Delete'}
@@ -55,16 +56,12 @@ const extensions = [
     i18nUpdate={'Update'}
     i18nUsedByMessage={'Used by 2 integration(s)'}
     onDelete={action('Delete id-2')}
-    onDetails={action('Details id-1')}
     onUpdate={action('Update id-2')}
     usedBy={2}
   />,
 ];
 
-const stories = storiesOf(
-  'Customization/CustomizationsExtensionListView',
-  module
-);
+const stories = storiesOf('Customization/ExtensionListView', module);
 
 const hasExtensionsTestNotes =
   '- Verify page title is "' +
@@ -122,7 +119,7 @@ stories
     'no extensions',
     withNotes(noExtensionsTestNotes)(() => (
       <Router>
-        <CustomizationsExtensionListView
+        <ExtensionListView
           activeFilters={[]}
           currentFilterType={{
             filterType: 'text',
@@ -168,7 +165,7 @@ stories
     'has extensions',
     withNotes(hasExtensionsTestNotes)(() => (
       <Router>
-        <CustomizationsExtensionListView
+        <ExtensionListView
           activeFilters={[]}
           currentFilterType={{
             filterType: 'text',

@@ -1,0 +1,16 @@
+.api-connector-card {
+  color: inherit;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+}
+
+.api-connector-card__icon {
+  max-height: 50px;
+  max-width: 50px;
+}
+
+.api-connector__title {
+  font-weight: 400;
+}

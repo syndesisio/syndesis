@@ -1,10 +1,10 @@
-import { PfNavLink } from '@syndesis/ui';
-import { Nav } from 'patternfly-react';
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import { Redirect, Route, Switch } from 'react-router';
 import ApiConnectorsPage from './pages/ApiConnectorsPage';
+import ExtensionDetailsPage from './pages/ExtensionDetailsPage';
 import ExtensionsPage from './pages/ExtensionsPage';
+import routes from './routes';
 
 export interface ICustomizationsAppProps {
   baseurl: string;
@@ -17,43 +17,28 @@ export default class CustomizationApp extends React.Component<
     return (
       <NamespacesConsumer ns={['customizations', 'shared']}>
         {t => (
-          <>
-            <Nav
-              bsClass="nav nav-tabs nav-tabs-pf"
-              style={{
-                background: '#fff',
-              }}
-            >
-              <PfNavLink
-                label={t('apiConnector.apiConnectorsPageTitle')}
-                to={'/customizations/api-connector'}
-                style={{
-                  marginLeft: 20,
-                }}
-              />
-              <PfNavLink
-                label={t('extension.extensionsPageTitle')}
-                to={'/customizations/extensions'}
-              />
-            </Nav>
-            <Switch>
-              <Redirect
-                path={this.props.baseurl}
-                exact={true}
-                to={`${this.props.baseurl}/api-connector`}
-              />
-              <Route
-                path={`${this.props.baseurl}/api-connector`}
-                exact={true}
-                component={ApiConnectorsPage}
-              />
-              <Route
-                path={`${this.props.baseurl}/extensions`}
-                exact={true}
-                component={ExtensionsPage}
-              />
-            </Switch>
-          </>
+          <Switch>
+            <Redirect
+              path={routes.root}
+              exact={true}
+              to={routes.apiConnectors.list}
+            />
+            <Route
+              path={routes.apiConnectors.list}
+              exact={true}
+              component={ApiConnectorsPage}
+            />
+            <Route
+              path={routes.extensions.list}
+              exact={true}
+              component={ExtensionsPage}
+            />
+            <Route
+              path={routes.extensions.extension}
+              exact={true}
+              component={ExtensionDetailsPage}
+            />
+          </Switch>
         )}
       </NamespacesConsumer>
     );

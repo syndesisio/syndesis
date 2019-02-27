@@ -34,7 +34,7 @@ const options = {
   fallbackLng: process.env.NODE_ENV === 'production' ? 'en' : 'it',
   fallbackNS: ['shared'],
   keySeparator: '.',
-  ns: ['shared', 'app', 'customizations', 'dashboard'],
+  ns: ['shared', 'app', 'customizations', 'dashboard', 'integrations'],
 } as InitOptions;
 
 i18n.use(LanguageDetector).init(options);

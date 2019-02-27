@@ -20,9 +20,19 @@ export interface IExtensionListViewProps extends IListViewToolbarProps {
   linkImportExtension: string;
 }
 
-export class CustomizationsExtensionListView extends React.Component<
+export class ExtensionListView extends React.Component<
   IExtensionListViewProps
 > {
+  public getImportTooltip() {
+    return (
+      <Tooltip id="importTip">
+        {this.props.i18nLinkImportExtensionTip
+          ? this.props.i18nLinkImportExtensionTip
+          : this.props.i18nLinkImportExtension}
+      </Tooltip>
+    );
+  }
+
   public render() {
     return (
       <>
@@ -40,7 +50,9 @@ export class CustomizationsExtensionListView extends React.Component<
         </ListViewToolbar>
         <div className="container-fluid">
           <h1>{this.props.i18nTitle}</h1>
-          <p>{this.props.i18nDescription}</p>
+          <div
+            dangerouslySetInnerHTML={{ __html: this.props.i18nDescription }}
+          />
           {this.props.children ? (
             <ListView>{this.props.children}</ListView>
           ) : (
@@ -67,16 +79,6 @@ export class CustomizationsExtensionListView extends React.Component<
           )}
         </div>
       </>
-    );
-  }
-
-  private getImportTooltip() {
-    return (
-      <Tooltip id="importTip">
-        {this.props.i18nLinkImportExtensionTip
-          ? this.props.i18nLinkImportExtensionTip
-          : this.props.i18nLinkImportExtension}
-      </Tooltip>
     );
   }
 }

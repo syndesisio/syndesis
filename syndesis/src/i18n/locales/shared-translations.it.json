@@ -13,12 +13,14 @@
       "Connections": "Connessioni",
       "Connector": "Connettore",
       "Customizations": "Personalizzazioni",
+      "DataVirtualization": "Virtualizzazione dei Dati",
+      "DataVirtualizations": "Virtualizzazioni di Dati",
       "Delete": "Elimina",
       "Description": "Descrizione",
       "Details": "Dettagli",
-      "Draft": "Draft",
+      "Draft": "Bozza",
       "Error": "Errore",
-      "Export": "Export",
+      "Export": "Esportare",
       "Extension": "Estensione",
       "Extensions": "Estensioni",
       "filterByNamePlaceholder": "Filtra per Nome",
@@ -31,19 +33,29 @@
       "Name": "Nome",
       "nameFilterPlaceholder": "Filtra per Nome...",
       "Pending": "Pendente",
-      "Publish": "Publish",
+      "Publish": "Pubblicare",
       "Published": "Funzionante",
       "resultsCount": "{{count}} Risultati",
       "Settings": "Impostazioni",
       "Status": "Stato",
       "Step": "Passo",
       "Total": "Totale",
-      "Unpublish": "Unpublish",
+      "Type": "Tipo",
+      "Unpublish": "Non Pubblicato",
       "Unpublished": "Fermato",
       "Update": "Aggiornare",
-      "viewLogs": "Visualizza i registri",
-      "Virtualization": "Virtualization",
-      "Virtualizations": "Virtualizations"
+      "viewLogs": "Visualizza i Registri",
+      "links": {
+        "contactus": "//access.redhat.com/support/cases/#/case/new",
+        "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/integrating_applications_with_fuse_online",
+        "connectorsguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/connecting_fuse_online_to_applications_and_services/",
+        "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/fuse_online_sample_integration_tutorials/",
+        "oauth-access": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/integrating_applications_with_fuse_online/#obtaining-authorization-to-access-applications"
+      },
+      "project": {
+        "name": "Syndesis",
+        "version": "7.1"
+      }
     }
   }
 }

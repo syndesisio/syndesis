@@ -1,15 +1,15 @@
 import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 
-export interface IApiConnectorListSkeletonProps {
+export interface ICustomizationsExtensionListSkeletonProps {
   width: number;
   style?: any;
 }
 
-export const CustomizationsApiConnectorListSkeleton = ({
+export const ExtensionListSkeleton = ({
   width,
   style,
-}: IApiConnectorListSkeletonProps) => (
+}: ICustomizationsExtensionListSkeletonProps) => (
   <ContentLoader
     height={356}
     width={width}

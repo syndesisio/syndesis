@@ -2,7 +2,7 @@
   "usedByOne": "Used by 1 integration",
   "usedByMulti": "Used by integrations {{count}} times",
   "apiConnector": {
-    "apiConnectorsPageDescription": "Syndesis creates an API client connector when you upload a valid OpenAPI 2.0 specification that describes the API you want to connect to.",
+    "apiConnectorsPageDescription": "<h3><strong>$t(shared:project.name)</strong> creates an API client connector when you upload a valid OpenAPI 2.0 specification that describes the API you want to connect to.<h3>",
     "apiConnectorsPageTitle": "API Client Connectors",
     "CreateApiConnector": "Create API Connector",
     "createApiConnectorTip": "Upload file or use URL to create API connector",
@@ -16,14 +16,22 @@
     "detailsExtensionTip": "View extension details",
     "emptyStateInfoMessage": "There are no extensions available. Please click on the button below to import one.",
     "emptyStateTitle": "$t(extension.ImportExtension)",
-    "extensionsPageDescription": "Syndesis creates an API client connector when you upload a valid OpenAPI 2.0 specification that describes the API you want to connect to.",
+    "extensionDetailPageTitle": "Extension Details",
+    "extensionsPageDescription": "<h3>Extensions provide custom features for use in integrations. Find out more at <a href=$t(shared:links.userguide) target=\"_blank\">$t(shared:project.name) Help</a>.</h3>",
     "extensionsPageTitle": "$t(shared:Extensions)",
+    "idMessage": "(ID: {{id}})",
     "ImportExtension": "$t(shared:Import) $t(shared:Extension)",
     "importExtensionTip": "Select the .jar file of the extension to import",
+    "LastUpdate": "Last Update",
     "LibraryExtension": "$t(shared:Library) $t(shared:Extension)",
     "notUsed": "Not used by any integrations",
+    "overviewSectionTitle": "Overview",
     "StepExtension": "$t(shared:Step) $t(shared:Extension)",
+    "supportedConnectorsSectionTitle": "Supported Connectors",
+    "supportedLibrariesSectionTitle": "Supported Libraries",
+    "supportedStepsSectionTitle": "Supported Steps",
     "unknownExtensionType": "Unknown $t(shared:Extension)",
-    "updateExtensionTip": "Update this extension"
+    "updateExtensionTip": "Update this extension",
+    "usageSectionTitle": "Usage"
   }
 }

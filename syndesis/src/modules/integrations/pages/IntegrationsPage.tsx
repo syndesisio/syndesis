@@ -75,7 +75,7 @@ const filterByConnection = {
   filterType: 'select',
   filterValues: [],
   id: 'connection',
-  placeholder: i18n.t('shared:filterByConnectionPlaceholder'),
+  placeholder: i18n.t('filterByConnectionPlaceholder'),
   title: i18n.t('shared:Connection'),
 };
 

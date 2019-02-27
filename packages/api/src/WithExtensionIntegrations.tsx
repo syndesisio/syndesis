@@ -1,4 +1,4 @@
-import { Extension } from '@syndesis/models';
+import { IntegrationOverview } from '@syndesis/models';
 import * as React from 'react';
 import { IFetchState } from './Fetch';
 import { ServerEventsContext } from './ServerEventsContext';
@@ -6,29 +6,31 @@ import { SyndesisFetch } from './SyndesisFetch';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
 
-export interface IExtensionsResponse {
-  items: Extension[];
-  totalCount: number;
-}
-
-export interface IWithExtensionsProps {
+export interface IWithExtensionIntegrationsProps {
+  extensionId: string;
   disableUpdates?: boolean;
-  children(props: IFetchState<IExtensionsResponse>): any;
+  children(props: IFetchState<IntegrationOverview[]>): any;
 }
 
 /**
- * A component that fetches all the extensions.
+ * A component that fetches the integrations that a specified extension is used by.
+ * @see [extensionId]{@link IWithExtensionIntegrationsProps#extensionId}
  */
-export class WithExtensions extends React.Component<IWithExtensionsProps> {
+export class WithExtensionIntegrations extends React.Component<
+  IWithExtensionIntegrationsProps
+> {
   public changeFilter(change: IChangeEvent) {
-    return change.kind === 'extension';
+    return (
+      // rerun fetch if there was a change in integrations
+      change.kind === 'integration' || change.kind === 'integration-deployment'
+    );
   }
 
   public render() {
     return (
-      <SyndesisFetch<IExtensionsResponse>
-        url={'/extensions'}
-        defaultValue={{ items: [], totalCount: 0 }}
+      <SyndesisFetch<IntegrationOverview[]>
+        url={`/extensions/${this.props.extensionId}/integrations`}
+        defaultValue={[]}
       >
         {({ read, response }) =>
           this.props.disableUpdates ? (
