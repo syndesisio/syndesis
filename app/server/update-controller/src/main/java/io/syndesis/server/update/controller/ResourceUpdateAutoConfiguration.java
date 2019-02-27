@@ -16,6 +16,7 @@
 package io.syndesis.server.update.controller;
 
 import java.util.Arrays;
+
 import javax.validation.Validator;
 
 import io.syndesis.common.util.EventBus;
@@ -23,6 +24,8 @@ import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.update.controller.bulletin.ConnectionUpdateHandler;
 import io.syndesis.server.update.controller.bulletin.IntegrationUpdateHandler;
+import io.syndesis.server.update.controller.usage.UsageUpdateHandler;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -37,12 +40,16 @@ import org.springframework.context.annotation.Scope;
 public class ResourceUpdateAutoConfiguration {
     @Autowired
     private ResourceUpdateConfiguration configuration;
-    @Autowired
-    private EventBus eventBus;
+
     @Autowired
     private DataManager dataManager;
+
     @Autowired
     private EncryptionComponent encryptionComponent;
+
+    @Autowired
+    private EventBus eventBus;
+
     @Autowired
     private Validator validator;
 
@@ -54,8 +61,7 @@ public class ResourceUpdateAutoConfiguration {
             eventBus,
             Arrays.<ResourceUpdateHandler>asList(
                 new ConnectionUpdateHandler(dataManager, encryptionComponent, validator),
-                new IntegrationUpdateHandler(dataManager, encryptionComponent,validator)
-            )
-        );
+                new IntegrationUpdateHandler(dataManager, encryptionComponent, validator),
+                new UsageUpdateHandler(dataManager)));
     }
 }

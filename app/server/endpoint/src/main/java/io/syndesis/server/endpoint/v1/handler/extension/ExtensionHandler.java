@@ -19,9 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -161,7 +159,6 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
                 .createFrom(embeddedExtension)
                 .id(id)
                 .status(Extension.Status.Draft)
-                .uses(OptionalInt.empty())
                 .lastUpdated(rightNow)
                 .createdDate(rightNow)
                 .userId(sec.getUserPrincipal().getName())
@@ -246,12 +243,6 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     }
 
     @Override
-    public Extension get(String id) {
-        Extension extension = Getter.super.get(id);
-        return enhance(extension);
-    }
-
-    @Override
     public ListResult<Extension> list(UriInfo uriInfo) {
         // Defaulting to display only Installed extensions
         String query = uriInfo.getQueryParameters().getFirst("query");
@@ -266,14 +257,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
         );
 
-        List<Extension> enhanced = extensions.getItems().stream()
-            .map(this::enhance)
-            .collect(Collectors.toList());
-
-        return new ListResult.Builder<Extension>()
-            .items(enhanced)
-            .totalCount(extensions.getTotalCount())
-            .build();
+        return extensions;
     }
 
     // ===============================================================
@@ -380,13 +364,6 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         return dependencies.stream()
             .filter(Dependency::isExtension)
             .anyMatch(ext -> ext.getId().equals(extension.getExtensionId()));
-    }
-
-    Extension enhance(Extension extension) {
-        return new Extension.Builder()
-            .createFrom(extension)
-            .uses(integrations(extension).size())
-            .build();
     }
 
 }

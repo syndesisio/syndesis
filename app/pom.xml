@@ -1644,6 +1644,12 @@
         <version>${errorprone.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.reflections</groupId>
+        <artifactId>reflections</artifactId>
+        <version>0.9.11</version>
+      </dependency>
+
       <!-- ActiveMQ deps to override Spring Boot imported pom -->
       <dependency>
         <groupId>org.apache.activemq</groupId>

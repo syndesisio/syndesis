@@ -31,7 +31,8 @@
               }
             },
             "id": "timer-connection",
-            "isDerived": false
+            "isDerived": false,
+            "uses": 0
           },
           "stepKind": "endpoint",
           "configuredProperties": {
@@ -76,7 +77,8 @@
                 "id": "org.apache.camel:camel-spring-boot-starter:2.10.0"
               }
             ],
-            "id": "my-extension-1"
+            "id": "my-extension-1",
+            "uses": 0
           },
           "stepKind": "extension",
           "configuredProperties": {
@@ -95,7 +97,8 @@
           },
           "extension": {
             "extensionId": "my-extension-2",
-            "id": "my-extension-2"
+            "id": "my-extension-2",
+            "uses": 0
           },
           "stepKind": "extension",
           "configuredProperties": {
@@ -114,7 +117,8 @@
           },
           "extension": {
             "extensionId": "my-extension-3",
-            "id": "my-extension-3"
+            "id": "my-extension-3",
+            "uses": 0
           },
           "stepKind": "extension",
           "configuredProperties": {
@@ -165,7 +169,8 @@
               }
             },
             "id": "http-connection",
-            "isDerived": false
+            "isDerived": false,
+            "uses": 0
           },
           "stepKind": "endpoint",
           "configuredProperties": {

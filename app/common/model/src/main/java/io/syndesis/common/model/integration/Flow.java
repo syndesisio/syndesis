@@ -19,14 +19,21 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.immutables.value.Value;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithMetadata;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
+
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = Flow.Builder.class)
@@ -61,5 +68,26 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
             .filter(step -> step.getId().isPresent())
             .filter(step -> stepId.equals(step.getId().get()))
             .findFirst();
+    }
+
+    @JsonIgnore
+    default Set<String> getConnectionIds() {
+        return Stream.concat(
+            getConnections().stream()
+                .map(Connection::getId),
+
+            getSteps().stream()
+                .map(s -> s.getConnectionId()))
+
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(Collectors.toSet());
+    }
+
+    @JsonIgnore
+    default Set<String> getExtensionIds() {
+        return getSteps().stream()
+            .flatMap(s -> s.getExtensionIds().stream())
+            .collect(Collectors.toSet());
     }
 }

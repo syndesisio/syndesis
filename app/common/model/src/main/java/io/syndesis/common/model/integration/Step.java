@@ -17,13 +17,17 @@ package io.syndesis.common.model.integration;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithDependencies;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithMetadata;
+import io.syndesis.common.model.Dependency.Type;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.extension.Extension;
@@ -56,6 +60,11 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
 
     Optional<Connection> getConnection();
 
+    @JsonIgnore
+    default Optional<String> getConnectionId() {
+        return getConnection().flatMap(Connection::getId);
+    }
+
     Optional<Extension> getExtension();
 
     StepKind getStepKind();
@@ -82,5 +91,17 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
     default Step updateOutputDataShape(final Optional<DataShape> outputDataShape) {
         return getAction().map(a -> builder().action(a.withOutputDataShape(outputDataShape))).map(b -> b.build())
             .orElseThrow(() -> new IllegalStateException("Unable to update output data shape of non existing action"));
+    }
+
+    @JsonIgnore
+    default Set<String> getExtensionIds() {
+        final Set<String> collected = getDependencies().stream()
+            .filter(d -> d.getType() == Type.EXTENSION)
+            .map(Dependency::getId)
+            .collect(Collectors.toSet());
+
+        getExtension().map(Extension::getExtensionId).map(collected::add);
+
+        return collected;
     }
 }

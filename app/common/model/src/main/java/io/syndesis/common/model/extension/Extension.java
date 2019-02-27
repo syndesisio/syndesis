@@ -18,7 +18,6 @@ package io.syndesis.common.model.extension;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 import javax.validation.constraints.NotNull;
 import org.immutables.value.Value;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,6 +31,7 @@ import io.syndesis.common.model.WithMetadata;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithProperties;
 import io.syndesis.common.model.WithTags;
+import io.syndesis.common.model.WithUsage;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.StepAction;
@@ -50,7 +50,7 @@ import io.syndesis.common.util.IndexedProperty;
     @IndexedProperty("status")
 })
 @SuppressWarnings("immutables")
-public interface Extension extends WithId<Extension>, WithActions<Action>, WithName, WithTags, WithProperties, WithDependencies, WithMetadata {
+public interface Extension extends WithId<Extension>, WithActions<Action>, WithName, WithTags, WithProperties, WithDependencies, WithMetadata, WithUsage {
 
     enum Status {
         Draft,
@@ -90,17 +90,6 @@ public interface Extension extends WithId<Extension>, WithActions<Action>, WithN
     String getIcon();
 
     String getDescription();
-
-    /**
-     * Provides number of integrations using this connection
-     * <p>
-     * Note:
-     * Excluded from {@link #hashCode()} and {@link #equals(Object)}
-     *
-     * @return count of integrations
-     */
-    @Value.Auxiliary
-    OptionalInt getUses();
 
     Optional<String> getUserId();
 

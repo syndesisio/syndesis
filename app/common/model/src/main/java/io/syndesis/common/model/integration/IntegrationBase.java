@@ -110,6 +110,28 @@ public interface IntegrationBase extends WithProperties, WithResourceId, WithVer
         .collect(Collectors.toSet());
     }
 
+    @JsonIgnore
+    default Set<String> getConnectionIds() {
+        return Stream.concat(
+                getConnections()
+                    .stream()
+                    .map(Connection::getId)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get),
+
+                getFlows().stream()
+                    .flatMap(f -> f.getConnectionIds().stream()))
+
+            .collect(Collectors.toSet());
+    }
+
+    @JsonIgnore
+    default Set<String> getExtensionIds() {
+        return getFlows().stream()
+            .flatMap(f -> f.getExtensionIds().stream())
+            .collect(Collectors.toSet());
+    }
+
     default Optional<Connection> findConnectionById(String connectionId) {
         if (getConnections() == null) {
             return Optional.empty();
