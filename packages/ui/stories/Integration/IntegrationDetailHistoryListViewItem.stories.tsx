@@ -11,82 +11,40 @@ const stories = storiesOf(
 );
 
 const integrationPublished = {
-  id: 'i-LYmlhVFB6pKKaBQVSyez',
   version: 1,
-  updatedAt: 1550261344272,
-  currentState: 'Unpublished',
-  targetState: 'Unpublished',
-  name: 'aaa',
-  isDraft: false,
+  updatedAt: 'Feb 24, 2019, 04:27:49',
 };
 
-const integrationUnpublished = {
-  id: 'i-LYmlhVFB6pKKaBQVSyez',
-  version: 1,
-  updatedAt: 1550261344272,
-  currentState: 'Unpublished',
-  targetState: 'Unpublished',
-  name: 'aaa',
-  isDraft: true,
-};
-
-const i18nTextBtnEdit = 'Edit';
-const i18nTextBtnPublish = 'Publish';
-const i18nTextDraft = 'Draft';
 const i18nTextHistoryMenuReplaceDraft = 'Replace Draft';
 const i18nTextHistoryMenuUnpublish = 'Unpublish';
 const i18nTextLastPublished = 'Last published on ';
-const i18nTextTitle = 'Integration Detail';
 const i18nTextVersion = 'Version';
 
-stories
-  .add(
-    'published',
-    withNotes('Verify there is no Publish button')(() => (
-      <IntegrationDetailHistoryListViewItem
-        integrationIsDraft={integrationPublished.isDraft}
-        integrationUpdatedAt={text(
-          'integrationUpdatedAt',
-          integrationPublished.updatedAt
-        )}
-        integrationVersion={text(
-          'integrationVersion',
-          integrationPublished.version
-        )}
-        i18nTextHistoryMenuReplaceDraft={text(
-          'i18nTextHistoryMenuReplaceDraft',
-          i18nTextHistoryMenuReplaceDraft
-        )}
-        i18nTextHistoryMenuUnpublish={text(
-          'i18nTextHistoryMenuUnpublish',
-          i18nTextHistoryMenuUnpublish
-        )}
-        i18nTextLastPublished={text(
-          'i18nTextLastPublished',
-          i18nTextLastPublished
-        )}
-        i18nTextTitle={text('i18nTextTitle', i18nTextTitle)}
-        i18nTextVersion={text('i18nTextVersion', i18nTextVersion)}
-      />
-    ))
-  )
-  .add(
-    'draft, no published history',
-    withNotes('Verify there is a Publish button')(() => (
-      <IntegrationDetailHistoryListViewItem
-        integrationIsDraft={integrationUnpublished.isDraft}
-        integrationVersion={text(
-          'integrationVersion',
-          integrationUnpublished.version
-        )}
-        i18nTextBtnEdit={text('i18nTextBtnEdit', i18nTextBtnEdit)}
-        i18nTextBtnPublish={text('i18nTextBtnPublish', i18nTextBtnPublish)}
-        i18nTextDraft={text('i18nTextDraft', i18nTextDraft)}
-        i18nTextHistoryMenuReplaceDraft={text(
-          'i18nTextHistoryMenuReplaceDraft',
-          i18nTextHistoryMenuReplaceDraft
-        )}
-        i18nTextTitle={text('i18nTextTitle', i18nTextTitle)}
-      />
-    ))
-  );
+stories.add(
+  'published',
+  withNotes('Verify there is a list of history items')(() => (
+    <IntegrationDetailHistoryListViewItem
+      integrationUpdatedAt={text(
+        'integrationUpdatedAt',
+        integrationPublished.updatedAt
+      )}
+      integrationVersion={text(
+        'integrationVersion',
+        integrationPublished.version
+      )}
+      i18nTextHistoryMenuReplaceDraft={text(
+        'i18nTextHistoryMenuReplaceDraft',
+        i18nTextHistoryMenuReplaceDraft
+      )}
+      i18nTextHistoryMenuUnpublish={text(
+        'i18nTextHistoryMenuUnpublish',
+        i18nTextHistoryMenuUnpublish
+      )}
+      i18nTextLastPublished={text(
+        'i18nTextLastPublished',
+        i18nTextLastPublished
+      )}
+      i18nTextVersion={text('i18nTextVersion', i18nTextVersion)}
+    />
+  ))
+);
