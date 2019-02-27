@@ -16,8 +16,8 @@ import {
 import * as React from 'react';
 import { NamespacesConsumer } from 'react-i18next';
 import i18n from '../../../i18n';
-import routes from '../routes';
 import CustomizationsNavBar from '../components/CustomizationsNavBar';
+import routes from '../routes';
 
 function getFilteredAndSortedApiConnectors(
   apiConnectors: Connector[],

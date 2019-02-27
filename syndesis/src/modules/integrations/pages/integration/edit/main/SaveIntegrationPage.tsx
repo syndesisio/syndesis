@@ -1,7 +1,7 @@
 import { WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { Integration } from '@syndesis/models';
-import { IntegrationEditorLayout, IntegrationEditorForm } from '@syndesis/ui';
+import { IntegrationEditorForm, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../../containers/PageTitle';

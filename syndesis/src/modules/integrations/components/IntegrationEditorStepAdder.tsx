@@ -40,6 +40,7 @@ export interface IIntegrationEditorStepAdderProps {
    * be edited
    * @param step - the integration step object that should be edited
    */
+  // tslint:disable-next-line:react-unused-props-and-state
   configureStepHref(stepIdx: number, step: Step): H.LocationDescriptor;
 }
 

@@ -6,10 +6,6 @@ export interface IIntegrationEditorBreadcrumbsProps {
    * The one-based active step number.
    */
   step: number;
-  /**
-   * Optional. The one-based active sub-step number.
-   */
-  subStep?: number;
 }
 
 export interface IIntegrationEditorBreadcrumbsState {
@@ -24,7 +20,6 @@ export interface IIntegrationEditorBreadcrumbsState {
  * A component to display the PatternFly Wizard Steps specific to the integration
  * editor flow.
  * @see [step]{@link IIntegrationEditorBreadcrumbsProps#step}
- * @see [subStep]{@link IIntegrationEditorBreadcrumbsProps#subStep}
  */
 export class IntegrationEditorBreadcrumbs extends React.Component<
   IIntegrationEditorBreadcrumbsProps,

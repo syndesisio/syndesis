@@ -23,11 +23,6 @@ export interface IIntegrationEditorSidebarProps {
    */
   addAtIndex?: number;
   /**
-   * indicates if the step that is being added is a 'connection' or 'step'.
-   * @todo is it needed?
-   */
-  addType?: 'connection' | 'step';
-  /**
    * the icon to show in the circle of the step that is being added.
    */
   addIcon?: any;
@@ -63,7 +58,6 @@ export interface IIntegrationEditorSidebarProps {
  * @see [steps]{@link IIntegrationEditorSidebarProps#steps}
  * @see [activeIndex]{@link IIntegrationEditorSidebarProps#activeIndex}
  * @see [addAtIndex]{@link IIntegrationEditorSidebarProps#addAtIndex}
- * @see [addType]{@link IIntegrationEditorSidebarProps#addType}
  * @see [addIcon]{@link IIntegrationEditorSidebarProps#addIcon}
  * @see [addI18nTitle]{@link IIntegrationEditorSidebarProps#addI18nTitle}
  * @see [addI18nTooltip]{@link IIntegrationEditorSidebarProps#addI18nTooltip}

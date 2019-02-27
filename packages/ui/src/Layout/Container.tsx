@@ -1,5 +1,14 @@
 import * as React from 'react';
 
-export const Container: React.FunctionComponent = ({ children }) => (
-  <div className="container-fluid">{children}</div>
+export interface IContainerProps {
+  [key: string]: any;
+}
+
+export const Container: React.FunctionComponent<IContainerProps> = ({
+  children,
+  ...props
+}) => (
+  <div className="container-fluid" {...props}>
+    {children}
+  </div>
 );
