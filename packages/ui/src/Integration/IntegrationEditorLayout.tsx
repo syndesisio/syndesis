@@ -94,7 +94,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<
         <ButtonLink
           onClick={onBack}
           href={backHref}
-          className={'btn-default wizard-pf-back'}
+          className={'wizard-pf-back'}
         >
           <i className="fa fa-angle-left" /> Back
         </ButtonLink>

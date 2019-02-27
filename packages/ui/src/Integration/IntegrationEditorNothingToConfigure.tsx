@@ -30,20 +30,20 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
       <Container>
         <h1>{this.props.i18nTitle} - Choose Action</h1>
         <p>{this.props.i18nSubtitle}</p>
-        <div className={'container-fluid'}>
+        <Container>
           <div className="row row-cards-pf">
             <div className="card-pf">
               <div className="card-pf-body">
-                <div className="container-fluid">
+                <Container>
                   <p className="alert alert-info">
                     <span className="pficon pficon-info" />
                     {this.props.i18nAlert}
                   </p>
-                </div>
+                </Container>
               </div>
             </div>
           </div>
-        </div>
+        </Container>
       </Container>
     );
   }

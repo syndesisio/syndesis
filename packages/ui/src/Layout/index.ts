@@ -4,7 +4,6 @@ export * from './ButtonLink';
 export * from './Breadcrumb';
 export * from './Container';
 export * from './Loader';
-export * from './PageHeader';
 export * from './PfNavLink';
 export * from './PfVerticalNavItem';
 export * from './TabBar';

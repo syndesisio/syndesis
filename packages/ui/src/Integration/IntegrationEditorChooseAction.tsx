@@ -1,5 +1,6 @@
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
+import { Container } from '../Layout';
 
 export interface IIntegrationEditorChooseActionProps {
   /**
@@ -24,13 +25,13 @@ export class IntegrationEditorChooseAction extends React.Component<
   public render() {
     return (
       <>
-        <div className="container-fluid">
+        <Container>
           <h1>{this.props.i18nTitle} - Choose Action</h1>
           <p>{this.props.i18nSubtitle}</p>
-        </div>
-        <div className={'container-fluid'}>
+        </Container>
+        <Container>
           <ListView>{this.props.children}</ListView>
-        </div>
+        </Container>
       </>
     );
   }
