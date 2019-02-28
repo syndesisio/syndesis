@@ -23,9 +23,10 @@ import java.util.Set;
 import org.apache.olingo.client.api.domain.ClientEntity;
 import org.apache.olingo.client.api.domain.ClientEntitySet;
 
+@SuppressWarnings("PMD")
 public class Olingo4Index {
 
-    private final Set<Integer> resultIndex = new HashSet<>();
+    private Set<Integer> resultIndex = new HashSet<>();
 
     private Object filter(Object o) {
         if (resultIndex.contains(o.hashCode())) {
@@ -94,21 +95,23 @@ public class Olingo4Index {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Object filterResponse(Object response) {
         if (response instanceof ClientEntitySet) {
-            return filter((ClientEntitySet) response);
+            response = filter((ClientEntitySet) response);
         } else if (response instanceof Iterable) {
-            return filter((Iterable<Object>) response);
+            response = filter((Iterable<Object>) response);
         } else if (response.getClass().isArray()) {
             List<Object> result = new ArrayList<>();
             final int size = Array.getLength(response);
             for (int i = 0; i < size; i++) {
                 result.add(Array.get(response, i));
             }
-            return filter(result);
+            response = filter(result);
         } else {
-            return filter(response);
+            response = filter(response);
         }
+
+        return response;
     }
 }
