@@ -54,7 +54,11 @@ syndesis_deployments() {
 
 pod() {
   local dc=${1}
+  local not=${2:-}
   local ret=$(oc get pod -o custom-columns=:.metadata.name | tail -n +2 | grep "$dc")
+  if [ -n "$not" ]; then
+      ret=$(echo $ret | grep -v $not)
+  fi
   local nr_pods=$(echo $ret | wc -l | awk '$1=$1')
   if [ $nr_pods != "1" ]; then
       echo "ERROR: More than 1 pod found for $dc ($nr_pods found)"
@@ -111,7 +115,7 @@ pg_backup() {
     local backupdir=${1}
     local db=${2}
 
-    local pod=$(pod "syndesis-db")
+    local pod=$(pod "syndesis-db" "syndesis-db-metrics")
     check_error $pod
 
     if [ ! -d ${backupdir} ]; then
@@ -126,7 +130,7 @@ pg_restore() {
     local backupdir=${1}
     local db=${2}
 
-    local pod=$(pod "syndesis-db")
+    local pod=$(pod "syndesis-db" "syndesis-db-metrics")
     check_error $pod
 
     # Create backup file remotely
