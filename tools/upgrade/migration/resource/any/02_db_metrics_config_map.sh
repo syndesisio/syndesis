@@ -1,6 +1,9 @@
 #!/bin/bash
 # Add ConfigMap for configuring the postgres-exporter
-cat <<EOT | oc create -f -
+set +e
+oc get configmap syndesis-db-metrics-config >/dev/null 2>&1
+if [ $? != 0 ]; then
+  cat <<EOT | oc create -f -
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -22,3 +25,5 @@ data:
           usage: "GAUGE"
           description: "Disk space used by the database"
 EOT
+fi
+set -e
