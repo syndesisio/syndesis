@@ -11,9 +11,4 @@ const storyNotes = '- Verify something here';
 
 stories
   .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
-  .add(
-    extensionImportStory,
-    withNotes(storyNotes)(() => (
-      <ExtensionImport i18nTitle={'Import Extension'} />
-    ))
-  );
+  .add(extensionImportStory, withNotes(storyNotes)(() => <ExtensionImport />));
