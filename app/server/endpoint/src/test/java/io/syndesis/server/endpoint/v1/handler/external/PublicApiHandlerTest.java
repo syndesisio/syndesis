@@ -180,7 +180,13 @@ public class PublicApiHandlerTest {
         assertThat(environments, notNullValue());
         assertThat(environments.isEmpty(), is(true));
 
+        final Map<String, ContinuousDeliveryEnvironment> releaseTags = handler.getReleaseTags(INTEGRATION_ID);
+
+        assertThat(releaseTags, notNullValue());
+        assertThat(releaseTags.isEmpty(), is(true));
+
         verify(dataManager).update(any(Integration.class));
+        verify(dataManager).fetch(Integration.class, INTEGRATION_ID);
     }
 
     @Test
