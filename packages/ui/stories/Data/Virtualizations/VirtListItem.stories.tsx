@@ -86,8 +86,8 @@ stories.add(
       i18nEditTip={editTip}
       i18nPublished={publishedText}
       i18nPublishedTip={publishedTip}
-      i18nDelete={deleteText}
-      i18nExport={exportText}
+      // i18nDelete={deleteText}
+      // i18nExport={exportText}
       i18nUnpublish={unpublishText}
       i18nPublish={publishText}
       onDelete={action(deleteText)}

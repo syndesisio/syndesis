@@ -19,7 +19,6 @@ const extensions = [
   <ExtensionListItem
     detailsPageLink={'/extensions/id-0'}
     extensionDescription="id-0 description goes here"
-    extensionExtensionId={'io.syndesis.extensions:syndesis-extension-id-0'}
     extensionId={'id-0'}
     extensionName={'id-0 name'}
     i18nDelete={'Delete'}
@@ -33,7 +32,6 @@ const extensions = [
   />,
   <ExtensionListItem
     detailsPageLink={'/extensions/id-1'}
-    extensionExtensionId={'io.syndesis.extensions:syndesis-extension-id-1'}
     extensionId={'id-1'}
     extensionName={'id-1 name'}
     i18nDelete={'Delete'}
@@ -47,7 +45,6 @@ const extensions = [
   />,
   <ExtensionListItem
     detailsPageLink={'/extensions/id-2'}
-    extensionExtensionId={'io.syndesis.extensions:syndesis-extension-id-2'}
     extensionId={'id-2'}
     extensionName={'id-2 name'}
     i18nDelete={'Delete'}
