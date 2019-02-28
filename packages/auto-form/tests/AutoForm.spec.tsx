@@ -1,68 +1,109 @@
 import * as React from 'react';
-import { render } from 'react-testing-library';
+import { fireEvent, render, wait } from 'react-testing-library';
 import { AutoForm } from '../src';
 
 export default describe('AutoForm', () => {
-  const onSave = () => {
-    // TODO
+  const definitions = {
+    text: {
+      defaultValue: 'INFO',
+      description: 'Log Level.',
+      displayName: 'log level',
+      kind: 'parameter',
+      required: true,
+      secret: false,
+      type: 'string',
+    },
+    select: {
+      defaultValue: 'INFO',
+      description: 'Log Level.',
+      displayName: 'log level',
+      kind: 'parameter',
+      required: true,
+      secret: false,
+      type: 'string',
+      enum: [
+        {
+          label: 'ERROR',
+          value: 'ERROR',
+        },
+        {
+          label: 'WARN',
+          value: 'WARN',
+        },
+        {
+          label: 'INFO',
+          value: 'INFO',
+        },
+        {
+          label: 'DEBUG',
+          value: 'DEBUG',
+        },
+        {
+          label: 'TRACE',
+          value: 'TRACE',
+        },
+        {
+          label: 'OFF',
+          value: 'OFF',
+        },
+      ],
+    },
+    checkbox: {
+      defaultValue: 'false',
+      description: 'whether or not to log everything (very verbose).',
+      displayName: 'Log everything',
+      required: true,
+      secret: false,
+      type: 'boolean',
+    },
   };
-  const testTextInputComponent = (
-    <AutoForm
-      definition={{
-        foo: {
-          defaultValue: 'bar',
-          displayName: 'Foo',
-          type: 'text',
-        },
-      }}
-      initialValue={{}}
-      i18nRequiredProperty={'required'}
-      onSave={onSave}
-    >
-      {({ fields, handleSubmit }) => <React.Fragment>{fields}</React.Fragment>}
-    </AutoForm>
+  const definitionIds = Object.keys(definitions);
+
+  const testSampleForm = definition => {
+    const onSave = jest.fn();
+    return {
+      form: (
+        <AutoForm
+          definition={definition}
+          initialValue={{}}
+          i18nRequiredProperty={'required'}
+          onSave={onSave}
+        >
+          {({ fields, handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              {fields}
+              <button type={'submit'}>Submit</button>
+            </form>
+          )}
+        </AutoForm>
+      ),
+      onSave,
+    };
+  };
+
+  it('All fields are rendered', () => {
+    const { form } = testSampleForm(definitions);
+    const { getByTestId } = render(form);
+    definitionIds.forEach(id => expect(getByTestId(id)).toBeDefined());
+  });
+
+  definitionIds.forEach(id =>
+    it(`An untouched ${id} with default values should be submittable`, async () => {
+      const { form, onSave } = testSampleForm(definitions[id]);
+      const { getByText } = render(form);
+      fireEvent.click(getByText('Submit'));
+      await wait(() => {
+        expect(onSave).toHaveBeenCalled();
+      });
+    })
   );
 
-  const testCheckboxComponent = (
-    <AutoForm
-      definition={{
-        showAll: {
-          defaultValue: 'true',
-          description: 'whether or not to log everything (very verbose).',
-          displayName: 'Log everything',
-          type: 'boolean',
-        },
-      }}
-      initialValue={{}}
-      i18nRequiredProperty={'required'}
-      onSave={onSave}
-    >
-      {({ fields, handleSubmit }) => <React.Fragment>{fields}</React.Fragment>}
-    </AutoForm>
-  );
-
-  it('Should use the definition key as an id for text input', () => {
-    const { getByTestId } = render(testTextInputComponent);
-    const idValue = Object.keys(testTextInputComponent.props.definition);
-    expect(getByTestId(idValue[0])).toBeDefined();
-  });
-
-  it('Should use the displayName as a label in text input', () => {
-    const { getByLabelText } = render(testTextInputComponent);
-    const displayName = testTextInputComponent.props.definition.foo.displayName;
-    expect(getByLabelText(displayName)).toBeDefined();
-  });
-
-  it('Should use the definition key as an id for checkbox', () => {
-    const { getByTestId } = render(testCheckboxComponent);
-    const idValue = Object.keys(testCheckboxComponent.props.definition);
-    expect(getByTestId(idValue[0])).toBeDefined();
-  });
-
-  it('Should use the displayName as a label in checkbox', () => {
-    const { getByLabelText } = render(testCheckboxComponent);
-    const displayName =
-      testCheckboxComponent.props.definition.showAll.displayName;
-    expect(getByLabelText(displayName)).toBeTruthy();
+  it(`An untouched complex form with default values should be submittable`, async () => {
+    const { form, onSave } = testSampleForm(definitions);
+    const { getByText } = render(form);
+    fireEvent.click(getByText('Submit'));
+    await wait(() => {
+      expect(onSave).toHaveBeenCalled();
+    });
   });
 });

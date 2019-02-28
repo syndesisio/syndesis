@@ -44,6 +44,8 @@ export interface IAutoFormState {
   isValidating: boolean;
   resetForm: (nextValues?: any) => void;
   submitForm: () => void;
+  values: any;
+  errors: any;
 }
 
 export class AutoForm<T> extends React.Component<
@@ -77,6 +79,7 @@ export class AutoForm<T> extends React.Component<
                 submitForm,
               }) =>
                 this.props.children({
+                  errors,
                   fields: (
                     <React.Fragment>
                       {fields.map(property =>
@@ -95,6 +98,7 @@ export class AutoForm<T> extends React.Component<
                   isValidating,
                   resetForm,
                   submitForm,
+                  values,
                 })
               }
             </Formik>
