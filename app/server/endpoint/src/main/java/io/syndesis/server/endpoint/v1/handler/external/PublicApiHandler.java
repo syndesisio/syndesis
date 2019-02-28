@@ -118,6 +118,42 @@ public class PublicApiHandler {
     }
 
     /**
+     * Delete an environment across all integrations.
+     */
+    @DELETE
+    @Path("environments/{env}")
+    public void deleteEnvironment(@NotNull @PathParam("env") @ApiParam(required = true) String environment) {
+
+        validateParam("environment", environment);
+
+        if (this.environments.contains(environment)) {
+
+            // get and update list of integrations with this environment
+            final List<Integration> integrations = dataMgr.fetchAll(Integration.class)
+                    .getItems()
+                    .stream()
+                    .filter(i -> i.getContinuousDeliveryState().containsKey(environment))
+                    .map(i -> {
+                        final Map<String, ContinuousDeliveryEnvironment> state = new HashMap<>(i.getContinuousDeliveryState());
+                        // untag
+                        state.remove(environment);
+
+                        return i.builder().continuousDeliveryState(state).build();
+                    })
+                    .collect(Collectors.toList());
+
+            // update environment names
+            integrations.forEach(dataMgr::update);
+
+            // update cache
+            environments.remove(environment);
+
+        } else {
+            throw new ClientErrorException("Missing environment " + environment, Response.Status.NOT_FOUND);
+        }
+    }
+
+    /**
      * Rename an environment across all integrations.
      */
     @PUT

@@ -114,7 +114,7 @@ public class PublicApiHandlerTest {
     }
 
     @Test
-    public void tagForRelease() throws Exception {
+    public void testTagForRelease() throws Exception {
         final Date now = new Date();
         // delay to avoid false positives in Date::after
         Thread.sleep(1000);
@@ -131,7 +131,7 @@ public class PublicApiHandlerTest {
     }
 
     @Test
-    public void tagForReleaseByName() throws Exception {
+    public void testTagForReleaseByName() throws Exception {
         final Date now = new Date();
         // delay to avoid false positives in Date::after
         Thread.sleep(1000);
@@ -169,6 +169,24 @@ public class PublicApiHandlerTest {
 
         verify(dataManager, times(2)).fetch(Integration.class, INTEGRATION_ID);
         verify(dataManager).update(any(Integration.class));
+    }
+
+    @Test
+    public void testDeleteEnvironment() {
+        handler.deleteEnvironment(ENVIRONMENT);
+
+        final List<String> environments = handler.getReleaseEnvironments();
+
+        assertThat(environments, notNullValue());
+        assertThat(environments.isEmpty(), is(true));
+
+        final Map<String, ContinuousDeliveryEnvironment> releaseTags = handler.getReleaseTags(INTEGRATION_ID);
+
+        assertThat(releaseTags, notNullValue());
+        assertThat(releaseTags.isEmpty(), is(true));
+
+        verify(dataManager).update(any(Integration.class));
+        verify(dataManager).fetch(Integration.class, INTEGRATION_ID);
     }
 
     @Test
