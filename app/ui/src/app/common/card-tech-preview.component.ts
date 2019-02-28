@@ -16,6 +16,7 @@ import { Connection, Connector } from '@syndesis/ui/platform';
             <span class="pficon pficon-info"
                   outsideClick="true"
                   placement="left"
+                  container="body"
                   [popover]="synTechPreviewInfo"></span>
     </div>
   `,
