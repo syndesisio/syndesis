@@ -10,7 +10,7 @@ import {
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
+import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import i18n from '../../../i18n';
 import resolvers from '../../resolvers';
@@ -78,7 +78,7 @@ export default class ExtensionDetailsPage extends React.Component {
                   errorChildren={<div>TODO</div>}
                 >
                   {() => (
-                    <NamespacesConsumer ns={['customizations', 'shared']}>
+                    <Translation ns={['customizations', 'shared']}>
                       {t => (
                         <>
                           <Breadcrumb>
@@ -169,7 +169,7 @@ export default class ExtensionDetailsPage extends React.Component {
                           />
                         </>
                       )}
-                    </NamespacesConsumer>
+                    </Translation>
                   )}
                 </WithLoader>
               )}

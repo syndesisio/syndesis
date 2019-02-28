@@ -10,7 +10,7 @@ import {
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
+import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
 import CustomizationsNavBar from '../components/CustomizationsNavBar';
 import resolvers from '../resolvers';
@@ -124,7 +124,7 @@ export default class ExtensionsPage extends React.Component {
               );
 
               return (
-                <NamespacesConsumer ns={['customizations', 'shared']}>
+                <Translation ns={['customizations', 'shared']}>
                   {t => (
                     <>
                       <CustomizationsNavBar />
@@ -215,7 +215,7 @@ export default class ExtensionsPage extends React.Component {
                       </ExtensionListView>
                     </>
                   )}
-                </NamespacesConsumer>
+                </Translation>
               );
             }}
           </WithListViewToolbarHelpers>

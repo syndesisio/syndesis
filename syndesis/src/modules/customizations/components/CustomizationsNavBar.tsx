@@ -1,6 +1,6 @@
 import { Container, TabBar, TabBarItem } from '@syndesis/ui';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
+import { Translation } from 'react-i18next';
 import routes from '../routes';
 
 /**
@@ -15,7 +15,7 @@ import routes from '../routes';
 export default class CustomizationsNavBar extends React.Component {
   public render() {
     return (
-      <NamespacesConsumer ns={['customizations', 'shared']}>
+      <Translation ns={['customizations', 'shared']}>
         {t => (
           <Container
             style={{
@@ -34,7 +34,7 @@ export default class CustomizationsNavBar extends React.Component {
             </TabBar>
           </Container>
         )}
-      </NamespacesConsumer>
+      </Translation>
     );
   }
 }

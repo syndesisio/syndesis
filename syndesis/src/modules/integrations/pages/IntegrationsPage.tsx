@@ -8,7 +8,7 @@ import {
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
+import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../containers/PageTitle';
 import i18n from '../../../i18n';
 import { Integrations } from '../components';
@@ -113,7 +113,7 @@ export class IntegrationsPage extends React.Component {
         {({ data: integrationsData, hasData, error }) => (
           <WithConnections>
             {({ data: connectionsData }) => (
-              <NamespacesConsumer ns={['integrations', 'shared']}>
+              <Translation ns={['integrations', 'shared']}>
                 {t => (
                   <WithListViewToolbarHelpers
                     defaultFilterType={filterByName}
@@ -158,7 +158,7 @@ export class IntegrationsPage extends React.Component {
                     }}
                   </WithListViewToolbarHelpers>
                 )}
-              </NamespacesConsumer>
+              </Translation>
             )}
           </WithConnections>
         )}

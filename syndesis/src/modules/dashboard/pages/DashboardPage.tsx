@@ -21,7 +21,7 @@ import {
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
+import { Translation } from 'react-i18next';
 import { Connections } from '../../connections/containers';
 import { Integrations } from '../../integrations/components';
 import resolvers from '../../resolvers';
@@ -123,9 +123,7 @@ export default () => (
                 metricsData.topIntegrations
               );
               return (
-                <NamespacesConsumer
-                  ns={['dashboard', 'integrations', 'shared']}
-                >
+                <Translation ns={['dashboard', 'integrations', 'shared']}>
                   {t => (
                     <Dashboard
                       linkToIntegrations={resolvers.integrations.list()}
@@ -255,7 +253,7 @@ export default () => (
                       i18nTitle={t('title')}
                     />
                   )}
-                </NamespacesConsumer>
+                </Translation>
               );
             }}
           </WithConnections>

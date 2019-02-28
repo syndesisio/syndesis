@@ -6,7 +6,7 @@ import {
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
+import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
 
 export interface IExtensionIntegrationsProps {
@@ -42,7 +42,7 @@ export default class ExtensionIntegrations extends React.Component<
             errorChildren={<div>TODO</div>}
           >
             {() => (
-              <NamespacesConsumer ns={['customizations', 'shared']}>
+              <Translation ns={['customizations', 'shared']}>
                 {t => (
                   <ExtensionIntegrationsTable
                     i18nDescription={t('shared:Description')}
@@ -52,7 +52,7 @@ export default class ExtensionIntegrations extends React.Component<
                     data={data as IExtensionIntegration[]}
                   />
                 )}
-              </NamespacesConsumer>
+              </Translation>
             )}
           </WithLoader>
         )}

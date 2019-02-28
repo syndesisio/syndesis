@@ -1,4 +1,4 @@
-import i18n, { InitOptions } from 'i18next';
+import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { en, it } from './locales';
 
@@ -35,7 +35,7 @@ const options = {
   fallbackNS: ['shared'],
   keySeparator: '.',
   ns: ['shared', 'app', 'customizations', 'dashboard', 'integrations'],
-} as InitOptions;
+} as i18n.InitOptions;
 
 i18n.use(LanguageDetector).init(options);
 export default i18n;

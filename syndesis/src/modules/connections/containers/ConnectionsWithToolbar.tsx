@@ -7,7 +7,7 @@ import {
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
+import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
 import resolvers from '../resolvers';
 import { Connections, IConnectionsProps } from './Connections';
@@ -67,7 +67,7 @@ export class ConnectionsWithToolbar extends React.Component<
 
   public render() {
     return (
-      <NamespacesConsumer ns={['shared']}>
+      <Translation ns={['shared']}>
         {t => (
           <WithListViewToolbarHelpers
             defaultFilterType={filterByName}
@@ -105,7 +105,7 @@ export class ConnectionsWithToolbar extends React.Component<
             }}
           </WithListViewToolbarHelpers>
         )}
-      </NamespacesConsumer>
+      </Translation>
     );
   }
 }
