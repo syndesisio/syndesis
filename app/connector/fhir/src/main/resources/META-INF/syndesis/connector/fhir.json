@@ -19,13 +19,24 @@
             "description": "Specify the resource id and type to read",
             "name": "Read resource from the server",
             "properties": {
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
+                "required": true,
+                "secret": false,
+                "type": "select"
+              },
               "containedResourceTypes": {
                 "deprecated": false,
                 "displayName": "Contained Resource Types",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
-                "labelHint": "The resource types, which may be included within a resource",
+                "labelHint": "The optional resource types, which may be contained within a resource",
                 "multiple": true,
                 "required": false,
                 "secret": false,
@@ -41,17 +52,6 @@
                 "required": false,
                 "secret": false,
                 "type": "string"
-              },
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
-                "required": false,
-                "secret": false,
-                "type": "select"
               },
               "version": {
                 "deprecated": false,
@@ -94,6 +94,17 @@
             "description": "Specify the resource type and the query, e.g. \"given=Vincent&family=Freeman\"",
             "name": "Search for resources on the server",
             "properties": {
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type to query",
+                "required": true,
+                "secret": false,
+                "type": "select"
+              },
               "query": {
                 "deprecated": false,
                 "displayName": "Query",
@@ -104,17 +115,6 @@
                 "required": false,
                 "secret": false,
                 "type": "string"
-              },
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type to query",
-                "required": false,
-                "secret": false,
-                "type": "select"
               }
             }
           }
@@ -147,6 +147,17 @@
             "description": "Specify the resource id and type to delete",
             "name": "Delete resource from the server",
             "properties": {
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type, e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
+                "required": true,
+                "secret": false,
+                "type": "String"
+              },
               "id": {
                 "deprecated": false,
                 "displayName": "Resource Id",
@@ -158,24 +169,13 @@
                 "secret": false,
                 "type": "string"
               },
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type, e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
-                "required": false,
-                "secret": false,
-                "type": "String"
-              },
               "version": {
                 "deprecated": false,
                 "displayName": "Resource version",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
-                "labelHint": "The version e.g \"123\"",
+                "labelHint": "The optional version e.g \"123\"",
                 "required": false,
                 "secret": false,
                 "type": "String"
@@ -211,18 +211,6 @@
             "description": "Specify the resource to update or create",
             "name": "Update all fields or create a resource with defined ID on the server",
             "properties": {
-              "containedResourceTypes": {
-                "deprecated": false,
-                "displayName": "Contained Resource Types",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource types, which may be included within a resource",
-                "multiple": true,
-                "required": false,
-                "secret": false,
-                "type": "select"
-              },
               "resourceType": {
                 "deprecated": false,
                 "displayName": "Resource Type",
@@ -230,9 +218,21 @@
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "labelHint": "The resource type to update",
-                "required": false,
+                "required": true,
                 "secret": false,
                 "type": "String"
+              },
+              "containedResourceTypes": {
+                "deprecated": false,
+                "displayName": "Contained Resource Types",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The optional resource types, which may be contained within a resource",
+                "multiple": true,
+                "required": false,
+                "secret": false,
+                "type": "select"
               }
             }
           }
@@ -265,6 +265,17 @@
             "description": "Specify the JSON patch to execute",
             "name": "Update selected fields in a resource on the server",
             "properties": {
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type to query",
+                "required": true,
+                "secret": false,
+                "type": "select"
+              },
               "id": {
                 "deprecated": false,
                 "displayName": "Resource Id",
@@ -294,21 +305,11 @@
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
-                "labelHint": "The JSON patch to execute. Conforms to http://jsonpatch.com/, e.g. [{ \"op\":\"replace\", \"path\":\"active\", \"value\":true }]",
+                "labelHint": "The JSON patch to execute. Conforms to http://jsonpatch.com/",
+                "placeholder": "e.g. [{ \"op\":\"replace\", \"path\":\"active\", \"value\":true }]",
                 "required": false,
                 "secret": false,
                 "type": "textarea"
-              },
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type to query",
-                "required": true,
-                "secret": false,
-                "type": "select"
               }
             }
           }
@@ -341,18 +342,6 @@
             "description": "Specify the resource to create",
             "name": "Create a resource on the server (with auto-generated ID)",
             "properties": {
-              "containedResourceTypes": {
-                "deprecated": false,
-                "displayName": "Contained Resource Types",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource types, which may be included within a resource",
-                "multiple": true,
-                "required": false,
-                "secret": false,
-                "type": "select"
-              },
               "resourceType": {
                 "deprecated": false,
                 "displayName": "Resource Type",
@@ -360,9 +349,21 @@
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "labelHint": "The resource type to create",
-                "required": false,
+                "required": true,
                 "secret": false,
                 "type": "String"
+              },
+              "containedResourceTypes": {
+                "deprecated": false,
+                "displayName": "Contained Resource Types",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The optional resource types, which may be contained within a resource",
+                "multiple": true,
+                "required": false,
+                "secret": false,
+                "type": "select"
               }
             }
           }
@@ -387,12 +388,12 @@
           "kind": "xml-schema"
         },
         "outputDataShape": {
-          "kind": "none"
+          "kind": "xml-schema"
         },
         "propertyDefinitionSteps": [
           {
             "description": "Specify the resources to include in a transaction",
-            "name": "Run a list of actions in a single transaction",
+            "name": "Create a number of resources in a single transaction",
             "properties": {
               "containedResourceTypes": {
                 "deprecated": false,
