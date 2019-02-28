@@ -47,6 +47,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -337,7 +338,7 @@ public class PublicApiHandler {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public ContinuousDeliveryImportResults importResources(@Context SecurityContext sec,
-                                                    @NotNull @ApiParam(required = true) ImportFormDataInput formInput) {
+                                                    @NotNull @MultipartForm @ApiParam(required = true) ImportFormDataInput formInput) {
 
         if (formInput == null) {
             throw new ClientErrorException("Multipart request is empty", Response.Status.BAD_REQUEST);
