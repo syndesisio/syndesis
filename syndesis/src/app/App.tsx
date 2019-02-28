@@ -13,9 +13,9 @@ import {
   UnrecoverableError,
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
-import { TranslationFunction } from 'i18next';
+import i18next from 'i18next';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
+import { Translation } from 'react-i18next';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import './App.css';
 import { AppContext } from './AppContext';
@@ -97,7 +97,7 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
     });
   }
 
-  public renderAppNav(t: TranslationFunction) {
+  public renderAppNav(t: i18next.TFunction) {
     return (
       <AppTopMenu username={'developer'}>
         <PfNavLink to={'/logout'} label={t('Logout')} />
@@ -126,7 +126,7 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
 
   public render() {
     return (
-      <NamespacesConsumer ns={['app']}>
+      <Translation ns={['app']}>
         {t => (
           <WithConfig>
             {({ config, loading, error }) => (
@@ -186,7 +186,7 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
             )}
           </WithConfig>
         )}
-      </NamespacesConsumer>
+      </Translation>
     );
   }
 }

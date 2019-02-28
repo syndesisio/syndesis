@@ -3,21 +3,21 @@ import resolvers from '../resolvers';
 
 export function getCreateAddConnectionHref(
   integration: Integration,
-  position: string
+  position: number
 ) {
   return resolvers.create.configure.addConnection.selectConnection({
     integration,
-    position,
+    position: `${position}`,
   });
 }
 
 export function getCreateAddStepHref(
   integration: Integration,
-  position: string
+  position: number
 ) {
   return resolvers.create.configure.addStep.selectStep({
     integration,
-    position,
+    position: `${position}`,
   });
 }
 
@@ -38,18 +38,18 @@ export function getCreateConfigureStepHrefCallback(integration: Integration) {
 
 export function getEditAddConnectionHref(
   integration: Integration,
-  position: string
+  position: number
 ) {
   return resolvers.integration.edit.addConnection.selectConnection({
     integration,
-    position,
+    position: `${position}`,
   });
 }
 
-export function getEditAddStepHref(integration: Integration, position: string) {
+export function getEditAddStepHref(integration: Integration, position: number) {
   return resolvers.integration.edit.addStep.selectStep({
     integration,
-    position,
+    position: `${position}`,
   });
 }
 

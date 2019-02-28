@@ -9,7 +9,7 @@ import {
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
+import { Translation } from 'react-i18next';
 import { AppContext } from '../../../app';
 import resolvers from '../resolvers';
 
@@ -22,7 +22,7 @@ export interface IIntegrationsProps {
 export class Integrations extends React.Component<IIntegrationsProps> {
   public render() {
     return (
-      <NamespacesConsumer ns={['integrations', 'shared']}>
+      <Translation ns={['integrations', 'shared']}>
         {t => (
           <AppContext.Consumer>
             {({ config, getPodLogUrl }) => (
@@ -145,7 +145,7 @@ export class Integrations extends React.Component<IIntegrationsProps> {
             )}
           </AppContext.Consumer>
         )}
-      </NamespacesConsumer>
+      </Translation>
     );
   }
 }

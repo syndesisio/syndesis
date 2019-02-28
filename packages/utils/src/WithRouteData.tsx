@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, RouteComponentProps } from 'react-router';
+import { Route, RouteChildrenProps } from 'react-router';
 
 export interface IWithRouteDataProps<P, S> {
   /**
@@ -8,7 +8,7 @@ export interface IWithRouteDataProps<P, S> {
    * @param state - the route state, with type `S`.
    * @param route - the raw route object, as provided by the `Route` component.
    */
-  children(params: P, state: S, route: RouteComponentProps): any;
+  children(params: P, state: S, route: RouteChildrenProps): any;
 }
 
 /**
@@ -25,6 +25,9 @@ export class WithRouteData<P, S> extends React.Component<
     return (
       <Route>
         {route => {
+          if (!route.match) {
+            throw new Error("Route doesn't have a match");
+          }
           const params: P = route.match.params as P;
           const state: S = route.location.state as S;
           return this.props.children(params, state, route);

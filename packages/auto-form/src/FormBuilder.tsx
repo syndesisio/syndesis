@@ -87,7 +87,7 @@ export class FormBuilder<T> extends React.Component<
   /**
    * Ensure that the input values match the property definitions
    */
-  private sanitizeValues(definition: IFormDefinition, initialValue: any) {
+  private sanitizeValues(definition: IFormDefinition, initialValue: any): T {
     return Object.keys(definition).reduce((result, key): any => {
       const prop = definition[key];
       let value = this.massageValue(prop, initialValue[key]);
@@ -95,7 +95,7 @@ export class FormBuilder<T> extends React.Component<
         value = this.massageValue(prop, prop.defaultValue);
       }
       return { ...result, [key]: value };
-    }, {});
+    }, {}) as T;
   }
 
   /**

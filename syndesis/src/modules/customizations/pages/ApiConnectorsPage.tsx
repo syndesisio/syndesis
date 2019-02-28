@@ -14,7 +14,7 @@ import {
   WithLoader,
 } from '@syndesis/utils';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
+import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
 import CustomizationsNavBar from '../components/CustomizationsNavBar';
 import routes from '../routes';
@@ -104,7 +104,7 @@ export default class ApiConnectorsPage extends React.Component {
               );
 
               return (
-                <NamespacesConsumer ns={['customizations', 'shared']}>
+                <Translation ns={['customizations', 'shared']}>
                   {t => (
                     <>
                       <CustomizationsNavBar />
@@ -178,7 +178,7 @@ export default class ApiConnectorsPage extends React.Component {
                       </ApiConnectorListView>
                     </>
                   )}
-                </NamespacesConsumer>
+                </Translation>
               );
             }}
           </WithListViewToolbarHelpers>

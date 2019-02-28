@@ -11,7 +11,7 @@ import {
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as H from 'history';
 import * as React from 'react';
-import { NamespacesConsumer } from 'react-i18next';
+import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
 import resolvers from '../resolvers';
 
@@ -119,7 +119,7 @@ export default class VirtualizationsPage extends React.Component {
               );
 
               return (
-                <NamespacesConsumer ns={['data', 'shared']}>
+                <Translation ns={['data', 'shared']}>
                   {t => (
                     <VirtListView
                       filterTypes={filterTypes}
@@ -210,7 +210,7 @@ export default class VirtualizationsPage extends React.Component {
                       </WithLoader>
                     </VirtListView>
                   )}
-                </NamespacesConsumer>
+                </Translation>
               );
             }}
           </WithListViewToolbarHelpers>
