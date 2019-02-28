@@ -1,0 +1,13 @@
+// Fontpath
+$pf-global--font-path: "~@patternfly/patternfly/assets/fonts" !default;
+// Iconpath
+$fa-font-path: "~@patternfly/patternfly/assets/fonts/webfonts" !default;
+// FontIcon Path
+$pf-global--fonticon-path: "~@patternfly/patternfly/assets/pficon" !default;
+
+@import "~@patternfly/patternfly/sass-utilities/all";
+@import "~@patternfly/patternfly/variables";
+@import "~@patternfly/patternfly/shield-noninheritable";
+@import "~@patternfly/patternfly/common";
+@import "~@patternfly/patternfly/themes";
+@import "~@patternfly/patternfly/pf-icons";

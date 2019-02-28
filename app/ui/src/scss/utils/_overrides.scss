@@ -1,4 +1,4 @@
-@import '@patternfly/patternfly/sass-utilities/_all.scss';
+@import '@patternfly/patternfly/sass-utilities/all';
 /// Common CSS overrides for UI normalization and styles referred to generic (PF/component-agnostic) items
 html,
 body {
@@ -39,6 +39,7 @@ body.cards-pf {
     background-color: #ededed;
     margin-top: 76px;
     overflow: auto;
+    padding-top: 0;
   }
 }
 
@@ -78,6 +79,10 @@ body.cards-pf {
 }
 
 @media screen and (max-width: 767px) {
+  .pf-c-page__header-brand-link {
+    --pf-c-page__header-brand-link--md--MaxWidth: 130px;
+  }
+
   .nav-pf-vertical {
     display: none;
 
@@ -235,6 +240,28 @@ body.cards-pf {
   &.left {
     .arrow {
       margin: 0;
+    }
+  }
+}
+
+// PF4 overrides
+.pf-c-page {
+  --pf-global--FontSize--md: 12px;
+  --pf-c-page__header-sidebar-toggle__c-button--FontSize: 24px;
+  --pf-c-page__header-brand--md--FlexBasis: 290px;
+
+  ul {
+    list-style-type: none;
+  }
+
+  .pf-c-page__header-tools-group {
+    .pf-icon {
+      font-size: 16px;
+    }
+    &.user-menu-group {
+      .pf-c-dropdown__toggle {
+        line-height: 2;
+      }
     }
   }
 }
