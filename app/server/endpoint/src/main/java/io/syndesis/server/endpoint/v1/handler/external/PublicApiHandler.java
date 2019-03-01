@@ -83,6 +83,7 @@ import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSup
 public class PublicApiHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(PublicApiHandler.class);
+    private static final String PROPERTY_INTEGRATION_ID = "integrationId";
 
     private final DataManager dataMgr;
     private final IntegrationSupportHandler handler;
@@ -258,6 +259,8 @@ public class PublicApiHandler {
         if (environments == null || environments.isEmpty()) {
             throw new ClientErrorException("Missing parameter environments", Response.Status.BAD_REQUEST);
         }
+        // validate individual environment names
+        environments.forEach(e -> validateParam("environment", e));
 
         // fetch integration
         final Integration integration = getIntegration(integrationId);
@@ -464,8 +467,7 @@ public class PublicApiHandler {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public IntegrationDeploymentStateDetails getIntegrationState(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) String integrationId) {
-        validateParam("integrationId", integrationId);
-        return monitoringProvider.getIntegrationStateDetails(integrationId);
+        return monitoringProvider.getIntegrationStateDetails(getIntegration(integrationId).getId().get());
     }
 
     /**
@@ -487,7 +489,7 @@ public class PublicApiHandler {
     @Produces(MediaType.APPLICATION_JSON)
     public void stopIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
 
-        validateParam("integrationId", integrationId);
+        final Integration integration = getIntegration(integrationId);
         IntegrationDeploymentHandler.TargetStateRequest targetState = new IntegrationDeploymentHandler
                 .TargetStateRequest();
         targetState.setTargetState(IntegrationDeploymentState.Unpublished);
@@ -495,7 +497,7 @@ public class PublicApiHandler {
         // find current deployed version
         final IntegrationDeployment[] deployment = {null};
         dataMgr.fetchAllByPropertyValue(IntegrationDeployment
-                .class, "integrationId", integrationId)
+                .class, PROPERTY_INTEGRATION_ID, integration.getId().get())
                 .forEach(d -> {
                     if (d.getCurrentState() == IntegrationDeploymentState.Published) {
                         deployment[0] = d;
@@ -503,7 +505,7 @@ public class PublicApiHandler {
                 });
 
         if (deployment[0] != null) {
-            deploymentHandler.updateTargetState(integrationId, deployment[0].getVersion(), targetState);
+            deploymentHandler.updateTargetState(integration.getId().get(), deployment[0].getVersion(), targetState);
         } else {
             throw new ClientErrorException("Integration " + integrationId + " is not published", Response.Status.FORBIDDEN);
         }
@@ -536,7 +538,7 @@ public class PublicApiHandler {
     }
 
     private Integration getIntegration(String integrationId) {
-        validateParam("integrationId", integrationId);
+        validateParam(PROPERTY_INTEGRATION_ID, integrationId);
         return getResource(Integration.class, integrationId);
     }
 

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 
@@ -129,6 +130,11 @@ public class PublicApiHandlerTest {
 
         verify(dataManager).update(notNull());
         verify(dataManager).fetch(Integration.class, INTEGRATION_ID);
+    }
+
+    @Test(expected = ClientErrorException.class)
+    public void testInvalidTagForRelease() throws Exception {
+        handler.tagForRelease(INTEGRATION_ID, Collections.singletonList(""));
     }
 
     @Test
