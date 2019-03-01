@@ -226,11 +226,6 @@ body.cards-pf {
   }
 }
 
-// Tooltip styling override
-.glyphicon-info-sign {
-  display: block;
-}
-
 // Override PF3's popover/tooltip arrow margin, use ngx-bootstrap's positioning
 .popover,
 .tooltip {
