@@ -6,23 +6,27 @@ import {
 } from 'patternfly-react';
 import * as React from 'react';
 import { IFormControl } from '../models';
+import { getValidationState } from './helpers';
 
-export const FormInputComponent = ({
-  field,
-  type,
-  form: { touched, errors, isSubmitting },
-  ...props
-}: IFormControl) => (
-  <FormGroup controlId={field.name} validationState={props.validationState}>
+export const FormInputComponent: React.FunctionComponent<
+  IFormControl
+> = props => (
+  <FormGroup
+    controlId={props.field.name}
+    validationState={getValidationState(props)}
+  >
     <ControlLabel>{props.property.displayName}</ControlLabel>
     <FormControl
-      {...field}
-      data-testid={field.name}
-      disabled={isSubmitting || props.property.disabled}
+      {...props.field}
+      data-testid={props.field.name}
+      disabled={props.form.isSubmitting || props.property.disabled}
       placeholder={props.property.placeholder}
-      type={type || 'text'}
-      onChange={field.onChange}
+      type={props.type || 'text'}
+      onChange={props.field.onChange}
     />
-    <HelpBlock>{props.property.description}</HelpBlock>
+    <HelpBlock>
+      {props.property.description}
+      {props.form.errors[props.field.name]}
+    </HelpBlock>
   </FormGroup>
 );

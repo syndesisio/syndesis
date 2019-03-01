@@ -104,10 +104,10 @@ export class FormBuilder<T> extends React.Component<
   private enrichAndOrderProperties(definition: IFormDefinition) {
     return Object.keys(definition)
       .map(key => ({
+        ...definition[key],
         name: key,
         required: this.massageRequired(definition[key]),
         type: this.massageType(definition[key]),
-        ...definition[key],
       }))
       .sort((a, b) => {
         const aOrder = (a.order || 0) as number;

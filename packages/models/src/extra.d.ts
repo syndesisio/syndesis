@@ -6,7 +6,6 @@ import {
 
 // TODO remove when these values are advertised by the swagger
 export interface IConfigurationProperty extends ConfigurationProperty {
-  componentProperty?: boolean;
   required?: boolean;
   secret?: boolean;
 }

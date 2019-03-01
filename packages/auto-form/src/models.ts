@@ -1,4 +1,5 @@
 import { IConfigurationProperty } from '@syndesis/models';
+import { FieldProps } from 'formik';
 
 export interface IFormDefinition {
   [name: string]: IConfigurationProperty;
@@ -24,22 +25,8 @@ export interface IFormProperty extends IConfigurationProperty {
   disabled?: boolean;
 }
 
-export interface IFormikFormProp {
-  dirty?: boolean;
-  errors?: string;
-  isSubmitting?: boolean;
-  isValid?: boolean;
-  isValidating?: boolean;
-  status?: any;
-  touched?: boolean;
-  values?: any;
-}
-
-export interface IFormControl {
+export interface IFormControl extends FieldProps {
   name?: string;
   type?: string;
-  field: IFormField;
-  form: IFormikFormProp;
   property: IFormProperty;
-  validationState?: string;
 }
