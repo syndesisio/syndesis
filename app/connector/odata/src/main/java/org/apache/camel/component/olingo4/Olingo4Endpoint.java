@@ -43,6 +43,7 @@ public class Olingo4Endpoint extends AbstractApiEndpoint<Olingo4ApiName, Olingo4
 
     protected static final String RESOURCE_PATH_PROPERTY = "resourcePath";
     protected static final String RESPONSE_HANDLER_PROPERTY = "responseHandler";
+    protected static final String SERVICE_URI_PROPERTY = "serviceUri";
     protected static final String FILTER_ALREADY_SEEN = "filterAlreadySeen";
 
     private static final String KEY_PREDICATE_PROPERTY = "keyPredicate";
@@ -70,10 +71,11 @@ public class Olingo4Endpoint extends AbstractApiEndpoint<Olingo4ApiName, Olingo4
         this.olingo4Configuration = endpointConfiguration;
 
         // get all endpoint property names
-        endpointPropertyNames = new HashSet<String>(getPropertiesHelper().getValidEndpointProperties(olingo4Configuration));
+        endpointPropertyNames = new HashSet<>(getPropertiesHelper().getValidEndpointProperties(olingo4Configuration));
         // avoid adding edm as queryParam
         endpointPropertyNames.add(EDM_PROPERTY);
         endpointPropertyNames.add(ENDPOINT_HTTP_HEADERS_PROPERTY);
+        endpointPropertyNames.add(SERVICE_URI_PROPERTY);
         endpointPropertyNames.add(FILTER_ALREADY_SEEN);
     }
 
@@ -169,10 +171,7 @@ public class Olingo4Endpoint extends AbstractApiEndpoint<Olingo4ApiName, Olingo4
         properties.put(EDM_PROPERTY, apiProxy.getEdm());
 
         // handle filterAlreadySeen property
-        properties.put(FILTER_ALREADY_SEEN, configuration.getFilterAlreadySeen());
-
-        // handle filterAlreadySeen property
-        properties.put(FILTER_ALREADY_SEEN, configuration.getFilterAlreadySeen());
+        properties.put(FILTER_ALREADY_SEEN, olingo4Configuration.getFilterAlreadySeen());
 
         // handle keyPredicate
         final String keyPredicate = (String)properties.get(KEY_PREDICATE_PROPERTY);
@@ -199,7 +198,7 @@ public class Olingo4Endpoint extends AbstractApiEndpoint<Olingo4ApiName, Olingo4
 
     private void parseQueryParams(Map<String, Object> options) {
         // extract non-endpoint properties as query params
-        final Map<String, String> queryParams = new HashMap<String, String>();
+        final Map<String, String> queryParams = new HashMap<>();
         for (Iterator<Map.Entry<String, Object>> it = options.entrySet().iterator(); it.hasNext();) {
 
             final Map.Entry<String, Object> entry = it.next();
@@ -208,6 +207,9 @@ public class Olingo4Endpoint extends AbstractApiEndpoint<Olingo4ApiName, Olingo4
             /**
              * Added in to fix
              * https://issues.apache.org/jira/projects/CAMEL/issues/CAMEL-13054
+             *
+             * Avoid swallowing consumer scheduler properties, which
+             * get processed in configureProperties()
              */
             if (paramName.startsWith("consumer.")) {
                 continue;

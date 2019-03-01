@@ -49,7 +49,7 @@ public class Olingo4Consumer extends AbstractApiConsumer<Olingo4ApiName, Olingo4
     @Override
     protected int poll() throws Exception {
         // invoke the consumer method
-        final Map<String, Object> args = new HashMap<String, Object>();
+        final Map<String, Object> args = new HashMap<>();
         args.putAll(endpoint.getEndpointProperties());
 
         // let the endpoint and the Consumer intercept properties
@@ -99,10 +99,10 @@ public class Olingo4Consumer extends AbstractApiConsumer<Olingo4ApiName, Olingo4
             //
             // Allow consumer idle properties to properly handle an empty polling response
             //
-            int processed = ApiConsumerHelper.getResultsProcessed(this, result[0], isSplitResult());
             if (result[0] instanceof ClientEntitySet && ((ClientEntitySet) result[0]).getEntities().isEmpty()) {
                 return 0;
             } else {
+                int processed = ApiConsumerHelper.getResultsProcessed(this, result[0], isSplitResult());
                 return processed;
             }
 

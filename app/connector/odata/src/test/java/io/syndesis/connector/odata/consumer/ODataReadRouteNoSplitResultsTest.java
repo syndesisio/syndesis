@@ -359,35 +359,23 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
 
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
-        int expectedMsgCount = defaultTestServer.getResultCount();
         MockEndpoint result = initMockEndpoint();
-        result.setMinimumExpectedMessageCount(expectedMsgCount);
+        result.setMinimumExpectedMessageCount(1);
 
         context.start();
 
         result.assertIsSatisfied();
 
-        for (int i = 0; i < expectedMsgCount; ++i) {
-            @SuppressWarnings( "unchecked" )
-            List<String> json = extractJsonFromExchgMsg(result, i, List.class);
+        @SuppressWarnings( "unchecked" )
+        List<String> json = extractJsonFromExchgMsg(result, 0, List.class);
 
-            String expected;
-            switch (i) {
-                case 0:
-                    expected = testData(TEST_SERVER_DATA_1);
-                    JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
-                    expected = testData(TEST_SERVER_DATA_2);
-                    JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
-                    expected = testData(TEST_SERVER_DATA_3);
-                    JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
-                    break;
-                default:
-                    //
-                    // Subsequent polling messages should be empty
-                    //
-                    assertTrue(json.isEmpty());
-            }
-        }
+        String expected;
+        expected = testData(TEST_SERVER_DATA_1);
+        JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+        expected = testData(TEST_SERVER_DATA_2);
+        JSONAssert.assertEquals(expected, json.get(1), JSONCompareMode.LENIENT);
+        expected = testData(TEST_SERVER_DATA_3);
+        JSONAssert.assertEquals(expected, json.get(2), JSONCompareMode.LENIENT);
 
         //
         // Check backup consumer options carried through to olingo4 component
