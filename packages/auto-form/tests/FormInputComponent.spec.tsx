@@ -1,99 +1,116 @@
 import * as React from 'react';
 import { render } from 'react-testing-library';
-import { FormInputComponent } from '../src/widgets/FormInputComponent';
+import { AutoForm } from '../src';
 
-export default describe('FormInputComponent', () => {
-  const textInputComponent = (
-    <FormInputComponent
-      form={{ isSubmitting: false }}
-      field={{
-        name: 'testTextInput',
-        value: '',
-        onChange: () => {},
-      }}
-      property={{
-        displayName: 'Test Text Input Control Label',
-        description: 'Test text description',
-      }}
-    />
+describe('FormInputComponent: text', () => {
+  const fieldId = 'testTextInput';
+  const definition = {
+    [fieldId]: {
+      defaultValue: 'INFO',
+      description: 'Log Level.',
+      displayName: 'log level',
+      kind: 'parameter',
+      required: true,
+      secret: false,
+      type: 'string',
+    },
+  };
+  const form = (
+    <AutoForm
+      definition={definition}
+      initialValue={{}}
+      i18nRequiredProperty={'required'}
+      onSave={() => false}
+    >
+      {({ fields }) => fields}
+    </AutoForm>
   );
 
-  it('Should use the definition key as an id for the textinput', () => {
-    const { getByTestId } = render(textInputComponent);
-    const idValue = textInputComponent.props.field.name;
-    expect(getByTestId(idValue)).toBeDefined();
+  it('Should use the definition key as an id', () => {
+    const { getByTestId } = render(form);
+    expect(getByTestId(fieldId)).toBeDefined();
   });
 
-  it('Should use the displayName as a label in the textinput', () => {
-    const { getByLabelText } = render(textInputComponent);
-    const displayName = textInputComponent.props.property.displayName;
+  it('Should use the displayName as a label', () => {
+    const { getByLabelText } = render(form);
+    const displayName = definition[fieldId].displayName;
     expect(getByLabelText(displayName)).toBeTruthy();
   });
+});
 
-  const pwdInputComponent = (
-    <FormInputComponent
-      type="password"
-      form={{ isSubmitting: false }}
-      field={{
-        name: 'testPwdInput',
-        value: '',
-        onChange: () => {},
-      }}
-      property={{
-        displayName: 'Test Pwd Input Control Label',
-        description: 'Test password description',
-      }}
-    />
+describe('FormInputComponent: password', () => {
+  const fieldId = 'testPasswordInput';
+  const definition = {
+    [fieldId]: {
+      defaultValue: 'supersecret',
+      description: 'Password.',
+      displayName: 'Password',
+      kind: 'parameter',
+      required: true,
+      secret: true,
+      type: 'string',
+    },
+  };
+  const form = (
+    <AutoForm
+      definition={definition}
+      initialValue={{}}
+      i18nRequiredProperty={'required'}
+      onSave={() => false}
+    >
+      {({ fields }) => fields}
+    </AutoForm>
   );
 
-  it('Should use the definition key as an id for the password input', () => {
-    const { getByTestId } = render(pwdInputComponent);
-    const idValue = pwdInputComponent.props.field.name;
-    expect(getByTestId(idValue)).toBeDefined();
+  it('Should use the definition key as an id', () => {
+    const { getByTestId } = render(form);
+    expect(getByTestId(fieldId)).toBeDefined();
   });
 
-  it('Should use the displayName as a label in the password input', () => {
-    const { getByLabelText } = render(pwdInputComponent);
-    const displayName = pwdInputComponent.props.property.displayName;
+  it('Should use the definition key as an id', () => {
+    const { getByTestId } = render(form);
+    expect(getByTestId(fieldId)).toBeDefined();
+  });
+
+  it('Should use the displayName as a label', () => {
+    const { getByLabelText } = render(form);
+    const displayName = definition[fieldId].displayName;
     expect(getByLabelText(displayName)).toBeTruthy();
   });
+});
 
-  const numberInputComponent = (
-    <FormInputComponent
-      type="number"
-      form={{ isSubmitting: false }}
-      field={{
-        name: 'testNumInput',
-        defaultValue: 2,
-        min: 0,
-        max: 3,
-        onChange: () => {},
-      }}
-      property={{
-        displayName: 'Test Pwd Input Control Label',
-        description: 'Test password description',
-      }}
-    />
+describe('FormInputComponent: number', () => {
+  const fieldId = 'testPasswordInput';
+  const definition = {
+    [fieldId]: {
+      defaultValue: '123',
+      description: 'Number.',
+      displayName: 'Number',
+      kind: 'parameter',
+      required: true,
+      secret: false,
+      type: 'number',
+    },
+  };
+  const form = (
+    <AutoForm
+      definition={definition}
+      initialValue={{}}
+      i18nRequiredProperty={'required'}
+      onSave={() => false}
+    >
+      {({ fields }) => fields}
+    </AutoForm>
   );
 
-  it('Should use the definition key as an id for the number input', () => {
-    const { getByTestId } = render(numberInputComponent);
-    const idValue = numberInputComponent.props.field.name;
-    expect(getByTestId(idValue)).toBeDefined();
+  it('Should use the definition key as an id', () => {
+    const { getByTestId } = render(form);
+    expect(getByTestId(fieldId)).toBeDefined();
   });
 
-  it('Should use the displayName as a label in the number input', () => {
-    const { getByLabelText } = render(numberInputComponent);
-    const displayName = numberInputComponent.props.property.displayName;
+  it('Should use the displayName as a label', () => {
+    const { getByLabelText } = render(form);
+    const displayName = definition[fieldId].displayName;
     expect(getByLabelText(displayName)).toBeTruthy();
-  });
-
-  it('Should set the value attr with defaultValue prop value', () => {
-    const { getByTestId } = render(numberInputComponent);
-    const defaultValue = String(numberInputComponent.props.field.defaultValue);
-    const domValueAttr = getByTestId(
-      numberInputComponent.props.field.name
-    ).getAttribute('value');
-    expect(defaultValue).toBe(domValueAttr);
   });
 });

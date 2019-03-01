@@ -98,7 +98,7 @@ export default describe('AutoForm', () => {
     })
   );
 
-  it(`An untouched complex form with default values should be submittable`, async () => {
+  it(`An untouched complex form with valid default values should be submittable`, async () => {
     const { form, onSave } = testSampleForm(definitions);
     const { getByText } = render(form);
     fireEvent.click(getByText('Submit'));
