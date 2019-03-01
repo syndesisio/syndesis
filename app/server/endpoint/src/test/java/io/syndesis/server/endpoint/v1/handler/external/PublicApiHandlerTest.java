@@ -63,6 +63,7 @@ public class PublicApiHandlerTest {
     private static final String INTEGRATION_ID = "integration-id";
     private static final String INTEGRATION_NAME = "integration-name";
     private static final String ENVIRONMENT = "environment";
+    public static final String ENVIRONMENT2 = "new-" + ENVIRONMENT;
     private static final String NAME_PROPERTY = "name";
 
     private final DataManager dataManager = mock(DataManager.class);
@@ -220,6 +221,38 @@ public class PublicApiHandlerTest {
         formInput.setDeploy(Boolean.TRUE);
 
         handler.importResources(security, formInput);
+
+        // assert that integration was recreated
+        verify(dataManager).fetchAll(eq(Integration.class), any());
+        verify(dataManager, times(2)).update(any(Integration.class));
+
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void importResourcesNewEnvironment() throws Exception {
+        // export integration
+        final StreamingOutput streamingOutput = handler.exportResources(ENVIRONMENT, false);
+
+        // import it back
+        final SecurityContext security = mock(SecurityContext.class);
+        final Principal principal = mock(Principal.class);
+        when(security.getUserPrincipal()).thenReturn(principal);
+        when(principal.getName()).thenReturn("user");
+
+        PublicApiHandler.ImportFormDataInput formInput = new PublicApiHandler.ImportFormDataInput();
+        final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        streamingOutput.write(bytes);
+        formInput.setData(new ByteArrayInputStream(bytes.toByteArray()));
+        formInput.setProperties(new ByteArrayInputStream("test-connection.prop=value".getBytes("UTF-8")));
+        formInput.setEnvironment(ENVIRONMENT2);
+        formInput.setDeploy(Boolean.TRUE);
+
+        handler.importResources(security, formInput);
+
+        // validate that new environment tag was created
+        final Integration integration = dataManager.fetch(Integration.class, INTEGRATION_ID);
+        assertThat(integration.getContinuousDeliveryState().containsKey(ENVIRONMENT2), is(true));
 
         // assert that integration was recreated
         verify(dataManager).fetchAll(eq(Integration.class), any());
