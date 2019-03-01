@@ -2,7 +2,6 @@
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.syndesis/syndesis-parent/badge.svg?style=flat-square)](https://search.maven.org/search?q=g:io.syndesis)
 [![CircleCI](https://circleci.com/gh/syndesisio/syndesis/tree/master.svg?style=svg)](https://circleci.com/gh/syndesisio/syndesis/tree/master)
-[![CircleCI](https://circleci.com/gh/syndesisio/syndesis/tree/1.2.x.svg?style=svg)](https://circleci.com/gh/syndesisio/syndesis/tree/1.2.x)
 
 A flexible, customizable, open source platform that provides core integration capabilities as a service.
 
