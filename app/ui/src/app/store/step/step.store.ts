@@ -141,7 +141,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
       properties: {},
       configuredProperties: undefined
     }),
-    StepStore.requiresSplit({
+    StepStore.requiresConsistentSplitAggregate({
       id: undefined,
       connection: undefined,
       action: undefined,
@@ -373,13 +373,29 @@ $\{in.body.title\} // Evaluates true when body contains title.
     return obj;
   }
 
-  static requiresSplit(obj: StepKind): StepKind {
+  static requiresConsistentSplitAggregate(obj: StepKind): StepKind {
     obj.visible = (
       position: number,
       previousSteps: Array<Step>,
       subsequentSteps: Array<Step>
     ) => {
-      return previousSteps.filter(s => s.stepKind == SPLIT).length > 0;
+      const countPreviousSplit = previousSteps.filter(s => s.stepKind == SPLIT).length;
+      const countPreviousAggregate = previousSteps.filter(s => s.stepKind == AGGREGATE).length;
+
+      if (countPreviousSplit <= countPreviousAggregate) {
+        return false;
+      }
+
+      const positionNextSplit = subsequentSteps.findIndex(s => s.stepKind == SPLIT);
+      const positionNextAggregate = subsequentSteps.findIndex(s => s.stepKind == AGGREGATE);
+
+      if (positionNextSplit === -1) {
+        return positionNextAggregate === -1;
+      }
+
+      return positionNextAggregate === -1 || positionNextSplit < positionNextAggregate;
+
+
     };
     return obj;
   }
