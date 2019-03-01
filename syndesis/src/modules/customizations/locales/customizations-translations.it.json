@@ -13,6 +13,8 @@
   "extension": {
     "ConnectorExtension": "$t(shared:Extension) del $t(shared:Connector)",
     "deleteExtensionTip": "Elimina questa estensione",
+    "deleteModalMessage": "Sei sicuro di voler eliminare l'estensione \"{{name}}\"?",
+    "deleteModalTitle": "Conferma Elimina?",
     "detailsExtensionTip": "Visualizza i dettagli dell'estensione",
     "emptyStateInfoMessage": "Non ci sono estensioni disponibili. Si prega di fare clic sul pulsante qui sotto per importarne uno.",
     "emptyStateTitle": "$t(extension.ImportExtension)",

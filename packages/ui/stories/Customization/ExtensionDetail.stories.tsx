@@ -220,7 +220,12 @@ stories
       <ExtensionDetail
         extensionName={extension.name}
         extensionUses={extension.uses}
+        i18nCancelText={'Cancel'}
         i18nDelete={deleteText}
+        i18nDeleteModalMessage={
+          'Are you sure you want to delete the extension?'
+        }
+        i18nDeleteModalTitle={'Confirm Delete?'}
         i18nIdMessage={idMsg}
         i18nOverviewSectionTitle={overviewText}
         i18nSupportsSectionTitle={supportedStepsText}
@@ -262,7 +267,12 @@ stories
       <ExtensionDetail
         extensionName={notUsedExtension.name}
         extensionUses={notUsedExtension.uses}
+        i18nCancelText={'Cancel'}
         i18nDelete={deleteText}
+        i18nDeleteModalMessage={
+          'Are you sure you want to delete the extension?'
+        }
+        i18nDeleteModalTitle={'Confirm Delete?'}
         i18nDeleteTip={deleteTip}
         i18nIdMessage={idMsg}
         i18nOverviewSectionTitle={overviewText}
@@ -303,7 +313,12 @@ stories
       <ExtensionDetail
         extensionName={libraryExtension.name}
         extensionUses={libraryExtension.uses}
+        i18nCancelText={'Cancel'}
         i18nDelete={deleteText}
+        i18nDeleteModalMessage={
+          'Are you sure you want to delete the extension?'
+        }
+        i18nDeleteModalTitle={'Confirm Delete?'}
         i18nIdMessage={idMsg}
         i18nOverviewSectionTitle={overviewText}
         i18nSupportsSectionTitle={supportedLibrariesText}

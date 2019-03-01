@@ -1,4 +1,4 @@
-import { WithExtensions } from '@syndesis/api';
+import { WithExtensionHelpers, WithExtensions } from '@syndesis/api';
 import { Extension } from '@syndesis/models';
 import {
   ExtensionListItem,
@@ -92,135 +92,151 @@ export default class ExtensionsPage extends React.Component {
     return i18n.t('customizations:usedByMulti', { count: numUsedBy });
   }
 
-  public handleDelete(extensionId: string) {
-    // TODO: implement handleDelete
-    alert('Delete extension ' + extensionId);
-  }
-
-  public handleDetails(extensionId: string) {
-    // TODO: implement handleDetails
-    alert('Show details of extension ' + extensionId);
-  }
-
   public handleUpdate(extensionId: string) {
     // TODO: implement handleUpdate
-    alert('Update extension ' + extensionId);
+    // alert('Update extension ' + extensionId);
   }
 
   public render() {
     return (
-      <WithExtensions>
-        {({ data, hasData, error }) => (
-          <WithListViewToolbarHelpers
-            defaultFilterType={filterByName}
-            defaultSortType={sortByName}
-          >
-            {helpers => {
-              const filteredAndSorted = getFilteredAndSortedExtensions(
-                data.items,
-                helpers.activeFilters,
-                helpers.currentSortType,
-                helpers.isSortAscending
-              );
+      <WithExtensionHelpers>
+        {({ deleteExtension }) => {
+          const handleDelete = async (extensionId: string) => {
+            await deleteExtension(extensionId);
+            // TODO: post toast notification
+          };
+          return (
+            <WithExtensions>
+              {({ data, hasData, error }) => (
+                <WithListViewToolbarHelpers
+                  defaultFilterType={filterByName}
+                  defaultSortType={sortByName}
+                >
+                  {helpers => {
+                    const filteredAndSorted = getFilteredAndSortedExtensions(
+                      data.items,
+                      helpers.activeFilters,
+                      helpers.currentSortType,
+                      helpers.isSortAscending
+                    );
 
-              return (
-                <Translation ns={['customizations', 'shared']}>
-                  {t => (
-                    <>
-                      <CustomizationsNavBar />
-                      <ExtensionListView
-                        filterTypes={filterTypes}
-                        sortTypes={sortTypes}
-                        {...this.state}
-                        linkImportExtension={resolvers.extensions.import()}
-                        resultsCount={filteredAndSorted.length}
-                        {...helpers}
-                        i18nDescription={t(
-                          'extension.extensionsPageDescription'
+                    return (
+                      <Translation ns={['customizations', 'shared']}>
+                        {t => (
+                          <>
+                            <CustomizationsNavBar />
+                            <ExtensionListView
+                              filterTypes={filterTypes}
+                              sortTypes={sortTypes}
+                              {...this.state}
+                              linkImportExtension={resolvers.extensions.import()}
+                              resultsCount={filteredAndSorted.length}
+                              {...helpers}
+                              i18nDescription={t(
+                                'extension.extensionsPageDescription'
+                              )}
+                              i18nEmptyStateInfo={t(
+                                'extension.emptyStateInfoMessage'
+                              )}
+                              i18nEmptyStateTitle={t(
+                                'extension.emptyStateTitle'
+                              )}
+                              i18nLinkImportExtension={t(
+                                'extension.ImportExtension'
+                              )}
+                              i18nLinkImportExtensionTip={t(
+                                'extension.importExtensionTip'
+                              )}
+                              i18nName={t('shared:Name')}
+                              i18nNameFilterPlaceholder={t(
+                                'shared:nameFilterPlaceholder'
+                              )}
+                              i18nResultsCount={t('shared:resultsCount', {
+                                count: filteredAndSorted.length,
+                              })}
+                              i18nTitle={t('extension.extensionsPageTitle')}
+                            >
+                              <WithLoader
+                                error={error}
+                                loading={!hasData}
+                                loaderChildren={
+                                  <ExtensionListSkeleton
+                                    width={800}
+                                    style={{
+                                      backgroundColor: '#FFF',
+                                      marginTop: 30,
+                                    }}
+                                  />
+                                }
+                                errorChildren={<div>TODO</div>}
+                              >
+                                {() =>
+                                  filteredAndSorted
+                                    .filter((extension: Extension) =>
+                                      this.filterUndefinedId(extension)
+                                    )
+                                    .map(
+                                      (extension: Extension, index: number) => (
+                                        <ExtensionListItem
+                                          key={index}
+                                          detailsPageLink={resolvers.extensions.extension(
+                                            { extension }
+                                          )}
+                                          extensionDescription={
+                                            extension.description
+                                          }
+                                          extensionIcon={extension.icon}
+                                          extensionId={extension.id!}
+                                          extensionName={extension.name}
+                                          i18nCancelText={t('shared:Cancel')}
+                                          i18nDelete={t('shared:Delete')}
+                                          i18nDeleteModalMessage={t(
+                                            'extension.deleteModalMessage',
+                                            { name: extension.name }
+                                          )}
+                                          i18nDeleteModalTitle={t(
+                                            'extension.deleteModalTitle'
+                                          )}
+                                          i18nDeleteTip={t(
+                                            'extension.deleteExtensionTip'
+                                          )}
+                                          i18nDetails={t('shared:Details')}
+                                          i18nDetailsTip={t(
+                                            'extension.detailsExtensionTip'
+                                          )}
+                                          i18nExtensionType={this.getTypeName(
+                                            extension
+                                          )}
+                                          i18nUpdate={t('shared:Update')}
+                                          i18nUpdateTip={t(
+                                            'extension.updateExtensionTip'
+                                          )}
+                                          i18nUsedByMessage={this.getUsedByMessage(
+                                            extension
+                                          )}
+                                          onDelete={handleDelete}
+                                          onUpdate={this.handleUpdate}
+                                          usedBy={
+                                            // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
+                                            extension.uses as number
+                                          }
+                                        />
+                                      )
+                                    )
+                                }
+                              </WithLoader>
+                            </ExtensionListView>
+                          </>
                         )}
-                        i18nEmptyStateInfo={t(
-                          'extension.emptyStateInfoMessage'
-                        )}
-                        i18nEmptyStateTitle={t('extension.emptyStateTitle')}
-                        i18nLinkImportExtension={t('extension.ImportExtension')}
-                        i18nLinkImportExtensionTip={t(
-                          'extension.importExtensionTip'
-                        )}
-                        i18nName={t('shared:Name')}
-                        i18nNameFilterPlaceholder={t(
-                          'shared:nameFilterPlaceholder'
-                        )}
-                        i18nResultsCount={t('shared:resultsCount', {
-                          count: filteredAndSorted.length,
-                        })}
-                        i18nTitle={t('extension.extensionsPageTitle')}
-                      >
-                        <WithLoader
-                          error={error}
-                          loading={!hasData}
-                          loaderChildren={
-                            <ExtensionListSkeleton
-                              width={800}
-                              style={{
-                                backgroundColor: '#FFF',
-                                marginTop: 30,
-                              }}
-                            />
-                          }
-                          errorChildren={<div>TODO</div>}
-                        >
-                          {() =>
-                            filteredAndSorted
-                              .filter((extension: Extension) =>
-                                this.filterUndefinedId(extension)
-                              )
-                              .map((extension: Extension, index: number) => (
-                                <ExtensionListItem
-                                  key={index}
-                                  detailsPageLink={resolvers.extensions.extension(
-                                    { extension }
-                                  )}
-                                  extensionDescription={extension.description}
-                                  extensionIcon={extension.icon}
-                                  extensionId={extension.id!}
-                                  extensionName={extension.name}
-                                  i18nDelete={t('shared:Delete')}
-                                  i18nDeleteTip={t(
-                                    'extension.deleteExtensionTip'
-                                  )}
-                                  i18nDetails={t('shared:Details')}
-                                  i18nDetailsTip={t(
-                                    'extension.detailsExtensionTip'
-                                  )}
-                                  i18nExtensionType={this.getTypeName(
-                                    extension
-                                  )}
-                                  i18nUpdate={t('shared:Update')}
-                                  i18nUpdateTip={t(
-                                    'extension.updateExtensionTip'
-                                  )}
-                                  i18nUsedByMessage={this.getUsedByMessage(
-                                    extension
-                                  )}
-                                  onDelete={this.handleDelete}
-                                  onUpdate={this.handleUpdate}
-                                  usedBy={
-                                    // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
-                                    extension.uses as number
-                                  }
-                                />
-                              ))
-                          }
-                        </WithLoader>
-                      </ExtensionListView>
-                    </>
-                  )}
-                </Translation>
-              );
-            }}
-          </WithListViewToolbarHelpers>
-        )}
-      </WithExtensions>
+                      </Translation>
+                    );
+                  }}
+                </WithListViewToolbarHelpers>
+              )}
+            </WithExtensions>
+          );
+        }}
+      </WithExtensionHelpers>
     );
   }
 }

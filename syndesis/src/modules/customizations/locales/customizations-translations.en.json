@@ -13,6 +13,8 @@
   "extension": {
     "ConnectorExtension": "$t(shared:Connector) $t(shared:Extension)",
     "deleteExtensionTip": "Delete this extension",
+    "deleteModalMessage": "Are you sure you want to delete the \"{{name}}\" extension?",
+    "deleteModalTitle": "Confirm Delete?",
     "detailsExtensionTip": "View extension details",
     "emptyStateInfoMessage": "There are no extensions available. Please click on the button below to import one.",
     "emptyStateTitle": "$t(extension.ImportExtension)",
