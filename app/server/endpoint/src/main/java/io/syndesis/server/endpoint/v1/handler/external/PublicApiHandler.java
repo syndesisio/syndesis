@@ -354,7 +354,7 @@ public class PublicApiHandler {
         final StreamingOutput output = handler.export(ids);
 
         // update lastExportedAt
-        updateCDEnvironments(integrations.getItems(), environment, b -> b.lastExportedAt(exportedAt));
+        updateCDEnvironments(integrations.getItems(), environment, exportedAt, b -> b.lastExportedAt(exportedAt));
 
         LOG.debug("Exported ({}) integrations for environment {}", ids.size(), environment);
         return output;
@@ -402,7 +402,7 @@ public class PublicApiHandler {
             final List<Integration> integrations = getResourcesOfType(results, Integration.class);
 
             // update importedAt field for imported integrations
-            updateCDEnvironments(integrations, environment, b -> b.lastImportedAt(lastImportedAt));
+            updateCDEnvironments(integrations, environment, lastImportedAt, b -> b.lastImportedAt(lastImportedAt));
 
             // optional connection properties configuration file
             final InputStream properties = formInput.getProperties();
@@ -585,15 +585,16 @@ public class PublicApiHandler {
                         .collect(Collectors.toList());
     }
 
-    private void updateCDEnvironments(List<Integration> integrations, String environment,
+    private void updateCDEnvironments(List<Integration> integrations, String environment, Date taggedAt,
                                       Function<ContinuousDeliveryEnvironment.Builder, ContinuousDeliveryEnvironment.Builder> operator) {
-        integrations.forEach(i -> updateCDEnvironment(i, environment, operator));
+        integrations.forEach(i -> updateCDEnvironment(i, environment, taggedAt, operator));
     }
 
-    private void updateCDEnvironment(Integration integration, String environment,
+    private void updateCDEnvironment(Integration integration, String environment, Date taggedAt,
                                      Function<ContinuousDeliveryEnvironment.Builder, ContinuousDeliveryEnvironment.Builder> operator) {
         final Map<String, ContinuousDeliveryEnvironment> map = new HashMap<>(integration.getContinuousDeliveryState());
-        map.put(environment, operator.apply(map.get(environment).builder()).build());
+        map.put(environment, operator.apply(map.getOrDefault(environment,
+                ContinuousDeliveryEnvironment.Builder.createFrom(environment, taggedAt)).builder()).build());
         dataMgr.update(integration.builder().continuousDeliveryState(map).build());
     }
 
