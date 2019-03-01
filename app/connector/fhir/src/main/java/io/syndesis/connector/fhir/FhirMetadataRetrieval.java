@@ -139,15 +139,18 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                     .description("FHIR " + actionId)
                     .name(actionId).build());
         } else if (actionId.contains("transaction")) {
+            String specification = newResourceSpecification(type, containedResourceTypes);
             return new SyndesisMetadata(
                 enrichedProperties,
                 new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA_INSPECTED)//
                     .type(type)
                     .description("FHIR " + type)
-                    .specification(newResourceSpecification(type, containedResourceTypes))
+                    .specification(specification)
                     .name(type).build(),
-                new DataShape.Builder().kind(DataShapeKinds.NONE)//
-                    .description("FHIR " + actionId)
+                new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA_INSPECTED)//
+                    .type(type)
+                    .description("FHIR " + type)
+                    .specification(specification)
                     .name(actionId).build());
         } else {
             //create, update

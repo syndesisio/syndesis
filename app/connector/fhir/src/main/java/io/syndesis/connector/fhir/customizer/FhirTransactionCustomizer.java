@@ -16,6 +16,7 @@
 package io.syndesis.connector.fhir.customizer;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.parser.IParser;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -55,6 +56,7 @@ public class FhirTransactionCustomizer implements ComponentProxyCustomizer {
         options.put("methodName", "withResources");
 
         component.setBeforeProducer(this::beforeProducer);
+        component.setAfterProducer(this::afterProducer);
     }
 
     public void beforeProducer(Exchange exchange) {
@@ -68,11 +70,12 @@ public class FhirTransactionCustomizer implements ComponentProxyCustomizer {
                 Document doc = dbf.newDocumentBuilder().parse(new ByteArrayInputStream(body.getBytes("UTF-8")));
                 Node transactionElement = doc.getFirstChild();
                 NodeList childNodes = transactionElement.getChildNodes();
+                IParser parser = fhirContext.newXmlParser();
                 for (int i = 0; i < childNodes.getLength(); i++) {
                     Node resourceNode = childNodes.item(i);
                     Document resourceDocument = toDocument(resourceNode, dbf);
                     String resourceXml = toXml(resourceDocument);
-                    IBaseResource resource = fhirContext.newXmlParser().parseResource(resourceXml);
+                    IBaseResource resource = parser.parseResource(resourceXml);
                     resources.add(resource);
                 }
             } catch (SAXException | IOException | ParserConfigurationException | TransformerException e) {
@@ -81,6 +84,23 @@ public class FhirTransactionCustomizer implements ComponentProxyCustomizer {
 
             in.setHeader("CamelFhir.resources", resources);
         }
+    }
+
+    public void afterProducer(Exchange exchange) {
+        final Message in = exchange.getIn();
+        @SuppressWarnings("unchecked")
+        List<IBaseResource> body = in.getBody(List.class);
+
+        StringBuilder transaction = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
+            "<Transaction xmlns=\"http://hl7.org/fhir\">");
+        IParser parser = fhirContext.newXmlParser();
+        for (IBaseResource resource: body) {
+            String encodedResource = parser.encodeResourceToString(resource);
+            transaction.append(encodedResource);
+        }
+        transaction.append("</Transaction>");
+
+        in.setBody(transaction.toString());
     }
 
     private Document toDocument(Node resourceNode, DocumentBuilderFactory dbf) throws ParserConfigurationException {

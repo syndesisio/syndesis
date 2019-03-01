@@ -1079,7 +1079,7 @@
               <xs:documentation xml:lang="en">A full text representation of the address.</xs:documentation>
             </xs:annotation>
           </xs:element>
-          <xs:element name="line" type="string" minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="line" type="string" minOccurs="0" maxOccurs="1">
             <xs:annotation>
               <xs:documentation xml:lang="en">This component contains the house number, apartment number, street name, street direction,  P.O. Box number, delivery hints, and similar address information.</xs:documentation>
             </xs:annotation>
@@ -1663,17 +1663,17 @@
               <xs:documentation xml:lang="en">The part of a name that links to the genealogy. In some cultures (e.g. Eritrea) the family name of a son is the first name of his father.</xs:documentation>
             </xs:annotation>
           </xs:element>
-          <xs:element name="given" type="string" minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="given" type="string" minOccurs="0" maxOccurs="1">
             <xs:annotation>
               <xs:documentation xml:lang="en">Given name.</xs:documentation>
             </xs:annotation>
           </xs:element>
-          <xs:element name="prefix" type="string" minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="prefix" type="string" minOccurs="0" maxOccurs="1">
             <xs:annotation>
               <xs:documentation xml:lang="en">Part of the name that is acquired as a title due to academic, legal, employment or nobility status, etc. and that appears at the start of the name.</xs:documentation>
             </xs:annotation>
           </xs:element>
-          <xs:element name="suffix" type="string" minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="suffix" type="string" minOccurs="0" maxOccurs="1">
             <xs:annotation>
               <xs:documentation xml:lang="en">Part of the name that is acquired as a title due to academic, legal, employment or nobility status, etc. and that appears at the end of the name.</xs:documentation>
             </xs:annotation>
