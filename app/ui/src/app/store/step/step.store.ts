@@ -394,8 +394,6 @@ $\{in.body.title\} // Evaluates true when body contains title.
       }
 
       return positionNextAggregate === -1 || positionNextSplit < positionNextAggregate;
-
-
     };
     return obj;
   }
