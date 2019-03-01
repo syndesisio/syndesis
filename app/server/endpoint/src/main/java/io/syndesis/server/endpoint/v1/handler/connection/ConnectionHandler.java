@@ -20,10 +20,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.Cookie;
@@ -52,7 +49,6 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.ConnectionOverview;
 import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.server.credential.CredentialFlowState;
 import io.syndesis.server.credential.Credentials;
@@ -109,7 +105,7 @@ public class ConnectionHandler
     public ListResult<ConnectionOverview> list(@Context UriInfo uriInfo) {
         final DataManager dataManager = getDataManager();
         final ListResult<Connection> connectionResults = fetchAll(Connection.class, uriInfo);
-        final List<Connection> connections = augmentedWithUsage(connectionResults.getItems());
+        final List<Connection> connections = connectionResults.getItems();
         final List<ConnectionOverview> overviews = new ArrayList<>(connectionResults.getTotalCount());
 
         for (Connection connection : connections) {
@@ -131,8 +127,7 @@ public class ConnectionHandler
     @Override
     public ConnectionOverview get(final String id) {
         final DataManager dataManager = getDataManager();
-        Connection connection = dataManager.fetch(Connection.class, id);
-        connection = augmentedWithUsage(connection);
+        final Connection connection = dataManager.fetch(Connection.class, id);
 
         if( connection == null ) {
             throw new EntityNotFoundException();
@@ -235,40 +230,4 @@ public class ConnectionHandler
         return validator;
     }
 
-    Connection augmentedWithUsage(final Connection connection) {
-        if (connection == null) {
-            return null;
-        }
-
-        return augmentedWithUsage(Collections.singletonList(connection)).get(0);
-    }
-
-    List<Connection> augmentedWithUsage(final List<Connection> connections) {
-        if (connections == null || connections.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        final ListResult<Integration> integrationsResult = getDataManager().fetchAll(Integration.class);
-        if (integrationsResult == null || integrationsResult.getTotalCount() == 0) {
-            return connections.stream().map(c -> c.builder().uses(0).build()).collect(Collectors.toList());
-        }
-
-        final List<Integration> integrations = integrationsResult.getItems();
-
-        final Map<String, Long> connectionUsage = Stream.concat(
-            integrations.stream().filter(i -> !i.isDeleted()).flatMap(i -> i.getConnections().stream()),
-            Stream.concat(
-                integrations.stream().filter(i -> !i.isDeleted()).flatMap(i -> i.getFlows().stream().flatMap(f -> f.getConnections().stream())),
-                integrations.stream().filter(i -> !i.isDeleted()).flatMap(i -> i.getFlows().stream().flatMap(f-> f.getSteps().stream())
-                    .map(s -> s.getConnection()).filter(Optional::isPresent).map(Optional::get))
-                )
-            ).collect(Collectors.groupingBy(c -> c.getId().get(), Collectors.counting()));
-
-        return connections.stream()//
-            .map(c -> {
-                final int uses = connectionUsage.getOrDefault(c.getId().get(), 0L).intValue();
-                return c.builder().uses(uses).build();
-            })//
-            .collect(Collectors.toList());
-    }
 }

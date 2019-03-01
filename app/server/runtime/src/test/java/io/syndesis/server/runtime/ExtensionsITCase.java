@@ -18,11 +18,11 @@ package io.syndesis.server.runtime;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.ResourceIdentifier;
@@ -49,9 +49,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 public class ExtensionsITCase extends BaseITCase {
+
+    private static final ParameterizedTypeReference<Map<String, Object>> RAW = new ParameterizedTypeReference<Map<String, Object>>() {
+        // type token pattern
+    };
 
     @Test
     public void basicConnectivityTest() {
@@ -320,15 +327,10 @@ public class ExtensionsITCase extends BaseITCase {
         ResponseEntity<Extension> got1 = get("/api/v1/extensions/" + id,
             Extension.class, tokenRule.validToken(), HttpStatus.OK);
 
-        assertThat(got1.getBody().getUses()).hasValue(0);
+        assertThat(got1.getBody().getUses()).isEqualTo(0);
 
-        // Create a active integration that uses the extension
-        dataManager.create(new IntegrationDeployment.Builder()
-            .version(1)
-            .targetState(IntegrationDeploymentState.Published)
-            .currentState(IntegrationDeploymentState.Published)
-            .createdAt(System.currentTimeMillis())
-            .spec(new Integration.Builder()
+        // Create a integration that uses the extension
+        dataManager.create(new Integration.Builder()
                 .id("integration-extension")
                 .name("test")
                 .addFlow(new Flow.Builder()
@@ -342,24 +344,22 @@ public class ExtensionsITCase extends BaseITCase {
                                 .build())
                         .build())
                     .build())
-                .build())
-            .build());
+                .build());
 
+        await().atMost(10, TimeUnit.SECONDS).pollInterval(250, TimeUnit.MILLISECONDS).untilAsserted(() -> {
+            // Get extension details again, we need to use RAW here as Jackson will not be able
+            // to write the `uses` property (access = READ_ONLY)
+            final ResponseEntity<Map<String, Object>> got = get("/api/v1/extensions/" + id,
+                RAW, tokenRule.validToken(), HttpStatus.OK);
 
-        // Get extension details again
-        ResponseEntity<Extension> got2 = get("/api/v1/extensions/" + id,
-            Extension.class, tokenRule.validToken(), HttpStatus.OK);
-
-
-        assertThat(got2.getBody().getUses()).hasValue(1);
+            assertThat(got.getBody().get("uses")).isEqualTo(1);
+        });
 
         // Get extension list
         ResponseEntity<ListResult<Extension>> list = get("/api/v1/extensions",
             new ParameterizedTypeReference<ListResult<Extension>>() {}, tokenRule.validToken(), HttpStatus.OK);
 
         assertThat(list.getBody().getItems()).hasSize(1);
-
-        dataManager.delete(IntegrationDeployment.class, "integration-extension:1");
     }
 
 

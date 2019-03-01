@@ -30,6 +30,8 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.dao.manager.DataAccessObject;
@@ -42,10 +44,17 @@ import io.syndesis.server.jsondb.JsonDB;
  */
 public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject<T> {
 
+    private final ObjectReader reader;
+
     private final JsonDB jsondb;
 
     public JsonDbDao(JsonDB jsondb) {
         this.jsondb = jsondb;
+
+        reader = Json.copyObjectMapperConfiguration()
+            .addMixIn(Connection.Builder.class, CanWriteUsage.class)
+            .addMixIn(Extension.Builder.class, CanWriteUsage.class)
+            .reader();
     }
 
     public String getCollectionPath() {
@@ -60,7 +69,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
             if( json==null || json.length == 0 ) {
                 return null;
             }
-            return Json.reader().forType(getType()).readValue(json);
+            return reader.forType(getType()).readValue(json);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
@@ -98,7 +107,6 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
             if( json!=null && json.length > 0 ) {
 
                 // Lets use jackson to parse the map of keys to our model instances
-                ObjectReader reader = Json.reader();
                 TypeFactory typeFactory = reader.getTypeFactory();
                 MapType mapType = typeFactory.constructMapType(LinkedHashMap.class, String.class, getType());
                 LinkedHashMap<String, T> map = reader.forType(mapType).readValue(json);
@@ -128,7 +136,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
 
             String json = jsondb.getAsString(getCollectionPath(), new GetOptions().depth(1));
             if (json != null) {
-                Map<String,Boolean> map = Json.reader().forType(new TypeReference<Map<String,Boolean>>() {}).readValue(json);
+                Map<String,Boolean> map = reader.forType(new TypeReference<Map<String,Boolean>>() {}).readValue(json);
                 return map.keySet()
                      .stream().map(path -> path.substring(path.indexOf(':') + 1)).collect(Collectors.toSet());
             } else {

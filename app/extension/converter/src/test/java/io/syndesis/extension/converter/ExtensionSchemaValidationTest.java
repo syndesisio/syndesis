@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.OptionalInt;
 
 import static org.junit.Assert.*;
 
@@ -64,7 +63,6 @@ public class ExtensionSchemaValidationTest {
             .extensionId("my-extension")
             .name("Name")
             .description("Description")
-            .uses(OptionalInt.empty())
             .version("1.0.0")
             .schemaVersion(ExtensionConverter.getCurrentSchemaVersion())
             .addAction(new StepAction.Builder()

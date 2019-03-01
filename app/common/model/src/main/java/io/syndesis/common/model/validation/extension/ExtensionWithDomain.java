@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.SortedSet;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -84,7 +83,7 @@ public class ExtensionWithDomain extends TargetWithDomain<Extension> implements 
     }
 
     @Override
-    public OptionalInt getUses() {
+    public int getUses() {
         return getTarget().getUses();
     }
 
