@@ -23,8 +23,8 @@ rules:
   - syndesis.io
   resources:
   - "*"
-  verbs:
-  - "*"
+  - "*/finalizers"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - ""
   resources:
@@ -35,8 +35,7 @@ rules:
   - configmaps
   - secrets
   - serviceaccounts
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - ""
   resources:
@@ -47,51 +46,43 @@ rules:
   resources:
   - roles
   - rolebindings
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - template.openshift.io
   resources:
   - processedtemplates
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - image.openshift.io
   resources:
   - imagestreams
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - apps.openshift.io
   resources:
   - deploymentconfigs
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - build.openshift.io
   resources:
   - buildconfigs
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - authorization.openshift.io
   resources:
   - rolebindings
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - route.openshift.io
   resources:
   - routes
   - routes/custom-host
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - camel.apache.org
   resources:
   - "*"
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - monitoring.coreos.com
   resources:
@@ -99,14 +90,12 @@ rules:
   - prometheuses
   - servicemonitors
   - prometheusrules
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - integreatly.org
   resources:
   - grafanadashboards
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1

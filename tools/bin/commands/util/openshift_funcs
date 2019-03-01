@@ -239,14 +239,35 @@ rules:
 - apiGroups:
   - syndesis.io
   resources:
-  - syndesises
-  - syndesises/finalizers
+  - "*"
+  - "*/finalisers"
   verbs:
   - "*"
 - apiGroups:
   - route.openshift.io
   resources:
   - routes/custom-host
+  verbs:
+  - "*"
+- apiGroups:
+  - camel.apache.org
+  resources:
+  - "*"
+  verbs:
+  - "*"
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - alertmanagers
+  - prometheuses
+  - servicemonitors
+  - prometheusrules
+  verbs:
+  - "*"
+- apiGroups:
+  - integreatly.org
+  resources:
+  - grafanadashboards
   verbs:
   - "*"
 ---
