@@ -53,24 +53,26 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
 
     private final List<Function<SwaggerModelInfo, SwaggerModelInfo>> rules = new ArrayList<>();
 
-    private SyndesisSwaggerValidationRules(APIValidationContext context) {
+    private SyndesisSwaggerValidationRules(final APIValidationContext context) {
         switch (context) {
-            case CONSUMED_API:
-                rules.add(SyndesisSwaggerValidationRules::validateResponses);
-                rules.add(SyndesisSwaggerValidationRules::validateConsumedAuthTypes);
-                rules.add(SyndesisSwaggerValidationRules::validateScheme);
-                rules.add(SyndesisSwaggerValidationRules::validateUniqueOperationIds);
-                return;
-            case PROVIDED_API:
-                rules.add(SyndesisSwaggerValidationRules::validateResponses);
-                rules.add(SyndesisSwaggerValidationRules::validateProvidedAuthTypes);
-                rules.add(SyndesisSwaggerValidationRules::validateUniqueOperationIds);
-                rules.add(SyndesisSwaggerValidationRules::validateNoMissingOperationIds);
-                return;
-            case NONE:
-                return;
-            default:
-                throw new IllegalArgumentException("Unsupported validation context " + context);
+        case CONSUMED_API:
+            rules.add(SyndesisSwaggerValidationRules::validateResponses);
+            rules.add(SyndesisSwaggerValidationRules::validateConsumedAuthTypes);
+            rules.add(SyndesisSwaggerValidationRules::validateScheme);
+            rules.add(SyndesisSwaggerValidationRules::validateUniqueOperationIds);
+            rules.add(SyndesisSwaggerValidationRules::validateCyclicReferences);
+            return;
+        case PROVIDED_API:
+            rules.add(SyndesisSwaggerValidationRules::validateResponses);
+            rules.add(SyndesisSwaggerValidationRules::validateProvidedAuthTypes);
+            rules.add(SyndesisSwaggerValidationRules::validateUniqueOperationIds);
+            rules.add(SyndesisSwaggerValidationRules::validateNoMissingOperationIds);
+            rules.add(SyndesisSwaggerValidationRules::validateCyclicReferences);
+            return;
+        case NONE:
+            return;
+        default:
+            throw new IllegalArgumentException("Unsupported validation context " + context);
         }
     }
 
@@ -79,28 +81,14 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
         return rules.stream().reduce(Function::compose).map(f -> f.apply(swaggerModelInfo)).orElse(swaggerModelInfo);
     }
 
-    public static SyndesisSwaggerValidationRules get(APIValidationContext context) {
+    public static SyndesisSwaggerValidationRules get(final APIValidationContext context) {
         return new SyndesisSwaggerValidationRules(context);
-    }
-
-    /**
-     * Check if all operations contains valid authentication types for consumed APIs.
-     */
-    static SwaggerModelInfo validateConsumedAuthTypes(final SwaggerModelInfo swaggerModelInfo) {
-        return validateAuthTypesIn(swaggerModelInfo, SUPPORTED_CONSUMED_AUTH_TYPES);
-    }
-
-    /**
-     * Check if all operations contains valid authentication types for provided APIs.
-     */
-    static SwaggerModelInfo validateProvidedAuthTypes(final SwaggerModelInfo swaggerModelInfo) {
-        return validateAuthTypesIn(swaggerModelInfo, Collections.emptySet());
     }
 
     /**
      * Check if all operations contains valid authentication types
      */
-    static SwaggerModelInfo validateAuthTypesIn(final SwaggerModelInfo swaggerModelInfo, Set<String> validAuthTypes) {
+    static SwaggerModelInfo validateAuthTypesIn(final SwaggerModelInfo swaggerModelInfo, final Set<String> validAuthTypes) {
 
         if (swaggerModelInfo.getModel() == null) {
             return swaggerModelInfo;
@@ -121,6 +109,58 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
         }
 
         return withWarnings.build();
+    }
+
+    /**
+     * Check if all operations contains valid authentication types for consumed
+     * APIs.
+     */
+    static SwaggerModelInfo validateConsumedAuthTypes(final SwaggerModelInfo swaggerModelInfo) {
+        return validateAuthTypesIn(swaggerModelInfo, SUPPORTED_CONSUMED_AUTH_TYPES);
+    }
+
+    static SwaggerModelInfo validateCyclicReferences(final SwaggerModelInfo info) {
+        if (CyclicValidationCheck.hasCyclicReferences(info.getModel())) {
+            return new SwaggerModelInfo.Builder().createFrom(info)
+                .addError(new Violation.Builder()
+                    .error("cyclic-schema")
+                    .message("Cyclic references are not suported")
+                    .build())
+                .build();
+        }
+
+        return info;
+    }
+
+    static SwaggerModelInfo validateNoMissingOperationIds(final SwaggerModelInfo info) {
+        final Swagger swagger = info.getModel();
+        if (swagger == null) {
+            return info;
+        }
+
+        final long countNoOpId = swagger.getPaths().values().stream()
+            .flatMap(p -> p.getOperationMap().values().stream())
+            .filter(o -> o.getOperationId() == null)
+            .count();
+
+        if (countNoOpId == 0) {
+            return info;
+        }
+
+        final SwaggerModelInfo.Builder withWarnings = new SwaggerModelInfo.Builder().createFrom(info);
+        withWarnings.addWarning(new Violation.Builder()//
+            .error("missing-operation-ids")
+            .message("Some operations (" + countNoOpId + ") have no operationId").build());
+
+        return withWarnings.build();
+    }
+
+    /**
+     * Check if all operations contains valid authentication types for provided
+     * APIs.
+     */
+    static SwaggerModelInfo validateProvidedAuthTypes(final SwaggerModelInfo swaggerModelInfo) {
+        return validateAuthTypesIn(swaggerModelInfo, Collections.emptySet());
     }
 
     /**
@@ -244,29 +284,6 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
         withWarnings.addWarning(new Violation.Builder()//
             .error("non-unique-operation-ids")
             .message("Found operations with non unique operationIds: " + String.join(", ", nonUnique.keySet())).build());
-
-        return withWarnings.build();
-    }
-
-    static SwaggerModelInfo validateNoMissingOperationIds(final SwaggerModelInfo info) {
-        final Swagger swagger = info.getModel();
-        if (swagger == null) {
-            return info;
-        }
-
-        long countNoOpId = swagger.getPaths().values().stream()
-            .flatMap(p -> p.getOperationMap().values().stream())
-            .filter(o -> o.getOperationId() == null)
-            .count();
-
-        if (countNoOpId == 0) {
-            return info;
-        }
-
-        final SwaggerModelInfo.Builder withWarnings = new SwaggerModelInfo.Builder().createFrom(info);
-        withWarnings.addWarning(new Violation.Builder()//
-            .error("missing-operation-ids")
-            .message("Some operations (" + countNoOpId + ") have no operationId").build());
 
         return withWarnings.build();
     }

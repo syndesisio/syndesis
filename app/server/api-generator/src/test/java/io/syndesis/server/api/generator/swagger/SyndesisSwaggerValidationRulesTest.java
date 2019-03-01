@@ -19,7 +19,10 @@ import java.util.List;
 
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
+import io.swagger.models.RefModel;
+import io.swagger.models.Response;
 import io.swagger.models.Swagger;
+import io.swagger.models.parameters.RefParameter;
 import io.syndesis.common.model.Violation;
 
 import org.junit.Test;
@@ -27,6 +30,53 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SyndesisSwaggerValidationRulesTest {
+
+    @Test
+    public void cyclicSchemaReferencesValidationShouldOperateOnParsedModel() {
+        final SwaggerModelInfo info = new SwaggerModelInfo.Builder().build();
+
+        final SwaggerModelInfo validated = SyndesisSwaggerValidationRules.validateCyclicReferences(info);
+        assertThat(validated).isSameAs(info);
+    }
+
+    @Test
+    public void shouldNotReportIssuesForNonCyclicSchemaReferences() {
+        final Swagger swagger = new Swagger();
+        swagger.path("/api", new Path()
+            .post(new Operation()
+                .parameter(new RefParameter("#/definitions/Request"))
+                .response(200, new Response()
+                    .responseSchema(new RefModel("#/definitions/Response")))));
+
+        final SwaggerModelInfo info = new SwaggerModelInfo.Builder().model(swagger).build();
+
+        final SwaggerModelInfo validated = SyndesisSwaggerValidationRules.validateCyclicReferences(info);
+        assertThat(validated).isEqualTo(info);
+    }
+
+    @Test
+    public void shouldNotReportIssuesForTrivialSwagger() {
+        final Swagger swagger = new Swagger();
+        final SwaggerModelInfo info = new SwaggerModelInfo.Builder().model(swagger).build();
+
+        final SwaggerModelInfo validated = SyndesisSwaggerValidationRules.validateCyclicReferences(info);
+        assertThat(validated).isEqualTo(info);
+    }
+
+    @Test
+    public void shouldReportIssuesForCyclicSchemaReferences() {
+        final Swagger swagger = new Swagger()
+            .path("/api", new Path()
+                .post(new Operation()
+                    .parameter(new RefParameter("#/definitions/Request"))));
+
+        swagger.addDefinition("Request", new RefModel("#definitions/Request"));
+
+        final SwaggerModelInfo info = new SwaggerModelInfo.Builder().model(swagger).build();
+
+        final SwaggerModelInfo validated = SyndesisSwaggerValidationRules.validateCyclicReferences(info);
+        assertThat(validated.getErrors()).containsOnly(new Violation.Builder().error("cyclic-schema").message("Cyclic references are not suported").build());
+    }
 
     @Test
     public void shouldValidateOperationUniqueness() {
