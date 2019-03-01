@@ -10,6 +10,7 @@
         ],
         "inputDataShape": {
           "kind": "java",
+          "name": "Message",
           "type": "io.syndesis.connector.slack.SlackPlainMessage"
         },
         "outputDataShape": {
@@ -49,6 +50,7 @@
         ],
         "inputDataShape": {
           "kind": "java",
+          "name": "Message",
           "type": "io.syndesis.connector.slack.SlackPlainMessage"
         },
         "outputDataShape": {
@@ -91,6 +93,7 @@
         },
         "outputDataShape": {
           "kind": "java",
+          "name": "Message",
           "type": "org.apache.camel.component.slack.helper.SlackMessage"
         },
         "propertyDefinitionSteps": [

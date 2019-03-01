@@ -17,6 +17,7 @@
         },
         "outputDataShape": {
           "kind": "java",
+          "name": "SalesforceRecord",
           "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
         },
         "propertyDefinitionSteps": [
@@ -62,6 +63,7 @@
         ],
         "inputDataShape": {
           "kind": "java",
+          "name": "SalesforceID",
           "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
         },
         "outputDataShape": {
@@ -111,6 +113,7 @@
         ],
         "inputDataShape": {
           "kind": "java",
+          "name": "SalesforceID",
           "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
         },
         "outputDataShape": {
@@ -180,6 +183,7 @@
         ],
         "inputDataShape": {
           "kind": "java",
+          "name": "SalesforceID",
           "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
         },
         "outputDataShape": {
@@ -229,6 +233,7 @@
         ],
         "inputDataShape": {
           "kind": "java",
+          "name": "SalesforceID",
           "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
         },
         "outputDataShape": {
@@ -349,6 +354,7 @@
         },
         "outputDataShape": {
           "kind": "java",
+          "name": "SalesforceRecord",
           "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
         },
         "propertyDefinitionSteps": [
@@ -520,6 +526,7 @@
         },
         "outputDataShape": {
           "kind": "java",
+          "name": "SalesforceID",
           "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
         },
         "propertyDefinitionSteps": [

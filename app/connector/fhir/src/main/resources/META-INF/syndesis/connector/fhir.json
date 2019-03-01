@@ -9,6 +9,7 @@
         ],
         "inputDataShape": {
           "kind": "java",
+          "name": "ResourceId",
           "type": "io.syndesis.connector.fhir.FhirResourceId"
         },
         "outputDataShape": {
@@ -84,6 +85,7 @@
         ],
         "inputDataShape": {
           "kind": "java",
+          "name": "ResourceQuery",
           "type": "io.syndesis.connector.fhir.FhirResourceQuery"
         },
         "outputDataShape": {
@@ -136,10 +138,12 @@
         ],
         "inputDataShape": {
           "kind": "java",
+          "name": "ResourceId",
           "type": "io.syndesis.connector.fhir.FhirResourceId"
         },
         "outputDataShape": {
           "kind": "java",
+          "name": "Outcome",
           "type": "ca.uhn.fhir.rest.api.MethodOutcome"
         },
         "propertyDefinitionSteps": [
@@ -204,6 +208,7 @@
         },
         "outputDataShape": {
           "kind": "java",
+          "name": "Outcome",
           "type": "ca.uhn.fhir.rest.api.MethodOutcome"
         },
         "propertyDefinitionSteps": [
@@ -258,6 +263,7 @@
         },
         "outputDataShape": {
           "kind": "java",
+          "name": "Outcome",
           "type": "ca.uhn.fhir.rest.api.MethodOutcome"
         },
         "propertyDefinitionSteps": [
@@ -335,6 +341,7 @@
         },
         "outputDataShape": {
           "kind": "java",
+          "name": "Outcome",
           "type": "ca.uhn.fhir.rest.api.MethodOutcome"
         },
         "propertyDefinitionSteps": [
