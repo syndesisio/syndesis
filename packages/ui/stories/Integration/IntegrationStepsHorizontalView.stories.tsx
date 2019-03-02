@@ -1,4 +1,4 @@
-import { object } from '@storybook/addon-knobs';
+// import { object } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
