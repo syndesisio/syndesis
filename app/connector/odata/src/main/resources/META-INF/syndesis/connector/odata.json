@@ -171,6 +171,7 @@
         ],
         "inputDataShape": {
           "kind": "java",
+          "name": "ODataEntityID",
           "type": "java.lang.String"
         },
         "outputDataShape": {
