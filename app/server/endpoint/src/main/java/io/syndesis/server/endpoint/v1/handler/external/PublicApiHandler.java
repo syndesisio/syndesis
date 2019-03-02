@@ -40,7 +40,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -303,7 +302,7 @@ public class PublicApiHandler {
     @GET
     @Path("integrations/{env}/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public StreamingOutput exportResources(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
+    public Response exportResources(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
                                     @QueryParam("all") @ApiParam boolean exportAll) throws IOException {
 
         // validate environment
@@ -350,7 +349,7 @@ public class PublicApiHandler {
                 .collect(Collectors.toList());
 
         if (ids.isEmpty()) {
-            throw new WebApplicationException("No integrations to export", Response.Status.NO_CONTENT);
+            return Response.status(Response.Status.NO_CONTENT.getStatusCode(), "No integrations to export").build();
         }
 
         final Date exportedAt = new Date();
@@ -360,7 +359,7 @@ public class PublicApiHandler {
         updateCDEnvironments(integrations.getItems(), environment, exportedAt, b -> b.lastExportedAt(exportedAt));
 
         LOG.debug("Exported ({}) integrations for environment {}", ids.size(), environment);
-        return output;
+        return Response.ok(output).build();
     }
 
     private void validateParam(String name, String param) {
