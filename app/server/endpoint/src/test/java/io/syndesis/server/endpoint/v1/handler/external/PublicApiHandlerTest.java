@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 
@@ -199,8 +200,9 @@ public class PublicApiHandlerTest {
     @Test
     @SuppressWarnings("unchecked")
     public void exportResources() throws Exception {
-        final StreamingOutput streamingOutput = handler.exportResources(ENVIRONMENT, false);
-        assertThat(streamingOutput, is(notNullValue()));
+        final Response response = handler.exportResources(ENVIRONMENT, false);
+        assertThat(response, is(notNullValue()));
+        assertThat(response.getStatusInfo().toEnum(), is(Response.Status.OK));
 
         verify(dataManager).fetchAll(eq(Integration.class), any(Function.class));
         verify(dataManager).update(any(Integration.class));
@@ -210,7 +212,7 @@ public class PublicApiHandlerTest {
     @SuppressWarnings("unchecked")
     public void importResources() throws Exception {
         // export integration
-        final StreamingOutput streamingOutput = handler.exportResources(ENVIRONMENT, false);
+        final Response response = handler.exportResources(ENVIRONMENT, false);
 
         // import it back
         final SecurityContext security = mock(SecurityContext.class);
@@ -220,7 +222,7 @@ public class PublicApiHandlerTest {
 
         PublicApiHandler.ImportFormDataInput formInput = new PublicApiHandler.ImportFormDataInput();
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        streamingOutput.write(bytes);
+        ((StreamingOutput)response.getEntity()).write(bytes);
         formInput.setData(new ByteArrayInputStream(bytes.toByteArray()));
         formInput.setProperties(new ByteArrayInputStream("test-connection.prop=value".getBytes("UTF-8")));
         formInput.setEnvironment(ENVIRONMENT);
@@ -238,7 +240,7 @@ public class PublicApiHandlerTest {
     @SuppressWarnings("unchecked")
     public void importResourcesNewEnvironment() throws Exception {
         // export integration
-        final StreamingOutput streamingOutput = handler.exportResources(ENVIRONMENT, false);
+        final Response response = handler.exportResources(ENVIRONMENT, false);
 
         // import it back
         final SecurityContext security = mock(SecurityContext.class);
@@ -248,7 +250,7 @@ public class PublicApiHandlerTest {
 
         PublicApiHandler.ImportFormDataInput formInput = new PublicApiHandler.ImportFormDataInput();
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        streamingOutput.write(bytes);
+        ((StreamingOutput)response.getEntity()).write(bytes);
         formInput.setData(new ByteArrayInputStream(bytes.toByteArray()));
         formInput.setProperties(new ByteArrayInputStream("test-connection.prop=value".getBytes("UTF-8")));
         formInput.setEnvironment(ENVIRONMENT2);
