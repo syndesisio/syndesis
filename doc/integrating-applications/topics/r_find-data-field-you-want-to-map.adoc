@@ -2,7 +2,7 @@
 // as_mapping-data.adoc
 
 [id='find-the-field-you-want-to-map_{context}']
-= Find the data field that you want to map
+= Finding the data field that you want to map
 
 In a relatively simple integration, mapping data fields is easy
 and intuitive. In more complex integrations or integrations that handle

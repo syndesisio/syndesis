@@ -2,7 +2,7 @@
 // as_adding-api-connectors.adoc
 
 [id='creating-api-connectors_{context}']
-= Create REST API client connectors
+= Creating REST API client connectors
 
 Upload an OpenAPI document to enable {prodname} to create a REST API
 client connector. 
@@ -57,7 +57,7 @@ want to use to access the API.
 .. *OAuth* -- {prodname} prompts you to enter:
 ... *Authorization URL* is the location for registering {prodname} as
 a client of the API. Registration authorizes {prodname} to access the API.
-See link:{LinkFuseOnlineConnectorGuide}#register-with-rest-api_rest[{NameOfFuseOnlineConnectorGuide}, Register {prodname} as a REST API client]. 
+See link:{LinkFuseOnlineConnectorGuide}#register-with-rest-api_rest[{NameOfFuseOnlineConnectorGuide}, Registering {prodname} as a REST API client]. 
 The OpenAPI document or other
 documentation for the API should specify this URL. If it does not then
 you must contact the service provider to obtain this URL.
@@ -94,4 +94,4 @@ You then continue the process for creating a new API client connector.
 
 .Next step
 For details about using your new API connector, see
-link:{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis_rest[{NameOfFuseOnlineConnectorGuide}, Connect to REST APIs]. 
+link:{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis_rest[{NameOfFuseOnlineConnectorGuide}, Connecting to REST APIs]. 

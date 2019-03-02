@@ -4,7 +4,7 @@
 
 :context: ug
 [id='customizing_{context}']
-= Customize {prodname}
+= Customizing {prodname}
 :context: custom
 
 {prodname} provides many connectors that you can use to connect to 
@@ -42,10 +42,10 @@ custom feature provided by the extension available.
 
 See the following topics for details:
 
-* <<developing-rest-api-client-connectors_{context}>>
-* <<adding-api-connectors_{context}>>
-* <<developing-extensions_{context}>>
-* <<adding-extensions_{context}>>
+* xref:developing-rest-api-client-connectors_{context}[]
+* xref:adding-api-connectors_{context}[]
+* xref:developing-extensions_{context}[]
+* xref:adding-extensions_{context}[]
 
 include::as_developing-rest-api-client-connectors.adoc[leveloffset=+1]
 

@@ -2,7 +2,7 @@
 // as_putting-integrations-into-service.adoc
 
 [id='restarting-older-integration-versions_{context}']
-= Restart older integration versions
+= Restarting older integration versions
 
 You might publish an integration that does not work the way you want it to.
 In this situation, you can stop the incorrect version

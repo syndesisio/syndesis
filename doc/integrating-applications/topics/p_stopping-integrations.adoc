@@ -2,7 +2,7 @@
 // as_putting-integrations-into-service.adoc
 
 [id='stopping-integrations_{context}']
-= Stop integrations
+= Stopping integrations
 
 Each integration can have exactly one version that is running. A running
 version is in the *Running* state. At any time, you can stop

@@ -2,7 +2,7 @@
 // as_adding-extensions.adoc
 
 [id='identifying-extension-use_{context}']
-= Identify integrations that use extensions
+= Identifying integrations that use extensions
 
 Before you update or delete an extension, you should identify the
 integrations that use customizations that are provided by that extension. 

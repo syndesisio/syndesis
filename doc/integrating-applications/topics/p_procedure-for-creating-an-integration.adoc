@@ -2,13 +2,16 @@
 // as_creating-integrations.adoc
 
 [id='procedure-for-creating-an-integration_{context}']
-= Procedure for creating an integration
+= Procedure for creating a simple integration
 
-{prodname} guides you through the procedure for creating an integration. 
+{prodname} guides you through the procedure for creating a simple integration. 
 It prompts you to choose the start connection, the finish connection, 
 optional middle connections, and other steps. When your integration is
 complete, you can publish it so that it is running or you can save
 it for publication at a later time. 
+
+To learn about the procedure for creating an API provider integration, see 
+xref:create-api-provider-integration_api-provider[].
 
 .Prerequisites
 * You have a plan for what the steps in the integration will be.

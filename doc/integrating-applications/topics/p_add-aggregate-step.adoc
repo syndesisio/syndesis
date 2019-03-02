@@ -1,0 +1,22 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='add-aggregate-step_{context}']
+= Adding an aggregate step
+
+In a flow, {prodname} can create a collection from individual objects. 
+Instead of executing subsequent steps once for each object, {prodname} 
+executes subsequent steps once for the collection. 
+
+.Prerequisites
+* You are creating or editing a simple integration or an operation flow.
+* The flow already has all the connections that it requires.
+* A previous step split a collection into individual objects. 
+
+.Procedure
+
+. In the integration visualization panel on the left, where you want to 
+add an aggregate step to the flow, click the
+image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
+
+. On the *Add a Step* page, click *Aggregate*.

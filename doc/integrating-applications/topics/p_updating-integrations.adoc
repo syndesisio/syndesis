@@ -2,7 +2,7 @@
 // as_managing-integrations.adoc
 
 [id='updating-integrations_{context}']
-= Update integrations
+= Updating integrations
 
 After you create an integration, you might need to update it to
 add, edit or remove a step.

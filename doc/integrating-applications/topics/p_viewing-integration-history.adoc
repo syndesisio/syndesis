@@ -2,7 +2,7 @@
 // as_monitoring-integrations.adoc
 
 [id='viewing-integration-history_{context}']
-= View integration history
+= Viewing integration history
 
 {prodname} maintains each version of an integration. You can always view a list
 of the versions of each integration. 

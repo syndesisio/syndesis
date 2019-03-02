@@ -2,7 +2,7 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='configure-publish-api-provider-quickstart_{context}']
-= Configure and publish the API provider quickstart integration
+= Configuring and publishing an API provider quickstart integration
 
 {prodname} provides an API provider quickstart integration that you can 
 import into your {prodname} environment. This quickstart includes 

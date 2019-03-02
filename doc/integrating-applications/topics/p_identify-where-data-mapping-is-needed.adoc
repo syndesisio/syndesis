@@ -2,7 +2,7 @@
 // as_mapping-data.adoc
 
 [id='identify-where-data-mapping-is-needed_{context}']
-= Identify where data mapping is needed
+= Identifying where data mapping is needed
 
 {prodname} displays warning icons to indicate where an integration
 requires data mapping. 

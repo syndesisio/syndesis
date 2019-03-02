@@ -2,7 +2,7 @@
 // as_putting-integrations-into-service.adoc
 
 [id='starting-integrations_{context}']
-= Start integrations
+= Starting integrations
 
 The first time that you start an integration, the process is
 referred to as publishing the integration because {prodname} has to build

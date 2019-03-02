@@ -12,12 +12,7 @@ creating an API provider integration is as follows.
 contains an OpenAPI 2.0 schema or indicate that you want to 
 create the schema now. If you upload a document, you can review and
 edit it. If you select *Create from scratch*, {prodname} opens an editor
-that supports creation of OpenAPI schemas. 
-+
-[CAUTION]
-After you save or publish an API provider integration, you cannot update 
-the OpenAPI definition for the REST API service. If you need to edit the OpenAPI 
-definition then you must start over and create a new API provider integration. 
+that supports creation of OpenAPI schemas.  
 
 . Give the integration a name and save it. 
 . On the *Choose operation* page, for each operation that the OpenAPI 

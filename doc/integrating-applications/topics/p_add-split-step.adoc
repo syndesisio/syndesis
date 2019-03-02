@@ -1,0 +1,25 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='add-split-step_{context}']
+= Adding a split step
+
+In a flow, when a connection returns a collection of objects, 
+{prodname} executes subsequent steps once for the collection.
+If you want to execute subsequent steps once for each object 
+that is in the collection, add a split step. For example, a
+Google Sheets connection returns a collection of row objects.
+To execute subsequent steps once for each row, add a 
+split step after the Google Sheets connection. 
+
+.Prerequisites
+* You are creating or editing a simple integration or an operation flow.
+* The flow already has all the connections that it requires.
+
+.Procedure
+
+. In the integration visualization panel on the left, where you want to 
+add a split step to the flow, click the
+image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
+
+. On the *Add a Step* page, click *Split*.

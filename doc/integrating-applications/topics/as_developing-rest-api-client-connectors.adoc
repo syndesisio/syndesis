@@ -3,7 +3,7 @@
 
 :context: custom
 [id='developing-rest-api-client-connectors_{context}']
-= Develop REST API client connectors
+= Developing REST API client connectors
 :context: dev-client-connector
 
 {prodname} can create connectors for
@@ -18,13 +18,13 @@ then an experienced developer must create the OpenAPI document.
 The following topics provide information and instructions for developing
 REST API connectors:
 
-* <<about-api-client-connectors_{context}>>
-* <<guidelines-for-openapi-documents_{context}>>
+* xref:about-api-client-connectors_{context}[]
+* xref:guidelines-for-openapi-documents_{context}[]
 // The following file contains content for a feature that was not actually added. 
 // So it is not linked in anywhere. But maybe some day, it will be. 
-// * <<access-token-strategy>>
-* <<providing-client-credentials_{context}>>
-* <<refreshing-access-tokens_{context}>>
+// * xref:access-token-strategy[]
+* xref:providing-client-credentials_{context}[]
+* xref:refreshing-access-tokens_{context}[]
 
 include::c_about-api-connectors.adoc[leveloffset=+1]
 

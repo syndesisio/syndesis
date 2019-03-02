@@ -2,7 +2,7 @@
 // as_copying-integrations-to-other-environments.adoc
 
 [id='importing-integrations_{context}']
-= Import integrations
+= Importing integrations
 
 In a {prodname} environment, you can import an integration that was
 exported from another {prodname} environment. 
@@ -43,11 +43,11 @@ application that uses the OAuth protocol, register your {prodname}
 environment with the application. The steps vary for each application.
 See the appropriate topic:
 
-* link:{LinkFuseOnlineConnectorGuide}#register-with-dropbox_dropbox[Register with Dropbox]
-* link:{LinkFuseOnlineConnectorGuide}#register-with-gmail_gmail[Register with Gmail]
-* link:{LinkFuseOnlineConnectorGuide}#register-with-rest-api_rest[Register with a REST API]
-* link:{LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce{context}[Register with Salesforce]
-* link:{LinkFuseOnlineConnectorGuide}#register-with-twitter_twitter[Register with Twitter]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-dropbox_dropbox[Registering with Dropbox]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-gmail_gmail[Registering with Gmail]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-rest-api_rest[Registering with a REST API]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce{context}[Registering with Salesforce]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-twitter_twitter[Registering with Twitter]
 
 . In the left panel, click *Connections* and confirm that there are no
 longer any connections that require configuration.

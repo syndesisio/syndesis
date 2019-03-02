@@ -2,7 +2,7 @@
 // as_managing-integrations.adoc
 
 [id='deleting-integrations_{context}']
-= Delete integrations
+= Deleting integrations
 
 After you delete an integration, {prodname} still has the history of 
 that integration. If you import a version of the deleted integration, 

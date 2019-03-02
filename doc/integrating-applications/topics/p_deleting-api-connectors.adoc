@@ -2,7 +2,7 @@
 // as_adding-api-connectors.adoc
 
 [id='deleting-api-connectors_{context}']
-= Delete API client connectors
+= Deleting API client connectors
 
 You cannot delete a connector when there is a connection that was 
 created from that connector and this connection is being used in 

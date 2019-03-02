@@ -22,12 +22,12 @@ link:{LinkFuseOnlineConnectorGuide}[{NameOfFuseOnlineConnectorGuide}].
 The following topics
 provide general information about connections:
 
-* <<about-creating-connections_{context}>>
-* <<general-procedure-for-obtaining-authorization_{context}>>
-* <<about-connection-validation_{context}>>
-* <<about-adding-connections-to-integrations_{context}>>
-* <<viewing-and-editing-connection-information_{context}>>
-* <<creating-connections-from-custom-connectors_{context}>>
+* xref:about-creating-connections_{context}[]
+* xref:general-procedure-for-obtaining-authorization_{context}[]
+* xref:about-connection-validation_{context}[]
+* xref:about-adding-connections-to-integrations_{context}[]
+* xref:viewing-and-editing-connection-information_{context}[]
+* xref:creating-connections-from-custom-connectors_{context}[]
 
 include::c_about-creating-connections.adoc[leveloffset=+1]
 

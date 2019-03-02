@@ -2,7 +2,7 @@
 // as_monitoring-integrations.adoc
 
 [id='viewing-integration-activity-information_{context}']
-= View information about an integration's activity
+= Viewing information about an integration's activity
 
 {prodname} provides activity information for each execution of an integration.
 This information is part of the integration's log. 

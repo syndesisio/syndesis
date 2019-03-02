@@ -2,15 +2,15 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='create-integration-operation-flows_{context}']
-= Create the integration's operation flows
+= Creating an API provider integration's operation flows
 
 The OpenAPI document that defines your REST API service defines
 the operations that the service can perform. After you create an API
 provider integration, you can edit the
-integration flow for each operation. 
+flow for each operation. 
 
-Each operation has exactly one integration flow. 
-In an integration flow, you can add connections
+Each operation has exactly one flow. 
+In an operation flow, you can add connections
 to other applications and services, as well as steps that operate on data
 between connections. 
 
@@ -96,7 +96,7 @@ to add a data mapper step here. Go back to the previous
 subset of instructions. 
 On the *Choose a Step* page, click *Data Mapper*, and define the
 needed mappings. For help, see
-link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Map integration data fields to the next connection in the integration].
+link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Mapping integration data to fields in the next connection.
 
 . When this integration flow has all needed 
 connections and steps, do one of the following:

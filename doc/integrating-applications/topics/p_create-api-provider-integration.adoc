@@ -2,7 +2,7 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='create-api-provider-integration_{context}']
-= Create an integration that is triggered by an API call
+= Creating an integration that is triggered by an API call
 
 To be able to invoke a call that triggers execution of an integration, you provide
 an OpenAPI document that defines the operations that the integration
@@ -59,10 +59,7 @@ that Syndesis opens:
 
 +
 For information about using the Apicurio editor, see 
-link:https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/designing_apis_with_apicurito/#create-api-definition[Design and develop an API definition with Apicurito].
-In this Technology Preview release, you cannot edit the operation 
-description that will appear in the operations list in {prodname}. 
-
+link:https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/designing_apis_with_apicurito/#create-api-definition[Designing and developing an API definition with Apicurito].
 
 . On the *Give this integration a name* page, enter a name for your integration.
 . Optionally, enter a description that helps you distinguish this integration

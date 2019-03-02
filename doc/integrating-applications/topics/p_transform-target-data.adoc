@@ -2,7 +2,7 @@
 // as_mapping-data.adoc
 
 [id='transform-target-data_{context}']
-= Transform source or target data
+= Transforming source or target data
 
 In the data mapper, after you define a mapping, you can transform
 any field in the mapping. 

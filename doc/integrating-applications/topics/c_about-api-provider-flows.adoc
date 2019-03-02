@@ -16,6 +16,6 @@ creates. For each operation, you can edit its flow by:
    
 * Adding connections to the applications that need to process the data.
 * Adding steps between connections, including data mapping steps.
-* Altering the return code for the finish connection, which sends a 
-response to the application that invoked the call that triggered
+* Altering the return code for HTTP response that finishes the flow. The 
+response goes to the application that invoked the call that triggered
 execution of the integration. 

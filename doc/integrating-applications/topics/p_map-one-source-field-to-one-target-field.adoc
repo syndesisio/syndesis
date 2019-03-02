@@ -2,7 +2,7 @@
 // as_mapping-data.adoc
 
 [id='map-one-source-field-to-one-target-field_{context}']
-= Map one source field to one target field
+= Mapping one source field to one target field
 
 The default mapping behavior maps one source field to one target field.
 For example, map the `Name` field to the `CustomerName` field.

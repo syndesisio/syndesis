@@ -3,7 +3,7 @@
 
 :context: custom
 [id='adding-extensions_{context}']
-= Add and manage extensions
+= Adding and managing extensions
 :context: add-extension
 
 Extensions let you add customizations to {prodname} so you can integrate 
@@ -14,10 +14,10 @@ to do before you update or delete an extension.
 
 The following topics provide details:
 
-* <<making-extensions-available_{context}>> 
-* <<identifying-extension-use_{context}>>
-* <<updating-extensions_{context}>>
-* <<deleting-extensions_{context}>>
+* xref:making-extensions-available_{context}[]
+* xref:identifying-extension-use_{context}[]
+* xref:updating-extensions_{context}[]
+* xref:deleting-extensions_{context}[]
 
 include::p_making-extensions-available.adoc[leveloffset=+1]
 
