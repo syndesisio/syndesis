@@ -115,7 +115,12 @@ stories
           extensionIcon={extensionIcon}
           extensionId={extensionId}
           extensionName={extensionName}
+          i18nCancelText={'Cancel'}
           i18nDelete={deleteText}
+          i18nDeleteModalMessage={
+            'Are you sure you want to delete the extension?'
+          }
+          i18nDeleteModalTitle={'Confirm Delete?'}
           i18nDeleteTip={deleteTip}
           i18nDetails={detailsText}
           i18nDetailsTip={detailsTip}
@@ -138,7 +143,12 @@ stories
           detailsPageLink={'/extensions/' + extensionId}
           extensionId={extensionId}
           extensionName={extensionName}
+          i18nCancelText={'Cancel'}
           i18nDelete={deleteText}
+          i18nDeleteModalMessage={
+            'Are you sure you want to delete the extension?'
+          }
+          i18nDeleteModalTitle={'Confirm Delete?'}
           i18nDetails={detailsText}
           i18nExtensionType={extensionType}
           i18nUpdate={updateText}

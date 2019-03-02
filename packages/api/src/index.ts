@@ -8,6 +8,7 @@ export * from './Stream';
 export * from './WithIntegrationHelpers';
 export * from './WithApiConnectors';
 export * from './WithExtension';
+export * from './WithExtensionHelpers';
 export * from './WithExtensionIntegrations';
 export * from './WithExtensions';
 export * from './WithIntegrations';

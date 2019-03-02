@@ -21,7 +21,12 @@ const extensions = [
     extensionDescription="id-0 description goes here"
     extensionId={'id-0'}
     extensionName={'id-0 name'}
+    i18nCancelText={'Cancel'}
     i18nDelete={'Delete'}
+    i18nDeleteModalMessage={
+      'Are you sure you want to delete the "id-0" extension?'
+    }
+    i18nDeleteModalTitle={'Confirm Delete?'}
     i18nDetails={'Details'}
     i18nExtensionType={'Step Extension'}
     i18nUpdate={'Update'}
@@ -34,7 +39,12 @@ const extensions = [
     detailsPageLink={'/extensions/id-1'}
     extensionId={'id-1'}
     extensionName={'id-1 name'}
+    i18nCancelText={'Cancel'}
     i18nDelete={'Delete'}
+    i18nDeleteModalMessage={
+      'Are you sure you want to delete the "id-1" extension?'
+    }
+    i18nDeleteModalTitle={'Confirm Delete?'}
     i18nDetails={'Details'}
     i18nExtensionType={'Step Extension'}
     i18nUpdate={'Update'}
@@ -47,7 +57,12 @@ const extensions = [
     detailsPageLink={'/extensions/id-2'}
     extensionId={'id-2'}
     extensionName={'id-2 name'}
+    i18nCancelText={'Cancel'}
     i18nDelete={'Delete'}
+    i18nDeleteModalMessage={
+      'Are you sure you want to delete the "id-2" extension?'
+    }
+    i18nDeleteModalTitle={'Confirm Delete?'}
     i18nDetails={'Details'}
     i18nExtensionType={'Step Extension'}
     i18nUpdate={'Update'}
