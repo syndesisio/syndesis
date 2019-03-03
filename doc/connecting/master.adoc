@@ -27,9 +27,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-amqp_{context}>>
 * <<connecting-to-dropbox_{context}>>
 * <<connecting-to-ftp_{context}>>
-* <<connecting-to-gmail_{context}>>
-* <<connecting-to-google-calendar_{context}>>
-* <<connecting-to-google-sheets_{context}>>
+* <<connecting-to-google_{context}>>
 * <<connecting-to-http_{context}>>
 * <<connecting-to-log_{context}>>
 * <<connecting-to-kafka_{context}>>
@@ -59,11 +57,7 @@ include::topics/as_connecting-to-dropbox.adoc[leveloffset=+1]
 
 include::topics/as_connecting-to-ftp.adoc[leveloffset=+1]
 
-include::topics/as_connecting-to-gmail.adoc[leveloffset=+1]
-
-include::topics/as_connecting-to-google-calendar.adoc[leveloffset=+1]
-
-include::topics/as_connecting-to-google-sheets.adoc[leveloffset=+1]
+include::topics/as_connecting-to-google.adoc[leveloffset=+1]
 
 include::topics/as_connecting-to-http.adoc[leveloffset=+1]
 

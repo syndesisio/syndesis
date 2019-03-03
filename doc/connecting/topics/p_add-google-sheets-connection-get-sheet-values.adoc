@@ -2,24 +2,27 @@
 // as_connecting-to-google-sheets.adoc
 
 [id='add-google-sheets-connection-get-sheet-values_{context}']
-= Trigger an integration when polling returns Google Sheets spreadsheet data
+= Trigger an integration when polling returns spreadsheet data
 
-To trigger execution of an integration upon obtaining value range data from
-a Google Sheets spreadsheet that you specify, add a Google Sheets connection to an integration as
-its start connection. When the integration is running, the Google Sheets
-connection loads data of a specific spreadsheet on your Google Sheets account at intervals that you
-control. When the connection finds some data that comply with the selected Google Sheets *Get sheet values* action, the connection
-passes the data to the next step in the integration.
+To trigger execution of an integration upon obtaining data from a
+Google Sheets spreadsheet, add a Google Sheets connection to an integration 
+as its start connection. When the integration is running, the Google Sheets 
+connection polls the spreadsheet at the interval that you specified, obtains
+the data that you identified, and passes the data to the next step in the 
+integration.
 
-When a Google Sheets connection returns a range of data representing multiple rows in a spreadsheet,
-{prodname} executes the integration for each returned row.
-For example, if the poll returns a data range of 5 rows then {prodname} executes
-the integration five times.
+To obtain data from a particular sheet in a spreadsheet, you specify the
+sheet name when you configure the *Get sheet values* action for the
+Google Sheets connection. A particular connection can obtain data from
+only one sheet. 
 
-This split results functionality can be disabled with the *splitResults* option on the Google Sheets *Get sheet values* action.
+Between polls, if there are no changes to the sheet values that the 
+connection is configured to return, then 
+the next poll returns the same values as the previous poll. 
 
 .Prerequisite
-You created a Google Sheets connection.
+You created a Google Sheets connection that is authorized to access 
+the spreadsheet that you want to obtain data from. 
 
 .Procedure
 
@@ -29,29 +32,78 @@ You created a Google Sheets connection.
 connection that you want to use to start the integration.
 . On the *Choose an Action* page, click the *Get sheet values* action.
 . To configure the *Get sheet values* action:
-.. In the *SpreadsheetId* field, enter the name of a Google sheet that is
+.. In the *SpreadsheetId* field, enter the ID of a Google spreadsheet that is
 accessible from the Google account that this Google Sheets connection
 is authorized to access.
-.. In the *Range* field, specify the target value range in a spreadsheet to obtain. This field uses the spreadsheet A1 notation
-where coordinates include a column name and a row index. The range holds a start coordinate and an end coordinate to define a set of
-rows and columns to select (e.g. "A1:C10", "A:C").
-.. In the *Major Dimension* field, describes the dimension of the returned values (one of "ROWS" or "COLUMNS") where
-the major dimension indicates which dimension results apply to first when building the set of values returned. Major dimension *ROWS* means that results will
-hold a collection of rows with each row holding multiple column values. Major dimension *COLUMNS* means that results will
-hold a collection of columns with each column holding multiple row values.
-.. In the *Split Results* field, enable or disable the automatic split of returned range values
-representing multiple rows in a spreadsheet. When enabled the connection passes each entry in the data range
-as a separate integration to the next step in the integration. When disabled the complete data range is passed as a collection
-fo values to the next step in the integration.
++
+To obtain a spreadsheet ID, display the spreadsheet in a browser. 
+The ID is the part of the URL between `d/` and `/edit`. 
+
+.. In the *Range* field, enter Google A1 notation that identifies 
+the data that you want to obtain. The default is *A:A*.
++
+For example, suppose that you want all data from a spreadsheet that
+has one sheet with 4 columns. Specify `A:D`. Or, to obtain data from
+rows 5 through 15, specify `A5:D15`. 
++
+If the spreadsheet from which you are 
+obtaining data has more than one sheet, specify the sheet name as well 
+as the start cell coordinate and the end cell coordinate. If there is more 
+than one sheet, and you do not
+specify a sheet name, then the connection obtains data from the first 
+sheet in the spreadsheet. For example, specification of `2019!A1:D5` specifies
+that you want to obtain data from the sheet whose name is `2019`. In that
+sheet, you want the data that is in columns A through D for rows 1 through 5. 
+
+.. In the *Major Dimension* field, accept *Rows*, which is the default, or
+select *Columns*. *Rows* configures the action to return a collection
+of row objects where each row object contains a value for each desired column. 
+*Columns* configures the action to return a collection of column objects
+where each column object contains a value for each desired row. 
+
+.. In the *Split Results* field, accept *No*, which is the default, or
+select *Yes*. A setting of *No* configures the action to
+return data as a collection of values. That is,
+the connection passes a collection of row objects or a collection of
+column objects to the next step in the integration. 
+Select *Yes* to enable the connection to split the returned data 
+according to the setting of *Major Dimension*. For example, if 
+*Major Dimension* is set to *ROWS* then the connection returns row
+objects. Each row object triggers a separate execution of the integration. 
+That is, {prodname} executes the integration once for each returned row
+object. For example, if the poll returns 5 rows then {prodname} executes
+the integration 5 times.
++
+{prodname} also provides discrete *Split* and *Aggregate* steps, which 
+you can add to an integration. 
+
 .. In the *Delay* field, accept the default of 30 seconds or
-specify how often you want the integration to check the sheets.
-.. In the *Max Results* field, accept the default of *5* or
-indicate the maximum number of events that the connection
-can return for each poll.
+specify how often you want the connection to obtain spreadsheet data.
+
+.. In the *Max Results* field, accept the default of *25* or
+specify another limit for the minor dimension in the result matrix. 
++
+For example, suppose that the *Major Dimension* is columns and that 
+*Max Results* is 25. The poll returns a column object for each column
+that the range setting includes. Each column object contains no more than 
+25 row values. 
 
 . Click *Done* to add this Google Sheets connection as the integration's
-start connection. The connection appears as the
-first step in the integration.
+start connection. In the integration visualization panel, the connection 
+appears as the first step in the integration.
 
-The connection automatically inspects the specified range to obtain. Out of that range value the resulting output data shape is built
-as dynamic data shape. Following up data mapping steps are able to access the output data shape object according to the specified range value and major dimension.
+.Next steps
+After you add a start connection, {prodname} prompts you to add the
+integration's finish connection. With the start and finish connections
+in the integration, add any other connections that you want in the
+integration. Then, after the connection that obtains sheet values, 
+add a data mapper step. In the data mapper, {prodname} displays 
+source fields according to how you configure the *Get sheet values* action. 
+That is, if the major dimension is *ROWS*, then the data mapper lists 
+the column names as fields that you can map to the target. If the major 
+dimension is *COLUMNS*, then the data mapper lists row indexes as 
+fields that you can map to the target.
+
+.Additional resource
+link:https://developers.google.com/sheets/api/guides/concepts#a1_notation[Google A1 notation]  
+for specifying groups of cells in a spreadsheet

@@ -1,0 +1,169 @@
+// This module is included in the following assemblies:
+// as_connecting-to-google-sheets.adoc
+
+[id='add-google-sheets-connection-add-chart_{context}']
+= Add a chart to a sheet 
+
+In the middle of an integration, or to finish an integration, 
+you can add a basic chart or a pie chart to a Google Sheets spreadsheet.
+To do this, add a Google Sheets connection to the middle of an integration
+or as the integration's finish connection. Then add a data mapping
+step just before the connection. In the data mapping step, set 
+options that determine the location, properties, and content of the chart. 
+
+When {prodname} prompts you to configure the *Add charts* 
+action, you can leave some or all fields blank. If you leave a field blank,
+you can map a value to that field in the data mapper step that is
+just before this connection. 
+
+.Prerequisites
+* You created a Google Sheets connection that is authorized to access
+the Google spreadsheet that you want to add a chart to.
+* You have access to the ID for the spreadsheet that you want to add a chart to.
+* You are creating or editing an integration and {prodname} is prompting you
+to choose the finish connection or to select the step that you want to add
+to the middle of the integration.
+
+.Procedure
+
+. Click a Google Sheets connection that is authorized to access
+the spreadsheet that you want to add a chart to.
+. On the *Choose an Action* page, click *Add charts*.
+. To configure the *Add charts* action: 
++
+.. In the *SpreadsheetId* field, do one of the following: 
++
+* Enter the ID of the spreadsheet that you want to add a chart to. 
+* Leave the field blank. In the data mapper step that will be just
+before this connection, map the spreadsheet ID from 
+a previous connection to this connection. The previous connection must 
+access the spreadsheet that you want to add a chart to in this connection.
+
+.. In the *Chart Title* field, enter a title. 
++
+Alternatively, leave the field blank. In the data mapper step that is 
+just before this connection, map the chart title from a source field or 
+property to the `title` target field. 
+
+.. In the *Subtitle* field, enter a subtitle. 
++
+Alternatively, leave the field blank. In the data mapper step that is 
+just before this connection, map the chart subtitle from a source field or 
+property to the `subtitle` target field. 
+
+. Click *Done* to add the connection to the integration.
+The connection appears in the integration visualization flow in the
+location where you added it.
+. If you want to add any other connections to the integration, add them now. 
+Then return to these instructions. 
+. In the integration visualization flow, click the plus sign that is
+just before the connection that adds a chart.
+. Click *Data Mapper*.
++
+In the data mapper, map source properties or source fields to the target 
+Google Sheets connection, which is adding a chart. The following instructions
+assume that there is a source field or a source property that contains the 
+value that you want to map to each target field. 
++
+If there is no source field or
+property that contains the required value, then create a source property
+in the data mapper by clicking the + sign that is to the right of the 
+*Properties* folder. In the *Create Property* dialog, give the property
+a name that makes it easy to map to the correct target field, for example, 
+specify *`overlayPosition`* as the property name. For the property value,
+specify the value that 
+you want the connection to use to create the chart. The chart’s overlay 
+position field requires A1 notation that identifies a cell. That is, 
+it specifies a start position but an end position specification is not 
+required, and it is ignored if it is present. For example, 
+specify something like `D4` as the value of the *overlayPosition* 
+source property. Save the new property.
++
+When you configured the *Add charts* action, you might have specified
+a value for the spreadsheet ID, the chart title, and/or the chart subtitle. 
+If you did, then do not map a value to that field. 
+
+. To add a chart to a sheet, map source properties or fields to 
+target fields as follows: 
++
+.. Set the location of the chart by mapping an A1 notation value that 
+identifies a cell to the *overlayPosition* target field. An end position 
+is not required and it is ignored if present. The mapped value identifies 
+the cell where Google Sheets places the chart. This cell is the upper 
+left corner of the chart display. If you do not map a value to 
+the *overlayPosition* field, the default behavior is that Google Sheets 
+creates a new sheet and places the chart in A1.
+ 
+.. Map a source *spreadsheetId* field to the target *spreadsheetId* field. 
+The connection uses source data in this spreadsheet to add the chart
+to a sheet in this same spreadsheet. The source data and the chart
+can be in two different sheets in the same spreadsheet but they
+cannot be in two different spreadsheets.  
+.. Set a chart title by mapping to the target *title* field. The connection inserts
+this string as the title of the chart.
+.. Set a chart subtitle by mapping to the target *subtitle* field. The connection inserts
+this string as a chart subtitle. 
+.. Identify the sheet to add the chart to by mapping an integer to the 
+*sheetId* field. This value is the index of the 
+sheet to add the chart to. The default is that the connection creates a new 
+sheet and adds the chart to the new sheet. 
+.. Identify the sheet that provides the data for the chart by mapping 
+an integer to the target *sourceSheetId* field. This value is the index 
+of the sheet that provides the data for the chart. The default is `0`, which is the 
+first sheet in the spreadsheet. 
++ 
+You can add a basic chart or a pie chart. Follow one of the following
+sets of instructions according to the kind of chart that you want to add.
+.. To add basic chart, in the target panel, expand the *basicChart* folder
+and map source fields to target fields that are in the *basicChart* folder:
+
+... Set the chart type (`BAR`, `LINE`, `AREA`, or `COLUMN`) by mapping 
+to the target *type* field. The default is `COLUMN`.
+... Set the title for the bottom axis of the chart by mapping to the 
+target *axisTitleBottom* field.
+... Set the title for the left axis of the chart by mapping to the 
+target *axisTitleLeft* field.
+... Set the high level category of information that the chart shows by
+mapping to the target *domainRange* field. 
+This field uses the Google Sheets A1 notation. For example, suppose that the first 
+column in a source sheet provides a list of 5 products in `A2` through `A6` , 
+and you want the chart to provide some data for each product. In this column, 
+the first cell (`A1`) must contain a label, such as  `Products`. 
+The setting of *domainRange* would be `A1:A6`. The chart will contain 
+the data that is in `A2` through `A6`. The chart does not display the label.
+ 
+... Identify the location of the source data that the chart shows by mapping to the 
+target *dataRange* field. This field uses the Google Sheets A1 notation. 
+A chart can provide only one series of data. Continuing with the *domainRange* 
+example, suppose that the second column in a source sheet shows the number 
+sold for each of the 5 products that are listed in the first column and 
+this is the data that you want the chart to show. In this column, 
+the first cell (`B1`) must contain a label, such as  `Number Sold`. 
+The setting of *dataRange* would be `B1:B6`. The chart will contain 
+the data that is in `B2` through `B6`. The chart does not display the label.   
+
+.. To add a pie chart, in the target panel, expand the *pieChart* folder
+and map source fields to target fields that are in the *pieChart* folder:
+... Set the location of the pie chart legend by mapping to the target  
+*legendPosition* field. The default is `LEFT_LEGEND`.
+The value must be `BOTTOM_LEGEND`, `LEFT_LEGEND`, 
+`RIGHT_LEGEND`, `TOP_LEGEND`, or `NO_LEGEND`.
+... Set the high level category of information that the pie chart shows 
+by mapping to the target *domainRange* field. 
+This field uses the Google Sheets A1 notation. For example, suppose that the first 
+column in a source sheet provides a list of 5 products in `A2` through `A6` , 
+and you want the chart to provide some data for each product. In this column, 
+the first cell (`A1`) must contain a label, such as  `Products`. 
+The setting of *domainRange* would be `A1:A6`. The chart will contain 
+the data that is in `A2` through `A6`. The chart does not display the label.
+... Identify the location of the source data that the chart shows by 
+mapping to the target  *dataRange* field. This field uses the Google Sheets 
+A1 notation. A chart can provide only one series of data. Continuing with the *domainRange* 
+example, suppose that the second column in a source sheet shows the number 
+sold for each of the 5 products that are listed in the first column and 
+this is the data that you want the chart to show. In this column, 
+the first cell (`B1`) must contain a label, such as  `Number Sold`. 
+The setting of *dataRange* would be B1:B6. The chart will contain 
+the data that is in `B2` through `B6`. The chart does not display the label.   
+
+.. In the upper right, click *Done* to add the data mapper step.

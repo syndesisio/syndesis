@@ -49,12 +49,12 @@ matter whether or not these events have been updated or added since the
 last poll.
 +
 * *Consume from the last event update date on the next poll* starts on the
-date of the most recently updated event that was returned in the previous poll. 
+date of the most recently updated event that was returned in a previous poll. 
 +
 For example, if you select this option, and if *Max Results* is 5, then the
 Google Calendar connection returns no more that 5 updated or new events. The 
 connection starts checking for new or updated events on the date of the
-most recently updated event that was returned in the previous poll. 
+most recently updated event that was returned in a previous poll. 
 
 .. Optionally, in the *Query for events* field, specify text to filter the 
 events that the poll can return. The connection returns only 

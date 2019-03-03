@@ -1,0 +1,73 @@
+// This module is included in the following assemblies:
+// as_connecting-to-google-sheets.adoc
+
+[id='add-google-sheets-connection-update-properties_{context}']
+= Update spreadsheet properties
+
+In an integration, you can update the properties of a spreadsheet 
+in the middle of the integration or to finish the integration.
+To do this, add a Google Sheets connection to the middle of an integration
+or as the integration's finish connection.
+
+Properties include the spreadsheet's title, locale, and time zone. 
+
+When {prodname} prompts you to configure the *Update spreadsheet properties* 
+action, you can leave some or all fields blank. In a data mapper step before
+this connection, you can map values from previous integration steps to 
+blank *Update spreadsheet properties* action configuration fields. 
+
+.Prerequisites
+
+* You created a Google Sheets connection that is authorized to access the 
+Google spreadsheet whose properties you want to update.
+* You have access to the spreadsheet ID for the spreadsheet whose properties 
+you want to update.
+* You are creating or editing an integration and {prodname} is prompting you
+to choose the finish connection or to select the step that you want to add
+to the middle of the integration.
+
+.Procedure
+
+. Click a Google Sheets connection that is authorized to access
+the spreadsheet whose properties you want to update.
+. On the *Choose an Action* page, click *Update spreadsheet properties*.
+. To configure the *Update spreadsheet properties* action:
++
+.. In the *SpreadsheetId* field, do one of the following: 
++
+* Enter the ID of the spreadsheet whose properties you want to update. 
+* Leave the field blank. In this case, after you add this connection 
+to the integration, you must add a data mapper step
+before this connection. In the data mapper step, map the spreadsheet ID from 
+a previous connection to this connection. The previous connection must 
+access the spreadsheet that you want to update in this connection.
+
+.. In the other fields, enter a value only if you want to change the property. 
+Alternatively, you can leave the fields blank. If you do, then in a data mapper
+step that you add later, just before this connection, you can map the fields that
+you want to change. 
+
+.. Click *Done* to add the connection to the integration.
+The connection appears in the integration visualization flow in the
+location where you added it.
+
+. If you want to add any other connections to the integration, add 
+them now and then return to these instructions. 
+. After the integration has all desired connections, you might want to 
+use a data mapper step to update spreadsheet properties:
+
+.. In the integration visualization flow, click the plus sign that is
+just before the Google Sheets connection that updates properties.
+.. Click the *Data Mapper* card to add a data mapping step to 
+the integration. 
+
+.. In the data mapper, if you did not specify a spreadsheet ID when 
+you configured the *Update spreadsheet properties* action, map a 
+source `spreadsheetId` to the target `spreadsheetId`.
+
+.. For each spreadsheet property that you want to change and for which 
+you did not specify an updated value when you configured the 
+*Update spreadsheet properties* action, map a field from a source step 
+to the target spreadsheet property that you want to change. 
+
+.. In the upper right, click *Done* to add the data mapper step.
