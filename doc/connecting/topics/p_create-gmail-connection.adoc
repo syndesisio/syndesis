@@ -8,10 +8,12 @@ When you create a Gmail connection, you authorize the connection to access one
 particular Gmail account. After you create a Gmail connection, you can 
 add it to multiple integrations.
 
-.Prerequisite
-You 
+.Prerequisites
+* You 
 link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[registered {prodname} as a Google client application] 
 and enabled the Gmail API. 
+* The {prodname} *Settings* page entry for Gmail has values for the client ID and client secret, which
+you obtained by registering {prodname} as a Google client application. 
 
 .Procedure
 

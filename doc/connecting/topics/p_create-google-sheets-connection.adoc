@@ -10,9 +10,12 @@ particular Google account, which you choose. After you create a Google Sheets co
 add it to multiple integrations.
 
 .Prerequisite
-You 
+* You 
 link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[registered {prodname} as a Google client application] 
 and enabled the Google Sheets API. 
+* The {prodname} *Settings* page entry for Google Sheets has values for the client ID and client secret, which
+you obtained by registering {prodname} as a Google client application. 
+
 
 .Procedure
 

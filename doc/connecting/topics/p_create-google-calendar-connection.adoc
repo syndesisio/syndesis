@@ -9,10 +9,12 @@ the Google calendars that are associated with one
 particular Google account. After you create a Google Calendar connection, you can 
 add it to multiple integrations.
 
-.Prerequisite
-You 
+.Prerequisites
+* You 
 link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[registered {prodname} as a Google client application] 
 and enabled the Google Calendar API. 
+* The {prodname} *Settings* page entry for Google Calendar has values for the client ID and client secret, which
+you obtained by registering {prodname} as a Google client application. 
 
 .Procedure
 
