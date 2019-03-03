@@ -3,7 +3,7 @@
 // Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
 [id='connecting-to-concur_{context}']
-= Connect to SAP Concur
+= Connecting to SAP Concur
 :context: concur
 
 SAP Concur manages business expenses, travel, and invoices. 
@@ -18,13 +18,13 @@ upload the new project codes to the appropriate list.
 
 See the following topics: 
 
-* <<user-roles-for-connecting-to-concur_{context}>>
-* <<obtain-concur-oauth-credentials-implementation_{context}>>
-* <<obtain-concur-oauth-credentials-production_{context}>>
-* <<configure-concur-connector_{context}>>
-* <<create-concur-connection_{context}>>
-* <<add-concur-connection_{context}>>
-* <<identify-concur-fields-for-mapping_{context}>>
+* xref:user-roles-for-connecting-to-concur_{context}[]
+* xref:obtain-concur-oauth-credentials-implementation_{context}[]
+* xref:obtain-concur-oauth-credentials-production_{context}[]
+* xref:configure-concur-connector_{context}[]
+* xref:create-concur-connection_{context}[]
+* xref:add-concur-connection_{context}[]
+* xref:identify-concur-fields-for-mapping_{context}[]
 
 
 include::c_user-roles-for-connecting-to-concur.adoc[leveloffset=+1]

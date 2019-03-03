@@ -2,7 +2,7 @@
 // as_connecting-to-servicenow.adoc
 
 [id='create-servicenow-connection_{context}']
-= Create a ServiceNow connection
+= Creating a ServiceNow connection
 
 In an integration, to connect to your company's ServiceNow instance,
 you must create a ServiceNow connection.

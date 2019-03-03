@@ -3,16 +3,16 @@
 
 :parent-context: {context}
 [id='amq2api-create-integration_{context}']
-= Create and deploy AMQ to REST API sample integration
+= Creating and deploying the AMQ to REST API sample integration
 :context: create-amq
 
 To create and deploy the AMQ to REST API sample integration, the main steps are:
 
-. <<amq2api-choose-start-connection_{context}>>
-. <<amq2api-choose-finish-connection_{context}>>
-. <<amq2api-add-damage-reporter-step_{context}>>
-. <<amq2api-add-mapping-step_{context}>>
-. <<amq2api-name-and-publish_{context}>>
+. xref:amq2api-choose-start-connection_{context}[]
+. xref:amq2api-choose-finish-connection_{context}[]
+. xref:amq2api-add-damage-reporter-step_{context}[]
+. xref:amq2api-add-mapping-step_{context}[]
+. xref:amq2api-name-and-publish_{context}[]
 
 .Prerequisites
 * You created a connection to the provided Red Hat AMQ broker. 

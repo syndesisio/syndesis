@@ -4,7 +4,7 @@
 
 :context: google
 [id='connecting-to-google-calendar_{context}']
-= Connect to Google Calendar
+= Connecting to Google Calendar
 :context: calendar
 
 To trigger integration execution when a poll returns an update to a
@@ -15,11 +15,11 @@ as the integration's middle or finish connection.
 
 Details for connecting to Google Calendar are in the following topics:
 
-* <<create-google-calendar-connection_{context}>>
-* <<add-google-calendar-connection-start_{context}>>
-* <<add-google-calendar-connection-to-get-one-event_{context}>>
-* <<add-google-calendar-connection-update-event_{context}>>
-* <<add-google-calendar-connection-add-event_{context}>>
+* xref:create-google-calendar-connection_{context}[]
+* xref:add-google-calendar-connection-start_{context}[]
+* xref:add-google-calendar-connection-to-get-one-event_{context}[]
+* xref:add-google-calendar-connection-update-event_{context}[]
+* xref:add-google-calendar-connection-add-event_{context}[]
 
 include::p_create-google-calendar-connection.adoc[leveloffset=+1]
 

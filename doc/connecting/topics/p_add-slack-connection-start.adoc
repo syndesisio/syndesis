@@ -2,7 +2,7 @@
 // as_connecting-to-slack.adoc
 
 [id='add-slack-connection-start_{context}']
-= Add a Slack connection to trigger execution upon receiving messages
+= Adding a Slack connection to trigger execution upon receiving messages
 
 A Slack connection that starts an integration triggers execution of the 
 integration when the connection finds messages on a Slack channel that 

@@ -2,7 +2,7 @@
 // master.adoc
 
 [id='twitter-to-salesforce_{context}']
-= Implement a Twitter to Salesforce sample integration
+= Implementing the Twitter to Salesforce sample integration
 :context: t2sf
 
 This sample integration watches Twitter for tweets that mention
@@ -36,13 +36,13 @@ endif::[]
 
 To implement, deploy, and test this sample integration, the main steps are:
 
-. <<register-with-twitter_{context}>>
-. <<create-twitter-connection_{context}>>
-. <<register-with-salesforce_{context}>>
-. <<create-salesforce-connection_{context}>>
-. <<create-twitter-sf-integration_{context}>>
-. <<t2sf-confirm-working_{context}>>
-. <<cleanup_{context}>>
+. xref:register-with-twitter_{context}[]
+. xref:create-twitter-connection_{context}[]
+. xref:register-with-salesforce_{context}[]
+. xref:create-salesforce-connection_{context}[]
+. xref:create-twitter-sf-integration_{context}[]
+. xref:t2sf-confirm-working_{context}[]
+. xref:cleanup_{context}[]
 
 include::shared/p_register-with-twitter.adoc[leveloffset=+1]
 

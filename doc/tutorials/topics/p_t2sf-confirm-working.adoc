@@ -2,7 +2,7 @@
 // as_t2sf-intro.adoc
 
 [id='t2sf-confirm-working_{context}']
-= Confirm that the Twitter to Salesforce integration works
+= Confirming that the Twitter to Salesforce integration works
 
 To confirm that the Twitter to Salesforce sample integration is working,
 tweet some messages and check for results in Salesforce. 

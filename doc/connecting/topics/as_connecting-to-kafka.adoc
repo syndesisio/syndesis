@@ -3,7 +3,7 @@
 // Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
 [id='connecting-to-kafka_{context}']
-= Connect to Kafka
+= Connecting to Kafka
 :context: kafka
 
 Apache Kafka is a distributed streaming platform that you can use to
@@ -13,9 +13,9 @@ that you specify or publish data to a Kafka topic that you specify.
 To do this, create a connection to Kafka and then add that connection to an 
 integration. Details are in the following topics:
 
-* <<creating-kafka-connections_{context}>>
-* <<adding-kafka-connection-start_{context}>>
-* <<adding-kafka-connection-finish-middle_{context}>>
+* xref:creating-kafka-connections_{context}[]
+* xref:adding-kafka-connection-start_{context}[]
+* xref:adding-kafka-connection-finish-middle_{context}[]
 
 include::p_creating-kafka-connections.adoc[leveloffset=+1]
 

@@ -2,7 +2,7 @@
 // as_t2sf-create-integration.adoc
 
 [id='t2sf-name-and-publish_{context}']
-= Give the integration a name and deploy it
+= Giving the integration a name and deploying it
 
 When the Twitter to Salesforce sample integration is complete then you
 can deploy it and see how it works. 

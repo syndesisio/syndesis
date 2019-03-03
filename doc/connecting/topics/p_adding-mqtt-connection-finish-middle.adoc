@@ -2,7 +2,7 @@
 // as_connecting-to-mqtt.adoc
 
 [id='adding-mqtt-connection-finish-middle_{context}']
-= Publish a message to an MQTT broker
+= Publishing a message to an MQTT broker
 
 In an integration, you can publish a message to an MQTT broker to finish
 an integration. To do this, add an MQTT connection as the integration's 

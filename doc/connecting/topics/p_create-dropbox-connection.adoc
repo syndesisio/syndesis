@@ -2,7 +2,7 @@
 // as_connecting-to-dropbox.adoc
 
 [id='create-dropbox-connection_{context}']
-= Create a Dropbox connection
+= Creating a Dropbox connection
 
 In an integration, to download or upload Dropbox files, create a 
 Dropbox connection, which you can add

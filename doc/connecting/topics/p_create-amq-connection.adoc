@@ -2,7 +2,7 @@
 // as_connecting-to-amq.adoc
 
 [id='create-amq-connection_{context}']
-= Create an AMQ connection
+= Creating an AMQ connection
 
 In an integration, to obtain messages from or to publish messages to: 
 

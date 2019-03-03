@@ -2,7 +2,7 @@
 // as_connecting-to-google-sheets.adoc
 
 [id='add-google-sheets-connection-update-sheet-values_{context}']
-= Update data in a sheet
+= Updating data in a sheet
 
 In an integration, you can update data in a spreadsheet
 in the middle of the integration or to finish the integration.

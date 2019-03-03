@@ -2,7 +2,7 @@
 // as_amq2api-create-integration.adoc
 
 [id='amq2api-choose-start-connection_{context}']
-= Choose the start connection
+= Choosing the start connection
 
 In {prodname}, to create the sample AMQ to REST API sample integration,
 the first task is to choose the start connection. 

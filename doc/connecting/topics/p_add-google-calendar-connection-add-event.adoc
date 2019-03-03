@@ -2,7 +2,7 @@
 // as_connecting-to-google-calendar.adoc
 
 [id='add-google-calendar-connection-add-event_{context}']
-= Add an event to a Google calendar 
+= Adding an event to a Google calendar 
 
 In an integration, you can add an event to a Google calendar 
 in the middle of the integration or to finish the integration.  

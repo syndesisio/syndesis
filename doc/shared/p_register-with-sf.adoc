@@ -1,4 +1,4 @@
-/ Module included in the following assemblies:
+// Module included in the following assemblies:
 // Upstream:
 // tutorials/topics/as_t2sf-intro.adoc
 // tutorials/topics/as_sf2db-intro.adoc
@@ -9,7 +9,7 @@
 // fuse-online-sample-integration-tutorials/upstream/as_sf2db-intro.adoc
 
 [id='register-with-salesforce_{context}']
-= Register {prodname} as a Salesforce client application
+= Registering {prodname} as a Salesforce client application
 
 In an integration, to connect to Salesforce, the first thing you must do is
 register your {prodname} environment as a client application
@@ -26,13 +26,13 @@ credentials.
 ifeval::["{context}" == "t2sf"]
 If you already registered {prodname} as a Salesforce
 client and created a Salesforce connection, skip to 
-link:{LinkFuseOnlineTutorials}#create-twitter-sf-integration_t2sf[Create Twitter to Salesforce integration].
+link:{LinkFuseOnlineTutorials}#create-twitter-sf-integration_t2sf[Creating Twitter to Salesforce integration].
 endif::[]
 
 ifeval::["{context}" == "sf2db"]
 If you already registered {prodname} as a Salesforce
 client and created a Salesforce connection, skip to 
-link:{LinkFuseOnlineTutorials}#create-sf-db-integration_sf2db[Create Salesforce to database integration]. 
+link:{LinkFuseOnlineTutorials}#create-sf-db-integration_sf2db[Creating Salesforce to database integration]. 
 endif::[]
 
  

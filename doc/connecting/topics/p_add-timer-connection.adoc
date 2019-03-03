@@ -2,7 +2,7 @@
 // as_trigger-integration-with-timer.adoc
 
 [id='add-timer-connection_{context}']
-= Add a timer connection to trigger integration execution
+= Adding a timer connection to trigger integration execution
 
 To trigger execution of an integration according to a schedule that
 you specify, add a timer connection as an integration's start

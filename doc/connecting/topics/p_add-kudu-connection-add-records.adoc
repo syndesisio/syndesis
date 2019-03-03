@@ -2,7 +2,7 @@
 // as_connecting-to-kudu.adoc
 
 [id='add-kudu-connection-add-records_{context}']
-= Insert records into a Kudu table
+= Inserting records into a Kudu table
 
 In an integration, you can add records to a Kudu table to finish
 an integration. To do this, add a Kudu connection as the integration's 

@@ -3,7 +3,7 @@
 // Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
 [id='connecting-to-log_{context}']
-= Connect to an integration's log
+= Connecting to an integration's log
 
 :context: connect-to-log
 
@@ -23,9 +23,9 @@ To obtain further details about integration execution, you can
 log information about the messages that an integration processes by 
 adding a log step and/or a log connection to an integration. 
 
-* <<comparison-log-step-connection_{context}>>
-* <<add-log-connection_{context}>>
-* <<create-replacement-log-connection_{context}>>
+* xref:comparison-log-step-connection_{context}[]
+* xref:add-log-connection_{context}[]
+* xref:create-replacement-log-connection_{context}[]
 
 include::r_comparison-log-step-connection.adoc[leveloffset=+1]
 

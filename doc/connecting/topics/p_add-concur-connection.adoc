@@ -2,7 +2,7 @@
 // as_connecting-to-concur.adoc
 
 [id='add-concur-connection_{context}']
-= Add a SAP Concur connection to an integration
+= Adding a SAP Concur connection to an integration
 
 In an integration, a connection to SAP Concur is a middle or finish
 connection and not a start connection. A connection to SAP Concur can perform

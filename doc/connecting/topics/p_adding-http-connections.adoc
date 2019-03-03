@@ -2,7 +2,7 @@
 // as_connecting-to-http.adoc
 
 [id='adding-http-connections_{context}']
-= Add an HTTP or HTTPS connection to an integration
+= Adding an HTTP or HTTPS connection to an integration
 
 You can add an HTTP or HTTPS connection to 
 any number of integrations.

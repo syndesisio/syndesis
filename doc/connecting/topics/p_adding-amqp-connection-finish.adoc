@@ -2,7 +2,7 @@
 // as_connecting-to-amqp.adoc
 
 [id='adding-amqp-connection-finish_{context}']
-= Finish an integration by publishing AMQP messages
+= Finishing an integration by publishing AMQP messages
 
 To finish an integration by publishing messages to an AMQP broker,
 add an AMQP connection as the finish connection. 

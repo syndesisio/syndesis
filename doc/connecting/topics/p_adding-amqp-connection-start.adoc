@@ -2,7 +2,7 @@
 // as_connecting-to-amqp.adoc
 
 [id='adding-amqp-connection-start_{context}']
-= Start an integration based on receiving AMQP messages
+= Starting an integration based on receiving AMQP messages
 
 To trigger execution of an integration based on receiving messages from
 an AMQP broker, add an AMQP connection as the start connection. 

@@ -2,7 +2,7 @@
 // as_amq2api-intro.adoc
 
 [id='amq2api-create-rest-api-connector_{context}']
-= Create a REST API connector
+= Creating a REST API connector
 
 {prodname} can create connectors for REST APIs
 that support Hypertext Transfer Protocol (HTTP)/1.0 or HTTP/1.1.

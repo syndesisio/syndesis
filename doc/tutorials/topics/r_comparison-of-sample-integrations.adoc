@@ -2,7 +2,7 @@
 // master.adoc
 
 [id='comparison-of-sample-integrations_{context}']
-= Choose the sample integration to create first
+= Choosing the sample integration to create first
 
 You can create the sample integrations in any order. To help you decide
 which one to try first, the following table compares them.

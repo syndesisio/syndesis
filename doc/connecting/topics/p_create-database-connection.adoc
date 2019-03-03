@@ -2,7 +2,7 @@
 // as_connecting-to-databases.adoc
 
 [id='create-database-connection_{context}']
-= Create a database connection
+= Creating a database connection
 
 You create a separate connection for each database that you want to 
 connect to in an integration. You can use the same connection in 

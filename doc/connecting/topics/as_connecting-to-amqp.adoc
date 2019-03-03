@@ -3,7 +3,7 @@
 // Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
 [id='connecting-to-amqp_{context}']
-= Connect to AMQP
+= Connecting to AMQP
 :context: amqp
 
 In an integration, you can obtain messages from or publish messages
@@ -35,10 +35,10 @@ https://access.redhat.com/documentation/en-us/red_hat_jboss_a-mq/6.3/html-single
 
 To use the AMQP connector, see:
 
-* <<create-amqp-connection_{context}>> 
-* <<adding-amqp-connection-start_{context}>>
-* <<adding-amqp-connection-finish_{context}>>
-* <<adding-amqp-connection-middle_{context}>>
+* xref:create-amqp-connection_{context}[] 
+* xref:adding-amqp-connection-start_{context}[]
+* xref:adding-amqp-connection-finish_{context}[]
+* xref:adding-amqp-connection-middle_{context}[]
 
 include::p_create-amqp-connection.adoc[leveloffset=+1]
 

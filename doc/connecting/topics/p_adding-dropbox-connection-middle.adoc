@@ -2,7 +2,7 @@
 // as_connecting-to-dropbox.adoc
 
 [id='adding-dropbox-connection-middle_{context}']
-= Access Dropbox in the middle of an integration
+= Accessing Dropbox in the middle of an integration
 
 To upload a file to Dropbox in the middle of an integration,
 add a Dropbox connection between the start and 

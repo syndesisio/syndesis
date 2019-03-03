@@ -2,7 +2,7 @@
 // as_connecting-to-amqp.adoc
 
 [id='create-amqp-connection_{context}']
-= Create an AMQP connection
+= Creating an AMQP connection
 
 In an integration, to obtain messages from or publish messages to an AMQP
 broker, create an AMQP connection, which you can add to an integration.

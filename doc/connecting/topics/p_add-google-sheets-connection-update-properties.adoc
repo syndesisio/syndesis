@@ -2,7 +2,7 @@
 // as_connecting-to-google-sheets.adoc
 
 [id='add-google-sheets-connection-update-properties_{context}']
-= Update spreadsheet properties
+= Updating spreadsheet properties
 
 In an integration, you can update the properties of a spreadsheet 
 in the middle of the integration or to finish the integration.

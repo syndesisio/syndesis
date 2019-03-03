@@ -2,7 +2,7 @@
 // as_connecting-to-gmail.adoc
 
 [id='add-gmail-connection-start_{context}']
-= Trigger an integration when polling returns a Gmail message
+= Triggering an integration when polling returns a Gmail message
 
 To trigger execution of an integration based on email received by 
 a particular Gmail account, add a Gmail connection as the start connection of

@@ -2,7 +2,7 @@
 // as_connecting-to-telegram.adoc
 
 [id='add-telegram-connection-middle-finish_{context}']
-= Add a Telegram connection to send a message to a Telegram chat
+= Adding a Telegram connection to send a message to a Telegram chat
 
 In an integration, you can send a message to a Telegram chat to
 finish an integration or in the middle of an integration. 

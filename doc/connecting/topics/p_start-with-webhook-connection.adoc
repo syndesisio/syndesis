@@ -2,7 +2,7 @@
 // as_triggering-integrations-with-http-requests.adoc
 
 [id='start-with-webhook-connection_{context}']
-= Create an integration that an HTTP request can trigger
+= Creating an integration that an HTTP request can trigger
 
 To trigger execution of an integration with an HTTP `GET` or `POST` request,
 add a Webhook connection as the integration's start connection. 

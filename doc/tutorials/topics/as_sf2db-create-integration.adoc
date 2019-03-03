@@ -3,16 +3,16 @@
 
 :parent-context: {context}
 [id='create-sf-db-integration_{context}']
-= Create and deploy Salesforce to database sample integration
+= Creating and deploying the Salesforce to database sample integration
 
 :context: sf2db-create
 To create and deploy an integration that uses the Salesforce
 connection and the database connection, the main steps are:
 
-* <<sf2db-choose-start-connection_{context}>>
-* <<sf2db-choose-finish-connection_{context}>>
-* <<sf2db-add-data-mapping-step_{context}>>
-* <<sf2db-name-and-publish_{context}>>
+* xref:sf2db-choose-start-connection_{context}[]
+* xref:sf2db-choose-finish-connection_{context}[]
+* xref:sf2db-add-data-mapping-step_{context}[]
+* xref:sf2db-name-and-publish_{context}[]
 
 .Prerequisites
 * You registered your {prodname} environment as a Salesforce client.

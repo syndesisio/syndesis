@@ -3,7 +3,7 @@
 // Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
 [id='connecting-to-google_{context}']
-= Connect to Google applications
+= Connecting to Google applications
 :context: google
 
 An integration can connect to Gmail, Google Calendar, and Google Sheets. 
@@ -13,10 +13,10 @@ Google API for each application that you want integrations to connect to.
 
 Information and instructions are in the following topics:
 
-* <<register-with-google_{context}>>
-* <<connecting-to-gmail_{context}>>
-* <<connecting-to-google-calendar_{context}>>
-* <<connecting-to-google-sheets_{context}>>
+* xref:register-with-google_{context}[]
+* xref:connecting-to-gmail_{context}[]
+* xref:connecting-to-google-calendar_{context}[]
+* xref:connecting-to-google-sheets_{context}[]
 
 include::p_register-with-google.adoc[leveloffset=+1]
 

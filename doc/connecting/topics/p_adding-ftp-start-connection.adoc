@@ -2,7 +2,7 @@
 // as_connecting-to-ftp.adoc
 
 [id='adding-ftp-start-connection_{context}']
-= Obtain files from an FTP or SFTP server
+= Obtaining files from an FTP or SFTP server
 
 To trigger integration execution when
 an FTP or SFTP connection finds the file(s) you are interested in,

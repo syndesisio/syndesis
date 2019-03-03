@@ -2,7 +2,7 @@
 // as_connecting-to-google-calendar.adoc
 
 [id='add-google-calendar-connection-start_{context}']
-= Trigger an integration when polling returns an event from a Google calendar
+= Triggering an integration when polling returns an event from a Google calendar
 
 To trigger execution of an integration upon obtaining events from 
 a Google Calendar that you specify, add a Google Calendar connection to an integration as 

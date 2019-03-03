@@ -2,7 +2,7 @@
 // as_connecting-to-rest-apis.adoc
 
 [id='add-api-client-connection_{context}']
-= Add an API client connection to an integration
+= Adding an API client connection to an integration
 
 In an integration, to connect to a REST API, add a connection to that
 REST API to the integration. 

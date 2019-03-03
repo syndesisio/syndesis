@@ -2,7 +2,7 @@
 // as_connecting-to-servicenow.adoc
 
 [id='create-servicenow-import-set_{context}']
-= Create an import set in ServiceNow
+= Creating an import set in ServiceNow
 
 In a {prodname} integration, a ServiceNow connection cannot directly 
 update a ServiceNow table. To update ServiceNow data in an integration, 

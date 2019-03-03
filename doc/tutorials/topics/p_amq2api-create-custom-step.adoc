@@ -2,7 +2,7 @@
 // as_amq2api-intro.adoc
 
 [id='amq2api-create-custom-step_{context}']
-= Make a custom step available
+= Making a custom step available
 
 {prodname} provides a number of steps that operate on 
 integration data between connections. If {prodname} does not provide a

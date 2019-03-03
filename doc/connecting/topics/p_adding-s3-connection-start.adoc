@@ -2,7 +2,7 @@
 // as_connecting-to-amazon-s3.adoc
 
 [id='adding-s3-connection-start_{context}']
-= Start an integration by obtaining data from Amazon S3
+= Starting an integration by obtaining data from Amazon S3
 
 To start an integration by obtaining data from an Amazon S3 bucket, 
 add an Amazon S3 connection as the start connection in an integration.

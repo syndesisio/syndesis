@@ -2,7 +2,7 @@
 // as_sf2db-create-integration.adoc
 
 [id='sf2db-add-data-mapping-step_{context}']
-= Add a data mapping step
+= Adding a data mapping step
 
 To continue creating the Salesforce to database sample integration,
 add a data mapping step that correlates Salesforce lead fields to

@@ -2,7 +2,7 @@
 // as_sf2db-intro.adoc
 
 [id='sf2db-confirm-working_{context}']
-= Confirm that the Salesforce to database integration works
+= Confirming that the Salesforce to database integration works
 
 To confirm that the Salesforce to database integration is working, 
 create a new lead in Salesforce and then open the web app that 

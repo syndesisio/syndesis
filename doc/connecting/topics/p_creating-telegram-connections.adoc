@@ -2,7 +2,7 @@
 // as_connecting-to-telegram.adoc
 
 [id='creating-telegram-connections_{context}']
-= Create a Telegram connection
+= Creating a Telegram connection
 
 In an integration, a Telegram connection can receive messages that have been 
 sent to a particular chat. A chat bot that you create forwards the messages 

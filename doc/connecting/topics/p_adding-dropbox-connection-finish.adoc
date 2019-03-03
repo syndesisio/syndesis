@@ -2,7 +2,7 @@
 // as_connecting-to-dropbox.adoc
 
 [id='adding-dropbox-connection-finish_{context}']
-= Finish an integration by adding files to Dropbox
+= Finishing an integration by adding files to Dropbox
 
 To finish an integration by uploading files to Dropbox,
 add a Dropbox connection as the finish connection.

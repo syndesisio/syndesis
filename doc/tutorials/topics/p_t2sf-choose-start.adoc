@@ -2,7 +2,7 @@
 // as_t2sf-create-integration.adoc
 
 [id='t2sf-choose-start-connection_{context}']
-= Choose the start connection
+= Choosing the start connection
 
 In {prodname}, to create the sample Twitter to Salesforce integration, 
 the first task is to choose the start connection. 

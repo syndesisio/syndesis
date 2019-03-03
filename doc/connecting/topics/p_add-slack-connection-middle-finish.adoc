@@ -2,7 +2,7 @@
 // as_connecting-to-slack.adoc
 
 [id='add-slack-connection-middle-finish_{context}']
-= Add a Slack connection to send a message to a Slack channel or user
+= Adding a Slack connection to send a message to a Slack channel or user
 
 In an integration, you can send a message to a Slack channel or Slack user to
 finish an integration or in the middle of an integration. 
