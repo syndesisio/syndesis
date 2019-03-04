@@ -73,6 +73,12 @@ public class HttpRequestWrapperProcessor implements Processor {
         final Message replacement = new DefaultMessage(exchange.getContext());
         replacement.copyFromWithNewBody(message, newBody);
 
+        // we rely on having the Content-Type match the body when we're
+        // extracting parameters from the JSON body, otherwise we don't
+        // know if the content is JSON or XML (or any future supported
+        // content type)
+        replacement.setHeader(Exchange.CONTENT_TYPE, "application/json");
+
         ExchangeHelper.replaceMessage(exchange, replacement, false);
     }
 
