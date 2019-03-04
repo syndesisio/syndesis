@@ -2937,8 +2937,8 @@ spec:
           },
           {
             "current": {
-              "text": "syndesis-db-metrics",
-              "value": "syndesis-db-metrics"
+              "text": "syndesis-db",
+              "value": "syndesis-db"
             },
             "hide": 2,
             "label": null,
@@ -2946,11 +2946,11 @@ spec:
             "options": [
               {
                 "selected": true,
-                "text": "syndesis-db-metrics",
-                "value": "syndesis-db-metrics"
+                "text": "syndesis-db",
+                "value": "syndesis-db"
               }
             ],
-            "query": "syndesis-db-metrics",
+            "query": "syndesis-db",
             "skipUrlSync": false,
             "type": "constant"
           },

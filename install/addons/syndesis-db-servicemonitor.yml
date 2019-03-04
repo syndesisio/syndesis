@@ -11,7 +11,7 @@ metadata:
   name: syndesis-db-metrics
 spec:
   endpoints:
-  - port: prometheus
+  - port: metrics
   selector:
     matchLabels:
-      syndesis.io/component: syndesis-db-metrics
+      syndesis.io/component: syndesis-db
