@@ -480,7 +480,10 @@ export function setStepInFlow(
 ) {
   const flow = getFlow(integration, flowId);
   const steps = [...flow.steps];
-  steps[position] = step;
+  if (typeof step.id === 'undefined') {
+    step.id = key();
+  }
+  steps[position] = { ...step };
   return setFlow(integration, { ...flow, steps });
 }
 
@@ -536,7 +539,7 @@ export function insertStepBefore(steps: Step[], step: Step, position: number) {
  */
 export function createStepUsingStore(store: StepStore, stepKind?: string) {
   const stepConfig = store.getDefaultStepDefinition(stepKind);
-  return { ...createStep(), stepKind, ...stepConfig };
+  return { ...createStep(), ...stepConfig, ...{ id: key(), stepKind } };
 }
 
 /**
