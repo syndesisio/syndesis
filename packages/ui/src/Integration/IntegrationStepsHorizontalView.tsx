@@ -13,7 +13,9 @@ export class IntegrationStepsHorizontalView extends React.Component<
     return (
       <Grid fluid={true} key={1}>
         {this.props.steps &&
-          this.props.steps.map((opt: any) => <p>blah, {opt.name}</p>)}
+          this.props.steps.map((opt: any) => (
+            <p key={opt.id}>blah, {opt.name}</p>
+          ))}
         {this.props.steps ? (
           <Grid.Row className="show-grid">
             <Grid.Col xs={2} md={2}>

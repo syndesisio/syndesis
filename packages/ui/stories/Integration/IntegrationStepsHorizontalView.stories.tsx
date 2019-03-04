@@ -10,9 +10,11 @@ const stories = storiesOf('Integration/IntegrationStepsHorizontalView', module);
 const integrationRunning = {
   steps: [
     {
+      id: 'd2D#T^g',
       name: 'Timer',
     },
     {
+      id: 'In2!%@s',
       name: 'Log',
     },
   ],
