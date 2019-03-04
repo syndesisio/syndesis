@@ -91,6 +91,7 @@ public class GoogleSheetsAddChartCustomizerTest extends AbstractGoogleSheetsCust
         model.setSubtitle("Some subtitle");
         model.setSourceSheetId(0);
         model.setSheetId(1);
+        model.setOverlayPosition("D2");
 
         GoogleChart.BasicChart basicChart = new GoogleChart.BasicChart();
         basicChart.setAxisTitleBottom("Product Names");
@@ -114,7 +115,9 @@ public class GoogleSheetsAddChartCustomizerTest extends AbstractGoogleSheetsCust
         EmbeddedChart chart = addChartRequest.getChart();
         Assert.assertEquals("SyndesisChart", chart.getSpec().getTitle());
         Assert.assertEquals("Some subtitle", chart.getSpec().getSubtitle());
-        Assert.assertEquals(Integer.valueOf(1), chart.getPosition().getSheetId());
+        Assert.assertEquals(Integer.valueOf(1), chart.getPosition().getOverlayPosition().getAnchorCell().getSheetId());
+        Assert.assertEquals(Integer.valueOf(1), chart.getPosition().getOverlayPosition().getAnchorCell().getRowIndex());
+        Assert.assertEquals(Integer.valueOf(3), chart.getPosition().getOverlayPosition().getAnchorCell().getColumnIndex());
 
         BasicChartSpec chartSpec = chart.getSpec().getBasicChart();
         Assert.assertNotNull(chartSpec);
@@ -170,6 +173,7 @@ public class GoogleSheetsAddChartCustomizerTest extends AbstractGoogleSheetsCust
         Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         AddChartRequest addChartRequest = batchUpdateRequest.getRequests().get(0).getAddChart();
+        Assert.assertTrue(addChartRequest.getChart().getPosition().getNewSheet());
         BasicChartSpec chartSpec = addChartRequest.getChart().getSpec().getBasicChart();
         Assert.assertNotNull(chartSpec);
         Assert.assertEquals(2, chartSpec.getSeries().size());
