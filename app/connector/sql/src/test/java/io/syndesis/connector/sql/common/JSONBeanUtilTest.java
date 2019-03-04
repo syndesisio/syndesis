@@ -15,17 +15,20 @@
  */
 package io.syndesis.connector.sql.common;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.jdbc.core.SqlParameterValue;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class JSONBeanUtilTest {
 
@@ -101,9 +104,10 @@ public class JSONBeanUtilTest {
     @Test
     public void parseSqlParametersFromJSONBeanWhenNoParameters() throws JsonProcessingException {
         try {
-            String[] jsonParamValues = { null, "" };
+            String[] jsonParamValues = { null, "", "{}", "[]", "something else" };
             for (int i = 0; i < jsonParamValues.length; ++i) {
-                JSONBeanUtil.parseSqlParametersFromJSONBean(jsonParamValues[i], new HashMap<>());
+                Map<String, SqlParameterValue> retMap = JSONBeanUtil.parseSqlParametersFromJSONBean(jsonParamValues[i], new HashMap<>());
+                assertThat(retMap).isEmpty();
             }
         } catch (Exception ex) {
             throw new AssertionError("Should not throw exception when json parameter is empty", ex);

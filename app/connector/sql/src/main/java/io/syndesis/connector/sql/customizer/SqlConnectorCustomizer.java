@@ -18,6 +18,7 @@ package io.syndesis.connector.sql.customizer;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +36,6 @@ import org.springframework.jdbc.core.SqlParameterValue;
 
 public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
 
-    private Map<String, Object> options;
     private Map<String, Integer> jdbcTypeMap;
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlConnectorCustomizer.class);
 
@@ -43,15 +43,16 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         component.setBeforeProducer(this::doBeforeProducer);
         component.setAfterProducer(this::doAfterProducer);
-        this.options = options;
-        initJdbcMap();
+        initJdbcMap(options);
     }
 
     private void doBeforeProducer(Exchange exchange) {
         final String body = exchange.getIn().getBody(String.class);
-        if (body != null) {
-            final Map<String,SqlParameterValue> sqlParametersValues = JSONBeanUtil.parseSqlParametersFromJSONBean(body, jdbcTypeMap);
+        if (body != null && !jdbcTypeMap.isEmpty()) {
+            final Map<String, SqlParameterValue> sqlParametersValues = JSONBeanUtil.parseSqlParametersFromJSONBean(body, jdbcTypeMap);
             exchange.getIn().setBody(sqlParametersValues);
+        } else {
+            exchange.getIn().setBody(Collections.emptyMap());
         }
     }
 
@@ -60,7 +61,7 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
         in.setBody(JSONBeanUtil.toJSONBeans(in));
     }
 
-    private void initJdbcMap() {
+    private void initJdbcMap(Map<String, Object> options) {
         if (jdbcTypeMap == null) {
             final String sql =  String.valueOf(options.get("query"));
             final DataSource dataSource = (DataSource) options.get("dataSource");
