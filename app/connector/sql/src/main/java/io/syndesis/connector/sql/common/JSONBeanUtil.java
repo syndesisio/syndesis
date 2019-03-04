@@ -76,8 +76,8 @@ public final class JSONBeanUtil {
         return ret;
     }
 
-    public static Map<String,SqlParameterValue> parseSqlParametersFromJSONBean(final String json, final Map<String, Integer> jdbcTypeMap) {
-        if (json == null || json.isEmpty()) {
+    public static Map<String, SqlParameterValue> parseSqlParametersFromJSONBean(final String json, final Map<String, Integer> jdbcTypeMap) {
+        if (!isValidJSONBean(json)) {
             return Collections.emptyMap(); // json is empty so no need to parse
         }
 
@@ -106,6 +106,15 @@ public final class JSONBeanUtil {
             ret.put(key, sqlParam);
         }
         return ret;
+    }
+
+    /**
+     * Validate JSON bean for being a proper parameter information object.
+     * @param json
+     * @return
+     */
+    private static boolean isValidJSONBean(String json) {
+        return json != null && !json.isEmpty() && json.trim().startsWith("{") && json.trim().endsWith("}");
     }
 
     /**
