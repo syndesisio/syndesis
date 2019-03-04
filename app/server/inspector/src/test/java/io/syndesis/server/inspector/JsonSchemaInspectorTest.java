@@ -33,7 +33,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JsonSchemaInspectorTest {
 
     private final String JSON_SCHEMA_KIND = "json-schema";
+    private final String JSON_SCHEMA_ORG_SCHEMA = "http://json-schema.org/schema#";
     private JsonSchemaInspector inspector = new JsonSchemaInspector();
+
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
     public void shouldCollectPathsFromJsonSchema() throws IOException {
@@ -51,7 +54,6 @@ public class JsonSchemaInspectorTest {
 
     @Test
     public void shouldFetchPathsFromJsonSchema() throws IOException {
-        final ObjectMapper mapper = new ObjectMapper();
         final ObjectSchema schema = mapper.readValue(getSalesForceContactSchema(), ObjectSchema.class);
 
         final List<String> paths = new ArrayList<>();
@@ -59,12 +61,43 @@ public class JsonSchemaInspectorTest {
         assertSalesforceContactProperties(paths);
     }
 
+    @Test
+    public void shouldFetchPathsWithNestedArraySchema() throws IOException {
+        final ObjectSchema schema = mapper.readValue(getSchemaWithNestedArray(), ObjectSchema.class);
+
+        final List<String> paths = new ArrayList<>();
+        JsonSchemaInspector.fetchPaths(null, paths, schema.getProperties());
+
+        assertThat(paths).hasSize(4);
+        assertThat(paths).containsAll(Arrays.asList("Id", "PhoneNumbers.size()", "PhoneNumbers[].Name", "PhoneNumbers[].Number"));
+    }
+
     private InputStream getSalesForceContactSchema() {
         return JsonSchemaInspectorTest.class.getResourceAsStream("/salesforce.Contact.jsonschema");
     }
 
     private String getSalesForceContactArraySchema() throws IOException {
-        return "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":" + IOStreams.readText(getSalesForceContactSchema()) + "}";
+        return "{\"type\":\"array\",\"$schema\":\"" + JSON_SCHEMA_ORG_SCHEMA + "\",\"items\":" + IOStreams.readText(getSalesForceContactSchema()) + "}";
+    }
+
+    private String getSchemaWithNestedArray() {
+        return "{" +
+                    "\"type\":\"object\"," +
+                "\"$schema\":\"" + JSON_SCHEMA_ORG_SCHEMA + "\", " +
+                    "\"properties\": { " +
+                            "\"Id\": { \"type\": \"string\",\"required\": true }, " +
+                            "\"PhoneNumbers\": {" +
+                                    "\"type\": \"array\"," +
+                                    "\"items\": {" +
+                                        "\"type\":\"object\", " +
+                                        "\"properties\": { " +
+                                                "\"Name\": { \"type\": \"string\",\"required\": true }, " +
+                                                "\"Number\": { \"type\": \"string\",\"required\": true } " +
+                                        "}" +
+                                    "}" +
+                            "}" +
+                    "}" +
+                "}";
     }
 
     private void assertSalesforceContactProperties(List<String> paths) {
