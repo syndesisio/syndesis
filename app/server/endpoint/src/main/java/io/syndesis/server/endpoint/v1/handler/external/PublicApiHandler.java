@@ -18,14 +18,11 @@ package io.syndesis.server.endpoint.v1.handler.external;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
@@ -90,7 +87,6 @@ public class PublicApiHandler {
     private final IntegrationDeploymentHandler deploymentHandler;
     private final ConnectionHandler connectionHandler;
     private final MonitoringProvider monitoringProvider;
-    private final Set<String> environments;
 
     protected PublicApiHandler(DataManager dataMgr, IntegrationSupportHandler handler, EncryptionComponent encryptionComponent, IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler, MonitoringProvider monitoringProvider) {
         this.dataMgr = dataMgr;
@@ -99,12 +95,6 @@ public class PublicApiHandler {
         this.deploymentHandler = deploymentHandler;
         this.connectionHandler = connectionHandler;
         this.monitoringProvider = monitoringProvider;
-
-        // read all existing environment names in a cache
-        this.environments = new CopyOnWriteArraySet<>();
-        dataMgr.fetchAll(Integration.class)
-                .getItems()
-                .forEach(i -> environments.addAll(i.getContinuousDeliveryState().keySet()));
     }
 
     /**
@@ -114,7 +104,10 @@ public class PublicApiHandler {
     @Path("environments")
     @Produces(MediaType.APPLICATION_JSON)
     public List<String> getReleaseEnvironments() {
-        return Arrays.asList(environments.toArray(new String[0]));
+        return dataMgr.fetchAll(Integration.class).getItems().stream()
+                .filter(i -> !i.isDeleted())
+                .flatMap(i -> i.getContinuousDeliveryState().keySet().stream())
+                .collect(Collectors.toList());
     }
 
     /**
@@ -126,31 +119,28 @@ public class PublicApiHandler {
 
         validateParam("environment", environment);
 
-        if (this.environments.contains(environment)) {
+        // get and update list of integrations with this environment
+        final List<Integration> integrations = dataMgr.fetchAll(Integration.class)
+                .getItems()
+                .stream()
+                .filter(i -> i.getContinuousDeliveryState().containsKey(environment))
+                .map(i -> {
+                    final Map<String, ContinuousDeliveryEnvironment> state = new HashMap<>(i.getContinuousDeliveryState());
+                    // untag
+                    state.remove(environment);
 
-            // get and update list of integrations with this environment
-            final List<Integration> integrations = dataMgr.fetchAll(Integration.class)
-                    .getItems()
-                    .stream()
-                    .filter(i -> i.getContinuousDeliveryState().containsKey(environment))
-                    .map(i -> {
-                        final Map<String, ContinuousDeliveryEnvironment> state = new HashMap<>(i.getContinuousDeliveryState());
-                        // untag
-                        state.remove(environment);
+                    return i.builder().continuousDeliveryState(state).build();
+                })
+                .collect(Collectors.toList());
 
-                        return i.builder().continuousDeliveryState(state).build();
-                    })
-                    .collect(Collectors.toList());
-
-            // update environment names
-            integrations.forEach(dataMgr::update);
-
-            // update cache
-            environments.remove(environment);
-
-        } else {
+        // no integrations using this environment name
+        if (integrations.isEmpty()) {
             throw new ClientErrorException("Missing environment " + environment, Response.Status.NOT_FOUND);
         }
+
+        // update environment names
+        integrations.forEach(dataMgr::update);
+
     }
 
     /**
@@ -170,35 +160,31 @@ public class PublicApiHandler {
             return;
         }
 
-        if (this.environments.contains(environment)) {
+        // get and update list of integrations with this environment
+        final List<Integration> integrations = dataMgr.fetchAll(Integration.class)
+                .getItems()
+                .stream()
+                .filter(i -> i.getContinuousDeliveryState().containsKey(environment))
+                .map(i -> {
+                    final Map<String, ContinuousDeliveryEnvironment> state = new HashMap<>(i.getContinuousDeliveryState());
 
-            // get and update list of integrations with this environment
-            final List<Integration> integrations = dataMgr.fetchAll(Integration.class)
-                    .getItems()
-                    .stream()
-                    .filter(i -> i.getContinuousDeliveryState().containsKey(environment))
-                    .map(i -> {
-                        final Map<String, ContinuousDeliveryEnvironment> state = new HashMap<>(i.getContinuousDeliveryState());
+                    state.put(newEnvironment, state.remove(environment)
+                            .builder()
+                            .name(newEnvironment)
+                            .build());
 
-                        state.put(newEnvironment, state.remove(environment)
-                                .builder()
-                                .name(newEnvironment)
-                                .build());
+                    return i.builder().continuousDeliveryState(state).build();
+                })
+                .collect(Collectors.toList());
 
-                        return i.builder().continuousDeliveryState(state).build();
-                    })
-                    .collect(Collectors.toList());
-
-            // update environment names
-            integrations.forEach(dataMgr::update);
-
-            // update cache
-            environments.add(newEnvironment);
-            environments.remove(environment);
-
-        } else {
+        // environment not in use
+        if (integrations.isEmpty()) {
             throw new ClientErrorException("Missing environment " + environment, Response.Status.NOT_FOUND);
         }
+
+        // update environment names
+        integrations.forEach(dataMgr::update);
+
     }
 
     /**
@@ -230,19 +216,6 @@ public class PublicApiHandler {
 
         // update json db
         dataMgr.update(integration.builder().continuousDeliveryState(deliveryState).build());
-
-        // update cache
-        boolean found = false;
-        final ListResult<Integration> integrations = dataMgr.fetchAll(Integration.class);
-        for (Integration intg : integrations) {
-            if (intg.getContinuousDeliveryState().get(environment) != null) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            environments.remove(environment);
-        }
     }
 
     /**
@@ -270,9 +243,6 @@ public class PublicApiHandler {
         for (String environment : environments) {
             // create or update tag
             result.put(environment, createOrUpdateTag(deliveryState, environment, lastTaggedAt));
-
-            // update cache if necessary
-            this.environments.add(environment);
         }
 
         // update json db
@@ -426,9 +396,6 @@ public class PublicApiHandler {
                 // deploy integrations
                 integrations.forEach(i -> publishIntegration(sec, i));
             }
-
-            // update cache if needed
-            this.environments.add(environment);
 
             return new ContinuousDeliveryImportResults.Builder()
                     .lastImportedAt(lastImportedAt)
