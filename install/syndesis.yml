@@ -714,7 +714,7 @@ objects:
         - capabilities: {}
           env:
           - name: DATA_SOURCE_NAME
-            value: localhost://${POSTGRESQL_USER}:${POSTGRESQL_PASSWORD}@syndesis-db:5432/syndesis?sslmode=disable
+            value: postgresql://${POSTGRESQL_USER}:${POSTGRESQL_PASSWORD}@localhost:5432/syndesis?sslmode=disable
           - name: PG_EXPORTER_EXTEND_QUERY_PATH
             value: /etc/postgres/exporter/queries.yaml
           image: ' '
