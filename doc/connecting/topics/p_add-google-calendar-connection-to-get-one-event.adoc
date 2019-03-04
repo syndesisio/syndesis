@@ -2,7 +2,7 @@
 // as_connecting-to-google-calendar.adoc
 
 [id='add-google-calendar-connection-to-get-one-event_{context}']
-= Obtain a particular event from a Google calendar
+= Obtaining a particular event from a Google calendar
 
 In an integration, you can obtain a particular Google calendar event
 in the middle of an integration. Obtaining a particular event is 

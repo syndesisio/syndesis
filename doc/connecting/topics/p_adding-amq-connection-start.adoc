@@ -2,7 +2,7 @@
 // as_connecting-to-amq.adoc
 
 [id='adding-amq-connection-start_{context}']
-= Start an integration based on receiving AMQ messages
+= Starting an integration based on receiving AMQ messages
 
 To trigger execution of an integration based on receiving a message
 from a Red Hat AMQ broker, add a Red Hat AMQ connection as the start connection.

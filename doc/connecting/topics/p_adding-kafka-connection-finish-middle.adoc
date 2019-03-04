@@ -2,7 +2,7 @@
 // as_connecting-to-kafka.adoc
 
 [id='adding-kafka-connection-finish-middle_{context}']
-= Publish data to a Kafka broker
+= Publishing data to a Kafka broker
 
 In an integration, you can publish data to a Kafka broker to finish
 an integration. To do this, add a Kafka connection as the integration's 

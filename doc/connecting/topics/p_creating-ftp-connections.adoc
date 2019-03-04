@@ -2,7 +2,7 @@
 // as_connecting-to-ftp.adoc
 
 [id='creating-ftp-connections_{context}']
-= Create an FTP or SFTP connection
+= Creating an FTP or SFTP connection
 
 In an integration, to download or upload files from/to an FTP or SFTP server, 
 create a connection to that FTP or SFTP server. You can add the same 

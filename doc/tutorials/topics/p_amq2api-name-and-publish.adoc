@@ -2,7 +2,7 @@
 // as_amq2api-create-integration.adoc
 
 [id='amq2api-name-and-publish_{context}']
-= Give the integration a name and deploy it
+= Giving the integration a name and deploying it
 
 The AMQ to REST API sample integration is complete when it has a Red Hat AMQ start
 connection, a Damage Reporter step, a data mapper step, and it finishes

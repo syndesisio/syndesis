@@ -2,7 +2,7 @@
 // as_connecting-to-amazon-s3.adoc
 
 [id='create-s3-connection_{context}']
-= Create Amazon S3 connections
+= Creating Amazon S3 connections
 
 You must create an Amazon S3 connection before you can add an
 Amazon S3 connection to an integration.

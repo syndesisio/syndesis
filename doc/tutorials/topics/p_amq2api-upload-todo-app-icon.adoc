@@ -2,7 +2,7 @@
 // as_amq2api-intro.adoc
 
 [id='amq2api-upload-todo-app-icon_{context}']
-= Upload the To Do app icon
+= Uploading the To Do app icon
 
 To show the flow of an integration, {prodname} displays icons that identify
 the applications that the integration is connecting to. Your {prodname}

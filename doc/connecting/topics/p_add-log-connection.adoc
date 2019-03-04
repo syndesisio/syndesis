@@ -2,7 +2,7 @@
 // as_connecting-to-log.adoc
 
 [id='add-log-connection_{context}']
-= Add a log connection to an integration
+= Adding a log connection to an integration
 
 To log information about the messages that an integration processes, 
 add one or more log connections to the integration. A log connection takes

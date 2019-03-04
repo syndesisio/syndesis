@@ -2,7 +2,7 @@
 // as_connecting-to-google-sheets.adoc
 
 [id='create-google-sheets-connection_{context}']
-= Create a Google Sheets connection
+= Creating a Google Sheets connection
 
 When you create a Google Sheets connection, you authorize the connection to access
 the Google Sheets spreadsheets that are associated with one

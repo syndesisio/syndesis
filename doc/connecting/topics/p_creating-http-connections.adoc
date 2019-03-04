@@ -2,7 +2,7 @@
 // as_connecting-to-http.adoc
 
 [id='creating-http-connections_{context}']
-= Create a connection to an HTTP or HTTPS endpoint
+= Creating a connection to an HTTP or HTTPS endpoint
 
 In an integration, to execute the HTTP `GET`, `PUT`, `POST`, `DELETE`, 
 `HEAD`, `OPTIONS`, `TRACE`, or `PATCH` method, create a connection to

@@ -2,7 +2,7 @@
 // as_amq2api-intro.adoc
 
 [id='amq2api-confirm-works_{context}']
-= Confirm that the AMQ to REST API integration works
+= Confirming that the AMQ to REST API integration works
 
 After you create and publish the AMQ to REST API sample integration, 
 you can confirm that it works as defined. 

@@ -3,7 +3,7 @@
 
 :parent-context: {context}
 [id='amq-to-rest-api_{context}']
-= Implement an AMQ to REST API sample integration
+= Implementing an AMQ to REST API sample integration
 
 :context: amq2api
 This sample integration connects to a Red Hat AMQ broker to obtain item
@@ -34,14 +34,14 @@ endif::[]
 
 To implement the AMQ to REST API sample integration, the main steps are:
 
-. <<amq2api-create-amq-connection_{context}>>
-. <<amq2api-create-custom-step_{context}>>
-. <<amq2api-create-rest-api-connector_{context}>>
-. <<amq2api-upload-todo-app-icon_{context}>>
-. <<amq2api-create-rest-api-connection_{context}>>
-. <<amq2api-create-integration_{context}>>
-. <<amq2api-confirm-works_{context}>>
-. <<cleanup_{context}>>
+. xref:amq2api-create-amq-connection_{context}[]
+. xref:amq2api-create-custom-step_{context}[]
+. xref:amq2api-create-rest-api-connector_{context}[]
+. xref:amq2api-upload-todo-app-icon_{context}[]
+. xref:amq2api-create-rest-api-connection_{context}[]
+. xref:amq2api-create-integration_{context}[]
+. xref:amq2api-confirm-works_{context}[]
+. xref:cleanup_{context}[]
 
 
 include::p_amq2api-create-amq-connection.adoc[leveloffset=+1]

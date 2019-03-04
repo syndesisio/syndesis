@@ -2,7 +2,7 @@
 // as_connecting-to-servicenow.adoc
 
 [id='add-servicenow-connection-finish_{context}']
-= Copy records to ServiceNow during or to finish an integration
+= Copying records to ServiceNow during or to finish an integration
 
 In the middle of an integration, or to finish an integration, 
 you can copy records to 
@@ -17,7 +17,7 @@ as the finish connection or as a middle connection.
 add records to. Your ServiceNow administrator can
 help you identify the appropriate import set. If the import set 
 does not exist, see 
-link:{LinkFuseOnlineConnectorGuide}#create-servicenow-import-set_servicenow[Create an import set in ServiceNow].
+link:{LinkFuseOnlineConnectorGuide}#create-servicenow-import-set_servicenow[Creating an import set in ServiceNow].
 * The ServiceNow import set is configured to handle the addition 
 of records.
 

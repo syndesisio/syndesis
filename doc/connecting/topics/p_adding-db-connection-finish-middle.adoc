@@ -2,7 +2,7 @@
 // as_connecting-to-databases.adoc
 
 [id='adding-db-connection-finish-middle_{context}']
-= Access a database in the middle or to complete an integration
+= Accessing a database in the middle or to complete an integration
 
 To finish an integration by accessing a database, add a database
 connection as the finish connection. To access 

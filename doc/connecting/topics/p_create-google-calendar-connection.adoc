@@ -2,7 +2,7 @@
 // as_connecting-to-google-calendar.adoc
 
 [id='create-google-calendar-connection_{context}']
-= Create a Google Calendar connection 
+= Creating a Google Calendar connection 
 
 When you create a Google Calendar connection, you authorize the connection to access 
 the Google calendars that are associated with one

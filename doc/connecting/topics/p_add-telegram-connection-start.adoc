@@ -2,7 +2,7 @@
 // as_connecting-to-telegram.adoc
 
 [id='add-telegram-connection-start_{context}']
-= Add a Telegram connection to trigger integration execution upon receiving messages
+= Adding a Telegram connection to trigger integration execution upon receiving messages
 
 A Telegram connection that starts an integration triggers execution of the 
 integration each time that the connection receives a message from a Telegram 
@@ -10,7 +10,7 @@ chat bot that you specify.
 
 .Prerequisites
 
-* You created a <<creating-telegram-connections_{context},Telegram connection>>. 
+* You created a xref:creating-telegram-connections_{context}[Telegram connection]. 
 * You are creating an integration and {prodname} is prompting you to 
 choose how you want to start the integration. 
 

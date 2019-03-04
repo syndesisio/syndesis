@@ -2,7 +2,7 @@
 // as_connecting-to-amqp.adoc
 
 [id='adding-amqp-connection-middle_{context}']
-= Publish messages to AMQP in the middle of an integration
+= Publishing messages to AMQP in the middle of an integration
 
 In the middle of an integration, to publish messages to an AMQP broker,
 add an AMQP connection between the start and 

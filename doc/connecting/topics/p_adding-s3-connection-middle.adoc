@@ -2,7 +2,7 @@
 // as_connecting-to-amazon-s3.adoc
 
 [id='adding-s3-connection-middle_{context}']
-= Add data to Amazon S3 in the middle of an integration
+= Adding data to Amazon S3 in the middle of an integration
 
 In the middle of an integration, to add data to Amazon S3, 
 add an Amazon S3 connection between the start and

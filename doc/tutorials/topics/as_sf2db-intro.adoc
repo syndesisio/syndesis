@@ -3,7 +3,7 @@
 
 :parent-context: {context}
 [id='salesforce-to-db_{context}']
-= Implement a Salesforce to database sample integration
+= Implementing the Salesforce to database sample integration
 :context: sf2db
 
 This sample integration captures updates in Salesforce and then
@@ -39,11 +39,11 @@ endif::[]
 
 To implement, deploy, and test this sample integration, the main steps are:
 
-. <<register-with-salesforce_{context}>>
-. <<create-salesforce-connection_{context}>>
-. <<create-sf-db-integration_{context}>>
-. <<sf2db-confirm-working_{context}>>
-. <<cleanup_{context}>>
+. xref:register-with-salesforce_{context}[]
+. xref:create-salesforce-connection_{context}[]
+. xref:create-sf-db-integration_{context}[]
+. xref:sf2db-confirm-working_{context}[]
+. xref:cleanup_{context}[]
 
 include::shared/p_register-with-sf.adoc[leveloffset=+1]
 

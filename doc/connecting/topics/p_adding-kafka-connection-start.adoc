@@ -2,7 +2,7 @@
 // as_connecting-to-kafka.adoc
 
 [id='adding-kafka-connection-start_{context}']
-= Obtain data from a Kafka broker
+= Obtaining data from a Kafka broker
 
 To trigger execution of an integration based on receiving data
 from a Kafka broker, add a Kafka connection as the start connection. When 

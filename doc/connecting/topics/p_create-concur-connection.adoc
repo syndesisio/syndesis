@@ -2,7 +2,7 @@
 // as_connecting-to-concur.adoc
 
 [id='create-concur-connection_{context}']
-= Create a SAP Concur connection
+= Creating a SAP Concur connection
 
 To connect to SAP Concur in an integration, you must first create a SAP
 Concur connection, which you can then add to any number of integrations. 

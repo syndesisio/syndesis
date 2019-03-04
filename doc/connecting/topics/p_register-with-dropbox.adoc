@@ -2,7 +2,7 @@
 // as_connecting-to_dropbox.adoc
 
 [id='register-with-dropbox_{context}']
-= Register {prodname} as a Dropbox client
+= Registering {prodname} as a Dropbox client
 
 You must register your {prodname} environment as a client application
 that can access Dropbox.

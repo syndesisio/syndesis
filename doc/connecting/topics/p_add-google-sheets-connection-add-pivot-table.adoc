@@ -2,7 +2,7 @@
 // as_connecting-to-google-sheets.adoc
 
 [id='add-google-sheets-connection-add-pivot-table_{context}']
-= Add a pivot table to a sheet
+= Adding a pivot table to a sheet
 
 In the middle of an integration, or to finish an integration, 
 you can add a pivot table to a Google Sheets spreadsheet.

@@ -2,7 +2,7 @@
 // as_connecting-to-google-calendar.adoc
 
 [id='add-google-calendar-connection-update-event_{context}']
-= Update an event in a Google calendar 
+= Updating an event in a Google calendar 
 
 In an integration, you can update an event in a Google calendar
 in the middle of the integration or to finish the integration.  

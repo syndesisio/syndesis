@@ -2,7 +2,7 @@
 // as_t2sf-create-integration.adoc
 
 [id='t2sf-add-data-mapping-step_{context}']
-= Add a data mapping step
+= Adding a data mapping step
 
 To continue creating the Twitter to Salesforce sample integration,
 add a data mapping step that correlates Twitter mention fields to

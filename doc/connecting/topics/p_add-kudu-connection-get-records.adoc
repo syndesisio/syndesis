@@ -2,7 +2,7 @@
 // as_connecting-to-kudu.adoc
 
 [id='add-kudu-connection-get-records_{context}']
-= Trigger an integration when scanning returns records from a Kudu table
+= Triggering an integration when scanning returns records from a Kudu table
 
 To trigger execution of an integration upon obtaining data from a 
 Kudu table, add a Kudu connection to an integration as its start 

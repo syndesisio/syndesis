@@ -2,7 +2,7 @@
 // as_connecting-to-concur.adoc
 
 [id='configure-concur-connector_{context}']
-= Configure the SAP Concur connector
+= Configuring the SAP Concur connector
 
 To connect to SAP Concur in an integration, you must configure the
 {prodname} SAP Concur connector. You can then use the connector

@@ -2,7 +2,7 @@
 // as_connecting-to-google-sheets.adoc
 
 [id='add-google-sheets-connection-create-spreadsheet_{context}']
-= Create a spreadsheet
+= Creating a spreadsheet
 
 To create a new spreadsheet in the middle of an integration, 
 add a Google Sheets connection between the start and finish connections. 

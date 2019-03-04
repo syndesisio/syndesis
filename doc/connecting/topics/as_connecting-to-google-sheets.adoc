@@ -4,7 +4,7 @@
 
 :context: google
 [id='connecting-to-google-sheets_{context}']
-= Connect to Google Sheets
+= Connecting to Google Sheets
 :context: sheets
 
 To trigger execution of an integration when a Google Sheets connection

@@ -2,7 +2,7 @@
 // as_connecting-to-gmail.adoc
 
 [id='create-gmail-connection_{context}']
-= Create a Gmail connection 
+= Creating a Gmail connection 
 
 When you create a Gmail connection, you authorize the connection to access one
 particular Gmail account. After you create a Gmail connection, you can 

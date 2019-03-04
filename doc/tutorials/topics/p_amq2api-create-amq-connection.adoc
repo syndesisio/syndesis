@@ -2,7 +2,7 @@
 // as_amq2api-intro.adoc
 
 [id='amq2api-create-amq-connection_{context}']
-= Create an AMQ connection
+= Creating an AMQ connection
 
 The AMQ to REST API sample integration starts by connecting to an
 AMQ broker (Red Hat AMQ) that is provided in your OpenShift Online  

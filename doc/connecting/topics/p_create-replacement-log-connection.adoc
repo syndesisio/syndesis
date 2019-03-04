@@ -2,7 +2,7 @@
 // as_connecting-to-log.adoc
 
 [id='create-replacement-log-connection_{context}']
-= Create a replacement log connection
+= Creating a replacement log connection
 
 {prodname} provides a log connection that you can add to an integration to
 log information about each message that an integration processes. If you 

@@ -3,7 +3,7 @@
 // Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
 [id='connecting-to-kudu_{context}']
-= Connect to Apache Kudu
+= Connecting to Apache Kudu
 :context: kudu
 
 Apache Kudu is a columnar storage manager developed for the Apache Hadoop platform. 

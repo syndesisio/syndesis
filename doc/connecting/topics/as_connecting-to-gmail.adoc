@@ -3,7 +3,7 @@
 // Downstream: connecting-fuse-online-to-applications-and-services/as_connecting-to-google.adoc
 
 [id='connecting-to-gmail_{context}']
-= Connect to Gmail
+= Connecting to Gmail
 :context: gmail
 
 To trigger execution of an integration when a particular Gmail
@@ -14,21 +14,21 @@ finish connection, or as a middle connection.
 
 The general steps for connecting to Gmail in an integration are:
 
-. link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Register {prodname} as a Google client application].
-. Create a Gmail connection. When you do this you choose the Gmail account that
+. link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering {prodname} as a Google client application].
+. Creating a Gmail connection. When you do this you choose the Gmail account that
 the connection is authorized to access.
 . If your integration sends an email from a Gmail account, 
 decide how to populate an email to send.
-. Add a Gmail connection to an integration.
-. For a Gmail connection that sends an email, optionally map integration
+. Adding a Gmail connection to an integration.
+. For a Gmail connection that sends an email, optionally mapping integration
 data to the email fields. 
 
 Information and instructions are in the following topics:
 
-* <<create-gmail-connection_{context}>>
-* <<alternatives-for-populating-email-to-send_{context}>>
-* <<add-gmail-connection-start_{context}>>
-* <<add-gmail-connection-finish-middle_{context}>>
+* xref:create-gmail-connection_{context}[]
+* xref:alternatives-for-populating-email-to-send_{context}[]
+* xref:add-gmail-connection-start_{context}[]
+* xref:add-gmail-connection-finish-middle_{context}[]
 
 include::p_create-gmail-connection.adoc[leveloffset=+1]
 

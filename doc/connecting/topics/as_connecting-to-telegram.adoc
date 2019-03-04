@@ -3,7 +3,7 @@
 :context: connectors
 
 [id='connecting-to-telegram_{context}']
-= Connect to Telegram
+= Connecting to Telegram
 
 As a business user, you can create an integration that connects to Telegram. A 
 connection to Telegram can do either one of the following:
@@ -25,9 +25,9 @@ To connect to Telegram in an integration, create a Telegram
 connection and then add the connection to an integration. 
 Details are in the following topics:
 
-* <<creating-telegram-connections_{context}>>
-* <<add-telegram-connection-start_{context}>>
-* <<add-telegram-connection-middle-finish_{context}>>
+* xref:creating-telegram-connections_{context}[]
+* xref:add-telegram-connection-start_{context}[]
+* xref:add-telegram-connection-middle-finish_{context}[]
 
 include::p_creating-telegram-connections.adoc[leveloffset=+1]
 

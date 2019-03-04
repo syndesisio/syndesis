@@ -2,7 +2,7 @@
 // as_connecting-to-amq.adoc
 
 [id='adding-amq-connection-finish_{context}']
-= Finish an integration by publishing AMQ messages
+= Finishing an integration by publishing AMQ messages
 
 To finish an integration by publishing messages to a Red Hat AMQ broker, 
 add a Red Hat AMQ connection as the finish connection.

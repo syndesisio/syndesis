@@ -2,7 +2,7 @@
 // as_connecting-to-kafka.adoc
 
 [id='creating-kafka-connections_{context}']
-= Create a connection to a Kafka broker
+= Creating a connection to a Kafka broker
 
 In an integration, to subscribe for data from a Kafka topic 
 or publish data to a Kafka topic, 

@@ -2,7 +2,7 @@
 // as_connecting-to-gmail.adoc
 
 [id='add-gmail-connection-finish-middle_{context}']
-= Send an email from a Gmail account
+= Sending an email from a Gmail account
 
 In an integration, you can send an email from a Gmail account either
 in the middle of the integration or to finish the integration.  

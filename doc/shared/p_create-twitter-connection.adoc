@@ -8,7 +8,7 @@
 
 
 [id='create-twitter-connection_{context}']
-= Create a Twitter connection
+= Creating a Twitter connection
 
 To create an integration that obtains data from Twitter, you 
 must first create a Twitter connection.  

@@ -2,7 +2,7 @@
 // as_connecting-to-twitter.adoc
 
 [id='adding-twitter-connections_{context}']
-= Add a Twitter connection to an integration
+= Adding a Twitter connection to an integration
 
 In an integration, a connection to Twitter can trigger execution of
 an integration when a tweet contains your Twitter handle or when 

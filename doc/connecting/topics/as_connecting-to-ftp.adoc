@@ -3,16 +3,16 @@
 // Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
 [id='connecting-to-ftp_{context}']
-= Connect to an FTP or SFTP server
+= Connecting to an FTP or SFTP server
 :context: ftp
 
 In an integration, you can connect to an FTP or SFTP server to download or 
 upload files. To do this, create an FTP or SFTP connection. You can then add this 
 connection to any number of integrations. The following topics provide details:
 
-* <<creating-ftp-connections_{context}>>
-* <<adding-ftp-start-connection_{context}>>
-* <<adding-ftp-finish-middle-connection_{context}>>
+* xref:creating-ftp-connections_{context}[]
+* xref:adding-ftp-start-connection_{context}[]
+* xref:adding-ftp-finish-middle-connection_{context}[]
 
 include::p_creating-ftp-connections.adoc[leveloffset=+1]
 

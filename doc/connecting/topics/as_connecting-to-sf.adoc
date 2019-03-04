@@ -3,7 +3,7 @@
 // Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
 [id='connecting-to-sf_{context}']
-= Connect to Salesforce
+= Connecting to Salesforce
 
 :context: salesforce
 
@@ -13,9 +13,9 @@ In an integration, to connect to Salesforce, you must register your
 a Salesforce connection, which you can then add to any number of 
 integrations. For details, see the following topics:
 
-* <<register-with-salesforce_{context}>>
-* <<create-salesforce-connection_{context}>>
-* <<adding-sf-connections_{context}>>
+* xref:register-with-salesforce_{context}[]
+* xref:create-salesforce-connection_{context}[]
+* xref:adding-sf-connections_{context}[]
 
 include::shared/p_register-with-sf.adoc[leveloffset=+1]
 

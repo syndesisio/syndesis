@@ -2,7 +2,7 @@
 // as_connecting-to-ftp.adoc
 
 [id='adding-ftp-finish-middle-connection_{context}']
-= Upload files to an FTP or SFTP server
+= Uploading files to an FTP or SFTP server
 
 To finish an integration by uploading files to an FTP or SFTP server, 
 add an FTP or SFTP connection as the integration's finish connection. You can also

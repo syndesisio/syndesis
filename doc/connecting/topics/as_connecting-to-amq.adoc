@@ -2,7 +2,7 @@
 // connecting/master.adoc
 
 [id='connecting-to-amq_{context}']
-= Connect to AMQ
+= Connecting to AMQ
 :context: amq
 
 In an integration, you can obtain messages from a
@@ -26,10 +26,10 @@ to create a connection to the broker of interest:
 
 To use the Red Hat AMQ connector, see:
 
-* <<create-amq-connection_{context}>>
-* <<adding-amq-connection-start_{context}>>
-* <<adding-amq-connection-finish_{context}>>
-* <<adding-amq-connection-middle_{context}>>
+* xref:create-amq-connection_{context}[]
+* xref:adding-amq-connection-start_{context}[]
+* xref:adding-amq-connection-finish_{context}[]
+* xref:adding-amq-connection-middle_{context}[]
 
 include::p_create-amq-connection.adoc[leveloffset=+1]
 

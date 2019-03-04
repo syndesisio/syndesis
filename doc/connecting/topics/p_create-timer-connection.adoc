@@ -2,7 +2,7 @@
 // as_trigger-integration-with-timer.adoc
 
 [id='create-timer-connection_{context}']
-= Create a replacement timer connection
+= Creating a replacement timer connection
 
 {prodname} provides a timer connection; you do not need to create one.
 However, if you inadvertently delete the provided timer connection

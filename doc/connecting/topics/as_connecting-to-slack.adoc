@@ -3,7 +3,7 @@
 // Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
 [id='connecting-to-slack_{context}']
-= Connect to Slack
+= Connecting to Slack
 :context: slack
 
 As a business user, you can create an integration that connects to Slack. A 
@@ -16,7 +16,6 @@ for keyword instances such as product names. Upon finding messages that
 contain those product names, the integration can notify the appropriate contact 
 in a Gmail connection. 
 
-
 * Deliver a message to a particular user or to a channel. For example, this 
 behavior is useful when an integration downloads a file from an FTP server and 
 processes it in some way. You can finish an integration by 
@@ -26,9 +25,9 @@ To connect to Slack in an integration, create a Slack
 connection and then add the connection to an integration. 
 Details are in the following topics:
 
-* <<creating-slack-connections_{context}>>
-* <<add-slack-connection-start_{context}>>
-* <<add-slack-connection-middle-finish_{context}>>
+* xref:creating-slack-connections_{context}[]
+* xref:add-slack-connection-start_{context}[]
+* xref:add-slack-connection-middle-finish_{context}[]
 
 include::p_creating-slack-connections.adoc[leveloffset=+1]
 

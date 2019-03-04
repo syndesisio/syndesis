@@ -7,7 +7,7 @@
 // connecting-fuse-online-to-applications-and-services/upstream/as_connecting-to-twitter.adoc
 
 [id='register-with-twitter_{context}']
-= Register {prodname} as a Twitter client application
+= Registering {prodname} as a Twitter client application
 
 In an integration, to connect to Twitter, the first thing you must do is
 register your {prodname} environment as a client application

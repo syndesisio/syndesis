@@ -2,7 +2,7 @@
 // as_connecting-to-google-sheets.adoc
 
 [id='add-google-sheets-connection-append-sheet-values_{context}']
-= Append data to a sheet
+= Appending data to a sheet
 
 You can append data to a sheet 
 in the middle of the integration or to finish the integration.

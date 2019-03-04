@@ -3,7 +3,7 @@
 // Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
 
 [id='connecting-to-servicenow_{context}']
-= Connect to ServiceNow
+= Connecting to ServiceNow
 :context: servicenow
 
 An integration can retrieve records from a ServiceNow table or add records to 
@@ -12,11 +12,11 @@ In an integration, to connect to ServiceNow,
 create a ServiceNow connection and then add that connection to an integration.
 For details, see:
 
-* <<create-servicenow-connection_{context}>>
-* <<add-servicenow-connection-start_{context}>>
-* <<create-servicenow-import-set_{context}>>
-* <<add-servicenow-connection-finish_{context}>>
-* <<example-sf-servicenow-integration_{context}>>
+* xref:create-servicenow-connection_{context}[]
+* xref:add-servicenow-connection-start_{context}[]
+* xref:create-servicenow-import-set_{context}[]
+* xref:add-servicenow-connection-finish_{context}[]
+* xref:example-sf-servicenow-integration_{context}[]
 
 include::p_create-servicenow-connection.adoc[leveloffset=+1]
 

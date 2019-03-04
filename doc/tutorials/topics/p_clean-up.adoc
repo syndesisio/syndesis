@@ -4,7 +4,7 @@
 // as_amq2api-intro.adoc
 
 [id='cleanup_{context}']
-= Clean up your integration
+= Cleaning up your integration
 
 When you are done working with a sample integration, you should stop it and
 delete it so that you can use the resources for another integration. 

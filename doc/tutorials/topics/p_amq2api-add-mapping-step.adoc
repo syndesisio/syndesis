@@ -2,7 +2,7 @@
 // as_amq2api-create-integration.adoc
 
 [id='amq2api-add-mapping-step_{context}']
-= Add a data mapping step
+= Adding a data mapping step
 
 To continue creating the AMQ to REST API sample integration, you need to add a 
 data mapping step. This step correlates the `task` field in the

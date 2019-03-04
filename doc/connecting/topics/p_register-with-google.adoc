@@ -2,7 +2,7 @@
 // as_connecting-to-google.adoc
 
 [id='register-with-google_{context}']
-= Register {prodname} as a Google client application
+= Registering {prodname} as a Google client application
 
 In an integration, to be able to connect to Gmail, Google Calendar, or
 Google Sheets, 

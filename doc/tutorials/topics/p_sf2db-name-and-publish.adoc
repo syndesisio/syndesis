@@ -2,7 +2,7 @@
 // as_sf2db-create-integration.adoc
 
 [id='sf2db-name-and-publish_{context}']
-= Give the integration a name and deploy it
+= Giving the integration a name and deploying it
 
 When the Salesforce to database sample integration is complete then you
 can deploy it and see how it works. 

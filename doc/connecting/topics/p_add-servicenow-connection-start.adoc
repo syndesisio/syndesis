@@ -2,7 +2,7 @@
 // as_connecting-to-servicenow.adoc
 
 [id='add-servicenow-connection-start_{context}']
-= Start an integration by obtaining records from ServiceNow
+= Starting an integration by obtaining records from ServiceNow
 
 To start an integration by obtaining records from ServiceNow,
 add a ServiceNow connection to an integration as the start connection.

@@ -2,7 +2,7 @@
 // as_triggering-integrations-with-http-requests.adoc
 
 [id='create-webhook-connection_{context}']
-= Use the Webhook connection 
+= Using the Webhook connection 
 
 {prodname} provides a Webhook connection that you can use in 
 any number of integrations as the start connection. Each time you 

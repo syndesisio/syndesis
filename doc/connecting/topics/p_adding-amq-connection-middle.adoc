@@ -2,7 +2,7 @@
 // as_connecting-to-amq.adoc
 
 [id='adding-amq-connection-middle_{context}']
-= Publish AMQ messages in the middle of an integration
+= Publishing AMQ messages in the middle of an integration
 
 In the middle of an integration, to publish messages to a Red Hat AMQ broker, 
 add a Red Hat AMQ connection between the start and

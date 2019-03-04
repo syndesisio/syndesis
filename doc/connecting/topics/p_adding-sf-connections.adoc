@@ -2,7 +2,7 @@
 // as_connecting-to-sf.adoc
 
 [id='adding-sf-connections_{context}']
-= Add a Salesforce connection to an integration
+= Adding a Salesforce connection to an integration
 
 In an integration, you can connect to Salesforce to start or finish the
 integration, or in the middle of an integration. To connect to Salesforce,

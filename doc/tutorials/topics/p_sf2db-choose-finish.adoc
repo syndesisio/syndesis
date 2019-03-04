@@ -2,7 +2,7 @@
 // as_sf2db-create-integration.adoc
 
 [id='sf2db-choose-finish-connection_{context}']
-= Choose the finish connection
+= Choosing the finish connection
 
 In {prodname}, to continue creating the Salesforce to database sample
 integration, after you add the start connection, you add the finish connection

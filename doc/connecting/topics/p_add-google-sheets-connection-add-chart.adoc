@@ -2,7 +2,7 @@
 // as_connecting-to-google-sheets.adoc
 
 [id='add-google-sheets-connection-add-chart_{context}']
-= Add a chart to a sheet 
+= Adding a chart to a sheet 
 
 In the middle of an integration, or to finish an integration, 
 you can add a basic chart or a pie chart to a Google Sheets spreadsheet.
