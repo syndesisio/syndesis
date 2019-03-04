@@ -124,6 +124,11 @@
       port: 5432
       protocol: TCP
       targetPort: 5432
+    - name: metrics
+      nodePort: 0
+      port: 9187
+      protocol: TCP
+      targetPort: 9187
     selector:
       app: syndesis
       syndesis.io/app: syndesis
@@ -230,7 +235,7 @@
         - capabilities: {}
           env:
           - name: DATA_SOURCE_NAME
-            value: postgresql://${POSTGRESQL_USER}:${POSTGRESQL_PASSWORD}@syndesis-db:5432/syndesis?sslmode=disable
+            value: localhost://${POSTGRESQL_USER}:${POSTGRESQL_PASSWORD}@syndesis-db:5432/syndesis?sslmode=disable
           - name: PG_EXPORTER_EXTEND_QUERY_PATH
             value: /etc/postgres/exporter/queries.yaml
 {{^WithDockerImages}}
