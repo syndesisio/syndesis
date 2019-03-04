@@ -18,67 +18,39 @@ between connections.
 
 * You created an API provider integration, gave it a name, and saved it.
 * You created a connection to each application or service that you want
-an integration flow to connect to. For details, see the
+an operation flow to connect to. For details, see the
 link:{LinkFuseOnlineIntegrationGuide}#about-creating-connections_connections[information about creating connections].
-* {prodname} is displaying the *Choose operation* page. 
+* {prodname} is displaying the list of operations that the API defines. 
 
 .Procedure
 
-. In the *Choose operation* page, click the entry for an operation
-whose flow you want to edit. This opens the *Add to Integration* page.
+. In the *Operations* list page, click the entry for an operation
+whose flow you want to edit. 
 
-. In the integration visualization panel on the left, click the 
-image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
-at the bottom. When you hover over this icon, *Provided API Return Path* 
-appears.
-+
-Every API provider integration ends each integration flow by 
-sending a response to the REST API caller that triggered execution of the 
-integration flow.
-
-. Specify the operation's return code as follows: 
-.. In the *Provided API Return Path* page, click in the *Return Code*
-input field, which displays a list of possible return codes. 
-.. Scroll to *200 OK* and click it. 
-+
-If there is a return code that better describes the result then you 
-can select that one instead. However, in this Technology Preview release,
-you can select only one return code. Whenever an API call triggers 
-execution of this integration flow, this is the return code. This
-Technology Preview release does not support error handling. 
-
-.. Click *Done*.
-.. In the upper right, click *Save as Draft*. 
-+
-After you implement the return code for at least one operation, 
-you can publish the integration to start running it. When it is
-running, you can invoke an API call that triggers execution of
-the integration flow for which you defined the return code. However,
-you probably want to add more steps to the operation's flow. 
-
-. In this integration flow, to connect to another application or service: 
-.. In the integration flow visualization panel on the left, hover over the
-plus sign in the location where you want to add a connection and in the 
-popup that appears, click *Add a connection*.
-.. Click the connection that you want to add to this integration flow. 
+. In this operation flow, to connect to another application or service: 
+.. In the flow visualization panel on the left, if this is the 
+first step that you are adding, click the
+plus sign. If this is not the first additional step, click the 
+plus sign in the location where you want to add a connection. 
+.. On the *Choose a Step* page, click the connection that you want 
+to add to this flow. 
 .. Click the action that you want this connection to perform.  
 .. Configure the action. 
 .. Click *Done*. 
-.. In the upper right, click *Save as Draft*. 
+.. In the upper right, click *Save*. 
 
 +
 For each connection that you want to add to this integration flow, repeat
-this subset of instructions. Add all desired connections to the integration flow
+this subset of instructions. Add all desired connections to the flow
 before you continue. 
 
-. In this integration flow, to process data between connections:
-.. In the integration flow visualization panel on the left, hover over the
-plus sign in the location where you want to add a step and in the
-popup that appears, click *Add a step*. 
-.. In the *Choose a Step* page, click the step that you want to add. 
+. In this operation flow, to process data between connections:
+.. In the flow visualization panel on the left, click the
+plus sign in the location where you want to add a step. 
+.. On the *Choose a Step* page, click the step that you want to add. 
 .. Configure the step. 
 .. Click *Done*. 
-.. In the upper right, click *Save as Draft*. 
+.. In the upper right, click *Save*. 
 
 +
 For help, see
@@ -88,7 +60,7 @@ link:{LinkFuseOnlineIntegrationGuide}#about-adding-steps_create[Adding steps bet
 Repeat this subset of instructions to add another step that processes
 data between connections.
 
-. In the integration flow visualization panel on the left, check for 
+. In the flow visualization panel on the left, check for 
 data type mismatch 
 image:images/DataTypeMismatchWarning.png[data mismatch] icons, which
 indicate that the connection cannot process the incoming data. You need
@@ -96,40 +68,58 @@ to add a data mapper step here. Go back to the previous
 subset of instructions. 
 On the *Choose a Step* page, click *Data Mapper*, and define the
 needed mappings. For help, see
-link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Mapping integration data to fields in the next connection.
+link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Mapping integration data to fields in the next connection].
+
+. In the flow visualization panel on the left, at the bottom, hover over the 
+image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
+to see that it is the *Provided API Return Path*. 
++
+Every API provider integration finishes each operation flow by 
+sending a response to the REST API caller that triggered execution of the 
+operation flow. The response contains the return code that is 
+specified here. 
++
+In this release, whenever an API call triggers 
+execution of this integration flow, the return code is the code that
+is specified in this step. 
+Error handling is expected to be supported in a future release. 
++
+Accept the flow's default return code, *200 OK*, or specify another 
+return code as follows:
+
+.. Click the 
+image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon.
+.. Click in the *Return Code* input field, which displays a list of 
+possible return codes. 
+.. Scroll to the return code that you want and click it. 
+.. Click *Next*.
 
 . When this integration flow has all needed 
 connections and steps, do one of the following:
-* To start running the integration, in the upper right, click *Publish*.
+* *Publish* - To start running the integration, in the upper right, click *Publish*.
 This builds the integration and makes it available to be executed. 
 You can publish the integration each time that you
-complete the creation of an operation's integration flow or each
-time that you edit an operation's integration flow.
-* To edit the integration flow for another operation, 
-in the upper right, click 
-*Go to Operations List*. 
-
+complete the creation of an operation's flow or each
+time that you edit an operation's flow.
+* *Edit another flow* - To edit the flow for another operation, select it from the 
+*Operations* drop-down list, which is at the top of the page, 
+and looks something like this: 
++
+image:images/operations-dropdown-list.jpg[operations] 
++
+Or, select *Go to Operations List* to select another operation from there. 
+Controls at the top of the operations list let you display
+operations according to criteria that you choose. 
++
 Repeat this procedure to edit another operation's 
 integration flow.
 
-ifeval::["{location}" == "upstream"]
 [NOTE]
 ==== 
-In this release, in an integration flow, a connection to a SQL database 
+In this release, in an operation flow, a connection to a SQL database 
 that executes a `SELECT` statement returns only the first record 
 in the result set.
 ====
-endif::[]
-
-ifeval::["{location}" == "downstream"]
-[IMPORTANT]
-==== 
-In this Technology Preview release, in an integration flow, 
-a connection to a SQL database 
-that executes a `SELECT` statement returns only the first record in 
-the result set.
-====
-endif::[]
 
 .Next steps
 When an API provider integration 

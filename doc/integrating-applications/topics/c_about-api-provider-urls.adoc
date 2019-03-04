@@ -14,7 +14,7 @@ Examples of REST clients are the `curl` utility, a web browser, the Postman app,
 and other applications that make REST calls. 
 
 
-In an integration, each operation that the OpenAPI document defines has its own 
+In an API provider integration, each operation that the OpenAPI document defines has its own 
 integration flow. Consequently, each operation can also have its own 
 REST API service URL. Each URL is defined by the base URL 
 and optionally by a subpath. REST API calls that trigger execution of a particular 
@@ -33,6 +33,6 @@ execution of the integration
 flow for one REST operation. This API provider integration has 3 flows. 
 Each integration flow can use any connection or step that 
 is available in {prodname}. The REST API along with its integration flows 
-is one {prodname} integration, which is deployed in one OpenShift container/pod.
+is one {prodname} API provider integration, which is deployed in one OpenShift container/pod.
 
 image:images/api-provider.png[API provider integration with 3 flows]

@@ -2,11 +2,11 @@
 include::topics/shared/attributes.adoc[]
 
 :prodname: Syndesis
-:prodversion: 7.2
+:prodversion: 7.3
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
 :productpkg: red_hat_fuse
-:version: 7.2
+:version: 7.3
 :location: upstream
 :parent-context: ug
 :context: ug
@@ -22,8 +22,6 @@ The content in this guide is organized as follows:
 
 * <<high-level-overview_{context}>>
 * <<how-to-get-ready_{context}>>
-// The following file is used downstream, but not upstream.
-// * <<logging-in-and-out_{context}>>
 * <<connecting-to-applications_{context}>>
 * <<creating-integrations_{context}>>
 * <<mapping-data_{context}>>
@@ -37,8 +35,6 @@ link:{LinkFuseOnlineTutorials}[{NameOfFuseOnlineTutorials}].
 include::topics/as_high-level-overview.adoc[leveloffset=+1]
 
 include::topics/as_how-to-get-ready.adoc[leveloffset=+1]
-
-// include::topics/shared/log-in.adoc[leveloffset=+1]
 
 include::topics/as_connecting-to-applications.adoc[leveloffset=+1]
 

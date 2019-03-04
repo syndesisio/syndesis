@@ -11,8 +11,8 @@ document that you provide. When you publish an API provider integration,
 
 The benefit of API provider integrations
 is that calls from REST API clients trigger execution of the integration. 
-This is different from other {prodname} integrations. A traditional
-{prodname} integration periodically monitors an application or 
+This is different from {prodname} simple integrations. A 
+{prodname} simple integration periodically monitors an application or 
 service and triggers execution of the integration according to how
 you configure the connection to that application or service. 
 For example, an integration might start with a Twitter
@@ -24,11 +24,12 @@ particular event occurs. This call
 triggers execution of the integration. To set this up, you upload an OpenAPI 2.0
 document to {prodname}. {prodname} publishes the API and provides the URL 
 where the service is available. In {prodname}, for each operation that the OpenAPI 
-document defines, you add connections and steps that process data
+document defines, you add connections and other steps to the flow for that
+operation. These steps process the data
 as required for the particular operation. For example, consider a human 
 resources application that calls a REST API service that {prodname} has 
 made available. Suppose the call invokes the operation that adds a new
-employee. The integration flow that handles this call could:
+employee. The operation flow that handles this call could:
 
 * Connect to an application that creates an expense report for new employee 
 equipment.
