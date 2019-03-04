@@ -19,6 +19,10 @@ const draftText = 'Draft';
 const draftTip = 'The virtualization ' + virtName + ' has not been published';
 const publishedText = 'Published';
 const publishedTip = 'The virtualization ' + virtName + ' is published';
+const confirmDeleteTitle = 'Confirm Delete?';
+const confirmDeleteMessage =
+  'Are you sure you want to delete the virtualization?';
+const cancelText = 'Cancel';
 const deleteText = 'Delete';
 const exportText = 'Export';
 const unpublishText = 'Unpublish';
@@ -79,15 +83,18 @@ stories.add(
     <VirtListItem
       virtName={virtName}
       virtDescription={virtDescription}
+      i18nCancelText={cancelText}
+      i18nDelete={deleteText}
+      i18nDeleteModalMessage={confirmDeleteMessage}
+      i18nDeleteModalTitle={confirmDeleteTitle}
       i18nDraft={draftText}
       i18nDraftTip={draftTip}
       icon={text('icon', virtIconData)}
       i18nEdit={editText}
       i18nEditTip={editTip}
+      i18nExport={'Export'}
       i18nPublished={publishedText}
       i18nPublishedTip={publishedTip}
-      // i18nDelete={deleteText}
-      // i18nExport={exportText}
       i18nUnpublish={unpublishText}
       i18nPublish={publishText}
       onDelete={action(deleteText)}

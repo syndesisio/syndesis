@@ -2,14 +2,16 @@
   "virtualization": {
     "createDataVirtualization": "Create $t(shared:DataVirtualization)",
     "createDataVirtualizationTip": "Create a data virtualization",
-    "importVirtualizationTip": "Import a data virtualization",
-    "emptyStateInfoMessage": "There are no virtualizations available. Please click on the button below to import one.",
-    "emptyStateTitle": "$t(virtualization.createDataVirtualization)",
-    "virtualizationsPageDescription": "Syndesis creates and manages data virtualizations to expose as data source connections.",
-    "virtualizationsPageTitle": "$t(shared:DataVirtualizations)",
-    "publishedDataVirtualization": "Published",
+    "deleteModalMessage": "Are you sure you want to delete the \"{{name}}\" virtualization?",
+    "deleteModalTitle": "Confirm Delete?",
     "draftDataVirtualizationTip": "The data virtualization is in Draft state",
     "editDataVirtualizationTip": "Edit the data virtualization",
-    "publishedDataVirtualizationTip": "The data virtualization is in Published state"
+    "emptyStateInfoMessage": "There are no virtualizations available. Please click on the button below to import one.",
+    "emptyStateTitle": "$t(virtualization.createDataVirtualization)",
+    "importVirtualizationTip": "Import a data virtualization",
+    "publishedDataVirtualization": "Published",
+    "publishedDataVirtualizationTip": "The data virtualization is in Published state",
+    "virtualizationsPageDescription": "Syndesis creates and manages data virtualizations to expose as data source connections.",
+    "virtualizationsPageTitle": "$t(shared:DataVirtualizations)"
   }
 }

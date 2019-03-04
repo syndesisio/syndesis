@@ -1,4 +1,4 @@
-import { WithVirtualizations } from '@syndesis/api';
+import { WithVirtualizationHelpers, WithVirtualizations } from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
 import {
   IActiveFilter,
@@ -77,11 +77,6 @@ export default class VirtualizationsPage extends React.Component {
     alert('Import virtualization ' + virtName);
   }
 
-  public handleDeleteVirtualization() {
-    // TODO: implement handleCreateVirtualization
-    alert('Delete virtualization ');
-  }
-
   public handleEditVirtualization() {
     // TODO: implement handleEditVirtualization
     alert('Edit virtualization ');
@@ -104,118 +99,146 @@ export default class VirtualizationsPage extends React.Component {
 
   public render() {
     return (
-      <WithVirtualizations>
-        {({ data, hasData, error }) => (
-          <WithListViewToolbarHelpers
-            defaultFilterType={filterByName}
-            defaultSortType={sortByName}
-          >
-            {helpers => {
-              const filteredAndSorted = getFilteredAndSortedVirts(
-                data,
-                helpers.activeFilters,
-                helpers.currentSortType,
-                helpers.isSortAscending
-              );
+      <WithVirtualizationHelpers>
+        {({ deleteVirtualization }) => {
+          const handleDelete = async (virualizationName: string) => {
+            await deleteVirtualization(virualizationName);
+            // TODO: post toast notification
+          };
+          return (
+            <WithVirtualizations>
+              {({ data, hasData, error }) => (
+                <WithListViewToolbarHelpers
+                  defaultFilterType={filterByName}
+                  defaultSortType={sortByName}
+                >
+                  {helpers => {
+                    const filteredAndSorted = getFilteredAndSortedVirts(
+                      data,
+                      helpers.activeFilters,
+                      helpers.currentSortType,
+                      helpers.isSortAscending
+                    );
 
-              return (
-                <Translation ns={['data', 'shared']}>
-                  {t => (
-                    <VirtListView
-                      filterTypes={filterTypes}
-                      sortTypes={sortTypes}
-                      {...this.state}
-                      resultsCount={filteredAndSorted.length}
-                      {...helpers}
-                      i18nCreateDataVirt={t(
-                        'virtualization.createDataVirtualization'
-                      )}
-                      i18nCreateDataVirtTip={t(
-                        'virtualization.createDataVirtualizationTip'
-                      )}
-                      i18nDescription={t(
-                        'virtualization.virtualizationsPageDescription'
-                      )}
-                      i18nEmptyStateInfo={t(
-                        'virtualization.emptyStateInfoMessage'
-                      )}
-                      i18nEmptyStateTitle={t('virtualization.emptyStateTitle')}
-                      i18nImport={t('shared:Import')}
-                      i18nImportTip={t(
-                        'virtualization.importVirtualizationTip'
-                      )}
-                      i18nLinkCreateVirt={t(
-                        'virtualization.createDataVirtualization'
-                      )}
-                      i18nName={t('shared:Name')}
-                      i18nNameFilterPlaceholder={t(
-                        'shared:nameFilterPlaceholder'
-                      )}
-                      i18nResultsCount={t('shared:resultsCount', {
-                        count: filteredAndSorted.length,
-                      })}
-                      i18nTitle={t('virtualization.virtualizationsPageTitle')}
-                      linkCreateHRef={resolvers.virtualizations.create()}
-                      onCreate={this.handleCreateVirt}
-                      onImport={this.handleImportVirt}
-                    >
-                      <WithLoader
-                        error={error}
-                        loading={!hasData}
-                        loaderChildren={
-                          <VirtListSkeleton
-                            width={800}
-                            style={{
-                              backgroundColor: '#FFF',
-                              marginTop: 30,
-                            }}
-                          />
-                        }
-                        errorChildren={<div>TODO</div>}
-                      >
-                        {() =>
-                          filteredAndSorted.map(
-                            (virt: RestDataService, index: number) => (
-                              <VirtListItem
-                                key={index}
-                                virtName={virt.keng__id}
-                                virtDescription={virt.tko__description}
-                                i18nDraft={t('shared:Draft')}
-                                i18nDraftTip={t(
-                                  'virtualization.draftDataVirtualizationTip'
-                                )}
-                                i18nEdit={t('shared:Edit')}
-                                i18nEditTip={t(
-                                  'virtualization.editDataVirtualizationTip'
-                                )}
-                                i18nPublished={t(
-                                  'virtualization.publishedDataVirtualization'
-                                )}
-                                i18nPublishedTip={t(
-                                  'virtualization.publishedDataVirtualizationTip'
-                                )}
-                                i18nUnpublish={t('shared:Unpublish')}
-                                i18nPublish={t('shared:Publish')}
-                                onDelete={this.handleDeleteVirtualization}
-                                onEdit={this.handleEditVirtualization}
-                                onExport={this.handleExportVirtualization}
-                                onUnpublish={this.handleUnpublishVirtualization}
-                                onPublish={this.handlePublishVirtualization}
-                                // TODO: modify komodo service call to add published state
-                                isPublished={false}
-                              />
-                            )
-                          )
-                        }
-                      </WithLoader>
-                    </VirtListView>
-                  )}
-                </Translation>
-              );
-            }}
-          </WithListViewToolbarHelpers>
-        )}
-      </WithVirtualizations>
+                    return (
+                      <Translation ns={['data', 'shared']}>
+                        {t => (
+                          <VirtListView
+                            filterTypes={filterTypes}
+                            sortTypes={sortTypes}
+                            {...this.state}
+                            resultsCount={filteredAndSorted.length}
+                            {...helpers}
+                            i18nCreateDataVirt={t(
+                              'virtualization.createDataVirtualization'
+                            )}
+                            i18nCreateDataVirtTip={t(
+                              'virtualization.createDataVirtualizationTip'
+                            )}
+                            i18nDescription={t(
+                              'virtualization.virtualizationsPageDescription'
+                            )}
+                            i18nEmptyStateInfo={t(
+                              'virtualization.emptyStateInfoMessage'
+                            )}
+                            i18nEmptyStateTitle={t(
+                              'virtualization.emptyStateTitle'
+                            )}
+                            i18nImport={t('shared:Import')}
+                            i18nImportTip={t(
+                              'virtualization.importVirtualizationTip'
+                            )}
+                            i18nLinkCreateVirt={t(
+                              'virtualization.createDataVirtualization'
+                            )}
+                            i18nName={t('shared:Name')}
+                            i18nNameFilterPlaceholder={t(
+                              'shared:nameFilterPlaceholder'
+                            )}
+                            i18nResultsCount={t('shared:resultsCount', {
+                              count: filteredAndSorted.length,
+                            })}
+                            i18nTitle={t(
+                              'virtualization.virtualizationsPageTitle'
+                            )}
+                            linkCreateHRef={resolvers.virtualizations.create()}
+                            onCreate={this.handleCreateVirt}
+                            onImport={this.handleImportVirt}
+                          >
+                            <WithLoader
+                              error={error}
+                              loading={!hasData}
+                              loaderChildren={
+                                <VirtListSkeleton
+                                  width={800}
+                                  style={{
+                                    backgroundColor: '#FFF',
+                                    marginTop: 30,
+                                  }}
+                                />
+                              }
+                              errorChildren={<div>TODO</div>}
+                            >
+                              {() =>
+                                filteredAndSorted.map(
+                                  (virt: RestDataService, index: number) => (
+                                    <VirtListItem
+                                      key={index}
+                                      virtName={virt.keng__id}
+                                      virtDescription={virt.tko__description}
+                                      i18nCancelText={t('shared:Cancel')}
+                                      i18nDelete={t('shared:Delete')}
+                                      i18nDeleteModalMessage={t(
+                                        'virtualization.deleteModalMessage',
+                                        { name: virt.keng__id }
+                                      )}
+                                      i18nDeleteModalTitle={t(
+                                        'virtualization.deleteModalTitle'
+                                      )}
+                                      i18nDraft={t('shared:Draft')}
+                                      i18nDraftTip={t(
+                                        'virtualization.draftDataVirtualizationTip'
+                                      )}
+                                      i18nEdit={t('shared:Edit')}
+                                      i18nEditTip={t(
+                                        'virtualization.editDataVirtualizationTip'
+                                      )}
+                                      i18nExport={t('shared:Export')}
+                                      i18nPublished={t(
+                                        'virtualization.publishedDataVirtualization'
+                                      )}
+                                      i18nPublishedTip={t(
+                                        'virtualization.publishedDataVirtualizationTip'
+                                      )}
+                                      i18nUnpublish={t('shared:Unpublish')}
+                                      i18nPublish={t('shared:Publish')}
+                                      onDelete={handleDelete}
+                                      onEdit={this.handleEditVirtualization}
+                                      onExport={this.handleExportVirtualization}
+                                      onUnpublish={
+                                        this.handleUnpublishVirtualization
+                                      }
+                                      onPublish={
+                                        this.handlePublishVirtualization
+                                      }
+                                      // TODO: modify komodo service call to add published state
+                                      isPublished={false}
+                                    />
+                                  )
+                                )
+                              }
+                            </WithLoader>
+                          </VirtListView>
+                        )}
+                      </Translation>
+                    );
+                  }}
+                </WithListViewToolbarHelpers>
+              )}
+            </WithVirtualizations>
+          );
+        }}
+      </WithVirtualizationHelpers>
     );
   }
 }
