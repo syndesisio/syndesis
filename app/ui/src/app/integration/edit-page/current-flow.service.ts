@@ -21,6 +21,7 @@ import {
   StepStore,
   SPLIT,
   AGGREGATE,
+  ENDPOINT,
 } from '@syndesis/ui/store';
 import {
   FlowEvent,
@@ -377,6 +378,28 @@ export class CurrentFlowService {
   }
 
   handleEvent(event: FlowEvent): void {
+    const onSave = event.onSave;
+    // Nested function of common actions that need to happen after changes
+    const thenFinally = () => {
+      executeEventAction(onSave);
+      this.dirty$.next(true);
+      this.postUpdates();
+    };
+
+    // Nested function to determine if we need to go through and update data shapes
+    const perhapsReconcileDataShapes = (
+      skipReconcile = false,
+      then: () => void
+    ) => {
+      if (!skipReconcile) {
+        this.reconcileAllDataShapes(() => {
+          then();
+        });
+      } else {
+        then();
+      }
+    };
+
     switch (event.kind) {
       case INTEGRATION_UPDATED: {
         // Nothing to do
@@ -390,8 +413,7 @@ export class CurrentFlowService {
           createStepUsingStore(this.stepStore),
           position
         );
-        executeEventAction(event.onSave);
-        this.postUpdates();
+        thenFinally();
         break;
       }
       case INTEGRATION_INSERT_DATAMAPPER: {
@@ -402,8 +424,7 @@ export class CurrentFlowService {
           createStepUsingStore(this.stepStore, DATA_MAPPER),
           position
         );
-        executeEventAction(event.onSave);
-        this.postUpdates();
+        thenFinally();
         break;
       }
       case INTEGRATION_INSERT_CONNECTION: {
@@ -414,8 +435,7 @@ export class CurrentFlowService {
           createConnectionStep(),
           position
         );
-        executeEventAction(event.onSave);
-        this.postUpdates();
+        thenFinally();
         break;
       }
       case INTEGRATION_REMOVE_STEP: {
@@ -426,9 +446,7 @@ export class CurrentFlowService {
             this.flowId,
             position
           );
-          executeEventAction(event.onSave);
-          this.dirty$.next(true);
-          this.postUpdates();
+          perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
         }
         break;
       }
@@ -442,9 +460,7 @@ export class CurrentFlowService {
             { ..._step },
             position
           );
-          executeEventAction(event.onSave);
-          this.dirty$.next(true);
-          this.postUpdates();
+          perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
         });
         break;
       }
@@ -459,9 +475,7 @@ export class CurrentFlowService {
           addMetadataToStep(step, metadata),
           position
         );
-        executeEventAction(event.onSave);
-        this.dirty$.next(true);
-        this.postUpdates();
+        thenFinally();
         break;
       }
       case INTEGRATION_SET_PROPERTIES: {
@@ -475,9 +489,11 @@ export class CurrentFlowService {
           setConfiguredPropertiesOnStep(step, properties),
           position
         );
-        this.postUpdates();
-        this.dirty$.next(true);
-        executeEventAction(event.onSave);
+        if (step.stepKind === DATA_MAPPER) {
+          perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
+        } else {
+          thenFinally();
+        }
         break;
       }
       case INTEGRATION_SET_ACTION: {
@@ -492,9 +508,7 @@ export class CurrentFlowService {
           setActionOnStep(step, action, stepKind),
           position
         );
-        executeEventAction(event.onSave);
-        this.dirty$.next(true);
-        this.postUpdates();
+        perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
         break;
       }
       case INTEGRATION_SET_DESCRIPTOR: {
@@ -508,9 +522,7 @@ export class CurrentFlowService {
           setDescriptorOnStep(step, descriptor),
           position
         );
-        executeEventAction(event.onSave);
-        this.dirty$.next(true);
-        this.postUpdates();
+        perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
         break;
       }
       case INTEGRATION_SET_DATASHAPE: {
@@ -525,9 +537,7 @@ export class CurrentFlowService {
           setDataShapeOnStep(step, dataShape, isInput),
           position
         );
-        executeEventAction(event['onSave']);
-        this.dirty$.next(true);
-        this.postUpdates();
+        perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
         break;
       }
       case INTEGRATION_SET_CONNECTION: {
@@ -539,9 +549,7 @@ export class CurrentFlowService {
           createStepWithConnection(connection),
           position
         );
-        executeEventAction(event.onSave);
-        this.dirty$.next(true);
-        this.postUpdates();
+        perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
         break;
       }
       case INTEGRATION_SET_PROPERTY:
@@ -550,9 +558,7 @@ export class CurrentFlowService {
           event.property,
           event.value
         );
-        this.dirty$.next(true);
-        executeEventAction(event.onSave);
-        this.postUpdates();
+        thenFinally();
         break;
       case INTEGRATION_SAVE: {
         // ensure that all steps have IDs before saving
@@ -599,6 +605,69 @@ export class CurrentFlowService {
     }
   }
 
+  /**
+   * Iterate through the flow and fire off requests as needed to ensure data
+   * shapes are consistent
+   * @param then
+   */
+  reconcileAllDataShapes(then: () => void) {
+    let outstanding = 0;
+    const decrementCount = () => {
+      outstanding = outstanding - 1;
+      if (outstanding <= 0) {
+        then();
+      }
+    };
+    this.currentFlow.steps.forEach((step, position) => {
+      outstanding = outstanding + 1;
+      switch (step.stepKind) {
+        case ENDPOINT:
+          const sub = this.integrationSupportService
+            .fetchMetadata(
+              step.connection,
+              step.action,
+              step.configuredProperties
+            )
+            .subscribe(
+              descriptor => {
+                this.events.emit({
+                  kind: INTEGRATION_SET_DESCRIPTOR,
+                  position,
+                  descriptor,
+                  skipReconcile: true,
+                  onSave: decrementCount,
+                });
+              },
+              _ => {
+                sub.unsubscribe();
+                decrementCount();
+              }
+            );
+          break;
+        case SPLIT:
+        case AGGREGATE:
+          // Just reset the existing step and trigger executing step customizations
+          this.events.emit({
+            kind: INTEGRATION_SET_STEP,
+            position,
+            step,
+            skipReconcile: true,
+            onSave: decrementCount,
+          });
+          break;
+        default:
+          decrementCount();
+      }
+    });
+  }
+
+  /**
+   * Apply any step-specific custom actions on the given step, then run the
+   * supplied callback
+   * @param position
+   * @param step
+   * @param then
+   */
   executeStepCustomizations(
     position: number,
     step: Step,
@@ -614,7 +683,7 @@ export class CurrentFlowService {
           subsequent !== undefined
             ? subsequent.action.descriptor.inputDataShape
             : undefined;
-        this.integrationSupportService
+        const sub = this.integrationSupportService
           .getStepDescriptor(step.stepKind, {
             inputShape:
               step.stepKind === AGGREGATE
@@ -628,10 +697,12 @@ export class CurrentFlowService {
                 ...step,
                 action: { actionType: 'step', descriptor } as Action,
               };
+              sub.unsubscribe();
               then(step);
             },
             err => {
               // we'll just pass through
+              sub.unsubscribe();
               then(step);
             }
           );
