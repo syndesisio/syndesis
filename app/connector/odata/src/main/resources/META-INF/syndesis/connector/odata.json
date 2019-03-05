@@ -18,7 +18,7 @@
           "kind": "json-schema"
         },
         "propertyDefinitionSteps": [
-        {
+          {
             "description": "Enhance the service url with a resource path and query",
             "name": "Resource Path and Query Options",
             "properties": {
@@ -68,8 +68,8 @@
                 "type": "duration"
               },
               "filterAlreadySeen": {
-                "deprecated": false,
                 "defaultValue": "true",
+                "deprecated": false,
                 "displayName": "Filter Old Results",
                 "group": "common",
                 "javaType": "java.lang.Boolean",
@@ -108,18 +108,6 @@
                 "secret": false,
                 "type": "string"
               },
-              "resourcePath": {
-                "deprecated": false,
-                "displayName": "Resource Collection",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource collection to be queried, eg. an <i><b>EntitySetName</b></i> or <i><b>EntityFunctionImportCall</b></i>",
-                "order": "1",
-                "required": true,
-                "secret": false,
-                "type": "string"
-              },
               "queryParams": {
                 "deprecated": false,
                 "displayName": "Query Options",
@@ -130,6 +118,18 @@
                 "labelHint": "Enter the full query to be applied to the collection in OData query syntax.",
                 "order": "3",
                 "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be queried, eg. an <i><b>EntitySetName</b></i> or <i><b>EntityFunctionImportCall</b></i>",
+                "order": "1",
+                "required": true,
                 "secret": false,
                 "type": "string"
               },
@@ -165,10 +165,10 @@
         "configuredProperties": {
           "methodName": "delete"
         },
-        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
         "connectorCustomizers": [
           "io.syndesis.connector.odata.customizer.ODataDeleteCustomizer"
         ],
+        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
         "inputDataShape": {
           "kind": "java",
           "name": "ODataEntityID",
@@ -178,7 +178,7 @@
           "kind": "json-instance"
         },
         "propertyDefinitionSteps": [
-        {
+          {
             "description": "Provide the resource information from which to remove data",
             "name": "Resource Path",
             "properties": {
@@ -212,10 +212,10 @@
         "configuredProperties": {
           "methodName": "create"
         },
-        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
         "connectorCustomizers": [
           "io.syndesis.connector.odata.customizer.ODataCreateCustomizer"
         ],
+        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
         "inputDataShape": {
           "kind": "json-schema"
         },
@@ -223,7 +223,7 @@
           "kind": "json-schema"
         },
         "propertyDefinitionSteps": [
-        {
+          {
             "description": "Provide the resource on which to create data",
             "name": "Resource Path",
             "properties": {
@@ -257,10 +257,10 @@
         "configuredProperties": {
           "methodName": "patch"
         },
-        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
         "connectorCustomizers": [
           "io.syndesis.connector.odata.customizer.ODataPatchCustomizer"
         ],
+        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
         "inputDataShape": {
           "kind": "json-schema"
         },
