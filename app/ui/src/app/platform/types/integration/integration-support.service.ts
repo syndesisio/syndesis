@@ -115,10 +115,7 @@ export abstract class IntegrationSupportService {
     environments: string[]
   ): Observable<Map<String, ContinuousDeliveryEnvironment>>;
 
-  abstract untagIntegration(
-    integrationId: string,
-    env: string
-  ): Observable<void>;
+  abstract removeEnvironment(env: string): Observable<void>;
 
   abstract renameEnvironment(oldEnv: string, newEnv: string): Observable<void>;
 

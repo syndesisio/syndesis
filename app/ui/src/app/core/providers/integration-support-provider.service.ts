@@ -196,10 +196,9 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
       .post<any>(environments);
   }
 
-  untagIntegration(integrationId: string, env: string): Observable<void> {
+  removeEnvironment(env: string): Observable<void> {
     return this.apiHttpService
-      .setEndpointUrl(integrationEndpoints.deleteTag, {
-        integrationId,
+      .setEndpointUrl(integrationEndpoints.removeEnvironment, {
         env: encodeURIComponent(env),
       })
       .delete();
@@ -212,8 +211,8 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
       })
       .put(newEnv, {
         headers: new HttpHeaders({
-          'Content-type': 'application/json'
-        })
+          'Content-type': 'application/json',
+        }),
       });
   }
 
