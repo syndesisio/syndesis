@@ -17,10 +17,6 @@ package io.syndesis.connector.rest.swagger;
 
 import java.util.List;
 
-import static java.util.Collections.singletonList;
-
-import java.util.Arrays;
-
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
@@ -28,11 +24,11 @@ import org.apache.camel.component.connector.ConnectorProducer;
 import org.apache.camel.component.connector.DefaultConnectorEndpoint;
 import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.impl.DefaultEndpoint;
-import org.apache.camel.processor.CatchProcessor;
 import org.apache.camel.processor.Pipeline;
-import org.apache.camel.processor.TryProcessor;
 
-final class OAuthRefreshingEndpoint extends DefaultEndpoint {
+import static java.util.Collections.singletonList;
+
+class OAuthRefreshingEndpoint extends DefaultEndpoint {
     private static final List<Class<? extends Throwable>> EXCEPTIONS_HANDLED = singletonList(HttpOperationFailedException.class);
 
     private final DefaultConnectorEndpoint endpoint;
@@ -50,15 +46,23 @@ final class OAuthRefreshingEndpoint extends DefaultEndpoint {
             throw new ExceptionInInitializerError(e);
         }
 
-        final OAuthRefreshTokenProcessor refreshProcessor= new OAuthRefreshTokenProcessor((SwaggerConnectorComponent) getComponent());
-
-        final Processor catchBody = new OAuthRefreshTokenOnFailProcessor((SwaggerConnectorComponent) getComponent());
-
-        final Processor catchProcessor = new CatchProcessor(EXCEPTIONS_HANDLED, catchBody, null, null);
-
-        final Processor tryProcessor = new TryProcessor(producer, singletonList(catchProcessor), null);
-
-        pipeline = new Pipeline(endpoint.getCamelContext(), Arrays.asList(refreshProcessor, tryProcessor));
+        pipeline = null;
+        // final OAuthRefreshTokenProcessor refreshProcessor = new
+        // OAuthRefreshTokenProcessor((SwaggerConnectorComponent)
+        // getComponent());
+        //
+        // final Processor catchBody = new
+        // OAuthRefreshTokenOnFailProcessor((SwaggerConnectorComponent)
+        // getComponent());
+        //
+        // final Processor catchProcessor = new
+        // CatchProcessor(EXCEPTIONS_HANDLED, catchBody, null, null);
+        //
+        // final Processor tryProcessor = new TryProcessor(producer,
+        // singletonList(catchProcessor), null);
+        //
+        // pipeline = new Pipeline(endpoint.getCamelContext(),
+        // Arrays.asList(refreshProcessor, tryProcessor));
     }
 
     @Override

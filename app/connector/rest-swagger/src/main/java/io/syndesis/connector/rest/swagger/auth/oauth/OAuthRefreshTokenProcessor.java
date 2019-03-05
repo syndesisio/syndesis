@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.rest.swagger;
+package io.syndesis.connector.rest.swagger.auth.oauth;
 
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import io.syndesis.connector.rest.swagger.Configuration;
+import io.syndesis.connector.support.processor.SyndesisHeaderStrategy;
+
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -37,6 +41,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Refreshes the OAuth token based on the expiry time of the token.
+ */
 class OAuthRefreshTokenProcessor implements Processor {
 
     /**
@@ -49,6 +56,10 @@ class OAuthRefreshTokenProcessor implements Processor {
 
     private static final Logger LOG = LoggerFactory.getLogger(OAuthRefreshTokenProcessor.class);
 
+    String accessToken;
+
+    long accessTokenExpiresAt;
+
     Optional<Long> expiresInOverride = Optional.ofNullable(System.getenv().get("AUTHTOKEN_EXPIRES_IN_OVERRIDE")).map(Long::valueOf);
 
     // Always refresh on (re)start
@@ -56,20 +67,41 @@ class OAuthRefreshTokenProcessor implements Processor {
 
     final AtomicReference<String> lastRefreshTokenTried = new AtomicReference<>(null);
 
-    protected final SwaggerConnectorComponent component;
+    String refreshToken;
 
-    OAuthRefreshTokenProcessor(final SwaggerConnectorComponent component) {
-        this.component = component;
+    private final String authorizationEndpoint;
+
+    private boolean authorizeUsingParameters;
+
+    private final String clientId;
+
+    private final String clientSecret;
+
+    public OAuthRefreshTokenProcessor(final Configuration configuration) {
+        clientId = configuration.stringOption("clientId");
+        clientSecret = configuration.stringOption("clientSecret");
+        accessToken = configuration.stringOption("accessToken");
+        refreshToken = configuration.stringOption("refreshToken");
+        authorizationEndpoint = configuration.stringOption("authorizationEndpoint");
+        accessTokenExpiresAt = configuration.longOption("accessTokenExpiresAt");
     }
 
     @Override
     public void process(final Exchange exchange) throws Exception {
-
-        if ((isFirstTime.get() || component.getAccessTokenExpiresAt() - AHEAD_OF_TIME_REFRESH_MILIS <= now())
-            && component.getRefreshToken() != null) {
+        if ((isFirstTime.get() || accessTokenExpiresAt - AHEAD_OF_TIME_REFRESH_MILIS <= now())
+            && refreshToken != null) {
             tryToRefreshAccessToken();
         }
 
+        final Message in = exchange.getIn();
+        in.setHeader("Authorization", "Bearer " + accessToken);
+
+        SyndesisHeaderStrategy.whitelist(exchange, "Authorization");
+    }
+
+    boolean canProcessRefresh() {
+        return refreshToken != null && authorizationEndpoint != null
+            && (!authorizeUsingParameters || authorizeUsingParameters && clientId != null && clientSecret != null);
     }
 
     CloseableHttpClient createHttpClient() {
@@ -77,15 +109,14 @@ class OAuthRefreshTokenProcessor implements Processor {
     }
 
     HttpUriRequest createHttpRequest() {
-        final String tokenEndpoint = component.getTokenEndpoint();
-        final RequestBuilder builder = RequestBuilder.post(tokenEndpoint);
+        final RequestBuilder builder = RequestBuilder.post(authorizationEndpoint);
 
-        if (component.isAuthorizeUsingParameters()) {
-            builder.addParameter("client_id", component.getClientId())//
-                .addParameter("client_secret", component.getClientSecret());
+        if (authorizeUsingParameters) {
+            builder.addParameter("client_id", clientId)
+                .addParameter("client_secret", clientSecret);
         }
 
-        builder.addParameter("refresh_token", component.getRefreshToken())//
+        builder.addParameter("refresh_token", refreshToken)
             .addParameter("grant_type", "refresh_token");
 
         return builder.build();
@@ -98,9 +129,14 @@ class OAuthRefreshTokenProcessor implements Processor {
     void processRefreshTokenResponse(final HttpEntity entity) throws IOException, JsonProcessingException {
         final JsonNode body = JSON.readTree(entity.getContent());
 
+        if (body == null) {
+            LOG.error("Received empty body while attempting to refresh access token via: {}", authorizationEndpoint);
+            return;
+        }
+
         final JsonNode accessToken = body.get("access_token");
         if (isPresentAndHasValue(accessToken)) {
-            component.setAccessToken(accessToken.asText());
+            this.accessToken = accessToken.asText();
             isFirstTime.set(Boolean.FALSE);
             LOG.info("Successful access token refresh");
 
@@ -114,21 +150,20 @@ class OAuthRefreshTokenProcessor implements Processor {
                 }
             }
             if (expiresInSeconds != null) {
-                component.setAccessTokenExpiresAt(now() + expiresInSeconds * 1000);
+                accessTokenExpiresAt = now() + expiresInSeconds * 1000;
             }
 
             final JsonNode refreshToken = body.get("refresh_token");
             if (isPresentAndHasValue(refreshToken)) {
-                final String givenRefreshToken = refreshToken.asText();
-                component.setRefreshToken(givenRefreshToken);
+                this.refreshToken = refreshToken.asText();
 
-                lastRefreshTokenTried.compareAndSet(givenRefreshToken, null);
+                lastRefreshTokenTried.compareAndSet(this.refreshToken, null);
             }
         }
     }
 
     void tryToRefreshAccessToken() {
-        final String currentRefreshToken = component.getRefreshToken();
+        final String currentRefreshToken = refreshToken;
         lastRefreshTokenTried.getAndUpdate(last -> {
             if (isFirstTime.get()) {
                 return null;

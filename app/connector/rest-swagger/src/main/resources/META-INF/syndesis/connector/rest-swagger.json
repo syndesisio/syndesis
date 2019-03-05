@@ -1,0 +1,207 @@
+{
+  "componentScheme": "rest-swagger",
+  "configuredProperties": {
+    "componentName": "connector-rest-swagger-http4"
+  },
+  "connectorCustomizers": [
+    "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",
+    "io.syndesis.connector.rest.swagger.AuthenticationCustomizer",
+    "io.syndesis.connector.rest.swagger.RequestCustomizer",
+    "io.syndesis.connector.rest.swagger.ResponseCustomizer"
+  ],
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    },
+    {
+      "id": "org.apache.camel:camel-rest-swagger:@camel.version@",
+      "type": "MAVEN"
+    },
+    {
+      "id": "org.apache.camel:camel-http4:@camel.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "id": "rest-swagger",
+  "metadata": {
+    "hide-from-connection-pages": "true"
+  },
+  "name": "OpenAPI client",
+  "properties": {
+    "accessToken": {
+      "description": "OAuth Access token",
+      "displayName": "OAuth access token",
+      "javaType": "java.lang.String",
+      "order": 4,
+      "secret": true,
+      "tags": [
+        "oauth-access-token"
+      ],
+      "type": "string"
+    },
+    "accessTokenExpiresAt": {
+      "description": "Seconds in UTC when the access token expires",
+      "javaType": "java.lang.Long",
+      "type": "hidden"
+    },
+    "authenticationType": {
+      "displayName": "Authentication type",
+      "enum": [
+        {
+          "label": "basic",
+          "value": "basic"
+        },
+        {
+          "label": "none",
+          "value": "none"
+        },
+        {
+          "label": "oauth2",
+          "value": "oauth2"
+        }
+      ],
+      "javaType": "java.lang.String",
+      "order": 1,
+      "tags": [
+        "authentication-type"
+      ],
+      "type": "string"
+    },
+    "authorizationEndpoint": {
+      "description": "URL for the start of the OAuth flow",
+      "displayName": "OAuth Authorization Endpoint URL",
+      "javaType": "java.lang.String",
+      "order": 6,
+      "required": true,
+      "tags": [
+        "oauth-authorization-url"
+      ],
+      "type": "string"
+    },
+    "authorizeUsingParameters": {
+      "description": "Should the implementation send client id and client secret when performing OAuth flow",
+      "javaType": "java.lang.String",
+      "tags": [
+        "oauth-authorize-using-parameters"
+      ],
+      "type": "hidden"
+    },
+    "basePath": {
+      "description": "API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI document.",
+      "displayName": "Base path",
+      "javaType": "java.lang.String",
+      "order": 11,
+      "type": "string"
+    },
+    "clientId": {
+      "description": "OAuth Client ID, sometimes called Consumer Key",
+      "displayName": "OAuth Client ID",
+      "javaType": "java.lang.String",
+      "order": 2,
+      "tags": [
+        "oauth-client-id"
+      ],
+      "type": "string"
+    },
+    "clientSecret": {
+      "description": "OAuth Client Secret, sometimes called Consumer Secret",
+      "displayName": "OAuth Client Secret",
+      "javaType": "java.lang.String",
+      "order": 3,
+      "secret": true,
+      "tags": [
+        "oauth-client-secret"
+      ],
+      "type": "string"
+    },
+    "host": {
+      "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port.",
+      "displayName": "Host",
+      "javaType": "java.lang.String",
+      "order": 10,
+      "required": true,
+      "type": "string"
+    },
+    "oauthScopes": {
+      "description": "OAuth scopes needed for the API.",
+      "displayName": "OAuth Scopes",
+      "javaType": "java.lang.String",
+      "order": 8,
+      "tags": [
+        "oauth-scope"
+      ],
+      "type": "string"
+    },
+    "operationId": {
+      "description": "ID of the operation from the OpenAPI document.",
+      "displayName": "Operation ID",
+      "javaType": "java.lang.String",
+      "required": true,
+      "type": "hidden"
+    },
+    "password": {
+      "description": "Password to authenticate with.",
+      "displayName": "Password",
+      "javaType": "java.lang.String",
+      "order": 3,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
+    "refreshToken": {
+      "description": "OAuth Refresh token.",
+      "displayName": "OAuth Refresh token",
+      "javaType": "java.lang.String",
+      "order": 5,
+      "secret": true,
+      "tags": [
+        "oauth-refresh-token"
+      ],
+      "type": "string"
+    },
+    "refreshTokenRetryStatuses": {
+      "description": "Comma separated list of HTTP statuses for which to refresh the OAuth access token using the refresh token.",
+      "displayName": "HTTP statuses for refreshing OAuth token",
+      "javaType": "java.lang.String",
+      "type": "hidden"
+    },
+    "specification": {
+      "description": "OpenAPI document defining the service.",
+      "displayName": "Document",
+      "javaType": "java.lang.String",
+      "required": true,
+      "tags": [
+        "upload",
+        "url"
+      ],
+      "type": "hidden"
+    },
+    "tokenEndpoint": {
+      "description": "URL to fetch the OAuth Access token.",
+      "displayName": "OAuth Token Endpoint URL",
+      "javaType": "java.lang.String",
+      "order": 7,
+      "tags": [
+        "oauth-access-token-url"
+      ],
+      "type": "string"
+    },
+    "tokenStrategy": {
+      "displayName": "OAuth Token strategy",
+      "javaType": "java.lang.String",
+      "tags": [
+        "oauth-token-strategy"
+      ],
+      "type": "hidden"
+    },
+    "username": {
+      "description": "Username to authenticate with.",
+      "displayName": "Username",
+      "javaType": "java.lang.String",
+      "order": 2,
+      "required": true,
+      "type": "string"
+    }
+  }
+}

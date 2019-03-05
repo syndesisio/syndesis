@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.rest.swagger;
+package io.syndesis.connector.rest.swagger.auth.oauth;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import io.syndesis.connector.rest.swagger.Configuration;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.http.common.HttpOperationFailedException;
@@ -41,25 +45,17 @@ import static org.mockito.Mockito.when;
 
 public class OAuthRefreshTokenOnFailProcessorTest {
 
-    SwaggerConnectorComponent component = new SwaggerConnectorComponent();
+    private final HttpOperationFailedException exception = new HttpOperationFailedException("uri", 403, "status", "location", null, null);
 
-    HttpOperationFailedException exception = new HttpOperationFailedException("uri", 403, "status", "location", null, null);
-
-    Exchange exchange = new DefaultExchange(new DefaultCamelContext());
+    private final Exchange exchange = new DefaultExchange(new DefaultCamelContext());
 
     public OAuthRefreshTokenOnFailProcessorTest() {
         exchange.setProperty(Exchange.EXCEPTION_CAUGHT, exception);
-        component.setClientId("client-id");
-        component.setClientSecret("client-secret");
-        component.setTokenEndpoint("token-endpoint");
-        component.setAccessToken("access-token");
-        component.setRefreshToken("refresh-token");
     }
 
     @Test
     public void shouldNotThrowExceptionWhenRetryingInitially() throws Exception {
         final OAuthRefreshTokenProcessor processor = createProcessor("{}");
-        component.setRefreshTokenRetryStatuses("403");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
     }
@@ -67,7 +63,6 @@ public class OAuthRefreshTokenOnFailProcessorTest {
     @Test
     public void shouldNotThrowExceptionWhenRetryingWithDifferentRefreshToken() throws Exception {
         final OAuthRefreshTokenProcessor processor = createProcessor("{}");
-        component.setRefreshTokenRetryStatuses("403");
         processor.lastRefreshTokenTried.set("different-refresh-token");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
@@ -76,45 +71,43 @@ public class OAuthRefreshTokenOnFailProcessorTest {
     @Test
     public void shouldNotUpdateComponentAccessAndRefreshTokensWithEmptyValues() throws Exception {
         final OAuthRefreshTokenProcessor processor = createProcessor("{\"access_token\": \"\", \"refresh_token\": \"\"}");
-        component.setRefreshTokenRetryStatuses("403");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(component.getAccessToken()).isEqualTo("access-token");
-        assertThat(component.getRefreshToken()).isEqualTo("refresh-token");
+        assertThat(processor.accessToken).isEqualTo("access-token");
+        assertThat(processor.refreshToken).isEqualTo("refresh-token");
     }
 
     @Test
     public void shouldNotUpdateComponentAccessAndRefreshTokensWithNullValues() throws Exception {
         final OAuthRefreshTokenProcessor processor = createProcessor("{\"access_token\": null, \"refresh_token\": null}");
-        component.setRefreshTokenRetryStatuses("403");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(component.getAccessToken()).isEqualTo("access-token");
-        assertThat(component.getRefreshToken()).isEqualTo("refresh-token");
+        assertThat(processor.accessToken).isEqualTo("access-token");
+        assertThat(processor.refreshToken).isEqualTo("refresh-token");
     }
 
     @Test
     public void shouldNotUpdateComponentRefreshTokensWithEmptyValues() throws Exception {
-        final OAuthRefreshTokenProcessor processor = createProcessor("{\"access_token\": \"new-access-token\", \"refresh_token\": \"\"}");
-        component.setRefreshTokenRetryStatuses("403");
+        final OAuthRefreshTokenProcessor processor = createProcessor(
+            "{\"access_token\": \"new-access-token\", \"refresh_token\": \"\"}");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(component.getAccessToken()).isEqualTo("new-access-token");
-        assertThat(component.getRefreshToken()).isEqualTo("refresh-token");
+        assertThat(processor.accessToken).isEqualTo("new-access-token");
+        assertThat(processor.refreshToken).isEqualTo("refresh-token");
     }
 
     @Test
     public void shouldNotUpdateComponentRefreshTokensWithNullValues() throws Exception {
-        final OAuthRefreshTokenProcessor processor = createProcessor("{\"access_token\": \"new-access-token\", \"refresh_token\": null}");
-        component.setRefreshTokenRetryStatuses("403");
+        final OAuthRefreshTokenProcessor processor = createProcessor(
+            "{\"access_token\": \"new-access-token\", \"refresh_token\": null}");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(component.getAccessToken()).isEqualTo("new-access-token");
-        assertThat(component.getRefreshToken()).isEqualTo("refresh-token");
+        assertThat(processor.accessToken).isEqualTo("new-access-token");
+        assertThat(processor.refreshToken).isEqualTo("refresh-token");
     }
 
     @Test
@@ -122,23 +115,23 @@ public class OAuthRefreshTokenOnFailProcessorTest {
         final OAuthRefreshTokenProcessor processor = createProcessor(
             "{\"access_token\": \"new-access-token\", \"refresh_token\": \"new-refresh-token\"}",
             "{\"access_token\": \"newer-access-token\", \"refresh_token\": \"new-refresh-token\"}");
-        component.setRefreshTokenRetryStatuses("403");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(component.getAccessToken()).isEqualTo("new-access-token");
-        assertThat(component.getRefreshToken()).isEqualTo("new-refresh-token");
+        assertThat(processor.accessToken).isEqualTo("new-access-token");
+        assertThat(processor.refreshToken).isEqualTo("new-refresh-token");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(component.getAccessToken()).isEqualTo("newer-access-token");
-        assertThat(component.getRefreshToken()).isEqualTo("new-refresh-token");
+        assertThat(processor.accessToken).isEqualTo("newer-access-token");
+        assertThat(processor.refreshToken).isEqualTo("new-refresh-token");
     }
 
     @Test
     public void shouldThrowExceptionIfAlreadyAttemptedWithTheSameRefreshToken() throws Exception {
-        component.setRefreshTokenRetryStatuses("403");
-        final OAuthRefreshTokenOnFailProcessor processor = new OAuthRefreshTokenOnFailProcessor(component);
+        final Configuration configuration = configuration("403");
+
+        final OAuthRefreshTokenOnFailProcessor processor = new OAuthRefreshTokenOnFailProcessor(configuration);
         processor.lastRefreshTokenTried.set("refresh-token");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
@@ -146,11 +139,9 @@ public class OAuthRefreshTokenOnFailProcessorTest {
 
     @Test
     public void shouldThrowExceptionIfStatusIsNonRetriable() {
-        final OAuthRefreshTokenOnFailProcessor processor = new OAuthRefreshTokenOnFailProcessor(component);
+        final Configuration configuration = configuration("400");
 
-        assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
-
-        component.setRefreshTokenRetryStatuses("400,500");
+        final OAuthRefreshTokenOnFailProcessor processor = new OAuthRefreshTokenOnFailProcessor(configuration);
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
     }
@@ -159,36 +150,48 @@ public class OAuthRefreshTokenOnFailProcessorTest {
     public void shouldUpdateComponentAccessAndRefreshTokens() throws Exception {
         final OAuthRefreshTokenProcessor processor = createProcessor(
             "{\"access_token\": \"new-access-token\", \"refresh_token\": \"new-refresh-token\"}");
-        component.setRefreshTokenRetryStatuses("403");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(component.getAccessToken()).isEqualTo("new-access-token");
-        assertThat(component.getRefreshToken()).isEqualTo("new-refresh-token");
+        assertThat(processor.accessToken).isEqualTo("new-access-token");
+        assertThat(processor.refreshToken).isEqualTo("new-refresh-token");
     }
 
     @Test
     public void shouldUpdateComponentAccessToken() throws Exception {
         final OAuthRefreshTokenProcessor processor = createProcessor("{\"access_token\": \"new-access-token\"}");
-        component.setRefreshTokenRetryStatuses("403");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(component.getAccessToken()).isEqualTo("new-access-token");
+        assertThat(processor.accessToken).isEqualTo("new-access-token");
     }
 
     @Test
     public void shouldUpdateComponentRefreshTokenOnlyIfAccessTokenIsGiven() throws Exception {
         final OAuthRefreshTokenProcessor processor = createProcessor("{\"refresh_token\": \"new-refresh-token\"}");
-        component.setRefreshTokenRetryStatuses("403");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(component.getAccessToken()).isEqualTo("access-token");
-        assertThat(component.getRefreshToken()).isEqualTo("refresh-token");
+        assertThat(processor.accessToken).isEqualTo("access-token");
+        assertThat(processor.refreshToken).isEqualTo("refresh-token");
     }
 
-    OAuthRefreshTokenOnFailProcessor createProcessor(final String... grantJsons) throws IOException {
+    private static Configuration configuration(final String retryStatuses) {
+        final Map<String, Object> initial = new HashMap<>();
+        initial.put("clientId", "client-id");
+        initial.put("clientSecret", "client-secret");
+        initial.put("accessToken", "access-token");
+        initial.put("refreshToken", "refresh-token");
+        initial.put("accessTokenExpiresAt", Long.valueOf(-1));
+        initial.put("authorizationEndpoint", "token-endpoint");
+        initial.put("authorizeUsingParameters", "false");
+        initial.put("refreshTokenRetryStatuses", retryStatuses);
+        final Configuration configuration = new Configuration(initial, null, null, null);
+        return configuration;
+    }
+
+    @SuppressWarnings("resource")
+    private static OAuthRefreshTokenOnFailProcessor createProcessor(final String... grantJsons) throws IOException {
         final CloseableHttpClient client = mock(CloseableHttpClient.class);
         final CloseableHttpResponse response = mock(CloseableHttpResponse.class);
         when(response.getStatusLine()).thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, 200, "OK"));
@@ -200,15 +203,19 @@ public class OAuthRefreshTokenOnFailProcessorTest {
 
         when(client.execute(ArgumentMatchers.any(HttpUriRequest.class))).thenReturn(response);
 
-        return new OAuthRefreshTokenOnFailProcessor(component) {
+        final Configuration configuration = configuration("403");
+
+        final OAuthRefreshTokenOnFailProcessor processor = new OAuthRefreshTokenOnFailProcessor(configuration) {
             @Override
             CloseableHttpClient createHttpClient() {
                 return client;
             }
         };
+
+        return processor;
     }
 
-    static HttpEntity entity(final String grantJson) {
+    private static HttpEntity entity(final String grantJson) {
         return new ByteArrayEntity(grantJson.getBytes(StandardCharsets.US_ASCII), ContentType.APPLICATION_JSON);
     }
 }

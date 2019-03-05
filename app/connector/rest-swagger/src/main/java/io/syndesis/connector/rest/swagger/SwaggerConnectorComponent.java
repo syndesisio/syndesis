@@ -15,33 +15,15 @@
  */
 package io.syndesis.connector.rest.swagger;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.camel.Endpoint;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 import org.apache.camel.component.connector.DefaultConnectorEndpoint;
-import org.apache.camel.component.rest.swagger.RestSwaggerEndpoint;
-import org.apache.camel.processor.Pipeline;
-import org.apache.camel.util.IntrospectionSupport;
-import org.apache.camel.util.IntrospectionSupport.ClassInfo;
-import org.apache.commons.io.IOUtils;
 
 public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
 
@@ -185,63 +167,9 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
         this.username = username;
     }
 
-    void addAuthenticationHeadersTo(final Map<String, Object> headers) {
-        if (authenticationType == AuthenticationType.oauth2) {
-            headers.put("Authorization", "Bearer " + accessToken);
-        } else if (authenticationType == AuthenticationType.basic) {
-            final String usernameAndPassword = username + ":" + password;
-            final String usernameAndPasswordEncoded = Base64.getEncoder()
-                .encodeToString(usernameAndPassword.getBytes(StandardCharsets.UTF_8));
-            headers.put("Authorization", "Basic " + usernameAndPasswordEncoded);
-        }
-    }
-
-    Map<String, Object> determineHeaders(final Map<String, Object> parameters) {
-        final Map<String, Object> headers = new HashMap<>();
-        final ClassInfo classInfo = IntrospectionSupport.cacheClass(RestSwaggerEndpoint.class);
-
-        final Set<String> knownParameters = Arrays.stream(classInfo.methods).map(i -> i.getterOrSetterShorthandName)
-            .filter(Objects::nonNull).collect(Collectors.toSet());
-
-        for (final Iterator<Entry<String, Object>> i = parameters.entrySet().iterator(); i.hasNext();) {
-            final Entry<String, Object> entry = i.next();
-            final String name = entry.getKey();
-
-            if (!knownParameters.contains(name)) {
-                headers.put(name, entry.getValue());
-
-                i.remove();
-            }
-        }
-
-        addAuthenticationHeadersTo(headers);
-
-        return headers;
-    }
-
     @Override
     protected Endpoint createEndpoint(final String uri, final String remaining, final Map<String, Object> parameters) throws Exception {
-        final URI baseEndpointUri = URI.create(uri);
-
-        final String scheme = Optional.ofNullable(baseEndpointUri.getScheme()).orElse(baseEndpointUri.getPath());
-
-        final String swaggerSpecificationPath = File.createTempFile(scheme, ".swagger").getAbsolutePath();
-
-        try (OutputStream out = new FileOutputStream(swaggerSpecificationPath)) {
-            IOUtils.write(specification, out, StandardCharsets.UTF_8);
-        }
-
-        final String operationId = Optional.ofNullable((String) parameters.get("operationId")).orElse(remaining);
-
-        final DefaultConnectorEndpoint endpoint = (DefaultConnectorEndpoint) super.createEndpoint(uri,
-            "file:" + swaggerSpecificationPath + "#" + operationId, parameters);
-
-        final Processor headerSetter = exchange -> exchange.getIn().getHeaders().putAll(determineHeaders(parameters));
-
-        final Processor headerRemover = exchange -> exchange.getIn().removeHeader(Exchange.HTTP_URI);
-
-        final Processor combinedBeforeProducers = Pipeline.newInstance(getCamelContext(), new RequestPayloadConverter(), headerSetter, headerRemover);
-        endpoint.setBeforeProducer(combinedBeforeProducers);
+        final DefaultConnectorEndpoint endpoint = null;
 
         if (authenticationType == AuthenticationType.oauth2 && refreshToken != null && !refreshTokenRetryStatuses.isEmpty()) {
             return new OAuthRefreshingEndpoint(endpoint, this);

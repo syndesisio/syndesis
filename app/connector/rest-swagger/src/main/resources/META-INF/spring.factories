@@ -1,3 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.syndesis.connector.rest.swagger.springboot.SwaggerConnectorConnectorAutoConfiguration,\
-  io.syndesis.connector.rest.swagger.springboot.SwaggerConnectorConfiguration
+  io.syndesis.connector.rest.swagger.springboot.SwaggerConnectorConnectorAutoConfiguration

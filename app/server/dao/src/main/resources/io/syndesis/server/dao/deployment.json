@@ -147,7 +147,7 @@
         "authorizeUsingParameters": {
           "componentProperty": true,
           "deprecated": false,
-          "displayName": "Should the implementation send client id and client secret when performing OAuth flow",
+          "description": "Should the implementation send client id and client secret when performing OAuth flow",
           "group": "producer",
           "javaType": "java.lang.String",
           "kind": "property",

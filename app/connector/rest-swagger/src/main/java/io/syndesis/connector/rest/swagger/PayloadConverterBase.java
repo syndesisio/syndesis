@@ -15,14 +15,13 @@
  */
 package io.syndesis.connector.rest.swagger;
 
-import javax.activation.MimeType;
-import javax.activation.MimeTypeParseException;
 import javax.xml.stream.XMLInputFactory;
+
+import io.syndesis.common.model.DataShapeKinds;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
-import org.apache.camel.util.MessageHelper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,38 +30,33 @@ abstract class PayloadConverterBase implements Processor {
 
     static final XMLInputFactory XML_INPUT_FACTORY = XMLInputFactory.newInstance();
 
-    private static final MimeType JSON;
+    private final DataShapeKinds kind;
 
-    private static final MimeType NONE;
-
-    private static final MimeType XML;
-
-    static {
-        try {
-            JSON = createMimeType("application/json");
-            XML = createMimeType("application/xml");
-            NONE = createMimeType("application/octet-stream");
-        } catch (final MimeTypeParseException e) {
-            throw new ExceptionInInitializerError(e);
-        }
+    public PayloadConverterBase(final DataShapeKinds kind) {
+        this.kind = kind;
     }
 
     @Override
     public void process(final Exchange exchange) {
+        if (kind == null) {
+            return;
+        }
+
         final Message in = exchange.getIn();
 
-        final String contentType = MessageHelper.getContentType(in);
-
-        try {
-            final MimeType mimeType = createMimeType(contentType);
-
-            if (mimeType.match(JSON)) {
-                convertAsJson(in);
-            } else if (mimeType.match(XML)) {
-                convertAsXml(in);
-            }
-        } catch (final MimeTypeParseException ignored) {
-            // we can't parse the MIME type
+        switch (kind) {
+        case JSON_INSTANCE:
+        case JSON_SCHEMA:
+            convertAsJson(in);
+            break;
+        case XML_INSTANCE:
+        case XML_SCHEMA:
+        case XML_SCHEMA_INSPECTED:
+            convertAsXml(in);
+            break;
+        default:
+            // perform no conversion
+            break;
         }
 
     }
@@ -79,10 +73,4 @@ abstract class PayloadConverterBase implements Processor {
         return body;
     }
 
-    private static MimeType createMimeType(final String raw) throws MimeTypeParseException {
-        if (raw == null) {
-            return NONE;
-        }
-        return new MimeType(raw);
-    }
 }

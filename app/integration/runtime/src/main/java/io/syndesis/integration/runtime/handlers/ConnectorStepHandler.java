@@ -117,9 +117,10 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
             // Try to set properties to the component
             HandlerCustomizer.setProperties(context, component, proxyProperties);
 
+            component.setCamelContext(context);
+
             HandlerCustomizer.customizeComponent(context, connector, descriptor, component, proxyProperties);
 
-            component.setCamelContext(context);
             component.setOptions(proxyProperties);
 
             // Remove component

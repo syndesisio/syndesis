@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.rest.swagger;
+package io.syndesis.connector.rest.swagger.auth.oauth;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import io.syndesis.connector.rest.swagger.Configuration;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.http.common.HttpOperationFailedException;
@@ -26,8 +31,17 @@ class OAuthRefreshTokenOnFailProcessor extends OAuthRefreshTokenProcessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(OAuthRefreshTokenOnFailProcessor.class);
 
-    OAuthRefreshTokenOnFailProcessor(final SwaggerConnectorComponent component) {
-        super(component);
+    private Set<Integer> statusesToRefreshFor = new HashSet<>();
+
+    OAuthRefreshTokenOnFailProcessor(final Configuration configuration) {
+        super(configuration);
+
+        final String statuses = configuration.stringOption("refreshTokenRetryStatuses");
+        if (statuses != null) {
+            statusesToRefreshFor = Stream.of(statuses.split("\\s*,\\s*"))
+                .map(Integer::valueOf)
+                .collect(Collectors.toSet());
+        }
     }
 
     @Override
@@ -51,9 +65,7 @@ class OAuthRefreshTokenOnFailProcessor extends OAuthRefreshTokenProcessor {
 
     boolean shouldTryRefreshingAccessCode(final HttpOperationFailedException httpFailure) {
         final int statusCode = httpFailure.getStatusCode();
-        final Set<Integer> statusesToRefreshFor = super.component.getRefreshTokenRetryStatusesSet();
 
         return statusesToRefreshFor.contains(statusCode);
     }
-
 }

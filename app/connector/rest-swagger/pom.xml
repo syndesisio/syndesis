@@ -33,44 +33,15 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-core</artifactId>
-    </dependency>
-
-    <!-- HTTP/REST component rest-swagger component delegates to -->
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-http4</artifactId>
-    </dependency>
-
-    <!-- base component to use for this connector -->
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-rest-swagger</artifactId>
-    </dependency>
-
-    <!-- camel-connector -->
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-connector</artifactId>
-    </dependency>
-
-    <!-- support Camel documentation -->
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>apt</artifactId>
+      <groupId>io.syndesis.integration</groupId>
+      <artifactId>integration-component-proxy</artifactId>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-http-common</artifactId>
-    </dependency>
-
-    <!-- support for Spring Boot auto configuration generation -->
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-spring-boot</artifactId>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-support-processor</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -79,19 +50,18 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis.integration</groupId>
-      <artifactId>integration-component-proxy</artifactId>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-http-common</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis.integration</groupId>
-      <artifactId>integration-runtime</artifactId>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-http4</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-support-processor</artifactId>
-      <scope>runtime</scope>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-rest-swagger</artifactId>
     </dependency>
 
     <dependency>
@@ -105,79 +75,20 @@
     </dependency>
 
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-beans</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-autoconfigure</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-      <scope>runtime</scope>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
     </dependency>
 
     <!-- testing -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-test</artifactId>
-      <scope>test</scope>
-    </dependency>
 
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-test</artifactId>
+      <groupId>io.syndesis.integration</groupId>
+      <artifactId>integration-runtime</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -206,6 +117,13 @@
     </dependency>
 
     <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8</artifactId>
+      <version>2.21.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
       <scope>test</scope>
@@ -226,6 +144,28 @@
         <filtering>true</filtering>
       </resource>
     </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>true</filtering>
+      </testResource>
+    </testResources>
+
+    <plugins>
+      <plugin>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-support-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>inspections</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>generate-connector-inspections</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
 </project>
