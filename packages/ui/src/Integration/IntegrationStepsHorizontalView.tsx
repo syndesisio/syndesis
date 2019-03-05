@@ -15,35 +15,25 @@ export class IntegrationStepsHorizontalView extends React.Component<
           <Grid.Row className="show-grid">
             <Grid.Col xs={6} md={4}>
               {this.props.steps && this.props.steps[0] ? (
-                <Icon name={'external-link'} />
+                <span>
+                  <p>{this.props.steps[0].name}</p>
+                </span>
               ) : null}
             </Grid.Col>
             {this.props.steps &&
-              this.props.steps.map((opt: any) => (
+              this.props.steps.slice(1).map((opt: any, index: any) => (
                 <>
                   <Grid.Col xs={6} md={4}>
                     <Icon name={'angle-right'} />
                   </Grid.Col>
                   <Grid.Col xsHidden={true} md={4}>
                     <span>
-                      <p key={opt.id}>{opt.name}</p>
+                      <p key={index}>{opt.name}</p>
                     </span>
                   </Grid.Col>
                 </>
               ))}
           </Grid.Row>
-        </Grid>
-        <Grid fluid={true}>
-          {this.props.steps ? (
-            <Grid.Row className="show-grid">
-              <Grid.Col xs={2} md={2}>
-                {<span>Step:</span>}
-              </Grid.Col>
-              <Grid.Col xs={10} md={10}>
-                {this.props.steps ? <span>Goodbye</span> : null}
-              </Grid.Col>
-            </Grid.Row>
-          ) : null}
         </Grid>
       </>
     );
