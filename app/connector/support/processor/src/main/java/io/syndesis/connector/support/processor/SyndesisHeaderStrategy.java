@@ -23,7 +23,10 @@ public class SyndesisHeaderStrategy extends HttpHeaderFilterStrategy {
     protected void initialize() {
         super.initialize();
 
-        setOutFilterPattern("(?i)(Syndesis|Camel|org\\.apache\\.camel).*");
-        setInFilterPattern("(?i)(Syndesis|Camel|org\\.apache\\.camel).*");
+        // just remove everything
+        setOutFilterPattern(".*");
+
+        // we need to preserve the Content-Type header
+        setInFilterPattern("^(?!Content-Type).*$");
     }
 }

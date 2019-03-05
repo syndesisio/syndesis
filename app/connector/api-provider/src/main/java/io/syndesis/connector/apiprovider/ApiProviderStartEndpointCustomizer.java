@@ -27,6 +27,7 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
+import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.processor.Pipeline;
@@ -71,7 +72,7 @@ public class ApiProviderStartEndpointCustomizer implements ComponentProxyCustomi
         // influence HTTP components in the flow after this connector don't
         // interpret them, for instance the `Host` header is particularly
         // troublesome
-        beforeConsumers.add((e) -> e.getIn().removeHeaders("*", "Syndesis.*"));
+        beforeConsumers.add((e) -> e.getIn().removeHeaders("*", Exchange.CONTENT_TYPE, "Syndesis.*"));
 
         component.setBeforeConsumer(Pipeline.newInstance(context, beforeConsumers));
     }
