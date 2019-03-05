@@ -30,7 +30,6 @@ spec:
       "editable": true,
       "gnetId": 3300,
       "graphTooltip": 1,
-      "id": 9,
       "iteration": 1550144280707,
       "links": [],
       "panels": [
@@ -112,7 +111,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "max_over_time(pg_settings_max_connections{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_settings_max_connections{job=\"$job\",namespace=\"$namespace\"}[5m])",
+              "expr": "max(max_over_time(pg_settings_max_connections{job=\"$job\",namespace=\"$namespace\"}[$interval])) or\nmax(max_over_time(pg_settings_max_connections{job=\"$job\",namespace=\"$namespace\"}[5m]))",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -196,7 +195,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "max_over_time(pg_settings_shared_buffers_bytes{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_settings_shared_buffers_bytes{job=\"$job\",namespace=\"$namespace\"}[5m]) ",
+              "expr": "max(max_over_time(pg_settings_shared_buffers_bytes{job=\"$job\",namespace=\"$namespace\"}[$interval])) or\nmax(max_over_time(pg_settings_shared_buffers_bytes{job=\"$job\",namespace=\"$namespace\"}[5m]))",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -279,7 +278,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "max_over_time(pg_settings_wal_buffers_bytes{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_settings_wal_buffers_bytes{job=\"$job\",namespace=\"$namespace\"}[5m])",
+              "expr": "max(max_over_time(pg_settings_wal_buffers_bytes{job=\"$job\",namespace=\"$namespace\"}[$interval])) or\nmax(max_over_time(pg_settings_wal_buffers_bytes{job=\"$job\",namespace=\"$namespace\"}[5m]))",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -362,7 +361,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "max_over_time(pg_settings_work_mem_bytes{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_settings_work_mem_bytes{job=\"$job\",namespace=\"$namespace\"}[5m])",
+              "expr": "max(max_over_time(pg_settings_work_mem_bytes{job=\"$job\",namespace=\"$namespace\"}[$interval])) or\nmax(max_over_time(pg_settings_work_mem_bytes{job=\"$job\",namespace=\"$namespace\"}[5m]))",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -445,7 +444,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "max_over_time(pg_settings_effective_cache_size_bytes{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_settings_effective_cache_size_bytes{job=\"$job\",namespace=\"$namespace\"}[5m])",
+              "expr": "max(max_over_time(pg_settings_effective_cache_size_bytes{job=\"$job\",namespace=\"$namespace\"}[$interval])) or\nmax(max_over_time(pg_settings_effective_cache_size_bytes{job=\"$job\",namespace=\"$namespace\"}[5m]))",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -528,7 +527,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "max_over_time(pg_settings_autovacuum{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_settings_autovacuum{job=\"$job\",namespace=\"$namespace\"}[5m])",
+              "expr": "max(max_over_time(pg_settings_autovacuum{job=\"$job\",namespace=\"$namespace\"}[$interval])) or\nmax(max_over_time(pg_settings_autovacuum{job=\"$job\",namespace=\"$namespace\"}[5m]))",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -732,7 +731,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "max_over_time(pg_stat_database_numbackends{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or \nmax_over_time(pg_stat_database_numbackends{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "expr": "max(max_over_time(pg_stat_database_numbackends{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) by (datname) or \nmax(max_over_time(pg_stat_database_numbackends{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])) by (datname)",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -740,7 +739,7 @@ spec:
               "refId": "A"
             },
             {
-              "expr": "max_over_time(pg_settings_max_connections{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or \nmax_over_time(pg_settings_max_connections{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "expr": "max(max_over_time(pg_settings_max_connections{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) or \nmax(max_over_time(pg_settings_max_connections{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m]))",
               "format": "time_series",
               "hide": false,
               "interval": "$interval",
@@ -1295,7 +1294,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "max_over_time(pg_stat_activity_max_tx_duration{job=\"$job\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_stat_activity_max_tx_duration{job=\"$job\",namespace=\"$namespace\"}[5m])",
+              "expr": "max(max_over_time(pg_stat_activity_max_tx_duration{job=\"$job\",namespace=\"$namespace\"}[$interval])) by (state) or\nmax(max_over_time(pg_stat_activity_max_tx_duration{job=\"$job\",namespace=\"$namespace\"}[5m])) by (state)",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1400,7 +1399,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "max_over_time(pg_stat_database_temp_files{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or \nmax_over_time(pg_stat_database_temp_files{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "expr": "max(max_over_time(pg_stat_database_temp_files{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) by (datname) or \nmax(max_over_time(pg_stat_database_temp_files{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])) by (datname)",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1497,7 +1496,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "max_over_time(pg_stat_database_temp_bytes{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or \nmax_over_time(pg_stat_database_temp_bytes{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "expr": "max(max_over_time(pg_stat_database_temp_bytes{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) by (datname) or \nmax(max_over_time(pg_stat_database_temp_bytes{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])) by (datname)",
               "format": "time_series",
               "hide": false,
               "interval": "$interval",
@@ -1808,7 +1807,7 @@ spec:
             {
               "alias": "conflicts",
               "dsType": "prometheus",
-              "expr": "max_over_time(pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "expr": "max(max_over_time(pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) by (mode, datname) or\nmax(max_over_time(pg_locks_count{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])) by (mode, datname)",
               "format": "time_series",
               "groupBy": [
                 {
@@ -1961,7 +1960,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(pg_stat_database_blk_read_time{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or\nirate(pg_stat_database_blk_read_time{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "expr": "sum(rate(pg_stat_database_blk_read_time{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) by (datname) or\nsum(irate(pg_stat_database_blk_read_time{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])) by (datname)",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1969,7 +1968,7 @@ spec:
               "refId": "A"
             },
             {
-              "expr": "rate(pg_stat_database_blk_write_time{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or\nirate(pg_stat_database_blk_write_time{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "expr": "sum(rate(pg_stat_database_blk_write_time{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) by (datname) or\nsum(irate(pg_stat_database_blk_write_time{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])) by (datname)",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2763,7 +2762,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "max_over_time(pg_database_size{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval]) or\nmax_over_time(pg_database_size{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])",
+              "expr": "max(max_over_time(pg_database_size{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[$interval])) by (datname) or\nmax(max_over_time(pg_database_size{job=\"$job\",datname=~\"$db\",namespace=\"$namespace\"}[5m])) by (datname)",
               "format": "time_series",
               "hide": false,
               "interval": "$interval",
