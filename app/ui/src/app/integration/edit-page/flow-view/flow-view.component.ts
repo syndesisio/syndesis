@@ -133,11 +133,11 @@ export class FlowViewComponent implements OnInit, OnDestroy {
             break;
 
           case INTEGRATION_SIDEBAR_COLLAPSE:
-            this.isCollapsed = true;
+            setTimeout(() => (this.isCollapsed = true), 1);
             break;
 
           case INTEGRATION_SIDEBAR_EXPAND:
-            this.isCollapsed = false;
+            setTimeout(() => (this.isCollapsed = false), 1);
             break;
           default:
         }
