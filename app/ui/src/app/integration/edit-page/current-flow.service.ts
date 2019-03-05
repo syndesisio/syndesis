@@ -441,12 +441,41 @@ export class CurrentFlowService {
       case INTEGRATION_REMOVE_STEP: {
         {
           const position = +event.position;
+          // Grab the step that's being removed so we can look at it later
+          const step = this.getStep(position);
           this._integration = removeStepFromFlow(
             this._integration,
             this.flowId,
             position
           );
-          perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
+          // Special handling when a split step is removed
+          switch (step.stepKind) {
+            case SPLIT:
+              // Look from the current position for an aggregate or split step
+              const stepIndex = this.currentFlow.steps.findIndex(
+                (_step, index) =>
+                  index >= position &&
+                  (_step.stepKind === AGGREGATE || _step.stepKind === SPLIT)
+              );
+              // If we found an aggregate step it goes with this split step and can be removed
+              const targetStep = this.getStep(stepIndex);
+              if (targetStep && targetStep.stepKind === AGGREGATE) {
+                this.events.emit({
+                  kind: INTEGRATION_REMOVE_STEP,
+                  position: stepIndex,
+                  onSave: () =>
+                    perhapsReconcileDataShapes(
+                      event.skipReconcile,
+                      thenFinally
+                    ),
+                });
+              } else {
+                perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
+              }
+              break;
+            default:
+              perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
+          }
         }
         break;
       }
