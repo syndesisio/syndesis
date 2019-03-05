@@ -41,10 +41,12 @@ export class IntegrationStepsHorizontalView extends React.Component<
           </Grid.Row>
         </Grid>
         <div>
-          <p>
-            {this.props.description}&nbsp;
-            <Icon name={'pencil'} />
-          </p>
+          {this.props.description ? (
+            <p>
+              {this.props.description}&nbsp;
+              <Icon name={'pencil'} />
+            </p>
+          ) : null}
         </div>
       </>
     );
