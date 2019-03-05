@@ -7,6 +7,7 @@ import { IntegrationStepsHorizontalView } from '../../src';
 const stories = storiesOf('Integration/IntegrationStepsHorizontalView', module);
 
 const integrationRunning = {
+  description: 'An example integration that is running.',
   steps: [
     {
       icon:
@@ -26,6 +27,9 @@ const integrationRunning = {
 stories.add(
   'running',
   withNotes('Verify the integration is running')(() => (
-    <IntegrationStepsHorizontalView steps={integrationRunning.steps} />
+    <IntegrationStepsHorizontalView
+      description={integrationRunning.description}
+      steps={integrationRunning.steps}
+    />
   ))
 );
