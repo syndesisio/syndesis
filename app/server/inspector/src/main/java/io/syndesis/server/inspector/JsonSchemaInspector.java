@@ -39,6 +39,7 @@ public class JsonSchemaInspector implements Inspector {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    private static final String ARRAY_CONTEXT = "[]";
     static final List<String> COLLECTION_PATHS = Collections.singletonList("size()");
 
     @Override
@@ -61,15 +62,10 @@ public class JsonSchemaInspector implements Inspector {
         if (schema.isObjectSchema()) {
             objectSchema = schema.asObjectSchema();
         } else if (schema.isArraySchema()) {
-            ArraySchema arraySchema = schema.asArraySchema();
-            if (arraySchema.getItems().isSingleItems()) {
-                objectSchema = arraySchema.getItems().asSingleItems().getSchema().asObjectSchema();
-            } else {
-                throw new IllegalStateException("Unexpected array schema type - expected single item schema");
-            }
+            objectSchema = getItemSchema(schema.asArraySchema());
             // add collection specific paths
             paths.addAll(COLLECTION_PATHS);
-            context = "[]";
+            context = ARRAY_CONTEXT;
         } else {
             throw new IllegalStateException(String.format("Unexpected schema type %s - expected object or array schema", schema.getType()));
         }
@@ -103,9 +99,24 @@ public class JsonSchemaInspector implements Inspector {
             if (subschema.isValueTypeSchema()) {
                 paths.add(path);
             } else if (subschema.isObjectSchema()) {
-                fetchPaths(path, paths, ((ObjectSchema) subschema).getProperties());
+                fetchPaths(path, paths, subschema.asObjectSchema().getProperties());
+            } else if (subschema.isArraySchema()) {
+                COLLECTION_PATHS.stream().map(p -> path + "." + p).forEach(paths::add);
+                fetchPaths(path + ARRAY_CONTEXT, paths, getItemSchema(subschema.asArraySchema()).getProperties());
             }
         }
     }
 
+    /**
+     * Extract item schema from array schema. Only supports single item array schema.
+     * @param arraySchema schema as array schema
+     * @return the nested item schema
+     */
+    private static ObjectSchema getItemSchema(ArraySchema arraySchema) {
+        if (arraySchema.getItems().isSingleItems()) {
+            return arraySchema.getItems().asSingleItems().getSchema().asObjectSchema();
+        } else {
+            throw new IllegalStateException("Unexpected array schema type - expected single item schema");
+        }
+    }
 }
