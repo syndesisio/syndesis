@@ -1,6 +1,7 @@
 import {
   Button,
   DropdownKebab,
+  ListView,
   ListViewIcon,
   ListViewItem,
   MenuItem,
@@ -196,7 +197,11 @@ export class VirtListItem extends React.Component<
             )
           }
           stacked={true}
-        />
+        >
+          {this.props.children ? (
+            <ListView>{this.props.children}</ListView>
+          ) : null}
+        </ListViewItem>
       </>
     );
   }
