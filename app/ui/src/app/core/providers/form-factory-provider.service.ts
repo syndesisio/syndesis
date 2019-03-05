@@ -66,7 +66,7 @@ export class FormFactoryProviderService extends FormFactoryService {
         case 'checkbox':
           type = 'checkbox';
           // massage string values as the form builder doesn't do this
-          if (typeof value !== 'boolean') {
+          if (typeof value === 'string') {
             value = value === 'true';
           }
           break;
@@ -318,7 +318,7 @@ export class FormFactoryProviderService extends FormFactoryService {
     let initialValue = false;
     if (value !== undefined && value !== null) {
       initialValue = !!value;
-    } else if (field.value !== undefined || field.value !== null) {
+    } else if (field.value !== undefined && field.value !== null) {
       initialValue = !!field.value;
     } else {
       initialValue = !!field.defaultValue;
