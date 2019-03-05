@@ -86,6 +86,10 @@
     {
       "id": "@project.groupId@:@project.artifactId@:@project.version@",
       "type": "MAVEN"
+    },
+    {
+      "id": "org.apache.camel:camel-quartz2:@camel.version@",
+      "type": "MAVEN"
     }
   ],
   "description": "Trigger events based on an interval or a quartz expression",
