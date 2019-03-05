@@ -6,13 +6,21 @@
 
 The OpenAPI document that defines your REST API service defines
 the operations that the service can perform. After you create an API
-provider integration, you can edit the
-flow for each operation. 
+provider integration, you can edit the flow for each operation. 
 
 Each operation has exactly one flow. 
 In an operation flow, you can add connections
 to other applications and services, as well as steps that operate on data
 between connections. 
+
+As you add to operation flows, you might find that you need to update
+the OpenAPI schema that the API provider integration is based on. To do this, 
+click *View/Edit API Definition* in the upper right of a page in which
+you are editing your API provider integration. This displays your schema
+in the Apicurito editor. In your OpenAPI schema 
+definition, as long as each operation has a unqiue `operationId` property, 
+you can save your updates in Apicurito and {prodname} can synchronize the
+API provider integration's schema to have your updates. 
 
 .Prerequisites
 
@@ -40,7 +48,7 @@ to add to this flow.
 .. In the upper right, click *Save*. 
 
 +
-For each connection that you want to add to this integration flow, repeat
+For each connection that you want to add to this flow, repeat
 this subset of instructions. Add all desired connections to the flow
 before you continue. 
 
@@ -80,7 +88,7 @@ operation flow. The response contains the return code that is
 specified here. 
 +
 In this release, whenever an API call triggers 
-execution of this integration flow, the return code is the code that
+execution of this flow, the return code is the code that
 is specified in this step. 
 Error handling is expected to be supported in a future release. 
 +
@@ -94,7 +102,7 @@ possible return codes.
 .. Scroll to the return code that you want and click it. 
 .. Click *Next*.
 
-. When this integration flow has all needed 
+. When this flow has all needed 
 connections and steps, do one of the following:
 * *Publish* - To start running the integration, in the upper right, click *Publish*.
 This builds the integration and makes it available to be executed. 
@@ -112,7 +120,7 @@ Controls at the top of the operations list let you display
 operations according to criteria that you choose. 
 +
 Repeat this procedure to edit another operation's 
-integration flow.
+flow.
 
 [NOTE]
 ==== 

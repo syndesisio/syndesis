@@ -28,6 +28,7 @@ instructions for creating API provider integrations:
 * xref:overview-benefit-api-provider-integrations_{context}[]
 * xref:about-api-provider-flows_{context}[]
 * xref:about-api-provider-urls_{context}[]
+* xref:requirements-for-api-provider-integrations_{context}[]
 * xref:workflow-api-providers_{context}[]
 * xref:create-api-provider-integration_{context}[]
 * xref:create-integration-operation-flows_{context}[]
@@ -39,6 +40,8 @@ include::c_overview-benefit-api-provider-integrations.adoc[leveloffset=+1]
 include::c_about-api-provider-flows.adoc[leveloffset=+1]
 
 include::c_about-api-provider-urls.adoc[leveloffset=+1]
+
+include::r_requirements-for-api-provider-integrations.adoc[leveloffset=+1]
 
 include::c_workflow-api-providers.adoc[leveloffset=+1]
 

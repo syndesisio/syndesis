@@ -4,38 +4,36 @@
 [id='add-basic-filter-step_{context}']
 = Adding a basic filter step
 
-You can add a step to a simple integration or to an operation flow 
-to filter the data that the
-integration operates on. In a filter step, {prodname} inspects the
+You can add a step to a flow to filter the data that the
+flow operates on. In a filter step, {prodname} inspects the
 data and continues only if the content meets
-criteria that you define. For example, in an integration that
+criteria that you define. For example, in a flow that
 obtains data from Twitter, you can specify that you want to
 continue execution by operating only on tweets that contain "Red Hat".
 
 .Prerequisites
-* The integration or the operation flow contains all connections that it needs to. 
-* You are creating or editing an integration or an operation flow. 
+* The flow contains all connections that it needs to. 
+* You are creating or editing a flow. 
 
 .Procedure
 
 . In the left panel, where you want to add a filter step to
-the integration, click the
+the flow, click the
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 
-. On the *Add a Step* page, click *Basic Filter*.
+. Click *Basic Filter*. 
 
 . On the *Configure Basic Filter Step* page, in
 the *Continue only if incoming data match* field, select one of the
 following options:
 +
-* Accept the
-default that all defined rules must be satisfied.
+* Accept the default that all defined rules must be satisfied.
 * Indicate that only
 one rule must be satisfied by selecting *ANY of the following*.
 
 . Define the filter rule:
 
-.. *For this field*: In the field on the left, enter the name of the field that contains the
+.. *The data you want to evaluate*: Enter the name of the field that contains the
 content you want the filter to evaluate. For example, suppose the data
 coming in to the step consists of tweets that mention your Twitter handle.
 You want to continue execution only when the tweet contains
@@ -47,15 +45,15 @@ You can define the field value in the following ways:
 *** Start typing. The data name field has a typeahead feature that
 provides a list of possible completions for you in a pop-up box.
 Select the correct one from the box.
-*** Click in the *text* field. A dropdown box appears with a list of
+*** Click in the field. A dropdown box appears with a list of
 available fields. Select the field of interest from the list.
 
-.. *This condition must be satisfied*: In the middle field, select a condition from the dropdown box.
+.. *Must meet this condition*: Select a condition from the dropdown box.
 The setting defaults to *Contains*. For execution to continue,
 the condition that you select in this field must be
 true for the value that you enter in the third field.
 
-.. *For this value*: In the third field, enter a value to filter on. For example,
+.. *For this value*: Enter a value to filter on. For example,
 if you want to operate on mentions of a certain product from the
 Twitter feed, you would enter the product name here.
 

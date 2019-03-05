@@ -15,14 +15,13 @@ map the source `Name` field to the target `CustomerName` field.
 
 .Prerequisite
 
-You are creating a new integration or editing
-an integration.
+You are creating or editing a flow. 
 
 .Procedure
 
 . In the left panel, where you want to add a data mapper step,
 click the image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
-. On the *Choose a Step* page, click *Data Mapper* to display source
+. Click *Data Mapper* to display source
 and target fields in the data mapper canvas. 
 
 .Next step

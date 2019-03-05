@@ -17,7 +17,7 @@ from the out-of-date connector.
 Be prepared to do one of the following:
 
 * Upload the updated OpenAPI document.
-* Upload the out-of-date schema again and update it in Apicurio Studio.
+* Upload the out-of-date schema again and update it in Apicurito.
 
 .Procedure
 

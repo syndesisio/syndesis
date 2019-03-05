@@ -9,7 +9,7 @@ Instead of executing subsequent steps once for each object, {prodname}
 executes subsequent steps once for the collection. 
 
 .Prerequisites
-* You are creating or editing a simple integration or an operation flow.
+* You are creating or editing a flow.
 * The flow already has all the connections that it requires.
 * A previous step split a collection into individual objects. 
 
@@ -19,4 +19,4 @@ executes subsequent steps once for the collection.
 add an aggregate step to the flow, click the
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 
-. On the *Add a Step* page, click *Aggregate*.
+. Click *Aggregate*. This step does not require any configuration. 

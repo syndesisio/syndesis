@@ -7,15 +7,14 @@
 After you add connections to a simple integration or to
 operation flows in an API provider integration, you can optionally add
 steps between connections. Each step operates on data obtained from the
-previous connection(s) and any other previous steps and makes the resulting data
+previous connection(s) and any previous steps and makes the resulting data
 available to the next step in the integration or in the operation flow.
 
 Often, you must map data fields that are received from a
-connection to data fields that the next connection in the integration
-or the operation flow 
+connection to data fields that the next connection in the flow 
 can operate on. After you add all connections to your simple integration,
 or after you add all connections to an operation flow, 
-check the integration visualization panel
+check the flow visualization panel
 on the left. For each connection that requires data mapping before
 it can operate on the input data,
 {prodname} displays

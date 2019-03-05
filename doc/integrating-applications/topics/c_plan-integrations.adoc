@@ -32,20 +32,20 @@ In a simple integration's set of steps or in each operation flow's set of steps:
 * Do you need to access any other applications? For any other
 applications that need to be accessed:
 +
-** Which application does the integration need to connect to?
-** What action should the integration perform?
+** Which application does the flow need to connect to?
+** What action should the connection perform?
 ** What are the data fields of interest?
-** What credentials should the integration use to connect to this application?
+** What credentials should the connection use to connect to this application?
 
-* Does the integration need to operate on the data between connections?
+* Does the flow need to operate on the data between connections?
 For example:
 +
-** Should the integration filter the data it operates on?
+** Should the flow filter the data it operates on?
 ** Do field names differ between source and target applications? If they
 do then data mapping is required.
-** Does the integration or operation flow need to split a collection into 
+** Does the flow need to split a collection into 
 individual records or aggregrate multiple records into a collection?
 ** Would a template be helpful for outputting data in a consistent form?
 ** Do you want to send information about messages being processed to the
 integration's log?
-** Does the integration need to operate on the data in some customized way?
+** Does the flow need to operate on the data in some customized way?

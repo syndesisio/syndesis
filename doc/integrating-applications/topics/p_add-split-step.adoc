@@ -13,13 +13,13 @@ To execute subsequent steps once for each row, add a
 split step after the Google Sheets connection. 
 
 .Prerequisites
-* You are creating or editing a simple integration or an operation flow.
+* You are creating or editing a flow.
 * The flow already has all the connections that it requires.
 
 .Procedure
 
-. In the integration visualization panel on the left, where you want to 
+. In the visualization panel on the left, where you want to 
 add a split step to the flow, click the
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 
-. On the *Add a Step* page, click *Split*.
+. Click *Split*. This step does not require any configuration. 

@@ -13,7 +13,7 @@ requires data mapping.
 
 .Procedure
 
-. In the integration visualization panel on the left, look for any
+. In the flow visualization panel on the left, look for any
 image:shared/images/WarningIcon.png[Warning] icons.
 
 . Click the icon to see the message. A *Data Type Mismatch* notification

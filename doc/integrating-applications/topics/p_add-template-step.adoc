@@ -4,7 +4,7 @@
 [id='add-template-step_{context}']
 = Adding a template step
 
-In a simple integration or an operation flow, a template step takes data from a source and
+In a flow, a template step takes data from a source and
 inserts it into the format that is defined in a template that you upload to {prodname}.
 The benefit of a template step is that it provides data output in a
 consistent format that you specify.
@@ -12,7 +12,7 @@ consistent format that you specify.
 In the template, you define placeholders and specify static text.
 When you create the flow, you add a template step, map source fields
 to the template placeholders, and then map template content to the next step
-in the flow. When the integration executes, {prodname}
+in the flow. When {prodname} executes the flow, it 
 inserts the values that are in the mapped source fields into an
 instance of the template and passes the result to the next step in the flow.
 
@@ -26,16 +26,16 @@ flow is allowed.
 * link:https://velocity.apache.org[Velocity] 
 
 .Prerequisites
-* You must be creating or editing a simple integration or an operation flow.
+* You must be creating or editing a flow.
 * If you are creating a simple
 integration then it must already have its start and finish connections.
 
 .Procedure
 
-. In the integration visualization panel on the left, click the
+. In the visualization panel on the left, click the
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
 at the location where you want to add a template step.
-. On the *Choose a Step* page, click *Template*. The
+. Click *Template*. The
 *Upload Template* page opens.
 . Specify the template type, which is Freemarker, Mustache, or Velocity. 
 
@@ -100,11 +100,11 @@ immediately after the template step that you just added.
 .. In the data mapper, map the template's *message* field, which
 always contains the result of inserting source fields into the
 template, to a target field. For example, suppose that a Gmail connection is
-next in the integration and you want to send the result of the template step
+next in the flow and you want to send the result of the template step
 as the content of a Gmail message. To do this, you would map the *message*
 source field to the *text* target field.
 .. In the upper right, click *Done*.
 
 .Additional resources
 
-For details about mapping fields, see link:{LinkFuseOnlineIntegrationGuide}#mapping-data_map[Mapping integration data to fields for the next connection in the integration].
+For details about mapping fields, see link:{LinkFuseOnlineIntegrationGuide}#mapping-data_map[Mapping integration data to fields for the next connection in the flow].

@@ -25,7 +25,7 @@ and client secret. For example, Salesforce generates a consumer key and
 a consumer secret.
 
 For some OAuth applications, {prodname} provides an entry in its *Settings*
-page that makes it easy to register with the application. To see which
+page for adding the client ID and client secret that registration provides. To see which
 applications this applies to, in the left panel of {prodname}, click
 *Settings*. 
 
@@ -43,7 +43,7 @@ click *Register* to display the client ID and client secret fields.
 `*During registration, enter this callback URL:*`, copy that URL to the
 clipboard.
 . In another browser tab, go to the web site for the application that you
-want to register with and perform the steps required to obtain
+want to register with and perform the steps that are required to obtain
 a client ID and secret. One of these steps requires you to enter
 the callback URL for your {prodname} environment. Paste the
 URL that you copied to the clipboard in the second step. 

@@ -5,22 +5,22 @@
 = Adding an advanced filter step
 
 In a filter step, {prodname} inspects the
-data and continues executing the integration or the operation flow only if the content meets
+data and continues executing the flow only if the content meets
 criteria that you define.
 If the basic filter step does not let you
 define the exact filter that you need, then add an advanced filter step.
 
 .Prerequisites
-* The integration or the operation flow contains all connections that it needs to. 
-* You are creating or editing an integration or an operation flow. 
+* The flow contains all connections that it needs to. 
+* You are creating or editing a flow. 
 
 .Procedure
 
 . In the left panel, where you want to add an advanced filter step to
-the integration or the operation flow, click the
+the flow, click the
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 
-. Select *Advanced Filter*.
+. Click *Advanced Filter*.
 
 . In the edit box, use the
 http://camel.apache.org/simple.html[Camel Simple Expression] language
