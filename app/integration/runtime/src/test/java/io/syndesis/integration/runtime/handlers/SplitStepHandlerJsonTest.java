@@ -76,6 +76,83 @@ public class SplitStepHandlerJsonTest extends IntegrationTestSupport {
     }
 
     /**
+     * Test simple split/aggregate use case.
+     * direct -> split -> log -> aggregate -> mock
+     */
+    @Test
+    public void testSplitAggregate() throws Exception {
+        final DefaultCamelContext context = new DefaultCamelContext();
+
+        try {
+            final RouteBuilder routes = new IntegrationRouteBuilder(
+                    "classpath:/syndesis/integration/split-aggregate.json",
+                    Resources.loadServices(IntegrationStepHandler.class)
+            );
+
+            // Set up the camel context
+            context.addRoutes(routes);
+            addBodyLogger(context);
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            final ProducerTemplate template = context.createProducerTemplate();
+            final MockEndpoint result = context.getEndpoint("mock:expression", MockEndpoint.class);
+            final List<String> body = Arrays.asList("a", "b", "c");
+
+            result.expectedMessageCount(1);
+
+            template.sendBody("direct:expression", body);
+
+            result.assertIsSatisfied();
+            List<?> bodyReceived = result.getExchanges().get(0).getIn().getBody(List.class);
+            assertThat(bodyReceived).hasSize(3);
+            assertThat(bodyReceived.get(0)).isEqualTo("a");
+            assertThat(bodyReceived.get(1)).isEqualTo("b");
+            assertThat(bodyReceived.get(2)).isEqualTo("c");
+        } finally {
+            context.stop();
+        }
+    }
+
+    /**
+     * Test inconsistent split aggregate combination where some additional aggregate steps are added to the integration.
+     * direct -> split -> log -> aggregate -> aggregate -> split -> log -> aggregate -> aggregate -> mock
+     */
+    @Test
+    public void testInconsistentSplitAggregate() throws Exception {
+        final DefaultCamelContext context = new DefaultCamelContext();
+
+        try {
+            final RouteBuilder routes = new IntegrationRouteBuilder(
+                    "classpath:/syndesis/integration/inconsistent-split.json",
+                    Resources.loadServices(IntegrationStepHandler.class)
+            );
+
+            // Set up the camel context
+            context.addRoutes(routes);
+            addBodyLogger(context);
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            final ProducerTemplate template = context.createProducerTemplate();
+            final MockEndpoint result = context.getEndpoint("mock:expression", MockEndpoint.class);
+            final List<String> body = Arrays.asList("a,b,c", "de", "f,g");
+
+            result.expectedBodiesReceived(body);
+
+            template.sendBody("direct:expression", body);
+
+            result.assertIsSatisfied();
+        } finally {
+            context.stop();
+        }
+    }
+
+    /**
      * Test chains of split/aggregate where a 2nd split directly follows on the 1st aggregate.
      * direct -> split -> log -> aggregate -> split -> log -> aggregate -> mock
      */
