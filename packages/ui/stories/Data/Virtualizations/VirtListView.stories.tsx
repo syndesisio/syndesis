@@ -6,9 +6,14 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { VirtListItem, VirtListView } from '../../../src';
+import { ViewListItem, VirtListItem, VirtListView } from '../../../src';
 
 const stories = storiesOf('Data/Virtualizations/VirtListView', module);
+
+const viewName1 = 'View_1';
+const viewDescription1 = 'View 1 description ...';
+const viewName2 = 'View_2';
+const viewDescription2 = 'View 2 description ...';
 
 const virtName1 = 'Virtualization_1';
 const virtDescription1 = 'Virtualization 1 description ...';
@@ -32,9 +37,62 @@ const deleteModalTitle = 'Confirm Delete?';
 const deleteModalMessage =
   'Are you sure you want to delete the virtualization?';
 
+const viewItems = [
+  <ViewListItem
+    key="viewListItem1"
+    viewName={viewName1}
+    viewDescription={viewDescription1}
+    i18nDelete={deleteText}
+    i18nDeleteTip={deleteText}
+    i18nEdit={editText}
+    i18nEditTip={editTip1}
+    onDelete={action(deleteText)}
+    onEdit={action(editText)}
+  />,
+  <ViewListItem
+    key="viewListItem2"
+    viewName={viewName2}
+    viewDescription={viewDescription2}
+    i18nDelete={deleteText}
+    i18nDeleteTip={deleteText}
+    i18nEdit={editText}
+    i18nEditTip={editTip1}
+    onDelete={action(deleteText)}
+    onEdit={action(editText)}
+  />,
+];
+
+const virtItem = [
+  <VirtListItem
+    key="virtListItem1"
+    virtName={virtName1}
+    virtDescription={virtDescription1}
+    i18nCancelText={cancelText}
+    i18nDelete={deleteText}
+    i18nDeleteModalMessage={deleteModalMessage}
+    i18nDeleteModalTitle={deleteModalTitle}
+    i18nDraft={draftText}
+    i18nDraftTip={draftTip1}
+    i18nEdit={editText}
+    i18nEditTip={editTip1}
+    i18nExport={exportText}
+    i18nPublished={publishedText}
+    i18nPublishedTip={publishedTip1}
+    i18nUnpublish={unpublishText}
+    i18nPublish={publishText}
+    onDelete={action(deleteText)}
+    onEdit={action(editText)}
+    onExport={action(exportText)}
+    onUnpublish={action(unpublishText)}
+    onPublish={action(publishText)}
+    isPublished={boolean(publishText, true)}
+    children={viewItems}
+  />,
+];
+
 const virtItems = [
   <VirtListItem
-    key="viewListItem1"
+    key="virtListItem1"
     virtName={virtName1}
     virtDescription={virtDescription1}
     i18nCancelText={cancelText}
@@ -58,7 +116,7 @@ const virtItems = [
     isPublished={boolean(publishText, true)}
   />,
   <VirtListItem
-    key="viewListItem2"
+    key="virtListItem2"
     virtName={virtName2}
     virtDescription={virtDescription2}
     i18nCancelText={cancelText}
@@ -91,7 +149,7 @@ const createVirtTip = 'Create Data Virtualization';
 const importText = 'Import';
 const importTip = 'Import a data virtualization';
 
-const hasVirtsTestNotes =
+const defaultNotes =
   '- Verify page title is "' +
   title +
   '"\n' +
@@ -118,7 +176,10 @@ const hasVirtsTestNotes =
   '- Verify toolbar "' +
   createVirt +
   '" button tooltip is "' +
-  createVirtTip +
+  createVirtTip;
+
+const twoVirtsTestNotes =
+  defaultNotes +
   '"\n' +
   '- Verify empty state component does not show\n' +
   '- Verify results message shows ' +
@@ -135,37 +196,18 @@ const hasVirtsTestNotes =
   '" mode';
 
 const noVirtsTestNotes =
-  '- Verify page title is "' +
-  title +
-  '"\n' +
-  '- Verify page description is "' +
-  description +
-  '"\n' +
-  '- Verify toolbar is displayed\n' +
-  '- Verify toolbar contains "' +
-  importText +
-  ' and ' +
-  createVirt +
-  '" buttons\n' +
-  '- Verify toolbar "' +
-  importText +
-  '" button is enabled\n' +
-  '- Verify toolbar "' +
-  importText +
-  '" button tooltip is "' +
-  importTip +
-  '"\n' +
-  '- Verify toolbar "' +
-  createVirt +
-  '" button is enabled\n' +
-  '- Verify toolbar "' +
-  createVirt +
-  '" button tooltip is "' +
-  createVirtTip +
+  defaultNotes +
   '"\n' +
   '- Verify results message shows 0 results\n' +
   '- Verify empty state component is displayed and has a New Virtualization button\n' +
   '- Verify no virtualization items are displayed';
+
+const singleVirtWithViewsTestNotes =
+  defaultNotes +
+  '"\n' +
+  '- Verify results message shows 1 results\n' +
+  '- Verify 1 virtualization is displayed and is expandable\n' +
+  '- Verify expanding virtualization shows 2 views\n';
 
 stories
 
@@ -225,8 +267,8 @@ stories
   )
 
   .add(
-    'has virtualizations',
-    withNotes(hasVirtsTestNotes)(() => (
+    '2 virtualizations',
+    withNotes(twoVirtsTestNotes)(() => (
       <Router>
         <VirtListView
           activeFilters={[]}
@@ -276,6 +318,63 @@ stories
           onCreate={action(createVirt)}
           onImport={action(importText)}
           children={virtItems}
+        />
+      </Router>
+    ))
+  )
+
+  .add(
+    'single virtualization - expand views',
+    withNotes(singleVirtWithViewsTestNotes)(() => (
+      <Router>
+        <VirtListView
+          activeFilters={[]}
+          currentFilterType={{
+            filterType: 'text',
+            id: 'name',
+            placeholder: text('placeholder', 'Filter by name'),
+            title: text('title', 'Name'),
+          }}
+          currentSortType={'sort'}
+          currentValue={''}
+          filterTypes={[]}
+          isSortAscending={true}
+          linkCreateHRef={action('/data/create')}
+          resultsCount={0}
+          sortTypes={[]}
+          onUpdateCurrentValue={action('onUpdateCurrentValue')}
+          onValueKeyPress={action('onValueKeyPress')}
+          onFilterAdded={action('onFilterAdded')}
+          onSelectFilterType={action('onSelectFilterType')}
+          onFilterValueSelected={action('onFilterValueSelected')}
+          onRemoveFilter={action('onRemoveFilter')}
+          onClearFilters={action('onClearFilters')}
+          onToggleCurrentSortDirection={action('onToggleCurrentSortDirection')}
+          onUpdateCurrentSortType={action('onUpdateCurrentSortType')}
+          i18nCreateDataVirt={createVirt}
+          i18nCreateDataVirtTip={createVirt}
+          i18nDescription={text('i18nDescription', description)}
+          i18nEmptyStateInfo={text(
+            'i18nEmptyStateInfo',
+            'There are no currently available API connectors. Please click on the button below to create one.'
+          )}
+          i18nEmptyStateTitle={text('i18nEmptyStateTitle', createVirt)}
+          i18nImport={importText}
+          i18nImportTip={importTip}
+          i18nLinkCreateVirt={text('i18nLinkCreateVirt', createVirt)}
+          i18nName={text('i18nName', 'Name')}
+          i18nNameFilterPlaceholder={text(
+            'i18nNameFilterPlaceholder',
+            'Filter by Name...'
+          )}
+          i18nResultsCount={text(
+            'i18nResultsCount',
+            virtItem.length + ' Results'
+          )}
+          i18nTitle={text('i18nTitle', title)}
+          onCreate={action(createVirt)}
+          onImport={action(importText)}
+          children={virtItem}
         />
       </Router>
     ))
