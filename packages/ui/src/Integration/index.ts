@@ -1,6 +1,7 @@
 export * from './IntegrationActionSelectorCard';
 export * from './IntegrationDetailHistoryListView';
 export * from './IntegrationDetailHistoryListViewItem';
+export * from './IntegrationDetailTab';
 export * from './IntegrationEditorActionsListItem';
 export * from './IntegrationEditorChooseAction';
 export * from './IntegrationEditorChooseConnection';
