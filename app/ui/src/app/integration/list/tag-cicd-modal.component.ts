@@ -84,7 +84,7 @@ export class TagCICDModalComponent implements OnInit, OnDestroy {
       return;
     }
     const sub = this.integrationSupportService
-      .untagIntegration(this.integration.id, this.removalCandidate.name)
+      .removeEnvironment(this.removalCandidate.name)
       .subscribe(
         _ => {
           this.fetchData();

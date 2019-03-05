@@ -26,7 +26,7 @@ export const integrationEndpoints: Endpoints = {
   environments: '/public/environments',
   renameEnvironment: '/public/environments/{env}',
   tags: '/public/integrations/{integrationId}/tags',
-  deleteTag: '/public/integrations/{integrationId}/tags/{env}',
+  deleteEnvironment: '/public/environments/{env}',
 
   pom: '/integration-support/generate/pom.xml',
   export: '/integration-support/export.zip',
