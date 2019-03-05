@@ -20,17 +20,6 @@
             "description": "Specify the resource id and type to read",
             "name": "Read resource from the server",
             "properties": {
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
-                "required": true,
-                "secret": false,
-                "type": "select"
-              },
               "containedResourceTypes": {
                 "deprecated": false,
                 "displayName": "Contained Resource Types",
@@ -53,6 +42,17 @@
                 "required": false,
                 "secret": false,
                 "type": "string"
+              },
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
+                "required": true,
+                "secret": false,
+                "type": "select"
               },
               "version": {
                 "deprecated": false,
@@ -96,17 +96,6 @@
             "description": "Specify the resource type and the query, e.g. \"given=Vincent&family=Freeman\"",
             "name": "Search for resources on the server",
             "properties": {
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type to query",
-                "required": true,
-                "secret": false,
-                "type": "select"
-              },
               "query": {
                 "deprecated": false,
                 "displayName": "Query",
@@ -117,6 +106,17 @@
                 "required": false,
                 "secret": false,
                 "type": "string"
+              },
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type to query",
+                "required": true,
+                "secret": false,
+                "type": "select"
               }
             }
           }
@@ -151,17 +151,6 @@
             "description": "Specify the resource id and type to delete",
             "name": "Delete resource from the server",
             "properties": {
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type, e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
-                "required": true,
-                "secret": false,
-                "type": "String"
-              },
               "id": {
                 "deprecated": false,
                 "displayName": "Resource Id",
@@ -172,6 +161,17 @@
                 "required": false,
                 "secret": false,
                 "type": "string"
+              },
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type, e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
+                "required": true,
+                "secret": false,
+                "type": "String"
               },
               "version": {
                 "deprecated": false,
@@ -216,17 +216,6 @@
             "description": "Specify the resource to update or create",
             "name": "Update all fields or create a resource with defined ID on the server",
             "properties": {
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type to update",
-                "required": true,
-                "secret": false,
-                "type": "String"
-              },
               "containedResourceTypes": {
                 "deprecated": false,
                 "displayName": "Contained Resource Types",
@@ -238,6 +227,17 @@
                 "required": false,
                 "secret": false,
                 "type": "select"
+              },
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type to update",
+                "required": true,
+                "secret": false,
+                "type": "String"
               }
             }
           }
@@ -271,17 +271,6 @@
             "description": "Specify the JSON patch to execute",
             "name": "Update selected fields in a resource on the server",
             "properties": {
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type to query",
-                "required": true,
-                "secret": false,
-                "type": "select"
-              },
               "id": {
                 "deprecated": false,
                 "displayName": "Resource Id",
@@ -316,6 +305,17 @@
                 "required": false,
                 "secret": false,
                 "type": "textarea"
+              },
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type to query",
+                "required": true,
+                "secret": false,
+                "type": "select"
               }
             }
           }
@@ -349,17 +349,6 @@
             "description": "Specify the resource to create",
             "name": "Create a resource on the server (with auto-generated ID)",
             "properties": {
-              "resourceType": {
-                "deprecated": false,
-                "displayName": "Resource Type",
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "The resource type to create",
-                "required": true,
-                "secret": false,
-                "type": "String"
-              },
               "containedResourceTypes": {
                 "deprecated": false,
                 "displayName": "Contained Resource Types",
@@ -371,6 +360,17 @@
                 "required": false,
                 "secret": false,
                 "type": "select"
+              },
+              "resourceType": {
+                "deprecated": false,
+                "displayName": "Resource Type",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource type to create",
+                "required": true,
+                "secret": false,
+                "type": "String"
               }
             }
           }
