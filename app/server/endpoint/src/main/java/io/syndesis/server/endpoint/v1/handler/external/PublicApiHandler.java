@@ -432,8 +432,11 @@ public class PublicApiHandler {
     @Path("integrations/{id}/state")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public IntegrationDeploymentStateDetails getIntegrationState(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) String integrationId) {
-        return monitoringProvider.getIntegrationStateDetails(getIntegration(integrationId).getId().get());
+    public IntegrationState getIntegrationState(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) String integrationId) {
+        final Integration integration = getIntegration(integrationId);
+        final IntegrationDeployment deployment = deploymentHandler.get(integration.getId().get(), integration.getVersion());
+        return new IntegrationState(deployment != null ? deployment.getCurrentState() : IntegrationDeploymentState.Unpublished,
+                monitoringProvider.getIntegrationStateDetails(integration.getId().get()));
     }
 
     /**
@@ -443,8 +446,7 @@ public class PublicApiHandler {
     @Path("integrations/{id}/deployments")
     @Produces(MediaType.APPLICATION_JSON)
     public IntegrationDeployment publishIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
-        final Integration integration = getIntegration(integrationId);
-        return publishIntegration(sec, integration);
+        return publishIntegration(sec, getIntegration(integrationId));
     }
 
     /**
@@ -460,18 +462,10 @@ public class PublicApiHandler {
                 .TargetStateRequest();
         targetState.setTargetState(IntegrationDeploymentState.Unpublished);
 
-        // find current deployed version
-        final IntegrationDeployment[] deployment = {null};
-        dataMgr.fetchAllByPropertyValue(IntegrationDeployment
-                .class, PROPERTY_INTEGRATION_ID, integration.getId().get())
-                .forEach(d -> {
-                    if (d.getCurrentState() == IntegrationDeploymentState.Published) {
-                        deployment[0] = d;
-                    }
-                });
-
-        if (deployment[0] != null) {
-            deploymentHandler.updateTargetState(integration.getId().get(), deployment[0].getVersion(), targetState);
+        // find current deployment
+        final IntegrationDeployment deployment = deploymentHandler.get(integration.getId().get(), integration.getVersion());
+        if (deployment != null && deployment.getCurrentState() != IntegrationDeploymentState.Published) {
+            deploymentHandler.updateTargetState(integration.getId().get(), integration.getVersion(), targetState);
         } else {
             throw new ClientErrorException("Integration " + integrationId + " is not published", Response.Status.FORBIDDEN);
         }
@@ -612,6 +606,34 @@ public class PublicApiHandler {
 
         public void setDeploy(Boolean deploy) {
             this.deploy = deploy;
+        }
+    }
+
+    public static class IntegrationState {
+
+        private IntegrationDeploymentState currentState;
+        private IntegrationDeploymentStateDetails stateDetails;
+
+        public IntegrationState(IntegrationDeploymentState currentState,
+                                IntegrationDeploymentStateDetails stateDetails) {
+            this.currentState = currentState;
+            this.stateDetails = stateDetails;
+        }
+
+        public IntegrationDeploymentState getCurrentState() {
+            return currentState;
+        }
+
+        public void setCurrentState(IntegrationDeploymentState currentState) {
+            this.currentState = currentState;
+        }
+
+        public IntegrationDeploymentStateDetails getStateDetails() {
+            return stateDetails;
+        }
+
+        public void setStateDetails(IntegrationDeploymentStateDetails stateDetails) {
+            this.stateDetails = stateDetails;
         }
     }
 }
