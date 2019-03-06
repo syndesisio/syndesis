@@ -56,19 +56,12 @@ public class AggregateStepHandler implements IntegrationStepHandler {
             public Object getValue(Exchange exchange) {
                 // Account for filter match indicator and only aggregate those values that actually matched the filter.
                 // When filter match indicator is not present aggregate all.
-                Optional<Boolean> filterMatchIndicator = Optional.ofNullable(exchange.getProperty(Exchange.FILTER_MATCHED))
-                                                .map(value -> {
-                                                    if (value instanceof Boolean) {
-                                                        return (Boolean) value;
-                                                    }
-                                                    return Boolean.FALSE;
-                                                });
-
-                if (filterMatchIndicator.isPresent() && Boolean.FALSE.equals(filterMatchIndicator.get())) {
+                if (exchange.getProperty(Exchange.FILTER_MATCHED, true, Boolean.class)) {
+                    return super.getValue(exchange);
+                } else {
                     return null;
                 }
 
-                return super.getValue(exchange);
             }
         }),
         latest(UseLatestAggregationStrategy::new),

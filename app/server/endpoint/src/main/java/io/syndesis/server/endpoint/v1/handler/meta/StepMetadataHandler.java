@@ -24,6 +24,10 @@ import io.syndesis.common.model.integration.StepKind;
  */
 interface StepMetadataHandler {
 
+    String VARIANT_METADATA_KEY = "variant";
+    String VARIANT_ELEMENT = "element";
+    String VARIANT_COLLECTION = "collection";
+
     /**
      * Adapt dynamic meta data for given step descriptor;
      * @param metadata
