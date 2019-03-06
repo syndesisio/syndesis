@@ -31,6 +31,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -220,16 +221,32 @@ public class PublicApiHandler {
     }
 
     /**
-     * Tag an integration for release to target environments.
+     * Set tags on an integration for release to target environments. Also deletes other tags.
      */
-    @POST
+    @PUT
     @Path("integrations/{id}/tags")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Map<String, ContinuousDeliveryEnvironment> tagForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
+    public Map<String, ContinuousDeliveryEnvironment> putTagsForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
                                                              @NotNull @ApiParam(required = true) List<String> environments) {
+        return tagForRelease(integrationId, environments, true);
+    }
 
-        if (environments == null || environments.isEmpty()) {
+    /**
+     * Add tags to an integration for release to target environments.
+     */
+    @PATCH
+    @Path("integrations/{id}/tags")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Map<String, ContinuousDeliveryEnvironment> patchTagsForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
+                                                             @NotNull @ApiParam(required = true) List<String> environments) {
+        return tagForRelease(integrationId, environments, false);
+    }
+
+    private Map<String, ContinuousDeliveryEnvironment> tagForRelease(String integrationId, List<String> environments, boolean deleteOtherTags) {
+
+        if (environments == null) {
             throw new ClientErrorException("Missing parameter environments", Response.Status.BAD_REQUEST);
         }
         // validate individual environment names
@@ -239,11 +256,15 @@ public class PublicApiHandler {
         final Integration integration = getIntegration(integrationId);
         final HashMap<String, ContinuousDeliveryEnvironment> deliveryState = new HashMap<>(integration.getContinuousDeliveryState());
 
-        Map<String, ContinuousDeliveryEnvironment> result = new HashMap<>();
         Date lastTaggedAt = new Date();
         for (String environment : environments) {
             // create or update tag
-            result.put(environment, createOrUpdateTag(deliveryState, environment, lastTaggedAt));
+            deliveryState.put(environment, createOrUpdateTag(deliveryState, environment, lastTaggedAt));
+        }
+
+        // delete tags not in the environments list?
+        if (deleteOtherTags) {
+            deliveryState.keySet().retainAll(environments);
         }
 
         // update json db
@@ -251,7 +272,7 @@ public class PublicApiHandler {
 
         LOG.debug("Tagged integration {} for environments {} at {}", integrationId, environments, lastTaggedAt);
 
-        return result;
+        return deliveryState;
     }
 
     private ContinuousDeliveryEnvironment createOrUpdateTag(Map<String,

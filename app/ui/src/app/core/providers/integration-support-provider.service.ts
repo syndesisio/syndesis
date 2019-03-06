@@ -193,12 +193,12 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   ): Observable<Map<String, ContinuousDeliveryEnvironment>> {
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.tags, { integrationId })
-      .post<any>(environments);
+      .put<any>(environments);
   }
 
   removeEnvironment(env: string): Observable<void> {
     return this.apiHttpService
-      .setEndpointUrl(integrationEndpoints.removeEnvironment, {
+      .setEndpointUrl(integrationEndpoints.deleteEnvironment, {
         env: encodeURIComponent(env),
       })
       .delete();
