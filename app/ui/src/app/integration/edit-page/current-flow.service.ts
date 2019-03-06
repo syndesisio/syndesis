@@ -380,9 +380,11 @@ export class CurrentFlowService {
   handleEvent(event: FlowEvent): void {
     const onSave = event.onSave;
     // Nested function of common actions that need to happen after changes
-    const thenFinally = () => {
+    const thenFinally = (emitDirty = true) => {
       executeEventAction(onSave);
-      this.dirty$.next(true);
+      if (emitDirty) {
+        this.dirty$.next(true);
+      }
       this.postUpdates();
     };
 
@@ -413,7 +415,7 @@ export class CurrentFlowService {
           createStepUsingStore(this.stepStore),
           position
         );
-        thenFinally();
+        thenFinally(false);
         break;
       }
       case INTEGRATION_INSERT_DATAMAPPER: {
@@ -424,7 +426,7 @@ export class CurrentFlowService {
           createStepUsingStore(this.stepStore, DATA_MAPPER),
           position
         );
-        thenFinally();
+        thenFinally(false);
         break;
       }
       case INTEGRATION_INSERT_CONNECTION: {
@@ -435,7 +437,7 @@ export class CurrentFlowService {
           createConnectionStep(),
           position
         );
-        thenFinally();
+        thenFinally(false);
         break;
       }
       case INTEGRATION_REMOVE_STEP: {
@@ -647,7 +649,13 @@ export class CurrentFlowService {
         then();
       }
     };
-    this.currentFlow.steps.forEach((step, position) => {
+
+    const stepsToVisit = this.currentFlow.steps.filter(step => step.action !== undefined);
+    if (stepsToVisit.length === 0) {
+      then();
+    }
+
+    stepsToVisit.forEach((step, position) => {
       outstanding = outstanding + 1;
       switch (step.stepKind) {
         case ENDPOINT:
