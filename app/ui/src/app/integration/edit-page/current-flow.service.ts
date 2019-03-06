@@ -380,7 +380,7 @@ export class CurrentFlowService {
   handleEvent(event: FlowEvent): void {
     const onSave = event.onSave;
     // Nested function of common actions that need to happen after changes
-    const thenFinally = (emitDirty: boolean = true) => {
+    const thenFinally = (emitDirty = true) => {
       executeEventAction(onSave);
       if (emitDirty) {
         this.dirty$.next(true);
