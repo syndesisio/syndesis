@@ -52,7 +52,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                                             .decompress()
                                             .build();
 
-                Optional<DataShape> singleElementShape = dataShape.findVariantByMeta("variant", "element");
+                Optional<DataShape> singleElementShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_ELEMENT);
 
                 if (singleElementShape.isPresent()) {
                     return new DynamicActionMetadata.Builder()
@@ -61,7 +61,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                             .build();
                 }
 
-                DataShape collectionShape = dataShape.findVariantByMeta("variant", "collection").orElse(dataShape);
+                DataShape collectionShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_COLLECTION).orElse(dataShape);
 
                 if (collectionShape.getKind().equals(DataShapeKinds.JSON_SCHEMA)) {
                     String specification = dataShape.getSpecification();
@@ -75,6 +75,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                             return new DynamicActionMetadata.Builder()
                                     .createFrom(metadata)
                                     .outputShape(new DataShape.Builder().createFrom(collectionShape)
+                                                                        .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
                                                                         .specification(Json.writer().writeValueAsString(itemSchema))
                                                                         .build())
                                     .build();
@@ -87,6 +88,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                         return new DynamicActionMetadata.Builder()
                                 .createFrom(metadata)
                                 .outputShape(new DataShape.Builder().createFrom(collectionShape)
+                                                                        .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
                                                                         .specification(Json.writer().writeValueAsString(items.get(0)))
                                                                         .build())
                                 .build();
