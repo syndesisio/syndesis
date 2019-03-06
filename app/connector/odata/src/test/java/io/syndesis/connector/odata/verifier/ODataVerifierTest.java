@@ -64,7 +64,7 @@ public class ODataVerifierTest extends AbstractODataTest {
     @Test
     public void testVerifyWithServer() throws Exception {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(SERVICE_URI, defaultTestServer.serviceUrl());
+        parameters.put(SERVICE_URI, defaultTestServer.servicePlainUri());
 
         Verifier verifier = new ODataVerifierAutoConfiguration().odataVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
@@ -78,7 +78,7 @@ public class ODataVerifierTest extends AbstractODataTest {
     @Test
     public void testVerifyWithBasicAuthenticatedServer() throws Exception {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(SERVICE_URI, authTestServer.serviceUrl());
+        parameters.put(SERVICE_URI, authTestServer.servicePlainUri());
         parameters.put(BASIC_USER_NAME, ODataTestServer.USER);
         parameters.put(BASIC_PASSWORD, ODataTestServer.USER_PASSWORD);
 
@@ -94,7 +94,7 @@ public class ODataVerifierTest extends AbstractODataTest {
     @Test
     public void testVerifyWithBasicAuthenticatedServerWrongPassword() throws Exception {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(SERVICE_URI, authTestServer.serviceUrl());
+        parameters.put(SERVICE_URI, authTestServer.servicePlainUri());
         parameters.put(BASIC_USER_NAME, ODataTestServer.USER);
         parameters.put(BASIC_PASSWORD, "WrongPassword");
 
@@ -113,33 +113,15 @@ public class ODataVerifierTest extends AbstractODataTest {
                         .allMatch(response -> response.getStatus() == Verifier.Status.ERROR);
     }
 
+    /**
+     * Needs to supply server certificate since the server is unknown to the default
+     * certificate authorities that is loaded into the keystore by default
+     */
     @Test
     public void testVerifyWithSSLServer() throws Exception {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(SERVICE_URI, sslTestServer.serviceUrl());
-        parameters.put(SKIP_CERT_CHECK, false);
-        parameters.put(CLIENT_CERTIFICATE, ODataTestServer.serverCertificate());
-
-        Verifier verifier = new ODataVerifierAutoConfiguration().odataVerifier();
-        List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
-
-        assertThat(responses).hasSize(2);
-        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.PARAMETERS);
-        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
-        assertThat(responses).allMatch(response -> response.getStatus() == Verifier.Status.OK);
-    }
-
-    /**
-     * Can use the different certificate and it will still be valid, ie. ignores certificate checking altogether
-     * @throws Exception
-     */
-    @Test
-    public void testVerifyWithSSLServerSkipCertificateCheck() throws Exception {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(SERVICE_URI, sslTestServer.serviceUrl());
-        // Turns off any certificate checking
-        parameters.put(SKIP_CERT_CHECK, true);
-        parameters.put(CLIENT_CERTIFICATE, ODataTestServer.differentCertificate());
+        parameters.put(SERVICE_URI, sslTestServer.serviceSSLUri());
+        parameters.put(SERVER_CERTIFICATE, ODataTestServer.serverCertificate());
 
         Verifier verifier = new ODataVerifierAutoConfiguration().odataVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
@@ -153,9 +135,8 @@ public class ODataVerifierTest extends AbstractODataTest {
     @Test
     public void testVerifyWithSSLServerFailsDifferentCertificate() throws Exception {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(SERVICE_URI, sslTestServer.serviceUrl());
-        parameters.put(SKIP_CERT_CHECK, false);
-        parameters.put(CLIENT_CERTIFICATE, ODataTestServer.differentCertificate());
+        parameters.put(SERVICE_URI, sslTestServer.serviceSSLUri());
+        parameters.put(SERVER_CERTIFICATE, ODataTestServer.differentCertificate());
 
         Verifier verifier = new ODataVerifierAutoConfiguration().odataVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
@@ -173,12 +154,15 @@ public class ODataVerifierTest extends AbstractODataTest {
                         .allMatch(response -> response.getStatus() == Verifier.Status.ERROR);
     }
 
+    /**
+     * Needs to supply server certificate since the server is unknown to the default
+     * certificate authorities that is loaded into the keystore by default
+     */
     @Test
     public void testVerifyWithSSLServerAndBasicAuthentication() throws Exception {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(SERVICE_URI, sslTestServer.serviceUrl());
-        parameters.put(SKIP_CERT_CHECK, false);
-        parameters.put(CLIENT_CERTIFICATE, ODataTestServer.serverCertificate());
+        parameters.put(SERVICE_URI, sslTestServer.serviceSSLUri());
+        parameters.put(SERVER_CERTIFICATE, ODataTestServer.serverCertificate());
         parameters.put(BASIC_USER_NAME, ODataTestServer.USER);
         parameters.put(BASIC_PASSWORD, ODataTestServer.USER_PASSWORD);
 

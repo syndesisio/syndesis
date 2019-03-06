@@ -50,7 +50,7 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
     private String serviceUri;
     private String basicUserName;
     private String basicPassword;
-    private String clientCertificate;
+    private String serverCertificate;
     private String keyPredicate;
     private String queryParams;
     private boolean filterAlreadySeen;
@@ -106,12 +106,12 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
     }
 
 
-    public String getClientCertificate() {
-        return clientCertificate;
+    public String getServerCertificate() {
+        return serverCertificate;
     }
 
-    public void setClientCertificate(String clientCertificate) {
-        this.clientCertificate = clientCertificate;
+    public void setServerCertificate(String serverCertificate) {
+        this.serverCertificate = serverCertificate;
     }
 
     public String getKeyPredicate() {
@@ -186,7 +186,7 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
             .propertyIfNotNull(SERVICE_URI, getServiceUri())
             .propertyIfNotNull(BASIC_USER_NAME, getBasicUserName())
             .propertyIfNotNull(BASIC_PASSWORD, getBasicPassword())
-            .propertyIfNotNull(CLIENT_CERTIFICATE, getClientCertificate())
+            .propertyIfNotNull(SERVER_CERTIFICATE, getServerCertificate())
             .propertyIfNotNull(KEY_PREDICATE, getKeyPredicate())
             .propertyIfNotNull(QUERY_PARAMS, getQueryParams())
             .build();
@@ -217,7 +217,6 @@ final class ODataComponent extends ComponentProxyComponent implements ODataConst
 
         HttpAsyncClientBuilder httpAsyncClientBuilder = ODataUtil.createHttpAsyncClientBuilder(resolvedOptions);
         configuration.setHttpAsyncClientBuilder(httpAsyncClientBuilder);
-        configuration.setSslContextParameters(ODataUtil.createSSLContextParameters(resolvedOptions));
 
         if (getServiceUri() != null) {
             configuration.setServiceUri(getServiceUri());

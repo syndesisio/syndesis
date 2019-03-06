@@ -37,9 +37,7 @@ public interface ODataConstants extends StringConstants {
 
     String BASIC_USER_NAME = "basicUserName";
 
-    String SKIP_CERT_CHECK = "skipCertificateCheck";
-
-    String CLIENT_CERTIFICATE = "clientCertificate";
+    String SERVER_CERTIFICATE = "serverCertificate";
 
     String CONSUMER = "consumer";
 

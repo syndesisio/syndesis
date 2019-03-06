@@ -73,6 +73,8 @@ public abstract class AbstractODataTest implements ODataConstants {
 
     protected static ODataTestServer sslAuthTestServer;
 
+    protected static final String REF_SERVICE_URI = "https://services.odata.org/TripPinRESTierService";
+
     protected CamelContext context;
 
     @Configuration
