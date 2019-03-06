@@ -107,6 +107,7 @@ public class PublicApiHandler {
         return dataMgr.fetchAll(Integration.class).getItems().stream()
                 .filter(i -> !i.isDeleted())
                 .flatMap(i -> i.getContinuousDeliveryState().keySet().stream())
+                .distinct()
                 .collect(Collectors.toList());
     }
 
