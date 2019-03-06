@@ -1,4 +1,4 @@
-import '../../.storybook/config';
+import '../../packages/.storybook/config';
 import { configure } from '@storybook/react';
 
 /* load all stories in the story folder */

@@ -3,7 +3,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { action } from '@storybook/addon-actions';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
-import { StoryHelper } from '../../.storybook/StoryHelper';
 import { ExtensionListItem } from '../../src';
 
 const stories = storiesOf('Customization/ExtensionListItem', module);
@@ -104,7 +103,6 @@ const notUsedTestNotes =
   '" in the ACTION LOGGER';
 
 stories
-  .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
   .add(
     'in use',
     withNotes(inUseTestNotes)(() => (

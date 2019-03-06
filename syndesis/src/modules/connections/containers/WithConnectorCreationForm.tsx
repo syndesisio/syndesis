@@ -6,8 +6,6 @@ export interface IConnectorModule {
 
 export function loadModule(connectorId: string): Promise<IConnectorModule> {
   switch (connectorId) {
-    case 'ftp':
-      return import('@syndesis/connector-ftp');
     default:
       return Promise.reject();
   }

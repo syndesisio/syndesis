@@ -1,7 +1,6 @@
 import { object, text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { StoryHelper } from '../.storybook/StoryHelper';
 import { AutoForm, IFormDefinition } from '../src';
 
 const stories = storiesOf('Components', module);
@@ -155,46 +154,44 @@ export const initialValue = {
   username: 'blah',
 };
 
-stories
-  .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
-  .add('AutoForm', () => {
-    const onSave = v => {
-      alert('Got value: ' + JSON.stringify(v, undefined, 2));
-    };
-    const validate = v => {
-      const errors: any = {};
-      if (v.clientID === 'foo') {
-        errors.clientID = 'Client ID cannot be set to "foo"';
-      }
-      return errors;
-    };
-    return (
-      <AutoForm
-        definition={object('definition', formDefinition)}
-        initialValue={object('initialValue', initialValue)}
-        i18nRequiredProperty={text(
-          'i18nRequiredProperty',
-          'This property is required'
-        )}
-        validate={validate}
-        onSave={onSave}
-      >
-        {({ fields, handleSubmit }) => (
-          <React.Fragment>
-            <p className="fields-status-pf">
-              The fields marked with <span className="required-pf">*</span> are
-              required.
-            </p>
-            {fields}
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </React.Fragment>
-        )}
-      </AutoForm>
-    );
-  });
+stories.add('AutoForm', () => {
+  const onSave = v => {
+    alert('Got value: ' + JSON.stringify(v, undefined, 2));
+  };
+  const validate = v => {
+    const errors: any = {};
+    if (v.clientID === 'foo') {
+      errors.clientID = 'Client ID cannot be set to "foo"';
+    }
+    return errors;
+  };
+  return (
+    <AutoForm
+      definition={object('definition', formDefinition)}
+      initialValue={object('initialValue', initialValue)}
+      i18nRequiredProperty={text(
+        'i18nRequiredProperty',
+        'This property is required'
+      )}
+      validate={validate}
+      onSave={onSave}
+    >
+      {({ fields, handleSubmit }) => (
+        <React.Fragment>
+          <p className="fields-status-pf">
+            The fields marked with <span className="required-pf">*</span> are
+            required.
+          </p>
+          {fields}
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </React.Fragment>
+      )}
+    </AutoForm>
+  );
+});
