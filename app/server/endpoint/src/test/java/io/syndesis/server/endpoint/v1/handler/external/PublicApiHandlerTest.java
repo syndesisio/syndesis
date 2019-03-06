@@ -117,12 +117,12 @@ public class PublicApiHandlerTest {
     }
 
     @Test
-    public void testTagForRelease() throws Exception {
+    public void testPutTagsForRelease() throws Exception {
         final Date now = new Date();
         // delay to avoid false positives in Date::after
-        Thread.sleep(1000);
+        Thread.sleep(10);
 
-        final Map<String, ContinuousDeliveryEnvironment> continuousDeliveryEnvironment = handler.tagForRelease(INTEGRATION_ID,
+        final Map<String, ContinuousDeliveryEnvironment> continuousDeliveryEnvironment = handler.putTagsForRelease(INTEGRATION_ID,
                 Collections.singletonList(ENVIRONMENT));
 
         assertThat(continuousDeliveryEnvironment, is(notNullValue()));
@@ -133,18 +133,39 @@ public class PublicApiHandlerTest {
         verify(dataManager).fetch(Integration.class, INTEGRATION_ID);
     }
 
+    @Test
+    public void testPatchTagsForRelease() throws Exception {
+        // delay to avoid false positives in Date::before
+        Thread.sleep(10);
+        final Date now = new Date();
+        // delay to avoid false positives in Date::after
+        Thread.sleep(10);
+
+        final Map<String, ContinuousDeliveryEnvironment> continuousDeliveryEnvironment = handler.patchTagsForRelease(INTEGRATION_ID,
+                Collections.singletonList(ENVIRONMENT2));
+
+        assertThat(continuousDeliveryEnvironment, is(notNullValue()));
+        assertThat(continuousDeliveryEnvironment.keySet(), hasItem(ENVIRONMENT));
+        assertThat(continuousDeliveryEnvironment.keySet(), hasItem(ENVIRONMENT2));
+        assertThat(continuousDeliveryEnvironment.get(ENVIRONMENT).getLastTaggedAt().before(now), is(true));
+        assertThat(continuousDeliveryEnvironment.get(ENVIRONMENT2).getLastTaggedAt().after(now), is(true));
+
+        verify(dataManager).update(notNull());
+        verify(dataManager).fetch(Integration.class, INTEGRATION_ID);
+    }
+
     @Test(expected = ClientErrorException.class)
     public void testInvalidTagForRelease() throws Exception {
-        handler.tagForRelease(INTEGRATION_ID, Collections.singletonList(""));
+        handler.putTagsForRelease(INTEGRATION_ID, Collections.singletonList(""));
     }
 
     @Test
-    public void testTagForReleaseByName() throws Exception {
+    public void testPutTagsForReleaseByName() throws Exception {
         final Date now = new Date();
         // delay to avoid false positives in Date::after
-        Thread.sleep(1000);
+        Thread.sleep(10);
 
-        final Map<String, ContinuousDeliveryEnvironment> continuousDeliveryEnvironment = handler.tagForRelease(INTEGRATION_NAME,
+        final Map<String, ContinuousDeliveryEnvironment> continuousDeliveryEnvironment = handler.putTagsForRelease(INTEGRATION_NAME,
                 Collections.singletonList(ENVIRONMENT));
 
         assertThat(continuousDeliveryEnvironment, is(notNullValue()));
