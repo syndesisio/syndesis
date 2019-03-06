@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
-import { StoryHelper } from '../../.storybook/StoryHelper';
 import { ApiConnectorDetail } from '../../src';
 
 export const apiConnectorDetailsStory = 'with review actions';
@@ -15,11 +14,9 @@ const stories = storiesOf('Customization/ApiConnectorDetail', module);
 
 const storyNotes = '- Verify something here';
 
-stories
-  .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
-  .add(
-    apiConnectorDetailsStory,
-    withNotes(storyNotes)(() => (
-      <ApiConnectorDetail description={description} icon={icon} name={name} />
-    ))
-  );
+stories.add(
+  apiConnectorDetailsStory,
+  withNotes(storyNotes)(() => (
+    <ApiConnectorDetail description={description} icon={icon} name={name} />
+  ))
+);

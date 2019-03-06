@@ -21,16 +21,16 @@ export class ApiConnectorDetail extends React.Component<
 > {
   public render() {
     return (
-      <CardGrid>
+      <CardGrid fluid={true}>
         <CardGrid.Row>
-          <CardGrid.Col xs={10} md={3}>
+          <CardGrid.Col xs={12} md={3}>
             <ApiConnectorDetailCard
               description={this.props.description}
               icon={this.props.icon}
               name={this.props.name}
             />
           </CardGrid.Col>
-          <CardGrid.Col xs={10} md={7}>
+          <CardGrid.Col xs={12} md={7}>
             <Card>
               <CardHeading>
                 <CardTitle>{this.props.name}</CardTitle>

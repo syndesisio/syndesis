@@ -3,17 +3,20 @@
 @import url('~patternfly-react/dist/css/patternfly-react.css');
 
 html,
-body,
+body {
+  height: 100%;
+  background: #F5F5F5;
+}
+
+body {
+  box-sizing: border-box;
+}
+
 #root {
   height: 100%;
 }
 
-#root {
-  padding: 2em;
-}
-
-.test-area {
-  align-items: center;
-  display: flex;
-  height: 100%;
+#root > div,
+#root > div > div {
+  width: 100%;
 }

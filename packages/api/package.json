@@ -11,9 +11,6 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.1.5",
-    "@storybook/addon-info": "^4.0.4",
-    "@storybook/addon-options": "^4.0.4",
-    "@storybook/react": "^4.0.4",
     "@types/expect": "^1.20.3",
     "@types/jest": "^24.0.9",
     "@types/patternfly-react": "*",
@@ -44,8 +41,7 @@
     "test:watch": "yarn run test --watch",
     "prebuild": "rimraf dist",
     "build": "microbundle --no-compress",
-    "dev": "microbundle watch --no-compress",
-    "storybook": "start-storybook -p 9001"
+    "dev": "microbundle watch --no-compress"
   },
   "peerDependencies": {
     "patternfly-react": "^2.29.2",
@@ -71,7 +67,7 @@
     },
     "globals": {
       "ts-jest": {
-        "tsConfig": "tsconfig.storybook.json"
+        "tsConfig": "tsconfig.test.json"
       }
     }
   }

@@ -5,7 +5,6 @@ import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { StoryHelper } from '../../.storybook/StoryHelper';
 import { ExtensionListItem, ExtensionListView } from '../../src';
 import { extensionImportStory } from './ExtensionImport.stories';
 
@@ -126,7 +125,6 @@ const noExtensionsTestNotes =
   '- Verify results message shows 0 Results';
 
 stories
-  .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
   .add(
     'no extensions',
     withNotes(noExtensionsTestNotes)(() => (

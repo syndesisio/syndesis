@@ -2,7 +2,6 @@ import { action } from '@storybook/addon-actions';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { StoryHelper } from '../../.storybook/StoryHelper';
 import {
   ExtensionDetail,
   ExtensionOverview,
@@ -213,7 +212,6 @@ const notUsedTestNotes =
   usageText;
 
 stories
-  .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
   .add(
     extensionDetailStory,
     withNotes(inUseTestNotes)(() => (

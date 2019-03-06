@@ -2,7 +2,6 @@ import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import { Button } from 'patternfly-react';
 import * as React from 'react';
-import { StoryHelper } from '../../.storybook/StoryHelper';
 import { DeleteConfirmationDialog } from '../../src';
 
 const cancelText = 'Cancel';
@@ -61,7 +60,6 @@ const noDetailsMessageStoryNotes =
   '- Verify clicking the "X" button in the title closes the dialog\n';
 
 stories
-  .addDecorator(story => <StoryHelper>{story()}</StoryHelper>)
   .add(
     'no details',
     withNotes(noDetailsMessageStoryNotes)(() => <ConfirmationDialog />)
