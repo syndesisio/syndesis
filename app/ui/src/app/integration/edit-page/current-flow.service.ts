@@ -650,36 +650,35 @@ export class CurrentFlowService {
       }
     };
 
-    const stepsToVisit = this.currentFlow.steps.filter(step => step.action !== undefined);
-    if (stepsToVisit.length === 0) {
-      then();
-    }
-
-    stepsToVisit.forEach((step, position) => {
+    this.currentFlow.steps.forEach((step, position) => {
       outstanding = outstanding + 1;
       switch (step.stepKind) {
         case ENDPOINT:
-          const sub = this.integrationSupportService
-            .fetchMetadata(
-              step.connection,
-              step.action,
-              step.configuredProperties
-            )
-            .subscribe(
-              descriptor => {
-                this.events.emit({
-                  kind: INTEGRATION_SET_DESCRIPTOR,
-                  position,
-                  descriptor,
-                  skipReconcile: true,
-                  onSave: decrementCount,
-                });
-              },
-              _ => {
-                sub.unsubscribe();
-                decrementCount();
-              }
-            );
+          if (step.action !== undefined) {
+            const sub = this.integrationSupportService
+              .fetchMetadata(
+                step.connection,
+                step.action,
+                step.configuredProperties
+              )
+              .subscribe(
+                descriptor => {
+                  this.events.emit({
+                    kind: INTEGRATION_SET_DESCRIPTOR,
+                    position,
+                    descriptor,
+                    skipReconcile: true,
+                    onSave: decrementCount,
+                  });
+                },
+                _ => {
+                  sub.unsubscribe();
+                  decrementCount();
+                }
+              );
+          } else {
+            decrementCount();
+          }
           break;
         case SPLIT:
         case AGGREGATE:
