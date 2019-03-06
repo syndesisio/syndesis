@@ -1,6 +1,7 @@
 {
   "description": "This is a test integration!",
   "connections": [],
+  "name": "SplitToEnd",
   "flows": [
     {
       "steps": [
@@ -24,7 +25,7 @@
           },
           "dependencies": [],
           "metadata": {
-            "step.index": "1"
+            "configured": "true"
           }
         },
         {
@@ -34,7 +35,7 @@
           },
           "dependencies": [],
           "metadata": {
-            "step.index": "2"
+            "configured": "true"
           }
         },
         {
@@ -57,16 +58,7 @@
           },
           "dependencies": [],
           "metadata": {
-            "step.index": "3"
-          }
-        },
-        {
-          "stepKind": "aggregate",
-          "configuredProperties": {
-          },
-          "dependencies": [],
-          "metadata": {
-            "step.index": "4"
+            "configured": "true"
           }
         }
       ]

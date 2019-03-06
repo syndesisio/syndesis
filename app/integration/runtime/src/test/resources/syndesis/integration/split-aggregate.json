@@ -1,0 +1,111 @@
+{
+  "id": "i-LZspTNggL5xULfktGzqz",
+  "connections": [],
+  "name": "SplitAggregate",
+  "flows": [
+    {
+      "id": "-LZspDCP-UwxzsO_9ImW",
+      "steps": [
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "direct",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "expression"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "id": "-LZspR7T-UwxzsO_9ImW",
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "actionType": "step",
+            "descriptor": {}
+          },
+          "stepKind": "split",
+          "name": "Split"
+        },
+        {
+          "id": "-LZspR7T-UwxzsO_9ImX",
+          "configuredProperties": {
+            "bodyLoggingEnabled": "true",
+            "contextLoggingEnabled": "false"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "log",
+          "name": "Log"
+        },
+        {
+          "id": "-LZspR7T-UwxzsO_9ImY",
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "actionType": "step",
+            "descriptor": {}
+          },
+          "stepKind": "aggregate",
+          "name": "Aggregate"
+        },
+        {
+          "id": "-LZspR7T-UwxzsO_9Imb",
+          "configuredProperties": {
+            "bodyLoggingEnabled": "true",
+            "contextLoggingEnabled": "false"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "log",
+          "name": "Log"
+        },
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "mock",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "expression"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "configured": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "currentState": "Unpublished",
+  "targetState": "Unpublished",
+  "isDraft": true,
+  "type": "SingleFlow",
+  "statusDetail": null
+}

@@ -18,8 +18,10 @@ package io.syndesis.integration.runtime;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -119,6 +121,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
         }
 
+        final Deque<String> splitStack = new ArrayDeque<>();
         for (int stepIndex = 0; stepIndex < steps.size(); stepIndex++) {
             final Step step = steps.get(stepIndex);
             final Optional<Step> nextStep = stepIndex < steps.size() -1 ? Optional.of(steps.get(stepIndex + 1)) : Optional.empty();
@@ -142,7 +145,10 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     if (nextStep.map(Step::getStepKind)
                                 .map(kind -> kind.equals(StepKind.split)).orElse(false)) {
                         parent = findHandler(nextStep.get()).handle(nextStep.get(), parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
-                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(nextStep.get().getId().orElseGet(KeyGenerator::createKey)));
+                        String splitStepId = nextStep.get().getId().orElseGet(KeyGenerator::createKey);
+                        splitStack.push(splitStepId);
+                        parent.id(getStepId(splitStepId));
+                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(splitStepId));
                         parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
                         stepIndex++;
                     } else {
@@ -154,15 +160,27 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 parent = configureRouteDefinition(parent, flowName, flowId, stepId);
 
                 if (StepKind.aggregate.equals(step.getStepKind())) {
-                    parent = handler.handle(step, parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
+                    if (!splitStack.isEmpty()) {
+                        parent = handler.handle(step, parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
 
-                    if (parent instanceof ExpressionNode) {
-                        parent = parent.end();
-                        parent = parent.endParent();
+                        String splitStepId = splitStack.pop();
+                        while (!getStepId(splitStepId).equals(parent.getId())) {
+                            if (parent instanceof ExpressionNode) {
+                                parent = parent.end();
+                                parent = parent.endParent();
+                            } else {
+                                parent = parent.getParent();
+                            }
+                        }
+
+                        if (parent instanceof ExpressionNode) {
+                            parent = parent.end();
+                            parent = parent.endParent();
+                        }
+
+                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
+                        parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
                     }
-
-                    parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
-                    parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
                 } else {
                     if (stepIndex > 0) {
                         // If parent is not null and this is the first step, a scheduler
@@ -180,7 +198,10 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                         }
 
                         parent = findHandler(nextStep.get()).handle(nextStep.get(), parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
-                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(nextStep.get().getId().orElseGet(KeyGenerator::createKey)));
+                        String splitStepId = nextStep.get().getId().orElseGet(KeyGenerator::createKey);
+                        splitStack.push(splitStepId);
+                        parent.id(getStepId(splitStepId));
+                        parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(splitStepId));
                         parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
                         stepIndex++;
                     } else {
@@ -235,8 +256,12 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     private ProcessorDefinition<PipelineDefinition> createPipeline(ProcessorDefinition<?> parent, String stepId) {
         return parent.pipeline()
-            .id(String.format("step:%s", stepId))
+            .id(getStepId(stepId))
             .setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
+    }
+
+    private String getStepId(String stepId) {
+        return String.format("step:%s", stepId);
     }
 
     /**

@@ -1,0 +1,141 @@
+{
+  "id": "i-LZta0CygIW9s3VxFK7qz",
+  "connections": [],
+  "name": "FilterInSplit",
+  "flows": [
+    {
+      "id": "-LZt_X4TOyXAeCAPBjh9",
+      "steps": [
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "direct",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "expression"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "id": "-LZt_wf-OyXAeCAPBjh9",
+          "configuredProperties": {
+            "bodyLoggingEnabled": "true",
+            "contextLoggingEnabled": "false",
+            "customText": "Before split"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "log",
+          "name": "Log"
+        },
+        {
+          "id": "-LZt_wf-OyXAeCAPBjhA",
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "actionType": "step",
+            "descriptor": {}
+          },
+          "stepKind": "split",
+          "name": "Split",
+          "configuredProperties": {}
+        },
+        {
+          "id": "-LZt_wf-OyXAeCAPBjhB",
+          "configuredProperties": {
+            "predicate": "AND",
+            "rules": "[{\"path\":\"task\",\"op\":\"contains\",\"value\":\"Wash\"}]",
+            "type": "rule"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "ruleFilter",
+          "name": "Basic Filter"
+        },
+        {
+          "id": "-LZt_wf-OyXAeCAPBjhC",
+          "configuredProperties": {
+            "bodyLoggingEnabled": "true",
+            "contextLoggingEnabled": "false",
+            "customText": "After filter"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "log",
+          "name": "Log"
+        },
+        {
+          "id": "-LZt_wf-OyXAeCAPBjhD",
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "descriptor": {},
+            "actionType": "step"
+          },
+          "stepKind": "aggregate",
+          "name": "Aggregate",
+          "configuredProperties": {}
+        },
+        {
+          "id": "-LZt_wf-OyXAeCAPBjhE",
+          "configuredProperties": {
+            "bodyLoggingEnabled": "true",
+            "contextLoggingEnabled": "false",
+            "customText": "End result"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "log",
+          "name": "Log"
+        },
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "mock",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "expression"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "configured": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "currentState": "Unpublished",
+  "targetState": "Unpublished",
+  "isDraft": true,
+  "type": "SingleFlow",
+  "statusDetail": null
+}

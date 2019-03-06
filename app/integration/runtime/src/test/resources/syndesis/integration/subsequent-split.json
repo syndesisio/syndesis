@@ -1,0 +1,169 @@
+{
+  "id": "i-LZspEgPgL5xULfktGzoz",
+  "connections": [],
+  "name": "SubsequentSplit",
+  "flows": [
+    {
+      "id": "-LZsomBS-UwxzsO_9ImO",
+      "steps": [
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "direct",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "expression"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "id": "-LZspCRm-UwxzsO_9ImO",
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "actionType": "step",
+            "descriptor": {}
+          },
+          "stepKind": "split",
+          "name": "Split"
+        },
+        {
+          "id": "-LZspCRm-UwxzsO_9ImP",
+          "configuredProperties": {
+            "bodyLoggingEnabled": "true",
+            "contextLoggingEnabled": "false"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "log",
+          "name": "Log"
+        },
+        {
+          "id": "-LZspCRm-UwxzsO_9ImQ",
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "actionType": "step",
+            "descriptor": {}
+          },
+          "stepKind": "aggregate",
+          "name": "Aggregate"
+        },
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "bean",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "beanName": "myMock"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+          },
+          "dependencies": [],
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "id": "-LZspCRm-UwxzsO_9ImR",
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "actionType": "step",
+            "descriptor": {}
+          },
+          "stepKind": "split",
+          "name": "Split"
+        },
+        {
+          "id": "-LZspCRm-UwxzsO_9ImS",
+          "configuredProperties": {
+            "bodyLoggingEnabled": "true",
+            "contextLoggingEnabled": "false"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "log",
+          "name": "Log"
+        },
+        {
+          "id": "-LZspCRm-UwxzsO_9ImT",
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "actionType": "step",
+            "descriptor": {}
+          },
+          "stepKind": "aggregate",
+          "name": "Aggregate"
+        },
+        {
+          "id": "-LZspCRm-UwxzsO_9ImU",
+          "configuredProperties": {
+            "bodyLoggingEnabled": "true",
+            "contextLoggingEnabled": "false"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "log",
+          "name": "Log"
+        },
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "mock",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "expression"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "configured": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "currentState": "Unpublished",
+  "targetState": "Unpublished",
+  "isDraft": true,
+  "type": "SingleFlow",
+  "statusDetail": null
+}

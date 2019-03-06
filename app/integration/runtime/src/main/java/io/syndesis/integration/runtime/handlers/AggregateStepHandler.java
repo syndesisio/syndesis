@@ -51,7 +51,26 @@ public class AggregateStepHandler implements IntegrationStepHandler {
 
     @SuppressWarnings("unchecked")
     public enum AggregationOption {
-        body(GroupedBodyAggregationStrategy::new),
+        body(() -> new GroupedBodyAggregationStrategy() {
+            @Override
+            public Object getValue(Exchange exchange) {
+                // Account for filter match indicator and only aggregate those values that actually matched the filter.
+                // When filter match indicator is not present aggregate all.
+                Optional<Boolean> filterMatchIndicator = Optional.ofNullable(exchange.getProperty(Exchange.FILTER_MATCHED))
+                                                .map(value -> {
+                                                    if (value instanceof Boolean) {
+                                                        return (Boolean) value;
+                                                    }
+                                                    return Boolean.FALSE;
+                                                });
+
+                if (filterMatchIndicator.isPresent() && Boolean.FALSE.equals(filterMatchIndicator.get())) {
+                    return null;
+                }
+
+                return super.getValue(exchange);
+            }
+        }),
         latest(UseLatestAggregationStrategy::new),
         original(() -> new UseOriginalAggregationStrategy(null, true)),
         script(AggregateStepHandler.ScriptAggregationStrategy::new, (strategy, stepProperties) -> {
