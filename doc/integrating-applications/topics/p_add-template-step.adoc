@@ -21,9 +21,9 @@ template step in that flow. However, more than one template step in a
 flow is allowed.
 
 {prodname} supports the following kinds of templates: 
-* link:https://freemarker.apache.org[Freemarker]
-* link:https://mustache.github.io[Mustache]
-* link:https://velocity.apache.org[Velocity] 
+link:https://freemarker.apache.org[Freemarker], 
+link:https://mustache.github.io[Mustache], 
+link:https://velocity.apache.org[Velocity].
 
 .Prerequisites
 * You must be creating or editing a flow.

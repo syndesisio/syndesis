@@ -27,9 +27,9 @@ integrations:
 * xref:monitoring-integrations_{context}[]
 * xref:testing-integrations_{context}[]
 * xref:troubleshooting-integration-execution_{context}[]
-* xref:copying-integrations-to-other-environments_{context}[]
 * xref:updating-integrations_{context}[]
 * xref:deleting-integrations_{context}[]
+* xref:copying-integrations-to-other-environments_{context}[]
 
 include::c_about-integration-lifecycle-handling.adoc[leveloffset=+1]
 
@@ -39,11 +39,11 @@ include::as_monitoring-integrations.adoc[leveloffset=+1]
 
 include::p_testing-integrations.adoc[leveloffset=+1]
 
+include::r_troubleshooting-integration-execution.adoc[leveloffset=+1]
+
 include::p_updating-integrations.adoc[leveloffset=+1]
 
 include::p_deleting-integrations.adoc[leveloffset=+1]
-
-include::r_troubleshooting-integration-execution.adoc[leveloffset=+1]
 
 include::as_copying-integrations-to-other-environments.adoc[leveloffset=+1]
 

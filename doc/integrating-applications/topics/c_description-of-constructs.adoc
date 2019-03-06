@@ -39,11 +39,6 @@ applications. Typically,
 there is a step that maps data fields from the previous connection to
 data fields that the next connection uses.
 
-In a simple integration, each step can operate on the data that is output from
-the previous steps. To determine the steps that you need in an integration, 
-see 
-link:{LinkFuseOnlineIntegrationGuide}#planning_ready[Planning integrations].
-
 An API provider integration publishes a REST API service for which you
 provided an OpenAPI schema. A call from a REST API client triggers execution
 of an API provider integration. The call can invoke any operation that the
@@ -159,3 +154,8 @@ A simple integration has one flow, which is the set of steps that it executes.
 An API provider integration has a flow for each operation that the REST API 
 defines. Each operation's flow is the set of steps that processes 
 a call that invokes that operation. 
+
+In a flow, each step can operate on the data that is output from
+the previous steps. To determine the steps that you need in a flow, 
+see 
+link:{LinkFuseOnlineIntegrationGuide}#planning_ready[Planning integrations].

@@ -4,9 +4,15 @@
 [id='viewing-system-metrics_{context}']
 = Viewing metrics for a {prodname} environment
 
-Metrics for your {prodname} environment 
-appear on the {prodname} home page. To see them, click
-*Home* in the left panel. {prodname} updates the following metrics
+Metrics for your {prodname} environment appear on the {prodname} home page. 
+
+.Procedure 
+
+In the left panel, click *Home*. 
+
+.Results
+
+{prodname} updates the following metrics
 every 5 seconds:
 
 * The number of integrations that are defined in this environment as

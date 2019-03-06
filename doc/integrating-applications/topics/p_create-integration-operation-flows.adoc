@@ -105,7 +105,8 @@ possible return codes.
 . When this flow has all needed 
 connections and steps, do one of the following:
 * *Publish* - To start running the integration, in the upper right, click *Publish*.
-This builds the integration and makes it available to be executed. 
+This builds the integration, deploys the REST API service to 
+OpenShift, and makes the integration available to be executed. 
 You can publish the integration each time that you
 complete the creation of an operation's flow or each
 time that you edit an operation's flow.

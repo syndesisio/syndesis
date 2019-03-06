@@ -15,13 +15,12 @@ There are two ways to view and edit information about a connection:
 view its details.
 
 * In the left panel, click *Integrations* and then click any integration
-to view its details.
+to view its summary page. In the integration's flow diagram:
 
-** For a simple integration, in the *Integration Summary* page, in the flow diagram
-of the integration, click a
+** For a simple integration, click a
 connection icon to view that connection's details.
 
-** For an API provider integration, in *Integration Summary* page, click the 
+** For an API provider integration, click 
 image:images/ApiProviderReturnIcon.png[flows icon] to display the integration's 
 operation list. Click the operation whose flow contains the connection 
 that you want to view details for.

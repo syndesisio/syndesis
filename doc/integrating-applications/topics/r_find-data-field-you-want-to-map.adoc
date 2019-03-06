@@ -4,18 +4,17 @@
 [id='find-the-field-you-want-to-map_{context}']
 = Finding the data field that you want to map
 
-In a relatively simple integration, mapping data fields is easy
-and intuitive. In more complex integrations or integrations that handle
+In a flow with relatively few steps, mapping data fields is easy
+and intuitive. In more complex flows or in flows that handle
 large sets of data fields, mapping from source to target is easier when
 you have some background about how to use the data mapper. 
 
 The data mapper displays two columns of data fields:
 
 * *Sources* is a list of the data fields that are obtained or
-processed in all previous steps in the integration. 
+processed in all previous steps in the flow. 
 * *Target* is a list of the data fields that the next 
-connection in the integration expects
-and can process.
+connection in the flow expects and can process.
 
 To quickly find the data field that you
 want to map, you can do any of the following:
@@ -42,10 +41,10 @@ field that you want to map to.
 To view the data fields available in a particular step, expand the 
 folder for that step. 
 +
-As you add steps to an integration, {prodname} numbers and renumbers them to
-indicate the order in which the integration processes the steps.
-When you are creating or editing an integration, these numbers are visible
-in the integration visualization panel on the left. When you add a data
+As you add steps to a flow, {prodname} numbers and renumbers them to
+indicate the order in which {prodname} processes the steps.
+When you are creating or editing a flow, these numbers are visible
+in the visualization panel on the left. When you are adding a data
 mapping step, the step numbers appear in the folder labels in the
 *Sources* panel and in the *Target* panel.
 +
@@ -54,11 +53,10 @@ by that step. Connections to applications such as Twitter, Salesforce,
 and SQL define their own data types. For connecting to applications
 such as Amazon S3, AMQ,
 AMQP, Dropbox, and FTP/SFTP, you define the connection's input and/or output
-type when you add the connection to an integration and select the action
+type when you add the connection to a flow and select the action
 that the connection performs.  
 When you specify the data type, you also give the type a name. 
-The type name you specify 
-appears as the name of 
+The type name you specify appears as the name of 
 a folder in the data mapper. If you specified a description when you 
 declared the data type, then the type description appears when you hover
 over the step folder in the mapper.  

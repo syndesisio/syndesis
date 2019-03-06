@@ -15,7 +15,7 @@ executes subsequent steps once for the collection.
 
 .Procedure
 
-. In the integration visualization panel on the left, where you want to 
+. In the flow visualization panel on the left, where you want to 
 add an aggregate step to the flow, click the
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 

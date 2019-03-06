@@ -7,8 +7,8 @@
 A {prodname} integration that does not start with a REST API service has one 
 flow. That is, each time {prodname} executes the integration, {prodname} 
 connects to the same applications, applies the same steps between connections, 
-and finishes integration execution in the same way. In other words, 
-this is a simple integration and it always has one execution path. 
+and finishes integration execution in the same way. 
+This is a simple integration and it always has one execution path. 
  
 An API provider integration has multiple flows. Each operation that the 
 OpenAPI document defines has its own flow, which {prodname} automatically 

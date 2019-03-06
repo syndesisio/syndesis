@@ -7,10 +7,10 @@
 = Mapping integration data to fields for the next connection
 :context: map
 
-In most integrations, you need to map data fields that have already 
+In most flows, you need to map data fields that have already 
 been obtained or processed to data fields that the next connection in the
-integration can process.
-{prodname} provides a data mapper to help you do this. In an integration,
+flow can process.
+{prodname} provides a data mapper to help you do this. In a flow,
 at each point where you need to map data fields, add a data mapper step.
 Details for mapping data fields are in the following topics:
 

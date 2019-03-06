@@ -15,9 +15,10 @@ This is different from {prodname} simple integrations. A
 {prodname} simple integration periodically monitors an application or 
 service and triggers execution of the integration according to how
 you configure the connection to that application or service. 
-For example, an integration might start with a Twitter
-connection that watches for tweets that contain `Red Hat Fuse`. {prodname}
-executes the integration only when the connection to Twitter finds such tweets.
+For example, an integration might start with a Salesforce
+connection that watches for the creation of new leads. {prodname}
+executes the integration only when the connection to Salesforce finds 
+a new lead.
 
 An API provider integration makes it possible to call a REST API when a 
 particular event occurs. This call

@@ -5,8 +5,8 @@
 = Tips for troubleshooting integration execution
 
 If an integration stops working, check its activity and history details.
-See link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_monitor[View integration activity information]
-and link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-history_monitor[View integration history]. 
+See link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_monitor[Viewing integration activity information]
+and link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-history_monitor[Viewing integration history]. 
 
 For a connection to an application that uses OAuth, 
 you might see an error message that indicates
@@ -20,8 +20,14 @@ then republishing the integration:
 . In the left panel, click *Integrations*. 
 . In the list of integrations, click the entry for the integration
 that stopped running. 
-. In the integration's summary page, in the visual integration flow, 
+. In the integration's summary page, in the flow visualization, 
 click the icon for the application that you want to reconnect to. 
++
+If this is an API provider integration, then in the integration's 
+summary page, click its flow icon to display the operations list.
+Then click the operation whose path contains the connection 
+that is failing and then click the failing connection in the 
+operation's path visualization. 
 . In the connection's details page, click *Reconnect*. 
 . Respond to that application's OAuth workflow prompts. 
 +

@@ -19,7 +19,7 @@ The result of importing an integration depends on:
 {prodname} uses an internal identifier for each integration and each
 connection to determine whether it already exists in the environment that
 it is being imported into. If you change the name of an integration or
-connection {prodname} recognizes it as the same integration or connection,
+connection, {prodname} recognizes it as the same integration or connection,
 which just has a different name.
 
 The following table describes the possible results of importing

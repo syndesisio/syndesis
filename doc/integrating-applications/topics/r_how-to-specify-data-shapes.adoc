@@ -193,7 +193,7 @@ the `name` property.
 image:images/TwitterMention.png[Name example]
 
 This name also appears in data type indicators in the {prodname} 
-integration visualization panel. 
+flow visualization panel. 
 
 .About the `description` property
 
