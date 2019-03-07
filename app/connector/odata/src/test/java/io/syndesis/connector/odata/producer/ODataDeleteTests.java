@@ -116,7 +116,7 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
         Step directStep = createDirectStep();
 
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl()));
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri()));
 
         String resourcePath = defaultTestServer.resourcePath();
         String keyPredicate = "1";
@@ -152,7 +152,7 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
         Step directStep = createDirectStep();
 
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl()));
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri()));
 
 
         String resourcePath = defaultTestServer.resourcePath();
@@ -189,7 +189,7 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
         Step directStep = createDirectStep();
 
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl()));
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri()));
 
         String resourcePath = defaultTestServer.resourcePath();
 

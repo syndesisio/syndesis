@@ -120,7 +120,7 @@ public class ODataCreateTests extends AbstractODataRouteTest {
         Step directStep = createDirectStep();
 
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl()));
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri()));
 
 
         String resourcePath = defaultTestServer.resourcePath();

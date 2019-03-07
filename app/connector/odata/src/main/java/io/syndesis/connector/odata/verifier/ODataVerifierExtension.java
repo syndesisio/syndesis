@@ -61,13 +61,6 @@ public class ODataVerifierExtension extends DefaultComponentVerifierExtension im
                           parameterKey(BASIC_USER_NAME).parameterKey(BASIC_PASSWORD).build());
         }
 
-        final String serviceUrl = (String) parameters.get(SERVICE_URI);
-        if (ODataUtil.isServiceSSL(serviceUrl) && ObjectHelper.isEmpty(parameters.get(CLIENT_CERTIFICATE))) {
-            builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.GENERIC,
-            "An https / ssl OData connection requires an ssl client certificate.").
-                      parameterKey(CLIENT_CERTIFICATE).build());
-        }
-
         return builder.build();
     }
 
@@ -103,11 +96,11 @@ public class ODataVerifierExtension extends DefaultComponentVerifierExtension im
 
             } catch (CertificateException e) {
                 builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid certificate: " + e.getMessage()).
-                              parameterKey(CLIENT_CERTIFICATE).
+                              parameterKey(SERVER_CERTIFICATE).
                               build());
             } catch (Exception e) {
                 builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Failure to communicate with serviceUrl: " + e.getMessage()).
-                              parameterKey(SERVICE_URI).parameterKey(CLIENT_CERTIFICATE).
+                              parameterKey(SERVICE_URI).parameterKey(SERVER_CERTIFICATE).
                               build());
             }
 

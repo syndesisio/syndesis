@@ -18,17 +18,14 @@ package io.syndesis.connector.odata.meta;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.assertj.core.api.Condition;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import io.syndesis.connector.odata.AbstractODataTest;
+import io.syndesis.connector.odata.server.ODataTestServer;
 
 public class ODataMetaDataTest extends AbstractODataTest {
 
@@ -52,7 +49,7 @@ public class ODataMetaDataTest extends AbstractODataTest {
         ODataMetaDataExtension extension = new ODataMetaDataExtension(context);
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(SERVICE_URI, defaultTestServer.serviceUrl());
+        parameters.put(SERVICE_URI, defaultTestServer.servicePlainUri());
 
         Optional<MetaDataExtension.MetaData> meta = extension.meta(parameters);
         assertThat(meta).isPresent();
@@ -64,30 +61,38 @@ public class ODataMetaDataTest extends AbstractODataTest {
         assertThat(odataMetadata.getEntityNames().iterator().next()).isEqualTo(defaultTestServer.resourcePath());
     }
 
+    /**
+     * Needs to supply server certificate since the server is unknown to the default
+     * certificate authorities that is loaded into the keystore by default
+     */
     @Test
-    @Ignore("Useful for manual testing but cannot guarantee access to odata service")
+    public void testMetaDataExtensionRetrievalSSL() throws Exception {
+        ODataMetaDataExtension extension = new ODataMetaDataExtension(context);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(SERVICE_URI, sslTestServer.serviceSSLUri());
+        parameters.put(SERVER_CERTIFICATE, ODataTestServer.serverCertificate());
+
+        Optional<MetaDataExtension.MetaData> meta = extension.meta(parameters);
+        assertThat(meta).isPresent();
+
+        Object payload = meta.get().getPayload();
+        assertThat(payload).isInstanceOf(ODataMetadata.class);
+        ODataMetadata odataMetadata = (ODataMetadata) payload;
+        assertThat(odataMetadata.getEntityNames().size()).isEqualTo(1);
+        assertThat(odataMetadata.getEntityNames().iterator().next()).isEqualTo(sslTestServer.resourcePath());
+    }
+
+    @Test
     public void testMetaDataExtensionOnRealServer() throws Exception {
         ODataMetaDataExtension extension = new ODataMetaDataExtension(context);
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(SERVICE_URI, "https://services.odata.org/TripPinRESTierService/");
-        parameters.put(SKIP_CERT_CHECK, true);
+        parameters.put(SERVICE_URI, REF_SERVICE_URI);
 
         Optional<MetaDataExtension.MetaData> meta = extension.meta(parameters);
         assertThat(meta).isPresent();
-        assertThat(meta.get().getPayload()).isInstanceOf(Set.class);
-        assertThat(meta.get().getAttributes()).hasEntrySatisfying(MetaDataExtension.MetaData.JAVA_TYPE, new Condition<Object>() {
-            @Override
-            public boolean matches(Object val) {
-                return Objects.equals(String.class, val);
-            }
-        });
-        assertThat(meta.get().getAttributes()).hasEntrySatisfying(MetaDataExtension.MetaData.CONTENT_TYPE, new Condition<Object>() {
-            @Override
-            public boolean matches(Object val) {
-                return Objects.equals("text/plain", val);
-            }
-        });
+        assertThat(meta.get().getPayload()).isInstanceOf(ODataMetadata.class);
     }
 
 }

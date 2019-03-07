@@ -340,27 +340,16 @@
       "secret": false,
       "type": "string"
     },
-    "clientCertificate": {
+    "serverCertificate": {
       "componentProperty": true,
       "deprecated": false,
-      "description": "Client certificate for SSL connections",
-      "displayName": "Client Certificate",
+      "description": "If the https/SSL server is internal and possesses a self-signed certificate then enable SSL by adding the certificate here.",
+      "displayName": "Server Certificate",
       "group": "security",
       "javaType": "java.lang.String",
       "kind": "parameter",
       "label": "common,security",
       "order": "5",
-      "relation": [
-        {
-          "action": "ENABLE",
-          "when": [
-            {
-              "id": "skipCertificateCheck",
-              "value": "false"
-            }
-          ]
-        }
-      ],
       "required": false,
       "secret": false,
       "type": "textarea"
@@ -374,31 +363,6 @@
       "labelHint": "The service root URL of your OData server",
       "order": "1",
       "required": true,
-      "secret": false,
-      "type": "string"
-    },
-    "skipCertificateCheck": {
-      "componentProperty": true,
-      "defaultValue": "false",
-      "deprecated": false,
-      "displayName": "Check Certificate",
-      "enum": [
-        {
-          "label": "Disable",
-          "value": "true"
-        },
-        {
-          "label": "Enable",
-          "value": "false"
-        }
-      ],
-      "group": "security",
-      "javaType": "java.lang.String",
-      "kind": "property",
-      "label": "common,security",
-      "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
-      "order": "4",
-      "required": false,
       "secret": false,
       "type": "string"
     }

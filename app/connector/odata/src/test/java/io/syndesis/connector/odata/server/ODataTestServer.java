@@ -18,6 +18,7 @@ package io.syndesis.connector.odata.server;
 import static org.junit.Assert.assertNotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -45,8 +46,11 @@ import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.NetworkConnector;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.servlet.FilterMapping;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
@@ -117,6 +121,8 @@ public class ODataTestServer extends Server implements ODataConstants {
 
     private int httpPort;
     private int httpsPort;
+    private ServerConnector httpConnector;
+    private ServerConnector httpsConnector;
 
     public ODataTestServer(Options... options) throws Exception {
         super();
@@ -174,31 +180,59 @@ public class ODataTestServer extends Server implements ODataConstants {
         }
     }
 
-    private String serverBaseUrl(Server server) {
-        return server.getURI().toString();
+    private String serverBaseUri(NetworkConnector connector) {
+        if (connector == null) {
+            return null;
+        }
+
+        ContextHandler context = getChildHandlerByClass(ContextHandler.class);
+
+        try {
+            String protocol = connector.getDefaultConnectionFactory().getProtocol();
+            String scheme = "http";
+            if (protocol.startsWith("SSL-") || protocol.equals("SSL"))
+                scheme = "https";
+
+            String host = connector.getHost();
+            if (context != null && context.getVirtualHosts() != null && context.getVirtualHosts().length > 0)
+                host = context.getVirtualHosts()[0];
+            if (host == null)
+                host = InetAddress.getLocalHost().getHostAddress();
+
+            String path = context == null ? null : context.getContextPath();
+            if (path == null) {
+                path = FORWARD_SLASH;
+            }
+
+            URI uri = new URI(scheme, null, host, connector.getLocalPort(), path, null, null);
+            return uri.toString();
+        }
+        catch(Exception e) {
+            LOG.error("Uri error", e);
+            return null;
+        }
     }
 
-    private static KeyStore serverStore() throws Exception {
+    private KeyStore serverStore() throws Exception {
         final KeyStore store = KeyStore.getInstance("jks");
-        URL url = ODataTestServer.class.getResource(KEYSTORE);
-        assertNotNull(url);
-        InputStream inputStream = url.openStream();
+        InputStream urlStream = getClass().getResourceAsStream(KEYSTORE);
+        assertNotNull(urlStream);
         try {
-            store.load(inputStream, KEYPASS_AND_STOREPASS_VALUE);
+            store.load(urlStream, KEYPASS_AND_STOREPASS_VALUE);
         } finally {
-            inputStream.close();
+            urlStream.close();
         }
 
         return store;
     }
 
-    private static KeyManager[] serverKeyManagers(KeyStore store, final char[] password) throws Exception {
+    private KeyManager[] serverKeyManagers(KeyStore store, final char[] password) throws Exception {
            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
            keyManagerFactory.init(store, password);
            return keyManagerFactory.getKeyManagers();
        }
 
-    private static TrustManager[] serverTrustManagers(KeyStore store) throws Exception {
+    private TrustManager[] serverTrustManagers(KeyStore store) throws Exception {
         TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         trustManagerFactory.init(store);
         return trustManagerFactory.getTrustManagers();
@@ -247,27 +281,40 @@ public class ODataTestServer extends Server implements ODataConstants {
             context.setSecurityHandler(securityHandler);
         }
 
-        if (sslContext == null) {
-            // HTTP
-            ServerConnector http = new ServerConnector(this);
-            http.setPort(httpPort); // Finds next available port if still 0
-            this.addConnector(http);
-        }
-        else {
+        httpConnector = new ServerConnector(this);
+        httpConnector.setPort(httpPort); // Finds next available port if still 0
+        this.addConnector(httpConnector);
+
+
+        if (sslContext != null) {
             // HTTPS
             HttpConfiguration httpConfiguration = new HttpConfiguration();
             httpConfiguration.setSecureScheme("https");
             httpConfiguration.setSecurePort(httpsPort); // Finds next available port if still 0
+            httpConfiguration.addCustomizer(new SecureRequestCustomizer());
 
             final SslContextFactory sslContextFactory = new SslContextFactory();
             sslContextFactory.setSslContext(sslContext);
-            ServerConnector https = new ServerConnector(this, sslContextFactory, new HttpConnectionFactory(httpConfiguration));
-            this.addConnector(https);
+            httpsConnector = new ServerConnector(this, sslContextFactory, new HttpConnectionFactory(httpConfiguration));
+            httpsConnector.setPort(httpsPort); // Finds next available port if still 0
+            this.addConnector(httpsConnector);
         }
     }
 
-    public String serviceUrl() {
-        return serverBaseUrl(this) + PRODUCTS_SVC;
+    public String servicePlainUri() {
+        if (httpConnector == null) {
+            return null;
+        }
+
+        return serverBaseUri(httpConnector) + PRODUCTS_SVC;
+    }
+
+    public String serviceSSLUri() {
+        if (httpsConnector == null) {
+            return null;
+        }
+
+        return serverBaseUri(httpsConnector) + PRODUCTS_SVC;
     }
 
     public String resourcePath() {
@@ -280,7 +327,13 @@ public class ODataTestServer extends Server implements ODataConstants {
 
     public ClientEntitySetIterator<ClientEntitySet, ClientEntity> getData() {
         ODataClient client = ODataClientFactory.getClient();
-        URI customersUri = client.newURIBuilder(serviceUrl())
+
+        String serviceUri = serviceSSLUri();
+        if (serviceUri == null) {
+            serviceUri = servicePlainUri();
+        }
+
+        URI customersUri = client.newURIBuilder(serviceUri)
                                                       .appendEntitySetSegment(resourcePath()).build();
 
         ODataRetrieveResponse<ClientEntitySetIterator<ClientEntitySet, ClientEntity>> response
@@ -292,8 +345,13 @@ public class ODataTestServer extends Server implements ODataConstants {
     public ClientEntity getData(String keyPredicate) {
         String resourcePath = resourcePath() + OPEN_BRACKET + keyPredicate + CLOSE_BRACKET;
 
+        String serviceUri = serviceSSLUri();
+        if (serviceUri == null) {
+            serviceUri = servicePlainUri();
+        }
+
         ODataClient client = ODataClientFactory.getClient();
-        URI customersUri = client.newURIBuilder(serviceUrl())
+        URI customersUri = client.newURIBuilder(serviceUri)
                                                       .appendEntitySetSegment(resourcePath).build();
 
         ODataRetrieveResponse<ClientEntity> response
@@ -312,9 +370,9 @@ public class ODataTestServer extends Server implements ODataConstants {
      * @param args
      */
     public static void main(String... args) throws Exception {
-       ODataTestServer server = new ODataTestServer(Options.HTTP_PORT);
+       ODataTestServer server = new ODataTestServer(Options.HTTP_PORT, Options.HTTPS_PORT, Options.SSL);
        server.start();
 
-       LOG.info("Server running with service url: {}", server.serviceUrl());
+       LOG.info("Server running with service urls:\n\t\t* {}\n\t\t* {}", server.servicePlainUri(), server.serviceSSLUri());
     }
 }

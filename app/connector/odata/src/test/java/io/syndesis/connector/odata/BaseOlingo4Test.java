@@ -71,7 +71,7 @@ public class BaseOlingo4Test extends AbstractODataTest {
 
     @Test
     public void testExpectations() throws Exception {
-        URI httpURI = URI.create(defaultTestServer.serviceUrl() + FORWARD_SLASH + defaultTestServer.resourcePath());
+        URI httpURI = URI.create(defaultTestServer.servicePlainUri() + FORWARD_SLASH + defaultTestServer.resourcePath());
         String camelURI = "olingo4://read/" + defaultTestServer.resourcePath();
 
         //
@@ -94,7 +94,7 @@ public class BaseOlingo4Test extends AbstractODataTest {
         // workaround the no serviceUri problem.
         //
         Olingo4AppEndpointConfiguration configuration = new Olingo4AppEndpointConfiguration();
-        configuration.setServiceUri(defaultTestServer.serviceUrl());
+        configuration.setServiceUri(defaultTestServer.servicePlainUri());
 
         //
         // Apply empty values to these properties so they are

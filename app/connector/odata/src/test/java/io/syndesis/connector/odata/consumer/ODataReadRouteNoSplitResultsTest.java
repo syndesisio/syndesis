@@ -71,7 +71,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
     @Test
     public void testSimpleODataRoute() throws Exception {
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl()));
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri()));
 
         Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
@@ -91,7 +91,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
     public void testAuthenticatedODataRoute() throws Exception {
         Connector odataConnector = createODataConnector(
                                                         new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, authTestServer.serviceUrl())
+                                                            .property(SERVICE_URI, authTestServer.servicePlainUri())
                                                             .property(BASIC_USER_NAME, ODataTestServer.USER),
                                                         new PropertyBuilder<ConfigurationProperty>()
                                                             .property(BASIC_PASSWORD, basicPasswordProperty())
@@ -111,11 +111,15 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
     }
 
+    /**
+     * Needs to supply server certificate since the server is unknown to the default
+     * certificate authorities that is loaded into the keystore by default
+     */
     @Test
     public void testSSLODataRoute() throws Exception {
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, sslTestServer.serviceUrl())
-                                                            .property(CLIENT_CERTIFICATE, ODataTestServer.serverCertificate()));
+                                                            .property(SERVICE_URI, sslTestServer.serviceSSLUri())
+                                                            .property(SERVER_CERTIFICATE, ODataTestServer.serverCertificate()));
 
         Step odataStep = createODataStep(odataConnector, sslTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
@@ -131,12 +135,16 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
     }
 
+    /**
+     * Needs to supply server certificate since the server is unknown to the default
+     * certificate authorities that is loaded into the keystore by default
+     */
     @Test
     public void testSSLAuthenticatedODataRoute() throws Exception {
         Connector odataConnector = createODataConnector(
                                                             new PropertyBuilder<String>()
-                                                                .property(SERVICE_URI, sslAuthTestServer.serviceUrl())
-                                                                .property(CLIENT_CERTIFICATE, ODataTestServer.serverCertificate())
+                                                                .property(SERVICE_URI, sslAuthTestServer.serviceSSLUri())
+                                                                .property(SERVER_CERTIFICATE, ODataTestServer.serverCertificate())
                                                                 .property(BASIC_USER_NAME, ODataTestServer.USER),
                                                             new PropertyBuilder<ConfigurationProperty>()
                                                                 .property(BASIC_PASSWORD, basicPasswordProperty())
@@ -159,16 +167,15 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
     @Test
     @Ignore("Run manually as not strictly required")
     public void testReferenceODataRoute() throws Exception {
-        String serviceUri = "https://services.odata.org/TripPinRESTierService";
         String resourcePath = "People";
         String queryParam = "$count=true";
 
         context = new SpringCamelContext(applicationContext);
 
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, serviceUri)
+                                                            .property(SERVICE_URI, REF_SERVICE_URI)
                                                             .property(QUERY_PARAMS, queryParam)
-                                                            .property(CLIENT_CERTIFICATE, ODataTestServer.referenceServiceCertificate()));
+                                                            .property(SERVER_CERTIFICATE, ODataTestServer.referenceServiceCertificate()));
 
         Step odataStep = createODataStep(odataConnector, resourcePath);
         Integration odataIntegration = createIntegration(odataStep, mockStep);
@@ -198,7 +205,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
     public void testODataRouteWithSimpleQuery() throws Exception {
         String queryParams = "$filter=ID eq 1";
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri())
                                                             .property(QUERY_PARAMS, queryParams));
 
         Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
@@ -219,7 +226,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
     public void testODataRouteWithCountQuery() throws Exception {
         String queryParams = "$count=true";
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri())
                                                             .property(QUERY_PARAMS, queryParams));
 
         Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
@@ -249,7 +256,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
     public void testODataRouteWithMoreComplexQuery() throws Exception {
         String queryParams = "$filter=ID le 2&$orderby=ID desc";
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri())
                                                             .property(QUERY_PARAMS, queryParams));
 
         Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
@@ -274,7 +281,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
     public void testODataRouteWithKeyPredicate() throws Exception {
         String keyPredicate = "1";
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri())
                                                             .property(KEY_PREDICATE, keyPredicate));
 
         Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
@@ -295,7 +302,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
     public void testODataRouteWithKeyPredicateWithBrackets() throws Exception {
         String keyPredicate = "(1)";
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri())
                                                             .property(KEY_PREDICATE, keyPredicate));
 
         Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
@@ -318,7 +325,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         String delayValue = "1000";
 
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri())
                                                             .property(INITIAL_DELAY, initialDelayValue)
                                                             .property(DELAY, delayValue));
 
@@ -349,7 +356,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         String backoffIdleThreshold = "1";
         String backoffMultiplier = "1";
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, defaultTestServer.serviceUrl())
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri())
                                                             .property(FILTER_ALREADY_SEEN, Boolean.TRUE.toString())
                                                             .property(BACKOFF_IDLE_THRESHOLD, backoffIdleThreshold)
                                                             .property(BACKOFF_MULTIPLIER, backoffMultiplier));
