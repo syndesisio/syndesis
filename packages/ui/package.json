@@ -16,6 +16,7 @@
     "@storybook/addon-actions": "^5.0.0",
     "@storybook/addon-info": "^5.0.0",
     "@storybook/addon-knobs": "^5.0.0",
+    "@storybook/addon-links": "^5.0.0",
     "@storybook/addon-notes": "^5.0.0",
     "@storybook/addon-options": "^5.0.0",
     "@storybook/addon-viewport": "^5.0.0",
@@ -58,7 +59,8 @@
     "prebuild": "rimraf dist",
     "build": "microbundle --no-compress",
     "dev": "microbundle watch --no-compress",
-    "storybook": "start-storybook -p 9001"
+    "storybook": "start-storybook -p 9001",
+    "build-storybook": "build-storybook -o ../../doc/ui"
   },
   "peerDependencies": {
     "patternfly-react": "^2.29.2",

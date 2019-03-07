@@ -2105,6 +2105,19 @@
     react-select "^2.3.0"
     util-deprecate "^1.0.2"
 
+"@storybook/addon-links@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-links/-/addon-links-5.0.0.tgz#ee38087cdfdc79389c87f86a6d3783495b362149"
+  integrity sha512-tmITiU+GA76M0yuGgJcx0EHevWfiznLvpO9H92Fs4xQmoDZ5e0ILFKTVL9bRW1k2J5B2UHerwPyhE82cGGYmkg==
+  dependencies:
+    "@storybook/addons" "5.0.0"
+    "@storybook/core-events" "5.0.0"
+    common-tags "^1.8.0"
+    core-js "^2.6.2"
+    global "^4.3.2"
+    prop-types "^15.6.2"
+    qs "^6.5.2"
+
 "@storybook/addon-notes@^5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@storybook/addon-notes/-/addon-notes-5.0.0.tgz#f3e5dc02a09395f5a898e6c67ed6344fab23a17f"

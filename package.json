@@ -29,6 +29,7 @@
     "format:app": "prettier --write 'syndesis/src/**/*.{js,ts,tsx,json}'",
     "format:packages": "prettier --write 'packages/*/src/**/*.{js,ts,tsx,json}'",
     "format": "npm-run-all format:*",
+    "build-storybook": "lerna run --stream --parallel build-storybook",
     "precommit": "npm-run-all -s lint:staged",
     "prepush": "npm-run-all -p lint test"
   },

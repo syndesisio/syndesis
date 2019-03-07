@@ -15,6 +15,7 @@
     "@storybook/addon-actions": "^5.0.0",
     "@storybook/addon-info": "^5.0.0",
     "@storybook/addon-knobs": "^5.0.0",
+    "@storybook/addon-links": "^5.0.0",
     "@storybook/addon-notes": "^5.0.0",
     "@storybook/addon-options": "^5.0.0",
     "@storybook/addon-viewport": "^5.0.0",
@@ -51,7 +52,8 @@
     "prebuild": "rimraf dist",
     "build": "microbundle --no-compress",
     "dev": "microbundle watch --no-compress",
-    "storybook": "start-storybook -p 9002"
+    "storybook": "start-storybook -p 9002",
+    "build-storybook": "build-storybook -o ../../doc/auto-form"
   },
   "peerDependencies": {
     "react": "^16.6.0",
